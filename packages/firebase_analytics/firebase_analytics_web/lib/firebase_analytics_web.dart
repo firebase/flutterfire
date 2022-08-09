@@ -39,6 +39,11 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   }
 
   @override
+  Future<bool> isSupported() {
+    return analytics_interop.Analytics.isSupported();
+  }
+
+  @override
   Future<void> logEvent({
     required String name,
     Map<String, Object?>? parameters,
@@ -124,10 +129,17 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setDefaultEventParameters(
-    Map<String, Object> defaultParameters,
+    Map<String, Object?>? defaultParameters,
   ) async {
     throw UnimplementedError(
       'setDefaultEventParameters() is not supported on web',
+    );
+  }
+
+  @override
+  Future<String?> getAppInstanceId() async {
+    throw UnimplementedError(
+      'getAppInstanceId() is not supported on web',
     );
   }
 }

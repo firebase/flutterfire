@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:twitter_login/twitter_login.dart';
 
@@ -383,6 +382,43 @@ class _AuthGateState extends State<AuthGate> {
         } else {
           await _phoneAuth();
         }
+      } on FirebaseAuthMultiFactorException catch (e) {
+        setState(() {
+          error = '${e.message}';
+        });
+        final firstHint = e.resolver.hints.first;
+        if (firstHint is! PhoneMultiFactorInfo) {
+          return;
+        }
+        final auth = FirebaseAuth.instance;
+        await auth.verifyPhoneNumber(
+          multiFactorSession: e.resolver.session,
+          multiFactorInfo: firstHint,
+          verificationCompleted: (_) {},
+          verificationFailed: print,
+          codeSent: (String verificationId, int? resendToken) async {
+            final smsCode = await getSmsCodeFromUser(context);
+
+            if (smsCode != null) {
+              // Create a PhoneAuthCredential with the code
+              final credential = PhoneAuthProvider.credential(
+                verificationId: verificationId,
+                smsCode: smsCode,
+              );
+
+              try {
+                await e.resolver.resolveSignIn(
+                  PhoneMultiFactorGenerator.getAssertion(
+                    credential,
+                  ),
+                );
+              } on FirebaseAuthException catch (e) {
+                print(e.message);
+              }
+            }
+          },
+          codeAutoRetrievalTimeout: print,
+        );
       } on FirebaseAuthException catch (e) {
         setState(() {
           error = '${e.message}';
@@ -397,48 +433,6 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
-  Future<String?> getSmsCodeFromUser() async {
-    String? smsCode;
-
-    // Update the UI - wait for the user to enter the SMS code
-    await showDialog<String>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('SMS code:'),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Sign in'),
-            ),
-            OutlinedButton(
-              onPressed: () {
-                smsCode = null;
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-          content: Container(
-            padding: const EdgeInsets.all(20),
-            child: TextField(
-              onChanged: (value) {
-                smsCode = value;
-              },
-              textAlign: TextAlign.center,
-              autofocus: true,
-            ),
-          ),
-        );
-      },
-    );
-
-    return smsCode;
-  }
-
   Future<void> _phoneAuth() async {
     if (mode != AuthMode.phone) {
       setState(() {
@@ -449,7 +443,7 @@ class _AuthGateState extends State<AuthGate> {
         if (kIsWeb) {
           final confirmationResult =
               await _auth.signInWithPhoneNumber(phoneController.text);
-          final smsCode = await getSmsCodeFromUser();
+          final smsCode = await getSmsCodeFromUser(context);
 
           if (smsCode != null) {
             await confirmationResult.confirm(smsCode);
@@ -464,7 +458,7 @@ class _AuthGateState extends State<AuthGate> {
               });
             },
             codeSent: (String verificationId, int? resendToken) async {
-              final smsCode = await getSmsCodeFromUser();
+              final smsCode = await getSmsCodeFromUser(context);
 
               if (smsCode != null) {
                 // Create a PhoneAuthCredential with the code
@@ -579,25 +573,10 @@ class _AuthGateState extends State<AuthGate> {
         // Once signed in, return the UserCredential
         await _auth.signInWithPopup(githubProvider);
       } else {
-        // Create a GitHubSignIn instance
-        final GitHubSignIn gitHubSignIn = GitHubSignIn(
-          clientId: GitHubConfig['CLIENT_ID']!,
-          clientSecret: GitHubConfig['CLIENT_SECRET']!,
-          redirectUrl: GitHubConfig['REDIRECT_URL']!,
-        );
+        // Create a new provider
+        GithubAuthProvider githubProvider = GithubAuthProvider();
 
-        // Trigger the sign-in flow
-        final result = await gitHubSignIn.signIn(context);
-
-        final token = result.token;
-
-        if (token != null) {
-          // Create a credential from the access token
-          final githubAuthCredential = GithubAuthProvider.credential(token);
-
-          // Once signed in, return the UserCredential
-          await _auth.signInWithCredential(githubAuthCredential);
-        }
+        await _auth.signInWithAuthProvider(githubProvider);
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -607,4 +586,46 @@ class _AuthGateState extends State<AuthGate> {
       setIsLoading();
     }
   }
+}
+
+Future<String?> getSmsCodeFromUser(BuildContext context) async {
+  String? smsCode;
+
+  // Update the UI - wait for the user to enter the SMS code
+  await showDialog<String>(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('SMS code:'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Sign in'),
+          ),
+          OutlinedButton(
+            onPressed: () {
+              smsCode = null;
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+        ],
+        content: Container(
+          padding: const EdgeInsets.all(20),
+          child: TextField(
+            onChanged: (value) {
+              smsCode = value;
+            },
+            textAlign: TextAlign.center,
+            autofocus: true,
+          ),
+        ),
+      );
+    },
+  );
+
+  return smsCode;
 }

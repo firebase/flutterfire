@@ -5,10 +5,15 @@ import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:flutter/foundation.dart';
 
 class FakeCollectionReference<Value>
-    extends QueryReference<FakeQuerySnapshot<Value>>
-    implements FirestoreCollectionReference<FakeQuerySnapshot<Value>> {
+    extends QueryReference<Value, FakeQuerySnapshot<Value>>
+    implements FirestoreCollectionReference<Value, FakeQuerySnapshot<Value>> {
   FakeCollectionReference(this.valueListenable);
   final ValueListenable<List<Value>> valueListenable;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError();
+  }
 
   @override
   Future<FakeQuerySnapshot<Value>> get([GetOptions? options]) async {
@@ -18,9 +23,6 @@ class FakeCollectionReference<Value>
           .toList(),
     );
   }
-
-  @override
-  CollectionReference<Object?> get reference => throw UnimplementedError();
 
   @override
   Stream<FakeQuerySnapshot<Value>> snapshots([GetOptions? options]) {
@@ -50,63 +52,36 @@ class FakeCollectionReference<Value>
 
     return controller.stream;
   }
-
-  @override
-  String get path => throw UnimplementedError();
-
-  @override
-  FirestoreDocumentReference<FirestoreDocumentSnapshot> doc([String? id]) {
-    throw UnimplementedError();
-  }
-
-  @override
-  QueryReference<FakeQuerySnapshot<Value>> limit(int limit) {
-    throw UnimplementedError();
-  }
-
-  @override
-  QueryReference<FakeQuerySnapshot<Value>> limitToLast(int limit) {
-    throw UnimplementedError();
-  }
 }
 
-class FakeQuerySnapshot<Value> extends FirestoreQuerySnapshot {
+class FakeQuerySnapshot<Value> extends FirestoreQuerySnapshot<Value,
+    FakeFirestoreQueryDocumentSnapshot<Value>> {
   FakeQuerySnapshot(this.docs);
-
-  @override
-  List<FirestoreDocumentChange<FirestoreQueryDocumentSnapshot>>
-      get docChanges => throw UnimplementedError();
 
   @override
   final List<FakeFirestoreQueryDocumentSnapshot<Value>> docs;
 
   @override
-  SnapshotMetadata get metadata => throw UnimplementedError();
-
-  @override
-  QuerySnapshot<Object?> get snapshot => throw UnimplementedError();
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError();
+  }
 }
 
 class FakeFirestoreQueryDocumentSnapshot<Value>
-    extends FirestoreQueryDocumentSnapshot {
+    extends FirestoreQueryDocumentSnapshot<Value> {
   FakeFirestoreQueryDocumentSnapshot(this.data);
 
   @override
   final Value data;
 
   @override
-  FirestoreDocumentReference<FirestoreDocumentSnapshot> get reference =>
-      throw UnimplementedError();
-
-  @override
-  QueryDocumentSnapshot<Object?> get snapshot => throw UnimplementedError();
-
-  @override
-  SnapshotMetadata get metadata => throw UnimplementedError();
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError();
+  }
 }
 
 class FakeDocumentReference<Value>
-    extends FirestoreDocumentReference<FakeDocumentSnapshot<Value>> {
+    extends FirestoreDocumentReference<Value, FakeDocumentSnapshot<Value>> {
   FakeDocumentReference(
     this.valueListenable, {
     this.errorListenable,
@@ -118,12 +93,14 @@ class FakeDocumentReference<Value>
   final bool emitCurrentValue;
 
   @override
-  Future<FakeDocumentSnapshot<Value>> get([GetOptions? options]) async {
-    return FakeDocumentSnapshot<Value>(valueListenable.value);
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError();
   }
 
   @override
-  DocumentReference<Object?> get reference => throw UnimplementedError();
+  Future<FakeDocumentSnapshot<Value>> get([GetOptions? options]) async {
+    return FakeDocumentSnapshot<Value>(valueListenable.value);
+  }
 
   @override
   Stream<FakeDocumentSnapshot<Value>> snapshots([GetOptions? options]) {
@@ -153,30 +130,16 @@ class FakeDocumentReference<Value>
 
     return controller.stream;
   }
-
-  @override
-  Future<void> delete() => throw UnimplementedError();
-
-  @override
-  String get id => throw UnimplementedError();
-
-  @override
-  String get path => throw UnimplementedError();
 }
 
-class FakeDocumentSnapshot<Value> extends FirestoreDocumentSnapshot {
+class FakeDocumentSnapshot<Value> extends FirestoreDocumentSnapshot<Value> {
   FakeDocumentSnapshot(this.data);
 
   @override
   final Value data;
 
   @override
-  FirestoreDocumentReference<FirestoreDocumentSnapshot> get reference =>
-      throw UnimplementedError();
-
-  @override
-  DocumentSnapshot<Object?> get snapshot => throw UnimplementedError();
-
-  @override
-  SnapshotMetadata get metadata => throw UnimplementedError();
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError();
+  }
 }

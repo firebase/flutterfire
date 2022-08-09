@@ -25,6 +25,7 @@ class EmailVerificationScreen extends StatelessWidget {
   final TextDirection? desktoplayoutDirection;
   final double breakpoint;
   final ActionCodeSettings? actionCodeSettings;
+  final Set<FlutterFireUIStyle>? styles;
 
   const EmailVerificationScreen({
     Key? key,
@@ -36,25 +37,30 @@ class EmailVerificationScreen extends StatelessWidget {
     this.desktoplayoutDirection,
     this.breakpoint = 500,
     this.actionCodeSettings,
+    this.styles,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FlutterFireUIActions(
-      actions: actions,
-      child: UniversalScaffold(
-        body: ResponsivePage(
-          breakpoint: breakpoint,
-          desktopLayoutDirection: desktoplayoutDirection,
-          headerBuilder: headerBuilder,
-          headerMaxExtent: headerMaxExtent,
-          sideBuilder: sideBuilder,
-          maxWidth: 1200,
-          contentFlex: 2,
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: _EmailVerificationScreenContent(
-              auth: auth,
+    return FlutterFireUITheme(
+      styles: styles ?? const {},
+      child: FlutterFireUIActions(
+        actions: actions,
+        child: UniversalScaffold(
+          body: ResponsivePage(
+            breakpoint: breakpoint,
+            desktopLayoutDirection: desktoplayoutDirection,
+            headerBuilder: headerBuilder,
+            headerMaxExtent: headerMaxExtent,
+            sideBuilder: sideBuilder,
+            maxWidth: 1200,
+            contentFlex: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: _EmailVerificationScreenContent(
+                auth: auth,
+                actionCodeSettings: actionCodeSettings,
+              ),
             ),
           ),
         ),
@@ -63,14 +69,22 @@ class EmailVerificationScreen extends StatelessWidget {
   }
 }
 
+/// This allows a value of type T or T?
+/// to be treated as a value of type T?.
+///
+/// We use this so that APIs that have become
+/// non-nullable can still be used with `!` and `?`
+/// to support older versions of the API as well.
+T? _ambiguate<T>(T? value) => value;
+
 class _EmailVerificationScreenContent extends StatefulWidget {
   final FirebaseAuth? auth;
   final ActionCodeSettings? actionCodeSettings;
 
   const _EmailVerificationScreenContent({
     Key? key,
-    this.auth,
-    this.actionCodeSettings,
+    required this.auth,
+    required this.actionCodeSettings,
   }) : super(key: key);
 
   @override
@@ -87,7 +101,8 @@ class __EmailVerificationScreenContentState
 
   @override
   void initState() {
-    SchedulerBinding.instance!.addPostFrameCallback(_sendEmailVerification);
+    _ambiguate(SchedulerBinding.instance)!
+        .addPostFrameCallback(_sendEmailVerification);
     super.initState();
   }
 

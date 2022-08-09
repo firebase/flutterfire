@@ -18,10 +18,1778 @@ const _sentinel = _Sentinel();
 /// A collection reference object can be used for adding documents,
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
+abstract class ModelCollectionReference
+    implements
+        ModelQuery,
+        FirestoreCollectionReference<Model, ModelQuerySnapshot> {
+  factory ModelCollectionReference([
+    FirebaseFirestore? firestore,
+  ]) = _$ModelCollectionReference;
+
+  static Model fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return _$ModelFromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    Model value,
+    SetOptions? options,
+  ) {
+    return _$ModelToJson(value);
+  }
+
+  @override
+  CollectionReference<Model> get reference;
+
+  @override
+  ModelDocumentReference doc([String? id]);
+
+  /// Add a new document to this collection with the specified data,
+  /// assigning it a document ID automatically.
+  Future<ModelDocumentReference> add(Model value);
+}
+
+class _$ModelCollectionReference extends _$ModelQuery
+    implements ModelCollectionReference {
+  factory _$ModelCollectionReference([FirebaseFirestore? firestore]) {
+    firestore ??= FirebaseFirestore.instance;
+
+    return _$ModelCollectionReference._(
+      firestore.collection('root').withConverter(
+            fromFirestore: ModelCollectionReference.fromFirestore,
+            toFirestore: ModelCollectionReference.toFirestore,
+          ),
+    );
+  }
+
+  _$ModelCollectionReference._(
+    CollectionReference<Model> reference,
+  ) : super(reference, reference);
+
+  String get path => reference.path;
+
+  @override
+  CollectionReference<Model> get reference =>
+      super.reference as CollectionReference<Model>;
+
+  @override
+  ModelDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
+    return ModelDocumentReference(
+      reference.doc(id),
+    );
+  }
+
+  @override
+  Future<ModelDocumentReference> add(Model value) {
+    return reference.add(value).then((ref) => ModelDocumentReference(ref));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$ModelCollectionReference &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+abstract class ModelDocumentReference
+    extends FirestoreDocumentReference<Model, ModelDocumentSnapshot> {
+  factory ModelDocumentReference(DocumentReference<Model> reference) =
+      _$ModelDocumentReference;
+
+  DocumentReference<Model> get reference;
+
+  /// A reference to the [ModelCollectionReference] containing this document.
+  ModelCollectionReference get parent {
+    return _$ModelCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<ModelDocumentSnapshot> snapshots();
+
+  @override
+  Future<ModelDocumentSnapshot> get([GetOptions? options]);
+
+  @override
+  Future<void> delete();
+
+  Future<void> update({
+    String value,
+  });
+
+  Future<void> set(Model value);
+}
+
+class _$ModelDocumentReference
+    extends FirestoreDocumentReference<Model, ModelDocumentSnapshot>
+    implements ModelDocumentReference {
+  _$ModelDocumentReference(this.reference);
+
+  @override
+  final DocumentReference<Model> reference;
+
+  /// A reference to the [ModelCollectionReference] containing this document.
+  ModelCollectionReference get parent {
+    return _$ModelCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<ModelDocumentSnapshot> snapshots() {
+    return reference.snapshots().map((snapshot) {
+      return ModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<ModelDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then((snapshot) {
+      return ModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<void> delete() {
+    return reference.delete();
+  }
+
+  Future<void> update({
+    Object? value = _sentinel,
+  }) async {
+    final json = {
+      if (value != _sentinel) "value": value as String,
+    };
+
+    return reference.update(json);
+  }
+
+  Future<void> set(Model value) {
+    return reference.set(value);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ModelDocumentReference &&
+        other.runtimeType == runtimeType &&
+        other.parent == parent &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, parent, id);
+}
+
+class ModelDocumentSnapshot extends FirestoreDocumentSnapshot<Model> {
+  ModelDocumentSnapshot._(
+    this.snapshot,
+    this.data,
+  );
+
+  @override
+  final DocumentSnapshot<Model> snapshot;
+
+  @override
+  ModelDocumentReference get reference {
+    return ModelDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Model? data;
+}
+
+abstract class ModelQuery implements QueryReference<Model, ModelQuerySnapshot> {
+  @override
+  ModelQuery limit(int limit);
+
+  @override
+  ModelQuery limitToLast(int limit);
+
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  ModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  ModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  ModelQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+  ModelQuery whereValue({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+
+  ModelQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
+  });
+
+  ModelQuery orderByValue({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
+  });
+}
+
+class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
+    implements ModelQuery {
+  _$ModelQuery(
+    this.reference,
+    this._collection,
+  );
+
+  final CollectionReference<Object?> _collection;
+
+  @override
+  final Query<Model> reference;
+
+  ModelQuerySnapshot _decodeSnapshot(
+    QuerySnapshot<Model> snapshot,
+  ) {
+    final docs = snapshot.docs.map((e) {
+      return ModelQueryDocumentSnapshot._(e, e.data());
+    }).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return FirestoreDocumentChange<ModelDocumentSnapshot>(
+        type: change.type,
+        oldIndex: change.oldIndex,
+        newIndex: change.newIndex,
+        doc: ModelDocumentSnapshot._(change.doc, change.doc.data()),
+      );
+    }).toList();
+
+    return ModelQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  @override
+  Stream<ModelQuerySnapshot> snapshots([SnapshotOptions? options]) {
+    return reference.snapshots().map(_decodeSnapshot);
+  }
+
+  @override
+  Future<ModelQuerySnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(_decodeSnapshot);
+  }
+
+  @override
+  ModelQuery limit(int limit) {
+    return _$ModelQuery(
+      reference.limit(limit),
+      _collection,
+    );
+  }
+
+  @override
+  ModelQuery limitToLast(int limit) {
+    return _$ModelQuery(
+      reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  ModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ModelQuery(query, _collection);
+  }
+
+  ModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$ModelQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  ModelQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$ModelQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  ModelQuery whereValue({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$ModelQuery(
+      reference.where(
+        _$ModelFieldMap["value"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  ModelQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ModelQuery(query, _collection);
+  }
+
+  ModelQuery orderByValue({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query =
+        reference.orderBy(_$ModelFieldMap["value"]!, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ModelQuery(query, _collection);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$ModelQuery &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+class ModelQuerySnapshot
+    extends FirestoreQuerySnapshot<Model, ModelQueryDocumentSnapshot> {
+  ModelQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  final QuerySnapshot<Model> snapshot;
+
+  @override
+  final List<ModelQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<ModelDocumentSnapshot>> docChanges;
+}
+
+class ModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Model>
+    implements ModelDocumentSnapshot {
+  ModelQueryDocumentSnapshot._(this.snapshot, this.data);
+
+  @override
+  final QueryDocumentSnapshot<Model> snapshot;
+
+  @override
+  ModelDocumentReference get reference {
+    return ModelDocumentReference(snapshot.reference);
+  }
+
+  @override
+  final Model data;
+}
+
+/// A collection reference object can be used for adding documents,
+/// getting document references, and querying for documents
+/// (using the methods inherited from Query).
+abstract class NestedCollectionReference
+    implements
+        NestedQuery,
+        FirestoreCollectionReference<Nested, NestedQuerySnapshot> {
+  factory NestedCollectionReference([
+    FirebaseFirestore? firestore,
+  ]) = _$NestedCollectionReference;
+
+  static Nested fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return Nested.fromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    Nested value,
+    SetOptions? options,
+  ) {
+    return value.toJson();
+  }
+
+  @override
+  CollectionReference<Nested> get reference;
+
+  @override
+  NestedDocumentReference doc([String? id]);
+
+  /// Add a new document to this collection with the specified data,
+  /// assigning it a document ID automatically.
+  Future<NestedDocumentReference> add(Nested value);
+}
+
+class _$NestedCollectionReference extends _$NestedQuery
+    implements NestedCollectionReference {
+  factory _$NestedCollectionReference([FirebaseFirestore? firestore]) {
+    firestore ??= FirebaseFirestore.instance;
+
+    return _$NestedCollectionReference._(
+      firestore.collection('nested').withConverter(
+            fromFirestore: NestedCollectionReference.fromFirestore,
+            toFirestore: NestedCollectionReference.toFirestore,
+          ),
+    );
+  }
+
+  _$NestedCollectionReference._(
+    CollectionReference<Nested> reference,
+  ) : super(reference, reference);
+
+  String get path => reference.path;
+
+  @override
+  CollectionReference<Nested> get reference =>
+      super.reference as CollectionReference<Nested>;
+
+  @override
+  NestedDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
+    return NestedDocumentReference(
+      reference.doc(id),
+    );
+  }
+
+  @override
+  Future<NestedDocumentReference> add(Nested value) {
+    return reference.add(value).then((ref) => NestedDocumentReference(ref));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$NestedCollectionReference &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+abstract class NestedDocumentReference
+    extends FirestoreDocumentReference<Nested, NestedDocumentSnapshot> {
+  factory NestedDocumentReference(DocumentReference<Nested> reference) =
+      _$NestedDocumentReference;
+
+  DocumentReference<Nested> get reference;
+
+  /// A reference to the [NestedCollectionReference] containing this document.
+  NestedCollectionReference get parent {
+    return _$NestedCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<NestedDocumentSnapshot> snapshots();
+
+  @override
+  Future<NestedDocumentSnapshot> get([GetOptions? options]);
+
+  @override
+  Future<void> delete();
+
+  Future<void> update({
+    int? simple,
+    List<bool>? boolList,
+    List<String>? stringList,
+    List<num>? numList,
+    List<Object?>? objectList,
+    List<dynamic>? dynamicList,
+  });
+
+  Future<void> set(Nested value);
+}
+
+class _$NestedDocumentReference
+    extends FirestoreDocumentReference<Nested, NestedDocumentSnapshot>
+    implements NestedDocumentReference {
+  _$NestedDocumentReference(this.reference);
+
+  @override
+  final DocumentReference<Nested> reference;
+
+  /// A reference to the [NestedCollectionReference] containing this document.
+  NestedCollectionReference get parent {
+    return _$NestedCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<NestedDocumentSnapshot> snapshots() {
+    return reference.snapshots().map((snapshot) {
+      return NestedDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<NestedDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then((snapshot) {
+      return NestedDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<void> delete() {
+    return reference.delete();
+  }
+
+  Future<void> update({
+    Object? simple = _sentinel,
+    Object? boolList = _sentinel,
+    Object? stringList = _sentinel,
+    Object? numList = _sentinel,
+    Object? objectList = _sentinel,
+    Object? dynamicList = _sentinel,
+  }) async {
+    final json = {
+      if (simple != _sentinel) "simple": simple as int?,
+      if (boolList != _sentinel) "boolList": boolList as List<bool>?,
+      if (stringList != _sentinel) "stringList": stringList as List<String>?,
+      if (numList != _sentinel) "numList": numList as List<num>?,
+      if (objectList != _sentinel) "objectList": objectList as List<Object?>?,
+      if (dynamicList != _sentinel)
+        "dynamicList": dynamicList as List<dynamic>?,
+    };
+
+    return reference.update(json);
+  }
+
+  Future<void> set(Nested value) {
+    return reference.set(value);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is NestedDocumentReference &&
+        other.runtimeType == runtimeType &&
+        other.parent == parent &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, parent, id);
+}
+
+class NestedDocumentSnapshot extends FirestoreDocumentSnapshot<Nested> {
+  NestedDocumentSnapshot._(
+    this.snapshot,
+    this.data,
+  );
+
+  @override
+  final DocumentSnapshot<Nested> snapshot;
+
+  @override
+  NestedDocumentReference get reference {
+    return NestedDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Nested? data;
+}
+
+abstract class NestedQuery
+    implements QueryReference<Nested, NestedQuerySnapshot> {
+  @override
+  NestedQuery limit(int limit);
+
+  @override
+  NestedQuery limitToLast(int limit);
+
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  NestedQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  NestedQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  NestedQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+  NestedQuery whereSimple({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int?>? whereIn,
+    List<int?>? whereNotIn,
+  });
+  NestedQuery whereBoolList({
+    List<bool>? isEqualTo,
+    List<bool>? isNotEqualTo,
+    List<bool>? isLessThan,
+    List<bool>? isLessThanOrEqualTo,
+    List<bool>? isGreaterThan,
+    List<bool>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    bool? arrayContains,
+    List<bool>? arrayContainsAny,
+  });
+  NestedQuery whereStringList({
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    String? arrayContains,
+    List<String>? arrayContainsAny,
+  });
+  NestedQuery whereNumList({
+    List<num>? isEqualTo,
+    List<num>? isNotEqualTo,
+    List<num>? isLessThan,
+    List<num>? isLessThanOrEqualTo,
+    List<num>? isGreaterThan,
+    List<num>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    num? arrayContains,
+    List<num>? arrayContainsAny,
+  });
+  NestedQuery whereObjectList({
+    List<Object?>? isEqualTo,
+    List<Object?>? isNotEqualTo,
+    List<Object?>? isLessThan,
+    List<Object?>? isLessThanOrEqualTo,
+    List<Object?>? isGreaterThan,
+    List<Object?>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+  });
+  NestedQuery whereDynamicList({
+    List<dynamic>? isEqualTo,
+    List<dynamic>? isNotEqualTo,
+    List<dynamic>? isLessThan,
+    List<dynamic>? isLessThanOrEqualTo,
+    List<dynamic>? isGreaterThan,
+    List<dynamic>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    dynamic arrayContains,
+    List<dynamic>? arrayContainsAny,
+  });
+
+  NestedQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderBySimple({
+    bool descending = false,
+    int? startAt,
+    int? startAfter,
+    int? endAt,
+    int? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByBoolList({
+    bool descending = false,
+    List<bool>? startAt,
+    List<bool>? startAfter,
+    List<bool>? endAt,
+    List<bool>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByStringList({
+    bool descending = false,
+    List<String>? startAt,
+    List<String>? startAfter,
+    List<String>? endAt,
+    List<String>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByNumList({
+    bool descending = false,
+    List<num>? startAt,
+    List<num>? startAfter,
+    List<num>? endAt,
+    List<num>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByObjectList({
+    bool descending = false,
+    List<Object?>? startAt,
+    List<Object?>? startAfter,
+    List<Object?>? endAt,
+    List<Object?>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByDynamicList({
+    bool descending = false,
+    List<dynamic>? startAt,
+    List<dynamic>? startAfter,
+    List<dynamic>? endAt,
+    List<dynamic>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+}
+
+class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
+    implements NestedQuery {
+  _$NestedQuery(
+    this.reference,
+    this._collection,
+  );
+
+  final CollectionReference<Object?> _collection;
+
+  @override
+  final Query<Nested> reference;
+
+  NestedQuerySnapshot _decodeSnapshot(
+    QuerySnapshot<Nested> snapshot,
+  ) {
+    final docs = snapshot.docs.map((e) {
+      return NestedQueryDocumentSnapshot._(e, e.data());
+    }).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return FirestoreDocumentChange<NestedDocumentSnapshot>(
+        type: change.type,
+        oldIndex: change.oldIndex,
+        newIndex: change.newIndex,
+        doc: NestedDocumentSnapshot._(change.doc, change.doc.data()),
+      );
+    }).toList();
+
+    return NestedQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  @override
+  Stream<NestedQuerySnapshot> snapshots([SnapshotOptions? options]) {
+    return reference.snapshots().map(_decodeSnapshot);
+  }
+
+  @override
+  Future<NestedQuerySnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(_decodeSnapshot);
+  }
+
+  @override
+  NestedQuery limit(int limit) {
+    return _$NestedQuery(
+      reference.limit(limit),
+      _collection,
+    );
+  }
+
+  @override
+  NestedQuery limitToLast(int limit) {
+    return _$NestedQuery(
+      reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  NestedQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery whereSimple({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int?>? whereIn,
+    List<int?>? whereNotIn,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        _$NestedFieldMap["simple"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery whereBoolList({
+    List<bool>? isEqualTo,
+    List<bool>? isNotEqualTo,
+    List<bool>? isLessThan,
+    List<bool>? isLessThanOrEqualTo,
+    List<bool>? isGreaterThan,
+    List<bool>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    bool? arrayContains,
+    List<bool>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        _$NestedFieldMap["boolList"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery whereStringList({
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    String? arrayContains,
+    List<String>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        _$NestedFieldMap["stringList"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery whereNumList({
+    List<num>? isEqualTo,
+    List<num>? isNotEqualTo,
+    List<num>? isLessThan,
+    List<num>? isLessThanOrEqualTo,
+    List<num>? isGreaterThan,
+    List<num>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    num? arrayContains,
+    List<num>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        _$NestedFieldMap["numList"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery whereObjectList({
+    List<Object?>? isEqualTo,
+    List<Object?>? isNotEqualTo,
+    List<Object?>? isLessThan,
+    List<Object?>? isLessThanOrEqualTo,
+    List<Object?>? isGreaterThan,
+    List<Object?>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        _$NestedFieldMap["objectList"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery whereDynamicList({
+    List<dynamic>? isEqualTo,
+    List<dynamic>? isNotEqualTo,
+    List<dynamic>? isLessThan,
+    List<dynamic>? isLessThanOrEqualTo,
+    List<dynamic>? isGreaterThan,
+    List<dynamic>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    dynamic arrayContains,
+    List<dynamic>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        _$NestedFieldMap["dynamicList"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery orderBySimple({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query =
+        reference.orderBy(_$NestedFieldMap["simple"]!, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery orderByBoolList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$NestedFieldMap["boolList"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery orderByStringList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$NestedFieldMap["stringList"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery orderByNumList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query =
+        reference.orderBy(_$NestedFieldMap["numList"]!, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery orderByObjectList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$NestedFieldMap["objectList"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery orderByDynamicList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$NestedFieldMap["dynamicList"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$NestedQuery &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+class NestedQuerySnapshot
+    extends FirestoreQuerySnapshot<Nested, NestedQueryDocumentSnapshot> {
+  NestedQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  final QuerySnapshot<Nested> snapshot;
+
+  @override
+  final List<NestedQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<NestedDocumentSnapshot>> docChanges;
+}
+
+class NestedQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Nested>
+    implements NestedDocumentSnapshot {
+  NestedQueryDocumentSnapshot._(this.snapshot, this.data);
+
+  @override
+  final QueryDocumentSnapshot<Nested> snapshot;
+
+  @override
+  NestedDocumentReference get reference {
+    return NestedDocumentReference(snapshot.reference);
+  }
+
+  @override
+  final Nested data;
+}
+
+/// A collection reference object can be used for adding documents,
+/// getting document references, and querying for documents
+/// (using the methods inherited from Query).
 abstract class SplitFileModelCollectionReference
     implements
         SplitFileModelQuery,
-        FirestoreCollectionReference<SplitFileModelQuerySnapshot> {
+        FirestoreCollectionReference<SplitFileModel,
+            SplitFileModelQuerySnapshot> {
   factory SplitFileModelCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$SplitFileModelCollectionReference;
@@ -39,6 +1807,9 @@ abstract class SplitFileModelCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<SplitFileModel> get reference;
 
   @override
   SplitFileModelDocumentReference doc([String? id]);
@@ -73,6 +1844,10 @@ class _$SplitFileModelCollectionReference extends _$SplitFileModelQuery
 
   @override
   SplitFileModelDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return SplitFileModelDocumentReference(
       reference.doc(id),
     );
@@ -97,7 +1872,8 @@ class _$SplitFileModelCollectionReference extends _$SplitFileModelQuery
 }
 
 abstract class SplitFileModelDocumentReference
-    extends FirestoreDocumentReference<SplitFileModelDocumentSnapshot> {
+    extends FirestoreDocumentReference<SplitFileModel,
+        SplitFileModelDocumentSnapshot> {
   factory SplitFileModelDocumentReference(
           DocumentReference<SplitFileModel> reference) =
       _$SplitFileModelDocumentReference;
@@ -121,9 +1897,9 @@ abstract class SplitFileModelDocumentReference
   Future<void> set(SplitFileModel value);
 }
 
-class _$SplitFileModelDocumentReference
-    extends FirestoreDocumentReference<SplitFileModelDocumentSnapshot>
-    implements SplitFileModelDocumentReference {
+class _$SplitFileModelDocumentReference extends FirestoreDocumentReference<
+    SplitFileModel,
+    SplitFileModelDocumentSnapshot> implements SplitFileModelDocumentReference {
   _$SplitFileModelDocumentReference(this.reference);
 
   @override
@@ -175,7 +1951,8 @@ class _$SplitFileModelDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class SplitFileModelDocumentSnapshot extends FirestoreDocumentSnapshot {
+class SplitFileModelDocumentSnapshot
+    extends FirestoreDocumentSnapshot<SplitFileModel> {
   SplitFileModelDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -196,15 +1973,105 @@ class SplitFileModelDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class SplitFileModelQuery
-    implements QueryReference<SplitFileModelQuerySnapshot> {
+    implements QueryReference<SplitFileModel, SplitFileModelQuerySnapshot> {
   @override
   SplitFileModelQuery limit(int limit);
 
   @override
   SplitFileModelQuery limitToLast(int limit);
+
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  SplitFileModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    SplitFileModelDocumentSnapshot? startAtDocument,
+    SplitFileModelDocumentSnapshot? endAtDocument,
+    SplitFileModelDocumentSnapshot? endBeforeDocument,
+    SplitFileModelDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  SplitFileModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  SplitFileModelQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+
+  SplitFileModelQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    SplitFileModelDocumentSnapshot? startAtDocument,
+    SplitFileModelDocumentSnapshot? endAtDocument,
+    SplitFileModelDocumentSnapshot? endBeforeDocument,
+    SplitFileModelDocumentSnapshot? startAfterDocument,
+  });
 }
 
-class _$SplitFileModelQuery extends QueryReference<SplitFileModelQuerySnapshot>
+class _$SplitFileModelQuery
+    extends QueryReference<SplitFileModel, SplitFileModelQuerySnapshot>
     implements SplitFileModelQuery {
   _$SplitFileModelQuery(
     this.reference,
@@ -265,6 +2132,152 @@ class _$SplitFileModelQuery extends QueryReference<SplitFileModelQuerySnapshot>
     );
   }
 
+  SplitFileModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    SplitFileModelDocumentSnapshot? startAtDocument,
+    SplitFileModelDocumentSnapshot? endAtDocument,
+    SplitFileModelDocumentSnapshot? endBeforeDocument,
+    SplitFileModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$SplitFileModelQuery(query, _collection);
+  }
+
+  SplitFileModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$SplitFileModelQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  SplitFileModelQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$SplitFileModelQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  SplitFileModelQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    SplitFileModelDocumentSnapshot? startAtDocument,
+    SplitFileModelDocumentSnapshot? endAtDocument,
+    SplitFileModelDocumentSnapshot? endBeforeDocument,
+    SplitFileModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$SplitFileModelQuery(query, _collection);
+  }
+
   @override
   bool operator ==(Object other) {
     return other is _$SplitFileModelQuery &&
@@ -276,8 +2289,8 @@ class _$SplitFileModelQuery extends QueryReference<SplitFileModelQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class SplitFileModelQuerySnapshot
-    extends FirestoreQuerySnapshot<SplitFileModelQueryDocumentSnapshot> {
+class SplitFileModelQuerySnapshot extends FirestoreQuerySnapshot<SplitFileModel,
+    SplitFileModelQueryDocumentSnapshot> {
   SplitFileModelQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -294,7 +2307,8 @@ class SplitFileModelQuerySnapshot
       docChanges;
 }
 
-class SplitFileModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class SplitFileModelQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<SplitFileModel>
     implements SplitFileModelDocumentSnapshot {
   SplitFileModelQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -316,7 +2330,7 @@ class SplitFileModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class EmptyModelCollectionReference
     implements
         EmptyModelQuery,
-        FirestoreCollectionReference<EmptyModelQuerySnapshot> {
+        FirestoreCollectionReference<EmptyModel, EmptyModelQuerySnapshot> {
   factory EmptyModelCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$EmptyModelCollectionReference;
@@ -334,6 +2348,9 @@ abstract class EmptyModelCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<EmptyModel> get reference;
 
   @override
   EmptyModelDocumentReference doc([String? id]);
@@ -368,6 +2385,10 @@ class _$EmptyModelCollectionReference extends _$EmptyModelQuery
 
   @override
   EmptyModelDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return EmptyModelDocumentReference(
       reference.doc(id),
     );
@@ -390,7 +2411,7 @@ class _$EmptyModelCollectionReference extends _$EmptyModelQuery
 }
 
 abstract class EmptyModelDocumentReference
-    extends FirestoreDocumentReference<EmptyModelDocumentSnapshot> {
+    extends FirestoreDocumentReference<EmptyModel, EmptyModelDocumentSnapshot> {
   factory EmptyModelDocumentReference(DocumentReference<EmptyModel> reference) =
       _$EmptyModelDocumentReference;
 
@@ -414,7 +2435,7 @@ abstract class EmptyModelDocumentReference
 }
 
 class _$EmptyModelDocumentReference
-    extends FirestoreDocumentReference<EmptyModelDocumentSnapshot>
+    extends FirestoreDocumentReference<EmptyModel, EmptyModelDocumentSnapshot>
     implements EmptyModelDocumentReference {
   _$EmptyModelDocumentReference(this.reference);
 
@@ -467,7 +2488,7 @@ class _$EmptyModelDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class EmptyModelDocumentSnapshot extends FirestoreDocumentSnapshot {
+class EmptyModelDocumentSnapshot extends FirestoreDocumentSnapshot<EmptyModel> {
   EmptyModelDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -488,15 +2509,105 @@ class EmptyModelDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class EmptyModelQuery
-    implements QueryReference<EmptyModelQuerySnapshot> {
+    implements QueryReference<EmptyModel, EmptyModelQuerySnapshot> {
   @override
   EmptyModelQuery limit(int limit);
 
   @override
   EmptyModelQuery limitToLast(int limit);
+
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  EmptyModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    EmptyModelDocumentSnapshot? startAtDocument,
+    EmptyModelDocumentSnapshot? endAtDocument,
+    EmptyModelDocumentSnapshot? endBeforeDocument,
+    EmptyModelDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  EmptyModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  EmptyModelQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+
+  EmptyModelQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    EmptyModelDocumentSnapshot? startAtDocument,
+    EmptyModelDocumentSnapshot? endAtDocument,
+    EmptyModelDocumentSnapshot? endBeforeDocument,
+    EmptyModelDocumentSnapshot? startAfterDocument,
+  });
 }
 
-class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
+class _$EmptyModelQuery
+    extends QueryReference<EmptyModel, EmptyModelQuerySnapshot>
     implements EmptyModelQuery {
   _$EmptyModelQuery(
     this.reference,
@@ -557,6 +2668,152 @@ class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
     );
   }
 
+  EmptyModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    EmptyModelDocumentSnapshot? startAtDocument,
+    EmptyModelDocumentSnapshot? endAtDocument,
+    EmptyModelDocumentSnapshot? endBeforeDocument,
+    EmptyModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$EmptyModelQuery(query, _collection);
+  }
+
+  EmptyModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$EmptyModelQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  EmptyModelQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$EmptyModelQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  EmptyModelQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    EmptyModelDocumentSnapshot? startAtDocument,
+    EmptyModelDocumentSnapshot? endAtDocument,
+    EmptyModelDocumentSnapshot? endBeforeDocument,
+    EmptyModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$EmptyModelQuery(query, _collection);
+  }
+
   @override
   bool operator ==(Object other) {
     return other is _$EmptyModelQuery &&
@@ -568,8 +2825,8 @@ class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class EmptyModelQuerySnapshot
-    extends FirestoreQuerySnapshot<EmptyModelQueryDocumentSnapshot> {
+class EmptyModelQuerySnapshot extends FirestoreQuerySnapshot<EmptyModel,
+    EmptyModelQueryDocumentSnapshot> {
   EmptyModelQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -585,7 +2842,8 @@ class EmptyModelQuerySnapshot
   final List<FirestoreDocumentChange<EmptyModelDocumentSnapshot>> docChanges;
 }
 
-class EmptyModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class EmptyModelQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<EmptyModel>
     implements EmptyModelDocumentSnapshot {
   EmptyModelQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -607,7 +2865,7 @@ class EmptyModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class OptionalJsonCollectionReference
     implements
         OptionalJsonQuery,
-        FirestoreCollectionReference<OptionalJsonQuerySnapshot> {
+        FirestoreCollectionReference<OptionalJson, OptionalJsonQuerySnapshot> {
   factory OptionalJsonCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$OptionalJsonCollectionReference;
@@ -625,6 +2883,9 @@ abstract class OptionalJsonCollectionReference
   ) {
     return _$OptionalJsonToJson(value);
   }
+
+  @override
+  CollectionReference<OptionalJson> get reference;
 
   @override
   OptionalJsonDocumentReference doc([String? id]);
@@ -659,6 +2920,10 @@ class _$OptionalJsonCollectionReference extends _$OptionalJsonQuery
 
   @override
   OptionalJsonDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return OptionalJsonDocumentReference(
       reference.doc(id),
     );
@@ -682,8 +2947,8 @@ class _$OptionalJsonCollectionReference extends _$OptionalJsonQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-abstract class OptionalJsonDocumentReference
-    extends FirestoreDocumentReference<OptionalJsonDocumentSnapshot> {
+abstract class OptionalJsonDocumentReference extends FirestoreDocumentReference<
+    OptionalJson, OptionalJsonDocumentSnapshot> {
   factory OptionalJsonDocumentReference(
           DocumentReference<OptionalJson> reference) =
       _$OptionalJsonDocumentReference;
@@ -711,9 +2976,9 @@ abstract class OptionalJsonDocumentReference
   Future<void> set(OptionalJson value);
 }
 
-class _$OptionalJsonDocumentReference
-    extends FirestoreDocumentReference<OptionalJsonDocumentSnapshot>
-    implements OptionalJsonDocumentReference {
+class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
+    OptionalJson,
+    OptionalJsonDocumentSnapshot> implements OptionalJsonDocumentReference {
   _$OptionalJsonDocumentReference(this.reference);
 
   @override
@@ -775,7 +3040,8 @@ class _$OptionalJsonDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class OptionalJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
+class OptionalJsonDocumentSnapshot
+    extends FirestoreDocumentSnapshot<OptionalJson> {
   OptionalJsonDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -796,13 +3062,89 @@ class OptionalJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class OptionalJsonQuery
-    implements QueryReference<OptionalJsonQuerySnapshot> {
+    implements QueryReference<OptionalJson, OptionalJsonQuerySnapshot> {
   @override
   OptionalJsonQuery limit(int limit);
 
   @override
   OptionalJsonQuery limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  OptionalJsonQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    OptionalJsonDocumentSnapshot? startAtDocument,
+    OptionalJsonDocumentSnapshot? endAtDocument,
+    OptionalJsonDocumentSnapshot? endBeforeDocument,
+    OptionalJsonDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  OptionalJsonQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  OptionalJsonQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   OptionalJsonQuery whereValue({
     int? isEqualTo,
     int? isNotEqualTo,
@@ -813,6 +3155,18 @@ abstract class OptionalJsonQuery
     bool? isNull,
     List<int>? whereIn,
     List<int>? whereNotIn,
+  });
+
+  OptionalJsonQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    OptionalJsonDocumentSnapshot? startAtDocument,
+    OptionalJsonDocumentSnapshot? endAtDocument,
+    OptionalJsonDocumentSnapshot? endBeforeDocument,
+    OptionalJsonDocumentSnapshot? startAfterDocument,
   });
 
   OptionalJsonQuery orderByValue({
@@ -828,7 +3182,8 @@ abstract class OptionalJsonQuery
   });
 }
 
-class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
+class _$OptionalJsonQuery
+    extends QueryReference<OptionalJson, OptionalJsonQuerySnapshot>
     implements OptionalJsonQuery {
   _$OptionalJsonQuery(
     this.reference,
@@ -889,20 +3244,96 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
     );
   }
 
-  OptionalJsonQuery whereValue({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
+  OptionalJsonQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    OptionalJsonDocumentSnapshot? startAtDocument,
+    OptionalJsonDocumentSnapshot? endAtDocument,
+    OptionalJsonDocumentSnapshot? endBeforeDocument,
+    OptionalJsonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$OptionalJsonQuery(query, _collection);
+  }
+
+  OptionalJsonQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
     bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
   }) {
     return _$OptionalJsonQuery(
       reference.where(
-        'value',
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  OptionalJsonQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$OptionalJsonQuery(
+      reference.where(
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -917,6 +3348,76 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
     );
   }
 
+  OptionalJsonQuery whereValue({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$OptionalJsonQuery(
+      reference.where(
+        _$OptionalJsonFieldMap["value"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  OptionalJsonQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    OptionalJsonDocumentSnapshot? startAtDocument,
+    OptionalJsonDocumentSnapshot? endAtDocument,
+    OptionalJsonDocumentSnapshot? endBeforeDocument,
+    OptionalJsonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$OptionalJsonQuery(query, _collection);
+  }
+
   OptionalJsonQuery orderByValue({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -928,7 +3429,8 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
     OptionalJsonDocumentSnapshot? endBeforeDocument,
     OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: descending);
+    var query = reference.orderBy(_$OptionalJsonFieldMap["value"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -970,8 +3472,8 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class OptionalJsonQuerySnapshot
-    extends FirestoreQuerySnapshot<OptionalJsonQueryDocumentSnapshot> {
+class OptionalJsonQuerySnapshot extends FirestoreQuerySnapshot<OptionalJson,
+    OptionalJsonQueryDocumentSnapshot> {
   OptionalJsonQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -987,7 +3489,8 @@ class OptionalJsonQuerySnapshot
   final List<FirestoreDocumentChange<OptionalJsonDocumentSnapshot>> docChanges;
 }
 
-class OptionalJsonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class OptionalJsonQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<OptionalJson>
     implements OptionalJsonDocumentSnapshot {
   OptionalJsonQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -1009,7 +3512,7 @@ class OptionalJsonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class MixedJsonCollectionReference
     implements
         MixedJsonQuery,
-        FirestoreCollectionReference<MixedJsonQuerySnapshot> {
+        FirestoreCollectionReference<MixedJson, MixedJsonQuerySnapshot> {
   factory MixedJsonCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$MixedJsonCollectionReference;
@@ -1027,6 +3530,9 @@ abstract class MixedJsonCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<MixedJson> get reference;
 
   @override
   MixedJsonDocumentReference doc([String? id]);
@@ -1061,6 +3567,10 @@ class _$MixedJsonCollectionReference extends _$MixedJsonQuery
 
   @override
   MixedJsonDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return MixedJsonDocumentReference(
       reference.doc(id),
     );
@@ -1083,7 +3593,7 @@ class _$MixedJsonCollectionReference extends _$MixedJsonQuery
 }
 
 abstract class MixedJsonDocumentReference
-    extends FirestoreDocumentReference<MixedJsonDocumentSnapshot> {
+    extends FirestoreDocumentReference<MixedJson, MixedJsonDocumentSnapshot> {
   factory MixedJsonDocumentReference(DocumentReference<MixedJson> reference) =
       _$MixedJsonDocumentReference;
 
@@ -1111,7 +3621,7 @@ abstract class MixedJsonDocumentReference
 }
 
 class _$MixedJsonDocumentReference
-    extends FirestoreDocumentReference<MixedJsonDocumentSnapshot>
+    extends FirestoreDocumentReference<MixedJson, MixedJsonDocumentSnapshot>
     implements MixedJsonDocumentReference {
   _$MixedJsonDocumentReference(this.reference);
 
@@ -1174,7 +3684,7 @@ class _$MixedJsonDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class MixedJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
+class MixedJsonDocumentSnapshot extends FirestoreDocumentSnapshot<MixedJson> {
   MixedJsonDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -1195,13 +3705,89 @@ class MixedJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class MixedJsonQuery
-    implements QueryReference<MixedJsonQuerySnapshot> {
+    implements QueryReference<MixedJson, MixedJsonQuerySnapshot> {
   @override
   MixedJsonQuery limit(int limit);
 
   @override
   MixedJsonQuery limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  MixedJsonQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MixedJsonDocumentSnapshot? startAtDocument,
+    MixedJsonDocumentSnapshot? endAtDocument,
+    MixedJsonDocumentSnapshot? endBeforeDocument,
+    MixedJsonDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  MixedJsonQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  MixedJsonQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   MixedJsonQuery whereValue({
     int? isEqualTo,
     int? isNotEqualTo,
@@ -1212,6 +3798,18 @@ abstract class MixedJsonQuery
     bool? isNull,
     List<int>? whereIn,
     List<int>? whereNotIn,
+  });
+
+  MixedJsonQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    MixedJsonDocumentSnapshot? startAtDocument,
+    MixedJsonDocumentSnapshot? endAtDocument,
+    MixedJsonDocumentSnapshot? endBeforeDocument,
+    MixedJsonDocumentSnapshot? startAfterDocument,
   });
 
   MixedJsonQuery orderByValue({
@@ -1227,7 +3825,7 @@ abstract class MixedJsonQuery
   });
 }
 
-class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
+class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     implements MixedJsonQuery {
   _$MixedJsonQuery(
     this.reference,
@@ -1288,20 +3886,96 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
     );
   }
 
-  MixedJsonQuery whereValue({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
+  MixedJsonQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MixedJsonDocumentSnapshot? startAtDocument,
+    MixedJsonDocumentSnapshot? endAtDocument,
+    MixedJsonDocumentSnapshot? endBeforeDocument,
+    MixedJsonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$MixedJsonQuery(query, _collection);
+  }
+
+  MixedJsonQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
     bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
   }) {
     return _$MixedJsonQuery(
       reference.where(
-        'value',
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  MixedJsonQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$MixedJsonQuery(
+      reference.where(
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1316,6 +3990,76 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
     );
   }
 
+  MixedJsonQuery whereValue({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$MixedJsonQuery(
+      reference.where(
+        _$MixedJsonFieldMap["value"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  MixedJsonQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MixedJsonDocumentSnapshot? startAtDocument,
+    MixedJsonDocumentSnapshot? endAtDocument,
+    MixedJsonDocumentSnapshot? endBeforeDocument,
+    MixedJsonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$MixedJsonQuery(query, _collection);
+  }
+
   MixedJsonQuery orderByValue({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1327,7 +4071,8 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
     MixedJsonDocumentSnapshot? endBeforeDocument,
     MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: descending);
+    var query = reference.orderBy(_$MixedJsonFieldMap["value"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1370,7 +4115,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
 }
 
 class MixedJsonQuerySnapshot
-    extends FirestoreQuerySnapshot<MixedJsonQueryDocumentSnapshot> {
+    extends FirestoreQuerySnapshot<MixedJson, MixedJsonQueryDocumentSnapshot> {
   MixedJsonQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -1386,7 +4131,8 @@ class MixedJsonQuerySnapshot
   final List<FirestoreDocumentChange<MixedJsonDocumentSnapshot>> docChanges;
 }
 
-class MixedJsonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class MixedJsonQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<MixedJson>
     implements MixedJsonDocumentSnapshot {
   MixedJsonQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -1406,7 +4152,9 @@ class MixedJsonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
 abstract class RootCollectionReference
-    implements RootQuery, FirestoreCollectionReference<RootQuerySnapshot> {
+    implements
+        RootQuery,
+        FirestoreCollectionReference<Root, RootQuerySnapshot> {
   factory RootCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$RootCollectionReference;
@@ -1424,6 +4172,9 @@ abstract class RootCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<Root> get reference;
 
   @override
   RootDocumentReference doc([String? id]);
@@ -1458,6 +4209,10 @@ class _$RootCollectionReference extends _$RootQuery
 
   @override
   RootDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return RootDocumentReference(
       reference.doc(id),
     );
@@ -1480,7 +4235,7 @@ class _$RootCollectionReference extends _$RootQuery
 }
 
 abstract class RootDocumentReference
-    extends FirestoreDocumentReference<RootDocumentSnapshot> {
+    extends FirestoreDocumentReference<Root, RootDocumentSnapshot> {
   factory RootDocumentReference(DocumentReference<Root> reference) =
       _$RootDocumentReference;
 
@@ -1523,7 +4278,7 @@ abstract class RootDocumentReference
 }
 
 class _$RootDocumentReference
-    extends FirestoreDocumentReference<RootDocumentSnapshot>
+    extends FirestoreDocumentReference<Root, RootDocumentSnapshot>
     implements RootDocumentReference {
   _$RootDocumentReference(this.reference);
 
@@ -1602,7 +4357,7 @@ class _$RootDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class RootDocumentSnapshot extends FirestoreDocumentSnapshot {
+class RootDocumentSnapshot extends FirestoreDocumentSnapshot<Root> {
   RootDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -1622,13 +4377,89 @@ class RootDocumentSnapshot extends FirestoreDocumentSnapshot {
   final Root? data;
 }
 
-abstract class RootQuery implements QueryReference<RootQuerySnapshot> {
+abstract class RootQuery implements QueryReference<Root, RootQuerySnapshot> {
   @override
   RootQuery limit(int limit);
 
   @override
   RootQuery limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  RootQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    RootDocumentSnapshot? startAtDocument,
+    RootDocumentSnapshot? endAtDocument,
+    RootDocumentSnapshot? endBeforeDocument,
+    RootDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  RootQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  RootQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   RootQuery whereNonNullable({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -1650,6 +4481,18 @@ abstract class RootQuery implements QueryReference<RootQuerySnapshot> {
     bool? isNull,
     List<int?>? whereIn,
     List<int?>? whereNotIn,
+  });
+
+  RootQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    RootDocumentSnapshot? startAtDocument,
+    RootDocumentSnapshot? endAtDocument,
+    RootDocumentSnapshot? endBeforeDocument,
+    RootDocumentSnapshot? startAfterDocument,
   });
 
   RootQuery orderByNonNullable({
@@ -1677,7 +4520,7 @@ abstract class RootQuery implements QueryReference<RootQuerySnapshot> {
   });
 }
 
-class _$RootQuery extends QueryReference<RootQuerySnapshot>
+class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     implements RootQuery {
   _$RootQuery(
     this.reference,
@@ -1738,6 +4581,110 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     );
   }
 
+  RootQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    RootDocumentSnapshot? startAtDocument,
+    RootDocumentSnapshot? endAtDocument,
+    RootDocumentSnapshot? endBeforeDocument,
+    RootDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$RootQuery(query, _collection);
+  }
+
+  RootQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$RootQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  RootQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$RootQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   RootQuery whereNonNullable({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -1751,7 +4698,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
   }) {
     return _$RootQuery(
       reference.where(
-        'nonNullable',
+        _$RootFieldMap["nonNullable"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1779,7 +4726,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
   }) {
     return _$RootQuery(
       reference.where(
-        'nullable',
+        _$RootFieldMap["nullable"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1794,6 +4741,48 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     );
   }
 
+  RootQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    RootDocumentSnapshot? startAtDocument,
+    RootDocumentSnapshot? endAtDocument,
+    RootDocumentSnapshot? endBeforeDocument,
+    RootDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$RootQuery(query, _collection);
+  }
+
   RootQuery orderByNonNullable({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1805,7 +4794,8 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('nonNullable', descending: descending);
+    var query = reference.orderBy(_$RootFieldMap["nonNullable"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1847,7 +4837,8 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('nullable', descending: descending);
+    var query =
+        reference.orderBy(_$RootFieldMap["nullable"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1890,7 +4881,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
 }
 
 class RootQuerySnapshot
-    extends FirestoreQuerySnapshot<RootQueryDocumentSnapshot> {
+    extends FirestoreQuerySnapshot<Root, RootQueryDocumentSnapshot> {
   RootQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -1906,7 +4897,7 @@ class RootQuerySnapshot
   final List<FirestoreDocumentChange<RootDocumentSnapshot>> docChanges;
 }
 
-class RootQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class RootQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Root>
     implements RootDocumentSnapshot {
   RootQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -1926,7 +4917,7 @@ class RootQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
 abstract class SubCollectionReference
-    implements SubQuery, FirestoreCollectionReference<SubQuerySnapshot> {
+    implements SubQuery, FirestoreCollectionReference<Sub, SubQuerySnapshot> {
   factory SubCollectionReference(
     DocumentReference<Root> parent,
   ) = _$SubCollectionReference;
@@ -1944,6 +4935,9 @@ abstract class SubCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<Sub> get reference;
 
   /// A reference to the containing [RootDocumentReference] if this is a subcollection.
   RootDocumentReference get parent;
@@ -1986,6 +4980,10 @@ class _$SubCollectionReference extends _$SubQuery
 
   @override
   SubDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return SubDocumentReference(
       reference.doc(id),
     );
@@ -2008,7 +5006,7 @@ class _$SubCollectionReference extends _$SubQuery
 }
 
 abstract class SubDocumentReference
-    extends FirestoreDocumentReference<SubDocumentSnapshot> {
+    extends FirestoreDocumentReference<Sub, SubDocumentSnapshot> {
   factory SubDocumentReference(DocumentReference<Sub> reference) =
       _$SubDocumentReference;
 
@@ -2042,7 +5040,7 @@ abstract class SubDocumentReference
 }
 
 class _$SubDocumentReference
-    extends FirestoreDocumentReference<SubDocumentSnapshot>
+    extends FirestoreDocumentReference<Sub, SubDocumentSnapshot>
     implements SubDocumentReference {
   _$SubDocumentReference(this.reference);
 
@@ -2112,7 +5110,7 @@ class _$SubDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class SubDocumentSnapshot extends FirestoreDocumentSnapshot {
+class SubDocumentSnapshot extends FirestoreDocumentSnapshot<Sub> {
   SubDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -2132,13 +5130,89 @@ class SubDocumentSnapshot extends FirestoreDocumentSnapshot {
   final Sub? data;
 }
 
-abstract class SubQuery implements QueryReference<SubQuerySnapshot> {
+abstract class SubQuery implements QueryReference<Sub, SubQuerySnapshot> {
   @override
   SubQuery limit(int limit);
 
   @override
   SubQuery limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  SubQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    SubDocumentSnapshot? startAtDocument,
+    SubDocumentSnapshot? endAtDocument,
+    SubDocumentSnapshot? endBeforeDocument,
+    SubDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  SubQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  SubQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   SubQuery whereNonNullable({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -2160,6 +5234,18 @@ abstract class SubQuery implements QueryReference<SubQuerySnapshot> {
     bool? isNull,
     List<int?>? whereIn,
     List<int?>? whereNotIn,
+  });
+
+  SubQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    SubDocumentSnapshot? startAtDocument,
+    SubDocumentSnapshot? endAtDocument,
+    SubDocumentSnapshot? endBeforeDocument,
+    SubDocumentSnapshot? startAfterDocument,
   });
 
   SubQuery orderByNonNullable({
@@ -2187,7 +5273,8 @@ abstract class SubQuery implements QueryReference<SubQuerySnapshot> {
   });
 }
 
-class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
+class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
+    implements SubQuery {
   _$SubQuery(
     this.reference,
     this._collection,
@@ -2247,6 +5334,110 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     );
   }
 
+  SubQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    SubDocumentSnapshot? startAtDocument,
+    SubDocumentSnapshot? endAtDocument,
+    SubDocumentSnapshot? endBeforeDocument,
+    SubDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$SubQuery(query, _collection);
+  }
+
+  SubQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$SubQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  SubQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$SubQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   SubQuery whereNonNullable({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -2260,7 +5451,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
   }) {
     return _$SubQuery(
       reference.where(
-        'nonNullable',
+        _$SubFieldMap["nonNullable"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2288,7 +5479,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
   }) {
     return _$SubQuery(
       reference.where(
-        'nullable',
+        _$SubFieldMap["nullable"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2303,6 +5494,48 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     );
   }
 
+  SubQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    SubDocumentSnapshot? startAtDocument,
+    SubDocumentSnapshot? endAtDocument,
+    SubDocumentSnapshot? endBeforeDocument,
+    SubDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$SubQuery(query, _collection);
+  }
+
   SubQuery orderByNonNullable({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -2314,7 +5547,8 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('nonNullable', descending: descending);
+    var query = reference.orderBy(_$SubFieldMap["nonNullable"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -2356,7 +5590,8 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('nullable', descending: descending);
+    var query =
+        reference.orderBy(_$SubFieldMap["nullable"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -2399,7 +5634,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
 }
 
 class SubQuerySnapshot
-    extends FirestoreQuerySnapshot<SubQueryDocumentSnapshot> {
+    extends FirestoreQuerySnapshot<Sub, SubQueryDocumentSnapshot> {
   SubQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -2415,7 +5650,7 @@ class SubQuerySnapshot
   final List<FirestoreDocumentChange<SubDocumentSnapshot>> docChanges;
 }
 
-class SubQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class SubQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Sub>
     implements SubDocumentSnapshot {
   SubQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -2437,7 +5672,7 @@ class SubQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class AsCamelCaseCollectionReference
     implements
         AsCamelCaseQuery,
-        FirestoreCollectionReference<AsCamelCaseQuerySnapshot> {
+        FirestoreCollectionReference<AsCamelCase, AsCamelCaseQuerySnapshot> {
   factory AsCamelCaseCollectionReference(
     DocumentReference<Root> parent,
   ) = _$AsCamelCaseCollectionReference;
@@ -2455,6 +5690,9 @@ abstract class AsCamelCaseCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<AsCamelCase> get reference;
 
   /// A reference to the containing [RootDocumentReference] if this is a subcollection.
   RootDocumentReference get parent;
@@ -2497,6 +5735,10 @@ class _$AsCamelCaseCollectionReference extends _$AsCamelCaseQuery
 
   @override
   AsCamelCaseDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return AsCamelCaseDocumentReference(
       reference.doc(id),
     );
@@ -2520,8 +5762,8 @@ class _$AsCamelCaseCollectionReference extends _$AsCamelCaseQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-abstract class AsCamelCaseDocumentReference
-    extends FirestoreDocumentReference<AsCamelCaseDocumentSnapshot> {
+abstract class AsCamelCaseDocumentReference extends FirestoreDocumentReference<
+    AsCamelCase, AsCamelCaseDocumentSnapshot> {
   factory AsCamelCaseDocumentReference(
           DocumentReference<AsCamelCase> reference) =
       _$AsCamelCaseDocumentReference;
@@ -2555,7 +5797,7 @@ abstract class AsCamelCaseDocumentReference
 }
 
 class _$AsCamelCaseDocumentReference
-    extends FirestoreDocumentReference<AsCamelCaseDocumentSnapshot>
+    extends FirestoreDocumentReference<AsCamelCase, AsCamelCaseDocumentSnapshot>
     implements AsCamelCaseDocumentReference {
   _$AsCamelCaseDocumentReference(this.reference);
 
@@ -2623,7 +5865,8 @@ class _$AsCamelCaseDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class AsCamelCaseDocumentSnapshot extends FirestoreDocumentSnapshot {
+class AsCamelCaseDocumentSnapshot
+    extends FirestoreDocumentSnapshot<AsCamelCase> {
   AsCamelCaseDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -2644,13 +5887,89 @@ class AsCamelCaseDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class AsCamelCaseQuery
-    implements QueryReference<AsCamelCaseQuerySnapshot> {
+    implements QueryReference<AsCamelCase, AsCamelCaseQuerySnapshot> {
   @override
   AsCamelCaseQuery limit(int limit);
 
   @override
   AsCamelCaseQuery limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  AsCamelCaseQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    AsCamelCaseDocumentSnapshot? startAtDocument,
+    AsCamelCaseDocumentSnapshot? endAtDocument,
+    AsCamelCaseDocumentSnapshot? endBeforeDocument,
+    AsCamelCaseDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  AsCamelCaseQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  AsCamelCaseQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   AsCamelCaseQuery whereValue({
     num? isEqualTo,
     num? isNotEqualTo,
@@ -2661,6 +5980,18 @@ abstract class AsCamelCaseQuery
     bool? isNull,
     List<num>? whereIn,
     List<num>? whereNotIn,
+  });
+
+  AsCamelCaseQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    AsCamelCaseDocumentSnapshot? startAtDocument,
+    AsCamelCaseDocumentSnapshot? endAtDocument,
+    AsCamelCaseDocumentSnapshot? endBeforeDocument,
+    AsCamelCaseDocumentSnapshot? startAfterDocument,
   });
 
   AsCamelCaseQuery orderByValue({
@@ -2676,7 +6007,8 @@ abstract class AsCamelCaseQuery
   });
 }
 
-class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
+class _$AsCamelCaseQuery
+    extends QueryReference<AsCamelCase, AsCamelCaseQuerySnapshot>
     implements AsCamelCaseQuery {
   _$AsCamelCaseQuery(
     this.reference,
@@ -2737,20 +6069,96 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
     );
   }
 
-  AsCamelCaseQuery whereValue({
-    num? isEqualTo,
-    num? isNotEqualTo,
-    num? isLessThan,
-    num? isLessThanOrEqualTo,
-    num? isGreaterThan,
-    num? isGreaterThanOrEqualTo,
+  AsCamelCaseQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    AsCamelCaseDocumentSnapshot? startAtDocument,
+    AsCamelCaseDocumentSnapshot? endAtDocument,
+    AsCamelCaseDocumentSnapshot? endBeforeDocument,
+    AsCamelCaseDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$AsCamelCaseQuery(query, _collection);
+  }
+
+  AsCamelCaseQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
     bool? isNull,
-    List<num>? whereIn,
-    List<num>? whereNotIn,
   }) {
     return _$AsCamelCaseQuery(
       reference.where(
-        'value',
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  AsCamelCaseQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$AsCamelCaseQuery(
+      reference.where(
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2765,6 +6173,76 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
     );
   }
 
+  AsCamelCaseQuery whereValue({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
+  }) {
+    return _$AsCamelCaseQuery(
+      reference.where(
+        _$AsCamelCaseFieldMap["value"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  AsCamelCaseQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    AsCamelCaseDocumentSnapshot? startAtDocument,
+    AsCamelCaseDocumentSnapshot? endAtDocument,
+    AsCamelCaseDocumentSnapshot? endBeforeDocument,
+    AsCamelCaseDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$AsCamelCaseQuery(query, _collection);
+  }
+
   AsCamelCaseQuery orderByValue({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -2776,7 +6254,8 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
     AsCamelCaseDocumentSnapshot? endBeforeDocument,
     AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: descending);
+    var query = reference.orderBy(_$AsCamelCaseFieldMap["value"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -2818,8 +6297,8 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class AsCamelCaseQuerySnapshot
-    extends FirestoreQuerySnapshot<AsCamelCaseQueryDocumentSnapshot> {
+class AsCamelCaseQuerySnapshot extends FirestoreQuerySnapshot<AsCamelCase,
+    AsCamelCaseQueryDocumentSnapshot> {
   AsCamelCaseQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -2835,7 +6314,8 @@ class AsCamelCaseQuerySnapshot
   final List<FirestoreDocumentChange<AsCamelCaseDocumentSnapshot>> docChanges;
 }
 
-class AsCamelCaseQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class AsCamelCaseQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<AsCamelCase>
     implements AsCamelCaseDocumentSnapshot {
   AsCamelCaseQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -2857,7 +6337,8 @@ class AsCamelCaseQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class CustomSubNameCollectionReference
     implements
         CustomSubNameQuery,
-        FirestoreCollectionReference<CustomSubNameQuerySnapshot> {
+        FirestoreCollectionReference<CustomSubName,
+            CustomSubNameQuerySnapshot> {
   factory CustomSubNameCollectionReference(
     DocumentReference<Root> parent,
   ) = _$CustomSubNameCollectionReference;
@@ -2875,6 +6356,9 @@ abstract class CustomSubNameCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<CustomSubName> get reference;
 
   /// A reference to the containing [RootDocumentReference] if this is a subcollection.
   RootDocumentReference get parent;
@@ -2917,6 +6401,10 @@ class _$CustomSubNameCollectionReference extends _$CustomSubNameQuery
 
   @override
   CustomSubNameDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return CustomSubNameDocumentReference(
       reference.doc(id),
     );
@@ -2941,7 +6429,8 @@ class _$CustomSubNameCollectionReference extends _$CustomSubNameQuery
 }
 
 abstract class CustomSubNameDocumentReference
-    extends FirestoreDocumentReference<CustomSubNameDocumentSnapshot> {
+    extends FirestoreDocumentReference<CustomSubName,
+        CustomSubNameDocumentSnapshot> {
   factory CustomSubNameDocumentReference(
           DocumentReference<CustomSubName> reference) =
       _$CustomSubNameDocumentReference;
@@ -2974,9 +6463,9 @@ abstract class CustomSubNameDocumentReference
   Future<void> set(CustomSubName value);
 }
 
-class _$CustomSubNameDocumentReference
-    extends FirestoreDocumentReference<CustomSubNameDocumentSnapshot>
-    implements CustomSubNameDocumentReference {
+class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
+    CustomSubName,
+    CustomSubNameDocumentSnapshot> implements CustomSubNameDocumentReference {
   _$CustomSubNameDocumentReference(this.reference);
 
   @override
@@ -3043,7 +6532,8 @@ class _$CustomSubNameDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class CustomSubNameDocumentSnapshot extends FirestoreDocumentSnapshot {
+class CustomSubNameDocumentSnapshot
+    extends FirestoreDocumentSnapshot<CustomSubName> {
   CustomSubNameDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -3064,13 +6554,89 @@ class CustomSubNameDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class CustomSubNameQuery
-    implements QueryReference<CustomSubNameQuerySnapshot> {
+    implements QueryReference<CustomSubName, CustomSubNameQuerySnapshot> {
   @override
   CustomSubNameQuery limit(int limit);
 
   @override
   CustomSubNameQuery limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  CustomSubNameQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    CustomSubNameDocumentSnapshot? startAtDocument,
+    CustomSubNameDocumentSnapshot? endAtDocument,
+    CustomSubNameDocumentSnapshot? endBeforeDocument,
+    CustomSubNameDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  CustomSubNameQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  CustomSubNameQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   CustomSubNameQuery whereValue({
     num? isEqualTo,
     num? isNotEqualTo,
@@ -3081,6 +6647,18 @@ abstract class CustomSubNameQuery
     bool? isNull,
     List<num>? whereIn,
     List<num>? whereNotIn,
+  });
+
+  CustomSubNameQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    CustomSubNameDocumentSnapshot? startAtDocument,
+    CustomSubNameDocumentSnapshot? endAtDocument,
+    CustomSubNameDocumentSnapshot? endBeforeDocument,
+    CustomSubNameDocumentSnapshot? startAfterDocument,
   });
 
   CustomSubNameQuery orderByValue({
@@ -3096,7 +6674,8 @@ abstract class CustomSubNameQuery
   });
 }
 
-class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
+class _$CustomSubNameQuery
+    extends QueryReference<CustomSubName, CustomSubNameQuerySnapshot>
     implements CustomSubNameQuery {
   _$CustomSubNameQuery(
     this.reference,
@@ -3157,20 +6736,96 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
     );
   }
 
-  CustomSubNameQuery whereValue({
-    num? isEqualTo,
-    num? isNotEqualTo,
-    num? isLessThan,
-    num? isLessThanOrEqualTo,
-    num? isGreaterThan,
-    num? isGreaterThanOrEqualTo,
+  CustomSubNameQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    CustomSubNameDocumentSnapshot? startAtDocument,
+    CustomSubNameDocumentSnapshot? endAtDocument,
+    CustomSubNameDocumentSnapshot? endBeforeDocument,
+    CustomSubNameDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$CustomSubNameQuery(query, _collection);
+  }
+
+  CustomSubNameQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
     bool? isNull,
-    List<num>? whereIn,
-    List<num>? whereNotIn,
   }) {
     return _$CustomSubNameQuery(
       reference.where(
-        'value',
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  CustomSubNameQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$CustomSubNameQuery(
+      reference.where(
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -3185,6 +6840,76 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
     );
   }
 
+  CustomSubNameQuery whereValue({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
+  }) {
+    return _$CustomSubNameQuery(
+      reference.where(
+        _$CustomSubNameFieldMap["value"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  CustomSubNameQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    CustomSubNameDocumentSnapshot? startAtDocument,
+    CustomSubNameDocumentSnapshot? endAtDocument,
+    CustomSubNameDocumentSnapshot? endBeforeDocument,
+    CustomSubNameDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$CustomSubNameQuery(query, _collection);
+  }
+
   CustomSubNameQuery orderByValue({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -3196,7 +6921,8 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
     CustomSubNameDocumentSnapshot? endBeforeDocument,
     CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: descending);
+    var query = reference.orderBy(_$CustomSubNameFieldMap["value"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -3238,8 +6964,8 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class CustomSubNameQuerySnapshot
-    extends FirestoreQuerySnapshot<CustomSubNameQueryDocumentSnapshot> {
+class CustomSubNameQuerySnapshot extends FirestoreQuerySnapshot<CustomSubName,
+    CustomSubNameQueryDocumentSnapshot> {
   CustomSubNameQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -3255,7 +6981,8 @@ class CustomSubNameQuerySnapshot
   final List<FirestoreDocumentChange<CustomSubNameDocumentSnapshot>> docChanges;
 }
 
-class CustomSubNameQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class CustomSubNameQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<CustomSubName>
     implements CustomSubNameDocumentSnapshot {
   CustomSubNameQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -3277,7 +7004,7 @@ class CustomSubNameQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class ExplicitPathCollectionReference
     implements
         ExplicitPathQuery,
-        FirestoreCollectionReference<ExplicitPathQuerySnapshot> {
+        FirestoreCollectionReference<ExplicitPath, ExplicitPathQuerySnapshot> {
   factory ExplicitPathCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$ExplicitPathCollectionReference;
@@ -3295,6 +7022,9 @@ abstract class ExplicitPathCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<ExplicitPath> get reference;
 
   @override
   ExplicitPathDocumentReference doc([String? id]);
@@ -3329,6 +7059,10 @@ class _$ExplicitPathCollectionReference extends _$ExplicitPathQuery
 
   @override
   ExplicitPathDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return ExplicitPathDocumentReference(
       reference.doc(id),
     );
@@ -3352,8 +7086,8 @@ class _$ExplicitPathCollectionReference extends _$ExplicitPathQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-abstract class ExplicitPathDocumentReference
-    extends FirestoreDocumentReference<ExplicitPathDocumentSnapshot> {
+abstract class ExplicitPathDocumentReference extends FirestoreDocumentReference<
+    ExplicitPath, ExplicitPathDocumentSnapshot> {
   factory ExplicitPathDocumentReference(
           DocumentReference<ExplicitPath> reference) =
       _$ExplicitPathDocumentReference;
@@ -3386,9 +7120,9 @@ abstract class ExplicitPathDocumentReference
   Future<void> set(ExplicitPath value);
 }
 
-class _$ExplicitPathDocumentReference
-    extends FirestoreDocumentReference<ExplicitPathDocumentSnapshot>
-    implements ExplicitPathDocumentReference {
+class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
+    ExplicitPath,
+    ExplicitPathDocumentSnapshot> implements ExplicitPathDocumentReference {
   _$ExplicitPathDocumentReference(this.reference);
 
   @override
@@ -3455,7 +7189,8 @@ class _$ExplicitPathDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class ExplicitPathDocumentSnapshot extends FirestoreDocumentSnapshot {
+class ExplicitPathDocumentSnapshot
+    extends FirestoreDocumentSnapshot<ExplicitPath> {
   ExplicitPathDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -3476,13 +7211,89 @@ class ExplicitPathDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class ExplicitPathQuery
-    implements QueryReference<ExplicitPathQuerySnapshot> {
+    implements QueryReference<ExplicitPath, ExplicitPathQuerySnapshot> {
   @override
   ExplicitPathQuery limit(int limit);
 
   @override
   ExplicitPathQuery limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  ExplicitPathQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    ExplicitPathDocumentSnapshot? startAtDocument,
+    ExplicitPathDocumentSnapshot? endAtDocument,
+    ExplicitPathDocumentSnapshot? endBeforeDocument,
+    ExplicitPathDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  ExplicitPathQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  ExplicitPathQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   ExplicitPathQuery whereValue({
     num? isEqualTo,
     num? isNotEqualTo,
@@ -3493,6 +7304,18 @@ abstract class ExplicitPathQuery
     bool? isNull,
     List<num>? whereIn,
     List<num>? whereNotIn,
+  });
+
+  ExplicitPathQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    ExplicitPathDocumentSnapshot? startAtDocument,
+    ExplicitPathDocumentSnapshot? endAtDocument,
+    ExplicitPathDocumentSnapshot? endBeforeDocument,
+    ExplicitPathDocumentSnapshot? startAfterDocument,
   });
 
   ExplicitPathQuery orderByValue({
@@ -3508,7 +7331,8 @@ abstract class ExplicitPathQuery
   });
 }
 
-class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
+class _$ExplicitPathQuery
+    extends QueryReference<ExplicitPath, ExplicitPathQuerySnapshot>
     implements ExplicitPathQuery {
   _$ExplicitPathQuery(
     this.reference,
@@ -3569,20 +7393,96 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
     );
   }
 
-  ExplicitPathQuery whereValue({
-    num? isEqualTo,
-    num? isNotEqualTo,
-    num? isLessThan,
-    num? isLessThanOrEqualTo,
-    num? isGreaterThan,
-    num? isGreaterThanOrEqualTo,
+  ExplicitPathQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ExplicitPathDocumentSnapshot? startAtDocument,
+    ExplicitPathDocumentSnapshot? endAtDocument,
+    ExplicitPathDocumentSnapshot? endBeforeDocument,
+    ExplicitPathDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ExplicitPathQuery(query, _collection);
+  }
+
+  ExplicitPathQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
     bool? isNull,
-    List<num>? whereIn,
-    List<num>? whereNotIn,
   }) {
     return _$ExplicitPathQuery(
       reference.where(
-        'value',
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  ExplicitPathQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$ExplicitPathQuery(
+      reference.where(
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -3597,6 +7497,76 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
     );
   }
 
+  ExplicitPathQuery whereValue({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
+  }) {
+    return _$ExplicitPathQuery(
+      reference.where(
+        _$ExplicitPathFieldMap["value"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  ExplicitPathQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ExplicitPathDocumentSnapshot? startAtDocument,
+    ExplicitPathDocumentSnapshot? endAtDocument,
+    ExplicitPathDocumentSnapshot? endBeforeDocument,
+    ExplicitPathDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ExplicitPathQuery(query, _collection);
+  }
+
   ExplicitPathQuery orderByValue({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -3608,7 +7578,8 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
     ExplicitPathDocumentSnapshot? endBeforeDocument,
     ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: descending);
+    var query = reference.orderBy(_$ExplicitPathFieldMap["value"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -3650,8 +7621,8 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class ExplicitPathQuerySnapshot
-    extends FirestoreQuerySnapshot<ExplicitPathQueryDocumentSnapshot> {
+class ExplicitPathQuerySnapshot extends FirestoreQuerySnapshot<ExplicitPath,
+    ExplicitPathQueryDocumentSnapshot> {
   ExplicitPathQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -3667,7 +7638,8 @@ class ExplicitPathQuerySnapshot
   final List<FirestoreDocumentChange<ExplicitPathDocumentSnapshot>> docChanges;
 }
 
-class ExplicitPathQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class ExplicitPathQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<ExplicitPath>
     implements ExplicitPathDocumentSnapshot {
   ExplicitPathQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -3689,7 +7661,8 @@ class ExplicitPathQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class ExplicitSubPathCollectionReference
     implements
         ExplicitSubPathQuery,
-        FirestoreCollectionReference<ExplicitSubPathQuerySnapshot> {
+        FirestoreCollectionReference<ExplicitSubPath,
+            ExplicitSubPathQuerySnapshot> {
   factory ExplicitSubPathCollectionReference(
     DocumentReference<ExplicitPath> parent,
   ) = _$ExplicitSubPathCollectionReference;
@@ -3707,6 +7680,9 @@ abstract class ExplicitSubPathCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<ExplicitSubPath> get reference;
 
   /// A reference to the containing [ExplicitPathDocumentReference] if this is a subcollection.
   ExplicitPathDocumentReference get parent;
@@ -3749,6 +7725,10 @@ class _$ExplicitSubPathCollectionReference extends _$ExplicitSubPathQuery
 
   @override
   ExplicitSubPathDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return ExplicitSubPathDocumentReference(
       reference.doc(id),
     );
@@ -3773,7 +7753,8 @@ class _$ExplicitSubPathCollectionReference extends _$ExplicitSubPathQuery
 }
 
 abstract class ExplicitSubPathDocumentReference
-    extends FirestoreDocumentReference<ExplicitSubPathDocumentSnapshot> {
+    extends FirestoreDocumentReference<ExplicitSubPath,
+        ExplicitSubPathDocumentSnapshot> {
   factory ExplicitSubPathDocumentReference(
           DocumentReference<ExplicitSubPath> reference) =
       _$ExplicitSubPathDocumentReference;
@@ -3806,8 +7787,8 @@ abstract class ExplicitSubPathDocumentReference
   Future<void> set(ExplicitSubPath value);
 }
 
-class _$ExplicitSubPathDocumentReference
-    extends FirestoreDocumentReference<ExplicitSubPathDocumentSnapshot>
+class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
+        ExplicitSubPath, ExplicitSubPathDocumentSnapshot>
     implements ExplicitSubPathDocumentReference {
   _$ExplicitSubPathDocumentReference(this.reference);
 
@@ -3875,7 +7856,8 @@ class _$ExplicitSubPathDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class ExplicitSubPathDocumentSnapshot extends FirestoreDocumentSnapshot {
+class ExplicitSubPathDocumentSnapshot
+    extends FirestoreDocumentSnapshot<ExplicitSubPath> {
   ExplicitSubPathDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -3896,13 +7878,89 @@ class ExplicitSubPathDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class ExplicitSubPathQuery
-    implements QueryReference<ExplicitSubPathQuerySnapshot> {
+    implements QueryReference<ExplicitSubPath, ExplicitSubPathQuerySnapshot> {
   @override
   ExplicitSubPathQuery limit(int limit);
 
   @override
   ExplicitSubPathQuery limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  ExplicitSubPathQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    ExplicitSubPathDocumentSnapshot? startAtDocument,
+    ExplicitSubPathDocumentSnapshot? endAtDocument,
+    ExplicitSubPathDocumentSnapshot? endBeforeDocument,
+    ExplicitSubPathDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  ExplicitSubPathQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  ExplicitSubPathQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   ExplicitSubPathQuery whereValue({
     num? isEqualTo,
     num? isNotEqualTo,
@@ -3913,6 +7971,18 @@ abstract class ExplicitSubPathQuery
     bool? isNull,
     List<num>? whereIn,
     List<num>? whereNotIn,
+  });
+
+  ExplicitSubPathQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    ExplicitSubPathDocumentSnapshot? startAtDocument,
+    ExplicitSubPathDocumentSnapshot? endAtDocument,
+    ExplicitSubPathDocumentSnapshot? endBeforeDocument,
+    ExplicitSubPathDocumentSnapshot? startAfterDocument,
   });
 
   ExplicitSubPathQuery orderByValue({
@@ -3929,7 +7999,7 @@ abstract class ExplicitSubPathQuery
 }
 
 class _$ExplicitSubPathQuery
-    extends QueryReference<ExplicitSubPathQuerySnapshot>
+    extends QueryReference<ExplicitSubPath, ExplicitSubPathQuerySnapshot>
     implements ExplicitSubPathQuery {
   _$ExplicitSubPathQuery(
     this.reference,
@@ -3990,20 +8060,96 @@ class _$ExplicitSubPathQuery
     );
   }
 
-  ExplicitSubPathQuery whereValue({
-    num? isEqualTo,
-    num? isNotEqualTo,
-    num? isLessThan,
-    num? isLessThanOrEqualTo,
-    num? isGreaterThan,
-    num? isGreaterThanOrEqualTo,
+  ExplicitSubPathQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ExplicitSubPathDocumentSnapshot? startAtDocument,
+    ExplicitSubPathDocumentSnapshot? endAtDocument,
+    ExplicitSubPathDocumentSnapshot? endBeforeDocument,
+    ExplicitSubPathDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ExplicitSubPathQuery(query, _collection);
+  }
+
+  ExplicitSubPathQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
     bool? isNull,
-    List<num>? whereIn,
-    List<num>? whereNotIn,
   }) {
     return _$ExplicitSubPathQuery(
       reference.where(
-        'value',
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  ExplicitSubPathQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$ExplicitSubPathQuery(
+      reference.where(
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4018,6 +8164,76 @@ class _$ExplicitSubPathQuery
     );
   }
 
+  ExplicitSubPathQuery whereValue({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
+  }) {
+    return _$ExplicitSubPathQuery(
+      reference.where(
+        _$ExplicitSubPathFieldMap["value"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  ExplicitSubPathQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ExplicitSubPathDocumentSnapshot? startAtDocument,
+    ExplicitSubPathDocumentSnapshot? endAtDocument,
+    ExplicitSubPathDocumentSnapshot? endBeforeDocument,
+    ExplicitSubPathDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ExplicitSubPathQuery(query, _collection);
+  }
+
   ExplicitSubPathQuery orderByValue({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -4029,7 +8245,8 @@ class _$ExplicitSubPathQuery
     ExplicitSubPathDocumentSnapshot? endBeforeDocument,
     ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: descending);
+    var query = reference.orderBy(_$ExplicitSubPathFieldMap["value"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -4071,8 +8288,8 @@ class _$ExplicitSubPathQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class ExplicitSubPathQuerySnapshot
-    extends FirestoreQuerySnapshot<ExplicitSubPathQueryDocumentSnapshot> {
+class ExplicitSubPathQuerySnapshot extends FirestoreQuerySnapshot<
+    ExplicitSubPath, ExplicitSubPathQueryDocumentSnapshot> {
   ExplicitSubPathQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -4090,7 +8307,7 @@ class ExplicitSubPathQuerySnapshot
 }
 
 class ExplicitSubPathQueryDocumentSnapshot
-    extends FirestoreQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<ExplicitSubPath>
     implements ExplicitSubPathDocumentSnapshot {
   ExplicitSubPathQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -4110,7 +8327,7 @@ class ExplicitSubPathQueryDocumentSnapshot
 // ValidatorGenerator
 // **************************************************************************
 
-_$assertMinValidation(MinValidation instance) {
+void _$assertMinValidation(MinValidation instance) {
   const Min(0).validate(instance.intNbr, "intNbr");
   const Max(42).validate(instance.intNbr, "intNbr");
   const Min(10).validate(instance.doubleNbr, "doubleNbr");
@@ -4121,7 +8338,62 @@ _$assertMinValidation(MinValidation instance) {
 // JsonSerializableGenerator
 // **************************************************************************
 
+Model _$ModelFromJson(Map<String, dynamic> json) => Model(
+      json['value'] as String,
+    );
+
+const _$ModelFieldMap = <String, String>{
+  'value': 'value',
+};
+
+Map<String, dynamic> _$ModelToJson(Model instance) => <String, dynamic>{
+      'value': instance.value,
+    };
+
+Nested _$NestedFromJson(Map<String, dynamic> json) => Nested(
+      value: json['value'] == null
+          ? null
+          : Nested.fromJson(json['value'] as Map<String, dynamic>),
+      simple: json['simple'] as int?,
+      valueList: (json['valueList'] as List<dynamic>?)
+          ?.map((e) => Nested.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      boolList:
+          (json['boolList'] as List<dynamic>?)?.map((e) => e as bool).toList(),
+      stringList: (json['stringList'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      numList:
+          (json['numList'] as List<dynamic>?)?.map((e) => e as num).toList(),
+      objectList: json['objectList'] as List<dynamic>?,
+      dynamicList: json['dynamicList'] as List<dynamic>?,
+    );
+
+const _$NestedFieldMap = <String, String>{
+  'value': 'value',
+  'simple': 'simple',
+  'valueList': 'valueList',
+  'boolList': 'boolList',
+  'stringList': 'stringList',
+  'numList': 'numList',
+  'objectList': 'objectList',
+  'dynamicList': 'dynamicList',
+};
+
+Map<String, dynamic> _$NestedToJson(Nested instance) => <String, dynamic>{
+      'value': instance.value,
+      'simple': instance.simple,
+      'valueList': instance.valueList,
+      'boolList': instance.boolList,
+      'stringList': instance.stringList,
+      'numList': instance.numList,
+      'objectList': instance.objectList,
+      'dynamicList': instance.dynamicList,
+    };
+
 EmptyModel _$EmptyModelFromJson(Map<String, dynamic> json) => EmptyModel();
+
+const _$EmptyModelFieldMap = <String, String>{};
 
 Map<String, dynamic> _$EmptyModelToJson(EmptyModel instance) =>
     <String, dynamic>{};
@@ -4132,6 +8404,12 @@ MinValidation _$MinValidationFromJson(Map<String, dynamic> json) =>
       (json['doubleNbr'] as num).toDouble(),
       json['numNbr'] as num,
     );
+
+const _$MinValidationFieldMap = <String, String>{
+  'intNbr': 'intNbr',
+  'doubleNbr': 'doubleNbr',
+  'numNbr': 'numNbr',
+};
 
 Map<String, dynamic> _$MinValidationToJson(MinValidation instance) =>
     <String, dynamic>{
@@ -4145,6 +8423,11 @@ Root _$RootFromJson(Map<String, dynamic> json) => Root(
       json['nullable'] as int?,
     );
 
+const _$RootFieldMap = <String, String>{
+  'nonNullable': 'nonNullable',
+  'nullable': 'nullable',
+};
+
 Map<String, dynamic> _$RootToJson(Root instance) => <String, dynamic>{
       'nonNullable': instance.nonNullable,
       'nullable': instance.nullable,
@@ -4153,6 +8436,10 @@ Map<String, dynamic> _$RootToJson(Root instance) => <String, dynamic>{
 OptionalJson _$OptionalJsonFromJson(Map<String, dynamic> json) => OptionalJson(
       json['value'] as int,
     );
+
+const _$OptionalJsonFieldMap = <String, String>{
+  'value': 'value',
+};
 
 Map<String, dynamic> _$OptionalJsonToJson(OptionalJson instance) =>
     <String, dynamic>{
@@ -4163,6 +8450,10 @@ MixedJson _$MixedJsonFromJson(Map<String, dynamic> json) => MixedJson(
       json['value'] as int,
     );
 
+const _$MixedJsonFieldMap = <String, String>{
+  'value': 'value',
+};
+
 Map<String, dynamic> _$MixedJsonToJson(MixedJson instance) => <String, dynamic>{
       'value': instance.value,
     };
@@ -4171,6 +8462,11 @@ Sub _$SubFromJson(Map<String, dynamic> json) => Sub(
       json['nonNullable'] as String,
       json['nullable'] as int?,
     );
+
+const _$SubFieldMap = <String, String>{
+  'nonNullable': 'nonNullable',
+  'nullable': 'nullable',
+};
 
 Map<String, dynamic> _$SubToJson(Sub instance) => <String, dynamic>{
       'nonNullable': instance.nonNullable,
@@ -4182,6 +8478,10 @@ CustomSubName _$CustomSubNameFromJson(Map<String, dynamic> json) =>
       json['value'] as num,
     );
 
+const _$CustomSubNameFieldMap = <String, String>{
+  'value': 'value',
+};
+
 Map<String, dynamic> _$CustomSubNameToJson(CustomSubName instance) =>
     <String, dynamic>{
       'value': instance.value,
@@ -4190,6 +8490,10 @@ Map<String, dynamic> _$CustomSubNameToJson(CustomSubName instance) =>
 AsCamelCase _$AsCamelCaseFromJson(Map<String, dynamic> json) => AsCamelCase(
       json['value'] as num,
     );
+
+const _$AsCamelCaseFieldMap = <String, String>{
+  'value': 'value',
+};
 
 Map<String, dynamic> _$AsCamelCaseToJson(AsCamelCase instance) =>
     <String, dynamic>{
@@ -4200,6 +8504,10 @@ ExplicitPath _$ExplicitPathFromJson(Map<String, dynamic> json) => ExplicitPath(
       json['value'] as num,
     );
 
+const _$ExplicitPathFieldMap = <String, String>{
+  'value': 'value',
+};
+
 Map<String, dynamic> _$ExplicitPathToJson(ExplicitPath instance) =>
     <String, dynamic>{
       'value': instance.value,
@@ -4209,6 +8517,10 @@ ExplicitSubPath _$ExplicitSubPathFromJson(Map<String, dynamic> json) =>
     ExplicitSubPath(
       json['value'] as num,
     );
+
+const _$ExplicitSubPathFieldMap = <String, String>{
+  'value': 'value',
+};
 
 Map<String, dynamic> _$ExplicitSubPathToJson(ExplicitSubPath instance) =>
     <String, dynamic>{

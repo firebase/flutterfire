@@ -89,6 +89,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];
     _binaryMessenger = messenger;
     _channel = channel;
+    _initiated = NO;
   }
   return self;
 }
@@ -127,6 +128,17 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
       code = errorDetails[kCode];
       message = errorDetails[kMessage];
       details = errorDetails;
+
+      if (errorDetails[@"additionalData"][NSLocalizedFailureReasonErrorKey] != nil) {
+        // This stops an uncaught type cast exception in dart
+        NSMutableDictionary *temp = [errorDetails[@"additionalData"] mutableCopy];
+        [temp removeObjectForKey:NSLocalizedFailureReasonErrorKey];
+        details = temp;
+        // provides a useful message to the user. e.g. "Universal link URL could not be parsed".
+        if ([message containsString:@"unknown error"]) {
+          message = errorDetails[@"additionalData"][NSLocalizedFailureReasonErrorKey];
+        }
+      }
     } else {
       details = @{
         kCode : code,
@@ -222,13 +234,18 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 }
 
 - (void)getInitialLink:(FLTFirebaseMethodCallResult *)result {
-  _initiated = YES;
+  if (_initiated == YES) {
+    result.success(nil);
+    return;
+  }
+
   NSMutableDictionary *dict = getDictionaryFromDynamicLink(_initialLink);
   if (dict == nil && self.initialError != nil) {
     result.error(nil, nil, nil, self.initialError);
   } else {
     result.success(dict);
   }
+  _initiated = YES;
 }
 
 - (void)getDynamicLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -334,7 +351,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     }
   }
 
-  if (_initialLink == nil && dynamicLink.url != nil) {
+  if (_initialLink == nil && _initiated == NO && dynamicLink.url != nil) {
     _initialLink = dynamicLink;
   }
 

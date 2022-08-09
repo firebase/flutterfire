@@ -1195,6 +1195,19 @@ void main() {
           ],
         );
       });
+
+      test('appInstanceId', () async {
+        var _ = await analytics!.appInstanceId;
+        expect(
+          methodCallLog,
+          <Matcher>[
+            isMethodCall(
+              'Analytics#getAppInstanceId',
+              arguments: null,
+            )
+          ],
+        );
+      });
     });
   });
 }

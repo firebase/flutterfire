@@ -61,5 +61,11 @@
 			</array>
 		</dict>
 	</array>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+  	<array>
+  		<string>https://flutterfiretests.page.link/**</string>
+  	</array>
 </dict>
 </plist>

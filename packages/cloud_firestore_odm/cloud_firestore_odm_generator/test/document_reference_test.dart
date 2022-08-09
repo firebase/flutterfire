@@ -8,7 +8,75 @@ Future<void> main() async {
     path: 'lib/__test__.dart',
   );
 
+  group('where(arrayContains)', () {
+    test(' is typed', () {
+      expect(
+        library.withCode(
+          '''
+import 'simple.dart';
+
+void main() {
+  // Does not arrayContains for non-list
+  // expect-error: UNDEFINED_METHOD
+  nestedRef.whereValue();
+  nestedRef.whereSimple(
+    // expect-error: UNDEFINED_NAMED_PARAMETER
+    arrayContains: null,
+  );
+  // expect-error: UNDEFINED_METHOD
+  nestedRef.whereValueList();
+
+  nestedRef.whereNumList(arrayContains: 42);
+  nestedRef.whereNumList(
+    // expect-error: ARGUMENT_TYPE_NOT_ASSIGNABLE
+    arrayContains: 'string',
+  );
+}
+''',
+        ),
+        compiles,
+      );
+    });
+  });
+
   group('update', () {
+    test('rejects complex object list but allows primitive lists', () {
+      expect(
+        library.withCode(
+          '''
+import 'simple.dart';
+
+void main() {
+  nestedRef.doc('42').update(
+    // expect-error: UNDEFINED_NAMED_PARAMETER
+    value: null,
+  );
+  nestedRef.doc('42').update(
+    // expect-error: UNDEFINED_NAMED_PARAMETER
+    valueList: null,
+  );
+  nestedRef.doc('42').update(
+    boolList: null,
+  );
+  nestedRef.doc('42').update(
+    stringList: null,
+  );
+  nestedRef.doc('42').update(
+    numList: null,
+  );
+  nestedRef.doc('42').update(
+    objectList: null,
+  );
+  nestedRef.doc('42').update(
+    dynamicList: null,
+  );  
+}
+''',
+        ),
+        compiles,
+      );
+    });
+
     test('types parameters', () {
       expect(
         library.withCode(

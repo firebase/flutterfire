@@ -17,6 +17,11 @@ void setupTests() {
       );
     });
 
+    test('isSupported', () async {
+      final result = await FirebaseAnalytics.instance.isSupported();
+      expect(result, isA<bool>());
+    });
+
     test('logEvent', () async {
       await expectLater(
         FirebaseAnalytics.instance.logEvent(name: 'testing'),
@@ -184,14 +189,59 @@ void setupTests() {
                 .setDefaultEventParameters({'default': 'parameters'}),
             throwsA(isA<UnimplementedError>()),
           );
+          // reset a single default parameter
+          await expectLater(
+            FirebaseAnalytics.instance
+                .setDefaultEventParameters({'default': null}),
+            throwsA(isA<UnimplementedError>()),
+          );
+          // reset all default parameters
+          await expectLater(
+            FirebaseAnalytics.instance.setDefaultEventParameters(null),
+            throwsA(isA<UnimplementedError>()),
+          );
         } else {
           await expectLater(
             FirebaseAnalytics.instance
                 .setDefaultEventParameters({'default': 'parameters'}),
             completes,
           );
+          // reset a single default parameter
+          await expectLater(
+            FirebaseAnalytics.instance
+                .setDefaultEventParameters({'default': null}),
+            completes,
+          );
+          // reset all default parameters
+          await expectLater(
+            FirebaseAnalytics.instance.setDefaultEventParameters(null),
+            completes,
+          );
         }
       },
     );
+
+    test('appInstanceId', () async {
+      if (kIsWeb) {
+        await expectLater(
+          FirebaseAnalytics.instance.appInstanceId,
+          throwsA(isA<UnimplementedError>()),
+        );
+      } else {
+        final result = await FirebaseAnalytics.instance.appInstanceId;
+        expect(result, isNull);
+
+        await expectLater(
+          FirebaseAnalytics.instance.setConsent(
+            analyticsStorageConsentGranted: true,
+            adStorageConsentGranted: false,
+          ),
+          completes,
+        );
+
+        final result2 = await FirebaseAnalytics.instance.appInstanceId;
+        expect(result2, isA<String>());
+      }
+    });
   });
 }

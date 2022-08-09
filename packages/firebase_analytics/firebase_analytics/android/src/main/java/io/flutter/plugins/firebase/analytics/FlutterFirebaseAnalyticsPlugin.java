@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -130,6 +131,9 @@ public class FlutterFirebaseAnalyticsPlugin
       case "Analytics#setDefaultEventParameters":
         methodCallTask = setDefaultEventParameters(call.arguments());
         break;
+      case "Analytics#getAppInstanceId":
+        methodCallTask = handleGetAppInstanceId();
+        break;
       default:
         result.notImplemented();
         return;
@@ -149,120 +153,213 @@ public class FlutterFirebaseAnalyticsPlugin
   }
 
   private Task<Void> handleLogEvent(final Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final String eventName =
-              (String) Objects.requireNonNull(arguments.get(Constants.EVENT_NAME));
-          @SuppressWarnings("unchecked")
-          final Map<String, Object> map = (Map<String, Object>) arguments.get(Constants.PARAMETERS);
-          final Bundle parameterBundle = createBundleFromMap(map);
-          analytics.logEvent(eventName, parameterBundle);
-          return null;
+          try {
+            final String eventName =
+                (String) Objects.requireNonNull(arguments.get(Constants.EVENT_NAME));
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> map =
+                (Map<String, Object>) arguments.get(Constants.PARAMETERS);
+            final Bundle parameterBundle = createBundleFromMap(map);
+            analytics.logEvent(eventName, parameterBundle);
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> handleSetUserId(final Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final String id = (String) arguments.get(Constants.USER_ID);
-          analytics.setUserId(id);
-          return null;
+          try {
+            final String id = (String) arguments.get(Constants.USER_ID);
+            analytics.setUserId(id);
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> handleSetAnalyticsCollectionEnabled(final Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final Boolean enabled =
-              (Boolean) Objects.requireNonNull(arguments.get(Constants.ENABLED));
-          analytics.setAnalyticsCollectionEnabled(enabled);
-          return null;
+          try {
+            final Boolean enabled =
+                (Boolean) Objects.requireNonNull(arguments.get(Constants.ENABLED));
+            analytics.setAnalyticsCollectionEnabled(enabled);
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> handleSetSessionTimeoutDuration(final Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final Integer milliseconds =
-              (Integer) Objects.requireNonNull(arguments.get(Constants.MILLISECONDS));
-          analytics.setSessionTimeoutDuration(milliseconds);
-          return null;
+          try {
+            final Integer milliseconds =
+                (Integer) Objects.requireNonNull(arguments.get(Constants.MILLISECONDS));
+            analytics.setSessionTimeoutDuration(milliseconds);
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> handleSetUserProperty(final Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final String name = (String) Objects.requireNonNull(arguments.get(Constants.NAME));
-          final String value = (String) arguments.get(Constants.VALUE);
-          analytics.setUserProperty(name, value);
-          return null;
+          try {
+            final String name = (String) Objects.requireNonNull(arguments.get(Constants.NAME));
+            final String value = (String) arguments.get(Constants.VALUE);
+            analytics.setUserProperty(name, value);
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> handleResetAnalyticsData() {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          analytics.resetAnalyticsData();
-          return null;
+          try {
+            analytics.resetAnalyticsData();
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> setConsent(final Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final Boolean adStorageGranted =
-              (Boolean) arguments.get(Constants.AD_STORAGE_CONSENT_GRANTED);
-          final Boolean analyticsStorageGranted =
-              (Boolean) arguments.get(Constants.ANALYTICS_STORAGE_CONSENT_GRANTED);
-          HashMap<FirebaseAnalytics.ConsentType, FirebaseAnalytics.ConsentStatus> parameters =
-              new HashMap<>();
+          try {
+            final Boolean adStorageGranted =
+                (Boolean) arguments.get(Constants.AD_STORAGE_CONSENT_GRANTED);
+            final Boolean analyticsStorageGranted =
+                (Boolean) arguments.get(Constants.ANALYTICS_STORAGE_CONSENT_GRANTED);
+            HashMap<FirebaseAnalytics.ConsentType, FirebaseAnalytics.ConsentStatus> parameters =
+                new HashMap<>();
 
-          if (adStorageGranted != null) {
-            parameters.put(
-                FirebaseAnalytics.ConsentType.AD_STORAGE,
-                adStorageGranted
-                    ? FirebaseAnalytics.ConsentStatus.GRANTED
-                    : FirebaseAnalytics.ConsentStatus.DENIED);
+            if (adStorageGranted != null) {
+              parameters.put(
+                  FirebaseAnalytics.ConsentType.AD_STORAGE,
+                  adStorageGranted
+                      ? FirebaseAnalytics.ConsentStatus.GRANTED
+                      : FirebaseAnalytics.ConsentStatus.DENIED);
+            }
+
+            if (analyticsStorageGranted != null) {
+              parameters.put(
+                  FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE,
+                  analyticsStorageGranted
+                      ? FirebaseAnalytics.ConsentStatus.GRANTED
+                      : FirebaseAnalytics.ConsentStatus.DENIED);
+            }
+
+            analytics.setConsent(parameters);
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
           }
-
-          if (analyticsStorageGranted != null) {
-            parameters.put(
-                FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE,
-                analyticsStorageGranted
-                    ? FirebaseAnalytics.ConsentStatus.GRANTED
-                    : FirebaseAnalytics.ConsentStatus.DENIED);
-          }
-
-          analytics.setConsent(parameters);
-          return null;
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> setDefaultEventParameters(final Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          Map<String, Object> parameters = Objects.requireNonNull(arguments);
-          analytics.setDefaultEventParameters(createBundleFromMap(parameters));
-          return null;
+          try {
+            analytics.setDefaultEventParameters(createBundleFromMap(arguments));
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
+  }
+
+  private Task<String> handleGetAppInstanceId() {
+    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(Tasks.await(analytics.getAppInstanceId()));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return Tasks.call(() -> new HashMap<String, Object>() {});
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(new HashMap<String, Object>() {});
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
-    return Tasks.call(() -> null);
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 }

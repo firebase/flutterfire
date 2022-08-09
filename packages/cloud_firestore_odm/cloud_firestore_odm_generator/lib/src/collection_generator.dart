@@ -18,6 +18,20 @@ import 'templates/query_reference.dart';
 import 'templates/query_snapshot.dart';
 import 'templates/template.dart';
 
+class QueryingField {
+  QueryingField(
+    this.name,
+    this.type, {
+    required this.field,
+    required this.updatable,
+  });
+
+  final String name;
+  final DartType type;
+  final String field;
+  final bool updatable;
+}
+
 class CollectionData {
   CollectionData({
     required this.type,
@@ -26,13 +40,18 @@ class CollectionData {
     required this.queryableFields,
     required this.fromJson,
     required this.toJson,
+    required this.libraryElement,
   }) : collectionName =
             collectionName ?? ReCase(path.split('/').last).camelCase;
 
   final DartType type;
   final String collectionName;
   final String path;
-  final List<FieldElement> queryableFields;
+  final List<QueryingField> queryableFields;
+  final LibraryElement libraryElement;
+
+  late final updatableFields =
+      queryableFields.where((element) => element.updatable).toList();
 
   CollectionData? _parent;
   CollectionData? get parent => _parent;
@@ -82,6 +101,16 @@ class Data {
   }
 }
 
+const _dateTimeChecker = TypeChecker.fromRuntime(DateTime);
+
+const _timestampChecker = TypeChecker.fromUrl(
+  'package:cloud_firestore_platform_interface/src/timestamp.dart#Timestamp',
+);
+
+const _geoPointChecker = TypeChecker.fromUrl(
+  'package:cloud_firestore_platform_interface/src/geo_point.dart#GeoPoint',
+);
+
 @immutable
 class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
   final _collectionTemplates = <Template<CollectionData>>[
@@ -99,9 +128,13 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
     void globalData,
     Element element,
   ) async {
+    final library = await buildStep.inputLibrary;
     final collectionAnnotations = const TypeChecker.fromRuntime(Collection)
         .annotationsOf(element)
-        .map((annotation) => _parseCollectionAnnotation(annotation, element))
+        .map(
+          (annotation) =>
+              _parseCollectionAnnotation(library, annotation, element),
+        )
         .toList();
 
     final roots = collectionAnnotations.where((collection) {
@@ -184,6 +217,7 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
   }
 
   CollectionData _parseCollectionAnnotation(
+    LibraryElement libraryElement,
     DartObject object,
     Element annotatedElement,
   ) {
@@ -278,27 +312,54 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       type: type,
       path: path,
       collectionName: name,
+      libraryElement: libraryElement,
       fromJson: (json) {
         if (fromJson != null) return '$type.fromJson($json)';
-        return '_\$${type}FromJson($json)';
+        return '_\$${type.toString().public}FromJson($json)';
       },
       toJson: (value) {
         if (toJson != null) return '$value.toJson()';
-        return '_\$${type}ToJson($value)';
+        return '_\$${type.toString().public}ToJson($value)';
       },
-      queryableFields: collectionTargetElement.fields
-          .where((f) => f.isPublic)
-          .where(
-            (f) =>
-                f.type.isDartCoreString ||
-                f.type.isDartCoreNum ||
-                f.type.isDartCoreInt ||
-                f.type.isDartCoreDouble ||
-                f.type.isDartCoreBool ||
-                f.type.isDartCoreList,
-            // TODO filter list other than LIst<string|bool|num>
-          )
-          .toList(),
+      queryableFields: [
+        QueryingField(
+          'documentId',
+          annotatedElement.library!.typeProvider.stringType,
+          field: 'FieldPath.documentId',
+          updatable: false,
+        ),
+        ...collectionTargetElement.fields
+            .where((f) => f.isPublic)
+            .where(
+              (f) =>
+                  f.type.isDartCoreString ||
+                  f.type.isDartCoreNum ||
+                  f.type.isDartCoreInt ||
+                  f.type.isDartCoreDouble ||
+                  f.type.isDartCoreBool ||
+                  f.type.isPrimitiveList ||
+                  f.type.isJsonDocumentReference ||
+                  _dateTimeChecker.isAssignableFromType(f.type) ||
+                  _timestampChecker.isAssignableFromType(f.type) ||
+                  _geoPointChecker.isAssignableFromType(f.type),
+              // TODO filter list other than LIst<string|bool|num>
+            )
+            .where((f) => !f.isJsonIgnored())
+            .map(
+          (e) {
+            final key = '"${e.name}"';
+
+            return QueryingField(
+              e.name,
+              e.type,
+              updatable: true,
+              field: hasJsonSerializable
+                  ? '_\$${collectionTargetElement.name.public}FieldMap[$key]!'
+                  : key,
+            );
+          },
+        ).toList(),
+      ],
     );
   }
 
@@ -334,4 +395,48 @@ const _sentinel = _Sentinel();
 
   @override
   void parseGlobalData(LibraryElement library) {}
+}
+
+extension on String {
+  String get public {
+    return startsWith('_') ? substring(1) : this;
+  }
+}
+
+extension on DartType {
+  bool get isJsonDocumentReference {
+    return element?.librarySource?.uri.scheme == 'package' &&
+        const {'cloud_firestore'}
+            .contains(element?.librarySource?.uri.pathSegments.first) &&
+        element?.name == 'DocumentReference' &&
+        (this as InterfaceType).typeArguments.single.isDartCoreMap;
+  }
+
+  bool get isPrimitiveList {
+    if (!isDartCoreList) return false;
+
+    final generic = (this as InterfaceType).typeArguments.single;
+
+    return generic.isDartCoreNum ||
+        generic.isDartCoreString ||
+        generic.isDartCoreBool ||
+        generic.isDartCoreObject ||
+        generic.isDynamic;
+  }
+}
+
+extension on FieldElement {
+  bool isJsonIgnored() {
+    const checker = TypeChecker.fromRuntime(JsonKey);
+    final jsonKeys = checker.annotationsOf(this);
+
+    for (final jsonKey in jsonKeys) {
+      final ignore = jsonKey.getField('ignore')?.toBoolValue();
+      if (ignore ?? false) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }

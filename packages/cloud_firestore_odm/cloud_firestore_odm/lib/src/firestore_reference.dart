@@ -41,8 +41,8 @@ abstract class FirestoreReference<Snapshot>
   );
 }
 
-abstract class FirestoreDocumentReference<
-        Snapshot extends FirestoreDocumentSnapshot>
+abstract class FirestoreDocumentReference<Model,
+        Snapshot extends FirestoreDocumentSnapshot<Model>>
     implements FirestoreReference<Snapshot> {
   @override
   FirestoreListenable<Selected> select<Selected>(
@@ -53,7 +53,7 @@ abstract class FirestoreDocumentReference<
 
   /// The original reference obtained from Firebase.
   @override
-  DocumentReference<Object?> get reference;
+  DocumentReference<Model> get reference;
 
   /// The document's identifier within its collection.
   String get id => reference.id;
@@ -77,10 +77,12 @@ abstract class FirestoreDocumentReference<
 }
 
 abstract class FirestoreCollectionReference<
-        Snapshot extends FirestoreQuerySnapshot>
+        Model,
+        Snapshot extends FirestoreQuerySnapshot<Model,
+            FirestoreDocumentSnapshot<Model>>>
     implements FirestoreReference<Snapshot> {
   @override
-  CollectionReference<Object?> get reference;
+  CollectionReference<Model> get reference;
 
   /// A string representing the path of the referenced collection
   /// (relative to the root of the database).
@@ -94,12 +96,13 @@ abstract class FirestoreCollectionReference<
   FirestoreDocumentReference doc([String? id]);
 }
 
-abstract class FirestoreDocumentSnapshot {
+abstract class FirestoreDocumentSnapshot<Model> {
   /// The reference for this document.
-  FirestoreDocumentReference get reference;
+  FirestoreDocumentReference<Model, FirestoreDocumentSnapshot<Model>>
+      get reference;
 
   /// The original [DocumentSnapshot] returned by Firebase.
-  DocumentSnapshot<Object?> get snapshot;
+  DocumentSnapshot<Model> get snapshot;
 
   /// Property of the DocumentSnapshot that provides the document's ID.
   String get id => snapshot.id;
@@ -113,23 +116,23 @@ abstract class FirestoreDocumentSnapshot {
   SnapshotMetadata get metadata => snapshot.metadata;
 
   /// Retrieves all fields in the document as an Object.
-  Object? get data;
+  Model? get data;
 }
 
-abstract class FirestoreQueryDocumentSnapshot
-    extends FirestoreDocumentSnapshot {
+abstract class FirestoreQueryDocumentSnapshot<Model>
+    extends FirestoreDocumentSnapshot<Model> {
   /// The original [QueryDocumentSnapshot] returned by Firebase.
   @override
-  QueryDocumentSnapshot<Object?> get snapshot;
+  QueryDocumentSnapshot<Model> get snapshot;
 
   @override
-  Object? get data;
+  Model get data;
 }
 
-abstract class FirestoreQuerySnapshot<
-    Snapshot extends FirestoreDocumentSnapshot> {
+abstract class FirestoreQuerySnapshot<Model,
+    Snapshot extends FirestoreDocumentSnapshot<Model>> {
   /// The original [QuerySnapshot] from Firebase.
-  QuerySnapshot<Object?> get snapshot;
+  QuerySnapshot<Model> get snapshot;
 
   /// Metadata about this snapshot, concerning its source and if it has
   /// local modifications.
@@ -140,7 +143,8 @@ abstract class FirestoreQuerySnapshot<
 
   /// An array of the documents that changed since the last snapshot. If this
   /// is the first snapshot, all documents will be in the list as Added changes.
-  List<FirestoreDocumentChange<Object?>> get docChanges;
+  List<FirestoreDocumentChange<FirestoreDocumentSnapshot<Model>>>
+      get docChanges;
 }
 
 /// A [DocumentChange] represents a change to the documents matching a query.
@@ -149,7 +153,7 @@ abstract class FirestoreQuerySnapshot<
 /// (added, modified, or removed).
 @sealed
 class FirestoreDocumentChange<
-    DocumentSnapshot extends FirestoreDocumentSnapshot> {
+    DocumentSnapshot extends FirestoreDocumentSnapshot<Object?>> {
   /// A [DocumentChange] represents a change to the documents matching a query.
   ///
   /// It contains the document affected and the type of change that occurred
@@ -182,7 +186,10 @@ class FirestoreDocumentChange<
   final DocumentSnapshot doc;
 }
 
-abstract class QueryReference<Snapshot extends FirestoreQuerySnapshot>
+abstract class QueryReference<
+        Model,
+        Snapshot extends FirestoreQuerySnapshot<Model,
+            FirestoreDocumentSnapshot<Model>>>
     implements FirestoreReference<Snapshot> {
   @override
   FirestoreListenable<Selected> select<Selected>(
@@ -192,7 +199,7 @@ abstract class QueryReference<Snapshot extends FirestoreQuerySnapshot>
   }
 
   @override
-  Query<Object?> get reference;
+  Query<Model> get reference;
 
   /// Executes the query and returns the results as a QuerySnapshot.
   ///
@@ -205,11 +212,37 @@ abstract class QueryReference<Snapshot extends FirestoreQuerySnapshot>
   Future<Snapshot> get([GetOptions options]);
 
   /// Creates and returns a new Query that only returns the first matching documents.
-  QueryReference<Snapshot> limit(int limit);
+  QueryReference<Model, Snapshot> limit(int limit);
 
   /// Creates and returns a new Query that only returns the last matching documents.
   ///
   /// You must specify at least one orderBy clause for limitToLast queries,
   /// otherwise an exception will be thrown during execution.
-  QueryReference<Snapshot> limitToLast(int limit);
+  QueryReference<Model, Snapshot> limitToLast(int limit);
+
+  /// Filter a collection based on the documents' ID.
+  ///
+  /// This is similar to using [FieldPath.documentId].
+  QueryReference<Model, Snapshot> whereDocumentId({
+    String isEqualTo,
+    String isNotEqualTo,
+    String isLessThan,
+    String isLessThanOrEqualTo,
+    String isGreaterThan,
+    String isGreaterThanOrEqualTo,
+    bool isNull,
+    List<String> whereIn,
+    List<String> whereNotIn,
+  });
+
+  /// Sorts a collection based on the documents' ID.
+  ///
+  /// This is similar to using [FieldPath.documentId].
+  QueryReference<Model, Snapshot> orderByDocumentId({
+    bool descending,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+  });
 }

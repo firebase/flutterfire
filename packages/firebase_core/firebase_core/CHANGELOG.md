@@ -1,11 +1,46 @@
+## 1.20.0
+
+ - **FEAT**: bump Firebase Android SDK to 30.3.0 ([#9161](https://github.com/firebase/flutterfire/issues/9161)). ([d1f96310](https://github.com/firebase/flutterfire/commit/d1f96310310c7584c4af751e1e75dc178aacce89))
+ - **FEAT**: add phone MFA ([#9044](https://github.com/firebase/flutterfire/issues/9044)). ([1b85c8b7](https://github.com/firebase/flutterfire/commit/1b85c8b7fbcc3f21767f23981cb35061772d483f))
+ - **FEAT**: update to 9.3.0 ([#9137](https://github.com/firebase/flutterfire/issues/9137)). ([97f6417b](https://github.com/firebase/flutterfire/commit/97f6417bf66f88e6621afa177c73245b9a7d5c73))
+
+## 1.19.2
+
+ - Update a dependency to the latest release.
+
+## 1.19.1
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 1.19.0
+
+ - **FEAT**: Bump Firebase iOS SDK to `9.2.0` (#8594). ([79610162](https://github.com/firebase/flutterfire/commit/79610162460b8877f3bc727464a7065106f08079))
+
+## 1.18.0
+
+ - **REFACTOR**: migrate from hash* to Object.hash* (#8797). ([3dfc0997](https://github.com/firebase/flutterfire/commit/3dfc0997050ee4351207c355b2c22b46885f971f))
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **FEAT**: bump Firebase Android SDK to 30.1.0 (#8847). ([796f1e74](https://github.com/firebase/flutterfire/commit/796f1e744fa361a023aba4ec7f491387a9e2f0f8))
+ - **DOCS**: point to "firebase.google" domain for hyperlinks in the usage section of `README.md` files (for the missing packages) (#8818). ([5bda8c92](https://github.com/firebase/flutterfire/commit/5bda8c92be1651a941d1285d36e885ee0b967b11))
+
+## 1.17.1
+
+ - **DOCS**: use camel case style for "FlutterFire" in `README.md` (#8749). ([41462a42](https://github.com/firebase/flutterfire/commit/41462a423ad783d20e5d303ed41898b061bccc48))
+
+## 1.17.0
+
+ - **REFACTOR**: remove deprecated `Tasks.call` for android and replace with `TaskCompletionSource`. ([#8581](https://github.com/firebase/flutterfire/issues/8581)). ([374c9df3](https://github.com/firebase/flutterfire/commit/374c9df33bbb6b354ea526dcc6cc7812fa4452c0))
+ - **FEAT**: bump Firebase Android SDK to 30.0.0 ([#8617](https://github.com/firebase/flutterfire/issues/8617)). ([72158aaf](https://github.com/firebase/flutterfire/commit/72158aaf9721dbf5f20c362f0c99853273507538))
+ - **FEAT**: allow initializing default Firebase apps via `FirebaseOptions.fromResource` on Android ([#8566](https://github.com/firebase/flutterfire/issues/8566)). ([30216c4a](https://github.com/firebase/flutterfire/commit/30216c4a4c06c20f9c4c2b9a235a4aa9a48816a0))
+
 ## 1.16.0
 
- - **FEAT**: allow initializing default Firebase apps via `FirebaseOptions.fromResource` on Android (#8566). ([30216c4a](https://github.com/FirebaseExtended/flutterfire/commit/30216c4a4c06c20f9c4c2b9a235a4aa9a48816a0))
+ - **FEAT**: allow initializing default Firebase apps via `FirebaseOptions.fromResource` on Android (#8566). ([30216c4a](https://github.com/firebase/flutterfire/commit/30216c4a4c06c20f9c4c2b9a235a4aa9a48816a0))
 
 ## 1.15.0
 
- - **FEAT**: bump Firebase Android SDK to `29.3.1` (#8494). ([17b9c289](https://github.com/FirebaseExtended/flutterfire/commit/17b9c2894ee901afd2631664b01829cd4df1dd16))
- - **FEAT**: Update Firebase iOS SDK to `8.15.0` (#8454). ([faaf4496](https://github.com/FirebaseExtended/flutterfire/commit/faaf449624ff4081cbbc0f241fec3134492cbdb3))
+ - **FEAT**: bump Firebase Android SDK to `29.3.1` (#8494). ([17b9c289](https://github.com/firebase/flutterfire/commit/17b9c2894ee901afd2631664b01829cd4df1dd16))
+ - **FEAT**: Update Firebase iOS SDK to `8.15.0` (#8454). ([faaf4496](https://github.com/firebase/flutterfire/commit/faaf449624ff4081cbbc0f241fec3134492cbdb3))
 
 ## 1.14.1
 
@@ -13,32 +48,32 @@
 
 ## 1.14.0
 
- - **FEAT**: Bump Firebase iOS SDK to `8.14.0`. (#8370). ([41bb9800](https://github.com/FirebaseExtended/flutterfire/commit/41bb98004327013f90c93709513c419d04382475))
- - **FEAT**: bump Firebase Android SDK to `29.3.0` (#8283). ([a6c646a0](https://github.com/FirebaseExtended/flutterfire/commit/a6c646a0d23600e5e4ae6d40ca4b23c7e73fc257))
- - **DOCS**: Update inline code documentation for initializing Firebase app. (#8329). ([19727798](https://github.com/FirebaseExtended/flutterfire/commit/19727798a8dcfde103665eb8209b714e49327a11))
+ - **FEAT**: Bump Firebase iOS SDK to `8.14.0`. (#8370). ([41bb9800](https://github.com/firebase/flutterfire/commit/41bb98004327013f90c93709513c419d04382475))
+ - **FEAT**: bump Firebase Android SDK to `29.3.0` (#8283). ([a6c646a0](https://github.com/firebase/flutterfire/commit/a6c646a0d23600e5e4ae6d40ca4b23c7e73fc257))
+ - **DOCS**: Update inline code documentation for initializing Firebase app. (#8329). ([19727798](https://github.com/firebase/flutterfire/commit/19727798a8dcfde103665eb8209b714e49327a11))
 
 ## 1.13.1
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 1.13.0
 
- - **FEAT**: refactor error handling to preserve stack traces on platform exceptions (#8156). ([6ac77d99](https://github.com/FirebaseExtended/flutterfire/commit/6ac77d99042de2a1950f89b35972e3ee1116dc9f))
+ - **FEAT**: refactor error handling to preserve stack traces on platform exceptions (#8156). ([6ac77d99](https://github.com/firebase/flutterfire/commit/6ac77d99042de2a1950f89b35972e3ee1116dc9f))
 
 ## 1.12.0
 
- - **FEAT**: bump Firebase iOS SDK to `8.11.0` & Android SDK to `29.0.4` (#7942). ([c23adf08](https://github.com/FirebaseExtended/flutterfire/commit/c23adf0853466941d0afb174dd425a43b44ce501))
+ - **FEAT**: bump Firebase iOS SDK to `8.11.0` & Android SDK to `29.0.4` (#7942). ([c23adf08](https://github.com/firebase/flutterfire/commit/c23adf0853466941d0afb174dd425a43b44ce501))
 
 ## 1.11.0
 
- - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
- - **FIX**: bump Firebase Android SDK version to `29.0.3` (from `29.0.0`). ([2ab4abaf](https://github.com/FirebaseExtended/flutterfire/commit/2ab4abafbed279183d298f129cd14aebb588c86d))
- - **FIX**: workaround an SDK issue on Android where calling `initializeApp` when having `In App Messaging` installed causes a crash. ([8f5204e7](https://github.com/FirebaseExtended/flutterfire/commit/8f5204e7e59e92869d61764c051e5687e118282d))
- - **FEAT**: bump Firebase iOS SDK version to `8.10.0`. (#7775). ([ac9709e0](https://github.com/FirebaseExtended/flutterfire/commit/ac9709e00a0e3d1706b793750ed2e65d9ae9440b))
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/firebase/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+ - **FIX**: bump Firebase Android SDK version to `29.0.3` (from `29.0.0`). ([2ab4abaf](https://github.com/firebase/flutterfire/commit/2ab4abafbed279183d298f129cd14aebb588c86d))
+ - **FIX**: workaround an SDK issue on Android where calling `initializeApp` when having `In App Messaging` installed causes a crash. ([8f5204e7](https://github.com/firebase/flutterfire/commit/8f5204e7e59e92869d61764c051e5687e118282d))
+ - **FEAT**: bump Firebase iOS SDK version to `8.10.0`. (#7775). ([ac9709e0](https://github.com/firebase/flutterfire/commit/ac9709e00a0e3d1706b793750ed2e65d9ae9440b))
 
 ## 1.10.6
 
- - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/firebase/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
 
 ## 1.10.5
 

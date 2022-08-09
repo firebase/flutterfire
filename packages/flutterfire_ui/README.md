@@ -2,6 +2,10 @@
 
 [![pub package](https://img.shields.io/pub/v/flutterfire_ui.svg)](https://pub.dev/packages/flutterfire_ui)
 
+FlutterFire UI is a set of Flutter widgets and utilities designed to help you build and integrate your user interface with Firebase.
+
+> FlutterFire UI is still in beta and is subject to change. Please contribute to the [discussion](https://github.com/firebase/flutterfire/discussions/6978) with feedback.
+
 ## Installation
 
 ```sh
@@ -9,11 +13,6 @@ flutter pub add flutterfire_ui
 ```
 
 ## Getting Started
-
-To get started with FlutterFire UI, please
-explore the [widget catalog](https://firebase.flutter.dev/docs/ui/widgets), the [storybook](https://flutterfire-ui.web.app/#/) and [see the documentation](https://firebase.flutter.dev/docs/ui/overview).
-
-## Usage
 
 Here's a quick example that shows how to build a `SignInScreen` and `ProfileScreen` in your app
 
@@ -56,12 +55,22 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-Learn more in the [Integrating your first screen section](https://firebase.flutter.dev/docs/ui/auth/integrating-your-first-screen) of the documentation
+Learn more in the [Integrating your first screen section](doc/auth/integrating-your-first-screen.md) of the documentation
 
-## Issues and feedback
+## Roadmap / Features
 
-Please file FlutterFire UI specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+FlutterFire UI is still in active development.
 
-To contribute a change to this plugin,
-please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
-and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+- For issues, please create a new [issue on the repository](https://github.com/firebase/flutterfire/issues).
+- For feature requests, & questions, please participate on the [discussion](https://github.com/firebase/flutterfire/discussions/6978) thread.
+- To contribute a change to this plugin, please review our [contribution guide](https://github.com/firebase/flutterfire/blob/master/CONTRIBUTING.md) and open a [pull request](https://github.com/firebase/flutterfire/pulls).
+
+Please contribute to the [discussion](https://github.com/firebase/flutterfire/discussions/6978) with feedback.
+
+## Next Steps
+
+Once installed, you can read the following documentation to learn more about the FlutterFire UI widgets and utilities:
+
+- [Authentication](doc/auth.md)
+- [Firestore](doc/firestore.md)
+- [Realtime Database](doc/database.md)

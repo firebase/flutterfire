@@ -134,12 +134,12 @@ void setupTests() {
       });
 
       test('fires once on first initialization of FirebaseAuth', () async {
-        // Fixes a very specific bug: https://github.com/FirebaseExtended/flutterfire/issues/3628
+        // Fixes a very specific bug: https://github.com/firebase/flutterfire/issues/3628
         // If the first initialization of FirebaseAuth involves the listeners userChanges() or idTokenChanges()
         // the user will receive two events. Why? The native SDK listener will always fire an event upon initial
         // listen. FirebaseAuth also sends an initial synthetic event. We send a synthetic event because, ordinarily, the user will
         // not use a listener as the first occurrence of FirebaseAuth. We, therefore, mimic native behavior by sending an
-        // event. This test proves the logic of PR: https://github.com/FirebaseExtended/flutterfire/pull/6560
+        // event. This test proves the logic of PR: https://github.com/firebase/flutterfire/pull/6560
 
         // Requires a fresh app.
         FirebaseApp second = await Firebase.initializeApp(
@@ -191,8 +191,9 @@ void setupTests() {
         await FirebaseAuth.instance.currentUser!
             .updateDisplayName('updatedName');
 
-        await FirebaseAuth.instance.currentUser!.reload();
-
+        if (!kIsWeb) {
+          await FirebaseAuth.instance.currentUser!.reload();
+        }
         expect(
           FirebaseAuth.instance.currentUser!.displayName,
           equals('updatedName'),
@@ -480,7 +481,7 @@ void setupTests() {
     group('setPersistence()', () {
       test(
         'throw an unimplemented error',
-        () async {
+            () async {
           try {
             await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
             fail('Should have thrown');
@@ -493,7 +494,7 @@ void setupTests() {
 
       test(
         'should set persistence',
-        () async {
+            () async {
           try {
             await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
           } catch (e) {

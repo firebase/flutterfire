@@ -8,21 +8,56 @@
 
 import 'dart:async';
 
-import 'package:http_parser/http_parser.dart';
-import 'package:js/js.dart';
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
+import 'package:http_parser/http_parser.dart';
+import 'package:js/js.dart';
+
 import 'auth_interop.dart' as auth_interop;
-import 'firebase_interop.dart' as firebase_interop;
 import 'utils/utils.dart';
 
 export 'auth_interop.dart';
 
 /// Given an AppJSImp, return the Auth instance.
-Auth getAuthInstance([App? app]) {
-  return Auth.getInstance(app != null
-      ? firebase_interop.auth(app.jsObject)
-      : firebase_interop.auth());
+Auth getAuthInstance(App app, {Persistence? persistence}) {
+  if (persistence != null) {
+    auth_interop.Persistence setPersistence;
+    switch (persistence) {
+      case Persistence.LOCAL:
+        setPersistence = auth_interop.browserLocalPersistence;
+        break;
+      case Persistence.INDEXED_DB:
+        setPersistence = auth_interop.indexedDBLocalPersistence;
+        break;
+      case Persistence.SESSION:
+        setPersistence = auth_interop.browserSessionPersistence;
+        break;
+      case Persistence.NONE:
+        setPersistence = auth_interop.inMemoryPersistence;
+        break;
+    }
+    return Auth.getInstance(auth_interop.initializeAuth(
+        app.jsObject,
+        jsify({
+          'errorMap': auth_interop.debugErrorMap,
+          'persistence': setPersistence,
+          'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
+        })));
+  }
+  return Auth.getInstance(auth_interop.initializeAuth(
+      app.jsObject,
+      jsify({
+        'errorMap': auth_interop.debugErrorMap,
+        // Default persistence can be seen here
+        // https://github.com/firebase/firebase-js-sdk/blob/master/packages/auth/src/platform_browser/index.ts#L47
+        'persistence': [
+          auth_interop.indexedDBLocalPersistence,
+          auth_interop.browserLocalPersistence,
+          auth_interop.browserSessionPersistence
+        ],
+        'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
+      })));
 }
 
 /// User profile information, visible only to the Firebase project's apps.
@@ -118,28 +153,29 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   /// available additional user information, such as user name.
   Future<UserCredential> linkWithCredential(
           auth_interop.OAuthCredential? credential) =>
-      handleThenable(jsObject.linkWithCredential(credential))
+      handleThenable(auth_interop.linkWithCredential(jsObject, credential))
           .then(UserCredential.fromJsObject);
 
   /// Links the user account with the given [phoneNumber] in E.164 format
   /// (e.g. +16505550101) and [applicationVerifier].
   Future<ConfirmationResult> linkWithPhoneNumber(
           String phoneNumber, ApplicationVerifier applicationVerifier) =>
-      handleThenable(jsObject.linkWithPhoneNumber(
-              phoneNumber, applicationVerifier.jsObject))
-          .then(ConfirmationResult.fromJsObject);
+      handleThenable(
+        auth_interop.linkWithPhoneNumber(
+            jsObject, phoneNumber, applicationVerifier.jsObject),
+      ).then(ConfirmationResult.fromJsObject);
 
   /// Links the authenticated [provider] to the user account using
   /// a pop-up based OAuth flow.
   /// It returns the [UserCredential] information if linking is successful.
   Future<UserCredential> linkWithPopup(AuthProvider provider) =>
-      handleThenable(jsObject.linkWithPopup(provider.jsObject))
+      handleThenable(auth_interop.linkWithPopup(jsObject, provider.jsObject))
           .then(UserCredential.fromJsObject);
 
   /// Links the authenticated [provider] to the user account using
   /// a full-page redirect flow.
-  Future<void> linkWithRedirect(AuthProvider provider) =>
-      handleThenable(jsObject.linkWithRedirect(provider.jsObject));
+  Future<void> linkWithRedirect(AuthProvider provider) => handleThenable(
+      auth_interop.linkWithRedirect(jsObject, provider.jsObject));
 
   // FYI: as of 2017-07-03 – the return type of this guy is documented as
   // Promise (Future)<nothing> - Filed a bug internally.
@@ -147,7 +183,8 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   /// available additional user information, such as user name.
   Future<UserCredential> reauthenticateWithCredential(
           auth_interop.OAuthCredential credential) =>
-      handleThenable(jsObject.reauthenticateWithCredential(credential))
+      handleThenable(
+              auth_interop.reauthenticateWithCredential(jsObject, credential))
           .then(UserCredential.fromJsObject);
 
   /// Re-authenticates a user using a fresh credential.
@@ -157,21 +194,23 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   /// The user's phone number is in E.164 format (e.g. +16505550101).
   Future<ConfirmationResult> reauthenticateWithPhoneNumber(
           String phoneNumber, ApplicationVerifier applicationVerifier) =>
-      handleThenable(jsObject.reauthenticateWithPhoneNumber(
-              phoneNumber, applicationVerifier.jsObject))
+      handleThenable(auth_interop.reauthenticateWithPhoneNumber(
+              jsObject, phoneNumber, applicationVerifier.jsObject))
           .then(ConfirmationResult.fromJsObject);
 
   /// Reauthenticates a user with the specified provider using
   /// a pop-up based OAuth flow.
   /// It returns the [UserCredential] information if reauthentication is successful.
   Future<UserCredential> reauthenticateWithPopup(AuthProvider provider) =>
-      handleThenable(jsObject.reauthenticateWithPopup(provider.jsObject))
+      handleThenable(
+              auth_interop.reauthenticateWithPopup(jsObject, provider.jsObject))
           .then(UserCredential.fromJsObject);
 
   /// Reauthenticates a user with the specified OAuth [provider] using
   /// a full-page redirect flow.
   Future<void> reauthenticateWithRedirect(AuthProvider provider) =>
-      handleThenable(jsObject.reauthenticateWithRedirect(provider.jsObject));
+      handleThenable(
+          auth_interop.reauthenticateWithRedirect(jsObject, provider.jsObject));
 
   /// If signed in, it refreshes the current user.
   Future<void> reload() => handleThenable(jsObject.reload());
@@ -196,38 +235,39 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   /// they are configured in the same Firebase Auth project used.
   Future<void> sendEmailVerification(
           [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
-      handleThenable(jsObject.sendEmailVerification(actionCodeSettings));
+      handleThenable(
+          auth_interop.sendEmailVerification(jsObject, actionCodeSettings));
 
   /// Sends a verification email to a new email address. The user's email will be updated to the new one
   /// after being verified.
   Future<void> verifyBeforeUpdateEmail(String newEmail,
           [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
-      handleThenable(
-          jsObject.verifyBeforeUpdateEmail(newEmail, actionCodeSettings));
+      handleThenable(auth_interop.verifyBeforeUpdateEmail(
+          jsObject, newEmail, actionCodeSettings));
 
   /// Unlinks a provider with [providerId] from a user account.
   Future<User> unlink(String providerId) =>
-      handleThenable(jsObject.unlink(providerId))
+      handleThenable(auth_interop.unlink(jsObject, providerId))
           .then((user) => User.getInstance(user)!);
 
   /// Updates the user's e-mail address to [newEmail].
   Future<void> updateEmail(String newEmail) =>
-      handleThenable(jsObject.updateEmail(newEmail));
+      handleThenable(auth_interop.updateEmail(jsObject, newEmail));
 
   /// Updates the user's password to [newPassword].
   /// Requires the user to have recently signed in. If not, ask the user
   /// to authenticate again and then use [reauthenticate()].
   Future<void> updatePassword(String newPassword) =>
-      handleThenable(jsObject.updatePassword(newPassword));
+      handleThenable(auth_interop.updatePassword(jsObject, newPassword));
 
   /// Updates the user's phone number.
   Future<void> updatePhoneNumber(
           auth_interop.OAuthCredential? phoneCredential) =>
-      handleThenable(jsObject.updatePhoneNumber(phoneCredential));
+      handleThenable(auth_interop.updatePhoneNumber(jsObject, phoneCredential));
 
   /// Updates a user's profile data.
   Future<void> updateProfile(auth_interop.UserProfile profile) =>
-      handleThenable(jsObject.updateProfile(profile));
+      handleThenable(auth_interop.updateProfile(jsObject, profile));
 
   Future<IdTokenResult> getIdTokenResult([bool? forceRefresh]) {
     final promise = forceRefresh == null
@@ -411,20 +451,22 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   Auth._fromJsObject(auth_interop.AuthJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  /// Applies a verification [code] sent to the user by e-mail or by other
+  /// Applies a verification [oobCode] sent to the user by e-mail or by other
   /// out-of-band mechanism.
-  Future applyActionCode(String code) =>
-      handleThenable(jsObject.applyActionCode(code));
+  Future applyActionCode(String oobCode) =>
+      handleThenable(auth_interop.applyActionCode(jsObject, oobCode));
 
   /// Checks a verification [code] sent to the user by e-mail or by other
   /// out-of-band mechanism.
   /// It returns [ActionCodeInfo], metadata about the code.
   Future<auth_interop.ActionCodeInfo> checkActionCode(String code) =>
-      handleThenable(jsObject.checkActionCode(code));
+      handleThenable(auth_interop.checkActionCode(jsObject, code));
 
   /// Completes password reset process with a [code] and a [newPassword].
   Future confirmPasswordReset(String code, String newPassword) =>
-      handleThenable(jsObject.confirmPasswordReset(code, newPassword));
+      handleThenable(
+        auth_interop.confirmPasswordReset(jsObject, code, newPassword),
+      );
 
   /// Creates a new user account associated with the specified email address and
   /// password.
@@ -443,7 +485,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
     String password,
   ) async {
     final u = await handleThenable(
-      jsObject.createUserWithEmailAndPassword(email, password),
+      auth_interop.createUserWithEmailAndPassword(jsObject, email, password),
     );
 
     return UserCredential.fromJsObject(u);
@@ -455,12 +497,12 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// eg. EmailAuthProvider which has 2 methods of sign-in, email/password and
   /// email/link.
   Future<List<String>> fetchSignInMethodsForEmail(String email) =>
-      handleThenable(jsObject.fetchSignInMethodsForEmail(email))
+      handleThenable(auth_interop.fetchSignInMethodsForEmail(jsObject, email))
           .then(List<String>.from);
 
   /// Checks if an incoming link is a sign-in with email link.
   bool isSignInWithEmailLink(String emailLink) =>
-      jsObject.isSignInWithEmailLink(emailLink);
+      auth_interop.isSignInWithEmailLink(emailLink);
 
   /// Returns a [UserCredential] from the redirect-based sign in flow.
   /// If sign is successful, returns the signed in user. Or fails with an error
@@ -468,7 +510,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// The [UserCredential] with a null [User] is returned if no redirect
   /// operation was called.
   Future<UserCredential> getRedirectResult() =>
-      handleThenable(jsObject.getRedirectResult())
+      handleThenable(auth_interop.getRedirectResult(jsObject))
           .then(UserCredential.fromJsObject);
 
   /// Sends a sign-in email link to the user with the specified email.
@@ -483,7 +525,44 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// the email link supplied in the email sent to the user.
   Future sendSignInLinkToEmail(String email,
           [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
-      handleThenable(jsObject.sendSignInLinkToEmail(email, actionCodeSettings));
+      handleThenable(auth_interop.sendSignInLinkToEmail(
+          jsObject, email, actionCodeSettings));
+
+  /// Changes the current type of persistence on the current Auth instance for
+  /// the currently saved Auth session and applies this type of persistence
+  /// for future sign-in requests, including sign-in with redirect requests.
+  /// This will return a Future that will resolve once the state finishes
+  /// copying from one type of storage to the other.
+  /// Calling a sign-in method after changing persistence will wait for that
+  /// persistence change to complete before applying it on the new Auth state.
+  ///
+  /// This makes it easy for a user signing in to specify whether their session
+  /// should be remembered or not. It also makes it easier to never persist
+  /// the Auth state for applications that are shared by other users or have
+  /// sensitive data.
+  ///
+  /// The default is [:'local':] (provided the browser supports this mechanism).
+  ///
+  /// The [persistence] string is the auth state persistence mechanism.
+  /// See allowed [persistence] values in [Persistence] class.
+  Future setPersistence(Persistence persistence) {
+    auth_interop.Persistence instance;
+    switch (persistence) {
+      case Persistence.LOCAL:
+        instance = auth_interop.browserLocalPersistence;
+        break;
+      case Persistence.INDEXED_DB:
+        instance = auth_interop.indexedDBLocalPersistence;
+        break;
+      case Persistence.SESSION:
+        instance = auth_interop.browserSessionPersistence;
+        break;
+      case Persistence.NONE:
+        instance = auth_interop.inMemoryPersistence;
+        break;
+    }
+    return handleThenable(auth_interop.setPersistence(jsObject, instance));
+  }
 
   /// Sends a password reset e-mail to the given [email].
   /// To confirm password reset, use the [Auth.confirmPasswordReset].
@@ -506,34 +585,14 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// they are configured in the same Firebase Auth project used.
   Future sendPasswordResetEmail(String email,
           [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
-      handleThenable(
-          jsObject.sendPasswordResetEmail(email, actionCodeSettings));
-
-  /// Changes the current type of persistence on the current Auth instance for
-  /// the currently saved Auth session and applies this type of persistence
-  /// for future sign-in requests, including sign-in with redirect requests.
-  /// This will return a Future that will resolve once the state finishes
-  /// copying from one type of storage to the other.
-  /// Calling a sign-in method after changing persistence will wait for that
-  /// persistence change to complete before applying it on the new Auth state.
-  ///
-  /// This makes it easy for a user signing in to specify whether their session
-  /// should be remembered or not. It also makes it easier to never persist
-  /// the Auth state for applications that are shared by other users or have
-  /// sensitive data.
-  ///
-  /// The default is [:'local':] (provided the browser supports this mechanism).
-  ///
-  /// The [persistence] string is the auth state persistence mechanism.
-  /// See allowed [persistence] values in [Persistence] class.
-  Future setPersistence(String persistence) =>
-      handleThenable(jsObject.setPersistence(persistence));
+      handleThenable(auth_interop.sendPasswordResetEmail(
+          jsObject, email, actionCodeSettings));
 
   /// Asynchronously signs in with the given credentials, and returns any
   /// available additional user information, such as user name.
   Future<UserCredential> signInWithCredential(
           auth_interop.OAuthCredential credential) =>
-      handleThenable(jsObject.signInWithCredential(credential))
+      handleThenable(auth_interop.signInWithCredential(jsObject, credential))
           .then(UserCredential.fromJsObject);
 
   /// Asynchronously signs in as an anonymous user.
@@ -542,7 +601,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   // returned; otherwise, a new anonymous user identity will be created and
   // returned.
   Future<UserCredential> signInAnonymously() =>
-      handleThenable(jsObject.signInAnonymously())
+      handleThenable(auth_interop.signInAnonymously(jsObject))
           .then(UserCredential.fromJsObject);
 
   /// Asynchronously signs in using a custom token.
@@ -553,7 +612,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// Fails with an error if the token is invalid, expired, or not accepted by
   /// the Firebase Auth service.
   Future<UserCredential> signInWithCustomToken(String token) =>
-      handleThenable(jsObject.signInWithCustomToken(token))
+      handleThenable(auth_interop.signInWithCustomToken(jsObject, token))
           .then(UserCredential.fromJsObject);
 
   /// Signs in a user asynchronously using a custom [token] and returns any
@@ -568,8 +627,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// Fails with an error if the token is invalid, expired, or not accepted by
   /// the Firebase Auth service.
   Future<UserCredential> signInAndRetrieveDataWithCustomToken(String token) =>
-      handleThenable(jsObject.signInAndRetrieveDataWithCustomToken(token))
-          .then(UserCredential.fromJsObject);
+      signInWithCustomToken(token);
 
   /// Asynchronously signs in using an email and password.
   ///
@@ -581,12 +639,14 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// Firebase project.
   Future<UserCredential> signInWithEmailAndPassword(
           String email, String password) =>
-      handleThenable(jsObject.signInWithEmailAndPassword(email, password))
+      handleThenable(auth_interop.signInWithEmailAndPassword(
+              jsObject, email, password))
           .then(UserCredential.fromJsObject);
 
   /// Signs in using [email] and [emailLink] link.
   Future<UserCredential> signInWithEmailLink(String email, String emailLink) =>
-      handleThenable(jsObject.signInWithEmailLink(email, emailLink))
+      handleThenable(
+              auth_interop.signInWithEmailLink(jsObject, email, emailLink))
           .then(UserCredential.fromJsObject);
 
   /// Asynchronously signs in using a phone number in E.164 format
@@ -601,20 +661,20 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// The Firebase Auth SDK includes a reCAPTCHA-based implementation, [RecaptchaVerifier].
   Future<ConfirmationResult> signInWithPhoneNumber(
           String phoneNumber, ApplicationVerifier applicationVerifier) =>
-      handleThenable(jsObject.signInWithPhoneNumber(
-              phoneNumber, applicationVerifier.jsObject))
+      handleThenable(auth_interop.signInWithPhoneNumber(
+              jsObject, phoneNumber, applicationVerifier.jsObject))
           .then(ConfirmationResult.fromJsObject);
 
   /// Signs in using a popup-based OAuth authentication flow with the
   /// given [provider].
   /// Returns [UserCredential] if successful, or an error object if unsuccessful.
   Future<UserCredential> signInWithPopup(AuthProvider provider) =>
-      handleThenable(jsObject.signInWithPopup(provider.jsObject))
+      handleThenable(auth_interop.signInWithPopup(jsObject, provider.jsObject))
           .then(UserCredential.fromJsObject);
 
   /// Signs in using a full-page redirect flow with the given [provider].
-  Future signInWithRedirect(AuthProvider provider) =>
-      handleThenable(jsObject.signInWithRedirect(provider.jsObject));
+  Future signInWithRedirect(AuthProvider provider) => handleThenable(
+      auth_interop.signInWithRedirect(jsObject, provider.jsObject));
 
   /// Signs out the current user.
   Future signOut() => handleThenable(jsObject.signOut());
@@ -625,7 +685,8 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// Note: must be called before using auth methods, do not use
   /// with production credentials as local connections are unencrypted
-  void useAuthEmulator(String origin) => jsObject.useEmulator(origin);
+  void useAuthEmulator(String origin) =>
+      auth_interop.connectAuthEmulator(jsObject, origin);
 
   /// Sets the current language to the default device/browser preference.
   void useDeviceLanguage() => jsObject.useDeviceLanguage();
@@ -634,7 +695,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// or other out-of-band mechanism.
   /// Returns the user's e-mail address if valid.
   Future<String> verifyPasswordResetCode(String code) =>
-      handleThenable(jsObject.verifyPasswordResetCode(code));
+      handleThenable(auth_interop.verifyPasswordResetCode(jsObject, code));
 }
 
 /// Represents an auth provider.
@@ -886,7 +947,7 @@ class PhoneAuthProvider
   /// Creates a new PhoneAuthProvider with the optional [Auth] instance
   /// in which sign-ins should occur.
   factory PhoneAuthProvider([Auth? auth]) =>
-      PhoneAuthProvider.fromJsObject((auth != null)
+      PhoneAuthProvider.fromJsObject(auth != null
           ? auth_interop.PhoneAuthProviderJsImpl(auth.jsObject)
           : auth_interop.PhoneAuthProviderJsImpl());
 
@@ -901,17 +962,17 @@ class PhoneAuthProvider
   ///
   /// For abuse prevention, this method also requires an [ApplicationVerifier].
   Future<String> verifyPhoneNumber(
-          String phoneNumber, ApplicationVerifier applicationVerifier) =>
+          dynamic phoneOptions, ApplicationVerifier applicationVerifier) =>
       handleThenable(jsObject.verifyPhoneNumber(
-          phoneNumber, applicationVerifier.jsObject));
+          phoneOptions, applicationVerifier.jsObject));
 
   /// Creates a phone auth credential given the verification ID
   /// from [verifyPhoneNumber] and the [verificationCode] that was sent to the
   /// user's mobile device.
-  static auth_interop.OAuthCredential credential(
+  static auth_interop.PhoneAuthCredentialJsImpl credential(
           String verificationId, String verificationCode) =>
       auth_interop.PhoneAuthProviderJsImpl.credential(
-          verificationId, verificationCode) as auth_interop.OAuthCredential;
+          verificationId, verificationCode);
 }
 
 /// A verifier for domain verification and abuse prevention.
@@ -965,18 +1026,16 @@ class RecaptchaVerifier
   ///         print('Response expired');
   ///       }
   ///     });
-  factory RecaptchaVerifier(container,
-          [Map<String, dynamic>? parameters, App? app]) =>
-      (parameters != null)
-          ? ((app != null)
-              ? RecaptchaVerifier.fromJsObject(
-                  auth_interop.RecaptchaVerifierJsImpl(
-                      container, jsify(parameters), app.jsObject))
-              : RecaptchaVerifier.fromJsObject(
-                  auth_interop.RecaptchaVerifierJsImpl(
-                      container, jsify(parameters))))
-          : RecaptchaVerifier.fromJsObject(
-              auth_interop.RecaptchaVerifierJsImpl(container));
+  factory RecaptchaVerifier(
+      container, Map<String, dynamic> parameters, Auth auth) {
+    return RecaptchaVerifier.fromJsObject(
+      auth_interop.RecaptchaVerifierJsImpl(
+        container,
+        jsify(parameters),
+        auth.jsObject,
+      ),
+    );
+  }
 
   /// Creates a new RecaptchaVerifier from a [jsObject].
   RecaptchaVerifier.fromJsObject(auth_interop.RecaptchaVerifierJsImpl jsObject)
@@ -1029,8 +1088,8 @@ class UserCredential
   String get operationType => jsObject.operationType;
 
   /// Returns additional user information from a federated identity provider.
-  AdditionalUserInfo get additionalUserInfo =>
-      AdditionalUserInfo.fromJsObject(jsObject.additionalUserInfo);
+  AdditionalUserInfo? get additionalUserInfo => AdditionalUserInfo.fromJsObject(
+      auth_interop.getAdditionalUserInfo(jsObject));
 
   /// Creates a new UserCredential from a [jsObject].
   UserCredential.fromJsObject(auth_interop.UserCredentialJsImpl jsObject)

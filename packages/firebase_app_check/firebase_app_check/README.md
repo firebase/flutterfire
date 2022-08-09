@@ -11,14 +11,14 @@ To get started with Firebase App Check for Flutter, please [see the documentatio
 
 ## Usage
 
-To use this plugin, please visit the [App Check Usage documentation](https://firebase.flutter.dev/docs/app-check/usage)
+To use this plugin, please visit the [App Check Usage documentation](https://firebase.google.com/docs/app-check/flutter/default-providers#initialize)
 
 ## Issues and feedback
 
-Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/firebase/flutterfire/issues/new).
 
-Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+Plugin issues that are not specific to FlutterFire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 To contribute a change to this plugin,
-please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
-and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+please review our [contribution guide](https://github.com/firebase/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/firebase/flutterfire/pulls).

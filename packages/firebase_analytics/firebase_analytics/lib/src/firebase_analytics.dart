@@ -65,6 +65,16 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return FirebaseAnalytics.instanceFor(app: defaultAppInstance);
   }
 
+  Future<bool> isSupported() {
+    return _delegate.isSupported();
+  }
+
+  /// Retrieves the app instance id from the service, or null if consent has
+  /// been denied.
+  Future<String?> get appInstanceId {
+    return _delegate.getAppInstanceId();
+  }
+
   /// Logs a custom Flutter Analytics event with the given [name] and event [parameters].
   Future<void> logEvent({
     required String name,
@@ -116,7 +126,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
 
   /// Adds parameters that will be set on every event logged from the SDK, including automatic ones.
   Future<void> setDefaultEventParameters(
-    Map<String, Object> defaultParameters,
+    Map<String, Object?>? defaultParameters,
   ) async {
     await _delegate.setDefaultEventParameters(defaultParameters);
   }

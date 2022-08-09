@@ -58,6 +58,14 @@ void main() {
     });
 
     test('should throw exception if no named app was found', () async {
+      (js.context['firebase_core'] as js.JsObject)['getApp'] =
+          js.allowInterop((String name) {
+        final dynamic error = js_util.newObject();
+        js_util.setProperty(error, 'name', 'FirebaseError');
+        js_util.setProperty(error, 'code', 'app/no-app');
+        throw error;
+      });
+
       await expectLater(
         () => Firebase.app('foo'),
         throwsA(noAppExists('foo')),

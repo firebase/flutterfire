@@ -1,3 +1,33 @@
+## 2.0.13
+
+ - Update a dependency to the latest release.
+
+## 2.0.12
+
+ - Update a dependency to the latest release.
+
+## 2.0.11
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 2.0.10
+
+ - Update a dependency to the latest release.
+
+## 2.0.9
+
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **FIX**: Provide firebase_remote_config as error code for android (#8717). ([2854cbcb](https://github.com/firebase/flutterfire/commit/2854cbcb5a2e604ace8dc55993893e5ffdbff5a8))
+ - **DOCS**: point to "firebase.google" domain for hyperlinks in the usage section of `README.md` files (for the missing packages) (#8818). ([5bda8c92](https://github.com/firebase/flutterfire/commit/5bda8c92be1651a941d1285d36e885ee0b967b11))
+
+## 2.0.8
+
+ - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8738). ([f5ca08b2](https://github.com/firebase/flutterfire/commit/f5ca08b2ca68e674f6c59c458ec26126c9e1b002))
+
+## 2.0.7
+
+ - Update a dependency to the latest release.
+
 ## 2.0.6
 
  - Update a dependency to the latest release.
@@ -16,21 +46,21 @@
 
 ## 2.0.2
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 2.0.1
 
- - **FIX**: add missing `default_package` entry for web in `pubspec.yaml` (#8139). ([5e6b570f](https://github.com/FirebaseExtended/flutterfire/commit/5e6b570f8445b0bd2eac8b112a2a6b35ff69b7b6))
+ - **FIX**: add missing `default_package` entry for web in `pubspec.yaml` (#8139). ([5e6b570f](https://github.com/firebase/flutterfire/commit/5e6b570f8445b0bd2eac8b112a2a6b35ff69b7b6))
 
 ## 2.0.0
 
 > Note: This release has breaking changes.
 
- - **BREAKING** **REFACTOR**: deprecated `RemoteConfig` in favour of `FirebaseRemoteConfig` to align Firebase services naming with other plugins. ([99b932be](https://github.com/FirebaseExtended/flutterfire/commit/99b932bea6d604d500bb29841ad59177165dee60))
+ - **BREAKING** **REFACTOR**: deprecated `RemoteConfig` in favour of `FirebaseRemoteConfig` to align Firebase services naming with other plugins. ([99b932be](https://github.com/firebase/flutterfire/commit/99b932bea6d604d500bb29841ad59177165dee60))
 
 ## 1.0.4
 
- - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/firebase/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
 
 ## 1.0.3
 

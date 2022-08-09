@@ -4,6 +4,12 @@
 
 include: ../../analysis_options.yaml
 
+analyzer:
+  # TODO(Lyokone): not working if added on the root analysis file
+  exclude:
+    - firebase_core_platform_interface/lib/src/pigeon/messages.pigeon.dart
+    - firebase_core_platform_interface/lib/src/pigeon/test_api.dart
+
 linter:
   rules:
     avoid_dynamic_calls: true

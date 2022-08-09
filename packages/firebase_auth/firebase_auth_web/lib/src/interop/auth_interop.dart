@@ -6,34 +6,258 @@
 // ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, comment_references
 // ignore_for_file: public_member_api_docs
 
-@JS('firebase.auth')
+@JS('firebase_auth')
 library firebase_interop.auth;
 
-import 'package:js/js.dart';
+import 'package:firebase_auth_web/src/interop/auth.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:js/js.dart';
+
+@JS()
+external AuthJsImpl getAuth([AppJsImpl? app]);
+
+@JS()
+external AuthJsImpl initializeAuth(AppJsImpl app, dynamic debugErrorMap);
+
+@JS('debugErrorMap')
+external Map get debugErrorMap;
+
+@JS()
+external PromiseJsImpl<void> applyActionCode(AuthJsImpl auth, String oobCode);
+
+@JS()
+external Persistence inMemoryPersistence;
+@JS()
+external Persistence browserSessionPersistence;
+@JS()
+external Persistence browserLocalPersistence;
+@JS()
+external Persistence indexedDBLocalPersistence;
+
+@JS()
+external PromiseJsImpl<ActionCodeInfo> checkActionCode(
+    AuthJsImpl auth, String oobCode);
+
+@JS()
+external PromiseJsImpl<void> confirmPasswordReset(
+  AuthJsImpl auth,
+  String oobCode,
+  String newPassword,
+);
+
+@JS()
+external void connectAuthEmulator(
+  AuthJsImpl auth,
+  String origin,
+);
+
+@JS()
+external PromiseJsImpl<void> setPersistence(
+    AuthJsImpl auth, Persistence persistence);
+
+@JS()
+external PromiseJsImpl<UserCredentialJsImpl> createUserWithEmailAndPassword(
+  AuthJsImpl auth,
+  String email,
+  String password,
+);
+
+@JS()
+external AdditionalUserInfoJsImpl getAdditionalUserInfo(
+    UserCredentialJsImpl userCredential);
+
+@JS()
+external PromiseJsImpl<void> deleteUser(
+  UserJsImpl user,
+);
+
+@JS()
+external PromiseJsImpl<List> fetchSignInMethodsForEmail(
+    AuthJsImpl auth, String email);
+
+@JS()
+external bool isSignInWithEmailLink(String emailLink);
+
+@JS()
+external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult(AuthJsImpl auth);
+
+@JS()
+external PromiseJsImpl<void> sendSignInLinkToEmail(
+  AuthJsImpl auth,
+  String email, [
+  ActionCodeSettings? actionCodeSettings,
+]);
+
+@JS()
+external PromiseJsImpl<void> sendPasswordResetEmail(
+  AuthJsImpl auth,
+  String email, [
+  ActionCodeSettings? actionCodeSettings,
+]);
+
+@JS()
+external PromiseJsImpl<UserCredentialJsImpl> signInWithCredential(
+  AuthJsImpl auth,
+  OAuthCredential credential,
+);
+
+@JS()
+external PromiseJsImpl<UserCredentialJsImpl> signInAnonymously(AuthJsImpl auth);
+
+@JS()
+external PromiseJsImpl<UserCredentialJsImpl> signInWithCustomToken(
+  AuthJsImpl auth,
+  String token,
+);
+
+@JS()
+external PromiseJsImpl<UserCredentialJsImpl> signInWithEmailAndPassword(
+  AuthJsImpl auth,
+  String email,
+  String password,
+);
+
+@JS()
+external PromiseJsImpl<UserCredentialJsImpl> signInWithEmailLink(
+  AuthJsImpl auth,
+  String email,
+  String emailLink,
+);
+
+@JS()
+external PromiseJsImpl<ConfirmationResultJsImpl> signInWithPhoneNumber(
+  AuthJsImpl auth,
+  String phoneNumber,
+  ApplicationVerifierJsImpl applicationVerifier,
+);
+
+@JS()
+external PromiseJsImpl<UserCredentialJsImpl> signInWithPopup(
+  AuthJsImpl auth,
+  AuthProviderJsImpl provider,
+);
+
+@JS()
+external PromiseJsImpl<void> signInWithRedirect(
+  AuthJsImpl auth,
+  AuthProviderJsImpl provider,
+);
+
+@JS()
+external PromiseJsImpl<String> verifyPasswordResetCode(
+  AuthJsImpl auth,
+  String code,
+);
+
+@JS()
+external PromiseJsImpl<UserCredentialJsImpl> linkWithCredential(
+  UserJsImpl user,
+  OAuthCredential? credential,
+);
+
+@JS()
+external PromiseJsImpl<ConfirmationResultJsImpl> linkWithPhoneNumber(
+  UserJsImpl user,
+  String phoneNumber,
+  ApplicationVerifierJsImpl applicationVerifier,
+);
+
+@JS()
+external PromiseJsImpl<UserCredentialJsImpl> linkWithPopup(
+  UserJsImpl user,
+  AuthProviderJsImpl provider,
+);
+
+@JS()
+external PromiseJsImpl<void> linkWithRedirect(
+  UserJsImpl user,
+  AuthProviderJsImpl provider,
+);
+
+@JS()
+external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithCredential(
+  UserJsImpl user,
+  OAuthCredential credential,
+);
+
+@JS()
+external PromiseJsImpl<ConfirmationResultJsImpl> reauthenticateWithPhoneNumber(
+  UserJsImpl user,
+  String phoneNumber,
+  ApplicationVerifierJsImpl applicationVerifier,
+);
+
+@JS()
+external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithPopup(
+  UserJsImpl user,
+  AuthProviderJsImpl provider,
+);
+
+@JS()
+external PromiseJsImpl<void> reauthenticateWithRedirect(
+  UserJsImpl user,
+  AuthProviderJsImpl provider,
+);
+
+@JS()
+external PromiseJsImpl<void> sendEmailVerification([
+  UserJsImpl user,
+  ActionCodeSettings? actionCodeSettings,
+]);
+
+@JS()
+external PromiseJsImpl<void> verifyBeforeUpdateEmail(
+  UserJsImpl user,
+  String newEmail, [
+  ActionCodeSettings? actionCodeSettings,
+]);
+
+@JS()
+external PromiseJsImpl<UserJsImpl> unlink(UserJsImpl user, String providerId);
+
+@JS()
+external PromiseJsImpl<void> updateEmail(UserJsImpl user, String newEmail);
+
+@JS()
+external PromiseJsImpl<void> updatePassword(
+  UserJsImpl user,
+  String newPassword,
+);
+
+@JS()
+external PromiseJsImpl<void> updatePhoneNumber(
+  UserJsImpl user,
+  OAuthCredential? phoneCredential,
+);
+
+@JS()
+external PromiseJsImpl<void> updateProfile(
+  UserJsImpl user,
+  UserProfile profile,
+);
+
+/// https://firebase.google.com/docs/reference/js/auth.md#multifactor
+@JS()
+external MultiFactorUserJsImpl multiFactor(
+  UserJsImpl user,
+);
+
+/// https://firebase.google.com/docs/reference/js/auth.md#multifactor
+@JS()
+external MultiFactorResolverJsImpl getMultiFactorResolver(
+  AuthJsImpl auth,
+  MultiFactorError error,
+);
 
 @JS('Auth')
 abstract class AuthJsImpl {
   external AppJsImpl get app;
-  external PromiseJsImpl<void> applyActionCode(String code);
-  external PromiseJsImpl<ActionCodeInfo> checkActionCode(String code);
-  external PromiseJsImpl<void> confirmPasswordReset(
-    String code,
-    String newPassword,
-  );
-  external PromiseJsImpl<UserCredentialJsImpl> createUserWithEmailAndPassword(
-    String email,
-    String password,
-  );
-  external PromiseJsImpl<List> fetchSignInMethodsForEmail(String email);
   external UserJsImpl get currentUser;
-  external String? get tenantId;
-  external set tenantId(String? s);
-  external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult();
-  external bool isSignInWithEmailLink(String emailLink);
-  external AuthSettings get settings;
   external String get languageCode;
   external set languageCode(String? s);
+  external AuthSettings get settings;
+  external String? get tenantId;
+  external set tenantId(String? s);
   external Func0 onAuthStateChanged(
     dynamic nextOrObserver, [
     Func1? opt_error,
@@ -44,45 +268,8 @@ abstract class AuthJsImpl {
     Func1? opt_error,
     Func0? opt_completed,
   ]);
-  external PromiseJsImpl<void> sendSignInLinkToEmail(
-    String email, [
-    ActionCodeSettings? actionCodeSettings,
-  ]);
-  external PromiseJsImpl<void> sendPasswordResetEmail(
-    String email, [
-    ActionCodeSettings? actionCodeSettings,
-  ]);
-  external PromiseJsImpl<void> setPersistence(String persistence);
-  external PromiseJsImpl<UserCredentialJsImpl> signInAnonymously();
-
-  external PromiseJsImpl<UserCredentialJsImpl> signInWithCredential(
-    OAuthCredential credential,
-  );
-  external PromiseJsImpl<UserCredentialJsImpl> signInWithCustomToken(
-    String token,
-  );
-  external PromiseJsImpl<UserCredentialJsImpl>
-      signInAndRetrieveDataWithCustomToken(String token);
-  external PromiseJsImpl<UserCredentialJsImpl> signInWithEmailAndPassword(
-    String email,
-    String password,
-  );
-  external PromiseJsImpl<UserCredentialJsImpl> signInWithEmailLink(
-    String email,
-    String emailLink,
-  );
-  external PromiseJsImpl<ConfirmationResultJsImpl> signInWithPhoneNumber(
-    String phoneNumber,
-    ApplicationVerifierJsImpl applicationVerifier,
-  );
-  external PromiseJsImpl<UserCredentialJsImpl> signInWithPopup(
-    AuthProviderJsImpl provider,
-  );
-  external PromiseJsImpl<void> signInWithRedirect(AuthProviderJsImpl provider);
   external PromiseJsImpl<void> signOut();
-  external PromiseJsImpl<void> useEmulator(String origin);
   external void useDeviceLanguage();
-  external PromiseJsImpl<String> verifyPasswordResetCode(String code);
 }
 
 @anonymous
@@ -119,68 +306,18 @@ abstract class UserJsImpl extends UserInfoJsImpl {
   external UserMetadata get metadata;
   external PromiseJsImpl<void> delete();
   external PromiseJsImpl<String> getIdToken([bool? opt_forceRefresh]);
-  external PromiseJsImpl<UserCredentialJsImpl> linkWithCredential(
-    OAuthCredential? credential,
-  );
-  external PromiseJsImpl<ConfirmationResultJsImpl> linkWithPhoneNumber(
-    String phoneNumber,
-    ApplicationVerifierJsImpl applicationVerifier,
-  );
-  external PromiseJsImpl<UserCredentialJsImpl> linkWithPopup(
-    AuthProviderJsImpl provider,
-  );
-  external PromiseJsImpl<void> linkWithRedirect(AuthProviderJsImpl provider);
-
-  external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithCredential(
-      OAuthCredential credential);
-  external PromiseJsImpl<ConfirmationResultJsImpl>
-      reauthenticateWithPhoneNumber(
-    String phoneNumber,
-    ApplicationVerifierJsImpl applicationVerifier,
-  );
-  external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithPopup(
-    AuthProviderJsImpl provider,
-  );
-  external PromiseJsImpl<void> reauthenticateWithRedirect(
-    AuthProviderJsImpl provider,
-  );
+  external PromiseJsImpl<IdTokenResultImpl> getIdTokenResult(
+      [bool? opt_forceRefresh]);
   external PromiseJsImpl<void> reload();
-  external PromiseJsImpl<void> sendEmailVerification([
-    ActionCodeSettings? actionCodeSettings,
-  ]);
-  external PromiseJsImpl<void> verifyBeforeUpdateEmail(
-    String newEmail, [
-    ActionCodeSettings? actionCodeSettings,
-  ]);
-  external PromiseJsImpl<UserJsImpl> unlink(String providerId);
-  external PromiseJsImpl<void> updateEmail(String newEmail);
-  external PromiseJsImpl<void> updatePassword(String newPassword);
-  external PromiseJsImpl<void> updatePhoneNumber(
-    OAuthCredential? phoneCredential,
-  );
-  external PromiseJsImpl<void> updateProfile(UserProfile profile);
-  external PromiseJsImpl<IdTokenResultImpl> getIdTokenResult([
-    bool? forceRefresh,
-  ]);
   external Object toJSON();
 }
 
 /// An enumeration of the possible persistence mechanism types.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.Auth#.Persistence>
-@JS('Auth.Persistence')
+@JS('Persistence')
 class Persistence {
-  /// Indicates that the state will be persisted even when the browser window
-  /// is closed.
-  external static String get LOCAL;
-
-  /// Indicates that the state will only be stored in memory and will be cleared
-  /// when the window.
-  external static String get NONE;
-
-  /// Indicates that the state will only persist in current session/tab,
-  /// relevant to web only, and will be cleared when the tab is closed.
-  external static String get SESSION;
+  external String get type;
 }
 
 /// Interface that represents the credentials returned by an auth provider.
@@ -322,10 +459,10 @@ class PhoneAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory PhoneAuthProviderJsImpl([AuthJsImpl? auth]);
   external static String get PROVIDER_ID;
   external PromiseJsImpl<String> verifyPhoneNumber(
-    String phoneNumber,
+    dynamic /* PhoneInfoOptions | string */ phoneOptions,
     ApplicationVerifierJsImpl applicationVerifier,
   );
-  external static AuthCredential credential(
+  external static PhoneAuthCredentialJsImpl credential(
     String verificationId,
     String verificationCode,
   );
@@ -340,10 +477,10 @@ abstract class ApplicationVerifierJsImpl {
 @JS('RecaptchaVerifier')
 class RecaptchaVerifierJsImpl extends ApplicationVerifierJsImpl {
   external factory RecaptchaVerifierJsImpl(
-    container, [
-    Object? parameters,
-    AppJsImpl? app,
-  ]);
+    containerOrId,
+    Object parameters,
+    AuthJsImpl authExtern,
+  );
   external void clear();
   external PromiseJsImpl<num> render();
 }
@@ -500,7 +637,7 @@ class AndroidSettings {
   });
 }
 
-/// https://firebase.google.com/docs/reference/js/firebase.auth#.UserCredential
+/// https://firebase.google.com/docs/reference/js/auth.usercredential
 @JS()
 @anonymous
 class UserCredentialJsImpl {
@@ -527,4 +664,94 @@ class AuthSettings {
   external bool get appVerificationDisabledForTesting;
   external set appVerificationDisabledForTesting(bool? b);
   // external factory AuthSettings({bool appVerificationDisabledForTesting});
+}
+
+external dynamic get browserPopupRedirectResolver;
+
+/// https://firebase.google.com/docs/reference/js/auth.multifactoruser.md#multifactoruser_interface
+@JS()
+@anonymous
+class MultiFactorUserJsImpl {
+  external List<MultiFactorInfoJsImpl> get enrolledFactors;
+  external PromiseJsImpl<void> enroll(
+      MultiFactorAssertionJsImpl assertion, String? displayName);
+  external PromiseJsImpl<MultiFactorSessionJsImpl> getSession();
+  external PromiseJsImpl<void> unenroll(
+      dynamic /* MultiFactorInfo | string */ option);
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.multifactorinfo
+@JS()
+@anonymous
+class MultiFactorInfoJsImpl {
+  external String? get displayName;
+  external String get enrollmentTime;
+  external String get factorId;
+  external String get uid;
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.multifactorassertion
+@JS()
+@anonymous
+class MultiFactorAssertionJsImpl {
+  external String get factorId;
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.multifactorerror
+@JS('Error')
+@anonymous
+class MultiFactorError extends AuthError {
+  external dynamic get customData;
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.multifactorresolver
+@JS()
+@anonymous
+class MultiFactorResolverJsImpl {
+  external List<MultiFactorInfoJsImpl> get hints;
+  external MultiFactorSessionJsImpl get session;
+  external PromiseJsImpl<UserCredentialJsImpl> resolveSignIn(
+      MultiFactorAssertionJsImpl assertion);
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.multifactorresolver
+@JS()
+@anonymous
+class MultiFactorSessionJsImpl {}
+
+/// https://firebase.google.com/docs/reference/js/auth.phonemultifactorinfo
+@JS()
+@anonymous
+class PhoneMultiFactorInfoJsImpl extends MultiFactorInfoJsImpl {
+  external String get phoneNumber;
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.phonemultifactorenrollinfooptions
+@JS()
+@anonymous
+class PhoneMultiFactorEnrollInfoOptionsJsImpl {
+  external String get phoneNumber;
+  external MultiFactorSessionJsImpl? get session;
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.phonemultifactorgenerator
+@JS('PhoneMultiFactorGenerator')
+class PhoneMultiFactorGeneratorJsImpl {
+  external static String get FACTOR_ID;
+  external static PhoneMultiFactorAssertionJsImpl? assertion(
+      PhoneAuthCredentialJsImpl credential);
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.phonemultifactorassertion
+@JS()
+@anonymous
+class PhoneMultiFactorAssertionJsImpl extends MultiFactorAssertionJsImpl {}
+
+/// https://firebase.google.com/docs/reference/js/auth.phoneauthcredential
+@JS()
+@anonymous
+class PhoneAuthCredentialJsImpl extends AuthCredential {
+  external static PhoneAuthCredentialJsImpl fromJSON(
+      dynamic /*object | string*/ json);
+  external Object toJSON();
 }

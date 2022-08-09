@@ -62,6 +62,17 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
+  /// isSupported() informs web users whether
+  /// the browser supports Firebase.Analytics
+  Future<bool> isSupported() {
+    throw UnimplementedError('isSupported() is not implemented');
+  }
+
+  /// Retrieves the app instance id from the service.
+  Future<String?> getAppInstanceId() {
+    throw UnimplementedError('getAppInstanceId() is not implemented');
+  }
+
   /// Logs the given event [name] with the given [parameters].
   Future<void> logEvent({
     required String name,
@@ -133,7 +144,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
 
   /// Adds parameters that will be set on every event logged from the SDK, including automatic ones.
   Future<void> setDefaultEventParameters(
-    Map<String, Object> defaultParameters,
+    Map<String, Object?>? defaultParameters,
   ) {
     throw UnimplementedError('setDefaultEventParameters() is not implemented');
   }

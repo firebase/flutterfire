@@ -1,5 +1,4 @@
 import 'package:cloud_firestore_odm_generator_integration_test/simple.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'setup_firestore_mock.dart';
@@ -7,9 +6,15 @@ import 'setup_firestore_mock.dart';
 void main() {
   setUpAll(setupCloudFirestoreMocks);
 
+  test('can specify @Collection on the model itself', () {
+    expect(
+      ModelCollectionReference().path,
+      'root',
+    );
+  });
+
   group('orderBy', () {
     testWidgets('applies `descending`', (tester) async {
-      await Firebase.initializeApp();
       expect(
         rootRef.orderByNullable(descending: true),
         rootRef.orderByNullable(descending: true),
@@ -21,6 +26,22 @@ void main() {
       expect(
         rootRef.orderByNullable(),
         rootRef.orderByNullable(),
+      );
+    });
+  });
+
+  group('doc', () {
+    test('asserts that the path does not point to a separate collection',
+        () async {
+      rootRef.doc('42');
+
+      expect(
+        () => rootRef.doc('42/123'),
+        throwsAssertionError,
+      );
+      expect(
+        () => rootRef.doc('42/123/456'),
+        throwsAssertionError,
       );
     });
   });

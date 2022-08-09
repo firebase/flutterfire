@@ -16,12 +16,12 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/collection_reference_web.dart';
-import 'src/field_value_factory_web.dart';
 import 'src/document_reference_web.dart';
+import 'src/field_value_factory_web.dart';
+import 'src/interop/firestore.dart' as firestore_interop;
 import 'src/query_web.dart';
 import 'src/transaction_web.dart';
 import 'src/write_batch_web.dart';
-import 'src/interop/firestore.dart' as firestore_interop;
 
 /// Web implementation for [FirebaseFirestorePlatform]
 /// delegates calls to firestore web plugin
@@ -29,10 +29,12 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// instance of Analytics from the web plugin
   firestore_interop.Firestore? _webFirestore;
 
+  firestore_interop.Settings? _settings;
+
   /// Lazily initialize [_webFirestore] on first method call
   firestore_interop.Firestore get _delegate {
-    return _webFirestore ??=
-        firestore_interop.getFirestoreInstance(core_interop.app(app.name));
+    return _webFirestore ??= firestore_interop.getFirestoreInstance(
+        core_interop.app(app.name), _settings);
   }
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
@@ -98,13 +100,20 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
-      {Duration timeout = const Duration(seconds: 30)}) async {
+  Future<T?> runTransaction<T>(
+    TransactionHandler<T> transactionHandler, {
+    Duration timeout = const Duration(seconds: 30),
+    int maxAttempts = 5,
+  }) async {
     await convertWebExceptions(() {
-      return _delegate.runTransaction((transaction) async {
-        return transactionHandler(
-            TransactionWeb(this, _delegate, transaction!));
-      }).timeout(timeout);
+      return _delegate
+          .runTransaction(
+            (transaction) async => transactionHandler(
+              TransactionWeb(this, _delegate, transaction!),
+            ),
+            maxAttempts,
+          )
+          .timeout(timeout);
     });
     // Workaround for 'Runtime type information not available for type_variable_local'
     // See: https://github.com/dart-lang/sdk/issues/29722
@@ -120,7 +129,6 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   @override
   set settings(Settings settings) {
     int? cacheSizeBytes;
-
     if (settings.cacheSizeBytes == null) {
       cacheSizeBytes = 40000000;
     } else if (settings.cacheSizeBytes == Settings.CACHE_SIZE_UNLIMITED) {
@@ -131,13 +139,17 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     }
 
     if (settings.host != null && settings.sslEnabled != null) {
-      _delegate.settings(firestore_interop.Settings(
-          cacheSizeBytes: cacheSizeBytes,
-          host: settings.host,
-          ssl: settings.sslEnabled));
+      _settings = firestore_interop.Settings(
+        cacheSizeBytes: cacheSizeBytes,
+        host: settings.host,
+        ssl: settings.sslEnabled,
+        ignoreUndefinedProperties: settings.ignoreUndefinedProperties,
+      );
     } else {
-      _delegate
-          .settings(firestore_interop.Settings(cacheSizeBytes: cacheSizeBytes));
+      _settings = firestore_interop.Settings(
+        cacheSizeBytes: cacheSizeBytes,
+        ignoreUndefinedProperties: settings.ignoreUndefinedProperties,
+      );
     }
   }
 

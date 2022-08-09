@@ -51,9 +51,7 @@ android {
 
 dependencies {
   implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
-  // TODO remove specific version and fallback to BoM once 18.2.10 is available in a BoM release
-  implementation 'com.google.firebase:firebase-crashlytics:18.2.10'
-  // implementation 'com.google.firebase:firebase-crashlytics'
+  implementation 'com.google.firebase:firebase-crashlytics'
   implementation 'androidx.annotation:annotation:1.1.0'
 }
 

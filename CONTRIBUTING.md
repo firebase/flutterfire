@@ -1,12 +1,11 @@
 # Contributing to FlutterFire
 
-<a href="https://github.com/FirebaseExtended/flutterfire/actions?query=workflow%3Aall_plugins">
-  <img src="https://github.com/FirebaseExtended/flutterfire/workflows/all_plugins/badge.svg" alt="all_plugins GitHub Workflow Status"/>
+<a href="https://github.com/firebase/flutterfire/actions?query=workflow%3Aall_plugins">
+  <img src="https://github.com/firebase/flutterfire/workflows/all_plugins/badge.svg" alt="all_plugins GitHub Workflow Status"/>
 </a>
 
 _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#code-of-conduct)_
 
-**Note about contributing to Docs**: We're in the process of updating documentation for the Firebase SDK for Flutter. Please hold your PRs for docs until May 5th, 2022.
 ## 1. Things you will need
 
 - Linux, Mac OS X, or Windows.
@@ -15,11 +14,12 @@ _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#cod
 - An IDE such as [Android Studio](https://developer.android.com/studio) or [Visual Studio Code](https://code.visualstudio.com/).
 - [`flutter_plugin_tools`](https://pub.dev/packages/flutter_plugin_tools) locally activated.
 - [`clang-format`](https://clang.llvm.org/docs/ClangFormat.html) (available via brew on macOS, apt on Ubuntu, maybe via llvm on chocolatey for Windows)
+- [`swiftformat`](https://github.com/nicklockwood/SwiftFormat) (available via brew on macOS)
 
 ## 2. Forking & cloning the repository
 
 - Ensure all the dependencies described in the previous section are installed.
-- Fork `https://github.com/FirebaseExtended/flutterfire` into your own GitHub account. If
+- Fork `https://github.com/firebase/flutterfire` into your own GitHub account. If
   you already have a fork, and are now installing a development environment on
   a new machine, make sure you've updated your fork so that you don't use stale
   configuration options from long ago.
@@ -27,7 +27,7 @@ _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#cod
   follow [GitHub's directions](https://help.github.com/articles/generating-ssh-keys/)
   to generate an SSH key.
 - `git clone git@github.com:<your_name_here>/flutterfire.git`
-- `git remote add upstream git@github.com:FirebaseExtended/flutterfire.git` (So that you
+- `git remote add upstream git@github.com:firebase/flutterfire.git` (So that you
   fetch from the master repository, not your clone, when running `git fetch`
   et al.)
 
@@ -38,7 +38,7 @@ FlutterFire uses [Melos](https://github.com/invertase/melos) to manage the proje
 To install Melos, run the following command from your SSH client:
 
 ```bash
-pub global activate melos
+dart pub global activate melos
 ```
 
 Next, at the root of your locally cloned repository bootstrap the projects dependencies:
@@ -53,7 +53,31 @@ plugins, examples and tests to build from the local clone project.
 
 > You do not need to run `flutter pub get` once bootstrap has been completed.
 
-## 4. Running an example
+> If you're using [fvm](https://fvm.app/) you might need to specify the sdk-path: `melos bs --sdk-path=/Users/user/fvm/default/`
+
+## 4. Automatically generated MethodChannel with Pigeon
+
+### Use
+
+FlutterFire uses [pigeon](https://github.com/flutter/packages/tree/main/packages/pigeon) to generate the `MethodChannel` API layer between Dart and the native platforms.
+To modify the messages sent with Pigeon (i.e. API code between Dart and native platforms), you can modify the `pigeons/messages.dart` file in the corresponding folder and regenerate the code running the below noted melos command.
+
+
+```
+melos run generate:pigeon
+```
+
+Don't forget to run the formatter on the generated files.
+
+### Tests
+
+To tests the created interface, you can mock the interface directly with:
+
+```dart
+TestNAMEHostApi.setup(MockNAMEApp());
+```
+
+## 5. Running an example
 
 Each plugin provides an example app which aims to showcase the main use-cases of each plugin.
 
@@ -68,7 +92,7 @@ flutter run
 Using Melos (installed in step 3), any changes made to the plugins locally will also be reflected within all
 example applications code automatically.
 
-## 4. Running tests
+## 6. Running tests
 
 FlutterFire comprises of a number of tests for each plugin, either end-to-end (e2e) or unit tests.
 
@@ -114,10 +138,10 @@ run the following command from the root of your cloned repository:
 melos run test:e2e
 ```
 
-A full list of all commands can be found within the [`melos.yaml`](https://github.com/FirebaseExtended/flutterfire/blob/master/melos.yaml)
+A full list of all commands can be found within the [`melos.yaml`](https://github.com/firebase/flutterfire/blob/master/melos.yaml)
 file.
 
-## 5. Contributing code
+## 7. Contributing code
 
 We gladly accept contributions via GitHub pull requests.
 
@@ -152,7 +176,7 @@ Assuming all is successful, commit and push your code:
 To send us a pull request:
 
 - `git pull-request` (if you are using [Hub](http://github.com/github/hub/)) or
-  go to `https://github.com/FirebaseExtended/flutterfire` and click the
+  go to `https://github.com/firebase/flutterfire` and click the
   "Compare & pull request" button
 
 Please make sure all your check-ins have detailed commit messages explaining the patch.
@@ -218,27 +242,42 @@ Some things to keep in mind before publishing the release:
 
 ### Run a release...
 
-1) Switch to `master` branch locally.
-2) Run `git pull origin master`.
-3) Run `git pull --tags` to make sure all tags are fetched.
-4) Create new branch with the signature "release/[year]-[month]-[day]".
-5) Run `melos version --no-git-tag-version` to automatically version packages and update Changelogs.
-6) Run `melos publish` to dry run and confirm all packages are publishable.
-7) After successful dry run, commit all changes with the signature "chore(release): prepare for release".
-8) Run `git push origin [RELEASE BRANCH NAME]` & open pull request for review on GitHub.
-9) After successful review and merge of the pull request, switch to `master` branch locally, & run `git pull origin master`.
-10) Run `melos publish --no-dry-run --git-tag-version` to now publish to Pub.dev.
-11) Run `git push --tags` to push tags to repository.
+1. Switch to `master` branch locally.
+2. Run `git pull origin master`.
+3. Run `git pull --tags` to make sure all tags are fetched.
+4. Create new branch with the signature "release/[year]-[month]-[day]".
+5. Run `melos version --no-git-tag-version` to automatically version packages and update Changelogs.
+6. Run `melos publish` to dry run and confirm all packages are publishable.
+7. After successful dry run, commit all changes with the signature "chore(release): prepare for release".
+8. Run `git push origin [RELEASE BRANCH NAME]` & open pull request for review on GitHub.
+9. After successful review and merge of the pull request, switch to `master` branch locally, & run `git pull origin master`.
+10. Run `melos publish --no-dry-run --git-tag-version` to now publish to Pub.dev.
+11. Run `git push --tags` to push tags to repository.
 
 ### Graduate packages
 
 Sometimes you may need to 'graduate' a package from a 'dev' or 'beta' (versions tagged like this: `0.10.0-dev.4`) to a stable version. Melos can also be used
 to graduate multiple packages using the following steps:
 
-1) Switch to `master` branch locally.
-2) Run 'git pull origin master'.
-3) Run `git fetch --all` to make sure all tags and commits are fetched.
-4) Run `melos version --graduate` to prompt a list of all packages to be graduated (You may also specifically select packages using the scope flag like this: `--scope="*firestore*"`)
-5) Run `git push --follow-tags` to push the auto commits and tags to the remote repository.
-6) Run `melos publish` to dry run and confirm all packages are publishable.
-7) Run `melos publish --no-dry-run` to now publish to Pub.dev.
+1. Switch to `master` branch locally.
+2. Run 'git pull origin master'.
+3. Run `git fetch --all` to make sure all tags and commits are fetched.
+4. Run `melos version --graduate` to prompt a list of all packages to be graduated (You may also specifically select packages using the scope flag like this: `--scope="*firestore*"`)
+5. Run `git push --follow-tags` to push the auto commits and tags to the remote repository.
+6. Run `melos publish` to dry run and confirm all packages are publishable.
+7. Run `melos publish --no-dry-run` to now publish to Pub.dev.
+
+## 8. Contributing documentation
+
+We gladly accept contributions to the SDK documentation. As our docs are also part of this repo,
+see "Contributing code" above for how to prepare and submit a PR to the repo.
+
+Since we merged the Firebase Flutter plugins documentation into the official
+Firebase documentation on firebase.google.com, you may notice some new markdown
+syntax related to the publishing infrastructure Google uses for developer documentation.
+
+Firebase follows the [Google developer documentation style guide](https://developers.google.com/style),
+similar to the [Flutter style guide](https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo#documentation-dartdocs-javadocs-etc),
+which you should read before writing substantial contributions.
+
+We also keep a list of issues related to the documentation.
