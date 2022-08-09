@@ -10,7 +10,6 @@ on:
       - "docs/**"
       - "website/**"
       - "**/example/**"
-      - "**/flutterfire_ui/**"
       - "**/cloud_firestore_odm/**"
       - "**.md"
   push:
@@ -20,7 +19,6 @@ on:
       - "docs/**"
       - "website/**"
       - "**/example/**"
-      - "**/flutterfire_ui/**"
       - "**/cloud_firestore_odm/**"
       - "**.md"
 
