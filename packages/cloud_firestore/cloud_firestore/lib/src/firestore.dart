@@ -114,7 +114,8 @@ class FirebaseFirestore extends FirebasePluginPlatform {
         final String message = (e as dynamic).message;
         // this catches FirebaseError from web that occurs after hot reloading & hot restarting
         if (!message.contains(
-            'Firestore has already been started and its settings can no longer be changed')) {
+          'Firestore has already been started and its settings can no longer be changed',
+        )) {
           rethrow;
         }
       }
