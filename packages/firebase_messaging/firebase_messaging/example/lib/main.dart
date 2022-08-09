@@ -264,20 +264,21 @@ class _Application extends State<Application> {
               }),
             ),
             ElevatedButton(
-                onPressed: () {
-                  FirebaseMessaging.instance
-                      .getInitialMessage()
-                      .then((RemoteMessage? message) {
-                    if (message != null) {
-                      Navigator.pushNamed(
-                        context,
-                        '/message',
-                        arguments: MessageArguments(message, true),
-                      );
-                    }
-                  });
-                },
-                child: const Text('getInitialMessage()')),
+              onPressed: () {
+                FirebaseMessaging.instance
+                    .getInitialMessage()
+                    .then((RemoteMessage? message) {
+                  if (message != null) {
+                    Navigator.pushNamed(
+                      context,
+                      '/message',
+                      arguments: MessageArguments(message, true),
+                    );
+                  }
+                });
+              },
+              child: const Text('getInitialMessage()'),
+            ),
             MetaCard('Message Stream', MessageList()),
           ],
         ),

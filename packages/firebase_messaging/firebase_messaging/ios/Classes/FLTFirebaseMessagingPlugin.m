@@ -340,7 +340,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // We only want to handle FCM notifications and stop firing `onMessageOpenedApp()` when app is
   // coming from a terminated state.
   if (remoteNotification[@"gcm.message_id"] &&
-      ![_initialNoticationID isEqualToString:remoteNotification[@"gcm.message_id"]]) {
+      ![_initialNoticationID isEqualToString:_notificationOpenedAppID]) {
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
@@ -1000,7 +1000,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (nullable NSDictionary *)copyInitialNotification {
   @synchronized(self) {
-    // Only return if initial notification was pushed when app is terminated. Also ensure that
+    // Only return if initial notification was sent when app is terminated. Also ensure that
     // it was the initial notification that was tapped to open the app.
     if (_initialNotification != nil &&
         [_initialNoticationID isEqualToString:_notificationOpenedAppID]) {
