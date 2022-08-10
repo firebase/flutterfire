@@ -56,6 +56,17 @@ void testsMain() {
       await testTrace.stop();
     });
 
+    test("starting Trace twice shouldn't throw an error", () async {
+      await testTrace.start();
+      await testTrace.start();
+    });
+
+    test("stopping Trace twice shouldn't throw an error", () async {
+      await testTrace.start();
+      await testTrace.stop();
+      await testTrace.stop();
+    });
+
     test('incrementMetric works correctly', () {
       testTrace.incrementMetric(metricName, 14);
       expect(testTrace.getMetric(metricName), 14);
@@ -199,6 +210,17 @@ void testsMain() {
       test('set response content type correctly', () {
         testHttpMetric.responseContentType = 'content';
         expect(testHttpMetric.responseContentType, equals('content'));
+      });
+
+      test("starting HttpMetric twice shouldn't throw an error", () async {
+        await testHttpMetric.start();
+        await testHttpMetric.start();
+      });
+
+      test("stopping HttpMetric twice shouldn't throw an error", () async {
+        await testHttpMetric.start();
+        await testHttpMetric.stop();
+        await testHttpMetric.stop();
       });
     },
     skip: kIsWeb,

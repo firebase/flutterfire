@@ -14,8 +14,7 @@ void main() {
   setupFirebasePerformanceMocks();
 
   late TestMethodChannelTrace trace;
-  const int kMethodHandle = 21;
-  const int kTraceHandle = 22;
+  const int kTraceHandle = 1;
   const String kName = 'test-trace-name';
   final List<MethodCall> log = <MethodCall>[];
   // mock props
@@ -36,9 +35,9 @@ void main() {
         }
 
         switch (call.method) {
-          case 'FirebasePerformance#newTrace':
-          case 'Trace#start':
-          case 'Trace#stop':
+          case 'FirebasePerformance#traceStart':
+            return 1;
+          case 'FirebasePerformance#traceStop':
             return null;
           default:
             return true;
@@ -46,7 +45,7 @@ void main() {
       });
     });
     setUp(() async {
-      trace = TestMethodChannelTrace(kMethodHandle, kTraceHandle, kName);
+      trace = TestMethodChannelTrace(kName);
       mockPlatformExceptionThrown = false;
       mockExceptionThrown = false;
       log.clear();
@@ -68,19 +67,9 @@ void main() {
 
         expect(log, <Matcher>[
           isMethodCall(
-            'FirebasePerformance#newTrace',
-            arguments: {
-              'handle': kMethodHandle,
-              'traceHandle': kTraceHandle,
-              'name': kName
-            },
+            'FirebasePerformance#traceStart',
+            arguments: {'name': kName},
           ),
-          isMethodCall(
-            'Trace#start',
-            arguments: {
-              'handle': kTraceHandle,
-            },
-          )
         ]);
       });
 
@@ -103,21 +92,11 @@ void main() {
 
         expect(log, <Matcher>[
           isMethodCall(
-            'FirebasePerformance#newTrace',
-            arguments: {
-              'handle': kMethodHandle,
-              'traceHandle': kTraceHandle,
-              'name': kName
-            },
+            'FirebasePerformance#traceStart',
+            arguments: {'name': kName},
           ),
           isMethodCall(
-            'Trace#start',
-            arguments: {
-              'handle': kTraceHandle,
-            },
-          ),
-          isMethodCall(
-            'Trace#stop',
+            'FirebasePerformance#traceStop',
             arguments: {
               'handle': kTraceHandle,
               'metrics': {
@@ -127,7 +106,7 @@ void main() {
                 'bar': 'baz',
               },
             },
-          )
+          ),
         ]);
       });
 
@@ -156,18 +135,8 @@ void main() {
 
         expect(log, <Matcher>[
           isMethodCall(
-            'FirebasePerformance#newTrace',
-            arguments: {
-              'handle': kMethodHandle,
-              'traceHandle': kTraceHandle,
-              'name': kName
-            },
-          ),
-          isMethodCall(
-            'Trace#start',
-            arguments: {
-              'handle': kTraceHandle,
-            },
+            'FirebasePerformance#traceStart',
+            arguments: {'name': kName},
           ),
         ]);
 
@@ -184,18 +153,8 @@ void main() {
 
         expect(log, <Matcher>[
           isMethodCall(
-            'FirebasePerformance#newTrace',
-            arguments: {
-              'handle': kMethodHandle,
-              'traceHandle': kTraceHandle,
-              'name': kName
-            },
-          ),
-          isMethodCall(
-            'Trace#start',
-            arguments: {
-              'handle': kTraceHandle,
-            },
+            'FirebasePerformance#traceStart',
+            arguments: {'name': kName},
           ),
         ]);
 
@@ -212,18 +171,8 @@ void main() {
 
         expect(log, <Matcher>[
           isMethodCall(
-            'FirebasePerformance#newTrace',
-            arguments: {
-              'handle': kMethodHandle,
-              'traceHandle': kTraceHandle,
-              'name': kName
-            },
-          ),
-          isMethodCall(
-            'Trace#start',
-            arguments: {
-              'handle': kTraceHandle,
-            },
+            'FirebasePerformance#traceStart',
+            arguments: {'name': kName},
           ),
         ]);
 
@@ -337,6 +286,5 @@ void main() {
 }
 
 class TestMethodChannelTrace extends MethodChannelTrace {
-  TestMethodChannelTrace(handle, traceHandle, name)
-      : super(handle, traceHandle, name);
+  TestMethodChannelTrace(name) : super(name);
 }
