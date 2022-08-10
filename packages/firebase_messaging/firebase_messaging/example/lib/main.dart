@@ -174,17 +174,6 @@ class _Application extends State<Application> {
   @override
   void initState() {
     super.initState();
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage? message) {
-      if (message != null) {
-        Navigator.pushNamed(
-          context,
-          '/message',
-          arguments: MessageArguments(message, true),
-        );
-      }
-    });
 
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
 
@@ -307,6 +296,22 @@ class _Application extends State<Application> {
                     ? const CircularProgressIndicator()
                     : Text(token, style: const TextStyle(fontSize: 12));
               }),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                FirebaseMessaging.instance
+                    .getInitialMessage()
+                    .then((RemoteMessage? message) {
+                  if (message != null) {
+                    Navigator.pushNamed(
+                      context,
+                      '/message',
+                      arguments: MessageArguments(message, true),
+                    );
+                  }
+                });
+              },
+              child: const Text('getInitialMessage()'),
             ),
             MetaCard('Message Stream', MessageList()),
           ],
