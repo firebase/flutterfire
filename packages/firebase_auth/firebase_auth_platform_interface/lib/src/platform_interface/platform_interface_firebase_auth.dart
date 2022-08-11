@@ -81,6 +81,8 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
+  ///
+  /// Setting a [persistence] type is only available on web based platforms.
   @protected
   FirebaseAuthPlatform delegateFor(
       {required FirebaseApp app, Persistence? persistence}) {
