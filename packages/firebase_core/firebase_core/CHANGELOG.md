@@ -1,3 +1,7 @@
+## 1.20.1
+
+ - **FIX**: broken homepage link in pubspec.yaml ([#9314](https://github.com/firebase/flutterfire/issues/9314)). ([7649c27f](https://github.com/firebase/flutterfire/commit/7649c27fde639aec8c70a1acfd86c938eeb77537))
+
 ## 1.20.0
 
  - **FEAT**: bump Firebase Android SDK to 30.3.0 ([#9161](https://github.com/firebase/flutterfire/issues/9161)). ([d1f96310](https://github.com/firebase/flutterfire/commit/d1f96310310c7584c4af751e1e75dc178aacce89))
