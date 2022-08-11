@@ -3,6 +3,135 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-08-11
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v3.4.4`](#cloud_firestore---v344)
+ - [`firebase_auth` - `v3.6.3`](#firebase_auth---v363)
+ - [`firebase_auth_platform_interface` - `v6.5.3`](#firebase_auth_platform_interface---v653)
+ - [`firebase_core` - `v1.20.1`](#firebase_core---v1201)
+ - [`firebase_messaging` - `v12.0.2`](#firebase_messaging---v1202)
+ - [`flutterfire_ui` - `v0.4.3+5`](#flutterfire_ui---v0435)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.26`](#cloud_firestore_odm---v100-dev26)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.26`](#cloud_firestore_odm_generator---v100-dev26)
+ - [`firebase_auth_web` - `v4.2.3`](#firebase_auth_web---v423)
+ - [`firebase_in_app_messaging` - `v0.6.0+21`](#firebase_in_app_messaging---v06021)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.1+13`](#firebase_in_app_messaging_platform_interface---v02113)
+ - [`firebase_crashlytics_platform_interface` - `v3.2.13`](#firebase_crashlytics_platform_interface---v3213)
+ - [`firebase_crashlytics` - `v2.8.7`](#firebase_crashlytics---v287)
+ - [`firebase_remote_config_platform_interface` - `v1.1.13`](#firebase_remote_config_platform_interface---v1113)
+ - [`firebase_database` - `v9.1.1`](#firebase_database---v911)
+ - [`firebase_remote_config` - `v2.0.14`](#firebase_remote_config---v2014)
+ - [`firebase_remote_config_web` - `v1.1.2`](#firebase_remote_config_web---v112)
+ - [`firebase_database_platform_interface` - `v0.2.2+1`](#firebase_database_platform_interface---v0221)
+ - [`cloud_firestore_web` - `v2.8.4`](#cloud_firestore_web---v284)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.3+9`](#firebase_dynamic_links_platform_interface---v0239)
+ - [`firebase_database_web` - `v0.2.1+3`](#firebase_database_web---v0213)
+ - [`firebase_dynamic_links` - `v4.3.4`](#firebase_dynamic_links---v434)
+ - [`firebase_app_installations` - `v0.1.1+4`](#firebase_app_installations---v0114)
+ - [`cloud_firestore_platform_interface` - `v5.7.1`](#cloud_firestore_platform_interface---v571)
+ - [`firebase_messaging_web` - `v3.1.1`](#firebase_messaging_web---v311)
+ - [`firebase_messaging_platform_interface` - `v4.1.1`](#firebase_messaging_platform_interface---v411)
+ - [`firebase_app_installations_web` - `v0.1.1+2`](#firebase_app_installations_web---v0112)
+ - [`firebase_app_installations_platform_interface` - `v0.1.1+13`](#firebase_app_installations_platform_interface---v01113)
+ - [`firebase_analytics_web` - `v0.4.2+1`](#firebase_analytics_web---v0421)
+ - [`firebase_analytics` - `v9.3.1`](#firebase_analytics---v931)
+ - [`firebase_ml_model_downloader` - `v0.1.1+4`](#firebase_ml_model_downloader---v0114)
+ - [`firebase_analytics_platform_interface` - `v3.3.1`](#firebase_analytics_platform_interface---v331)
+ - [`firebase_app_check_platform_interface` - `v0.0.4+13`](#firebase_app_check_platform_interface---v00413)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.1+13`](#firebase_ml_model_downloader_platform_interface---v01113)
+ - [`firebase_app_check` - `v0.0.6+19`](#firebase_app_check---v00619)
+ - [`firebase_app_check_web` - `v0.0.6+2`](#firebase_app_check_web---v0062)
+ - [`cloud_functions_web` - `v4.3.2`](#cloud_functions_web---v432)
+ - [`firebase_storage_web` - `v3.3.3`](#firebase_storage_web---v333)
+ - [`cloud_functions` - `v3.3.4`](#cloud_functions---v334)
+ - [`firebase_storage` - `v10.3.5`](#firebase_storage---v1035)
+ - [`firebase_storage_platform_interface` - `v4.1.13`](#firebase_storage_platform_interface---v4113)
+ - [`cloud_functions_platform_interface` - `v5.1.13`](#cloud_functions_platform_interface---v5113)
+ - [`firebase_performance` - `v0.8.2+2`](#firebase_performance---v0822)
+ - [`firebase_performance_platform_interface` - `v0.1.1+13`](#firebase_performance_platform_interface---v01113)
+ - [`firebase_performance_web` - `v0.1.1+2`](#firebase_performance_web---v0112)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.3+5`
+ - `cloud_firestore_odm` - `v1.0.0-dev.26`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.26`
+ - `firebase_auth_web` - `v4.2.3`
+ - `firebase_in_app_messaging` - `v0.6.0+21`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.1+13`
+ - `firebase_crashlytics_platform_interface` - `v3.2.13`
+ - `firebase_crashlytics` - `v2.8.7`
+ - `firebase_remote_config_platform_interface` - `v1.1.13`
+ - `firebase_database` - `v9.1.1`
+ - `firebase_remote_config` - `v2.0.14`
+ - `firebase_remote_config_web` - `v1.1.2`
+ - `firebase_database_platform_interface` - `v0.2.2+1`
+ - `cloud_firestore_web` - `v2.8.4`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.3+9`
+ - `firebase_database_web` - `v0.2.1+3`
+ - `firebase_dynamic_links` - `v4.3.4`
+ - `firebase_app_installations` - `v0.1.1+4`
+ - `cloud_firestore_platform_interface` - `v5.7.1`
+ - `firebase_messaging_web` - `v3.1.1`
+ - `firebase_messaging_platform_interface` - `v4.1.1`
+ - `firebase_app_installations_web` - `v0.1.1+2`
+ - `firebase_app_installations_platform_interface` - `v0.1.1+13`
+ - `firebase_analytics_web` - `v0.4.2+1`
+ - `firebase_analytics` - `v9.3.1`
+ - `firebase_ml_model_downloader` - `v0.1.1+4`
+ - `firebase_analytics_platform_interface` - `v3.3.1`
+ - `firebase_app_check_platform_interface` - `v0.0.4+13`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.1+13`
+ - `firebase_app_check` - `v0.0.6+19`
+ - `firebase_app_check_web` - `v0.0.6+2`
+ - `cloud_functions_web` - `v4.3.2`
+ - `firebase_storage_web` - `v3.3.3`
+ - `cloud_functions` - `v3.3.4`
+ - `firebase_storage` - `v10.3.5`
+ - `firebase_storage_platform_interface` - `v4.1.13`
+ - `cloud_functions_platform_interface` - `v5.1.13`
+ - `firebase_performance` - `v0.8.2+2`
+ - `firebase_performance_platform_interface` - `v0.1.1+13`
+ - `firebase_performance_web` - `v0.1.1+2`
+
+---
+
+#### `cloud_firestore` - `v3.4.4`
+
+ - **FIX**: stop `FirebaseError` appearing in console on hot restart & hot refresh ([#9321](https://github.com/firebase/flutterfire/issues/9321)). ([4ba0ff9d](https://github.com/firebase/flutterfire/commit/4ba0ff9d9c7d13f7e040d80375d6db3edb8d37d5))
+
+#### `firebase_auth` - `v3.6.3`
+
+ - **FIX**: use correct UTC time from server for `currentUser?.metadata.creationTime` & `currentUser?.metadata.lastSignInTime` ([#9248](https://github.com/firebase/flutterfire/issues/9248)). ([a6204128](https://github.com/firebase/flutterfire/commit/a6204128edf1f54ac734385d0ed6214d50cebd1b))
+ - **DOCS**: explicit mention that `refreshToken` is empty string on native platforms on the `User`instance ([#9183](https://github.com/firebase/flutterfire/issues/9183)). ([1aa1c163](https://github.com/firebase/flutterfire/commit/1aa1c1638edc632dedf8de0f02127e26b1a86e17))
+
+#### `firebase_auth_platform_interface` - `v6.5.3`
+
+ - **FIX**: use correct UTC time from server for `currentUser?.metadata.creationTime` & `currentUser?.metadata.lastSignInTime` ([#9248](https://github.com/firebase/flutterfire/issues/9248)). ([a6204128](https://github.com/firebase/flutterfire/commit/a6204128edf1f54ac734385d0ed6214d50cebd1b))
+ - **DOCS**: explicit mention that `refreshToken` is empty string on native platforms on the `User`instance ([#9183](https://github.com/firebase/flutterfire/issues/9183)). ([1aa1c163](https://github.com/firebase/flutterfire/commit/1aa1c1638edc632dedf8de0f02127e26b1a86e17))
+ - **DOCS**: add note that `persistence` is only available on web based platforms. ([#9274](https://github.com/firebase/flutterfire/issues/9274)). ([3ad2485c](https://github.com/firebase/flutterfire/commit/3ad2485ccdcce2eb9634bd7f005479a03b3265ef))
+
+#### `firebase_core` - `v1.20.1`
+
+ - **FIX**: broken homepage link in pubspec.yaml ([#9314](https://github.com/firebase/flutterfire/issues/9314)). ([7649c27f](https://github.com/firebase/flutterfire/commit/7649c27fde639aec8c70a1acfd86c938eeb77537))
+
+#### `firebase_messaging` - `v12.0.2`
+
+ - **FIX**: ensure initial notification was tapped to open app. fixes `getInitialMessage()` & `onMessageOpenedApp()` . ([#9315](https://github.com/firebase/flutterfire/issues/9315)). ([e66c59ca](https://github.com/firebase/flutterfire/commit/e66c59ca4b8a13fc4ce597cb63612eaaaefaf673))
+
+
 ## 2022-08-01
 
 ### Changes

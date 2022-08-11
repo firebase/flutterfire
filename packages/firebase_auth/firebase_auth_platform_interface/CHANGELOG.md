@@ -1,3 +1,9 @@
+## 6.5.3
+
+ - **FIX**: use correct UTC time from server for `currentUser?.metadata.creationTime` & `currentUser?.metadata.lastSignInTime` ([#9248](https://github.com/firebase/flutterfire/issues/9248)). ([a6204128](https://github.com/firebase/flutterfire/commit/a6204128edf1f54ac734385d0ed6214d50cebd1b))
+ - **DOCS**: explicit mention that `refreshToken` is empty string on native platforms on the `User`instance ([#9183](https://github.com/firebase/flutterfire/issues/9183)). ([1aa1c163](https://github.com/firebase/flutterfire/commit/1aa1c1638edc632dedf8de0f02127e26b1a86e17))
+ - **DOCS**: add note that `persistence` is only available on web based platforms. ([#9274](https://github.com/firebase/flutterfire/issues/9274)). ([3ad2485c](https://github.com/firebase/flutterfire/commit/3ad2485ccdcce2eb9634bd7f005479a03b3265ef))
+
 ## 6.5.2
 
  - **DOCS**: update `getIdTokenResult` inline documentation ([#9150](https://github.com/firebase/flutterfire/issues/9150)). ([519518ce](https://github.com/firebase/flutterfire/commit/519518ce3ed36580e35713e791281b251018201c))
