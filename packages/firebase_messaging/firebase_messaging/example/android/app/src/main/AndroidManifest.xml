@@ -1,7 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.flutter.plugins.firebase.messaging.example">
-  <!-- Permissions options for the `notification` group -->
-  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
         android:label="firebase_messaging_example"
         android:icon="@mipmap/ic_launcher">
