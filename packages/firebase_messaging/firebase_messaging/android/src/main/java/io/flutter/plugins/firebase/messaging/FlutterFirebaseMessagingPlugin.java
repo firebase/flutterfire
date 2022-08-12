@@ -84,7 +84,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
   @Override
   public void onAttachedToActivity(ActivityPluginBinding binding) {
     binding.addOnNewIntentListener(this);
-    binding.addRequestPermissionsResultListener(this.permissionManager);
+    binding.addRequestPermissionsResultListener(permissionManager);
     this.mainActivity = binding.getActivity();
     if (mainActivity.getIntent() != null && mainActivity.getIntent().getExtras() != null) {
       if ((mainActivity.getIntent().getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY)
@@ -329,7 +329,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
                     == PackageManager.PERMISSION_GRANTED;
 
             if (!areNotificationsEnabled) {
-              this.permissionManager.requestPermissions(
+              permissionManager.requestPermissions(
                   mainActivity,
                   (notificationsEnabled) -> {
                     permissions.put("authorizationStatus", notificationsEnabled);
@@ -369,6 +369,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
 
     return taskCompletionSource.getTask();
   }
+
 
   @Override
   public void onMethodCall(final MethodCall call, @NonNull final Result result) {
@@ -440,12 +441,12 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         methodCallTask = setAutoInitEnabled(call.arguments());
         break;
       case "Messaging#requestPermission":
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-          //Android version < Android 13 doesn't require asking for runtime permissions.
-          methodCallTask = getPermissions();
+        if (Build.VERSION.SDK_INT >= 33) {
+          // Android version >= Android 13 requires user input if notification permission not set/granted
+            methodCallTask = requestPermissions();
         } else {
-          //Android version > Android 13 requires user input if notification permission not set/granted
-          methodCallTask = requestPermissions();
+          // Android version < Android 13 doesn't require asking for runtime permissions.
+          methodCallTask = getPermissions();
         }
         break;
       case "Messaging#getNotificationSettings":
