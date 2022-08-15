@@ -370,7 +370,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     return taskCompletionSource.getTask();
   }
 
-
   @Override
   public void onMethodCall(final MethodCall call, @NonNull final Result result) {
     Task<?> methodCallTask;
@@ -443,7 +442,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
       case "Messaging#requestPermission":
         if (Build.VERSION.SDK_INT >= 33) {
           // Android version >= Android 13 requires user input if notification permission not set/granted
-            methodCallTask = requestPermissions();
+          methodCallTask = requestPermissions();
         } else {
           // Android version < Android 13 doesn't require asking for runtime permissions.
           methodCallTask = getPermissions();
