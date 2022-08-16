@@ -358,9 +358,17 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         () -> {
           try {
             final Map<String, Integer> permissions = new HashMap<>();
-            final boolean areNotificationsEnabled =
-                NotificationManagerCompat.from(mainActivity).areNotificationsEnabled();
-            permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
+            if (Build.VERSION.SDK_INT >= 33) {
+              final boolean areNotificationsEnabled =
+                  ContextHolder.getApplicationContext()
+                          .checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+                      == PackageManager.PERMISSION_GRANTED;
+              permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
+            } else {
+              final boolean areNotificationsEnabled =
+                  NotificationManagerCompat.from(mainActivity).areNotificationsEnabled();
+              permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
+            }
             taskCompletionSource.setResult(permissions);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
