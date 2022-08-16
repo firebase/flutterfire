@@ -61,7 +61,7 @@ String? getBuildId(StackTrace stackTrace) {
       if (frame.member.startsWith("build_id: '") &&
           frame.member.endsWith("'")) {
         // format is: "build_id: '8deece9b0e5bf1aa541b5a91e171282e'"
-        return frame.member.substring(10, frame.member.length - 1);
+        return frame.member.substring(11, frame.member.length - 1);
       }
     }
   }
