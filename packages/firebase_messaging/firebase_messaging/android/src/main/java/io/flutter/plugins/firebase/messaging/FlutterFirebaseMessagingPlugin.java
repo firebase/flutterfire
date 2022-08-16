@@ -77,7 +77,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    binding.getApplicationContext();
     LocalBroadcastManager.getInstance(binding.getApplicationContext()).unregisterReceiver(this);
   }
 
@@ -323,10 +322,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         () -> {
           final Map<String, Integer> permissions = new HashMap<>();
           try {
-            final boolean areNotificationsEnabled =
-                ContextHolder.getApplicationContext()
-                        .checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
-                    == PackageManager.PERMISSION_GRANTED;
+            final boolean areNotificationsEnabled = checkPermissions();
 
             if (!areNotificationsEnabled) {
               permissionManager.requestPermissions(
@@ -351,6 +347,17 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     return taskCompletionSource.getTask();
   }
 
+  private Boolean checkPermissions() {
+    if (Build.VERSION.SDK_INT >= 33) {
+      return ContextHolder.getApplicationContext()
+              .checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+          == PackageManager.PERMISSION_GRANTED;
+    }
+
+    throw new RuntimeException(
+        "Cannot check permissions using POST_NOTIFICATIONS on anything less than API level 33");
+  }
+
   private Task<Map<String, Integer>> getPermissions() {
     TaskCompletionSource<Map<String, Integer>> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -359,10 +366,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
           try {
             final Map<String, Integer> permissions = new HashMap<>();
             if (Build.VERSION.SDK_INT >= 33) {
-              final boolean areNotificationsEnabled =
-                  ContextHolder.getApplicationContext()
-                          .checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
-                      == PackageManager.PERMISSION_GRANTED;
+              final boolean areNotificationsEnabled = checkPermissions();
               permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
             } else {
               final boolean areNotificationsEnabled =
