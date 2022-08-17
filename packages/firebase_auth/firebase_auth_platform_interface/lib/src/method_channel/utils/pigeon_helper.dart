@@ -10,7 +10,9 @@ List<MultiFactorInfo> multiFactorInfoPigeonToObject(
       return PhoneMultiFactorInfo(
         displayName: e.displayName,
         enrollmentTimestamp: e.enrollmentTimestamp,
-        factorId: e.factorId,
+        // Sometimes can be null on iOS when it shouldn't be.
+        // Adding default value to prevent null exception.
+        factorId: e.factorId ?? 'phone',
         uid: e.uid,
         phoneNumber: e.phoneNumber!,
       );
@@ -18,7 +20,7 @@ List<MultiFactorInfo> multiFactorInfoPigeonToObject(
     return MultiFactorInfo(
       displayName: e.displayName,
       enrollmentTimestamp: e.enrollmentTimestamp,
-      factorId: e.factorId,
+      factorId: e.factorId ?? '',
       uid: e.uid,
     );
   }).toList();
