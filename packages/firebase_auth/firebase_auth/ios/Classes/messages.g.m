@@ -102,7 +102,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @implementation PigeonMultiFactorInfo
 + (instancetype)makeWithDisplayName:(nullable NSString *)displayName
                 enrollmentTimestamp:(NSNumber *)enrollmentTimestamp
-                           factorId:(NSString *)factorId
+                           factorId:(nullable NSString *)factorId
                                 uid:(NSString *)uid
                         phoneNumber:(nullable NSString *)phoneNumber {
   PigeonMultiFactorInfo *pigeonResult = [[PigeonMultiFactorInfo alloc] init];
@@ -119,7 +119,6 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.enrollmentTimestamp = GetNullableObject(dict, @"enrollmentTimestamp");
   NSAssert(pigeonResult.enrollmentTimestamp != nil, @"");
   pigeonResult.factorId = GetNullableObject(dict, @"factorId");
-  NSAssert(pigeonResult.factorId != nil, @"");
   pigeonResult.uid = GetNullableObject(dict, @"uid");
   NSAssert(pigeonResult.uid != nil, @"");
   pigeonResult.phoneNumber = GetNullableObject(dict, @"phoneNumber");
