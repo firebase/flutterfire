@@ -1,3 +1,8 @@
+## 1.21.0
+
+ - **FEAT**: Bump Firebase iOS SDK to 9.4.0 ([#9357](https://github.com/firebase/flutterfire/issues/9357)). ([4f356ff4](https://github.com/firebase/flutterfire/commit/4f356ff4fd5ec939c373265dd173d1cb73de1678))
+ - **FEAT**: Bump Firebase android SDK to 30.3.2 ([#9358](https://github.com/firebase/flutterfire/issues/9358)). ([d6934398](https://github.com/firebase/flutterfire/commit/d69343988006cf809c61f4c31e41bd5aa8075cf5))
+
 ## 1.20.1
 
  - **FIX**: broken homepage link in pubspec.yaml ([#9314](https://github.com/firebase/flutterfire/issues/9314)). ([7649c27f](https://github.com/firebase/flutterfire/commit/7649c27fde639aec8c70a1acfd86c938eeb77537))
