@@ -33,12 +33,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithDisplayName:(nullable NSString *)displayName
                 enrollmentTimestamp:(NSNumber *)enrollmentTimestamp
-                           factorId:(NSString *)factorId
+                           factorId:(nullable NSString *)factorId
                                 uid:(NSString *)uid
                         phoneNumber:(nullable NSString *)phoneNumber;
 @property(nonatomic, copy, nullable) NSString *displayName;
 @property(nonatomic, strong) NSNumber *enrollmentTimestamp;
-@property(nonatomic, copy) NSString *factorId;
+@property(nonatomic, copy, nullable) NSString *factorId;
 @property(nonatomic, copy) NSString *uid;
 @property(nonatomic, copy, nullable) NSString *phoneNumber;
 @end

@@ -176,6 +176,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: const Text('Verify Email'),
                     ),
                     const SizedBox(height: 20),
+                    TextButton(
+                      onPressed: () async {
+                        final a = await user.multiFactor.getEnrolledFactors();
+                        print(a);
+                      },
+                      child: const Text('Get enrolled factors'),
+                    ),
+                    const SizedBox(height: 20),
                     TextFormField(
                       controller: phoneController,
                       decoration: const InputDecoration(
