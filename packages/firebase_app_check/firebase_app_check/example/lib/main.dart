@@ -2,38 +2,11 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: kIsWeb
-        ? const FirebaseOptions(
-            apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
-            authDomain: 'react-native-firebase-testing.firebaseapp.com',
-            databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-            projectId: 'react-native-firebase-testing',
-            storageBucket: 'react-native-firebase-testing.appspot.com',
-            messagingSenderId: '448618578101',
-            appId: '1:448618578101:web:2109c1424695f352ac3efc',
-            trackingId: 'G-0N1G9FLDZE',
-            iosClientId:
-                '448618578101-gdvmskjsg1sk5v9pkifk73uqfr2ukta0.apps.googleusercontent.com',
-            iosBundleId: 'io.flutter.plugins.firebase.appcheck.example',
-          )
-        : const FirebaseOptions(
-            apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-            authDomain: 'react-native-firebase-testing.firebaseapp.com',
-            databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-            projectId: 'react-native-firebase-testing',
-            storageBucket: 'react-native-firebase-testing.appspot.com',
-            messagingSenderId: '448618578101',
-            appId: '1:448618578101:ios:eaf25c1747605f69ac3efc',
-            trackingId: 'G-0N1G9FLDZE',
-            iosClientId:
-                '448618578101-gdvmskjsg1sk5v9pkifk73uqfr2ukta0.apps.googleusercontent.com',
-            iosBundleId: 'io.flutter.plugins.firebase.appcheck.example',
-          ),
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Activate app check after initialization, but before
   // usage of any Firebase services.
@@ -117,8 +90,8 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final token = await appCheck.getToken(true);
-                setMessage('your token: $token');
+                // Token will be passed to `onTokenChange()` event handler
+                await appCheck.getToken(true);
               },
               child: const Text('getToken()'),
             ),

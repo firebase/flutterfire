@@ -1,3 +1,7 @@
+## 0.2.1+3
+
+ - Update a dependency to the latest release.
+
 ## 0.2.1+2
 
  - **FIX**: change the interop to fix an issue with startAt/endAt/limitTo when compilating with dart2js in release mode ([#9251](https://github.com/firebase/flutterfire/issues/9251)). ([c2771a42](https://github.com/firebase/flutterfire/commit/c2771a425bd7260b11970e9e9e77ef40a39f9f16))

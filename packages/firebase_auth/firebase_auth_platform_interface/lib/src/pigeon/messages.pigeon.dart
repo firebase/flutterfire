@@ -57,14 +57,14 @@ class PigeonMultiFactorInfo {
   PigeonMultiFactorInfo({
     this.displayName,
     required this.enrollmentTimestamp,
-    required this.factorId,
+    this.factorId,
     required this.uid,
     this.phoneNumber,
   });
 
   String? displayName;
   double enrollmentTimestamp;
-  String factorId;
+  String? factorId;
   String uid;
   String? phoneNumber;
 
@@ -83,7 +83,7 @@ class PigeonMultiFactorInfo {
     return PigeonMultiFactorInfo(
       displayName: pigeonMap['displayName'] as String?,
       enrollmentTimestamp: pigeonMap['enrollmentTimestamp']! as double,
-      factorId: pigeonMap['factorId']! as String,
+      factorId: pigeonMap['factorId'] as String?,
       uid: pigeonMap['uid']! as String,
       phoneNumber: pigeonMap['phoneNumber'] as String?,
     );

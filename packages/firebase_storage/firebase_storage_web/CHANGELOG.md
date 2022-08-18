@@ -1,3 +1,7 @@
+## 3.3.3
+
+ - Update a dependency to the latest release.
+
 ## 3.3.2
 
  - **FIX**: fix UploadTask by fixing TaskEvent Web Interop ([#9212](https://github.com/firebase/flutterfire/issues/9212)). ([6df75ca0](https://github.com/firebase/flutterfire/commit/6df75ca09b0ae1334d2f80804c1386f8baac13fa))

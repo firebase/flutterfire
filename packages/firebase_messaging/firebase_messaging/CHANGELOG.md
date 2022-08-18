@@ -1,3 +1,7 @@
+## 12.0.2
+
+ - **FIX**: ensure initial notification was tapped to open app. fixes `getInitialMessage()` & `onMessageOpenedApp()` . ([#9315](https://github.com/firebase/flutterfire/issues/9315)). ([e66c59ca](https://github.com/firebase/flutterfire/commit/e66c59ca4b8a13fc4ce597cb63612eaaaefaf673))
+
 ## 12.0.1
 
  - Update a dependency to the latest release.
