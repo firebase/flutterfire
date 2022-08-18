@@ -39,14 +39,14 @@ class PigeonMultiFactorInfo {
   const PigeonMultiFactorInfo({
     this.displayName,
     required this.enrollmentTimestamp,
-    required this.factorId,
+    this.factorId,
     required this.uid,
     required this.phoneNumber,
   });
 
   final String? displayName;
   final double enrollmentTimestamp;
-  final String factorId;
+  final String? factorId;
   final String uid;
   final String? phoneNumber;
 }
