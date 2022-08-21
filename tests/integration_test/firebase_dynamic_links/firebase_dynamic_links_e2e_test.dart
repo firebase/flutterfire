@@ -134,15 +134,19 @@ void main() {
       });
 
       group('getDynamicLink', () {
-        test('dynamic link using uri', () async {
-          Uri uri = Uri.parse('');
-          PendingDynamicLinkData? pendingLink =
-              await FirebaseDynamicLinks.instance.getDynamicLink(uri);
-          expect(pendingLink, isNull);
-          // We skip this on iOS because we are getting "Universal link URL could
-          // not be parsed by Dynamic Links.". Needs more investigation to figure
-          // more details out.
-        }, skip: defaultTargetPlatform == TargetPlatform.iOS);
+        test(
+          'dynamic link using uri',
+          () async {
+            Uri uri = Uri.parse('');
+            PendingDynamicLinkData? pendingLink =
+                await FirebaseDynamicLinks.instance.getDynamicLink(uri);
+            expect(pendingLink, isNull);
+            // We skip this on iOS because we are getting "Universal link URL could
+            // not be parsed by Dynamic Links.". Needs more investigation to figure
+            // more details out.
+          },
+          skip: defaultTargetPlatform == TargetPlatform.iOS,
+        );
       });
 
       group('onLink', () {
