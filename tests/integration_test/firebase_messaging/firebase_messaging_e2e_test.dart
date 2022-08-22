@@ -75,8 +75,9 @@ void main() {
       });
 
       group('isSupported()', () {
-        test('returns "true" value', () {
-          expect(messaging.isSupported(), isTrue);
+        test('returns "true" value', () async {
+          final isSupported = await messaging.isSupported();
+          expect(isSupported, isTrue);
         });
       });
 
