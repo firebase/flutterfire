@@ -15,6 +15,7 @@ import 'lang/hi.dart';
 import 'lang/de.dart';
 import 'lang/es.dart';
 import 'lang/zh.dart';
+import 'lang/pl.dart';
 
 abstract class FlutterFireUILocalizationLabels {
   const FlutterFireUILocalizationLabels();
@@ -122,6 +123,7 @@ const localizations = <String, FlutterFireUILocalizationLabels>{
   'id': IdLocalizations(),
   'de': DeLocalizations(),
   'zh': ZhLocalizations(),
+  'pl': PlLocalizations(),
 };
 
 class DefaultLocalizations extends EnLocalizations {
