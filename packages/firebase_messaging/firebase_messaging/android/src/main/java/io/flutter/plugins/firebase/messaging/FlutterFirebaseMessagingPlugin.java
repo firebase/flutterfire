@@ -347,15 +347,11 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     return taskCompletionSource.getTask();
   }
 
+  @RequiresApi(api = 33)
   private Boolean checkPermissions() {
-    if (Build.VERSION.SDK_INT >= 33) {
-      return ContextHolder.getApplicationContext()
-              .checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
-          == PackageManager.PERMISSION_GRANTED;
-    }
-
-    throw new RuntimeException(
-        "Cannot check permissions using POST_NOTIFICATIONS on anything less than API level 33");
+    return ContextHolder.getApplicationContext()
+            .checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+        == PackageManager.PERMISSION_GRANTED;
   }
 
   private Task<Map<String, Integer>> getPermissions() {
