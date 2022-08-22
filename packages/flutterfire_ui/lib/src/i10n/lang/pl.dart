@@ -168,7 +168,7 @@ class PlLocalizations extends FlutterFireUILocalizationLabels {
   @override
   final String referenceLabel;
 
-  const EnLocalizations({
+  const PlLocalizations({
     this.emailInputLabel = 'Adres e-mail',
     this.passwordInputLabel = 'Hasło',
     this.signInActionText = 'Zaloguj się',
