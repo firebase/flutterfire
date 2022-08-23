@@ -29,7 +29,6 @@ void main() {
     'reason': 'MethodChannelTest',
     'fatal': false,
     'information': 'This is a test exception',
-    'buildId': '',
     'stackTraceElements': <Map<String, String>>[
       <String, String>{
         'declaringClass': 'MethodChannelCrashlyticsTest',
@@ -218,7 +217,6 @@ void main() {
               'fatal': kMockError['fatal'],
               'information': kMockError['information'],
               'stackTraceElements': kMockError['stackTraceElements'],
-              'buildId': '',
             },
           ),
         ]);
