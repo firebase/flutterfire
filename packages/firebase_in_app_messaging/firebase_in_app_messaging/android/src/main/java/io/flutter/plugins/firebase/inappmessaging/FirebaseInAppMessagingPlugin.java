@@ -17,6 +17,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.Map;
+import java.util.Objects;
 
 /** FirebaseInAppMessagingPlugin */
 public class FirebaseInAppMessagingPlugin
@@ -43,16 +44,14 @@ public class FirebaseInAppMessagingPlugin
     switch (call.method) {
       case "FirebaseInAppMessaging#triggerEvent":
         {
-          String eventName = call.argument("eventName");
-          assert eventName != null;
+          String eventName = Objects.requireNonNull(call.argument("eventName"));
           FirebaseInAppMessaging.getInstance().triggerEvent(eventName);
           result.success(null);
           break;
         }
       case "FirebaseInAppMessaging#setMessagesSuppressed":
         {
-          Boolean suppress = (Boolean) call.argument("suppress");
-          assert suppress != null;
+          Boolean suppress = Objects.requireNonNull(call.argument("suppress"));
           FirebaseInAppMessaging.getInstance().setMessagesSuppressed(suppress);
           result.success(null);
           break;
