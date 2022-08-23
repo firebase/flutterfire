@@ -19,6 +19,7 @@ export 'src/platform_interface/platform_interface_multi_factor.dart';
 export 'src/platform_interface/platform_interface_recaptcha_verifier_factory.dart';
 export 'src/platform_interface/platform_interface_user.dart';
 export 'src/platform_interface/platform_interface_user_credential.dart';
+export 'src/providers/apple_auth.dart';
 export 'src/providers/email_auth.dart';
 export 'src/providers/facebook_auth.dart';
 export 'src/providers/github_auth.dart';
