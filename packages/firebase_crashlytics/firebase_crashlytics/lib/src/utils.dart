@@ -66,5 +66,5 @@ String? getBuildId(StackTrace stackTrace) {
     }
   }
 
-  return "";
+  return null;
 }
