@@ -494,8 +494,9 @@ NSString *const kErrMsgInvalidCredential =
                   }];
 }
 
-// Adapted from https://auth0.com/docs/api-auth/tutorials/nonce#generate-a-cryptographically-random-nonce
-// Used for Apple Sign In
+// Adapted from
+// https://auth0.com/docs/api-auth/tutorials/nonce#generate-a-cryptographically-random-nonce Used
+// for Apple Sign In
 - (NSString *)randomNonce:(NSInteger)length {
   NSAssert(length > 0, @"Expected nonce to have positive length");
   NSString *characterSet = @"0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._";
@@ -528,7 +529,6 @@ NSString *const kErrMsgInvalidCredential =
   return [result copy];
 }
 
-
 - (NSString *)stringBySha256HashingString:(NSString *)input {
   const char *string = [input UTF8String];
   unsigned char result[CC_SHA256_DIGEST_LENGTH];
@@ -541,14 +541,14 @@ NSString *const kErrMsgInvalidCredential =
   return hashed;
 }
 
-
-
 - (void)authorizationController:(ASAuthorizationController *)controller
-   didCompleteWithAuthorization:(ASAuthorization *)authorization API_AVAILABLE(macos(10.15), ios(13.0)) {
+    didCompleteWithAuthorization:(ASAuthorization *)authorization
+    API_AVAILABLE(macos(10.15), ios(13.0)) {
   if ([authorization.credential isKindOfClass:[ASAuthorizationAppleIDCredential class]]) {
     ASAuthorizationAppleIDCredential *appleIDCredential = authorization.credential;
     NSString *rawNonce = self.currentNonce;
-    NSAssert(rawNonce != nil, @"Invalid state: A login callback was received, but no login request was sent.");
+    NSAssert(rawNonce != nil,
+             @"Invalid state: A login callback was received, but no login request was sent.");
 
     if (appleIDCredential.identityToken == nil) {
       NSLog(@"Unable to fetch identity token.");
@@ -567,21 +567,21 @@ NSString *const kErrMsgInvalidCredential =
                                                                        rawNonce:rawNonce];
 
     // Sign in with Firebase.
-    [[FIRAuth auth] signInWithCredential:credential
-                              completion:^(FIRAuthDataResult * _Nullable authResult,
-                                           NSError * _Nullable error) {
-      if (error != nil) {
-          if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
-            [self handleMultiFactorError:self.appleArguments
-                              withResult:self.appleResult
-                               withError:error];
-          } else {
-              self.appleResult.error(nil, nil, nil, error);
-          }
-          return;
-      }
-      self.appleResult.success(authResult);
-    }];
+    [[FIRAuth auth]
+        signInWithCredential:credential
+                  completion:^(FIRAuthDataResult *_Nullable authResult, NSError *_Nullable error) {
+                    if (error != nil) {
+                      if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+                        [self handleMultiFactorError:self.appleArguments
+                                          withResult:self.appleResult
+                                           withError:error];
+                      } else {
+                        self.appleResult.error(nil, nil, nil, error);
+                      }
+                      return;
+                    }
+                    self.appleResult.success(authResult);
+                  }];
   }
 }
 
@@ -591,33 +591,33 @@ NSString *const kErrMsgInvalidCredential =
   self.appleResult.error(nil, nil, nil, error);
 }
 
-
-
 - (void)signInWithAuthProvider:(id)arguments
           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-    if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
-        if (@available(iOS 13.0, macOS 10.15, *)) {
-            NSString *nonce = [self randomNonce:32];
-            self.currentNonce = nonce;
-            self.appleResult = result;
-            self.appleArguments = arguments;
+  if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
+    if (@available(iOS 13.0, macOS 10.15, *)) {
+      NSString *nonce = [self randomNonce:32];
+      self.currentNonce = nonce;
+      self.appleResult = result;
+      self.appleArguments = arguments;
 
-            ASAuthorizationAppleIDProvider *appleIDProvider = [[ASAuthorizationAppleIDProvider alloc] init];
-            
-            ASAuthorizationAppleIDRequest *request = [appleIDProvider createRequest];
-            request.requestedScopes = @[ASAuthorizationScopeFullName, ASAuthorizationScopeEmail];
-            request.nonce = [self stringBySha256HashingString:nonce];
+      ASAuthorizationAppleIDProvider *appleIDProvider =
+          [[ASAuthorizationAppleIDProvider alloc] init];
 
-            ASAuthorizationController *authorizationController =
-                [[ASAuthorizationController alloc] initWithAuthorizationRequests:@[request]];
-            authorizationController.delegate = self;
-            authorizationController.presentationContextProvider = self;
-            [authorizationController performRequests];
-        } else {
-            NSLog(@"Sign in with Apple was introduced in iOS 13, update your Podfile with platform :ios, '13.0'");
-        }
-        return;
+      ASAuthorizationAppleIDRequest *request = [appleIDProvider createRequest];
+      request.requestedScopes = @[ ASAuthorizationScopeFullName, ASAuthorizationScopeEmail ];
+      request.nonce = [self stringBySha256HashingString:nonce];
+
+      ASAuthorizationController *authorizationController =
+          [[ASAuthorizationController alloc] initWithAuthorizationRequests:@[ request ]];
+      authorizationController.delegate = self;
+      authorizationController.presentationContextProvider = self;
+      [authorizationController performRequests];
+    } else {
+      NSLog(@"Sign in with Apple was introduced in iOS 13, update your Podfile with platform :ios, "
+            @"'13.0'");
     }
+    return;
+  }
 #if TARGET_OS_OSX
   NSLog(@"The Firebase Phone Authentication provider is not supported on the "
         @"MacOS platform.");
@@ -1748,11 +1748,12 @@ NSString *const kErrMsgInvalidCredential =
 
 #endif
 
-- (nonnull ASPresentationAnchor)presentationAnchorForAuthorizationController:(nonnull ASAuthorizationController *)controller  API_AVAILABLE(macos(10.15), ios(13.0)){
+- (nonnull ASPresentationAnchor)presentationAnchorForAuthorizationController:
+    (nonnull ASAuthorizationController *)controller API_AVAILABLE(macos(10.15), ios(13.0)) {
 #if TARGET_OS_OSX
-    return [[NSApplication sharedApplication] keyWindow];
+  return [[NSApplication sharedApplication] keyWindow];
 #else
-    return [[UIApplication sharedApplication] keyWindow];
+  return [[UIApplication sharedApplication] keyWindow];
 #endif
 }
 
