@@ -9,6 +9,7 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
@@ -143,210 +144,328 @@ public class FirebaseDatabasePlugin
   }
 
   private Task<Void> goOnline(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final FirebaseDatabase database = getDatabase(arguments);
-          database.goOnline();
-          return null;
+          try {
+            final FirebaseDatabase database = getDatabase(arguments);
+            database.goOnline();
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> goOffline(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final FirebaseDatabase database = getDatabase(arguments);
-          database.goOffline();
-          return null;
+          try {
+            final FirebaseDatabase database = getDatabase(arguments);
+            database.goOffline();
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> purgeOutstandingWrites(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final FirebaseDatabase database = getDatabase(arguments);
-          database.purgeOutstandingWrites();
-          return null;
+          try {
+            final FirebaseDatabase database = getDatabase(arguments);
+            database.purgeOutstandingWrites();
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> setValue(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final DatabaseReference ref = getReference(arguments);
-          final Object value = arguments.get(Constants.VALUE);
-          Tasks.await(ref.setValue(value));
-          return null;
+          try {
+            final DatabaseReference ref = getReference(arguments);
+            final Object value = arguments.get(Constants.VALUE);
+            Tasks.await(ref.setValue(value));
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> setValueWithPriority(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final DatabaseReference ref = getReference(arguments);
-          final Object value = arguments.get(Constants.VALUE);
-          final Object priority = arguments.get(Constants.PRIORITY);
-          Tasks.await(ref.setValue(value, priority));
-          return null;
+          try {
+            final DatabaseReference ref = getReference(arguments);
+            final Object value = arguments.get(Constants.VALUE);
+            final Object priority = arguments.get(Constants.PRIORITY);
+            Tasks.await(ref.setValue(value, priority));
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> update(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final DatabaseReference ref = getReference(arguments);
+          try {
+            final DatabaseReference ref = getReference(arguments);
 
-          @SuppressWarnings("unchecked")
-          final Map<String, Object> value =
-              (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.VALUE));
-          Tasks.await(ref.updateChildren(value));
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> value =
+                (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.VALUE));
+            Tasks.await(ref.updateChildren(value));
 
-          return null;
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> setPriority(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final DatabaseReference ref = getReference(arguments);
-          final Object priority = arguments.get(Constants.PRIORITY);
-          Tasks.await(ref.setPriority(priority));
-          return null;
+          try {
+            final DatabaseReference ref = getReference(arguments);
+            final Object priority = arguments.get(Constants.PRIORITY);
+            Tasks.await(ref.setPriority(priority));
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> runTransaction(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final DatabaseReference ref = getReference(arguments);
+          try {
+            final DatabaseReference ref = getReference(arguments);
 
-          final int transactionKey =
-              (int) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_KEY));
-          final boolean transactionApplyLocally =
-              (boolean) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_APPLY_LOCALLY));
+            final int transactionKey =
+                (int) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_KEY));
+            final boolean transactionApplyLocally =
+                (boolean)
+                    Objects.requireNonNull(arguments.get(Constants.TRANSACTION_APPLY_LOCALLY));
 
-          final TransactionHandler handler = new TransactionHandler(methodChannel, transactionKey);
+            final TransactionHandler handler =
+                new TransactionHandler(methodChannel, transactionKey);
 
-          ref.runTransaction(handler, transactionApplyLocally);
+            ref.runTransaction(handler, transactionApplyLocally);
 
-          return Tasks.await(handler.getTask());
+            Map<String, Object> result = Tasks.await(handler.getTask());
+
+            taskCompletionSource.setResult(result);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> queryGet(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final Query query = getQuery(arguments);
-          final DataSnapshot snapshot = Tasks.await(query.get());
-          final FlutterDataSnapshotPayload payload = new FlutterDataSnapshotPayload(snapshot);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
-          return payload.toMap();
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            final Query query = getQuery(arguments);
+            final DataSnapshot snapshot = Tasks.await(query.get());
+            final FlutterDataSnapshotPayload payload = new FlutterDataSnapshotPayload(snapshot);
+
+            taskCompletionSource.setResult(payload.toMap());
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> queryKeepSynced(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final Query query = getQuery(arguments);
-          final boolean keepSynced =
-              (Boolean) Objects.requireNonNull(arguments.get(Constants.VALUE));
-          query.keepSynced(keepSynced);
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
-          return null;
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            final Query query = getQuery(arguments);
+            final boolean keepSynced =
+                (Boolean) Objects.requireNonNull(arguments.get(Constants.VALUE));
+            query.keepSynced(keepSynced);
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<String> observe(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final Query query = getQuery(arguments);
-          final String eventChannelNamePrefix =
-              (String) arguments.get(Constants.EVENT_CHANNEL_NAME_PREFIX);
-          final String eventChannelName = eventChannelNamePrefix + "#" + listenerCount++;
+          try {
+            final Query query = getQuery(arguments);
+            final String eventChannelNamePrefix =
+                (String) arguments.get(Constants.EVENT_CHANNEL_NAME_PREFIX);
+            final String eventChannelName = eventChannelNamePrefix + "#" + listenerCount++;
 
-          final EventChannel eventChannel = new EventChannel(messenger, eventChannelName);
-          final EventStreamHandler streamHandler =
-              new EventStreamHandler(
-                  query,
-                  () -> {
-                    eventChannel.setStreamHandler(null);
-                  });
+            final EventChannel eventChannel = new EventChannel(messenger, eventChannelName);
+            final EventStreamHandler streamHandler =
+                new EventStreamHandler(
+                    query,
+                    () -> {
+                      eventChannel.setStreamHandler(null);
+                    });
 
-          eventChannel.setStreamHandler(streamHandler);
-          streamHandlers.put(eventChannel, streamHandler);
-          return eventChannelName;
+            eventChannel.setStreamHandler(streamHandler);
+            streamHandlers.put(eventChannel, streamHandler);
+
+            taskCompletionSource.setResult(eventChannelName);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> setOnDisconnect(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final Object value = arguments.get(Constants.VALUE);
-          final OnDisconnect onDisconnect = getReference(arguments).onDisconnect();
-          Tasks.await(onDisconnect.setValue(value));
-          return null;
+          try {
+            final Object value = arguments.get(Constants.VALUE);
+            final OnDisconnect onDisconnect = getReference(arguments).onDisconnect();
+            Tasks.await(onDisconnect.setValue(value));
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> setWithPriorityOnDisconnect(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final Object value = arguments.get(Constants.VALUE);
-          final Object priority = arguments.get(Constants.PRIORITY);
-          final OnDisconnect onDisconnect = getReference(arguments).onDisconnect();
+          try {
+            final Object value = arguments.get(Constants.VALUE);
+            final Object priority = arguments.get(Constants.PRIORITY);
+            final OnDisconnect onDisconnect = getReference(arguments).onDisconnect();
 
-          Task<Void> onDisconnectTask;
-          if (priority instanceof Double) {
-            onDisconnectTask = onDisconnect.setValue(value, ((Number) priority).doubleValue());
-          } else if (priority instanceof String) {
-            onDisconnectTask = onDisconnect.setValue(value, (String) priority);
-          } else if (priority == null) {
-            onDisconnectTask = onDisconnect.setValue(value, (String) null);
-          } else {
-            throw new Exception("Invalid priority value for OnDisconnect.setWithPriority");
+            Task<Void> onDisconnectTask;
+            if (priority instanceof Double) {
+              onDisconnectTask = onDisconnect.setValue(value, ((Number) priority).doubleValue());
+            } else if (priority instanceof String) {
+              onDisconnectTask = onDisconnect.setValue(value, (String) priority);
+            } else if (priority == null) {
+              onDisconnectTask = onDisconnect.setValue(value, (String) null);
+            } else {
+              throw new Exception("Invalid priority value for OnDisconnect.setWithPriority");
+            }
+
+            Tasks.await(onDisconnectTask);
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
           }
-
-          Tasks.await(onDisconnectTask);
-          return null;
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> updateOnDisconnect(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final DatabaseReference ref = getReference(arguments);
+          try {
+            final DatabaseReference ref = getReference(arguments);
 
-          @SuppressWarnings("unchecked")
-          final Map<String, Object> value =
-              (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.VALUE));
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> value =
+                (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.VALUE));
 
-          final Task<Void> task = ref.onDisconnect().updateChildren(value);
-          Tasks.await(task);
-          return null;
+            final Task<Void> task = ref.onDisconnect().updateChildren(value);
+            Tasks.await(task);
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> cancelOnDisconnect(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final DatabaseReference ref = getReference(arguments);
-          Tasks.await(ref.onDisconnect().cancel());
-          return null;
+          try {
+            final DatabaseReference ref = getReference(arguments);
+            Tasks.await(ref.onDisconnect().cancel());
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
@@ -447,17 +566,36 @@ public class FirebaseDatabasePlugin
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return Tasks.call(cachedThreadPool, HashMap::new);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            final Map<String, Object> constants = new HashMap<>();
+            taskCompletionSource.setResult(constants);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          cleanup();
-          return null;
+          try {
+            cleanup();
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private void cleanup() {
