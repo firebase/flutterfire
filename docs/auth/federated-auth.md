@@ -171,7 +171,7 @@ For further information, see this [issue](https://github.com/firebase/flutterfir
 
 ## Apple
 
-* {iOS and macOS}
+* {iOS+}
 
   Before you begin [configure Sign In with Apple](/docs/auth/ios/apple#configure-sign-in-with-apple)
   and [enable Apple as a sign-in provider](/docs/auth/ios/apple#enable-apple-as-a-sign-in-provider).
