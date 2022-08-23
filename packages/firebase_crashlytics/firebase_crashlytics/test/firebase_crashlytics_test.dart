@@ -3,13 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_crashlytics/src/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_crashlytics/src/utils.dart';
 import './mock.dart';
 
 void main() {
@@ -77,8 +76,7 @@ void main() {
             'reason': exceptionReason,
             'information': '',
             'fatal': false,
-            'stackTraceElements': getStackTraceElements(stack),
-            'buildId': '',
+            'stackTraceElements': getStackTraceElements(stack)
           })
         ]);
         // Confirm that the stack trace contains current stack.
@@ -139,8 +137,7 @@ void main() {
             'reason': exceptionReason,
             'fatal': false,
             'information': '$exceptionFirstMessage\n$exceptionSecondMessage',
-            'stackTraceElements': getStackTraceElements(stack),
-            'buildId': '',
+            'stackTraceElements': getStackTraceElements(stack)
           })
         ]);
       } finally {
