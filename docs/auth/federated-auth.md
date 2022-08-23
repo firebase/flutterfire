@@ -171,12 +171,16 @@ For further information, see this [issue](https://github.com/firebase/flutterfir
 
 ## Apple
 
-* {iOS+ and Android}
+* {iOS and macOS}
 
-  Before you begin [configure Sign In with Apple for iOS](/docs/auth/ios/apple#configure-sign-in-with-apple) and [Android](/docs/auth/ios/android#configure-sign-in-with-apple).
-  Then [enable Apple as a sign-in provider](/docs/auth/ios/apple#enable-apple-as-a-sign-in-provider).
+  Before you begin [configure Sign In with Apple](/docs/auth/ios/apple#configure-sign-in-with-apple)
+  and [enable Apple as a sign-in provider](/docs/auth/ios/apple#enable-apple-as-a-sign-in-provider).
 
-  Next, make sure that your iOS `Runner` apps have the "Sign in with Apple" capability.
+  Next, make sure that your `Runner` apps have the "Sign in with Apple" capability.
+
+* {Android}
+  Before you begin [configure Sign In with Apple](/docs/auth/android/apple#configure-sign-in-with-apple)
+  and [enable Apple as a sign-in provider](/docs/auth/android/apple#enable-apple-as-a-sign-in-provider).
 
 * {Web}
 
@@ -188,31 +192,12 @@ For further information, see this [issue](https://github.com/firebase/flutterfir
 import 'package:firebase_auth/firebase_auth.dart';
 
 Future<UserCredential> signInWithApple() async {
-  // To prevent replay attacks with the credential returned from Apple, we
-  // include a nonce in the credential request. When signing in with
-  // Firebase, the nonce in the id token returned by Apple, is expected to
-  // match the sha256 hash of `rawNonce`.
-  final rawNonce = generateNonce();
-  final nonce = sha256ofString(rawNonce);
-
-  // Request credential for the currently signed in Apple account.
-  final appleCredential = await SignInWithApple.getAppleIDCredential(
-    scopes: [
-      AppleIDAuthorizationScopes.email,
-      AppleIDAuthorizationScopes.fullName,
-    ],
-    nonce: nonce,
-  );
-
-  // Create an `OAuthCredential` from the credential returned by Apple.
-  final oauthCredential = OAuthProvider("apple.com").credential(
-    idToken: appleCredential.identityToken,
-    rawNonce: rawNonce,
-  );
-
-  // Sign in the user with Firebase. If the nonce we generated earlier does
-  // not match the nonce in `appleCredential.identityToken`, sign in will fail.
-  return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+  final appleProvider = AppleAuthProvider();
+  if (kIsWeb) {
+    await _auth.signInWithPopup(appleProvider);
+  } else {
+    await _auth.signInWithAuthProvider(appleProvider);
+  }
 }
 ```
 
@@ -293,20 +278,20 @@ with the Client ID and Secret are set, with the callback URL set in the GitHub a
 
 * {iOS+ and Android}
 
-For native platforms, you need to add the `google-services.json` and `GoogleService-Info.plist`.
+  For native platforms, you need to add the `google-services.json` and `GoogleService-Info.plist`.
 
-For iOS, add the custom URL scheme as [described on the iOS guide](https://firebase.google.com/docs/auth/ios/github-auth#handle_the_sign-in_flow_with_the_firebase_sdk) step 1.
+  For iOS, add the custom URL scheme as [described on the iOS guide](https://firebase.google.com/docs/auth/ios/github-auth#handle_the_sign-in_flow_with_the_firebase_sdk) step 1.
 
-```dart
-import 'package:github_sign_in/github_sign_in.dart';
+  ```dart
+  import 'package:github_sign_in/github_sign_in.dart';
 
-Future<UserCredential> signInWithGitHub() async {
-  // Create a new provider
-  GithubAuthProvider githubProvider = GithubAuthProvider();
+  Future<UserCredential> signInWithGitHub() async {
+    // Create a new provider
+    GithubAuthProvider githubProvider = GithubAuthProvider();
 
-  return await _auth.signInWithAuthProvider(githubProvider);
-}
-```
+    return await _auth.signInWithAuthProvider(githubProvider);
+  }
+  ```
 
 * {Web}
 
