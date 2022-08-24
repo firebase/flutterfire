@@ -6,13 +6,17 @@ package io.flutter.plugins.firebase.messaging;
 
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.gms.tasks.Task;
@@ -48,12 +52,13 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
   private MethodChannel channel;
   private Activity mainActivity;
   private RemoteMessage initialMessage;
+  FlutterFirebasePermissionManager permissionManager;
 
   private void initInstance(BinaryMessenger messenger) {
     String channelName = "plugins.flutter.io/firebase_messaging";
     channel = new MethodChannel(messenger, channelName);
     channel.setMethodCallHandler(this);
-
+    permissionManager = new FlutterFirebasePermissionManager();
     // Register broadcast receiver
     IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(FlutterFirebaseMessagingUtils.ACTION_TOKEN);
@@ -72,14 +77,13 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    if (binding.getApplicationContext() != null) {
-      LocalBroadcastManager.getInstance(binding.getApplicationContext()).unregisterReceiver(this);
-    }
+    LocalBroadcastManager.getInstance(binding.getApplicationContext()).unregisterReceiver(this);
   }
 
   @Override
   public void onAttachedToActivity(ActivityPluginBinding binding) {
     binding.addOnNewIntentListener(this);
+    binding.addRequestPermissionsResultListener(permissionManager);
     this.mainActivity = binding.getActivity();
     if (mainActivity.getIntent() != null && mainActivity.getIntent().getExtras() != null) {
       if ((mainActivity.getIntent().getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY)
@@ -247,7 +251,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     return taskCompletionSource.getTask();
   }
 
-  private Task<Map<String, Object>> getInitialMessage(Map<String, Object> arguments) {
+  private Task<Map<String, Object>> getInitialMessage() {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
@@ -311,6 +315,45 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     return taskCompletionSource.getTask();
   }
 
+  @RequiresApi(api = 33)
+  private Task<Map<String, Integer>> requestPermissions() {
+    TaskCompletionSource<Map<String, Integer>> taskCompletionSource = new TaskCompletionSource<>();
+    cachedThreadPool.execute(
+        () -> {
+          final Map<String, Integer> permissions = new HashMap<>();
+          try {
+            final boolean areNotificationsEnabled = checkPermissions();
+
+            if (!areNotificationsEnabled) {
+              permissionManager.requestPermissions(
+                  mainActivity,
+                  (notificationsEnabled) -> {
+                    permissions.put("authorizationStatus", notificationsEnabled);
+                    taskCompletionSource.setResult(permissions);
+                  },
+                  (String errorDescription) -> {
+                    taskCompletionSource.setException(new Exception(errorDescription));
+                  });
+            } else {
+              permissions.put("authorizationStatus", 1);
+              taskCompletionSource.setResult(permissions);
+            }
+
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
+  @RequiresApi(api = 33)
+  private Boolean checkPermissions() {
+    return ContextHolder.getApplicationContext()
+            .checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+        == PackageManager.PERMISSION_GRANTED;
+  }
+
   private Task<Map<String, Integer>> getPermissions() {
     TaskCompletionSource<Map<String, Integer>> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -318,9 +361,14 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         () -> {
           try {
             final Map<String, Integer> permissions = new HashMap<>();
-            final boolean areNotificationsEnabled =
-                NotificationManagerCompat.from(mainActivity).areNotificationsEnabled();
-            permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
+            if (Build.VERSION.SDK_INT >= 33) {
+              final boolean areNotificationsEnabled = checkPermissions();
+              permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
+            } else {
+              final boolean areNotificationsEnabled =
+                  NotificationManagerCompat.from(mainActivity).areNotificationsEnabled();
+              permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
+            }
             taskCompletionSource.setResult(permissions);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
@@ -379,7 +427,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         methodCallTask = Tasks.forResult(null);
         break;
       case "Messaging#getInitialMessage":
-        methodCallTask = getInitialMessage(call.arguments());
+        methodCallTask = getInitialMessage();
         break;
       case "Messaging#deleteToken":
         methodCallTask = deleteToken();
@@ -400,6 +448,14 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         methodCallTask = setAutoInitEnabled(call.arguments());
         break;
       case "Messaging#requestPermission":
+        if (Build.VERSION.SDK_INT >= 33) {
+          // Android version >= Android 13 requires user input if notification permission not set/granted
+          methodCallTask = requestPermissions();
+        } else {
+          // Android version < Android 13 doesn't require asking for runtime permissions.
+          methodCallTask = getPermissions();
+        }
+        break;
       case "Messaging#getNotificationSettings":
         methodCallTask = getPermissions();
         break;
