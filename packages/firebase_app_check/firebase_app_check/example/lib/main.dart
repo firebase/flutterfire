@@ -84,7 +84,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
           children: [
             ElevatedButton(
               onPressed: () async {
-                // Use this button to check whether the request was validated.
+                // Use this button to check whether the request was validated on the Firebase console
                 // Gets first document in collection
                 final result = await FirebaseFirestore.instance
                     .collection('flutter-tests')
