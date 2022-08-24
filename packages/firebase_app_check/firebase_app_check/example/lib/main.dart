@@ -86,14 +86,14 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
               onPressed: () async {
                 // Use this button to check whether the request was validated.
                 // Gets first document in collection
-                final doc = await FirebaseFirestore.instance
+                final result = await FirebaseFirestore.instance
                     .collection('flutter-tests')
                     .limit(1)
                     .get();
 
-                if (doc.docs.isNotEmpty) {
+                if (result.docs.isNotEmpty) {
                   setMessage('Document found');
-                  print('${doc.docs[0].data()}');
+                  print('${result.docs[0].data()}');
                 } else {
                   setMessage(
                     'Document not found, please add a document to the collection',
