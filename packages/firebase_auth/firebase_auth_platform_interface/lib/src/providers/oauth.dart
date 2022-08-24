@@ -18,19 +18,22 @@ class OAuthProvider extends AuthProvider {
   Map<dynamic, dynamic> _parameters = {};
 
   /// Returns the currently assigned scopes to this provider instance.
-  /// This is a Web only API.
   List<String> get scopes {
     return _scopes;
   }
 
   /// Returns the parameters for this provider instance.
-  /// This is a Web only API.
   Map<dynamic, dynamic> get parameters {
     return _parameters;
   }
 
+  /// Returns the parameters for this provider instance.
+  OAuthProvider setScopes(List<String> scopes) {
+    _scopes = scopes;
+    return this;
+  }
+
   /// Adds OAuth scope.
-  /// This is a Web only API.
   OAuthProvider addScope(String scope) {
     _scopes.add(scope);
     return this;
@@ -38,7 +41,6 @@ class OAuthProvider extends AuthProvider {
 
   /// Sets the OAuth custom parameters to pass in a OAuth request for popup and
   /// redirect sign-in operations.
-  /// This is a Web only API.
   OAuthProvider setCustomParameters(
     Map<dynamic, dynamic> customOAuthParameters,
   ) {

@@ -201,6 +201,35 @@ Future<UserCredential> signInWithApple() async {
 }
 ```
 
+## Microsoft
+
+* {iOS+}
+
+  Before you begin [configure Microsoft Login for iOS](/docs/auth/ios/microsoft-oauth#before_you_begin) and add the [custom URL schemes
+  to your Runner (step 1)](https://firebase.google.com/docs/auth/ios/microsoft-oauth#handle_the_sign-in_flow_with_the_firebase_sdk).
+
+* {Android}
+  Before you begin [configure Microsoft Login for Android](/docs/auth/android/microsoft-oauth#before_you_begin).
+  
+  Don't forget to add your app's SHA-1 fingerprint.
+
+* {Web}
+
+  Before you begin [configure Microsoft Login for Web](/docs/auth/web/microsoft-oauth#configure-sign-in-with-apple).
+
+```dart
+import 'package:firebase_auth/firebase_auth.dart';
+
+Future<UserCredential> signInWithMicrosoft() async {
+  final microsoftProvider = MicrosoftAuthProvider();
+  if (kIsWeb) {
+    await _auth.signInWithPopup(microsoftProvider);
+  } else {
+    await _auth.signInWithAuthProvider(microsoftProvider);
+  }
+}
+```
+
 ## Twitter
 
 Ensure the "Twitter" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers)
@@ -283,8 +312,6 @@ with the Client ID and Secret are set, with the callback URL set in the GitHub a
   For iOS, add the custom URL scheme as [described on the iOS guide](https://firebase.google.com/docs/auth/ios/github-auth#handle_the_sign-in_flow_with_the_firebase_sdk) step 1.
 
   ```dart
-  import 'package:github_sign_in/github_sign_in.dart';
-
   Future<UserCredential> signInWithGitHub() async {
     // Create a new provider
     GithubAuthProvider githubProvider = GithubAuthProvider();
