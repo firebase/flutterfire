@@ -14,6 +14,8 @@ dependencies:
     path: ../
   firebase_core:
     path: ../../../firebase_core/firebase_core
+  cloud_firestore:
+    path: ../../../cloud_firestore/cloud_firestore
   flutter:
     sdk: flutter
 
@@ -28,6 +30,11 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_platform_interface
   firebase_core_web:
     path: ../../../firebase_core/firebase_core_web
-
+  cloud_firestore:
+    path: ../../../cloud_firestore/cloud_firestore
+  cloud_firestore_platform_interface:
+    path: ../../../cloud_firestore/cloud_firestore_platform_interface
+  cloud_firestore_web:
+    path: ../../../cloud_firestore/cloud_firestore_web
 flutter:
   uses-material-design: true

@@ -74,9 +74,16 @@ public class FlutterFirebaseAppCheckPlugin
     return Tasks.call(
         cachedThreadPool,
         () -> {
+          // To test your app in debug mode, you may uncomment the following
+          //          if(BuildConfig.DEBUG) {
+          //            FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+          //            firebaseAppCheck.installAppCheckProviderFactory(
+          //              DebugAppCheckProviderFactory.getInstance());
+          //          } else {
           FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
           firebaseAppCheck.installAppCheckProviderFactory(
               SafetyNetAppCheckProviderFactory.getInstance());
+          //          }
           return null;
         });
   }
