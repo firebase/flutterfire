@@ -100,7 +100,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                   );
                 }
               },
-              child: const Text('Test App Check validate requests'),
+              child: const Text('Test App Check validates requests'),
             ),
             ElevatedButton(
               onPressed: () async {
