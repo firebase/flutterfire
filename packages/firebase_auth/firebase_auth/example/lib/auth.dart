@@ -100,6 +100,9 @@ class _AuthGateState extends State<AuthGate> {
         Buttons.GitHub: () => _handleMultiFactorException(
               _signInWithGitHub,
             ),
+        Buttons.Microsoft: () => _handleMultiFactorException(
+              _signInWithMicrosoft,
+            ),
         Buttons.Twitter: () => _handleMultiFactorException(
               _signInWithTwitter,
             ),
@@ -556,30 +559,33 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   Future<void> _signInWithApple() async {
-    if (kIsWeb) {
-      final appleProvider = AppleAuthProvider();
+    final appleProvider = AppleAuthProvider();
 
+    if (kIsWeb) {
       // Once signed in, return the UserCredential
       await _auth.signInWithPopup(appleProvider);
     } else {
-      final appleProvider = AppleAuthProvider();
-
       await _auth.signInWithAuthProvider(appleProvider);
     }
   }
 
   Future<void> _signInWithGitHub() async {
-    if (kIsWeb) {
-      // Create a new provider
-      final githubProvider = GithubAuthProvider();
+    final githubProvider = GithubAuthProvider();
 
-      // Once signed in, return the UserCredential
+    if (kIsWeb) {
       await _auth.signInWithPopup(githubProvider);
     } else {
-      // Create a new provider
-      final githubProvider = GithubAuthProvider();
-
       await _auth.signInWithAuthProvider(githubProvider);
+    }
+  }
+
+  Future<void> _signInWithMicrosoft() async {
+    final microsoftProvider = MicrosoftAuthProvider();
+
+    if (kIsWeb) {
+      await _auth.signInWithPopup(microsoftProvider);
+    } else {
+      await _auth.signInWithAuthProvider(microsoftProvider);
     }
   }
 }

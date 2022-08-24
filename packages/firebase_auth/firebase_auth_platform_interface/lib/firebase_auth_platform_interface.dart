@@ -24,6 +24,7 @@ export 'src/providers/email_auth.dart';
 export 'src/providers/facebook_auth.dart';
 export 'src/providers/github_auth.dart';
 export 'src/providers/google_auth.dart';
+export 'src/providers/microsoft_auth.dart';
 export 'src/providers/oauth.dart';
 export 'src/providers/phone_auth.dart';
 export 'src/providers/saml_auth.dart';
