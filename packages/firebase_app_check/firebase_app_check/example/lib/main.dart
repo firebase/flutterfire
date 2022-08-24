@@ -95,7 +95,8 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                   setMessage('Document found');
                   print('${doc.docs[0].data()}');
                 } else {
-                  setMessage('Document not found, please add a document to the collection');
+                  setMessage(
+                      'Document not found, please add a document to the collection');
                 }
               },
               child: const Text('Test App Check validate requests'),
