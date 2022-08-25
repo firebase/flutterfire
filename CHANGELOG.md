@@ -137,14 +137,6 @@ Packages with dependency updates only:
 
  - **FIX**: Prepare for fix to https://github.com/flutter/flutter/issues/109339. ([#9364](https://github.com/firebase/flutterfire/issues/9364)). ([7418dfd9](https://github.com/firebase/flutterfire/commit/7418dfd91c4fc7982c6bc6b1e8de80f9bccd575b))
 
-#### `firebase_crashlytics` - `v2.9.0`
-
- - **FEAT**: Send Flutter Build Id to Crashlytics to get --split-debug-info working ([#9365](https://github.com/firebase/flutterfire/issues/9365)). ([e6752501](https://github.com/firebase/flutterfire/commit/e67525018cbf60f28a551b7cc0fd95547498dbc1))
-
-#### `firebase_crashlytics_platform_interface` - `v3.3.0`
-
- - **FEAT**: Send Flutter Build Id to Crashlytics to get --split-debug-info working ([#9365](https://github.com/firebase/flutterfire/issues/9365)). ([e6752501](https://github.com/firebase/flutterfire/commit/e67525018cbf60f28a551b7cc0fd95547498dbc1))
-
 #### `firebase_remote_config` - `v2.0.16`
 
  - **REFACTOR**: update deprecated `Tasks.call()` to `TaskCompletionSource` API ([#9405](https://github.com/firebase/flutterfire/issues/9405)). ([837d68ea](https://github.com/firebase/flutterfire/commit/837d68ea60649fa1fb1c7f8254e4ae67874e9bf2))

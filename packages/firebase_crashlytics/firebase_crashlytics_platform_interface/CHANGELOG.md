@@ -1,7 +1,3 @@
-## 3.3.0
-
- - **FEAT**: Send Flutter Build Id to Crashlytics to get --split-debug-info working ([#9365](https://github.com/firebase/flutterfire/issues/9365)). ([e6752501](https://github.com/firebase/flutterfire/commit/e67525018cbf60f28a551b7cc0fd95547498dbc1))
-
 ## 3.2.14
 
  - Update a dependency to the latest release.
