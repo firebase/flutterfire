@@ -1,3 +1,7 @@
+## 1.0.0-dev.28
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.27
 
  - **FIX**: replace deprecated elements from analyzer ([#9366](https://github.com/firebase/flutterfire/issues/9366)). ([89c4c429](https://github.com/firebase/flutterfire/commit/89c4c4294dc6fb376caf74704abf738ec664f85f))
