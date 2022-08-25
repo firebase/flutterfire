@@ -66,7 +66,6 @@ Packages with dependency updates only:
 
  - `firebase_analytics` - `v9.3.3`
  - `flutterfire_ui` - `v0.4.3+7`
- - `firebase_in_app_messaging` - `v0.6.0+23`
  - `firebase_database` - `v9.1.3`
  - `firebase_dynamic_links` - `v4.3.6`
  - `cloud_firestore` - `v3.4.6`
@@ -135,6 +134,10 @@ Packages with dependency updates only:
 #### `firebase_core_platform_interface` - `v4.5.1`
 
  - **FIX**: Prepare for fix to https://github.com/flutter/flutter/issues/109339. ([#9364](https://github.com/firebase/flutterfire/issues/9364)). ([7418dfd9](https://github.com/firebase/flutterfire/commit/7418dfd91c4fc7982c6bc6b1e8de80f9bccd575b))
+
+#### `firebase_in_app_messaging` - `v0.6.0+23`
+
+ - **REFACTOR**: update deprecated `Tasks.call()` to `TaskCompletionSource` API ([#9407](https://github.com/firebase/flutterfire/pull/9407)). ([837d68ea](https://github.com/firebase/flutterfire/commit/bb9b3b23c683d28730a1952f54384caed78674d7))
 
 #### `firebase_remote_config` - `v2.0.16`
 
