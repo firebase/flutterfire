@@ -11,6 +11,25 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 Packages with breaking changes:
 
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_in_app_messaging` - `v0.6.1`](#firebase_in_app_messaging---v061)
+
+---
+
+#### `firebase_in_app_messaging` - `v0.6.1`
+
+
+## 2022-08-25
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
  - [`firebase_messaging` - `v13.0.0`](#firebase_messaging---v1300)
 
 Packages with other changes:
