@@ -110,6 +110,7 @@ Packages with dependency updates only:
 #### `firebase_messaging` - `v13.0.0`
 
  - **BREAKING** **FEAT**: android 13 notifications permission request ([#9348](https://github.com/firebase/flutterfire/issues/9348)). ([43b3b06b](https://github.com/firebase/flutterfire/commit/43b3b06b64739658f79c994110654f5a56abca05))
+   `firebase_messaging` now includes this permission: `Manifest.permission.POST_NOTIFICATIONS` in its `AndroidManifest.xml` file which requires updating your `android/app/build.gradle` to target API level 33.
 
 #### `firebase_analytics_web` - `v0.4.2+3`
 
