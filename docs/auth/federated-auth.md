@@ -249,8 +249,7 @@ You also might need to request elevated [API access depending on your app](https
 
 * {Web}
 
-  Before you begin [configure Sign In with Apple](/docs/auth/web/apple#configure-sign-in-with-apple)
-  and [enable Apple as a sign-in provider](/docs/auth/web/apple#enable-apple-as-a-sign-in-provider).
+  Works out of the box.
 
 ```dart
 import 'package:firebase_auth/firebase_auth.dart';
