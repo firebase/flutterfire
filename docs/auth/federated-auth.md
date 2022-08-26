@@ -173,18 +173,18 @@ For further information, see this [issue](https://github.com/firebase/flutterfir
 
 * {iOS+}
 
-  Before you begin [configure Sign In with Apple](/docs/auth/ios/apple#configure-sign-in-with-apple)
+  Before you begin, [configure Sign In with Apple](/docs/auth/ios/apple#configure-sign-in-with-apple)
   and [enable Apple as a sign-in provider](/docs/auth/ios/apple#enable-apple-as-a-sign-in-provider).
 
   Next, make sure that your `Runner` apps have the "Sign in with Apple" capability.
 
 * {Android}
-  Before you begin [configure Sign In with Apple](/docs/auth/android/apple#configure-sign-in-with-apple)
+  Before you begin, [configure Sign In with Apple](/docs/auth/android/apple#configure_sign_in_with_apple)
   and [enable Apple as a sign-in provider](/docs/auth/android/apple#enable-apple-as-a-sign-in-provider).
 
 * {Web}
 
-  Before you begin [configure Sign In with Apple](/docs/auth/web/apple#configure-sign-in-with-apple)
+  Before you begin, [configure Sign In with Apple](/docs/auth/web/apple#configure-sign-in-with-apple)
   and [enable Apple as a sign-in provider](/docs/auth/web/apple#enable-apple-as-a-sign-in-provider).
 
 
