@@ -7,12 +7,30 @@ part of firebase_core_platform_interface;
 
 /// Throws a consistent cross-platform error message when usage of an app occurs but
 /// no app has been created.
-FirebaseException noAppExists(String appName) {
-  return FirebaseException(
-      plugin: 'core',
-      code: 'no-app',
-      message:
-          "No Firebase App '$appName' has been created - call Firebase.initializeApp()");
+FirebaseException noAppExists(String appName, Set<String> availableApps) {
+  if (availableApps.isEmpty) {
+    return FirebaseException(
+        plugin: 'core',
+        code: 'no-app',
+        message:
+            "No Firebase App '$appName' has been created - call Firebase.initializeApp()");
+  } else if (appName == defaultFirebaseAppName) {
+    return FirebaseException(
+        plugin: 'core',
+        code: 'no-app',
+        message:
+            'The default Firebase App has not been created. Either initialize a'
+            ' default app by calling Firebase.initializeApp() with no `name`'
+            ' parameter, or look up the app by name. Available apps:'
+            ' ${availableApps}');
+  } else {
+    return FirebaseException(
+        plugin: 'core',
+        code: 'no-app',
+        message:
+            "No Firebase App '$appName' has been created. Available apps:"
+            ' ${availableApps}');
+  }
 }
 
 /// Throws a consistent cross-platform error message when an app is being created

@@ -265,8 +265,16 @@ class FirebaseCoreWeb extends FirebasePlatform {
     try {
       app = guardNotInitialized(() => firebase.app(name));
     } catch (e) {
+      final Set<String> availableApps = {};
+      try {
+        availableApps.addAll(apps.map((app) => app.name));
+      } catch (_) {
+        // If we fail to get apps here, that's OK. Continue with an
+        // empty set of apps.
+      }
+
       if (_getJSErrorCode(e) == 'app/no-app') {
-        throw noAppExists(name);
+        throw noAppExists(name, availableApps);
       }
 
       throw _catchJSError(e);

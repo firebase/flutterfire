@@ -67,10 +67,40 @@ class MethodChannelFirebase extends FirebasePlatform {
     String? name,
     FirebaseOptions? options,
   }) async {
+    final firstInitialization = !isCoreInitialized;
+
     // Ensure that core has been initialized on the first usage of
     // initializeApp
     if (!isCoreInitialized) {
       await _initializeCore();
+    }
+
+    // On the first initialization, if there were native apps loaded and not
+    // configured in this call to [initializeApp], warn users that their firebase
+    // configuration may not work on other platforms. Without this, it is
+    // possible for users to e.g. initialize a named app that is doing nothing
+    // on android, and expect it to work on web.
+    if (firstInitialization && defaultTargetPlatform == TargetPlatform.android) {
+      final surpriseApps = appInstances.keys
+          .where((appName) => appName != (name ?? defaultFirebaseAppName))
+          .toSet();
+      if (surpriseApps.contains(defaultFirebaseAppName)) {
+        print('WARNING: default firebase app configured from android resources.'
+            ' The default app will work on android, but not on other platforms,'
+            ' until it is configured in Flutter with `initializeApp()` and an'
+            ' omitted `name` option.');
+      }
+
+      final surpriseNamedApps = surpriseApps
+          .where((name) => name != defaultFirebaseAppName)
+          .toSet();
+
+      if (surpriseNamedApps.isNotEmpty) {
+        print('WARNING: apps configured from android resources: '
+            ' $surpriseNamedApps. These apps will work on android, but not'
+            ' other platforms, until they are configured in Flutter with'
+            ' initializeApp(name: name)');
+      }
     }
 
     // If no name is provided, attempt to get the default Firebase app instance.
@@ -190,6 +220,6 @@ class MethodChannelFirebase extends FirebasePlatform {
       return appInstances[name]!;
     }
 
-    throw noAppExists(name);
+    throw noAppExists(name, appInstances.keys.toSet());
   }
 }
