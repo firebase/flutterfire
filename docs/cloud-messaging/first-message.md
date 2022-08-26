@@ -1,5 +1,11 @@
-Project: /docs/_project.yaml
+Project: /docs/cloud-messaging/_project.yaml
 Book: /docs/_book.yaml
+page_type: guide
+
+{% include "_shared/apis/console/_local_variables.html" %}
+{% include "_local_variables.html" %}
+{% include "docs/cloud-messaging/_local_variables.html" %}
+{% include "docs/android/_local_variables.html" %}
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 

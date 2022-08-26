@@ -3,13 +3,13 @@ Book: /docs/_book.yaml
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
-# Enable App Check in Flutter apps
+# Get started using App Check in Flutter apps
 
 This page shows you how to enable App Check in a Flutter app, using the
 default providers: SafetyNet on Android, Device Check on Apple platforms, and
 reCAPTCHA v3 on web. When you enable App Check, you help ensure that
 only your app can access your project's Firebase resources. See an
-[Overview](overview) of this feature.
+[Overview](/docs/app-check) of this feature.
 
 
 ## 1. Set up your Firebase project {:#project-setup}
@@ -84,124 +84,45 @@ Future<void> main() async {
 }
 ```
 
+## Next steps
+
 Once the App Check library is installed in your app, start distributing the
 updated app to your users.
 
 The updated client app will begin sending App Check tokens along with every
 request it makes to Firebase, but Firebase products will not require the tokens
 to be valid until you enable enforcement in the App Check section of the
-Firebase console. See the next two sections for details.
+Firebase console.
 
+### Monitor metrics and enable enforcement {:#monitor}
 
-## 4. Monitor request metrics {:#metrics}
+Before you enable enforcement, however, you should make sure that doing so won't
+disrupt your existing legitimate users. On the other hand, if you're seeing
+suspicious use of your app resources, you might want to enable enforcement
+sooner.
 
-Now that your updated app is in the hands of users, you can enable enforcement
-of App Check for the Firebase products you use. Before you do so, however,
-you should make sure that doing so won’t disrupt your existing legitimate users.
+To help make this decision, you can look at App Check metrics for the
+services you use:
 
-### Realtime Database, Cloud Firestore, and Cloud Storage {:#metrics-other}
+- [Monitor App Check request metrics](/docs/app-check/monitor-metrics) for
+  Realtime Database, Cloud Firestore, and Cloud Storage.
+- [Monitor App Check request metrics for Cloud Functions](/docs/app-check/monitor-functions-metrics).
 
-An important tool you can use to make this decision for Realtime Database,
-Cloud Firestore, and Cloud Storage is the App Check request metrics screen.
+### Enable App Check enforcement {:#enforce}
 
-To view the App Check request metrics for a product, open the
-[**Project Settings > App Check**](https://console.firebase.google.com/project/_/settings/appcheck)
-section of the Firebase console. For example:
+When you understand how App Check will affect your users and you're ready to
+proceed, you can enable App Check enforcement:
 
-<img src="/docs/app-check/app-check-metrics.png"
-     alt="Screenshot of the App Check metrics page"
-     class="screenshot"/>
+- [Enable App Check enforcement](/docs/app-check/enable-enforcement) for
+  Realtime Database, Cloud Firestore, and Cloud Storage.
+- [Enable App Check enforcement for Cloud Functions](/docs/app-check/cloud-functions).
 
-The request metrics for each product are broken down into four categories:
+### Use App Check in debug environments {:#debug}
 
-- **Verified** requests are those that have a valid App Check token. After
-  you enable App Check enforcement, only requests in this category will
-  succeed.
+If, after you have registered your app for App Check, you want to run your
+app in an environment that App Check would normally not classify as valid,
+such as an emulator during development, or from a continuous integration (CI)
+environment, you can create a debug build of your app that uses the
+App Check debug provider instead of a real attestation provider.
 
-- **Outdated client** requests are those that are missing an App Check
-  token. These requests might be from an older version of the Firebase SDK
-  before App Check was included in the app.
-
-- **Unknown origin** requests are those that are missing an App Check token,
-  and don't look like they come from the Firebase SDK. These might be from
-  requests made with stolen API keys or forged requests made without the
-  Firebase SDK.
-
-- **Invalid** requests are those that have an invalid
-  App Check token, which might be from an inauthentic client attempting to
-  impersonate your app, or from emulated environments.
-
-The distribution of these categories for your app should inform when you decide
-to enable enforcement. Here are some guidelines:
-
-- If almost all of the recent requests are from verified clients, consider
-  enabling enforcement to start protecting your backend resources.
-
-- If a significant portion of the recent requests are from likely-outdated
-  clients, to avoid disrupting users, consider waiting for more users to update
-  your app before enabling enforcement. Enforcing App Check on a released
-  app will break prior app versions that are not integrated with the
-  App Check SDK.
-
-- If your app hasn't launched yet, you should enable App Check enforcement
-  immediately, since there aren't any outdated clients in use.
-
-### Cloud Functions {:#metrics-functions}
-
-For Cloud Functions, you can get App Check metrics by examining your
-functions' logs. Every invocation of a callable function emits a structured log
-entry like the following example:
-
-```json
-{
-  "severity": "INFO",    // INFO, WARNING, or ERROR
-  "logging.googleapis.com/labels": {"firebase-log-type": "callable-request-verification"},
-  "jsonPayload": {
-    "message": "Callable header verifications passed.",
-    "verifications": {
-      // ...
-      "app": "MISSING",  // VALID, INVALID, or MISSING
-    }
-  }
-}
-```
-
-You can analyze these metrics in the Google Cloud Console by [creating a
-logs-based counter metric](https://cloud.google.com/logging/docs/logs-based-metrics/counter-metrics)
-with the following metric filter:
-
-```
-resource.type="cloud_function"
-resource.labels.function_name="YOUR_CLOUD_FUNCTION"
-resource.labels.region="us-central1"
-labels.firebase-log-type="callable-request-verification"
-```
-
-[Label the metric](https://cloud.google.com/logging/docs/logs-based-metrics/labels#create-label)
-using the field `jsonPayload.verifications.appCheck`.
-
-
-## 5. Enable enforcement {:#enable-enforcement}
-
-To enable enforcement, follow the instructions for each product, below. Once you
-enable enforcement for a product, all unverified requests to that product will
-be rejected.
-
-### Realtime Database, Cloud Firestore, and Cloud Storage {:#enable-other}
-
-To enable enforcement for Realtime Database, Cloud Firestore (iOS and Android), and Cloud Storage:
-
-1.  Open the [**Project Settings > App Check**](https://console.firebase.google.com/project/_/settings/appcheck)
-    section of the Firebase console.
-
-1.  Expand the metrics view of the product for which you want to enable
-    enforcement.
-
-1.  Click **Enforce** and confirm your choice.
-
-Note that it can take up to 10 minutes after you enable enforcement for it to
-take effect.
-
-### Cloud Functions {:#enable-functions}
-
-See [Enable App Check enforcement for Cloud Functions](/docs/app-check/cloud-functions).
+See [Use App Check with the debug provider in Flutter apps](/docs/app-check/flutter/debug-provider).
