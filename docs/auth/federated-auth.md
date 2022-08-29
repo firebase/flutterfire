@@ -343,3 +343,39 @@ with the Client ID and Secret are set, with the callback URL set in the GitHub a
     // return await FirebaseAuth.instance.signInWithRedirect(githubProvider);
   }
   ```
+
+
+
+## Yahoo
+
+Ensure the "Yahoo" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers)
+with an API Key and API Secret set. Also make sure your Firebase OAuth redirect URI (e.g. my-app-12345.firebaseapp.com/__/auth/handler) 
+is set as your Authorization callback URL in your app's settings page on your Yahoo app's config.
+
+
+* {iOS+}
+
+  Before you begin [configure Yahoo Login for iOS](/docs/auth/ios/yahoo-oauth#before_you_begin) and add the [custom URL schemes
+  to your Runner (step 1)](https://firebase.google.com/docs/auth/ios/yahoo-oauth#handle_the_sign-in_flow_with_the_firebase_sdk).
+
+* {Android}
+  Before you begin [configure Yahoo Login for Android](/docs/auth/android/yahoo-oauth#before_you_begin).
+  
+  Don't forget to add your app's SHA-1 fingerprint.
+
+* {Web}
+
+  Works out of the box.
+
+```dart
+import 'package:firebase_auth/firebase_auth.dart';
+
+Future<UserCredential> signInWithYahoo() async {
+  final yahooProvider = YahooAuthProvider();
+  if (kIsWeb) {
+    await _auth.signInWithPopup(yahooProvider);
+  } else {
+    await _auth.signInWithAuthProvider(yahooProvider);
+  }
+}
+```
