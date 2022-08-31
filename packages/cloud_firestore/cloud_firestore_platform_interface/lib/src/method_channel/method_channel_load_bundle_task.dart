@@ -1,6 +1,5 @@
 // ignore_for_file: require_trailing_commas
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
