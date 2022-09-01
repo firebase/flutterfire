@@ -36,16 +36,23 @@ class CollectionData {
   CollectionData({
     required this.type,
     required String? collectionName,
+    required String? classPrefix,
     required this.path,
     required this.queryableFields,
     required this.fromJson,
     required this.toJson,
     required this.libraryElement,
-  }) : collectionName =
-            collectionName ?? ReCase(path.split('/').last).camelCase;
+  })  : collectionName =
+            collectionName ?? ReCase(path.split('/').last).camelCase,
+        classPrefix = classPrefix ??
+            type.getDisplayString(withNullability: false).replaceFirstMapped(
+                  RegExp('[a-zA-Z]'),
+                  (match) => match.group(0)!.toUpperCase(),
+                );
 
   final DartType type;
   final String collectionName;
+  final String classPrefix;
   final String path;
   final List<QueryingField> queryableFields;
   final LibraryElement libraryElement;
@@ -59,23 +66,17 @@ class CollectionData {
   final List<CollectionData> _children = [];
   List<CollectionData> get children => UnmodifiableListView(_children);
 
-  late final String className =
-      type.getDisplayString(withNullability: false).replaceFirstMapped(
-            RegExp('[a-zA-Z]'),
-            (match) => match.group(0)!.toUpperCase(),
-          );
-
   late final String collectionReferenceInterfaceName =
-      '${className}CollectionReference';
+      '${classPrefix}CollectionReference';
   late final String collectionReferenceImplName =
-      '_\$${className}CollectionReference';
-  late final String documentReferenceName = '${className}DocumentReference';
-  late final String queryReferenceInterfaceName = '${className}Query';
-  late final String queryReferenceImplName = '_\$${className}Query';
-  late final String querySnapshotName = '${className}QuerySnapshot';
+      '_\$${classPrefix}CollectionReference';
+  late final String documentReferenceName = '${classPrefix}DocumentReference';
+  late final String queryReferenceInterfaceName = '${classPrefix}Query';
+  late final String queryReferenceImplName = '_\$${classPrefix}Query';
+  late final String querySnapshotName = '${classPrefix}QuerySnapshot';
   late final String queryDocumentSnapshotName =
-      '${className}QueryDocumentSnapshot';
-  late final String documentSnapshotName = '${className}DocumentSnapshot';
+      '${classPrefix}QueryDocumentSnapshot';
+  late final String documentSnapshotName = '${classPrefix}DocumentSnapshot';
   late final String originalDocumentSnapshotName = 'DocumentSnapshot<$type>';
 
   String Function(String json) fromJson;
@@ -224,6 +225,7 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
     // TODO find a way to test validation
 
     final name = object.getField('name')!.toStringValue();
+    final prefix = object.getField('prefix')!.toStringValue();
 
     // TODO(validate name)
 
@@ -312,6 +314,7 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       type: type,
       path: path,
       collectionName: name,
+      classPrefix: prefix,
       libraryElement: libraryElement,
       fromJson: (json) {
         if (fromJson != null) return '$type.fromJson($json)';
