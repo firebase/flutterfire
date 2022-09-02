@@ -144,8 +144,6 @@ public class FlutterFirebaseCrashlyticsPlugin
                 (String) Objects.requireNonNull(arguments.get(Constants.BUILD_ID));
 
             if (buildId.length() > 0) {
-              // TODO(mrober): Remove custom key after cl/470239655 has rolled out.
-              crashlytics.setCustomKey("com.crashlytics.flutter.build-id.0", buildId);
               FlutterFirebaseCrashlyticsInternal.setFlutterBuildId(buildId);
             }
 
