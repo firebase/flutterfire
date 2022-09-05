@@ -406,7 +406,7 @@ class ${data.queryReferenceImplName}
 
 extension on TypeProvider {
   DartType asNullable(DartType type) {
-    final typeSystem = nullType.element2.library.typeSystem;
+    final typeSystem = nullType.element.library.typeSystem;
     if (typeSystem.isNullable(type)) return type;
 
     return typeSystem.leastUpperBound(type, nullType);
