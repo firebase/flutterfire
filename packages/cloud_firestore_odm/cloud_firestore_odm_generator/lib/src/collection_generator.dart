@@ -233,7 +233,7 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
     final type = (object.type! as ParameterizedType).typeArguments.first;
 
     final hasJsonSerializable = const TypeChecker.fromRuntime(JsonSerializable)
-        .hasAnnotationOf(type.element2!);
+        .hasAnnotationOf(type.element!);
 
     if (type.isDynamic) {
       throw InvalidGenerationSourceError(
@@ -243,7 +243,7 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       );
     }
 
-    final collectionTargetElement = type.element2;
+    final collectionTargetElement = type.element;
     if (collectionTargetElement is! ClassElement) {
       throw InvalidGenerationSourceError(
         'The annotation @Collection can only receive classes as generic argument. ',
@@ -405,10 +405,10 @@ extension on String {
 
 extension on DartType {
   bool get isJsonDocumentReference {
-    return element2?.librarySource?.uri.scheme == 'package' &&
+    return element?.librarySource?.uri.scheme == 'package' &&
         const {'cloud_firestore'}
-            .contains(element2?.librarySource?.uri.pathSegments.first) &&
-        element2?.name == 'DocumentReference' &&
+            .contains(element?.librarySource?.uri.pathSegments.first) &&
+        element?.name == 'DocumentReference' &&
         (this as InterfaceType).typeArguments.single.isDartCoreMap;
   }
 
