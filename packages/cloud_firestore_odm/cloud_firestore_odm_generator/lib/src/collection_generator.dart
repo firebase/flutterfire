@@ -262,6 +262,9 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       },
     ).toList();
 
+    // TODO throw when using json_serializable if the Model type and
+    // the collection are defined in separate libraries
+
     // TODO test error handling
     if (redirectedFreezedConstructors.length > 1) {
       throw InvalidGenerationSourceError(

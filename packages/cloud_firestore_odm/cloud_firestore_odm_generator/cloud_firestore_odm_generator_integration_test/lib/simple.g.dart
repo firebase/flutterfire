@@ -2480,7 +2480,7 @@ class _$SplitFileModelQuery
   }) {
     return _$SplitFileModelQuery(
       reference.where(
-        _$SplitFileModelFieldMap["hashCode"]!,
+        "hashCode",
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2548,8 +2548,7 @@ class _$SplitFileModelQuery
     SplitFileModelDocumentSnapshot? endBeforeDocument,
     SplitFileModelDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$SplitFileModelFieldMap["hashCode"]!,
-        descending: descending);
+    var query = reference.orderBy("hashCode", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
