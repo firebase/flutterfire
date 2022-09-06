@@ -3,16 +3,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:typed_data';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/field_path_type.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 
-import '../method_channel_query.dart';
 import '../method_channel_firestore.dart';
+import '../method_channel_query.dart';
 
 /// The codec utilized to encode data back and forth between
 /// the Dart application and the native platform.
