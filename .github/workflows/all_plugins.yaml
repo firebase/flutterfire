@@ -29,8 +29,6 @@ jobs:
       - name: 'Install Tools'
         run: |
           ./.github/workflows/scripts/install-tools.sh
-      - name: 'Print Flutter version'
-        run: flutter --version
       - name: 'Bootstrap Workspace'
         run: melos bootstrap
       - name: 'Run Analyze'
