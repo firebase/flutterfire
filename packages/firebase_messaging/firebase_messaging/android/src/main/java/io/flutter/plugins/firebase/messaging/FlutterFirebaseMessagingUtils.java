@@ -16,6 +16,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+@FunctionalInterface
+interface ErrorCallback {
+  void onError(String errorDescription);
+}
+
 class FlutterFirebaseMessagingUtils {
   static final String IS_AUTO_INIT_ENABLED = "isAutoInitEnabled";
   static final String SHARED_PREFERENCES_KEY = "io.flutter.firebase.messaging.callback";

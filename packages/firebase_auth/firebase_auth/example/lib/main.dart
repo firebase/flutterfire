@@ -14,7 +14,6 @@ bool shouldUseFirebaseEmulator = false;
 // e.g via `melos run firebase:emulator`.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   // We're using the manual installation on non-web platforms since Google sign in plugin doesn't yet support Dart initialization.
   // See related issue: https://github.com/flutter/flutter/issues/96391
   if (!kIsWeb) {
@@ -54,11 +53,11 @@ class AuthExampleApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.amber),
       home: Scaffold(
         body: LayoutBuilder(
-          builder: (context, constraines) {
+          builder: (context, constraints) {
             return Row(
               children: [
                 Visibility(
-                  visible: constraines.maxWidth >= 1200,
+                  visible: constraints.maxWidth >= 1200,
                   child: Expanded(
                     child: Container(
                       height: double.infinity,
@@ -78,9 +77,9 @@ class AuthExampleApp extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: constraines.maxWidth >= 1200
-                      ? constraines.maxWidth / 2
-                      : constraines.maxWidth,
+                  width: constraints.maxWidth >= 1200
+                      ? constraints.maxWidth / 2
+                      : constraints.maxWidth,
                   child: StreamBuilder<User?>(
                     stream: FirebaseAuth.instance.authStateChanges(),
                     builder: (context, snapshot) {

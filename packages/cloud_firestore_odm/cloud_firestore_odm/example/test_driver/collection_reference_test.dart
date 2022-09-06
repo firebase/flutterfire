@@ -349,6 +349,59 @@ void main() {
         );
       });
 
+      group('arrayContains', () {
+        test('supports whereFieldPath', () async {
+          final collection = await initializeTest(MovieCollectionReference());
+
+          await collection.add(
+            createMovie(title: 'A', genre: ['foo', 'unrelated']),
+          );
+          await collection.add(
+            createMovie(title: 'B', genre: ['bar', 'unrelated']),
+          );
+          await collection.add(
+            createMovie(title: 'C', genre: ['bar', 'unrelated']),
+          );
+
+          final querySnap = await collection
+              .whereFieldPath(
+                FieldPath.fromString('genre'),
+                arrayContains: 'bar',
+              )
+              .orderByTitle()
+              .get();
+
+          expect(
+            querySnap.docs.map((e) => e.data.title),
+            ['B', 'C'],
+          );
+        });
+
+        test('supports whereProperty', () async {
+          final collection = await initializeTest(MovieCollectionReference());
+
+          await collection.add(
+            createMovie(title: 'A', genre: ['foo', 'unrelated']),
+          );
+          await collection.add(
+            createMovie(title: 'B', genre: ['bar', 'unrelated']),
+          );
+          await collection.add(
+            createMovie(title: 'C', genre: ['bar', 'unrelated']),
+          );
+
+          final querySnap = await collection
+              .whereGenre(arrayContains: 'bar')
+              .orderByTitle()
+              .get();
+
+          expect(
+            querySnap.docs.map((e) => e.data.title),
+            ['B', 'C'],
+          );
+        });
+      });
+
       test('whereFieldPath', () async {
         final collection = await initializeTest(MovieCollectionReference());
 

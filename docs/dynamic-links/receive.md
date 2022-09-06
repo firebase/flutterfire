@@ -73,7 +73,7 @@ start the activity with this intent filter to handle the link.
 
     1.  On the Signing & Capabilities page, enable **Associated Domains** and
         add the following to the Associated Domains list:
-        
+
         ```
         applinks:example.page.link
         ```

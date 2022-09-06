@@ -29,12 +29,6 @@ external PromiseJsImpl<DocumentReferenceJsImpl> addDoc(
 );
 
 @JS()
-external FieldValue arrayRemove(dynamic elements);
-
-@JS()
-external FieldValue arrayUnion(dynamic elements);
-
-@JS()
 external PromiseJsImpl<void> clearIndexedDbPersistence(
   FirestoreJsImpl firestore,
 );
@@ -92,15 +86,6 @@ external PromiseJsImpl<void> enableMultiTabIndexedDbPersistence(
 @JS()
 external PromiseJsImpl<void> enableNetwork(FirestoreJsImpl firestore);
 
-@JS()
-external QueryConstraintJsImpl endBefore(
-  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
-);
-
-@JS()
-external QueryConstraintJsImpl endAt(
-  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
-);
 @JS()
 external PromiseJsImpl<DocumentSnapshotJsImpl> getDoc(
   DocumentReferenceJsImpl reference,
@@ -193,11 +178,12 @@ external PromiseJsImpl<void> runTransaction(
 ]);
 
 @JS('TransactionOptions')
-class TransactionOptionsJsImpl {
-  external factory TransactionOptionsJsImpl(num maxAttempts);
+@anonymous
+abstract class TransactionOptionsJsImpl {
+  external factory TransactionOptionsJsImpl({num maxAttempts});
 
   /// Maximum number of attempts to commit, after which transaction fails. Default is 5.
-  external num get maxAttempts;
+  external static num get maxAttempts;
 }
 
 @JS()
@@ -217,16 +203,6 @@ external void setLogLevel(String logLevel);
 external bool snapshotEqual(
   dynamic /* DocumentSnapshot | QuerySnapshot */ left,
   dynamic /* DocumentSnapshot | QuerySnapshot */ right,
-);
-
-@JS()
-external QueryConstraintJsImpl startAfter(
-  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
-);
-
-@JS()
-external QueryConstraintJsImpl startAt(
-  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
 );
 
 @JS()
@@ -654,3 +630,24 @@ abstract class SnapshotOptions {
 
   external factory SnapshotOptions({String? serverTimestamps});
 }
+
+// We type these 6 functions as Object to avoid an issue with dart2js compilation
+// in release mode
+// Discussed internally with dart2js team
+@JS()
+external Object get startAfter;
+
+@JS()
+external Object get startAt;
+
+@JS()
+external Object get endBefore;
+
+@JS()
+external Object get endAt;
+
+@JS()
+external Object get arrayRemove;
+
+@JS()
+external Object get arrayUnion;

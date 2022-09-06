@@ -12,6 +12,8 @@
 
 #import "Private/CustomPigeonHeader.h"
 #import "Public/FLTFirebaseAuthPlugin.h"
+@import CommonCrypto;
+#import <AuthenticationServices/AuthenticationServices.h>
 
 NSString *const kFLTFirebaseAuthChannelName = @"plugins.flutter.io/firebase_auth";
 
@@ -25,12 +27,15 @@ NSString *const kSignInMethodFacebook = @"facebook.com";
 NSString *const kSignInMethodGoogle = @"google.com";
 NSString *const kSignInMethodTwitter = @"twitter.com";
 NSString *const kSignInMethodGithub = @"github.com";
+NSString *const kSignInMethodApple = @"apple.com";
 NSString *const kSignInMethodPhone = @"phone";
 NSString *const kSignInMethodOAuth = @"oauth";
 
 // Credential argument keys.
 NSString *const kArgumentCredential = @"credential";
 NSString *const kArgumentProviderId = @"providerId";
+NSString *const kArgumentProviderScope = @"scopes";
+NSString *const kArgumentProviderCustomParameters = @"customParameters";
 NSString *const kArgumentSignInMethod = @"signInMethod";
 NSString *const kArgumentSecret = @"secret";
 NSString *const kArgumentIdToken = @"idToken";
@@ -62,6 +67,10 @@ NSString *const kErrMsgInvalidCredential =
 @interface FLTFirebaseAuthPlugin ()
 @property(nonatomic, retain) NSObject<FlutterBinaryMessenger> *messenger;
 @property(strong, nonatomic) FIROAuthProvider *authProvider;
+@property(strong, nonatomic) NSString *currentNonce;
+@property(strong, nonatomic) FLTFirebaseMethodCallResult *appleResult;
+@property(strong, nonatomic) id appleArguments;
+
 @end
 
 @implementation FLTFirebaseAuthPlugin {
@@ -487,8 +496,130 @@ NSString *const kErrMsgInvalidCredential =
                   }];
 }
 
+// Adapted from
+// https://auth0.com/docs/api-auth/tutorials/nonce#generate-a-cryptographically-random-nonce Used
+// for Apple Sign In
+- (NSString *)randomNonce:(NSInteger)length {
+  NSAssert(length > 0, @"Expected nonce to have positive length");
+  NSString *characterSet = @"0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._";
+  NSMutableString *result = [NSMutableString string];
+  NSInteger remainingLength = length;
+
+  while (remainingLength > 0) {
+    NSMutableArray *randoms = [NSMutableArray arrayWithCapacity:16];
+    for (NSInteger i = 0; i < 16; i++) {
+      uint8_t random = 0;
+      int errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random);
+      NSAssert(errorCode == errSecSuccess, @"Unable to generate nonce: OSStatus %i", errorCode);
+
+      [randoms addObject:@(random)];
+    }
+
+    for (NSNumber *random in randoms) {
+      if (remainingLength == 0) {
+        break;
+      }
+
+      if (random.unsignedIntValue < characterSet.length) {
+        unichar character = [characterSet characterAtIndex:random.unsignedIntValue];
+        [result appendFormat:@"%C", character];
+        remainingLength--;
+      }
+    }
+  }
+
+  return [result copy];
+}
+
+- (NSString *)stringBySha256HashingString:(NSString *)input {
+  const char *string = [input UTF8String];
+  unsigned char result[CC_SHA256_DIGEST_LENGTH];
+  CC_SHA256(string, (CC_LONG)strlen(string), result);
+
+  NSMutableString *hashed = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
+  for (NSInteger i = 0; i < CC_SHA256_DIGEST_LENGTH; i++) {
+    [hashed appendFormat:@"%02x", result[i]];
+  }
+  return hashed;
+}
+
+- (void)authorizationController:(ASAuthorizationController *)controller
+    didCompleteWithAuthorization:(ASAuthorization *)authorization
+    API_AVAILABLE(macos(10.15), ios(13.0)) {
+  if ([authorization.credential isKindOfClass:[ASAuthorizationAppleIDCredential class]]) {
+    ASAuthorizationAppleIDCredential *appleIDCredential = authorization.credential;
+    NSString *rawNonce = self.currentNonce;
+    NSAssert(rawNonce != nil,
+             @"Invalid state: A login callback was received, but no login request was sent.");
+
+    if (appleIDCredential.identityToken == nil) {
+      NSLog(@"Unable to fetch identity token.");
+      return;
+    }
+
+    NSString *idToken = [[NSString alloc] initWithData:appleIDCredential.identityToken
+                                              encoding:NSUTF8StringEncoding];
+    if (idToken == nil) {
+      NSLog(@"Unable to serialize id token from data: %@", appleIDCredential.identityToken);
+    }
+
+    // Initialize a Firebase credential.
+    FIROAuthCredential *credential = [FIROAuthProvider credentialWithProviderID:@"apple.com"
+                                                                        IDToken:idToken
+                                                                       rawNonce:rawNonce];
+
+    // Sign in with Firebase.
+    [[FIRAuth auth]
+        signInWithCredential:credential
+                  completion:^(FIRAuthDataResult *_Nullable authResult, NSError *_Nullable error) {
+                    if (error != nil) {
+                      if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+                        [self handleMultiFactorError:self.appleArguments
+                                          withResult:self.appleResult
+                                           withError:error];
+                      } else {
+                        self.appleResult.error(nil, nil, nil, error);
+                      }
+                      return;
+                    }
+                    self.appleResult.success(authResult);
+                  }];
+  }
+}
+
+- (void)authorizationController:(ASAuthorizationController *)controller
+           didCompleteWithError:(NSError *)error API_AVAILABLE(macos(10.15), ios(13.0)) {
+  NSLog(@"Sign in with Apple errored: %@", error);
+  self.appleResult.error(nil, nil, nil, error);
+}
+
 - (void)signInWithAuthProvider:(id)arguments
           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
+    if (@available(iOS 13.0, macOS 10.15, *)) {
+      NSString *nonce = [self randomNonce:32];
+      self.currentNonce = nonce;
+      self.appleResult = result;
+      self.appleArguments = arguments;
+
+      ASAuthorizationAppleIDProvider *appleIDProvider =
+          [[ASAuthorizationAppleIDProvider alloc] init];
+
+      ASAuthorizationAppleIDRequest *request = [appleIDProvider createRequest];
+      request.requestedScopes = @[ ASAuthorizationScopeFullName, ASAuthorizationScopeEmail ];
+      request.nonce = [self stringBySha256HashingString:nonce];
+
+      ASAuthorizationController *authorizationController =
+          [[ASAuthorizationController alloc] initWithAuthorizationRequests:@[ request ]];
+      authorizationController.delegate = self;
+      authorizationController.presentationContextProvider = self;
+      [authorizationController performRequests];
+    } else {
+      NSLog(@"Sign in with Apple was introduced in iOS 13, update your Podfile with platform :ios, "
+            @"'13.0'");
+    }
+    return;
+  }
 #if TARGET_OS_OSX
   NSLog(@"The Firebase Phone Authentication provider is not supported on the "
         @"MacOS platform.");
@@ -496,6 +627,14 @@ NSString *const kErrMsgInvalidCredential =
 #else
   FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
   self.authProvider = [FIROAuthProvider providerWithProviderID:arguments[@"signInProvider"]];
+  NSArray *scopes = arguments[kArgumentProviderScope];
+  if (scopes != nil) {
+    [self.authProvider setScopes:scopes];
+  }
+  NSDictionary *customParameters = arguments[kArgumentProviderCustomParameters];
+  if (customParameters != nil) {
+    [self.authProvider setCustomParameters:customParameters];
+  }
 
   [self.authProvider
       getCredentialWithUIDelegate:nil
@@ -1618,5 +1757,14 @@ NSString *const kErrMsgInvalidCredential =
 }
 
 #endif
+
+- (nonnull ASPresentationAnchor)presentationAnchorForAuthorizationController:
+    (nonnull ASAuthorizationController *)controller API_AVAILABLE(macos(10.15), ios(13.0)) {
+#if TARGET_OS_OSX
+  return [[NSApplication sharedApplication] keyWindow];
+#else
+  return [[UIApplication sharedApplication] keyWindow];
+#endif
+}
 
 @end

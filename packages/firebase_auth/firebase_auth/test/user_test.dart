@@ -333,8 +333,8 @@ void main() {
           'uid: 12345)';
 
       final userMetadata = 'UserMetadata('
-          'creationTime: ${DateTime.fromMillisecondsSinceEpoch(kMockCreationTimestamp)}, '
-          'lastSignInTime: ${DateTime.fromMillisecondsSinceEpoch(kMockLastSignInTimestamp)})';
+          'creationTime: ${DateTime.fromMillisecondsSinceEpoch(kMockCreationTimestamp, isUtc: true)}, '
+          'lastSignInTime: ${DateTime.fromMillisecondsSinceEpoch(kMockLastSignInTimestamp, isUtc: true)})';
 
       expect(
         auth!.currentUser.toString(),
@@ -374,7 +374,8 @@ class MockFirebaseAuth extends Mock
   }
 
   @override
-  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
+  FirebaseAuthPlatform delegateFor(
+      {FirebaseApp? app, Persistence? persistence}) {
     return super.noSuchMethod(
       Invocation.method(#delegateFor, const [], {#app: app}),
       returnValue: TestFirebaseAuthPlatform(),
@@ -555,7 +556,9 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   TestFirebaseAuthPlatform() : super();
 
   @override
-  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) => this;
+  FirebaseAuthPlatform delegateFor(
+          {FirebaseApp? app, Persistence? persistence}) =>
+      this;
 
   @override
   FirebaseAuthPlatform setInitialValues({

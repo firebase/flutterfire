@@ -1,0 +1,10 @@
+{
+  "name": "firebase-messaging-scripts",
+  "description": "Used to demonstrate sending a RemoteMessage to a client.",
+  "scripts": {
+    "send-message": "node send-message.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^11.0.1"
+  }
+}

@@ -31,6 +31,8 @@ external Persistence inMemoryPersistence;
 external Persistence browserSessionPersistence;
 @JS()
 external Persistence browserLocalPersistence;
+@JS()
+external Persistence indexedDBLocalPersistence;
 
 @JS()
 external PromiseJsImpl<ActionCodeInfo> checkActionCode(
@@ -663,6 +665,8 @@ class AuthSettings {
   external set appVerificationDisabledForTesting(bool? b);
   // external factory AuthSettings({bool appVerificationDisabledForTesting});
 }
+
+external dynamic get browserPopupRedirectResolver;
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactoruser.md#multifactoruser_interface
 @JS()

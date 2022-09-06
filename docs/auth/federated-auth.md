@@ -171,98 +171,64 @@ For further information, see this [issue](https://github.com/firebase/flutterfir
 
 ## Apple
 
-* {iOS+ and Android}
+* {iOS+}
 
-  Before you begin [configure Sign In with Apple](/docs/auth/ios/apple#configure-sign-in-with-apple)
+  Before you begin, [configure Sign In with Apple](/docs/auth/ios/apple#configure-sign-in-with-apple)
   and [enable Apple as a sign-in provider](/docs/auth/ios/apple#enable-apple-as-a-sign-in-provider).
 
   Next, make sure that your `Runner` apps have the "Sign in with Apple" capability.
 
-  Install the [`sign_in_with_apple`](https://pub.dev/packages/sign_in_with_apple) plugin, as well as the
-  [`crypto`](https://pub.dev/packages/crypto) package:
-
-  ```yaml title="pubspec.yaml"
-  dependencies:
-    sign_in_with_apple: ^3.0.0
-    crypto: ^3.0.1
-  ```
-
-  ```dart
-  import 'dart:convert';
-  import 'dart:math';
-
-  import 'package:crypto/crypto.dart';
-  import 'package:firebase_auth/firebase_auth.dart';
-  import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
-  /// Generates a cryptographically secure random nonce, to be included in a
-  /// credential request.
-  String generateNonce([int length = 32]) {
-    const charset =
-        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
-    final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
-        .join();
-  }
-
-  /// Returns the sha256 hash of [input] in hex notation.
-  String sha256ofString(String input) {
-    final bytes = utf8.encode(input);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
-  }
-
-  Future<UserCredential> signInWithApple() async {
-    // To prevent replay attacks with the credential returned from Apple, we
-    // include a nonce in the credential request. When signing in with
-    // Firebase, the nonce in the id token returned by Apple, is expected to
-    // match the sha256 hash of `rawNonce`.
-    final rawNonce = generateNonce();
-    final nonce = sha256ofString(rawNonce);
-
-    // Request credential for the currently signed in Apple account.
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-      nonce: nonce,
-    );
-
-    // Create an `OAuthCredential` from the credential returned by Apple.
-    final oauthCredential = OAuthProvider("apple.com").credential(
-      idToken: appleCredential.identityToken,
-      rawNonce: rawNonce,
-    );
-
-    // Sign in the user with Firebase. If the nonce we generated earlier does
-    // not match the nonce in `appleCredential.identityToken`, sign in will fail.
-    return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
-  }
-  ```
+* {Android}
+  Before you begin, [configure Sign In with Apple](/docs/auth/android/apple#configure_sign_in_with_apple)
+  and [enable Apple as a sign-in provider](/docs/auth/android/apple#enable-apple-as-a-sign-in-provider).
 
 * {Web}
 
-  Before you begin [configure Sign In with Apple](/docs/auth/web/apple#configure-sign-in-with-apple)
+  Before you begin, [configure Sign In with Apple](/docs/auth/web/apple#configure-sign-in-with-apple)
   and [enable Apple as a sign-in provider](/docs/auth/web/apple#enable-apple-as-a-sign-in-provider).
 
-  ```dart
-  import 'package:firebase_auth/firebase_auth.dart';
 
-  Future<UserCredential> signInWithApple() async {
-    // Create and configure an OAuthProvider for Sign In with Apple.
-    final provider = OAuthProvider("apple.com")
-      ..addScope('email')
-      ..addScope('name');
+```dart
+import 'package:firebase_auth/firebase_auth.dart';
 
-    // Sign in the user with Firebase.
-    return await FirebaseAuth.instance.signInWithPopup(provider);
+Future<UserCredential> signInWithApple() async {
+  final appleProvider = AppleAuthProvider();
+  if (kIsWeb) {
+    await _auth.signInWithPopup(appleProvider);
+  } else {
+    await _auth.signInWithAuthProvider(appleProvider);
   }
-  ```
+}
+```
 
-  An alternative is to use `signInWithRedirect`. In that case the browser will navigate away from your app
-  and you have to use `getRedirectResult` to check for authentication results during app startup.
+## Microsoft
 
+* {iOS+}
+
+  Before you begin [configure Microsoft Login for iOS](/docs/auth/ios/microsoft-oauth#before_you_begin) and add the [custom URL schemes
+  to your Runner (step 1)](https://firebase.google.com/docs/auth/ios/microsoft-oauth#handle_the_sign-in_flow_with_the_firebase_sdk).
+
+* {Android}
+  Before you begin [configure Microsoft Login for Android](/docs/auth/android/microsoft-oauth#before_you_begin).
+  
+  Don't forget to add your app's SHA-1 fingerprint.
+
+* {Web}
+
+  Before you begin [configure Microsoft Login for Web](/docs/auth/web/microsoft-oauth#configure-sign-in-with-apple).
+
+```dart
+import 'package:firebase_auth/firebase_auth.dart';
+
+Future<UserCredential> signInWithMicrosoft() async {
+  final microsoftProvider = MicrosoftAuthProvider();
+  if (kIsWeb) {
+    await _auth.signInWithPopup(microsoftProvider);
+  } else {
+    await _auth.signInWithAuthProvider(microsoftProvider);
+  }
+}
+```
 
 ## Twitter
 
@@ -341,20 +307,18 @@ with the Client ID and Secret are set, with the callback URL set in the GitHub a
 
 * {iOS+ and Android}
 
-For native platforms, you need to add the `google-services.json` and `GoogleService-Info.plist`.
+  For native platforms, you need to add the `google-services.json` and `GoogleService-Info.plist`.
 
-For iOS, add the custom URL scheme as [described on the iOS guide](https://firebase.google.com/docs/auth/ios/github-auth#handle_the_sign-in_flow_with_the_firebase_sdk) step 1.
+  For iOS, add the custom URL scheme as [described on the iOS guide](https://firebase.google.com/docs/auth/ios/github-auth#handle_the_sign-in_flow_with_the_firebase_sdk) step 1.
 
-```dart
-import 'package:github_sign_in/github_sign_in.dart';
+  ```dart
+  Future<UserCredential> signInWithGitHub() async {
+    // Create a new provider
+    GithubAuthProvider githubProvider = GithubAuthProvider();
 
-Future<UserCredential> signInWithGitHub() async {
-  // Create a new provider
-  GithubAuthProvider githubProvider = GithubAuthProvider();
-
-  return await _auth.signInWithAuthProvider(githubProvider);
-}
-```
+    return await _auth.signInWithAuthProvider(githubProvider);
+  }
+  ```
 
 * {Web}
 

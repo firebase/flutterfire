@@ -73,8 +73,8 @@ class User {
 
   /// Returns a JWT refresh token for the user.
   ///
-  /// This property maybe `null` or empty if the underlying platform does not
-  /// support providing refresh tokens.
+  /// This property will be an empty string for native platforms (android, iOS & macOS) as they do not
+  /// support refresh tokens.
   String? get refreshToken {
     return _delegate.refreshToken;
   }
@@ -122,6 +122,9 @@ class User {
 
   /// Returns a [IdTokenResult] containing the users JSON Web Token (JWT) and
   /// other metadata.
+  ///
+  /// Returns the current token if it has not expired. Otherwise, this will
+  /// refresh the token and return a new one.
   ///
   /// If [forceRefresh] is `true`, the token returned will be refreshed regardless
   /// of token expiration.

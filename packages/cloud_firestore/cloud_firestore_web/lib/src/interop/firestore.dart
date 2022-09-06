@@ -104,7 +104,8 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     return handleThenable(firestore_interop.runTransaction(
             jsObject,
             updateFunctionWrap,
-            firestore_interop.TransactionOptionsJsImpl(maxAttempts)))
+            firestore_interop.TransactionOptionsJsImpl(
+                maxAttempts: maxAttempts)))
         .then((value) => dartify(null));
   }
 
@@ -466,7 +467,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// We need to call this method in all paginating methods to fix that Dart
   /// doesn't support varargs - we need to use [List] to call js function.
   S? _createQueryConstraint<S>(
-      Function method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
+      Object method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
     if (snapshot == null && fieldValues == null) {
       throw ArgumentError(
           'Please provide either snapshot or fieldValues parameter.');
@@ -476,7 +477,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
         ? [snapshot.jsObject]
         : fieldValues!.map(jsify).toList();
 
-    return callMethod(method, 'apply', jsify([null, args]));
+    return callMethod(method, 'apply', [null, jsify(args)]);
   }
 }
 
@@ -706,7 +707,7 @@ class _FieldValueArrayUnion extends _FieldValueArray {
   firestore_interop.FieldValue? _jsify() {
     // This uses var arg so cannot use js package
     return callMethod(
-        firestore_interop.arrayUnion, 'apply', jsify([null, elements]));
+        firestore_interop.arrayUnion, 'apply', [null, jsify(elements)]);
   }
 
   @override
@@ -720,7 +721,7 @@ class _FieldValueArrayRemove extends _FieldValueArray {
   firestore_interop.FieldValue? _jsify() {
     // This uses var arg so cannot use js package
     return callMethod(
-        firestore_interop.arrayRemove, 'apply', jsify([null, elements]));
+        firestore_interop.arrayRemove, 'apply', [null, jsify(elements)]);
   }
 
   @override

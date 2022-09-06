@@ -14,8 +14,8 @@ import 'package:flutter/foundation.dart';
 export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
     show
         FirebaseAuthException,
-        FirebaseAuthMultiFactorException,
         MultiFactorInfo,
+        MultiFactorSession,
         PhoneMultiFactorInfo,
         IdTokenResult,
         UserMetadata,
@@ -30,6 +30,8 @@ export 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
         PhoneCodeSent,
         PhoneCodeAutoRetrievalTimeout,
         AuthCredential,
+        AppleAuthProvider,
+        AppleAuthCredential,
         EmailAuthProvider,
         EmailAuthCredential,
         FacebookAuthProvider,
@@ -38,6 +40,8 @@ export 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
         GithubAuthCredential,
         GoogleAuthProvider,
         GoogleAuthCredential,
+        MicrosoftAuthProvider,
+        MicrosoftAuthCredential,
         OAuthProvider,
         OAuthCredential,
         PhoneAuthProvider,
