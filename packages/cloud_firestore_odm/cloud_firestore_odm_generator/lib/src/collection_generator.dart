@@ -435,6 +435,7 @@ extension on ClassElement {
   Iterable<MethodElement> get allMethods sync* {
     yield* methods;
     for (final supertype in allSupertypes) {
+      if (supertype.isDartCoreObject) continue;
       yield* supertype.methods;
     }
   }
@@ -446,10 +447,20 @@ extension on ClassElement {
     if (hasFreezed) {
       yield* freezedConstructors.single.parameters;
     } else {
-      yield* fields;
-      for (final supertype in allSupertypes) {
-        yield* supertype.element2.fields;
+      final uniqueFields = <String, FieldElement>{};
+
+      for (final field in fields) {
+        uniqueFields[field.name] ??= field;
       }
+
+      for (final supertype in allSupertypes) {
+        if (supertype.isDartCoreObject) continue;
+
+        for (final field in supertype.element2.fields) {
+          uniqueFields[field.name] ??= field;
+        }
+      }
+      yield* uniqueFields.values;
     }
   }
 }

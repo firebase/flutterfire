@@ -136,7 +136,6 @@ abstract class MovieDocumentReference
     String runtime,
     String rated,
     List<String>? genre,
-    int hashCode,
   });
 
   Future<void> set(Movie value);
@@ -192,7 +191,6 @@ class _$MovieDocumentReference
     Object? runtime = _sentinel,
     Object? rated = _sentinel,
     Object? genre = _sentinel,
-    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (poster != _sentinel) "poster": poster as String,
@@ -202,7 +200,6 @@ class _$MovieDocumentReference
       if (runtime != _sentinel) "runtime": runtime as String,
       if (rated != _sentinel) "rated": rated as String,
       if (genre != _sentinel) "genre": genre as List<String>?,
-      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -404,17 +401,6 @@ abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
     String? arrayContains,
     List<String>? arrayContainsAny,
   });
-  MovieQuery whereHashCode({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
-  });
 
   MovieQuery orderByDocumentId({
     bool descending = false,
@@ -506,18 +492,6 @@ abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
     List<String>? startAfter,
     List<String>? endAt,
     List<String>? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
-  });
-
-  MovieQuery orderByHashCode({
-    bool descending = false,
-    int startAt,
-    int startAfter,
-    int endAt,
-    int endBefore,
     MovieDocumentSnapshot? startAtDocument,
     MovieDocumentSnapshot? endAtDocument,
     MovieDocumentSnapshot? endBeforeDocument,
@@ -886,34 +860,6 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     );
   }
 
-  MovieQuery whereHashCode({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
-  }) {
-    return _$MovieQuery(
-      reference.where(
-        _$MovieFieldMap["hashCode"]!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
-      _collection,
-    );
-  }
-
   MovieQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1257,49 +1203,6 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(query, _collection);
   }
 
-  MovieQuery orderByHashCode({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
-  }) {
-    var query =
-        reference.orderBy(_$MovieFieldMap["hashCode"]!, descending: descending);
-
-    if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
-    }
-    if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
-    }
-    if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
-    }
-    if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
-    }
-
-    if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
-    }
-    if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
-    }
-    if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
-    }
-    if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
-    }
-
-    return _$MovieQuery(query, _collection);
-  }
-
   @override
   bool operator ==(Object other) {
     return other is _$MovieQuery &&
@@ -1467,7 +1370,6 @@ abstract class CommentDocumentReference
   Future<void> update({
     String authorName,
     String message,
-    int hashCode,
   });
 
   Future<void> set(Comment value);
@@ -1519,12 +1421,10 @@ class _$CommentDocumentReference
   Future<void> update({
     Object? authorName = _sentinel,
     Object? message = _sentinel,
-    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (authorName != _sentinel) "authorName": authorName as String,
       if (message != _sentinel) "message": message as String,
-      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -1672,17 +1572,6 @@ abstract class CommentQuery
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
-  CommentQuery whereHashCode({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
-  });
 
   CommentQuery orderByDocumentId({
     bool descending = false,
@@ -1714,18 +1603,6 @@ abstract class CommentQuery
     String startAfter,
     String endAt,
     String endBefore,
-    CommentDocumentSnapshot? startAtDocument,
-    CommentDocumentSnapshot? endAtDocument,
-    CommentDocumentSnapshot? endBeforeDocument,
-    CommentDocumentSnapshot? startAfterDocument,
-  });
-
-  CommentQuery orderByHashCode({
-    bool descending = false,
-    int startAt,
-    int startAfter,
-    int endAt,
-    int endBefore,
     CommentDocumentSnapshot? startAtDocument,
     CommentDocumentSnapshot? endAtDocument,
     CommentDocumentSnapshot? endBeforeDocument,
@@ -1954,34 +1831,6 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     );
   }
 
-  CommentQuery whereHashCode({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
-  }) {
-    return _$CommentQuery(
-      reference.where(
-        _$CommentFieldMap["hashCode"]!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
-      _collection,
-    );
-  }
-
   CommentQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -2079,49 +1928,6 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     CommentDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$CommentFieldMap["message"]!,
-        descending: descending);
-
-    if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
-    }
-    if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
-    }
-    if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
-    }
-    if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
-    }
-
-    if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
-    }
-    if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
-    }
-    if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
-    }
-    if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
-    }
-
-    return _$CommentQuery(query, _collection);
-  }
-
-  CommentQuery orderByHashCode({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    CommentDocumentSnapshot? startAtDocument,
-    CommentDocumentSnapshot? endAtDocument,
-    CommentDocumentSnapshot? endBeforeDocument,
-    CommentDocumentSnapshot? startAfterDocument,
-  }) {
-    var query = reference.orderBy(_$CommentFieldMap["hashCode"]!,
         descending: descending);
 
     if (startAtDocument != null) {
