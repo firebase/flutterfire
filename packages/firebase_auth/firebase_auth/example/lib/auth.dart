@@ -560,6 +560,7 @@ class _AuthGateState extends State<AuthGate> {
 
   Future<void> _signInWithApple() async {
     final appleProvider = AppleAuthProvider();
+    appleProvider.addScope('email');
 
     if (kIsWeb) {
       // Once signed in, return the UserCredential
