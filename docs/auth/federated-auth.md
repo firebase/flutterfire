@@ -233,14 +233,14 @@ Future<UserCredential> signInWithMicrosoft() async {
 ## Twitter
 
 Ensure the "Twitter" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers)
-with an API Key and API Secret set. Also make sure your Firebase OAuth redirect URI (e.g. my-app-12345.firebaseapp.com/__/auth/handler) 
+with an API Key and API Secret set. Ensure your Firebase OAuth redirect URI (e.g. my-app-12345.firebaseapp.com/__/auth/handler) 
 is set as your Authorization callback URL in your app's settings page on your [Twitter app's config](https://apps.twitter.com/).
 
 You also might need to request elevated [API access depending on your app](https://developer.twitter.com/en/portal/products/elevated).
 
 * {iOS+}
 
-  You need to configure custom URL scheme as [described in iOS guide step 1](https://firebase.google.com/docs/auth/ios/twitter-login#handle_the_sign-in_flow_with_the_firebase_sdk).
+  You need to configure your custom URL scheme as [described in iOS guide step 1](https://firebase.google.com/docs/auth/ios/twitter-login#handle_the_sign-in_flow_with_the_firebase_sdk).
 
 * {Android}
 
