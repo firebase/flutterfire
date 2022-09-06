@@ -131,6 +131,7 @@ abstract class DateTimeQueryDocumentReference
 
   Future<void> update({
     DateTime time,
+    int hashCode,
   });
 
   Future<void> set(DateTimeQuery value);
@@ -176,9 +177,11 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? time = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (time != _sentinel) "time": time as DateTime,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -316,6 +319,17 @@ abstract class DateTimeQueryQuery
     List<DateTime>? whereIn,
     List<DateTime>? whereNotIn,
   });
+  DateTimeQueryQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   DateTimeQueryQuery orderByDocumentId({
     bool descending = false,
@@ -335,6 +349,18 @@ abstract class DateTimeQueryQuery
     DateTime startAfter,
     DateTime endAt,
     DateTime endBefore,
+    DateTimeQueryDocumentSnapshot? startAtDocument,
+    DateTimeQueryDocumentSnapshot? endAtDocument,
+    DateTimeQueryDocumentSnapshot? endBeforeDocument,
+    DateTimeQueryDocumentSnapshot? startAfterDocument,
+  });
+
+  DateTimeQueryQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     DateTimeQueryDocumentSnapshot? startAtDocument,
     DateTimeQueryDocumentSnapshot? endAtDocument,
     DateTimeQueryDocumentSnapshot? endBeforeDocument,
@@ -536,6 +562,34 @@ class _$DateTimeQueryQuery
     );
   }
 
+  DateTimeQueryQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$DateTimeQueryQuery(
+      reference.where(
+        _$DateTimeQueryFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   DateTimeQueryQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -590,6 +644,49 @@ class _$DateTimeQueryQuery
     DateTimeQueryDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$DateTimeQueryFieldMap["time"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$DateTimeQueryQuery(query, _collection);
+  }
+
+  DateTimeQueryQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    DateTimeQueryDocumentSnapshot? startAtDocument,
+    DateTimeQueryDocumentSnapshot? endAtDocument,
+    DateTimeQueryDocumentSnapshot? endBeforeDocument,
+    DateTimeQueryDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$DateTimeQueryFieldMap["hashCode"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -782,6 +879,7 @@ abstract class TimestampQueryDocumentReference
 
   Future<void> update({
     Timestamp time,
+    int hashCode,
   });
 
   Future<void> set(TimestampQuery value);
@@ -827,9 +925,11 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? time = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (time != _sentinel) "time": time as Timestamp,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -967,6 +1067,17 @@ abstract class TimestampQueryQuery
     List<Timestamp>? whereIn,
     List<Timestamp>? whereNotIn,
   });
+  TimestampQueryQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   TimestampQueryQuery orderByDocumentId({
     bool descending = false,
@@ -986,6 +1097,18 @@ abstract class TimestampQueryQuery
     Timestamp startAfter,
     Timestamp endAt,
     Timestamp endBefore,
+    TimestampQueryDocumentSnapshot? startAtDocument,
+    TimestampQueryDocumentSnapshot? endAtDocument,
+    TimestampQueryDocumentSnapshot? endBeforeDocument,
+    TimestampQueryDocumentSnapshot? startAfterDocument,
+  });
+
+  TimestampQueryQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     TimestampQueryDocumentSnapshot? startAtDocument,
     TimestampQueryDocumentSnapshot? endAtDocument,
     TimestampQueryDocumentSnapshot? endBeforeDocument,
@@ -1187,6 +1310,34 @@ class _$TimestampQueryQuery
     );
   }
 
+  TimestampQueryQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$TimestampQueryQuery(
+      reference.where(
+        _$TimestampQueryFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   TimestampQueryQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1241,6 +1392,49 @@ class _$TimestampQueryQuery
     TimestampQueryDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$TimestampQueryFieldMap["time"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$TimestampQueryQuery(query, _collection);
+  }
+
+  TimestampQueryQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    TimestampQueryDocumentSnapshot? startAtDocument,
+    TimestampQueryDocumentSnapshot? endAtDocument,
+    TimestampQueryDocumentSnapshot? endBeforeDocument,
+    TimestampQueryDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$TimestampQueryFieldMap["hashCode"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -1434,6 +1628,7 @@ abstract class GeoPointQueryDocumentReference
 
   Future<void> update({
     GeoPoint point,
+    int hashCode,
   });
 
   Future<void> set(GeoPointQuery value);
@@ -1479,9 +1674,11 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? point = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (point != _sentinel) "point": point as GeoPoint,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -1619,6 +1816,17 @@ abstract class GeoPointQueryQuery
     List<GeoPoint>? whereIn,
     List<GeoPoint>? whereNotIn,
   });
+  GeoPointQueryQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   GeoPointQueryQuery orderByDocumentId({
     bool descending = false,
@@ -1638,6 +1846,18 @@ abstract class GeoPointQueryQuery
     GeoPoint startAfter,
     GeoPoint endAt,
     GeoPoint endBefore,
+    GeoPointQueryDocumentSnapshot? startAtDocument,
+    GeoPointQueryDocumentSnapshot? endAtDocument,
+    GeoPointQueryDocumentSnapshot? endBeforeDocument,
+    GeoPointQueryDocumentSnapshot? startAfterDocument,
+  });
+
+  GeoPointQueryQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     GeoPointQueryDocumentSnapshot? startAtDocument,
     GeoPointQueryDocumentSnapshot? endAtDocument,
     GeoPointQueryDocumentSnapshot? endBeforeDocument,
@@ -1839,6 +2059,34 @@ class _$GeoPointQueryQuery
     );
   }
 
+  GeoPointQueryQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$GeoPointQueryQuery(
+      reference.where(
+        _$GeoPointQueryFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   GeoPointQueryQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1893,6 +2141,49 @@ class _$GeoPointQueryQuery
     GeoPointQueryDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$GeoPointQueryFieldMap["point"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$GeoPointQueryQuery(query, _collection);
+  }
+
+  GeoPointQueryQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    GeoPointQueryDocumentSnapshot? startAtDocument,
+    GeoPointQueryDocumentSnapshot? endAtDocument,
+    GeoPointQueryDocumentSnapshot? endBeforeDocument,
+    GeoPointQueryDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$GeoPointQueryFieldMap["hashCode"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -2088,6 +2379,7 @@ abstract class DocumentReferenceQueryDocumentReference
 
   Future<void> update({
     DocumentReference<Map<String, dynamic>> ref,
+    int hashCode,
   });
 
   Future<void> set(DocumentReferenceQuery value);
@@ -2134,10 +2426,12 @@ class _$DocumentReferenceQueryDocumentReference
 
   Future<void> update({
     Object? ref = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (ref != _sentinel)
         "ref": ref as DocumentReference<Map<String, dynamic>>,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -2277,6 +2571,17 @@ abstract class DocumentReferenceQueryQuery
     List<DocumentReference<Map<String, dynamic>>>? whereIn,
     List<DocumentReference<Map<String, dynamic>>>? whereNotIn,
   });
+  DocumentReferenceQueryQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   DocumentReferenceQueryQuery orderByDocumentId({
     bool descending = false,
@@ -2296,6 +2601,18 @@ abstract class DocumentReferenceQueryQuery
     DocumentReference<Map<String, dynamic>> startAfter,
     DocumentReference<Map<String, dynamic>> endAt,
     DocumentReference<Map<String, dynamic>> endBefore,
+    DocumentReferenceQueryDocumentSnapshot? startAtDocument,
+    DocumentReferenceQueryDocumentSnapshot? endAtDocument,
+    DocumentReferenceQueryDocumentSnapshot? endBeforeDocument,
+    DocumentReferenceQueryDocumentSnapshot? startAfterDocument,
+  });
+
+  DocumentReferenceQueryQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     DocumentReferenceQueryDocumentSnapshot? startAtDocument,
     DocumentReferenceQueryDocumentSnapshot? endAtDocument,
     DocumentReferenceQueryDocumentSnapshot? endBeforeDocument,
@@ -2499,6 +2816,34 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
     );
   }
 
+  DocumentReferenceQueryQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$DocumentReferenceQueryQuery(
+      reference.where(
+        _$DocumentReferenceQueryFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   DocumentReferenceQueryQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -2553,6 +2898,49 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
     DocumentReferenceQueryDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$DocumentReferenceQueryFieldMap["ref"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$DocumentReferenceQueryQuery(query, _collection);
+  }
+
+  DocumentReferenceQueryQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    DocumentReferenceQueryDocumentSnapshot? startAtDocument,
+    DocumentReferenceQueryDocumentSnapshot? endAtDocument,
+    DocumentReferenceQueryDocumentSnapshot? endBeforeDocument,
+    DocumentReferenceQueryDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$DocumentReferenceQueryFieldMap["hashCode"]!,
         descending: descending);
 
     if (startAtDocument != null) {

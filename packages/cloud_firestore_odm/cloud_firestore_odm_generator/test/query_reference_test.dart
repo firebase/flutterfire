@@ -39,5 +39,31 @@ void main() {
         compiles,
       );
     });
+
+    test('supports Freezed', () {
+      expect(
+        library.withCode(
+          '''
+import 'freezed.dart';
+
+void main() {
+  personRef.whereFirstName(isEqualTo: 'foo');
+  personRef.orderByFirstName();
+
+  personRef.doc('42').update(firstName: 'foo');
+  personRef.doc('42')
+    // expect-error: UNDEFINED_NAMED_PARAMETER
+    .update(ignored: 42);
+
+  // expect-error: UNDEFINED_METHOD
+  personRef.orderByIgnored();
+  // expect-error: UNDEFINED_METHOD
+  personRef.whereIgnored();
+}
+''',
+        ),
+        compiles,
+      );
+    });
   });
 }

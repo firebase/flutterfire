@@ -124,6 +124,7 @@ abstract class ModelDocumentReference
 
   Future<void> update({
     String value,
+    int hashCode,
   });
 
   Future<void> set(Model value);
@@ -169,9 +170,11 @@ class _$ModelDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (value != _sentinel) "value": value as String,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -307,6 +310,17 @@ abstract class ModelQuery implements QueryReference<Model, ModelQuerySnapshot> {
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
+  ModelQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   ModelQuery orderByDocumentId({
     bool descending = false,
@@ -326,6 +340,18 @@ abstract class ModelQuery implements QueryReference<Model, ModelQuerySnapshot> {
     String startAfter,
     String endAt,
     String endBefore,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
+  });
+
+  ModelQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     ModelDocumentSnapshot? startAtDocument,
     ModelDocumentSnapshot? endAtDocument,
     ModelDocumentSnapshot? endBeforeDocument,
@@ -526,6 +552,34 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     );
   }
 
+  ModelQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$ModelQuery(
+      reference.where(
+        _$ModelFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   ModelQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -581,6 +635,49 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
   }) {
     var query =
         reference.orderBy(_$ModelFieldMap["value"]!, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ModelQuery(query, _collection);
+  }
+
+  ModelQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query =
+        reference.orderBy(_$ModelFieldMap["hashCode"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -769,6 +866,7 @@ abstract class NestedDocumentReference
     List<num>? numList,
     List<Object?>? objectList,
     List<dynamic>? dynamicList,
+    int hashCode,
   });
 
   Future<void> set(Nested value);
@@ -819,6 +917,7 @@ class _$NestedDocumentReference
     Object? numList = _sentinel,
     Object? objectList = _sentinel,
     Object? dynamicList = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (simple != _sentinel) "simple": simple as int?,
@@ -828,6 +927,7 @@ class _$NestedDocumentReference
       if (objectList != _sentinel) "objectList": objectList as List<Object?>?,
       if (dynamicList != _sentinel)
         "dynamicList": dynamicList as List<dynamic>?,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -1019,6 +1119,17 @@ abstract class NestedQuery
     dynamic arrayContains,
     List<dynamic>? arrayContainsAny,
   });
+  NestedQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   NestedQuery orderByDocumentId({
     bool descending = false,
@@ -1098,6 +1209,18 @@ abstract class NestedQuery
     List<dynamic>? startAfter,
     List<dynamic>? endAt,
     List<dynamic>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     NestedDocumentSnapshot? startAtDocument,
     NestedDocumentSnapshot? endAtDocument,
     NestedDocumentSnapshot? endBeforeDocument,
@@ -1438,6 +1561,34 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     );
   }
 
+  NestedQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        _$NestedFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   NestedQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1738,6 +1889,49 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(query, _collection);
   }
 
+  NestedQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$NestedFieldMap["hashCode"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
   @override
   bool operator ==(Object other) {
     return other is _$NestedQuery &&
@@ -1894,6 +2088,10 @@ abstract class SplitFileModelDocumentReference
   @override
   Future<void> delete();
 
+  Future<void> update({
+    int hashCode,
+  });
+
   Future<void> set(SplitFileModel value);
 }
 
@@ -1933,6 +2131,16 @@ class _$SplitFileModelDocumentReference extends FirestoreDocumentReference<
   @override
   Future<void> delete() {
     return reference.delete();
+  }
+
+  Future<void> update({
+    Object? hashCode = _sentinel,
+  }) async {
+    final json = {
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
+    };
+
+    return reference.update(json);
   }
 
   Future<void> set(SplitFileModel value) {
@@ -2056,6 +2264,17 @@ abstract class SplitFileModelQuery
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
+  SplitFileModelQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   SplitFileModelQuery orderByDocumentId({
     bool descending = false,
@@ -2063,6 +2282,18 @@ abstract class SplitFileModelQuery
     String startAfter,
     String endAt,
     String endBefore,
+    SplitFileModelDocumentSnapshot? startAtDocument,
+    SplitFileModelDocumentSnapshot? endAtDocument,
+    SplitFileModelDocumentSnapshot? endBeforeDocument,
+    SplitFileModelDocumentSnapshot? startAfterDocument,
+  });
+
+  SplitFileModelQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     SplitFileModelDocumentSnapshot? startAtDocument,
     SplitFileModelDocumentSnapshot? endAtDocument,
     SplitFileModelDocumentSnapshot? endBeforeDocument,
@@ -2236,6 +2467,34 @@ class _$SplitFileModelQuery
     );
   }
 
+  SplitFileModelQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$SplitFileModelQuery(
+      reference.where(
+        _$SplitFileModelFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   SplitFileModelQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -2248,6 +2507,49 @@ class _$SplitFileModelQuery
     SplitFileModelDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$SplitFileModelQuery(query, _collection);
+  }
+
+  SplitFileModelQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    SplitFileModelDocumentSnapshot? startAtDocument,
+    SplitFileModelDocumentSnapshot? endAtDocument,
+    SplitFileModelDocumentSnapshot? endBeforeDocument,
+    SplitFileModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$SplitFileModelFieldMap["hashCode"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -2431,6 +2733,10 @@ abstract class EmptyModelDocumentReference
   @override
   Future<void> delete();
 
+  Future<void> update({
+    int hashCode,
+  });
+
   Future<void> set(EmptyModel value);
 }
 
@@ -2470,6 +2776,16 @@ class _$EmptyModelDocumentReference
   @override
   Future<void> delete() {
     return reference.delete();
+  }
+
+  Future<void> update({
+    Object? hashCode = _sentinel,
+  }) async {
+    final json = {
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
+    };
+
+    return reference.update(json);
   }
 
   Future<void> set(EmptyModel value) {
@@ -2592,6 +2908,17 @@ abstract class EmptyModelQuery
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
+  EmptyModelQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   EmptyModelQuery orderByDocumentId({
     bool descending = false,
@@ -2599,6 +2926,18 @@ abstract class EmptyModelQuery
     String startAfter,
     String endAt,
     String endBefore,
+    EmptyModelDocumentSnapshot? startAtDocument,
+    EmptyModelDocumentSnapshot? endAtDocument,
+    EmptyModelDocumentSnapshot? endBeforeDocument,
+    EmptyModelDocumentSnapshot? startAfterDocument,
+  });
+
+  EmptyModelQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     EmptyModelDocumentSnapshot? startAtDocument,
     EmptyModelDocumentSnapshot? endAtDocument,
     EmptyModelDocumentSnapshot? endBeforeDocument,
@@ -2772,6 +3111,34 @@ class _$EmptyModelQuery
     );
   }
 
+  EmptyModelQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$EmptyModelQuery(
+      reference.where(
+        _$EmptyModelFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   EmptyModelQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -2784,6 +3151,49 @@ class _$EmptyModelQuery
     EmptyModelDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$EmptyModelQuery(query, _collection);
+  }
+
+  EmptyModelQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    EmptyModelDocumentSnapshot? startAtDocument,
+    EmptyModelDocumentSnapshot? endAtDocument,
+    EmptyModelDocumentSnapshot? endBeforeDocument,
+    EmptyModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$EmptyModelFieldMap["hashCode"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -2971,6 +3381,7 @@ abstract class OptionalJsonDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     int value,
+    int hashCode,
   });
 
   Future<void> set(OptionalJson value);
@@ -3016,9 +3427,11 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (value != _sentinel) "value": value as int,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -3156,6 +3569,17 @@ abstract class OptionalJsonQuery
     List<int>? whereIn,
     List<int>? whereNotIn,
   });
+  OptionalJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   OptionalJsonQuery orderByDocumentId({
     bool descending = false,
@@ -3170,6 +3594,18 @@ abstract class OptionalJsonQuery
   });
 
   OptionalJsonQuery orderByValue({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
+    OptionalJsonDocumentSnapshot? startAtDocument,
+    OptionalJsonDocumentSnapshot? endAtDocument,
+    OptionalJsonDocumentSnapshot? endBeforeDocument,
+    OptionalJsonDocumentSnapshot? startAfterDocument,
+  });
+
+  OptionalJsonQuery orderByHashCode({
     bool descending = false,
     int startAt,
     int startAfter,
@@ -3376,6 +3812,34 @@ class _$OptionalJsonQuery
     );
   }
 
+  OptionalJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$OptionalJsonQuery(
+      reference.where(
+        _$OptionalJsonFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   OptionalJsonQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -3430,6 +3894,49 @@ class _$OptionalJsonQuery
     OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$OptionalJsonFieldMap["value"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$OptionalJsonQuery(query, _collection);
+  }
+
+  OptionalJsonQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    OptionalJsonDocumentSnapshot? startAtDocument,
+    OptionalJsonDocumentSnapshot? endAtDocument,
+    OptionalJsonDocumentSnapshot? endBeforeDocument,
+    OptionalJsonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$OptionalJsonFieldMap["hashCode"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -3615,6 +4122,7 @@ abstract class MixedJsonDocumentReference
 
   Future<void> update({
     int value,
+    int hashCode,
   });
 
   Future<void> set(MixedJson value);
@@ -3660,9 +4168,11 @@ class _$MixedJsonDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (value != _sentinel) "value": value as int,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -3799,6 +4309,17 @@ abstract class MixedJsonQuery
     List<int>? whereIn,
     List<int>? whereNotIn,
   });
+  MixedJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   MixedJsonQuery orderByDocumentId({
     bool descending = false,
@@ -3813,6 +4334,18 @@ abstract class MixedJsonQuery
   });
 
   MixedJsonQuery orderByValue({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
+    MixedJsonDocumentSnapshot? startAtDocument,
+    MixedJsonDocumentSnapshot? endAtDocument,
+    MixedJsonDocumentSnapshot? endBeforeDocument,
+    MixedJsonDocumentSnapshot? startAfterDocument,
+  });
+
+  MixedJsonQuery orderByHashCode({
     bool descending = false,
     int startAt,
     int startAfter,
@@ -4018,6 +4551,34 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     );
   }
 
+  MixedJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$MixedJsonQuery(
+      reference.where(
+        _$MixedJsonFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   MixedJsonQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -4072,6 +4633,49 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$MixedJsonFieldMap["value"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$MixedJsonQuery(query, _collection);
+  }
+
+  MixedJsonQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MixedJsonDocumentSnapshot? startAtDocument,
+    MixedJsonDocumentSnapshot? endAtDocument,
+    MixedJsonDocumentSnapshot? endBeforeDocument,
+    MixedJsonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$MixedJsonFieldMap["hashCode"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -4272,6 +4876,7 @@ abstract class RootDocumentReference
   Future<void> update({
     String nonNullable,
     int? nullable,
+    int hashCode,
   });
 
   Future<void> set(Root value);
@@ -4332,10 +4937,12 @@ class _$RootDocumentReference
   Future<void> update({
     Object? nonNullable = _sentinel,
     Object? nullable = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
       if (nullable != _sentinel) "nullable": nullable as int?,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -4482,6 +5089,17 @@ abstract class RootQuery implements QueryReference<Root, RootQuerySnapshot> {
     List<int?>? whereIn,
     List<int?>? whereNotIn,
   });
+  RootQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   RootQuery orderByDocumentId({
     bool descending = false,
@@ -4513,6 +5131,18 @@ abstract class RootQuery implements QueryReference<Root, RootQuerySnapshot> {
     int? startAfter,
     int? endAt,
     int? endBefore,
+    RootDocumentSnapshot? startAtDocument,
+    RootDocumentSnapshot? endAtDocument,
+    RootDocumentSnapshot? endBeforeDocument,
+    RootDocumentSnapshot? startAfterDocument,
+  });
+
+  RootQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     RootDocumentSnapshot? startAtDocument,
     RootDocumentSnapshot? endAtDocument,
     RootDocumentSnapshot? endBeforeDocument,
@@ -4741,6 +5371,34 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     );
   }
 
+  RootQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$RootQuery(
+      reference.where(
+        _$RootFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   RootQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -4839,6 +5497,49 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
   }) {
     var query =
         reference.orderBy(_$RootFieldMap["nullable"]!, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$RootQuery(query, _collection);
+  }
+
+  RootQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    RootDocumentSnapshot? startAtDocument,
+    RootDocumentSnapshot? endAtDocument,
+    RootDocumentSnapshot? endBeforeDocument,
+    RootDocumentSnapshot? startAfterDocument,
+  }) {
+    var query =
+        reference.orderBy(_$RootFieldMap["hashCode"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -5034,6 +5735,7 @@ abstract class SubDocumentReference
   Future<void> update({
     String nonNullable,
     int? nullable,
+    int hashCode,
   });
 
   Future<void> set(Sub value);
@@ -5085,10 +5787,12 @@ class _$SubDocumentReference
   Future<void> update({
     Object? nonNullable = _sentinel,
     Object? nullable = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
       if (nullable != _sentinel) "nullable": nullable as int?,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -5235,6 +5939,17 @@ abstract class SubQuery implements QueryReference<Sub, SubQuerySnapshot> {
     List<int?>? whereIn,
     List<int?>? whereNotIn,
   });
+  SubQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   SubQuery orderByDocumentId({
     bool descending = false,
@@ -5266,6 +5981,18 @@ abstract class SubQuery implements QueryReference<Sub, SubQuerySnapshot> {
     int? startAfter,
     int? endAt,
     int? endBefore,
+    SubDocumentSnapshot? startAtDocument,
+    SubDocumentSnapshot? endAtDocument,
+    SubDocumentSnapshot? endBeforeDocument,
+    SubDocumentSnapshot? startAfterDocument,
+  });
+
+  SubQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     SubDocumentSnapshot? startAtDocument,
     SubDocumentSnapshot? endAtDocument,
     SubDocumentSnapshot? endBeforeDocument,
@@ -5494,6 +6221,34 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     );
   }
 
+  SubQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$SubQuery(
+      reference.where(
+        _$SubFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   SubQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -5592,6 +6347,49 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
   }) {
     var query =
         reference.orderBy(_$SubFieldMap["nullable"]!, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$SubQuery(query, _collection);
+  }
+
+  SubQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    SubDocumentSnapshot? startAtDocument,
+    SubDocumentSnapshot? endAtDocument,
+    SubDocumentSnapshot? endBeforeDocument,
+    SubDocumentSnapshot? startAfterDocument,
+  }) {
+    var query =
+        reference.orderBy(_$SubFieldMap["hashCode"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -5791,6 +6589,7 @@ abstract class AsCamelCaseDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     num value,
+    int hashCode,
   });
 
   Future<void> set(AsCamelCase value);
@@ -5841,9 +6640,11 @@ class _$AsCamelCaseDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (value != _sentinel) "value": value as num,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -5981,6 +6782,17 @@ abstract class AsCamelCaseQuery
     List<num>? whereIn,
     List<num>? whereNotIn,
   });
+  AsCamelCaseQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   AsCamelCaseQuery orderByDocumentId({
     bool descending = false,
@@ -6000,6 +6812,18 @@ abstract class AsCamelCaseQuery
     num startAfter,
     num endAt,
     num endBefore,
+    AsCamelCaseDocumentSnapshot? startAtDocument,
+    AsCamelCaseDocumentSnapshot? endAtDocument,
+    AsCamelCaseDocumentSnapshot? endBeforeDocument,
+    AsCamelCaseDocumentSnapshot? startAfterDocument,
+  });
+
+  AsCamelCaseQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     AsCamelCaseDocumentSnapshot? startAtDocument,
     AsCamelCaseDocumentSnapshot? endAtDocument,
     AsCamelCaseDocumentSnapshot? endBeforeDocument,
@@ -6201,6 +7025,34 @@ class _$AsCamelCaseQuery
     );
   }
 
+  AsCamelCaseQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$AsCamelCaseQuery(
+      reference.where(
+        _$AsCamelCaseFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   AsCamelCaseQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -6255,6 +7107,49 @@ class _$AsCamelCaseQuery
     AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$AsCamelCaseFieldMap["value"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$AsCamelCaseQuery(query, _collection);
+  }
+
+  AsCamelCaseQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    AsCamelCaseDocumentSnapshot? startAtDocument,
+    AsCamelCaseDocumentSnapshot? endAtDocument,
+    AsCamelCaseDocumentSnapshot? endBeforeDocument,
+    AsCamelCaseDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$AsCamelCaseFieldMap["hashCode"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -6458,6 +7353,7 @@ abstract class CustomSubNameDocumentReference
 
   Future<void> update({
     num value,
+    int hashCode,
   });
 
   Future<void> set(CustomSubName value);
@@ -6508,9 +7404,11 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (value != _sentinel) "value": value as num,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -6648,6 +7546,17 @@ abstract class CustomSubNameQuery
     List<num>? whereIn,
     List<num>? whereNotIn,
   });
+  CustomSubNameQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   CustomSubNameQuery orderByDocumentId({
     bool descending = false,
@@ -6667,6 +7576,18 @@ abstract class CustomSubNameQuery
     num startAfter,
     num endAt,
     num endBefore,
+    CustomSubNameDocumentSnapshot? startAtDocument,
+    CustomSubNameDocumentSnapshot? endAtDocument,
+    CustomSubNameDocumentSnapshot? endBeforeDocument,
+    CustomSubNameDocumentSnapshot? startAfterDocument,
+  });
+
+  CustomSubNameQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     CustomSubNameDocumentSnapshot? startAtDocument,
     CustomSubNameDocumentSnapshot? endAtDocument,
     CustomSubNameDocumentSnapshot? endBeforeDocument,
@@ -6868,6 +7789,34 @@ class _$CustomSubNameQuery
     );
   }
 
+  CustomSubNameQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$CustomSubNameQuery(
+      reference.where(
+        _$CustomSubNameFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   CustomSubNameQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -6922,6 +7871,49 @@ class _$CustomSubNameQuery
     CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$CustomSubNameFieldMap["value"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$CustomSubNameQuery(query, _collection);
+  }
+
+  CustomSubNameQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    CustomSubNameDocumentSnapshot? startAtDocument,
+    CustomSubNameDocumentSnapshot? endAtDocument,
+    CustomSubNameDocumentSnapshot? endBeforeDocument,
+    CustomSubNameDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$CustomSubNameFieldMap["hashCode"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -7115,6 +8107,7 @@ abstract class ExplicitPathDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     num value,
+    int hashCode,
   });
 
   Future<void> set(ExplicitPath value);
@@ -7165,9 +8158,11 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (value != _sentinel) "value": value as num,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -7305,6 +8300,17 @@ abstract class ExplicitPathQuery
     List<num>? whereIn,
     List<num>? whereNotIn,
   });
+  ExplicitPathQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   ExplicitPathQuery orderByDocumentId({
     bool descending = false,
@@ -7324,6 +8330,18 @@ abstract class ExplicitPathQuery
     num startAfter,
     num endAt,
     num endBefore,
+    ExplicitPathDocumentSnapshot? startAtDocument,
+    ExplicitPathDocumentSnapshot? endAtDocument,
+    ExplicitPathDocumentSnapshot? endBeforeDocument,
+    ExplicitPathDocumentSnapshot? startAfterDocument,
+  });
+
+  ExplicitPathQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     ExplicitPathDocumentSnapshot? startAtDocument,
     ExplicitPathDocumentSnapshot? endAtDocument,
     ExplicitPathDocumentSnapshot? endBeforeDocument,
@@ -7525,6 +8543,34 @@ class _$ExplicitPathQuery
     );
   }
 
+  ExplicitPathQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$ExplicitPathQuery(
+      reference.where(
+        _$ExplicitPathFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   ExplicitPathQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -7579,6 +8625,49 @@ class _$ExplicitPathQuery
     ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$ExplicitPathFieldMap["value"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ExplicitPathQuery(query, _collection);
+  }
+
+  ExplicitPathQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ExplicitPathDocumentSnapshot? startAtDocument,
+    ExplicitPathDocumentSnapshot? endAtDocument,
+    ExplicitPathDocumentSnapshot? endBeforeDocument,
+    ExplicitPathDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$ExplicitPathFieldMap["hashCode"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -7782,6 +8871,7 @@ abstract class ExplicitSubPathDocumentReference
 
   Future<void> update({
     num value,
+    int hashCode,
   });
 
   Future<void> set(ExplicitSubPath value);
@@ -7832,9 +8922,11 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (value != _sentinel) "value": value as num,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -7972,6 +9064,17 @@ abstract class ExplicitSubPathQuery
     List<num>? whereIn,
     List<num>? whereNotIn,
   });
+  ExplicitSubPathQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   ExplicitSubPathQuery orderByDocumentId({
     bool descending = false,
@@ -7991,6 +9094,18 @@ abstract class ExplicitSubPathQuery
     num startAfter,
     num endAt,
     num endBefore,
+    ExplicitSubPathDocumentSnapshot? startAtDocument,
+    ExplicitSubPathDocumentSnapshot? endAtDocument,
+    ExplicitSubPathDocumentSnapshot? endBeforeDocument,
+    ExplicitSubPathDocumentSnapshot? startAfterDocument,
+  });
+
+  ExplicitSubPathQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     ExplicitSubPathDocumentSnapshot? startAtDocument,
     ExplicitSubPathDocumentSnapshot? endAtDocument,
     ExplicitSubPathDocumentSnapshot? endBeforeDocument,
@@ -8192,6 +9307,34 @@ class _$ExplicitSubPathQuery
     );
   }
 
+  ExplicitSubPathQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$ExplicitSubPathQuery(
+      reference.where(
+        _$ExplicitSubPathFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   ExplicitSubPathQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -8246,6 +9389,49 @@ class _$ExplicitSubPathQuery
     ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$ExplicitSubPathFieldMap["value"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ExplicitSubPathQuery(query, _collection);
+  }
+
+  ExplicitSubPathQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ExplicitSubPathDocumentSnapshot? startAtDocument,
+    ExplicitSubPathDocumentSnapshot? endAtDocument,
+    ExplicitSubPathDocumentSnapshot? endBeforeDocument,
+    ExplicitSubPathDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$ExplicitSubPathFieldMap["hashCode"]!,
         descending: descending);
 
     if (startAtDocument != null) {

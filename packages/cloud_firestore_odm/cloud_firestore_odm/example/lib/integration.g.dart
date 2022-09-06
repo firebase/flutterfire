@@ -126,6 +126,7 @@ abstract class ManualJsonDocumentReference
 
   Future<void> update({
     String value,
+    int hashCode,
   });
 
   Future<void> set(ManualJson value);
@@ -171,9 +172,11 @@ class _$ManualJsonDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (value != _sentinel) "value": value as String,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -310,6 +313,17 @@ abstract class ManualJsonQuery
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
+  ManualJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   ManualJsonQuery orderByDocumentId({
     bool descending = false,
@@ -329,6 +343,18 @@ abstract class ManualJsonQuery
     String startAfter,
     String endAt,
     String endBefore,
+    ManualJsonDocumentSnapshot? startAtDocument,
+    ManualJsonDocumentSnapshot? endAtDocument,
+    ManualJsonDocumentSnapshot? endBeforeDocument,
+    ManualJsonDocumentSnapshot? startAfterDocument,
+  });
+
+  ManualJsonQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     ManualJsonDocumentSnapshot? startAtDocument,
     ManualJsonDocumentSnapshot? endAtDocument,
     ManualJsonDocumentSnapshot? endBeforeDocument,
@@ -530,6 +556,34 @@ class _$ManualJsonQuery
     );
   }
 
+  ManualJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$ManualJsonQuery(
+      reference.where(
+        "hashCode",
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   ManualJsonQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -584,6 +638,48 @@ class _$ManualJsonQuery
     ManualJsonDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy("value", descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ManualJsonQuery(query, _collection);
+  }
+
+  ManualJsonQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ManualJsonDocumentSnapshot? startAtDocument,
+    ManualJsonDocumentSnapshot? endAtDocument,
+    ManualJsonDocumentSnapshot? endBeforeDocument,
+    ManualJsonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy("hashCode", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -773,6 +869,7 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     String? firstName,
     String? lastName,
     int hashCode,
+    int hashCode,
   });
 
   Future<void> set(AdvancedJson value);
@@ -820,10 +917,12 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     Object? firstName = _sentinel,
     Object? lastName = _sentinel,
     Object? hashCode = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (firstName != _sentinel) "firstName": firstName as String?,
       if (lastName != _sentinel) "lastName": lastName as String?,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
       if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
@@ -984,6 +1083,17 @@ abstract class AdvancedJsonQuery
     List<int>? whereIn,
     List<int>? whereNotIn,
   });
+  AdvancedJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   AdvancedJsonQuery orderByDocumentId({
     bool descending = false,
@@ -1015,6 +1125,18 @@ abstract class AdvancedJsonQuery
     String? startAfter,
     String? endAt,
     String? endBefore,
+    AdvancedJsonDocumentSnapshot? startAtDocument,
+    AdvancedJsonDocumentSnapshot? endAtDocument,
+    AdvancedJsonDocumentSnapshot? endBeforeDocument,
+    AdvancedJsonDocumentSnapshot? startAfterDocument,
+  });
+
+  AdvancedJsonQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     AdvancedJsonDocumentSnapshot? startAtDocument,
     AdvancedJsonDocumentSnapshot? endAtDocument,
     AdvancedJsonDocumentSnapshot? endBeforeDocument,
@@ -1284,6 +1406,34 @@ class _$AdvancedJsonQuery
     );
   }
 
+  AdvancedJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$AdvancedJsonQuery(
+      reference.where(
+        _$AdvancedJsonFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   AdvancedJsonQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1381,6 +1531,49 @@ class _$AdvancedJsonQuery
     AdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$AdvancedJsonFieldMap["lastName"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$AdvancedJsonQuery(query, _collection);
+  }
+
+  AdvancedJsonQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    AdvancedJsonDocumentSnapshot? startAtDocument,
+    AdvancedJsonDocumentSnapshot? endAtDocument,
+    AdvancedJsonDocumentSnapshot? endBeforeDocument,
+    AdvancedJsonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$AdvancedJsonFieldMap["hashCode"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -1622,6 +1815,7 @@ abstract class _PrivateAdvancedJsonDocumentReference
     String? firstName,
     String? lastName,
     int hashCode,
+    int hashCode,
   });
 
   Future<void> set(_PrivateAdvancedJson value);
@@ -1670,10 +1864,12 @@ class _$_PrivateAdvancedJsonDocumentReference
     Object? firstName = _sentinel,
     Object? lastName = _sentinel,
     Object? hashCode = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (firstName != _sentinel) "firstName": firstName as String?,
       if (lastName != _sentinel) "lastName": lastName as String?,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
       if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
@@ -1836,6 +2032,17 @@ abstract class _PrivateAdvancedJsonQuery
     List<int>? whereIn,
     List<int>? whereNotIn,
   });
+  _PrivateAdvancedJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   _PrivateAdvancedJsonQuery orderByDocumentId({
     bool descending = false,
@@ -1867,6 +2074,18 @@ abstract class _PrivateAdvancedJsonQuery
     String? startAfter,
     String? endAt,
     String? endBefore,
+    _PrivateAdvancedJsonDocumentSnapshot? startAtDocument,
+    _PrivateAdvancedJsonDocumentSnapshot? endAtDocument,
+    _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
+    _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
+  });
+
+  _PrivateAdvancedJsonQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     _PrivateAdvancedJsonDocumentSnapshot? startAtDocument,
     _PrivateAdvancedJsonDocumentSnapshot? endAtDocument,
     _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
@@ -2137,6 +2356,34 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     );
   }
 
+  _PrivateAdvancedJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$_PrivateAdvancedJsonQuery(
+      reference.where(
+        _$PrivateAdvancedJsonFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   _PrivateAdvancedJsonQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -2234,6 +2481,49 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$PrivateAdvancedJsonFieldMap["lastName"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$_PrivateAdvancedJsonQuery(query, _collection);
+  }
+
+  _PrivateAdvancedJsonQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    _PrivateAdvancedJsonDocumentSnapshot? startAtDocument,
+    _PrivateAdvancedJsonDocumentSnapshot? endAtDocument,
+    _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
+    _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$PrivateAdvancedJsonFieldMap["hashCode"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -2461,6 +2751,10 @@ abstract class EmptyModelDocumentReference
   @override
   Future<void> delete();
 
+  Future<void> update({
+    int hashCode,
+  });
+
   Future<void> set(EmptyModel value);
 }
 
@@ -2500,6 +2794,16 @@ class _$EmptyModelDocumentReference
   @override
   Future<void> delete() {
     return reference.delete();
+  }
+
+  Future<void> update({
+    Object? hashCode = _sentinel,
+  }) async {
+    final json = {
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
+    };
+
+    return reference.update(json);
   }
 
   Future<void> set(EmptyModel value) {
@@ -2622,6 +2926,17 @@ abstract class EmptyModelQuery
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
+  EmptyModelQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   EmptyModelQuery orderByDocumentId({
     bool descending = false,
@@ -2629,6 +2944,18 @@ abstract class EmptyModelQuery
     String startAfter,
     String endAt,
     String endBefore,
+    EmptyModelDocumentSnapshot? startAtDocument,
+    EmptyModelDocumentSnapshot? endAtDocument,
+    EmptyModelDocumentSnapshot? endBeforeDocument,
+    EmptyModelDocumentSnapshot? startAfterDocument,
+  });
+
+  EmptyModelQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     EmptyModelDocumentSnapshot? startAtDocument,
     EmptyModelDocumentSnapshot? endAtDocument,
     EmptyModelDocumentSnapshot? endBeforeDocument,
@@ -2802,6 +3129,34 @@ class _$EmptyModelQuery
     );
   }
 
+  EmptyModelQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$EmptyModelQuery(
+      reference.where(
+        _$EmptyModelFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   EmptyModelQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -2814,6 +3169,49 @@ class _$EmptyModelQuery
     EmptyModelDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$EmptyModelQuery(query, _collection);
+  }
+
+  EmptyModelQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    EmptyModelDocumentSnapshot? startAtDocument,
+    EmptyModelDocumentSnapshot? endAtDocument,
+    EmptyModelDocumentSnapshot? endBeforeDocument,
+    EmptyModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$EmptyModelFieldMap["hashCode"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
