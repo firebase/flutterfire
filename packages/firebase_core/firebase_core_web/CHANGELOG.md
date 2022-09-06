@@ -1,3 +1,11 @@
+## 1.7.2
+
+ - Update a dependency to the latest release.
+
+## 1.7.1
+
+ - Update a dependency to the latest release.
+
 ## 1.7.0
 
  - **FEAT**: web JS v9.9.0 SDK bump ([#9075](https://github.com/firebase/flutterfire/issues/9075)). ([200a7747](https://github.com/firebase/flutterfire/commit/200a7747945155a99694d245c9b53ee3526a1da9))

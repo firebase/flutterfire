@@ -129,10 +129,17 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setDefaultEventParameters(
-    Map<String, Object> defaultParameters,
+    Map<String, Object?>? defaultParameters,
   ) async {
     throw UnimplementedError(
       'setDefaultEventParameters() is not supported on web',
+    );
+  }
+
+  @override
+  Future<String?> getAppInstanceId() async {
+    throw UnimplementedError(
+      'getAppInstanceId() is not supported on web',
     );
   }
 }

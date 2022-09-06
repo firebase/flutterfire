@@ -70,6 +70,8 @@ public class Constants {
   public static final String ISSUED_AT_TIMESTAMP = "issuedAtTimestamp";
   public static final String SIGN_IN_METHOD = "signInMethod";
   public static final String SIGN_IN_PROVIDER = "signInProvider";
+  public static final String SIGN_IN_PROVIDER_SCOPE = "scopes";
+  public static final String SIGN_IN_PROVIDER_CUSTOM_PARAMETERS = "customParameters";
   public static final String SIGN_IN_SECOND_FACTOR = "signInSecondFactor";
   public static final String FORCE_RESENDING_TOKEN = "forceResendingToken";
   public static final String FORCE_REFRESH = "forceRefresh";
@@ -83,4 +85,10 @@ public class Constants {
   public static final String APP_VERIFICATION_DISABLED_FOR_TESTING =
       "appVerificationDisabledForTesting";
   public static final String FORCE_RECAPTCHA_FLOW = "forceRecaptchaFlow";
+
+  // MultiFactor
+  public static final String MULTI_FACTOR_HINTS = "multiFactorHints";
+  public static final String MULTI_FACTOR_SESSION_ID = "multiFactorSessionId";
+  public static final String MULTI_FACTOR_RESOLVER_ID = "multiFactorResolverId";
+  public static final String MULTI_FACTOR_INFO = "multiFactorInfo";
 }

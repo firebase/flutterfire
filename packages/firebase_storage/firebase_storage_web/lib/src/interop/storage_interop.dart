@@ -229,11 +229,4 @@ class StringFormat {
   external static String get DATA_URL;
 }
 
-// ignore: avoid_classes_with_only_static_members
-/// An event that is triggered on a task.
-///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.storage#.TaskEvent>.
-@JS()
-abstract class TaskEvent {
-  external static String get STATE_CHANGED;
-}
+external String get TaskEvent;

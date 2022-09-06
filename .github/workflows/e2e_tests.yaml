@@ -178,11 +178,6 @@ jobs:
           FLUTTER_DRIVE_EXIT_CODE=$?
           xcrun simctl shutdown "$SIMULATOR"
           exit $FLUTTER_DRIVE_EXIT_CODE
-      - name: "Swift Format Check"
-        if: ${{ success() || failure() }}
-        run: |
-          swiftformat .
-          ./.github/workflows/scripts/validate-formatting.sh
 
   macos:
     runs-on: macos-latest

@@ -23,7 +23,8 @@ const _sentinel = _Sentinel();
 abstract class DateTimeQueryCollectionReference
     implements
         DateTimeQueryQuery,
-        FirestoreCollectionReference<DateTimeQueryQuerySnapshot> {
+        FirestoreCollectionReference<DateTimeQuery,
+            DateTimeQueryQuerySnapshot> {
   factory DateTimeQueryCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$DateTimeQueryCollectionReference;
@@ -106,7 +107,8 @@ class _$DateTimeQueryCollectionReference extends _$DateTimeQueryQuery
 }
 
 abstract class DateTimeQueryDocumentReference
-    extends FirestoreDocumentReference<DateTimeQueryDocumentSnapshot> {
+    extends FirestoreDocumentReference<DateTimeQuery,
+        DateTimeQueryDocumentSnapshot> {
   factory DateTimeQueryDocumentReference(
           DocumentReference<DateTimeQuery> reference) =
       _$DateTimeQueryDocumentReference;
@@ -134,9 +136,9 @@ abstract class DateTimeQueryDocumentReference
   Future<void> set(DateTimeQuery value);
 }
 
-class _$DateTimeQueryDocumentReference
-    extends FirestoreDocumentReference<DateTimeQueryDocumentSnapshot>
-    implements DateTimeQueryDocumentReference {
+class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
+    DateTimeQuery,
+    DateTimeQueryDocumentSnapshot> implements DateTimeQueryDocumentReference {
   _$DateTimeQueryDocumentReference(this.reference);
 
   @override
@@ -198,7 +200,8 @@ class _$DateTimeQueryDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class DateTimeQueryDocumentSnapshot extends FirestoreDocumentSnapshot {
+class DateTimeQueryDocumentSnapshot
+    extends FirestoreDocumentSnapshot<DateTimeQuery> {
   DateTimeQueryDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -219,7 +222,7 @@ class DateTimeQueryDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class DateTimeQueryQuery
-    implements QueryReference<DateTimeQueryQuerySnapshot> {
+    implements QueryReference<DateTimeQuery, DateTimeQueryQuerySnapshot> {
   @override
   DateTimeQueryQuery limit(int limit);
 
@@ -339,7 +342,8 @@ abstract class DateTimeQueryQuery
   });
 }
 
-class _$DateTimeQueryQuery extends QueryReference<DateTimeQueryQuerySnapshot>
+class _$DateTimeQueryQuery
+    extends QueryReference<DateTimeQuery, DateTimeQueryQuerySnapshot>
     implements DateTimeQueryQuery {
   _$DateTimeQueryQuery(
     this.reference,
@@ -628,8 +632,8 @@ class _$DateTimeQueryQuery extends QueryReference<DateTimeQueryQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class DateTimeQueryQuerySnapshot
-    extends FirestoreQuerySnapshot<DateTimeQueryQueryDocumentSnapshot> {
+class DateTimeQueryQuerySnapshot extends FirestoreQuerySnapshot<DateTimeQuery,
+    DateTimeQueryQueryDocumentSnapshot> {
   DateTimeQueryQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -645,7 +649,8 @@ class DateTimeQueryQuerySnapshot
   final List<FirestoreDocumentChange<DateTimeQueryDocumentSnapshot>> docChanges;
 }
 
-class DateTimeQueryQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class DateTimeQueryQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<DateTimeQuery>
     implements DateTimeQueryDocumentSnapshot {
   DateTimeQueryQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -667,7 +672,8 @@ class DateTimeQueryQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class TimestampQueryCollectionReference
     implements
         TimestampQueryQuery,
-        FirestoreCollectionReference<TimestampQueryQuerySnapshot> {
+        FirestoreCollectionReference<TimestampQuery,
+            TimestampQueryQuerySnapshot> {
   factory TimestampQueryCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$TimestampQueryCollectionReference;
@@ -752,7 +758,8 @@ class _$TimestampQueryCollectionReference extends _$TimestampQueryQuery
 }
 
 abstract class TimestampQueryDocumentReference
-    extends FirestoreDocumentReference<TimestampQueryDocumentSnapshot> {
+    extends FirestoreDocumentReference<TimestampQuery,
+        TimestampQueryDocumentSnapshot> {
   factory TimestampQueryDocumentReference(
           DocumentReference<TimestampQuery> reference) =
       _$TimestampQueryDocumentReference;
@@ -780,9 +787,9 @@ abstract class TimestampQueryDocumentReference
   Future<void> set(TimestampQuery value);
 }
 
-class _$TimestampQueryDocumentReference
-    extends FirestoreDocumentReference<TimestampQueryDocumentSnapshot>
-    implements TimestampQueryDocumentReference {
+class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
+    TimestampQuery,
+    TimestampQueryDocumentSnapshot> implements TimestampQueryDocumentReference {
   _$TimestampQueryDocumentReference(this.reference);
 
   @override
@@ -844,7 +851,8 @@ class _$TimestampQueryDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class TimestampQueryDocumentSnapshot extends FirestoreDocumentSnapshot {
+class TimestampQueryDocumentSnapshot
+    extends FirestoreDocumentSnapshot<TimestampQuery> {
   TimestampQueryDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -865,7 +873,7 @@ class TimestampQueryDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class TimestampQueryQuery
-    implements QueryReference<TimestampQueryQuerySnapshot> {
+    implements QueryReference<TimestampQuery, TimestampQueryQuerySnapshot> {
   @override
   TimestampQueryQuery limit(int limit);
 
@@ -985,7 +993,8 @@ abstract class TimestampQueryQuery
   });
 }
 
-class _$TimestampQueryQuery extends QueryReference<TimestampQueryQuerySnapshot>
+class _$TimestampQueryQuery
+    extends QueryReference<TimestampQuery, TimestampQueryQuerySnapshot>
     implements TimestampQueryQuery {
   _$TimestampQueryQuery(
     this.reference,
@@ -1274,8 +1283,8 @@ class _$TimestampQueryQuery extends QueryReference<TimestampQueryQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class TimestampQueryQuerySnapshot
-    extends FirestoreQuerySnapshot<TimestampQueryQueryDocumentSnapshot> {
+class TimestampQueryQuerySnapshot extends FirestoreQuerySnapshot<TimestampQuery,
+    TimestampQueryQueryDocumentSnapshot> {
   TimestampQueryQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -1292,7 +1301,8 @@ class TimestampQueryQuerySnapshot
       docChanges;
 }
 
-class TimestampQueryQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class TimestampQueryQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<TimestampQuery>
     implements TimestampQueryDocumentSnapshot {
   TimestampQueryQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -1314,7 +1324,8 @@ class TimestampQueryQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class GeoPointQueryCollectionReference
     implements
         GeoPointQueryQuery,
-        FirestoreCollectionReference<GeoPointQueryQuerySnapshot> {
+        FirestoreCollectionReference<GeoPointQuery,
+            GeoPointQueryQuerySnapshot> {
   factory GeoPointQueryCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$GeoPointQueryCollectionReference;
@@ -1399,7 +1410,8 @@ class _$GeoPointQueryCollectionReference extends _$GeoPointQueryQuery
 }
 
 abstract class GeoPointQueryDocumentReference
-    extends FirestoreDocumentReference<GeoPointQueryDocumentSnapshot> {
+    extends FirestoreDocumentReference<GeoPointQuery,
+        GeoPointQueryDocumentSnapshot> {
   factory GeoPointQueryDocumentReference(
           DocumentReference<GeoPointQuery> reference) =
       _$GeoPointQueryDocumentReference;
@@ -1427,9 +1439,9 @@ abstract class GeoPointQueryDocumentReference
   Future<void> set(GeoPointQuery value);
 }
 
-class _$GeoPointQueryDocumentReference
-    extends FirestoreDocumentReference<GeoPointQueryDocumentSnapshot>
-    implements GeoPointQueryDocumentReference {
+class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
+    GeoPointQuery,
+    GeoPointQueryDocumentSnapshot> implements GeoPointQueryDocumentReference {
   _$GeoPointQueryDocumentReference(this.reference);
 
   @override
@@ -1491,7 +1503,8 @@ class _$GeoPointQueryDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class GeoPointQueryDocumentSnapshot extends FirestoreDocumentSnapshot {
+class GeoPointQueryDocumentSnapshot
+    extends FirestoreDocumentSnapshot<GeoPointQuery> {
   GeoPointQueryDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -1512,7 +1525,7 @@ class GeoPointQueryDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class GeoPointQueryQuery
-    implements QueryReference<GeoPointQueryQuerySnapshot> {
+    implements QueryReference<GeoPointQuery, GeoPointQueryQuerySnapshot> {
   @override
   GeoPointQueryQuery limit(int limit);
 
@@ -1632,7 +1645,8 @@ abstract class GeoPointQueryQuery
   });
 }
 
-class _$GeoPointQueryQuery extends QueryReference<GeoPointQueryQuerySnapshot>
+class _$GeoPointQueryQuery
+    extends QueryReference<GeoPointQuery, GeoPointQueryQuerySnapshot>
     implements GeoPointQueryQuery {
   _$GeoPointQueryQuery(
     this.reference,
@@ -1921,8 +1935,8 @@ class _$GeoPointQueryQuery extends QueryReference<GeoPointQueryQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class GeoPointQueryQuerySnapshot
-    extends FirestoreQuerySnapshot<GeoPointQueryQueryDocumentSnapshot> {
+class GeoPointQueryQuerySnapshot extends FirestoreQuerySnapshot<GeoPointQuery,
+    GeoPointQueryQueryDocumentSnapshot> {
   GeoPointQueryQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -1938,7 +1952,8 @@ class GeoPointQueryQuerySnapshot
   final List<FirestoreDocumentChange<GeoPointQueryDocumentSnapshot>> docChanges;
 }
 
-class GeoPointQueryQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class GeoPointQueryQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<GeoPointQuery>
     implements GeoPointQueryDocumentSnapshot {
   GeoPointQueryQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -1960,7 +1975,8 @@ class GeoPointQueryQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class DocumentReferenceQueryCollectionReference
     implements
         DocumentReferenceQueryQuery,
-        FirestoreCollectionReference<DocumentReferenceQueryQuerySnapshot> {
+        FirestoreCollectionReference<DocumentReferenceQuery,
+            DocumentReferenceQueryQuerySnapshot> {
   factory DocumentReferenceQueryCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$DocumentReferenceQueryCollectionReference;
@@ -2048,7 +2064,8 @@ class _$DocumentReferenceQueryCollectionReference
 }
 
 abstract class DocumentReferenceQueryDocumentReference
-    extends FirestoreDocumentReference<DocumentReferenceQueryDocumentSnapshot> {
+    extends FirestoreDocumentReference<DocumentReferenceQuery,
+        DocumentReferenceQueryDocumentSnapshot> {
   factory DocumentReferenceQueryDocumentReference(
           DocumentReference<DocumentReferenceQuery> reference) =
       _$DocumentReferenceQueryDocumentReference;
@@ -2077,7 +2094,8 @@ abstract class DocumentReferenceQueryDocumentReference
 }
 
 class _$DocumentReferenceQueryDocumentReference
-    extends FirestoreDocumentReference<DocumentReferenceQueryDocumentSnapshot>
+    extends FirestoreDocumentReference<DocumentReferenceQuery,
+        DocumentReferenceQueryDocumentSnapshot>
     implements DocumentReferenceQueryDocumentReference {
   _$DocumentReferenceQueryDocumentReference(this.reference);
 
@@ -2141,7 +2159,8 @@ class _$DocumentReferenceQueryDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class DocumentReferenceQueryDocumentSnapshot extends FirestoreDocumentSnapshot {
+class DocumentReferenceQueryDocumentSnapshot
+    extends FirestoreDocumentSnapshot<DocumentReferenceQuery> {
   DocumentReferenceQueryDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -2162,7 +2181,9 @@ class DocumentReferenceQueryDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class DocumentReferenceQueryQuery
-    implements QueryReference<DocumentReferenceQueryQuerySnapshot> {
+    implements
+        QueryReference<DocumentReferenceQuery,
+            DocumentReferenceQueryQuerySnapshot> {
   @override
   DocumentReferenceQueryQuery limit(int limit);
 
@@ -2282,8 +2303,8 @@ abstract class DocumentReferenceQueryQuery
   });
 }
 
-class _$DocumentReferenceQueryQuery
-    extends QueryReference<DocumentReferenceQueryQuerySnapshot>
+class _$DocumentReferenceQueryQuery extends QueryReference<
+        DocumentReferenceQuery, DocumentReferenceQueryQuerySnapshot>
     implements DocumentReferenceQueryQuery {
   _$DocumentReferenceQueryQuery(
     this.reference,
@@ -2575,7 +2596,7 @@ class _$DocumentReferenceQueryQuery
 }
 
 class DocumentReferenceQueryQuerySnapshot extends FirestoreQuerySnapshot<
-    DocumentReferenceQueryQueryDocumentSnapshot> {
+    DocumentReferenceQuery, DocumentReferenceQueryQueryDocumentSnapshot> {
   DocumentReferenceQueryQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -2593,7 +2614,7 @@ class DocumentReferenceQueryQuerySnapshot extends FirestoreQuerySnapshot<
 }
 
 class DocumentReferenceQueryQueryDocumentSnapshot
-    extends FirestoreQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<DocumentReferenceQuery>
     implements DocumentReferenceQueryDocumentSnapshot {
   DocumentReferenceQueryQueryDocumentSnapshot._(this.snapshot, this.data);
 

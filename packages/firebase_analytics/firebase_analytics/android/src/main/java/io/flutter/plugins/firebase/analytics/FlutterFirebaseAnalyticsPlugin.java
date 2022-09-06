@@ -10,6 +10,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -129,6 +130,9 @@ public class FlutterFirebaseAnalyticsPlugin
         break;
       case "Analytics#setDefaultEventParameters":
         methodCallTask = setDefaultEventParameters(call.arguments());
+        break;
+      case "Analytics#getAppInstanceId":
+        methodCallTask = handleGetAppInstanceId();
         break;
       default:
         result.notImplemented();
@@ -302,9 +306,23 @@ public class FlutterFirebaseAnalyticsPlugin
     cachedThreadPool.execute(
         () -> {
           try {
-            Map<String, Object> parameters = Objects.requireNonNull(arguments);
-            analytics.setDefaultEventParameters(createBundleFromMap(parameters));
+            analytics.setDefaultEventParameters(createBundleFromMap(arguments));
             taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
+  private Task<String> handleGetAppInstanceId() {
+    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(Tasks.await(analytics.getAppInstanceId()));
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }

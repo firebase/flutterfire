@@ -481,7 +481,7 @@ void setupTests() {
     group('setPersistence()', () {
       test(
         'throw an unimplemented error',
-        () async {
+            () async {
           try {
             await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
             fail('Should have thrown');
@@ -494,7 +494,7 @@ void setupTests() {
 
       test(
         'should set persistence',
-        () async {
+            () async {
           try {
             await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
           } catch (e) {

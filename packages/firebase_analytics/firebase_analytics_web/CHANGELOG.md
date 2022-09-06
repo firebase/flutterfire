@@ -1,3 +1,23 @@
+## 0.4.2+3
+
+ - **FIX**: `setCurrentScreen()` API is now obsolete, using `logEvent()` instead ([#9397](https://github.com/firebase/flutterfire/issues/9397)). ([490ef204](https://github.com/firebase/flutterfire/commit/490ef204b9873fca994f1a69ddf7962e6d735c4b))
+
+## 0.4.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.4.2
+
+ - **FEAT**: retrieves `appInstanceId` property on native platforms if available ([#8689](https://github.com/firebase/flutterfire/issues/8689)). ([7132d771](https://github.com/firebase/flutterfire/commit/7132d771ed5ada7a0433232b9f0d996ef0d61481))
+
+## 0.4.1+1
+
+ - **FIX**: allow `null` values for `setDefaultEventParameters()` which removes defaults. Permissible on android and iOS. ([#9135](https://github.com/firebase/flutterfire/issues/9135)). ([dff46a3f](https://github.com/firebase/flutterfire/commit/dff46a3f33d0b9881864f79be659b2770526677d))
+
 ## 0.4.1
 
  - **FEAT**: upgrade to support v9.8.1 Firebase JS SDK ([#8235](https://github.com/firebase/flutterfire/issues/8235)). ([4b417af5](https://github.com/firebase/flutterfire/commit/4b417af574bb8a32ca8e4b3ab2ff253a22be9903))

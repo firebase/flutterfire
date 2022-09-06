@@ -1,3 +1,23 @@
+## 9.1.3
+
+ - Update a dependency to the latest release.
+
+## 9.1.2
+
+ - Update a dependency to the latest release.
+
+## 9.1.1
+
+ - Update a dependency to the latest release.
+
+## 9.1.0
+
+ - **FEAT**: `ServerValue.increment()` now correctly accepts a `num`  to support both integers and doubles. ([#9101](https://github.com/firebase/flutterfire/issues/9101)). ([35cce5b0](https://github.com/firebase/flutterfire/commit/35cce5b03fae00b1753fc9b6ed688c7f020a5007))
+
+## 9.0.20
+
+ - Update a dependency to the latest release.
+
 ## 9.0.19
 
  - Update a dependency to the latest release.

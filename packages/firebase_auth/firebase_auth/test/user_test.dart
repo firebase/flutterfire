@@ -5,15 +5,16 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
+import 'package:mockito/mockito.dart';
 // import 'package:mockito/annotations.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:mockito/mockito.dart';
 
 // import './user_test.mocks.dart';
 import './mock.dart';
+import 'firebase_auth_test.dart';
 
 Map<String, dynamic> kMockUser1 = <String, dynamic>{
   'isAnonymous': true,
@@ -320,8 +321,8 @@ void main() {
     });
 
     test('toString()', () async {
-      when(mockAuthPlatform.currentUser)
-          .thenReturn(TestUserPlatform(mockAuthPlatform, user!));
+      when(mockAuthPlatform.currentUser).thenReturn(TestUserPlatform(
+          mockAuthPlatform, TestMultiFactorPlatform(mockAuthPlatform), user!));
 
       const userInfo = 'UserInfo('
           'displayName: Flutter Test User, '
@@ -332,8 +333,8 @@ void main() {
           'uid: 12345)';
 
       final userMetadata = 'UserMetadata('
-          'creationTime: ${DateTime.fromMillisecondsSinceEpoch(kMockCreationTimestamp)}, '
-          'lastSignInTime: ${DateTime.fromMillisecondsSinceEpoch(kMockLastSignInTimestamp)})';
+          'creationTime: ${DateTime.fromMillisecondsSinceEpoch(kMockCreationTimestamp, isUtc: true)}, '
+          'lastSignInTime: ${DateTime.fromMillisecondsSinceEpoch(kMockLastSignInTimestamp, isUtc: true)})';
 
       expect(
         auth!.currentUser.toString(),
@@ -373,7 +374,8 @@ class MockFirebaseAuth extends Mock
   }
 
   @override
-  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
+  FirebaseAuthPlatform delegateFor(
+      {FirebaseApp? app, Persistence? persistence}) {
     return super.noSuchMethod(
       Invocation.method(#delegateFor, const [], {#app: app}),
       returnValue: TestFirebaseAuthPlatform(),
@@ -401,7 +403,7 @@ class MockUserPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserPlatform {
   MockUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> _user) {
-    TestUserPlatform(auth, _user);
+    TestUserPlatform(auth, TestMultiFactorPlatform(auth), _user);
   }
 
   @override
@@ -554,7 +556,9 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   TestFirebaseAuthPlatform() : super();
 
   @override
-  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) => this;
+  FirebaseAuthPlatform delegateFor(
+          {FirebaseApp? app, Persistence? persistence}) =>
+      this;
 
   @override
   FirebaseAuthPlatform setInitialValues({
@@ -566,8 +570,9 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 }
 
 class TestUserPlatform extends UserPlatform {
-  TestUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> data)
-      : super(auth, data);
+  TestUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
+      Map<String, dynamic> data)
+      : super(auth, multiFactor, data);
 }
 
 class TestUserCredentialPlatform extends UserCredentialPlatform {

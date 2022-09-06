@@ -1,3 +1,19 @@
+## 5.7.3
+
+ - Update a dependency to the latest release.
+
+## 5.7.2
+
+ - Update a dependency to the latest release.
+
+## 5.7.1
+
+ - Update a dependency to the latest release.
+
+## 5.7.0
+
+ - **FEAT**: add max attempts for Firestore transactions ([#9163](https://github.com/firebase/flutterfire/issues/9163)). ([9da7cc36](https://github.com/firebase/flutterfire/commit/9da7cc36cb266e4f5a0de26dfe727e0a4687f1a0))
+
 ## 5.6.0
 
  - **FEAT**: upgrade to support v9.8.1 Firebase JS SDK ([#8235](https://github.com/firebase/flutterfire/issues/8235)). ([4b417af5](https://github.com/firebase/flutterfire/commit/4b417af574bb8a32ca8e4b3ab2ff253a22be9903))

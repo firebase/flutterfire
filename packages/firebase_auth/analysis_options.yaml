@@ -1,0 +1,11 @@
+# Copyright 2021 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# in the LICENSE file.
+
+include: ../../analysis_options.yaml
+
+analyzer:
+  # TODO(Lyokone): not working if added on the root analysis file
+  exclude:
+    - firebase_auth_platform_interface/lib/src/pigeon/messages.pigeon.dart
+    - firebase_auth_platform_interface/test/pigeon/test_api.dart

@@ -48,15 +48,18 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseAuthPlatform.instanceFor({
-    required FirebaseApp app,
-    required Map<dynamic, dynamic> pluginConstants,
-  }) {
-    return FirebaseAuthPlatform.instance.delegateFor(app: app).setInitialValues(
-        languageCode: pluginConstants['APP_LANGUAGE_CODE'],
-        currentUser: pluginConstants['APP_CURRENT_USER'] == null
-            ? null
-            : Map<String, dynamic>.from(pluginConstants['APP_CURRENT_USER']));
+  factory FirebaseAuthPlatform.instanceFor(
+      {required FirebaseApp app,
+      required Map<dynamic, dynamic> pluginConstants,
+      Persistence? persistence}) {
+    return FirebaseAuthPlatform.instance
+        .delegateFor(app: app, persistence: persistence)
+        .setInitialValues(
+            languageCode: pluginConstants['APP_LANGUAGE_CODE'],
+            currentUser: pluginConstants['APP_CURRENT_USER'] == null
+                ? null
+                : Map<String, dynamic>.from(
+                    pluginConstants['APP_CURRENT_USER']));
   }
 
   /// The current default [FirebaseAuthPlatform] instance.
@@ -78,8 +81,11 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
+  ///
+  /// Setting a [persistence] type is only available on web based platforms.
   @protected
-  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
+  FirebaseAuthPlatform delegateFor(
+      {required FirebaseApp app, Persistence? persistence}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -503,6 +509,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///
   /// Confirm the link is a sign-in email link before calling this method,
   /// using [isSignInWithEmailLink].
+
   ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **expired-action-code**:
@@ -636,13 +643,15 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// [codeAutoRetrievalTimeout] Triggered when SMS auto-retrieval times out and
   ///   provide a [verificationId].
   Future<void> verifyPhoneNumber({
-    required String phoneNumber,
+    String? phoneNumber,
+    PhoneMultiFactorInfo? multiFactorInfo,
     required PhoneVerificationCompleted verificationCompleted,
     required PhoneVerificationFailed verificationFailed,
     required PhoneCodeSent codeSent,
     required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
     Duration timeout = const Duration(seconds: 30),
     int? forceResendingToken,
+    MultiFactorSession? multiFactorSession,
     // ignore: invalid_use_of_visible_for_testing_member
     @visibleForTesting String? autoRetrievedSmsCodeForTesting,
   }) {

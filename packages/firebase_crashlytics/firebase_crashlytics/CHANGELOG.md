@@ -1,3 +1,19 @@
+## 2.8.9
+
+ - Update a dependency to the latest release.
+
+## 2.8.8
+
+ - Update a dependency to the latest release.
+
+## 2.8.7
+
+ - Update a dependency to the latest release.
+
+## 2.8.6
+
+ - Update a dependency to the latest release.
+
 ## 2.8.5
 
  - **FIX**: `[core/duplicate-app]` exception when running the example ([#8991](https://github.com/firebase/flutterfire/issues/8991)). ([c70e66a5](https://github.com/firebase/flutterfire/commit/c70e66a546cf9236e728796c5b59a3d4e39caeb2))

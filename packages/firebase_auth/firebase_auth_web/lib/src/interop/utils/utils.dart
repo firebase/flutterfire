@@ -12,6 +12,9 @@ dynamic dartify(Object jsObject) {
 }
 
 /// Returns the JS implementation from Dart Object.
-dynamic jsify(Object dartObject) {
-  return core_interop.jsify(dartObject);
+dynamic jsify(
+  Object dartObject, [
+  Object? Function(Object? object)? customJsify,
+]) {
+  return core_interop.jsify(dartObject, customJsify);
 }

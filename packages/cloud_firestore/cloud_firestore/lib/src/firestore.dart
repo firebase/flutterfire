@@ -108,7 +108,15 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   void useFirestoreEmulator(String host, int port, {bool sslEnabled = false}) {
     if (kIsWeb) {
       // use useEmulator() API for web as settings are set immediately unlike native platforms
-      _delegate.useEmulator(host, port);
+      try {
+        _delegate.useEmulator(host, port);
+      } catch (e) {
+        final String code = (e as dynamic).code;
+        // this catches FirebaseError from web that occurs after hot reloading & hot restarting
+        if (code != 'failed-precondition') {
+          rethrow;
+        }
+      }
     } else {
       String mappedHost = host;
       // Android considers localhost as 10.0.2.2 - automatically handle this for users.
@@ -213,9 +221,13 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// By default transactions are limited to 30 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
+  ///
+  /// By default transactions will retry 5 times. You can change the number of attemps
+  /// with [maxAttempts]. Attempts should be at least 1.
   Future<T> runTransaction<T>(
     TransactionHandler<T> transactionHandler, {
     Duration timeout = const Duration(seconds: 30),
+    int maxAttempts = 5,
   }) async {
     late T output;
     await _delegate.runTransaction(
@@ -223,6 +235,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
         output = await transactionHandler(Transaction._(this, transaction));
       },
       timeout: timeout,
+      maxAttempts: maxAttempts,
     );
 
     return output;

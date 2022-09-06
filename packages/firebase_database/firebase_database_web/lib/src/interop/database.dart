@@ -7,13 +7,14 @@
 
 import 'dart:async';
 import 'dart:js';
+
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:firebase_core_web/firebase_core_web_interop.dart'
+    hide jsify, dartify, callMethod;
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_web/firebase_database_web.dart'
     show convertFirebaseDatabaseException;
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    hide jsify, dartify, callMethod;
 import 'package:flutter/widgets.dart';
 import 'package:js/js_util.dart';
 
@@ -455,12 +456,12 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   dynamic toJson() => dartify(jsObject.toJSON());
 
   S? _createQueryConstraint<S>(
-      Function method, List<dynamic>? /*list of primitive value */ args) {
+      Object method, List<dynamic>? /*list of primitive value */ args) {
     if (args == null) {
       throw ArgumentError('Please provide "args" parameter.');
     }
     var params = args.map(jsify).toList();
-    return callMethod(method, 'apply', jsify([null, params]));
+    return callMethod(method, 'apply', [null, jsify(params)]);
   }
 }
 

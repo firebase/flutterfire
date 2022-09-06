@@ -22,10 +22,11 @@ export 'src/firestore_reference.dart'
 /// ```dart
 /// @JsonSerializable(converters: firestoreJsonConverters)
 /// ```
-const firestoreJsonConverters = [
+const List<JsonConverter<Object?, Object?>> firestoreJsonConverters = [
   FirestoreDateTimeConverter(),
   FirestoreTimestampConverter(),
   FirestoreGeoPointConverter(),
+  FirestoreDocumentReferenceConverter(),
 ];
 
 /// A [JsonConverter] that adds support for [Timestamp] objects within ODM models.

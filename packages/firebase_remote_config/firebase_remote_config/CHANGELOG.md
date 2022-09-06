@@ -1,3 +1,19 @@
+## 2.0.16
+
+ - **REFACTOR**: update deprecated `Tasks.call()` to `TaskCompletionSource` API ([#9405](https://github.com/firebase/flutterfire/issues/9405)). ([837d68ea](https://github.com/firebase/flutterfire/commit/837d68ea60649fa1fb1c7f8254e4ae67874e9bf2))
+
+## 2.0.15
+
+ - Update a dependency to the latest release.
+
+## 2.0.14
+
+ - Update a dependency to the latest release.
+
+## 2.0.13
+
+ - Update a dependency to the latest release.
+
 ## 2.0.12
 
  - Update a dependency to the latest release.

@@ -21,7 +21,9 @@ const _sentinel = _Sentinel();
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
 abstract class MovieCollectionReference
-    implements MovieQuery, FirestoreCollectionReference<MovieQuerySnapshot> {
+    implements
+        MovieQuery,
+        FirestoreCollectionReference<Movie, MovieQuerySnapshot> {
   factory MovieCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$MovieCollectionReference;
@@ -102,7 +104,7 @@ class _$MovieCollectionReference extends _$MovieQuery
 }
 
 abstract class MovieDocumentReference
-    extends FirestoreDocumentReference<MovieDocumentSnapshot> {
+    extends FirestoreDocumentReference<Movie, MovieDocumentSnapshot> {
   factory MovieDocumentReference(DocumentReference<Movie> reference) =
       _$MovieDocumentReference;
 
@@ -140,7 +142,7 @@ abstract class MovieDocumentReference
 }
 
 class _$MovieDocumentReference
-    extends FirestoreDocumentReference<MovieDocumentSnapshot>
+    extends FirestoreDocumentReference<Movie, MovieDocumentSnapshot>
     implements MovieDocumentReference {
   _$MovieDocumentReference(this.reference);
 
@@ -219,7 +221,7 @@ class _$MovieDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class MovieDocumentSnapshot extends FirestoreDocumentSnapshot {
+class MovieDocumentSnapshot extends FirestoreDocumentSnapshot<Movie> {
   MovieDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -239,7 +241,7 @@ class MovieDocumentSnapshot extends FirestoreDocumentSnapshot {
   final Movie? data;
 }
 
-abstract class MovieQuery implements QueryReference<MovieQuerySnapshot> {
+abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
   @override
   MovieQuery limit(int limit);
 
@@ -396,6 +398,7 @@ abstract class MovieQuery implements QueryReference<MovieQuerySnapshot> {
     List<String>? isGreaterThan,
     List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
+    String? arrayContains,
     List<String>? arrayContainsAny,
   });
 
@@ -496,7 +499,7 @@ abstract class MovieQuery implements QueryReference<MovieQuerySnapshot> {
   });
 }
 
-class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
+class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     implements MovieQuery {
   _$MovieQuery(
     this.reference,
@@ -837,6 +840,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     List<String>? isGreaterThan,
     List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
+    String? arrayContains,
     List<String>? arrayContainsAny,
   }) {
     return _$MovieQuery(
@@ -849,6 +853,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1210,7 +1215,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
 }
 
 class MovieQuerySnapshot
-    extends FirestoreQuerySnapshot<MovieQueryDocumentSnapshot> {
+    extends FirestoreQuerySnapshot<Movie, MovieQueryDocumentSnapshot> {
   MovieQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -1226,7 +1231,7 @@ class MovieQuerySnapshot
   final List<FirestoreDocumentChange<MovieDocumentSnapshot>> docChanges;
 }
 
-class MovieQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class MovieQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Movie>
     implements MovieDocumentSnapshot {
   MovieQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -1248,7 +1253,7 @@ class MovieQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class CommentCollectionReference
     implements
         CommentQuery,
-        FirestoreCollectionReference<CommentQuerySnapshot> {
+        FirestoreCollectionReference<Comment, CommentQuerySnapshot> {
   factory CommentCollectionReference(
     DocumentReference<Movie> parent,
   ) = _$CommentCollectionReference;
@@ -1337,7 +1342,7 @@ class _$CommentCollectionReference extends _$CommentQuery
 }
 
 abstract class CommentDocumentReference
-    extends FirestoreDocumentReference<CommentDocumentSnapshot> {
+    extends FirestoreDocumentReference<Comment, CommentDocumentSnapshot> {
   factory CommentDocumentReference(DocumentReference<Comment> reference) =
       _$CommentDocumentReference;
 
@@ -1371,7 +1376,7 @@ abstract class CommentDocumentReference
 }
 
 class _$CommentDocumentReference
-    extends FirestoreDocumentReference<CommentDocumentSnapshot>
+    extends FirestoreDocumentReference<Comment, CommentDocumentSnapshot>
     implements CommentDocumentReference {
   _$CommentDocumentReference(this.reference);
 
@@ -1441,7 +1446,7 @@ class _$CommentDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class CommentDocumentSnapshot extends FirestoreDocumentSnapshot {
+class CommentDocumentSnapshot extends FirestoreDocumentSnapshot<Comment> {
   CommentDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -1461,7 +1466,8 @@ class CommentDocumentSnapshot extends FirestoreDocumentSnapshot {
   final Comment? data;
 }
 
-abstract class CommentQuery implements QueryReference<CommentQuerySnapshot> {
+abstract class CommentQuery
+    implements QueryReference<Comment, CommentQuerySnapshot> {
   @override
   CommentQuery limit(int limit);
 
@@ -1604,7 +1610,7 @@ abstract class CommentQuery implements QueryReference<CommentQuerySnapshot> {
   });
 }
 
-class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
+class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     implements CommentQuery {
   _$CommentQuery(
     this.reference,
@@ -1965,7 +1971,7 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
 }
 
 class CommentQuerySnapshot
-    extends FirestoreQuerySnapshot<CommentQueryDocumentSnapshot> {
+    extends FirestoreQuerySnapshot<Comment, CommentQueryDocumentSnapshot> {
   CommentQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -1981,7 +1987,8 @@ class CommentQuerySnapshot
   final List<FirestoreDocumentChange<CommentDocumentSnapshot>> docChanges;
 }
 
-class CommentQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class CommentQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<Comment>
     implements CommentDocumentSnapshot {
   CommentQueryDocumentSnapshot._(this.snapshot, this.data);
 

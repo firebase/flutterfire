@@ -1,3 +1,36 @@
+## 0.4.3+7
+
+ - Update a dependency to the latest release.
+
+## 0.4.3+6
+
+ - Update a dependency to the latest release.
+
+## 0.4.3+5
+
+ - Update a dependency to the latest release.
+
+## 0.4.3+4
+
+ - Update a dependency to the latest release.
+
+## 0.4.3+3
+
+ - Update a dependency to the latest release.
+
+## 0.4.3+2
+
+ - Update a dependency to the latest release.
+
+## 0.4.3+1
+
+ - Update a dependency to the latest release.
+
+## 0.4.3
+
+ - **FEAT**: add max attempts for Firestore transactions ([#9163](https://github.com/firebase/flutterfire/issues/9163)). ([9da7cc36](https://github.com/firebase/flutterfire/commit/9da7cc36cb266e4f5a0de26dfe727e0a4687f1a0))
+ - **FEAT**: add phone MFA ([#9044](https://github.com/firebase/flutterfire/issues/9044)). ([1b85c8b7](https://github.com/firebase/flutterfire/commit/1b85c8b7fbcc3f21767f23981cb35061772d483f))
+
 ## 0.4.2+3
 
  - Update a dependency to the latest release.

@@ -23,6 +23,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   late User user;
   late TextEditingController controller;
+  final phoneController = TextEditingController();
 
   String? photoURL;
 
@@ -167,7 +168,68 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                       ],
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 20),
+                    TextButton(
+                      onPressed: () {
+                        user.sendEmailVerification();
+                      },
+                      child: const Text('Verify Email'),
+                    ),
+                    const SizedBox(height: 20),
+                    TextButton(
+                      onPressed: () async {
+                        final a = await user.multiFactor.getEnrolledFactors();
+                        print(a);
+                      },
+                      child: const Text('Get enrolled factors'),
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: phoneController,
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.phone),
+                        hintText: '+33612345678',
+                        labelText: 'Phone number',
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextButton(
+                      onPressed: () async {
+                        final session = await user.multiFactor.getSession();
+                        final auth = FirebaseAuth.instance;
+                        await auth.verifyPhoneNumber(
+                          multiFactorSession: session,
+                          phoneNumber: phoneController.text,
+                          verificationCompleted: (_) {},
+                          verificationFailed: print,
+                          codeSent:
+                              (String verificationId, int? resendToken) async {
+                            final smsCode = await getSmsCodeFromUser(context);
+
+                            if (smsCode != null) {
+                              // Create a PhoneAuthCredential with the code
+                              final credential = PhoneAuthProvider.credential(
+                                verificationId: verificationId,
+                                smsCode: smsCode,
+                              );
+
+                              try {
+                                await user.multiFactor.enroll(
+                                  PhoneMultiFactorGenerator.getAssertion(
+                                    credential,
+                                  ),
+                                );
+                              } on FirebaseAuthException catch (e) {
+                                print(e.message);
+                              }
+                            }
+                          },
+                          codeAutoRetrievalTimeout: print,
+                        );
+                      },
+                      child: const Text('Verify Number For MFA'),
+                    ),
+                    const SizedBox(height: 20),
                     TextButton(
                       onPressed: _signOut,
                       child: const Text('Sign out'),
