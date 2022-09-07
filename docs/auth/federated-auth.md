@@ -350,8 +350,7 @@ with the Client ID and Secret are set, with the callback URL set in the GitHub a
 
 Ensure the "Yahoo" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers)
 with an API Key and API Secret set. Also make sure your Firebase OAuth redirect URI (e.g. my-app-12345.firebaseapp.com/__/auth/handler) 
-is set as your Authorization callback URL in your app's settings page on your app's Yahoo config.
-.
+is set as a redirect URI in your app's Yahoo Developer Network configuration.
 
 
 * {iOS+}
