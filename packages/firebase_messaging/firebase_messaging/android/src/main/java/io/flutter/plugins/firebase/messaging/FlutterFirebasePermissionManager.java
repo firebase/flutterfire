@@ -24,7 +24,7 @@ class FlutterFirebasePermissionManager implements PluginRegistry.RequestPermissi
   @Override
   public boolean onRequestPermissionsResult(
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (requestInProgress && requestCode == permissionCode || this.successCallback == null) {
+    if (requestInProgress && requestCode == permissionCode || this.successCallback != null) {
       requestInProgress = false;
       boolean granted =
           grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
