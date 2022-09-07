@@ -92,6 +92,7 @@ Ensure the "Google" sign-in provider is enabled on the [Firebase Console](https:
   ```
 
 ## Game Auth Provider
+
 Firebase is compatible with specific game provider on Android (Play Games Sign-In) and iOS (Game Center).
 
 * {iOS}
@@ -103,7 +104,8 @@ Firebase is compatible with specific game provider on Android (Play Games Sign-I
   Follow the instructions for Google setup on Android, then configure 
   [Play Games services with your Firebase app information](https://firebase.google.com/docs/auth/android/play-games#configure-play-games-with-firebase-info).
 
-  You can connect your user using:
+  The following will trigger the sign-in flow, create a new credential and sign in the user:
+
   ```dart
   final googleUser = await GoogleSignIn(
     signInOption: SignInOption.games,
