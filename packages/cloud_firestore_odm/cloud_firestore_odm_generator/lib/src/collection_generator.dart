@@ -123,6 +123,9 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
     QueryDocumentSnapshotTemplate(),
   ];
 
+  /// Map of file path to class prefixes
+  final _classPrefixes = <String, List<String>>{};
+
   @override
   Future<Data> parseElement(
     BuildStep buildStep,
@@ -253,13 +256,15 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       );
     }
 
+    final annotatedElementSourceName = annotatedElement.librarySource!.fullName;
+
     // TODO(rrousselGit) handle parts
     // Whether the model class and the reference variable are defined in the same file
     // This is important because json_serializable generates private code for
     // decoding a Model class.
     final modelAndReferenceInTheSameLibrary =
         collectionTargetElement.librarySource.fullName ==
-            annotatedElement.librarySource!.fullName;
+            annotatedElementSourceName;
 
     final fromJson = collectionTargetElement.constructors.firstWhereOrNull(
       (ctor) => ctor.name == 'fromJson',
@@ -310,7 +315,7 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       }
     }
 
-    return CollectionData(
+    final data = CollectionData(
       type: type,
       path: path,
       collectionName: name,
@@ -364,6 +369,24 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
         ).toList(),
       ],
     );
+
+    final classPrefix = data.classPrefix;
+
+    if (_classPrefixes[annotatedElementSourceName]?.contains(classPrefix) ??
+        false) {
+      throw InvalidGenerationSourceError(
+        'Defined a collection with duplicate class prefix $classPrefix.'
+        ' Either use a different class, or set a unique class prefix.',
+      );
+    }
+
+    _classPrefixes.update(
+      annotatedElementSourceName,
+      (value) => value..add(classPrefix),
+      ifAbsent: () => [classPrefix],
+    );
+
+    return data;
   }
 
   @override
