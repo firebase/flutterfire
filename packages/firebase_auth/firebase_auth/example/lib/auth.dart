@@ -85,15 +85,11 @@ class _AuthGateState extends State<AuthGate> {
     super.initState();
     if (!kIsWeb && Platform.isMacOS) {
       authButtons = {
-        Buttons.Apple: () => _handleMultiFactorException(
-              _signInWithApple,
-            ),
+        Buttons.Apple: _signInWithApple,
       };
     } else {
       authButtons = {
-        Buttons.Apple: () => _handleMultiFactorException(
-              _signInWithApple,
-            ),
+        Buttons.Apple: _signInWithApple,
         Buttons.Google: () => _handleMultiFactorException(
               _signInWithGoogle,
             ),
@@ -559,13 +555,19 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   Future<void> _signInWithApple() async {
+    await _auth.signOut();
+    final anonymous = await _auth.signInAnonymously();
+
     final appleProvider = AppleAuthProvider();
 
     if (kIsWeb) {
       // Once signed in, return the UserCredential
-      await _auth.signInWithPopup(appleProvider);
+      final credential = await _auth.signInWithPopup(appleProvider);
     } else {
-      await _auth.signInWithAuthProvider(appleProvider);
+      final credential = await _auth.signInWithAuthProvider(appleProvider);
+      final user =
+          await anonymous.user!.linkWithCredential(credential.credential!);
+      print(user);
     }
   }
 

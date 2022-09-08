@@ -23,6 +23,7 @@ public class Constants {
   public static final String SIGN_IN_METHOD_OAUTH = "oauth";
 
   // User
+  public static final String USER_ID = "userId";
   public static final String USER = "user";
   public static final String EMAIL = "email";
   public static final String NEW_EMAIL = "newEmail";

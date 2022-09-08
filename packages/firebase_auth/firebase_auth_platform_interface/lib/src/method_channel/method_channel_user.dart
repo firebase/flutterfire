@@ -85,6 +85,7 @@ class MethodChannelUser extends UserPlatform {
               'User#linkWithCredential',
               _withChannelDefaults(
                 {
+                  'userId': uid,
                   'credential': credential.asMap(),
                 },
               )))!;

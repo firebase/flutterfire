@@ -8,6 +8,8 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 
 import android.app.Activity;
 import android.net.Uri;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
@@ -83,6 +85,10 @@ public class FlutterFirebaseAuthPlugin
 
   // Stores the instances of native AuthCredentials by their hashCode
   static final HashMap<Integer, AuthCredential> authCredentials = new HashMap<>();
+
+  // Stores the instances of native User by their hashCode
+  static final HashMap<String, FirebaseUser> usersMap = new HashMap<>();
+
 
   @Nullable private BinaryMessenger messenger;
 
@@ -312,6 +318,8 @@ public class FlutterFirebaseAuthPlugin
         parseAdditionalUserInfo(authResult.getAdditionalUserInfo()));
     output.put(Constants.AUTH_CREDENTIAL, parseAuthCredential(authResult.getCredential()));
     output.put(Constants.USER, parseFirebaseUser(authResult.getUser()));
+
+    usersMap.put(authResult.getUser().getUid(), authResult.getUser());
 
     return output;
   }
@@ -1104,7 +1112,8 @@ public class FlutterFirebaseAuthPlugin
     cachedThreadPool.execute(
         () -> {
           try {
-            FirebaseUser firebaseUser = getCurrentUser(arguments);
+            FirebaseAuth firebaseAuth = getAuth(arguments);
+            FirebaseUser firebaseUser = usersMap.get(arguments.get(Constants.USER_ID));
             AuthCredential credential = getCredential(arguments);
 
             if (firebaseUser == null) {
@@ -1120,7 +1129,14 @@ public class FlutterFirebaseAuthPlugin
 
             AuthResult authResult;
 
-            authResult = Tasks.await(firebaseUser.linkWithCredential(credential));
+
+
+            FirebaseUser u = firebaseAuth.getCurrentUser();
+
+            AppleAuthProvider.getCredential("idToken", "rawNonce");
+            u.linkWithCredential(O)
+
+            authResult = Tasks.await(u.linkWithCredential(credential));
 
             taskCompletionSource.setResult(parseAuthResult(authResult));
           } catch (Exception e) {
