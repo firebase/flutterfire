@@ -4,8 +4,7 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:cloud_firestore_odm/annotation.dart';
 import 'package:collection/collection.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:recase/recase.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -251,6 +250,29 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       );
     }
 
+    final hasFreezed =
+        const TypeChecker.fromRuntime(Freezed).hasAnnotationOf(type.element2!);
+    final redirectedFreezedConstructors =
+        collectionTargetElement.constructors.where(
+      (element) {
+        return element.isFactory &&
+            // It should be safe to read "redirectedConstructor" as the build.yaml
+            // asks to run the ODM after Freezed
+            element.redirectedConstructor != null;
+      },
+    ).toList();
+
+    // TODO throw when using json_serializable if the Model type and
+    // the collection are defined in separate libraries
+
+    // TODO test error handling
+    if (redirectedFreezedConstructors.length > 1) {
+      throw InvalidGenerationSourceError(
+        'Union types when using @freezed are currently unsupported. Use a single constructor instead',
+        element: annotatedElement,
+      );
+    }
+
     // TODO(rrousselGit) handle parts
     // Whether the model class and the reference variable are defined in the same file
     // This is important because json_serializable generates private code for
@@ -285,9 +307,10 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       }
     }
 
-    final toJson = collectionTargetElement.methods.firstWhereOrNull(
-      (ctor) => ctor.name == 'toJson',
-    );
+    final toJson = collectionTargetElement
+        // Looking into fromJson from superTypes too
+        .allMethods
+        .firstWhereOrNull((method) => method.name == 'toJson');
     if (!hasJsonSerializable && toJson == null) {
       throw InvalidGenerationSourceError(
         'Used @Collection with the class ${collectionTargetElement.name}, but '
@@ -328,39 +351,50 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
           field: 'FieldPath.documentId',
           updatable: false,
         ),
-        ...collectionTargetElement.fields
-            .where((f) => f.isPublic)
-            .where(
-              (f) =>
-                  f.type.isDartCoreString ||
-                  f.type.isDartCoreNum ||
-                  f.type.isDartCoreInt ||
-                  f.type.isDartCoreDouble ||
-                  f.type.isDartCoreBool ||
-                  f.type.isPrimitiveList ||
-                  f.type.isJsonDocumentReference ||
-                  _dateTimeChecker.isAssignableFromType(f.type) ||
-                  _timestampChecker.isAssignableFromType(f.type) ||
-                  _geoPointChecker.isAssignableFromType(f.type),
-              // TODO filter list other than LIst<string|bool|num>
+        ...collectionTargetElement
+            .allFields(
+              hasFreezed: hasFreezed,
+              freezedConstructors: redirectedFreezedConstructors,
             )
+            .where((f) => f.isPublic)
+            .where((f) => _isSupportedType(f.type))
             .where((f) => !f.isJsonIgnored())
             .map(
           (e) {
-            final key = '"${e.name}"';
+            var key = '"${e.name}"';
+
+            if (hasFreezed) {
+              key =
+                  // two $ because both Freezed and json_serializable add one
+                  '_\$\$${redirectedFreezedConstructors.single.redirectedConstructor!.enclosingElement3.name}FieldMap[$key]!';
+            } else if (hasJsonSerializable) {
+              key = '_\$${collectionTargetElement.name.public}FieldMap[$key]!';
+            }
 
             return QueryingField(
               e.name,
               e.type,
               updatable: true,
-              field: hasJsonSerializable
-                  ? '_\$${collectionTargetElement.name.public}FieldMap[$key]!'
-                  : key,
+              field: key,
             );
           },
         ).toList(),
       ],
     );
+  }
+
+  bool _isSupportedType(DartType type) {
+    return type.isDartCoreString ||
+        type.isDartCoreNum ||
+        type.isDartCoreInt ||
+        type.isDartCoreDouble ||
+        type.isDartCoreBool ||
+        type.isPrimitiveList ||
+        type.isJsonDocumentReference ||
+        _dateTimeChecker.isAssignableFromType(type) ||
+        _timestampChecker.isAssignableFromType(type) ||
+        _geoPointChecker.isAssignableFromType(type);
+    // TODO filter list other than LIst<string|bool|num>
   }
 
   @override
@@ -397,6 +431,40 @@ const _sentinel = _Sentinel();
   void parseGlobalData(LibraryElement library) {}
 }
 
+extension on ClassElement {
+  Iterable<MethodElement> get allMethods sync* {
+    yield* methods;
+    for (final supertype in allSupertypes) {
+      if (supertype.isDartCoreObject) continue;
+      yield* supertype.methods;
+    }
+  }
+
+  Iterable<VariableElement> allFields({
+    required bool hasFreezed,
+    required List<ConstructorElement> freezedConstructors,
+  }) sync* {
+    if (hasFreezed) {
+      yield* freezedConstructors.single.parameters;
+    } else {
+      final uniqueFields = <String, FieldElement>{};
+
+      for (final field in fields) {
+        uniqueFields[field.name] ??= field;
+      }
+
+      for (final supertype in allSupertypes) {
+        if (supertype.isDartCoreObject) continue;
+
+        for (final field in supertype.element2.fields) {
+          uniqueFields[field.name] ??= field;
+        }
+      }
+      yield* uniqueFields.values;
+    }
+  }
+}
+
 extension on String {
   String get public {
     return startsWith('_') ? substring(1) : this;
@@ -425,7 +493,7 @@ extension on DartType {
   }
 }
 
-extension on FieldElement {
+extension on Element {
   bool isJsonIgnored() {
     const checker = TypeChecker.fromRuntime(JsonKey);
     final jsonKeys = checker.annotationsOf(this);

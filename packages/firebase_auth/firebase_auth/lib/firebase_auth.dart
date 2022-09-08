@@ -40,6 +40,8 @@ export 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
         GithubAuthCredential,
         GoogleAuthProvider,
         GoogleAuthCredential,
+        YahooAuthProvider,
+        YahooAuthCredential,
         MicrosoftAuthProvider,
         MicrosoftAuthCredential,
         OAuthProvider,

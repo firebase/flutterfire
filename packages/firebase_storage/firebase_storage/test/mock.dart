@@ -5,6 +5,8 @@
 
 import 'dart:async';
 import 'dart:io';
+// TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
+// ignore: unnecessary_import
 import 'dart:typed_data';
 
 import 'package:firebase_core/firebase_core.dart';
