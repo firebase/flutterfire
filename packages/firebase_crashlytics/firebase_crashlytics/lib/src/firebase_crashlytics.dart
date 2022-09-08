@@ -114,7 +114,10 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
       print('----------------------------------------------------');
     }
 
-    final StackTrace stackTrace = stack ?? StackTrace.current;
+    // Replace null or empty stack traces with the current stack trace.
+    final StackTrace stackTrace = (stack == null || stack.toString().isEmpty)
+        ? StackTrace.current
+        : stack;
 
     // Report error.
     final List<Map<String, String>> stackTraceElements =

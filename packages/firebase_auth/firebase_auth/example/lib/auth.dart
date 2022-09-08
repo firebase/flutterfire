@@ -106,6 +106,9 @@ class _AuthGateState extends State<AuthGate> {
         Buttons.Twitter: () => _handleMultiFactorException(
               _signInWithTwitter,
             ),
+        Buttons.Yahoo: () => _handleMultiFactorException(
+              _signInWithYahoo,
+            ),
       };
     }
   }
@@ -566,6 +569,17 @@ class _AuthGateState extends State<AuthGate> {
       await _auth.signInWithPopup(appleProvider);
     } else {
       await _auth.signInWithAuthProvider(appleProvider);
+    }
+  }
+
+  Future<void> _signInWithYahoo() async {
+    final yahooProvider = YahooAuthProvider();
+
+    if (kIsWeb) {
+      // Once signed in, return the UserCredential
+      await _auth.signInWithPopup(yahooProvider);
+    } else {
+      await _auth.signInWithAuthProvider(yahooProvider);
     }
   }
 
