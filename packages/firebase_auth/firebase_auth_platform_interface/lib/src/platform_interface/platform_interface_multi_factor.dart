@@ -128,6 +128,11 @@ class MultiFactorInfo {
 
   /// The unique identifier for this second factor.
   final String uid;
+
+  @override
+  String toString() {
+    return 'MultiFactorInfo{enrollmentTimestamp: $enrollmentTimestamp, displayName: $displayName, uid: $uid}';
+  }
 }
 
 /// Represents the information for a phone second factor.
