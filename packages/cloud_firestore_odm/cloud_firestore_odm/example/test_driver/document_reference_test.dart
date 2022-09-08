@@ -123,17 +123,17 @@ void main() {
                   runtime: 'runtime',
                   title: 'title',
                   year: 0,
-                  language: [LanguageType.English],
+                  language: [LanguageType.english],
                   certification: CertificationType.R,
                   cast: [
                     {
-                      CastType.CoStar: 'William Shatner',
-                      CastType.Cameo: 'Harlan Ellison'
+                      CastType.coStar: 'William Shatner',
+                      CastType.cameo: 'Harlan Ellison'
                     }
                   ],
                   majorCast: {
-                    CastType.CoStar: 'William Shatner',
-                    CastType.Cameo: 'Harlan Ellison'
+                    CastType.coStar: 'William Shatner',
+                    CastType.cameo: 'Harlan Ellison'
                   },
                 ),
               );
@@ -179,17 +179,17 @@ void main() {
                   runtime: 'runtime',
                   title: 'title',
                   year: 0,
-                  language: [LanguageType.English],
+                  language: [LanguageType.english],
                   certification: CertificationType.R,
                   cast: [
                     {
-                      CastType.CoStar: 'William Shatner',
-                      CastType.Cameo: 'Harlan Ellison'
+                      CastType.coStar: 'William Shatner',
+                      CastType.cameo: 'Harlan Ellison'
                     }
                   ],
                   majorCast: {
-                    CastType.CoStar: 'William Shatner',
-                    CastType.Cameo: 'Harlan Ellison'
+                    CastType.coStar: 'William Shatner',
+                    CastType.cameo: 'Harlan Ellison'
                   },
                 ),
               );
@@ -359,17 +359,17 @@ void main() {
                 runtime: 'runtime',
                 title: 'title',
                 year: 0,
-                language: [LanguageType.English, LanguageType.Korean],
+                language: [LanguageType.english, LanguageType.korean],
                 certification: CertificationType.R,
                 cast: [
                   {
-                    CastType.CoStar: 'William Shatner',
-                    CastType.Cameo: 'Harlan Ellison'
+                    CastType.coStar: 'William Shatner',
+                    CastType.cameo: 'Harlan Ellison'
                   }
                 ],
                 majorCast: {
-                  CastType.CoStar: 'William Shatner',
-                  CastType.Cameo: 'Harlan Ellison'
+                  CastType.coStar: 'William Shatner',
+                  CastType.cameo: 'Harlan Ellison'
                 },
               ),
             );
@@ -404,17 +404,17 @@ void main() {
                   runtime: 'runtime',
                   title: 'title',
                   year: 0,
-                  language: [LanguageType.English, LanguageType.Korean],
+                  language: [LanguageType.english, LanguageType.korean],
                   certification: CertificationType.R,
                   cast: [
                     {
-                      CastType.CoStar: 'William Shatner',
-                      CastType.Cameo: 'Harlan Ellison'
+                      CastType.coStar: 'William Shatner',
+                      CastType.cameo: 'Harlan Ellison'
                     }
                   ],
                   majorCast: {
-                    CastType.CoStar: 'William Shatner',
-                    CastType.Cameo: 'Harlan Ellison'
+                    CastType.coStar: 'William Shatner',
+                    CastType.cameo: 'Harlan Ellison'
                   },
                 ),
               );
@@ -440,7 +440,7 @@ void main() {
                 .having(
               (e) => e.language,
               'language',
-              [LanguageType.English, LanguageType.Korean],
+              [LanguageType.english, LanguageType.korean],
             ),
           );
           // TODO implement enums in list context

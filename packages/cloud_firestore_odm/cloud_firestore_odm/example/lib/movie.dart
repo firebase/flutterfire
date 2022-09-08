@@ -4,39 +4,61 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'movie.g.dart';
 
-// ignore_for_file: constant_identifier_names
-enum LanguageType { English, French, Spanish, Chinese, Korean }
+enum LanguageType { english, french, spanish, chinese, korean }
 
 enum GenreType {
-  Action,
-  Adventure,
-  Comedy,
-  Crime,
-  Drame,
-  Fantasy,
-  Mystery,
-  SciFi,
-  Thriler,
+  @JsonValue('action')
+  action,
+  @JsonValue('adventure')
+  adventure,
+  @JsonValue('comedy')
+  comedy,
+  @JsonValue('crime')
+  crime,
+  @JsonValue('drame')
+  drame,
+  @JsonValue('fantasy')
+  fantasy,
+  @JsonValue('mystery')
+  mystery,
+  @JsonValue('sciFi')
+  sciFi,
+  @JsonValue('thriler')
+  thriler,
 }
 
 enum CertificationType {
-  None,
-  G,
-  PG,
-  PG13,
+  @JsonValue('none')
+  none,
+  @JsonValue('g')
+  g,
+  @JsonValue('pg')
+  pg,
+  @JsonValue('pg13')
+  pg13,
+  @JsonValue('R')
   R,
-  TVPG,
-  TVMA,
+  @JsonValue('tvpg')
+  tvpg,
+  @JsonValue('tvma')
+  tvma,
 }
 
 enum CastType {
-  Background,
-  Cameo,
-  Recurring,
-  Side,
-  Star,
-  CoStar,
-  GuestStar,
+  @JsonValue('background')
+  background,
+  @JsonValue('cameo')
+  cameo,
+  @JsonValue('recurring')
+  recurring,
+  @JsonValue('side')
+  side,
+  @JsonValue('star')
+  star,
+  @JsonValue('coStar')
+  coStar,
+  @JsonValue('guestStar')
+  guestStar,
 }
 
 @JsonSerializable()

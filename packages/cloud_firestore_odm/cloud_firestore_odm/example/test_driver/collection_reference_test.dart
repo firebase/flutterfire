@@ -87,7 +87,7 @@ void main() {
             await collection.doc('123').set(
                   createMovie(
                     title: 'title',
-                    certification: CertificationType.PG,
+                    certification: CertificationType.pg,
                   ),
                 );
 
@@ -95,13 +95,13 @@ void main() {
 
             expect(
               await collection
-                  .whereCertification(isEqualTo: CertificationType.PG)
+                  .whereCertification(isEqualTo: CertificationType.pg)
                   .get(),
               isA<MovieQuerySnapshot>().having((e) => e.docs, 'doc', [
                 isA<MovieQueryDocumentSnapshot>().having(
                   (e) => e.data.certification,
                   'data.certification',
-                  CertificationType.PG,
+                  CertificationType.pg,
                 )
               ]),
             );
@@ -116,10 +116,10 @@ void main() {
             await collection.doc('123').set(
                   createMovie(
                     title: 'title',
-                    language: [LanguageType.English, LanguageType.Korean],
+                    language: [LanguageType.english, LanguageType.korean],
                     cast: [
-                      {CastType.CoStar: 'William Shatner'},
-                      {CastType.Cameo: 'Harlan Ellison'}
+                      {CastType.coStar: 'William Shatner'},
+                      {CastType.cameo: 'Harlan Ellison'}
                     ],
                   ),
                 );
@@ -128,7 +128,7 @@ void main() {
             expect(
               await collection
                   .whereLanguage(
-                    arrayContains: LanguageType.English,
+                    arrayContains: LanguageType.english,
                     // arrayContainsAny: [LanguageType.English],
                     // isEqualTo: [LanguageType.English, LanguageType.Korean]
                   )
@@ -137,7 +137,7 @@ void main() {
                 isA<MovieQueryDocumentSnapshot>().having(
                   (e) => e.data.language,
                   'data.language',
-                  [LanguageType.English, LanguageType.Korean],
+                  [LanguageType.english, LanguageType.korean],
                 )
               ]),
             );
@@ -152,16 +152,16 @@ void main() {
             await collection.doc('123').set(
                   createMovie(
                     title: 'title',
-                    language: [LanguageType.English, LanguageType.Korean],
+                    language: [LanguageType.english, LanguageType.korean],
                     cast: [
                       {
-                        CastType.CoStar: 'William Shatner',
+                        CastType.coStar: 'William Shatner',
                       },
-                      {CastType.Cameo: 'Harlan Ellison'}
+                      {CastType.cameo: 'Harlan Ellison'}
                     ],
                     majorCast: {
-                      CastType.CoStar: 'William Shatner',
-                      CastType.Cameo: 'Harlan Ellison'
+                      CastType.coStar: 'William Shatner',
+                      CastType.cameo: 'Harlan Ellison'
                     },
                   ),
                 );
@@ -171,14 +171,14 @@ void main() {
               await collection.whereCast(
                 // whereMajorCast
                 arrayContains: {
-                  CastType.CoStar: 'William Shatner',
+                  CastType.coStar: 'William Shatner',
                 },
               ).get(),
               isA<MovieQuerySnapshot>().having((e) => e.docs, 'doc', [
                 isA<MovieQueryDocumentSnapshot>()
                     .having((e) => e.data.cast, 'data.cast', [
-                  {CastType.CoStar: 'William Shatner'},
-                  {CastType.Cameo: 'Harlan Ellison'},
+                  {CastType.coStar: 'William Shatner'},
+                  {CastType.cameo: 'Harlan Ellison'},
                 ])
               ]),
             );
@@ -805,14 +805,14 @@ void main() {
             runtime: 'runtime',
             title: 'title',
             year: 1999,
-            language: [LanguageType.English],
-            certification: CertificationType.PG,
+            language: [LanguageType.english],
+            certification: CertificationType.pg,
             cast: [
-              {CastType.Cameo: 'Wil Wheaton', CastType.Recurring: 'Jim Parsons'}
+              {CastType.cameo: 'Wil Wheaton', CastType.recurring: 'Jim Parsons'}
             ],
             majorCast: {
-              CastType.Cameo: 'Wil Wheaton',
-              CastType.Recurring: 'Jim Parsons'
+              CastType.cameo: 'Wil Wheaton',
+              CastType.recurring: 'Jim Parsons'
             },
           ),
         );
@@ -837,17 +837,17 @@ void main() {
             runtime: 'runtime2',
             title: 'title2',
             year: 14242,
-            language: [LanguageType.English],
+            language: [LanguageType.english],
             certification: CertificationType.R,
             cast: [
               {
-                CastType.Star: 'Michael Jackson',
-                CastType.GuestStar: 'Vincent Price'
+                CastType.star: 'Michael Jackson',
+                CastType.guestStar: 'Vincent Price'
               }
             ],
             majorCast: {
-              CastType.Star: 'Michael Jackson',
-              CastType.GuestStar: 'Vincent Price'
+              CastType.star: 'Michael Jackson',
+              CastType.guestStar: 'Vincent Price'
             },
           ),
         );
@@ -882,17 +882,17 @@ void main() {
             runtime: 'runtime',
             title: 'title',
             year: 1999,
-            language: [LanguageType.English],
-            certification: CertificationType.PG13,
+            language: [LanguageType.english],
+            certification: CertificationType.pg13,
             cast: [
               {
-                CastType.CoStar: 'William Shatner',
-                CastType.Cameo: 'Harlan Ellison'
+                CastType.coStar: 'William Shatner',
+                CastType.cameo: 'Harlan Ellison'
               }
             ],
             majorCast: {
-              CastType.CoStar: 'William Shatner',
-              CastType.Cameo: 'Harlan Ellison'
+              CastType.coStar: 'William Shatner',
+              CastType.cameo: 'Harlan Ellison'
             },
           ),
         );
@@ -916,17 +916,17 @@ void main() {
             runtime: 'runtime2',
             title: 'title2',
             year: 14242,
-            language: [LanguageType.Spanish],
-            certification: CertificationType.TVMA,
+            language: [LanguageType.spanish],
+            certification: CertificationType.tvma,
             cast: [
               {
-                CastType.CoStar: 'Sandra Bullock',
-                CastType.Cameo: 'George Clooney'
+                CastType.coStar: 'Sandra Bullock',
+                CastType.cameo: 'George Clooney'
               }
             ],
             majorCast: {
-              CastType.CoStar: 'Sandra Bullock',
-              CastType.Cameo: 'George Clooney'
+              CastType.coStar: 'Sandra Bullock',
+              CastType.cameo: 'George Clooney'
             },
           ),
         );

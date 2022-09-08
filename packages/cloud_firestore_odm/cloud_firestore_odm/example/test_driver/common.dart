@@ -31,13 +31,13 @@ Movie createMovie({
   String title = '',
   int year = 1990,
   List<LanguageType> language = const [],
-  CertificationType certification = CertificationType.None,
+  CertificationType certification = CertificationType.none,
   List<Map<CastType, String>> cast = const [
-    {CastType.Cameo: 'Wil Wheaton', CastType.Recurring: 'Jim Parsons'}
+    {CastType.cameo: 'Wil Wheaton', CastType.recurring: 'Jim Parsons'}
   ],
   Map<CastType, String> majorCast = const {
-    CastType.Cameo: 'Wil Wheaton',
-    CastType.Recurring: 'Jim Parsons'
+    CastType.cameo: 'Wil Wheaton',
+    CastType.recurring: 'Jim Parsons'
   },
 }) {
   return Movie(
