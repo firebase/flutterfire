@@ -4,7 +4,7 @@ homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_auth/firebase_auth_platform_interface
 # NOTE: We strongly prefer non-breaking changes, even at the expense of a
 # less-clean API. See https://flutter.dev/go/platform-interface-breaking-changes
-version: 6.6.0
+version: 6.7.0
 
 environment:
   sdk: '>=2.16.0 <3.0.0'
