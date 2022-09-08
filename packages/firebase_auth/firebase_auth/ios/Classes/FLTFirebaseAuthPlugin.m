@@ -606,7 +606,14 @@ NSString *const kErrMsgInvalidCredential =
           [[ASAuthorizationAppleIDProvider alloc] init];
 
       ASAuthorizationAppleIDRequest *request = [appleIDProvider createRequest];
-      request.requestedScopes = @[ ASAuthorizationScopeFullName, ASAuthorizationScopeEmail ];
+      NSMutableArray *requestedScopes = [NSMutableArray arrayWithCapacity:2];
+      if ([arguments[kArgumentProviderScope] containsObject:@"name"]) {
+        [requestedScopes addObject:ASAuthorizationScopeFullName];
+      }
+      if ([arguments[kArgumentProviderScope] containsObject:@"email"]) {
+        [requestedScopes addObject:ASAuthorizationScopeEmail];
+      }
+      request.requestedScopes = [requestedScopes copy];
       request.nonce = [self stringBySha256HashingString:nonce];
 
       ASAuthorizationController *authorizationController =

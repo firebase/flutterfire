@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 class FlutterFirebasePermissionManager implements PluginRegistry.RequestPermissionsResultListener {
 
-  private final int permissionCode = 24;
+  private final int permissionCode = 240;
   @Nullable private RequestPermissionsSuccessCallback successCallback;
   private boolean requestInProgress = false;
 
@@ -24,15 +24,16 @@ class FlutterFirebasePermissionManager implements PluginRegistry.RequestPermissi
   @Override
   public boolean onRequestPermissionsResult(
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    requestInProgress = false;
-    if (requestCode != permissionCode) {
+    if (requestInProgress && requestCode == permissionCode && this.successCallback != null) {
+      requestInProgress = false;
+      boolean granted =
+          grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+
+      this.successCallback.onSuccess(granted ? 1 : 0);
+      return true;
+    } else {
       return false;
     }
-
-    int grantResult = grantResults[0];
-    assert this.successCallback != null;
-    this.successCallback.onSuccess(grantResult == PackageManager.PERMISSION_GRANTED ? 1 : 0);
-    return true;
   }
 
   @RequiresApi(api = 33)

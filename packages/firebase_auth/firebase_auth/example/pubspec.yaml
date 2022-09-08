@@ -12,9 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_signin_button: ^2.0.0
-  github_sign_in: ^0.0.5-dev.4
   google_sign_in: ^5.1.0
-  twitter_login: ^4.0.1
 
 dependency_overrides:
   firebase_auth:
