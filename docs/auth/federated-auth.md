@@ -93,11 +93,7 @@ Ensure the "Google" sign-in provider is enabled on the [Firebase Console](https:
 
 ## Game Auth Provider
 
-Firebase is compatible with specific game provider on Android (Play Games Sign-In) and iOS (Game Center).
-
-* {iOS}
-
-  Not supported yet.
+Firebase is compatible with specific game provider on Android (Play Games Sign-In).
 
 * {Android}
 
