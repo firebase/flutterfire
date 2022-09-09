@@ -91,10 +91,9 @@ Ensure the "Google" sign-in provider is enabled on the [Firebase Console](https:
   }
   ```
 
-## Game Auth Provider
+## Google Play Games {:#games}
 
-Firebase is compatible with specific game provider on Android (Play Games Sign-In).
-
+You can authenticate users in your Android game using Play Games Sign-In.
 * {Android}
 
   Follow the instructions for Google setup on Android, then configure 
