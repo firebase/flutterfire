@@ -3,7 +3,7 @@ description: A common platform interface for the firebase_in_app_messaging plugi
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_in_app_messaging/firebase_in_app_messagin_platform_interface
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_in_app_messaging/firebase_in_app_messagin_platform_interface
 
-version: 0.2.1+14
+version: 0.2.1+16
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
@@ -17,6 +17,6 @@ dependencies:
   plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
-  firebase_core_platform_interface: ^4.5.0
+  firebase_core_platform_interface: ^4.5.1
   flutter_test:
     sdk: flutter

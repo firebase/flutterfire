@@ -5,7 +5,7 @@ repository: https://github.com/firebase/flutterfire/tree/master/packages/cloud_f
 
 # NOTE: We strongly prefer non-breaking changes, even at the expense of a
 # less-clean API. See https://flutter.dev/go/platform-interface-breaking-changes
-version: 5.1.14
+version: 5.1.16
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
@@ -19,7 +19,7 @@ dependencies:
   plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
-  firebase_core_platform_interface: ^4.5.0
+  firebase_core_platform_interface: ^4.5.1
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0

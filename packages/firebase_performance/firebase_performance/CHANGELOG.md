@@ -1,3 +1,11 @@
+## 0.8.3
+
+ - **FEAT**: Bump Firebase iOS SDK to 9.5.0 ([#9492](https://github.com/firebase/flutterfire/issues/9492)). ([d246ba2a](https://github.com/firebase/flutterfire/commit/d246ba2aeec3da0bf5e2b4171ea2d1ec67618226))
+
+## 0.8.2+4
+
+ - Update a dependency to the latest release.
+
 ## 0.8.2+3
 
  - Update a dependency to the latest release.

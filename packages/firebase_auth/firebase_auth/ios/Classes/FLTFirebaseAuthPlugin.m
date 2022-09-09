@@ -34,6 +34,8 @@ NSString *const kSignInMethodOAuth = @"oauth";
 // Credential argument keys.
 NSString *const kArgumentCredential = @"credential";
 NSString *const kArgumentProviderId = @"providerId";
+NSString *const kArgumentProviderScope = @"scopes";
+NSString *const kArgumentProviderCustomParameters = @"customParameters";
 NSString *const kArgumentSignInMethod = @"signInMethod";
 NSString *const kArgumentSecret = @"secret";
 NSString *const kArgumentIdToken = @"idToken";
@@ -604,7 +606,14 @@ NSString *const kErrMsgInvalidCredential =
           [[ASAuthorizationAppleIDProvider alloc] init];
 
       ASAuthorizationAppleIDRequest *request = [appleIDProvider createRequest];
-      request.requestedScopes = @[ ASAuthorizationScopeFullName, ASAuthorizationScopeEmail ];
+      NSMutableArray *requestedScopes = [NSMutableArray arrayWithCapacity:2];
+      if ([arguments[kArgumentProviderScope] containsObject:@"name"]) {
+        [requestedScopes addObject:ASAuthorizationScopeFullName];
+      }
+      if ([arguments[kArgumentProviderScope] containsObject:@"email"]) {
+        [requestedScopes addObject:ASAuthorizationScopeEmail];
+      }
+      request.requestedScopes = [requestedScopes copy];
       request.nonce = [self stringBySha256HashingString:nonce];
 
       ASAuthorizationController *authorizationController =
@@ -625,6 +634,14 @@ NSString *const kErrMsgInvalidCredential =
 #else
   FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
   self.authProvider = [FIROAuthProvider providerWithProviderID:arguments[@"signInProvider"]];
+  NSArray *scopes = arguments[kArgumentProviderScope];
+  if (scopes != nil) {
+    [self.authProvider setScopes:scopes];
+  }
+  NSDictionary *customParameters = arguments[kArgumentProviderCustomParameters];
+  if (customParameters != nil) {
+    [self.authProvider setCustomParameters:customParameters];
+  }
 
   [self.authProvider
       getCredentialWithUIDelegate:nil

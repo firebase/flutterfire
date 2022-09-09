@@ -2,7 +2,7 @@ name: firebase_analytics_platform_interface
 description: A common platform interface for the firebase_analytics plugin.
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_analytics/firebase_analytics_platform_interface
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_analytics/firebase_analytics_platform_interface
-version: 3.3.2
+version: 3.3.4
 
 environment:
   sdk: '>=2.16.0 <3.0.0'
@@ -16,6 +16,6 @@ dependencies:
   plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
-  firebase_core_platform_interface: ^4.5.0
+  firebase_core_platform_interface: ^4.5.1
   flutter_test:
     sdk: flutter

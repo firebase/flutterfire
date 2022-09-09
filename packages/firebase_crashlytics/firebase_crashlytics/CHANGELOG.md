@@ -1,3 +1,11 @@
+## 2.8.10
+
+ - **FIX**: Replace null or empty stack traces with the current stack trace ([#9490](https://github.com/firebase/flutterfire/issues/9490)). ([c54a95f3](https://github.com/firebase/flutterfire/commit/c54a95f365c5a61d2df52fb89467ab6103aa0146))
+
+## 2.8.9
+
+ - Update a dependency to the latest release.
+
 ## 2.8.8
 
  - Update a dependency to the latest release.

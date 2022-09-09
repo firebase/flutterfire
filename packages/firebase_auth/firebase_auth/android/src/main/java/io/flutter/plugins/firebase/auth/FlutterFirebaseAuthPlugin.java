@@ -1558,8 +1558,19 @@ public class FlutterFirebaseAuthPlugin
             FirebaseAuth firebaseAuth = getAuth(arguments);
             String providerId =
                 (String) Objects.requireNonNull(arguments.get(Constants.SIGN_IN_PROVIDER));
+            @SuppressWarnings("unchecked")
+            List<String> scopes = (List<String>) arguments.get(Constants.SIGN_IN_PROVIDER_SCOPE);
+            @SuppressWarnings("unchecked")
+            Map<String, String> customParameters =
+                (Map<String, String>) arguments.get(Constants.SIGN_IN_PROVIDER_CUSTOM_PARAMETERS);
 
             OAuthProvider.Builder provider = OAuthProvider.newBuilder(providerId);
+            if (scopes != null) {
+              provider.setScopes(scopes);
+            }
+            if (customParameters != null) {
+              provider.addCustomParameters(customParameters);
+            }
 
             AuthResult authResult =
                 Tasks.await(

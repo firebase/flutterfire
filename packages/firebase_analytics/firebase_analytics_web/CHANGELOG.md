@@ -1,3 +1,11 @@
+## 0.4.2+4
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+3
+
+ - **FIX**: `setCurrentScreen()` API is now obsolete, using `logEvent()` instead ([#9397](https://github.com/firebase/flutterfire/issues/9397)). ([490ef204](https://github.com/firebase/flutterfire/commit/490ef204b9873fca994f1a69ddf7962e6d735c4b))
+
 ## 0.4.2+2
 
  - Update a dependency to the latest release.

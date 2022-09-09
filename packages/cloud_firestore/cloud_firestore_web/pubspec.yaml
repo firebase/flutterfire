@@ -3,17 +3,17 @@ description: The web implementation of cloud_firestore
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/cloud_firestore/cloud_firestore_web
 repository: https://github.com/firebase/flutterfire/tree/master/packages/cloud_firestore/cloud_firestore_web
 
-version: 2.8.5
+version: 2.8.7
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.4"
 
 dependencies:
-  cloud_firestore_platform_interface: ^5.7.2
+  cloud_firestore_platform_interface: ^5.7.4
   collection: ^1.0.0
   firebase_core: ^1.10.0
-  firebase_core_web: ^1.7.1
+  firebase_core_web: ^1.7.2
   flutter:
     sdk: flutter
   flutter_web_plugins:
@@ -21,7 +21,7 @@ dependencies:
   js: ^0.6.3
 
 dev_dependencies:
-  firebase_core_platform_interface: ^4.5.0
+  firebase_core_platform_interface: ^4.5.1
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0

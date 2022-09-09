@@ -8,6 +8,7 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -46,15 +47,23 @@ public class FirebaseRemoteConfigPlugin
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(final FirebaseApp firebaseApp) {
-    FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance(firebaseApp);
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          Map<String, Object> configProperties = getConfigProperties(remoteConfig);
-          Map<String, Object> configValues = new HashMap<>(configProperties);
-          configValues.put("parameters", parseParameters(remoteConfig.getAll()));
-          return configValues;
+          try {
+            FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance(firebaseApp);
+            Map<String, Object> configProperties = getConfigProperties(remoteConfig);
+            Map<String, Object> configValues = new HashMap<>(configProperties);
+            configValues.put("parameters", parseParameters(remoteConfig.getAll()));
+
+            taskCompletionSource.setResult(configValues);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Map<String, Object> getConfigProperties(FirebaseRemoteConfig remoteConfig) {
@@ -73,7 +82,18 @@ public class FirebaseRemoteConfigPlugin
 
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
-    return Tasks.call(() -> null);
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   private void setupChannel(BinaryMessenger messenger) {
