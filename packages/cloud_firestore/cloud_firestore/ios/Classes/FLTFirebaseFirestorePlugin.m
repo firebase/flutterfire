@@ -479,8 +479,7 @@ FlutterStandardMethodCodec *_codec;
 
   [firestore getQueryNamed:name
                 completion:^(FIRQuery *_Nullable query) {
-                  // Why we check [NSNull null]: https://github.com/firebase/flutterfire/issues/9328
-                  if (query == nil || query == [NSNull null]) {
+                  if (query == nil) {
                     result.error(@"non-existent-named-query",
                                  @"Named query has not been found. Please check it has been loaded "
                                  @"properly via loadBundle().",
