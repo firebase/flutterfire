@@ -274,13 +274,14 @@ class _Application extends State<Application> {
 
 How you handle interaction depends on your application setup. The above example shows a basic illustration using a StatefulWidget.
 
-## Localize messages
-Localizing notification is embedded in the underlying system (Android or iOS). You can send localized
-strings 2 ways:
+## Localize Messages
+Localizing notifications is embedded in the underlying system (Android or iOS). You can send localized
+strings in two different ways:
 * Storing the language of your user in your server and send customized notification for each language
 * Add native locale strings to your app
 
 For the second method, you can check how to use it below: 
+
 ### Android
 
 1. resources/values/strings.xml (default file)
@@ -295,9 +296,9 @@ For the second method, you can check how to use it below:
 <string name="notification_title">Bonjour le monde</string>
 <string name="notification_message">C'est un message</string>
 ```
-On the server payload instead of using **title** and **message** / **body**  keys, we will use **title_loc_key** and **body_loc_key** for our localized message.
+On the server payload, instead of using **title** and **message** / **body**  keys, we will use **title_loc_key** and **body_loc_key** for our localized message.
 
-When sending the payload would look like this:
+The message payload would look like this:
 
 ```json
 {
@@ -309,6 +310,7 @@ When sending the payload would look like this:
 ```
 
 ### iOS
+
 1. Base.lproj/Localizable.strings default language file:
 
 ```strings
@@ -323,7 +325,7 @@ When sending the payload would look like this:
 "NOTIFICATION_MESSAGE" = "C'est un message";
 ```
 
-When sending the payload would look like this:
+The message payload would look like this:
 
 ```json
 {
