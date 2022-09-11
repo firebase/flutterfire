@@ -42,7 +42,8 @@ import 'firebase_options.dart';
 ///
 /// To verify that your messages are being received, you ought to see a notification appearon your device/emulator via the flutter_local_notifications plugin.
 /// Define a top-level named handler which background/terminated messages will
-/// call.
+/// call. Be sure to annotate the handler with `@pragma('vm:entry-point')` above the function declaration.
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await setupFlutterNotifications();

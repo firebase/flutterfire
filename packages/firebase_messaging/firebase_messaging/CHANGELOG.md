@@ -1,3 +1,7 @@
+## 13.0.1
+
+ - **FIX**: ensure only messaging permission request is processed ([#9486](https://github.com/firebase/flutterfire/issues/9486)). ([5b31e71b](https://github.com/firebase/flutterfire/commit/5b31e71b6cbca0e6a149482436e00598f4eaa2de))
+
 ## 13.0.0
 
 > Note: This release has breaking changes.

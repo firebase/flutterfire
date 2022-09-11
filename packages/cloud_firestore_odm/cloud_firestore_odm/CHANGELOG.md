@@ -1,3 +1,7 @@
+## 1.0.0-dev.29
+
+ - **FEAT**: Add support using Freezed classes as collection models ([#9483](https://github.com/firebase/flutterfire/issues/9483)). ([ce238f71](https://github.com/firebase/flutterfire/commit/ce238f713b250f523890b9e7e42d395f433ed80f))
+
 ## 1.0.0-dev.28
 
  - Update a dependency to the latest release.
