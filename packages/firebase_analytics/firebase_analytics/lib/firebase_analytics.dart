@@ -11,6 +11,6 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
     show FirebasePluginPlatform;
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 export 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart'
-    show AnalyticsEventItem, AnalyticsCallOptions;
+    show AnalyticsEventItem, AnalyticsCallOptions, EventParameters;
 export 'observer.dart';
 part 'src/firebase_analytics.dart';

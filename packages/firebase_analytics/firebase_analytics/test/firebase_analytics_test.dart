@@ -126,7 +126,7 @@ void main() {
       test('custom event with correct parameters', () async {
         await analytics!.logEvent(
           name: 'test-event',
-          parameters: {'a': 'b'},
+          parameters: EventParameters().addParameter('a', string: 'b'),
         );
         expect(
           methodCallLog,

@@ -58,15 +58,14 @@ void testsMain() {
         promotionName: 'promotionName',
         quantity: 1,
       );
+
       // test custom event
       await expectLater(
         analytics.logEvent(
           name: 'testing-parameters',
-          parameters: {
-            'foo': 'bar',
-            'baz': 500,
-            'items': [analyticsEventItem],
-          },
+          parameters: EventParameters()
+              .addParameter('foo', string: 'bar')
+              .addParameter('bar', number: 500),
         ),
         completes,
       );
