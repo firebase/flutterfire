@@ -556,80 +556,80 @@ void main() {
         });
       });
 
-      test(
-        'Using startAt after startAtDocumentSnapshot overrides the overrides the previous cursor',
-        () async {
-          final collection = await initializeTest(MovieCollectionReference());
+      // test(
+      //   'Using startAt after startAtDocumentSnapshot overrides the overrides the previous cursor',
+      //   () async {
+      //     final collection = await initializeTest(MovieCollectionReference());
 
-          await collection.add(createMovie(title: 'A'));
-          await collection.add(createMovie(title: 'B'));
-          final cRef = await collection.add(createMovie(title: 'C'));
-          final cSnap = await cRef.get();
+      //     await collection.add(createMovie(title: 'A'));
+      //     await collection.add(createMovie(title: 'B'));
+      //     final cRef = await collection.add(createMovie(title: 'C'));
+      //     final cSnap = await cRef.get();
 
-          final querySnap = await collection
-              .orderByTitle(startAtDocument: cSnap)
-              .orderByTitle(startAt: 'B')
-              .get();
+      //     final querySnap = await collection
+      //         .orderByTitle(startAtDocument: cSnap)
+      //         .orderByTitle(startAt: 'B')
+      //         .get();
 
-          expect(
-            querySnap.docs,
-            [
-              isA<MovieQueryDocumentSnapshot>()
-                  .having((d) => d.data.title, 'data.title', 'B'),
-              isA<MovieQueryDocumentSnapshot>()
-                  .having((d) => d.data.title, 'data.title', 'C'),
-            ],
-          );
-        },
-        timeout: const Timeout.factor(5),
-      );
+      //     expect(
+      //       querySnap.docs,
+      //       [
+      //         isA<MovieQueryDocumentSnapshot>()
+      //             .having((d) => d.data.title, 'data.title', 'B'),
+      //         isA<MovieQueryDocumentSnapshot>()
+      //             .having((d) => d.data.title, 'data.title', 'C'),
+      //       ],
+      //     );
+      //   },
+      //   timeout: const Timeout.factor(5),
+      // );
 
-      test(
-        'Using startAtDocumentSnapshot after startAt overrides the overrides the previous cursor',
-        () async {
-          final collection = await initializeTest(MovieCollectionReference());
+      // test(
+      //   'Using startAtDocumentSnapshot after startAt overrides the overrides the previous cursor',
+      //   () async {
+      //     final collection = await initializeTest(MovieCollectionReference());
 
-          await collection.add(createMovie(title: 'A'));
-          await collection.add(createMovie(title: 'B'));
-          final cRef = await collection.add(createMovie(title: 'C'));
-          final cSnap = await cRef.get();
+      //     await collection.add(createMovie(title: 'A'));
+      //     await collection.add(createMovie(title: 'B'));
+      //     final cRef = await collection.add(createMovie(title: 'C'));
+      //     final cSnap = await cRef.get();
 
-          final querySnap = await collection
-              .orderByTitle(startAt: 'B')
-              .orderByTitle(startAtDocument: cSnap)
-              .get();
+      //     final querySnap = await collection
+      //         .orderByTitle(startAt: 'B')
+      //         .orderByTitle(startAtDocument: cSnap)
+      //         .get();
 
-          expect(querySnap.docs.single.data.title, 'C');
-        },
-        timeout: const Timeout.factor(5),
-      );
+      //     expect(querySnap.docs.single.data.title, 'C');
+      //   },
+      //   timeout: const Timeout.factor(5),
+      // );
 
-      test(
-        'Using startAt after startAt overrides the overrides the previous cursor',
-        () async {
-          final collection = await initializeTest(MovieCollectionReference());
+      // test(
+      //   'Using startAt after startAt overrides the overrides the previous cursor',
+      //   () async {
+      //     final collection = await initializeTest(MovieCollectionReference());
 
-          await collection.add(createMovie(title: 'A'));
-          await collection.add(createMovie(title: 'B'));
-          await collection.add(createMovie(title: 'C'));
+      //     await collection.add(createMovie(title: 'A'));
+      //     await collection.add(createMovie(title: 'B'));
+      //     await collection.add(createMovie(title: 'C'));
 
-          final querySnap = await collection
-              .orderByTitle(startAt: 'C')
-              .orderByTitle(startAt: 'B')
-              .get();
+      //     final querySnap = await collection
+      //         .orderByTitle(startAt: 'C')
+      //         .orderByTitle(startAt: 'B')
+      //         .get();
 
-          expect(
-            querySnap.docs,
-            [
-              isA<MovieQueryDocumentSnapshot>()
-                  .having((d) => d.data.title, 'data.title', 'B'),
-              isA<MovieQueryDocumentSnapshot>()
-                  .having((d) => d.data.title, 'data.title', 'C'),
-            ],
-          );
-        },
-        timeout: const Timeout.factor(5),
-      );
+      //     expect(
+      //       querySnap.docs,
+      //       [
+      //         isA<MovieQueryDocumentSnapshot>()
+      //             .having((d) => d.data.title, 'data.title', 'B'),
+      //         isA<MovieQueryDocumentSnapshot>()
+      //             .having((d) => d.data.title, 'data.title', 'C'),
+      //       ],
+      //     );
+      //   },
+      //   timeout: const Timeout.factor(5),
+      // );
 
       group('startAt', () {
         test(
@@ -679,6 +679,9 @@ void main() {
                 isA<MovieQueryDocumentSnapshot>()
                     .having((d) => d.data.title, 'data.title', 'B')
                     .having((d) => d.data.likes, 'data.likes', 2),
+                isA<MovieQueryDocumentSnapshot>()
+                    .having((d) => d.data.title, 'data.title', 'C')
+                    .having((d) => d.data.likes, 'data.likes', 1),
                 isA<MovieQueryDocumentSnapshot>()
                     .having((d) => d.data.title, 'data.title', 'C')
                     .having((d) => d.data.likes, 'data.likes', 2),
