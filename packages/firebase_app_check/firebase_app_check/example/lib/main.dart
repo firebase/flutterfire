@@ -20,6 +20,7 @@ Future<void> main() async {
       // Your personal reCaptcha public key goes here:
       .activate(
     webRecaptchaSiteKey: kWebRecaptchaSiteKey,
+    androidDebugProvider: true,
   );
 
   runApp(MyApp());
@@ -110,8 +111,8 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                   );
                 }
                 await appCheck.activate(
-                  webRecaptchaSiteKey: kWebRecaptchaSiteKey,
-                );
+                    webRecaptchaSiteKey: kWebRecaptchaSiteKey,
+                    androidDebugProvider: true);
                 setMessage('activated!!');
               },
               child: const Text('activate()'),
