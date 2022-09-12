@@ -111,8 +111,9 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                   );
                 }
                 await appCheck.activate(
-                    webRecaptchaSiteKey: kWebRecaptchaSiteKey,
-                    androidDebugProvider: true);
+                  webRecaptchaSiteKey: kWebRecaptchaSiteKey,
+                  androidDebugProvider: true,
+                );
                 setMessage('activated!!');
               },
               child: const Text('activate()'),

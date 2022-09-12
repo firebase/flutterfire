@@ -70,8 +70,10 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   }
 
   @override
-  Future<void> activate(
-      {String? webRecaptchaSiteKey, bool? androidDebugProvider}) async {
+  Future<void> activate({
+    String? webRecaptchaSiteKey,
+    bool? androidDebugProvider,
+  }) async {
     try {
       await channel.invokeMethod<void>('FirebaseAppCheck#activate', {
         'appName': app.name,
