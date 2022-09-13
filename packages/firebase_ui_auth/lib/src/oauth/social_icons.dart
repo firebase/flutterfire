@@ -24,14 +24,9 @@ class SocialIcons {
   SocialIcons._();
 
   static const _kFontFam = 'SocialIcons';
-  static const String _kFontPkg = 'firebase_ui_oauth';
 
-  static const IconData twitter =
-      IconData(0xf099, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData facebook =
-      IconData(0xf09a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData apple =
-      IconData(0xf179, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData google =
-      IconData(0xf1a0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData twitter = IconData(0xf099, fontFamily: _kFontFam);
+  static const IconData facebook = IconData(0xf09a, fontFamily: _kFontFam);
+  static const IconData apple = IconData(0xf179, fontFamily: _kFontFam);
+  static const IconData google = IconData(0xf1a0, fontFamily: _kFontFam);
 }
