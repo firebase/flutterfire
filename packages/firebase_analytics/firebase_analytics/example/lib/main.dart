@@ -74,7 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
     params.addParameter('long', number: 12345678910);
     params.addParameter('double', number: 42.0);
     params.addParameter('bool', string: true.toString());
-    params.addParameter('key', string: null, number: null);
     // Only strings and numbers (ints & doubles) are supported for GA custom event parameters:
     // https://developers.google.com/analytics/devguides/collection/analyticsjs/custom-dims-mets#overview
     await widget.analytics.logEvent(
