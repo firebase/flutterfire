@@ -1,18 +1,19 @@
-const String _exceptionMessage = "'string' OR 'number' must be set as the value of the parameter";
+const String _exceptionMessage =
+    "'string' OR 'number' must be set as the value of the parameter";
 
 class EventParameters {
   EventParameters();
   // Constructs an [EventParameters] from a raw Map.
-  factory EventParameters.fromMap(Map<String, Object> map){
+  factory EventParameters.fromMap(Map<String, Object> map) {
     Map<String, Object> parameters = {};
     map.forEach((key, value) {
       assert(
-      value is String || value is num,
-      _exceptionMessage,
+        value is String || value is num,
+        _exceptionMessage,
       );
       parameters[key] = value;
     });
-   return EventParameters._(parameters);
+    return EventParameters._(parameters);
   }
 
   EventParameters._(this._parameters);

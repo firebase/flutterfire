@@ -156,7 +156,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _testAllEventTypes() async {
-    EventParameters params = EventParameters.fromMap({'foo': 403, 'bar': 'baz'});
+    EventParameters params =
+        EventParameters.fromMap({'foo': 403, 'bar': 'baz'});
     await widget.analytics.logEvent(name: 'super_test', parameters: params);
     await widget.analytics.logAddPaymentInfo();
     await widget.analytics.logAddToCart(

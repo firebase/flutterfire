@@ -6,8 +6,7 @@ import 'package:firebase_analytics_platform_interface/firebase_analytics_platfor
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('EventParameters', ()
-  {
+  group('EventParameters', () {
     group('EventParameters()', () {
       test('create EventParameters', () {
         EventParameters parameters = EventParameters();
@@ -22,42 +21,56 @@ void main() {
         expect(parameters.asMap(), equals({'foo': 'bar', 'num': 303}));
       });
 
-      test('should throw an AssertionError for incorrect use of addParameter()', () {
+      test('should throw an AssertionError for incorrect use of addParameter()',
+          () {
         EventParameters parameters = EventParameters();
-        expect(() => parameters.addParameter('foo', string: null), throwsAssertionError);
-        expect(() => parameters.addParameter('foo', number: null), throwsAssertionError);
-        expect(() => parameters.addParameter('foo', number: null, string: null), throwsAssertionError);
         expect(() => parameters.addParameter('foo'), throwsAssertionError);
-        expect(() => parameters.addParameter('foo'), throwsAssertionError);
-        expect(() => parameters.addParameter('foo', string: 'foo', number: 21.2), throwsAssertionError);
+        expect(
+            () => parameters.addParameter('foo', string: 'foo', number: 21.2),
+            throwsAssertionError);
       });
     });
 
-    group('EventParameters.fromMap()', () {
-      test(
-          'Create EventParameters using EventParameters.fromMap() with empty map', () {
-        EventParameters parameters = EventParameters.fromMap({});
+    group(
+      'EventParameters.fromMap()',
+      () {
+        test(
+            'Create EventParameters using EventParameters.fromMap() with empty map',
+            () {
+          EventParameters parameters = EventParameters.fromMap({});
 
-        expect(parameters.asMap(), equals({}));
-      });
+          expect(parameters.asMap(), equals({}));
+        });
 
-      test('Create EventParameters using EventParameters.fromMap()', () {
-        EventParameters parameters = EventParameters.fromMap(
-            {'foo': 'bar', 'baz': 303});
+        test(
+          'Create EventParameters using EventParameters.fromMap()',
+          () {
+            EventParameters parameters = EventParameters.fromMap(
+              {'foo': 'bar', 'baz': 303},
+            );
 
-        expect(parameters.asMap(), equals({'foo': 'bar', 'baz': 303}));
-      });
+            expect(parameters.asMap(), equals({'foo': 'bar', 'baz': 303}));
+          },
+        );
 
-
-      test(
-          'should throw an AssertionError with incorrect use of EventParameters.fromMap()', () {
-        expect(()=>EventParameters.fromMap({'foo': true}),
-            throwsAssertionError);
-        expect(() => EventParameters.fromMap({'foo': true, 'bar': 'baz'}),
-            throwsAssertionError);
-        expect(() => EventParameters.fromMap({'foo': true, 'bar': 22}),
-            throwsAssertionError);
-      });
-    });
+        test(
+          'should throw an AssertionError with incorrect use of EventParameters.fromMap()',
+          () {
+            expect(
+              () => EventParameters.fromMap({'foo': true}),
+              throwsAssertionError,
+            );
+            expect(
+              () => EventParameters.fromMap({'foo': true, 'bar': 'baz'}),
+              throwsAssertionError,
+            );
+            expect(
+              () => EventParameters.fromMap({'foo': true, 'bar': 22}),
+              throwsAssertionError,
+            );
+          },
+        );
+      },
+    );
   });
 }
