@@ -57,7 +57,9 @@ void setupTests() {
       await expectLater(
         FirebaseAnalytics.instance.logEvent(
           name: 'testing-parameters',
-          parameters: EventParameters().addParameter('foo', string: 'bar').addParameter('number', number: 500),
+          parameters: EventParameters()
+              .addParameter('foo', string: 'bar')
+              .addParameter('number', number: 500),
         ),
         completes,
       );

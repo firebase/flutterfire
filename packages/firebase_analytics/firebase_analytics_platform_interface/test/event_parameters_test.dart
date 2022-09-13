@@ -26,8 +26,9 @@ void main() {
         EventParameters parameters = EventParameters();
         expect(() => parameters.addParameter('foo'), throwsAssertionError);
         expect(
-            () => parameters.addParameter('foo', string: 'foo', number: 21.2),
-            throwsAssertionError);
+          () => parameters.addParameter('foo', string: 'foo', number: 21.2),
+          throwsAssertionError,
+        );
       });
     });
 
