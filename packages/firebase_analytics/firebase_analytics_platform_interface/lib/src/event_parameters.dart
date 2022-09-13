@@ -1,4 +1,4 @@
-const String _exceptionMessage = 'string or number must be set as the value of the parameter';
+const String _exceptionMessage = "'string' OR 'number' must be set as the value of the parameter";
 
 class EventParameters {
   EventParameters();
