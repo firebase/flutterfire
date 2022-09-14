@@ -67,6 +67,8 @@ NSString *const kErrMsgInvalidCredential =
 @interface FLTFirebaseAuthPlugin ()
 @property(nonatomic, retain) NSObject<FlutterBinaryMessenger> *messenger;
 @property(strong, nonatomic) FIROAuthProvider *authProvider;
+// Used to keep the user who wants to link with Apple Sign In
+@property(strong, nonatomic) FIRUser *linkWithAppleUser;
 @property(strong, nonatomic) NSString *currentNonce;
 @property(strong, nonatomic) FLTFirebaseMethodCallResult *appleResult;
 @property(strong, nonatomic) id appleArguments;
@@ -249,6 +251,8 @@ NSString *const kErrMsgInvalidCredential =
     [self userGetIdToken:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"User#linkWithCredential" isEqualToString:call.method]) {
     [self userLinkWithCredential:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"User#linkWithAuthProvider" isEqualToString:call.method]) {
+    [self userLinkWithProvider:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"User#reauthenticateUserWithCredential" isEqualToString:call.method]) {
     [self userReauthenticateUserWithCredential:call.arguments
                           withMethodCallResult:methodCallResult];
@@ -543,6 +547,21 @@ NSString *const kErrMsgInvalidCredential =
   return hashed;
 }
 
+static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResult *authResult,
+                                  NSError *error) {
+  if (error != nil) {
+    if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+      [object handleMultiFactorError:object.appleArguments
+                          withResult:object.appleResult
+                           withError:error];
+    } else {
+      object.appleResult.error(nil, nil, nil, error);
+    }
+    return;
+  }
+  object.appleResult.success(authResult);
+}
+
 - (void)authorizationController:(ASAuthorizationController *)controller
     didCompleteWithAuthorization:(ASAuthorization *)authorization
     API_AVAILABLE(macos(10.15), ios(13.0)) {
@@ -568,22 +587,19 @@ NSString *const kErrMsgInvalidCredential =
                                                                         IDToken:idToken
                                                                        rawNonce:rawNonce];
 
-    // Sign in with Firebase.
-    [[FIRAuth auth]
-        signInWithCredential:credential
-                  completion:^(FIRAuthDataResult *_Nullable authResult, NSError *_Nullable error) {
-                    if (error != nil) {
-                      if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
-                        [self handleMultiFactorError:self.appleArguments
-                                          withResult:self.appleResult
-                                           withError:error];
-                      } else {
-                        self.appleResult.error(nil, nil, nil, error);
-                      }
-                      return;
-                    }
-                    self.appleResult.success(authResult);
-                  }];
+    if (self.linkWithAppleUser != nil) {
+      [self.linkWithAppleUser linkWithCredential:credential
+                                      completion:^(FIRAuthDataResult *authResult, NSError *error) {
+                                        handleSignInWithApple(self, authResult, error);
+                                      }];
+
+    } else {
+      [FIRAuth.auth signInWithCredential:credential
+                              completion:^(FIRAuthDataResult *_Nullable authResult,
+                                           NSError *_Nullable error) {
+                                handleSignInWithApple(self, authResult, error);
+                              }];
+    }
   }
 }
 
@@ -597,30 +613,7 @@ NSString *const kErrMsgInvalidCredential =
           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
     if (@available(iOS 13.0, macOS 10.15, *)) {
-      NSString *nonce = [self randomNonce:32];
-      self.currentNonce = nonce;
-      self.appleResult = result;
-      self.appleArguments = arguments;
-
-      ASAuthorizationAppleIDProvider *appleIDProvider =
-          [[ASAuthorizationAppleIDProvider alloc] init];
-
-      ASAuthorizationAppleIDRequest *request = [appleIDProvider createRequest];
-      NSMutableArray *requestedScopes = [NSMutableArray arrayWithCapacity:2];
-      if ([arguments[kArgumentProviderScope] containsObject:@"name"]) {
-        [requestedScopes addObject:ASAuthorizationScopeFullName];
-      }
-      if ([arguments[kArgumentProviderScope] containsObject:@"email"]) {
-        [requestedScopes addObject:ASAuthorizationScopeEmail];
-      }
-      request.requestedScopes = [requestedScopes copy];
-      request.nonce = [self stringBySha256HashingString:nonce];
-
-      ASAuthorizationController *authorizationController =
-          [[ASAuthorizationController alloc] initWithAuthorizationRequests:@[ request ]];
-      authorizationController.delegate = self;
-      authorizationController.presentationContextProvider = self;
-      [authorizationController performRequests];
+      launchAppleSignInRequest(self, arguments, result);
     } else {
       NSLog(@"Sign in with Apple was introduced in iOS 13, update your Podfile with platform :ios, "
             @"'13.0'");
@@ -647,44 +640,7 @@ NSString *const kErrMsgInvalidCredential =
       getCredentialWithUIDelegate:nil
                        completion:^(FIRAuthCredential *_Nullable credential,
                                     NSError *_Nullable error) {
-                         if (error) {
-                           if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
-                             [self handleMultiFactorError:arguments
-                                               withResult:result
-                                                withError:error];
-                           } else {
-                             result.error(nil, nil, nil, error);
-                           }
-                           return;
-                         }
-                         if (credential) {
-                           [auth
-                               signInWithCredential:credential
-                                         completion:^(FIRAuthDataResult *authResult,
-                                                      NSError *error) {
-                                           if (error != nil) {
-                                             NSDictionary *userInfo = [error userInfo];
-                                             NSError *underlyingError =
-                                                 [userInfo objectForKey:NSUnderlyingErrorKey];
-
-                                             NSDictionary *firebaseDictionary =
-                                                 underlyingError.userInfo[@"FIRAuthErrorUserInfoDes"
-                                                                          @"erializedResponseKey"];
-
-                                             if (firebaseDictionary != nil &&
-                                                 firebaseDictionary[@"message"] != nil) {
-                                               // error from firebase-ios-sdk is
-                                               // buried in underlying error.
-                                               result.error(nil, firebaseDictionary[@"message"],
-                                                            nil, nil);
-                                             } else {
-                                               result.error(nil, nil, nil, error);
-                                             }
-                                           } else {
-                                             result.success(authResult);
-                                           }
-                                         }];
-                         }
+                         handleAppleSignInResult(self, arguments, auth, credential, error, result);
                        }];
 #endif
 }
@@ -934,6 +890,113 @@ NSString *const kErrMsgInvalidCredential =
                               result.success(tokenData);
                             }
                           }];
+}
+
+static void launchAppleSignInRequest(FLTFirebaseAuthPlugin *object, id arguments,
+                                     FLTFirebaseMethodCallResult *result) {
+  NSString *nonce = [object randomNonce:32];
+  object.currentNonce = nonce;
+  object.appleResult = result;
+  object.appleArguments = arguments;
+
+  ASAuthorizationAppleIDProvider *appleIDProvider = [[ASAuthorizationAppleIDProvider alloc] init];
+
+  ASAuthorizationAppleIDRequest *request = [appleIDProvider createRequest];
+  NSMutableArray *requestedScopes = [NSMutableArray arrayWithCapacity:2];
+  if ([arguments[kArgumentProviderScope] containsObject:@"name"]) {
+    [requestedScopes addObject:ASAuthorizationScopeFullName];
+  }
+  if ([arguments[kArgumentProviderScope] containsObject:@"email"]) {
+    [requestedScopes addObject:ASAuthorizationScopeEmail];
+  }
+  request.requestedScopes = [requestedScopes copy];
+  request.nonce = [object stringBySha256HashingString:nonce];
+
+  ASAuthorizationController *authorizationController =
+      [[ASAuthorizationController alloc] initWithAuthorizationRequests:@[ request ]];
+  authorizationController.delegate = object;
+  authorizationController.presentationContextProvider = object;
+  [authorizationController performRequests];
+}
+
+static void handleAppleSignInResult(FLTFirebaseAuthPlugin *object, id arguments, FIRAuth *auth,
+                                    FIRAuthCredential *credentials, NSError *error,
+                                    FLTFirebaseMethodCallResult *result) {
+  if (error) {
+    if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+      [object handleMultiFactorError:arguments withResult:result withError:error];
+    } else {
+      result.error(nil, nil, nil, error);
+    }
+    return;
+  }
+  if (credentials) {
+    [auth signInWithCredential:credentials
+                    completion:^(FIRAuthDataResult *authResult, NSError *error) {
+                      if (error != nil) {
+                        NSDictionary *userInfo = [error userInfo];
+                        NSError *underlyingError = [userInfo objectForKey:NSUnderlyingErrorKey];
+
+                        NSDictionary *firebaseDictionary =
+                            underlyingError.userInfo[@"FIRAuthErrorUserInfoDes"
+                                                     @"erializedResponseKey"];
+
+                        if (firebaseDictionary != nil && firebaseDictionary[@"message"] != nil) {
+                          // error from firebase-ios-sdk is
+                          // buried in underlying error.
+                          result.error(nil, firebaseDictionary[@"message"], nil, nil);
+                        } else {
+                          result.error(nil, nil, nil, error);
+                        }
+                      } else {
+                        result.success(authResult);
+                      }
+                    }];
+  }
+}
+
+- (void)userLinkWithProvider:(id)arguments
+        withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
+
+  FIRUser *currentUser = auth.currentUser;
+  if (currentUser == nil) {
+    result.error(kErrCodeNoCurrentUser, kErrMsgNoCurrentUser, nil, nil);
+    return;
+  }
+
+  if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
+    if (@available(iOS 13.0, macOS 10.15, *)) {
+      self.linkWithAppleUser = currentUser;
+      launchAppleSignInRequest(self, arguments, result);
+    } else {
+      NSLog(@"Sign in with Apple was introduced in iOS 13, update your Podfile with platform :ios, "
+            @"'13.0'");
+    }
+    return;
+  }
+#if TARGET_OS_OSX
+  NSLog(@"The Firebase Phone Authentication provider is not supported on the "
+        @"MacOS platform.");
+  result.success(nil);
+#else
+  self.authProvider = [FIROAuthProvider providerWithProviderID:arguments[@"signInProvider"]];
+  NSArray *scopes = arguments[kArgumentProviderScope];
+  if (scopes != nil) {
+    [self.authProvider setScopes:scopes];
+  }
+  NSDictionary *customParameters = arguments[kArgumentProviderCustomParameters];
+  if (customParameters != nil) {
+    [self.authProvider setCustomParameters:customParameters];
+  }
+
+  [currentUser
+      linkWithProvider:self.authProvider
+            UIDelegate:nil
+            completion:^(FIRAuthDataResult *authResult, NSError *error) {
+              handleAppleSignInResult(self, arguments, auth, authResult.credential, error, result);
+            }];
+#endif
 }
 
 - (void)userLinkWithCredential:(id)arguments
