@@ -63,9 +63,8 @@ void testsMain() {
       await expectLater(
         analytics.logEvent(
           name: 'testing-parameters',
-          parameters: EventParameters()
-              .addParameter('foo', string: 'bar')
-              .addParameter('bar', number: 500),
+          parameters:
+              EventParameters().addString('foo', 'bar').addNumber('bar', 500),
         ),
         completes,
       );

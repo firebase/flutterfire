@@ -69,11 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _sendAnalyticsEvent() async {
     EventParameters params = EventParameters();
 
-    params.addParameter('string', string: 'string');
-    params.addParameter('int', number: 42);
-    params.addParameter('long', number: 12345678910);
-    params.addParameter('double', number: 42.0);
-    params.addParameter('bool', string: true.toString());
+    params.addString('string', 'string');
+    params.addNumber('int', 42);
+    params.addNumber('long', 12345678910);
+    params.addNumber('double', 42.0);
+    params.addString('bool', true.toString());
     // Only strings and numbers (ints & doubles) are supported for GA custom event parameters:
     // https://developers.google.com/analytics/devguides/collection/analyticsjs/custom-dims-mets#overview
     await widget.analytics.logEvent(

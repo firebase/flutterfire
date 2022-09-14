@@ -58,8 +58,8 @@ void setupTests() {
         FirebaseAnalytics.instance.logEvent(
           name: 'testing-parameters',
           parameters: EventParameters()
-              .addParameter('foo', string: 'bar')
-              .addParameter('number', number: 500),
+              .addString('foo', 'bar')
+              .addNumber('number', 500),
         ),
         completes,
       );

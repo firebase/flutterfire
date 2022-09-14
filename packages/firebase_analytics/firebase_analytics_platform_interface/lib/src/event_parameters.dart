@@ -1,5 +1,6 @@
-const String _exceptionMessage =
-    "'string' OR 'number' must be set as the value of the parameter";
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
 
 class EventParameters {
   EventParameters();
@@ -9,7 +10,7 @@ class EventParameters {
     map.forEach((key, value) {
       assert(
         value is String || value is num,
-        _exceptionMessage,
+        "'string' OR 'number' must be set as the value of the parameter",
       );
       parameters[key] = value;
     });
@@ -20,14 +21,13 @@ class EventParameters {
 
   Map<String, Object> _parameters = {};
 
-  // Can only pass either a String or a num value
-  EventParameters addParameter(String key, {String? string, num? number}) {
-    assert(
-      !(string == null && number == null),
-      _exceptionMessage,
-    );
-    assert(!(string != null && number != null), _exceptionMessage);
-    _parameters[key] = (string ?? number)!;
+  EventParameters addString(String key, String value) {
+    _parameters[key] = value;
+    return this;
+  }
+
+  EventParameters addNumber(String key, num value) {
+    _parameters[key] = value;
     return this;
   }
 

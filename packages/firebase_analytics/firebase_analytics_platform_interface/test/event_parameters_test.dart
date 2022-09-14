@@ -15,20 +15,10 @@ void main() {
 
       test('create EventParameters and use addParameters()', () {
         EventParameters parameters = EventParameters();
-        parameters.addParameter('foo', string: 'bar');
-        parameters.addParameter('num', number: 303);
+        parameters.addString('foo', 'bar');
+        parameters.addNumber('num', 303);
 
         expect(parameters.asMap(), equals({'foo': 'bar', 'num': 303}));
-      });
-
-      test('should throw an AssertionError for incorrect use of addParameter()',
-          () {
-        EventParameters parameters = EventParameters();
-        expect(() => parameters.addParameter('foo'), throwsAssertionError);
-        expect(
-          () => parameters.addParameter('foo', string: 'foo', number: 21.2),
-          throwsAssertionError,
-        );
       });
     });
 
