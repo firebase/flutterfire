@@ -116,6 +116,16 @@ class FirebaseAuthUIExample extends StatelessWidget {
                   Navigator.pushReplacementNamed(context, '/profile');
                 }
               }),
+              AuthStateChangeAction<MFARequired>((context, state) async {
+                final nav = Navigator.of(context);
+
+                await startMFAVerification(
+                  resolver: state.resolver,
+                  context: context,
+                );
+
+                nav.pushReplacementNamed('/profile');
+              }),
               EmailLinkSignInAction((context) {
                 Navigator.pushReplacementNamed(context, '/email-link-sign-in');
               }),
@@ -232,6 +242,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
               }),
             ],
             actionCodeSettings: actionCodeSettings,
+            showMFATile: true,
           );
         },
       },

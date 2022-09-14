@@ -166,6 +166,8 @@ class _SignInFormContentState extends State<_SignInFormContent> {
         return l.registerActionText;
       case AuthAction.link:
         return l.linkEmailButtonText;
+      default:
+        throw Exception('Invalid auth action: ${ctrl.action}');
     }
   }
 

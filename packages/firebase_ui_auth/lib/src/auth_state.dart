@@ -1,6 +1,7 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/widgets.dart';
-import 'package:firebase_auth/firebase_auth.dart' show AuthCredential, User;
+import 'package:firebase_auth/firebase_auth.dart'
+    show AuthCredential, MultiFactorResolver, User;
 
 /// An abstract class for all auth states.
 /// [AuthState] transitions could be captured with an [AuthStateChangeAction]:
@@ -169,6 +170,16 @@ class DifferentSignInMethodsFound extends AuthState {
 class FetchingProvidersForEmail extends AuthState {
   /// {@macro ui.auth.auth_state.fetching_providers_for_email}
   const FetchingProvidersForEmail();
+}
+
+/// {@template ui.auth.auth_state.mfa_required}
+/// An [AuthState] that indicates that multi-factor authentication is required.
+/// {@endtemplate}
+class MFARequired extends AuthState {
+  /// A multi-factor resolver that should be used to complete MFA.
+  final MultiFactorResolver resolver;
+
+  const MFARequired(this.resolver);
 }
 
 class AuthStateProvider extends InheritedWidget {

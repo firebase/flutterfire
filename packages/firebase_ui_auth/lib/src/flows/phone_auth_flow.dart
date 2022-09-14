@@ -73,7 +73,10 @@ class AutoresolutionFailedException implements Exception {
 abstract class PhoneAuthController extends AuthController {
   /// Initializes the flow with a phone number. This method should be called
   /// after user submits a phone number.
-  void acceptPhoneNumber(String phoneNumber);
+  void acceptPhoneNumber(
+    String phoneNumber, [
+    fba.MultiFactorSession? multiFactorSession,
+  ]);
 
   /// Triggers an SMS code verification.
   void verifySMSCode(
@@ -113,8 +116,15 @@ class PhoneAuthFlow extends AuthFlow<PhoneAuthProvider>
         );
 
   @override
-  void acceptPhoneNumber(String phoneNumber) {
-    provider.sendVerificationCode(phoneNumber, action);
+  void acceptPhoneNumber(
+    String phoneNumber, [
+    fba.MultiFactorSession? multiFactorSession,
+  ]) {
+    provider.sendVerificationCode(
+      phoneNumber: phoneNumber,
+      action: action,
+      multiFactorSession: multiFactorSession,
+    );
   }
 
   @override
@@ -122,6 +132,7 @@ class PhoneAuthFlow extends AuthFlow<PhoneAuthProvider>
     String code, {
     String? verificationId,
     fba.ConfirmationResult? confirmationResult,
+    fba.MultiFactorSession? multiFactorSession,
   }) {
     provider.verifySMSCode(
       action: action,

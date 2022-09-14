@@ -26,14 +26,20 @@ void main() {
 
     group('#sendVerificationCode', () {
       test('calls onSMSCodeRequested', () {
-        provider.sendVerificationCode('+123456789', AuthAction.signIn);
+        provider.sendVerificationCode(
+          phoneNumber: '+123456789',
+          action: AuthAction.signIn,
+        );
 
         final invocation = verify(listener.onSMSCodeRequested('+123456789'));
         expect(invocation.callCount, 1);
       });
 
       test('calls FirebaseAuth#verifyPhoneNumber', () async {
-        provider.sendVerificationCode('+123456789', AuthAction.signIn);
+        provider.sendVerificationCode(
+          phoneNumber: '+123456789',
+          action: AuthAction.signIn,
+        );
 
         final invocation = verify(
           auth.verifyPhoneNumber(
@@ -52,7 +58,10 @@ void main() {
       });
 
       test('calls onCodeSent when code is sent', () async {
-        provider.sendVerificationCode('+123456789', AuthAction.signIn);
+        provider.sendVerificationCode(
+          phoneNumber: '+123456789',
+          action: AuthAction.signIn,
+        );
 
         final invocation = verify(
           auth.verifyPhoneNumber(
@@ -78,7 +87,10 @@ void main() {
       test(
         'calls onVerificationCompleted when verification is complete',
         () async {
-          provider.sendVerificationCode('+123456789', AuthAction.signIn);
+          provider.sendVerificationCode(
+            phoneNumber: '+123456789',
+            action: AuthAction.signIn,
+          );
 
           final credential = MockPhoneCredential();
 
@@ -107,7 +119,10 @@ void main() {
       );
 
       test('calls onError if autoresolution timed out', () async {
-        provider.sendVerificationCode('+123456789', AuthAction.signIn);
+        provider.sendVerificationCode(
+          phoneNumber: '+123456789',
+          action: AuthAction.signIn,
+        );
 
         final invocation = verify(
           auth.verifyPhoneNumber(
@@ -136,7 +151,10 @@ void main() {
       });
 
       test('calls onError if verification failed', () async {
-        provider.sendVerificationCode('+123456789', AuthAction.signIn);
+        provider.sendVerificationCode(
+          phoneNumber: '+123456789',
+          action: AuthAction.signIn,
+        );
 
         final exception = TestException();
 
@@ -253,7 +271,7 @@ void main() {
         );
 
         final invocation = verify(
-          listener.onBeforeCredentialLinked(captureAny),
+          listener.onCredentialReceived(captureAny),
         );
 
         expect(invocation.callCount, 1);
@@ -301,10 +319,7 @@ void main() {
           ctrl.acceptPhoneNumber('+123456789');
 
           final invocation = verify(
-            provider.sendVerificationCode(
-              captureAny,
-              any,
-            ),
+            provider.sendVerificationCode(phoneNumber: captureAny),
           );
 
           expect(invocation.callCount, 1);
@@ -337,15 +352,24 @@ void main() {
 
 class MockProvider extends Mock implements PhoneAuthProvider {
   @override
-  void sendVerificationCode(
+  void sendVerificationCode({
     String? phoneNumber,
-    AuthAction? action, [
+    AuthAction? action,
     int? forceResendingToken,
-  ]) {
+    MultiFactorSession? multiFactorSession,
+    PhoneMultiFactorInfo? hint,
+  }) {
     super.noSuchMethod(
       Invocation.method(
         #sendVerificationCode,
-        [phoneNumber, action, forceResendingToken],
+        null,
+        {
+          #phoneNumber: phoneNumber,
+          #action: action,
+          #forceResendingToken: forceResendingToken,
+          #multiFactorSession: multiFactorSession,
+          #hint: hint,
+        },
       ),
     );
   }
@@ -431,7 +455,7 @@ class MockListener extends Mock implements PhoneAuthListener {
   }
 
   @override
-  void onBeforeCredentialLinked(AuthCredential? credential) {
+  void onCredentialReceived(AuthCredential? credential) {
     super.noSuchMethod(
       Invocation.method(
         #onBeforeCredentialLinked,

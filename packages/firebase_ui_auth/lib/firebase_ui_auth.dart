@@ -15,7 +15,8 @@ export 'src/auth_state.dart'
         SignedIn,
         SigningIn,
         AuthFailed,
-        DifferentSignInMethodsFound;
+        DifferentSignInMethodsFound,
+        MFARequired;
 
 export 'src/providers/auth_provider.dart';
 export 'src/providers/email_auth_provider.dart';
@@ -91,6 +92,8 @@ export 'src/email_verification.dart';
 export 'src/styling/theme.dart' show FirebaseUITheme;
 export 'src/styling/style.dart' show FirebaseUIStyle;
 export 'src/widgets/internal/universal_button.dart' show ButtonVariant;
+
+export 'src/mfa.dart' show startMFAVerification;
 
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:firebase_core/firebase_core.dart';

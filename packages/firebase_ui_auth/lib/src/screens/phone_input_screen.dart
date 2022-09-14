@@ -1,4 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
+import 'package:firebase_auth/firebase_auth.dart'
+    show
+        FirebaseAuth,
+        MultiFactorInfo,
+        MultiFactorSession,
+        PhoneMultiFactorInfo;
 import 'package:flutter/widgets.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
@@ -60,6 +65,12 @@ class PhoneInputScreen extends StatelessWidget {
   /// {@macro ui.auth.screens.responsive_page.breakpoint}
   final double breakpoint;
 
+  /// {@macro ui.auth.providers.phone_auth_provider.mfa_session}
+  final MultiFactorSession? multiFactorSession;
+
+  /// {@macro ui.auth.providers.phone_auth_provider.mfa_hint}
+  final PhoneMultiFactorInfo? mfaHint;
+
   const PhoneInputScreen({
     Key? key,
     this.action,
@@ -72,6 +83,8 @@ class PhoneInputScreen extends StatelessWidget {
     this.sideBuilder,
     this.desktopLayoutDirection,
     this.breakpoint = 500,
+    this.multiFactorSession,
+    this.mfaHint,
   }) : super(key: key);
 
   void _next(BuildContext context, AuthAction? action, Object flowKey, _) {
@@ -113,6 +126,8 @@ class PhoneInputScreen extends StatelessWidget {
                   subtitleBuilder: subtitleBuilder,
                   footerBuilder: footerBuilder,
                   flowKey: flowKey,
+                  multiFactorSession: multiFactorSession,
+                  mfaHint: mfaHint,
                 ),
                 UniversalButton(
                   text: l.goBackButtonLabel,

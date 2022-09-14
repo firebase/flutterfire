@@ -101,11 +101,17 @@ class FirebaseUIActions extends InheritedWidget {
 
     /// A [Widget] to wrap with [FirebaseUIActions].
     required Widget child,
+
+    /// A list of [FirebaseUIAction]s to provide to the [child].
+    List<FirebaseUIAction> actions = const [],
   }) {
     final w = maybeOf(from);
 
     if (w != null) {
-      return FirebaseUIActions(actions: w.actions, child: child);
+      return FirebaseUIActions(
+        actions: [...w.actions, ...actions],
+        child: child,
+      );
     }
 
     return child;

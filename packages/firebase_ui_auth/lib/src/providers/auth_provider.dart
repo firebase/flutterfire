@@ -12,6 +12,11 @@ void defaultOnAuthError(AuthProvider provider, Object error) {
     throw error;
   }
 
+  if (error is FirebaseAuthMultiFactorException) {
+    provider.authListener.onMFARequired(error.resolver);
+    return;
+  }
+
   if (error.code == 'account-exists-with-different-credential') {
     final email = error.email;
     if (email == null) {
@@ -49,7 +54,7 @@ abstract class AuthListener {
 
   /// Called before an attempt to link the credential with currently signed in
   /// user account.
-  void onBeforeCredentialLinked(AuthCredential credential);
+  void onCredentialReceived(AuthCredential credential);
 
   /// Called if the credential was successfully linked with the user account.
   void onCredentialLinked(AuthCredential credential);
@@ -66,6 +71,9 @@ abstract class AuthListener {
 
   /// Called when the user cancells the sign in process.
   void onCanceled();
+
+  /// Called when the user has to complete MFA.
+  void onMFARequired(MultiFactorResolver resolver);
 }
 
 /// {@template ui.auth.auth_provider}
@@ -109,7 +117,7 @@ abstract class AuthProvider<T extends AuthListener, K extends AuthCredential> {
   /// Links a provided [AuthCredential] with the currently signed in user
   /// account.
   void linkWithCredential(AuthCredential credential) {
-    authListener.onBeforeCredentialLinked(credential);
+    authListener.onCredentialReceived(credential);
     try {
       final user = auth.currentUser!;
       user
@@ -155,10 +163,18 @@ abstract class AuthProvider<T extends AuthListener, K extends AuthCredential> {
   /// hooks are called if action is [AuthAction.signUp].
   /// {@endtemplate}
   void onCredentialReceived(K credential, AuthAction action) {
-    if (action == AuthAction.link) {
-      linkWithCredential(credential);
-    } else {
-      signInWithCredential(credential);
+    switch (action) {
+      case AuthAction.link:
+        linkWithCredential(credential);
+        break;
+      case AuthAction.signIn:
+        signInWithCredential(credential);
+        break;
+      case AuthAction.none:
+        authListener.onCredentialReceived(credential);
+        break;
+      default:
+        throw Exception('$runtimeType should handle $action');
     }
   }
 }

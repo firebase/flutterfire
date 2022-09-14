@@ -6,6 +6,8 @@ import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
+import 'auth_state.dart';
+
 /// An exception that is being thrown when user cancels the authentication
 /// process.
 class AuthCancelledException implements Exception {
@@ -106,7 +108,7 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
   }
 
   @override
-  void onBeforeCredentialLinked(AuthCredential credential) {
+  void onCredentialReceived(AuthCredential credential) {
     value = CredentialReceived(credential);
   }
 
@@ -163,5 +165,10 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
   @override
   void onCanceled() {
     value = initialState;
+  }
+
+  @override
+  void onMFARequired(MultiFactorResolver resolver) {
+    value = MFARequired(resolver);
   }
 }

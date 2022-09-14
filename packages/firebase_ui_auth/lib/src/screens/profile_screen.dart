@@ -1,5 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart'
-    show ActionCodeSettings, FirebaseAuth, FirebaseAuthException, User;
+    show
+        ActionCodeSettings,
+        FirebaseAuth,
+        FirebaseAuthException,
+        MultiFactorInfo,
+        PhoneAuthCredential,
+        PhoneMultiFactorGenerator,
+        User;
+import 'package:firebase_ui_auth/src/widgets/internal/universal_icon.dart';
 import 'package:flutter/cupertino.dart' hide Title;
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart' hide Title;
@@ -439,6 +447,196 @@ class _EmailVerificationBadgeState extends State<_EmailVerificationBadge> {
   }
 }
 
+class _MFABadge extends StatelessWidget {
+  final bool enrolled;
+  final FirebaseAuth auth;
+  final VoidCallback onToggled;
+
+  const _MFABadge({
+    Key? key,
+    required this.enrolled,
+    required this.auth,
+    required this.onToggled,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // TODO(lesnitsky): update once labels available
+          const Subtitle(text: '2-step verification'),
+          const SizedBox(height: 8),
+          _MFAToggle(
+            enrolled: enrolled,
+            auth: auth,
+            onToggled: onToggled,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MFAToggle extends StatefulWidget {
+  final bool enrolled;
+  final FirebaseAuth auth;
+  final VoidCallback? onToggled;
+
+  const _MFAToggle({
+    Key? key,
+    required this.enrolled,
+    required this.auth,
+    required this.onToggled,
+  }) : super(key: key);
+
+  @override
+  State<_MFAToggle> createState() => _MFAToggleState();
+}
+
+class _MFAToggleState extends State<_MFAToggle> {
+  bool isLoading = false;
+  Exception? exception;
+
+  IconData getCupertinoIcon() {
+    if (widget.enrolled) {
+      return CupertinoIcons.check_mark_circled;
+    } else {
+      return CupertinoIcons.circle;
+    }
+  }
+
+  IconData getMaterialIcon() {
+    if (widget.enrolled) {
+      return Icons.check_circle;
+    } else {
+      return Icons.remove_circle_sharp;
+    }
+  }
+
+  Color getColor() {
+    if (widget.enrolled) {
+      return Theme.of(context).colorScheme.primary;
+    } else {
+      return Theme.of(context).colorScheme.error;
+    }
+  }
+
+  Future<void> _disable() async {
+    setState(() {
+      exception = null;
+      isLoading = true;
+    });
+
+    final mfa = widget.auth.currentUser!.multiFactor;
+    final factors = await mfa.getEnrolledFactors();
+
+    if (factors.isEmpty) {
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
+    try {
+      await mfa.unenroll(multiFactorInfo: factors.first);
+      widget.onToggled?.call();
+    } on Exception catch (e) {
+      // TODO(lesnitsky): handle recent login
+      setState(() {
+        exception = e;
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _enable() async {
+    setState(() {
+      exception = null;
+      isLoading = true;
+    });
+
+    final currentRoute = ModalRoute.of(context);
+
+    final mfa = widget.auth.currentUser!.multiFactor;
+    final session = await mfa.getSession();
+
+    await startPhoneVerification(
+      context: context,
+      action: AuthAction.none,
+      multiFactorSession: session,
+      auth: widget.auth,
+      actions: [
+        AuthStateChangeAction<CredentialReceived>((context, state) async {
+          final cred = state.credential as PhoneAuthCredential;
+          final assertion = PhoneMultiFactorGenerator.getAssertion(cred);
+
+          try {
+            await mfa.enroll(assertion);
+            widget.onToggled?.call();
+          } on Exception catch (e) {
+            setState(() {
+              exception = e;
+            });
+          } finally {
+            setState(() {
+              isLoading = false;
+            });
+
+            Navigator.of(context).popUntil((route) => route == currentRoute);
+          }
+        })
+      ],
+    );
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            UniversalIcon(
+              cupertinoIcon: getCupertinoIcon(),
+              materialIcon: getMaterialIcon(),
+              color: getColor(),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              // TODO(lesnitsky): update once labels available
+              child: Text(widget.enrolled ? 'On' : 'Off'),
+            ),
+            LoadingButton(
+              variant: ButtonVariant.text,
+              // TODO(lesnitsky): update once labels available
+              label: widget.enrolled ? 'Disable' : 'Enable',
+              onTap: widget.enrolled ? _disable : _enable,
+              isLoading: isLoading,
+            )
+          ],
+        ),
+        if (exception != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: ErrorText(exception: exception!),
+          )
+      ],
+    );
+  }
+}
+
 /// {@template ui.auth.screens.profile_screen}
 /// A pre-built profile screen that allows to link more auth providers,
 /// unlink auth providers, edit user name and delete the account. Could also
@@ -490,6 +688,8 @@ class ProfileScreen extends MultiProviderScreen {
   /// verification.
   final ActionCodeSettings? actionCodeSettings;
 
+  final bool showMFATile;
+
   const ProfileScreen({
     Key? key,
     FirebaseAuth? auth,
@@ -502,6 +702,7 @@ class ProfileScreen extends MultiProviderScreen {
     this.appBar,
     this.cupertinoNavigationBar,
     this.actionCodeSettings,
+    this.showMFATile = false,
   }) : super(key: key, providers: providers, auth: auth);
 
   Future<bool> _reauthenticate(BuildContext context) {
@@ -542,6 +743,7 @@ class ProfileScreen extends MultiProviderScreen {
   Widget buildPage(BuildContext context) {
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
     final providersScopeKey = RebuildScopeKey();
+    final mfaScopeKey = RebuildScopeKey();
     final emailVerificationScopeKey = RebuildScopeKey();
 
     final user = auth.currentUser!;
@@ -613,6 +815,34 @@ class ProfileScreen extends MultiProviderScreen {
           },
           scopeKey: providersScopeKey,
         ),
+        if (showMFATile)
+          RebuildScope(
+            builder: (context) {
+              final user = auth.currentUser!;
+              final mfa = user.multiFactor;
+
+              return FutureBuilder<List<MultiFactorInfo>>(
+                future: mfa.getEnrolledFactors(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const SizedBox.shrink();
+                  }
+
+                  final enrolledFactors = snapshot.requireData;
+
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: _MFABadge(
+                      enrolled: enrolledFactors.isNotEmpty,
+                      auth: auth,
+                      onToggled: mfaScopeKey.rebuild,
+                    ),
+                  );
+                },
+              );
+            },
+            scopeKey: mfaScopeKey,
+          ),
         ...children,
         const SizedBox(height: 16),
         SignOutButton(

@@ -41,6 +41,12 @@ class PhoneInputView extends StatefulWidget {
   /// Returned widget would be placed at the bottom.
   final WidgetBuilder? footerBuilder;
 
+  /// {@macro ui.auth.providers.phone_auth_provider.mfa_session}
+  final MultiFactorSession? multiFactorSession;
+
+  /// {@macro ui.auth.providers.phone_auth_provider.mfa_hint}
+  final PhoneMultiFactorInfo? mfaHint;
+
   /// {@macro ui.auth.views.phone_input_view}
   const PhoneInputView({
     Key? key,
@@ -51,6 +57,8 @@ class PhoneInputView extends StatefulWidget {
     this.onSubmit,
     this.subtitleBuilder,
     this.footerBuilder,
+    this.multiFactorSession,
+    this.mfaHint,
   }) : super(key: key);
 
   @override
@@ -65,7 +73,10 @@ class _PhoneInputViewState extends State<PhoneInputView> {
         if (widget.onSubmit != null) {
           widget.onSubmit!(phoneNumber);
         } else {
-          ctrl.acceptPhoneNumber(phoneNumber);
+          ctrl.acceptPhoneNumber(
+            phoneNumber,
+            widget.multiFactorSession,
+          );
         }
       };
 

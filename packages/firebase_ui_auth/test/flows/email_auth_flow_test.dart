@@ -81,7 +81,7 @@ void main() {
         flow.provider.authListener = mockListener;
         flow.provider.authenticate('email', 'password', AuthAction.link);
 
-        verify(mockListener.onBeforeCredentialLinked(any)).called(1);
+        verify(mockListener.onCredentialReceived(any)).called(1);
       });
 
       test('calls onSignedIn', () async {
@@ -243,7 +243,7 @@ class MockProvider extends Mock implements EmailAuthProvider {
 
 class MockAuthListener extends Mock implements EmailAuthListener {
   @override
-  void onBeforeCredentialLinked(AuthCredential? credential) {
+  void onCredentialReceived(AuthCredential? credential) {
     super.noSuchMethod(
       Invocation.method(
         #onBeforeCredentialLinked,

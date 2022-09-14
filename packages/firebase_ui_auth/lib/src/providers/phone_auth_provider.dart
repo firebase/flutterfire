@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as fba;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
@@ -45,20 +46,33 @@ class PhoneAuthProvider
   /// linked with the currently signed in user account.
   /// If [action] is [AuthAction.signIn], the user will be created (if doesn't
   /// exist) or signed in.
-  void sendVerificationCode(
-    String phoneNumber,
-    AuthAction action, [
+  void sendVerificationCode({
+    String? phoneNumber,
+    AuthAction action = AuthAction.signIn,
     int? forceResendingToken,
-  ]) {
-    authListener.onSMSCodeRequested(phoneNumber);
+
+    /// {@template ui.auth.providers.phone_auth_provider.mfa_session}
+    /// Multi-factor session to use for verification
+    /// {@endtemplate}
+    MultiFactorSession? multiFactorSession,
+
+    /// {@template ui.auth.providers.phone_auth_provider.mfa_hint}
+    /// Multi-factor session info to use for verification
+    /// {@endtemplate}
+    final PhoneMultiFactorInfo? hint,
+  }) {
+    final phone = phoneNumber ?? hint!.phoneNumber;
+    authListener.onSMSCodeRequested(phone);
 
     if (kIsWeb) {
-      _sendVerficationCodeWeb(phoneNumber, action);
+      _sendVerficationCodeWeb(phone, action);
     }
 
     auth.verifyPhoneNumber(
       forceResendingToken: forceResendingToken,
-      phoneNumber: phoneNumber,
+      phoneNumber: hint != null ? null : phoneNumber,
+      multiFactorInfo: hint,
+      multiFactorSession: multiFactorSession,
       verificationCompleted: authListener.onVerificationCompleted,
       verificationFailed: authListener.onError,
       codeSent: authListener.onCodeSent,

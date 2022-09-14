@@ -271,10 +271,15 @@ class _OAuthProviderButtonBaseState extends State<OAuthProviderButtonBase>
   FirebaseAuth get auth => widget.auth ?? FirebaseAuth.instance;
 
   @override
-  void onBeforeCredentialLinked(AuthCredential credential) {
+  void onCredentialReceived(AuthCredential credential) {
     setState(() {
       isLoading = true;
     });
+  }
+
+  @override
+  void onMFARequired(MultiFactorResolver resolver) {
+    startMFAVerification(context: context, resolver: resolver);
   }
 
   @override
