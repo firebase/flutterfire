@@ -178,8 +178,6 @@ void runInstanceTests() {
         await FirebaseAuth.instance.currentUser!
             .updateDisplayName('updatedName');
 
-        await FirebaseAuth.instance.currentUser!.reload();
-
         expect(
           FirebaseAuth.instance.currentUser!.displayName,
           equals('updatedName'),

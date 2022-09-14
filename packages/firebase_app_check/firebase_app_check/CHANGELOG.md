@@ -1,3 +1,7 @@
+## 0.0.7+1
+
+ - Update a dependency to the latest release.
+
 ## 0.0.7
 
  - **FEAT**: update the example app with webRecaptcha in activate button ([#9373](https://github.com/firebase/flutterfire/issues/9373)). ([1ff76c1b](https://github.com/firebase/flutterfire/commit/1ff76c1b87b623ff21c921d6a6cc2c586cf43ac3))

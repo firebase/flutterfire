@@ -6,12 +6,12 @@ environment:
   sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
-  cloud_firestore: ^3.4.6
+  cloud_firestore: ^3.4.7
   cloud_firestore_odm:
     path: ../../cloud_firestore_odm
   flutter:
     sdk: flutter
-  freezed_annotation: ^1.0.0
+  freezed_annotation: ^2.0.0
   json_annotation: ^4.6.0
   meta: ^1.3.0
 
@@ -21,6 +21,7 @@ dev_dependencies:
     path: ../../cloud_firestore_odm_generator
   flutter_test:
     sdk: flutter
+  freezed: ^2.0.0
   json_serializable: ">=6.3.0 <7.0.0"
 
 dependency_overrides:

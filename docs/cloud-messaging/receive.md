@@ -125,8 +125,10 @@ There are a few things to keep in mind about your background message handler:
 
 1. It must not be an anonymous function.
 2. It must be a top-level function (e.g. not a class method which requires initialization).
+3. It must be annotated with `@pragma('vm:entry-point')` right above the function declaration (otherwise it may be removed during tree shaking for release mode).
 
 ```dart
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
