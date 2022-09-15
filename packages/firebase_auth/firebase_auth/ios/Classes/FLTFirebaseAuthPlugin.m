@@ -610,7 +610,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
 }
 
 - (void)signInWithProvider:(id)arguments
-          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+      withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
     if (@available(iOS 13.0, macOS 10.15, *)) {
       launchAppleSignInRequest(self, arguments, result);
