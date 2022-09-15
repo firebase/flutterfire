@@ -1,5 +1,5 @@
 name: firebase_ui_oauth_google
-description: A new Flutter package project.
+description: Firebase UI widgets for authentication & OAuth.
 version: 1.0.0-dev.0
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_oauth_google
 
