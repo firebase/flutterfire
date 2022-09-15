@@ -621,7 +621,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
     return;
   }
 #if TARGET_OS_OSX
-  NSLog(@"signInWithAuthProvider is not supported on the "
+  NSLog(@"signInWithProvider is not supported on the "
         @"MacOS platform.");
   result.success(nil);
 #else
