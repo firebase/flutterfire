@@ -349,6 +349,7 @@ Future<UserCredential> signInWithYahoo() async {
 
 
 # Linking an Authentication Provider
+
 If you want to link a provider to a current user, you can use the following method:
 ```dart
 await FirebaseAuth.instance.signInAnonymously();

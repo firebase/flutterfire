@@ -640,7 +640,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
       getCredentialWithUIDelegate:nil
                        completion:^(FIRAuthCredential *_Nullable credential,
                                     NSError *_Nullable error) {
-                         handleAppleSignInResult(self, arguments, auth, credential, error, result);
+                         handleAppleAuthResult(self, arguments, auth, credential, error, result);
                        }];
 #endif
 }
@@ -919,7 +919,7 @@ static void launchAppleSignInRequest(FLTFirebaseAuthPlugin *object, id arguments
   [authorizationController performRequests];
 }
 
-static void handleAppleSignInResult(FLTFirebaseAuthPlugin *object, id arguments, FIRAuth *auth,
+static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, FIRAuth *auth,
                                     FIRAuthCredential *credentials, NSError *error,
                                     FLTFirebaseMethodCallResult *result) {
   if (error) {
@@ -994,7 +994,7 @@ static void handleAppleSignInResult(FLTFirebaseAuthPlugin *object, id arguments,
       linkWithProvider:self.authProvider
             UIDelegate:nil
             completion:^(FIRAuthDataResult *authResult, NSError *error) {
-              handleAppleSignInResult(self, arguments, auth, authResult.credential, error, result);
+              handleAppleAuthResult(self, arguments, auth, authResult.credential, error, result);
             }];
 #endif
 }
