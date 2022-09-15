@@ -19,7 +19,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  firebase_ui_oauth_google: ^0.0.1
+  firebase_ui_oauth_google: ^1.0.0-dev.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

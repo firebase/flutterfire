@@ -15,6 +15,25 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`firebase_ui_oauth_google` - `v1.0.0-dev.0`](#firebase_ui_oauth_google---v100-dev0)
+
+---
+
+#### `firebase_ui_oauth_google` - `v1.0.0-dev.0`
+
+
+## 2022-09-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`firebase_ui_oauth_facebook` - `v1.0.0-dev.0`](#firebase_ui_oauth_facebook---v100-dev0)
 
 ---
