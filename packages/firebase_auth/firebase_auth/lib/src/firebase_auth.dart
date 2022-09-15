@@ -609,18 +609,31 @@ class FirebaseAuth extends FirebasePluginPlatform {
     }
   }
 
+  /// Signs in with an AuthProvider using native authentication flow. This is
+  /// deprecated in favor of `signInWithProvider()`.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **user-disabled**:
+  ///  - Thrown if the user corresponding to the given email has been disabled.
+  @Deprecated('You should use signInWithProvider instead')
+  Future<UserCredential> signInWithAuthProvider(
+    AuthProvider provider,
+  ) async {
+    return signInWithProvider(provider);
+  }
+
   /// Signs in with an AuthProvider using native authentication flow.
   ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **user-disabled**:
   ///  - Thrown if the user corresponding to the given email has been disabled.
-  Future<UserCredential> signInWithAuthProvider(
+  Future<UserCredential> signInWithProvider(
     AuthProvider provider,
   ) async {
     try {
       return UserCredential._(
         this,
-        await _delegate.signInWithAuthProvider(provider),
+        await _delegate.signInWithProvider(provider),
       );
     } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
       throw FirebaseAuthMultiFactorException._(this, e);
