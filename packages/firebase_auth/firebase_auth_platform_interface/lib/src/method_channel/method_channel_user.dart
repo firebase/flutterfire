@@ -101,7 +101,7 @@ class MethodChannelUser extends UserPlatform {
   }
 
   @override
-  Future<UserCredentialPlatform> linkWithAuthProvider(
+  Future<UserCredentialPlatform> linkWithProvider(
     AuthProvider provider,
   ) async {
     try {
@@ -110,7 +110,7 @@ class MethodChannelUser extends UserPlatform {
 
       Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
           .invokeMapMethod<String, dynamic>(
-              'User#linkWithAuthProvider',
+              'User#linkWithProvider',
               _withChannelDefaults({
                 'signInProvider': convertedProvider.providerId,
                 if (convertedProvider is OAuthProvider) ...{

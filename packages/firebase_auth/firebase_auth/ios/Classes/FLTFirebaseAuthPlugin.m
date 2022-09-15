@@ -251,7 +251,7 @@ NSString *const kErrMsgInvalidCredential =
     [self userGetIdToken:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"User#linkWithCredential" isEqualToString:call.method]) {
     [self userLinkWithCredential:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"User#linkWithAuthProvider" isEqualToString:call.method]) {
+  } else if ([@"User#linkWithProvider" isEqualToString:call.method]) {
     [self userLinkWithProvider:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"User#reauthenticateUserWithCredential" isEqualToString:call.method]) {
     [self userReauthenticateUserWithCredential:call.arguments
@@ -976,7 +976,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
     return;
   }
 #if TARGET_OS_OSX
-  NSLog(@"linkWithAuthProvider is not supported on the "
+  NSLog(@"linkWithProvider is not supported on the "
         @"MacOS platform.");
   result.success(nil);
 #else

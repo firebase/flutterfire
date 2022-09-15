@@ -226,13 +226,13 @@ class User {
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
   ///    to the Firebase Console for your project, in the Auth section and the
   ///    Sign in Method tab and configure the provider.
-  Future<UserCredential> linkWithAuthProvider(
+  Future<UserCredential> linkWithProvider(
     AuthProvider provider,
   ) async {
     try {
       return UserCredential._(
         _auth,
-        await _delegate.linkWithAuthProvider(provider),
+        await _delegate.linkWithProvider(provider),
       );
     } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
       throw FirebaseAuthMultiFactorException._(_auth, e);

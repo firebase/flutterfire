@@ -235,8 +235,8 @@ abstract class UserPlatform extends PlatformInterface {
   /// - **invalid-verification-id**:
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
-  Future<UserCredentialPlatform> linkWithAuthProvider(AuthProvider provider) {
-    throw UnimplementedError('linkWithAuthProvider() is not implemented');
+  Future<UserCredentialPlatform> linkWithProvider(AuthProvider provider) {
+    throw UnimplementedError('linkWithProvider() is not implemented');
   }
 
   /// Links the user account with the given provider.

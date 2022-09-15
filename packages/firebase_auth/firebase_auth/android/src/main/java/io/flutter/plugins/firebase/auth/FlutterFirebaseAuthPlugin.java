@@ -1494,8 +1494,8 @@ public class FlutterFirebaseAuthPlugin
       case "Auth#signInWithAuthProvider":
         methodCallTask = signInWithAuthProvider(call.arguments());
         break;
-      case "User#linkWithAuthProvider":
-        methodCallTask = startActivityForlinkWithAuthProvider(call.arguments());
+      case "User#linkWithProvider":
+        methodCallTask = startActivityForLinkWithProvider(call.arguments());
         break;
       case "User#delete":
         methodCallTask = deleteUser(call.arguments());
@@ -1552,7 +1552,7 @@ public class FlutterFirebaseAuthPlugin
         });
   }
 
-  private Task<Map<String, Object>> startActivityForlinkWithAuthProvider(
+  private Task<Map<String, Object>> startActivityForLinkWithProvider(
       Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 

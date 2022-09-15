@@ -359,7 +359,7 @@ final appleProvider = AppleAuthProvider();
 if (kIsWeb) {
   await FirebaseAuth.instance.currentUser?.linkWithPopup(appleProvider);
 } else {
-  await FirebaseAuth.instance.currentUser?.linkWithAuthProvider(appleProvider);
+  await FirebaseAuth.instance.currentUser?.linkWithProvider(appleProvider);
 }
 
 // You're anonymous user is now upgraded to be able to connect with Sign In With Apple
