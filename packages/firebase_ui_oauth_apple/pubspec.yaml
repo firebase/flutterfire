@@ -10,7 +10,7 @@ environment:
 dependencies:
   crypto: ^3.0.1
   firebase_auth: ^3.6.2
-  firebase_ui_oauth: ^0.0.1
+  firebase_ui_oauth: ^1.0.0-dev.0
   flutter:
     sdk: flutter
   sign_in_with_apple: ^4.1.0

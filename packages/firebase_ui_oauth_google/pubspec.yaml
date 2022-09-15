@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   firebase_auth: ^3.6.2
-  firebase_ui_oauth: ^0.0.1
+  firebase_ui_oauth: ^1.0.0-dev.0
   flutter:
     sdk: flutter
   google_sign_in: ^5.4.0
