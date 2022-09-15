@@ -1,5 +1,10 @@
-Project: /docs/_project.yaml
+Project: /docs/dynamic-links/_project.yaml
 Book: /docs/_book.yaml
+page_type: guide
+
+{% include "_local_variables.html" %}
+{% include "docs/cpp/_local_variables.html" %}
+{% include "docs/dynamic-links/_local_variables.html" %}
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
@@ -50,7 +55,6 @@ completed these steps and you can skip this section.
         from your domain to sites you don't control.
 
         See <a href="https://support.google.com/firebase/answer/9021429">Allow specific URL patterns</a>.
-
 
 ## Create a Dynamic Link from parameters
 

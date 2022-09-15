@@ -4260,6 +4260,11 @@ abstract class RootDocumentReference
     reference,
   );
 
+  late final ThisIsACustomPrefixCollectionReference customClassPrefix =
+      _$ThisIsACustomPrefixCollectionReference(
+    reference,
+  );
+
   @override
   Stream<RootDocumentSnapshot> snapshots();
 
@@ -4301,6 +4306,11 @@ class _$RootDocumentReference
 
   late final CustomSubNameCollectionReference thisIsACustomName =
       _$CustomSubNameCollectionReference(
+    reference,
+  );
+
+  late final ThisIsACustomPrefixCollectionReference customClassPrefix =
+      _$ThisIsACustomPrefixCollectionReference(
     reference,
   );
 
@@ -7001,6 +7011,678 @@ class CustomSubNameQueryDocumentSnapshot
 /// A collection reference object can be used for adding documents,
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
+abstract class ThisIsACustomPrefixCollectionReference
+    implements
+        ThisIsACustomPrefixQuery,
+        FirestoreCollectionReference<CustomClassPrefix,
+            ThisIsACustomPrefixQuerySnapshot> {
+  factory ThisIsACustomPrefixCollectionReference(
+    DocumentReference<Root> parent,
+  ) = _$ThisIsACustomPrefixCollectionReference;
+
+  static CustomClassPrefix fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return CustomClassPrefix.fromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    CustomClassPrefix value,
+    SetOptions? options,
+  ) {
+    return value.toJson();
+  }
+
+  @override
+  CollectionReference<CustomClassPrefix> get reference;
+
+  /// A reference to the containing [RootDocumentReference] if this is a subcollection.
+  RootDocumentReference get parent;
+
+  @override
+  ThisIsACustomPrefixDocumentReference doc([String? id]);
+
+  /// Add a new document to this collection with the specified data,
+  /// assigning it a document ID automatically.
+  Future<ThisIsACustomPrefixDocumentReference> add(CustomClassPrefix value);
+}
+
+class _$ThisIsACustomPrefixCollectionReference
+    extends _$ThisIsACustomPrefixQuery
+    implements ThisIsACustomPrefixCollectionReference {
+  factory _$ThisIsACustomPrefixCollectionReference(
+    DocumentReference<Root> parent,
+  ) {
+    return _$ThisIsACustomPrefixCollectionReference._(
+      RootDocumentReference(parent),
+      parent.collection('custom-class-prefix').withConverter(
+            fromFirestore: ThisIsACustomPrefixCollectionReference.fromFirestore,
+            toFirestore: ThisIsACustomPrefixCollectionReference.toFirestore,
+          ),
+    );
+  }
+
+  _$ThisIsACustomPrefixCollectionReference._(
+    this.parent,
+    CollectionReference<CustomClassPrefix> reference,
+  ) : super(reference, reference);
+
+  @override
+  final RootDocumentReference parent;
+
+  String get path => reference.path;
+
+  @override
+  CollectionReference<CustomClassPrefix> get reference =>
+      super.reference as CollectionReference<CustomClassPrefix>;
+
+  @override
+  ThisIsACustomPrefixDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
+    return ThisIsACustomPrefixDocumentReference(
+      reference.doc(id),
+    );
+  }
+
+  @override
+  Future<ThisIsACustomPrefixDocumentReference> add(CustomClassPrefix value) {
+    return reference
+        .add(value)
+        .then((ref) => ThisIsACustomPrefixDocumentReference(ref));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$ThisIsACustomPrefixCollectionReference &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+abstract class ThisIsACustomPrefixDocumentReference
+    extends FirestoreDocumentReference<CustomClassPrefix,
+        ThisIsACustomPrefixDocumentSnapshot> {
+  factory ThisIsACustomPrefixDocumentReference(
+          DocumentReference<CustomClassPrefix> reference) =
+      _$ThisIsACustomPrefixDocumentReference;
+
+  DocumentReference<CustomClassPrefix> get reference;
+
+  /// A reference to the [ThisIsACustomPrefixCollectionReference] containing this document.
+  ThisIsACustomPrefixCollectionReference get parent {
+    return _$ThisIsACustomPrefixCollectionReference(
+      reference.parent.parent!.withConverter<Root>(
+        fromFirestore: RootCollectionReference.fromFirestore,
+        toFirestore: RootCollectionReference.toFirestore,
+      ),
+    );
+  }
+
+  @override
+  Stream<ThisIsACustomPrefixDocumentSnapshot> snapshots();
+
+  @override
+  Future<ThisIsACustomPrefixDocumentSnapshot> get([GetOptions? options]);
+
+  @override
+  Future<void> delete();
+
+  Future<void> update({
+    num value,
+  });
+
+  Future<void> set(CustomClassPrefix value);
+}
+
+class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
+        CustomClassPrefix, ThisIsACustomPrefixDocumentSnapshot>
+    implements ThisIsACustomPrefixDocumentReference {
+  _$ThisIsACustomPrefixDocumentReference(this.reference);
+
+  @override
+  final DocumentReference<CustomClassPrefix> reference;
+
+  /// A reference to the [ThisIsACustomPrefixCollectionReference] containing this document.
+  ThisIsACustomPrefixCollectionReference get parent {
+    return _$ThisIsACustomPrefixCollectionReference(
+      reference.parent.parent!.withConverter<Root>(
+        fromFirestore: RootCollectionReference.fromFirestore,
+        toFirestore: RootCollectionReference.toFirestore,
+      ),
+    );
+  }
+
+  @override
+  Stream<ThisIsACustomPrefixDocumentSnapshot> snapshots() {
+    return reference.snapshots().map((snapshot) {
+      return ThisIsACustomPrefixDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<ThisIsACustomPrefixDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then((snapshot) {
+      return ThisIsACustomPrefixDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<void> delete() {
+    return reference.delete();
+  }
+
+  Future<void> update({
+    Object? value = _sentinel,
+  }) async {
+    final json = {
+      if (value != _sentinel) "value": value as num,
+    };
+
+    return reference.update(json);
+  }
+
+  Future<void> set(CustomClassPrefix value) {
+    return reference.set(value);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ThisIsACustomPrefixDocumentReference &&
+        other.runtimeType == runtimeType &&
+        other.parent == parent &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, parent, id);
+}
+
+class ThisIsACustomPrefixDocumentSnapshot
+    extends FirestoreDocumentSnapshot<CustomClassPrefix> {
+  ThisIsACustomPrefixDocumentSnapshot._(
+    this.snapshot,
+    this.data,
+  );
+
+  @override
+  final DocumentSnapshot<CustomClassPrefix> snapshot;
+
+  @override
+  ThisIsACustomPrefixDocumentReference get reference {
+    return ThisIsACustomPrefixDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final CustomClassPrefix? data;
+}
+
+abstract class ThisIsACustomPrefixQuery
+    implements
+        QueryReference<CustomClassPrefix, ThisIsACustomPrefixQuerySnapshot> {
+  @override
+  ThisIsACustomPrefixQuery limit(int limit);
+
+  @override
+  ThisIsACustomPrefixQuery limitToLast(int limit);
+
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  ThisIsACustomPrefixQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    ThisIsACustomPrefixDocumentSnapshot? startAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endBeforeDocument,
+    ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  ThisIsACustomPrefixQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  ThisIsACustomPrefixQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+  ThisIsACustomPrefixQuery whereValue({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
+  });
+
+  ThisIsACustomPrefixQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    ThisIsACustomPrefixDocumentSnapshot? startAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endBeforeDocument,
+    ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
+  });
+
+  ThisIsACustomPrefixQuery orderByValue({
+    bool descending = false,
+    num startAt,
+    num startAfter,
+    num endAt,
+    num endBefore,
+    ThisIsACustomPrefixDocumentSnapshot? startAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endBeforeDocument,
+    ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
+  });
+}
+
+class _$ThisIsACustomPrefixQuery
+    extends QueryReference<CustomClassPrefix, ThisIsACustomPrefixQuerySnapshot>
+    implements ThisIsACustomPrefixQuery {
+  _$ThisIsACustomPrefixQuery(
+    this.reference,
+    this._collection,
+  );
+
+  final CollectionReference<Object?> _collection;
+
+  @override
+  final Query<CustomClassPrefix> reference;
+
+  ThisIsACustomPrefixQuerySnapshot _decodeSnapshot(
+    QuerySnapshot<CustomClassPrefix> snapshot,
+  ) {
+    final docs = snapshot.docs.map((e) {
+      return ThisIsACustomPrefixQueryDocumentSnapshot._(e, e.data());
+    }).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return FirestoreDocumentChange<ThisIsACustomPrefixDocumentSnapshot>(
+        type: change.type,
+        oldIndex: change.oldIndex,
+        newIndex: change.newIndex,
+        doc: ThisIsACustomPrefixDocumentSnapshot._(
+            change.doc, change.doc.data()),
+      );
+    }).toList();
+
+    return ThisIsACustomPrefixQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  @override
+  Stream<ThisIsACustomPrefixQuerySnapshot> snapshots(
+      [SnapshotOptions? options]) {
+    return reference.snapshots().map(_decodeSnapshot);
+  }
+
+  @override
+  Future<ThisIsACustomPrefixQuerySnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(_decodeSnapshot);
+  }
+
+  @override
+  ThisIsACustomPrefixQuery limit(int limit) {
+    return _$ThisIsACustomPrefixQuery(
+      reference.limit(limit),
+      _collection,
+    );
+  }
+
+  @override
+  ThisIsACustomPrefixQuery limitToLast(int limit) {
+    return _$ThisIsACustomPrefixQuery(
+      reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  ThisIsACustomPrefixQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ThisIsACustomPrefixDocumentSnapshot? startAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endBeforeDocument,
+    ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ThisIsACustomPrefixQuery(query, _collection);
+  }
+
+  ThisIsACustomPrefixQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$ThisIsACustomPrefixQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  ThisIsACustomPrefixQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$ThisIsACustomPrefixQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  ThisIsACustomPrefixQuery whereValue({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
+  }) {
+    return _$ThisIsACustomPrefixQuery(
+      reference.where(
+        _$CustomClassPrefixFieldMap["value"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  ThisIsACustomPrefixQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ThisIsACustomPrefixDocumentSnapshot? startAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endBeforeDocument,
+    ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ThisIsACustomPrefixQuery(query, _collection);
+  }
+
+  ThisIsACustomPrefixQuery orderByValue({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ThisIsACustomPrefixDocumentSnapshot? startAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endBeforeDocument,
+    ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$CustomClassPrefixFieldMap["value"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ThisIsACustomPrefixQuery(query, _collection);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$ThisIsACustomPrefixQuery &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+class ThisIsACustomPrefixQuerySnapshot extends FirestoreQuerySnapshot<
+    CustomClassPrefix, ThisIsACustomPrefixQueryDocumentSnapshot> {
+  ThisIsACustomPrefixQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  final QuerySnapshot<CustomClassPrefix> snapshot;
+
+  @override
+  final List<ThisIsACustomPrefixQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<ThisIsACustomPrefixDocumentSnapshot>>
+      docChanges;
+}
+
+class ThisIsACustomPrefixQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<CustomClassPrefix>
+    implements ThisIsACustomPrefixDocumentSnapshot {
+  ThisIsACustomPrefixQueryDocumentSnapshot._(this.snapshot, this.data);
+
+  @override
+  final QueryDocumentSnapshot<CustomClassPrefix> snapshot;
+
+  @override
+  ThisIsACustomPrefixDocumentReference get reference {
+    return ThisIsACustomPrefixDocumentReference(snapshot.reference);
+  }
+
+  @override
+  final CustomClassPrefix data;
+}
+
+/// A collection reference object can be used for adding documents,
+/// getting document references, and querying for documents
+/// (using the methods inherited from Query).
 abstract class ExplicitPathCollectionReference
     implements
         ExplicitPathQuery,
@@ -8496,6 +9178,20 @@ const _$AsCamelCaseFieldMap = <String, String>{
 };
 
 Map<String, dynamic> _$AsCamelCaseToJson(AsCamelCase instance) =>
+    <String, dynamic>{
+      'value': instance.value,
+    };
+
+CustomClassPrefix _$CustomClassPrefixFromJson(Map<String, dynamic> json) =>
+    CustomClassPrefix(
+      json['value'] as num,
+    );
+
+const _$CustomClassPrefixFieldMap = <String, String>{
+  'value': 'value',
+};
+
+Map<String, dynamic> _$CustomClassPrefixToJson(CustomClassPrefix instance) =>
     <String, dynamic>{
       'value': instance.value,
     };

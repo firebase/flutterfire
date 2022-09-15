@@ -166,16 +166,13 @@ public class GeneratedAndroidFirebaseAuth {
       this.enrollmentTimestamp = setterArg;
     }
 
-    private @NonNull String factorId;
+    private @Nullable String factorId;
 
-    public @NonNull String getFactorId() {
+    public @Nullable String getFactorId() {
       return factorId;
     }
 
-    public void setFactorId(@NonNull String setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"factorId\" is null.");
-      }
+    public void setFactorId(@Nullable String setterArg) {
       this.factorId = setterArg;
     }
 
@@ -222,7 +219,7 @@ public class GeneratedAndroidFirebaseAuth {
 
       private @Nullable String factorId;
 
-      public @NonNull Builder setFactorId(@NonNull String setterArg) {
+      public @NonNull Builder setFactorId(@Nullable String setterArg) {
         this.factorId = setterArg;
         return this;
       }

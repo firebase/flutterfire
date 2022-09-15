@@ -2,7 +2,7 @@
 
 [![pub package](https://img.shields.io/pub/v/firebase_ui_oauth_apple.svg)](https://pub.dev/packages/firebase_ui_oauth_apple)
 
-Apple Sign In for [Firebase UI](https://pub.dev/packages/firebase_ui)
+Apple Sign In for [Firebase UI](https://pub.dev/packages/firebase_ui_auth)
 
 ## Installation
 
