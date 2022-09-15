@@ -621,7 +621,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
     return;
   }
 #if TARGET_OS_OSX
-  NSLog(@"The Firebase Phone Authentication provider is not supported on the "
+  NSLog(@"signInWithAuthProvider is not supported on the "
         @"MacOS platform.");
   result.success(nil);
 #else
@@ -976,7 +976,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
     return;
   }
 #if TARGET_OS_OSX
-  NSLog(@"The Firebase Phone Authentication provider is not supported on the "
+  NSLog(@"linkWithAuthProvider is not supported on the "
         @"MacOS platform.");
   result.success(nil);
 #else
