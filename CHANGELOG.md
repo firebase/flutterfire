@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-09-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.0.0-dev.0`](#firebase_ui_auth---v100-dev0)
+ - [`firebase_ui_oauth` - `v0.0.1+1`](#firebase_ui_oauth---v0011)
+ - [`firebase_ui_oauth_apple` - `v0.0.1+1`](#firebase_ui_oauth_apple---v0011)
+ - [`firebase_ui_oauth_twitter` - `v0.0.1+1`](#firebase_ui_oauth_twitter---v0011)
+ - [`firebase_ui_oauth_facebook` - `v0.0.1+1`](#firebase_ui_oauth_facebook---v0011)
+ - [`firebase_ui_oauth_google` - `v0.0.1+1`](#firebase_ui_oauth_google---v0011)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth` - `v0.0.1+1`
+ - `firebase_ui_oauth_apple` - `v0.0.1+1`
+ - `firebase_ui_oauth_twitter` - `v0.0.1+1`
+ - `firebase_ui_oauth_facebook` - `v0.0.1+1`
+ - `firebase_ui_oauth_google` - `v0.0.1+1`
+
+---
+
+#### `firebase_ui_auth` - `v1.0.0-dev.0`
+
+ - Bump "firebase_ui_auth" to `1.0.0-dev.0`.
+
+
 ## 2022-08-01
 
 ### Changes

@@ -38,7 +38,6 @@ dependencies:
   firebase_ui_oauth_facebook: ^0.0.1
   firebase_ui_oauth_google: ^0.0.1
   firebase_ui_oauth_twitter: ^0.0.1
-
 dev_dependencies:
   drive: ^1.0.0-1.0.nullsafety.1
   flutter_driver:

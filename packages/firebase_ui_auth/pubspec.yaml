@@ -1,6 +1,6 @@
 name: firebase_ui_auth
 description: Firebase UI widgets for authentication
-version: 0.0.1
+version: 1.0.0-dev.0
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_auth
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_auth
 
@@ -22,7 +22,7 @@ dependencies:
   firebase_database: ^9.1.0
   firebase_dynamic_links: ^4.3.3
   firebase_ui_localizations: ^0.0.1
-  firebase_ui_oauth: ^0.1.0
+  firebase_ui_oauth: ^0.0.1
   flutter:
     sdk: flutter
   flutter_localizations:

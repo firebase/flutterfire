@@ -10,7 +10,7 @@ environment:
 dependencies:
   desktop_webview_auth: ^0.0.9
   firebase_auth: ^3.6.2
-  firebase_ui_auth: ^0.0.1
+  firebase_ui_auth: ^1.0.0-dev.0
   flutter_svg: ^1.1.2
   flutter:
     sdk: flutter
@@ -20,7 +20,6 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
   firebase_ui_oauth_google: ^0.0.1
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
