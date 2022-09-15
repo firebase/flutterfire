@@ -1,3 +1,7 @@
+## 1.0.0-dev.30
+
+ - **FEAT**: add support for specifying class name prefix ([#9453](https://github.com/firebase/flutterfire/issues/9453)). ([49921a43](https://github.com/firebase/flutterfire/commit/49921a4362c5965d2efeed17eb73775302007ea8))
+
 ## 1.0.0-dev.29
 
  - **FEAT**: Add support using Freezed classes as collection models ([#9483](https://github.com/firebase/flutterfire/issues/9483)). ([ce238f71](https://github.com/firebase/flutterfire/commit/ce238f713b250f523890b9e7e42d395f433ed80f))

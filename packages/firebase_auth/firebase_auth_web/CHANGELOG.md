@@ -1,3 +1,7 @@
+## 4.4.1
+
+ - Update a dependency to the latest release.
+
 ## 4.4.0
 
  - **FIX**: fix enrollementTimestamp parsing on Web ([#9440](https://github.com/firebase/flutterfire/issues/9440)). ([639cab7b](https://github.com/firebase/flutterfire/commit/639cab7b84aa33cc1dda144fc89db2236a1945b2))

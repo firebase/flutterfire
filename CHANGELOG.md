@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-09-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v3.4.8`](#cloud_firestore---v348)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.30`](#cloud_firestore_odm---v100-dev30)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.30`](#cloud_firestore_odm_generator---v100-dev30)
+ - [`firebase_analytics` - `v9.3.5`](#firebase_analytics---v935)
+ - [`firebase_auth` - `v3.9.0`](#firebase_auth---v390)
+ - [`firebase_auth_platform_interface` - `v6.8.0`](#firebase_auth_platform_interface---v680)
+ - [`firebase_messaging` - `v13.0.2`](#firebase_messaging---v1302)
+ - [`flutterfire_ui` - `v0.4.3+9`](#flutterfire_ui---v0439)
+ - [`firebase_auth_web` - `v4.4.1`](#firebase_auth_web---v441)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.3+9`
+ - `firebase_auth_web` - `v4.4.1`
+
+---
+
+#### `cloud_firestore` - `v3.4.8`
+
+ - **FIX**: fix `queryGet()` & `namedQueryGet()`. Check if `query` is `[NSNull null]` value ([#9410](https://github.com/firebase/flutterfire/issues/9410)). ([ae035fe2](https://github.com/firebase/flutterfire/commit/ae035fe2b060264153386ae5c2a1eb90c22e90f3))
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.30`
+
+ - **FEAT**: add support for specifying class name prefix ([#9453](https://github.com/firebase/flutterfire/issues/9453)). ([49921a43](https://github.com/firebase/flutterfire/commit/49921a4362c5965d2efeed17eb73775302007ea8))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.30`
+
+ - **FEAT**: add support for specifying class name prefix ([#9453](https://github.com/firebase/flutterfire/issues/9453)). ([49921a43](https://github.com/firebase/flutterfire/commit/49921a4362c5965d2efeed17eb73775302007ea8))
+
+#### `firebase_analytics` - `v9.3.5`
+
+ - **REFACTOR**: deprecate `signInWithAuthProvider` in favor of `signInWithProvider` ([#9542](https://github.com/firebase/flutterfire/issues/9542)). ([ca340ea1](https://github.com/firebase/flutterfire/commit/ca340ea19c8dbb340f083e48cf1b0de36f7d64c4))
+
+#### `firebase_auth` - `v3.9.0`
+
+ - **REFACTOR**: deprecate `signInWithAuthProvider` in favor of `signInWithProvider` ([#9542](https://github.com/firebase/flutterfire/issues/9542)). ([ca340ea1](https://github.com/firebase/flutterfire/commit/ca340ea19c8dbb340f083e48cf1b0de36f7d64c4))
+ - **FEAT**: add `linkWithProvider` to support for linking auth providers ([#9535](https://github.com/firebase/flutterfire/issues/9535)). ([1ac14fb1](https://github.com/firebase/flutterfire/commit/1ac14fb147f83cf5c7874004a9dc61838dce8da8))
+
+#### `firebase_auth_platform_interface` - `v6.8.0`
+
+ - **REFACTOR**: deprecate `signInWithAuthProvider` in favor of `signInWithProvider` ([#9542](https://github.com/firebase/flutterfire/issues/9542)). ([ca340ea1](https://github.com/firebase/flutterfire/commit/ca340ea19c8dbb340f083e48cf1b0de36f7d64c4))
+ - **FEAT**: add `linkWithProvider` to support for linking auth providers ([#9535](https://github.com/firebase/flutterfire/issues/9535)). ([1ac14fb1](https://github.com/firebase/flutterfire/commit/1ac14fb147f83cf5c7874004a9dc61838dce8da8))
+
+#### `firebase_messaging` - `v13.0.2`
+
+ - **DOCS**: update docs to use `@pragma('vm:entry-point')` annotation for messaging background handler ([#9494](https://github.com/firebase/flutterfire/issues/9494)). ([27a7f44e](https://github.com/firebase/flutterfire/commit/27a7f44e02f2ed533e0249622afdd0a421261385))
+
+
 ## 2022-09-08
 
 ### Changes

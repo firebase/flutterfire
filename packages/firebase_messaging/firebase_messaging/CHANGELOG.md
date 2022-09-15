@@ -1,3 +1,7 @@
+## 13.0.2
+
+ - **DOCS**: update docs to use `@pragma('vm:entry-point')` annotation for messaging background handler ([#9494](https://github.com/firebase/flutterfire/issues/9494)). ([27a7f44e](https://github.com/firebase/flutterfire/commit/27a7f44e02f2ed533e0249622afdd0a421261385))
+
 ## 13.0.1
 
  - **FIX**: ensure only messaging permission request is processed ([#9486](https://github.com/firebase/flutterfire/issues/9486)). ([5b31e71b](https://github.com/firebase/flutterfire/commit/5b31e71b6cbca0e6a149482436e00598f4eaa2de))

@@ -1,3 +1,7 @@
+## 9.3.5
+
+ - **REFACTOR**: deprecate `signInWithAuthProvider` in favor of `signInWithProvider` ([#9542](https://github.com/firebase/flutterfire/issues/9542)). ([ca340ea1](https://github.com/firebase/flutterfire/commit/ca340ea19c8dbb340f083e48cf1b0de36f7d64c4))
+
 ## 9.3.4
 
  - Update a dependency to the latest release.
