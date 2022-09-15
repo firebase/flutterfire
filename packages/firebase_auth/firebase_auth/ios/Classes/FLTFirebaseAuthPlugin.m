@@ -920,8 +920,8 @@ static void launchAppleSignInRequest(FLTFirebaseAuthPlugin *object, id arguments
 }
 
 static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, FIRAuth *auth,
-                                    FIRAuthCredential *credentials, NSError *error,
-                                    FLTFirebaseMethodCallResult *result) {
+                                  FIRAuthCredential *credentials, NSError *error,
+                                  FLTFirebaseMethodCallResult *result) {
   if (error) {
     if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
       [object handleMultiFactorError:arguments withResult:result withError:error];
