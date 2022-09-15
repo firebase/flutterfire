@@ -1,6 +1,6 @@
 name: firebase_ui_localizations
 description: Localization package for firebase_ui_auth, firebase_ui_firestore and firebase_ui_database
-version: 0.0.1
+version: 1.0.0-dev.0
 homepage:
 
 environment:

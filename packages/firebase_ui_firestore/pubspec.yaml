@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   cloud_firestore: ^3.4.3
-  firebase_ui_localizations: ^0.0.1
+  firebase_ui_localizations: ^1.0.0-dev.0
   flutter:
     sdk: flutter
 
