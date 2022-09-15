@@ -3,11 +3,12 @@ import 'package:flutter/material.dart' hide Title;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 
-import '../widgets/internal/title.dart';
+import 'internal/title.dart';
+import 'internal/universal_button.dart';
 
 /// {@template ui.auth.widgets.reauthenticate_dialog}
 /// A dialog that prompts the user to re-authenticate their account
-/// Used to confirm destructive actions (like account deletion).
+/// Used to confirm destructive actions (like account deletion or disabling MFA).
 /// {@endtemplate}
 class ReauthenticateDialog extends StatelessWidget {
   /// {@macro ui.auth.auth_controller.auth}
@@ -48,6 +49,12 @@ class ReauthenticateDialog extends StatelessWidget {
                   providers: providers,
                   onSignedIn: onSignedIn,
                 ),
+                const SizedBox(height: 16),
+                UniversalButton(
+                  text: l.cancelLabel,
+                  variant: ButtonVariant.text,
+                  onPressed: () => Navigator.of(context).pop(),
+                )
               ],
             ),
           ),

@@ -14,6 +14,7 @@ import 'package:flutter/material.dart' hide Title;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth/firebase_ui_oauth.dart'
     hide OAuthProviderButtonBase;
+import 'package:flutter/services.dart';
 
 import '../widgets/internal/loading_button.dart';
 import '../widgets/internal/universal_button.dart';
@@ -451,12 +452,14 @@ class _MFABadge extends StatelessWidget {
   final bool enrolled;
   final FirebaseAuth auth;
   final VoidCallback onToggled;
+  final List<AuthProvider> providers;
 
   const _MFABadge({
     Key? key,
     required this.enrolled,
     required this.auth,
     required this.onToggled,
+    required this.providers,
   }) : super(key: key);
 
   @override
@@ -474,6 +477,7 @@ class _MFABadge extends StatelessWidget {
             enrolled: enrolled,
             auth: auth,
             onToggled: onToggled,
+            providers: providers,
           ),
         ],
       ),
@@ -485,12 +489,14 @@ class _MFAToggle extends StatefulWidget {
   final bool enrolled;
   final FirebaseAuth auth;
   final VoidCallback? onToggled;
+  final List<AuthProvider> providers;
 
   const _MFAToggle({
     Key? key,
     required this.enrolled,
     required this.auth,
     required this.onToggled,
+    required this.providers,
   }) : super(key: key);
 
   @override
@@ -525,6 +531,17 @@ class _MFAToggleState extends State<_MFAToggle> {
     }
   }
 
+  Future<bool> _reauthenticate() async {
+    return await showReauthenticateDialog(
+      context: context,
+      providers: widget.providers,
+      auth: widget.auth,
+      onSignedIn: () {
+        Navigator.of(context).pop(true);
+      },
+    );
+  }
+
   Future<void> _disable() async {
     setState(() {
       exception = null;
@@ -544,6 +561,14 @@ class _MFAToggleState extends State<_MFAToggle> {
     try {
       await mfa.unenroll(multiFactorInfo: factors.first);
       widget.onToggled?.call();
+    } on PlatformException catch (e) {
+      if (e.code == 'FirebaseAuthRecentLoginRequiredException') {
+        if (await _reauthenticate()) {
+          await _disable();
+        }
+      } else {
+        rethrow;
+      }
     } on Exception catch (e) {
       // TODO(lesnitsky): handle recent login
       setState(() {
@@ -833,6 +858,7 @@ class ProfileScreen extends MultiProviderScreen {
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: _MFABadge(
+                      providers: providers,
                       enrolled: enrolledFactors.isNotEmpty,
                       auth: auth,
                       onToggled: mfaScopeKey.rebuild,

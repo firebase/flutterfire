@@ -15,15 +15,21 @@ Future<bool> showReauthenticateDialog({
   /// A callback that is being called after user has successfully signed in.
   VoidCallback? onSignedIn,
 }) async {
-  return await showGeneralDialog<bool>(
-        context: context,
-        pageBuilder: (context, _, __) => ReauthenticateDialog(
-          providers: providers,
-          auth: auth,
-          onSignedIn: onSignedIn,
-        ),
-      ) ??
-      false;
+  final reauthenticated = await showGeneralDialog<bool>(
+    context: context,
+    barrierDismissible: true,
+    pageBuilder: (_, __, ___) => FirebaseUIActions.inherit(
+      from: context,
+      child: ReauthenticateDialog(
+        providers: providers,
+        auth: auth,
+        onSignedIn: onSignedIn,
+      ),
+    ),
+  );
+
+  if (reauthenticated == null) return false;
+  return reauthenticated;
 }
 
 /// Shows [DifferentMethodSignInDialog].
@@ -44,6 +50,7 @@ Future<void> showDifferentMethodSignInDialog({
 }) async {
   await showGeneralDialog(
     context: context,
+    barrierDismissible: true,
     pageBuilder: (context, _, __) => DifferentMethodSignInDialog(
       availableProviders: availableProviders,
       providers: providers,

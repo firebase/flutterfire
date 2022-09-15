@@ -4,6 +4,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 
 import '../widgets/internal/title.dart';
+import 'internal/universal_button.dart';
 
 /// {@template ui.auth.widgets.different_method_sign_in_dialog}
 /// A dialog that is shown when the user tries to sign in with a provider that
@@ -53,6 +54,10 @@ class DifferentMethodSignInDialog extends StatelessWidget {
                   providers: providers,
                   availableProviders: availableProviders,
                   onSignedIn: onSignedIn,
+                ),
+                UniversalButton(
+                  text: l.cancelLabel,
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
             ),

@@ -16,11 +16,11 @@ import 'config.dart';
 import 'decorations.dart';
 
 final actionCodeSettings = ActionCodeSettings(
-  url: 'https://reactnativefirebase.page.link',
+  url: 'https://flutterfire-e2e-tests.page.link',
   handleCodeInApp: true,
   androidMinimumVersion: '1',
   androidPackageName: 'io.flutter.plugins.firebase_ui.firebase_ui_example',
-  iOSBundleId: 'io.flutter.plugins.flutterfireui.flutterfireUIExample',
+  iOSBundleId: 'io.flutter.plugins.fireabaseUiExample',
 );
 final emailLinkProviderConfig = EmailLinkAuthProvider(
   actionCodeSettings: actionCodeSettings,
@@ -83,6 +83,19 @@ class FirebaseAuthUIExample extends StatelessWidget {
       ),
     );
 
+    final mfaAction = AuthStateChangeAction<MFARequired>(
+      (context, state) async {
+        final nav = Navigator.of(context);
+
+        await startMFAVerification(
+          resolver: state.resolver,
+          context: context,
+        );
+
+        nav.pushReplacementNamed('/profile');
+      },
+    );
+
     return MaterialApp(
       theme: ThemeData(
         brightness: Brightness.light,
@@ -116,16 +129,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
                   Navigator.pushReplacementNamed(context, '/profile');
                 }
               }),
-              AuthStateChangeAction<MFARequired>((context, state) async {
-                final nav = Navigator.of(context);
-
-                await startMFAVerification(
-                  resolver: state.resolver,
-                  context: context,
-                );
-
-                nav.pushReplacementNamed('/profile');
-              }),
+              mfaAction,
               EmailLinkSignInAction((context) {
                 Navigator.pushReplacementNamed(context, '/email-link-sign-in');
               }),
@@ -240,6 +244,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
               SignedOutAction((context) {
                 Navigator.pushReplacementNamed(context, '/');
               }),
+              mfaAction,
             ],
             actionCodeSettings: actionCodeSettings,
             showMFATile: true,
