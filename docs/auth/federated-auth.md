@@ -346,3 +346,21 @@ Future<UserCredential> signInWithYahoo() async {
   }
 }
 ```
+
+
+# Linking an Authentication Provider
+
+If you want to link a provider to a current user, you can use the following method:
+```dart
+await FirebaseAuth.instance.signInAnonymously();
+
+final appleProvider = AppleAuthProvider();
+
+if (kIsWeb) {
+  await FirebaseAuth.instance.currentUser?.linkWithPopup(appleProvider);
+} else {
+  await FirebaseAuth.instance.currentUser?.linkWithProvider(appleProvider);
+}
+
+// You're anonymous user is now upgraded to be able to connect with Sign In With Apple
+```
