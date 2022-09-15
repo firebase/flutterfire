@@ -1,7 +1,7 @@
 name: firebase_ui_firestore
 description: A new Flutter package project.
 version: 1.0.0-dev.0
-homepage:
+homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_firestore
 
 environment:
   sdk: '>=2.17.6 <3.0.0'
@@ -21,6 +21,11 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+false_secrets:
+  - '/example/**/google-services.json'
+  - '/example/**/firebase_options.dart'
+  - '/example/**/GoogleService-Info.plist'
 
 # The following section is specific to Flutter packages.
 flutter:

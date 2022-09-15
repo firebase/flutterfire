@@ -4,9 +4,6 @@ version: 1.0.0-dev.0
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_auth
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_auth
 
-false_secrets:
-  - example/**
-
 environment:
   sdk: '>=2.16.0 <3.0.0'
   flutter: '>=1.17.0'
@@ -38,6 +35,13 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
+
+false_secrets:
+  - '/example/**/google-services.json'
+  - '/example/**/firebase_options.dart'
+  - '/example/**/GoogleService-Info.plist'
+  - 'example/lib/config.dart'
+
 flutter:
   assets:
     - assets/icons/
