@@ -34,7 +34,7 @@ dependencies:
     path: ../
   firebase_ui_localizations: ^1.0.0-dev.0
   firebase_ui_oauth: ^1.0.0-dev.0
-  firebase_ui_oauth_apple: ^0.0.1
+  firebase_ui_oauth_apple: ^1.0.0-dev.0
   firebase_ui_oauth_facebook: ^0.0.1
   firebase_ui_oauth_google: ^0.0.1
   firebase_ui_oauth_twitter: ^0.0.1
