@@ -610,7 +610,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   }
 
   /// Signs in with an AuthProvider using native authentication flow. This is
-  /// deprecated in favour of calling directly `signInWithProvider()`.
+  /// deprecated in favor of `signInWithProvider()`.
   ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **user-disabled**:
