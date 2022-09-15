@@ -196,7 +196,7 @@ Future<UserCredential> signInWithApple() async {
   if (kIsWeb) {
     await FirebaseAuth.instance.signInWithPopup(appleProvider);
   } else {
-    await FirebaseAuth.instance.signInWithAuthProvider(appleProvider);
+    await FirebaseAuth.instance.signInWithProvider(appleProvider);
   }
 }
 ```
@@ -225,7 +225,7 @@ Future<UserCredential> signInWithMicrosoft() async {
   if (kIsWeb) {
     await FirebaseAuth.instance.signInWithPopup(microsoftProvider);
   } else {
-    await FirebaseAuth.instance.signInWithAuthProvider(microsoftProvider);
+    await FirebaseAuth.instance.signInWithProvider(microsoftProvider);
   }
 }
 ```
@@ -260,7 +260,7 @@ Future<void> _signInWithTwitter() async {
   if (kIsWeb) {
     await FirebaseAuth.instance.signInWithPopup(twitterProvider);
   } else {
-    await FirebaseAuth.instance.signInWithAuthProvider(twitterProvider);
+    await FirebaseAuth.instance.signInWithProvider(twitterProvider);
   }
 }
 ```
@@ -283,7 +283,7 @@ with the Client ID and Secret are set, with the callback URL set in the GitHub a
     // Create a new provider
     GithubAuthProvider githubProvider = GithubAuthProvider();
 
-    return await FirebaseAuth.instance.signInWithAuthProvider(githubProvider);
+    return await FirebaseAuth.instance.signInWithProvider(githubProvider);
   }
   ```
 
@@ -342,7 +342,7 @@ Future<UserCredential> signInWithYahoo() async {
   if (kIsWeb) {
     await _auth.signInWithPopup(yahooProvider);
   } else {
-    await _auth.signInWithAuthProvider(yahooProvider);
+    await _auth.signInWithProvider(yahooProvider);
   }
 }
 ```

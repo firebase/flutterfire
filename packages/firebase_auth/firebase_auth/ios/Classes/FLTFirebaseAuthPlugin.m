@@ -241,8 +241,8 @@ NSString *const kErrMsgInvalidCredential =
     [self useEmulator:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#verifyPasswordResetCode" isEqualToString:call.method]) {
     [self verifyPasswordResetCode:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Auth#signInWithAuthProvider" isEqualToString:call.method]) {
-    [self signInWithAuthProvider:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Auth#signInWithProvider" isEqualToString:call.method]) {
+    [self signInWithProvider:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#verifyPhoneNumber" isEqualToString:call.method]) {
     [self verifyPhoneNumber:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"User#delete" isEqualToString:call.method]) {
@@ -609,7 +609,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
   self.appleResult.error(nil, nil, nil, error);
 }
 
-- (void)signInWithAuthProvider:(id)arguments
+- (void)signInWithProvider:(id)arguments
           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
     if (@available(iOS 13.0, macOS 10.15, *)) {

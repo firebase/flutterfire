@@ -1491,8 +1491,8 @@ public class FlutterFirebaseAuthPlugin
       case "Auth#verifyPhoneNumber":
         methodCallTask = verifyPhoneNumber(call.arguments());
         break;
-      case "Auth#signInWithAuthProvider":
-        methodCallTask = signInWithAuthProvider(call.arguments());
+      case "Auth#signInWithProvider":
+        methodCallTask = signInWithProvider(call.arguments());
         break;
       case "User#linkWithProvider":
         methodCallTask = startActivityForLinkWithProvider(call.arguments());
@@ -1594,7 +1594,7 @@ public class FlutterFirebaseAuthPlugin
     return taskCompletionSource.getTask();
   }
 
-  private Task<Map<String, Object>> signInWithAuthProvider(Map<String, Object> arguments) {
+  private Task<Map<String, Object>> signInWithProvider(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
