@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-Learn more in the [Getting started guide](doc/getting-started.md).
+Learn more [here](https://github.com/firebase/flutterfire/packages/firebase_ui_auth/doc/README.md).
 
 ## Roadmap / Features
 
