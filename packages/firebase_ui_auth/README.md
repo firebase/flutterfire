@@ -6,6 +6,22 @@ Firebase UI Auth is a set of Flutter widgets and utilities designed to help you 
 
 > Please contribute to the [discussion](https://github.com/firebase/flutterfire/discussions/6978) with feedback.
 
+## Platoform support
+
+| Feature/platform   | Android | iOS | Web              | macOS            | Windows          | Linux            |
+| ------------------ | ------- | --- | ---------------- | ---------------- | ---------------- | ---------------- |
+| Email              | ✓       | ✓   | ✓                | ✓                | ✓ <sup>(1)</sup> | ✓ <sup>(1)</sup> |
+| Phone              | ✓       | ✓   | ✓                | ╳                | ╳                | ╳                |
+| Email link         | ✓       | ✓   | ╳                | ╳                | ╳                | ╳                |
+| Email verification | ✓       | ✓   | ✓ <sup>(2)</sup> | ✓ <sup>(2)</sup> | ✓ <sup>(1)</sup> | ✓ <sup>(1)</sup> |
+| Sign in with Apple | ╳       | ✓   | ╳                | ✓                | ╳                | ╳                |
+| Google Sign in     | ✓       | ✓   | ✓                | ✓                | ✓ <sup>(1)</sup> | ✓ <sup>(1)</sup> |
+| Twitter Login      | ✓       | ✓   | ✓                | ✓                | ✓ <sup>(1)</sup> | ✓ <sup>(1)</sup> |
+| Facebook Sign in   | ✓       | ✓   | ✓                | ✓                | ✓ <sup>(1)</sup> | ✓ <sup>(1)</sup> |
+
+1. Available with [flutterfire_desktop](https://github.com/invertase/flutterfire_desktop)
+2. No deep-linking into app, so email verification link opens a web page
+
 ## Installation
 
 ```sh
