@@ -225,7 +225,7 @@ jobs:
           export CCACHE_DEPEND=true
           export CCACHE_INODECACHE=true
           ccache -s
-          flutter build macos --no-codesign --debug --target=./test_driver/driver_e2e.dart --device-id=macos --dart-define=CI=true
+          flutter build macos --debug --target=./test_driver/driver_e2e.dart --device-id=macos --dart-define=CI=true
           ccache -s
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
