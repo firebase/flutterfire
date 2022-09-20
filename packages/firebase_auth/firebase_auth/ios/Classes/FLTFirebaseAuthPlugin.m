@@ -1002,7 +1002,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
 }
 
 - (void)reauthenticateWithProvider:(id)arguments
-        withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+              withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
 
   FIRUser *currentUser = auth.currentUser;
@@ -1036,15 +1036,14 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
     [self.authProvider setCustomParameters:customParameters];
   }
 
-  [currentUser
-    reauthenticateWithProvider:self.authProvider
-            UIDelegate:nil
-            completion:^(FIRAuthDataResult *authResult, NSError *error) {
-              handleAppleAuthResult(self, arguments, auth, authResult.credential, error, result);
-            }];
+  [currentUser reauthenticateWithProvider:self.authProvider
+                               UIDelegate:nil
+                               completion:^(FIRAuthDataResult *authResult, NSError *error) {
+                                 handleAppleAuthResult(self, arguments, auth, authResult.credential,
+                                                       error, result);
+                               }];
 #endif
 }
-
 
 - (void)userLinkWithCredential:(id)arguments
           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {

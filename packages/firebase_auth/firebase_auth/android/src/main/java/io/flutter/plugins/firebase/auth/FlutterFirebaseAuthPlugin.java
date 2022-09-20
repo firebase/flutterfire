@@ -1597,48 +1597,46 @@ public class FlutterFirebaseAuthPlugin
     return taskCompletionSource.getTask();
   }
 
-  private Task<Map<String, Object>> reauthenticateWithProvider(
-    Map<String, Object> arguments) {
+  private Task<Map<String, Object>> reauthenticateWithProvider(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
-      () -> {
-        try {
-          FirebaseUser firebaseUser = getCurrentUser(arguments);
+        () -> {
+          try {
+            FirebaseUser firebaseUser = getCurrentUser(arguments);
 
-          String providerId =
-            (String) Objects.requireNonNull(arguments.get(Constants.SIGN_IN_PROVIDER));
-          @SuppressWarnings("unchecked")
-          List<String> scopes = (List<String>) arguments.get(Constants.SIGN_IN_PROVIDER_SCOPE);
-          @SuppressWarnings("unchecked")
-          Map<String, String> customParameters =
-            (Map<String, String>) arguments.get(Constants.SIGN_IN_PROVIDER_CUSTOM_PARAMETERS);
+            String providerId =
+                (String) Objects.requireNonNull(arguments.get(Constants.SIGN_IN_PROVIDER));
+            @SuppressWarnings("unchecked")
+            List<String> scopes = (List<String>) arguments.get(Constants.SIGN_IN_PROVIDER_SCOPE);
+            @SuppressWarnings("unchecked")
+            Map<String, String> customParameters =
+                (Map<String, String>) arguments.get(Constants.SIGN_IN_PROVIDER_CUSTOM_PARAMETERS);
 
-          OAuthProvider.Builder provider = OAuthProvider.newBuilder(providerId);
-          if (scopes != null) {
-            provider.setScopes(scopes);
-          }
-          if (customParameters != null) {
-            provider.addCustomParameters(customParameters);
-          }
+            OAuthProvider.Builder provider = OAuthProvider.newBuilder(providerId);
+            if (scopes != null) {
+              provider.setScopes(scopes);
+            }
+            if (customParameters != null) {
+              provider.addCustomParameters(customParameters);
+            }
 
-          AuthResult authResult =
-            Tasks.await(
-              firebaseUser.startActivityForReauthenticateWithProvider(
-                /* activity= */ activity, provider.build()));
-          taskCompletionSource.setResult(parseAuthResult(authResult));
-        } catch (Exception e) {
-          if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
-            handleMultiFactorException(arguments, taskCompletionSource, e);
-          } else {
-            taskCompletionSource.setException(e);
+            AuthResult authResult =
+                Tasks.await(
+                    firebaseUser.startActivityForReauthenticateWithProvider(
+                        /* activity= */ activity, provider.build()));
+            taskCompletionSource.setResult(parseAuthResult(authResult));
+          } catch (Exception e) {
+            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+              handleMultiFactorException(arguments, taskCompletionSource, e);
+            } else {
+              taskCompletionSource.setException(e);
+            }
           }
-        }
-      });
+        });
 
     return taskCompletionSource.getTask();
   }
-
 
   private Task<Map<String, Object>> signInWithProvider(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
