@@ -4,6 +4,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'movie.g.dart';
 
+int a = 1;
+
 @JsonSerializable()
 class Movie {
   Movie({
