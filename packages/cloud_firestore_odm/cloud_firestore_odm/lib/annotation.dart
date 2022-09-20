@@ -1,5 +1,6 @@
 export 'src/validator.dart' show Min, Validator, Max;
 
+/// {@template cloud_firestore_odm.collection}
 /// Defines a collection reference.
 ///
 /// To define a collection reference, first it is necessary to define a class
@@ -98,9 +99,14 @@ export 'src/validator.dart' show Min, Validator, Max;
 ///   FriendQuerySnapshot johnFriends = await johnRef.friends.get();
 /// }
 /// ```
+/// {@endtemplate}
 class Collection<T> {
+  /// {@macro cloud_firestore_odm.collection}
   const Collection(this.path, {this.name, this.prefix});
 
+  /// Decode a [Collection] from a [Map]
+  ///
+  /// This is internally used by the code-generator to decode configs from the `build.yaml`
   Collection.fromJson(Map<Object?, Object?> json)
       : this(
           json['path']! as String,
@@ -117,4 +123,15 @@ class Collection<T> {
 
   /// The prefix to use for generated class names. Defaults to the type of [T].
   final String? prefix;
+}
+
+/// {@macro cloud_firestore_odm.id}
+class Id {
+  /// {@template cloud_firestore_odm.id}
+  /// Marks a property as the document ID of a document.
+  ///
+  /// Only a single property can be annotated by `@Id()`.
+  /// The annotated property must be of type [String].
+  /// {@endtemplate}
+  const Id();
 }

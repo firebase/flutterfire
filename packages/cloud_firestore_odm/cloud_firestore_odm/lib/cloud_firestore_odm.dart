@@ -1,5 +1,8 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 export 'annotation.dart';
 export 'src/firestore_builder.dart' show FirestoreBuilder;
@@ -15,6 +18,32 @@ export 'src/firestore_reference.dart'
         FirestoreReference,
         QueryReference,
         $QueryCursor;
+
+/// A wrapper over [Map] to inject the document ID in a [Map], without having
+/// to clone the [Map].
+// ignore: invalid_internal_annotation, used by the code-generator and only it
+@internal
+class $JsonMapWithId extends MapView<String, Object?> {
+  $JsonMapWithId(Map<String, Object?> map, this._id, this._idKey) : super(map);
+
+  final String _id;
+  final String _idKey;
+
+  @override
+  Object? operator [](Object? key) {
+    if (key == _idKey) return _id;
+    return super[key];
+  }
+
+  @override
+  void operator []=(String key, Object? value) {
+    if (key == _idKey) {
+      throw UnsupportedError('Cannot modify the $_idKey');
+    }
+
+    super[key] = value;
+  }
+}
 
 /// The list of all [JsonConverter]s that cloud_firestore_odm offers.
 ///
