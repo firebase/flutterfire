@@ -548,10 +548,6 @@ class _AuthGateState extends State<AuthGate> {
     } else {
       await _auth.signInWithProvider(appleProvider);
     }
-
-    await FirebaseAuth.instance.currentUser?.reauthenticateWithProvider(
-      appleProvider,
-    );
   }
 
   Future<void> _signInWithYahoo() async {
@@ -583,6 +579,10 @@ class _AuthGateState extends State<AuthGate> {
     } else {
       await _auth.signInWithProvider(microsoftProvider);
     }
+
+    await FirebaseAuth.instance.currentUser?.reauthenticateWithProvider(
+      microsoftProvider,
+    );
   }
 }
 
