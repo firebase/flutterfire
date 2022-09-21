@@ -111,6 +111,15 @@ class UserWeb extends UserPlatform {
   }
 
   @override
+  Future<void> linkWithRedirect(AuthProvider provider) async {
+    try {
+      return _webUser.linkWithRedirect(convertPlatformAuthProvider(provider));
+    } catch (e) {
+      throw getFirebaseAuthException(e);
+    }
+  }
+
+  @override
   Future<ConfirmationResultPlatform> linkWithPhoneNumber(
     String phoneNumber,
     RecaptchaVerifierFactoryPlatform applicationVerifier,
