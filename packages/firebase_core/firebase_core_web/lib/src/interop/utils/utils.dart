@@ -67,6 +67,9 @@ dynamic jsify(
   Object? Function(Object? object)? customJsify,
 ]) {
   if (_isBasicType(dartObject)) {
+    if (dartObject == null) {
+      return null;
+    }
     return dartObject;
   }
 
@@ -77,7 +80,7 @@ dynamic jsify(
   if (dartObject is Map) {
     var jsMap = util.newObject();
     dartObject.forEach((key, value) {
-      util.setProperty(jsMap, key, value == null ? null : jsify(value, customJsify));
+      util.setProperty(jsMap, key, jsify(value, customJsify));
     });
     return jsMap;
   }
@@ -103,6 +106,7 @@ dynamic callMethod(Object jsObject, String method, List<dynamic> args) =>
 /// `null`, [num], [bool] or [String]. It returns `false` in the other case.
 bool _isBasicType(Object? value) {
   if (value == null || value is num || value is bool || value is String) {
+    print('VVVVVVV');
     return true;
   }
   return false;
