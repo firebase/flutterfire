@@ -77,7 +77,7 @@ dynamic jsify(
   if (dartObject is Map) {
     var jsMap = util.newObject();
     dartObject.forEach((key, value) {
-      util.setProperty(jsMap, key, jsify(value, customJsify));
+      util.setProperty(jsMap, key, value == null ? null : jsify(value, customJsify));
     });
     return jsMap;
   }
