@@ -132,8 +132,36 @@ class Id {
   /// {@template cloud_firestore_odm.id}
   /// Marks a property as the document ID of a document.
   ///
-  /// Only a single property can be annotated by `@Id()`.
-  /// The annotated property must be of type [String].
+  /// By default, the document ID is not present in the firestore object once decoded.
+  ///
+  /// While you can acccess it using the `DocumentSnapshot`, it isn't always convenient.
+  /// A solution to that is to use the `@Id` annotation, to tell Firestore that a
+  /// a given property in a class would be the document ID:
+  ///
+  /// ```dart
+  /// @Collection<Person>('users')
+  /// @firestoreSerializable
+  /// class Person {
+  ///   Person({
+  ///     required this.name,
+  ///     required this.age,
+  ///     required this.id,
+  ///   });
+  ///
+  ///   // By adding this annotation, this property will not be considered as part
+  ///   // of the Firestore document, but instead represent the document ID.
+  ///   @Id()
+  ///   final String id;
+  ///
+  ///   final String name;
+  ///   final int age;
+  /// }
+  /// ```
+  ///
+  /// There are a few restrictions when using this annotation:
+  ///
+  /// - It can be used only once within an object
+  /// - The annotated property must be of type `String`.
   /// {@endtemplate}
   const Id();
 }
