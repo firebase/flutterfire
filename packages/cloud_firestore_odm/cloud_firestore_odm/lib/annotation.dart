@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 export 'src/validator.dart' show Min, Validator, Max;
 
 /// {@template cloud_firestore_odm.collection}

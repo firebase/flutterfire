@@ -32,7 +32,7 @@ abstract class MovieCollectionReference
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return _$MovieFromJson({'id': snapshot.documentId, ...?snashot.data()});
+    return _$MovieFromJson({'id': snapshot.id, ...?snashot.data()});
   }
 
   static Map<String, Object?> toFirestore(

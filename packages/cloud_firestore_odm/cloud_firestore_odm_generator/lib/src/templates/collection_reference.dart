@@ -10,7 +10,7 @@ class CollectionReferenceTemplate extends Template<CollectionData> {
     String toFirestoreBody;
     if (idKey != null) {
       fromFirestoreBody =
-          'return ${data.fromJson("{'$idKey': snapshot.documentId, ...?snashot.data()}")};';
+          'return ${data.fromJson("{'$idKey': snapshot.id, ...?snashot.data()}")};';
       toFirestoreBody =
           "return {...${data.toJson('value')}}..remove('$idKey');";
     } else {
