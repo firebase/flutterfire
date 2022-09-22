@@ -130,6 +130,35 @@ class MethodChannelUser extends UserPlatform {
   }
 
   @override
+  Future<UserCredentialPlatform> reauthenticateWithProvider(
+    AuthProvider provider,
+  ) async {
+    try {
+      // To extract scopes and custom parameters from the provider
+      final convertedProvider = convertToOAuthProvider(provider);
+
+      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
+          .invokeMapMethod<String, dynamic>(
+              'User#reauthenticateWithProvider',
+              _withChannelDefaults({
+                'signInProvider': convertedProvider.providerId,
+                if (convertedProvider is OAuthProvider) ...{
+                  'scopes': convertedProvider.scopes,
+                  'customParameters': convertedProvider.parameters
+                },
+              })))!;
+
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(auth, data);
+
+      auth.currentUser = userCredential.user;
+      return userCredential;
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
   Future<UserCredentialPlatform> reauthenticateWithCredential(
     AuthCredential credential,
   ) async {

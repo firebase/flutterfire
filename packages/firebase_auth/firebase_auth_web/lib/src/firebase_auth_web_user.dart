@@ -143,6 +143,19 @@ class UserWeb extends UserPlatform {
   }
 
   @override
+  Future<UserCredentialPlatform> reauthenticateWithPopup(
+      AuthProvider provider) async {
+    _assertIsSignedOut(auth);
+    try {
+      auth_interop.UserCredential userCredential = await _webUser
+          .reauthenticateWithPopup(convertPlatformAuthProvider(provider));
+      return UserCredentialWeb(auth, userCredential);
+    } catch (e) {
+      throw getFirebaseAuthException(e);
+    }
+  }
+
+  @override
   Future<void> reload() async {
     _assertIsSignedOut(auth);
 

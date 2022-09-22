@@ -395,3 +395,20 @@ if (kIsWeb) {
 
 // You're anonymous user is now upgraded to be able to connect with Sign In With Apple
 ```
+
+# Reauthenticate with provider
+
+The same pattern can be used with `reauthenticateWithProvider` which can be used to retrieve fresh
+credentials for sensitive operations that require recent login.
+
+```dart
+final appleProvider = AppleAuthProvider();
+
+if (kIsWeb) {
+  await FirebaseAuth.instance.currentUser?.reauthenticateWithPopup(appleProvider);
+} else {
+  await FirebaseAuth.instance.currentUser?.reauthenticateWithProvider(appleProvider);
+}
+
+// You can now perform sensitive operations
+```
