@@ -40,6 +40,7 @@ class CollectionData {
     required this.queryableFields,
     required this.fromJson,
     required this.toJson,
+    required this.idKey,
     required this.libraryElement,
   })  : collectionName =
             collectionName ?? ReCase(path.split('/').last).camelCase,
@@ -53,6 +54,7 @@ class CollectionData {
   final String collectionName;
   final String classPrefix;
   final String path;
+  final String? idKey;
   final List<QueryingField> queryableFields;
   final LibraryElement libraryElement;
 
@@ -358,6 +360,13 @@ class CollectionGenerator
         if (toJson != null) return '$value.toJson()';
         return '_\$${type.toString().public}ToJson($value)';
       },
+      idKey: collectionTargetElement
+          .allFields(
+            hasFreezed: hasFreezed,
+            freezedConstructors: redirectedFreezedConstructors,
+          )
+          .firstWhereOrNull((f) => f.hasId())
+          ?.name,
       queryableFields: [
         QueryingField(
           'documentId',
@@ -372,6 +381,7 @@ class CollectionGenerator
             )
             .where((f) => f.isPublic)
             .where((f) => _isSupportedType(f.type))
+            .where((f) => !f.hasId())
             .where((f) => !f.isJsonIgnored())
             .map(
           (e) {
@@ -537,5 +547,10 @@ extension on Element {
     }
 
     return false;
+  }
+
+  bool hasId() {
+    const checker = TypeChecker.fromRuntime(Id);
+    return checker.hasAnnotationOf(this);
   }
 }

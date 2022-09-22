@@ -32,14 +32,14 @@ abstract class MovieCollectionReference
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return _$MovieFromJson(snapshot.data()!);
+    return _$MovieFromJson({'id': snapshot.documentId, ...?snashot.data()});
   }
 
   static Map<String, Object?> toFirestore(
     Movie value,
     SetOptions? options,
   ) {
-    return _$MovieToJson(value);
+    return {..._$MovieToJson(value)}..remove('id');
   }
 
   @override
@@ -129,7 +129,6 @@ abstract class MovieDocumentReference
   Future<void> delete();
 
   Future<void> update({
-    String id,
     String poster,
     int likes,
     String title,
@@ -185,7 +184,6 @@ class _$MovieDocumentReference
   }
 
   Future<void> update({
-    Object? id = _sentinel,
     Object? poster = _sentinel,
     Object? likes = _sentinel,
     Object? title = _sentinel,
@@ -195,7 +193,6 @@ class _$MovieDocumentReference
     Object? genre = _sentinel,
   }) async {
     final json = {
-      if (id != _sentinel) "id": id as String,
       if (poster != _sentinel) "poster": poster as String,
       if (likes != _sentinel) "likes": likes as int,
       if (title != _sentinel) "title": title as String,
@@ -327,17 +324,6 @@ abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
-  MovieQuery whereId({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  });
   MovieQuery wherePoster({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -417,18 +403,6 @@ abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
   });
 
   MovieQuery orderByDocumentId({
-    bool descending = false,
-    String startAt,
-    String startAfter,
-    String endAt,
-    String endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
-  });
-
-  MovieQuery orderById({
     bool descending = false,
     String startAt,
     String startAfter,
@@ -724,35 +698,6 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     );
   }
 
-  MovieQuery whereId({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  }) {
-    return _$MovieQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["id"]!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
   MovieQuery wherePoster({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -968,78 +913,6 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
-        descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-
-    return _$MovieQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
-  MovieQuery orderById({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
-  }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["id"]!,
         descending: descending);
     var queryCursor = $queryCursor;
 

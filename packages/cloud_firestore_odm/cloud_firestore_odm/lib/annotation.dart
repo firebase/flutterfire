@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 export 'src/validator.dart' show Min, Validator, Max;
 
 /// {@template cloud_firestore_odm.collection}
@@ -134,4 +136,49 @@ class Id {
   /// The annotated property must be of type [String].
   /// {@endtemplate}
   const Id();
+}
+
+/// A wrapper over [Map] to inject the document ID in a [Map], without having
+/// to clone the [Map].
+///
+/// Do not use
+// ignore: invalid_internal_annotation, used by the code-generator and only it
+class $JsonMapWithId extends MapView<String, Object?> {
+  $JsonMapWithId(Map<String, Object?> map, this._id, this._idKey) : super(map);
+
+  final String _id;
+  final String _idKey;
+
+  @override
+  int get length => super.length + 1;
+
+  @override
+  Iterable<String> get keys => [_idKey, ...super.keys];
+
+  @override
+  bool containsKey(Object? key) {
+    if (_idKey == key) return true;
+    return super.containsKey(key);
+  }
+
+  @override
+  bool containsValue(Object? value) {
+    if (_id == value) return true;
+    return super.containsValue(value);
+  }
+
+  @override
+  Object? operator [](Object? key) {
+    if (key == _idKey) return _id;
+    return super[key];
+  }
+
+  @override
+  void operator []=(String key, Object? value) {
+    if (key == _idKey) {
+      throw UnsupportedError('Cannot modify the $_idKey');
+    }
+
+    super[key] = value;
+  }
 }
