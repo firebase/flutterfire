@@ -1636,6 +1636,9 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
     // instead.
     kArgumentSignInMethod : authCredential.provider,
     kArgumentToken : @([authCredential hash]),
+    kArgumentAccessToken : ([authCredential isKindOfClass:[FIROAuthCredential class]])
+        ? ((FIROAuthCredential *)authCredential).accessToken
+        : nil,
   };
 }
 
