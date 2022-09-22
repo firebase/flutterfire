@@ -106,7 +106,6 @@ dynamic callMethod(Object jsObject, String method, List<dynamic> args) =>
 /// `null`, [num], [bool] or [String]. It returns `false` in the other case.
 bool _isBasicType(Object? value) {
   if (value == null || value is num || value is bool || value is String) {
-    print('VVVVVVV');
     return true;
   }
   return false;
