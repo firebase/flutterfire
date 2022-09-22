@@ -389,6 +389,8 @@ final appleProvider = AppleAuthProvider();
 
 if (kIsWeb) {
   await FirebaseAuth.instance.currentUser?.linkWithPopup(appleProvider);
+  
+  // You can also use `linkWithRedirect`
 } else {
   await FirebaseAuth.instance.currentUser?.linkWithProvider(appleProvider);
 }
