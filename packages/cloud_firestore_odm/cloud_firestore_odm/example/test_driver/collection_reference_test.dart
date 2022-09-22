@@ -739,6 +739,7 @@ void main() {
             runtime: 'runtime',
             title: 'title',
             year: 1999,
+            id: '_',
           ),
         );
         final snapshot = StreamQueue(doc.snapshots());
@@ -762,6 +763,7 @@ void main() {
             runtime: 'runtime2',
             title: 'title2',
             year: 14242,
+            id: '_',
           ),
         );
 
@@ -795,6 +797,7 @@ void main() {
             runtime: 'runtime',
             title: 'title',
             year: 1999,
+            id: '_',
           ),
         );
 
@@ -817,6 +820,7 @@ void main() {
             runtime: 'runtime2',
             title: 'title2',
             year: 14242,
+            id: '_',
           ),
         );
 
