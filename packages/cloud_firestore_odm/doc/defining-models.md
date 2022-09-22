@@ -1,3 +1,11 @@
+- [Defining Models](#defining-models)
+  - [Creating references](#creating-references)
+  - [Model validation](#model-validation)
+    - [Available validators](#available-validators)
+      - [`int`](#int)
+    - [Custom validators](#custom-validators)
+  - [Next Steps](#next-steps)
+
 # Defining Models
 
 > The Cloud Firestore ODM is currently in **alpha**. Expect breaking changes, API changes and more. The documentation is still a work in progress. See the [discussion](https://github.com/firebase/flutterfire/discussions/7475) for more details.
@@ -69,6 +77,27 @@ class User {
 :::
 
 **Note**: `JsonSerializable(fieldRename: ...)` and `JsonKey(ignore: true)` are currently not supported
+
+## Creating references
+
+On their own, a model does not do anything. Instead we create a "reference" using a model.
+A reference enables the ODM to interact with Firestore using the model.
+
+To create a reference, we use the `Collection` annotation which is used as a pointer to a collection
+within the Firestore database. For example, the `users` collection in the root of the database
+corresponds to the `Users` model we defined previously:
+
+```dart
+@firestoreSerializable
+class User {
+ // ...
+}
+
+@Collection<User>('users')
+final usersRef = UserCollectionReference();
+```
+
+If you are looking to define a model as a reference on a Subcollection, read the [Working with Subcollections](./subcollections.md) documentation.
 
 ## Model validation
 
@@ -160,27 +189,6 @@ class User {
   final String email;
 }
 ```
-
-## Creating references
-
-On their own, a model does not do anything. Instead we create a "reference" using a model.
-A reference enables the ODM to interact with Firestore using the model.
-
-To create a reference, we use the `Collection` annotation which is used as a pointer to a collection
-within the Firestore database. For example, the `users` collection in the root of the database
-corresponds to the `Users` model we defined previously:
-
-```dart
-@firestoreSerializable
-class User {
- // ...
-}
-
-@Collection<User>('users')
-final usersRef = UserCollectionReference();
-```
-
-If you are looking to define a model as a reference on a Subcollection, read the [Working with Subcollections](./subcollections.md) documentation.
 
 ## Next Steps
 
