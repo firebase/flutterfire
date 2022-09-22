@@ -1,3 +1,7 @@
+## 1.0.0-dev.31
+
+ - **FIX**: handle query.orderBy(startAt:).orderBy() ([#9185](https://github.com/firebase/flutterfire/issues/9185)). ([62396e8a](https://github.com/firebase/flutterfire/commit/62396e8a4a229dfc096d6280964bb559c00b3511))
+
 ## 1.0.0-dev.30
 
  - **FEAT**: add support for specifying class name prefix ([#9453](https://github.com/firebase/flutterfire/issues/9453)). ([49921a43](https://github.com/firebase/flutterfire/commit/49921a4362c5965d2efeed17eb73775302007ea8))
