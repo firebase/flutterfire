@@ -42,6 +42,7 @@ import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamH
 import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
+import io.flutter.plugins.firebase.firestore.utils.ServerTimestampBehaviorConverter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -72,6 +73,10 @@ public class FlutterFirebaseFirestorePlugin
   private final Map<String, EventChannel> eventChannels = new HashMap<>();
   private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
   private final Map<String, OnTransactionResultListener> transactionHandlers = new HashMap<>();
+
+  // Used in the decoder to know which ServerTimestampBehavior to use
+  public static final Map<Integer, DocumentSnapshot.ServerTimestampBehavior>
+      serverTimestampBehaviorHashMap = new HashMap<>();
 
   protected static FirebaseFirestore getCachedFirebaseFirestoreInstanceForKey(String key) {
     synchronized (firestoreInstanceCache) {
@@ -287,6 +292,11 @@ public class FlutterFirebaseFirestorePlugin
           try {
             Source source = getSource(arguments);
             Query query = (Query) arguments.get("query");
+            String serverTimestampBehaviorString =
+                (String) arguments.get("serverTimestampBehavior");
+            DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
+                ServerTimestampBehaviorConverter.toServerTimestampBehavior(
+                    serverTimestampBehaviorString);
 
             if (query == null) {
               taskCompletionSource.setException(
@@ -294,8 +304,10 @@ public class FlutterFirebaseFirestorePlugin
                       "An error occurred while parsing query arguments, see native logs for more information. Please report this issue."));
               return;
             }
+            final QuerySnapshot querySnapshot = Tasks.await(query.get(source));
+            serverTimestampBehaviorHashMap.put(querySnapshot.hashCode(), serverTimestampBehavior);
 
-            taskCompletionSource.setResult(Tasks.await(query.get(source)));
+            taskCompletionSource.setResult(querySnapshot);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
