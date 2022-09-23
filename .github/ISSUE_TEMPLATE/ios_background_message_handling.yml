@@ -57,7 +57,7 @@ body:
 
         <details>
         <summary>Click to see an illustration of hpw your Xcode project "Signing and Capabilities" settings should look like</summary>
-        ![Xcode "Signing and Capabilities tab"](./../images/remote-notifications-enable.png?raw=true)
+        <img alt="Xcode "Signing and Capabilities tab" src="./../images/remote-notifications-enable.png?raw=true" />
         </details>
 
         REQUIRED: Please provide a screenshot of your Xcode project "Signing and capabilities" settings in the text area.
