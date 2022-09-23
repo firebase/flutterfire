@@ -6,9 +6,5 @@
 	<array>
 		<string>applinks:flutterfiretests.page.link</string>
 	</array>
-	<key>keychain-access-groups</key>
-	<array>
-		<string>$(AppIdentifierPrefix)io.flutter.plugins.firebase.tests</string>
-	</array>
 </dict>
 </plist>
