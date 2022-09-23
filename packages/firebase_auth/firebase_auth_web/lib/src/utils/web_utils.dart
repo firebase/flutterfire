@@ -278,16 +278,21 @@ AuthCredential? convertWebAuthCredential(
 
 /// Converts a [auth_interop.OAuthCredential] into a [AuthCredential].
 AuthCredential? convertWebOAuthCredential(
-  auth_interop.OAuthCredential? oAuthCredential,
+  auth_interop.UserCredential? userCredential,
 ) {
-  if (oAuthCredential == null) {
+  if (userCredential == null) {
     return null;
   }
 
-  return OAuthProvider(oAuthCredential.providerId).credential(
-    accessToken: oAuthCredential.accessToken,
-    secret: oAuthCredential.secret,
-    idToken: oAuthCredential.idToken,
+  final authProvider = auth_interop.OAuthProvider.credentialFromResult(
+    userCredential.jsObject,
+  );
+
+  return OAuthProvider(authProvider.providerId).credential(
+    signInMethod: authProvider.signInMethod,
+    accessToken: authProvider.accessToken,
+    secret: authProvider.secret,
+    idToken: authProvider.idToken,
   );
 }
 

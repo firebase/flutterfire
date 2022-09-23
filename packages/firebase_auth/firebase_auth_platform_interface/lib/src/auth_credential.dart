@@ -30,8 +30,9 @@ class AuthCredential {
   /// A token used to identify the AuthCredential on native platforms.
   final int? token;
 
-  /// OAuth access token associated with the provider.
-  /// Using the OAuth access token, you can call the GitHub API.
+  /// The OAuth access token associated with the credential if it belongs to an
+  /// OAuth provider, such as `facebook.com`, `twitter.com`, etc.
+  /// Using the OAuth access token, you can call the provider's API.
   final String? accessToken;
 
   /// Returns the current instance as a serialized [Map].
