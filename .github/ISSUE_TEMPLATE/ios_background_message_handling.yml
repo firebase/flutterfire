@@ -28,7 +28,7 @@ body:
         4. App is in a terminated or background state
         5. Data-only messages are considered lower priority than notification messages
       options:
-        - label: I understand that iOS and android background messages behaves differently, and I've designed my application with that in mind.
+        - label: I understand that iOS and Android background messages behave differently, and I've designed my application with that in mind.
           required: true
 
   - type: checkboxes
