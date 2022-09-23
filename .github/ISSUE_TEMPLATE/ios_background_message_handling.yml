@@ -76,18 +76,18 @@ body:
   - type: markdown
     attributes:
       value: |
-      Have you used the console app on your macOS computer to check if the iOS device's system is throttling your background messages?
+        Have you used the console app on your macOS computer to check if the iOS device's system is throttling your background messages?
 
-      To check the status of your push notification, please follow the steps below.
-        1. Open the `Console` app on your Mac
-        2. Select your iPhone from the devices list on the left hand side
-        3. Filter messages by typing in your Bundle ID (e.g. The Firebase Messaging example app bundle ID is 'io.flutter.plugins.firebase.messaging') into the search box and pressing enter.
-        4. Press the clear button to clean the history.
-        5. Now send the message to your device
-        6. Select all the rows on the logs & copy them, Cmd + C (not available on right-click menu)
-        7. Paste them here in a code block so we can see a successful message delivered not being received by the background message handler.
+        To check the status of your push notification, please follow the steps below.
+          1. Open the `Console` app on your Mac
+          2. Select your iPhone from the devices list on the left hand side
+          3. Filter messages by typing in your Bundle ID (e.g. The Firebase Messaging example app bundle ID is 'io.flutter.plugins.firebase.messaging') into the search box and pressing enter.
+          4. Press the clear button to clean the history.
+          5. Now send the message to your device
+          6. Select all the rows on the logs & copy them, Cmd + C (not available on right-click menu)
+          7. Paste them here in a code block so we can see a successful message delivered not being received by the background message handler.
 
-        [Example of successfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-delivered.png)
-        [Example of unsuccessfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-not-delivered.png)
+          [Example of successfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-delivered.png)
+          [Example of unsuccessfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-not-delivered.png)
 
 
