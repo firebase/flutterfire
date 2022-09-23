@@ -76,7 +76,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Have you used the console app on your macOS computer to check if the iOS device's system is throttling your background messages?
+        ## Have you used the console app on your macOS computer to check if the iOS device's system is throttling your background messages?
 
         To check the status of your push notification, please follow the steps below.
           1. Open the `Console` app on your Mac
