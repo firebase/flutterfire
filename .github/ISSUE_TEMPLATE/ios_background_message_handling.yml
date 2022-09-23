@@ -46,6 +46,11 @@ body:
         - label: I have an active Apple Developer account.
           required: true
 
+  - type: markdown
+    attributes:
+      value: |
+        ---
+ 
   - type: checkboxes
     attributes:
       label: Are you using a physical iOS device to test background messages?
