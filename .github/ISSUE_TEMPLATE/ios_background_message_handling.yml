@@ -9,7 +9,6 @@ body:
     attributes:
       value: |
         Create an issue after ensuring you have understood iOS background message handling and its limitations.
-
   - type: checkboxes
     attributes:
       label: Is there an existing issue for this?
