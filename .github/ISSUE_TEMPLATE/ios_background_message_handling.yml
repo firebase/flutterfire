@@ -60,6 +60,11 @@ body:
         - label: I am using a physical iOS device to test background messages.
           required: true
 
+  - type: markdown
+    attributes:
+      value: |
+        ---
+ 
   - type: textarea
     attributes:
       label: Have you enabled "Remote Notifications" & "Background Mode" (Checking options for "Background Processing" & "Remote Notifications") in your app's Xcode project?
@@ -75,6 +80,11 @@ body:
     validations:
       required: true
 
+  - type: markdown
+    attributes:
+      value: |
+        ---
+ 
   - type: textarea
     attributes:
       label: Have you created an APNs key in your Apple Developer account & uploaded this APNs key to your Firebase console?
@@ -90,6 +100,11 @@ body:
     validations:
       required: true
 
+  - type: markdown
+    attributes:
+      value: |
+        ---
+ 
   - type: textarea
     attributes:
       label: Have you enabled method swizzling in your app?
@@ -100,6 +115,11 @@ body:
     validations:
       required: true
 
+  - type: markdown
+    attributes:
+      value: |
+        ---
+ 
   - type: textarea
     attributes:
       label: Are you sending messages to your app from the Firebase Admin SDK?
@@ -134,6 +154,11 @@ body:
     validations:
       required: true
 
+  - type: markdown
+    attributes:
+      value: |
+        ---
+ 
   - type: checkboxes
     attributes:
       label: Have you requested permission from the user to receive notifications?
@@ -159,6 +184,11 @@ body:
         - label: I have the relevant permission to receive notifications.
           required: true
 
+  - type: markdown
+    attributes:
+      value: |
+        ---
+ 
   - type: textarea
     attributes:
       label: Have you used the 'Console' application on your macOS device to check if the iOS device's system is throttling your background messages?
@@ -178,6 +208,11 @@ body:
     validations:
       required: true
 
+  - type: markdown
+    attributes:
+      value: |
+        ---
+ 
   - type: textarea
     id: comments
     attributes:
