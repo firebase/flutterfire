@@ -75,7 +75,7 @@ body:
         <img alt="APNs key uploaded to Firebase console" src="./../images/apns-key-upload.png?raw=true" />
         </details>
 
-        REQUIRED: Please provide a screenshot of your APNs key uploaded to your Firebase console to the correct app in the text area.
+        REQUIRED: Please provide a screenshot of your APNs key showing as uploaded in the Firebase console for your app in the text area below (as show in the example above).
     validations:
       required: true
 
