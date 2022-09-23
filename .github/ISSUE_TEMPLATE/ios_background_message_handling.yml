@@ -119,7 +119,7 @@ body:
           )
         ```
 
-        REQUIRED: Please paste the code snippet you're using to sending messages to your app from the Firebase Admin SDK in the text area.
+        REQUIRED: Please paste a code snippet that you're using to send messages to your app from the Firebase Admin SDK in the text area below.
     validations:
       required: true
 
