@@ -1,10 +1,8 @@
-name: iOS Background Message Handling
+name: iOS background message handling bug report for Firebase Messaging
 description:
-  Create an issue after ensuring you have understood iOS background message handling, its limitations and the required configuration.
-title: "fix:  "
-labels: ["bug", "triage"]
-# assignees:
-#   - ...
+  Create an issue specific to receiving Firebase Messaging messages in the background on iOS.
+title: "[firebase_messaging]: <YOUR TITLE HERE>"
+labels: ["Needs Attention", "type: bug", "plugin: messaging", "platform: ios"]
 body:
   - type: checkboxes
     attributes:
@@ -167,4 +165,9 @@ body:
     validations:
       required: true
 
-
+  - type: textarea
+    id: comments
+    attributes:
+      label: Additional context and comments
+      description: |
+        Anything else you want to add for this issue?
