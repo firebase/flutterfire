@@ -55,8 +55,10 @@ body:
       description: |
         Find out how to enable "Remote Notifications" & "Background Mode" in the [documentation](https://firebase.google.com/docs/cloud-messaging/flutter/client#enable_app_capabilities_in_xcode).
 
-        For illustration, your Xcode project "Signing and Capabilities" settings should look like this:
+        <details>
+        <summary>Click to see an illustration of hpw your Xcode project "Signing and Capabilities" settings should look like</summary>
         ![Xcode "Signing and Capabilities tab"](./../images/remote-notifications-enable.png?raw=true)
+        </details>
 
         REQUIRED: Please provide a screenshot of your Xcode project "Signing and capabilities" settings in the text area.
     validations:
