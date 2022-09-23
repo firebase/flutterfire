@@ -70,8 +70,10 @@ body:
       description: |
         You have to create an APNs key in your [Apple Developer account](https://developer.apple.com/membercenter/index.action) & upload this APNs key to your [Firebase console](https://console.firebase.google.com). [See documentation](https://firebase.google.com/docs/cloud-messaging/flutter/client#upload_your_apns_authentication_key).
 
-        For illustration, your APNs key uploaded to the correct app in your Firebase console should look like this:
-        ![APNs key uploaded to Firebase console](./../images/apns-key-upload.png?raw=true)
+        <details>
+        <summary>Click to see how an APNs key uploaded to the correct app in the Firebase console should look like</summary>
+        <img alt="APNs key uploaded to Firebase console" src="./../images/apns-key-upload.png?raw=true" />
+        </details>
 
         REQUIRED: Please provide a screenshot of your APNs key uploaded to your Firebase console to the correct app in the text area.
     validations:
