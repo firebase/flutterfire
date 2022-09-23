@@ -49,7 +49,7 @@ body:
         - label: I am using a physical iOS device to test background messages.
           required: true
 
-  - type: textarea
+  - type: markdown
     attributes:
       label: Have you enabled "Remote Notifications" & "Background Mode" (Checking options for "Background Processing" & "Remote Notifications") in your app's Xcode project?
       description: |
