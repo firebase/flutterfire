@@ -1,0 +1,86 @@
+name: iOS Background Message Handling
+description: Create an issue for iOS background message handling.
+title: "fix:  "
+labels: ["bug", "triage"]
+# assignees:
+#   - ...
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Create an issue after ensuring you have understood iOS background message handling and its limitations.
+
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: |
+        Please search to see if an issue already exists for the bug you encountered.
+      options:
+        - label: I have searched the existing issues.
+          required: true
+    - type: checkboxes
+        attributes:
+          label: Do you have an active [Apple Developer account](https://developer.apple.com/membercenter/index.action)?
+          description: |
+            This is required for handling background messages.
+          options:
+            - label: I have an active Apple Developer account.
+              required: true
+    - type: checkboxes
+        attributes:
+          label: Are you using a physical iOS device to test background messages?
+          description: |
+            A physical device is required for testing background messages, it will not work on a simulator.
+          options:
+            - label: I am using a physical iOS device to test background messages.
+              required: true
+    - type: checkboxes
+        attributes:
+          label: Have you enabled "Remote Notifications" & "Background Mode" (Checking options for "Background Processing" & "Remote Notifications") in your app's Xcode project as [documented here](https://firebase.google.com/docs/cloud-messaging/flutter/client#enable_app_capabilities_in_xcode)?
+          description: |
+            This is required for handling background messages in your app.
+          options:
+            - label: I have enabled "Remote Notifications" & "Background Mode" (Checking options for "Background Processing" & "Remote Notifications") in my Xcode project.
+              required: true
+    - type: checkboxes
+        attributes:
+          label: Have you created an APNs certificate in your [Apple Developer account](https://developer.apple.com/membercenter/index.action) & upload this APNs certificate to your [Firebase console](https://console.firebase.google.com)? [See documentation](https://firebase.google.com/docs/cloud-messaging/flutter/client#upload_your_apns_authentication_key) for instructions.
+          description: |
+            This is required for handling background messages in your app.
+          options:
+            - label: I have enabled "Remote Notifications" & "Background Mode" (Checking options for "Background Processing" & "Remote Notifications") in my Xcode project.
+              required: true
+    - type: checkboxes
+        attributes:
+          label: Have you enabled method swizzling in your app? Go to your "Info.plist" file and add the following key `FirebaseAppDelegateProxyEnabled` with a value of `YES`.
+          description: |
+            This is required for handling background messages in your app.
+          options:
+            - label: enabled method swizzling in my app
+              required: true
+    - type: checkboxes
+        attributes:
+          label: Are you sending messages to your app from the Firebase Admin SDK? See [FlutterFire's nodejs Firebase Admin SDK script](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/scripts/send-message.js) for sending messages to your app.
+          description: |
+            FlutterFire does not support sending messages from the 3rd party packages.
+          options:
+            - label: I am sending messages from a Firebase Admin SDK.
+              required: true
+    - type: markdown
+        attributes:
+          value: "
+          Have you used the console app on your macOS computer to check if the iOS device's system is throttling your background messages?
+
+          To check the status of your push notification, please follow the steps below.
+            1. Open the `Console` app on your Mac
+            2. Select your iPhone from the devices list on the left hand side
+            3. Filter messages by typing in your Bundle ID (e.g. The Firebase Messaging example app bundle ID is 'io.flutter.plugins.firebase.messaging') into the search box and pressing enter.
+            4. Press the clear button to clean the history.
+            5. Now send the message to your device
+            6. Select all the rows on the logs & copy them, Cmd + C (not available on right-click menu)
+            7. Paste them here in a code block so we can see a successful message delivered not being received by the background message handler.
+
+            [Example of successfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-delivered.png)
+            [Example of unsuccessfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-not-delivered.png)
+            "
+
