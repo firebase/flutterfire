@@ -78,7 +78,7 @@ body:
 
         It is essential you include the `contentAvailable` flag in your message payload when sending messages to your app from the Firebase Admin SDK.
 
-        Example:
+        Example code snippet using the nodejs Firebase Admin SDK to send a message to your app:
         ```js
         admin
           .messaging()
