@@ -6,11 +6,6 @@ labels: ["bug", "triage"]
 # assignees:
 #   - ...
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Please fill out this form to help us understand if this is a bug with iOS background message handling.
-
   - type: checkboxes
     attributes:
       label: Is there an existing issue for this?
