@@ -9,7 +9,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Please fill out this form to help us understand your issue better.
+        Please fill out this form to help us understand if this is a bug with iOS background message handling.
 
   - type: checkboxes
     attributes:
