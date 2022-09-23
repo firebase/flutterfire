@@ -163,7 +163,7 @@ body:
           [Example of successfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-delivered.png)
           [Example of unsuccessfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-not-delivered.png)
 
-          REQUIRED: Please paste your logs in the text area so we can see a successful message delivered not being received by the background message handler.
+          REQUIRED: Please paste your logs from the above steps in the text area so we can see if a message was delivered but not received by the background message handler.
     validations:
       required: true
 
