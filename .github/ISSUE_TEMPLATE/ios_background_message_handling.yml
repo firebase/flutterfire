@@ -21,9 +21,9 @@ body:
 
   - type: checkboxes
     attributes:
-      label: Do you have an active [Apple Developer account](https://developer.apple.com/membercenter/index.action)?
+      label: Do you have an active Apple Developer account?
       description: |
-        This is required for handling background messages.
+        An [Apple Developer account](https://developer.apple.com/membercenter/index.action) is required for handling background messages.
       options:
         - label: I have an active Apple Developer account.
           required: true
@@ -43,7 +43,7 @@ body:
       description: |
         Find out how to enable "Remote Notifications" & "Background Mode" in the [documentation](https://firebase.google.com/docs/cloud-messaging/flutter/client#enable_app_capabilities_in_xcode)
 
-        Your Xcode project "Signing and Capabilities" settings should look like this:
+        For illustration, your Xcode project "Signing and Capabilities" settings should look like this:
         ![Xcode "Signing and Capabilities tab"](https://github.com/firebase/flutterfire/blob/master/.github/images/remote-notifications-enable.png)
 
         REQUIRED: Please provide a screenshot of your Xcode project "Signing and capabilities" settings.
@@ -55,7 +55,6 @@ body:
       label: Have you created an APNs certificate in your Apple Developer account & uploaded this APNs certificate to your Firebase console?
       description: |
         You have to create an APNs certificate in your [Apple Developer account](https://developer.apple.com/membercenter/index.action) & upload this APNs certificate to your [Firebase console](https://console.firebase.google.com)? [See documentation](https://firebase.google.com/docs/cloud-messaging/flutter/client#upload_your_apns_authentication_key).
-        This is required for handling background messages in your app.
       options:
         - label: I have enabled "Remote Notifications" & "Background Mode" (Checking options for "Background Processing" & "Remote Notifications") in my Xcode project.
           required: true
@@ -64,7 +63,7 @@ body:
     attributes:
       label: Have you enabled method swizzling in your app?
       description: |
-        This is required for handling background messages in your app. Go to your "Info.plist" file and add the following key `FirebaseAppDelegateProxyEnabled` with a value of `YES`.
+        Go to your "Info.plist" file and add the following key `FirebaseAppDelegateProxyEnabled` with a value of `YES`.
 
         REQUIRED: Please paste your Info.plist in the text area.
     validations:
@@ -75,7 +74,7 @@ body:
       label: Are you sending messages to your app from the Firebase Admin SDK?
       description: |
         For an example of sending messages to your app, please see [FlutterFire's nodejs Firebase Admin SDK script](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/scripts/send-message.js)
-        FlutterFire does not support sending messages from the 3rd party packages.
+        FlutterFire does not support sending messages from 3rd party packages.
 
         It is essential you include the `contentAvailable` flag in your message payload when sending messages to your app from the Firebase Admin SDK.
 
