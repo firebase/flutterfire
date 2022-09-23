@@ -19,7 +19,7 @@ body:
     attributes:
       label: Are you aware of the fundamental differences between iOS and Android background message handling?
       description: |
-        iOS adopts a more agressive policy to throttling background messages. Android is a lot more lenient, even when the app is in a terminated state, it is highly likely that
+        iOS adopts a more aggressive policy to throttling background messages. Android is a lot more lenient, even when the app is in a terminated state, it is highly likely that
         messages will be received by the device and processed by the Firebase Messaging background handler. This is not the case with iOS. There are multiple reasons why your messages
         may not be received by the device. Here are just a few reasons that are weighed by the iOS system in the decision to throttle you messages:
         1. Low battery
