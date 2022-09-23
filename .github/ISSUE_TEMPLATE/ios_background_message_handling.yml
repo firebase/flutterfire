@@ -73,11 +73,10 @@ body:
         - label: I am sending messages from a Firebase Admin SDK.
           required: true
 
-  - type: markdown
+  - type: textarea
     attributes:
-      value: |
-        ## Have you used the console app on your macOS computer to check if the iOS device's system is throttling your background messages?
-
+      label: Have you used the console app on your macOS computer to check if the iOS device's system is throttling your background messages?
+      description: |
         To check the status of your push notification, please follow the steps below.
           1. Open the `Console` app on your Mac
           2. Select your iPhone from the devices list on the left hand side
