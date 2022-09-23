@@ -99,26 +99,25 @@ body:
 
         <details>
         <summary>View example code snippet for using the Node.js Firebase Admin SDK to send a message to your app</summary>
-        ```js
-        admin
-          .messaging()
-          .sendToDevice(
-            [token],
-            {
-              data: {
-                foo:'bar',
-              },
-              notification: {
-                title: 'A great title',
-                body: 'Great content',
-              },
-            },
-            {
-              // Required for background/terminated app state messages on iOS
-              contentAvailable: true,
-            }
-          )
-        ```
+```js
+admin
+  .messaging()
+  .sendToDevice(
+    [token],
+    {
+      data: {
+        foo:'bar',
+      },
+      notification: {
+        title: 'A great title',
+        body: 'Great content',
+      },
+    },
+    {
+      // Required for background/terminated app state messages on iOS
+      contentAvailable: true,
+    }
+  )
         </details>
 
         REQUIRED: Please paste the code snippet you're using to sending messages to your app from the Firebase Admin SDK in the text area.
