@@ -29,7 +29,7 @@ body:
         1. Low battery
         2. High CPU usage
         3. Too many messages received
-        4. App is in a terminated state
+        4. App is in a terminated or background state
         5. Data-only messages are considered lower priority than notification messages
       options:
         - label: I understand that iOS and android background messages behaves differently and I've designed my application with that in mind.
