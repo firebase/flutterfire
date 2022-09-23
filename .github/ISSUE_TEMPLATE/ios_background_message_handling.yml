@@ -85,7 +85,7 @@ body:
       description: |
         Go to your "Info.plist" file and add the following key `FirebaseAppDelegateProxyEnabled` with a value of `YES`.
 
-        REQUIRED: Please paste your Info.plist in the text area.
+        REQUIRED: Please paste your `ios/Info.plist` file in the text area.
     validations:
       required: true
 
