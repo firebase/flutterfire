@@ -33,6 +33,10 @@ body:
         - label: I understand that iOS and Android background messages behave differently, and I've designed my application with that in mind.
           required: true
 
+  - type: markdown
+    attributes:
+      value: |
+        ---
   - type: checkboxes
     attributes:
       label: Do you have an active Apple Developer account?
