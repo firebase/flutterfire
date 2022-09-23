@@ -8,7 +8,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Create an issue after ensuring you have understood iOS background message handling and its limitations.
+        Create an issue after ensuring you have understood iOS background message handling, its limitations and the required configuration.
 
   - type: checkboxes
     attributes:
@@ -32,14 +32,14 @@ body:
         4. App is in a terminated or background state
         5. Data-only messages are considered lower priority than notification messages
       options:
-        - label: I understand that iOS and android background messages behaves differently and I've designed my application with that in mind.
+        - label: I understand that iOS and android background messages behaves differently, and I've designed my application with that in mind.
           required: true
 
   - type: checkboxes
     attributes:
       label: Do you have an active Apple Developer account?
       description: |
-        An [Apple Developer account](https://developer.apple.com/membercenter/index.action) is required for handling background messages.
+        An [Apple Developer account](https://developer.apple.com/membercenter/index.action) is required.
       options:
         - label: I have an active Apple Developer account.
           required: true
@@ -48,7 +48,7 @@ body:
     attributes:
       label: Are you using a physical iOS device to test background messages?
       description: |
-        A physical device is required for testing background messages, it will not work on a simulator.
+        A physical device is required, background messages will not work on a simulator.
       options:
         - label: I am using a physical iOS device to test background messages.
           required: true
