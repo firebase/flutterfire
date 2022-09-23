@@ -58,12 +58,12 @@ body:
     attributes:
       label: Have you enabled "Remote Notifications" & "Background Mode" (Checking options for "Background Processing" & "Remote Notifications") in your app's Xcode project?
       description: |
-        Find out how to enable "Remote Notifications" & "Background Mode" in the [documentation](https://firebase.google.com/docs/cloud-messaging/flutter/client#enable_app_capabilities_in_xcode)
+        Find out how to enable "Remote Notifications" & "Background Mode" in the [documentation](https://firebase.google.com/docs/cloud-messaging/flutter/client#enable_app_capabilities_in_xcode).
 
         For illustration, your Xcode project "Signing and Capabilities" settings should look like this:
         ![Xcode "Signing and Capabilities tab"](https://github.com/firebase/flutterfire/blob/master/.github/images/remote-notifications-enable.png)
 
-        REQUIRED: Please provide a screenshot of your Xcode project "Signing and capabilities" settings.
+        REQUIRED: Please provide a screenshot of your Xcode project "Signing and capabilities" settings in the text area.
     validations:
       required: true
 
@@ -76,7 +76,7 @@ body:
         For illustration, your APNs key uploaded to the correct app in your Firebase console should look like this:
         ![APNs key uploaded to Firebase console](https://github.com/firebase/flutterfire/blob/master/.github/images/apns-key-upload.png)
 
-        REQUIRED: Please provide a screenshot of your APNs key uploaded to your Firebase console to the correct app.
+        REQUIRED: Please provide a screenshot of your APNs key uploaded to your Firebase console to the correct app in the text area.
     validations:
       required: true
 
@@ -94,8 +94,7 @@ body:
     attributes:
       label: Are you sending messages to your app from the Firebase Admin SDK?
       description: |
-        For an example of sending messages to your app, please see [FlutterFire's nodejs Firebase Admin SDK script](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/scripts/send-message.js)
-        FlutterFire does not support sending messages from 3rd party packages.
+        For an example of sending messages to your app, please see [FlutterFire's nodejs Firebase Admin SDK script](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/scripts/send-message.js). FlutterFire does not support sending messages from 3rd party packages.
 
         It is essential you include the `contentAvailable` flag in your message payload when sending messages to your app from the Firebase Admin SDK.
 
@@ -121,7 +120,7 @@ body:
           )
         ```
 
-        REQUIRED: Please paste the code snippet in the text area you're using to sending messages to your app from the Firebase Admin SDK.
+        REQUIRED: Please paste the code snippet you're using to sending messages to your app from the Firebase Admin SDK in the text area.
     validations:
       required: true
 
