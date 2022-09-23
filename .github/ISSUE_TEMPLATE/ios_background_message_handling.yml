@@ -55,14 +55,15 @@ body:
         - label: I have enabled "Remote Notifications" & "Background Mode" (Checking options for "Background Processing" & "Remote Notifications") in my Xcode project.
           required: true
 
-  - type: checkboxes
+  - type: textarea
     attributes:
-      label: Have you enabled method swizzling in your app? Go to your "Info.plist" file and add the following key `FirebaseAppDelegateProxyEnabled` with a value of `YES`.
+      label: Have you enabled method swizzling in your app?
       description: |
-        This is required for handling background messages in your app.
-      options:
-        - label: enabled method swizzling in my app
-          required: true
+        This is required for handling background messages in your app. Go to your "Info.plist" file and add the following key `FirebaseAppDelegateProxyEnabled` with a value of `YES`.
+
+        REQUIRED: Please paste your Info.plist file here.
+    validations:
+      required: true
 
   - type: textarea
     attributes:
@@ -95,7 +96,7 @@ body:
           )
         ```
 
-        REQUIRED: Please confirm you're sending messages to your app from the Firebase Admin SDK.
+        REQUIRED: Please paste the code snippet you're using to sending messages to your app from the Firebase Admin SDK.
     validations:
       required: true
 
