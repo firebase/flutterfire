@@ -71,6 +71,30 @@ body:
         For an example of sending messages to your app, please see [FlutterFire's nodejs Firebase Admin SDK script](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/scripts/send-message.js)
         FlutterFire does not support sending messages from the 3rd party packages.
 
+        It is essential you include the `contentAvailable` flag in your message payload when sending messages to your app from the Firebase Admin SDK.
+
+        Example:
+        ```js
+        admin
+          .messaging()
+          .sendToDevice(
+            [token],
+            {
+              data: {
+                foo:'bar',
+              },
+              notification: {
+                title: 'A great title',
+                body: 'Great content',
+              },
+            },
+            {
+              // Required for background/terminated app state messages on iOS
+              contentAvailable: true,
+            }
+          )
+        ```
+
         REQUIRED: Please confirm you're sending messages to your app from the Firebase Admin SDK.
     validations:
       required: true
