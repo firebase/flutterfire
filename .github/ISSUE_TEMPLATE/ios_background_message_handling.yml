@@ -64,14 +64,16 @@ body:
         - label: enabled method swizzling in my app
           required: true
 
-  - type: checkboxes
+  - type: textarea
     attributes:
-      label: Are you sending messages to your app from the Firebase Admin SDK? See [FlutterFire's nodejs Firebase Admin SDK script](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/scripts/send-message.js) for sending messages to your app.
+      label: Are you sending messages to your app from the Firebase Admin SDK?
       description: |
+        For an example of sending messages to your app, please see [FlutterFire's nodejs Firebase Admin SDK script](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/scripts/send-message.js)
         FlutterFire does not support sending messages from the 3rd party packages.
-      options:
-        - label: I am sending messages from a Firebase Admin SDK.
-          required: true
+
+        REQUIRED: Please confirm you're sending messages to your app from the Firebase Admin SDK.
+    validations:
+      required: true
 
   - type: textarea
     attributes:
@@ -84,9 +86,12 @@ body:
           4. Press the clear button to clean the history.
           5. Now send the message to your device
           6. Select all the rows on the logs & copy them, Cmd + C (not available on right-click menu)
-          7. Paste them here in a code block so we can see a successful message delivered not being received by the background message handler.
 
           [Example of successfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-delivered.png)
           [Example of unsuccessfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-not-delivered.png)
+
+          REQUIRED: Paste your logs in the text area so we can see a successful message delivered not being received by the background message handler.
+    validations:
+      required: true
 
 
