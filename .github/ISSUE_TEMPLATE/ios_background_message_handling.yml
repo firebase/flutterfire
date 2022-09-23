@@ -13,6 +13,10 @@ body:
         - label: I have searched the existing issues.
           required: true
 
+  - type: markdown
+    attributes:
+      value: |
+        ---
   - type: checkboxes
     attributes:
       label: Are you aware of the fundamental differences between iOS and Android background message handling?
