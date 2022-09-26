@@ -33,12 +33,12 @@ dependencies:
     path: ../packages/firebase_app_check/firebase_app_check_platform_interface
   firebase_app_check_web:
     path: ../packages/firebase_app_check/firebase_app_check_web
-  firebase_app_installations:
-    path: ../packages/firebase_app_installations/firebase_app_installations
-  firebase_app_installations_platform_interface:
-    path: ../packages/firebase_app_installations/firebase_app_installations_platform_interface
-  firebase_app_installations_web:
-    path: ../packages/firebase_app_installations/firebase_app_installations_web
+#  firebase_app_installations:
+#    path: ../packages/firebase_app_installations/firebase_app_installations
+#  firebase_app_installations_platform_interface:
+#    path: ../packages/firebase_app_installations/firebase_app_installations_platform_interface
+#  firebase_app_installations_web:
+#    path: ../packages/firebase_app_installations/firebase_app_installations_web
   firebase_auth:
     path: ../packages/firebase_auth/firebase_auth
   firebase_auth_platform_interface:
@@ -128,12 +128,12 @@ dependency_overrides:
     path: ../packages/firebase_app_check/firebase_app_check_platform_interface
   firebase_app_check_web:
     path: ../packages/firebase_app_check/firebase_app_check_web
-  firebase_app_installations:
-    path: ../packages/firebase_app_installations/firebase_app_installations
-  firebase_app_installations_platform_interface:
-    path: ../packages/firebase_app_installations/firebase_app_installations_platform_interface
-  firebase_app_installations_web:
-    path: ../packages/firebase_app_installations/firebase_app_installations_web
+#  firebase_app_installations:
+#    path: ../packages/firebase_app_installations/firebase_app_installations
+#  firebase_app_installations_platform_interface:
+#    path: ../packages/firebase_app_installations/firebase_app_installations_platform_interface
+#  firebase_app_installations_web:
+#    path: ../packages/firebase_app_installations/firebase_app_installations_web
   firebase_auth:
     path: ../packages/firebase_auth/firebase_auth
   firebase_auth_platform_interface:

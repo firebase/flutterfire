@@ -40,7 +40,7 @@ void setupTests() {
   firebase_dynamic_links.setupTests();
   firebase_remote_config.setupTests();
   // firebase_in_app_messaging.setupTests();
-  firebase_app_installations.setupTests();
+  // firebase_app_installations.setupTests();
   firebase_ml_model_downloader.setupTests();
 }
 
