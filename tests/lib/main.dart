@@ -12,7 +12,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseRemoteConfig.instance.fetchAndActivate();
   runApp(const MyApp());
 }
 
@@ -109,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             ElevatedButton(
               onPressed: () async {
-                // Running these APIs manually as they're failing on CI due to keychain sharing entitlements required
+                // Running these APIs manually as they're failing on CI due to required keychain sharing entitlements
                 // See this issue https://github.com/firebase/flutterfire/issues/9538
                 // You will also need to add the keychain sharing entitlements to this test app and sign code with development team for app & tests to successfully run
                 if (Platform.isMacOS && kDebugMode) {
