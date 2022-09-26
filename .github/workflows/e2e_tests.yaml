@@ -184,9 +184,6 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v2
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: '13.1.0'
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
@@ -200,13 +197,13 @@ jobs:
         with:
           key: ${{ runner.os }}-macos-v2
           max-size: 700M
-      - uses: actions/cache@v2
-        name: Pods Cache
-        id: pods-cache
-        with:
-          path: tests/macos/Pods
-          key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
-          restore-keys: ${{ runner.os }}-macos-pods-v1
+#      - uses: actions/cache@v2
+#        name: Pods Cache
+#        id: pods-cache
+#        with:
+#          path: tests/macos/Pods
+#          key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
+#          restore-keys: ${{ runner.os }}-macos-pods-v1
       - name: Cache Firebase Emulator
         uses: actions/cache@v2
         with:
