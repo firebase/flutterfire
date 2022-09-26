@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   await Future.delayed(const Duration(seconds: 8));
 
                   await FirebaseInstallations.instance.delete();
-                  print('Received Firebase App Installations id: $id');
+                  print('Deleted Firebase App Installations id');
 
                   final token = await FirebaseInstallations.instance.getToken();
                   print('Received Firebase App Installations token: $token');
