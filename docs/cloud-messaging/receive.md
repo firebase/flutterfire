@@ -275,63 +275,67 @@ class _Application extends State<Application> {
 How you handle interaction depends on your application setup. The above example shows a basic illustration using a StatefulWidget.
 
 ## Localize Messages
-Localizing notifications is embedded in the underlying system (Android or iOS). You can send localized
-strings in two different ways:
-* Storing the language of your user in your server and send customized notification for each language
-* Add native locale strings to your app
 
-For the second method, you can check how to use it below: 
+You can send localized strings in two different ways:
+
+* Store the preferred language of each of your users in your server and send customized notifications for each language
+* Embed localized strings in your app and make use of the operating system's native locale settings
+
+Here's how to use the second method:
 
 ### Android
 
-1. resources/values/strings.xml (default file)
+1. Specify your default-language messages in `resources/values/strings.xml`:
 
-```xml
-<string name="notification_title">Hello world</string>
-<string name="notification_message">This is a message</string>
-```
-2. resources/values-fr/strings.xml (French strings file)
+   ```xml
+   <string name="notification_title">Hello world</string>
+   <string name="notification_message">This is a message</string>
+   ```
 
-```xml
-<string name="notification_title">Bonjour le monde</string>
-<string name="notification_message">C'est un message</string>
-```
-On the server payload, instead of using **title** and **message** / **body**  keys, we will use **title_loc_key** and **body_loc_key** for our localized message.
+2. Specify the translated messages in the <code>values-<var>language</var></code> directory. For example, specify French messages in `resources/values-fr/strings.xml`:
 
-The message payload would look like this:
+   ```xml
+   <string name="notification_title">Bonjour le monde</string>
+   <string name="notification_message">C'est un message</string>
+   ```
 
-```json
-{
-  "data": {
-    "title_loc_key": "notification_title",
-    "body_loc_key": "notification_message"
-  },
-}
-```
+3. In the server payload, instead of using `title`, `message`, and `body`  keys, use `title_loc_key` and `body_loc_key` for your localized message, and set them to the `name` attribute of the message you want to display.
+
+   The message payload would look like this:
+
+   ```json
+   {
+     "data": {
+       "title_loc_key": "notification_title",
+       "body_loc_key": "notification_message"
+     },
+   }
+   ```
+
 
 ### iOS
 
-1. Base.lproj/Localizable.strings default language file:
+1. Specify your default-language messages in `Base.lproj/Localizable.strings`:
 
-```strings
-"NOTIFICATION_TITLE" = "Hello World";
-"NOTIFICATION_MESSAGE" = "This is a message";
-```
+   ```
+   "NOTIFICATION_TITLE" = "Hello World";
+   "NOTIFICATION_MESSAGE" = "This is a message";
+   ```
 
-2. fr.lproj/Localizable.strings French file:
+2. Specify the translated messages in the <code><var>language</var>.lproj</code> directory. For example, specify French messages in `fr.lproj/Localizable.strings`:
 
-```strings
-"NOTIFICATION_TITLE" = "Bonjour le monde";
-"NOTIFICATION_MESSAGE" = "C'est un message";
-```
+   ```
+   "NOTIFICATION_TITLE" = "Bonjour le monde";
+   "NOTIFICATION_MESSAGE" = "C'est un message";
+   ```
 
-The message payload would look like this:
+   The message payload would look like this:
 
-```json
-{
-  "data": {
-    "title_loc_key": "NOTIFICATION_TITLE",
-    "body_loc_key": "NOTIFICATION_MESSAGE"
-  },
-}
-```
+   ```json
+   {
+     "data": {
+       "title_loc_key": "NOTIFICATION_TITLE",
+       "body_loc_key": "NOTIFICATION_MESSAGE"
+     },
+   }
+   ```
