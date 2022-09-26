@@ -7,8 +7,8 @@ import 'package:drive/drive.dart' as drive;
 import 'cloud_functions/cloud_functions_e2e.dart' as cloud_functions;
 import 'firebase_analytics/firebase_analytics_e2e.dart' as firebase_analytics;
 import 'firebase_app_check/firebase_app_check_e2e.dart' as firebase_app_check;
-import 'firebase_app_installations/firebase_app_installations_e2e.dart'
-    as firebase_app_installations;
+// import 'firebase_app_installations/firebase_app_installations_e2e.dart'
+//     as firebase_app_installations;
 import 'firebase_auth/firebase_auth_e2e.dart' as firebase_auth;
 import 'firebase_core/firebase_core_e2e.dart' as firebase_core;
 import 'firebase_crashlytics/firebase_crashlytics_e2e.dart'
