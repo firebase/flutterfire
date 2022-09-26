@@ -180,7 +180,7 @@ jobs:
           exit $FLUTTER_DRIVE_EXIT_CODE
 
   macos:
-    runs-on: macos-11
+    runs-on: macos-latest
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v2
@@ -197,13 +197,13 @@ jobs:
         with:
           key: ${{ runner.os }}-macos-v2
           max-size: 700M
-#      - uses: actions/cache@v2
-#        name: Pods Cache
-#        id: pods-cache
-#        with:
-#          path: tests/macos/Pods
-#          key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
-#          restore-keys: ${{ runner.os }}-macos-pods-v1
+      - uses: actions/cache@v2
+        name: Pods Cache
+        id: pods-cache
+        with:
+          path: tests/macos/Pods
+          key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
+          restore-keys: ${{ runner.os }}-macos-pods-v1
       - name: Cache Firebase Emulator
         uses: actions/cache@v2
         with:
