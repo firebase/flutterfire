@@ -109,7 +109,7 @@ body:
     attributes:
       label: Have you disabled method swizzling for Firebase in your app?
       description: |
-        Firebase Messaging will not work if you disable method swizzling. Please remove or set to `true` the `FirebaseAppDelegateProxyEnabled` property in your `ios/Info.plist` file if it exists.
+        Firebase Messaging will not work if you disable method swizzling. Please remove or set to `YES` the `FirebaseAppDelegateProxyEnabled` property in your `ios/Info.plist` file if it exists.
 
         REQUIRED: Please paste your `ios/Info.plist` file in the text area.
     validations:
