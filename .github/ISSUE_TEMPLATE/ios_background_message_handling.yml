@@ -50,7 +50,7 @@ body:
     attributes:
       value: |
         ---
- 
+
   - type: checkboxes
     attributes:
       label: Are you using a physical iOS device to test background messages?
@@ -64,7 +64,7 @@ body:
     attributes:
       value: |
         ---
- 
+
   - type: textarea
     attributes:
       label: Have you enabled "Remote Notifications" & "Background Mode" (Checking options for "Background Processing" & "Remote Notifications") in your app's Xcode project?
@@ -84,7 +84,7 @@ body:
     attributes:
       value: |
         ---
- 
+
   - type: textarea
     attributes:
       label: Have you created an APNs key in your Apple Developer account & uploaded this APNs key to your Firebase console?
@@ -104,12 +104,12 @@ body:
     attributes:
       value: |
         ---
- 
+
   - type: textarea
     attributes:
-      label: Have you enabled method swizzling in your app?
+      label: Have you disabled method swizzling for Firebase in your app?
       description: |
-        Go to your "Info.plist" file and add the following key `FirebaseAppDelegateProxyEnabled` with a value of `YES`.
+        Firebase Messaging will not work if you disable method swizzling. Please remove or set to `true` the `FirebaseAppDelegateProxyEnabled` property in your `ios/Info.plist` file if it exists.
 
         REQUIRED: Please paste your `ios/Info.plist` file in the text area.
     validations:
@@ -119,7 +119,7 @@ body:
     attributes:
       value: |
         ---
- 
+
   - type: textarea
     attributes:
       label: Are you sending messages to your app from the Firebase Admin SDK?
@@ -158,7 +158,7 @@ body:
     attributes:
       value: |
         ---
- 
+
   - type: checkboxes
     attributes:
       label: Have you requested permission from the user to receive notifications?
@@ -188,7 +188,7 @@ body:
     attributes:
       value: |
         ---
- 
+
   - type: textarea
     attributes:
       label: Have you used the 'Console' application on your macOS device to check if the iOS device's system is throttling your background messages?
@@ -212,7 +212,7 @@ body:
     attributes:
       value: |
         ---
- 
+
   - type: textarea
     id: comments
     attributes:
