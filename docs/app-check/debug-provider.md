@@ -103,9 +103,39 @@ immediately in the Firebase console.
 
 ## Android
 
-The debug provider is not currently supported in Flutter apps on Android. See
-[issue #6551](https://github.com/firebase/flutterfire/issues/6551#issuecomment-1225502729)
-in GitHub for a workaround.
+To use the debug provider while running your Flutter app in an android environment,
+implement the following:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+// Import the firebase_app_check plugin
+import 'package:firebase_app_check/firebase_app_check.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(
+    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
+    // Set the androidDebugProvider to `true`
+    androidDebugProvider: true,
+  );
+  runApp(App());
+}
+
+```
+
+A local debug token will be logged to the debug output when Firebase tries
+to send a request to the backend. For example:
+
+<pre>D DebugAppCheckProvider: Enter this debug secret into the allow list in
+the Firebase Console for your project: 123a4567-b89c-12d3-e456-789012345678</pre>
+
+{# Google-internal common file: #}
+<<../_includes/manage-debug-tokens.md>>
+
+After you register the token, Firebase backend services will accept it as valid.
 
 ## Web
 
