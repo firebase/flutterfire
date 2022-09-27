@@ -1,6 +1,10 @@
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:firebase_app_installations/firebase_app_installations.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -102,6 +106,38 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            ElevatedButton(
+              onPressed: () async {
+                // Running these APIs manually as they're failing on CI due to required keychain sharing entitlements
+                // See this issue https://github.com/firebase/flutterfire/issues/9538
+                // You will also need to add the keychain sharing entitlements to this test app and sign code with development team for app & tests to successfully run
+                if (Platform.isMacOS && kDebugMode) {
+                  // ignore_for_file: avoid_print
+                  await FirebaseRemoteConfig.instance.fetchAndActivate();
+                  print('Fetched and activated remote config');
+
+                  final id = await FirebaseInstallations.instance.getId();
+                  print('Received Firebase App Installations id: $id');
+
+                  // Wait a little so we don't get a delete-pending exception
+                  await Future.delayed(const Duration(seconds: 8));
+
+                  await FirebaseInstallations.instance.delete();
+                  print('Deleted Firebase App Installations id');
+
+                  final token = await FirebaseInstallations.instance.getToken();
+                  print('Received Firebase App Installations token: $token');
+
+                  const topic = 'test-topic';
+                  await FirebaseMessaging.instance.subscribeToTopic(topic);
+                  print('Firebase Messaging subscribed to topic: $topic');
+
+                  await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+                  print('Firebase Messaging unsubscribed to topic: $topic');
+                }
+              },
+              child: const Text('Test macOS tests manually'),
+            ),
             const Text(
               'You have pushed the button this many times:',
             ),
