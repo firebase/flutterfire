@@ -85,8 +85,8 @@ To use the debug provider while running your app in a simulator interactively
     1.  In the **Arguments Passed on Launch** section, add `-FIRDebugEnabled`.
 
 1.  Open `ios/Runner.xcworkspace` with Xcode and run your app in the Simulator.
-    A local debug token will be logged to the debug output when Firebase tries
-    to send a request to the backend. For example:
+    Your app will print a local debug token to the debug output when Firebase
+    tries to send a request to the backend. For example:
 
     <pre>[Firebase/AppCheck][I-FAA001001] Firebase App Check Debug Token:
     123a4567-b89c-12d3-e456-789012345678</pre>
@@ -103,7 +103,7 @@ immediately in the Firebase console.
 
 ## Android
 
-To use the debug provider while running your Flutter app in an android environment, 
+To use the debug provider while running your Flutter app in an Android environment, 
 implement the following code in your Flutter application:
 
 ```dart
@@ -126,7 +126,7 @@ Future<void> main() async {
 
 ```
 
-A local debug token will be logged to the debug output when Firebase tries
+Your app will print a local debug token to the debug output when Firebase tries
 to send a request to the backend. For example:
 
 <pre>D DebugAppCheckProvider: Enter this debug secret into the allow list in
