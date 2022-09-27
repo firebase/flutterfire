@@ -103,21 +103,8 @@ immediately in the Firebase console.
 
 ## Android
 
-To use the debug provider while running your Flutter app in an android environment,
-do the following:
-
-Add the following dependencies to your `android/app/build.gradle` file:
-
-```gradle
-
-dependencies {
-  // Add the following dependencies:
-  implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0'
-  implementation 'com.google.firebase:firebase-appcheck-debug:16.0.0'
-}
-```
-
-Implement the following code in your Flutter application:
+To use the debug provider while running your Flutter app in an android environment, 
+implement the following code in your Flutter application:
 
 ```dart
 import 'package:flutter/material.dart';
