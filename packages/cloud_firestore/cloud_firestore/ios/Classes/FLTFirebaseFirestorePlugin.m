@@ -451,8 +451,8 @@ FlutterStandardMethodCodec *_codec;
 
 - (void)queryGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRQuery *query = arguments[@"query"];
-
-  if (query == nil) {
+  // Why we check [NSNull null]:  https://github.com/firebase/flutterfire/issues/9328
+  if (query == nil || query == [NSNull null]) {
     result.error(@"sdk-error",
                  @"An error occurred while parsing query arguments, see native logs for more "
                  @"information. Please report this issue.",

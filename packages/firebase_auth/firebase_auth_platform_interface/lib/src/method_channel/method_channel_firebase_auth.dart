@@ -7,6 +7,7 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -573,14 +574,23 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<UserCredentialPlatform> signInWithAuthProvider(
+  Future<UserCredentialPlatform> signInWithProvider(
     AuthProvider provider,
   ) async {
     try {
+      // To extract scopes and custom parameters from the provider
+      final convertedProvider = convertToOAuthProvider(provider);
+
       Map<String, dynamic> data =
           (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#signInWithAuthProvider',
-              _withChannelDefaults({'signInProvider': provider.providerId})))!;
+              'Auth#signInWithProvider',
+              _withChannelDefaults({
+                'signInProvider': convertedProvider.providerId,
+                if (convertedProvider is OAuthProvider) ...{
+                  'scopes': convertedProvider.scopes,
+                  'customParameters': convertedProvider.parameters
+                },
+              })))!;
 
       MethodChannelUserCredential userCredential =
           MethodChannelUserCredential(this, data);

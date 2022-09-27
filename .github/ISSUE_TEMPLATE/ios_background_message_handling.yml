@@ -1,0 +1,221 @@
+name: iOS background message handling bug report for Firebase Messaging
+description:
+  Create an issue specific to receiving Firebase Messaging messages in the background on iOS.
+title: "[firebase_messaging]: <YOUR TITLE HERE>"
+labels: ["Needs Attention", "type: bug", "plugin: messaging", "platform: ios"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: |
+        Please search to see if an issue already exists for the bug you encountered.
+      options:
+        - label: I have searched the existing issues.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+  - type: checkboxes
+    attributes:
+      label: Are you aware of the differences between iOS and Android background message handling?
+      description: |
+        iOS adopts a more aggressive policy to throttling background messages. Android is a lot more lenient, even when the app is in a terminated state, it is highly likely that
+        messages will be received by the device and processed by the Firebase Messaging background handler. This is not the case with iOS. There are multiple reasons why your messages
+        may not be received by the device. Here are just a few reasons that are weighed by the iOS system in the decision to throttle your messages:
+        1. Low battery
+        2. High CPU usage
+        3. Too many messages received
+        4. App is in a terminated or background state
+        5. Data-only messages are considered lower priority than notification messages
+      options:
+        - label: I understand that iOS and Android background messages behave differently, and I've designed my application with that in mind.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+  - type: checkboxes
+    attributes:
+      label: Do you have an active Apple Developer account?
+      description: |
+        An [Apple Developer account](https://developer.apple.com/membercenter/index.action) is required.
+      options:
+        - label: I have an active Apple Developer account.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: checkboxes
+    attributes:
+      label: Are you using a physical iOS device to test background messages?
+      description: |
+        A physical device is required, background messages will not work on a simulator.
+      options:
+        - label: I am using a physical iOS device to test background messages.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: textarea
+    attributes:
+      label: Have you enabled "Remote Notifications" & "Background Mode" (Checking options for "Background Processing" & "Remote Notifications") in your app's Xcode project?
+      description: |
+        Find out how to enable "Remote Notifications" & "Background Mode" in the [documentation](https://firebase.google.com/docs/cloud-messaging/flutter/client#enable_app_capabilities_in_xcode).
+
+        <details>
+        <summary>Click to see how your Xcode project "Signing and Capabilities" settings should look like</summary>
+        <img alt="Xcode "Signing and Capabilities tab" src="./../images/remote-notifications-enable.png?raw=true" />
+        </details>
+
+        REQUIRED: Please provide a screenshot of your Xcode project "Signing and capabilities" settings in the text area.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: textarea
+    attributes:
+      label: Have you created an APNs key in your Apple Developer account & uploaded this APNs key to your Firebase console?
+      description: |
+        You have to create an APNs key in your [Apple Developer account](https://developer.apple.com/membercenter/index.action) & upload this APNs key to your [Firebase console](https://console.firebase.google.com). [See documentation](https://firebase.google.com/docs/cloud-messaging/flutter/client#upload_your_apns_authentication_key).
+
+        <details>
+        <summary>Click to see how an APNs key uploaded to the correct app in the Firebase console should look like</summary>
+        <img alt="APNs key uploaded to Firebase console" src="./../images/apns-key-upload.png?raw=true" />
+        </details>
+
+        REQUIRED: Please provide a screenshot of your APNs key showing as uploaded in the Firebase console for your app in the text area below (as show in the example above).
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: textarea
+    attributes:
+      label: Have you disabled method swizzling for Firebase in your app?
+      description: |
+        Firebase Messaging will not work if you disable method swizzling. Please remove or set to `YES` the `FirebaseAppDelegateProxyEnabled` property in your `ios/Info.plist` file if it exists.
+
+        REQUIRED: Please paste your `ios/Info.plist` file in the text area.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: textarea
+    attributes:
+      label: Are you sending messages to your app from the Firebase Admin SDK?
+      description: |
+        For an example of sending messages to your app, please see [FlutterFire's nodejs Firebase Admin SDK script](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/scripts/send-message.js). FlutterFire does not support sending messages from 3rd party packages.
+
+        It is essential you include the `contentAvailable` flag in your message payload when sending messages to your app from the Firebase Admin SDK.
+
+        Example code snippet for using the Node.js Firebase Admin SDK to send a message to your app
+        ```js
+        admin
+          .messaging()
+          .sendToDevice(
+            [token],
+            {
+              data: {
+                foo:'bar',
+              },
+              notification: {
+                title: 'A great title',
+                body: 'Great content',
+              },
+            },
+            {
+              // Required for background/terminated app state messages on iOS
+              contentAvailable: true,
+            }
+          )
+        ```
+
+        REQUIRED: Please paste a code snippet that you're using to send messages to your app from the Firebase Admin SDK in the text area below.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: checkboxes
+    attributes:
+      label: Have you requested permission from the user to receive notifications?
+      description: |
+        You need to request permission from your user to receive notifications using the following API:
+        ```dart
+        FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+        NotificationSettings settings = await messaging.requestPermission(
+          alert: true,
+          announcement: false,
+          badge: true,
+          carPlay: false,
+          criticalAlert: false,
+          provisional: false,
+          sound: true,
+        );
+
+        print('User granted permission: ${settings.authorizationStatus}');
+        ```
+
+      options:
+        - label: I have the relevant permission to receive notifications.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: textarea
+    attributes:
+      label: Have you used the 'Console' application on your macOS device to check if the iOS device's system is throttling your background messages?
+      description: |
+        To check the status of your push notification, please follow the steps below.
+          1. Open the `Console` app on your Mac
+          2. Select your iPhone from the devices list on the left hand side
+          3. Filter messages by typing in your Bundle ID (e.g. The Firebase Messaging example app bundle ID is 'io.flutter.plugins.firebase.messaging') into the search box and pressing enter.
+          4. Press the clear button to clean the history.
+          5. Now send the message to your device
+          6. Select all the rows on the logs & copy them, Cmd + C (not available on right-click menu)
+
+          [Example of successfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-delivered.png)
+          [Example of unsuccessfully delivered data-only background message](https://github.com/firebase/flutterfire/blob/master/.github/images/ios-background-message-not-delivered.png)
+
+          REQUIRED: Please paste your logs from the above steps in the text area so we can see if a message was delivered but not received by the background message handler.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+  - type: textarea
+    id: comments
+    attributes:
+      label: Additional context and comments
+      description: |
+        Anything else you want to add for this issue?

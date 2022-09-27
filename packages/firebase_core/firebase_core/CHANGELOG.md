@@ -1,3 +1,16 @@
+## 1.23.0
+
+ - **FEAT**: Bump Firebase android SDK to 30.5.0 ([#9573](https://github.com/firebase/flutterfire/issues/9573)). ([3ec750e1](https://github.com/firebase/flutterfire/commit/3ec750e1612671527fe7c0e576ca900821c1535b))
+ - **DOCS**: update inline documentation on `initializeApp()` behaviour ([#9431](https://github.com/firebase/flutterfire/issues/9431)). ([3af5b676](https://github.com/firebase/flutterfire/commit/3af5b67664149b54ec73b328a04d94c06f389221))
+
+## 1.22.0
+
+ - **FEAT**: Bump Firebase iOS SDK to 9.5.0 ([#9492](https://github.com/firebase/flutterfire/issues/9492)). ([d246ba2a](https://github.com/firebase/flutterfire/commit/d246ba2aeec3da0bf5e2b4171ea2d1ec67618226))
+
+## 1.21.1
+
+ - Update a dependency to the latest release.
+
 ## 1.21.0
 
  - **FEAT**: Bump Firebase iOS SDK to 9.4.0 ([#9357](https://github.com/firebase/flutterfire/issues/9357)). ([4f356ff4](https://github.com/firebase/flutterfire/commit/4f356ff4fd5ec939c373265dd173d1cb73de1678))
