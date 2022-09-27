@@ -1,3 +1,23 @@
+## 9.3.6
+
+ - **FIX**: suppress unchecked warnings that aren't necessary ([#9532](https://github.com/firebase/flutterfire/issues/9532)). ([3ebd4593](https://github.com/firebase/flutterfire/commit/3ebd4593d11fbbd359b8d514a9c0577654859992))
+
+## 9.3.5
+
+ - **REFACTOR**: deprecate `signInWithAuthProvider` in favor of `signInWithProvider` ([#9542](https://github.com/firebase/flutterfire/issues/9542)). ([ca340ea1](https://github.com/firebase/flutterfire/commit/ca340ea19c8dbb340f083e48cf1b0de36f7d64c4))
+
+## 9.3.4
+
+ - Update a dependency to the latest release.
+
+## 9.3.3
+
+ - Update a dependency to the latest release.
+
+## 9.3.2
+
+ - Update a dependency to the latest release.
+
 ## 9.3.1
 
  - Update a dependency to the latest release.

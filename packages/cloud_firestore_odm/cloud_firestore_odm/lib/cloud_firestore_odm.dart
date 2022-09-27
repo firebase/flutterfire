@@ -13,7 +13,8 @@ export 'src/firestore_reference.dart'
         FirestoreQueryDocumentSnapshot,
         FirestoreQuerySnapshot,
         FirestoreReference,
-        QueryReference;
+        QueryReference,
+        $QueryCursor;
 
 /// The list of all [JsonConverter]s that cloud_firestore_odm offers.
 ///

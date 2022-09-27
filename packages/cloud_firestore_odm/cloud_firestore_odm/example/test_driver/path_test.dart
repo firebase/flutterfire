@@ -76,4 +76,23 @@ void main() {
       });
     });
   });
+
+  group('collection class prefix', () {
+    test('can be manually specified through the Collection annotation',
+        () async {
+      final collection =
+          await initializeTest(rootRef.doc('123').customClassPrefix);
+
+      await FirebaseFirestore.instance
+          .collection('root/123/custom-class-prefix')
+          .add(<String, Object?>{'value': 42});
+
+      final snapshot = await collection.get();
+
+      expect(snapshot.docs, [
+        isA<ThisIsACustomPrefixDocumentSnapshot>()
+            .having((e) => e.data?.value, 'data.value', 42)
+      ]);
+    });
+  });
 }

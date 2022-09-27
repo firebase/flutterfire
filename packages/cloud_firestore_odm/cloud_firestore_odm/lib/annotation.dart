@@ -99,16 +99,22 @@ export 'src/validator.dart' show Min, Validator, Max;
 /// }
 /// ```
 class Collection<T> {
-  const Collection(this.path, {this.name});
+  const Collection(this.path, {this.name, this.prefix});
 
   Collection.fromJson(Map<Object?, Object?> json)
       : this(
           json['path']! as String,
           name: json['name'] as String?,
+          prefix: json['prefix'] as String?,
         );
 
   /// The firestore collection path
   final String path;
 
+  /// The name of the generated collection field. Defaults to the last part of
+  /// the collection [path].
   final String? name;
+
+  /// The prefix to use for generated class names. Defaults to the type of [T].
+  final String? prefix;
 }

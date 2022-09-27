@@ -71,7 +71,7 @@ class ProgrammaticTriggersExample extends StatelessWidget {
                   ),
                 );
               },
-              style: ElevatedButton.styleFrom(primary: Colors.blue),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: Text(
                 'Programmatic Triggers'.toUpperCase(),
                 style: const TextStyle(color: Colors.white),
@@ -120,7 +120,7 @@ class AnalyticsEventExample extends StatelessWidget {
                   ),
                 );
               },
-              style: ElevatedButton.styleFrom(primary: Colors.blue),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: Text(
                 'Log event'.toUpperCase(),
                 style: const TextStyle(color: Colors.white),

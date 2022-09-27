@@ -2,7 +2,10 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'firebase_options.dart';
+
+const kWebRecaptchaSiteKey = '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +16,7 @@ Future<void> main() async {
   await FirebaseAppCheck.instance
       // Your personal reCaptcha public key goes here:
       .activate(
-    webRecaptchaSiteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
+    webRecaptchaSiteKey: kWebRecaptchaSiteKey,
   );
 
   runApp(MyApp());
@@ -83,7 +86,9 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                     'Pass in your "webRecaptchaSiteKey" key found on you Firebase Console to activate if using on the web platform.',
                   );
                 }
-                await appCheck.activate();
+                await appCheck.activate(
+                  webRecaptchaSiteKey: kWebRecaptchaSiteKey,
+                );
                 setMessage('activated!!');
               },
               child: const Text('activate()'),

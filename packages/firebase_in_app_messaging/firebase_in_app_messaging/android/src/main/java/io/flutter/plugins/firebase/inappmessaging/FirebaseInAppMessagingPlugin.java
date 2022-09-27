@@ -4,8 +4,9 @@
 
 package io.flutter.plugins.firebase.inappmessaging;
 
+import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.inappmessaging.FirebaseInAppMessaging;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -16,6 +17,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.Map;
+import java.util.Objects;
 
 /** FirebaseInAppMessagingPlugin */
 public class FirebaseInAppMessagingPlugin
@@ -30,7 +32,7 @@ public class FirebaseInAppMessagingPlugin
   }
 
   @Override
-  public void onDetachedFromEngine(FlutterPluginBinding binding) {
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     if (channel != null) {
       channel.setMethodCallHandler(null);
       channel = null;
@@ -38,18 +40,18 @@ public class FirebaseInAppMessagingPlugin
   }
 
   @Override
-  public void onMethodCall(MethodCall call, Result result) {
+  public void onMethodCall(MethodCall call, @NonNull Result result) {
     switch (call.method) {
       case "FirebaseInAppMessaging#triggerEvent":
         {
-          String eventName = call.argument("eventName");
+          String eventName = Objects.requireNonNull(call.argument("eventName"));
           FirebaseInAppMessaging.getInstance().triggerEvent(eventName);
           result.success(null);
           break;
         }
       case "FirebaseInAppMessaging#setMessagesSuppressed":
         {
-          Boolean suppress = (Boolean) call.argument("suppress");
+          Boolean suppress = Objects.requireNonNull(call.argument("suppress"));
           FirebaseInAppMessaging.getInstance().setMessagesSuppressed(suppress);
           result.success(null);
           break;
@@ -71,11 +73,33 @@ public class FirebaseInAppMessagingPlugin
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return Tasks.call(() -> null);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
-    return Tasks.call(() -> null);
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 }

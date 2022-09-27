@@ -194,6 +194,15 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
     return facebookAuthProvider;
   }
 
+  if (authProvider is AppleAuthProvider) {
+    auth_interop.OAuthProvider oAuthProvider =
+        auth_interop.OAuthProvider(authProvider.providerId);
+
+    authProvider.scopes.forEach(oAuthProvider.addScope);
+    oAuthProvider.setCustomParameters(authProvider.parameters);
+    return oAuthProvider;
+  }
+
   if (authProvider is GithubAuthProvider) {
     auth_interop.GithubAuthProvider githubAuthProvider =
         auth_interop.GithubAuthProvider();
@@ -210,6 +219,24 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
     authProvider.scopes.forEach(googleAuthProvider.addScope);
     googleAuthProvider.setCustomParameters(authProvider.parameters);
     return googleAuthProvider;
+  }
+
+  if (authProvider is MicrosoftAuthProvider) {
+    auth_interop.OAuthProvider oAuthProvider =
+        auth_interop.OAuthProvider(authProvider.providerId);
+
+    authProvider.scopes.forEach(oAuthProvider.addScope);
+    oAuthProvider.setCustomParameters(authProvider.parameters);
+    return oAuthProvider;
+  }
+
+  if (authProvider is YahooAuthProvider) {
+    auth_interop.OAuthProvider oAuthProvider =
+        auth_interop.OAuthProvider(authProvider.providerId);
+
+    authProvider.scopes.forEach(oAuthProvider.addScope);
+    oAuthProvider.setCustomParameters(authProvider.parameters);
+    return oAuthProvider;
   }
 
   if (authProvider is TwitterAuthProvider) {
