@@ -1,3 +1,11 @@
+## 3.4.9
+
+ - Update a dependency to the latest release.
+
+## 3.4.8
+
+ - **FIX**: fix `queryGet()` & `namedQueryGet()`. Check if `query` is `[NSNull null]` value ([#9410](https://github.com/firebase/flutterfire/issues/9410)). ([ae035fe2](https://github.com/firebase/flutterfire/commit/ae035fe2b060264153386ae5c2a1eb90c22e90f3))
+
 ## 3.4.7
 
  - Update a dependency to the latest release.

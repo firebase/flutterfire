@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user_credential.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
 
 import 'utils/exception.dart';
 
@@ -88,6 +89,64 @@ class MethodChannelUser extends UserPlatform {
                   'credential': credential.asMap(),
                 },
               )))!;
+
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(auth, data);
+
+      auth.currentUser = userCredential.user;
+      return userCredential;
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<UserCredentialPlatform> linkWithProvider(
+    AuthProvider provider,
+  ) async {
+    try {
+      // To extract scopes and custom parameters from the provider
+      final convertedProvider = convertToOAuthProvider(provider);
+
+      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
+          .invokeMapMethod<String, dynamic>(
+              'User#linkWithProvider',
+              _withChannelDefaults({
+                'signInProvider': convertedProvider.providerId,
+                if (convertedProvider is OAuthProvider) ...{
+                  'scopes': convertedProvider.scopes,
+                  'customParameters': convertedProvider.parameters
+                },
+              })))!;
+
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(auth, data);
+
+      auth.currentUser = userCredential.user;
+      return userCredential;
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<UserCredentialPlatform> reauthenticateWithProvider(
+    AuthProvider provider,
+  ) async {
+    try {
+      // To extract scopes and custom parameters from the provider
+      final convertedProvider = convertToOAuthProvider(provider);
+
+      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
+          .invokeMapMethod<String, dynamic>(
+              'User#reauthenticateWithProvider',
+              _withChannelDefaults({
+                'signInProvider': convertedProvider.providerId,
+                if (convertedProvider is OAuthProvider) ...{
+                  'scopes': convertedProvider.scopes,
+                  'customParameters': convertedProvider.parameters
+                },
+              })))!;
 
       MethodChannelUserCredential userCredential =
           MethodChannelUserCredential(auth, data);

@@ -91,6 +91,37 @@ Ensure the "Google" sign-in provider is enabled on the [Firebase Console](https:
   }
   ```
 
+## Google Play Games {:#games}
+
+You can authenticate users in your Android game using Play Games Sign-In.
+
+* {Android}
+
+  Follow the instructions for Google setup on Android, then configure 
+  [Play Games services with your Firebase app information](https://firebase.google.com/docs/auth/android/play-games#configure-play-games-with-firebase-info).
+
+  The following will trigger the sign-in flow, create a new credential and sign in the user:
+
+  ```dart
+  final googleUser = await GoogleSignIn(
+    signInOption: SignInOption.games,
+  ).signIn();
+
+  final googleAuth = await googleUser?.authentication;
+
+  if (googleAuth != null) {
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    await _auth.signInWithCredential(credential);
+  }
+  ```
+
+
 
 ## Facebook
 
@@ -196,7 +227,7 @@ Future<UserCredential> signInWithApple() async {
   if (kIsWeb) {
     await FirebaseAuth.instance.signInWithPopup(appleProvider);
   } else {
-    await FirebaseAuth.instance.signInWithAuthProvider(appleProvider);
+    await FirebaseAuth.instance.signInWithProvider(appleProvider);
   }
 }
 ```
@@ -225,7 +256,7 @@ Future<UserCredential> signInWithMicrosoft() async {
   if (kIsWeb) {
     await FirebaseAuth.instance.signInWithPopup(microsoftProvider);
   } else {
-    await FirebaseAuth.instance.signInWithAuthProvider(microsoftProvider);
+    await FirebaseAuth.instance.signInWithProvider(microsoftProvider);
   }
 }
 ```
@@ -260,7 +291,7 @@ Future<void> _signInWithTwitter() async {
   if (kIsWeb) {
     await FirebaseAuth.instance.signInWithPopup(twitterProvider);
   } else {
-    await FirebaseAuth.instance.signInWithAuthProvider(twitterProvider);
+    await FirebaseAuth.instance.signInWithProvider(twitterProvider);
   }
 }
 ```
@@ -283,7 +314,7 @@ with the Client ID and Secret are set, with the callback URL set in the GitHub a
     // Create a new provider
     GithubAuthProvider githubProvider = GithubAuthProvider();
 
-    return await FirebaseAuth.instance.signInWithAuthProvider(githubProvider);
+    return await FirebaseAuth.instance.signInWithProvider(githubProvider);
   }
   ```
 
@@ -342,7 +373,44 @@ Future<UserCredential> signInWithYahoo() async {
   if (kIsWeb) {
     await _auth.signInWithPopup(yahooProvider);
   } else {
-    await _auth.signInWithAuthProvider(yahooProvider);
+    await _auth.signInWithProvider(yahooProvider);
   }
 }
+```
+
+
+# Linking an Authentication Provider
+
+If you want to link a provider to a current user, you can use the following method:
+```dart
+await FirebaseAuth.instance.signInAnonymously();
+
+final appleProvider = AppleAuthProvider();
+
+if (kIsWeb) {
+  await FirebaseAuth.instance.currentUser?.linkWithPopup(appleProvider);
+  
+  // You can also use `linkWithRedirect`
+} else {
+  await FirebaseAuth.instance.currentUser?.linkWithProvider(appleProvider);
+}
+
+// You're anonymous user is now upgraded to be able to connect with Sign In With Apple
+```
+
+# Reauthenticate with provider
+
+The same pattern can be used with `reauthenticateWithProvider` which can be used to retrieve fresh
+credentials for sensitive operations that require recent login.
+
+```dart
+final appleProvider = AppleAuthProvider();
+
+if (kIsWeb) {
+  await FirebaseAuth.instance.currentUser?.reauthenticateWithPopup(appleProvider);
+} else {
+  await FirebaseAuth.instance.currentUser?.reauthenticateWithProvider(appleProvider);
+}
+
+// You can now perform sensitive operations
 ```

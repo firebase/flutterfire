@@ -574,7 +574,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<UserCredentialPlatform> signInWithAuthProvider(
+  Future<UserCredentialPlatform> signInWithProvider(
     AuthProvider provider,
   ) async {
     try {
@@ -583,7 +583,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
       Map<String, dynamic> data =
           (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#signInWithAuthProvider',
+              'Auth#signInWithProvider',
               _withChannelDefaults({
                 'signInProvider': convertedProvider.providerId,
                 if (convertedProvider is OAuthProvider) ...{

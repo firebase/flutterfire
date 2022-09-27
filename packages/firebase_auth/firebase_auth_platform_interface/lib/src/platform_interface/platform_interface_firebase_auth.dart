@@ -530,10 +530,10 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **user-disabled**:
   ///  - Thrown if the user corresponding to the given email has been disabled.
-  Future<UserCredentialPlatform> signInWithAuthProvider(
+  Future<UserCredentialPlatform> signInWithProvider(
     AuthProvider provider,
   ) async {
-    throw UnimplementedError('signInWithAuthProvider() is not implemented');
+    throw UnimplementedError('signInWithProvider() is not implemented');
   }
 
   /// Starts a sign-in flow for a phone number.
