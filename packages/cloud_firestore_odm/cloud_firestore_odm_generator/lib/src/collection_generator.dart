@@ -111,8 +111,13 @@ const _geoPointChecker = TypeChecker.fromUrl(
   'package:cloud_firestore_platform_interface/src/geo_point.dart#GeoPoint',
 );
 
+class GlobalData {
+  final classPrefixesForLibrary = <Object?, List<String>>{};
+}
+
 @immutable
-class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
+class CollectionGenerator
+    extends ParserGenerator<GlobalData, Data, Collection> {
   final _collectionTemplates = <Template<CollectionData>>[
     CollectionReferenceTemplate(),
     DocumentReferenceTemplate(),
@@ -122,23 +127,24 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
     QueryDocumentSnapshotTemplate(),
   ];
 
-  /// Map of file path to class prefixes
-  final _classPrefixes = Expando<List<String>>();
-
   @override
   Future<Data> parseElement(
     BuildStep buildStep,
-    void globalData,
+    GlobalData globalData,
     Element element,
   ) async {
     final library = await buildStep.inputLibrary;
-    final collectionAnnotations = const TypeChecker.fromRuntime(Collection)
-        .annotationsOf(element)
-        .map(
-          (annotation) =>
-              _parseCollectionAnnotation(library, annotation, element),
-        )
-        .toList();
+    final collectionAnnotations =
+        const TypeChecker.fromRuntime(Collection).annotationsOf(element).map(
+      (annotation) {
+        return _parseCollectionAnnotation(
+          library,
+          annotation,
+          element,
+          globalData,
+        );
+      },
+    ).toList();
 
     final roots = collectionAnnotations.where((collection) {
       final pathSplit = collection.path.split('/');
@@ -223,6 +229,7 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
     LibraryElement libraryElement,
     DartObject object,
     Element annotatedElement,
+    GlobalData globalData,
   ) {
     // TODO find a way to test validation
 
@@ -391,7 +398,8 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
 
     final classPrefix = data.classPrefix;
 
-    if (_classPrefixes[annotatedElementSource]?.contains(classPrefix) ??
+    if (globalData.classPrefixesForLibrary[annotatedElementSource]
+            ?.contains(classPrefix) ??
         false) {
       throw InvalidGenerationSourceError(
         'Defined a collection with duplicate class prefix $classPrefix.'
@@ -399,8 +407,9 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       );
     }
 
-    _classPrefixes[annotatedElementSource] ??= [];
-    _classPrefixes[annotatedElementSource]!.add(classPrefix);
+    globalData.classPrefixesForLibrary[annotatedElementSource] ??= [];
+    globalData.classPrefixesForLibrary[annotatedElementSource]!
+        .add(classPrefix);
 
     return data;
   }
@@ -450,7 +459,7 @@ const _sentinel = _Sentinel();
   }
 
   @override
-  void parseGlobalData(LibraryElement library) {}
+  GlobalData parseGlobalData(LibraryElement library) => GlobalData();
 }
 
 extension on ClassElement {
