@@ -53,11 +53,11 @@ class AuthExampleApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.amber),
       home: Scaffold(
         body: LayoutBuilder(
-          builder: (context, constraines) {
+          builder: (context, constraints) {
             return Row(
               children: [
                 Visibility(
-                  visible: constraines.maxWidth >= 1200,
+                  visible: constraints.maxWidth >= 1200,
                   child: Expanded(
                     child: Container(
                       height: double.infinity,
@@ -77,9 +77,9 @@ class AuthExampleApp extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: constraines.maxWidth >= 1200
-                      ? constraines.maxWidth / 2
-                      : constraines.maxWidth,
+                  width: constraints.maxWidth >= 1200
+                      ? constraints.maxWidth / 2
+                      : constraints.maxWidth,
                   child: StreamBuilder<User?>(
                     stream: FirebaseAuth.instance.authStateChanges(),
                     builder: (context, snapshot) {

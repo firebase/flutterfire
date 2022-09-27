@@ -1,5 +1,11 @@
-Project: /docs/_project.yaml
+Project: /docs/cloud-messaging/_project.yaml
 Book: /docs/_book.yaml
+page_type: guide
+
+{% include "_shared/apis/console/_local_variables.html" %}
+{% include "_local_variables.html" %}
+{% include "docs/cloud-messaging/_local_variables.html" %}
+{% include "docs/android/_local_variables.html" %}
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
@@ -119,8 +125,10 @@ There are a few things to keep in mind about your background message handler:
 
 1. It must not be an anonymous function.
 2. It must be a top-level function (e.g. not a class method which requires initialization).
+3. It must be annotated with `@pragma('vm:entry-point')` right above the function declaration (otherwise it may be removed during tree shaking for release mode).
 
 ```dart
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
@@ -202,16 +210,16 @@ Next restart your Flutter application. The worker will be registered and any bac
 
 ### Handling Interaction
 
-Since notifications are a visible cue, it is common for users to interact with them (by pressing). The default behavior on both Android & iOS is to open the
-application. If the application is terminated it will be started, if it is in the background it will be brought to the foreground.
+Since notifications are a visible cue, it is common for users to interact with them (by pressing). The default behavior on both Android and iOS is to open the
+application. If the application is terminated it will be started; if it is in the background it will be brought to the foreground.
 
-Depending on the content of a notification, you may wish to handle the users interaction when the application opens. For example, if a new chat message is sent via
+Depending on the content of a notification, you may wish to handle the user's interaction when the application opens. For example, if a new chat message is sent via
 a notification and the user presses it, you may want to open the specific conversation when the application opens.
 
 The `firebase-messaging` package provides two ways to handle this interaction:
 
-1. `getInitialMessage()`: If the application is opened from a terminated state a `Future` containing a `RemoteMessage` will be returned. Once consumed, the `RemoteMessage` will be removed.
-2. `onMessageOpenedApp`: A `Stream` which posts a `RemoteMessage` when the application is opened from a background state.
+- `getInitialMessage()`: If the application is opened from a terminated state a `Future` containing a `RemoteMessage` will be returned. Once consumed, the `RemoteMessage` will be removed.
+- `onMessageOpenedApp`: A `Stream` which posts a `RemoteMessage` when the application is opened from a background state.
 
 It is recommended that both scenarios are handled to ensure a smooth UX for your users. The code example below outlines how this can be achieved:
 
@@ -264,4 +272,70 @@ class _Application extends State<Application> {
 }
 ```
 
-How you handle interaction depends on your application setup, the above example shows a basic illustration using a StatefulWidget.
+How you handle interaction depends on your application setup. The above example shows a basic illustration using a StatefulWidget.
+
+## Localize Messages
+
+You can send localized strings in two different ways:
+
+* Store the preferred language of each of your users in your server and send customized notifications for each language
+* Embed localized strings in your app and make use of the operating system's native locale settings
+
+Here's how to use the second method:
+
+### Android
+
+1. Specify your default-language messages in `resources/values/strings.xml`:
+
+   ```xml
+   <string name="notification_title">Hello world</string>
+   <string name="notification_message">This is a message</string>
+   ```
+
+2. Specify the translated messages in the <code>values-<var>language</var></code> directory. For example, specify French messages in `resources/values-fr/strings.xml`:
+
+   ```xml
+   <string name="notification_title">Bonjour le monde</string>
+   <string name="notification_message">C'est un message</string>
+   ```
+
+3. In the server payload, instead of using `title`, `message`, and `body`  keys, use `title_loc_key` and `body_loc_key` for your localized message, and set them to the `name` attribute of the message you want to display.
+
+   The message payload would look like this:
+
+   ```json
+   {
+     "data": {
+       "title_loc_key": "notification_title",
+       "body_loc_key": "notification_message"
+     },
+   }
+   ```
+
+
+### iOS
+
+1. Specify your default-language messages in `Base.lproj/Localizable.strings`:
+
+   ```
+   "NOTIFICATION_TITLE" = "Hello World";
+   "NOTIFICATION_MESSAGE" = "This is a message";
+   ```
+
+2. Specify the translated messages in the <code><var>language</var>.lproj</code> directory. For example, specify French messages in `fr.lproj/Localizable.strings`:
+
+   ```
+   "NOTIFICATION_TITLE" = "Bonjour le monde";
+   "NOTIFICATION_MESSAGE" = "C'est un message";
+   ```
+
+   The message payload would look like this:
+
+   ```json
+   {
+     "data": {
+       "title_loc_key": "NOTIFICATION_TITLE",
+       "body_loc_key": "NOTIFICATION_MESSAGE"
+     },
+   }
+   ```

@@ -9,8 +9,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../firebase_default_options.dart';
 import './test_utils.dart';
+import '../firebase_default_options.dart';
 
 void setupTests() {
   group('FirebaseAuth.instance', () {
@@ -191,9 +191,6 @@ void setupTests() {
         await FirebaseAuth.instance.currentUser!
             .updateDisplayName('updatedName');
 
-        if (!kIsWeb) {
-          await FirebaseAuth.instance.currentUser!.reload();
-        }
         expect(
           FirebaseAuth.instance.currentUser!.displayName,
           equals('updatedName'),
@@ -481,7 +478,7 @@ void setupTests() {
     group('setPersistence()', () {
       test(
         'throw an unimplemented error',
-            () async {
+        () async {
           try {
             await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
             fail('Should have thrown');
@@ -494,7 +491,7 @@ void setupTests() {
 
       test(
         'should set persistence',
-            () async {
+        () async {
           try {
             await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
           } catch (e) {

@@ -1,5 +1,11 @@
-Project: /docs/_project.yaml
+Project: /docs/perf-mon/_project.yaml
 Book: /docs/_book.yaml
+page_type: guide
+
+{% include "_shared/apis/console/_local_variables.html" %}
+{% include "_local_variables.html" %}
+{% include "docs/perf-mon/_local_variables.html" %}
+{% include "_shared/firebase/_snippet_include_comment.html" %}
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 

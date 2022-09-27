@@ -73,7 +73,7 @@ start the activity with this intent filter to handle the link.
 
     1.  On the Signing & Capabilities page, enable **Associated Domains** and
         add the following to the Associated Domains list:
-        
+
         ```
         applinks:example.page.link
         ```
@@ -180,3 +180,8 @@ FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
   // Handle errors
 });
 ```
+
+### Testing A Dynamic Link On iOS Platform
+
+To test a dynamic link on iOS, it is required that you use an actual device. You will also need to run the app in release mode (i.e. `flutter run --release`.),
+if testing a dynamic link from a terminated (i.e. app has been swiped closed.) app state.
