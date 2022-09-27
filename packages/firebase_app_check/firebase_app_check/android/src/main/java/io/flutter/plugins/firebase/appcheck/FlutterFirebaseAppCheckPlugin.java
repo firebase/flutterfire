@@ -78,9 +78,9 @@ public class FlutterFirebaseAppCheckPlugin
     cachedThreadPool.execute(
         () -> {
           try {
-            boolean debug = (boolean) Objects.requireNonNull(arguments.get("androidDebugProvider"));
+            Boolean debug = (Boolean) arguments.get("androidDebugProvider");
 
-            if (debug) {
+            if (Boolean.TRUE.equals(debug)) {
               FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
               firebaseAppCheck.installAppCheckProviderFactory(
                   DebugAppCheckProviderFactory.getInstance());
