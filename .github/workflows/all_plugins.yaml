@@ -60,6 +60,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: 'Install Flutter'
         run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
       - name: 'Install Tools'
         run: |
           ./.github/workflows/scripts/install-tools.sh
