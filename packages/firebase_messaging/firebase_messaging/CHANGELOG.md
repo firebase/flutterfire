@@ -1,3 +1,7 @@
+## 13.0.3
+
+ - Update a dependency to the latest release.
+
 ## 13.0.2
 
  - **DOCS**: update docs to use `@pragma('vm:entry-point')` annotation for messaging background handler ([#9494](https://github.com/firebase/flutterfire/issues/9494)). ([27a7f44e](https://github.com/firebase/flutterfire/commit/27a7f44e02f2ed533e0249622afdd0a421261385))

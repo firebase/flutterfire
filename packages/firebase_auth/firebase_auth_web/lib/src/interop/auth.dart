@@ -177,8 +177,6 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   Future<void> linkWithRedirect(AuthProvider provider) => handleThenable(
       auth_interop.linkWithRedirect(jsObject, provider.jsObject));
 
-  // FYI: as of 2017-07-03 – the return type of this guy is documented as
-  // Promise (Future)<nothing> - Filed a bug internally.
   /// Re-authenticates a user using a fresh credential, and returns any
   /// available additional user information, such as user name.
   Future<UserCredential> reauthenticateWithCredential(
