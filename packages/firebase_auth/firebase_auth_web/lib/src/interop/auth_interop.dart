@@ -442,7 +442,7 @@ class OAuthProviderJsImpl extends AuthProviderJsImpl {
     dynamic customOAuthParameters,
   );
   external OAuthCredential credential(OAuthCredentialOptions credentialOptions);
-  external static OAuthCredential credentialFromResult(
+  external static OAuthCredential? credentialFromResult(
     UserCredentialJsImpl userCredential,
   );
 }

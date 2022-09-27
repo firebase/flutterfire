@@ -284,15 +284,19 @@ AuthCredential? convertWebOAuthCredential(
     return null;
   }
 
-  final authProvider = auth_interop.OAuthProvider.credentialFromResult(
+  final authCredential = auth_interop.OAuthProvider.credentialFromResult(
     userCredential.jsObject,
   );
 
-  return OAuthProvider(authProvider.providerId).credential(
-    signInMethod: authProvider.signInMethod,
-    accessToken: authProvider.accessToken,
-    secret: authProvider.secret,
-    idToken: authProvider.idToken,
+  if (authCredential == null) {
+    return null;
+  }
+
+  return OAuthProvider(authCredential.providerId).credential(
+    signInMethod: authCredential.signInMethod,
+    accessToken: authCredential.accessToken,
+    secret: authCredential.secret,
+    idToken: authCredential.idToken,
   );
 }
 

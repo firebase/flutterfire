@@ -901,7 +901,7 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
       jsObject.credential(credentialOptions);
 
   /// Used to extract the underlying OAuthCredential from a UserCredential.
-  static auth_interop.OAuthCredential credentialFromResult(
+  static auth_interop.OAuthCredential? credentialFromResult(
           auth_interop.UserCredentialJsImpl userCredential) =>
       auth_interop.OAuthProviderJsImpl.credentialFromResult(userCredential);
 }
