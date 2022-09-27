@@ -1,13 +1,11 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_example/config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:twitter_login/twitter_login.dart';
 
 typedef OAuthSignIn = void Function();
 
@@ -100,8 +98,14 @@ class _AuthGateState extends State<AuthGate> {
         Buttons.GitHub: () => _handleMultiFactorException(
               _signInWithGitHub,
             ),
+        Buttons.Microsoft: () => _handleMultiFactorException(
+              _signInWithMicrosoft,
+            ),
         Buttons.Twitter: () => _handleMultiFactorException(
               _signInWithTwitter,
+            ),
+        Buttons.Yahoo: () => _handleMultiFactorException(
+              _signInWithYahoo,
             ),
       };
     }
@@ -525,62 +529,60 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   Future<void> _signInWithTwitter() async {
+    TwitterAuthProvider twitterProvider = TwitterAuthProvider();
+
     if (kIsWeb) {
-      // Create a new provider
-      TwitterAuthProvider twitterProvider = TwitterAuthProvider();
-
-      // Once signed in, return the UserCredential
-      await FirebaseAuth.instance.signInWithPopup(twitterProvider);
+      await _auth.signInWithPopup(twitterProvider);
     } else {
-      // Create a TwitterLogin instance
-      final twitterLogin = TwitterLogin(
-        apiKey: TwitterConfig['API_KEY']!,
-        apiSecretKey: TwitterConfig['API_SECRET_KEY']!,
-        redirectURI: TwitterConfig['REDIRECT_URL']!,
-      );
-
-      // Trigger the sign-in flow
-      final authResult = await twitterLogin.login();
-
-      if (authResult.status == TwitterLoginStatus.loggedIn) {
-        // Create a credential from the access token
-        final twitterAuthCredential = TwitterAuthProvider.credential(
-          accessToken: authResult.authToken!,
-          secret: authResult.authTokenSecret!,
-        );
-
-        // Once signed in, return the UserCredential
-        await _auth.signInWithCredential(twitterAuthCredential);
-      }
+      await _auth.signInWithProvider(twitterProvider);
     }
   }
 
   Future<void> _signInWithApple() async {
-    if (kIsWeb) {
-      final appleProvider = AppleAuthProvider();
+    final appleProvider = AppleAuthProvider();
+    appleProvider.addScope('email');
 
+    if (kIsWeb) {
       // Once signed in, return the UserCredential
       await _auth.signInWithPopup(appleProvider);
     } else {
-      final appleProvider = AppleAuthProvider();
+      await _auth.signInWithProvider(appleProvider);
+    }
+  }
 
-      await _auth.signInWithAuthProvider(appleProvider);
+  Future<void> _signInWithYahoo() async {
+    final yahooProvider = YahooAuthProvider();
+
+    if (kIsWeb) {
+      // Once signed in, return the UserCredential
+      await _auth.signInWithPopup(yahooProvider);
+    } else {
+      await _auth.signInWithProvider(yahooProvider);
     }
   }
 
   Future<void> _signInWithGitHub() async {
-    if (kIsWeb) {
-      // Create a new provider
-      final githubProvider = GithubAuthProvider();
+    final githubProvider = GithubAuthProvider();
 
-      // Once signed in, return the UserCredential
+    if (kIsWeb) {
       await _auth.signInWithPopup(githubProvider);
     } else {
-      // Create a new provider
-      final githubProvider = GithubAuthProvider();
-
-      await _auth.signInWithAuthProvider(githubProvider);
+      await _auth.signInWithProvider(githubProvider);
     }
+  }
+
+  Future<void> _signInWithMicrosoft() async {
+    final microsoftProvider = MicrosoftAuthProvider();
+
+    if (kIsWeb) {
+      await _auth.signInWithPopup(microsoftProvider);
+    } else {
+      await _auth.signInWithProvider(microsoftProvider);
+    }
+
+    await FirebaseAuth.instance.currentUser?.reauthenticateWithProvider(
+      microsoftProvider,
+    );
   }
 }
 

@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "flutterfire-e2e-tests"
-  }
+    "default": "flutterfire-e2e-tests",
+    "react-native-firebase-testing": "react-native-firebase-testing"
+  },
+  "targets": {}
 }

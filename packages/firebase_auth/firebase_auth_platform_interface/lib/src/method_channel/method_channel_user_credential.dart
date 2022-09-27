@@ -28,6 +28,7 @@ class MethodChannelUserCredential extends UserCredentialPlatform {
               : AuthCredential(
                   providerId: data['authCredential']['providerId'],
                   signInMethod: data['authCredential']['signInMethod'],
+                  token: data['authCredential']['token'],
                 ),
           user: data['user'] == null
               ? null

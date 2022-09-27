@@ -221,6 +221,24 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
     return googleAuthProvider;
   }
 
+  if (authProvider is MicrosoftAuthProvider) {
+    auth_interop.OAuthProvider oAuthProvider =
+        auth_interop.OAuthProvider(authProvider.providerId);
+
+    authProvider.scopes.forEach(oAuthProvider.addScope);
+    oAuthProvider.setCustomParameters(authProvider.parameters);
+    return oAuthProvider;
+  }
+
+  if (authProvider is YahooAuthProvider) {
+    auth_interop.OAuthProvider oAuthProvider =
+        auth_interop.OAuthProvider(authProvider.providerId);
+
+    authProvider.scopes.forEach(oAuthProvider.addScope);
+    oAuthProvider.setCustomParameters(authProvider.parameters);
+    return oAuthProvider;
+  }
+
   if (authProvider is TwitterAuthProvider) {
     auth_interop.TwitterAuthProvider twitterAuthProvider =
         auth_interop.TwitterAuthProvider();

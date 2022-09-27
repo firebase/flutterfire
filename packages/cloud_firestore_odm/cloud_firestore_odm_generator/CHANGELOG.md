@@ -1,3 +1,21 @@
+## 1.0.0-dev.31
+
+ - **FIX**: a false positive by checking that there are no prefix duplicates.  ([#9576](https://github.com/firebase/flutterfire/issues/9576)). ([d6f619c9](https://github.com/firebase/flutterfire/commit/d6f619c90fadb5057a8db1d69921cd4e2f5c1816))
+ - **FIX**: handle query.orderBy(startAt:).orderBy() ([#9185](https://github.com/firebase/flutterfire/issues/9185)). ([62396e8a](https://github.com/firebase/flutterfire/commit/62396e8a4a229dfc096d6280964bb559c00b3511))
+
+## 1.0.0-dev.30
+
+ - **FEAT**: add support for specifying class name prefix ([#9453](https://github.com/firebase/flutterfire/issues/9453)). ([49921a43](https://github.com/firebase/flutterfire/commit/49921a4362c5965d2efeed17eb73775302007ea8))
+
+## 1.0.0-dev.29
+
+ - **FIX**: bump minimum analyzer version ([#9493](https://github.com/firebase/flutterfire/issues/9493)). ([5137a646](https://github.com/firebase/flutterfire/commit/5137a6469fb57fb003757459222cb6c4e39fb0f8))
+ - **FEAT**: Add support using Freezed classes as collection models ([#9483](https://github.com/firebase/flutterfire/issues/9483)). ([ce238f71](https://github.com/firebase/flutterfire/commit/ce238f713b250f523890b9e7e42d395f433ed80f))
+
+## 1.0.0-dev.28
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.27
 
  - **FIX**: replace deprecated elements from analyzer ([#9366](https://github.com/firebase/flutterfire/issues/9366)). ([89c4c429](https://github.com/firebase/flutterfire/commit/89c4c4294dc6fb376caf74704abf738ec664f85f))
