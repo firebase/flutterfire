@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../../firebase_app_check_platform_interface.dart';
@@ -77,7 +78,8 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     try {
       await channel.invokeMethod<void>('FirebaseAppCheck#activate', {
         'appName': app.name,
-        if (Platform.isAndroid) 'androidDebugProvider': androidDebugProvider,
+        if (Platform.isAndroid || kDebugMode)
+          'androidDebugProvider': androidDebugProvider,
       });
     } on PlatformException catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
