@@ -8,8 +8,6 @@ import 'firebase_options.dart';
 
 const kWebRecaptchaSiteKey = '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8';
 
-// For iOS debug instructions, please visit: https://github.com/firebase/flutterfire/issues/8969#issuecomment-1202544521
-// For android debug instructions, please visit: https://github.com/firebase/flutterfire/issues/6551#issuecomment-1225502729
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -94,7 +92,6 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
 
                 if (result.docs.isNotEmpty) {
                   setMessage('Document found');
-                  print('${result.docs[0].data()}');
                 } else {
                   setMessage(
                     'Document not found, please add a document to the collection',
