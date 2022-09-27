@@ -77,7 +77,9 @@ void setupTests() {
           );
         },
         // iOS v9.2.0 hangs on ci if `fetchAndActivate()` is used, but works locally.
-        skip: defaultTargetPlatform == TargetPlatform.iOS,
+        // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
+        skip: defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS,
       );
 
       test('settings', () async {
