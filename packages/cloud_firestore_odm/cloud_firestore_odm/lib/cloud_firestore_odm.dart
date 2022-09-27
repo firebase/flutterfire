@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 export 'annotation.dart';
+
 export 'src/firestore_builder.dart' show FirestoreBuilder;
 export 'src/firestore_reference.dart'
     show
