@@ -123,6 +123,7 @@ void main() {
                   runtime: 'runtime',
                   title: 'title',
                   year: 0,
+                  id: '_',
                 ),
               );
 
@@ -167,6 +168,7 @@ void main() {
                   runtime: 'runtime',
                   title: 'title',
                   year: 0,
+                  id: '_',
                 ),
               );
 

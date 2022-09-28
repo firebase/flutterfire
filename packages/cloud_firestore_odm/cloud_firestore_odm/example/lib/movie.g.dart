@@ -32,14 +32,14 @@ abstract class MovieCollectionReference
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return _$MovieFromJson(snapshot.data()!);
+    return _$MovieFromJson({'id': snapshot.id, ...?snapshot.data()});
   }
 
   static Map<String, Object?> toFirestore(
     Movie value,
     SetOptions? options,
   ) {
-    return _$MovieToJson(value);
+    return {..._$MovieToJson(value)}..remove('id');
   }
 
   @override
@@ -2424,9 +2424,11 @@ Movie _$MovieFromJson(Map<String, dynamic> json) => Movie(
       runtime: json['runtime'] as String,
       title: json['title'] as String,
       year: json['year'] as int,
+      id: json['id'] as String,
     );
 
 const _$MovieFieldMap = <String, String>{
+  'id': 'id',
   'poster': 'poster',
   'likes': 'likes',
   'title': 'title',
@@ -2437,6 +2439,7 @@ const _$MovieFieldMap = <String, String>{
 };
 
 Map<String, dynamic> _$MovieToJson(Movie instance) => <String, dynamic>{
+      'id': instance.id,
       'poster': instance.poster,
       'likes': instance.likes,
       'title': instance.title,
