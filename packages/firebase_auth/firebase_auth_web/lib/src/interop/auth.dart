@@ -897,6 +897,11 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
   auth_interop.OAuthCredential credential(
           auth_interop.OAuthCredentialOptions credentialOptions) =>
       jsObject.credential(credentialOptions);
+
+  /// Used to extract the underlying OAuthCredential from a UserCredential.
+  static auth_interop.OAuthCredential? credentialFromResult(
+          auth_interop.UserCredentialJsImpl userCredential) =>
+      auth_interop.OAuthProviderJsImpl.credentialFromResult(userCredential);
 }
 
 /// Twitter auth provider.
@@ -1078,9 +1083,6 @@ class UserCredential
     extends JsObjectWrapper<auth_interop.UserCredentialJsImpl> {
   /// Returns the user.
   User? get user => User.getInstance(jsObject.user);
-
-  /// Returns the auth credential.
-  auth_interop.OAuthCredential get credential => jsObject.credential;
 
   /// Returns the operation type.
   String get operationType => jsObject.operationType;

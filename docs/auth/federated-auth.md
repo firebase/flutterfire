@@ -378,6 +378,20 @@ Future<UserCredential> signInWithYahoo() async {
 }
 ```
 
+# Using the OAuth access token
+
+By using an AuthProvider, you can retrieve the access token associated with the provider
+by making the following request.
+
+```dart
+final appleProvider = AppleAuthProvider();
+
+final user = await FirebaseAuth.instance.signInWithProvider(appleProvider);
+final accessToken = user.credential?.accessToken;
+
+// You can send requests with the `accessToken`
+```
+
 
 # Linking an Authentication Provider
 

@@ -54,10 +54,11 @@ class OAuthProvider extends AuthProvider {
     String? secret,
     String? idToken,
     String? rawNonce,
+    String? signInMethod,
   }) {
     return OAuthCredential(
       providerId: providerId,
-      signInMethod: 'oauth',
+      signInMethod: signInMethod ?? 'oauth',
       accessToken: accessToken,
       secret: secret,
       idToken: idToken,
@@ -76,15 +77,15 @@ class OAuthCredential extends AuthCredential {
   const OAuthCredential({
     required String providerId,
     required String signInMethod,
-    this.accessToken,
+    String? accessToken,
     this.idToken,
     this.secret,
     this.rawNonce,
-  }) : super(providerId: providerId, signInMethod: signInMethod);
-
-  /// The OAuth access token associated with the credential if it belongs to an
-  /// OAuth provider, such as `facebook.com`, `twitter.com`, etc.
-  final String? accessToken;
+  }) : super(
+          providerId: providerId,
+          signInMethod: signInMethod,
+          accessToken: accessToken,
+        );
 
   /// The OAuth ID token associated with the credential if it belongs to an
   /// OIDC provider, such as `google.com`.
