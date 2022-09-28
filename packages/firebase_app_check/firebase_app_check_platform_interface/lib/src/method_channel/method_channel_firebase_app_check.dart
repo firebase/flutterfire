@@ -82,7 +82,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
           'androidDebugProvider': androidDebugProvider,
       });
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -96,7 +96,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
 
       return result!['token'];
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -113,7 +113,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
         },
       );
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 

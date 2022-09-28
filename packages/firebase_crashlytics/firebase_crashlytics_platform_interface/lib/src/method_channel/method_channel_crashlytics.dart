@@ -53,7 +53,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
 
       return data!['unsentReports'];
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -62,7 +62,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     try {
       await channel.invokeMethod<void>('Crashlytics#crash');
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -71,7 +71,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     try {
       await channel.invokeMethod<void>('Crashlytics#deleteUnsentReports');
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -84,7 +84,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
 
       return data!['didCrashOnPreviousExecution'];
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -106,7 +106,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
         'stackTraceElements': stackTraceElements ?? [],
       });
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -117,7 +117,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
         'message': message,
       });
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -126,7 +126,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     try {
       await channel.invokeMethod<void>('Crashlytics#sendUnsentReports');
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -141,7 +141,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
 
       _isCrashlyticsCollectionEnabled = data!['isCrashlyticsCollectionEnabled'];
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -153,7 +153,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
         'identifier': identifier,
       });
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -166,7 +166,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
         'value': value,
       });
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 }

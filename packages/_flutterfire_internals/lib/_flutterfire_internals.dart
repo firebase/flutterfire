@@ -12,6 +12,8 @@ import 'src/interop_shimmer.dart'
     if (dart.library.js) 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 
+export 'src/exception.dart';
+
 /// An extension that adds utilities for safely casting objects
 extension ObjectX<T> on T? {
   /// Transform an object if that value is not null.
