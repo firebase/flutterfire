@@ -26,7 +26,7 @@ dev_dependencies:
 
 dependency_overrides:
   _flutterfire_internals:
-    path: ../../_flutterfire_internals
+    path: ../../../_flutterfire_internals
   cloud_firestore:
     path: ../../../cloud_firestore/cloud_firestore
   cloud_firestore_odm:
