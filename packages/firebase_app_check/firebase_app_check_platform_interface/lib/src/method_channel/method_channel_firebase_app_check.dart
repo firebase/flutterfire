@@ -3,8 +3,10 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../../firebase_app_check_platform_interface.dart';
@@ -69,10 +71,15 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   }
 
   @override
-  Future<void> activate({String? webRecaptchaSiteKey}) async {
+  Future<void> activate({
+    String? webRecaptchaSiteKey,
+    bool? androidDebugProvider,
+  }) async {
     try {
       await channel.invokeMethod<void>('FirebaseAppCheck#activate', {
         'appName': app.name,
+        if (Platform.isAndroid || kDebugMode)
+          'androidDebugProvider': androidDebugProvider,
       });
     } on PlatformException catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
