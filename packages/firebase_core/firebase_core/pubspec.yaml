@@ -13,7 +13,6 @@ environment:
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  _flutterfire_internals: ^1.0.0
   firebase_core_platform_interface: ^4.5.1
   firebase_core_web: ^1.7.2
   flutter:
