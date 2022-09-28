@@ -51,9 +51,9 @@ android {
     api firebaseCoreProject
     implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
     // TODO: Since App Check is a beta SDK it's not available in the Firebase Android BoM so we need to specify an exact version here.
-    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta04'
-    implementation 'com.google.firebase:firebase-appcheck-debug:16.0.0-beta04'
-    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.2'
+    implementation 'com.google.firebase:firebase-appcheck-debug:16.0.2'
+    implementation 'androidx.annotation:annotation:1.5.0'
   }
 }
 

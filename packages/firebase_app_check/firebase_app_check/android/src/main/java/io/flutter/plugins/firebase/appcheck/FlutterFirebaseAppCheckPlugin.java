@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.AppCheckTokenResult;
 import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -77,9 +78,17 @@ public class FlutterFirebaseAppCheckPlugin
     cachedThreadPool.execute(
         () -> {
           try {
-            FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-            firebaseAppCheck.installAppCheckProviderFactory(
-                SafetyNetAppCheckProviderFactory.getInstance());
+            Boolean debug = (Boolean) arguments.get("androidDebugProvider");
+
+            if (Boolean.TRUE.equals(debug)) {
+              FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+              firebaseAppCheck.installAppCheckProviderFactory(
+                  DebugAppCheckProviderFactory.getInstance());
+            } else {
+              FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+              firebaseAppCheck.installAppCheckProviderFactory(
+                  SafetyNetAppCheckProviderFactory.getInstance());
+            }
             taskCompletionSource.setResult(null);
           } catch (Exception e) {
             taskCompletionSource.setException(e);

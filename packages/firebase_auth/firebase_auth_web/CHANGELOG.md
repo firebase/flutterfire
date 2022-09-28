@@ -1,3 +1,7 @@
+## 4.5.0
+
+ - **FEAT**: add `reauthenticateWithProvider` ([#9570](https://github.com/firebase/flutterfire/issues/9570)). ([dad6b481](https://github.com/firebase/flutterfire/commit/dad6b4813c682e35315dda3965ea8aaf5ba030e8))
+
 ## 4.4.1
 
  - Update a dependency to the latest release.

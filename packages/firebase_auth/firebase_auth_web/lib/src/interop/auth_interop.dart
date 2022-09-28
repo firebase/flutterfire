@@ -442,6 +442,9 @@ class OAuthProviderJsImpl extends AuthProviderJsImpl {
     dynamic customOAuthParameters,
   );
   external OAuthCredential credential(OAuthCredentialOptions credentialOptions);
+  external static OAuthCredential? credentialFromResult(
+    UserCredentialJsImpl userCredential,
+  );
 }
 
 @JS('TwitterAuthProvider')
@@ -642,7 +645,6 @@ class AndroidSettings {
 @anonymous
 class UserCredentialJsImpl {
   external UserJsImpl get user;
-  external OAuthCredential get credential;
   external String get operationType;
   external AdditionalUserInfoJsImpl get additionalUserInfo;
 }
