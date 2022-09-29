@@ -305,4 +305,11 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   Future<void> unsubscribeFromTopic(String topic) {
     throw UnimplementedError('unsubscribeFromTopic() is not implemented');
   }
+
+  /// Enables or disables Firebase Cloud Messaging message delivery metrics export to BigQuery.
+  Future<void> setDeliveryMetricsExportToBigQuery(bool enabled) {
+    throw UnimplementedError(
+      'setDeliveryMetricsExportToBigQuery() is not implemented',
+    );
+  }
 }
