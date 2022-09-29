@@ -191,7 +191,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Stream<void> snapshotsInSync() {
-    StreamSubscription<dynamic>? snapshotStream;
+    StreamSubscription<dynamic>? snapshotStreamSubscription;
     late StreamController<void> controller; // ignore: close_sinks
 
     controller = StreamController<void>.broadcast(
@@ -199,12 +199,10 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         final observerId = await MethodChannelFirebaseFirestore.channel
             .invokeMethod<String>('SnapshotsInSync#setup');
 
-        snapshotStream =
+        snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId!)
                 .receiveGuardedBroadcastStream(
-          arguments: <String, dynamic>{
-            'firestore': this,
-          },
+          arguments: <String, dynamic>{'firestore': this},
           onError: convertPlatformException,
         ).listen(
           (event) => controller.add(null),
@@ -212,7 +210,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         );
       },
       onCancel: () {
-        snapshotStream?.cancel();
+        snapshotStreamSubscription?.cancel();
       },
     );
 
@@ -233,8 +231,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       'Transaction#create',
     );
 
-    StreamSubscription<dynamic> snapshotStream;
-
     Completer<T> completer = Completer();
 
     // Will be set by the `transactionHandler`.
@@ -245,7 +241,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       const StandardMethodCodec(FirestoreMessageCodec()),
     );
 
-    snapshotStream = eventChannel.receiveGuardedBroadcastStream(
+    final snapshotStreamSubscription =
+        eventChannel.receiveGuardedBroadcastStream(
       arguments: <String, dynamic>{
         'firestore': this,
         'timeout': timeout.inMilliseconds,
@@ -305,9 +302,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       },
     );
 
-    return completer.future.whenComplete(() {
-      snapshotStream.cancel();
-    });
+    return completer.future.whenComplete(snapshotStreamSubscription.cancel);
   }
 
   @override

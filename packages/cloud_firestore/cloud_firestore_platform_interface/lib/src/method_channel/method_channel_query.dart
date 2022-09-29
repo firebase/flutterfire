@@ -135,16 +135,15 @@ class MethodChannelQuery extends QueryPlatform {
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     late StreamController<QuerySnapshotPlatform>
         controller; // ignore: close_sinks
-    StreamSubscription<dynamic>? snapshotStream;
 
-    final incomingStackTrace = StackTrace.current;
+    StreamSubscription<dynamic>? snapshotStreamSubscription;
 
     controller = StreamController<QuerySnapshotPlatform>.broadcast(
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.channel
             .invokeMethod<String>('Query#snapshots');
 
-        snapshotStream =
+        snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.querySnapshotChannel(observerId!)
                 .receiveGuardedBroadcastStream(
           arguments: <String, dynamic>{
@@ -160,7 +159,7 @@ class MethodChannelQuery extends QueryPlatform {
         );
       },
       onCancel: () {
-        snapshotStream?.cancel();
+        snapshotStreamSubscription?.cancel();
       },
     );
 

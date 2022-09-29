@@ -104,12 +104,12 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     late StreamController<DocumentSnapshotPlatform>
         controller; // ignore: close_sinks
 
-    StreamSubscription<dynamic>? snapshotStream;
+    StreamSubscription<dynamic>? snapshotStreamSubscription;
     controller = StreamController<DocumentSnapshotPlatform>.broadcast(
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.channel
             .invokeMethod<String>('DocumentReference#snapshots');
-        snapshotStream =
+        snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId!)
                 .receiveGuardedBroadcastStream(
           arguments: <String, dynamic>{
@@ -134,7 +134,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         );
       },
       onCancel: () {
-        snapshotStream?.cancel();
+        snapshotStreamSubscription?.cancel();
       },
     );
 
