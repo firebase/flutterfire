@@ -8,6 +8,7 @@ import 'dart:async';
 // ignore: unnecessary_import
 import 'dart:typed_data';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_load_bundle_task.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query_snapshot.dart';
@@ -200,16 +201,15 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
         snapshotStream =
             MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId!)
-                .receiveBroadcastStream(
-                  <String, dynamic>{
-                    'firestore': this,
-                  },
-                )
-                .handleError(convertPlatformException)
-                .listen(
-                  (event) => controller.add(null),
-                  onError: controller.addError,
-                );
+                .receiveGuardedBroadcastStream(
+          arguments: <String, dynamic>{
+            'firestore': this,
+          },
+          onError: convertPlatformException,
+        ).listen(
+          (event) => controller.add(null),
+          onError: controller.addError,
+        );
       },
       onCancel: () {
         snapshotStream?.cancel();
@@ -245,12 +245,13 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       const StandardMethodCodec(FirestoreMessageCodec()),
     );
 
-    snapshotStream = eventChannel.receiveBroadcastStream(
-      <String, dynamic>{
+    snapshotStream = eventChannel.receiveGuardedBroadcastStream(
+      arguments: <String, dynamic>{
         'firestore': this,
         'timeout': timeout.inMilliseconds,
         'maxAttempts': maxAttempts,
       },
+      onError: convertPlatformException,
     ).listen(
       (event) async {
         if (event['error'] != null) {

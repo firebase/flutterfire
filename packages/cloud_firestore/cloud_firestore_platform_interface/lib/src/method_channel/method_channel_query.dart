@@ -5,6 +5,7 @@
 
 import 'dart:async';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:collection/collection.dart';
@@ -134,8 +135,10 @@ class MethodChannelQuery extends QueryPlatform {
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     late StreamController<QuerySnapshotPlatform>
         controller; // ignore: close_sinks
-
     StreamSubscription<dynamic>? snapshotStream;
+
+    final incomingStackTrace = StackTrace.current;
+
     controller = StreamController<QuerySnapshotPlatform>.broadcast(
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.channel
@@ -143,20 +146,18 @@ class MethodChannelQuery extends QueryPlatform {
 
         snapshotStream =
             MethodChannelFirebaseFirestore.querySnapshotChannel(observerId!)
-                .receiveBroadcastStream(
-                  <String, dynamic>{
-                    'query': this,
-                    'includeMetadataChanges': includeMetadataChanges,
-                  },
-                )
-                .handleError(convertPlatformException)
-                .listen(
-                  (snapshot) {
-                    controller
-                        .add(MethodChannelQuerySnapshot(firestore, snapshot));
-                  },
-                  onError: controller.addError,
-                );
+                .receiveGuardedBroadcastStream(
+          arguments: <String, dynamic>{
+            'query': this,
+            'includeMetadataChanges': includeMetadataChanges,
+          },
+          onError: convertPlatformException,
+        ).listen(
+          (snapshot) {
+            controller.add(MethodChannelQuerySnapshot(firestore, snapshot));
+          },
+          onError: controller.addError,
+        );
       },
       onCancel: () {
         snapshotStream?.cancel();

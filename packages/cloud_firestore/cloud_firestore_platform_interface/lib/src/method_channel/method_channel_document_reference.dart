@@ -5,6 +5,7 @@
 
 import 'dart:async';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:flutter/services.dart';
@@ -110,28 +111,27 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
             .invokeMethod<String>('DocumentReference#snapshots');
         snapshotStream =
             MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId!)
-                .receiveBroadcastStream(
-                  <String, dynamic>{
-                    'reference': this,
-                    'includeMetadataChanges': includeMetadataChanges,
-                  },
-                )
-                .handleError(convertPlatformException)
-                .listen(
-                  (snapshot) {
-                    controller.add(
-                      DocumentSnapshotPlatform(
-                        firestore,
-                        snapshot['path'],
-                        <String, dynamic>{
-                          'data': snapshot['data'],
-                          'metadata': snapshot['metadata'],
-                        },
-                      ),
-                    );
-                  },
-                  onError: controller.addError,
-                );
+                .receiveGuardedBroadcastStream(
+          arguments: <String, dynamic>{
+            'reference': this,
+            'includeMetadataChanges': includeMetadataChanges,
+          },
+          onError: convertPlatformException,
+        ).listen(
+          (snapshot) {
+            controller.add(
+              DocumentSnapshotPlatform(
+                firestore,
+                snapshot['path'],
+                <String, dynamic>{
+                  'data': snapshot['data'],
+                  'metadata': snapshot['metadata'],
+                },
+              ),
+            );
+          },
+          onError: controller.addError,
+        );
       },
       onCancel: () {
         snapshotStream?.cancel();
