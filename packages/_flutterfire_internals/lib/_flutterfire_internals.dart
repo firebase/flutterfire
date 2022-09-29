@@ -7,17 +7,38 @@
 // This file exports utilities shared between firebase packages, without making
 // them public.
 
-import '../firebase_core.dart';
-import 'interop_shimmer.dart'
+import 'package:firebase_core/firebase_core.dart';
+import 'src/interop_shimmer.dart'
     if (dart.library.js) 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 
+export 'src/exception.dart';
+
+/// An extension that adds utilities for safely casting objects
 extension ObjectX<T> on T? {
+  /// Transform an object if that value is not null.
+  ///
+  /// Doing:
+  ///
+  /// ```dart
+  /// Map? json;
+  /// var result = json?['key']?.guard((json) => Model.fromJson(json));
+  /// ```
+  ///
+  /// is equivalent to doing:
+  ///
+  /// ```dart
+  /// Map? json;
+  /// var key = json?['key'];
+  /// var result = key == null ? null : Model.fromJson(key);
+  /// ```
   R? guard<R>(R Function(T value) cb) {
     if (this is T) return cb(this as T);
     return null;
   }
 
+  /// Safely cast an object, returning `null` if the casted object does not
+  /// match the casted type.
   R? safeCast<R>() {
     if (this is R) return this as R;
     return null;

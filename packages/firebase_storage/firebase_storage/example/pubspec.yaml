@@ -15,6 +15,8 @@ dependencies:
   image_picker_for_web: ^2.1.4
 
 dependency_overrides:
+  _flutterfire_internals:
+    path: ../../../_flutterfire_internals
   firebase_core:
     path: ../../../firebase_core/firebase_core
   firebase_core_platform_interface:
