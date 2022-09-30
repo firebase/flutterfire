@@ -53,6 +53,7 @@ android {
     // TODO: Since App Check is a beta SDK it's not available in the Firebase Android BoM so we need to specify an exact version here.
     implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.2'
     implementation 'com.google.firebase:firebase-appcheck-debug:16.0.2'
+    implementation 'com.google.firebase:firebase-appcheck-playintegrity'
     implementation 'androidx.annotation:annotation:1.5.0'
   }
 }

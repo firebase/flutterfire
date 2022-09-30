@@ -57,7 +57,7 @@ void main() {
       test('successful call', () async {
         await appCheck.activate(
           webRecaptchaSiteKey: 'key',
-          androidDebugProvider: true,
+          androidProvider: AndroidProvider.playIntegrity,
         );
 
         expect(
@@ -67,7 +67,7 @@ void main() {
               'FirebaseAppCheck#activate',
               arguments: <String, dynamic>{
                 'appName': defaultFirebaseAppName,
-                'androidDebugProvider': true,
+                'androidProvider': 'playIntegrity',
               },
             )
           ],
