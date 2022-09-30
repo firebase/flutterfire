@@ -8,8 +8,8 @@
 @JS('firebase_messaging')
 library firebase_interop.messaging;
 
-import 'package:js/js.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:js/js.dart';
 
 @JS()
 external MessagingJsImpl getMessaging([AppJsImpl? app]);
@@ -20,6 +20,11 @@ external PromiseJsImpl<bool> deleteToken(MessagingJsImpl messaging);
 @JS()
 external PromiseJsImpl<String> getToken(
     MessagingJsImpl messaging, GetTokenOptions? getTokenOptions);
+
+@JS()
+external PromiseJsImpl<void>
+    experimentalSetDeliveryMetricsExportedToBigQueryEnabled(
+        MessagingJsImpl messaging, bool enabled);
 
 @JS('isSupported')
 external PromiseJsImpl<bool> isSupported();

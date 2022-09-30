@@ -7,9 +7,9 @@
 
 import 'dart:async';
 
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:js/js.dart';
 
-import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'messaging_interop.dart' as messaging_interop;
 
 export 'messaging_interop.dart';
@@ -47,6 +47,20 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
           vapidKey == null
               ? null
               : messaging_interop.GetTokenOptions(vapidKey: vapidKey)));
+
+  /// Enables or disables Firebase Cloud Messaging message delivery metrics export to BigQuery.
+  /// By default, message delivery metrics are not exported to BigQuery.
+  /// Use this method to enable or disable the export at runtime.
+  Future<void> experimentalSetDeliveryMetricsExportedToBigQueryEnabled(
+    bool enabled,
+  ) =>
+      handleThenable(
+        messaging_interop
+            .experimentalSetDeliveryMetricsExportedToBigQueryEnabled(
+          jsObject,
+          enabled,
+        ),
+      );
 
   // ignore: close_sinks
   StreamController<MessagePayload>? _onMessageController;
