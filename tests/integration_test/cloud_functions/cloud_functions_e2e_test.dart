@@ -172,24 +172,31 @@ void main() {
     });
 
     group('HttpsCallableOptions', () {
-      test('times out when the provided timeout option is exceeded', () async {
-        final instance = FirebaseFunctions.instance;
-        instance.useFunctionsEmulator('localhost', 5001);
-        final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
-          kTestFunctionTimeout,
-          options: HttpsCallableOptions(timeout: const Duration(seconds: 3)),
-        );
-        try {
-          await timeoutCallable({
-            'testTimeout': const Duration(seconds: 6).inMilliseconds.toString(),
-          });
-          fail('Should have thrown');
-        } on FirebaseFunctionsException catch (e) {
-          expect(e.code, equals('deadline-exceeded'));
-        } catch (e) {
-          fail('$e');
-        }
-      });
+      test(
+        'times out when the provided timeout option is exceeded',
+        () async {
+          final instance = FirebaseFunctions.instance;
+          instance.useFunctionsEmulator('localhost', 5001);
+          final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
+            kTestFunctionTimeout,
+            options: HttpsCallableOptions(timeout: const Duration(seconds: 3)),
+          );
+          try {
+            await timeoutCallable({
+              'testTimeout':
+                  const Duration(seconds: 6).inMilliseconds.toString(),
+            });
+            fail('Should have thrown');
+          } on FirebaseFunctionsException catch (e) {
+            expect(e.code, equals('deadline-exceeded'));
+          } catch (e) {
+            fail('$e');
+          }
+        },
+        // Android skip because it's flaky. See:
+        // https://github.com/firebase/flutterfire/issues/9652
+        skip: defaultTargetPlatform == TargetPlatform.android,
+      );
     });
   });
 }
