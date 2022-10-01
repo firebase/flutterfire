@@ -7,6 +7,8 @@ import 'firebase_analytics/firebase_analytics_e2e_test.dart'
 import 'cloud_functions/cloud_functions_e2e_test.dart' as cloud_functions;
 import 'firebase_app_check/firebase_app_check_e2e_test.dart'
     as firebase_app_check;
+import 'firebase_app_installations/firebase_app_installations_e2e_test.dart'
+    as firebase_app_installations;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -16,5 +18,6 @@ void main() {
     firebase_analytics.main();
     cloud_functions.main();
     firebase_app_check.main();
+    firebase_app_installations.main();
   });
 }
