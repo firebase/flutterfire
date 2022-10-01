@@ -21,6 +21,7 @@ import 'firebase_ml_model_downloader/firebase_ml_model_downloader_e2e_test.dart'
     as firebase_ml_model_downloader;
 import 'firebase_remote_config/firebase_remote_config_e2e_test.dart'
     as firebase_remote_config;
+import 'firebase_storage/firebase_storage_e2e_test.dart' as firebase_storage;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -38,5 +39,6 @@ void main() {
     firebase_messaging.main();
     firebase_ml_model_downloader.main();
     firebase_remote_config.main();
+    firebase_storage.main();
   });
 }
