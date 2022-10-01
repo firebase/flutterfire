@@ -3,9 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
 
 import 'collection_reference_e2e.dart';
 import 'document_change_e2e.dart';
@@ -24,12 +24,14 @@ import 'second_app_e2e.dart';
 
 bool kUseFirestoreEmulator = true;
 
-void testsMain() {
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
   setUpAll(() async {
     await Firebase.initializeApp(options: TestFirebaseConfig.platformOptions);
 
     if (kUseFirestoreEmulator) {
-      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8082);
     }
   });
 
@@ -48,5 +50,3 @@ void testsMain() {
   runLoadBundleTests();
   runSecondAppTests();
 }
-
-void main() => drive.main(testsMain);
