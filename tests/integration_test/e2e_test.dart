@@ -9,12 +9,14 @@ import 'firebase_app_check/firebase_app_check_e2e_test.dart'
     as firebase_app_check;
 import 'firebase_app_installations/firebase_app_installations_e2e_test.dart'
     as firebase_app_installations;
+import 'firebase_auth/firebase_auth_e2e_test.dart' as firebase_auth;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('FlutterFire', () {
     firebase_core.main();
+    firebase_auth.main();
     firebase_analytics.main();
     cloud_functions.main();
     firebase_app_check.main();
