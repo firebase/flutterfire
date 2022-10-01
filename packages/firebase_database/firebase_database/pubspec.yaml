@@ -24,7 +24,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.0.2
-  test: any
 
 flutter:
   plugin:
