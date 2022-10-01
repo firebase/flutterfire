@@ -24,7 +24,6 @@ dev_dependencies:
     sdk: flutter
   mockito: ^5.0.16
   plugin_platform_interface: null
-  test: any
 
 flutter:
   plugin:
