@@ -27,26 +27,28 @@ bool kUseFirestoreEmulator = true;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  setUpAll(() async {
-    await Firebase.initializeApp(options: TestFirebaseConfig.platformOptions);
+  group('cloud_firestore', () {
+    setUpAll(() async {
+      await Firebase.initializeApp(options: TestFirebaseConfig.platformOptions);
 
-    if (kUseFirestoreEmulator) {
-      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8082);
-    }
+      if (kUseFirestoreEmulator) {
+        FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+      }
+    });
+
+    runInstanceTests();
+
+    runCollectionReferenceTests();
+    runDocumentChangeTests();
+    runDocumentReferenceTests();
+    runFieldValueTests();
+    runGeoPointTests();
+    runQueryTests();
+    runSnapshotMetadataTests();
+    runTimestampTests();
+    runTransactionTests();
+    runWriteBatchTests();
+    runLoadBundleTests();
+    runSecondAppTests();
   });
-
-  runInstanceTests();
-
-  runCollectionReferenceTests();
-  runDocumentChangeTests();
-  runDocumentReferenceTests();
-  runFieldValueTests();
-  runGeoPointTests();
-  runQueryTests();
-  runSnapshotMetadataTests();
-  runTimestampTests();
-  runTransactionTests();
-  runWriteBatchTests();
-  runLoadBundleTests();
-  runSecondAppTests();
 }
