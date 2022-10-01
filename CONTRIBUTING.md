@@ -131,11 +131,11 @@ flutter drive --target=./test_driver/firebase_auth_e2e.dart --release -d chrome
 ### Using Melos
 
 To help aid developer workflow, Melos provides a number of commands to quickly run
-tests against plugins. For example, to run all e2e tests across all plugins at once,
+tests against plugins. For example, to run all tests across all plugins at once,
 run the following command from the root of your cloned repository:
 
 ```bash
-melos run test:e2e
+melos run test
 ```
 
 A full list of all commands can be found within the [`melos.yaml`](https://github.com/firebase/flutterfire/blob/master/melos.yaml)
