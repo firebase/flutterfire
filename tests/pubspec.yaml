@@ -198,7 +198,7 @@ dependency_overrides:
     path: ../packages/firebase_storage/firebase_storage_web
 
 dev_dependencies:
-  flutter_driver:
+  integration_test:
     sdk: flutter
   flutter_test:
     sdk: flutter
