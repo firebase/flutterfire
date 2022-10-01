@@ -27,6 +27,11 @@ on:
 jobs:
   android:
     runs-on: macos-11
+    strategy:
+      fail-fast: false
+      matrix:
+        A1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        A2: [1, 2, 3, 4, 5]
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v2
@@ -115,6 +120,11 @@ jobs:
 
   ios:
     runs-on: macos-12
+    strategy:
+      fail-fast: false
+      matrix:
+        A1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        A2: [1, 2, 3, 4, 5]
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v2
@@ -181,6 +191,11 @@ jobs:
 
   macos:
     runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        A1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        A2: [1, 2, 3, 4, 5]
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v2
@@ -239,6 +254,11 @@ jobs:
 
   web:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        A1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        A2: [1, 2, 3, 4, 5]
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v2
