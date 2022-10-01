@@ -111,7 +111,7 @@ flutter test
 ### End-to-end (e2e) tests
 
 E2e tests are those which directly communicate with Firebase, whose results cannot be mocked. These tests run directly from
-an example application. To run e2e tests, run the `flutter test` (for Android & iOS) or the `flutter drive` (for macOS & web) 
+an example application. To run e2e tests, run the `flutter test` (for Android, iOS & macOS) or the `flutter drive` (for web) 
 command from the plugins main `example` directory, targeting the entry e2e test file.
 
 > Some packages use Firebase Emulator Suite to run tests. To learn more, [visit the official documentation](https://firebase.google.com/docs/emulator-suite).
@@ -123,25 +123,18 @@ cd .github/workflows/scripts
 firebase emulators:start --only auth,firestore,functions,storage,database --project flutterfire-e2e-tests
 ```
 
-To run tests against Android & iOS environments, run these commands:
+To run tests against Android, iOS or macOS environments, run these commands:
 
 ```bash
 cd packages/firebase_auth/firebase_auth/example
 flutter test integration_test/firebase_auth_e2e_test.dart
 ```
 
-To run tests against macOS environments, run these commands:
-
-```bash
-cd packages/firebase_auth/firebase_auth/example
-flutter drive --target=./integration_test/firebase_auth_e2e_test.dart
-```
-
 To run tests against web environments, run the command as a release build:
 
 ```bash
 cd packages/firebase_auth/firebase_auth/example
-flutter drive --target=./integration_test/firebase_auth_e2e_test.dart --release -d chrome
+flutter drive --target=./integration_test/firebase_auth_e2e_test.dart --driver=./test_driver/integration_test.dart --release -d chrome
 ```
 
 ### Using Melos

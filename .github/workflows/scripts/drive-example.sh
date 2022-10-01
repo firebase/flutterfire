@@ -31,7 +31,7 @@ fi
 if [ "$ACTION" == "macos" ]
 then
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
-    flutter drive $FLUTTER_COMMAND_FLAGS -d macos --no-pub --target=./integration_test/MELOS_PARENT_PACKAGE_NAME_e2e_test.dart --dart-define=CI=true
+    flutter test integration_test/MELOS_PARENT_PACKAGE_NAME_e2e_test.dart $FLUTTER_COMMAND_FLAGS -d macos --no-pub --dart-define=CI=true
   exit
 fi
 
@@ -40,6 +40,6 @@ then
   melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
   chromedriver --port=4444 &
   melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=web -- \
-    flutter drive $FLUTTER_COMMAND_FLAGS --no-pub --verbose-system-logs --device-id=web-server --target=./integration_test/MELOS_PARENT_PACKAGE_NAME_e2e_test.dart --dart-define=CI=true
+    flutter drive $FLUTTER_COMMAND_FLAGS --no-pub --verbose-system-logs --device-id=web-server --target=./integration_test/MELOS_PARENT_PACKAGE_NAME_e2e_test.dart --driver=./test_driver/integration_test.dart --dart-define=CI=true
   exit
 fi
