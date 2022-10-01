@@ -1,8 +1,9 @@
 name: e2e
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+# TEMP
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.ref }}
+  # cancel-in-progress: true
 
 on:
   pull_request:
