@@ -15,6 +15,8 @@ import 'firebase_crashlytics/firebase_crashlytics_e2e_test.dart'
 import 'firebase_database/firebase_database_e2e_test.dart' as firebase_database;
 import 'firebase_dynamic_links/firebase_dynamic_links_e2e_test.dart'
     as firebase_dynamic_links;
+import 'firebase_messaging/firebase_messaging_e2e_test.dart'
+    as firebase_messaging;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -29,5 +31,6 @@ void main() {
     firebase_app_check.main();
     firebase_app_installations.main();
     firebase_dynamic_links.main();
+    firebase_messaging.main();
   });
 }
