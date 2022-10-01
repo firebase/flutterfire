@@ -28,8 +28,5 @@ dependency_overrides:
   firebase_core_web:
     path: ../../../firebase_core/firebase_core_web
 
-dev_dependencies:
-  test: any
-
 flutter:
   uses-material-design: true
