@@ -17,6 +17,8 @@ import 'firebase_dynamic_links/firebase_dynamic_links_e2e_test.dart'
     as firebase_dynamic_links;
 import 'firebase_messaging/firebase_messaging_e2e_test.dart'
     as firebase_messaging;
+import 'firebase_ml_model_downloader/firebase_ml_model_downloader_e2e_test.dart'
+    as firebase_ml_model_downloader;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -32,5 +34,6 @@ void main() {
     firebase_app_installations.main();
     firebase_dynamic_links.main();
     firebase_messaging.main();
+    firebase_ml_model_downloader.main();
   });
 }
