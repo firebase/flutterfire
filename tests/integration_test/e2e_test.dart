@@ -12,12 +12,14 @@ import 'firebase_auth/firebase_auth_e2e_test.dart' as firebase_auth;
 import 'firebase_core/firebase_core_e2e_test.dart' as firebase_core;
 import 'firebase_crashlytics/firebase_crashlytics_e2e_test.dart'
     as firebase_crashlytics;
+import 'firebase_database/firebase_database_e2e_test.dart' as firebase_database;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('FlutterFire', () {
     firebase_core.main();
+    firebase_database.main();
     firebase_crashlytics.main();
     firebase_auth.main();
     firebase_analytics.main();
