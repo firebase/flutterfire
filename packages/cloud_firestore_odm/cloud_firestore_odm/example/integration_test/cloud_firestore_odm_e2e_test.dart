@@ -12,7 +12,7 @@ import 'document_reference_test.dart' as document_reference_test;
 import 'path_test.dart' as path_test;
 import 'query_reference_test.dart' as query_reference_test;
 
-Future<void> main() async {
+void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('cloud_firestore_odm', () {
