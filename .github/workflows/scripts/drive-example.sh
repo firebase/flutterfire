@@ -6,7 +6,7 @@ if [ "$ACTION" == "android" ]
 then
   # Sleep to allow emulator to settle.
   sleep 15
-  melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
+  melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=integration_test -- \
     flutter test integration_test/MELOS_PARENT_PACKAGE_NAME_e2e_test.dart $FLUTTER_COMMAND_FLAGS --no-pub --dart-define=CI=true
   exit
 fi
@@ -21,7 +21,7 @@ then
   sleep 15
   # Uncomment following line to have simulator logs printed out for debugging purposes.
   # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-  melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
+  melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=integration_test -- \
     flutter test integration_test/MELOS_PARENT_PACKAGE_NAME_e2e_test.dart $FLUTTER_COMMAND_FLAGS -d \"$SIMULATOR\" --no-pub --dart-define=CI=true
   MELOS_EXIT_CODE=$?
   xcrun simctl shutdown "$SIMULATOR"
