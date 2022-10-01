@@ -2,15 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:integration_test/integration_test.dart';
 
 import 'firebase_config.dart';
 
-void testsMain() {
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
   setUpAll(() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseConfig.platformOptions,
@@ -204,5 +206,3 @@ void testsMain() {
     skip: kIsWeb,
   );
 }
-
-void main() => drive.main(testsMain);
