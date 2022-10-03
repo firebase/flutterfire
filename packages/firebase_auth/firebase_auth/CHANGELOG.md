@@ -1,3 +1,7 @@
+## 3.11.1
+
+ - **FIX**: fix an iOS crash when using Sign In With Apple due to invalid return of nil instead of NSNull ([#9644](https://github.com/firebase/flutterfire/issues/9644)). ([3f76b53f](https://github.com/firebase/flutterfire/commit/3f76b53f375f4398652abfa7c9236571ee0bd87f))
+
 ## 3.11.0
 
  - **FEAT**: add OAuth Access Token support to sign in with providers ([#9593](https://github.com/firebase/flutterfire/issues/9593)). ([cb6661bb](https://github.com/firebase/flutterfire/commit/cb6661bbc701031d6f920ace3a6efc8e8d56aa4c))
