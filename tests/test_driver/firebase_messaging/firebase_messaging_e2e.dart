@@ -216,7 +216,8 @@ void setupTests() {
         test(
           'successfully subscribes from topic',
           () async {
-            await messaging.setDeliveryMetricsExportToBigQuery(true);
+            await FirebaseMessaging.instance
+                .setDeliveryMetricsExportToBigQuery(true);
           },
         );
       });

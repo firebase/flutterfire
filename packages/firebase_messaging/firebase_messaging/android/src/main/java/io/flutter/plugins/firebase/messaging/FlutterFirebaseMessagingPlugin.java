@@ -255,21 +255,20 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
-      () -> {
-        try {
-          FirebaseMessaging firebaseMessaging =
-            FlutterFirebaseMessagingUtils.getFirebaseMessagingForArguments(arguments);
-          Boolean enabled = (Boolean) Objects.requireNonNull(arguments.get("enabled"));
-          firebaseMessaging.setDeliveryMetricsExportToBigQuery(enabled);
-          taskCompletionSource.setResult(null);
-        } catch (Exception e) {
-          taskCompletionSource.setException(e);
-        }
-      });
+        () -> {
+          try {
+            FirebaseMessaging firebaseMessaging =
+                FlutterFirebaseMessagingUtils.getFirebaseMessagingForArguments(arguments);
+            Boolean enabled = (Boolean) Objects.requireNonNull(arguments.get("enabled"));
+            firebaseMessaging.setDeliveryMetricsExportToBigQuery(enabled);
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
 
     return taskCompletionSource.getTask();
   }
-
 
   private Task<Map<String, Object>> getInitialMessage() {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
@@ -500,7 +499,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
           }
         });
   }
-
 
   private Map<String, Object> getExceptionDetails(@Nullable Exception exception) {
     Map<String, Object> details = new HashMap<>();

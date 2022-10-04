@@ -339,3 +339,48 @@ Here's how to use the second method:
      },
    }
    ```
+
+
+## Enable message delivery data export
+
+You can export your message data into BigQuery for further analysis. BigQuery allows you to analyze the data using BigQuery SQL, 
+export it to another cloud provider, or use the data for your custom ML models. An export to BigQuery 
+includes all available data for messages, regardless of message type or whether the message is sent via 
+the API or the Notifications composer.
+
+To enable the export, first follow the steps [described here](https://firebase.google.com/docs/cloud-messaging/understand-delivery?platform=ios#bigquery-data-export),
+then follow these instructions:
+
+### Android and Web
+
+You can use the following code:
+```dart
+await FirebaseMessaging.instance.setDeliveryMetricsExportToBigQuery(true);
+```
+
+### iOS
+
+For iOS, you need to change the `AppDelegate.m` with the following content.
+
+```objective-c
+#import "AppDelegate.h"
+#import "GeneratedPluginRegistrant.h"
+#import <Firebase/Firebase.h>
+
+@implementation AppDelegate
+
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [GeneratedPluginRegistrant registerWithRegistry:self];
+  // Override point for customization after application launch.
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+
+- (void)application:(UIApplication *)application
+    didReceiveRemoteNotification:(NSDictionary *)userInfo
+          fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+  [[FIRMessaging extensionHelper] exportDeliveryMetricsToBigQueryWithMessageInfo:userInfo];
+}
+
+@end
+``` 
