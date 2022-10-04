@@ -240,7 +240,7 @@ public class FlutterFirebaseDynamicLinksPlugin
                   Tasks.await(dynamicLinks.getDynamicLink(activity.get().getIntent()));
 
               // Only save that the link was used if the activity is not detached already.
-              if (activity.get() == null || activity.get().getIntent() == null) {
+              if (activity.get() != null || activity.get().getIntent() != null) {
                 activity.get().getIntent().putExtra("flutterfire-used-link", true);
               }
             }
