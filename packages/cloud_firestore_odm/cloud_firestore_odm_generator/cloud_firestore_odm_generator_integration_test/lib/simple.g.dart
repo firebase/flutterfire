@@ -122,10 +122,17 @@ abstract class ModelDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String value,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     String value,
@@ -871,6 +878,10 @@ abstract class NestedDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     int? simple,
     List<bool>? boolList,
@@ -880,6 +891,9 @@ abstract class NestedDocumentReference
     List<dynamic>? dynamicList,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     int? simple,
@@ -3480,10 +3494,17 @@ abstract class OptionalJsonDocumentReference extends FirestoreDocumentReference<
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     int value,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     int value,
@@ -4233,10 +4254,17 @@ abstract class MixedJsonDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     int value,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     int value,
@@ -5003,11 +5031,18 @@ abstract class RootDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String nonNullable,
     int? nullable,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     String nonNullable,
@@ -5912,11 +5947,18 @@ abstract class SubDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String nonNullable,
     int? nullable,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     String nonNullable,
@@ -6812,10 +6854,17 @@ abstract class AsCamelCaseDocumentReference extends FirestoreDocumentReference<
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     num value,
@@ -7588,10 +7637,17 @@ abstract class CustomSubNameDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     num value,
@@ -8366,10 +8422,17 @@ abstract class ThisIsACustomPrefixDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     num value,
@@ -9137,10 +9200,17 @@ abstract class ExplicitPathDocumentReference extends FirestoreDocumentReference<
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     num value,
@@ -9913,10 +9983,17 @@ abstract class ExplicitSubPathDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     num value,

@@ -128,6 +128,10 @@ abstract class MovieDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String poster,
     int likes,
@@ -138,6 +142,9 @@ abstract class MovieDocumentReference
     List<String>? genre,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     String poster,
@@ -1674,11 +1681,18 @@ abstract class CommentDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String authorName,
     String message,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     String authorName,

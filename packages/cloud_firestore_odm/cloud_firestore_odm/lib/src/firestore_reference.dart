@@ -108,11 +108,6 @@ abstract class FirestoreDocumentReference<Model,
   /// If the document changes whilst the transaction is in progress, it will
   /// be re-tried up to five times.
   Future<Snapshot> transactionGet(Transaction transaction);
-
-  /// Updates fields in the current document using the transaction API.
-  ///
-  /// The update will fail if applied to a document that does not exist.
-  void transactionUpdate(Transaction transaction);
 }
 
 abstract class FirestoreCollectionReference<

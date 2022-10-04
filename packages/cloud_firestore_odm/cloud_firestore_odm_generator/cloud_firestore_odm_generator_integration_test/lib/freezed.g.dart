@@ -122,11 +122,18 @@ abstract class PersonDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String firstName,
     String lastName,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     String firstName,
@@ -1008,10 +1015,17 @@ abstract class PublicRedirectedDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String value,
   });
 
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
     String value,

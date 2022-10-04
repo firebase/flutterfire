@@ -85,8 +85,15 @@ class _\$${data.documentReferenceName}
     ];
 
     return '''
+/// Updates data on the document. Data will be merged with any existing
+/// document data.
+///
+/// If no document exists yet, the update will fail.
 Future<void> update({${parameters.join()}});
 
+/// Updates fields in the current document using the transaction API.
+///
+/// The update will fail if applied to a document that does not exist.
 void transactionUpdate(Transaction transaction, {${parameters.join()}});
 ''';
   }
