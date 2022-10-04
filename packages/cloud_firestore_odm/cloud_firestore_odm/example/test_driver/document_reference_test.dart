@@ -206,7 +206,7 @@ void main() {
           await FirebaseFirestore.instance.runTransaction((transaction) async {
             ref.doc('123').transactionSet(
                   transaction,
-                  createMovie(title: 'Foo', rated: '21'),
+                  createMovie(title: 'Foo'),
                 );
           });
 
@@ -214,7 +214,7 @@ void main() {
             await ref.doc('123').get().then((e) => e.data),
             isA<Movie>()
                 .having((e) => e.rated, 'rated', '')
-                .having((e) => e.title, 'title', 'title'),
+                .having((e) => e.title, 'title', 'Foo'),
           );
         });
       });
