@@ -195,15 +195,15 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     Object? time = _sentinel,
-  }) async {
+  }) {
     final json = {
       if (time != _sentinel) "time": time as DateTime,
     };
 
-    return transaction.update(reference, json);
+    transaction.update(reference, json);
   }
 
   @override
@@ -958,15 +958,15 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     Object? time = _sentinel,
-  }) async {
+  }) {
     final json = {
       if (time != _sentinel) "time": time as Timestamp,
     };
 
-    return transaction.update(reference, json);
+    transaction.update(reference, json);
   }
 
   @override
@@ -1722,15 +1722,15 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     Object? point = _sentinel,
-  }) async {
+  }) {
     final json = {
       if (point != _sentinel) "point": point as GeoPoint,
     };
 
-    return transaction.update(reference, json);
+    transaction.update(reference, json);
   }
 
   @override
@@ -2490,16 +2490,16 @@ class _$DocumentReferenceQueryDocumentReference
     return reference.update(json);
   }
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     Object? ref = _sentinel,
-  }) async {
+  }) {
     final json = {
       if (ref != _sentinel)
         "ref": ref as DocumentReference<Map<String, dynamic>>,
     };
 
-    return transaction.update(reference, json);
+    transaction.update(reference, json);
   }
 
   @override

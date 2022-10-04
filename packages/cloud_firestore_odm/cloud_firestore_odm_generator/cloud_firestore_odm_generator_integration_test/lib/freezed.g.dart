@@ -127,6 +127,12 @@ abstract class PersonDocumentReference
     String lastName,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    String firstName,
+    String lastName,
+  });
+
   Future<void> set(Person value);
 }
 
@@ -164,8 +170,13 @@ class _$PersonDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<PersonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return PersonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -180,8 +191,17 @@ class _$PersonDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(Person value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? firstName = _sentinel,
+    Object? lastName = _sentinel,
+  }) {
+    final json = {
+      if (firstName != _sentinel) "firstName": firstName as String,
+      if (lastName != _sentinel) "lastName": lastName as String,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -994,6 +1014,11 @@ abstract class PublicRedirectedDocumentReference
     String value,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    String value,
+  });
+
   Future<void> set(PublicRedirected value);
 }
 
@@ -1031,8 +1056,14 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<PublicRedirectedDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return PublicRedirectedDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -1045,8 +1076,15 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(PublicRedirected value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+  }) {
+    final json = {
+      if (value != _sentinel) "value": value as String,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override

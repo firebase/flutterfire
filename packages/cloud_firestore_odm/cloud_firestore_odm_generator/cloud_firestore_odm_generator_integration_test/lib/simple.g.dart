@@ -126,6 +126,11 @@ abstract class ModelDocumentReference
     String value,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    String value,
+  });
+
   Future<void> set(Model value);
 }
 
@@ -163,8 +168,13 @@ class _$ModelDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ModelDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -177,8 +187,15 @@ class _$ModelDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(Model value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+  }) {
+    final json = {
+      if (value != _sentinel) "value": value as String,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -865,6 +882,16 @@ abstract class NestedDocumentReference
     List<dynamic>? dynamicList,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    int? simple,
+    List<bool>? boolList,
+    List<String>? stringList,
+    List<num>? numList,
+    List<Object?>? objectList,
+    List<dynamic>? dynamicList,
+  });
+
   Future<void> set(Nested value);
 }
 
@@ -902,8 +929,13 @@ class _$NestedDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<NestedDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return NestedDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -927,8 +959,26 @@ class _$NestedDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(Nested value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? simple = _sentinel,
+    Object? boolList = _sentinel,
+    Object? stringList = _sentinel,
+    Object? numList = _sentinel,
+    Object? objectList = _sentinel,
+    Object? dynamicList = _sentinel,
+  }) {
+    final json = {
+      if (simple != _sentinel) "simple": simple as int?,
+      if (boolList != _sentinel) "boolList": boolList as List<bool>?,
+      if (stringList != _sentinel) "stringList": stringList as List<String>?,
+      if (numList != _sentinel) "numList": numList as List<num>?,
+      if (objectList != _sentinel) "objectList": objectList as List<Object?>?,
+      if (dynamicList != _sentinel)
+        "dynamicList": dynamicList as List<dynamic>?,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -2269,12 +2319,14 @@ class _$SplitFileModelDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
-  }
-
-  Future<void> set(SplitFileModel value) {
-    return reference.set(value);
+  Future<SplitFileModelDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return SplitFileModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   @override
@@ -2870,12 +2922,13 @@ class _$EmptyModelDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
-  }
-
-  Future<void> set(EmptyModel value) {
-    return reference.set(value);
+  Future<EmptyModelDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return EmptyModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   @override
@@ -3439,6 +3492,11 @@ abstract class OptionalJsonDocumentReference extends FirestoreDocumentReference<
     int value,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    int value,
+  });
+
   Future<void> set(OptionalJson value);
 }
 
@@ -3476,8 +3534,13 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<OptionalJsonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return OptionalJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -3490,8 +3553,15 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(OptionalJson value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+  }) {
+    final json = {
+      if (value != _sentinel) "value": value as int,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -4177,6 +4247,11 @@ abstract class MixedJsonDocumentReference
     int value,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    int value,
+  });
+
   Future<void> set(MixedJson value);
 }
 
@@ -4214,8 +4289,13 @@ class _$MixedJsonDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<MixedJsonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return MixedJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -4228,8 +4308,15 @@ class _$MixedJsonDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(MixedJson value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+  }) {
+    final json = {
+      if (value != _sentinel) "value": value as int,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -4933,6 +5020,12 @@ abstract class RootDocumentReference
     int? nullable,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    String nonNullable,
+    int? nullable,
+  });
+
   Future<void> set(Root value);
 }
 
@@ -4989,8 +5082,13 @@ class _$RootDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<RootDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return RootDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -5005,8 +5103,17 @@ class _$RootDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(Root value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? nonNullable = _sentinel,
+    Object? nullable = _sentinel,
+  }) {
+    final json = {
+      if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
+      if (nullable != _sentinel) "nullable": nullable as int?,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -5824,6 +5931,12 @@ abstract class SubDocumentReference
     int? nullable,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    String nonNullable,
+    int? nullable,
+  });
+
   Future<void> set(Sub value);
 }
 
@@ -5866,8 +5979,13 @@ class _$SubDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<SubDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return SubDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -5882,8 +6000,17 @@ class _$SubDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(Sub value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? nonNullable = _sentinel,
+    Object? nullable = _sentinel,
+  }) {
+    final json = {
+      if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
+      if (nullable != _sentinel) "nullable": nullable as int?,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -6705,6 +6832,11 @@ abstract class AsCamelCaseDocumentReference extends FirestoreDocumentReference<
     num value,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    num value,
+  });
+
   Future<void> set(AsCamelCase value);
 }
 
@@ -6747,8 +6879,13 @@ class _$AsCamelCaseDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<AsCamelCaseDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return AsCamelCaseDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -6761,8 +6898,15 @@ class _$AsCamelCaseDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(AsCamelCase value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+  }) {
+    final json = {
+      if (value != _sentinel) "value": value as num,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -7466,6 +7610,11 @@ abstract class CustomSubNameDocumentReference
     num value,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    num value,
+  });
+
   Future<void> set(CustomSubName value);
 }
 
@@ -7508,8 +7657,14 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<CustomSubNameDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return CustomSubNameDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -7522,8 +7677,15 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(CustomSubName value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+  }) {
+    final json = {
+      if (value != _sentinel) "value": value as num,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -8228,6 +8390,11 @@ abstract class ThisIsACustomPrefixDocumentReference
     num value,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    num value,
+  });
+
   Future<void> set(CustomClassPrefix value);
 }
 
@@ -8270,8 +8437,14 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ThisIsACustomPrefixDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ThisIsACustomPrefixDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -8284,8 +8457,15 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(CustomClassPrefix value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+  }) {
+    final json = {
+      if (value != _sentinel) "value": value as num,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -8983,6 +9163,11 @@ abstract class ExplicitPathDocumentReference extends FirestoreDocumentReference<
     num value,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    num value,
+  });
+
   Future<void> set(ExplicitPath value);
 }
 
@@ -9025,8 +9210,13 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ExplicitPathDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ExplicitPathDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -9039,8 +9229,15 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(ExplicitPath value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+  }) {
+    final json = {
+      if (value != _sentinel) "value": value as num,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -9744,6 +9941,11 @@ abstract class ExplicitSubPathDocumentReference
     num value,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    num value,
+  });
+
   Future<void> set(ExplicitSubPath value);
 }
 
@@ -9786,8 +9988,14 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ExplicitSubPathDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ExplicitSubPathDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -9800,8 +10008,15 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(ExplicitSubPath value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+  }) {
+    final json = {
+      if (value != _sentinel) "value": value as num,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override

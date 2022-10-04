@@ -193,17 +193,17 @@ class _$PersonDocumentReference
     return reference.update(json);
   }
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     Object? firstName = _sentinel,
     Object? lastName = _sentinel,
-  }) async {
+  }) {
     final json = {
       if (firstName != _sentinel) "firstName": firstName as String,
       if (lastName != _sentinel) "lastName": lastName as String,
     };
 
-    return transaction.update(reference, json);
+    transaction.update(reference, json);
   }
 
   @override
@@ -1078,15 +1078,15 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     Object? value = _sentinel,
-  }) async {
+  }) {
     final json = {
       if (value != _sentinel) "value": value as String,
     };
 
-    return transaction.update(reference, json);
+    transaction.update(reference, json);
   }
 
   @override

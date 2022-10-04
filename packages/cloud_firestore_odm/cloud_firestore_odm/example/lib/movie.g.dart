@@ -221,7 +221,7 @@ class _$MovieDocumentReference
     return reference.update(json);
   }
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     Object? poster = _sentinel,
     Object? likes = _sentinel,
@@ -230,7 +230,7 @@ class _$MovieDocumentReference
     Object? runtime = _sentinel,
     Object? rated = _sentinel,
     Object? genre = _sentinel,
-  }) async {
+  }) {
     final json = {
       if (poster != _sentinel) "poster": poster as String,
       if (likes != _sentinel) "likes": likes as int,
@@ -241,7 +241,7 @@ class _$MovieDocumentReference
       if (genre != _sentinel) "genre": genre as List<String>?,
     };
 
-    return transaction.update(reference, json);
+    transaction.update(reference, json);
   }
 
   @override
@@ -1750,17 +1750,17 @@ class _$CommentDocumentReference
     return reference.update(json);
   }
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     Object? authorName = _sentinel,
     Object? message = _sentinel,
-  }) async {
+  }) {
     final json = {
       if (authorName != _sentinel) "authorName": authorName as String,
       if (message != _sentinel) "message": message as String,
     };
 
-    return transaction.update(reference, json);
+    transaction.update(reference, json);
   }
 
   @override

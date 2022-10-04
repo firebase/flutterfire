@@ -117,10 +117,10 @@ Future<void> update({${parameters.join()}}) async {
   return reference.update(json);
 }
 
-Future<void> transactionUpdate(Transaction transaction, {${parameters.join()}}) async {
+void transactionUpdate(Transaction transaction, {${parameters.join()}}) {
   final json = {${json.join()}};
 
-  return transaction.update(reference, json);
+  transaction.update(reference, json);
 }
 ''';
   }
