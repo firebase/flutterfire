@@ -61,15 +61,16 @@ class _\$${data.documentReferenceName}
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<${data.documentSnapshotName}> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ${data.documentSnapshotName}._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
-  ${_update(data)}
-
-  Future<void> set(${data.type} value) {
-    return reference.set(value);
-  }
+  ${_update(data)} 
 
   ${_equalAndHashCode(data)}
 }
@@ -85,7 +86,11 @@ class _\$${data.documentReferenceName}
           '${field.type.getDisplayString(withNullability: true)} ${field.name},'
     ];
 
-    return 'Future<void> update({${parameters.join()}});';
+    return '''
+Future<void> update({${parameters.join()}});
+
+Future<void> transactionUpdate(Transaction transaction, {${parameters.join()}});
+''';
   }
 
   String _update(CollectionData data) {
@@ -110,7 +115,14 @@ Future<void> update({${parameters.join()}}) async {
   final json = {${json.join()}};
 
   return reference.update(json);
-}''';
+}
+
+Future<void> transactionUpdate(Transaction transaction, {${parameters.join()}}) async {
+  final json = {${json.join()}};
+
+  return transaction.update(reference, json);
+}
+''';
   }
 
   String _parent(CollectionData data) {

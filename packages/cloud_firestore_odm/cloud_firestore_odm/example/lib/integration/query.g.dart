@@ -133,6 +133,11 @@ abstract class DateTimeQueryDocumentReference
     DateTime time,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    DateTime time,
+  });
+
   Future<void> set(DateTimeQuery value);
 }
 
@@ -170,8 +175,14 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<DateTimeQueryDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return DateTimeQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -184,8 +195,15 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(DateTimeQuery value) {
-    return reference.set(value);
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    Object? time = _sentinel,
+  }) async {
+    final json = {
+      if (time != _sentinel) "time": time as DateTime,
+    };
+
+    return transaction.update(reference, json);
   }
 
   @override
@@ -878,6 +896,11 @@ abstract class TimestampQueryDocumentReference
     Timestamp time,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    Timestamp time,
+  });
+
   Future<void> set(TimestampQuery value);
 }
 
@@ -915,8 +938,14 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<TimestampQueryDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return TimestampQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -929,8 +958,15 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(TimestampQuery value) {
-    return reference.set(value);
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    Object? time = _sentinel,
+  }) async {
+    final json = {
+      if (time != _sentinel) "time": time as Timestamp,
+    };
+
+    return transaction.update(reference, json);
   }
 
   @override
@@ -1624,6 +1660,11 @@ abstract class GeoPointQueryDocumentReference
     GeoPoint point,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    GeoPoint point,
+  });
+
   Future<void> set(GeoPointQuery value);
 }
 
@@ -1661,8 +1702,14 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<GeoPointQueryDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return GeoPointQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -1675,8 +1722,15 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(GeoPointQuery value) {
-    return reference.set(value);
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    Object? point = _sentinel,
+  }) async {
+    final json = {
+      if (point != _sentinel) "point": point as GeoPoint,
+    };
+
+    return transaction.update(reference, json);
   }
 
   @override
@@ -2372,6 +2426,11 @@ abstract class DocumentReferenceQueryDocumentReference
     DocumentReference<Map<String, dynamic>> ref,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    DocumentReference<Map<String, dynamic>> ref,
+  });
+
   Future<void> set(DocumentReferenceQuery value);
 }
 
@@ -2410,8 +2469,14 @@ class _$DocumentReferenceQueryDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<DocumentReferenceQueryDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return DocumentReferenceQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -2425,8 +2490,16 @@ class _$DocumentReferenceQueryDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(DocumentReferenceQuery value) {
-    return reference.set(value);
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    Object? ref = _sentinel,
+  }) async {
+    final json = {
+      if (ref != _sentinel)
+        "ref": ref as DocumentReference<Map<String, dynamic>>,
+    };
+
+    return transaction.update(reference, json);
   }
 
   @override

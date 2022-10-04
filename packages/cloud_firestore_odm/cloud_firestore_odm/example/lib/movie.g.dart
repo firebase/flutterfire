@@ -138,6 +138,17 @@ abstract class MovieDocumentReference
     List<String>? genre,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    String poster,
+    int likes,
+    String title,
+    int year,
+    String runtime,
+    String rated,
+    List<String>? genre,
+  });
+
   Future<void> set(Movie value);
 }
 
@@ -179,8 +190,13 @@ class _$MovieDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<MovieDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return MovieDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -205,8 +221,27 @@ class _$MovieDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(Movie value) {
-    return reference.set(value);
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    Object? poster = _sentinel,
+    Object? likes = _sentinel,
+    Object? title = _sentinel,
+    Object? year = _sentinel,
+    Object? runtime = _sentinel,
+    Object? rated = _sentinel,
+    Object? genre = _sentinel,
+  }) async {
+    final json = {
+      if (poster != _sentinel) "poster": poster as String,
+      if (likes != _sentinel) "likes": likes as int,
+      if (title != _sentinel) "title": title as String,
+      if (year != _sentinel) "year": year as int,
+      if (runtime != _sentinel) "runtime": runtime as String,
+      if (rated != _sentinel) "rated": rated as String,
+      if (genre != _sentinel) "genre": genre as List<String>?,
+    };
+
+    return transaction.update(reference, json);
   }
 
   @override
@@ -1646,6 +1681,12 @@ abstract class CommentDocumentReference
     String message,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    String authorName,
+    String message,
+  });
+
   Future<void> set(Comment value);
 }
 
@@ -1688,8 +1729,13 @@ class _$CommentDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<CommentDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return CommentDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -1704,8 +1750,17 @@ class _$CommentDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(Comment value) {
-    return reference.set(value);
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    Object? authorName = _sentinel,
+    Object? message = _sentinel,
+  }) async {
+    final json = {
+      if (authorName != _sentinel) "authorName": authorName as String,
+      if (message != _sentinel) "message": message as String,
+    };
+
+    return transaction.update(reference, json);
   }
 
   @override

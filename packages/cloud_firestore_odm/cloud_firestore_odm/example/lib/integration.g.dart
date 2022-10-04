@@ -128,6 +128,11 @@ abstract class ManualJsonDocumentReference
     String value,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    String value,
+  });
+
   Future<void> set(ManualJson value);
 }
 
@@ -165,8 +170,13 @@ class _$ManualJsonDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ManualJsonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ManualJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -179,8 +189,15 @@ class _$ManualJsonDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(ManualJson value) {
-    return reference.set(value);
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+  }) async {
+    final json = {
+      if (value != _sentinel) "value": value as String,
+    };
+
+    return transaction.update(reference, json);
   }
 
   @override
@@ -870,6 +887,13 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     int hashCode,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    String? firstName,
+    String? lastName,
+    int hashCode,
+  });
+
   Future<void> set(AdvancedJson value);
 }
 
@@ -907,8 +931,13 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<AdvancedJsonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return AdvancedJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -925,8 +954,19 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(AdvancedJson value) {
-    return reference.set(value);
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    Object? firstName = _sentinel,
+    Object? lastName = _sentinel,
+    Object? hashCode = _sentinel,
+  }) async {
+    final json = {
+      if (firstName != _sentinel) "firstName": firstName as String?,
+      if (lastName != _sentinel) "lastName": lastName as String?,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
+    };
+
+    return transaction.update(reference, json);
   }
 
   @override
@@ -1873,6 +1913,13 @@ abstract class _PrivateAdvancedJsonDocumentReference
     int hashCode,
   });
 
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    String? firstName,
+    String? lastName,
+    int hashCode,
+  });
+
   Future<void> set(_PrivateAdvancedJson value);
 }
 
@@ -1911,8 +1958,14 @@ class _$_PrivateAdvancedJsonDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<_PrivateAdvancedJsonDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return _PrivateAdvancedJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -1929,8 +1982,19 @@ class _$_PrivateAdvancedJsonDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(_PrivateAdvancedJson value) {
-    return reference.set(value);
+  Future<void> transactionUpdate(
+    Transaction transaction, {
+    Object? firstName = _sentinel,
+    Object? lastName = _sentinel,
+    Object? hashCode = _sentinel,
+  }) async {
+    final json = {
+      if (firstName != _sentinel) "firstName": firstName as String?,
+      if (lastName != _sentinel) "lastName": lastName as String?,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
+    };
+
+    return transaction.update(reference, json);
   }
 
   @override
@@ -2904,12 +2968,13 @@ class _$EmptyModelDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
-  }
-
-  Future<void> set(EmptyModel value) {
-    return reference.set(value);
+  Future<EmptyModelDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return EmptyModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   @override
