@@ -214,10 +214,9 @@ void setupTests() {
 
       group('setDeliveryMetricsExportToBigQuery()', () {
         test(
-          'successfully subscribes from topic',
+          'successfully set delivery metrics export to big query',
           () async {
-            await FirebaseMessaging.instance
-                .setDeliveryMetricsExportToBigQuery(true);
+            await messaging.setDeliveryMetricsExportToBigQuery(true);
           },
         );
       });
