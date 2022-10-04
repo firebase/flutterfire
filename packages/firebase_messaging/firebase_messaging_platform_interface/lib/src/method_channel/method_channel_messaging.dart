@@ -387,6 +387,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> setDeliveryMetricsExportToBigQuery(bool enabled) async {
+    // The method is not available on iOS.
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
     try {
       await channel
           .invokeMapMethod('Messaging#setDeliveryMetricsExportToBigQuery', {

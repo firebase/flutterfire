@@ -4,11 +4,11 @@
 
 import 'dart:async';
 
+import 'package:drive/drive.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
-import 'package:drive/drive.dart';
 import 'package:flutter/foundation.dart';
+
 import '../firebase_default_options.dart';
 
 // ignore: do_not_use_environment
@@ -209,6 +209,15 @@ void setupTests() {
           },
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
           skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+        );
+      });
+
+      group('setDeliveryMetricsExportToBigQuery()', () {
+        test(
+          'successfully subscribes from topic',
+          () async {
+            await messaging.setDeliveryMetricsExportToBigQuery(true);
+          },
         );
       });
     },
