@@ -126,7 +126,7 @@ abstract class ModelDocumentReference
     String value,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     String value,
   });
@@ -882,7 +882,7 @@ abstract class NestedDocumentReference
     List<dynamic>? dynamicList,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     int? simple,
     List<bool>? boolList,
@@ -3492,7 +3492,7 @@ abstract class OptionalJsonDocumentReference extends FirestoreDocumentReference<
     int value,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     int value,
   });
@@ -4247,7 +4247,7 @@ abstract class MixedJsonDocumentReference
     int value,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     int value,
   });
@@ -5020,7 +5020,7 @@ abstract class RootDocumentReference
     int? nullable,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     String nonNullable,
     int? nullable,
@@ -5931,7 +5931,7 @@ abstract class SubDocumentReference
     int? nullable,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     String nonNullable,
     int? nullable,
@@ -6832,7 +6832,7 @@ abstract class AsCamelCaseDocumentReference extends FirestoreDocumentReference<
     num value,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     num value,
   });
@@ -7610,7 +7610,7 @@ abstract class CustomSubNameDocumentReference
     num value,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     num value,
   });
@@ -8390,7 +8390,7 @@ abstract class ThisIsACustomPrefixDocumentReference
     num value,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     num value,
   });
@@ -9163,7 +9163,7 @@ abstract class ExplicitPathDocumentReference extends FirestoreDocumentReference<
     num value,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     num value,
   });
@@ -9941,7 +9941,7 @@ abstract class ExplicitSubPathDocumentReference
     num value,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     num value,
   });

@@ -129,7 +129,7 @@ abstract class PersonDocumentReference
     String lastName,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     String firstName,
     String lastName,
@@ -1016,7 +1016,7 @@ abstract class PublicRedirectedDocumentReference
     String value,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     String value,
   });

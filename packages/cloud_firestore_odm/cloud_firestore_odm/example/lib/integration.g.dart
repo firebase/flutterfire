@@ -128,7 +128,7 @@ abstract class ManualJsonDocumentReference
     String value,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     String value,
   });
@@ -887,7 +887,7 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     int hashCode,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     String? firstName,
     String? lastName,
@@ -1913,7 +1913,7 @@ abstract class _PrivateAdvancedJsonDocumentReference
     int hashCode,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     String? firstName,
     String? lastName,

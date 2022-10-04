@@ -133,7 +133,7 @@ abstract class DateTimeQueryDocumentReference
     DateTime time,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     DateTime time,
   });
@@ -896,7 +896,7 @@ abstract class TimestampQueryDocumentReference
     Timestamp time,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     Timestamp time,
   });
@@ -1660,7 +1660,7 @@ abstract class GeoPointQueryDocumentReference
     GeoPoint point,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     GeoPoint point,
   });
@@ -2426,7 +2426,7 @@ abstract class DocumentReferenceQueryDocumentReference
     DocumentReference<Map<String, dynamic>> ref,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     DocumentReference<Map<String, dynamic>> ref,
   });

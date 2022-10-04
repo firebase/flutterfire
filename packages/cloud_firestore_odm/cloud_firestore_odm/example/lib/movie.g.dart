@@ -138,7 +138,7 @@ abstract class MovieDocumentReference
     List<String>? genre,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     String poster,
     int likes,
@@ -1681,7 +1681,7 @@ abstract class CommentDocumentReference
     String message,
   });
 
-  Future<void> transactionUpdate(
+  void transactionUpdate(
     Transaction transaction, {
     String authorName,
     String message,

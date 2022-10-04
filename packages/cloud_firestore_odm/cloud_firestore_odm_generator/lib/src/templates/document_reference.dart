@@ -89,7 +89,7 @@ class _\$${data.documentReferenceName}
     return '''
 Future<void> update({${parameters.join()}});
 
-Future<void> transactionUpdate(Transaction transaction, {${parameters.join()}});
+void transactionUpdate(Transaction transaction, {${parameters.join()}});
 ''';
   }
 
