@@ -173,9 +173,7 @@ void main() {
           );
 
           await FirebaseFirestore.instance.runTransaction((transaction) async {
-            await ref
-                .doc('123')
-                .transactionUpdate(transaction, genre: ['genre']);
+            ref.doc('123').transactionUpdate(transaction, genre: ['genre']);
           });
 
           expect(
