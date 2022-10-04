@@ -137,8 +137,6 @@ abstract class DateTimeQueryDocumentReference
     Transaction transaction, {
     DateTime time,
   });
-
-  Future<void> set(DateTimeQuery value);
 }
 
 class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
@@ -900,8 +898,6 @@ abstract class TimestampQueryDocumentReference
     Transaction transaction, {
     Timestamp time,
   });
-
-  Future<void> set(TimestampQuery value);
 }
 
 class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
@@ -1664,8 +1660,6 @@ abstract class GeoPointQueryDocumentReference
     Transaction transaction, {
     GeoPoint point,
   });
-
-  Future<void> set(GeoPointQuery value);
 }
 
 class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
@@ -2430,8 +2424,6 @@ abstract class DocumentReferenceQueryDocumentReference
     Transaction transaction, {
     DocumentReference<Map<String, dynamic>> ref,
   });
-
-  Future<void> set(DocumentReferenceQuery value);
 }
 
 class _$DocumentReferenceQueryDocumentReference

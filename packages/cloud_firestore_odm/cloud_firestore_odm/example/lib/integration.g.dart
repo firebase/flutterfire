@@ -132,8 +132,6 @@ abstract class ManualJsonDocumentReference
     Transaction transaction, {
     String value,
   });
-
-  Future<void> set(ManualJson value);
 }
 
 class _$ManualJsonDocumentReference
@@ -893,8 +891,6 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     String? lastName,
     int hashCode,
   });
-
-  Future<void> set(AdvancedJson value);
 }
 
 class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
@@ -1919,8 +1915,6 @@ abstract class _PrivateAdvancedJsonDocumentReference
     String? lastName,
     int hashCode,
   });
-
-  Future<void> set(_PrivateAdvancedJson value);
 }
 
 class _$_PrivateAdvancedJsonDocumentReference
@@ -2930,8 +2924,6 @@ abstract class EmptyModelDocumentReference
 
   @override
   Future<void> delete();
-
-  Future<void> set(EmptyModel value);
 }
 
 class _$EmptyModelDocumentReference

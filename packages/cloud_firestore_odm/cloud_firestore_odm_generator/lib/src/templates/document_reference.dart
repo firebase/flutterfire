@@ -24,8 +24,6 @@ abstract class ${data.documentReferenceName} extends FirestoreDocumentReference<
   Future<void> delete();
 
   ${_updatePrototype(data)}
-
-  Future<void> set(${data.type} value);
 }
 
 class _\$${data.documentReferenceName}

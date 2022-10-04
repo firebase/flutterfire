@@ -134,8 +134,6 @@ abstract class PersonDocumentReference
     String firstName,
     String lastName,
   });
-
-  Future<void> set(Person value);
 }
 
 class _$PersonDocumentReference
@@ -1020,8 +1018,6 @@ abstract class PublicRedirectedDocumentReference
     Transaction transaction, {
     String value,
   });
-
-  Future<void> set(PublicRedirected value);
 }
 
 class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<

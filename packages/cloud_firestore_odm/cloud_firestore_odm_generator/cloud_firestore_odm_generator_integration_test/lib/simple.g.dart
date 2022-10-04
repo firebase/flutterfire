@@ -130,8 +130,6 @@ abstract class ModelDocumentReference
     Transaction transaction, {
     String value,
   });
-
-  Future<void> set(Model value);
 }
 
 class _$ModelDocumentReference
@@ -891,8 +889,6 @@ abstract class NestedDocumentReference
     List<Object?>? objectList,
     List<dynamic>? dynamicList,
   });
-
-  Future<void> set(Nested value);
 }
 
 class _$NestedDocumentReference
@@ -2281,8 +2277,6 @@ abstract class SplitFileModelDocumentReference
 
   @override
   Future<void> delete();
-
-  Future<void> set(SplitFileModel value);
 }
 
 class _$SplitFileModelDocumentReference extends FirestoreDocumentReference<
@@ -2884,8 +2878,6 @@ abstract class EmptyModelDocumentReference
 
   @override
   Future<void> delete();
-
-  Future<void> set(EmptyModel value);
 }
 
 class _$EmptyModelDocumentReference
@@ -3496,8 +3488,6 @@ abstract class OptionalJsonDocumentReference extends FirestoreDocumentReference<
     Transaction transaction, {
     int value,
   });
-
-  Future<void> set(OptionalJson value);
 }
 
 class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
@@ -4251,8 +4241,6 @@ abstract class MixedJsonDocumentReference
     Transaction transaction, {
     int value,
   });
-
-  Future<void> set(MixedJson value);
 }
 
 class _$MixedJsonDocumentReference
@@ -5025,8 +5013,6 @@ abstract class RootDocumentReference
     String nonNullable,
     int? nullable,
   });
-
-  Future<void> set(Root value);
 }
 
 class _$RootDocumentReference
@@ -5936,8 +5922,6 @@ abstract class SubDocumentReference
     String nonNullable,
     int? nullable,
   });
-
-  Future<void> set(Sub value);
 }
 
 class _$SubDocumentReference
@@ -6836,8 +6820,6 @@ abstract class AsCamelCaseDocumentReference extends FirestoreDocumentReference<
     Transaction transaction, {
     num value,
   });
-
-  Future<void> set(AsCamelCase value);
 }
 
 class _$AsCamelCaseDocumentReference
@@ -7614,8 +7596,6 @@ abstract class CustomSubNameDocumentReference
     Transaction transaction, {
     num value,
   });
-
-  Future<void> set(CustomSubName value);
 }
 
 class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
@@ -8394,8 +8374,6 @@ abstract class ThisIsACustomPrefixDocumentReference
     Transaction transaction, {
     num value,
   });
-
-  Future<void> set(CustomClassPrefix value);
 }
 
 class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
@@ -9167,8 +9145,6 @@ abstract class ExplicitPathDocumentReference extends FirestoreDocumentReference<
     Transaction transaction, {
     num value,
   });
-
-  Future<void> set(ExplicitPath value);
 }
 
 class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
@@ -9945,8 +9921,6 @@ abstract class ExplicitSubPathDocumentReference
     Transaction transaction, {
     num value,
   });
-
-  Future<void> set(ExplicitSubPath value);
 }
 
 class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<

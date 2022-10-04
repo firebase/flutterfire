@@ -148,8 +148,6 @@ abstract class MovieDocumentReference
     String rated,
     List<String>? genre,
   });
-
-  Future<void> set(Movie value);
 }
 
 class _$MovieDocumentReference
@@ -1686,8 +1684,6 @@ abstract class CommentDocumentReference
     String authorName,
     String message,
   });
-
-  Future<void> set(Comment value);
 }
 
 class _$CommentDocumentReference
