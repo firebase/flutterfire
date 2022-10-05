@@ -30,8 +30,8 @@ const _iconSvgDark = '''
 ''';
 
 const _iconSrc = ThemedIconSrc(
-  _iconSvgDark,
   _iconSvgLight,
+  _iconSvgDark,
 );
 
 class AppleProviderButtonStyle extends ThemedOAuthProviderButtonStyle {
