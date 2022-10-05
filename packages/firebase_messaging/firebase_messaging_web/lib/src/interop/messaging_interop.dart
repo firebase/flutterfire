@@ -21,11 +21,6 @@ external PromiseJsImpl<bool> deleteToken(MessagingJsImpl messaging);
 external PromiseJsImpl<String> getToken(
     MessagingJsImpl messaging, GetTokenOptions? getTokenOptions);
 
-@JS()
-external PromiseJsImpl<void>
-    experimentalSetDeliveryMetricsExportedToBigQueryEnabled(
-        MessagingJsImpl messaging, bool enabled);
-
 @JS('isSupported')
 external PromiseJsImpl<bool> isSupported();
 

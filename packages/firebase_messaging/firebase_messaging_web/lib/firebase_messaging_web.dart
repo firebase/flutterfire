@@ -119,21 +119,6 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<void> setDeliveryMetricsExportToBigQuery(bool enabled) async {
-    _delegate;
-
-    if (!_initialized) {
-      // no-op for unsupported browsers
-      return;
-    }
-
-    return convertWebExceptions(
-      () => _delegate
-          .experimentalSetDeliveryMetricsExportedToBigQueryEnabled(enabled),
-    );
-  }
-
-  @override
   Stream<String> get onTokenRefresh {
     // onTokenRefresh is deprecated on web, however since this is a non-critical
     // api we just return a noop stream to keep functionality the same across
