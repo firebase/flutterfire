@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 /// {@template ui.oauth.themed_value}
 /// An object that is used to resolve the value base on the current theme
