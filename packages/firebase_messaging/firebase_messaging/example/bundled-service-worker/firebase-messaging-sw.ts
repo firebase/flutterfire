@@ -3,8 +3,10 @@ import {
   experimentalSetDeliveryMetricsExportedToBigQueryEnabled,
   getMessaging,
   isSupported,
-  onBackgroundMessage,
+  onBackgroundMessage
 } from 'firebase/messaging/sw';
+
+declare var self: ServiceWorkerGlobalScope;
 
 self.addEventListener('install', (event) => {
   console.log(self);
