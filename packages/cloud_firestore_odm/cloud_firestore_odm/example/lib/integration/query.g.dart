@@ -178,7 +178,7 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
     Object? time = _sentinel,
   }) async {
     final json = {
-      if (time != _sentinel) "time": time as DateTime,
+      if (time != _sentinel) 'time': time as DateTime,
     };
 
     return reference.update(json);
@@ -920,7 +920,7 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
     Object? time = _sentinel,
   }) async {
     final json = {
-      if (time != _sentinel) "time": time as Timestamp,
+      if (time != _sentinel) 'time': time as Timestamp,
     };
 
     return reference.update(json);
@@ -1663,7 +1663,7 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     Object? point = _sentinel,
   }) async {
     final json = {
-      if (point != _sentinel) "point": point as GeoPoint,
+      if (point != _sentinel) 'point': point as GeoPoint,
     };
 
     return reference.update(json);
@@ -2410,7 +2410,7 @@ class _$DocumentReferenceQueryDocumentReference
   }) async {
     final json = {
       if (ref != _sentinel)
-        "ref": ref as DocumentReference<Map<String, dynamic>>,
+        'ref': ref as DocumentReference<Map<String, dynamic>>,
     };
 
     return reference.update(json);

@@ -171,7 +171,7 @@ class _$ModelDocumentReference
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as String,
+      if (value != _sentinel) 'value': value as String,
     };
 
     return reference.update(json);
@@ -912,13 +912,13 @@ class _$NestedDocumentReference
     Object? dynamicList = _sentinel,
   }) async {
     final json = {
-      if (simple != _sentinel) "simple": simple as int?,
-      if (boolList != _sentinel) "boolList": boolList as List<bool>?,
-      if (stringList != _sentinel) "stringList": stringList as List<String>?,
-      if (numList != _sentinel) "numList": numList as List<num>?,
-      if (objectList != _sentinel) "objectList": objectList as List<Object?>?,
+      if (simple != _sentinel) 'simple': simple as int?,
+      if (boolList != _sentinel) 'boolList': boolList as List<bool>?,
+      if (stringList != _sentinel) 'stringList': stringList as List<String>?,
+      if (numList != _sentinel) 'numList': numList as List<num>?,
+      if (objectList != _sentinel) 'objectList': objectList as List<Object?>?,
       if (dynamicList != _sentinel)
-        "dynamicList": dynamicList as List<dynamic>?,
+        'dynamicList': dynamicList as List<dynamic>?,
     };
 
     return reference.update(json);
@@ -3472,7 +3472,7 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as int,
+      if (value != _sentinel) 'value': value as int,
     };
 
     return reference.update(json);
@@ -4207,7 +4207,7 @@ class _$MixedJsonDocumentReference
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as int,
+      if (value != _sentinel) 'value': value as int,
     };
 
     return reference.update(json);
@@ -4980,8 +4980,8 @@ class _$RootDocumentReference
     Object? nullable = _sentinel,
   }) async {
     final json = {
-      if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
-      if (nullable != _sentinel) "nullable": nullable as int?,
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
     };
 
     return reference.update(json);
@@ -5854,8 +5854,8 @@ class _$SubDocumentReference
     Object? nullable = _sentinel,
   }) async {
     final json = {
-      if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
-      if (nullable != _sentinel) "nullable": nullable as int?,
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
     };
 
     return reference.update(json);
@@ -6731,7 +6731,7 @@ class _$AsCamelCaseDocumentReference
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
     };
 
     return reference.update(json);
@@ -7489,7 +7489,7 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
     };
 
     return reference.update(json);
@@ -8248,7 +8248,7 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
     };
 
     return reference.update(json);
@@ -9000,7 +9000,7 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
     };
 
     return reference.update(json);
@@ -9758,7 +9758,7 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
     };
 
     return reference.update(json);
@@ -10343,10 +10343,10 @@ class ExplicitSubPathQueryDocumentSnapshot
 // **************************************************************************
 
 void _$assertMinValidation(MinValidation instance) {
-  const Min(0).validate(instance.intNbr, "intNbr");
-  const Max(42).validate(instance.intNbr, "intNbr");
-  const Min(10).validate(instance.doubleNbr, "doubleNbr");
-  const Min(-10).validate(instance.numNbr, "numNbr");
+  const Min(0).validate(instance.intNbr, 'intNbr');
+  const Max(42).validate(instance.intNbr, 'intNbr');
+  const Min(10).validate(instance.doubleNbr, 'doubleNbr');
+  const Min(-10).validate(instance.numNbr, 'numNbr');
 }
 
 // **************************************************************************

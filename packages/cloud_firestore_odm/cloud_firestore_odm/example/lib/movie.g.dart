@@ -193,13 +193,13 @@ class _$MovieDocumentReference
     Object? genre = _sentinel,
   }) async {
     final json = {
-      if (poster != _sentinel) "poster": poster as String,
-      if (likes != _sentinel) "likes": likes as int,
-      if (title != _sentinel) "title": title as String,
-      if (year != _sentinel) "year": year as int,
-      if (runtime != _sentinel) "runtime": runtime as String,
-      if (rated != _sentinel) "rated": rated as String,
-      if (genre != _sentinel) "genre": genre as List<String>?,
+      if (poster != _sentinel) 'poster': poster as String,
+      if (likes != _sentinel) 'likes': likes as int,
+      if (title != _sentinel) 'title': title as String,
+      if (year != _sentinel) 'year': year as int,
+      if (runtime != _sentinel) 'runtime': runtime as String,
+      if (rated != _sentinel) 'rated': rated as String,
+      if (genre != _sentinel) 'genre': genre as List<String>?,
     };
 
     return reference.update(json);
@@ -1694,8 +1694,8 @@ class _$CommentDocumentReference
     Object? message = _sentinel,
   }) async {
     final json = {
-      if (authorName != _sentinel) "authorName": authorName as String,
-      if (message != _sentinel) "message": message as String,
+      if (authorName != _sentinel) 'authorName': authorName as String,
+      if (message != _sentinel) 'message': message as String,
     };
 
     return reference.update(json);
@@ -2401,8 +2401,8 @@ class CommentQueryDocumentSnapshot
 // **************************************************************************
 
 void _$assertMovie(Movie instance) {
-  const Min(0).validate(instance.likes, "likes");
-  const Min(0).validate(instance.year, "year");
+  const Min(0).validate(instance.likes, 'likes');
+  const Min(0).validate(instance.year, 'year');
 }
 
 // **************************************************************************

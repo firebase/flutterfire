@@ -175,8 +175,8 @@ class _$PersonDocumentReference
     Object? lastName = _sentinel,
   }) async {
     final json = {
-      if (firstName != _sentinel) "firstName": firstName as String,
-      if (lastName != _sentinel) "lastName": lastName as String,
+      if (firstName != _sentinel) 'firstName': firstName as String,
+      if (lastName != _sentinel) 'lastName': lastName as String,
     };
 
     return reference.update(json);
@@ -1038,7 +1038,7 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as String,
+      if (value != _sentinel) 'value': value as String,
     };
 
     return reference.update(json);
