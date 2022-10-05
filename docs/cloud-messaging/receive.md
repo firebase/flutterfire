@@ -351,7 +351,7 @@ the API or the Notifications composer.
 To enable the export, first follow the steps [described here](https://firebase.google.com/docs/cloud-messaging/understand-delivery?platform=ios#bigquery-data-export),
 then follow these instructions:
 
-### Android and Web
+### Android
 
 You can use the following code:
 ```dart
@@ -384,3 +384,19 @@ For iOS, you need to change the `AppDelegate.m` with the following content.
 
 @end
 ``` 
+
+### Web
+
+For Web, you need to change your service worker in order to use the v9 version of the SDK.
+The v9 version needs to be bundled, so you need to use a bundler like `esbuild` for instance 
+to get the service worker to work.
+See [the example app](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/bundled-service-worker) to see how to achieve this.
+
+Once you've migrated to the v9 SDK, you can use the following code:
+
+``` typescript
+const messaging = getMessaging(app);
+experimentalSetDeliveryMetricsExportedToBigQueryEnabled(messaging, true);
+```
+
+Don't forget to run `yarn build` in order to export the new version of your service worker to the `web` folder.
