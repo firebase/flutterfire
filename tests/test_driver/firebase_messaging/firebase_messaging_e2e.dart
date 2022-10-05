@@ -218,6 +218,8 @@ void setupTests() {
           () async {
             await messaging.setDeliveryMetricsExportToBigQuery(true);
           },
+          // Web is skipped because it has to be setup in the service worker
+          skip: kIsWeb,
         );
       });
     },
