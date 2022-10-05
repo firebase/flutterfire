@@ -9,7 +9,7 @@ part of 'query.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_double_quotes
 
 class _Sentinel {
   const _Sentinel();
@@ -553,7 +553,7 @@ class _$DateTimeQueryQuery
     return _$DateTimeQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$DateTimeQueryFieldMap["time"]!,
+        _$DateTimeQueryFieldMap['time']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -652,7 +652,7 @@ class _$DateTimeQueryQuery
     DateTimeQueryDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$DateTimeQueryFieldMap["time"]!, descending: descending);
+        .orderBy(_$DateTimeQueryFieldMap['time']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1295,7 +1295,7 @@ class _$TimestampQueryQuery
     return _$TimestampQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$TimestampQueryFieldMap["time"]!,
+        _$TimestampQueryFieldMap['time']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1394,7 +1394,7 @@ class _$TimestampQueryQuery
     TimestampQueryDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$TimestampQueryFieldMap["time"]!, descending: descending);
+        .orderBy(_$TimestampQueryFieldMap['time']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -2038,7 +2038,7 @@ class _$GeoPointQueryQuery
     return _$GeoPointQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$GeoPointQueryFieldMap["point"]!,
+        _$GeoPointQueryFieldMap['point']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2137,7 +2137,7 @@ class _$GeoPointQueryQuery
     GeoPointQueryDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$GeoPointQueryFieldMap["point"]!, descending: descending);
+        .orderBy(_$GeoPointQueryFieldMap['point']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -2789,7 +2789,7 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
     return _$DocumentReferenceQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$DocumentReferenceQueryFieldMap["ref"]!,
+        _$DocumentReferenceQueryFieldMap['ref']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2888,7 +2888,7 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
     DocumentReferenceQueryDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$DocumentReferenceQueryFieldMap["ref"]!,
+        _$DocumentReferenceQueryFieldMap['ref']!,
         descending: descending);
     var queryCursor = $queryCursor;
 

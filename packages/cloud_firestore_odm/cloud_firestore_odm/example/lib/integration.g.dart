@@ -9,7 +9,7 @@ part of 'integration.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_double_quotes
 
 class _Sentinel {
   const _Sentinel();
@@ -547,7 +547,7 @@ class _$ManualJsonQuery
     return _$ManualJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        "value",
+        'value',
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -646,7 +646,7 @@ class _$ManualJsonQuery
     ManualJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query =
-        $referenceWithoutCursor.orderBy("value", descending: descending);
+        $referenceWithoutCursor.orderBy('value', descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1337,7 +1337,7 @@ class _$AdvancedJsonQuery
     return _$AdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AdvancedJsonFieldMap["firstName"]!,
+        _$AdvancedJsonFieldMap['firstName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1366,7 +1366,7 @@ class _$AdvancedJsonQuery
     return _$AdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AdvancedJsonFieldMap["lastName"]!,
+        _$AdvancedJsonFieldMap['lastName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1395,7 +1395,7 @@ class _$AdvancedJsonQuery
     return _$AdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AdvancedJsonFieldMap["hashCode"]!,
+        _$AdvancedJsonFieldMap['hashCode']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1494,7 +1494,7 @@ class _$AdvancedJsonQuery
     AdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$AdvancedJsonFieldMap["firstName"]!, descending: descending);
+        .orderBy(_$AdvancedJsonFieldMap['firstName']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1566,7 +1566,7 @@ class _$AdvancedJsonQuery
     AdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$AdvancedJsonFieldMap["lastName"]!, descending: descending);
+        .orderBy(_$AdvancedJsonFieldMap['lastName']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1638,7 +1638,7 @@ class _$AdvancedJsonQuery
     AdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$AdvancedJsonFieldMap["hashCode"]!, descending: descending);
+        .orderBy(_$AdvancedJsonFieldMap['hashCode']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -2341,7 +2341,7 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     return _$_PrivateAdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$PrivateAdvancedJsonFieldMap["firstName"]!,
+        _$PrivateAdvancedJsonFieldMap['firstName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2370,7 +2370,7 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     return _$_PrivateAdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$PrivateAdvancedJsonFieldMap["lastName"]!,
+        _$PrivateAdvancedJsonFieldMap['lastName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2399,7 +2399,7 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     return _$_PrivateAdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$PrivateAdvancedJsonFieldMap["hashCode"]!,
+        _$PrivateAdvancedJsonFieldMap['hashCode']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2498,7 +2498,7 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$PrivateAdvancedJsonFieldMap["firstName"]!,
+        _$PrivateAdvancedJsonFieldMap['firstName']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2571,7 +2571,7 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$PrivateAdvancedJsonFieldMap["lastName"]!,
+        _$PrivateAdvancedJsonFieldMap['lastName']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2644,7 +2644,7 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$PrivateAdvancedJsonFieldMap["hashCode"]!,
+        _$PrivateAdvancedJsonFieldMap['hashCode']!,
         descending: descending);
     var queryCursor = $queryCursor;
 

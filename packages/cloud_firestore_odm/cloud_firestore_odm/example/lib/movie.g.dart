@@ -9,7 +9,7 @@ part of 'movie.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_double_quotes
 
 class _Sentinel {
   const _Sentinel();
@@ -709,7 +709,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["poster"]!,
+        _$MovieFieldMap['poster']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -738,7 +738,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["likes"]!,
+        _$MovieFieldMap['likes']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -767,7 +767,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["title"]!,
+        _$MovieFieldMap['title']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -796,7 +796,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["year"]!,
+        _$MovieFieldMap['year']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -825,7 +825,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["runtime"]!,
+        _$MovieFieldMap['runtime']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -854,7 +854,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["rated"]!,
+        _$MovieFieldMap['rated']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -883,7 +883,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["genre"]!,
+        _$MovieFieldMap['genre']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -981,7 +981,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["poster"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['poster']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1053,7 +1053,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["likes"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['likes']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1125,7 +1125,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["title"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['title']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1197,7 +1197,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["year"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['year']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1269,7 +1269,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["runtime"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['runtime']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1341,7 +1341,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["rated"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['rated']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1413,7 +1413,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["genre"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['genre']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2091,7 +2091,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     return _$CommentQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$CommentFieldMap["authorName"]!,
+        _$CommentFieldMap['authorName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2120,7 +2120,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     return _$CommentQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$CommentFieldMap["message"]!,
+        _$CommentFieldMap['message']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2219,7 +2219,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     CommentDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$CommentFieldMap["authorName"]!, descending: descending);
+        .orderBy(_$CommentFieldMap['authorName']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -2290,7 +2290,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     CommentDocumentSnapshot? endBeforeDocument,
     CommentDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$CommentFieldMap["message"]!,
+    final query = $referenceWithoutCursor.orderBy(_$CommentFieldMap['message']!,
         descending: descending);
     var queryCursor = $queryCursor;
 

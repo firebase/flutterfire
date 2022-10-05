@@ -7,7 +7,7 @@ part of 'simple.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_double_quotes
 
 class _Sentinel {
   const _Sentinel();
@@ -65,8 +65,8 @@ class _$ModelCollectionReference extends _$ModelQuery
   }
 
   _$ModelCollectionReference._(
-    CollectionReference<Model> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<Model> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -337,12 +337,9 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     implements ModelQuery {
   _$ModelQuery(
     this._collection, {
-    required Query<Model> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -546,7 +543,7 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     return _$ModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$ModelFieldMap["value"]!,
+        _$ModelFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -644,7 +641,7 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     ModelDocumentSnapshot? endBeforeDocument,
     ModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$ModelFieldMap["value"]!,
+    final query = $referenceWithoutCursor.orderBy(_$ModelFieldMap['value']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -799,8 +796,8 @@ class _$NestedCollectionReference extends _$NestedQuery
   }
 
   _$NestedCollectionReference._(
-    CollectionReference<Nested> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<Nested> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -1203,12 +1200,9 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     implements NestedQuery {
   _$NestedQuery(
     this._collection, {
-    required Query<Nested> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -1412,7 +1406,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["simple"]!,
+        _$NestedFieldMap['simple']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1441,7 +1435,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["boolList"]!,
+        _$NestedFieldMap['boolList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1470,7 +1464,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["stringList"]!,
+        _$NestedFieldMap['stringList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1499,7 +1493,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["numList"]!,
+        _$NestedFieldMap['numList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1528,7 +1522,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["objectList"]!,
+        _$NestedFieldMap['objectList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1557,7 +1551,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["dynamicList"]!,
+        _$NestedFieldMap['dynamicList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1655,7 +1649,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap["simple"]!,
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['simple']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1727,7 +1721,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap["boolList"]!,
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['boolList']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1800,7 +1794,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$NestedFieldMap["stringList"]!, descending: descending);
+        .orderBy(_$NestedFieldMap['stringList']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1871,7 +1865,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap["numList"]!,
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['numList']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1944,7 +1938,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$NestedFieldMap["objectList"]!, descending: descending);
+        .orderBy(_$NestedFieldMap['objectList']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -2016,7 +2010,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$NestedFieldMap["dynamicList"]!, descending: descending);
+        .orderBy(_$NestedFieldMap['dynamicList']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -2171,8 +2165,8 @@ class _$SplitFileModelCollectionReference extends _$SplitFileModelQuery
   }
 
   _$SplitFileModelCollectionReference._(
-    CollectionReference<SplitFileModel> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<SplitFileModel> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -2413,12 +2407,9 @@ class _$SplitFileModelQuery
     implements SplitFileModelQuery {
   _$SplitFileModelQuery(
     this._collection, {
-    required Query<SplitFileModel> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -2776,8 +2767,8 @@ class _$EmptyModelCollectionReference extends _$EmptyModelQuery
   }
 
   _$EmptyModelCollectionReference._(
-    CollectionReference<EmptyModel> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<EmptyModel> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -3013,12 +3004,9 @@ class _$EmptyModelQuery
     implements EmptyModelQuery {
   _$EmptyModelQuery(
     this._collection, {
-    required Query<EmptyModel> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -3375,8 +3363,8 @@ class _$OptionalJsonCollectionReference extends _$OptionalJsonQuery
   }
 
   _$OptionalJsonCollectionReference._(
-    CollectionReference<OptionalJson> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<OptionalJson> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -3653,12 +3641,9 @@ class _$OptionalJsonQuery
     implements OptionalJsonQuery {
   _$OptionalJsonQuery(
     this._collection, {
-    required Query<OptionalJson> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -3862,7 +3847,7 @@ class _$OptionalJsonQuery
     return _$OptionalJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$OptionalJsonFieldMap["value"]!,
+        _$OptionalJsonFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -3961,7 +3946,7 @@ class _$OptionalJsonQuery
     OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$OptionalJsonFieldMap["value"]!, descending: descending);
+        .orderBy(_$OptionalJsonFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4116,8 +4101,8 @@ class _$MixedJsonCollectionReference extends _$MixedJsonQuery
   }
 
   _$MixedJsonCollectionReference._(
-    CollectionReference<MixedJson> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<MixedJson> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -4389,12 +4374,9 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     implements MixedJsonQuery {
   _$MixedJsonQuery(
     this._collection, {
-    required Query<MixedJson> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -4598,7 +4580,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     return _$MixedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MixedJsonFieldMap["value"]!,
+        _$MixedJsonFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4696,7 +4678,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     MixedJsonDocumentSnapshot? endBeforeDocument,
     MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MixedJsonFieldMap["value"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MixedJsonFieldMap['value']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -4852,8 +4834,8 @@ class _$RootCollectionReference extends _$RootQuery
   }
 
   _$RootCollectionReference._(
-    CollectionReference<Root> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<Root> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -5188,12 +5170,9 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     implements RootQuery {
   _$RootQuery(
     this._collection, {
-    required Query<Root> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -5397,7 +5376,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     return _$RootQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$RootFieldMap["nonNullable"]!,
+        _$RootFieldMap['nonNullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5426,7 +5405,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     return _$RootQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$RootFieldMap["nullable"]!,
+        _$RootFieldMap['nullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5525,7 +5504,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     RootDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$RootFieldMap["nonNullable"]!, descending: descending);
+        .orderBy(_$RootFieldMap['nonNullable']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -5596,7 +5575,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$RootFieldMap["nullable"]!,
+    final query = $referenceWithoutCursor.orderBy(_$RootFieldMap['nullable']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -5754,8 +5733,8 @@ class _$SubCollectionReference extends _$SubQuery
 
   _$SubCollectionReference._(
     this.parent,
-    CollectionReference<Sub> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<Sub> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   @override
   final RootDocumentReference parent;
@@ -6065,12 +6044,9 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     implements SubQuery {
   _$SubQuery(
     this._collection, {
-    required Query<Sub> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -6274,7 +6250,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     return _$SubQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$SubFieldMap["nonNullable"]!,
+        _$SubFieldMap['nonNullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -6303,7 +6279,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     return _$SubQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$SubFieldMap["nullable"]!,
+        _$SubFieldMap['nullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -6401,7 +6377,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap["nonNullable"]!,
+    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap['nonNullable']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -6473,7 +6449,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap["nullable"]!,
+    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap['nullable']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -6633,8 +6609,8 @@ class _$AsCamelCaseCollectionReference extends _$AsCamelCaseQuery
 
   _$AsCamelCaseCollectionReference._(
     this.parent,
-    CollectionReference<AsCamelCase> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<AsCamelCase> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   @override
   final RootDocumentReference parent;
@@ -6924,12 +6900,9 @@ class _$AsCamelCaseQuery
     implements AsCamelCaseQuery {
   _$AsCamelCaseQuery(
     this._collection, {
-    required Query<AsCamelCase> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -7133,7 +7106,7 @@ class _$AsCamelCaseQuery
     return _$AsCamelCaseQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AsCamelCaseFieldMap["value"]!,
+        _$AsCamelCaseFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -7232,7 +7205,7 @@ class _$AsCamelCaseQuery
     AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$AsCamelCaseFieldMap["value"]!, descending: descending);
+        .orderBy(_$AsCamelCaseFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -7393,8 +7366,8 @@ class _$CustomSubNameCollectionReference extends _$CustomSubNameQuery
 
   _$CustomSubNameCollectionReference._(
     this.parent,
-    CollectionReference<CustomSubName> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<CustomSubName> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   @override
   final RootDocumentReference parent;
@@ -7685,12 +7658,9 @@ class _$CustomSubNameQuery
     implements CustomSubNameQuery {
   _$CustomSubNameQuery(
     this._collection, {
-    required Query<CustomSubName> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -7894,7 +7864,7 @@ class _$CustomSubNameQuery
     return _$CustomSubNameQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$CustomSubNameFieldMap["value"]!,
+        _$CustomSubNameFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -7993,7 +7963,7 @@ class _$CustomSubNameQuery
     CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$CustomSubNameFieldMap["value"]!, descending: descending);
+        .orderBy(_$CustomSubNameFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -8155,8 +8125,8 @@ class _$ThisIsACustomPrefixCollectionReference
 
   _$ThisIsACustomPrefixCollectionReference._(
     this.parent,
-    CollectionReference<CustomClassPrefix> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<CustomClassPrefix> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   @override
   final RootDocumentReference parent;
@@ -8448,12 +8418,9 @@ class _$ThisIsACustomPrefixQuery
     implements ThisIsACustomPrefixQuery {
   _$ThisIsACustomPrefixQuery(
     this._collection, {
-    required Query<CustomClassPrefix> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -8659,7 +8626,7 @@ class _$ThisIsACustomPrefixQuery
     return _$ThisIsACustomPrefixQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$CustomClassPrefixFieldMap["value"]!,
+        _$CustomClassPrefixFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -8758,7 +8725,7 @@ class _$ThisIsACustomPrefixQuery
     ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$CustomClassPrefixFieldMap["value"]!, descending: descending);
+        .orderBy(_$CustomClassPrefixFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -8914,8 +8881,8 @@ class _$ExplicitPathCollectionReference extends _$ExplicitPathQuery
   }
 
   _$ExplicitPathCollectionReference._(
-    CollectionReference<ExplicitPath> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<ExplicitPath> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -9202,12 +9169,9 @@ class _$ExplicitPathQuery
     implements ExplicitPathQuery {
   _$ExplicitPathQuery(
     this._collection, {
-    required Query<ExplicitPath> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -9411,7 +9375,7 @@ class _$ExplicitPathQuery
     return _$ExplicitPathQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$ExplicitPathFieldMap["value"]!,
+        _$ExplicitPathFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -9510,7 +9474,7 @@ class _$ExplicitPathQuery
     ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$ExplicitPathFieldMap["value"]!, descending: descending);
+        .orderBy(_$ExplicitPathFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -9671,8 +9635,8 @@ class _$ExplicitSubPathCollectionReference extends _$ExplicitSubPathQuery
 
   _$ExplicitSubPathCollectionReference._(
     this.parent,
-    CollectionReference<ExplicitSubPath> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<ExplicitSubPath> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   @override
   final ExplicitPathDocumentReference parent;
@@ -9963,12 +9927,9 @@ class _$ExplicitSubPathQuery
     implements ExplicitSubPathQuery {
   _$ExplicitSubPathQuery(
     this._collection, {
-    required Query<ExplicitSubPath> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -10172,7 +10133,7 @@ class _$ExplicitSubPathQuery
     return _$ExplicitSubPathQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$ExplicitSubPathFieldMap["value"]!,
+        _$ExplicitSubPathFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -10271,7 +10232,7 @@ class _$ExplicitSubPathQuery
     ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$ExplicitSubPathFieldMap["value"]!, descending: descending);
+        .orderBy(_$ExplicitSubPathFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
