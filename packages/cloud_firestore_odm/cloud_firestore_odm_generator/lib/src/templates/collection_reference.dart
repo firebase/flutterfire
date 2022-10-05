@@ -165,8 +165,8 @@ ${_parentProperty(data)}
 
   ${data.collectionReferenceImplName}._(
     this.parent,
-    CollectionReference<${data.type}> super.reference,
-  ) : super(\$referenceWithoutCursor: reference);
+    CollectionReference<${data.type}> reference,
+  ) : super(reference, \$referenceWithoutCursor: reference);
 ''';
   }
 
@@ -196,8 +196,8 @@ factory ${data.collectionReferenceInterfaceName}([
   }
 
   ${data.collectionReferenceImplName}._(
-    CollectionReference<${data.type}> super.reference,
-  ) : super(\$referenceWithoutCursor: reference);
+    CollectionReference<${data.type}> reference,
+  ) : super(reference, \$referenceWithoutCursor: reference);
 ''';
   }
 }

@@ -9,7 +9,7 @@ part of 'integration.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_double_quotes
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -67,8 +67,8 @@ class _$ManualJsonCollectionReference extends _$ManualJsonQuery
   }
 
   _$ManualJsonCollectionReference._(
-    CollectionReference<ManualJson> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<ManualJson> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -341,9 +341,12 @@ class _$ManualJsonQuery
     implements ManualJsonQuery {
   _$ManualJsonQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<ManualJson> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -801,8 +804,8 @@ class _$AdvancedJsonCollectionReference extends _$AdvancedJsonQuery
   }
 
   _$AdvancedJsonCollectionReference._(
-    CollectionReference<AdvancedJson> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<AdvancedJson> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -1131,9 +1134,12 @@ class _$AdvancedJsonQuery
     implements AdvancedJsonQuery {
   _$AdvancedJsonQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<AdvancedJson> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -1799,8 +1805,8 @@ class _$_PrivateAdvancedJsonCollectionReference
   }
 
   _$_PrivateAdvancedJsonCollectionReference._(
-    CollectionReference<_PrivateAdvancedJson> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<_PrivateAdvancedJson> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -2133,9 +2139,12 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     _PrivateAdvancedJsonQuerySnapshot> implements _PrivateAdvancedJsonQuery {
   _$_PrivateAdvancedJsonQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<_PrivateAdvancedJson> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -2801,8 +2810,8 @@ class _$EmptyModelCollectionReference extends _$EmptyModelQuery
   }
 
   _$EmptyModelCollectionReference._(
-    CollectionReference<EmptyModel> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<EmptyModel> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -3038,9 +3047,12 @@ class _$EmptyModelQuery
     implements EmptyModelQuery {
   _$EmptyModelQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<EmptyModel> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 

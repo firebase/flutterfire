@@ -9,7 +9,7 @@ part of 'query.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_double_quotes
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -68,8 +68,8 @@ class _$DateTimeQueryCollectionReference extends _$DateTimeQueryQuery
   }
 
   _$DateTimeQueryCollectionReference._(
-    CollectionReference<DateTimeQuery> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<DateTimeQuery> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -347,9 +347,12 @@ class _$DateTimeQueryQuery
     implements DateTimeQueryQuery {
   _$DateTimeQueryQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<DateTimeQuery> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -810,8 +813,8 @@ class _$TimestampQueryCollectionReference extends _$TimestampQueryQuery
   }
 
   _$TimestampQueryCollectionReference._(
-    CollectionReference<TimestampQuery> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<TimestampQuery> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -1089,9 +1092,12 @@ class _$TimestampQueryQuery
     implements TimestampQueryQuery {
   _$TimestampQueryQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<TimestampQuery> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -1553,8 +1559,8 @@ class _$GeoPointQueryCollectionReference extends _$GeoPointQueryQuery
   }
 
   _$GeoPointQueryCollectionReference._(
-    CollectionReference<GeoPointQuery> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<GeoPointQuery> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -1832,9 +1838,12 @@ class _$GeoPointQueryQuery
     implements GeoPointQueryQuery {
   _$GeoPointQueryQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<GeoPointQuery> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -2297,8 +2306,8 @@ class _$DocumentReferenceQueryCollectionReference
   }
 
   _$DocumentReferenceQueryCollectionReference._(
-    CollectionReference<DocumentReferenceQuery> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<DocumentReferenceQuery> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -2581,9 +2590,12 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
     implements DocumentReferenceQueryQuery {
   _$DocumentReferenceQueryQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<DocumentReferenceQuery> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 

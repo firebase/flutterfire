@@ -7,7 +7,7 @@ part of 'simple.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_double_quotes
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -65,8 +65,8 @@ class _$ModelCollectionReference extends _$ModelQuery
   }
 
   _$ModelCollectionReference._(
-    CollectionReference<Model> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<Model> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -337,9 +337,12 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     implements ModelQuery {
   _$ModelQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<Model> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -796,8 +799,8 @@ class _$NestedCollectionReference extends _$NestedQuery
   }
 
   _$NestedCollectionReference._(
-    CollectionReference<Nested> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<Nested> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -1200,9 +1203,12 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     implements NestedQuery {
   _$NestedQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<Nested> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -2165,8 +2171,8 @@ class _$SplitFileModelCollectionReference extends _$SplitFileModelQuery
   }
 
   _$SplitFileModelCollectionReference._(
-    CollectionReference<SplitFileModel> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<SplitFileModel> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -2407,9 +2413,12 @@ class _$SplitFileModelQuery
     implements SplitFileModelQuery {
   _$SplitFileModelQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<SplitFileModel> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -2767,8 +2776,8 @@ class _$EmptyModelCollectionReference extends _$EmptyModelQuery
   }
 
   _$EmptyModelCollectionReference._(
-    CollectionReference<EmptyModel> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<EmptyModel> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -3004,9 +3013,12 @@ class _$EmptyModelQuery
     implements EmptyModelQuery {
   _$EmptyModelQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<EmptyModel> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -3363,8 +3375,8 @@ class _$OptionalJsonCollectionReference extends _$OptionalJsonQuery
   }
 
   _$OptionalJsonCollectionReference._(
-    CollectionReference<OptionalJson> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<OptionalJson> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -3641,9 +3653,12 @@ class _$OptionalJsonQuery
     implements OptionalJsonQuery {
   _$OptionalJsonQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<OptionalJson> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -4101,8 +4116,8 @@ class _$MixedJsonCollectionReference extends _$MixedJsonQuery
   }
 
   _$MixedJsonCollectionReference._(
-    CollectionReference<MixedJson> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<MixedJson> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -4374,9 +4389,12 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     implements MixedJsonQuery {
   _$MixedJsonQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<MixedJson> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -4834,8 +4852,8 @@ class _$RootCollectionReference extends _$RootQuery
   }
 
   _$RootCollectionReference._(
-    CollectionReference<Root> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<Root> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -5170,9 +5188,12 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     implements RootQuery {
   _$RootQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<Root> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -5733,8 +5754,8 @@ class _$SubCollectionReference extends _$SubQuery
 
   _$SubCollectionReference._(
     this.parent,
-    CollectionReference<Sub> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<Sub> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   @override
   final RootDocumentReference parent;
@@ -6044,9 +6065,12 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     implements SubQuery {
   _$SubQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<Sub> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -6609,8 +6633,8 @@ class _$AsCamelCaseCollectionReference extends _$AsCamelCaseQuery
 
   _$AsCamelCaseCollectionReference._(
     this.parent,
-    CollectionReference<AsCamelCase> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<AsCamelCase> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   @override
   final RootDocumentReference parent;
@@ -6900,9 +6924,12 @@ class _$AsCamelCaseQuery
     implements AsCamelCaseQuery {
   _$AsCamelCaseQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<AsCamelCase> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -7366,8 +7393,8 @@ class _$CustomSubNameCollectionReference extends _$CustomSubNameQuery
 
   _$CustomSubNameCollectionReference._(
     this.parent,
-    CollectionReference<CustomSubName> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<CustomSubName> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   @override
   final RootDocumentReference parent;
@@ -7658,9 +7685,12 @@ class _$CustomSubNameQuery
     implements CustomSubNameQuery {
   _$CustomSubNameQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<CustomSubName> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -8125,8 +8155,8 @@ class _$ThisIsACustomPrefixCollectionReference
 
   _$ThisIsACustomPrefixCollectionReference._(
     this.parent,
-    CollectionReference<CustomClassPrefix> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<CustomClassPrefix> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   @override
   final RootDocumentReference parent;
@@ -8418,9 +8448,12 @@ class _$ThisIsACustomPrefixQuery
     implements ThisIsACustomPrefixQuery {
   _$ThisIsACustomPrefixQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<CustomClassPrefix> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -8881,8 +8914,8 @@ class _$ExplicitPathCollectionReference extends _$ExplicitPathQuery
   }
 
   _$ExplicitPathCollectionReference._(
-    CollectionReference<ExplicitPath> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<ExplicitPath> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -9169,9 +9202,12 @@ class _$ExplicitPathQuery
     implements ExplicitPathQuery {
   _$ExplicitPathQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<ExplicitPath> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
@@ -9635,8 +9671,8 @@ class _$ExplicitSubPathCollectionReference extends _$ExplicitSubPathQuery
 
   _$ExplicitSubPathCollectionReference._(
     this.parent,
-    CollectionReference<ExplicitSubPath> super.reference,
-  ) : super($referenceWithoutCursor: reference);
+    CollectionReference<ExplicitSubPath> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   @override
   final ExplicitPathDocumentReference parent;
@@ -9927,9 +9963,12 @@ class _$ExplicitSubPathQuery
     implements ExplicitSubPathQuery {
   _$ExplicitSubPathQuery(
     this._collection, {
-    required super.$referenceWithoutCursor,
-    super.$queryCursor,
-  });
+    required Query<ExplicitSubPath> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
 
