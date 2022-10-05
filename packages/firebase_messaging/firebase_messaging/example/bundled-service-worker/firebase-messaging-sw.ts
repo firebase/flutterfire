@@ -29,8 +29,6 @@ isSupported().then((isSupported) => {
 
     experimentalSetDeliveryMetricsExportedToBigQueryEnabled(messaging, true);
 
-    console.log('experimental working');
-
     onBackgroundMessage(messaging, ({ notification: notification }) => {
       const { title, body, image } = notification ?? {};
 
