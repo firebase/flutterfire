@@ -90,12 +90,9 @@ class ${data.queryReferenceImplName}
     implements ${data.queryReferenceInterfaceName} {
   ${data.queryReferenceImplName}(
     this._collection, {
-    required Query<${data.type}> \$referenceWithoutCursor,
-    \$QueryCursor \$queryCursor = const \$QueryCursor(),
-  })  : super(
-          \$referenceWithoutCursor: \$referenceWithoutCursor,
-          \$queryCursor: \$queryCursor,
-        );
+    required super.\$referenceWithoutCursor,
+    super.\$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 

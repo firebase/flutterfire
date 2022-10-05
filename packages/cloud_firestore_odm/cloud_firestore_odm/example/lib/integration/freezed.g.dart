@@ -9,7 +9,7 @@ part of 'freezed.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas
 
 class _Sentinel {
   const _Sentinel();
@@ -67,8 +67,8 @@ class _$PersonCollectionReference extends _$PersonQuery
   }
 
   _$PersonCollectionReference._(
-    CollectionReference<Person> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<Person> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -366,12 +366,9 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
     implements PersonQuery {
   _$PersonQuery(
     this._collection, {
-    required Query<Person> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -931,8 +928,8 @@ class _$PublicRedirectedCollectionReference extends _$PublicRedirectedQuery
   }
 
   _$PublicRedirectedCollectionReference._(
-    CollectionReference<PublicRedirected> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<PublicRedirected> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -1210,12 +1207,9 @@ class _$PublicRedirectedQuery
     implements PublicRedirectedQuery {
   _$PublicRedirectedQuery(
     this._collection, {
-    required Query<PublicRedirected> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 

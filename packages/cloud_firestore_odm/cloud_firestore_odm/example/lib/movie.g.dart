@@ -9,7 +9,7 @@ part of 'movie.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas
 
 class _Sentinel {
   const _Sentinel();
@@ -67,8 +67,8 @@ class _$MovieCollectionReference extends _$MovieQuery
   }
 
   _$MovieCollectionReference._(
-    CollectionReference<Movie> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<Movie> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -503,12 +503,9 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     implements MovieQuery {
   _$MovieQuery(
     this._collection, {
-    required Query<Movie> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
@@ -1576,8 +1573,8 @@ class _$CommentCollectionReference extends _$CommentQuery
 
   _$CommentCollectionReference._(
     this.parent,
-    CollectionReference<Comment> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
+    CollectionReference<Comment> super.reference,
+  ) : super($referenceWithoutCursor: reference);
 
   @override
   final MovieDocumentReference parent;
@@ -1888,12 +1885,9 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     implements CommentQuery {
   _$CommentQuery(
     this._collection, {
-    required Query<Comment> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
+    required super.$referenceWithoutCursor,
+    super.$queryCursor,
+  });
 
   final CollectionReference<Object?> _collection;
 
