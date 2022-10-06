@@ -307,6 +307,10 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   }
 
   /// Enables or disables Firebase Cloud Messaging message delivery metrics export to BigQuery.
+  ///
+  /// On iOS, you need to follow [this guide](https://firebase.google.com/docs/cloud-messaging/understand-delivery?platform=ios#enable_delivery_data_export_for_background_notifications)
+  /// in order to export metrics to BigQuery.
+  /// On Web, you need to setup a [service worker](https://firebase.google.com/docs/cloud-messaging/js/client) and call `experimentalSetDeliveryMetricsExportedToBigQueryEnabled(messaging, true)`
   Future<void> setDeliveryMetricsExportToBigQuery(bool enabled) {
     throw UnimplementedError(
       'setDeliveryMetricsExportToBigQuery() is not implemented',
