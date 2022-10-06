@@ -7,7 +7,7 @@ part of 'freezed.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -122,6 +122,10 @@ abstract class PersonDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String firstName,
     FieldValue firstNameFieldValue,
@@ -129,7 +133,16 @@ abstract class PersonDocumentReference
     FieldValue lastNameFieldValue,
   });
 
-  Future<void> set(Person value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String firstName,
+    FieldValue firstNameFieldValue,
+    String lastName,
+    FieldValue lastNameFieldValue,
+  });
 }
 
 class _$PersonDocumentReference
@@ -166,8 +179,13 @@ class _$PersonDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<PersonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return PersonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -185,17 +203,30 @@ class _$PersonDocumentReference
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) "firstName": firstName as String,
-      if (firstNameFieldValue != null) "firstName": firstNameFieldValue,
-      if (lastName != _sentinel) "lastName": lastName as String,
-      if (lastNameFieldValue != null) "lastName": lastNameFieldValue,
+      if (firstName != _sentinel) 'firstName': firstName as String,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
+      if (lastName != _sentinel) 'lastName': lastName as String,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(Person value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
+    Object? lastName = _sentinel,
+    FieldValue? lastNameFieldValue,
+  }) {
+    final json = {
+      if (firstName != _sentinel) 'firstName': firstName as String,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
+      if (lastName != _sentinel) 'lastName': lastName as String,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -587,7 +618,7 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
     return _$PersonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$_PersonFieldMap["firstName"]!,
+        _$$_PersonFieldMap['firstName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -616,7 +647,7 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
     return _$PersonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$_PersonFieldMap["lastName"]!,
+        _$$_PersonFieldMap['lastName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -715,7 +746,7 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
     PersonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$_PersonFieldMap["firstName"]!, descending: descending);
+        .orderBy(_$$_PersonFieldMap['firstName']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -787,7 +818,7 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
     PersonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$_PersonFieldMap["lastName"]!, descending: descending);
+        .orderBy(_$$_PersonFieldMap['lastName']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1004,12 +1035,23 @@ abstract class PublicRedirectedDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String value,
     FieldValue valueFieldValue,
   });
 
-  Future<void> set(PublicRedirected value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
@@ -1046,8 +1088,14 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<PublicRedirectedDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return PublicRedirectedDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -1059,15 +1107,24 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) "value": value as String,
-      if (valueFieldValue != null) "value": valueFieldValue,
+      if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(PublicRedirected value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    final json = {
+      if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -1438,7 +1495,7 @@ class _$PublicRedirectedQuery
     return _$PublicRedirectedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$PublicRedirected2FieldMap["value"]!,
+        _$$PublicRedirected2FieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1537,7 +1594,7 @@ class _$PublicRedirectedQuery
     PublicRedirectedDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$$PublicRedirected2FieldMap["value"]!,
+        _$$PublicRedirected2FieldMap['value']!,
         descending: descending);
     var queryCursor = $queryCursor;
 

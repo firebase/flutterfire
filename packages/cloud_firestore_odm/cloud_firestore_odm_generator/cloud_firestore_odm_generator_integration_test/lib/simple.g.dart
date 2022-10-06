@@ -7,7 +7,7 @@ part of 'simple.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -122,12 +122,23 @@ abstract class ModelDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String value,
     FieldValue valueFieldValue,
   });
 
-  Future<void> set(Model value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$ModelDocumentReference
@@ -164,8 +175,13 @@ class _$ModelDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ModelDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -177,15 +193,24 @@ class _$ModelDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) "value": value as String,
-      if (valueFieldValue != null) "value": valueFieldValue,
+      if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(Model value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    final json = {
+      if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -553,7 +578,7 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     return _$ModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$ModelFieldMap["value"]!,
+        _$ModelFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -651,7 +676,7 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     ModelDocumentSnapshot? endBeforeDocument,
     ModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$ModelFieldMap["value"]!,
+    final query = $referenceWithoutCursor.orderBy(_$ModelFieldMap['value']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -863,6 +888,10 @@ abstract class NestedDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     int? simple,
     FieldValue simpleFieldValue,
@@ -878,7 +907,24 @@ abstract class NestedDocumentReference
     FieldValue dynamicListFieldValue,
   });
 
-  Future<void> set(Nested value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    int? simple,
+    FieldValue simpleFieldValue,
+    List<bool>? boolList,
+    FieldValue boolListFieldValue,
+    List<String>? stringList,
+    FieldValue stringListFieldValue,
+    List<num>? numList,
+    FieldValue numListFieldValue,
+    List<Object?>? objectList,
+    FieldValue objectListFieldValue,
+    List<dynamic>? dynamicList,
+    FieldValue dynamicListFieldValue,
+  });
 }
 
 class _$NestedDocumentReference
@@ -915,8 +961,13 @@ class _$NestedDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<NestedDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return NestedDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -958,26 +1009,56 @@ class _$NestedDocumentReference
       "Cannot specify both dynamicList and dynamicListFieldValue",
     );
     final json = {
-      if (simple != _sentinel) "simple": simple as int?,
-      if (simpleFieldValue != null) "simple": simpleFieldValue,
-      if (boolList != _sentinel) "boolList": boolList as List<bool>?,
-      if (boolListFieldValue != null) "boolList": boolListFieldValue,
-      if (stringList != _sentinel) "stringList": stringList as List<String>?,
-      if (stringListFieldValue != null) "stringList": stringListFieldValue,
-      if (numList != _sentinel) "numList": numList as List<num>?,
-      if (numListFieldValue != null) "numList": numListFieldValue,
-      if (objectList != _sentinel) "objectList": objectList as List<Object?>?,
-      if (objectListFieldValue != null) "objectList": objectListFieldValue,
+      if (simple != _sentinel) 'simple': simple as int?,
+      if (simpleFieldValue != null) 'simple': simpleFieldValue,
+      if (boolList != _sentinel) 'boolList': boolList as List<bool>?,
+      if (boolListFieldValue != null) 'boolList': boolListFieldValue,
+      if (stringList != _sentinel) 'stringList': stringList as List<String>?,
+      if (stringListFieldValue != null) 'stringList': stringListFieldValue,
+      if (numList != _sentinel) 'numList': numList as List<num>?,
+      if (numListFieldValue != null) 'numList': numListFieldValue,
+      if (objectList != _sentinel) 'objectList': objectList as List<Object?>?,
+      if (objectListFieldValue != null) 'objectList': objectListFieldValue,
       if (dynamicList != _sentinel)
-        "dynamicList": dynamicList as List<dynamic>?,
-      if (dynamicListFieldValue != null) "dynamicList": dynamicListFieldValue,
+        'dynamicList': dynamicList as List<dynamic>?,
+      if (dynamicListFieldValue != null) 'dynamicList': dynamicListFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(Nested value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? simple = _sentinel,
+    FieldValue? simpleFieldValue,
+    Object? boolList = _sentinel,
+    FieldValue? boolListFieldValue,
+    Object? stringList = _sentinel,
+    FieldValue? stringListFieldValue,
+    Object? numList = _sentinel,
+    FieldValue? numListFieldValue,
+    Object? objectList = _sentinel,
+    FieldValue? objectListFieldValue,
+    Object? dynamicList = _sentinel,
+    FieldValue? dynamicListFieldValue,
+  }) {
+    final json = {
+      if (simple != _sentinel) 'simple': simple as int?,
+      if (simpleFieldValue != null) 'simple': simpleFieldValue,
+      if (boolList != _sentinel) 'boolList': boolList as List<bool>?,
+      if (boolListFieldValue != null) 'boolList': boolListFieldValue,
+      if (stringList != _sentinel) 'stringList': stringList as List<String>?,
+      if (stringListFieldValue != null) 'stringList': stringListFieldValue,
+      if (numList != _sentinel) 'numList': numList as List<num>?,
+      if (numListFieldValue != null) 'numList': numListFieldValue,
+      if (objectList != _sentinel) 'objectList': objectList as List<Object?>?,
+      if (objectListFieldValue != null) 'objectList': objectListFieldValue,
+      if (dynamicList != _sentinel)
+        'dynamicList': dynamicList as List<dynamic>?,
+      if (dynamicListFieldValue != null) 'dynamicList': dynamicListFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -1461,7 +1542,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["simple"]!,
+        _$NestedFieldMap['simple']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1490,7 +1571,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["boolList"]!,
+        _$NestedFieldMap['boolList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1519,7 +1600,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["stringList"]!,
+        _$NestedFieldMap['stringList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1548,7 +1629,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["numList"]!,
+        _$NestedFieldMap['numList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1577,7 +1658,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["objectList"]!,
+        _$NestedFieldMap['objectList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1606,7 +1687,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["dynamicList"]!,
+        _$NestedFieldMap['dynamicList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1704,7 +1785,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap["simple"]!,
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['simple']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1776,7 +1857,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap["boolList"]!,
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['boolList']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1849,7 +1930,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$NestedFieldMap["stringList"]!, descending: descending);
+        .orderBy(_$NestedFieldMap['stringList']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1920,7 +2001,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap["numList"]!,
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['numList']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1993,7 +2074,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$NestedFieldMap["objectList"]!, descending: descending);
+        .orderBy(_$NestedFieldMap['objectList']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -2065,7 +2146,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$NestedFieldMap["dynamicList"]!, descending: descending);
+        .orderBy(_$NestedFieldMap['dynamicList']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -2280,8 +2361,6 @@ abstract class SplitFileModelDocumentReference
 
   @override
   Future<void> delete();
-
-  Future<void> set(SplitFileModel value);
 }
 
 class _$SplitFileModelDocumentReference extends FirestoreDocumentReference<
@@ -2318,12 +2397,14 @@ class _$SplitFileModelDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
-  }
-
-  Future<void> set(SplitFileModel value) {
-    return reference.set(value);
+  Future<SplitFileModelDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return SplitFileModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   @override
@@ -2881,8 +2962,6 @@ abstract class EmptyModelDocumentReference
 
   @override
   Future<void> delete();
-
-  Future<void> set(EmptyModel value);
 }
 
 class _$EmptyModelDocumentReference
@@ -2919,12 +2998,13 @@ class _$EmptyModelDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
-  }
-
-  Future<void> set(EmptyModel value) {
-    return reference.set(value);
+  Future<EmptyModelDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return EmptyModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   @override
@@ -3484,12 +3564,23 @@ abstract class OptionalJsonDocumentReference extends FirestoreDocumentReference<
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     int value,
     FieldValue valueFieldValue,
   });
 
-  Future<void> set(OptionalJson value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    int value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
@@ -3526,8 +3617,13 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<OptionalJsonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return OptionalJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -3539,15 +3635,24 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) "value": value as int,
-      if (valueFieldValue != null) "value": valueFieldValue,
+      if (value != _sentinel) 'value': value as int,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(OptionalJson value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    final json = {
+      if (value != _sentinel) 'value': value as int,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -3918,7 +4023,7 @@ class _$OptionalJsonQuery
     return _$OptionalJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$OptionalJsonFieldMap["value"]!,
+        _$OptionalJsonFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4017,7 +4122,7 @@ class _$OptionalJsonQuery
     OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$OptionalJsonFieldMap["value"]!, descending: descending);
+        .orderBy(_$OptionalJsonFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4229,12 +4334,23 @@ abstract class MixedJsonDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     int value,
     FieldValue valueFieldValue,
   });
 
-  Future<void> set(MixedJson value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    int value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$MixedJsonDocumentReference
@@ -4271,8 +4387,13 @@ class _$MixedJsonDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<MixedJsonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return MixedJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -4284,15 +4405,24 @@ class _$MixedJsonDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) "value": value as int,
-      if (valueFieldValue != null) "value": valueFieldValue,
+      if (value != _sentinel) 'value': value as int,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(MixedJson value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    final json = {
+      if (value != _sentinel) 'value': value as int,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -4661,7 +4791,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     return _$MixedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MixedJsonFieldMap["value"]!,
+        _$MixedJsonFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4759,7 +4889,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     MixedJsonDocumentSnapshot? endBeforeDocument,
     MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MixedJsonFieldMap["value"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MixedJsonFieldMap['value']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -4991,6 +5121,10 @@ abstract class RootDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String nonNullable,
     FieldValue nonNullableFieldValue,
@@ -4998,7 +5132,16 @@ abstract class RootDocumentReference
     FieldValue nullableFieldValue,
   });
 
-  Future<void> set(Root value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String nonNullable,
+    FieldValue nonNullableFieldValue,
+    int? nullable,
+    FieldValue nullableFieldValue,
+  });
 }
 
 class _$RootDocumentReference
@@ -5054,8 +5197,13 @@ class _$RootDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<RootDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return RootDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -5073,17 +5221,30 @@ class _$RootDocumentReference
       "Cannot specify both nullable and nullableFieldValue",
     );
     final json = {
-      if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
-      if (nonNullableFieldValue != null) "nonNullable": nonNullableFieldValue,
-      if (nullable != _sentinel) "nullable": nullable as int?,
-      if (nullableFieldValue != null) "nullable": nullableFieldValue,
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
+      if (nullableFieldValue != null) 'nullable': nullableFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(Root value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? nonNullable = _sentinel,
+    FieldValue? nonNullableFieldValue,
+    Object? nullable = _sentinel,
+    FieldValue? nullableFieldValue,
+  }) {
+    final json = {
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
+      if (nullableFieldValue != null) 'nullable': nullableFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -5474,7 +5635,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     return _$RootQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$RootFieldMap["nonNullable"]!,
+        _$RootFieldMap['nonNullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5503,7 +5664,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     return _$RootQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$RootFieldMap["nullable"]!,
+        _$RootFieldMap['nullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5602,7 +5763,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     RootDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$RootFieldMap["nonNullable"]!, descending: descending);
+        .orderBy(_$RootFieldMap['nonNullable']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -5673,7 +5834,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$RootFieldMap["nullable"]!,
+    final query = $referenceWithoutCursor.orderBy(_$RootFieldMap['nullable']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -5896,6 +6057,10 @@ abstract class SubDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String nonNullable,
     FieldValue nonNullableFieldValue,
@@ -5903,7 +6068,16 @@ abstract class SubDocumentReference
     FieldValue nullableFieldValue,
   });
 
-  Future<void> set(Sub value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String nonNullable,
+    FieldValue nonNullableFieldValue,
+    int? nullable,
+    FieldValue nullableFieldValue,
+  });
 }
 
 class _$SubDocumentReference
@@ -5945,8 +6119,13 @@ class _$SubDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<SubDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return SubDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -5964,17 +6143,30 @@ class _$SubDocumentReference
       "Cannot specify both nullable and nullableFieldValue",
     );
     final json = {
-      if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
-      if (nonNullableFieldValue != null) "nonNullable": nonNullableFieldValue,
-      if (nullable != _sentinel) "nullable": nullable as int?,
-      if (nullableFieldValue != null) "nullable": nullableFieldValue,
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
+      if (nullableFieldValue != null) 'nullable': nullableFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(Sub value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? nonNullable = _sentinel,
+    FieldValue? nonNullableFieldValue,
+    Object? nullable = _sentinel,
+    FieldValue? nullableFieldValue,
+  }) {
+    final json = {
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
+      if (nullableFieldValue != null) 'nullable': nullableFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -6365,7 +6557,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     return _$SubQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$SubFieldMap["nonNullable"]!,
+        _$SubFieldMap['nonNullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -6394,7 +6586,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     return _$SubQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$SubFieldMap["nullable"]!,
+        _$SubFieldMap['nullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -6492,7 +6684,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap["nonNullable"]!,
+    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap['nonNullable']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -6564,7 +6756,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap["nullable"]!,
+    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap['nullable']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -6792,12 +6984,23 @@ abstract class AsCamelCaseDocumentReference extends FirestoreDocumentReference<
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
     FieldValue valueFieldValue,
   });
 
-  Future<void> set(AsCamelCase value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    num value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$AsCamelCaseDocumentReference
@@ -6839,8 +7042,13 @@ class _$AsCamelCaseDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<AsCamelCaseDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return AsCamelCaseDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -6852,15 +7060,24 @@ class _$AsCamelCaseDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) "value": value as num,
-      if (valueFieldValue != null) "value": valueFieldValue,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(AsCamelCase value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    final json = {
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -7231,7 +7448,7 @@ class _$AsCamelCaseQuery
     return _$AsCamelCaseQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AsCamelCaseFieldMap["value"]!,
+        _$AsCamelCaseFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -7330,7 +7547,7 @@ class _$AsCamelCaseQuery
     AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$AsCamelCaseFieldMap["value"]!, descending: descending);
+        .orderBy(_$AsCamelCaseFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -7560,12 +7777,23 @@ abstract class CustomSubNameDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
     FieldValue valueFieldValue,
   });
 
-  Future<void> set(CustomSubName value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    num value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
@@ -7607,8 +7835,14 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<CustomSubNameDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return CustomSubNameDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -7620,15 +7854,24 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) "value": value as num,
-      if (valueFieldValue != null) "value": valueFieldValue,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(CustomSubName value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    final json = {
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -7999,7 +8242,7 @@ class _$CustomSubNameQuery
     return _$CustomSubNameQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$CustomSubNameFieldMap["value"]!,
+        _$CustomSubNameFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -8098,7 +8341,7 @@ class _$CustomSubNameQuery
     CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$CustomSubNameFieldMap["value"]!, descending: descending);
+        .orderBy(_$CustomSubNameFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -8329,12 +8572,23 @@ abstract class ThisIsACustomPrefixDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
     FieldValue valueFieldValue,
   });
 
-  Future<void> set(CustomClassPrefix value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    num value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
@@ -8376,8 +8630,14 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ThisIsACustomPrefixDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ThisIsACustomPrefixDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -8389,15 +8649,24 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) "value": value as num,
-      if (valueFieldValue != null) "value": valueFieldValue,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(CustomClassPrefix value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    final json = {
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -8771,7 +9040,7 @@ class _$ThisIsACustomPrefixQuery
     return _$ThisIsACustomPrefixQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$CustomClassPrefixFieldMap["value"]!,
+        _$CustomClassPrefixFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -8870,7 +9139,7 @@ class _$ThisIsACustomPrefixQuery
     ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$CustomClassPrefixFieldMap["value"]!, descending: descending);
+        .orderBy(_$CustomClassPrefixFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -9091,12 +9360,23 @@ abstract class ExplicitPathDocumentReference extends FirestoreDocumentReference<
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
     FieldValue valueFieldValue,
   });
 
-  Future<void> set(ExplicitPath value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    num value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
@@ -9138,8 +9418,13 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ExplicitPathDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ExplicitPathDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -9151,15 +9436,24 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) "value": value as num,
-      if (valueFieldValue != null) "value": valueFieldValue,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(ExplicitPath value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    final json = {
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -9530,7 +9824,7 @@ class _$ExplicitPathQuery
     return _$ExplicitPathQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$ExplicitPathFieldMap["value"]!,
+        _$ExplicitPathFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -9629,7 +9923,7 @@ class _$ExplicitPathQuery
     ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$ExplicitPathFieldMap["value"]!, descending: descending);
+        .orderBy(_$ExplicitPathFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -9859,12 +10153,23 @@ abstract class ExplicitSubPathDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
     FieldValue valueFieldValue,
   });
 
-  Future<void> set(ExplicitSubPath value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    num value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
@@ -9906,8 +10211,14 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ExplicitSubPathDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ExplicitSubPathDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -9919,15 +10230,24 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) "value": value as num,
-      if (valueFieldValue != null) "value": valueFieldValue,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(ExplicitSubPath value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    final json = {
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -10298,7 +10618,7 @@ class _$ExplicitSubPathQuery
     return _$ExplicitSubPathQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$ExplicitSubPathFieldMap["value"]!,
+        _$ExplicitSubPathFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -10397,7 +10717,7 @@ class _$ExplicitSubPathQuery
     ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$ExplicitSubPathFieldMap["value"]!, descending: descending);
+        .orderBy(_$ExplicitSubPathFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -10508,10 +10828,10 @@ class ExplicitSubPathQueryDocumentSnapshot
 // **************************************************************************
 
 void _$assertMinValidation(MinValidation instance) {
-  const Min(0).validate(instance.intNbr, "intNbr");
-  const Max(42).validate(instance.intNbr, "intNbr");
-  const Min(10).validate(instance.doubleNbr, "doubleNbr");
-  const Min(-10).validate(instance.numNbr, "numNbr");
+  const Min(0).validate(instance.intNbr, 'intNbr');
+  const Max(42).validate(instance.intNbr, 'intNbr');
+  const Min(10).validate(instance.doubleNbr, 'doubleNbr');
+  const Min(-10).validate(instance.numNbr, 'numNbr');
 }
 
 // **************************************************************************

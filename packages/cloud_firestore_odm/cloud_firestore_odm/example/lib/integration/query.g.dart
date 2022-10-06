@@ -9,7 +9,7 @@ part of 'query.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -129,12 +129,23 @@ abstract class DateTimeQueryDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     DateTime time,
     FieldValue timeFieldValue,
   });
 
-  Future<void> set(DateTimeQuery value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    DateTime time,
+    FieldValue timeFieldValue,
+  });
 }
 
 class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
@@ -171,8 +182,14 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<DateTimeQueryDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return DateTimeQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -184,15 +201,24 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) "time": time as DateTime,
-      if (timeFieldValue != null) "time": timeFieldValue,
+      if (time != _sentinel) 'time': time as DateTime,
+      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(DateTimeQuery value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? time = _sentinel,
+    FieldValue? timeFieldValue,
+  }) {
+    final json = {
+      if (time != _sentinel) 'time': time as DateTime,
+      if (timeFieldValue != null) 'time': timeFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -563,7 +589,7 @@ class _$DateTimeQueryQuery
     return _$DateTimeQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$DateTimeQueryFieldMap["time"]!,
+        _$DateTimeQueryFieldMap['time']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -662,7 +688,7 @@ class _$DateTimeQueryQuery
     DateTimeQueryDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$DateTimeQueryFieldMap["time"]!, descending: descending);
+        .orderBy(_$DateTimeQueryFieldMap['time']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -881,12 +907,23 @@ abstract class TimestampQueryDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     Timestamp time,
     FieldValue timeFieldValue,
   });
 
-  Future<void> set(TimestampQuery value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    Timestamp time,
+    FieldValue timeFieldValue,
+  });
 }
 
 class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
@@ -923,8 +960,14 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<TimestampQueryDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return TimestampQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -936,15 +979,24 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) "time": time as Timestamp,
-      if (timeFieldValue != null) "time": timeFieldValue,
+      if (time != _sentinel) 'time': time as Timestamp,
+      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(TimestampQuery value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? time = _sentinel,
+    FieldValue? timeFieldValue,
+  }) {
+    final json = {
+      if (time != _sentinel) 'time': time as Timestamp,
+      if (timeFieldValue != null) 'time': timeFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -1315,7 +1367,7 @@ class _$TimestampQueryQuery
     return _$TimestampQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$TimestampQueryFieldMap["time"]!,
+        _$TimestampQueryFieldMap['time']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1414,7 +1466,7 @@ class _$TimestampQueryQuery
     TimestampQueryDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$TimestampQueryFieldMap["time"]!, descending: descending);
+        .orderBy(_$TimestampQueryFieldMap['time']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1634,12 +1686,23 @@ abstract class GeoPointQueryDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     GeoPoint point,
     FieldValue pointFieldValue,
   });
 
-  Future<void> set(GeoPointQuery value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    GeoPoint point,
+    FieldValue pointFieldValue,
+  });
 }
 
 class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
@@ -1676,8 +1739,14 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<GeoPointQueryDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return GeoPointQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -1689,15 +1758,24 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both point and pointFieldValue",
     );
     final json = {
-      if (point != _sentinel) "point": point as GeoPoint,
-      if (pointFieldValue != null) "point": pointFieldValue,
+      if (point != _sentinel) 'point': point as GeoPoint,
+      if (pointFieldValue != null) 'point': pointFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(GeoPointQuery value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? point = _sentinel,
+    FieldValue? pointFieldValue,
+  }) {
+    final json = {
+      if (point != _sentinel) 'point': point as GeoPoint,
+      if (pointFieldValue != null) 'point': pointFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -2068,7 +2146,7 @@ class _$GeoPointQueryQuery
     return _$GeoPointQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$GeoPointQueryFieldMap["point"]!,
+        _$GeoPointQueryFieldMap['point']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2167,7 +2245,7 @@ class _$GeoPointQueryQuery
     GeoPointQueryDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$GeoPointQueryFieldMap["point"]!, descending: descending);
+        .orderBy(_$GeoPointQueryFieldMap['point']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -2389,12 +2467,23 @@ abstract class DocumentReferenceQueryDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     DocumentReference<Map<String, dynamic>> ref,
     FieldValue refFieldValue,
   });
 
-  Future<void> set(DocumentReferenceQuery value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    DocumentReference<Map<String, dynamic>> ref,
+    FieldValue refFieldValue,
+  });
 }
 
 class _$DocumentReferenceQueryDocumentReference
@@ -2432,8 +2521,14 @@ class _$DocumentReferenceQueryDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<DocumentReferenceQueryDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return DocumentReferenceQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -2446,15 +2541,25 @@ class _$DocumentReferenceQueryDocumentReference
     );
     final json = {
       if (ref != _sentinel)
-        "ref": ref as DocumentReference<Map<String, dynamic>>,
-      if (refFieldValue != null) "ref": refFieldValue,
+        'ref': ref as DocumentReference<Map<String, dynamic>>,
+      if (refFieldValue != null) 'ref': refFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(DocumentReferenceQuery value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? ref = _sentinel,
+    FieldValue? refFieldValue,
+  }) {
+    final json = {
+      if (ref != _sentinel)
+        'ref': ref as DocumentReference<Map<String, dynamic>>,
+      if (refFieldValue != null) 'ref': refFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -2829,7 +2934,7 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
     return _$DocumentReferenceQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$DocumentReferenceQueryFieldMap["ref"]!,
+        _$DocumentReferenceQueryFieldMap['ref']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2928,7 +3033,7 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
     DocumentReferenceQueryDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$DocumentReferenceQueryFieldMap["ref"]!,
+        _$DocumentReferenceQueryFieldMap['ref']!,
         descending: descending);
     var queryCursor = $queryCursor;
 

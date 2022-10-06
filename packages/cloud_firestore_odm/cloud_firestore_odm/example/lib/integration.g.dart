@@ -9,7 +9,7 @@ part of 'integration.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -124,12 +124,23 @@ abstract class ManualJsonDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String value,
     FieldValue valueFieldValue,
   });
 
-  Future<void> set(ManualJson value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$ManualJsonDocumentReference
@@ -166,8 +177,13 @@ class _$ManualJsonDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ManualJsonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ManualJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -179,15 +195,24 @@ class _$ManualJsonDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) "value": value as String,
-      if (valueFieldValue != null) "value": valueFieldValue,
+      if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(ManualJson value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    final json = {
+      if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -557,7 +582,7 @@ class _$ManualJsonQuery
     return _$ManualJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        "value",
+        'value',
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -656,7 +681,7 @@ class _$ManualJsonQuery
     ManualJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query =
-        $referenceWithoutCursor.orderBy("value", descending: descending);
+        $referenceWithoutCursor.orderBy('value', descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -871,6 +896,10 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String? firstName,
     FieldValue firstNameFieldValue,
@@ -880,7 +909,18 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     FieldValue hashCodeFieldValue,
   });
 
-  Future<void> set(AdvancedJson value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String? firstName,
+    FieldValue firstNameFieldValue,
+    String? lastName,
+    FieldValue lastNameFieldValue,
+    int hashCode,
+    FieldValue hashCodeFieldValue,
+  });
 }
 
 class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
@@ -917,8 +957,13 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<AdvancedJsonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return AdvancedJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -942,19 +987,36 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both hashCode and hashCodeFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) "firstName": firstName as String?,
-      if (firstNameFieldValue != null) "firstName": firstNameFieldValue,
-      if (lastName != _sentinel) "lastName": lastName as String?,
-      if (lastNameFieldValue != null) "lastName": lastNameFieldValue,
-      if (hashCode != _sentinel) "hashCode": hashCode as int,
-      if (hashCodeFieldValue != null) "hashCode": hashCodeFieldValue,
+      if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
+      if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+      if (hashCode != _sentinel) 'hashCode': hashCode as int,
+      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(AdvancedJson value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
+    Object? lastName = _sentinel,
+    FieldValue? lastNameFieldValue,
+    Object? hashCode = _sentinel,
+    FieldValue? hashCodeFieldValue,
+  }) {
+    final json = {
+      if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
+      if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+      if (hashCode != _sentinel) 'hashCode': hashCode as int,
+      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -1371,7 +1433,7 @@ class _$AdvancedJsonQuery
     return _$AdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AdvancedJsonFieldMap["firstName"]!,
+        _$AdvancedJsonFieldMap['firstName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1400,7 +1462,7 @@ class _$AdvancedJsonQuery
     return _$AdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AdvancedJsonFieldMap["lastName"]!,
+        _$AdvancedJsonFieldMap['lastName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1429,7 +1491,7 @@ class _$AdvancedJsonQuery
     return _$AdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AdvancedJsonFieldMap["hashCode"]!,
+        _$AdvancedJsonFieldMap['hashCode']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1528,7 +1590,7 @@ class _$AdvancedJsonQuery
     AdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$AdvancedJsonFieldMap["firstName"]!, descending: descending);
+        .orderBy(_$AdvancedJsonFieldMap['firstName']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1600,7 +1662,7 @@ class _$AdvancedJsonQuery
     AdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$AdvancedJsonFieldMap["lastName"]!, descending: descending);
+        .orderBy(_$AdvancedJsonFieldMap['lastName']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1672,7 +1734,7 @@ class _$AdvancedJsonQuery
     AdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$AdvancedJsonFieldMap["hashCode"]!, descending: descending);
+        .orderBy(_$AdvancedJsonFieldMap['hashCode']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1895,6 +1957,10 @@ abstract class _PrivateAdvancedJsonDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String? firstName,
     FieldValue firstNameFieldValue,
@@ -1904,7 +1970,18 @@ abstract class _PrivateAdvancedJsonDocumentReference
     FieldValue hashCodeFieldValue,
   });
 
-  Future<void> set(_PrivateAdvancedJson value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String? firstName,
+    FieldValue firstNameFieldValue,
+    String? lastName,
+    FieldValue lastNameFieldValue,
+    int hashCode,
+    FieldValue hashCodeFieldValue,
+  });
 }
 
 class _$_PrivateAdvancedJsonDocumentReference
@@ -1942,8 +2019,14 @@ class _$_PrivateAdvancedJsonDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<_PrivateAdvancedJsonDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return _PrivateAdvancedJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -1967,19 +2050,36 @@ class _$_PrivateAdvancedJsonDocumentReference
       "Cannot specify both hashCode and hashCodeFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) "firstName": firstName as String?,
-      if (firstNameFieldValue != null) "firstName": firstNameFieldValue,
-      if (lastName != _sentinel) "lastName": lastName as String?,
-      if (lastNameFieldValue != null) "lastName": lastNameFieldValue,
-      if (hashCode != _sentinel) "hashCode": hashCode as int,
-      if (hashCodeFieldValue != null) "hashCode": hashCodeFieldValue,
+      if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
+      if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+      if (hashCode != _sentinel) 'hashCode': hashCode as int,
+      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(_PrivateAdvancedJson value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
+    Object? lastName = _sentinel,
+    FieldValue? lastNameFieldValue,
+    Object? hashCode = _sentinel,
+    FieldValue? hashCodeFieldValue,
+  }) {
+    final json = {
+      if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
+      if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+      if (hashCode != _sentinel) 'hashCode': hashCode as int,
+      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -2399,7 +2499,7 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     return _$_PrivateAdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$PrivateAdvancedJsonFieldMap["firstName"]!,
+        _$PrivateAdvancedJsonFieldMap['firstName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2428,7 +2528,7 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     return _$_PrivateAdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$PrivateAdvancedJsonFieldMap["lastName"]!,
+        _$PrivateAdvancedJsonFieldMap['lastName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2457,7 +2557,7 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     return _$_PrivateAdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$PrivateAdvancedJsonFieldMap["hashCode"]!,
+        _$PrivateAdvancedJsonFieldMap['hashCode']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2556,7 +2656,7 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$PrivateAdvancedJsonFieldMap["firstName"]!,
+        _$PrivateAdvancedJsonFieldMap['firstName']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2629,7 +2729,7 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$PrivateAdvancedJsonFieldMap["lastName"]!,
+        _$PrivateAdvancedJsonFieldMap['lastName']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2702,7 +2802,7 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$PrivateAdvancedJsonFieldMap["hashCode"]!,
+        _$PrivateAdvancedJsonFieldMap['hashCode']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2915,8 +3015,6 @@ abstract class EmptyModelDocumentReference
 
   @override
   Future<void> delete();
-
-  Future<void> set(EmptyModel value);
 }
 
 class _$EmptyModelDocumentReference
@@ -2953,12 +3051,13 @@ class _$EmptyModelDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
-  }
-
-  Future<void> set(EmptyModel value) {
-    return reference.set(value);
+  Future<EmptyModelDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return EmptyModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   @override
