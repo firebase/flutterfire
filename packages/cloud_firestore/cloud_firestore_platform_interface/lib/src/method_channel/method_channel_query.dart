@@ -5,6 +5,7 @@
 
 import 'dart:async';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:collection/collection.dart';
@@ -135,31 +136,30 @@ class MethodChannelQuery extends QueryPlatform {
     late StreamController<QuerySnapshotPlatform>
         controller; // ignore: close_sinks
 
-    StreamSubscription<dynamic>? snapshotStream;
+    StreamSubscription<dynamic>? snapshotStreamSubscription;
+
     controller = StreamController<QuerySnapshotPlatform>.broadcast(
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.channel
             .invokeMethod<String>('Query#snapshots');
 
-        snapshotStream =
+        snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.querySnapshotChannel(observerId!)
-                .receiveBroadcastStream(
-                  <String, dynamic>{
-                    'query': this,
-                    'includeMetadataChanges': includeMetadataChanges,
-                  },
-                )
-                .handleError(convertPlatformException)
-                .listen(
-                  (snapshot) {
-                    controller
-                        .add(MethodChannelQuerySnapshot(firestore, snapshot));
-                  },
-                  onError: controller.addError,
-                );
+                .receiveGuardedBroadcastStream(
+          arguments: <String, dynamic>{
+            'query': this,
+            'includeMetadataChanges': includeMetadataChanges,
+          },
+          onError: convertPlatformException,
+        ).listen(
+          (snapshot) {
+            controller.add(MethodChannelQuerySnapshot(firestore, snapshot));
+          },
+          onError: controller.addError,
+        );
       },
       onCancel: () {
-        snapshotStream?.cancel();
+        snapshotStreamSubscription?.cancel();
       },
     );
 

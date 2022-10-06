@@ -4,6 +4,7 @@
 
 import 'dart:async';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_installations_platform_interface/firebase_app_installations_platform_interface.dart';
 import 'package:flutter/services.dart';
@@ -37,9 +38,9 @@ class MethodChannelFirebaseAppInstallations
       'appName': app.name,
     }).then((channelName) {
       final events = EventChannel(channelName!, channel.codec);
+
       events
-          .receiveBroadcastStream()
-          .handleError(convertPlatformException)
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
           .listen(
             (Object? arguments) => controller.add((arguments as Map)['token']),
             onError: controller.addError,
