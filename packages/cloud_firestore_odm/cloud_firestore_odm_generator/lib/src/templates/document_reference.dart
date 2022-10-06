@@ -81,8 +81,10 @@ class _\$${data.documentReferenceName}
 
     final parameters = [
       for (final field in data.updatableFields)
-        if (field.updatable)
-          '${field.type.getDisplayString(withNullability: true)} ${field.name},'
+        if (field.updatable) ...[
+          '${field.type.getDisplayString(withNullability: true)} ${field.name},',
+          'FieldValue ${field.name}FieldValue,'
+        ]
     ];
 
     return 'Future<void> update({${parameters.join()}});';
@@ -92,21 +94,38 @@ class _\$${data.documentReferenceName}
     if (data.updatableFields.isEmpty) return '';
 
     final parameters = [
-      for (final field in data.updatableFields)
-        'Object? ${field.name} = _sentinel,'
+      for (final field in data.updatableFields) ...[
+        'Object? ${field.name} = _sentinel,',
+        'FieldValue? ${field.name},',
+      ]
     ];
 
     // TODO support nested objects
     final json = [
-      for (final field in data.updatableFields)
+      for (final field in data.updatableFields) ...[
         '''
         if (${field.name} != _sentinel)
           "${field.name}": ${field.name} as ${field.type},
+        ''',
         '''
+        if (${field.name}FieldValue != null)
+          "${field.name}": ${field.name}FieldValue ,
+        '''
+      ],
     ];
+
+    final asserts = [
+      for (final field in data.updatableFields)
+        '''
+        assert(
+          ${field.name} == _sentinel || ${field.name}FieldValue == null,
+          "Cannot specify both ${field.name} and ${field.name}FieldValue",
+        );''',
+    ].join();
 
     return '''
 Future<void> update({${parameters.join()}}) async {
+  $asserts
   final json = {${json.join()}};
 
   return reference.update(json);

@@ -130,12 +130,19 @@ abstract class MovieDocumentReference
 
   Future<void> update({
     String poster,
+    FieldValue posterFieldValue,
     int likes,
+    FieldValue likesFieldValue,
     String title,
+    FieldValue titleFieldValue,
     int year,
+    FieldValue yearFieldValue,
     String runtime,
+    FieldValue runtimeFieldValue,
     String rated,
+    FieldValue ratedFieldValue,
     List<String>? genre,
+    FieldValue genreFieldValue,
   });
 
   Future<void> set(Movie value);
@@ -185,21 +192,63 @@ class _$MovieDocumentReference
 
   Future<void> update({
     Object? poster = _sentinel,
+    FieldValue? poster,
     Object? likes = _sentinel,
+    FieldValue? likes,
     Object? title = _sentinel,
+    FieldValue? title,
     Object? year = _sentinel,
+    FieldValue? year,
     Object? runtime = _sentinel,
+    FieldValue? runtime,
     Object? rated = _sentinel,
+    FieldValue? rated,
     Object? genre = _sentinel,
+    FieldValue? genre,
   }) async {
+    assert(
+      poster == _sentinel || posterFieldValue == null,
+      "Cannot specify both poster and posterFieldValue",
+    );
+    assert(
+      likes == _sentinel || likesFieldValue == null,
+      "Cannot specify both likes and likesFieldValue",
+    );
+    assert(
+      title == _sentinel || titleFieldValue == null,
+      "Cannot specify both title and titleFieldValue",
+    );
+    assert(
+      year == _sentinel || yearFieldValue == null,
+      "Cannot specify both year and yearFieldValue",
+    );
+    assert(
+      runtime == _sentinel || runtimeFieldValue == null,
+      "Cannot specify both runtime and runtimeFieldValue",
+    );
+    assert(
+      rated == _sentinel || ratedFieldValue == null,
+      "Cannot specify both rated and ratedFieldValue",
+    );
+    assert(
+      genre == _sentinel || genreFieldValue == null,
+      "Cannot specify both genre and genreFieldValue",
+    );
     final json = {
       if (poster != _sentinel) "poster": poster as String,
+      if (posterFieldValue != null) "poster": posterFieldValue,
       if (likes != _sentinel) "likes": likes as int,
+      if (likesFieldValue != null) "likes": likesFieldValue,
       if (title != _sentinel) "title": title as String,
+      if (titleFieldValue != null) "title": titleFieldValue,
       if (year != _sentinel) "year": year as int,
+      if (yearFieldValue != null) "year": yearFieldValue,
       if (runtime != _sentinel) "runtime": runtime as String,
+      if (runtimeFieldValue != null) "runtime": runtimeFieldValue,
       if (rated != _sentinel) "rated": rated as String,
+      if (ratedFieldValue != null) "rated": ratedFieldValue,
       if (genre != _sentinel) "genre": genre as List<String>?,
+      if (genreFieldValue != null) "genre": genreFieldValue,
     };
 
     return reference.update(json);
@@ -1643,7 +1692,9 @@ abstract class CommentDocumentReference
 
   Future<void> update({
     String authorName,
+    FieldValue authorNameFieldValue,
     String message,
+    FieldValue messageFieldValue,
   });
 
   Future<void> set(Comment value);
@@ -1694,11 +1745,23 @@ class _$CommentDocumentReference
 
   Future<void> update({
     Object? authorName = _sentinel,
+    FieldValue? authorName,
     Object? message = _sentinel,
+    FieldValue? message,
   }) async {
+    assert(
+      authorName == _sentinel || authorNameFieldValue == null,
+      "Cannot specify both authorName and authorNameFieldValue",
+    );
+    assert(
+      message == _sentinel || messageFieldValue == null,
+      "Cannot specify both message and messageFieldValue",
+    );
     final json = {
       if (authorName != _sentinel) "authorName": authorName as String,
+      if (authorNameFieldValue != null) "authorName": authorNameFieldValue,
       if (message != _sentinel) "message": message as String,
+      if (messageFieldValue != null) "message": messageFieldValue,
     };
 
     return reference.update(json);

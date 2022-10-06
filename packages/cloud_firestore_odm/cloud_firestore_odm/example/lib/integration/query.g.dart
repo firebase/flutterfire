@@ -131,6 +131,7 @@ abstract class DateTimeQueryDocumentReference
 
   Future<void> update({
     DateTime time,
+    FieldValue timeFieldValue,
   });
 
   Future<void> set(DateTimeQuery value);
@@ -176,9 +177,15 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? time = _sentinel,
+    FieldValue? time,
   }) async {
+    assert(
+      time == _sentinel || timeFieldValue == null,
+      "Cannot specify both time and timeFieldValue",
+    );
     final json = {
       if (time != _sentinel) "time": time as DateTime,
+      if (timeFieldValue != null) "time": timeFieldValue,
     };
 
     return reference.update(json);
@@ -876,6 +883,7 @@ abstract class TimestampQueryDocumentReference
 
   Future<void> update({
     Timestamp time,
+    FieldValue timeFieldValue,
   });
 
   Future<void> set(TimestampQuery value);
@@ -921,9 +929,15 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? time = _sentinel,
+    FieldValue? time,
   }) async {
+    assert(
+      time == _sentinel || timeFieldValue == null,
+      "Cannot specify both time and timeFieldValue",
+    );
     final json = {
       if (time != _sentinel) "time": time as Timestamp,
+      if (timeFieldValue != null) "time": timeFieldValue,
     };
 
     return reference.update(json);
@@ -1622,6 +1636,7 @@ abstract class GeoPointQueryDocumentReference
 
   Future<void> update({
     GeoPoint point,
+    FieldValue pointFieldValue,
   });
 
   Future<void> set(GeoPointQuery value);
@@ -1667,9 +1682,15 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? point = _sentinel,
+    FieldValue? point,
   }) async {
+    assert(
+      point == _sentinel || pointFieldValue == null,
+      "Cannot specify both point and pointFieldValue",
+    );
     final json = {
       if (point != _sentinel) "point": point as GeoPoint,
+      if (pointFieldValue != null) "point": pointFieldValue,
     };
 
     return reference.update(json);
@@ -2370,6 +2391,7 @@ abstract class DocumentReferenceQueryDocumentReference
 
   Future<void> update({
     DocumentReference<Map<String, dynamic>> ref,
+    FieldValue refFieldValue,
   });
 
   Future<void> set(DocumentReferenceQuery value);
@@ -2416,10 +2438,16 @@ class _$DocumentReferenceQueryDocumentReference
 
   Future<void> update({
     Object? ref = _sentinel,
+    FieldValue? ref,
   }) async {
+    assert(
+      ref == _sentinel || refFieldValue == null,
+      "Cannot specify both ref and refFieldValue",
+    );
     final json = {
       if (ref != _sentinel)
         "ref": ref as DocumentReference<Map<String, dynamic>>,
+      if (refFieldValue != null) "ref": refFieldValue,
     };
 
     return reference.update(json);

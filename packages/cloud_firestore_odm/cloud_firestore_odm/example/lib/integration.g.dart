@@ -126,6 +126,7 @@ abstract class ManualJsonDocumentReference
 
   Future<void> update({
     String value,
+    FieldValue valueFieldValue,
   });
 
   Future<void> set(ManualJson value);
@@ -171,9 +172,15 @@ class _$ManualJsonDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? value,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) "value": value as String,
+      if (valueFieldValue != null) "value": valueFieldValue,
     };
 
     return reference.update(json);
@@ -866,8 +873,11 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     String? firstName,
+    FieldValue firstNameFieldValue,
     String? lastName,
+    FieldValue lastNameFieldValue,
     int hashCode,
+    FieldValue hashCodeFieldValue,
   });
 
   Future<void> set(AdvancedJson value);
@@ -913,13 +923,31 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? firstName = _sentinel,
+    FieldValue? firstName,
     Object? lastName = _sentinel,
+    FieldValue? lastName,
     Object? hashCode = _sentinel,
+    FieldValue? hashCode,
   }) async {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
+    assert(
+      hashCode == _sentinel || hashCodeFieldValue == null,
+      "Cannot specify both hashCode and hashCodeFieldValue",
+    );
     final json = {
       if (firstName != _sentinel) "firstName": firstName as String?,
+      if (firstNameFieldValue != null) "firstName": firstNameFieldValue,
       if (lastName != _sentinel) "lastName": lastName as String?,
+      if (lastNameFieldValue != null) "lastName": lastNameFieldValue,
       if (hashCode != _sentinel) "hashCode": hashCode as int,
+      if (hashCodeFieldValue != null) "hashCode": hashCodeFieldValue,
     };
 
     return reference.update(json);
@@ -1869,8 +1897,11 @@ abstract class _PrivateAdvancedJsonDocumentReference
 
   Future<void> update({
     String? firstName,
+    FieldValue firstNameFieldValue,
     String? lastName,
+    FieldValue lastNameFieldValue,
     int hashCode,
+    FieldValue hashCodeFieldValue,
   });
 
   Future<void> set(_PrivateAdvancedJson value);
@@ -1917,13 +1948,31 @@ class _$_PrivateAdvancedJsonDocumentReference
 
   Future<void> update({
     Object? firstName = _sentinel,
+    FieldValue? firstName,
     Object? lastName = _sentinel,
+    FieldValue? lastName,
     Object? hashCode = _sentinel,
+    FieldValue? hashCode,
   }) async {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
+    assert(
+      hashCode == _sentinel || hashCodeFieldValue == null,
+      "Cannot specify both hashCode and hashCodeFieldValue",
+    );
     final json = {
       if (firstName != _sentinel) "firstName": firstName as String?,
+      if (firstNameFieldValue != null) "firstName": firstNameFieldValue,
       if (lastName != _sentinel) "lastName": lastName as String?,
+      if (lastNameFieldValue != null) "lastName": lastNameFieldValue,
       if (hashCode != _sentinel) "hashCode": hashCode as int,
+      if (hashCodeFieldValue != null) "hashCode": hashCodeFieldValue,
     };
 
     return reference.update(json);

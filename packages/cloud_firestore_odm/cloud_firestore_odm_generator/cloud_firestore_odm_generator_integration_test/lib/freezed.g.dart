@@ -124,7 +124,9 @@ abstract class PersonDocumentReference
 
   Future<void> update({
     String firstName,
+    FieldValue firstNameFieldValue,
     String lastName,
+    FieldValue lastNameFieldValue,
   });
 
   Future<void> set(Person value);
@@ -170,11 +172,23 @@ class _$PersonDocumentReference
 
   Future<void> update({
     Object? firstName = _sentinel,
+    FieldValue? firstName,
     Object? lastName = _sentinel,
+    FieldValue? lastName,
   }) async {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
     final json = {
       if (firstName != _sentinel) "firstName": firstName as String,
+      if (firstNameFieldValue != null) "firstName": firstNameFieldValue,
       if (lastName != _sentinel) "lastName": lastName as String,
+      if (lastNameFieldValue != null) "lastName": lastNameFieldValue,
     };
 
     return reference.update(json);
@@ -992,6 +1006,7 @@ abstract class PublicRedirectedDocumentReference
 
   Future<void> update({
     String value,
+    FieldValue valueFieldValue,
   });
 
   Future<void> set(PublicRedirected value);
@@ -1037,9 +1052,15 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? value,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) "value": value as String,
+      if (valueFieldValue != null) "value": valueFieldValue,
     };
 
     return reference.update(json);

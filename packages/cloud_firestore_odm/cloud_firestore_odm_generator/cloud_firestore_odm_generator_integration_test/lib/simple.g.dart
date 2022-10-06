@@ -124,6 +124,7 @@ abstract class ModelDocumentReference
 
   Future<void> update({
     String value,
+    FieldValue valueFieldValue,
   });
 
   Future<void> set(Model value);
@@ -169,9 +170,15 @@ class _$ModelDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? value,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) "value": value as String,
+      if (valueFieldValue != null) "value": valueFieldValue,
     };
 
     return reference.update(json);
@@ -858,11 +865,17 @@ abstract class NestedDocumentReference
 
   Future<void> update({
     int? simple,
+    FieldValue simpleFieldValue,
     List<bool>? boolList,
+    FieldValue boolListFieldValue,
     List<String>? stringList,
+    FieldValue stringListFieldValue,
     List<num>? numList,
+    FieldValue numListFieldValue,
     List<Object?>? objectList,
+    FieldValue objectListFieldValue,
     List<dynamic>? dynamicList,
+    FieldValue dynamicListFieldValue,
   });
 
   Future<void> set(Nested value);
@@ -908,20 +921,56 @@ class _$NestedDocumentReference
 
   Future<void> update({
     Object? simple = _sentinel,
+    FieldValue? simple,
     Object? boolList = _sentinel,
+    FieldValue? boolList,
     Object? stringList = _sentinel,
+    FieldValue? stringList,
     Object? numList = _sentinel,
+    FieldValue? numList,
     Object? objectList = _sentinel,
+    FieldValue? objectList,
     Object? dynamicList = _sentinel,
+    FieldValue? dynamicList,
   }) async {
+    assert(
+      simple == _sentinel || simpleFieldValue == null,
+      "Cannot specify both simple and simpleFieldValue",
+    );
+    assert(
+      boolList == _sentinel || boolListFieldValue == null,
+      "Cannot specify both boolList and boolListFieldValue",
+    );
+    assert(
+      stringList == _sentinel || stringListFieldValue == null,
+      "Cannot specify both stringList and stringListFieldValue",
+    );
+    assert(
+      numList == _sentinel || numListFieldValue == null,
+      "Cannot specify both numList and numListFieldValue",
+    );
+    assert(
+      objectList == _sentinel || objectListFieldValue == null,
+      "Cannot specify both objectList and objectListFieldValue",
+    );
+    assert(
+      dynamicList == _sentinel || dynamicListFieldValue == null,
+      "Cannot specify both dynamicList and dynamicListFieldValue",
+    );
     final json = {
       if (simple != _sentinel) "simple": simple as int?,
+      if (simpleFieldValue != null) "simple": simpleFieldValue,
       if (boolList != _sentinel) "boolList": boolList as List<bool>?,
+      if (boolListFieldValue != null) "boolList": boolListFieldValue,
       if (stringList != _sentinel) "stringList": stringList as List<String>?,
+      if (stringListFieldValue != null) "stringList": stringListFieldValue,
       if (numList != _sentinel) "numList": numList as List<num>?,
+      if (numListFieldValue != null) "numList": numListFieldValue,
       if (objectList != _sentinel) "objectList": objectList as List<Object?>?,
+      if (objectListFieldValue != null) "objectList": objectListFieldValue,
       if (dynamicList != _sentinel)
         "dynamicList": dynamicList as List<dynamic>?,
+      if (dynamicListFieldValue != null) "dynamicList": dynamicListFieldValue,
     };
 
     return reference.update(json);
@@ -3437,6 +3486,7 @@ abstract class OptionalJsonDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     int value,
+    FieldValue valueFieldValue,
   });
 
   Future<void> set(OptionalJson value);
@@ -3482,9 +3532,15 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? value,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) "value": value as int,
+      if (valueFieldValue != null) "value": valueFieldValue,
     };
 
     return reference.update(json);
@@ -4175,6 +4231,7 @@ abstract class MixedJsonDocumentReference
 
   Future<void> update({
     int value,
+    FieldValue valueFieldValue,
   });
 
   Future<void> set(MixedJson value);
@@ -4220,9 +4277,15 @@ class _$MixedJsonDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? value,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) "value": value as int,
+      if (valueFieldValue != null) "value": valueFieldValue,
     };
 
     return reference.update(json);
@@ -4930,7 +4993,9 @@ abstract class RootDocumentReference
 
   Future<void> update({
     String nonNullable,
+    FieldValue nonNullableFieldValue,
     int? nullable,
+    FieldValue nullableFieldValue,
   });
 
   Future<void> set(Root value);
@@ -4995,11 +5060,23 @@ class _$RootDocumentReference
 
   Future<void> update({
     Object? nonNullable = _sentinel,
+    FieldValue? nonNullable,
     Object? nullable = _sentinel,
+    FieldValue? nullable,
   }) async {
+    assert(
+      nonNullable == _sentinel || nonNullableFieldValue == null,
+      "Cannot specify both nonNullable and nonNullableFieldValue",
+    );
+    assert(
+      nullable == _sentinel || nullableFieldValue == null,
+      "Cannot specify both nullable and nullableFieldValue",
+    );
     final json = {
       if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
+      if (nonNullableFieldValue != null) "nonNullable": nonNullableFieldValue,
       if (nullable != _sentinel) "nullable": nullable as int?,
+      if (nullableFieldValue != null) "nullable": nullableFieldValue,
     };
 
     return reference.update(json);
@@ -5821,7 +5898,9 @@ abstract class SubDocumentReference
 
   Future<void> update({
     String nonNullable,
+    FieldValue nonNullableFieldValue,
     int? nullable,
+    FieldValue nullableFieldValue,
   });
 
   Future<void> set(Sub value);
@@ -5872,11 +5951,23 @@ class _$SubDocumentReference
 
   Future<void> update({
     Object? nonNullable = _sentinel,
+    FieldValue? nonNullable,
     Object? nullable = _sentinel,
+    FieldValue? nullable,
   }) async {
+    assert(
+      nonNullable == _sentinel || nonNullableFieldValue == null,
+      "Cannot specify both nonNullable and nonNullableFieldValue",
+    );
+    assert(
+      nullable == _sentinel || nullableFieldValue == null,
+      "Cannot specify both nullable and nullableFieldValue",
+    );
     final json = {
       if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
+      if (nonNullableFieldValue != null) "nonNullable": nonNullableFieldValue,
       if (nullable != _sentinel) "nullable": nullable as int?,
+      if (nullableFieldValue != null) "nullable": nullableFieldValue,
     };
 
     return reference.update(json);
@@ -6703,6 +6794,7 @@ abstract class AsCamelCaseDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
   Future<void> set(AsCamelCase value);
@@ -6753,9 +6845,15 @@ class _$AsCamelCaseDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? value,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) "value": value as num,
+      if (valueFieldValue != null) "value": valueFieldValue,
     };
 
     return reference.update(json);
@@ -7464,6 +7562,7 @@ abstract class CustomSubNameDocumentReference
 
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
   Future<void> set(CustomSubName value);
@@ -7514,9 +7613,15 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? value,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) "value": value as num,
+      if (valueFieldValue != null) "value": valueFieldValue,
     };
 
     return reference.update(json);
@@ -8226,6 +8331,7 @@ abstract class ThisIsACustomPrefixDocumentReference
 
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
   Future<void> set(CustomClassPrefix value);
@@ -8276,9 +8382,15 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? value,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) "value": value as num,
+      if (valueFieldValue != null) "value": valueFieldValue,
     };
 
     return reference.update(json);
@@ -8981,6 +9093,7 @@ abstract class ExplicitPathDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
   Future<void> set(ExplicitPath value);
@@ -9031,9 +9144,15 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? value,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) "value": value as num,
+      if (valueFieldValue != null) "value": valueFieldValue,
     };
 
     return reference.update(json);
@@ -9742,6 +9861,7 @@ abstract class ExplicitSubPathDocumentReference
 
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
   Future<void> set(ExplicitSubPath value);
@@ -9792,9 +9912,15 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? value,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) "value": value as num,
+      if (valueFieldValue != null) "value": valueFieldValue,
     };
 
     return reference.update(json);
