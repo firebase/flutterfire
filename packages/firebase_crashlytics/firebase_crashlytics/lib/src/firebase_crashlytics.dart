@@ -79,7 +79,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// Submits a Crashlytics report of a caught error.
   Future<void> recordError(dynamic exception, StackTrace? stack,
       {dynamic reason,
-      Iterable<DiagnosticsNode> information = const [],
+      Iterable<Object> information = const [],
       bool? printDetails,
       bool fatal = false}) async {
     // Use the debug flag if printDetails is not provided
@@ -139,13 +139,13 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
       {bool fatal = false}) {
     FlutterError.presentError(flutterErrorDetails);
 
+    final information = flutterErrorDetails.informationCollector?.call() ?? [];
+
     return recordError(
       flutterErrorDetails.exceptionAsString(),
       flutterErrorDetails.stack,
       reason: flutterErrorDetails.context,
-      information: flutterErrorDetails.informationCollector == null
-          ? []
-          : flutterErrorDetails.informationCollector!(),
+      information: information,
       printDetails: false,
       fatal: fatal,
     );
