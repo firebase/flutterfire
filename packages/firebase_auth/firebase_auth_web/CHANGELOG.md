@@ -1,3 +1,7 @@
+## 4.6.1
+
+ - Update a dependency to the latest release.
+
 ## 4.6.0
 
  - **FEAT**: add OAuth Access Token support to sign in with providers ([#9593](https://github.com/firebase/flutterfire/issues/9593)). ([cb6661bb](https://github.com/firebase/flutterfire/commit/cb6661bbc701031d6f920ace3a6efc8e8d56aa4c))

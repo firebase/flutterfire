@@ -1,3 +1,7 @@
+## 3.2.19
+
+ - **DOCS**: add note for `crash()` that the app needs to be restarted to send a crash report ([#9586](https://github.com/firebase/flutterfire/issues/9586)). ([3a3e5212](https://github.com/firebase/flutterfire/commit/3a3e52123f04eac6d73c21474155e6e67cb357c1))
+
 ## 3.2.18
 
  - Update a dependency to the latest release.
