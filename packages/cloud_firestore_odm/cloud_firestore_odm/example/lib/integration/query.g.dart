@@ -213,6 +213,10 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
     Object? time = _sentinel,
     FieldValue? timeFieldValue,
   }) {
+    assert(
+      time == _sentinel || timeFieldValue == null,
+      "Cannot specify both time and timeFieldValue",
+    );
     final json = {
       if (time != _sentinel) 'time': time as DateTime,
       if (timeFieldValue != null) 'time': timeFieldValue,
@@ -991,6 +995,10 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
     Object? time = _sentinel,
     FieldValue? timeFieldValue,
   }) {
+    assert(
+      time == _sentinel || timeFieldValue == null,
+      "Cannot specify both time and timeFieldValue",
+    );
     final json = {
       if (time != _sentinel) 'time': time as Timestamp,
       if (timeFieldValue != null) 'time': timeFieldValue,
@@ -1770,6 +1778,10 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     Object? point = _sentinel,
     FieldValue? pointFieldValue,
   }) {
+    assert(
+      point == _sentinel || pointFieldValue == null,
+      "Cannot specify both point and pointFieldValue",
+    );
     final json = {
       if (point != _sentinel) 'point': point as GeoPoint,
       if (pointFieldValue != null) 'point': pointFieldValue,
@@ -2553,6 +2565,10 @@ class _$DocumentReferenceQueryDocumentReference
     Object? ref = _sentinel,
     FieldValue? refFieldValue,
   }) {
+    assert(
+      ref == _sentinel || refFieldValue == null,
+      "Cannot specify both ref and refFieldValue",
+    );
     final json = {
       if (ref != _sentinel)
         'ref': ref as DocumentReference<Map<String, dynamic>>,

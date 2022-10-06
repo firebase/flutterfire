@@ -221,6 +221,14 @@ class _$PersonDocumentReference
     Object? lastName = _sentinel,
     FieldValue? lastNameFieldValue,
   }) {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String,
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
@@ -1121,6 +1129,10 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
     FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as String,
       if (valueFieldValue != null) 'value': valueFieldValue,

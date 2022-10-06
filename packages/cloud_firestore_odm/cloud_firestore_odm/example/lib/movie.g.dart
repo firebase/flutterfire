@@ -299,6 +299,34 @@ class _$MovieDocumentReference
     Object? genre = _sentinel,
     FieldValue? genreFieldValue,
   }) {
+    assert(
+      poster == _sentinel || posterFieldValue == null,
+      "Cannot specify both poster and posterFieldValue",
+    );
+    assert(
+      likes == _sentinel || likesFieldValue == null,
+      "Cannot specify both likes and likesFieldValue",
+    );
+    assert(
+      title == _sentinel || titleFieldValue == null,
+      "Cannot specify both title and titleFieldValue",
+    );
+    assert(
+      year == _sentinel || yearFieldValue == null,
+      "Cannot specify both year and yearFieldValue",
+    );
+    assert(
+      runtime == _sentinel || runtimeFieldValue == null,
+      "Cannot specify both runtime and runtimeFieldValue",
+    );
+    assert(
+      rated == _sentinel || ratedFieldValue == null,
+      "Cannot specify both rated and ratedFieldValue",
+    );
+    assert(
+      genre == _sentinel || genreFieldValue == null,
+      "Cannot specify both genre and genreFieldValue",
+    );
     final json = {
       if (poster != _sentinel) 'poster': poster as String,
       if (posterFieldValue != null) 'poster': posterFieldValue,
@@ -1853,6 +1881,14 @@ class _$CommentDocumentReference
     Object? message = _sentinel,
     FieldValue? messageFieldValue,
   }) {
+    assert(
+      authorName == _sentinel || authorNameFieldValue == null,
+      "Cannot specify both authorName and authorNameFieldValue",
+    );
+    assert(
+      message == _sentinel || messageFieldValue == null,
+      "Cannot specify both message and messageFieldValue",
+    );
     final json = {
       if (authorName != _sentinel) 'authorName': authorName as String,
       if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,

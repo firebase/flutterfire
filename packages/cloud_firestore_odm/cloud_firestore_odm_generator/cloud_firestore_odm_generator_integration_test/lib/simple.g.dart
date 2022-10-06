@@ -205,6 +205,10 @@ class _$ModelDocumentReference
     Object? value = _sentinel,
     FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as String,
       if (valueFieldValue != null) 'value': valueFieldValue,
@@ -1042,6 +1046,30 @@ class _$NestedDocumentReference
     Object? dynamicList = _sentinel,
     FieldValue? dynamicListFieldValue,
   }) {
+    assert(
+      simple == _sentinel || simpleFieldValue == null,
+      "Cannot specify both simple and simpleFieldValue",
+    );
+    assert(
+      boolList == _sentinel || boolListFieldValue == null,
+      "Cannot specify both boolList and boolListFieldValue",
+    );
+    assert(
+      stringList == _sentinel || stringListFieldValue == null,
+      "Cannot specify both stringList and stringListFieldValue",
+    );
+    assert(
+      numList == _sentinel || numListFieldValue == null,
+      "Cannot specify both numList and numListFieldValue",
+    );
+    assert(
+      objectList == _sentinel || objectListFieldValue == null,
+      "Cannot specify both objectList and objectListFieldValue",
+    );
+    assert(
+      dynamicList == _sentinel || dynamicListFieldValue == null,
+      "Cannot specify both dynamicList and dynamicListFieldValue",
+    );
     final json = {
       if (simple != _sentinel) 'simple': simple as int?,
       if (simpleFieldValue != null) 'simple': simpleFieldValue,
@@ -3647,6 +3675,10 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
     FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as int,
       if (valueFieldValue != null) 'value': valueFieldValue,
@@ -4417,6 +4449,10 @@ class _$MixedJsonDocumentReference
     Object? value = _sentinel,
     FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as int,
       if (valueFieldValue != null) 'value': valueFieldValue,
@@ -5237,6 +5273,14 @@ class _$RootDocumentReference
     Object? nullable = _sentinel,
     FieldValue? nullableFieldValue,
   }) {
+    assert(
+      nonNullable == _sentinel || nonNullableFieldValue == null,
+      "Cannot specify both nonNullable and nonNullableFieldValue",
+    );
+    assert(
+      nullable == _sentinel || nullableFieldValue == null,
+      "Cannot specify both nullable and nullableFieldValue",
+    );
     final json = {
       if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
       if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
@@ -6159,6 +6203,14 @@ class _$SubDocumentReference
     Object? nullable = _sentinel,
     FieldValue? nullableFieldValue,
   }) {
+    assert(
+      nonNullable == _sentinel || nonNullableFieldValue == null,
+      "Cannot specify both nonNullable and nonNullableFieldValue",
+    );
+    assert(
+      nullable == _sentinel || nullableFieldValue == null,
+      "Cannot specify both nullable and nullableFieldValue",
+    );
     final json = {
       if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
       if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
@@ -7072,6 +7124,10 @@ class _$AsCamelCaseDocumentReference
     Object? value = _sentinel,
     FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as num,
       if (valueFieldValue != null) 'value': valueFieldValue,
@@ -7866,6 +7922,10 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
     FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as num,
       if (valueFieldValue != null) 'value': valueFieldValue,
@@ -8661,6 +8721,10 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
     FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as num,
       if (valueFieldValue != null) 'value': valueFieldValue,
@@ -9448,6 +9512,10 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
     FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as num,
       if (valueFieldValue != null) 'value': valueFieldValue,
@@ -10242,6 +10310,10 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
     FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as num,
       if (valueFieldValue != null) 'value': valueFieldValue,

@@ -142,6 +142,7 @@ Future<void> update({${parameters.join()}}) async {
 }
 
 void transactionUpdate(Transaction transaction, {${parameters.join()}}) {
+  $asserts
   final json = {${json.join()}};
 
   transaction.update(reference, json);

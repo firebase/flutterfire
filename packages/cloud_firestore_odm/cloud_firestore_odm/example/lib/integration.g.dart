@@ -207,6 +207,10 @@ class _$ManualJsonDocumentReference
     Object? value = _sentinel,
     FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as String,
       if (valueFieldValue != null) 'value': valueFieldValue,
@@ -1007,6 +1011,18 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     Object? hashCode = _sentinel,
     FieldValue? hashCodeFieldValue,
   }) {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
+    assert(
+      hashCode == _sentinel || hashCodeFieldValue == null,
+      "Cannot specify both hashCode and hashCodeFieldValue",
+    );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
@@ -2070,6 +2086,18 @@ class _$_PrivateAdvancedJsonDocumentReference
     Object? hashCode = _sentinel,
     FieldValue? hashCodeFieldValue,
   }) {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
+    assert(
+      hashCode == _sentinel || hashCodeFieldValue == null,
+      "Cannot specify both hashCode and hashCodeFieldValue",
+    );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
