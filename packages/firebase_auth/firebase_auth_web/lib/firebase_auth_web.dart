@@ -402,7 +402,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       // origin as a single string
       delegate.useAuthEmulator('http://$host:$port');
     } catch (e) {
-      final String code = (e as dynamic).code;
+      final String code = (e as auth_interop.AuthError).code;
       // this catches Firebase Error from web that occurs after hot reloading & hot restarting
       // ignore: avoid_print
       print(
