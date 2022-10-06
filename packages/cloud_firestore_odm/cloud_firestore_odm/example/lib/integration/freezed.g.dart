@@ -9,7 +9,7 @@ part of 'freezed.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -191,8 +191,8 @@ class _$PersonDocumentReference
     Object? lastName = _sentinel,
   }) async {
     final json = {
-      if (firstName != _sentinel) "firstName": firstName as String,
-      if (lastName != _sentinel) "lastName": lastName as String,
+      if (firstName != _sentinel) 'firstName': firstName as String,
+      if (lastName != _sentinel) 'lastName': lastName as String,
     };
 
     return reference.update(json);
@@ -600,7 +600,7 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
     return _$PersonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$_PersonFieldMap["firstName"]!,
+        _$$_PersonFieldMap['firstName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -629,7 +629,7 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
     return _$PersonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$_PersonFieldMap["lastName"]!,
+        _$$_PersonFieldMap['lastName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -728,7 +728,7 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
     PersonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$_PersonFieldMap["firstName"]!, descending: descending);
+        .orderBy(_$$_PersonFieldMap['firstName']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -800,7 +800,7 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
     PersonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$$_PersonFieldMap["lastName"]!, descending: descending);
+        .orderBy(_$$_PersonFieldMap['lastName']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1082,7 +1082,7 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as String,
+      if (value != _sentinel) 'value': value as String,
     };
 
     return reference.update(json);
@@ -1467,7 +1467,7 @@ class _$PublicRedirectedQuery
     return _$PublicRedirectedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$$PublicRedirected2FieldMap["value"]!,
+        _$$PublicRedirected2FieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1566,7 +1566,7 @@ class _$PublicRedirectedQuery
     PublicRedirectedDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$$PublicRedirected2FieldMap["value"]!,
+        _$$PublicRedirected2FieldMap['value']!,
         descending: descending);
     var queryCursor = $queryCursor;
 

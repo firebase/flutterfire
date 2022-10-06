@@ -9,7 +9,7 @@ part of 'query.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -194,7 +194,7 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
     Object? time = _sentinel,
   }) async {
     final json = {
-      if (time != _sentinel) "time": time as DateTime,
+      if (time != _sentinel) 'time': time as DateTime,
     };
 
     return reference.update(json);
@@ -579,7 +579,7 @@ class _$DateTimeQueryQuery
     return _$DateTimeQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$DateTimeQueryFieldMap["time"]!,
+        _$DateTimeQueryFieldMap['time']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -678,7 +678,7 @@ class _$DateTimeQueryQuery
     DateTimeQueryDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$DateTimeQueryFieldMap["time"]!, descending: descending);
+        .orderBy(_$DateTimeQueryFieldMap['time']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -962,7 +962,7 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
     Object? time = _sentinel,
   }) async {
     final json = {
-      if (time != _sentinel) "time": time as Timestamp,
+      if (time != _sentinel) 'time': time as Timestamp,
     };
 
     return reference.update(json);
@@ -1347,7 +1347,7 @@ class _$TimestampQueryQuery
     return _$TimestampQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$TimestampQueryFieldMap["time"]!,
+        _$TimestampQueryFieldMap['time']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1446,7 +1446,7 @@ class _$TimestampQueryQuery
     TimestampQueryDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$TimestampQueryFieldMap["time"]!, descending: descending);
+        .orderBy(_$TimestampQueryFieldMap['time']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1731,7 +1731,7 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     Object? point = _sentinel,
   }) async {
     final json = {
-      if (point != _sentinel) "point": point as GeoPoint,
+      if (point != _sentinel) 'point': point as GeoPoint,
     };
 
     return reference.update(json);
@@ -2116,7 +2116,7 @@ class _$GeoPointQueryQuery
     return _$GeoPointQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$GeoPointQueryFieldMap["point"]!,
+        _$GeoPointQueryFieldMap['point']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2215,7 +2215,7 @@ class _$GeoPointQueryQuery
     GeoPointQueryDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$GeoPointQueryFieldMap["point"]!, descending: descending);
+        .orderBy(_$GeoPointQueryFieldMap['point']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -2504,7 +2504,7 @@ class _$DocumentReferenceQueryDocumentReference
   }) async {
     final json = {
       if (ref != _sentinel)
-        "ref": ref as DocumentReference<Map<String, dynamic>>,
+        'ref': ref as DocumentReference<Map<String, dynamic>>,
     };
 
     return reference.update(json);
@@ -2894,7 +2894,7 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
     return _$DocumentReferenceQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$DocumentReferenceQueryFieldMap["ref"]!,
+        _$DocumentReferenceQueryFieldMap['ref']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2993,7 +2993,7 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
     DocumentReferenceQueryDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(
-        _$DocumentReferenceQueryFieldMap["ref"]!,
+        _$DocumentReferenceQueryFieldMap['ref']!,
         descending: descending);
     var queryCursor = $queryCursor;
 

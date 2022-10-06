@@ -7,7 +7,7 @@ part of 'simple.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -186,7 +186,7 @@ class _$ModelDocumentReference
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as String,
+      if (value != _sentinel) 'value': value as String,
     };
 
     return reference.update(json);
@@ -568,7 +568,7 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     return _$ModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$ModelFieldMap["value"]!,
+        _$ModelFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -666,7 +666,7 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     ModelDocumentSnapshot? endBeforeDocument,
     ModelDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$ModelFieldMap["value"]!,
+    final query = $referenceWithoutCursor.orderBy(_$ModelFieldMap['value']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -957,13 +957,13 @@ class _$NestedDocumentReference
     Object? dynamicList = _sentinel,
   }) async {
     final json = {
-      if (simple != _sentinel) "simple": simple as int?,
-      if (boolList != _sentinel) "boolList": boolList as List<bool>?,
-      if (stringList != _sentinel) "stringList": stringList as List<String>?,
-      if (numList != _sentinel) "numList": numList as List<num>?,
-      if (objectList != _sentinel) "objectList": objectList as List<Object?>?,
+      if (simple != _sentinel) 'simple': simple as int?,
+      if (boolList != _sentinel) 'boolList': boolList as List<bool>?,
+      if (stringList != _sentinel) 'stringList': stringList as List<String>?,
+      if (numList != _sentinel) 'numList': numList as List<num>?,
+      if (objectList != _sentinel) 'objectList': objectList as List<Object?>?,
       if (dynamicList != _sentinel)
-        "dynamicList": dynamicList as List<dynamic>?,
+        'dynamicList': dynamicList as List<dynamic>?,
     };
 
     return reference.update(json);
@@ -1472,7 +1472,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["simple"]!,
+        _$NestedFieldMap['simple']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1501,7 +1501,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["boolList"]!,
+        _$NestedFieldMap['boolList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1530,7 +1530,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["stringList"]!,
+        _$NestedFieldMap['stringList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1559,7 +1559,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["numList"]!,
+        _$NestedFieldMap['numList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1588,7 +1588,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["objectList"]!,
+        _$NestedFieldMap['objectList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1617,7 +1617,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$NestedFieldMap["dynamicList"]!,
+        _$NestedFieldMap['dynamicList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1715,7 +1715,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap["simple"]!,
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['simple']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1787,7 +1787,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap["boolList"]!,
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['boolList']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1860,7 +1860,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$NestedFieldMap["stringList"]!, descending: descending);
+        .orderBy(_$NestedFieldMap['stringList']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1931,7 +1931,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap["numList"]!,
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['numList']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2004,7 +2004,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$NestedFieldMap["objectList"]!, descending: descending);
+        .orderBy(_$NestedFieldMap['objectList']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -2076,7 +2076,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$NestedFieldMap["dynamicList"]!, descending: descending);
+        .orderBy(_$NestedFieldMap['dynamicList']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -3558,7 +3558,7 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as int,
+      if (value != _sentinel) 'value': value as int,
     };
 
     return reference.update(json);
@@ -3943,7 +3943,7 @@ class _$OptionalJsonQuery
     return _$OptionalJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$OptionalJsonFieldMap["value"]!,
+        _$OptionalJsonFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4042,7 +4042,7 @@ class _$OptionalJsonQuery
     OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$OptionalJsonFieldMap["value"]!, descending: descending);
+        .orderBy(_$OptionalJsonFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -4318,7 +4318,7 @@ class _$MixedJsonDocumentReference
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as int,
+      if (value != _sentinel) 'value': value as int,
     };
 
     return reference.update(json);
@@ -4701,7 +4701,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     return _$MixedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MixedJsonFieldMap["value"]!,
+        _$MixedJsonFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4799,7 +4799,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     MixedJsonDocumentSnapshot? endBeforeDocument,
     MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MixedJsonFieldMap["value"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MixedJsonFieldMap['value']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -5117,8 +5117,8 @@ class _$RootDocumentReference
     Object? nullable = _sentinel,
   }) async {
     final json = {
-      if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
-      if (nullable != _sentinel) "nullable": nullable as int?,
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
     };
 
     return reference.update(json);
@@ -5525,7 +5525,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     return _$RootQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$RootFieldMap["nonNullable"]!,
+        _$RootFieldMap['nonNullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5554,7 +5554,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     return _$RootQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$RootFieldMap["nullable"]!,
+        _$RootFieldMap['nullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5653,7 +5653,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     RootDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$RootFieldMap["nonNullable"]!, descending: descending);
+        .orderBy(_$RootFieldMap['nonNullable']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -5724,7 +5724,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$RootFieldMap["nullable"]!,
+    final query = $referenceWithoutCursor.orderBy(_$RootFieldMap['nullable']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -6019,8 +6019,8 @@ class _$SubDocumentReference
     Object? nullable = _sentinel,
   }) async {
     final json = {
-      if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
-      if (nullable != _sentinel) "nullable": nullable as int?,
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
     };
 
     return reference.update(json);
@@ -6427,7 +6427,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     return _$SubQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$SubFieldMap["nonNullable"]!,
+        _$SubFieldMap['nonNullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -6456,7 +6456,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     return _$SubQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$SubFieldMap["nullable"]!,
+        _$SubFieldMap['nullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -6554,7 +6554,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap["nonNullable"]!,
+    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap['nonNullable']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -6626,7 +6626,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap["nullable"]!,
+    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap['nullable']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -6923,7 +6923,7 @@ class _$AsCamelCaseDocumentReference
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
     };
 
     return reference.update(json);
@@ -7308,7 +7308,7 @@ class _$AsCamelCaseQuery
     return _$AsCamelCaseQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AsCamelCaseFieldMap["value"]!,
+        _$AsCamelCaseFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -7407,7 +7407,7 @@ class _$AsCamelCaseQuery
     AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$AsCamelCaseFieldMap["value"]!, descending: descending);
+        .orderBy(_$AsCamelCaseFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -7707,7 +7707,7 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
     };
 
     return reference.update(json);
@@ -8092,7 +8092,7 @@ class _$CustomSubNameQuery
     return _$CustomSubNameQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$CustomSubNameFieldMap["value"]!,
+        _$CustomSubNameFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -8191,7 +8191,7 @@ class _$CustomSubNameQuery
     CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$CustomSubNameFieldMap["value"]!, descending: descending);
+        .orderBy(_$CustomSubNameFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -8492,7 +8492,7 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
     };
 
     return reference.update(json);
@@ -8880,7 +8880,7 @@ class _$ThisIsACustomPrefixQuery
     return _$ThisIsACustomPrefixQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$CustomClassPrefixFieldMap["value"]!,
+        _$CustomClassPrefixFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -8979,7 +8979,7 @@ class _$ThisIsACustomPrefixQuery
     ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$CustomClassPrefixFieldMap["value"]!, descending: descending);
+        .orderBy(_$CustomClassPrefixFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -9269,7 +9269,7 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
     };
 
     return reference.update(json);
@@ -9654,7 +9654,7 @@ class _$ExplicitPathQuery
     return _$ExplicitPathQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$ExplicitPathFieldMap["value"]!,
+        _$ExplicitPathFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -9753,7 +9753,7 @@ class _$ExplicitPathQuery
     ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$ExplicitPathFieldMap["value"]!, descending: descending);
+        .orderBy(_$ExplicitPathFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -10053,7 +10053,7 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
     Object? value = _sentinel,
   }) async {
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
     };
 
     return reference.update(json);
@@ -10438,7 +10438,7 @@ class _$ExplicitSubPathQuery
     return _$ExplicitSubPathQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$ExplicitSubPathFieldMap["value"]!,
+        _$ExplicitSubPathFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -10537,7 +10537,7 @@ class _$ExplicitSubPathQuery
     ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$ExplicitSubPathFieldMap["value"]!, descending: descending);
+        .orderBy(_$ExplicitSubPathFieldMap['value']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -10648,10 +10648,10 @@ class ExplicitSubPathQueryDocumentSnapshot
 // **************************************************************************
 
 void _$assertMinValidation(MinValidation instance) {
-  const Min(0).validate(instance.intNbr, "intNbr");
-  const Max(42).validate(instance.intNbr, "intNbr");
-  const Min(10).validate(instance.doubleNbr, "doubleNbr");
-  const Min(-10).validate(instance.numNbr, "numNbr");
+  const Min(0).validate(instance.intNbr, 'intNbr');
+  const Max(42).validate(instance.intNbr, 'intNbr');
+  const Min(10).validate(instance.doubleNbr, 'doubleNbr');
+  const Min(-10).validate(instance.numNbr, 'numNbr');
 }
 
 // **************************************************************************

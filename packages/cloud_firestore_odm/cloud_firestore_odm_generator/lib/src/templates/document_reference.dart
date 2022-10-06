@@ -109,10 +109,10 @@ void transactionUpdate(Transaction transaction, {${parameters.join()}});
     // TODO support nested objects
     final json = [
       for (final field in data.updatableFields)
-        '''
+        """
         if (${field.name} != _sentinel)
-          "${field.name}": ${field.name} as ${field.type},
-        '''
+          '${field.name}': ${field.name} as ${field.type},
+        """
     ];
 
     return '''
