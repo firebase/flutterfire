@@ -15,6 +15,8 @@ dependencies:
   google_sign_in: ^5.1.0
 
 dependency_overrides:
+  _flutterfire_internals:
+    path: ../../../_flutterfire_internals
   firebase_auth:
     path: ../
   firebase_auth_platform_interface:
