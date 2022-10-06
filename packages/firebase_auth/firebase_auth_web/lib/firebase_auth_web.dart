@@ -404,9 +404,6 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     } catch (e) {
       final String code = (e as auth_interop.AuthError).code;
       // this catches Firebase Error from web that occurs after hot reloading & hot restarting
-      // ignore: avoid_print
-      print(
-          "Web auth emulator throws exception on hot restart/reload (Web JS SDK thinks you're calling emulator multiple times). We're hiding the exception for your convenience.");
       if (code != 'auth/emulator-config-failed') {
         throw getFirebaseAuthException(e);
       }
