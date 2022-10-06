@@ -395,6 +395,13 @@ See [the example app](https://github.com/firebase/flutterfire/blob/master/packag
 Once you've migrated to the v9 SDK, you can use the following code:
 
 ``` typescript
+import {
+  experimentalSetDeliveryMetricsExportedToBigQueryEnabled,
+  getMessaging,
+} from 'firebase/messaging/sw';
+
+...
+
 const messaging = getMessaging(app);
 experimentalSetDeliveryMetricsExportedToBigQueryEnabled(messaging, true);
 ```
