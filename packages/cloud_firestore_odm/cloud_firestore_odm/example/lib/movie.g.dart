@@ -192,19 +192,19 @@ class _$MovieDocumentReference
 
   Future<void> update({
     Object? poster = _sentinel,
-    FieldValue? poster,
+    FieldValue? posterFieldValue,
     Object? likes = _sentinel,
-    FieldValue? likes,
+    FieldValue? likesFieldValue,
     Object? title = _sentinel,
-    FieldValue? title,
+    FieldValue? titleFieldValue,
     Object? year = _sentinel,
-    FieldValue? year,
+    FieldValue? yearFieldValue,
     Object? runtime = _sentinel,
-    FieldValue? runtime,
+    FieldValue? runtimeFieldValue,
     Object? rated = _sentinel,
-    FieldValue? rated,
+    FieldValue? ratedFieldValue,
     Object? genre = _sentinel,
-    FieldValue? genre,
+    FieldValue? genreFieldValue,
   }) async {
     assert(
       poster == _sentinel || posterFieldValue == null,
@@ -1745,9 +1745,9 @@ class _$CommentDocumentReference
 
   Future<void> update({
     Object? authorName = _sentinel,
-    FieldValue? authorName,
+    FieldValue? authorNameFieldValue,
     Object? message = _sentinel,
-    FieldValue? message,
+    FieldValue? messageFieldValue,
   }) async {
     assert(
       authorName == _sentinel || authorNameFieldValue == null,

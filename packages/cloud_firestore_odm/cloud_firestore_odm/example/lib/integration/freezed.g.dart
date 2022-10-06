@@ -174,9 +174,9 @@ class _$PersonDocumentReference
 
   Future<void> update({
     Object? firstName = _sentinel,
-    FieldValue? firstName,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
-    FieldValue? lastName,
+    FieldValue? lastNameFieldValue,
   }) async {
     assert(
       firstName == _sentinel || firstNameFieldValue == null,
@@ -1054,7 +1054,7 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
-    FieldValue? value,
+    FieldValue? valueFieldValue,
   }) async {
     assert(
       value == _sentinel || valueFieldValue == null,

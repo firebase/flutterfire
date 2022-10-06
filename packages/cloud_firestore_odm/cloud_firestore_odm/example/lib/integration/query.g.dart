@@ -177,7 +177,7 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? time = _sentinel,
-    FieldValue? time,
+    FieldValue? timeFieldValue,
   }) async {
     assert(
       time == _sentinel || timeFieldValue == null,
@@ -929,7 +929,7 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? time = _sentinel,
-    FieldValue? time,
+    FieldValue? timeFieldValue,
   }) async {
     assert(
       time == _sentinel || timeFieldValue == null,
@@ -1682,7 +1682,7 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? point = _sentinel,
-    FieldValue? point,
+    FieldValue? pointFieldValue,
   }) async {
     assert(
       point == _sentinel || pointFieldValue == null,
@@ -2438,7 +2438,7 @@ class _$DocumentReferenceQueryDocumentReference
 
   Future<void> update({
     Object? ref = _sentinel,
-    FieldValue? ref,
+    FieldValue? refFieldValue,
   }) async {
     assert(
       ref == _sentinel || refFieldValue == null,

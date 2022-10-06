@@ -172,7 +172,7 @@ class _$ManualJsonDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
-    FieldValue? value,
+    FieldValue? valueFieldValue,
   }) async {
     assert(
       value == _sentinel || valueFieldValue == null,
@@ -923,11 +923,11 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? firstName = _sentinel,
-    FieldValue? firstName,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
-    FieldValue? lastName,
+    FieldValue? lastNameFieldValue,
     Object? hashCode = _sentinel,
-    FieldValue? hashCode,
+    FieldValue? hashCodeFieldValue,
   }) async {
     assert(
       firstName == _sentinel || firstNameFieldValue == null,
@@ -1948,11 +1948,11 @@ class _$_PrivateAdvancedJsonDocumentReference
 
   Future<void> update({
     Object? firstName = _sentinel,
-    FieldValue? firstName,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
-    FieldValue? lastName,
+    FieldValue? lastNameFieldValue,
     Object? hashCode = _sentinel,
-    FieldValue? hashCode,
+    FieldValue? hashCodeFieldValue,
   }) async {
     assert(
       firstName == _sentinel || firstNameFieldValue == null,

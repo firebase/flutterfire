@@ -170,7 +170,7 @@ class _$ModelDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
-    FieldValue? value,
+    FieldValue? valueFieldValue,
   }) async {
     assert(
       value == _sentinel || valueFieldValue == null,
@@ -921,17 +921,17 @@ class _$NestedDocumentReference
 
   Future<void> update({
     Object? simple = _sentinel,
-    FieldValue? simple,
+    FieldValue? simpleFieldValue,
     Object? boolList = _sentinel,
-    FieldValue? boolList,
+    FieldValue? boolListFieldValue,
     Object? stringList = _sentinel,
-    FieldValue? stringList,
+    FieldValue? stringListFieldValue,
     Object? numList = _sentinel,
-    FieldValue? numList,
+    FieldValue? numListFieldValue,
     Object? objectList = _sentinel,
-    FieldValue? objectList,
+    FieldValue? objectListFieldValue,
     Object? dynamicList = _sentinel,
-    FieldValue? dynamicList,
+    FieldValue? dynamicListFieldValue,
   }) async {
     assert(
       simple == _sentinel || simpleFieldValue == null,
@@ -3532,7 +3532,7 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
-    FieldValue? value,
+    FieldValue? valueFieldValue,
   }) async {
     assert(
       value == _sentinel || valueFieldValue == null,
@@ -4277,7 +4277,7 @@ class _$MixedJsonDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
-    FieldValue? value,
+    FieldValue? valueFieldValue,
   }) async {
     assert(
       value == _sentinel || valueFieldValue == null,
@@ -5060,9 +5060,9 @@ class _$RootDocumentReference
 
   Future<void> update({
     Object? nonNullable = _sentinel,
-    FieldValue? nonNullable,
+    FieldValue? nonNullableFieldValue,
     Object? nullable = _sentinel,
-    FieldValue? nullable,
+    FieldValue? nullableFieldValue,
   }) async {
     assert(
       nonNullable == _sentinel || nonNullableFieldValue == null,
@@ -5951,9 +5951,9 @@ class _$SubDocumentReference
 
   Future<void> update({
     Object? nonNullable = _sentinel,
-    FieldValue? nonNullable,
+    FieldValue? nonNullableFieldValue,
     Object? nullable = _sentinel,
-    FieldValue? nullable,
+    FieldValue? nullableFieldValue,
   }) async {
     assert(
       nonNullable == _sentinel || nonNullableFieldValue == null,
@@ -6845,7 +6845,7 @@ class _$AsCamelCaseDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
-    FieldValue? value,
+    FieldValue? valueFieldValue,
   }) async {
     assert(
       value == _sentinel || valueFieldValue == null,
@@ -7613,7 +7613,7 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
-    FieldValue? value,
+    FieldValue? valueFieldValue,
   }) async {
     assert(
       value == _sentinel || valueFieldValue == null,
@@ -8382,7 +8382,7 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
-    FieldValue? value,
+    FieldValue? valueFieldValue,
   }) async {
     assert(
       value == _sentinel || valueFieldValue == null,
@@ -9144,7 +9144,7 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
-    FieldValue? value,
+    FieldValue? valueFieldValue,
   }) async {
     assert(
       value == _sentinel || valueFieldValue == null,
@@ -9912,7 +9912,7 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
-    FieldValue? value,
+    FieldValue? valueFieldValue,
   }) async {
     assert(
       value == _sentinel || valueFieldValue == null,

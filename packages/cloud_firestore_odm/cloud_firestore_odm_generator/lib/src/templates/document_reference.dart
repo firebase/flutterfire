@@ -96,7 +96,7 @@ class _\$${data.documentReferenceName}
     final parameters = [
       for (final field in data.updatableFields) ...[
         'Object? ${field.name} = _sentinel,',
-        'FieldValue? ${field.name},',
+        'FieldValue? ${field.name}FieldValue,',
       ]
     ];
 
