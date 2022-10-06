@@ -236,13 +236,10 @@ public class FlutterFirebaseDynamicLinksPlugin
                 taskCompletionSource.setResult(null);
                 return;
               }
+              
+              activity.get().getIntent().putExtra("flutterfire-used-link", true);
               pendingDynamicLink =
                   Tasks.await(dynamicLinks.getDynamicLink(activity.get().getIntent()));
-
-              // Only save that the link was used if the activity is not detached already.
-              if (activity.get() != null || activity.get().getIntent() != null) {
-                activity.get().getIntent().putExtra("flutterfire-used-link", true);
-              }
             }
 
             taskCompletionSource.setResult(
