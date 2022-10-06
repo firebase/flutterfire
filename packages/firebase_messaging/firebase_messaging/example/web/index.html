@@ -1,39 +1,40 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>example</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <title>example</title>
-</head>
+  <body>
+    <script src="main.dart.js" type="application/javascript"></script>
 
-<body>
-  <script src="main.dart.js" type="application/javascript"></script>
-  <script>
-    var serviceWorkerVersion = null;
-    var scriptLoaded = false;
-    function loadMainDartJs() {
-      if (scriptLoaded) {
-        return;
+    <script>
+      var serviceWorkerVersion = null;
+      var scriptLoaded = false;
+      function loadMainDartJs() {
+        if (scriptLoaded) {
+          return;
+        }
+        scriptLoaded = true;
+        var scriptTag = document.createElement('script');
+        scriptTag.src = 'main.dart.js';
+        scriptTag.type = 'application/javascript';
+        document.body.append(scriptTag);
       }
-      scriptLoaded = true;
-      var scriptTag = document.createElement('script');
-      scriptTag.src = 'main.dart.js';
-      scriptTag.type = 'application/javascript';
-      document.body.append(scriptTag);
-    }
 
-    if ('serviceWorker' in navigator) {
-      // Service workers are supported. Use them.
-      window.addEventListener('load', function () {
-        //register firebase-messaging service worker
-        navigator.serviceWorker.register("/firebase-messaging-sw.js");
-        // Wait for registration to finish before dropping the <script> tag.
-        // Otherwise, the browser will load the script multiple times,
-        // potentially different versions.
-        var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
+      if ('serviceWorker' in navigator) {
+        // Service workers are supported. Use them.
+        window.addEventListener('load', function () {
+          // Register Firebase Messaging service worker.
+          navigator.serviceWorker.register('firebase-messaging-sw.js');
 
-        navigator.serviceWorker.register(serviceWorkerUrl)
-          .then((reg) => {
+          // Wait for registration to finish before dropping the <script> tag.
+          // Otherwise, the browser will load the script multiple times,
+          // potentially different versions.
+          var serviceWorkerUrl =
+            'flutter_service_worker.js?v=' + serviceWorkerVersion;
+
+          navigator.serviceWorker.register(serviceWorkerUrl).then((reg) => {
             function waitForActivation(serviceWorker) {
               serviceWorker.addEventListener('statechange', () => {
                 if (serviceWorker.state == 'activated') {
@@ -59,22 +60,21 @@
             }
           });
 
-        // If service worker doesn't succeed in a reasonable amount of time,
-        // fallback to plaint <script> tag.
-        setTimeout(() => {
-          if (!scriptLoaded) {
-            console.warn(
-              'Failed to load app from service worker. Falling back to plain <script> tag.',
-            );
-            loadMainDartJs();
-          }
-        }, 4000);
-      });
-    } else {
-      // Service workers not supported. Just drop the <script> tag.
-      loadMainDartJs();
-    }
-  </script>
-</body>
-
+          // If service worker doesn't succeed in a reasonable amount of time,
+          // fallback to plaint <script> tag.
+          setTimeout(() => {
+            if (!scriptLoaded) {
+              console.warn(
+                'Failed to load app from service worker. Falling back to plain <script> tag.'
+              );
+              loadMainDartJs();
+            }
+          }, 4000);
+        });
+      } else {
+        // Service workers not supported. Just drop the <script> tag.
+        loadMainDartJs();
+      }
+    </script>
+  </body>
 </html>
