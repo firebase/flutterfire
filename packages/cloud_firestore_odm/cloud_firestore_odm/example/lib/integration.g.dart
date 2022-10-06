@@ -124,11 +124,21 @@ abstract class ManualJsonDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String value,
   });
 
-  Future<void> set(ManualJson value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String value,
+  });
 }
 
 class _$ManualJsonDocumentReference
@@ -165,8 +175,13 @@ class _$ManualJsonDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ManualJsonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ManualJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -179,8 +194,15 @@ class _$ManualJsonDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(ManualJson value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+  }) {
+    final json = {
+      if (value != _sentinel) "value": value as String,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -864,13 +886,25 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String? firstName,
     String? lastName,
     int hashCode,
   });
 
-  Future<void> set(AdvancedJson value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String? firstName,
+    String? lastName,
+    int hashCode,
+  });
 }
 
 class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
@@ -907,8 +941,13 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<AdvancedJsonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return AdvancedJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -925,8 +964,19 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(AdvancedJson value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? firstName = _sentinel,
+    Object? lastName = _sentinel,
+    Object? hashCode = _sentinel,
+  }) {
+    final json = {
+      if (firstName != _sentinel) "firstName": firstName as String?,
+      if (lastName != _sentinel) "lastName": lastName as String?,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -1867,13 +1917,25 @@ abstract class _PrivateAdvancedJsonDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String? firstName,
     String? lastName,
     int hashCode,
   });
 
-  Future<void> set(_PrivateAdvancedJson value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String? firstName,
+    String? lastName,
+    int hashCode,
+  });
 }
 
 class _$_PrivateAdvancedJsonDocumentReference
@@ -1911,8 +1973,14 @@ class _$_PrivateAdvancedJsonDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<_PrivateAdvancedJsonDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return _PrivateAdvancedJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -1929,8 +1997,19 @@ class _$_PrivateAdvancedJsonDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(_PrivateAdvancedJson value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? firstName = _sentinel,
+    Object? lastName = _sentinel,
+    Object? hashCode = _sentinel,
+  }) {
+    final json = {
+      if (firstName != _sentinel) "firstName": firstName as String?,
+      if (lastName != _sentinel) "lastName": lastName as String?,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -2866,8 +2945,6 @@ abstract class EmptyModelDocumentReference
 
   @override
   Future<void> delete();
-
-  Future<void> set(EmptyModel value);
 }
 
 class _$EmptyModelDocumentReference
@@ -2904,12 +2981,13 @@ class _$EmptyModelDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
-  }
-
-  Future<void> set(EmptyModel value) {
-    return reference.set(value);
+  Future<EmptyModelDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return EmptyModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   @override

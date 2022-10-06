@@ -129,11 +129,21 @@ abstract class DateTimeQueryDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     DateTime time,
   });
 
-  Future<void> set(DateTimeQuery value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    DateTime time,
+  });
 }
 
 class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
@@ -170,8 +180,14 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<DateTimeQueryDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return DateTimeQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -184,8 +200,15 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(DateTimeQuery value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? time = _sentinel,
+  }) {
+    final json = {
+      if (time != _sentinel) "time": time as DateTime,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -874,11 +897,21 @@ abstract class TimestampQueryDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     Timestamp time,
   });
 
-  Future<void> set(TimestampQuery value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    Timestamp time,
+  });
 }
 
 class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
@@ -915,8 +948,14 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<TimestampQueryDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return TimestampQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -929,8 +968,15 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(TimestampQuery value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? time = _sentinel,
+  }) {
+    final json = {
+      if (time != _sentinel) "time": time as Timestamp,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -1620,11 +1666,21 @@ abstract class GeoPointQueryDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     GeoPoint point,
   });
 
-  Future<void> set(GeoPointQuery value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    GeoPoint point,
+  });
 }
 
 class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
@@ -1661,8 +1717,14 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<GeoPointQueryDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return GeoPointQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -1675,8 +1737,15 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     return reference.update(json);
   }
 
-  Future<void> set(GeoPointQuery value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? point = _sentinel,
+  }) {
+    final json = {
+      if (point != _sentinel) "point": point as GeoPoint,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -2368,11 +2437,21 @@ abstract class DocumentReferenceQueryDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     DocumentReference<Map<String, dynamic>> ref,
   });
 
-  Future<void> set(DocumentReferenceQuery value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    DocumentReference<Map<String, dynamic>> ref,
+  });
 }
 
 class _$DocumentReferenceQueryDocumentReference
@@ -2410,8 +2489,14 @@ class _$DocumentReferenceQueryDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<DocumentReferenceQueryDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return DocumentReferenceQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -2425,8 +2510,16 @@ class _$DocumentReferenceQueryDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(DocumentReferenceQuery value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? ref = _sentinel,
+  }) {
+    final json = {
+      if (ref != _sentinel)
+        "ref": ref as DocumentReference<Map<String, dynamic>>,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override

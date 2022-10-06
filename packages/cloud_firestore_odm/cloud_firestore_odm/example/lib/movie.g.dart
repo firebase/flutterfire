@@ -128,6 +128,10 @@ abstract class MovieDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String poster,
     int likes,
@@ -138,7 +142,19 @@ abstract class MovieDocumentReference
     List<String>? genre,
   });
 
-  Future<void> set(Movie value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String poster,
+    int likes,
+    String title,
+    int year,
+    String runtime,
+    String rated,
+    List<String>? genre,
+  });
 }
 
 class _$MovieDocumentReference
@@ -179,8 +195,13 @@ class _$MovieDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<MovieDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return MovieDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -205,8 +226,27 @@ class _$MovieDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(Movie value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? poster = _sentinel,
+    Object? likes = _sentinel,
+    Object? title = _sentinel,
+    Object? year = _sentinel,
+    Object? runtime = _sentinel,
+    Object? rated = _sentinel,
+    Object? genre = _sentinel,
+  }) {
+    final json = {
+      if (poster != _sentinel) "poster": poster as String,
+      if (likes != _sentinel) "likes": likes as int,
+      if (title != _sentinel) "title": title as String,
+      if (year != _sentinel) "year": year as int,
+      if (runtime != _sentinel) "runtime": runtime as String,
+      if (rated != _sentinel) "rated": rated as String,
+      if (genre != _sentinel) "genre": genre as List<String>?,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -1641,12 +1681,23 @@ abstract class CommentDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String authorName,
     String message,
   });
 
-  Future<void> set(Comment value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String authorName,
+    String message,
+  });
 }
 
 class _$CommentDocumentReference
@@ -1688,8 +1739,13 @@ class _$CommentDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<CommentDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return CommentDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
@@ -1704,8 +1760,17 @@ class _$CommentDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(Comment value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? authorName = _sentinel,
+    Object? message = _sentinel,
+  }) {
+    final json = {
+      if (authorName != _sentinel) "authorName": authorName as String,
+      if (message != _sentinel) "message": message as String,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
