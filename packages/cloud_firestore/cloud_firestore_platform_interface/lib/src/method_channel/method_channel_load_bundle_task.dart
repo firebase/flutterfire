@@ -37,6 +37,8 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
           }
         }
       } catch (exception) {
+        // TODO this should be refactored to use `convertPlatformException`,
+        // then change receiveBroadcastStream -> receiveGuardedBroadedStream
         if (exception is! Exception || exception is! PlatformException) {
           rethrow;
         }

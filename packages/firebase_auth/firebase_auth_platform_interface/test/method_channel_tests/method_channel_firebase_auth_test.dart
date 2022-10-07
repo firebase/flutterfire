@@ -1006,12 +1006,6 @@ void main() {
     });
 
     group('authStateChanges()', () {
-      StreamSubscription<UserPlatform?>? subscription;
-
-      tearDown(() {
-        subscription?.cancel();
-      });
-
       test('returns [Stream<UserPlatform>]', () async {
         // Checks that `authStateChanges` does not throw UnimplementedError
         expect(auth.authStateChanges(), isNotNull);
@@ -1051,12 +1045,6 @@ void main() {
     });
 
     group('idTokenChanges()', () {
-      StreamSubscription<UserPlatform?>? subscription;
-
-      tearDown(() {
-        subscription?.cancel();
-      });
-
       test('returns [Stream<UserPlatform>]', () async {
         // Checks that `idTokenChanges` does not throw UnimplementedError
         expect(auth.idTokenChanges(), isNotNull);
@@ -1097,12 +1085,6 @@ void main() {
     });
 
     group('userChanges()', () {
-      StreamSubscription<UserPlatform?>? subscription;
-
-      tearDown(() {
-        subscription?.cancel();
-      });
-
       test('returns [Stream<UserPlatform>]', () async {
         // Checks that `userChanges` does not throw UnimplementedError
         expect(auth.userChanges(), isNotNull);

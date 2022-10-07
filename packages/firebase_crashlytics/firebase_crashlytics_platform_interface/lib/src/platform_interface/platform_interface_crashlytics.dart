@@ -89,7 +89,8 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
   /// This should only be used for testing purposes in cases where you wish to
   /// simulate a native crash to view the results on the Firebase Console.
   ///
-  /// Note: crash reports will not include a stack trace.
+  /// Note: crash reports will not include a stack trace and crash reports are
+  /// not sent until the next application startup.
   void crash() {
     throw UnimplementedError('crash() is not implemented');
   }

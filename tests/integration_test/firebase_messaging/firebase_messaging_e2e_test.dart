@@ -219,6 +219,17 @@ void main() {
               defaultTargetPlatform == TargetPlatform.android,
         );
       });
+
+      group('setDeliveryMetricsExportToBigQuery()', () {
+        test(
+          'successfully set delivery metrics export to big query',
+          () async {
+            await messaging.setDeliveryMetricsExportToBigQuery(true);
+          },
+          // Web is skipped because it has to be setup in the service worker
+          skip: kIsWeb,
+        );
+      });
     },
   );
 }

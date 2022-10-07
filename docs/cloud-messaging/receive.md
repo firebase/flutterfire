@@ -339,3 +339,71 @@ Here's how to use the second method:
      },
    }
    ```
+
+
+## Enable message delivery data export
+
+You can export your message data into BigQuery for further analysis. BigQuery allows you to analyze the data using BigQuery SQL, 
+export it to another cloud provider, or use the data for your custom ML models. An export to BigQuery 
+includes all available data for messages, regardless of message type or whether the message is sent via 
+the API or the Notifications composer.
+
+To enable the export, first follow the steps [described here](https://firebase.google.com/docs/cloud-messaging/understand-delivery?platform=ios#bigquery-data-export),
+then follow these instructions:
+
+### Android
+
+You can use the following code:
+```dart
+await FirebaseMessaging.instance.setDeliveryMetricsExportToBigQuery(true);
+```
+
+### iOS
+
+For iOS, you need to change the `AppDelegate.m` with the following content.
+
+```objective-c
+#import "AppDelegate.h"
+#import "GeneratedPluginRegistrant.h"
+#import <Firebase/Firebase.h>
+
+@implementation AppDelegate
+
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [GeneratedPluginRegistrant registerWithRegistry:self];
+  // Override point for customization after application launch.
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+
+- (void)application:(UIApplication *)application
+    didReceiveRemoteNotification:(NSDictionary *)userInfo
+          fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+  [[FIRMessaging extensionHelper] exportDeliveryMetricsToBigQueryWithMessageInfo:userInfo];
+}
+
+@end
+``` 
+
+### Web
+
+For Web, you need to change your service worker in order to use the v9 version of the SDK.
+The v9 version needs to be bundled, so you need to use a bundler like `esbuild` for instance 
+to get the service worker to work.
+See [the example app](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/bundled-service-worker) to see how to achieve this.
+
+Once you've migrated to the v9 SDK, you can use the following code:
+
+``` typescript
+import {
+  experimentalSetDeliveryMetricsExportedToBigQueryEnabled,
+  getMessaging,
+} from 'firebase/messaging/sw';
+
+...
+
+const messaging = getMessaging(app);
+experimentalSetDeliveryMetricsExportedToBigQueryEnabled(messaging, true);
+```
+
+Don't forget to run `yarn build` in order to export the new version of your service worker to the `web` folder.

@@ -3,6 +3,190 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-10-06
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`_flutterfire_internals` - `v1.0.2`](#_flutterfire_internals---v102)
+ - [`cloud_firestore` - `v3.5.1`](#cloud_firestore---v351)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.33`](#cloud_firestore_odm---v100-dev33)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.33`](#cloud_firestore_odm_generator---v100-dev33)
+ - [`cloud_firestore_platform_interface` - `v5.7.7`](#cloud_firestore_platform_interface---v577)
+ - [`cloud_firestore_web` - `v2.8.10`](#cloud_firestore_web---v2810)
+ - [`firebase_app_check_platform_interface` - `v0.0.5+1`](#firebase_app_check_platform_interface---v0051)
+ - [`firebase_app_installations_platform_interface` - `v0.1.1+19`](#firebase_app_installations_platform_interface---v01119)
+ - [`firebase_auth` - `v3.11.2`](#firebase_auth---v3112)
+ - [`firebase_auth_platform_interface` - `v6.10.1`](#firebase_auth_platform_interface---v6101)
+ - [`firebase_crashlytics` - `v2.8.13`](#firebase_crashlytics---v2813)
+ - [`firebase_crashlytics_platform_interface` - `v3.2.19`](#firebase_crashlytics_platform_interface---v3219)
+ - [`firebase_database_platform_interface` - `v0.2.2+7`](#firebase_database_platform_interface---v0227)
+ - [`firebase_messaging` - `v13.1.0`](#firebase_messaging---v1310)
+ - [`firebase_messaging_platform_interface` - `v4.2.0`](#firebase_messaging_platform_interface---v420)
+ - [`firebase_messaging_web` - `v3.2.0`](#firebase_messaging_web---v320)
+ - [`firebase_remote_config_platform_interface` - `v1.1.19`](#firebase_remote_config_platform_interface---v1119)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.1+19`](#firebase_in_app_messaging_platform_interface---v02119)
+ - [`firebase_app_check_web` - `v0.0.7+1`](#firebase_app_check_web---v0071)
+ - [`firebase_app_installations_web` - `v0.1.1+8`](#firebase_app_installations_web---v0118)
+ - [`firebase_performance_platform_interface` - `v0.1.1+19`](#firebase_performance_platform_interface---v01119)
+ - [`firebase_analytics_web` - `v0.4.2+7`](#firebase_analytics_web---v0427)
+ - [`firebase_storage_web` - `v3.3.9`](#firebase_storage_web---v339)
+ - [`firebase_performance_web` - `v0.1.1+8`](#firebase_performance_web---v0118)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.3+15`](#firebase_dynamic_links_platform_interface---v02315)
+ - [`firebase_analytics_platform_interface` - `v3.3.7`](#firebase_analytics_platform_interface---v337)
+ - [`firebase_remote_config_web` - `v1.1.8`](#firebase_remote_config_web---v118)
+ - [`firebase_remote_config` - `v2.0.20`](#firebase_remote_config---v2020)
+ - [`firebase_in_app_messaging` - `v0.6.0+27`](#firebase_in_app_messaging---v06027)
+ - [`firebase_app_check` - `v0.0.9+1`](#firebase_app_check---v0091)
+ - [`firebase_app_installations` - `v0.1.1+10`](#firebase_app_installations---v01110)
+ - [`firebase_performance` - `v0.8.3+3`](#firebase_performance---v0833)
+ - [`firebase_analytics` - `v9.3.8`](#firebase_analytics---v938)
+ - [`firebase_storage` - `v10.3.11`](#firebase_storage---v10311)
+ - [`firebase_auth_web` - `v4.6.1`](#firebase_auth_web---v461)
+ - [`firebase_dynamic_links` - `v4.3.10`](#firebase_dynamic_links---v4310)
+ - [`firebase_database` - `v9.1.7`](#firebase_database---v917)
+ - [`firebase_database_web` - `v0.2.1+9`](#firebase_database_web---v0219)
+ - [`flutterfire_ui` - `v0.4.3+13`](#flutterfire_ui---v04313)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_remote_config_platform_interface` - `v1.1.19`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.1+19`
+ - `firebase_app_check_web` - `v0.0.7+1`
+ - `firebase_app_installations_web` - `v0.1.1+8`
+ - `firebase_performance_platform_interface` - `v0.1.1+19`
+ - `firebase_analytics_web` - `v0.4.2+7`
+ - `firebase_storage_web` - `v3.3.9`
+ - `firebase_performance_web` - `v0.1.1+8`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.3+15`
+ - `firebase_analytics_platform_interface` - `v3.3.7`
+ - `firebase_remote_config_web` - `v1.1.8`
+ - `firebase_remote_config` - `v2.0.20`
+ - `firebase_in_app_messaging` - `v0.6.0+27`
+ - `firebase_app_check` - `v0.0.9+1`
+ - `firebase_app_installations` - `v0.1.1+10`
+ - `firebase_performance` - `v0.8.3+3`
+ - `firebase_analytics` - `v9.3.8`
+ - `firebase_storage` - `v10.3.11`
+ - `firebase_auth_web` - `v4.6.1`
+ - `firebase_dynamic_links` - `v4.3.10`
+ - `firebase_database` - `v9.1.7`
+ - `firebase_database_web` - `v0.2.1+9`
+ - `flutterfire_ui` - `v0.4.3+13`
+
+---
+
+#### `_flutterfire_internals` - `v1.0.2`
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+
+#### `cloud_firestore` - `v3.5.1`
+
+ - **FIX**: fix a query error in Flutter Web that was affecting the parsing of ancient dates ([#9633](https://github.com/firebase/flutterfire/issues/9633)). ([9250d45f](https://github.com/firebase/flutterfire/commit/9250d45f1d7ece9335b2c4c4795fecc728df3de5))
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.33`
+
+ - **FIX**: Update ignored lints in generated files ([#9683](https://github.com/firebase/flutterfire/issues/9683)). ([3ab283bb](https://github.com/firebase/flutterfire/commit/3ab283bb3ec6e5dbc0befefb062c5069959f9fb5))
+ - **FEAT**: Add transaction utilities to the ODM ([#9670](https://github.com/firebase/flutterfire/issues/9670)). ([7d84d70a](https://github.com/firebase/flutterfire/commit/7d84d70a1120f7751f5ff817d7b10b330dcf7e06))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.33`
+
+ - **FIX**: Update ignored lints in generated files ([#9683](https://github.com/firebase/flutterfire/issues/9683)). ([3ab283bb](https://github.com/firebase/flutterfire/commit/3ab283bb3ec6e5dbc0befefb062c5069959f9fb5))
+ - **FEAT**: Add transaction utilities to the ODM ([#9670](https://github.com/firebase/flutterfire/issues/9670)). ([7d84d70a](https://github.com/firebase/flutterfire/commit/7d84d70a1120f7751f5ff817d7b10b330dcf7e06))
+
+#### `cloud_firestore_platform_interface` - `v5.7.7`
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+
+#### `cloud_firestore_web` - `v2.8.10`
+
+ - **FIX**: fix a query error in Flutter Web that was affecting the parsing of ancient dates ([#9633](https://github.com/firebase/flutterfire/issues/9633)). ([9250d45f](https://github.com/firebase/flutterfire/commit/9250d45f1d7ece9335b2c4c4795fecc728df3de5))
+
+#### `firebase_app_check_platform_interface` - `v0.0.5+1`
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+
+#### `firebase_app_installations_platform_interface` - `v0.1.1+19`
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+
+#### `firebase_auth` - `v3.11.2`
+
+ - **DOCS**: update `setSettings()` inline documentation ([#9655](https://github.com/firebase/flutterfire/issues/9655)). ([39ca0029](https://github.com/firebase/flutterfire/commit/39ca00299ec5c6e0f2dc9b0b5a8d71b8d59d51d4))
+
+#### `firebase_auth_platform_interface` - `v6.10.1`
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+ - **DOCS**: update `setSettings()` inline documentation ([#9655](https://github.com/firebase/flutterfire/issues/9655)). ([39ca0029](https://github.com/firebase/flutterfire/commit/39ca00299ec5c6e0f2dc9b0b5a8d71b8d59d51d4))
+
+#### `firebase_crashlytics` - `v2.8.13`
+
+ - **FIX**: parameter `information` accepts `Iterable<Object>` for further diagnostic logging information ([#9678](https://github.com/firebase/flutterfire/issues/9678)). ([2d2b5b03](https://github.com/firebase/flutterfire/commit/2d2b5b03901b68976047e5f2888beb0296f4af45))
+ - **DOCS**: add note for `crash()` that the app needs to be restarted to send a crash report ([#9586](https://github.com/firebase/flutterfire/issues/9586)). ([3a3e5212](https://github.com/firebase/flutterfire/commit/3a3e52123f04eac6d73c21474155e6e67cb357c1))
+
+#### `firebase_crashlytics_platform_interface` - `v3.2.19`
+
+ - **DOCS**: add note for `crash()` that the app needs to be restarted to send a crash report ([#9586](https://github.com/firebase/flutterfire/issues/9586)). ([3a3e5212](https://github.com/firebase/flutterfire/commit/3a3e52123f04eac6d73c21474155e6e67cb357c1))
+
+#### `firebase_database_platform_interface` - `v0.2.2+7`
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+
+#### `firebase_messaging` - `v13.1.0`
+
+ - **FEAT**: add support for exporting delivery metrics to BigQuery ([#9636](https://github.com/firebase/flutterfire/issues/9636)). ([170b99b9](https://github.com/firebase/flutterfire/commit/170b99b91573f28316172e43188d57ca14600446))
+
+#### `firebase_messaging_platform_interface` - `v4.2.0`
+
+ - **FEAT**: add support for exporting delivery metrics to BigQuery ([#9636](https://github.com/firebase/flutterfire/issues/9636)). ([170b99b9](https://github.com/firebase/flutterfire/commit/170b99b91573f28316172e43188d57ca14600446))
+
+#### `firebase_messaging_web` - `v3.2.0`
+
+ - **FEAT**: add support for exporting delivery metrics to BigQuery ([#9636](https://github.com/firebase/flutterfire/issues/9636)). ([170b99b9](https://github.com/firebase/flutterfire/commit/170b99b91573f28316172e43188d57ca14600446))
+
+
+## 2022-10-03
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_app_check` - `v0.0.9`](#firebase_app_check---v009)
+ - [`firebase_auth` - `v3.11.1`](#firebase_auth---v3120)
+ - [`flutterfire_ui` - `v0.4.3+12`](#flutterfire_ui---v04312)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.3+12`
+
+---
+
+#### `firebase_app_check` - `v0.0.9`
+
+ - **FEAT**: provide `androidDebugProvider` boolean for android debug provider & update app check example app ([#9412](https://github.com/firebase/flutterfire/issues/9412)). ([f1f26748](https://github.com/firebase/flutterfire/commit/f1f26748615c7c9d406e1d3d605e2987e1134ee7))
+
+#### `firebase_auth` - `v3.11.1`
+
+ - **FIX**: fix an iOS crash when using Sign In With Apple due to invalid return of nil instead of NSNull ([#9644](https://github.com/firebase/flutterfire/issues/9644)). ([3f76b53f](https://github.com/firebase/flutterfire/commit/3f76b53f375f4398652abfa7c9236571ee0bd87f))
+
+
 ## 2022-09-29
 
 ### Changes
