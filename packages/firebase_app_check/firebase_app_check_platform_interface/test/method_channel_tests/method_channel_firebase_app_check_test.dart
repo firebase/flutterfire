@@ -77,7 +77,7 @@ void main() {
             'FirebaseAppCheck#activate',
             arguments: {
               'appName': defaultFirebaseAppName,
-              'androidProvider': 'debug'
+              'androidProvider': 'playIntegrity'
             },
           ),
         ],

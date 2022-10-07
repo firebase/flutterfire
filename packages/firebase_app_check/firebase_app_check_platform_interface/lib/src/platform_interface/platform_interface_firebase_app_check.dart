@@ -55,8 +55,9 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   ///
   /// On web, provide the reCAPTCHA v3 Site Key which can be found in the
   /// Firebase Console. For more information, see
-  /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web?authuser=0).
-  /// On Android, the default provider is debug. If you wish to set the provider to "safety net" or "play integrity", you may set the `androidProvider` property using the `AndroidProvider` enum
+  /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web).
+  ///
+  /// On Android, the default provider is "play integrity". If you wish to set the provider to "safety net" or "debug", you may set the `androidProvider` property using the `AndroidProvider` enum
   /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
   Future<void> activate(
       {String? webRecaptchaSiteKey, AndroidProvider? androidProvider}) {

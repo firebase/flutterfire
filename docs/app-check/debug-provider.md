@@ -103,7 +103,7 @@ immediately in the Firebase console.
 
 ## Android
 
-To use the debug provider while running your Flutter app in an Android environment, 
+To use the debug provider while running your Flutter app in an Android environment,
 implement the following code in your Flutter application:
 
 ```dart
@@ -118,8 +118,8 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
     webRecaptchaSiteKey: 'recaptcha-v3-site-key',
-    // Set the androidDebugProvider to `true`
-    androidDebugProvider: true,
+    // Set androidProvider to `AndroidProvider.debug`
+    androidProvider: AndroidProvider.debug,
   );
   runApp(App());
 }

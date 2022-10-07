@@ -57,7 +57,6 @@ void main() {
       test('successful call', () async {
         await appCheck.activate(
           webRecaptchaSiteKey: 'key',
-          androidProvider: AndroidProvider.playIntegrity,
         );
 
         expect(

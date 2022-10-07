@@ -53,11 +53,11 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   /// Firebase Console. For more information, see
   /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web).
   ///
-  /// On Android, the default provider is debug. If you wish to set the provider to "safety net" or "play integrity", you may set the `androidProvider` property using the `AndroidProvider` enum
+  /// On Android, the default provider is "play integrity". If you wish to set the provider to "safety net" or "debug", you may set the `androidProvider` property using the `AndroidProvider` enum
   /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
   Future<void> activate(
       {String? webRecaptchaSiteKey,
-      AndroidProvider androidProvider = AndroidProvider.debug}) {
+      AndroidProvider androidProvider = AndroidProvider.playIntegrity}) {
     return _delegate.activate(
         webRecaptchaSiteKey: webRecaptchaSiteKey,
         androidProvider: androidProvider);
