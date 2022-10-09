@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
 
 import 'cloud_functions/cloud_functions_e2e_test.dart' as cloud_functions;
 import 'firebase_analytics/firebase_analytics_e2e_test.dart'
@@ -23,6 +24,8 @@ import 'firebase_remote_config/firebase_remote_config_e2e_test.dart'
 import 'firebase_storage/firebase_storage_e2e_test.dart' as firebase_storage;
 
 void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
   group('FlutterFire', () {
     firebase_core.main();
     firebase_database.main();
