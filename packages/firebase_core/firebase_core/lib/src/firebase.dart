@@ -33,6 +33,9 @@ class Firebase {
   ///
   /// The default app instance can be initialized here simply by passing no "name" as an argument
   /// in both Dart & manual initialization flows.
+  /// If you have a `google-services.json` file in your android project or a `GoogleService-Info.plist` file in your iOS+ project,
+  /// it will automatically create a default (named "[DEFAULT]") app instance on the native platform. However, you will still need to call this method
+  /// before using any FlutterFire plugins.
   static Future<FirebaseApp> initializeApp({
     String? name,
     FirebaseOptions? options,

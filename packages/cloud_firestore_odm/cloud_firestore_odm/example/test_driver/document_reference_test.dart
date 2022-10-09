@@ -30,6 +30,26 @@ void main() {
     });
 
     group('any document', () {
+      test('transactionDelete', () async {
+        final collection = await initializeTest(MovieCollectionReference());
+
+        await collection.doc('123').set(createMovie(title: 'title'));
+
+        expect(
+          await collection.doc('123').get().then((e) => e.exists),
+          true,
+        );
+
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+          collection.doc('123').transactionDelete(transaction);
+        });
+
+        expect(
+          await collection.doc('123').get().then((e) => e.exists),
+          false,
+        );
+      });
+
       test('delete', () async {
         final collection = await initializeTest(MovieCollectionReference());
 
@@ -87,6 +107,19 @@ void main() {
         });
       });
 
+      test('transactionGet', () async {
+        final collection = await initializeTest(MovieCollectionReference());
+
+        await collection.doc('123').set(createMovie(title: 'title'));
+
+        final result = await FirebaseFirestore.instance.runTransaction(
+          (transaction) => collection.doc('123').transactionGet(transaction),
+        );
+
+        expect(result.id, '123');
+        expect(result.data?.title, 'title');
+      });
+
       group('snapshots', () {
         test('calls listeners when value changes', () async {
           final collection = await initializeTest(MovieCollectionReference());
@@ -110,6 +143,82 @@ void main() {
         });
       });
 
+      group('transactionUpdate', () {
+        test('allows modifying a single property of an object', () async {
+          final ref = await initializeTest(moviesRef);
+
+          await ref.doc('123').set(
+                Movie(
+                  genre: [],
+                  likes: 42,
+                  poster: 'foo',
+                  rated: 'good',
+                  runtime: 'runtime',
+                  title: 'title',
+                  year: 0,
+                  id: '_',
+                ),
+              );
+
+          expect(
+            await ref.doc('123').get().then((e) => e.data),
+            isA<Movie>()
+                .having((e) => e.genre, 'genre', isEmpty)
+                .having((e) => e.likes, 'likes', 42)
+                .having((e) => e.poster, 'poster', 'foo')
+                .having((e) => e.rated, 'rated', 'good')
+                .having((e) => e.runtime, 'runtime', 'runtime')
+                .having((e) => e.title, 'title', 'title')
+                .having((e) => e.year, 'year', 0),
+          );
+
+          await FirebaseFirestore.instance.runTransaction((transaction) async {
+            ref.doc('123').transactionUpdate(transaction, genre: ['genre']);
+          });
+
+          expect(
+            await ref.doc('123').get().then((e) => e.data),
+            isA<Movie>()
+                .having((e) => e.genre, 'genre', ['genre'])
+                .having((e) => e.likes, 'likes', 42)
+                .having((e) => e.poster, 'poster', 'foo')
+                .having((e) => e.rated, 'rated', 'good')
+                .having((e) => e.runtime, 'runtime', 'runtime')
+                .having((e) => e.title, 'title', 'title')
+                .having((e) => e.year, 'year', 0),
+          );
+        });
+      });
+
+      group('transactionSet', () {
+        test('allows modifying a single property of an object', () async {
+          final ref = await initializeTest(moviesRef);
+
+          await ref.doc('123').set(createMovie(title: 'title', rated: 'good'));
+
+          expect(
+            await ref.doc('123').get().then((e) => e.data),
+            isA<Movie>()
+                .having((e) => e.rated, 'rated', 'good')
+                .having((e) => e.title, 'title', 'title'),
+          );
+
+          await FirebaseFirestore.instance.runTransaction((transaction) async {
+            ref.doc('123').transactionSet(
+                  transaction,
+                  createMovie(title: 'Foo'),
+                );
+          });
+
+          expect(
+            await ref.doc('123').get().then((e) => e.data),
+            isA<Movie>()
+                .having((e) => e.rated, 'rated', '')
+                .having((e) => e.title, 'title', 'Foo'),
+          );
+        });
+      });
+
       group('update', () {
         test('allows modifying only one property of an object', () async {
           final ref = await initializeTest(moviesRef);
@@ -123,6 +232,7 @@ void main() {
                   runtime: 'runtime',
                   title: 'title',
                   year: 0,
+                  id: '_',
                 ),
               );
 
@@ -167,6 +277,7 @@ void main() {
                   runtime: 'runtime',
                   title: 'title',
                   year: 0,
+                  id: '_',
                 ),
               );
 

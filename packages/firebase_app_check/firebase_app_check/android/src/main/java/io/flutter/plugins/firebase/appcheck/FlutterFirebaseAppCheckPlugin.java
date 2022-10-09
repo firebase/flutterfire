@@ -9,10 +9,12 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.AppCheckTokenResult;
 import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -71,53 +73,93 @@ public class FlutterFirebaseAppCheckPlugin
   }
 
   private Task<Void> activate(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-          firebaseAppCheck.installAppCheckProviderFactory(
-              SafetyNetAppCheckProviderFactory.getInstance());
-          return null;
+          try {
+            Boolean debug = (Boolean) arguments.get("androidDebugProvider");
+
+            if (Boolean.TRUE.equals(debug)) {
+              FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+              firebaseAppCheck.installAppCheckProviderFactory(
+                  DebugAppCheckProviderFactory.getInstance());
+            } else {
+              FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+              firebaseAppCheck.installAppCheckProviderFactory(
+                  SafetyNetAppCheckProviderFactory.getInstance());
+            }
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> getToken(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-          Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
-          AppCheckTokenResult tokenResult = Tasks.await(firebaseAppCheck.getToken(forceRefresh));
-          return tokenResultToMap(tokenResult);
+          try {
+            FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+            Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
+            AppCheckTokenResult tokenResult = Tasks.await(firebaseAppCheck.getToken(forceRefresh));
+
+            taskCompletionSource.setResult(tokenResultToMap(tokenResult));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> setTokenAutoRefreshEnabled(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-          Boolean isTokenAutoRefreshEnabled =
-              (Boolean) Objects.requireNonNull(arguments.get("isTokenAutoRefreshEnabled"));
-          firebaseAppCheck.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled);
-          return null;
+          try {
+            FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+            Boolean isTokenAutoRefreshEnabled =
+                (Boolean) Objects.requireNonNull(arguments.get("isTokenAutoRefreshEnabled"));
+            firebaseAppCheck.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled);
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<String> registerTokenListener(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          String appName = (String) Objects.requireNonNull(arguments.get("appName"));
-          FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
 
-          final TokenChannelStreamHandler handler = new TokenChannelStreamHandler(firebaseAppCheck);
-          final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
-          final EventChannel channel = new EventChannel(messenger, name);
-          channel.setStreamHandler(handler);
-          streamHandlers.put(channel, handler);
-          return name;
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            String appName = (String) Objects.requireNonNull(arguments.get("appName"));
+            FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+
+            final TokenChannelStreamHandler handler =
+                new TokenChannelStreamHandler(firebaseAppCheck);
+            final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
+            final EventChannel channel = new EventChannel(messenger, name);
+            channel.setStreamHandler(handler);
+            streamHandlers.put(channel, handler);
+
+            taskCompletionSource.setResult(name);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
@@ -169,12 +211,34 @@ public class FlutterFirebaseAppCheckPlugin
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return Tasks.call(() -> null);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
-    return Tasks.call(() -> null);
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   private void removeEventListeners() {

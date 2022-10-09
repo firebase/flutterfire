@@ -63,7 +63,35 @@ abstract class FirestoreDocumentReference<Model,
   String get path => reference.path;
 
   /// Deletes the document referred to by this DocumentReference.
-  Future<void> delete();
+  Future<void> delete() {
+    return reference.delete();
+  }
+
+  /// Deletes the document using the transaction API.
+  void transactionDelete(Transaction transaction) {
+    transaction.delete(reference);
+  }
+
+  /// Sets data on the document, overwriting any existing data. If the document
+  /// does not yet exist, it will be created.
+  ///
+  /// If [SetOptions] are provided, the data will be merged into an existing
+  /// document instead of overwriting.
+  Future<void> set(Model model, [SetOptions? setOptions]) {
+    return reference.set(model, setOptions);
+  }
+
+  /// Writes to the document using the transaction API.
+  ///
+  /// If the document does not exist yet, it will be created. If you pass
+  /// [SetOptions], the provided data can be merged into the existing document.
+  void transactionSet(
+    Transaction transaction,
+    Model model, [
+    SetOptions? setOptions,
+  ]) {
+    transaction.set(reference, model, setOptions);
+  }
 
   /// Reads the document referred to by this DocumentReference.
   ///
@@ -74,13 +102,28 @@ abstract class FirestoreDocumentReference<Model,
   /// altered via the GetOptions parameter.
   @override
   Future<Snapshot> get([GetOptions options]);
+
+  /// Reads the document using the transaction API.
+  ///
+  /// If the document changes whilst the transaction is in progress, it will
+  /// be re-tried up to five times.
+  Future<Snapshot> transactionGet(Transaction transaction);
 }
 
 abstract class FirestoreCollectionReference<
         Model,
         Snapshot extends FirestoreQuerySnapshot<Model,
             FirestoreDocumentSnapshot<Model>>>
+    extends QueryReference<Model, Snapshot>
     implements FirestoreReference<Snapshot> {
+  FirestoreCollectionReference({
+    required Query<Model> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
+
   @override
   CollectionReference<Model> get reference;
 
@@ -186,11 +229,150 @@ class FirestoreDocumentChange<
   final DocumentSnapshot doc;
 }
 
+/// An implementation detail for applying operators such as `startAt` to queries.
+///
+/// Do not use.
+@sealed
+@immutable
+class $QueryCursor {
+  const $QueryCursor({
+    this.startAt = const [],
+    this.startAtDocumentSnapshot,
+    this.startAfter = const [],
+    this.startAfterDocumentSnapshot,
+    this.endAt = const [],
+    this.endAtDocumentSnapshot,
+    this.endBefore = const [],
+    this.endBeforeDocumentSnapshot,
+  });
+
+  /// Information for `startAt`.
+  /// Do not use
+  final List<Object?> startAt;
+
+  /// Information for `startAtDocumentSnapshot`.
+  /// Do not use
+  final DocumentSnapshot<Object?>? startAtDocumentSnapshot;
+
+  /// Information for `startAfter`
+  /// Do not use
+  final List<Object?> startAfter;
+
+  /// Information for `startAfterDocumentSnapshot`
+  /// Do not use
+  final DocumentSnapshot<Object?>? startAfterDocumentSnapshot;
+
+  /// Information for `endAt`
+  /// Do not use
+  final List<Object?> endAt;
+
+  /// Information for `endAtDocumentSnapshot`
+  /// Do not use
+  final DocumentSnapshot<Object?>? endAtDocumentSnapshot;
+
+  /// Information for `endBefore`
+  /// Do not use
+  final List<Object?> endBefore;
+
+  /// Information for `endBeforeDocumentSnapshot`
+  /// Do not use
+  final DocumentSnapshot<Object?>? endBeforeDocumentSnapshot;
+
+  /// Updates a [$QueryCursor] with new values
+  ///
+  /// Do not use
+  $QueryCursor Function({
+    List<Object?> startAt,
+    DocumentSnapshot<Object?>? startAtDocumentSnapshot,
+    List<Object?> startAfter,
+    DocumentSnapshot<Object?>? startAfterDocumentSnapshot,
+    List<Object?> endAt,
+    DocumentSnapshot<Object?>? endAtDocumentSnapshot,
+    List<Object?> endBefore,
+    DocumentSnapshot<Object?>? endBeforeDocumentSnapshot,
+  }) get copyWith {
+    return ({
+      Object startAt = const Object(),
+      Object? startAtDocumentSnapshot = const Object(),
+      Object startAfter = const Object(),
+      Object? startAfterDocumentSnapshot = const Object(),
+      Object endAt = const Object(),
+      Object? endAtDocumentSnapshot = const Object(),
+      Object endBefore = const Object(),
+      Object? endBeforeDocumentSnapshot = const Object(),
+    }) {
+      return $QueryCursor(
+        startAt:
+            startAt == const Object() ? this.startAt : startAt as List<Object?>,
+        startAtDocumentSnapshot: startAtDocumentSnapshot == const Object()
+            ? this.startAtDocumentSnapshot
+            : startAtDocumentSnapshot as DocumentSnapshot<Object?>?,
+        startAfter: startAfter == const Object()
+            ? this.startAfter
+            : startAfter as List<Object?>,
+        startAfterDocumentSnapshot: startAfterDocumentSnapshot == const Object()
+            ? this.startAfterDocumentSnapshot
+            : startAfterDocumentSnapshot as DocumentSnapshot<Object?>?,
+        endAt: endAt == const Object() ? this.endAt : endAt as List<Object?>,
+        endAtDocumentSnapshot: endAtDocumentSnapshot == const Object()
+            ? this.endAtDocumentSnapshot
+            : endAtDocumentSnapshot as DocumentSnapshot<Object?>?,
+        endBefore: endBefore == const Object()
+            ? this.endBefore
+            : endBefore as List<Object?>,
+        endBeforeDocumentSnapshot: endBeforeDocumentSnapshot == const Object()
+            ? this.endBeforeDocumentSnapshot
+            : endBeforeDocumentSnapshot as DocumentSnapshot<Object?>?,
+      );
+    };
+  }
+
+  /// Transforms a query using the given cursor information.
+  Query<T> _apply<T>(Query<T> query) {
+    var result = query;
+
+    if (startAt.isNotEmpty) {
+      result = result.startAt(startAt);
+    }
+    if (startAtDocumentSnapshot != null) {
+      result = result.startAtDocument(startAtDocumentSnapshot!);
+    }
+
+    if (startAfter.isNotEmpty) {
+      result = result.startAfter(startAfter);
+    }
+    if (startAfterDocumentSnapshot != null) {
+      result = result.startAfterDocument(startAfterDocumentSnapshot!);
+    }
+
+    if (endBefore.isNotEmpty) {
+      result = result.endBefore(endBefore);
+    }
+    if (endBeforeDocumentSnapshot != null) {
+      result = result.endBeforeDocument(endBeforeDocumentSnapshot!);
+    }
+
+    if (endAt.isNotEmpty) {
+      result = result.endAt(endAt);
+    }
+    if (endAtDocumentSnapshot != null) {
+      result = result.endAtDocument(endAtDocumentSnapshot!);
+    }
+
+    return result;
+  }
+}
+
 abstract class QueryReference<
         Model,
         Snapshot extends FirestoreQuerySnapshot<Model,
             FirestoreDocumentSnapshot<Model>>>
     implements FirestoreReference<Snapshot> {
+  QueryReference({
+    required this.$referenceWithoutCursor,
+    this.$queryCursor = const $QueryCursor(),
+  });
+
   @override
   FirestoreListenable<Selected> select<Selected>(
     Selected Function(Snapshot snapshot) selector,
@@ -198,8 +380,24 @@ abstract class QueryReference<
     return FirestoreSelector._(this, selector);
   }
 
+  /// The reference to a query, without operations such as `startAt`.
+  ///
+  /// Do not use.
+  @protected
+  final Query<Model> $referenceWithoutCursor;
+
+  /// A function which takes [$referenceWithoutCursor] and applies cursors like
+  /// `startAt`.
+  ///
+  /// Do not use.
+  @protected
+  final $QueryCursor $queryCursor;
+
+  // Since we cannot do `orderBy().startAt().orderBy()`, the ODM needs to convert
+  // `orderBy(startAt: ).orderBy()` into a valid query.
   @override
-  Query<Model> get reference;
+  late final Query<Model> reference =
+      $queryCursor._apply($referenceWithoutCursor);
 
   /// Executes the query and returns the results as a QuerySnapshot.
   ///

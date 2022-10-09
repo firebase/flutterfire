@@ -11,12 +11,17 @@
 #import <Flutter/Flutter.h>
 #endif
 
+#import <AuthenticationServices/AuthenticationServices.h>
 #import <Foundation/Foundation.h>
 #import <firebase_core/FLTFirebasePlugin.h>
 #import "messages.g.h"
 
 @interface FLTFirebaseAuthPlugin
-    : FLTFirebasePlugin <FlutterPlugin, MultiFactorUserHostApi, MultiFactoResolverHostApi>
+    : FLTFirebasePlugin <FlutterPlugin,
+                         MultiFactorUserHostApi,
+                         MultiFactoResolverHostApi,
+                         ASAuthorizationControllerDelegate,
+                         ASAuthorizationControllerPresentationContextProviding>
 
 + (id)getNSDictionaryFromAuthCredential:(FIRAuthCredential *)authCredential;
 + (NSDictionary *)getNSDictionaryFromUserInfo:(id<FIRUserInfo>)userInfo;

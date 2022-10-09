@@ -24,8 +24,6 @@ abstract class ${data.documentReferenceName} extends FirestoreDocumentReference<
   Future<void> delete();
 
   ${_updatePrototype(data)}
-
-  Future<void> set(${data.type} value);
 }
 
 class _\$${data.documentReferenceName}
@@ -61,15 +59,16 @@ class _\$${data.documentReferenceName}
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<${data.documentSnapshotName}> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ${data.documentSnapshotName}._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
-  ${_update(data)}
-
-  Future<void> set(${data.type} value) {
-    return reference.set(value);
-  }
+  ${_update(data)} 
 
   ${_equalAndHashCode(data)}
 }
@@ -85,7 +84,18 @@ class _\$${data.documentReferenceName}
           '${field.type.getDisplayString(withNullability: true)} ${field.name},'
     ];
 
-    return 'Future<void> update({${parameters.join()}});';
+    return '''
+/// Updates data on the document. Data will be merged with any existing
+/// document data.
+///
+/// If no document exists yet, the update will fail.
+Future<void> update({${parameters.join()}});
+
+/// Updates fields in the current document using the transaction API.
+///
+/// The update will fail if applied to a document that does not exist.
+void transactionUpdate(Transaction transaction, {${parameters.join()}});
+''';
   }
 
   String _update(CollectionData data) {
@@ -99,10 +109,10 @@ class _\$${data.documentReferenceName}
     // TODO support nested objects
     final json = [
       for (final field in data.updatableFields)
-        '''
+        """
         if (${field.name} != _sentinel)
-          "${field.name}": ${field.name} as ${field.type},
-        '''
+          '${field.name}': ${field.name} as ${field.type},
+        """
     ];
 
     return '''
@@ -110,7 +120,14 @@ Future<void> update({${parameters.join()}}) async {
   final json = {${json.join()}};
 
   return reference.update(json);
-}''';
+}
+
+void transactionUpdate(Transaction transaction, {${parameters.join()}}) {
+  final json = {${json.join()}};
+
+  transaction.update(reference, json);
+}
+''';
   }
 
   String _parent(CollectionData data) {

@@ -15,6 +15,8 @@ dependencies:
     sdk: flutter
 
 dependency_overrides:
+  _flutterfire_internals:
+    path: ../../../_flutterfire_internals
   cloud_functions_platform_interface:
     path: ../../../cloud_functions/cloud_functions_platform_interface
   cloud_functions_web:

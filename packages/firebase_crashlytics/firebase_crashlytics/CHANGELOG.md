@@ -1,3 +1,28 @@
+## 2.8.13
+
+ - **FIX**: parameter `information` accepts `Iterable<Object>` for further diagnostic logging information ([#9678](https://github.com/firebase/flutterfire/issues/9678)). ([2d2b5b03](https://github.com/firebase/flutterfire/commit/2d2b5b03901b68976047e5f2888beb0296f4af45))
+ - **DOCS**: add note for `crash()` that the app needs to be restarted to send a crash report ([#9586](https://github.com/firebase/flutterfire/issues/9586)). ([3a3e5212](https://github.com/firebase/flutterfire/commit/3a3e52123f04eac6d73c21474155e6e67cb357c1))
+
+## 2.8.12
+
+ - Update a dependency to the latest release.
+
+## 2.8.11
+
+ - Update a dependency to the latest release.
+
+## 2.8.10
+
+ - **FIX**: Replace null or empty stack traces with the current stack trace ([#9490](https://github.com/firebase/flutterfire/issues/9490)). ([c54a95f3](https://github.com/firebase/flutterfire/commit/c54a95f365c5a61d2df52fb89467ab6103aa0146))
+
+## 2.8.9
+
+ - Update a dependency to the latest release.
+
+## 2.8.8
+
+ - Update a dependency to the latest release.
+
 ## 2.8.7
 
  - Update a dependency to the latest release.

@@ -1,3 +1,11 @@
+## 1.7.3
+
+ - **FIX**: explicitly set `null` value on Firestore data object property value ([#9599](https://github.com/firebase/flutterfire/issues/9599)). ([e61b6039](https://github.com/firebase/flutterfire/commit/e61b60390cfe8fc985203a4d3e3ed30eb8d020c6))
+
+## 1.7.2
+
+ - Update a dependency to the latest release.
+
 ## 1.7.1
 
  - Update a dependency to the latest release.

@@ -9,6 +9,8 @@ environment:
   sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
+  cloud_firestore:
+    path: ../../../cloud_firestore/cloud_firestore
   cupertino_icons: ^0.1.2
   firebase_app_check:
     path: ../
@@ -18,6 +20,14 @@ dependencies:
     sdk: flutter
 
 dependency_overrides:
+  _flutterfire_internals:
+    path: ../../../_flutterfire_internals
+  cloud_firestore:
+    path: ../../../cloud_firestore/cloud_firestore
+  cloud_firestore_platform_interface:
+    path: ../../../cloud_firestore/cloud_firestore_platform_interface
+  cloud_firestore_web:
+    path: ../../../cloud_firestore/cloud_firestore_web
   firebase_app_check_platform_interface:
     path: ../../../firebase_app_check/firebase_app_check_platform_interface
   firebase_app_check_web:
@@ -28,6 +38,5 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_platform_interface
   firebase_core_web:
     path: ../../../firebase_core/firebase_core_web
-
 flutter:
   uses-material-design: true

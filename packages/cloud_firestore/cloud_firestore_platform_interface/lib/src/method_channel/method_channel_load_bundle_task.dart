@@ -1,5 +1,7 @@
 // ignore_for_file: require_trailing_commas
 import 'dart:async';
+// TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
+// ignore: unnecessary_import
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -35,6 +37,8 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
           }
         }
       } catch (exception) {
+        // TODO this should be refactored to use `convertPlatformException`,
+        // then change receiveBroadcastStream -> receiveGuardedBroadedStream
         if (exception is! Exception || exception is! PlatformException) {
           rethrow;
         }

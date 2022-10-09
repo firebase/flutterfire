@@ -14,10 +14,13 @@ class Movie {
     required this.runtime,
     required this.title,
     required this.year,
+    required this.id,
   }) {
     _$assertMovie(this);
   }
 
+  @Id()
+  final String id;
   final String poster;
   @Min(0)
   final int likes;
