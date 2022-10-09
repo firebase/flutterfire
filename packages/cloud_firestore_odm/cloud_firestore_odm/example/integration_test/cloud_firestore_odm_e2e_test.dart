@@ -5,7 +5,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 
 import 'collection_reference_test.dart' as collection_reference_test;
 import 'document_reference_test.dart' as document_reference_test;
@@ -13,8 +12,6 @@ import 'path_test.dart' as path_test;
 import 'query_reference_test.dart' as query_reference_test;
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
   group('cloud_firestore_odm', () {
     setUpAll(() async {
       await Firebase.initializeApp(
