@@ -125,5 +125,7 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.13.1'
-      - run: go install github.com/google/addlicense@latest 
+      - run: go install github.com/google/addlicense@latest
+      # To add the license header to all missing files, see CONTRIBUTING.md for
+      # more details.
       - run: addlicense -check -f header_template.txt .
