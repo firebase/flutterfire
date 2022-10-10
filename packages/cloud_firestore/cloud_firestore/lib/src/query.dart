@@ -186,6 +186,8 @@ abstract class Query<T extends Object?> {
     required FromFirestore<R> fromFirestore,
     required ToFirestore<R> toFirestore,
   });
+
+  AggregateQuery count();
 }
 
 /// Represents a [Query] over the data at a particular location.
@@ -808,6 +810,11 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
 
   @override
   int get hashCode => Object.hash(runtimeType, firestore, _delegate);
+
+  @override
+  AggregateQuery count() {
+    return AggregateQuery._(_delegate.count());
+  }
 }
 
 class _WithConverterQuery<T extends Object?> implements Query<T> {
@@ -970,4 +977,9 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   @override
   int get hashCode =>
       Object.hash(runtimeType, _fromFirestore, _toFirestore, _originalQuery);
+
+  @override
+  AggregateQuery count() {
+    return _originalQuery.count();
+  }
 }

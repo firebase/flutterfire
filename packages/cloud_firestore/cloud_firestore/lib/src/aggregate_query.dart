@@ -6,7 +6,7 @@ class AggregateQuery {
   }
   final AggregateQueryPlatform _delegate;
 
-  Future<AggregateQuerySnapshot> get({required AggregateSource source}) async {
+  Future<AggregateQuerySnapshot> get({AggregateSource source = AggregateSource.server}) async {
     return AggregateQuerySnapshot._(await _delegate.get(source: source));
   }
 }

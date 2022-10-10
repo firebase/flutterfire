@@ -6,7 +6,5 @@ class AggregateQuerySnapshot {
   }
   final AggregateQuerySnapshotPlatform _delegate;
 
-  int count(){
-    return _delegate.count;
-  }
+  int get count => _delegate.count;
 }
