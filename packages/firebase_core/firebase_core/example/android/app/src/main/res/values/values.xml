@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+ for details. All rights reserved. Use of this source code is governed by a
+ BSD-style license that can be found in the LICENSE file.
+-->
+
 <resources>
     <string name="default_web_client_id" translatable="false">406099696497-a12gakvts4epfk5pkio7dphc1anjiggc.apps.googleusercontent.com</string>
     <string name="firebase_database_url" translatable="false">https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app</string>
