@@ -579,10 +579,6 @@ class _AuthGateState extends State<AuthGate> {
     } else {
       await _auth.signInWithProvider(microsoftProvider);
     }
-
-    await FirebaseAuth.instance.currentUser?.reauthenticateWithProvider(
-      microsoftProvider,
-    );
   }
 }
 

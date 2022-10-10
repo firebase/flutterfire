@@ -165,6 +165,17 @@ class UserWeb extends UserPlatform {
   }
 
   @override
+  Future<void> reauthenticateWithRedirect(AuthProvider provider) async {
+    _assertIsSignedOut(auth);
+    try {
+      return _webUser
+          .reauthenticateWithRedirect(convertPlatformAuthProvider(provider));
+    } catch (e) {
+      throw getFirebaseAuthException(e);
+    }
+  }
+
+  @override
   Future<void> reload() async {
     _assertIsSignedOut(auth);
 
