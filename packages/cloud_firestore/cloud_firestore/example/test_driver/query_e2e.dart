@@ -7,6 +7,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runQueryTests() {
@@ -1807,6 +1808,22 @@ void runQueryTests() {
         },
         timeout: const Timeout.factor(3),
       );
+
+      test('count()', () async {
+        final collection = await initializeTest('count');
+
+        await Future.wait([collection.add({'foo': 'bar'}), collection.add({'bar': 'baz'})]) ;
+
+        AggregateQuery query = collection.count();
+
+        AggregateQuerySnapshot snapshot = await query.get();
+
+        expect(
+          snapshot.count,
+          2,
+        );
+        // TODO(russellwheatley): remove when native code implemented
+      }, skip: !kIsWeb);
     });
   });
 }
