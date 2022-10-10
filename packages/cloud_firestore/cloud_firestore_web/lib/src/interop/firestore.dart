@@ -789,12 +789,12 @@ class AggregateQuerySnapshot
   late final Map<String, Object> _data;
   /// Creates a new Firestore from a [jsObject].
   static AggregateQuerySnapshot getInstance(firestore_interop.AggregateQuerySnapshotJsImpl jsObject) {
-    _data = Map.from(dartify(jsObject.data()));
+
     return _expando[jsObject] ??= AggregateQuerySnapshot._fromJsObject(jsObject);
   }
 
   AggregateQuerySnapshot._fromJsObject(firestore_interop.AggregateQuerySnapshotJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+      : _data = Map.from(dartify(jsObject.data())), super.fromJsObject(jsObject);
 
   int get count => _data['count']! as int;
 }
