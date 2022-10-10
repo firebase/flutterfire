@@ -1,8 +1,6 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import '../../cloud_firestore_platform_interface.dart';
-import '../aggregate_source.dart';
 
-abstract class AggregateQuerySnapshotPlatform extends PlatformInterface {
+class AggregateQuerySnapshotPlatform extends PlatformInterface {
   AggregateQuerySnapshotPlatform({required count}) : _count = count, super(token: _token);
 
   static final Object _token = Object();

@@ -2,7 +2,6 @@ import 'package:cloud_firestore_platform_interface/src/method_channel/utils/sour
 import 'package:cloud_firestore_platform_interface/src/platform_interface/platform_interface_aggregate_query.dart';
 
 import 'method_channel_firestore.dart';
-import 'method_channel_aggregate_query_snapshot.dart';
 import '../../cloud_firestore_platform_interface.dart';
 import '../aggregate_source.dart';
 import '../aggregate_type.dart';
@@ -24,7 +23,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
       },
     );
 
-    return MethodChannelAggregateQuerySnapshot(
+    return AggregateQuerySnapshotPlatform(
        count: data!['count'] as int,
     );
   }
