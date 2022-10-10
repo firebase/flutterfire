@@ -116,12 +116,18 @@ jobs:
 
   check-files-license-headers:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.13.1'
+      # Go is used by addlicense command (addlicense is used in melos run
+      # check-license-header)
       - run: go install github.com/google/addlicense@latest
-      # To add the license header to all missing files, see CONTRIBUTING.md for
-      # more details.
-      - run: addlicense -check -f header_template.txt .
+      - name: 'Install Flutter'
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: 'Install Tools'
+        run: ./.github/workflows/scripts/install-tools.sh
+      - name: Check license header
+        run: melos run check-license-header 
