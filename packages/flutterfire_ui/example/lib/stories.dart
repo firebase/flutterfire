@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:flutterfire_ui_example/stories/screens/forgot_password_screen.dart';
 import 'package:flutterfire_ui_example/stories/screens/profile_screen.dart';
 import 'package:flutterfire_ui_example/stories/screens/sms_code_input_screen.dart';
