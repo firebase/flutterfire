@@ -19,7 +19,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
     final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
         .channel
         .invokeMapMethod<String, dynamic>(
-      'AggregateQuery#count',
+      'AggregateQuery#countGet',
       <String, dynamic>{
         'query': query,
         'firestore': query.firestore,
