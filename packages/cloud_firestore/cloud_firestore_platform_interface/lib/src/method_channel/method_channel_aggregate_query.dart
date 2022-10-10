@@ -4,18 +4,17 @@ import 'package:cloud_firestore_platform_interface/src/platform_interface/platfo
 import 'method_channel_firestore.dart';
 import '../../cloud_firestore_platform_interface.dart';
 import '../aggregate_source.dart';
-import '../aggregate_type.dart';
 import '../platform_interface/platform_interface_aggregate_query_snapshot.dart';
 
 class MethodChannelAggregateQuery extends AggregateQueryPlatform {
-  MethodChannelAggregateQuery(QueryPlatform query, AggregateType aggregateType) : super(query, aggregateType);
+  MethodChannelAggregateQuery(QueryPlatform query) : super(query);
 
   @override
   Future<AggregateQuerySnapshotPlatform> get({required AggregateSource source}) async {
     final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
         .channel
         .invokeMapMethod<String, dynamic>(
-      'AggregateQuery#get',
+      'AggregateQuery#count',
       <String, dynamic>{
         'query': query,
         'firestore': query.firestore,

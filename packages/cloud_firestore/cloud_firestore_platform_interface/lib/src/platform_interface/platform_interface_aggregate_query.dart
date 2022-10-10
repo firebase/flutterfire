@@ -2,10 +2,9 @@ import 'package:cloud_firestore_platform_interface/src/platform_interface/platfo
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import '../../cloud_firestore_platform_interface.dart';
 import '../aggregate_source.dart';
-import '../aggregate_type.dart';
 
 abstract class AggregateQueryPlatform extends PlatformInterface {
-  AggregateQueryPlatform(this.query, this.aggregateType) : super(token: _token);
+  AggregateQueryPlatform(this.query) : super(token: _token);
 
   static final Object _token = Object();
 
@@ -20,7 +19,6 @@ abstract class AggregateQueryPlatform extends PlatformInterface {
   }
 
   final QueryPlatform query;
-  final AggregateType aggregateType;
 
   Future<AggregateQuerySnapshotPlatform> get({required AggregateSource source}) async {
     throw UnimplementedError('get() is not implemented');
