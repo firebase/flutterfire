@@ -1128,6 +1128,10 @@ public class FlutterFirebaseAuthPlugin
 
             taskCompletionSource.setResult(parseAuthResult(authResult));
           } catch (Exception e) {
+            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+              handleMultiFactorException(arguments, taskCompletionSource, e);
+              return;
+            }
             String message = e.getMessage();
 
             if (message != null
@@ -1169,8 +1173,11 @@ public class FlutterFirebaseAuthPlugin
                 Tasks.await(firebaseUser.reauthenticateAndRetrieveData(credential));
             taskCompletionSource.setResult(parseAuthResult(authResult));
           } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
+            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+              handleMultiFactorException(arguments, taskCompletionSource, e);
+            } else {
+              taskCompletionSource.setException(e);
+            }          }
         });
 
     return taskCompletionSource.getTask();
