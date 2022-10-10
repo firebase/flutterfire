@@ -1,3 +1,7 @@
+# Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
 name: firebase_remote_config_platform_interface
 description: A common platform interface for the firebase_remote_config plugin.
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config_platform_interface

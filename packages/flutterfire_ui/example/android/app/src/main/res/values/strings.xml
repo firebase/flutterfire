@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+ for details. All rights reserved. Use of this source code is governed by a
+ BSD-style license that can be found in the LICENSE file.
+-->
+
 <resources>
     <string name="app_name">Flutterfire UI Test App</string>
     <string name="facebook_app_id">128693022464535</string>

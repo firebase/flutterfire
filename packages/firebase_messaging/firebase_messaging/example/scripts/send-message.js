@@ -1,3 +1,9 @@
+/**
+ * Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+ * for details. All rights reserved. Use of this source code is governed by a
+ * BSD-style license that can be found in the LICENSE file.
+ */
+
 //
 var admin = require('firebase-admin');
 // 1. Download a service account key (JSON file) from your Firebase console and add to the example/scripts directory
