@@ -128,6 +128,7 @@ abstract class ModelDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     String value,
+    FieldValue valueFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -136,6 +137,7 @@ abstract class ModelDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     String value,
+    FieldValue valueFieldValue,
   });
 }
 
@@ -184,9 +186,15 @@ class _$ModelDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -195,9 +203,15 @@ class _$ModelDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as String,
+      if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);
@@ -884,11 +898,17 @@ abstract class NestedDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     int? simple,
+    FieldValue simpleFieldValue,
     List<bool>? boolList,
+    FieldValue boolListFieldValue,
     List<String>? stringList,
+    FieldValue stringListFieldValue,
     List<num>? numList,
+    FieldValue numListFieldValue,
     List<Object?>? objectList,
+    FieldValue objectListFieldValue,
     List<dynamic>? dynamicList,
+    FieldValue dynamicListFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -897,11 +917,17 @@ abstract class NestedDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     int? simple,
+    FieldValue simpleFieldValue,
     List<bool>? boolList,
+    FieldValue boolListFieldValue,
     List<String>? stringList,
+    FieldValue stringListFieldValue,
     List<num>? numList,
+    FieldValue numListFieldValue,
     List<Object?>? objectList,
+    FieldValue objectListFieldValue,
     List<dynamic>? dynamicList,
+    FieldValue dynamicListFieldValue,
   });
 }
 
@@ -950,20 +976,56 @@ class _$NestedDocumentReference
 
   Future<void> update({
     Object? simple = _sentinel,
+    FieldValue? simpleFieldValue,
     Object? boolList = _sentinel,
+    FieldValue? boolListFieldValue,
     Object? stringList = _sentinel,
+    FieldValue? stringListFieldValue,
     Object? numList = _sentinel,
+    FieldValue? numListFieldValue,
     Object? objectList = _sentinel,
+    FieldValue? objectListFieldValue,
     Object? dynamicList = _sentinel,
+    FieldValue? dynamicListFieldValue,
   }) async {
+    assert(
+      simple == _sentinel || simpleFieldValue == null,
+      "Cannot specify both simple and simpleFieldValue",
+    );
+    assert(
+      boolList == _sentinel || boolListFieldValue == null,
+      "Cannot specify both boolList and boolListFieldValue",
+    );
+    assert(
+      stringList == _sentinel || stringListFieldValue == null,
+      "Cannot specify both stringList and stringListFieldValue",
+    );
+    assert(
+      numList == _sentinel || numListFieldValue == null,
+      "Cannot specify both numList and numListFieldValue",
+    );
+    assert(
+      objectList == _sentinel || objectListFieldValue == null,
+      "Cannot specify both objectList and objectListFieldValue",
+    );
+    assert(
+      dynamicList == _sentinel || dynamicListFieldValue == null,
+      "Cannot specify both dynamicList and dynamicListFieldValue",
+    );
     final json = {
       if (simple != _sentinel) 'simple': simple as int?,
+      if (simpleFieldValue != null) 'simple': simpleFieldValue,
       if (boolList != _sentinel) 'boolList': boolList as List<bool>?,
+      if (boolListFieldValue != null) 'boolList': boolListFieldValue,
       if (stringList != _sentinel) 'stringList': stringList as List<String>?,
+      if (stringListFieldValue != null) 'stringList': stringListFieldValue,
       if (numList != _sentinel) 'numList': numList as List<num>?,
+      if (numListFieldValue != null) 'numList': numListFieldValue,
       if (objectList != _sentinel) 'objectList': objectList as List<Object?>?,
+      if (objectListFieldValue != null) 'objectList': objectListFieldValue,
       if (dynamicList != _sentinel)
         'dynamicList': dynamicList as List<dynamic>?,
+      if (dynamicListFieldValue != null) 'dynamicList': dynamicListFieldValue,
     };
 
     return reference.update(json);
@@ -972,20 +1034,56 @@ class _$NestedDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     Object? simple = _sentinel,
+    FieldValue? simpleFieldValue,
     Object? boolList = _sentinel,
+    FieldValue? boolListFieldValue,
     Object? stringList = _sentinel,
+    FieldValue? stringListFieldValue,
     Object? numList = _sentinel,
+    FieldValue? numListFieldValue,
     Object? objectList = _sentinel,
+    FieldValue? objectListFieldValue,
     Object? dynamicList = _sentinel,
+    FieldValue? dynamicListFieldValue,
   }) {
+    assert(
+      simple == _sentinel || simpleFieldValue == null,
+      "Cannot specify both simple and simpleFieldValue",
+    );
+    assert(
+      boolList == _sentinel || boolListFieldValue == null,
+      "Cannot specify both boolList and boolListFieldValue",
+    );
+    assert(
+      stringList == _sentinel || stringListFieldValue == null,
+      "Cannot specify both stringList and stringListFieldValue",
+    );
+    assert(
+      numList == _sentinel || numListFieldValue == null,
+      "Cannot specify both numList and numListFieldValue",
+    );
+    assert(
+      objectList == _sentinel || objectListFieldValue == null,
+      "Cannot specify both objectList and objectListFieldValue",
+    );
+    assert(
+      dynamicList == _sentinel || dynamicListFieldValue == null,
+      "Cannot specify both dynamicList and dynamicListFieldValue",
+    );
     final json = {
-      if (simple != _sentinel) "simple": simple as int?,
-      if (boolList != _sentinel) "boolList": boolList as List<bool>?,
-      if (stringList != _sentinel) "stringList": stringList as List<String>?,
-      if (numList != _sentinel) "numList": numList as List<num>?,
-      if (objectList != _sentinel) "objectList": objectList as List<Object?>?,
+      if (simple != _sentinel) 'simple': simple as int?,
+      if (simpleFieldValue != null) 'simple': simpleFieldValue,
+      if (boolList != _sentinel) 'boolList': boolList as List<bool>?,
+      if (boolListFieldValue != null) 'boolList': boolListFieldValue,
+      if (stringList != _sentinel) 'stringList': stringList as List<String>?,
+      if (stringListFieldValue != null) 'stringList': stringListFieldValue,
+      if (numList != _sentinel) 'numList': numList as List<num>?,
+      if (numListFieldValue != null) 'numList': numListFieldValue,
+      if (objectList != _sentinel) 'objectList': objectList as List<Object?>?,
+      if (objectListFieldValue != null) 'objectList': objectListFieldValue,
       if (dynamicList != _sentinel)
-        "dynamicList": dynamicList as List<dynamic>?,
+        'dynamicList': dynamicList as List<dynamic>?,
+      if (dynamicListFieldValue != null) 'dynamicList': dynamicListFieldValue,
     };
 
     transaction.update(reference, json);
@@ -3500,6 +3598,7 @@ abstract class OptionalJsonDocumentReference extends FirestoreDocumentReference<
   /// If no document exists yet, the update will fail.
   Future<void> update({
     int value,
+    FieldValue valueFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -3508,6 +3607,7 @@ abstract class OptionalJsonDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     int value,
+    FieldValue valueFieldValue,
   });
 }
 
@@ -3556,9 +3656,15 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as int,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -3567,9 +3673,15 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as int,
+      if (value != _sentinel) 'value': value as int,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);
@@ -4260,6 +4372,7 @@ abstract class MixedJsonDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     int value,
+    FieldValue valueFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -4268,6 +4381,7 @@ abstract class MixedJsonDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     int value,
+    FieldValue valueFieldValue,
   });
 }
 
@@ -4316,9 +4430,15 @@ class _$MixedJsonDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as int,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -4327,9 +4447,15 @@ class _$MixedJsonDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as int,
+      if (value != _sentinel) 'value': value as int,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);
@@ -5037,7 +5163,9 @@ abstract class RootDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     String nonNullable,
+    FieldValue nonNullableFieldValue,
     int? nullable,
+    FieldValue nullableFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -5046,7 +5174,9 @@ abstract class RootDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     String nonNullable,
+    FieldValue nonNullableFieldValue,
     int? nullable,
+    FieldValue nullableFieldValue,
   });
 }
 
@@ -5114,11 +5244,23 @@ class _$RootDocumentReference
 
   Future<void> update({
     Object? nonNullable = _sentinel,
+    FieldValue? nonNullableFieldValue,
     Object? nullable = _sentinel,
+    FieldValue? nullableFieldValue,
   }) async {
+    assert(
+      nonNullable == _sentinel || nonNullableFieldValue == null,
+      "Cannot specify both nonNullable and nonNullableFieldValue",
+    );
+    assert(
+      nullable == _sentinel || nullableFieldValue == null,
+      "Cannot specify both nullable and nullableFieldValue",
+    );
     final json = {
       if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
       if (nullable != _sentinel) 'nullable': nullable as int?,
+      if (nullableFieldValue != null) 'nullable': nullableFieldValue,
     };
 
     return reference.update(json);
@@ -5127,11 +5269,23 @@ class _$RootDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     Object? nonNullable = _sentinel,
+    FieldValue? nonNullableFieldValue,
     Object? nullable = _sentinel,
+    FieldValue? nullableFieldValue,
   }) {
+    assert(
+      nonNullable == _sentinel || nonNullableFieldValue == null,
+      "Cannot specify both nonNullable and nonNullableFieldValue",
+    );
+    assert(
+      nullable == _sentinel || nullableFieldValue == null,
+      "Cannot specify both nullable and nullableFieldValue",
+    );
     final json = {
-      if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
-      if (nullable != _sentinel) "nullable": nullable as int?,
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
+      if (nullableFieldValue != null) 'nullable': nullableFieldValue,
     };
 
     transaction.update(reference, json);
@@ -5953,7 +6107,9 @@ abstract class SubDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     String nonNullable,
+    FieldValue nonNullableFieldValue,
     int? nullable,
+    FieldValue nullableFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -5962,7 +6118,9 @@ abstract class SubDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     String nonNullable,
+    FieldValue nonNullableFieldValue,
     int? nullable,
+    FieldValue nullableFieldValue,
   });
 }
 
@@ -6016,11 +6174,23 @@ class _$SubDocumentReference
 
   Future<void> update({
     Object? nonNullable = _sentinel,
+    FieldValue? nonNullableFieldValue,
     Object? nullable = _sentinel,
+    FieldValue? nullableFieldValue,
   }) async {
+    assert(
+      nonNullable == _sentinel || nonNullableFieldValue == null,
+      "Cannot specify both nonNullable and nonNullableFieldValue",
+    );
+    assert(
+      nullable == _sentinel || nullableFieldValue == null,
+      "Cannot specify both nullable and nullableFieldValue",
+    );
     final json = {
       if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
       if (nullable != _sentinel) 'nullable': nullable as int?,
+      if (nullableFieldValue != null) 'nullable': nullableFieldValue,
     };
 
     return reference.update(json);
@@ -6029,11 +6199,23 @@ class _$SubDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     Object? nonNullable = _sentinel,
+    FieldValue? nonNullableFieldValue,
     Object? nullable = _sentinel,
+    FieldValue? nullableFieldValue,
   }) {
+    assert(
+      nonNullable == _sentinel || nonNullableFieldValue == null,
+      "Cannot specify both nonNullable and nonNullableFieldValue",
+    );
+    assert(
+      nullable == _sentinel || nullableFieldValue == null,
+      "Cannot specify both nullable and nullableFieldValue",
+    );
     final json = {
-      if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
-      if (nullable != _sentinel) "nullable": nullable as int?,
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
+      if (nullableFieldValue != null) 'nullable': nullableFieldValue,
     };
 
     transaction.update(reference, json);
@@ -6860,6 +7042,7 @@ abstract class AsCamelCaseDocumentReference extends FirestoreDocumentReference<
   /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -6868,6 +7051,7 @@ abstract class AsCamelCaseDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     num value,
+    FieldValue valueFieldValue,
   });
 }
 
@@ -6921,9 +7105,15 @@ class _$AsCamelCaseDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -6932,9 +7122,15 @@ class _$AsCamelCaseDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);
@@ -7643,6 +7839,7 @@ abstract class CustomSubNameDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -7651,6 +7848,7 @@ abstract class CustomSubNameDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     num value,
+    FieldValue valueFieldValue,
   });
 }
 
@@ -7705,9 +7903,15 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -7716,9 +7920,15 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);
@@ -8428,6 +8638,7 @@ abstract class ThisIsACustomPrefixDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -8436,6 +8647,7 @@ abstract class ThisIsACustomPrefixDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     num value,
+    FieldValue valueFieldValue,
   });
 }
 
@@ -8490,9 +8702,15 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -8501,9 +8719,15 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);
@@ -9206,6 +9430,7 @@ abstract class ExplicitPathDocumentReference extends FirestoreDocumentReference<
   /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -9214,6 +9439,7 @@ abstract class ExplicitPathDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     num value,
+    FieldValue valueFieldValue,
   });
 }
 
@@ -9267,9 +9493,15 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -9278,9 +9510,15 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);
@@ -9989,6 +10227,7 @@ abstract class ExplicitSubPathDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -9997,6 +10236,7 @@ abstract class ExplicitSubPathDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     num value,
+    FieldValue valueFieldValue,
   });
 }
 
@@ -10051,9 +10291,15 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -10062,9 +10308,15 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);

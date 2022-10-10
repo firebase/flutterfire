@@ -130,6 +130,7 @@ abstract class ManualJsonDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     String value,
+    FieldValue valueFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -138,6 +139,7 @@ abstract class ManualJsonDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     String value,
+    FieldValue valueFieldValue,
   });
 }
 
@@ -186,9 +188,15 @@ class _$ManualJsonDocumentReference
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -197,9 +205,15 @@ class _$ManualJsonDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as String,
+      if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);
@@ -892,8 +906,11 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
   /// If no document exists yet, the update will fail.
   Future<void> update({
     String? firstName,
+    FieldValue firstNameFieldValue,
     String? lastName,
+    FieldValue lastNameFieldValue,
     int hashCode,
+    FieldValue hashCodeFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -902,8 +919,11 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     String? firstName,
+    FieldValue firstNameFieldValue,
     String? lastName,
+    FieldValue lastNameFieldValue,
     int hashCode,
+    FieldValue hashCodeFieldValue,
   });
 }
 
@@ -952,13 +972,31 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
+    FieldValue? lastNameFieldValue,
     Object? hashCode = _sentinel,
+    FieldValue? hashCodeFieldValue,
   }) async {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
+    assert(
+      hashCode == _sentinel || hashCodeFieldValue == null,
+      "Cannot specify both hashCode and hashCodeFieldValue",
+    );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
       if (hashCode != _sentinel) 'hashCode': hashCode as int,
+      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     return reference.update(json);
@@ -967,13 +1005,31 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
+    FieldValue? lastNameFieldValue,
     Object? hashCode = _sentinel,
+    FieldValue? hashCodeFieldValue,
   }) {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
+    assert(
+      hashCode == _sentinel || hashCodeFieldValue == null,
+      "Cannot specify both hashCode and hashCodeFieldValue",
+    );
     final json = {
-      if (firstName != _sentinel) "firstName": firstName as String?,
-      if (lastName != _sentinel) "lastName": lastName as String?,
-      if (hashCode != _sentinel) "hashCode": hashCode as int,
+      if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
+      if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+      if (hashCode != _sentinel) 'hashCode': hashCode as int,
+      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1923,8 +1979,11 @@ abstract class _PrivateAdvancedJsonDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     String? firstName,
+    FieldValue firstNameFieldValue,
     String? lastName,
+    FieldValue lastNameFieldValue,
     int hashCode,
+    FieldValue hashCodeFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -1933,8 +1992,11 @@ abstract class _PrivateAdvancedJsonDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     String? firstName,
+    FieldValue firstNameFieldValue,
     String? lastName,
+    FieldValue lastNameFieldValue,
     int hashCode,
+    FieldValue hashCodeFieldValue,
   });
 }
 
@@ -1985,13 +2047,31 @@ class _$_PrivateAdvancedJsonDocumentReference
 
   Future<void> update({
     Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
+    FieldValue? lastNameFieldValue,
     Object? hashCode = _sentinel,
+    FieldValue? hashCodeFieldValue,
   }) async {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
+    assert(
+      hashCode == _sentinel || hashCodeFieldValue == null,
+      "Cannot specify both hashCode and hashCodeFieldValue",
+    );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
       if (hashCode != _sentinel) 'hashCode': hashCode as int,
+      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     return reference.update(json);
@@ -2000,13 +2080,31 @@ class _$_PrivateAdvancedJsonDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
+    FieldValue? lastNameFieldValue,
     Object? hashCode = _sentinel,
+    FieldValue? hashCodeFieldValue,
   }) {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
+    assert(
+      hashCode == _sentinel || hashCodeFieldValue == null,
+      "Cannot specify both hashCode and hashCodeFieldValue",
+    );
     final json = {
-      if (firstName != _sentinel) "firstName": firstName as String?,
-      if (lastName != _sentinel) "lastName": lastName as String?,
-      if (hashCode != _sentinel) "hashCode": hashCode as int,
+      if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
+      if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+      if (hashCode != _sentinel) 'hashCode': hashCode as int,
+      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     transaction.update(reference, json);

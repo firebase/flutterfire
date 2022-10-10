@@ -128,7 +128,9 @@ abstract class PersonDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     String firstName,
+    FieldValue firstNameFieldValue,
     String lastName,
+    FieldValue lastNameFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -137,7 +139,9 @@ abstract class PersonDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     String firstName,
+    FieldValue firstNameFieldValue,
     String lastName,
+    FieldValue lastNameFieldValue,
   });
 }
 
@@ -186,11 +190,23 @@ class _$PersonDocumentReference
 
   Future<void> update({
     Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
+    FieldValue? lastNameFieldValue,
   }) async {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
     return reference.update(json);
@@ -199,11 +215,23 @@ class _$PersonDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
+    FieldValue? lastNameFieldValue,
   }) {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
     final json = {
-      if (firstName != _sentinel) "firstName": firstName as String,
-      if (lastName != _sentinel) "lastName": lastName as String,
+      if (firstName != _sentinel) 'firstName': firstName as String,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
+      if (lastName != _sentinel) 'lastName': lastName as String,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1021,6 +1049,7 @@ abstract class PublicRedirectedDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     String value,
+    FieldValue valueFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -1029,6 +1058,7 @@ abstract class PublicRedirectedDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     String value,
+    FieldValue valueFieldValue,
   });
 }
 
@@ -1078,9 +1108,15 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -1089,9 +1125,15 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as String,
+      if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);
