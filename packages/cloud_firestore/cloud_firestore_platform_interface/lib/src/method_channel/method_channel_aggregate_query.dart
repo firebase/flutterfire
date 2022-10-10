@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:cloud_firestore_platform_interface/src/method_channel/utils/source.dart';
 import 'package:cloud_firestore_platform_interface/src/platform_interface/platform_interface_aggregate_query.dart';
 
@@ -6,6 +10,7 @@ import '../../cloud_firestore_platform_interface.dart';
 import '../aggregate_source.dart';
 import '../platform_interface/platform_interface_aggregate_query_snapshot.dart';
 
+/// An implementation of [AggregateQueryPlatform] for the [MethodChannel]
 class MethodChannelAggregateQuery extends AggregateQueryPlatform {
   MethodChannelAggregateQuery(QueryPlatform query) : super(query);
 

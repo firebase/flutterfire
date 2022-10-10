@@ -811,6 +811,8 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   @override
   int get hashCode => Object.hash(runtimeType, firestore, _delegate);
 
+  /// Represents an [AggregateQuery] over the data at a particular location for retrieving meta data
+  /// without retrieving the actual documents.
   @override
   AggregateQuery count() {
     return AggregateQuery._(_delegate.count());
@@ -978,6 +980,8 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   int get hashCode =>
       Object.hash(runtimeType, _fromFirestore, _toFirestore, _originalQuery);
 
+  /// Represents an [AggregateQuery] over the data at a particular location for retrieving meta data
+  /// without retrieving the actual documents.
   @override
   AggregateQuery count() {
     return _originalQuery.count();
