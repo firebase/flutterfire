@@ -214,8 +214,9 @@ Linux or macOS, you need to add `export PATH="$HOME/go/bin:$PATH"` to your
 
 To add the license header to all files, run from the root of the repository:
 ```bash
-addlicense -f header_template.txt .
+melos run add-license-header
 ```
+This command uses `addlicense` with all necessary flags.
 
 ### The review process
 
