@@ -786,7 +786,7 @@ class AggregateQuery {
 class AggregateQuerySnapshot
     extends JsObjectWrapper<firestore_interop.AggregateQuerySnapshotJsImpl> {
   static final _expando = Expando<AggregateQuerySnapshot>();
-  static late final Map<String, Object> _data;
+  late final Map<String, Object> _data;
   /// Creates a new Firestore from a [jsObject].
   static AggregateQuerySnapshot getInstance(firestore_interop.AggregateQuerySnapshotJsImpl jsObject) {
     _data = Map.from(dartify(jsObject.data()));
