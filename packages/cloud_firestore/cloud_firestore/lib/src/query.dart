@@ -815,7 +815,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   /// without retrieving the actual documents.
   @override
   AggregateQuery count() {
-    return AggregateQuery._(_delegate.count());
+    return AggregateQuery._(_delegate.count(), this);
   }
 }
 

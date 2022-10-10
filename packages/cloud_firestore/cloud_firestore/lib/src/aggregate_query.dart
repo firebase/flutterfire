@@ -7,9 +7,12 @@ part of cloud_firestore;
 /// [AggregateQuery] represents the data at a particular location for retrieving meta data
 /// without retrieving the actual documents.
 class AggregateQuery {
-  AggregateQuery._(this._delegate) {
+  AggregateQuery._(this._delegate, this.query) {
     AggregateQueryPlatform.verifyExtends(_delegate);
   }
+  /// [Query] represents the query over the data at a particular location used by the [AggregateQuery] to
+  /// retrieve the meta data.
+  final Query query;
 
   final AggregateQueryPlatform _delegate;
 
