@@ -29,11 +29,11 @@ Pod::Spec.new do |s|
   s.public_header_files = 'Classes/Public/*.h'
   s.private_header_files = 'Classes/Private/*.h'
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '11.0'
   s.dependency 'Flutter'
 
   s.dependency 'firebase_core'
-  s.dependency 'FirebaseFirestore', '10.0.0'
+  s.dependency 'Firebase/Firestore', firebase_sdk_version
 
   s.static_framework = true
   s.pod_target_xcconfig = {
