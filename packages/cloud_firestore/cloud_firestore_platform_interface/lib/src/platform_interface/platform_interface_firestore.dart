@@ -23,6 +23,8 @@ import 'platform_interface_query.dart';
 import 'platform_interface_query_snapshot.dart';
 import 'platform_interface_transaction.dart';
 import 'platform_interface_write_batch.dart';
+import 'platform_interface_aggregate_query.dart';
+import 'platform_interface_aggregate_query_snapshot.dart';
 
 /// Defines an interface to work with Cloud Firestore on web and mobile
 abstract class FirebaseFirestorePlatform extends PlatformInterface {

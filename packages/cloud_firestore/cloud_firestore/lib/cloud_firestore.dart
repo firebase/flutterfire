@@ -46,3 +46,5 @@ part 'src/snapshot_metadata.dart';
 part 'src/transaction.dart';
 part 'src/utils/codec_utility.dart';
 part 'src/write_batch.dart';
+part 'src/aggregate_query.dart';
+part 'src/aggregate_query_snapshot.dart';
