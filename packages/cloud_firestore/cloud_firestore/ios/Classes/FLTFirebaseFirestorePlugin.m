@@ -225,377 +225,364 @@ FlutterStandardMethodCodec *_codec;
                              withMethodCallResult:methodCallResult];
   } else if ([@"LoadBundle#snapshots" isEqualToString:call.method]) {
     [self setupLoadBundleListener:call.arguments withMethodCallResult:methodCallResult];
-    else if ([@"AggregateQuery#countGet" isEqualToString:call.method]) {
-      [self aggregateQueryCountGet:call.arguments withMethodCallResult:methodCallResult];
-    }
-    else {
-      methodCallResult.success(FlutterMethodNotImplemented);
-    }
+  } else if ([@"AggregateQuery#countGet" isEqualToString:call.method]) {
+    [self aggregateQueryCountGet:call.arguments withMethodCallResult:methodCallResult];
+  } else {
+    methodCallResult.success(FlutterMethodNotImplemented);
   }
+}
 
 #pragma mark - FLTFirebasePlugin
 
-  -(void)didReinitializeFirebaseCore : (void (^)(void))completion {
-    [self cleanupWithCompletion:completion];
-  }
+- (void)didReinitializeFirebaseCore:(void (^)(void))completion {
+  [self cleanupWithCompletion:completion];
+}
 
-  -(NSDictionary * _Nonnull) pluginConstantsForFIRApp : (FIRApp *)firebase_app {
-    return @{};
-  }
+- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
+  return @{};
+}
 
-  -(NSString * _Nonnull) firebaseLibraryName {
-    return LIBRARY_NAME;
-  }
+- (NSString *_Nonnull)firebaseLibraryName {
+  return LIBRARY_NAME;
+}
 
-  -(NSString * _Nonnull) firebaseLibraryVersion {
-    return LIBRARY_VERSION;
-  }
+- (NSString *_Nonnull)firebaseLibraryVersion {
+  return LIBRARY_VERSION;
+}
 
-  -(NSString * _Nonnull) flutterChannelName {
-    return kFLTFirebaseFirestoreChannelName;
-  }
+- (NSString *_Nonnull)flutterChannelName {
+  return kFLTFirebaseFirestoreChannelName;
+}
 
 #pragma mark - Firestore API
 
-  -(void)setupSnapshotsInSyncListener : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    result.success([self
-        registerEventChannelWithPrefix:kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName
-                         streamHandler:[FLTSnapshotsInSyncStreamHandler new]]);
-  }
+- (void)setupSnapshotsInSyncListener:(id)arguments
+                withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  result.success([self
+      registerEventChannelWithPrefix:kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName
+                       streamHandler:[FLTSnapshotsInSyncStreamHandler new]]);
+}
 
-  -(void)setupLoadBundleListener : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    result.success([self registerEventChannelWithPrefix:kFLTFirebaseFirestoreLoadBundleChannelName
-                                          streamHandler:[FLTLoadBundleStreamHandler new]]);
-  }
+- (void)setupLoadBundleListener:(id)arguments
+           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  result.success([self registerEventChannelWithPrefix:kFLTFirebaseFirestoreLoadBundleChannelName
+                                        streamHandler:[FLTLoadBundleStreamHandler new]]);
+}
 
-  -(void)setupDocumentReferenceSnapshotsListener : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    result.success([self
-        registerEventChannelWithPrefix:kFLTFirebaseFirestoreDocumentSnapshotEventChannelName
-                         streamHandler:[FLTDocumentSnapshotStreamHandler new]]);
-  }
+- (void)setupDocumentReferenceSnapshotsListener:(id)arguments
+                           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  result.success([self
+      registerEventChannelWithPrefix:kFLTFirebaseFirestoreDocumentSnapshotEventChannelName
+                       streamHandler:[FLTDocumentSnapshotStreamHandler new]]);
+}
 
-  -(void)setupQuerySnapshotsListener : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    result.success([self
-        registerEventChannelWithPrefix:kFLTFirebaseFirestoreQuerySnapshotEventChannelName
-                         streamHandler:[FLTQuerySnapshotStreamHandler new]]);
-  }
+- (void)setupQuerySnapshotsListener:(id)arguments
+               withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  result.success([self
+      registerEventChannelWithPrefix:kFLTFirebaseFirestoreQuerySnapshotEventChannelName
+                       streamHandler:[FLTQuerySnapshotStreamHandler new]]);
+}
 
-  -(void)waitForPendingWrites : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    FIRFirestore *firestore = arguments[@"firestore"];
-    [firestore waitForPendingWritesWithCompletion:^(NSError *error) {
-      if (error != nil) {
-        result.error(nil, nil, nil, error);
-      } else {
-        result.success(nil);
-      }
-    }];
-  }
-
-  -(void)clearPersistence : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    FIRFirestore *firestore = arguments[@"firestore"];
-    [firestore clearPersistenceWithCompletion:^(NSError *error) {
-      if (error != nil) {
-        result.error(nil, nil, nil, error);
-      } else {
-        result.success(nil);
-      }
-    }];
-  }
-
-  -(void)terminate : (id)arguments withMethodCallResult : (FLTFirebaseMethodCallResult *)result {
-    FIRFirestore *firestore = arguments[@"firestore"];
-    [firestore terminateWithCompletion:^(NSError *error) {
-      if (error != nil) {
-        result.error(nil, nil, nil, error);
-      } else {
-        [FLTFirebaseFirestoreUtils destroyCachedFIRFirestoreInstanceForKey:firestore.app.name];
-        result.success(nil);
-      }
-    }];
-  }
-
-  -(void)enableNetwork : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    FIRFirestore *firestore = arguments[@"firestore"];
-    [firestore enableNetworkWithCompletion:^(NSError *error) {
-      if (error != nil) {
-        result.error(nil, nil, nil, error);
-      } else {
-        result.success(nil);
-      }
-    }];
-  }
-
-  -(void)disableNetwork : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    FIRFirestore *firestore = arguments[@"firestore"];
-    [firestore disableNetworkWithCompletion:^(NSError *error) {
-      if (error != nil) {
-        result.error(nil, nil, nil, error);
-      } else {
-        result.success(nil);
-      }
-    }];
-  }
-
-  -(void)transactionGet : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-      NSString *transactionId = arguments[@"transactionId"];
-      FIRDocumentReference *document = arguments[@"reference"];
-
-      FIRTransaction *transaction = self->_transactions[transactionId];
-
-      NSError *error = [[NSError alloc] init];
-      FIRDocumentSnapshot *snapshot = [transaction getDocument:document error:&error];
-
-      if (error != nil) {
-        result.error(nil, nil, nil, error);
-      } else if (snapshot != nil) {
-        result.success(snapshot);
-      } else {
-        result.success(nil);
-      }
-    });
-  }
-
-  -(void)transactionCreate : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    NSString *transactionId = [[[NSUUID UUID] UUIDString] lowercaseString];
-
-    FLTTransactionStreamHandler *handler =
-        [[FLTTransactionStreamHandler alloc] initWithId:transactionId
-            started:^(FIRTransaction *_Nonnull transaction) {
-              self->_transactions[transactionId] = transaction;
-            }
-            ended:^{
-              self->_transactions[transactionId] = nil;
-            }];
-
-    _transactionHandlers[transactionId] = handler;
-
-    result.success([self registerEventChannelWithPrefix:kFLTFirebaseFirestoreTransactionChannelName
-                                             identifier:transactionId
-                                          streamHandler:handler]);
-  }
-
-  -(void)transactionStoreResult : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    NSString *transactionId = arguments[@"transactionId"];
-    NSDictionary *transactionResult = arguments[@"result"];
-
-    [_transactionHandlers[transactionId] receiveTransactionResponse:transactionResult];
-
-    result.success(nil);
-  }
-
-  -(void)documentSet : (id)arguments withMethodCallResult : (FLTFirebaseMethodCallResult *)result {
-    id data = arguments[@"data"];
-    FIRDocumentReference *document = arguments[@"reference"];
-
-    NSDictionary *options = arguments[@"options"];
-    void (^completionBlock)(NSError *) = ^(NSError *error) {
-      if (error != nil) {
-        result.error(nil, nil, nil, error);
-      } else {
-        result.success(nil);
-      }
-    };
-
-    if ([options[@"merge"] isEqual:@YES]) {
-      [document setData:data merge:YES completion:completionBlock];
-    } else if (![options[@"mergeFields"] isEqual:[NSNull null]]) {
-      [document setData:data mergeFields:options[@"mergeFields"] completion:completionBlock];
+- (void)waitForPendingWrites:(id)arguments
+        withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRFirestore *firestore = arguments[@"firestore"];
+  [firestore waitForPendingWritesWithCompletion:^(NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
     } else {
-      [document setData:data completion:completionBlock];
+      result.success(nil);
+    }
+  }];
+}
+
+- (void)clearPersistence:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRFirestore *firestore = arguments[@"firestore"];
+  [firestore clearPersistenceWithCompletion:^(NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(nil);
+    }
+  }];
+}
+
+- (void)terminate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRFirestore *firestore = arguments[@"firestore"];
+  [firestore terminateWithCompletion:^(NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      [FLTFirebaseFirestoreUtils destroyCachedFIRFirestoreInstanceForKey:firestore.app.name];
+      result.success(nil);
+    }
+  }];
+}
+
+- (void)enableNetwork:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRFirestore *firestore = arguments[@"firestore"];
+  [firestore enableNetworkWithCompletion:^(NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(nil);
+    }
+  }];
+}
+
+- (void)disableNetwork:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRFirestore *firestore = arguments[@"firestore"];
+  [firestore disableNetworkWithCompletion:^(NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(nil);
+    }
+  }];
+}
+
+- (void)transactionGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    NSString *transactionId = arguments[@"transactionId"];
+    FIRDocumentReference *document = arguments[@"reference"];
+
+    FIRTransaction *transaction = self->_transactions[transactionId];
+
+    NSError *error = [[NSError alloc] init];
+    FIRDocumentSnapshot *snapshot = [transaction getDocument:document error:&error];
+
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else if (snapshot != nil) {
+      result.success(snapshot);
+    } else {
+      result.success(nil);
+    }
+  });
+}
+
+- (void)transactionCreate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSString *transactionId = [[[NSUUID UUID] UUIDString] lowercaseString];
+
+  FLTTransactionStreamHandler *handler =
+      [[FLTTransactionStreamHandler alloc] initWithId:transactionId
+          started:^(FIRTransaction *_Nonnull transaction) {
+            self->_transactions[transactionId] = transaction;
+          }
+          ended:^{
+            self->_transactions[transactionId] = nil;
+          }];
+
+  _transactionHandlers[transactionId] = handler;
+
+  result.success([self registerEventChannelWithPrefix:kFLTFirebaseFirestoreTransactionChannelName
+                                           identifier:transactionId
+                                        streamHandler:handler]);
+}
+
+- (void)transactionStoreResult:(id)arguments
+          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSString *transactionId = arguments[@"transactionId"];
+  NSDictionary *transactionResult = arguments[@"result"];
+
+  [_transactionHandlers[transactionId] receiveTransactionResponse:transactionResult];
+
+  result.success(nil);
+}
+
+- (void)documentSet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  id data = arguments[@"data"];
+  FIRDocumentReference *document = arguments[@"reference"];
+
+  NSDictionary *options = arguments[@"options"];
+  void (^completionBlock)(NSError *) = ^(NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(nil);
+    }
+  };
+
+  if ([options[@"merge"] isEqual:@YES]) {
+    [document setData:data merge:YES completion:completionBlock];
+  } else if (![options[@"mergeFields"] isEqual:[NSNull null]]) {
+    [document setData:data mergeFields:options[@"mergeFields"] completion:completionBlock];
+  } else {
+    [document setData:data completion:completionBlock];
+  }
+}
+
+- (void)documentUpdate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  id data = arguments[@"data"];
+  FIRDocumentReference *document = arguments[@"reference"];
+
+  [document updateData:data
+            completion:^(NSError *error) {
+              if (error != nil) {
+                result.error(nil, nil, nil, error);
+              } else {
+                result.success(nil);
+              }
+            }];
+}
+
+- (void)documentDelete:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDocumentReference *document = arguments[@"reference"];
+
+  [document deleteDocumentWithCompletion:^(NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(nil);
+    }
+  }];
+}
+
+- (void)documentGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDocumentReference *document = arguments[@"reference"];
+  FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
+  id completion = ^(FIRDocumentSnapshot *_Nullable snapshot, NSError *_Nullable error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(snapshot);
+    }
+  };
+
+  [document getDocumentWithSource:source completion:completion];
+}
+
+- (void)queryGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRQuery *query = arguments[@"query"];
+  // Why we check [NSNull null]:  https://github.com/firebase/flutterfire/issues/9328
+  if (query == nil || query == [NSNull null]) {
+    result.error(@"sdk-error",
+                 @"An error occurred while parsing query arguments, see native logs for more "
+                 @"information. Please report this issue.",
+                 nil, nil);
+    return;
+  }
+
+  FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
+  [query getDocumentsWithSource:source
+                     completion:^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
+                       if (error != nil) {
+                         result.error(nil, nil, nil, error);
+                       } else {
+                         result.success(snapshot);
+                       }
+                     }];
+}
+
+- (void)namedQueryGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRFirestore *firestore = arguments[@"firestore"];
+  NSString *name = arguments[@"name"];
+
+  FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
+
+  [firestore getQueryNamed:name
+                completion:^(FIRQuery *_Nullable query) {
+                  if (query == nil) {
+                    result.error(@"non-existent-named-query",
+                                 @"Named query has not been found. Please check it has been loaded "
+                                 @"properly via loadBundle().",
+                                 nil, nil);
+                    return;
+                  }
+                  [query getDocumentsWithSource:source
+                                     completion:^(FIRQuerySnapshot *_Nullable snapshot,
+                                                  NSError *_Nullable error) {
+                                       if (error != nil) {
+                                         result.error(nil, nil, nil, error);
+                                       } else {
+                                         result.success(snapshot);
+                                       }
+                                     }];
+                }];
+}
+
+- (void)batchCommit:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRFirestore *firestore = arguments[@"firestore"];
+  NSArray<NSDictionary *> *writes = arguments[@"writes"];
+  FIRWriteBatch *batch = [firestore batch];
+
+  for (NSDictionary *write in writes) {
+    NSString *type = write[@"type"];
+    NSString *path = write[@"path"];
+    FIRDocumentReference *reference = [firestore documentWithPath:path];
+
+    if ([@"DELETE" isEqualToString:type]) {
+      [batch deleteDocument:reference];
+    } else if ([@"UPDATE" isEqualToString:type]) {
+      NSDictionary *data = write[@"data"];
+      [batch updateData:data forDocument:reference];
+    } else if ([@"SET" isEqualToString:type]) {
+      NSDictionary *data = write[@"data"];
+      NSDictionary *options = write[@"options"];
+      if ([options[@"merge"] isEqual:@YES]) {
+        [batch setData:data forDocument:reference merge:YES];
+      } else if (![options[@"mergeFields"] isEqual:[NSNull null]]) {
+        [batch setData:data forDocument:reference mergeFields:options[@"mergeFields"]];
+      } else {
+        [batch setData:data forDocument:reference];
+      }
     }
   }
 
-  -(void)documentUpdate : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    id data = arguments[@"data"];
-    FIRDocumentReference *document = arguments[@"reference"];
-
-    [document updateData:data
-              completion:^(NSError *error) {
-                if (error != nil) {
-                  result.error(nil, nil, nil, error);
-                } else {
-                  result.success(nil);
-                }
-              }];
-  }
-
-  -(void)documentDelete : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    FIRDocumentReference *document = arguments[@"reference"];
-
-    [document deleteDocumentWithCompletion:^(NSError *error) {
-      if (error != nil) {
-        result.error(nil, nil, nil, error);
-      } else {
-        result.success(nil);
-      }
-    }];
-  }
-
-  -(void)documentGet : (id)arguments withMethodCallResult : (FLTFirebaseMethodCallResult *)result {
-    FIRDocumentReference *document = arguments[@"reference"];
-    FIRFirestoreSource source =
-        [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
-    id completion = ^(FIRDocumentSnapshot *_Nullable snapshot, NSError *_Nullable error) {
-      if (error != nil) {
-        result.error(nil, nil, nil, error);
-      } else {
-        result.success(snapshot);
-      }
-    };
-
-    [document getDocumentWithSource:source completion:completion];
-  }
-
-  -(void)queryGet : (id)arguments withMethodCallResult : (FLTFirebaseMethodCallResult *)result {
-    FIRQuery *query = arguments[@"query"];
-    // Why we check [NSNull null]:  https://github.com/firebase/flutterfire/issues/9328
-    if (query == nil || query == [NSNull null]) {
-      result.error(@"sdk-error",
-                   @"An error occurred while parsing query arguments, see native logs for more "
-                   @"information. Please report this issue.",
-                   nil, nil);
-      return;
+  [batch commitWithCompletion:^(NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(nil);
     }
+  }];
+}
 
-    FIRFirestoreSource source =
-        [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
-    [query
-        getDocumentsWithSource:source
-                    completion:^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
-                      if (error != nil) {
-                        result.error(nil, nil, nil, error);
-                      } else {
-                        result.success(snapshot);
-                      }
-                    }];
-  }
+- (void)aggregateQueryCountGet:(id)arguments
+          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRFirestore *firestore = arguments[@"firestore"];
+  FIRQuery *query = arguments[@"query"];
 
-  -(void)namedQueryGet : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    FIRFirestore *firestore = arguments[@"firestore"];
-    NSString *name = arguments[@"name"];
+  // NOTE: There is only "server" as the source at the moment. So this
+  // is unused for the time being. Using "FIRAggregateSourceServer".
+  NSString *source = arguments[@"source"];
 
-    FIRFirestoreSource source =
-        [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
+  FIRAggregateQuery *aggregateQuery = [query count];
 
-    [firestore
-        getQueryNamed:name
-           completion:^(FIRQuery *_Nullable query) {
-             if (query == nil) {
-               result.error(@"non-existent-named-query",
-                            @"Named query has not been found. Please check it has been loaded "
-                            @"properly via loadBundle().",
-                            nil, nil);
-               return;
-             }
-             [query getDocumentsWithSource:source
-                                completion:^(FIRQuerySnapshot *_Nullable snapshot,
-                                             NSError *_Nullable error) {
-                                  if (error != nil) {
-                                    result.error(nil, nil, nil, error);
-                                  } else {
-                                    result.success(snapshot);
-                                  }
-                                }];
-           }];
-  }
+  [aggregateQuery aggregationWithSource:FIRAggregateSourceServer
+                             completion:^(FIRAggregateQuerySnapshot *_Nullable snapshot,
+                                          NSError *_Nullable error) {
+                               if (error != nil) {
+                                 result.error(nil, nil, nil, error);
+                               } else {
+                                 NSMutableDictionary *response = [NSMutableDictionary dictionary];
+                                 response[@"count"] = snapshot.count;
 
-  -(void)batchCommit : (id)arguments withMethodCallResult : (FLTFirebaseMethodCallResult *)result {
-    FIRFirestore *firestore = arguments[@"firestore"];
-    NSArray<NSDictionary *> *writes = arguments[@"writes"];
-    FIRWriteBatch *batch = [firestore batch];
+                                 result.success(response);
+                               }
+                             }];
+}
 
-    for (NSDictionary *write in writes) {
-      NSString *type = write[@"type"];
-      NSString *path = write[@"path"];
-      FIRDocumentReference *reference = [firestore documentWithPath:path];
+- (NSString *)registerEventChannelWithPrefix:(NSString *)prefix
+                               streamHandler:(NSObject<FlutterStreamHandler> *)handler {
+  return [self registerEventChannelWithPrefix:prefix
+                                   identifier:[[[NSUUID UUID] UUIDString] lowercaseString]
+                                streamHandler:handler];
+}
 
-      if ([@"DELETE" isEqualToString:type]) {
-        [batch deleteDocument:reference];
-      } else if ([@"UPDATE" isEqualToString:type]) {
-        NSDictionary *data = write[@"data"];
-        [batch updateData:data forDocument:reference];
-      } else if ([@"SET" isEqualToString:type]) {
-        NSDictionary *data = write[@"data"];
-        NSDictionary *options = write[@"options"];
-        if ([options[@"merge"] isEqual:@YES]) {
-          [batch setData:data forDocument:reference merge:YES];
-        } else if (![options[@"mergeFields"] isEqual:[NSNull null]]) {
-          [batch setData:data forDocument:reference mergeFields:options[@"mergeFields"]];
-        } else {
-          [batch setData:data forDocument:reference];
-        }
-      }
-    }
+- (NSString *)registerEventChannelWithPrefix:(NSString *)prefix
+                                  identifier:(NSString *)identifier
+                               streamHandler:(NSObject<FlutterStreamHandler> *)handler {
+  NSString *channelName = [NSString stringWithFormat:@"%@/%@", prefix, identifier];
 
-    [batch commitWithCompletion:^(NSError *error) {
-      if (error != nil) {
-        result.error(nil, nil, nil, error);
-      } else {
-        result.success(nil);
-      }
-    }];
-  }
+  FlutterEventChannel *channel = [[FlutterEventChannel alloc] initWithName:channelName
+                                                           binaryMessenger:_binaryMessenger
+                                                                     codec:_codec];
 
-  -(void)aggregateQueryCountGet : (id)arguments withMethodCallResult
-      : (FLTFirebaseMethodCallResult *)result {
-    FIRFirestore *firestore = arguments[@"firestore"];
-    FIRQuery *query = arguments[@"query"];
+  [channel setStreamHandler:handler];
+  [_eventChannels setObject:channel forKey:identifier];
+  [_streamHandlers setObject:handler forKey:identifier];
 
-    // NOTE: There is only "server" as the source at the moment. So this
-    // is unused for the time being. Using "FIRAggregateSourceServer".
-    NSString *source = arguments[@"source"];
+  return identifier;
+}
 
-    FIRAggregateQuery *aggregateQuery = [query count];
-
-    [aggregateQuery aggregationWithSource:FIRAggregateSourceServer
-                               completion:^(FIRAggregateQuerySnapshot *_Nullable snapshot,
-                                            NSError *_Nullable error) {
-                                 if (error != nil) {
-                                   result.error(nil, nil, nil, error);
-                                 } else {
-                                   NSMutableDictionary *response = [NSMutableDictionary dictionary];
-                                   response[@"count"] = snapshot.count;
-
-                                   result.success(response);
-                                 }
-                               }];
-  }
-
-  -(NSString *)registerEventChannelWithPrefix : (NSString *)prefix streamHandler
-      : (NSObject<FlutterStreamHandler> *)handler {
-    return [self registerEventChannelWithPrefix:prefix
-                                     identifier:[[[NSUUID UUID] UUIDString] lowercaseString]
-                                  streamHandler:handler];
-  }
-
-  -(NSString *)registerEventChannelWithPrefix : (NSString *)prefix identifier
-      : (NSString *)identifier streamHandler : (NSObject<FlutterStreamHandler> *)handler {
-    NSString *channelName = [NSString stringWithFormat:@"%@/%@", prefix, identifier];
-
-    FlutterEventChannel *channel = [[FlutterEventChannel alloc] initWithName:channelName
-                                                             binaryMessenger:_binaryMessenger
-                                                                       codec:_codec];
-
-    [channel setStreamHandler:handler];
-    [_eventChannels setObject:channel forKey:identifier];
-    [_streamHandlers setObject:handler forKey:identifier];
-
-    return identifier;
-  }
-
-  @end
+@end
