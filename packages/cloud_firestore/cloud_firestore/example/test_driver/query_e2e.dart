@@ -1826,7 +1826,8 @@ void runQueryTests() {
           2,
         );
         // TODO(russellwheatley): remove when native code implemented
-      }, skip: !kIsWeb);
+      }, skip: defaultTargetPlatform == TargetPlatform.android,
+      );
     });
   });
 }
