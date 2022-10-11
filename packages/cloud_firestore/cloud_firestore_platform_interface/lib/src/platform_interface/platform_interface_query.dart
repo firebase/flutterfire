@@ -37,9 +37,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
   static void verify(QueryPlatform instance) {
-    if (instance is! CollectionReferencePlatform) {
-      PlatformInterface.verify(instance, _token);
-    }
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The [FirebaseFirestorePlatform] interface for this current query.
