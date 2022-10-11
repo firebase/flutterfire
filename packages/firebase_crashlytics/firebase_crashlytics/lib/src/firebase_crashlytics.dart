@@ -123,12 +123,14 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     // Report error.
     final List<Map<String, String>> stackTraceElements =
         getStackTraceElements(stackTrace);
+    final String? buildId = getBuildId(stackTrace);
 
     return _delegate.recordError(
       exception: exception.toString(),
       reason: reason.toString(),
       information: _information,
       stackTraceElements: stackTraceElements,
+      buildId: buildId,
       fatal: fatal,
     );
   }
