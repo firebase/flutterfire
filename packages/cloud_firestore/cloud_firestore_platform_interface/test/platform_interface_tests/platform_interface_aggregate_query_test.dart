@@ -33,7 +33,7 @@ void main() {
       expect(aggregateQuery.query, isInstanceOf<TestQuery>());
     });
 
-    test('throws if .checkForUnsentReports', () {
+    test('throws if .get() is unimplemented ', () {
       expect(
         () => aggregateQuery.get(source: AggregateSource.server),
         throwsA(

@@ -12,7 +12,7 @@ class AggregateQuerySnapshot {
   final AggregateQuerySnapshotPlatform _delegate;
 
   /// [Query] represents the query over the data at a particular location used by the [AggregateQuery] to
-  /// retrieve the meta data.
+  /// retrieve the metadata.
   final Query query;
 
   /// Returns the count of the documents that match the query.

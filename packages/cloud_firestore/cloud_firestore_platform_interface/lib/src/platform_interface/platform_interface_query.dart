@@ -230,7 +230,7 @@ abstract class QueryPlatform extends PlatformInterface {
   }
 
   /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
-  /// meta data
+  /// metadata
   AggregateQueryPlatform count() {
     throw UnimplementedError('count() is not implemented');
   }

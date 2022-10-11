@@ -5,7 +5,7 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import '../../cloud_firestore_platform_interface.dart';
 
-/// [AggregateQueryPlatform] represents the data at a particular location for retrieving meta data
+/// [AggregateQueryPlatform] represents the data at a particular location for retrieving metadata
 /// without retrieving the actual documents.
 abstract class AggregateQueryPlatform extends PlatformInterface {
   AggregateQueryPlatform(this.query) : super(token: _token);
@@ -22,7 +22,7 @@ abstract class AggregateQueryPlatform extends PlatformInterface {
     PlatformInterface.verifyToken(instance, _token);
   }
 
-  /// The [QueryPlatform] instance to which this [AggregateQueryPlatform] queries against to retrieve the meta data.
+  /// The [QueryPlatform] instance to which this [AggregateQueryPlatform] queries against to retrieve the metadata.
   final QueryPlatform query;
 
   /// Returns an [AggregateQuerySnapshotPlatform] with the count of the documents that match the query.

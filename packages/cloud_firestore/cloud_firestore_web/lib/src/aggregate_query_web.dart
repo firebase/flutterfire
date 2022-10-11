@@ -11,7 +11,7 @@ class AggregateQueryWeb extends AggregateQueryPlatform {
   /// instance of [AggregateQuery] from the web plugin
   final firestore_interop.AggregateQuery _delegate;
 
-  /// [AggregateQueryWeb] represents the data at a particular location for retrieving meta data
+  /// [AggregateQueryWeb] represents the data at a particular location for retrieving metadata
   /// without retrieving the actual documents.
   AggregateQueryWeb(QueryPlatform query, _webQuery)
       : _delegate = firestore_interop.AggregateQuery(_webQuery),
