@@ -26,8 +26,9 @@ abstract class AggregateQueryPlatform extends PlatformInterface {
   final QueryPlatform query;
 
   /// Returns an [AggregateQuerySnapshotPlatform] with the count of the documents that match the query.
-  Future<AggregateQuerySnapshotPlatform> get(
-      {required AggregateSource source}) async {
+  Future<AggregateQuerySnapshotPlatform> get({
+    required AggregateSource source,
+  }) async {
     throw UnimplementedError('get() is not implemented');
   }
 }

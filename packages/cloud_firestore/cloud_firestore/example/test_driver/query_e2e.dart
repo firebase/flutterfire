@@ -1809,24 +1809,27 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      test('count()', () async {
-        final collection = await initializeTest('count');
+      test(
+        'count()',
+        () async {
+          final collection = await initializeTest('count');
 
-        await Future.wait([
-          collection.add({'foo': 'bar'}),
-          collection.add({'bar': 'baz'})
-        ]);
+          await Future.wait([
+            collection.add({'foo': 'bar'}),
+            collection.add({'bar': 'baz'})
+          ]);
 
-        AggregateQuery query = collection.count();
+          AggregateQuery query = collection.count();
 
-        AggregateQuerySnapshot snapshot = await query.get();
+          AggregateQuerySnapshot snapshot = await query.get();
 
-        expect(
-          snapshot.count,
-          2,
-        );
-        // TODO(russellwheatley): remove when native code implemented
-      }, skip: defaultTargetPlatform == TargetPlatform.android,
+          expect(
+            snapshot.count,
+            2,
+          );
+          // TODO(russellwheatley): remove when android code implemented
+        },
+        skip: defaultTargetPlatform == TargetPlatform.android,
       );
     });
   });

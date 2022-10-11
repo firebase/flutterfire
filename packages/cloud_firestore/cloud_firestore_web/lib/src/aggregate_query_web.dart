@@ -19,8 +19,9 @@ class AggregateQueryWeb extends AggregateQueryPlatform {
 
   /// Returns an [AggregateQuerySnapshotPlatform] with the count of the documents that match the query.
   @override
-  Future<AggregateQuerySnapshotPlatform> get(
-      {required AggregateSource source}) async {
+  Future<AggregateQuerySnapshotPlatform> get({
+    required AggregateSource source,
+  }) async {
     // Note: There isn't a source option on the web platform
     firestore_interop.AggregateQuerySnapshot snapshot = await _delegate.get();
 

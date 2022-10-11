@@ -3,20 +3,18 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/src/method_channel/utils/source.dart';
-import 'package:cloud_firestore_platform_interface/src/platform_interface/platform_interface_aggregate_query.dart';
 
 import 'method_channel_firestore.dart';
 import '../../cloud_firestore_platform_interface.dart';
-import '../aggregate_source.dart';
-import '../platform_interface/platform_interface_aggregate_query_snapshot.dart';
 
 /// An implementation of [AggregateQueryPlatform] for the [MethodChannel]
 class MethodChannelAggregateQuery extends AggregateQueryPlatform {
   MethodChannelAggregateQuery(QueryPlatform query) : super(query);
 
   @override
-  Future<AggregateQuerySnapshotPlatform> get(
-      {required AggregateSource source}) async {
+  Future<AggregateQuerySnapshotPlatform> get({
+    required AggregateSource source,
+  }) async {
     final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
         .channel
         .invokeMapMethod<String, dynamic>(
