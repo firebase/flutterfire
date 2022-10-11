@@ -1177,7 +1177,8 @@ public class FlutterFirebaseAuthPlugin
               handleMultiFactorException(arguments, taskCompletionSource, e);
             } else {
               taskCompletionSource.setException(e);
-            }          }
+            }
+          }
         });
 
     return taskCompletionSource.getTask();
