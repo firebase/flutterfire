@@ -7,9 +7,9 @@
 
 import 'dart:async';
 
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:js/js.dart';
 
-import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'messaging_interop.dart' as messaging_interop;
 
 export 'messaging_interop.dart';

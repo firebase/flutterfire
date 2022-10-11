@@ -15,6 +15,7 @@ class AuthCredential {
     required this.providerId,
     required this.signInMethod,
     this.token,
+    this.accessToken,
   });
 
   /// The authentication provider ID for the credential. For example,
@@ -29,16 +30,22 @@ class AuthCredential {
   /// A token used to identify the AuthCredential on native platforms.
   final int? token;
 
+  /// The OAuth access token associated with the credential if it belongs to an
+  /// OAuth provider, such as `facebook.com`, `twitter.com`, etc.
+  /// Using the OAuth access token, you can call the provider's API.
+  final String? accessToken;
+
   /// Returns the current instance as a serialized [Map].
   Map<String, dynamic> asMap() {
     return <String, dynamic>{
       'providerId': providerId,
       'signInMethod': signInMethod,
       'token': token,
+      'accessToken': accessToken,
     };
   }
 
   @override
   String toString() =>
-      'AuthCredential(providerId: $providerId, signInMethod: $signInMethod, token: $token)';
+      'AuthCredential(providerId: $providerId, signInMethod: $signInMethod, token: $token, accessToken: $accessToken)';
 }

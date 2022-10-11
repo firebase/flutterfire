@@ -7,7 +7,7 @@ part of 'simple.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
 List<String>? _enumConvertList(enumList) {
   if (enumList == null) {
@@ -109,7 +109,7 @@ class _$ModelCollectionReference extends _$ModelQuery
 
   _$ModelCollectionReference._(
     CollectionReference<Model> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -165,11 +165,23 @@ abstract class ModelDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String value,
+    FieldValue valueFieldValue,
   });
 
-  Future<void> set(Model value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$ModelDocumentReference
@@ -206,22 +218,46 @@ class _$ModelDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ModelDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as String,
+      if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(Model value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
+    final json = {
+      if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -379,14 +415,15 @@ abstract class ModelQuery implements QueryReference<Model, ModelQuerySnapshot> {
 class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     implements ModelQuery {
   _$ModelQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<Model> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
-
-  @override
-  final Query<Model> reference;
 
   ModelQuerySnapshot _decodeSnapshot(
     QuerySnapshot<Model> snapshot,
@@ -424,16 +461,18 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
   @override
   ModelQuery limit(int limit) {
     return _$ModelQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   ModelQuery limitToLast(int limit) {
     return _$ModelQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -449,35 +488,64 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     ModelDocumentSnapshot? endBeforeDocument,
     ModelDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(fieldPath, descending: descending);
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
-    return _$ModelQuery(query, _collection);
+    return _$ModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   ModelQuery whereFieldPath(
@@ -495,7 +563,8 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     bool? isNull,
   }) {
     return _$ModelQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -509,7 +578,7 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -525,7 +594,8 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$ModelQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -537,7 +607,7 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -553,8 +623,9 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$ModelQuery(
-      reference.where(
-        _$ModelFieldMap["value"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$ModelFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -565,7 +636,7 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -580,35 +651,65 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     ModelDocumentSnapshot? endBeforeDocument,
     ModelDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$ModelQuery(query, _collection);
+    return _$ModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   ModelQuery orderByValue({
@@ -622,36 +723,65 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     ModelDocumentSnapshot? endBeforeDocument,
     ModelDocumentSnapshot? startAfterDocument,
   }) {
-    var query =
-        reference.orderBy(_$ModelFieldMap["value"]!, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$ModelFieldMap['value']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$ModelQuery(query, _collection);
+    return _$ModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -749,7 +879,7 @@ class _$NestedCollectionReference extends _$NestedQuery
 
   _$NestedCollectionReference._(
     CollectionReference<Nested> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -805,17 +935,44 @@ abstract class NestedDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     int? simple,
+    FieldValue simpleFieldValue,
     List<bool>? boolList,
+    FieldValue boolListFieldValue,
     List<String>? stringList,
+    FieldValue stringListFieldValue,
     List<num>? numList,
+    FieldValue numListFieldValue,
     List<Object?>? objectList,
+    FieldValue objectListFieldValue,
     List<dynamic>? dynamicList,
-    List<SimpleEnum>? enumList,
+    FieldValue dynamicListFieldValue,
   });
 
-  Future<void> set(Nested value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    int? simple,
+    FieldValue simpleFieldValue,
+    List<bool>? boolList,
+    FieldValue boolListFieldValue,
+    List<String>? stringList,
+    FieldValue stringListFieldValue,
+    List<num>? numList,
+    FieldValue numListFieldValue,
+    List<Object?>? objectList,
+    FieldValue objectListFieldValue,
+    List<dynamic>? dynamicList,
+    FieldValue dynamicListFieldValue,
+    List<SimpleEnum>? enumList,
+  });
 }
 
 class _$NestedDocumentReference
@@ -852,27 +1009,68 @@ class _$NestedDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<NestedDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return NestedDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
     Object? simple = _sentinel,
+    FieldValue? simpleFieldValue,
     Object? boolList = _sentinel,
+    FieldValue? boolListFieldValue,
     Object? stringList = _sentinel,
+    FieldValue? stringListFieldValue,
     Object? numList = _sentinel,
+    FieldValue? numListFieldValue,
     Object? objectList = _sentinel,
+    FieldValue? objectListFieldValue,
     Object? dynamicList = _sentinel,
+    FieldValue? dynamicListFieldValue,
     Object? enumList = _sentinel,
   }) async {
+    assert(
+      simple == _sentinel || simpleFieldValue == null,
+      "Cannot specify both simple and simpleFieldValue",
+    );
+    assert(
+      boolList == _sentinel || boolListFieldValue == null,
+      "Cannot specify both boolList and boolListFieldValue",
+    );
+    assert(
+      stringList == _sentinel || stringListFieldValue == null,
+      "Cannot specify both stringList and stringListFieldValue",
+    );
+    assert(
+      numList == _sentinel || numListFieldValue == null,
+      "Cannot specify both numList and numListFieldValue",
+    );
+    assert(
+      objectList == _sentinel || objectListFieldValue == null,
+      "Cannot specify both objectList and objectListFieldValue",
+    );
+    assert(
+      dynamicList == _sentinel || dynamicListFieldValue == null,
+      "Cannot specify both dynamicList and dynamicListFieldValue",
+    );
     final json = {
-      if (simple != _sentinel) "simple": simple as int?,
-      if (boolList != _sentinel) "boolList": boolList as List<bool>?,
-      if (stringList != _sentinel) "stringList": stringList as List<String>?,
-      if (numList != _sentinel) "numList": numList as List<num>?,
-      if (objectList != _sentinel) "objectList": objectList as List<Object?>?,
+      if (simple != _sentinel) 'simple': simple as int?,
+      if (simpleFieldValue != null) 'simple': simpleFieldValue,
+      if (boolList != _sentinel) 'boolList': boolList as List<bool>?,
+      if (boolListFieldValue != null) 'boolList': boolListFieldValue,
+      if (stringList != _sentinel) 'stringList': stringList as List<String>?,
+      if (stringListFieldValue != null) 'stringList': stringListFieldValue,
+      if (numList != _sentinel) 'numList': numList as List<num>?,
+      if (numListFieldValue != null) 'numList': numListFieldValue,
+      if (objectList != _sentinel) 'objectList': objectList as List<Object?>?,
+      if (objectListFieldValue != null) 'objectList': objectListFieldValue,
       if (dynamicList != _sentinel)
-        "dynamicList": dynamicList as List<dynamic>?,
+        'dynamicList': dynamicList as List<dynamic>?,
+      if (dynamicListFieldValue != null) 'dynamicList': dynamicListFieldValue,
       if (enumList != _sentinel)
         "enumList": _enumConvertList(enumList as List<SimpleEnum>?),
     };
@@ -880,8 +1078,62 @@ class _$NestedDocumentReference
     return reference.update(json);
   }
 
-  Future<void> set(Nested value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? simple = _sentinel,
+    FieldValue? simpleFieldValue,
+    Object? boolList = _sentinel,
+    FieldValue? boolListFieldValue,
+    Object? stringList = _sentinel,
+    FieldValue? stringListFieldValue,
+    Object? numList = _sentinel,
+    FieldValue? numListFieldValue,
+    Object? objectList = _sentinel,
+    FieldValue? objectListFieldValue,
+    Object? dynamicList = _sentinel,
+    FieldValue? dynamicListFieldValue,
+  }) {
+    assert(
+      simple == _sentinel || simpleFieldValue == null,
+      "Cannot specify both simple and simpleFieldValue",
+    );
+    assert(
+      boolList == _sentinel || boolListFieldValue == null,
+      "Cannot specify both boolList and boolListFieldValue",
+    );
+    assert(
+      stringList == _sentinel || stringListFieldValue == null,
+      "Cannot specify both stringList and stringListFieldValue",
+    );
+    assert(
+      numList == _sentinel || numListFieldValue == null,
+      "Cannot specify both numList and numListFieldValue",
+    );
+    assert(
+      objectList == _sentinel || objectListFieldValue == null,
+      "Cannot specify both objectList and objectListFieldValue",
+    );
+    assert(
+      dynamicList == _sentinel || dynamicListFieldValue == null,
+      "Cannot specify both dynamicList and dynamicListFieldValue",
+    );
+    final json = {
+      if (simple != _sentinel) 'simple': simple as int?,
+      if (simpleFieldValue != null) 'simple': simpleFieldValue,
+      if (boolList != _sentinel) 'boolList': boolList as List<bool>?,
+      if (boolListFieldValue != null) 'boolList': boolListFieldValue,
+      if (stringList != _sentinel) 'stringList': stringList as List<String>?,
+      if (stringListFieldValue != null) 'stringList': stringListFieldValue,
+      if (numList != _sentinel) 'numList': numList as List<num>?,
+      if (numListFieldValue != null) 'numList': numListFieldValue,
+      if (objectList != _sentinel) 'objectList': objectList as List<Object?>?,
+      if (objectListFieldValue != null) 'objectList': objectListFieldValue,
+      if (dynamicList != _sentinel)
+        'dynamicList': dynamicList as List<dynamic>?,
+      if (dynamicListFieldValue != null) 'dynamicList': dynamicListFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -1178,14 +1430,15 @@ abstract class NestedQuery
 class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     implements NestedQuery {
   _$NestedQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<Nested> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
-
-  @override
-  final Query<Nested> reference;
 
   NestedQuerySnapshot _decodeSnapshot(
     QuerySnapshot<Nested> snapshot,
@@ -1223,16 +1476,18 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   @override
   NestedQuery limit(int limit) {
     return _$NestedQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   NestedQuery limitToLast(int limit) {
     return _$NestedQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1248,35 +1503,64 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(fieldPath, descending: descending);
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
-    return _$NestedQuery(query, _collection);
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   NestedQuery whereFieldPath(
@@ -1294,7 +1578,8 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     bool? isNull,
   }) {
     return _$NestedQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -1308,7 +1593,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1324,7 +1609,8 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$NestedQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -1336,7 +1622,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1352,8 +1638,9 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     List<int?>? whereNotIn,
   }) {
     return _$NestedQuery(
-      reference.where(
-        _$NestedFieldMap["simple"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$NestedFieldMap['simple']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1364,7 +1651,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1380,8 +1667,9 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     List<bool>? arrayContainsAny,
   }) {
     return _$NestedQuery(
-      reference.where(
-        _$NestedFieldMap["boolList"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$NestedFieldMap['boolList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1392,7 +1680,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1408,8 +1696,9 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     List<String>? arrayContainsAny,
   }) {
     return _$NestedQuery(
-      reference.where(
-        _$NestedFieldMap["stringList"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$NestedFieldMap['stringList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1420,7 +1709,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1436,8 +1725,9 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     List<num>? arrayContainsAny,
   }) {
     return _$NestedQuery(
-      reference.where(
-        _$NestedFieldMap["numList"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$NestedFieldMap['numList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1448,7 +1738,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1464,8 +1754,9 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     List<Object?>? arrayContainsAny,
   }) {
     return _$NestedQuery(
-      reference.where(
-        _$NestedFieldMap["objectList"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$NestedFieldMap['objectList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1476,7 +1767,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1492,8 +1783,9 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     List<dynamic>? arrayContainsAny,
   }) {
     return _$NestedQuery(
-      reference.where(
-        _$NestedFieldMap["dynamicList"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$NestedFieldMap['dynamicList']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1504,7 +1796,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1547,35 +1839,65 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$NestedQuery(query, _collection);
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   NestedQuery orderBySimple({
@@ -1589,36 +1911,65 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query =
-        reference.orderBy(_$NestedFieldMap["simple"]!, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['simple']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$NestedQuery(query, _collection);
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   NestedQuery orderByBoolList({
@@ -1632,36 +1983,65 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$NestedFieldMap["boolList"]!,
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['boolList']!,
         descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$NestedQuery(query, _collection);
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   NestedQuery orderByStringList({
@@ -1675,36 +2055,65 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$NestedFieldMap["stringList"]!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$NestedFieldMap['stringList']!, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$NestedQuery(query, _collection);
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   NestedQuery orderByNumList({
@@ -1718,36 +2127,65 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query =
-        reference.orderBy(_$NestedFieldMap["numList"]!, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['numList']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$NestedQuery(query, _collection);
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   NestedQuery orderByObjectList({
@@ -1761,36 +2199,65 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$NestedFieldMap["objectList"]!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$NestedFieldMap['objectList']!, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$NestedQuery(query, _collection);
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   NestedQuery orderByDynamicList({
@@ -1804,36 +2271,65 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$NestedFieldMap["dynamicList"]!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$NestedFieldMap['dynamicList']!, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$NestedQuery(query, _collection);
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   NestedQuery orderByEnumList({
@@ -1975,7 +2471,7 @@ class _$SplitFileModelCollectionReference extends _$SplitFileModelQuery
 
   _$SplitFileModelCollectionReference._(
     CollectionReference<SplitFileModel> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -2034,8 +2530,6 @@ abstract class SplitFileModelDocumentReference
 
   @override
   Future<void> delete();
-
-  Future<void> set(SplitFileModel value);
 }
 
 class _$SplitFileModelDocumentReference extends FirestoreDocumentReference<
@@ -2072,12 +2566,14 @@ class _$SplitFileModelDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
-  }
-
-  Future<void> set(SplitFileModel value) {
-    return reference.set(value);
+  Future<SplitFileModelDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return SplitFileModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   @override
@@ -2215,14 +2711,15 @@ class _$SplitFileModelQuery
     extends QueryReference<SplitFileModel, SplitFileModelQuerySnapshot>
     implements SplitFileModelQuery {
   _$SplitFileModelQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<SplitFileModel> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
-
-  @override
-  final Query<SplitFileModel> reference;
 
   SplitFileModelQuerySnapshot _decodeSnapshot(
     QuerySnapshot<SplitFileModel> snapshot,
@@ -2260,16 +2757,18 @@ class _$SplitFileModelQuery
   @override
   SplitFileModelQuery limit(int limit) {
     return _$SplitFileModelQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   SplitFileModelQuery limitToLast(int limit) {
     return _$SplitFileModelQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -2285,35 +2784,64 @@ class _$SplitFileModelQuery
     SplitFileModelDocumentSnapshot? endBeforeDocument,
     SplitFileModelDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(fieldPath, descending: descending);
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
-    return _$SplitFileModelQuery(query, _collection);
+    return _$SplitFileModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   SplitFileModelQuery whereFieldPath(
@@ -2331,7 +2859,8 @@ class _$SplitFileModelQuery
     bool? isNull,
   }) {
     return _$SplitFileModelQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -2345,7 +2874,7 @@ class _$SplitFileModelQuery
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -2361,7 +2890,8 @@ class _$SplitFileModelQuery
     List<String>? whereNotIn,
   }) {
     return _$SplitFileModelQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -2373,7 +2903,7 @@ class _$SplitFileModelQuery
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -2388,35 +2918,65 @@ class _$SplitFileModelQuery
     SplitFileModelDocumentSnapshot? endBeforeDocument,
     SplitFileModelDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$SplitFileModelQuery(query, _collection);
+    return _$SplitFileModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -2516,7 +3076,7 @@ class _$EmptyModelCollectionReference extends _$EmptyModelQuery
 
   _$EmptyModelCollectionReference._(
     CollectionReference<EmptyModel> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -2571,8 +3131,6 @@ abstract class EmptyModelDocumentReference
 
   @override
   Future<void> delete();
-
-  Future<void> set(EmptyModel value);
 }
 
 class _$EmptyModelDocumentReference
@@ -2609,12 +3167,13 @@ class _$EmptyModelDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
-  }
-
-  Future<void> set(EmptyModel value) {
-    return reference.set(value);
+  Future<EmptyModelDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return EmptyModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   @override
@@ -2751,14 +3310,15 @@ class _$EmptyModelQuery
     extends QueryReference<EmptyModel, EmptyModelQuerySnapshot>
     implements EmptyModelQuery {
   _$EmptyModelQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<EmptyModel> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
-
-  @override
-  final Query<EmptyModel> reference;
 
   EmptyModelQuerySnapshot _decodeSnapshot(
     QuerySnapshot<EmptyModel> snapshot,
@@ -2796,16 +3356,18 @@ class _$EmptyModelQuery
   @override
   EmptyModelQuery limit(int limit) {
     return _$EmptyModelQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   EmptyModelQuery limitToLast(int limit) {
     return _$EmptyModelQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -2821,35 +3383,64 @@ class _$EmptyModelQuery
     EmptyModelDocumentSnapshot? endBeforeDocument,
     EmptyModelDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(fieldPath, descending: descending);
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
-    return _$EmptyModelQuery(query, _collection);
+    return _$EmptyModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   EmptyModelQuery whereFieldPath(
@@ -2867,7 +3458,8 @@ class _$EmptyModelQuery
     bool? isNull,
   }) {
     return _$EmptyModelQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -2881,7 +3473,7 @@ class _$EmptyModelQuery
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -2897,7 +3489,8 @@ class _$EmptyModelQuery
     List<String>? whereNotIn,
   }) {
     return _$EmptyModelQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -2909,7 +3502,7 @@ class _$EmptyModelQuery
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -2924,35 +3517,65 @@ class _$EmptyModelQuery
     EmptyModelDocumentSnapshot? endBeforeDocument,
     EmptyModelDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$EmptyModelQuery(query, _collection);
+    return _$EmptyModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -3051,7 +3674,7 @@ class _$OptionalJsonCollectionReference extends _$OptionalJsonQuery
 
   _$OptionalJsonCollectionReference._(
     CollectionReference<OptionalJson> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -3110,11 +3733,23 @@ abstract class OptionalJsonDocumentReference extends FirestoreDocumentReference<
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     int value,
+    FieldValue valueFieldValue,
   });
 
-  Future<void> set(OptionalJson value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    int value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
@@ -3151,22 +3786,46 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<OptionalJsonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return OptionalJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as int,
+      if (value != _sentinel) 'value': value as int,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(OptionalJson value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
+    final json = {
+      if (value != _sentinel) 'value': value as int,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -3327,14 +3986,15 @@ class _$OptionalJsonQuery
     extends QueryReference<OptionalJson, OptionalJsonQuerySnapshot>
     implements OptionalJsonQuery {
   _$OptionalJsonQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<OptionalJson> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
-
-  @override
-  final Query<OptionalJson> reference;
 
   OptionalJsonQuerySnapshot _decodeSnapshot(
     QuerySnapshot<OptionalJson> snapshot,
@@ -3372,16 +4032,18 @@ class _$OptionalJsonQuery
   @override
   OptionalJsonQuery limit(int limit) {
     return _$OptionalJsonQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   OptionalJsonQuery limitToLast(int limit) {
     return _$OptionalJsonQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -3397,35 +4059,64 @@ class _$OptionalJsonQuery
     OptionalJsonDocumentSnapshot? endBeforeDocument,
     OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(fieldPath, descending: descending);
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
-    return _$OptionalJsonQuery(query, _collection);
+    return _$OptionalJsonQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   OptionalJsonQuery whereFieldPath(
@@ -3443,7 +4134,8 @@ class _$OptionalJsonQuery
     bool? isNull,
   }) {
     return _$OptionalJsonQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -3457,7 +4149,7 @@ class _$OptionalJsonQuery
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -3473,7 +4165,8 @@ class _$OptionalJsonQuery
     List<String>? whereNotIn,
   }) {
     return _$OptionalJsonQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -3485,7 +4178,7 @@ class _$OptionalJsonQuery
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -3501,8 +4194,9 @@ class _$OptionalJsonQuery
     List<int>? whereNotIn,
   }) {
     return _$OptionalJsonQuery(
-      reference.where(
-        _$OptionalJsonFieldMap["value"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$OptionalJsonFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -3513,7 +4207,7 @@ class _$OptionalJsonQuery
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -3528,35 +4222,65 @@ class _$OptionalJsonQuery
     OptionalJsonDocumentSnapshot? endBeforeDocument,
     OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$OptionalJsonQuery(query, _collection);
+    return _$OptionalJsonQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   OptionalJsonQuery orderByValue({
@@ -3570,36 +4294,65 @@ class _$OptionalJsonQuery
     OptionalJsonDocumentSnapshot? endBeforeDocument,
     OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$OptionalJsonFieldMap["value"]!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$OptionalJsonFieldMap['value']!, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$OptionalJsonQuery(query, _collection);
+    return _$OptionalJsonQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -3698,7 +4451,7 @@ class _$MixedJsonCollectionReference extends _$MixedJsonQuery
 
   _$MixedJsonCollectionReference._(
     CollectionReference<MixedJson> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -3754,11 +4507,23 @@ abstract class MixedJsonDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     int value,
+    FieldValue valueFieldValue,
   });
 
-  Future<void> set(MixedJson value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    int value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$MixedJsonDocumentReference
@@ -3795,22 +4560,46 @@ class _$MixedJsonDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<MixedJsonDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return MixedJsonDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as int,
+      if (value != _sentinel) 'value': value as int,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(MixedJson value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
+    final json = {
+      if (value != _sentinel) 'value': value as int,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -3969,14 +4758,15 @@ abstract class MixedJsonQuery
 class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     implements MixedJsonQuery {
   _$MixedJsonQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<MixedJson> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
-
-  @override
-  final Query<MixedJson> reference;
 
   MixedJsonQuerySnapshot _decodeSnapshot(
     QuerySnapshot<MixedJson> snapshot,
@@ -4014,16 +4804,18 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
   @override
   MixedJsonQuery limit(int limit) {
     return _$MixedJsonQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   MixedJsonQuery limitToLast(int limit) {
     return _$MixedJsonQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -4039,35 +4831,64 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     MixedJsonDocumentSnapshot? endBeforeDocument,
     MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(fieldPath, descending: descending);
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
-    return _$MixedJsonQuery(query, _collection);
+    return _$MixedJsonQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   MixedJsonQuery whereFieldPath(
@@ -4085,7 +4906,8 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     bool? isNull,
   }) {
     return _$MixedJsonQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -4099,7 +4921,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -4115,7 +4937,8 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$MixedJsonQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -4127,7 +4950,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -4143,8 +4966,9 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     List<int>? whereNotIn,
   }) {
     return _$MixedJsonQuery(
-      reference.where(
-        _$MixedJsonFieldMap["value"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$MixedJsonFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4155,7 +4979,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -4170,35 +4994,65 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     MixedJsonDocumentSnapshot? endBeforeDocument,
     MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$MixedJsonQuery(query, _collection);
+    return _$MixedJsonQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   MixedJsonQuery orderByValue({
@@ -4212,36 +5066,65 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     MixedJsonDocumentSnapshot? endBeforeDocument,
     MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$MixedJsonFieldMap["value"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MixedJsonFieldMap['value']!,
         descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$MixedJsonQuery(query, _collection);
+    return _$MixedJsonQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -4340,7 +5223,7 @@ class _$RootCollectionReference extends _$RootQuery
 
   _$RootCollectionReference._(
     CollectionReference<Root> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -4401,6 +5284,11 @@ abstract class RootDocumentReference
     reference,
   );
 
+  late final ThisIsACustomPrefixCollectionReference customClassPrefix =
+      _$ThisIsACustomPrefixCollectionReference(
+    reference,
+  );
+
   @override
   Stream<RootDocumentSnapshot> snapshots();
 
@@ -4410,12 +5298,27 @@ abstract class RootDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String nonNullable,
+    FieldValue nonNullableFieldValue,
     int? nullable,
+    FieldValue nullableFieldValue,
   });
 
-  Future<void> set(Root value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String nonNullable,
+    FieldValue nonNullableFieldValue,
+    int? nullable,
+    FieldValue nullableFieldValue,
+  });
 }
 
 class _$RootDocumentReference
@@ -4445,6 +5348,11 @@ class _$RootDocumentReference
     reference,
   );
 
+  late final ThisIsACustomPrefixCollectionReference customClassPrefix =
+      _$ThisIsACustomPrefixCollectionReference(
+    reference,
+  );
+
   @override
   Stream<RootDocumentSnapshot> snapshots() {
     return reference.snapshots().map((snapshot) {
@@ -4466,24 +5374,62 @@ class _$RootDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<RootDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return RootDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
     Object? nonNullable = _sentinel,
+    FieldValue? nonNullableFieldValue,
     Object? nullable = _sentinel,
+    FieldValue? nullableFieldValue,
   }) async {
+    assert(
+      nonNullable == _sentinel || nonNullableFieldValue == null,
+      "Cannot specify both nonNullable and nonNullableFieldValue",
+    );
+    assert(
+      nullable == _sentinel || nullableFieldValue == null,
+      "Cannot specify both nullable and nullableFieldValue",
+    );
     final json = {
-      if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
-      if (nullable != _sentinel) "nullable": nullable as int?,
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
+      if (nullableFieldValue != null) 'nullable': nullableFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(Root value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? nonNullable = _sentinel,
+    FieldValue? nonNullableFieldValue,
+    Object? nullable = _sentinel,
+    FieldValue? nullableFieldValue,
+  }) {
+    assert(
+      nonNullable == _sentinel || nonNullableFieldValue == null,
+      "Cannot specify both nonNullable and nonNullableFieldValue",
+    );
+    assert(
+      nullable == _sentinel || nullableFieldValue == null,
+      "Cannot specify both nullable and nullableFieldValue",
+    );
+    final json = {
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
+      if (nullableFieldValue != null) 'nullable': nullableFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -4664,14 +5610,15 @@ abstract class RootQuery implements QueryReference<Root, RootQuerySnapshot> {
 class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     implements RootQuery {
   _$RootQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<Root> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
-
-  @override
-  final Query<Root> reference;
 
   RootQuerySnapshot _decodeSnapshot(
     QuerySnapshot<Root> snapshot,
@@ -4709,16 +5656,18 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
   @override
   RootQuery limit(int limit) {
     return _$RootQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   RootQuery limitToLast(int limit) {
     return _$RootQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -4734,35 +5683,64 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(fieldPath, descending: descending);
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
-    return _$RootQuery(query, _collection);
+    return _$RootQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   RootQuery whereFieldPath(
@@ -4780,7 +5758,8 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     bool? isNull,
   }) {
     return _$RootQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -4794,7 +5773,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -4810,7 +5789,8 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$RootQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -4822,7 +5802,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -4838,8 +5818,9 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$RootQuery(
-      reference.where(
-        _$RootFieldMap["nonNullable"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$RootFieldMap['nonNullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4850,7 +5831,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -4866,8 +5847,9 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     List<int?>? whereNotIn,
   }) {
     return _$RootQuery(
-      reference.where(
-        _$RootFieldMap["nullable"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$RootFieldMap['nullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4878,7 +5860,7 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -4893,35 +5875,65 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$RootQuery(query, _collection);
+    return _$RootQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   RootQuery orderByNonNullable({
@@ -4935,36 +5947,65 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$RootFieldMap["nonNullable"]!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$RootFieldMap['nonNullable']!, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$RootQuery(query, _collection);
+    return _$RootQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   RootQuery orderByNullable({
@@ -4978,36 +6019,65 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    var query =
-        reference.orderBy(_$RootFieldMap["nullable"]!, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$RootFieldMap['nullable']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$RootQuery(query, _collection);
+    return _$RootQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -5108,7 +6178,7 @@ class _$SubCollectionReference extends _$SubQuery
   _$SubCollectionReference._(
     this.parent,
     CollectionReference<Sub> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   @override
   final RootDocumentReference parent;
@@ -5172,12 +6242,27 @@ abstract class SubDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String nonNullable,
+    FieldValue nonNullableFieldValue,
     int? nullable,
+    FieldValue nullableFieldValue,
   });
 
-  Future<void> set(Sub value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String nonNullable,
+    FieldValue nonNullableFieldValue,
+    int? nullable,
+    FieldValue nullableFieldValue,
+  });
 }
 
 class _$SubDocumentReference
@@ -5219,24 +6304,62 @@ class _$SubDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<SubDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return SubDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
     Object? nonNullable = _sentinel,
+    FieldValue? nonNullableFieldValue,
     Object? nullable = _sentinel,
+    FieldValue? nullableFieldValue,
   }) async {
+    assert(
+      nonNullable == _sentinel || nonNullableFieldValue == null,
+      "Cannot specify both nonNullable and nonNullableFieldValue",
+    );
+    assert(
+      nullable == _sentinel || nullableFieldValue == null,
+      "Cannot specify both nullable and nullableFieldValue",
+    );
     final json = {
-      if (nonNullable != _sentinel) "nonNullable": nonNullable as String,
-      if (nullable != _sentinel) "nullable": nullable as int?,
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
+      if (nullableFieldValue != null) 'nullable': nullableFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(Sub value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? nonNullable = _sentinel,
+    FieldValue? nonNullableFieldValue,
+    Object? nullable = _sentinel,
+    FieldValue? nullableFieldValue,
+  }) {
+    assert(
+      nonNullable == _sentinel || nonNullableFieldValue == null,
+      "Cannot specify both nonNullable and nonNullableFieldValue",
+    );
+    assert(
+      nullable == _sentinel || nullableFieldValue == null,
+      "Cannot specify both nullable and nullableFieldValue",
+    );
+    final json = {
+      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
+      if (nonNullableFieldValue != null) 'nonNullable': nonNullableFieldValue,
+      if (nullable != _sentinel) 'nullable': nullable as int?,
+      if (nullableFieldValue != null) 'nullable': nullableFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -5417,14 +6540,15 @@ abstract class SubQuery implements QueryReference<Sub, SubQuerySnapshot> {
 class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     implements SubQuery {
   _$SubQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<Sub> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
-
-  @override
-  final Query<Sub> reference;
 
   SubQuerySnapshot _decodeSnapshot(
     QuerySnapshot<Sub> snapshot,
@@ -5462,16 +6586,18 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
   @override
   SubQuery limit(int limit) {
     return _$SubQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   SubQuery limitToLast(int limit) {
     return _$SubQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -5487,35 +6613,64 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(fieldPath, descending: descending);
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
-    return _$SubQuery(query, _collection);
+    return _$SubQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   SubQuery whereFieldPath(
@@ -5533,7 +6688,8 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     bool? isNull,
   }) {
     return _$SubQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -5547,7 +6703,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -5563,7 +6719,8 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$SubQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -5575,7 +6732,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -5591,8 +6748,9 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     List<String>? whereNotIn,
   }) {
     return _$SubQuery(
-      reference.where(
-        _$SubFieldMap["nonNullable"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$SubFieldMap['nonNullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5603,7 +6761,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -5619,8 +6777,9 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     List<int?>? whereNotIn,
   }) {
     return _$SubQuery(
-      reference.where(
-        _$SubFieldMap["nullable"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$SubFieldMap['nullable']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5631,7 +6790,7 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -5646,35 +6805,65 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$SubQuery(query, _collection);
+    return _$SubQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   SubQuery orderByNonNullable({
@@ -5688,36 +6877,65 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$SubFieldMap["nonNullable"]!,
+    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap['nonNullable']!,
         descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$SubQuery(query, _collection);
+    return _$SubQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   SubQuery orderByNullable({
@@ -5731,36 +6949,65 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    var query =
-        reference.orderBy(_$SubFieldMap["nullable"]!, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(_$SubFieldMap['nullable']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$SubQuery(query, _collection);
+    return _$SubQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -5863,7 +7110,7 @@ class _$AsCamelCaseCollectionReference extends _$AsCamelCaseQuery
   _$AsCamelCaseCollectionReference._(
     this.parent,
     CollectionReference<AsCamelCase> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   @override
   final RootDocumentReference parent;
@@ -5930,11 +7177,23 @@ abstract class AsCamelCaseDocumentReference extends FirestoreDocumentReference<
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
-  Future<void> set(AsCamelCase value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    num value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$AsCamelCaseDocumentReference
@@ -5976,22 +7235,46 @@ class _$AsCamelCaseDocumentReference
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<AsCamelCaseDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return AsCamelCaseDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(AsCamelCase value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
+    final json = {
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -6152,14 +7435,15 @@ class _$AsCamelCaseQuery
     extends QueryReference<AsCamelCase, AsCamelCaseQuerySnapshot>
     implements AsCamelCaseQuery {
   _$AsCamelCaseQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<AsCamelCase> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
-
-  @override
-  final Query<AsCamelCase> reference;
 
   AsCamelCaseQuerySnapshot _decodeSnapshot(
     QuerySnapshot<AsCamelCase> snapshot,
@@ -6197,16 +7481,18 @@ class _$AsCamelCaseQuery
   @override
   AsCamelCaseQuery limit(int limit) {
     return _$AsCamelCaseQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   AsCamelCaseQuery limitToLast(int limit) {
     return _$AsCamelCaseQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -6222,35 +7508,64 @@ class _$AsCamelCaseQuery
     AsCamelCaseDocumentSnapshot? endBeforeDocument,
     AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(fieldPath, descending: descending);
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
-    return _$AsCamelCaseQuery(query, _collection);
+    return _$AsCamelCaseQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   AsCamelCaseQuery whereFieldPath(
@@ -6268,7 +7583,8 @@ class _$AsCamelCaseQuery
     bool? isNull,
   }) {
     return _$AsCamelCaseQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -6282,7 +7598,7 @@ class _$AsCamelCaseQuery
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -6298,7 +7614,8 @@ class _$AsCamelCaseQuery
     List<String>? whereNotIn,
   }) {
     return _$AsCamelCaseQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -6310,7 +7627,7 @@ class _$AsCamelCaseQuery
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -6326,8 +7643,9 @@ class _$AsCamelCaseQuery
     List<num>? whereNotIn,
   }) {
     return _$AsCamelCaseQuery(
-      reference.where(
-        _$AsCamelCaseFieldMap["value"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$AsCamelCaseFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -6338,7 +7656,7 @@ class _$AsCamelCaseQuery
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -6353,35 +7671,65 @@ class _$AsCamelCaseQuery
     AsCamelCaseDocumentSnapshot? endBeforeDocument,
     AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$AsCamelCaseQuery(query, _collection);
+    return _$AsCamelCaseQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   AsCamelCaseQuery orderByValue({
@@ -6395,36 +7743,65 @@ class _$AsCamelCaseQuery
     AsCamelCaseDocumentSnapshot? endBeforeDocument,
     AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$AsCamelCaseFieldMap["value"]!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$AsCamelCaseFieldMap['value']!, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$AsCamelCaseQuery(query, _collection);
+    return _$AsCamelCaseQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -6529,7 +7906,7 @@ class _$CustomSubNameCollectionReference extends _$CustomSubNameQuery
   _$CustomSubNameCollectionReference._(
     this.parent,
     CollectionReference<CustomSubName> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   @override
   final RootDocumentReference parent;
@@ -6597,11 +7974,23 @@ abstract class CustomSubNameDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
-  Future<void> set(CustomSubName value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    num value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
@@ -6643,22 +8032,47 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<CustomSubNameDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return CustomSubNameDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(CustomSubName value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
+    final json = {
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -6819,14 +8233,15 @@ class _$CustomSubNameQuery
     extends QueryReference<CustomSubName, CustomSubNameQuerySnapshot>
     implements CustomSubNameQuery {
   _$CustomSubNameQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<CustomSubName> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
-
-  @override
-  final Query<CustomSubName> reference;
 
   CustomSubNameQuerySnapshot _decodeSnapshot(
     QuerySnapshot<CustomSubName> snapshot,
@@ -6864,16 +8279,18 @@ class _$CustomSubNameQuery
   @override
   CustomSubNameQuery limit(int limit) {
     return _$CustomSubNameQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   CustomSubNameQuery limitToLast(int limit) {
     return _$CustomSubNameQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -6889,35 +8306,64 @@ class _$CustomSubNameQuery
     CustomSubNameDocumentSnapshot? endBeforeDocument,
     CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(fieldPath, descending: descending);
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
-    return _$CustomSubNameQuery(query, _collection);
+    return _$CustomSubNameQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   CustomSubNameQuery whereFieldPath(
@@ -6935,7 +8381,8 @@ class _$CustomSubNameQuery
     bool? isNull,
   }) {
     return _$CustomSubNameQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -6949,7 +8396,7 @@ class _$CustomSubNameQuery
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -6965,7 +8412,8 @@ class _$CustomSubNameQuery
     List<String>? whereNotIn,
   }) {
     return _$CustomSubNameQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -6977,7 +8425,7 @@ class _$CustomSubNameQuery
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -6993,8 +8441,9 @@ class _$CustomSubNameQuery
     List<num>? whereNotIn,
   }) {
     return _$CustomSubNameQuery(
-      reference.where(
-        _$CustomSubNameFieldMap["value"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$CustomSubNameFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -7005,7 +8454,7 @@ class _$CustomSubNameQuery
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -7020,35 +8469,65 @@ class _$CustomSubNameQuery
     CustomSubNameDocumentSnapshot? endBeforeDocument,
     CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$CustomSubNameQuery(query, _collection);
+    return _$CustomSubNameQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   CustomSubNameQuery orderByValue({
@@ -7062,36 +8541,65 @@ class _$CustomSubNameQuery
     CustomSubNameDocumentSnapshot? endBeforeDocument,
     CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$CustomSubNameFieldMap["value"]!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$CustomSubNameFieldMap['value']!, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$CustomSubNameQuery(query, _collection);
+    return _$CustomSubNameQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -7137,6 +8645,809 @@ class CustomSubNameQueryDocumentSnapshot
 
   @override
   final CustomSubName data;
+}
+
+/// A collection reference object can be used for adding documents,
+/// getting document references, and querying for documents
+/// (using the methods inherited from Query).
+abstract class ThisIsACustomPrefixCollectionReference
+    implements
+        ThisIsACustomPrefixQuery,
+        FirestoreCollectionReference<CustomClassPrefix,
+            ThisIsACustomPrefixQuerySnapshot> {
+  factory ThisIsACustomPrefixCollectionReference(
+    DocumentReference<Root> parent,
+  ) = _$ThisIsACustomPrefixCollectionReference;
+
+  static CustomClassPrefix fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return CustomClassPrefix.fromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    CustomClassPrefix value,
+    SetOptions? options,
+  ) {
+    return value.toJson();
+  }
+
+  @override
+  CollectionReference<CustomClassPrefix> get reference;
+
+  /// A reference to the containing [RootDocumentReference] if this is a subcollection.
+  RootDocumentReference get parent;
+
+  @override
+  ThisIsACustomPrefixDocumentReference doc([String? id]);
+
+  /// Add a new document to this collection with the specified data,
+  /// assigning it a document ID automatically.
+  Future<ThisIsACustomPrefixDocumentReference> add(CustomClassPrefix value);
+}
+
+class _$ThisIsACustomPrefixCollectionReference
+    extends _$ThisIsACustomPrefixQuery
+    implements ThisIsACustomPrefixCollectionReference {
+  factory _$ThisIsACustomPrefixCollectionReference(
+    DocumentReference<Root> parent,
+  ) {
+    return _$ThisIsACustomPrefixCollectionReference._(
+      RootDocumentReference(parent),
+      parent.collection('custom-class-prefix').withConverter(
+            fromFirestore: ThisIsACustomPrefixCollectionReference.fromFirestore,
+            toFirestore: ThisIsACustomPrefixCollectionReference.toFirestore,
+          ),
+    );
+  }
+
+  _$ThisIsACustomPrefixCollectionReference._(
+    this.parent,
+    CollectionReference<CustomClassPrefix> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
+
+  @override
+  final RootDocumentReference parent;
+
+  String get path => reference.path;
+
+  @override
+  CollectionReference<CustomClassPrefix> get reference =>
+      super.reference as CollectionReference<CustomClassPrefix>;
+
+  @override
+  ThisIsACustomPrefixDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
+    return ThisIsACustomPrefixDocumentReference(
+      reference.doc(id),
+    );
+  }
+
+  @override
+  Future<ThisIsACustomPrefixDocumentReference> add(CustomClassPrefix value) {
+    return reference
+        .add(value)
+        .then((ref) => ThisIsACustomPrefixDocumentReference(ref));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$ThisIsACustomPrefixCollectionReference &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+abstract class ThisIsACustomPrefixDocumentReference
+    extends FirestoreDocumentReference<CustomClassPrefix,
+        ThisIsACustomPrefixDocumentSnapshot> {
+  factory ThisIsACustomPrefixDocumentReference(
+          DocumentReference<CustomClassPrefix> reference) =
+      _$ThisIsACustomPrefixDocumentReference;
+
+  DocumentReference<CustomClassPrefix> get reference;
+
+  /// A reference to the [ThisIsACustomPrefixCollectionReference] containing this document.
+  ThisIsACustomPrefixCollectionReference get parent {
+    return _$ThisIsACustomPrefixCollectionReference(
+      reference.parent.parent!.withConverter<Root>(
+        fromFirestore: RootCollectionReference.fromFirestore,
+        toFirestore: RootCollectionReference.toFirestore,
+      ),
+    );
+  }
+
+  @override
+  Stream<ThisIsACustomPrefixDocumentSnapshot> snapshots();
+
+  @override
+  Future<ThisIsACustomPrefixDocumentSnapshot> get([GetOptions? options]);
+
+  @override
+  Future<void> delete();
+
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
+  Future<void> update({
+    num value,
+    FieldValue valueFieldValue,
+  });
+
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    num value,
+    FieldValue valueFieldValue,
+  });
+}
+
+class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
+        CustomClassPrefix, ThisIsACustomPrefixDocumentSnapshot>
+    implements ThisIsACustomPrefixDocumentReference {
+  _$ThisIsACustomPrefixDocumentReference(this.reference);
+
+  @override
+  final DocumentReference<CustomClassPrefix> reference;
+
+  /// A reference to the [ThisIsACustomPrefixCollectionReference] containing this document.
+  ThisIsACustomPrefixCollectionReference get parent {
+    return _$ThisIsACustomPrefixCollectionReference(
+      reference.parent.parent!.withConverter<Root>(
+        fromFirestore: RootCollectionReference.fromFirestore,
+        toFirestore: RootCollectionReference.toFirestore,
+      ),
+    );
+  }
+
+  @override
+  Stream<ThisIsACustomPrefixDocumentSnapshot> snapshots() {
+    return reference.snapshots().map((snapshot) {
+      return ThisIsACustomPrefixDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<ThisIsACustomPrefixDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then((snapshot) {
+      return ThisIsACustomPrefixDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<ThisIsACustomPrefixDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ThisIsACustomPrefixDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  Future<void> update({
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
+    final json = {
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    return reference.update(json);
+  }
+
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
+    final json = {
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ThisIsACustomPrefixDocumentReference &&
+        other.runtimeType == runtimeType &&
+        other.parent == parent &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, parent, id);
+}
+
+class ThisIsACustomPrefixDocumentSnapshot
+    extends FirestoreDocumentSnapshot<CustomClassPrefix> {
+  ThisIsACustomPrefixDocumentSnapshot._(
+    this.snapshot,
+    this.data,
+  );
+
+  @override
+  final DocumentSnapshot<CustomClassPrefix> snapshot;
+
+  @override
+  ThisIsACustomPrefixDocumentReference get reference {
+    return ThisIsACustomPrefixDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final CustomClassPrefix? data;
+}
+
+abstract class ThisIsACustomPrefixQuery
+    implements
+        QueryReference<CustomClassPrefix, ThisIsACustomPrefixQuerySnapshot> {
+  @override
+  ThisIsACustomPrefixQuery limit(int limit);
+
+  @override
+  ThisIsACustomPrefixQuery limitToLast(int limit);
+
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  ThisIsACustomPrefixQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    ThisIsACustomPrefixDocumentSnapshot? startAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endBeforeDocument,
+    ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  ThisIsACustomPrefixQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  ThisIsACustomPrefixQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+  ThisIsACustomPrefixQuery whereValue({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
+  });
+
+  ThisIsACustomPrefixQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    ThisIsACustomPrefixDocumentSnapshot? startAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endBeforeDocument,
+    ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
+  });
+
+  ThisIsACustomPrefixQuery orderByValue({
+    bool descending = false,
+    num startAt,
+    num startAfter,
+    num endAt,
+    num endBefore,
+    ThisIsACustomPrefixDocumentSnapshot? startAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endBeforeDocument,
+    ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
+  });
+}
+
+class _$ThisIsACustomPrefixQuery
+    extends QueryReference<CustomClassPrefix, ThisIsACustomPrefixQuerySnapshot>
+    implements ThisIsACustomPrefixQuery {
+  _$ThisIsACustomPrefixQuery(
+    this._collection, {
+    required Query<CustomClassPrefix> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
+
+  final CollectionReference<Object?> _collection;
+
+  ThisIsACustomPrefixQuerySnapshot _decodeSnapshot(
+    QuerySnapshot<CustomClassPrefix> snapshot,
+  ) {
+    final docs = snapshot.docs.map((e) {
+      return ThisIsACustomPrefixQueryDocumentSnapshot._(e, e.data());
+    }).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return FirestoreDocumentChange<ThisIsACustomPrefixDocumentSnapshot>(
+        type: change.type,
+        oldIndex: change.oldIndex,
+        newIndex: change.newIndex,
+        doc: ThisIsACustomPrefixDocumentSnapshot._(
+            change.doc, change.doc.data()),
+      );
+    }).toList();
+
+    return ThisIsACustomPrefixQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  @override
+  Stream<ThisIsACustomPrefixQuerySnapshot> snapshots(
+      [SnapshotOptions? options]) {
+    return reference.snapshots().map(_decodeSnapshot);
+  }
+
+  @override
+  Future<ThisIsACustomPrefixQuerySnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(_decodeSnapshot);
+  }
+
+  @override
+  ThisIsACustomPrefixQuery limit(int limit) {
+    return _$ThisIsACustomPrefixQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  @override
+  ThisIsACustomPrefixQuery limitToLast(int limit) {
+    return _$ThisIsACustomPrefixQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  ThisIsACustomPrefixQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ThisIsACustomPrefixDocumentSnapshot? startAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endBeforeDocument,
+    ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
+  }) {
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+    return _$ThisIsACustomPrefixQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  ThisIsACustomPrefixQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$ThisIsACustomPrefixQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  ThisIsACustomPrefixQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$ThisIsACustomPrefixQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  ThisIsACustomPrefixQuery whereValue({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
+  }) {
+    return _$ThisIsACustomPrefixQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$CustomClassPrefixFieldMap['value']!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  ThisIsACustomPrefixQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ThisIsACustomPrefixDocumentSnapshot? startAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endBeforeDocument,
+    ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$ThisIsACustomPrefixQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  ThisIsACustomPrefixQuery orderByValue({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ThisIsACustomPrefixDocumentSnapshot? startAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endAtDocument,
+    ThisIsACustomPrefixDocumentSnapshot? endBeforeDocument,
+    ThisIsACustomPrefixDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$CustomClassPrefixFieldMap['value']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$ThisIsACustomPrefixQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$ThisIsACustomPrefixQuery &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+class ThisIsACustomPrefixQuerySnapshot extends FirestoreQuerySnapshot<
+    CustomClassPrefix, ThisIsACustomPrefixQueryDocumentSnapshot> {
+  ThisIsACustomPrefixQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  final QuerySnapshot<CustomClassPrefix> snapshot;
+
+  @override
+  final List<ThisIsACustomPrefixQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<ThisIsACustomPrefixDocumentSnapshot>>
+      docChanges;
+}
+
+class ThisIsACustomPrefixQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<CustomClassPrefix>
+    implements ThisIsACustomPrefixDocumentSnapshot {
+  ThisIsACustomPrefixQueryDocumentSnapshot._(this.snapshot, this.data);
+
+  @override
+  final QueryDocumentSnapshot<CustomClassPrefix> snapshot;
+
+  @override
+  ThisIsACustomPrefixDocumentReference get reference {
+    return ThisIsACustomPrefixDocumentReference(snapshot.reference);
+  }
+
+  @override
+  final CustomClassPrefix data;
 }
 
 /// A collection reference object can be used for adding documents,
@@ -7841,7 +10152,7 @@ class _$ExplicitPathCollectionReference extends _$ExplicitPathQuery
 
   _$ExplicitPathCollectionReference._(
     CollectionReference<ExplicitPath> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -7905,11 +10216,23 @@ abstract class ExplicitPathDocumentReference extends FirestoreDocumentReference<
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
-  Future<void> set(ExplicitPath value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    num value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
@@ -7951,22 +10274,46 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ExplicitPathDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ExplicitPathDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(ExplicitPath value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
+    final json = {
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -8127,14 +10474,15 @@ class _$ExplicitPathQuery
     extends QueryReference<ExplicitPath, ExplicitPathQuerySnapshot>
     implements ExplicitPathQuery {
   _$ExplicitPathQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<ExplicitPath> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
-
-  @override
-  final Query<ExplicitPath> reference;
 
   ExplicitPathQuerySnapshot _decodeSnapshot(
     QuerySnapshot<ExplicitPath> snapshot,
@@ -8172,16 +10520,18 @@ class _$ExplicitPathQuery
   @override
   ExplicitPathQuery limit(int limit) {
     return _$ExplicitPathQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   ExplicitPathQuery limitToLast(int limit) {
     return _$ExplicitPathQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -8197,35 +10547,64 @@ class _$ExplicitPathQuery
     ExplicitPathDocumentSnapshot? endBeforeDocument,
     ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(fieldPath, descending: descending);
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
-    return _$ExplicitPathQuery(query, _collection);
+    return _$ExplicitPathQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   ExplicitPathQuery whereFieldPath(
@@ -8243,7 +10622,8 @@ class _$ExplicitPathQuery
     bool? isNull,
   }) {
     return _$ExplicitPathQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -8257,7 +10637,7 @@ class _$ExplicitPathQuery
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -8273,7 +10653,8 @@ class _$ExplicitPathQuery
     List<String>? whereNotIn,
   }) {
     return _$ExplicitPathQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -8285,7 +10666,7 @@ class _$ExplicitPathQuery
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -8301,8 +10682,9 @@ class _$ExplicitPathQuery
     List<num>? whereNotIn,
   }) {
     return _$ExplicitPathQuery(
-      reference.where(
-        _$ExplicitPathFieldMap["value"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$ExplicitPathFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -8313,7 +10695,7 @@ class _$ExplicitPathQuery
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -8328,35 +10710,65 @@ class _$ExplicitPathQuery
     ExplicitPathDocumentSnapshot? endBeforeDocument,
     ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$ExplicitPathQuery(query, _collection);
+    return _$ExplicitPathQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   ExplicitPathQuery orderByValue({
@@ -8370,36 +10782,65 @@ class _$ExplicitPathQuery
     ExplicitPathDocumentSnapshot? endBeforeDocument,
     ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$ExplicitPathFieldMap["value"]!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$ExplicitPathFieldMap['value']!, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$ExplicitPathQuery(query, _collection);
+    return _$ExplicitPathQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -8504,7 +10945,7 @@ class _$ExplicitSubPathCollectionReference extends _$ExplicitSubPathQuery
   _$ExplicitSubPathCollectionReference._(
     this.parent,
     CollectionReference<ExplicitSubPath> reference,
-  ) : super(reference, reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   @override
   final ExplicitPathDocumentReference parent;
@@ -8572,11 +11013,23 @@ abstract class ExplicitSubPathDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     num value,
+    FieldValue valueFieldValue,
   });
 
-  Future<void> set(ExplicitSubPath value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    num value,
+    FieldValue valueFieldValue,
+  });
 }
 
 class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
@@ -8618,22 +11071,47 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<ExplicitSubPathDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then((snapshot) {
+      return ExplicitSubPathDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
   }
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as num,
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(ExplicitSubPath value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
+  }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
+    final json = {
+      if (value != _sentinel) 'value': value as num,
+      if (valueFieldValue != null) 'value': valueFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -8794,14 +11272,15 @@ class _$ExplicitSubPathQuery
     extends QueryReference<ExplicitSubPath, ExplicitSubPathQuerySnapshot>
     implements ExplicitSubPathQuery {
   _$ExplicitSubPathQuery(
-    this.reference,
-    this._collection,
-  );
+    this._collection, {
+    required Query<ExplicitSubPath> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
 
   final CollectionReference<Object?> _collection;
-
-  @override
-  final Query<ExplicitSubPath> reference;
 
   ExplicitSubPathQuerySnapshot _decodeSnapshot(
     QuerySnapshot<ExplicitSubPath> snapshot,
@@ -8839,16 +11318,18 @@ class _$ExplicitSubPathQuery
   @override
   ExplicitSubPathQuery limit(int limit) {
     return _$ExplicitSubPathQuery(
-      reference.limit(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
   @override
   ExplicitSubPathQuery limitToLast(int limit) {
     return _$ExplicitSubPathQuery(
-      reference.limitToLast(limit),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -8864,35 +11345,64 @@ class _$ExplicitSubPathQuery
     ExplicitSubPathDocumentSnapshot? endBeforeDocument,
     ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(fieldPath, descending: descending);
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
-    return _$ExplicitSubPathQuery(query, _collection);
+    return _$ExplicitSubPathQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   ExplicitSubPathQuery whereFieldPath(
@@ -8910,7 +11420,8 @@ class _$ExplicitSubPathQuery
     bool? isNull,
   }) {
     return _$ExplicitSubPathQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -8924,7 +11435,7 @@ class _$ExplicitSubPathQuery
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -8940,7 +11451,8 @@ class _$ExplicitSubPathQuery
     List<String>? whereNotIn,
   }) {
     return _$ExplicitSubPathQuery(
-      reference.where(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -8952,7 +11464,7 @@ class _$ExplicitSubPathQuery
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -8968,8 +11480,9 @@ class _$ExplicitSubPathQuery
     List<num>? whereNotIn,
   }) {
     return _$ExplicitSubPathQuery(
-      reference.where(
-        _$ExplicitSubPathFieldMap["value"]!,
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$ExplicitSubPathFieldMap['value']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -8980,7 +11493,7 @@ class _$ExplicitSubPathQuery
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      _collection,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -8995,35 +11508,65 @@ class _$ExplicitSubPathQuery
     ExplicitSubPathDocumentSnapshot? endBeforeDocument,
     ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$ExplicitSubPathQuery(query, _collection);
+    return _$ExplicitSubPathQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   ExplicitSubPathQuery orderByValue({
@@ -9037,36 +11580,65 @@ class _$ExplicitSubPathQuery
     ExplicitSubPathDocumentSnapshot? endBeforeDocument,
     ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$ExplicitSubPathFieldMap["value"]!,
-        descending: descending);
+    final query = $referenceWithoutCursor
+        .orderBy(_$ExplicitSubPathFieldMap['value']!, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      query = query.startAtDocument(startAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      query = query.endAtDocument(endAtDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      query = query.startAt([startAt]);
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      query = query.startAfter([startAfter]);
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      query = query.endAt([endAt]);
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      query = query.endBefore([endBefore]);
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
-    return _$ExplicitSubPathQuery(query, _collection);
+    return _$ExplicitSubPathQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
   }
 
   @override
@@ -9120,10 +11692,10 @@ class ExplicitSubPathQueryDocumentSnapshot
 // **************************************************************************
 
 void _$assertMinValidation(MinValidation instance) {
-  const Min(0).validate(instance.intNbr, "intNbr");
-  const Max(42).validate(instance.intNbr, "intNbr");
-  const Min(10).validate(instance.doubleNbr, "doubleNbr");
-  const Min(-10).validate(instance.numNbr, "numNbr");
+  const Min(0).validate(instance.intNbr, 'intNbr');
+  const Max(42).validate(instance.intNbr, 'intNbr');
+  const Min(10).validate(instance.doubleNbr, 'doubleNbr');
+  const Min(-10).validate(instance.numNbr, 'numNbr');
 }
 
 // **************************************************************************
@@ -9312,6 +11884,20 @@ const _$AsCamelCaseFieldMap = <String, String>{
 };
 
 Map<String, dynamic> _$AsCamelCaseToJson(AsCamelCase instance) =>
+    <String, dynamic>{
+      'value': instance.value,
+    };
+
+CustomClassPrefix _$CustomClassPrefixFromJson(Map<String, dynamic> json) =>
+    CustomClassPrefix(
+      json['value'] as num,
+    );
+
+const _$CustomClassPrefixFieldMap = <String, String>{
+  'value': 'value',
+};
+
+Map<String, dynamic> _$CustomClassPrefixToJson(CustomClassPrefix instance) =>
     <String, dynamic>{
       'value': instance.value,
     };

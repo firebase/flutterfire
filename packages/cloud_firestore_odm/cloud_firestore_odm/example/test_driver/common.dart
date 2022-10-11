@@ -30,6 +30,7 @@ Movie createMovie({
   String runtime = '',
   String title = '',
   int year = 1990,
+  String id = '',
   List<LanguageType> language = const [],
   CertificationType certification = CertificationType.none,
   List<Map<CastType, String>> cast = const [
@@ -48,6 +49,7 @@ Movie createMovie({
     runtime: runtime,
     title: title,
     year: year,
+    id: id,
     language: language,
     certification: certification,
     cast: cast,

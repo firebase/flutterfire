@@ -71,6 +71,7 @@ class Movie {
     required this.runtime,
     required this.title,
     required this.year,
+    required this.id,
     required this.language,
     required this.certification,
     required this.cast,
@@ -79,6 +80,8 @@ class Movie {
     _$assertMovie(this);
   }
 
+  @Id()
+  final String id;
   final String poster;
   @Min(0)
   final int likes;

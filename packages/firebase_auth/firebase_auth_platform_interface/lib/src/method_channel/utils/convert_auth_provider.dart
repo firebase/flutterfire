@@ -24,5 +24,11 @@ AuthProvider convertToOAuthProvider(AuthProvider authProvider) {
     return oAuthProvider;
   }
 
+  if (authProvider is TwitterAuthProvider) {
+    final oAuthProvider = OAuthProvider(authProvider.providerId);
+    oAuthProvider.setCustomParameters(authProvider.parameters);
+    return oAuthProvider;
+  }
+
   return authProvider;
 }

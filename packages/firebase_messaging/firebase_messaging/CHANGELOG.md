@@ -1,3 +1,23 @@
+## 13.1.0
+
+ - **FEAT**: add support for exporting delivery metrics to BigQuery ([#9636](https://github.com/firebase/flutterfire/issues/9636)). ([170b99b9](https://github.com/firebase/flutterfire/commit/170b99b91573f28316172e43188d57ca14600446))
+
+## 13.0.4
+
+ - Update a dependency to the latest release.
+
+## 13.0.3
+
+ - Update a dependency to the latest release.
+
+## 13.0.2
+
+ - **DOCS**: update docs to use `@pragma('vm:entry-point')` annotation for messaging background handler ([#9494](https://github.com/firebase/flutterfire/issues/9494)). ([27a7f44e](https://github.com/firebase/flutterfire/commit/27a7f44e02f2ed533e0249622afdd0a421261385))
+
+## 13.0.1
+
+ - **FIX**: ensure only messaging permission request is processed ([#9486](https://github.com/firebase/flutterfire/issues/9486)). ([5b31e71b](https://github.com/firebase/flutterfire/commit/5b31e71b6cbca0e6a149482436e00598f4eaa2de))
+
 ## 13.0.0
 
 > Note: This release has breaking changes.

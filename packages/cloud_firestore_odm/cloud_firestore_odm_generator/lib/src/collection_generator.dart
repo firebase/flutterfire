@@ -35,17 +35,26 @@ class CollectionData {
   CollectionData({
     required this.type,
     required String? collectionName,
+    required String? classPrefix,
     required this.path,
     required this.queryableFields,
     required this.fromJson,
     required this.toJson,
+    required this.idKey,
     required this.libraryElement,
-  }) : collectionName =
-            collectionName ?? ReCase(path.split('/').last).camelCase;
+  })  : collectionName =
+            collectionName ?? ReCase(path.split('/').last).camelCase,
+        classPrefix = classPrefix ??
+            type.getDisplayString(withNullability: false).replaceFirstMapped(
+                  RegExp('[a-zA-Z]'),
+                  (match) => match.group(0)!.toUpperCase(),
+                );
 
   final DartType type;
   final String collectionName;
+  final String classPrefix;
   final String path;
+  final String? idKey;
   final List<QueryingField> queryableFields;
   final LibraryElement libraryElement;
 
@@ -58,23 +67,17 @@ class CollectionData {
   final List<CollectionData> _children = [];
   List<CollectionData> get children => UnmodifiableListView(_children);
 
-  late final String className =
-      type.getDisplayString(withNullability: false).replaceFirstMapped(
-            RegExp('[a-zA-Z]'),
-            (match) => match.group(0)!.toUpperCase(),
-          );
-
   late final String collectionReferenceInterfaceName =
-      '${className}CollectionReference';
+      '${classPrefix}CollectionReference';
   late final String collectionReferenceImplName =
-      '_\$${className}CollectionReference';
-  late final String documentReferenceName = '${className}DocumentReference';
-  late final String queryReferenceInterfaceName = '${className}Query';
-  late final String queryReferenceImplName = '_\$${className}Query';
-  late final String querySnapshotName = '${className}QuerySnapshot';
+      '_\$${classPrefix}CollectionReference';
+  late final String documentReferenceName = '${classPrefix}DocumentReference';
+  late final String queryReferenceInterfaceName = '${classPrefix}Query';
+  late final String queryReferenceImplName = '_\$${classPrefix}Query';
+  late final String querySnapshotName = '${classPrefix}QuerySnapshot';
   late final String queryDocumentSnapshotName =
-      '${className}QueryDocumentSnapshot';
-  late final String documentSnapshotName = '${className}DocumentSnapshot';
+      '${classPrefix}QueryDocumentSnapshot';
+  late final String documentSnapshotName = '${classPrefix}DocumentSnapshot';
   late final String originalDocumentSnapshotName = 'DocumentSnapshot<$type>';
 
   String Function(String json) fromJson;
@@ -110,8 +113,13 @@ const _geoPointChecker = TypeChecker.fromUrl(
   'package:cloud_firestore_platform_interface/src/geo_point.dart#GeoPoint',
 );
 
+class GlobalData {
+  final classPrefixesForLibrary = <Object?, List<String>>{};
+}
+
 @immutable
-class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
+class CollectionGenerator
+    extends ParserGenerator<GlobalData, Data, Collection> {
   final _collectionTemplates = <Template<CollectionData>>[
     CollectionReferenceTemplate(),
     DocumentReferenceTemplate(),
@@ -124,17 +132,21 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
   @override
   Future<Data> parseElement(
     BuildStep buildStep,
-    void globalData,
+    GlobalData globalData,
     Element element,
   ) async {
     final library = await buildStep.inputLibrary;
-    final collectionAnnotations = const TypeChecker.fromRuntime(Collection)
-        .annotationsOf(element)
-        .map(
-          (annotation) =>
-              _parseCollectionAnnotation(library, annotation, element),
-        )
-        .toList();
+    final collectionAnnotations =
+        const TypeChecker.fromRuntime(Collection).annotationsOf(element).map(
+      (annotation) {
+        return _parseCollectionAnnotation(
+          library,
+          annotation,
+          element,
+          globalData,
+        );
+      },
+    ).toList();
 
     final roots = collectionAnnotations.where((collection) {
       final pathSplit = collection.path.split('/');
@@ -219,10 +231,12 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
     LibraryElement libraryElement,
     DartObject object,
     Element annotatedElement,
+    GlobalData globalData,
   ) {
     // TODO find a way to test validation
 
     final name = object.getField('name')!.toStringValue();
+    final prefix = object.getField('prefix')!.toStringValue();
 
     // TODO(validate name)
 
@@ -273,13 +287,14 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       );
     }
 
+    final annotatedElementSource = annotatedElement.librarySource!;
+
     // TODO(rrousselGit) handle parts
     // Whether the model class and the reference variable are defined in the same file
     // This is important because json_serializable generates private code for
     // decoding a Model class.
     final modelAndReferenceInTheSameLibrary =
-        collectionTargetElement.librarySource.fullName ==
-            annotatedElement.librarySource!.fullName;
+        collectionTargetElement.librarySource == annotatedElementSource;
 
     final fromJson = collectionTargetElement.constructors.firstWhereOrNull(
       (ctor) => ctor.name == 'fromJson',
@@ -331,10 +346,11 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       }
     }
 
-    return CollectionData(
+    final data = CollectionData(
       type: type,
       path: path,
       collectionName: name,
+      classPrefix: prefix,
       libraryElement: libraryElement,
       fromJson: (json) {
         if (fromJson != null) return '$type.fromJson($json)';
@@ -344,6 +360,13 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
         if (toJson != null) return '$value.toJson()';
         return '_\$${type.toString().public}ToJson($value)';
       },
+      idKey: collectionTargetElement
+          .allFields(
+            hasFreezed: hasFreezed,
+            freezedConstructors: redirectedFreezedConstructors,
+          )
+          .firstWhereOrNull((f) => f.hasId())
+          ?.name,
       queryableFields: [
         QueryingField(
           'documentId',
@@ -358,10 +381,11 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
             )
             .where((f) => f.isPublic)
             .where((f) => _isSupportedType(f.type))
+            .where((f) => !f.hasId())
             .where((f) => !f.isJsonIgnored())
             .map(
           (e) {
-            var key = '"${e.name}"';
+            var key = "'${e.name}'";
 
             if (hasFreezed) {
               key =
@@ -381,6 +405,23 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
         ).toList(),
       ],
     );
+
+    final classPrefix = data.classPrefix;
+
+    if (globalData.classPrefixesForLibrary[annotatedElementSource]
+            ?.contains(classPrefix) ??
+        false) {
+      throw InvalidGenerationSourceError(
+        'Defined a collection with duplicate class prefix $classPrefix.'
+        ' Either use a different class, or set a unique class prefix.',
+      );
+    }
+
+    globalData.classPrefixesForLibrary[annotatedElementSource] ??= [];
+    globalData.classPrefixesForLibrary[annotatedElementSource]!
+        .add(classPrefix);
+
+    return data;
   }
 
   bool _isSupportedType(DartType type) {
@@ -402,7 +443,7 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
   Iterable<Object> generateForAll(void globalData) sync* {
     yield '''
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
     ''';
 
     yield '''
@@ -470,7 +511,7 @@ const _sentinel = _Sentinel();
   }
 
   @override
-  void parseGlobalData(LibraryElement library) {}
+  GlobalData parseGlobalData(LibraryElement library) => GlobalData();
 }
 
 extension on ClassElement {
@@ -550,5 +591,10 @@ extension on Element {
     }
 
     return false;
+  }
+
+  bool hasId() {
+    const checker = TypeChecker.fromRuntime(Id);
+    return checker.hasAnnotationOf(this);
   }
 }
