@@ -1,3 +1,7 @@
+## 4.3.11
+
+ - **FIX**: Add speculative fix for null object reference crash ([#9671](https://github.com/firebase/flutterfire/issues/9671)). ([6c003685](https://github.com/firebase/flutterfire/commit/6c00368580a0e5e3f153543302006967747cb4ef))
+
 ## 4.3.10
 
  - Update a dependency to the latest release.

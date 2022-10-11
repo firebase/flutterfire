@@ -1,6 +1,6 @@
 name: flutterfire_ui
 description: UI library built on top of firebase services
-version: 0.4.3+13
+version: 0.4.3+14
 repository: https://github.com/firebase/flutterfire/tree/master/packages/flutterfire_ui
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/flutterfire_ui
 
@@ -20,7 +20,7 @@ dependencies:
   firebase_auth: ^3.10.0
   firebase_core: ^1.10.2
   firebase_database: ^9.1.7
-  firebase_dynamic_links: ^4.3.10
+  firebase_dynamic_links: ^4.3.11
   flutter:
     sdk: flutter
   flutter_facebook_auth: ^4.0.1

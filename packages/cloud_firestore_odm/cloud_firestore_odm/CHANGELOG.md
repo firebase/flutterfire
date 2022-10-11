@@ -1,3 +1,7 @@
+## 1.0.0-dev.34
+
+ - **FEAT**: Add support for FieldValue ([#9684](https://github.com/firebase/flutterfire/issues/9684)). ([467c403a](https://github.com/firebase/flutterfire/commit/467c403aad5dc9a829450eee22750e172e88f90b))
+
 ## 1.0.0-dev.33
 
  - **FIX**: Update ignored lints in generated files ([#9683](https://github.com/firebase/flutterfire/issues/9683)). ([3ab283bb](https://github.com/firebase/flutterfire/commit/3ab283bb3ec6e5dbc0befefb062c5069959f9fb5))
