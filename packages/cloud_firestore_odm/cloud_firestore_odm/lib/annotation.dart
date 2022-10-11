@@ -1,5 +1,32 @@
 export 'src/validator.dart' show Min, Validator, Max;
 
+/// {@macro cloud_firestore_odm.named_query}
+class NamedQuery<T> {
+  /// {@template cloud_firestore_odm.named_query}
+  /// Defines a named query, allowing the ODM to generate utilities to interact
+  /// with the query in a type-safe way.
+  ///
+  /// By doing:
+  ///
+  /// ```dart
+  /// @NamedQuery<Person>('my-query-name')
+  /// class Anything {}
+  /// ```
+  ///
+  /// The ODM will generate a `myQueryNameGet` utility, which can be used as followed:
+  ///
+  /// ```dart
+  /// void main() async {
+  ///   Future<PersonSnapshot> snapshot = myQueryNameGet();
+  /// }
+  /// ```
+  /// {@endtemplate}
+  const NamedQuery(this.queryName);
+
+  /// The name of the Firestore query that will be performed.
+  final String queryName;
+}
+
 /// {@template cloud_firestore_odm.collection}
 /// Defines a collection reference.
 ///

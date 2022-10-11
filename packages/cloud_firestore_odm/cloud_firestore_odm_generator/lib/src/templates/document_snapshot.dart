@@ -1,28 +1,34 @@
-import '../collection_generator.dart';
-import 'template.dart';
+import 'package:analyzer/dart/element/type.dart';
 
-class DocumentSnapshotTemplate extends Template<CollectionData> {
+class DocumentSnapshotTemplate {
+  DocumentSnapshotTemplate({
+    required this.documentSnapshotName,
+    required this.documentReferenceName,
+    required this.type,
+  });
+
+  final String documentSnapshotName;
+  final String documentReferenceName;
+  final DartType type;
+
   @override
-  String generate(CollectionData data) {
+  String toString() {
     return '''
-class ${data.documentSnapshotName} extends FirestoreDocumentSnapshot<${data.type}> {
-  ${data.documentSnapshotName}._(
-    this.snapshot,
-    this.data,
-  );
+class $documentSnapshotName extends FirestoreDocumentSnapshot<$type> {
+  $documentSnapshotName._(this.snapshot): data = snapshot.data();
 
   @override
-  final DocumentSnapshot<${data.type}> snapshot;
+  final DocumentSnapshot<$type> snapshot;
 
   @override
-  ${data.documentReferenceName} get reference {
-    return ${data.documentReferenceName}(
+  $documentReferenceName get reference {
+    return $documentReferenceName(
       snapshot.reference,
     );
   }
 
   @override
-  final ${data.type}? data;
+  final $type? data;
 }
 ''';
   }

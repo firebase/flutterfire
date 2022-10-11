@@ -12,10 +12,24 @@ import 'parse_generator.dart';
 import 'templates/collection_reference.dart';
 import 'templates/document_reference.dart';
 import 'templates/document_snapshot.dart';
+import 'templates/named_query.dart';
 import 'templates/query_document_snapshot.dart';
 import 'templates/query_reference.dart';
 import 'templates/query_snapshot.dart';
-import 'templates/template.dart';
+
+const _namedQueryChecker = TypeChecker.fromUrl(
+  'package:cloud_firestore_odm/annotation.dart#NamedQuery',
+);
+
+const _dateTimeChecker = TypeChecker.fromRuntime(DateTime);
+
+const _timestampChecker = TypeChecker.fromUrl(
+  'package:cloud_firestore_platform_interface/src/timestamp.dart#Timestamp',
+);
+
+const _geoPointChecker = TypeChecker.fromUrl(
+  'package:cloud_firestore_platform_interface/src/geo_point.dart#GeoPoint',
+);
 
 class QueryingField {
   QueryingField(
@@ -31,41 +45,17 @@ class QueryingField {
   final bool updatable;
 }
 
-class CollectionData {
-  CollectionData({
-    required this.type,
-    required String? collectionName,
-    required String? classPrefix,
-    required this.path,
-    required this.queryableFields,
-    required this.fromJson,
-    required this.toJson,
-    required this.idKey,
-    required this.libraryElement,
-  })  : collectionName =
-            collectionName ?? ReCase(path.split('/').last).camelCase,
-        classPrefix = classPrefix ??
-            type.getDisplayString(withNullability: false).replaceFirstMapped(
-                  RegExp('[a-zA-Z]'),
-                  (match) => match.group(0)!.toUpperCase(),
-                );
+/// A mixin for obtaining the class name of collections/documents/snapshots/etc
+/// based on annotation metadata.
+mixin Names {
+  String? get collectionPrefix;
+  DartType get type;
 
-  final DartType type;
-  final String collectionName;
-  final String classPrefix;
-  final String path;
-  final String? idKey;
-  final List<QueryingField> queryableFields;
-  final LibraryElement libraryElement;
-
-  late final updatableFields =
-      queryableFields.where((element) => element.updatable).toList();
-
-  CollectionData? _parent;
-  CollectionData? get parent => _parent;
-
-  final List<CollectionData> _children = [];
-  List<CollectionData> get children => UnmodifiableListView(_children);
+  late final String classPrefix = collectionPrefix ??
+      type.getDisplayString(withNullability: false).replaceFirstMapped(
+            RegExp('[a-zA-Z]'),
+            (match) => match.group(0)!.toUpperCase(),
+          );
 
   late final String collectionReferenceInterfaceName =
       '${classPrefix}CollectionReference';
@@ -79,6 +69,41 @@ class CollectionData {
       '${classPrefix}QueryDocumentSnapshot';
   late final String documentSnapshotName = '${classPrefix}DocumentSnapshot';
   late final String originalDocumentSnapshotName = 'DocumentSnapshot<$type>';
+}
+
+class CollectionData with Names {
+  CollectionData({
+    required this.type,
+    required String? collectionName,
+    required this.collectionPrefix,
+    required this.path,
+    required this.queryableFields,
+    required this.fromJson,
+    required this.toJson,
+    required this.idKey,
+    required this.libraryElement,
+  }) : collectionName =
+            collectionName ?? ReCase(path.split('/').last).camelCase;
+
+  @override
+  final String? collectionPrefix;
+  @override
+  final DartType type;
+
+  final String collectionName;
+  final String path;
+  final String? idKey;
+  final List<QueryingField> queryableFields;
+  final LibraryElement libraryElement;
+
+  late final updatableFields =
+      queryableFields.where((element) => element.updatable).toList();
+
+  CollectionData? _parent;
+  CollectionData? get parent => _parent;
+
+  final List<CollectionData> _children = [];
+  List<CollectionData> get children => UnmodifiableListView(_children);
 
   String Function(String json) fromJson;
   String Function(String value) toJson;
@@ -103,32 +128,42 @@ class Data {
   }
 }
 
-const _dateTimeChecker = TypeChecker.fromRuntime(DateTime);
+class NamedQueryData with Names {
+  NamedQueryData(this.queryName, {required this.type});
 
-const _timestampChecker = TypeChecker.fromUrl(
-  'package:cloud_firestore_platform_interface/src/timestamp.dart#Timestamp',
-);
+  factory NamedQueryData.fromAnnotation(DartObject dartObject) {
+    final queryName = dartObject.getField('queryName')!.toStringValue()!;
 
-const _geoPointChecker = TypeChecker.fromUrl(
-  'package:cloud_firestore_platform_interface/src/geo_point.dart#GeoPoint',
-);
+    final genericType =
+        (dartObject.type! as InterfaceType).typeArguments.single;
+
+    return NamedQueryData(queryName, type: genericType);
+  }
+
+  @override
+  final DartType type;
+
+  final String queryName;
+
+  late final String namedQueryGetName = '${ReCase(queryName).camelCase}Get';
+  late final String namedQueryExtensionName =
+      '${ReCase(queryName).pascalCase}Extrension';
+
+  @override
+  String? get collectionPrefix => null;
+}
 
 class GlobalData {
+  /// All the [Collection.prefix] in the library.
   final classPrefixesForLibrary = <Object?, List<String>>{};
+
+  /// The list of all [NamedQuery] in the library.
+  final namedQueries = <NamedQueryData>[];
 }
 
 @immutable
 class CollectionGenerator
     extends ParserGenerator<GlobalData, Data, Collection> {
-  final _collectionTemplates = <Template<CollectionData>>[
-    CollectionReferenceTemplate(),
-    DocumentReferenceTemplate(),
-    DocumentSnapshotTemplate(),
-    QueryTemplate(),
-    QuerySnapshotTemplate(),
-    QueryDocumentSnapshotTemplate(),
-  ];
-
   @override
   Future<Data> parseElement(
     BuildStep buildStep,
@@ -350,7 +385,7 @@ class CollectionGenerator
       type: type,
       path: path,
       collectionName: name,
-      classPrefix: prefix,
+      collectionPrefix: prefix,
       libraryElement: libraryElement,
       fromJson: (json) {
         if (fromJson != null) return '$type.fromJson($json)';
@@ -439,7 +474,7 @@ class CollectionGenerator
   }
 
   @override
-  Iterable<Object> generateForAll(void globalData) sync* {
+  Iterable<Object> generateForAll(GlobalData globalData) sync* {
     yield '''
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
@@ -452,24 +487,76 @@ class _Sentinel {
 
 const _sentinel = _Sentinel();
     ''';
-  }
 
-  @override
-  Iterable<Object> generateForData(
-    void globalData,
-    Data data,
-  ) sync* {
-    for (final collection in data.allCollections) {
-      for (final template in _collectionTemplates) {
-        if (template.accepts(collection)) {
-          yield template.generate(collection);
-        }
-      }
+    for (final namedQuery in globalData.namedQueries) {
+      yield NamedQueryTemplate(namedQuery, globalData);
+
+      // It is safe to generate snapshots here and in [generateForData]
+      // as parse_generator will filter duplicate generations.
+      yield QuerySnapshotTemplate(
+        documentSnapshotName: namedQuery.documentSnapshotName,
+        queryDocumentSnapshotName: namedQuery.queryDocumentSnapshotName,
+        querySnapshotName: namedQuery.querySnapshotName,
+        type: namedQuery.type,
+      );
+      yield QueryDocumentSnapshotTemplate(
+        documentSnapshotName: namedQuery.documentSnapshotName,
+        documentReferenceName: namedQuery.documentReferenceName,
+        queryDocumentSnapshotName: namedQuery.queryDocumentSnapshotName,
+        type: namedQuery.type,
+      );
+      yield DocumentSnapshotTemplate(
+        documentSnapshotName: namedQuery.documentSnapshotName,
+        documentReferenceName: namedQuery.documentReferenceName,
+        type: namedQuery.type,
+      );
     }
   }
 
   @override
-  GlobalData parseGlobalData(LibraryElement library) => GlobalData();
+  Iterable<Object> generateForData(
+    GlobalData globalData,
+    Data data,
+  ) sync* {
+    for (final collection in data.allCollections) {
+      yield CollectionReferenceTemplate(collection);
+      yield DocumentReferenceTemplate(collection);
+      yield QueryTemplate(collection);
+
+      yield DocumentSnapshotTemplate(
+        documentSnapshotName: collection.documentSnapshotName,
+        documentReferenceName: collection.documentReferenceName,
+        type: collection.type,
+      );
+      yield QuerySnapshotTemplate(
+        documentSnapshotName: collection.documentSnapshotName,
+        queryDocumentSnapshotName: collection.queryDocumentSnapshotName,
+        querySnapshotName: collection.querySnapshotName,
+        type: collection.type,
+      );
+      yield QueryDocumentSnapshotTemplate(
+        documentSnapshotName: collection.documentSnapshotName,
+        documentReferenceName: collection.documentReferenceName,
+        queryDocumentSnapshotName: collection.queryDocumentSnapshotName,
+        type: collection.type,
+      );
+    }
+  }
+
+  @override
+  GlobalData parseGlobalData(LibraryElement library) {
+    final globalData = GlobalData();
+
+    for (final element in library.topLevelElements) {
+      for (final queryAnnotation in _namedQueryChecker.annotationsOf(element)) {
+        globalData.namedQueries.add(
+          NamedQueryData.fromAnnotation(queryAnnotation),
+        );
+      }
+    }
+
+    return globalData;
+  }
 }
 
 extension on ClassElement {

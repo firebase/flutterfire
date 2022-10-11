@@ -1,9 +1,12 @@
 import '../collection_generator.dart';
-import 'template.dart';
 
-class DocumentReferenceTemplate extends Template<CollectionData> {
+class DocumentReferenceTemplate {
+  DocumentReferenceTemplate(this.data);
+
+  final CollectionData data;
+
   @override
-  String generate(CollectionData data) {
+  String toString() {
     return '''
 abstract class ${data.documentReferenceName} extends FirestoreDocumentReference<${data.type}, ${data.documentSnapshotName}> {
   factory ${data.documentReferenceName}(DocumentReference<${data.type}> reference) = _\$${data.documentReferenceName};
@@ -40,32 +43,17 @@ class _\$${data.documentReferenceName}
 
   @override
   Stream<${data.documentSnapshotName}> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return ${data.documentSnapshotName}._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(${data.documentSnapshotName}._);
   }
 
   @override
   Future<${data.documentSnapshotName}> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return ${data.documentSnapshotName}._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(${data.documentSnapshotName}._);
   }
 
   @override
   Future<${data.documentSnapshotName}> transactionGet(Transaction transaction) {
-    return transaction.get(reference).then((snapshot) {
-      return ${data.documentSnapshotName}._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return transaction.get(reference).then(${data.documentSnapshotName}._);
   }
 
   ${_update(data)} 
