@@ -20,6 +20,6 @@ class AggregateQuery {
   /// Returns an [AggregateQuerySnapshot] with the count of the documents that match the query.
   Future<AggregateQuerySnapshot> get(
       {AggregateSource source = AggregateSource.server}) async {
-    return AggregateQuerySnapshot._(await _delegate.get(source: source));
+    return AggregateQuerySnapshot._(await _delegate.get(source: source), query);
   }
 }
