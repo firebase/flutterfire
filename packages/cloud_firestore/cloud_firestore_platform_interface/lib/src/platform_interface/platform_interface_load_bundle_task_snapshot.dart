@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
 import '../../cloud_firestore_platform_interface.dart';
 
 /// The interface a load bundle task snapshot must extend.
@@ -24,8 +25,8 @@ class LoadBundleTaskSnapshotPlatform extends PlatformInterface {
   /// This is used by the app-facing [LoadBundleTaskSnapshot] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(LoadBundleTaskSnapshotPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(LoadBundleTaskSnapshotPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   final LoadBundleTaskState taskState;

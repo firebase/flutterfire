@@ -43,10 +43,10 @@ void main() {
       }
     });
 
-    group('verifyExtends()', () {
+    group('verify()', () {
       test('calls successfully', () {
         try {
-          RecaptchaVerifierFactoryPlatform.verifyExtends(
+          RecaptchaVerifierFactoryPlatform.verify(
               recaptchaVerifierFactoryPlatform);
           return;
         } catch (_) {

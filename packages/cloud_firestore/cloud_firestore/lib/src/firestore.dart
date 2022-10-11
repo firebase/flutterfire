@@ -17,7 +17,9 @@ part of cloud_firestore;
 /// ```
 class FirebaseFirestore extends FirebasePluginPlatform {
   FirebaseFirestore._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_firestore');
+      : super(app.name, 'plugins.flutter.io/firebase_firestore') {
+    FirebasePluginPlatform.verify(instance);
+  }
 
   static final Map<String, FirebaseFirestore> _cachedInstances = {};
 

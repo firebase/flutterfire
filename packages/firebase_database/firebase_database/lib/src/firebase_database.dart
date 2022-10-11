@@ -21,6 +21,7 @@ class FirebaseDatabase extends FirebasePluginPlatform {
 
   FirebaseDatabase._({required this.app, this.databaseURL})
       : super(app.name, 'plugins.flutter.io/firebase_database') {
+    FirebasePluginPlatform.verify(instance);
     if (databaseURL != null && databaseURL!.endsWith('/')) {
       databaseURL = databaseURL!.substring(0, databaseURL!.length - 1);
     }

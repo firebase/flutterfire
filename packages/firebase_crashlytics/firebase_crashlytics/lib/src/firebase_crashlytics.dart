@@ -10,7 +10,9 @@ part of firebase_crashlytics;
 /// You can get an instance by calling [FirebaseCrashlytics.instance].
 class FirebaseCrashlytics extends FirebasePluginPlatform {
   FirebaseCrashlytics._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
+      : super(app.name, 'plugins.flutter.io/firebase_crashlytics') {
+    FirebasePluginPlatform.verify(instance);
+  }
 
   /// Cached instance of [FirebaseCrashlytics];
   static FirebaseCrashlytics? _instance;

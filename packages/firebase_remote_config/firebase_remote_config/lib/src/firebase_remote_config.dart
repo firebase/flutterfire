@@ -11,7 +11,9 @@ part of firebase_remote_config;
 // ignore: prefer_mixin
 class FirebaseRemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   FirebaseRemoteConfig._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_remote_config');
+      : super(app.name, 'plugins.flutter.io/firebase_remote_config') {
+    FirebasePluginPlatform.verify(instance);
+  }
 
   // Cached instances of [FirebaseRemoteConfig].
   static final Map<String, FirebaseRemoteConfig>

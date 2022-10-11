@@ -9,7 +9,9 @@ import 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_mes
 
 class FirebaseInAppMessaging extends FirebasePluginPlatform {
   FirebaseInAppMessaging._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_in_app_messaging');
+      : super(app.name, 'plugins.flutter.io/firebase_in_app_messaging') {
+    FirebasePluginPlatform.verify(instance);
+  }
 
   /// The [FirebaseApp] for this current [FirebaseAnalytics] instance.
   final FirebaseApp app;

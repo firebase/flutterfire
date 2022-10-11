@@ -7,7 +7,9 @@ part of firebase_analytics;
 /// Firebase Analytics API.
 class FirebaseAnalytics extends FirebasePluginPlatform {
   FirebaseAnalytics._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_analytics');
+      : super(app.name, 'plugins.flutter.io/firebase_analytics') {
+    FirebasePluginPlatform.verify(instance);
+  }
 
   /// Namespace for analytics API available on Android only. This is deprecated in favor of
   /// `FirebaseAnalytics.instance.setSessionTimeoutDuration()`.

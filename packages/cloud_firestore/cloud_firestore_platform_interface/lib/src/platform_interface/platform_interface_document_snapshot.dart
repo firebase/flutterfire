@@ -26,8 +26,8 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   /// This is used by the app-facing [DocumentSnapshot] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(DocumentSnapshotPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(DocumentSnapshotPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The [FirebaseFirestorePlatform] used to produce this [DocumentSnapshotPlatform].

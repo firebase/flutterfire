@@ -48,7 +48,7 @@ abstract class DatabasePlatform extends PlatformInterface {
   }
 
   static set instance(DatabasePlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

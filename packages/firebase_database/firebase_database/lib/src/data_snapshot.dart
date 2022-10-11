@@ -10,7 +10,7 @@ class DataSnapshot {
   final DataSnapshotPlatform _delegate;
 
   DataSnapshot._(this._delegate) {
-    DataSnapshotPlatform.verifyExtends(_delegate);
+    DataSnapshotPlatform.verify(_delegate);
   }
 
   /// The key of the location that generated this DataSnapshot or null if at

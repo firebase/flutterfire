@@ -9,7 +9,9 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   static Map<String, FirebaseAppCheck> _firebaseAppCheckInstances = {};
 
   FirebaseAppCheck._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_app_check');
+      : super(app.name, 'plugins.flutter.io/firebase_app_check') {
+    FirebasePluginPlatform.verify(instance);
+  }
 
   /// Cached instance of [FirebaseAppCheck];
   static FirebaseAppCheck? _instance;

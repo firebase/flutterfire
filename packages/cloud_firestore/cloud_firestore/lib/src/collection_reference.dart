@@ -77,7 +77,7 @@ class _JsonCollectionReference extends _JsonQuery
   _JsonCollectionReference(
     FirebaseFirestore firestore,
     CollectionReferencePlatform _delegate,
-  ) : super(firestore, _delegate);
+  ) : super(firestore, _delegate) 
 
   @override
   CollectionReferencePlatform get _delegate =>

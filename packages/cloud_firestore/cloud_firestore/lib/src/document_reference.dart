@@ -94,7 +94,7 @@ abstract class DocumentReference<T extends Object?> {
 class _JsonDocumentReference
     implements DocumentReference<Map<String, dynamic>> {
   _JsonDocumentReference(this.firestore, this._delegate) {
-    DocumentReferencePlatform.verifyExtends(_delegate);
+    DocumentReferencePlatform.verify(_delegate);
   }
 
   @override

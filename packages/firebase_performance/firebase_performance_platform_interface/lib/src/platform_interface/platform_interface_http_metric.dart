@@ -10,8 +10,8 @@ abstract class HttpMetricPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Ensures that any delegate class has extended a [HttpMetricPlatform].
-  static void verifyExtends(HttpMetricPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(HttpMetricPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// Maximum allowed length of a key passed to [putAttribute].
