@@ -19,15 +19,15 @@ abstract class AggregateQueryPlatform extends PlatformInterface {
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
   static void verifyExtends(AggregateQueryPlatform instance) {
-      PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verifyToken(instance, _token);
   }
 
   /// The [QueryPlatform] instance to which this [AggregateQueryPlatform] queries against to retrieve the meta data.
   final QueryPlatform query;
 
   /// Returns an [AggregateQuerySnapshotPlatform] with the count of the documents that match the query.
-  Future<AggregateQuerySnapshotPlatform> get({required AggregateSource source}) async {
+  Future<AggregateQuerySnapshotPlatform> get(
+      {required AggregateSource source}) async {
     throw UnimplementedError('get() is not implemented');
   }
-
 }

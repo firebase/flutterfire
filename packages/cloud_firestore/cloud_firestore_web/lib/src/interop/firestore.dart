@@ -774,11 +774,11 @@ abstract class FieldValue {
 }
 
 class AggregateQuery {
-  AggregateQuery(Query query) :  _jsQuery = query.jsObject;
+  AggregateQuery(Query query) : _jsQuery = query.jsObject;
   final firestore_interop.QueryJsImpl _jsQuery;
   Future<AggregateQuerySnapshot> get() async {
     return handleThenable<firestore_interop.AggregateQuerySnapshotJsImpl>(
-        firestore_interop.getCountFromServer(_jsQuery))
+            firestore_interop.getCountFromServer(_jsQuery))
         .then(AggregateQuerySnapshot.getInstance);
   }
 }
@@ -787,14 +787,18 @@ class AggregateQuerySnapshot
     extends JsObjectWrapper<firestore_interop.AggregateQuerySnapshotJsImpl> {
   static final _expando = Expando<AggregateQuerySnapshot>();
   late final Map<String, Object> _data;
-  /// Creates a new [AggregateQuerySnapshot] from a [jsObject].
-  static AggregateQuerySnapshot getInstance(firestore_interop.AggregateQuerySnapshotJsImpl jsObject) {
 
-    return _expando[jsObject] ??= AggregateQuerySnapshot._fromJsObject(jsObject);
+  /// Creates a new [AggregateQuerySnapshot] from a [jsObject].
+  static AggregateQuerySnapshot getInstance(
+      firestore_interop.AggregateQuerySnapshotJsImpl jsObject) {
+    return _expando[jsObject] ??=
+        AggregateQuerySnapshot._fromJsObject(jsObject);
   }
 
-  AggregateQuerySnapshot._fromJsObject(firestore_interop.AggregateQuerySnapshotJsImpl jsObject)
-      : _data = Map.from(dartify(jsObject.data())), super.fromJsObject(jsObject);
+  AggregateQuerySnapshot._fromJsObject(
+      firestore_interop.AggregateQuerySnapshotJsImpl jsObject)
+      : _data = Map.from(dartify(jsObject.data())),
+        super.fromJsObject(jsObject);
 
   int get count => _data['count']! as int;
 }

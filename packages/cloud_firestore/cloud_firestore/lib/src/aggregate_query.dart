@@ -10,6 +10,7 @@ class AggregateQuery {
   AggregateQuery._(this._delegate, this.query) {
     AggregateQueryPlatform.verifyExtends(_delegate);
   }
+
   /// [Query] represents the query over the data at a particular location used by the [AggregateQuery] to
   /// retrieve the meta data.
   final Query query;
@@ -17,7 +18,8 @@ class AggregateQuery {
   final AggregateQueryPlatform _delegate;
 
   /// Returns an [AggregateQuerySnapshot] with the count of the documents that match the query.
-  Future<AggregateQuerySnapshot> get({AggregateSource source = AggregateSource.server}) async {
+  Future<AggregateQuerySnapshot> get(
+      {AggregateSource source = AggregateSource.server}) async {
     return AggregateQuerySnapshot._(await _delegate.get(source: source));
   }
 }

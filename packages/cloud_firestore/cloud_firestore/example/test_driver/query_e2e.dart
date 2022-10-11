@@ -1812,7 +1812,10 @@ void runQueryTests() {
       test('count()', () async {
         final collection = await initializeTest('count');
 
-        await Future.wait([collection.add({'foo': 'bar'}), collection.add({'bar': 'baz'})]) ;
+        await Future.wait([
+          collection.add({'foo': 'bar'}),
+          collection.add({'bar': 'baz'})
+        ]);
 
         AggregateQuery query = collection.count();
 

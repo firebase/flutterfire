@@ -22,7 +22,7 @@ void main() {
   );
 
   MethodChannelFirebaseFirestore.channel.setMockMethodCallHandler((call) async {
-    if (call.method == 'AggregateQuery#countGet' ) {
+    if (call.method == 'AggregateQuery#countGet') {
       return {
         'count': kCount,
       };
@@ -39,7 +39,8 @@ void main() {
       firestore = FirebaseFirestore.instance;
     });
 
-    test('returns the correct `AggregateQuerySnapshot` with correct `count`', () async {
+    test('returns the correct `AggregateQuerySnapshot` with correct `count`',
+        () async {
       Query query = firestore!.collection('flutter-tests');
       AggregateQuery aggregateQuery = query.count();
 
@@ -58,12 +59,11 @@ class AggregateQueryMessageCodec extends FirestoreMessageCodec {
   static const int _kFirestoreQuery = 145;
   static const int _kFirestoreSettings = 146;
 
-
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-    // The following cases are only used by unit tests, and not by actual application
-    // code paths.
+      // The following cases are only used by unit tests, and not by actual application
+      // code paths.
       case _kFirestoreInstance:
         String appName = readValue(buffer)! as String;
         readValue(buffer);
@@ -71,7 +71,7 @@ class AggregateQueryMessageCodec extends FirestoreMessageCodec {
         return MethodChannelFirebaseFirestore(app: app);
       case _kFirestoreQuery:
         Map<dynamic, dynamic> values =
-        readValue(buffer)! as Map<dynamic, dynamic>;
+            readValue(buffer)! as Map<dynamic, dynamic>;
         final FirebaseApp app = Firebase.app();
         return MethodChannelQuery(
           MethodChannelFirebaseFirestore(app: app),

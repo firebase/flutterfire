@@ -9,13 +9,13 @@ import 'package:flutter_test/flutter_test.dart';
 import '../utils/test_common.dart';
 
 class AggregateQuery extends AggregateQueryPlatform {
-  AggregateQuery(QueryPlatform query)
-      : super(query);
+  AggregateQuery(QueryPlatform query) : super(query);
 }
 
 class TestQuery extends QueryPlatform {
   TestQuery._() : super(FirebaseFirestorePlatform.instance, null);
 }
+
 late QueryPlatform query;
 late AggregateQueryPlatform aggregateQuery;
 
@@ -24,8 +24,8 @@ void main() {
   group('$AggregateQueryPlatform()', () {
     setUpAll(() async {
       await Firebase.initializeApp();
-    query = TestQuery._();
-    aggregateQuery = AggregateQuery(query);
+      query = TestQuery._();
+      aggregateQuery = AggregateQuery(query);
     });
 
     test('constructor', () {
@@ -35,10 +35,13 @@ void main() {
 
     test('throws if .checkForUnsentReports', () {
       expect(
-            () => aggregateQuery.get(source: AggregateSource.server),
-        throwsA(isA<UnimplementedError>().having((e) => e.message, 'message',
+        () => aggregateQuery.get(source: AggregateSource.server),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
             'get() is not implemented',
-        ),
+          ),
         ),
       );
     });

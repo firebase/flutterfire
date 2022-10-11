@@ -231,7 +231,7 @@ abstract class QueryPlatform extends PlatformInterface {
 
   /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
   /// meta data
-  AggregateQueryPlatform count(){
+  AggregateQueryPlatform count() {
     throw UnimplementedError('count() is not implemented');
   }
 }

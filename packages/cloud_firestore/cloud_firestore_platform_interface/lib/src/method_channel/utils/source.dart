@@ -17,7 +17,6 @@ String getSourceString(Source source) {
   }
 }
 
-
 /// Converts [AggregateSource] to [String]
 String getAggregateSourceString(AggregateSource source) {
   switch (source) {

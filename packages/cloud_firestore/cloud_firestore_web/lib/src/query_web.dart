@@ -235,7 +235,7 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  AggregateQueryPlatform count(){
+  AggregateQueryPlatform count() {
     return AggregateQueryWeb(this, _webQuery);
   }
 }

@@ -15,7 +15,8 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
   MethodChannelAggregateQuery(QueryPlatform query) : super(query);
 
   @override
-  Future<AggregateQuerySnapshotPlatform> get({required AggregateSource source}) async {
+  Future<AggregateQuerySnapshotPlatform> get(
+      {required AggregateSource source}) async {
     final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
         .channel
         .invokeMapMethod<String, dynamic>(
@@ -28,7 +29,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
     );
 
     return AggregateQuerySnapshotPlatform(
-       count: data!['count'] as int,
+      count: data!['count'] as int,
     );
   }
 }
