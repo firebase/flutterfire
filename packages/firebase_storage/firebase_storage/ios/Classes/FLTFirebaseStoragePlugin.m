@@ -67,6 +67,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 @implementation FLTFirebaseStoragePlugin {
   NSMutableDictionary<NSNumber *, FIRStorageObservableTask<FIRStorageTaskManagement> *> *_tasks;
   dispatch_queue_t _callbackQueue;
+  bool hasEmulatorBooted;
 }
 
 #pragma mark - FlutterPlugin
@@ -92,6 +93,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
         dictionary];
     _callbackQueue =
         dispatch_queue_create("io.flutter.plugins.firebase.storage", DISPATCH_QUEUE_SERIAL);
+    hasEmulatorBooted = false;
   }
   return self;
 }
@@ -853,6 +855,12 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   if (![maxUploadRetryTime isEqual:[NSNull null]]) {
     storage.maxUploadRetryTime = [maxUploadRetryTime longLongValue] / 1000.0;
   }
+  
+  NSString *emulatorHost = arguments[@"host"];
+   if (![emulatorHost isEqual:[NSNull null]] && emulatorHost != nil && hasEmulatorBooted == false) {
+    [storage useEmulatorWithHost:emulatorHost port:[arguments[@"port"] integerValue]];
+    hasEmulatorBooted = true;
+   }
 
   storage.callbackQueue = _callbackQueue;
 
