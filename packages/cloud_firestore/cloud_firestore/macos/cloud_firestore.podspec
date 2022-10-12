@@ -47,7 +47,7 @@ Pod::Spec.new do |s|
   s.public_header_files = 'Classes/Public/*.h'
   s.private_header_files = 'Classes/Private/*.h'
 
-  s.platform = :osx, '10.12'
+  s.platform = :osx, '10.13'
 
   # Flutter dependencies
   s.dependency 'FlutterMacOS'

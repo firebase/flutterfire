@@ -34,7 +34,7 @@ Pod::Spec.new do |s|
   s.public_header_files = 'Classes/Public/*.h'
   s.private_header_files = 'Classes/Private/*.h'
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '11.0'
   s.dependency 'Flutter'
 
   s.dependency 'firebase_core'
