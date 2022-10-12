@@ -33,8 +33,8 @@ enum EmailVerificationState {
 }
 
 /// A [ValueNotifier] that manages the email verification process.
-class EmailVerificationController
-    extends ValueNotifier<EmailVerificationState> {
+class EmailVerificationController extends ValueNotifier<EmailVerificationState>
+    with WidgetsBindingObserver {
   /// {@macro ui.auth.auth_controller.auth}
   final FirebaseAuth auth;
 
@@ -48,6 +48,15 @@ class EmailVerificationController
       } else {
         value = EmailVerificationState.unverified;
       }
+    }
+
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      reload();
     }
   }
 
