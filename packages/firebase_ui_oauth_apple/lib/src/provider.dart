@@ -12,10 +12,12 @@ class AppleProvider extends OAuthProvider {
   final style = const AppleProviderButtonStyle();
 
   @override
-  final fba.AppleAuthProvider firebaseAuthProvider = fba.AppleAuthProvider();
+  fba.AppleAuthProvider firebaseAuthProvider = fba.AppleAuthProvider();
 
   @override
   void mobileSignIn(AuthAction action) {
+    authListener.onBeforeSignIn();
+
     auth.signInWithAuthProvider(firebaseAuthProvider).then((userCred) {
       if (action == AuthAction.signIn) {
         authListener.onSignedIn(userCred);
