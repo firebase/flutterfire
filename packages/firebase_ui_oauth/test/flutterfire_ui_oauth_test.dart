@@ -76,12 +76,11 @@ void main() {
     testWidgets('applies background color from style', (tester) async {
       await tester.pumpWidget(renderMaterialButton());
 
-      final containerFinder = find.byWidgetPredicate(
-        (widget) =>
-            widget is Material &&
-            widget.color.toString() ==
-                style.backgroundColor.getValue(Brightness.light).toString(),
-      );
+      final expectedColor = style.backgroundColor.getValue(Brightness.dark);
+
+      final containerFinder = find.byWidgetPredicate((widget) {
+        return widget is Material && widget.color!.value == expectedColor.value;
+      });
 
       expect(containerFinder, findsOneWidget);
     });
@@ -92,8 +91,8 @@ void main() {
       final textFinder = find.byWidgetPredicate(
         (widget) =>
             widget is Text &&
-            widget.style!.color.toString() ==
-                style.color.getValue(Brightness.light).toString(),
+            widget.style!.color!.value ==
+                style.color.getValue(Brightness.dark).value,
       );
 
       expect(textFinder, findsOneWidget);
