@@ -90,7 +90,7 @@ class MyLoginScreen extends StatelessWidget {
 
 ## Using widget
 
-If a view is also not flexible enoguh, there is an `EmailForm`:
+If a view is also not flexible enough, there is an `EmailForm`:
 
 ```dart
 class MyCustomWidget extends StatelessWidget {
@@ -134,7 +134,7 @@ class MyCustomWidget extends StatelessWidget {
 
 ## Building a custom stateful widget
 
-For a full control over every phase of the authentication lifecylce you could build a stateful widget, which implements `EmailAuthListener`:
+For full control over every phase of the authentication lifecycle you could build a stateful widget, which implements `EmailAuthListener`:
 
 ```dart
 class CustomEmailSignIn extends StatefulWidget {
@@ -226,8 +226,8 @@ class _CustomEmailSignInState extends State<CustomEmailSignIn>
 ## Other topics
 
 - [Email verification](./email-verification.md)
-- [EmailLinkAuthProvider](./email-link.md) - allows to register and sign in using a link sent to email.
-- [PhoneAuthProvider](./phone.md) - allows to register and sign in using a phone number
+- [EmailLinkAuthProvider](./email-link.md) - allows registering and signing using a link sent to email.
+- [PhoneAuthProvider](./phone.md) - allows registering and signing using a phone number
 - [UniversalEmailSignInProvider](./universal-email-sign-in.md) - gets all connected auth providers for a given email.
 - [OAuth](./oauth.md)
 - [Localization](../../../firebase_ui_localizations/README.md)

@@ -108,7 +108,7 @@ class MyLoginScreen extends StatelessWidget {
 
 ## Using widget
 
-If a view is also not flexible enoguh, there is an `PhoneInput` and `SMSCodeInput` widgets:
+If a view is also not flexible enough, there is an `PhoneInput` and `SMSCodeInput` widgets:
 
 ```dart
 class MyCustomWidget extends StatefulWidget {
@@ -189,7 +189,7 @@ class MyCustomWidget extends StatelessWidget {
 
 ## Building a custom stateful widget
 
-For a full control over every phase of the authentication lifecylce you could build a stateful widget, which implements `PhoneAuthController`:
+For full control over every phase of the authentication lifecycle you could build a stateful widget, which implements `PhoneAuthController`:
 
 ```dart
 class CustomPhoneVerification extends StatefulWidget {
@@ -312,8 +312,8 @@ class _CustomPhoneVerificationState extends State<CustomPhoneVerification>
 ## Other topics
 
 - [Email verification](./email-verification.md)
-- [EmailLinkAuthProvider](./email-link.md) - allows to register and sign in using a link sent to email.
-- [PhoneAuthProvider](./phone.md) - allows to register and sign in using a phone number
+- [EmailLinkAuthProvider](./email-link.md) - allows registering and signing using a link sent to email.
+- [PhoneAuthProvider](./phone.md) - allows registering and signing using a phone number
 - [UniversalEmailSignInProvider](./universal-email-sign-in.md) - gets all connected auth providers for a given email.
 - [OAuth](./oauth.md)
 - [Localization](../../../firebase_ui_localizations/README.md)

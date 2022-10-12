@@ -6,7 +6,7 @@ Facebook Sign In for [Firebase UI](https://pub.dev/packages/firebase_ui)
 
 ## Installation
 
-Add dependency
+Add dependencies
 
 ```sh
 flutter pub add firebase_ui

@@ -9,7 +9,7 @@ lower level abstractions for developers looking for tighter control.
 Activate FlutterFire CLI
 
 ```sh
-flutter pub global activate
+dart pub global activate flutterfire_cli
 ```
 
 Install dependencies

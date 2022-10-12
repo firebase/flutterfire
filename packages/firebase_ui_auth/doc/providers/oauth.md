@@ -185,10 +185,10 @@ class MyCustomScreen extends StatelessWidget {
 
 ## Other topics
 
-- [EmaiAuthProvider](./email.md) - allows to register and sign in using email and password.
+- [EmaiAuthProvider](./email.md) - allows registering and signing using email and password.
 - [Email verification](./email-verification.md)
-- [EmailLinkAuthProvider](./email-link.md) - allows to register and sign in using a link sent to email.
-- [PhoneAuthProvider](./phone.md) - allows to register and sign in using a phone number
+- [EmailLinkAuthProvider](./email-link.md) - allows registering and signing using a link sent to email.
+- [PhoneAuthProvider](./phone.md) - allows registering and signing using a phone number
 - [UniversalEmailSignInProvider](./universal-email-sign-in.md) - gets all connected auth providers for a given email.
 - [Localization](../../../firebase_ui_localizations/README.md)
 - [Theming](../theming.md)

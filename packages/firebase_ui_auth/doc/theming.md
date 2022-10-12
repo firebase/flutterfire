@@ -98,9 +98,9 @@ The button will now respect the updated theme data and display a styled button i
 
 ## Other topics
 
-- [EmaiAuthProvider](./providers/email.md) - allows to register and sign in using email and password.
-- [EmailLinkAuthProvider](./providers/email-link.md) - allows to register and sign in using a link sent to email.
-- [PhoneAuthProvider](./providers/phone.md) - allows to register and sign in using a phone number
+- [EmaiAuthProvider](./providers/email.md) - allows registering and signing using email and password.
+- [EmailLinkAuthProvider](./providers/email-link.md) - allows registering and signing using a link sent to email.
+- [PhoneAuthProvider](./providers/phone.md) - allows registering and signing using a phone number
 - [UniversalEmailSignInProvider](./providers/universal-email-sign-in.md) - gets all connected auth providers for a given email.
 - [OAuth](./providers/oauth.md)
 

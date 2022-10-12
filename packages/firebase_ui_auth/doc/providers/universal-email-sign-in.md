@@ -1,6 +1,6 @@
 # Universal email sign in
 
-Universal email sign in is a flow that allows to resolve connnected auth providers given an email.
+Universal email sign in is a flow that will resolve connected auth providers with a given email.
 This flow is intended to solve the problem where the user doesn't remember which provider was
 previously used to authenticate.
 
@@ -21,7 +21,7 @@ UniversalEmailSignInScreen(
 
 ## Using view
 
-If the pre-built screens don't suite the app needs, you could use a `FindProvidersForEmailView` to build your custom screen:
+If the pre-built screens don't suit the app needs, you could use a `FindProvidersForEmailView` to build your custom screen:
 
 ```dart
 class MyLoginScreen extends StatelessWidget {
@@ -92,7 +92,7 @@ class MyCustomWidget extends StatelessWidget {
 
 ## Building a custom stateful widget
 
-For a full control over every phase of the authentication lifecylce you could build a stateful widget, which implements `UniversalEmailSignInListener`:
+For a full control over every phase of the authentication lifecycle you could build a stateful widget, which implements `UniversalEmailSignInListener`:
 
 ```dart
 class CustomUniversalEmailSignIn extends StatefulWidget {
@@ -188,10 +188,10 @@ class _CustomUniversalEmailSignInState extends State<CustomUniversalEmailSignIn>
 
 ## Other topics
 
-- [EmaiAuthProvider](./email.md) - allows to register and sign in using email and password.
+- [EmaiAuthProvider](./email.md) - allows registering and signing using email and password.
 - [Email verification](./email-verification.md)
-- [EmailLinkAuthProvider](./email-link.md) - allows to register and sign in using a link sent to email.
-- [PhoneAuthProvider](./phone.md) - allows to register and sign in using a phone number
+- [EmailLinkAuthProvider](./email-link.md) - allows registering and signing using a link sent to email.
+- [PhoneAuthProvider](./phone.md) - allows registering and signing using a phone number
 - [OAuth](./oauth.md)
 - [Localization](../../../firebase_ui_localizations/README.md)
 - [Theming](../theming.md)
