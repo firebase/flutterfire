@@ -16,7 +16,7 @@ import 'config.dart';
 import 'decorations.dart';
 
 final actionCodeSettings = ActionCodeSettings(
-  url: 'https://flutterfire-e2e-tests.page.link',
+  url: 'https://flutterfire-e2e-tests.firebaseapp.com',
   handleCodeInApp: true,
   androidMinimumVersion: '1',
   androidPackageName: 'io.flutter.plugins.firebase_ui.firebase_ui_example',
@@ -124,6 +124,13 @@ class FirebaseAuthUIExample extends StatelessWidget {
               }),
               AuthStateChangeAction<SignedIn>((context, state) {
                 if (!state.user!.emailVerified) {
+                  Navigator.pushNamed(context, '/verify-email');
+                } else {
+                  Navigator.pushReplacementNamed(context, '/profile');
+                }
+              }),
+              AuthStateChangeAction<UserCreated>((context, state) {
+                if (!state.credential.user!.emailVerified) {
                   Navigator.pushNamed(context, '/verify-email');
                 } else {
                   Navigator.pushReplacementNamed(context, '/profile');
