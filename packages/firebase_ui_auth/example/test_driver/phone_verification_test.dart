@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
@@ -20,6 +19,7 @@ Future<void> sendSMS(WidgetTester tester, String phoneNumber) async {
 
 void main() {
   const labels = DefaultLocalizations();
+
   group('PhoneInputScreen', () {
     testWidgets(
       'allows to pick country code',
@@ -195,5 +195,5 @@ void main() {
         expect(state.user!.phoneNumber, '+1234567890');
       },
     );
-  }, skip: kIsWeb);
+  });
 }

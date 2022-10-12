@@ -116,6 +116,7 @@ void main() {
         await tester.testTextInput.receiveAction(TextInputAction.done);
 
         await tester.pump();
+        await Future.delayed(const Duration(milliseconds: 1));
 
         expect(find.byType(LoadingIndicator), findsOneWidget);
         await tester.pumpAndSettle();

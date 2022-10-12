@@ -30,9 +30,12 @@ Future<void> main() async {
   email_form.main();
   email_link_sign_in_view.main();
   universal_email_sign_in_screen.main();
-  phone_verification.main();
-  google_sign_in.main();
-  twitter_sign_in.main();
-  apple_sign_in.main();
-  facebook_sign_in.main();
+
+  if (isMobile) {
+    phone_verification.main();
+    google_sign_in.main();
+    twitter_sign_in.main();
+    apple_sign_in.main();
+    facebook_sign_in.main();
+  }
 }

@@ -16,6 +16,12 @@ String get testEmulatorHost {
   return 'localhost';
 }
 
+bool get isMobile {
+  return !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
+}
+
 Future<void> prepare() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAuth.instance.useAuthEmulator(testEmulatorHost, 9099);
