@@ -17,102 +17,6 @@ class _Sentinel {
 
 const _sentinel = _Sentinel();
 
-/// Adds [onlyNamedQueryGet] to [FirebaseFirestore].
-extension OnlyNamedQueryExtrension on FirebaseFirestore {
-  /// Performs [FirebaseFirestore.namedQueryGet] and decode the result into
-  /// a [OnlyNamedQuery] snashot.
-  Future<OnlyNamedQueryQuerySnapshot> onlyNamedQueryGet() async {
-    final snapshot = await namedQueryGet(r'only_named_query');
-    return OnlyNamedQueryQuerySnapshot._fromQuerySnapshot(snapshot);
-  }
-}
-
-class OnlyNamedQueryQuerySnapshot extends FirestoreQuerySnapshot<OnlyNamedQuery,
-    OnlyNamedQueryQueryDocumentSnapshot> {
-  OnlyNamedQueryQuerySnapshot._(
-    this.snapshot,
-    this.docs,
-    this.docChanges,
-  );
-
-  factory OnlyNamedQueryQuerySnapshot._fromQuerySnapshot(
-    QuerySnapshot<OnlyNamedQuery> snapshot,
-  ) {
-    final docs =
-        snapshot.docs.map(OnlyNamedQueryQueryDocumentSnapshot._).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return _decodeDocumentChange(
-        change,
-        OnlyNamedQueryDocumentSnapshot._,
-      );
-    }).toList();
-
-    return OnlyNamedQueryQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
-  static FirestoreDocumentChange<OnlyNamedQueryDocumentSnapshot>
-      _decodeDocumentChange<T>(
-    DocumentChange<T> docChange,
-    OnlyNamedQueryDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
-  ) {
-    return FirestoreDocumentChange<OnlyNamedQueryDocumentSnapshot>(
-      type: docChange.type,
-      oldIndex: docChange.oldIndex,
-      newIndex: docChange.newIndex,
-      doc: decodeDoc(docChange.doc),
-    );
-  }
-
-  final QuerySnapshot<OnlyNamedQuery> snapshot;
-
-  @override
-  final List<OnlyNamedQueryQueryDocumentSnapshot> docs;
-
-  @override
-  final List<FirestoreDocumentChange<OnlyNamedQueryDocumentSnapshot>>
-      docChanges;
-}
-
-class OnlyNamedQueryQueryDocumentSnapshot
-    extends FirestoreQueryDocumentSnapshot<OnlyNamedQuery>
-    implements OnlyNamedQueryDocumentSnapshot {
-  OnlyNamedQueryQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
-
-  @override
-  final QueryDocumentSnapshot<OnlyNamedQuery> snapshot;
-
-  @override
-  final OnlyNamedQuery data;
-
-  @override
-  OnlyNamedQueryDocumentReference get reference {
-    return OnlyNamedQueryDocumentReference(snapshot.reference);
-  }
-}
-
-class OnlyNamedQueryDocumentSnapshot
-    extends FirestoreDocumentSnapshot<OnlyNamedQuery> {
-  OnlyNamedQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
-
-  @override
-  final DocumentSnapshot<OnlyNamedQuery> snapshot;
-
-  @override
-  OnlyNamedQueryDocumentReference get reference {
-    return OnlyNamedQueryDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final OnlyNamedQuery? data;
-}
-
 /// Adds [conflictQueryGet] to [FirebaseFirestore].
 extension ConflictQueryExtrension on FirebaseFirestore {
   /// Performs [FirebaseFirestore.namedQueryGet] and decode the result into
@@ -121,89 +25,6 @@ extension ConflictQueryExtrension on FirebaseFirestore {
     final snapshot = await namedQueryGet(r'conflict-query');
     return ConflictQuerySnapshot._fromQuerySnapshot(snapshot);
   }
-}
-
-class ConflictQuerySnapshot
-    extends FirestoreQuerySnapshot<Conflict, ConflictQueryDocumentSnapshot> {
-  ConflictQuerySnapshot._(
-    this.snapshot,
-    this.docs,
-    this.docChanges,
-  );
-
-  factory ConflictQuerySnapshot._fromQuerySnapshot(
-    QuerySnapshot<Conflict> snapshot,
-  ) {
-    final docs = snapshot.docs.map(ConflictQueryDocumentSnapshot._).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return _decodeDocumentChange(
-        change,
-        ConflictDocumentSnapshot._,
-      );
-    }).toList();
-
-    return ConflictQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
-  static FirestoreDocumentChange<ConflictDocumentSnapshot>
-      _decodeDocumentChange<T>(
-    DocumentChange<T> docChange,
-    ConflictDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
-  ) {
-    return FirestoreDocumentChange<ConflictDocumentSnapshot>(
-      type: docChange.type,
-      oldIndex: docChange.oldIndex,
-      newIndex: docChange.newIndex,
-      doc: decodeDoc(docChange.doc),
-    );
-  }
-
-  final QuerySnapshot<Conflict> snapshot;
-
-  @override
-  final List<ConflictQueryDocumentSnapshot> docs;
-
-  @override
-  final List<FirestoreDocumentChange<ConflictDocumentSnapshot>> docChanges;
-}
-
-class ConflictQueryDocumentSnapshot
-    extends FirestoreQueryDocumentSnapshot<Conflict>
-    implements ConflictDocumentSnapshot {
-  ConflictQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
-
-  @override
-  final QueryDocumentSnapshot<Conflict> snapshot;
-
-  @override
-  final Conflict data;
-
-  @override
-  ConflictDocumentReference get reference {
-    return ConflictDocumentReference(snapshot.reference);
-  }
-}
-
-class ConflictDocumentSnapshot extends FirestoreDocumentSnapshot<Conflict> {
-  ConflictDocumentSnapshot._(this.snapshot) : data = snapshot.data();
-
-  @override
-  final DocumentSnapshot<Conflict> snapshot;
-
-  @override
-  ConflictDocumentReference get reference {
-    return ConflictDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final Conflict? data;
 }
 
 /// A collection reference object can be used for adding documents,
@@ -890,23 +711,92 @@ class _$ConflictQuery extends QueryReference<Conflict, ConflictQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class ConflictDocumentSnapshot extends FirestoreDocumentSnapshot<Conflict> {
+  ConflictDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<Conflict> snapshot;
+
+  @override
+  ConflictDocumentReference get reference {
+    return ConflictDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Conflict? data;
+}
+
+class ConflictQuerySnapshot
+    extends FirestoreQuerySnapshot<Conflict, ConflictQueryDocumentSnapshot> {
+  ConflictQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  factory ConflictQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<Conflict> snapshot,
+  ) {
+    final docs = snapshot.docs.map(ConflictQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        ConflictDocumentSnapshot._,
+      );
+    }).toList();
+
+    return ConflictQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<ConflictDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    ConflictDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<ConflictDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
+
+  final QuerySnapshot<Conflict> snapshot;
+
+  @override
+  final List<ConflictQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<ConflictDocumentSnapshot>> docChanges;
+}
+
+class ConflictQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<Conflict>
+    implements ConflictDocumentSnapshot {
+  ConflictQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final QueryDocumentSnapshot<Conflict> snapshot;
+
+  @override
+  final Conflict data;
+
+  @override
+  ConflictDocumentReference get reference {
+    return ConflictDocumentReference(snapshot.reference);
+  }
+}
+
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
-
-OnlyNamedQuery _$OnlyNamedQueryFromJson(Map<String, dynamic> json) =>
-    OnlyNamedQuery(
-      json['value'] as int,
-    );
-
-const _$OnlyNamedQueryFieldMap = <String, String>{
-  'value': 'value',
-};
-
-Map<String, dynamic> _$OnlyNamedQueryToJson(OnlyNamedQuery instance) =>
-    <String, dynamic>{
-      'value': instance.value,
-    };
 
 Conflict _$ConflictFromJson(Map<String, dynamic> json) => Conflict(
       json['value'] as int,

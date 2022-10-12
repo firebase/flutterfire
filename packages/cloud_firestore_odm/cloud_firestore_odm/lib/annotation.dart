@@ -10,6 +10,7 @@ class NamedQuery<T> {
   ///
   /// ```dart
   /// @NamedQuery<Person>('my-query-name')
+  /// @Collection<Person>(...)
   /// class Anything {}
   /// ```
   ///
@@ -20,6 +21,15 @@ class NamedQuery<T> {
   ///   Future<PersonSnapshot> snapshot = myQueryNameGet();
   /// }
   /// ```
+  ///
+  ///
+  /// **Note**:
+  /// Named queries **must** be associated with a [Collection] that has a
+  /// matching generic argument.
+  ///
+  /// This is necessary to ensure that `FirestoreDocumentSnapshot.reference` is
+  /// properly set.
+  ///
   /// {@endtemplate}
   const NamedQuery(this.queryName);
 

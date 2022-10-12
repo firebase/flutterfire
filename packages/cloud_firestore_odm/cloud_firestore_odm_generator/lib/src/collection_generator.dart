@@ -63,9 +63,26 @@ class CollectionGenerator
 
     for (final element in library.topLevelElements) {
       for (final queryAnnotation in namedQueryChecker.annotationsOf(element)) {
-        globalData.namedQueries.add(
-          NamedQueryData.fromAnnotation(queryAnnotation),
+        final queryData = NamedQueryData.fromAnnotation(queryAnnotation);
+
+        final hasCollectionWithMatchingModelType =
+            collectionChecker.annotationsOf(element).any(
+          (annotation) {
+            final collectionType =
+                CollectionData.modelTypeOfAnnotation(annotation);
+            return collectionType == queryData.type;
+          },
         );
+
+        if (!hasCollectionWithMatchingModelType) {
+          throw InvalidGenerationSourceError(
+            'The named query "${queryData.queryName}" has no matching @Collection. '
+            'Named queries must be associated with a @Collection with the same generic type.',
+            element: element,
+          );
+        }
+
+        globalData.namedQueries.add(queryData);
       }
     }
 

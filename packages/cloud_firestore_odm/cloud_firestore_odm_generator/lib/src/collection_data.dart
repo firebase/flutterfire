@@ -109,7 +109,7 @@ class CollectionData with Names {
     final path = annotation.getField('path')!.toStringValue()!;
     _assertIsValidCollectionPath(path, annotatedElement);
 
-    final type = (annotation.type! as ParameterizedType).typeArguments.first;
+    final type = CollectionData.modelTypeOfAnnotation(annotation);
 
     final hasJsonSerializable =
         jsonSerializableChecker.hasAnnotationOf(type.element2!);
@@ -317,6 +317,10 @@ class CollectionData with Names {
         );
       }
     }
+  }
+
+  static DartType modelTypeOfAnnotation(DartObject annotation) {
+    return (annotation.type! as ParameterizedType).typeArguments.first;
   }
 
   static bool _isSupportedType(DartType type) {
