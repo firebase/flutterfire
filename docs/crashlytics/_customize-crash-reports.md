@@ -97,7 +97,7 @@ event is reported or when the app restarts.
 Note: {{crashlytics}} only stores the most recent eight recorded non-fatal
 exceptions. If your app throws more than eight, older exceptions are lost. This
 count is reset each time a fatal exception is thrown, since this causes a report
-to be sent to {{crashlytics}}. 
+to be sent to {{crashlytics}}.
 
 Use the `recordError` method to record non-fatal exceptions in your app's catch
 blocks. For example:
@@ -107,6 +107,18 @@ await FirebaseCrashlytics.instance.recordError(
   error,
   stackTrace,
   reason: 'a non-fatal error'
+);
+```
+
+You may also wish to log further information about the error which is possible
+using the `information` property:
+
+```dart
+await FirebaseCrashlytics.instance.recordError(
+  error,
+  stackTrace,
+  reason: 'a non-fatal error',
+  information: ['further diagnostic information about the error', 'version 2.0'],
 );
 ```
 

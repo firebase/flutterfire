@@ -35,6 +35,33 @@ void main() {
       );
     });
 
+    test('Injects document ID when annotated by @Id', () async {
+      final collection = await initializeTest(MovieCollectionReference());
+
+      await collection.doc('123').set(createMovie(title: 'a'));
+      await collection.doc('456').set(createMovie(title: 'b'));
+
+      final a = await collection.doc('123').get();
+      final b = await collection.doc('456').get();
+
+      expect(a.data?.id, '123');
+      expect(b.data?.id, '456');
+    });
+
+    test(
+        'When using @Id, set/update do not insert an "id" property in the document',
+        () async {
+      final collection = await initializeTest(MovieCollectionReference());
+
+      await collection.doc('123').set(createMovie(title: 'a', id: '42'));
+
+      final snapshot = await FirebaseFirestore.instance
+          .doc(collection.doc('123').path)
+          .get();
+
+      expect(snapshot.data()?.containsKey('id'), false);
+    });
+
     group('any collection', () {
       test('reference', () async {
         expect(
@@ -555,26 +582,66 @@ void main() {
           );
         });
       });
+
       group('startAt', () {
-        test('supports values', () async {
-          final collection = await initializeTest(MovieCollectionReference());
+        test(
+          'supports values',
+          () async {
+            final collection = await initializeTest(MovieCollectionReference());
 
-          await collection.add(createMovie(title: 'A'));
-          await collection.add(createMovie(title: 'B'));
-          await collection.add(createMovie(title: 'C'));
+            await collection.add(createMovie(title: 'A'));
+            await collection.add(createMovie(title: 'B'));
+            await collection.add(createMovie(title: 'C'));
 
-          final querySnap = await collection.orderByTitle(startAt: 'B').get();
+            final querySnap = await collection.orderByTitle(startAt: 'B').get();
 
-          expect(
-            querySnap.docs,
-            [
-              isA<MovieQueryDocumentSnapshot>()
-                  .having((d) => d.data.title, 'data.title', 'B'),
-              isA<MovieQueryDocumentSnapshot>()
-                  .having((d) => d.data.title, 'data.title', 'C'),
-            ],
-          );
-        });
+            expect(
+              querySnap.docs,
+              [
+                isA<MovieQueryDocumentSnapshot>()
+                    .having((d) => d.data.title, 'data.title', 'B'),
+                isA<MovieQueryDocumentSnapshot>()
+                    .having((d) => d.data.title, 'data.title', 'C'),
+              ],
+            );
+          },
+          timeout: const Timeout.factor(5),
+        );
+
+        test(
+          'can be used multiple times within a query',
+          () async {
+            final collection = await initializeTest(MovieCollectionReference());
+
+            await collection.add(createMovie(title: 'A', likes: 1));
+            await collection.add(createMovie(title: 'A', likes: 2));
+            await collection.add(createMovie(title: 'B', likes: 1));
+            await collection.add(createMovie(title: 'B', likes: 2));
+            await collection.add(createMovie(title: 'C', likes: 1));
+            await collection.add(createMovie(title: 'C', likes: 2));
+
+            final querySnap = await collection
+                .orderByTitle(startAt: 'B')
+                .orderByLikes(startAt: 2)
+                .get();
+
+            expect(
+              querySnap.docs,
+              [
+                isA<MovieQueryDocumentSnapshot>()
+                    .having((d) => d.data.title, 'data.title', 'B')
+                    .having((d) => d.data.likes, 'data.likes', 2),
+                isA<MovieQueryDocumentSnapshot>()
+                    .having((d) => d.data.title, 'data.title', 'C')
+                    .having((d) => d.data.likes, 'data.likes', 1),
+                isA<MovieQueryDocumentSnapshot>()
+                    .having((d) => d.data.title, 'data.title', 'C')
+                    .having((d) => d.data.likes, 'data.likes', 2),
+              ],
+            );
+          },
+          timeout: const Timeout.factor(5),
+        );
 
         test('supports document snapshots', () async {
           final collection = await initializeTest(MovieCollectionReference());
@@ -699,6 +766,7 @@ void main() {
             runtime: 'runtime',
             title: 'title',
             year: 1999,
+            id: '_',
           ),
         );
         final snapshot = StreamQueue(doc.snapshots());
@@ -722,6 +790,7 @@ void main() {
             runtime: 'runtime2',
             title: 'title2',
             year: 14242,
+            id: '_',
           ),
         );
 
@@ -755,6 +824,7 @@ void main() {
             runtime: 'runtime',
             title: 'title',
             year: 1999,
+            id: '_',
           ),
         );
 
@@ -777,6 +847,7 @@ void main() {
             runtime: 'runtime2',
             title: 'title2',
             year: 14242,
+            id: '_',
           ),
         );
 

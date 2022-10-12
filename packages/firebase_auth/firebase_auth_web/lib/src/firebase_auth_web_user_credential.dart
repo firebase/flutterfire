@@ -22,7 +22,7 @@ class UserCredentialWeb extends UserCredentialPlatform {
           additionalUserInfo: convertWebAdditionalUserInfo(
             webUserCredential.additionalUserInfo,
           ),
-          credential: convertWebOAuthCredential(webUserCredential.credential),
+          credential: convertWebOAuthCredential(webUserCredential),
           user: UserWeb(
               auth,
               MultiFactorWeb(auth, multiFactor(webUserCredential.user!)),

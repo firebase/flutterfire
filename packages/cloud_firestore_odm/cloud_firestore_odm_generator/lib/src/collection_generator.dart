@@ -40,6 +40,7 @@ class CollectionData {
     required this.queryableFields,
     required this.fromJson,
     required this.toJson,
+    required this.idKey,
     required this.libraryElement,
   })  : collectionName =
             collectionName ?? ReCase(path.split('/').last).camelCase,
@@ -53,6 +54,7 @@ class CollectionData {
   final String collectionName;
   final String classPrefix;
   final String path;
+  final String? idKey;
   final List<QueryingField> queryableFields;
   final LibraryElement libraryElement;
 
@@ -111,8 +113,13 @@ const _geoPointChecker = TypeChecker.fromUrl(
   'package:cloud_firestore_platform_interface/src/geo_point.dart#GeoPoint',
 );
 
+class GlobalData {
+  final classPrefixesForLibrary = <Object?, List<String>>{};
+}
+
 @immutable
-class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
+class CollectionGenerator
+    extends ParserGenerator<GlobalData, Data, Collection> {
   final _collectionTemplates = <Template<CollectionData>>[
     CollectionReferenceTemplate(),
     DocumentReferenceTemplate(),
@@ -122,23 +129,24 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
     QueryDocumentSnapshotTemplate(),
   ];
 
-  /// Map of file path to class prefixes
-  final _classPrefixes = Expando<List<String>>();
-
   @override
   Future<Data> parseElement(
     BuildStep buildStep,
-    void globalData,
+    GlobalData globalData,
     Element element,
   ) async {
     final library = await buildStep.inputLibrary;
-    final collectionAnnotations = const TypeChecker.fromRuntime(Collection)
-        .annotationsOf(element)
-        .map(
-          (annotation) =>
-              _parseCollectionAnnotation(library, annotation, element),
-        )
-        .toList();
+    final collectionAnnotations =
+        const TypeChecker.fromRuntime(Collection).annotationsOf(element).map(
+      (annotation) {
+        return _parseCollectionAnnotation(
+          library,
+          annotation,
+          element,
+          globalData,
+        );
+      },
+    ).toList();
 
     final roots = collectionAnnotations.where((collection) {
       final pathSplit = collection.path.split('/');
@@ -223,6 +231,7 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
     LibraryElement libraryElement,
     DartObject object,
     Element annotatedElement,
+    GlobalData globalData,
   ) {
     // TODO find a way to test validation
 
@@ -351,6 +360,13 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
         if (toJson != null) return '$value.toJson()';
         return '_\$${type.toString().public}ToJson($value)';
       },
+      idKey: collectionTargetElement
+          .allFields(
+            hasFreezed: hasFreezed,
+            freezedConstructors: redirectedFreezedConstructors,
+          )
+          .firstWhereOrNull((f) => f.hasId())
+          ?.name,
       queryableFields: [
         QueryingField(
           'documentId',
@@ -365,10 +381,11 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
             )
             .where((f) => f.isPublic)
             .where((f) => _isSupportedType(f.type))
+            .where((f) => !f.hasId())
             .where((f) => !f.isJsonIgnored())
             .map(
           (e) {
-            var key = '"${e.name}"';
+            var key = "'${e.name}'";
 
             if (hasFreezed) {
               key =
@@ -391,7 +408,8 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
 
     final classPrefix = data.classPrefix;
 
-    if (_classPrefixes[annotatedElementSource]?.contains(classPrefix) ??
+    if (globalData.classPrefixesForLibrary[annotatedElementSource]
+            ?.contains(classPrefix) ??
         false) {
       throw InvalidGenerationSourceError(
         'Defined a collection with duplicate class prefix $classPrefix.'
@@ -399,8 +417,9 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       );
     }
 
-    _classPrefixes[annotatedElementSource] ??= [];
-    _classPrefixes[annotatedElementSource]!.add(classPrefix);
+    globalData.classPrefixesForLibrary[annotatedElementSource] ??= [];
+    globalData.classPrefixesForLibrary[annotatedElementSource]!
+        .add(classPrefix);
 
     return data;
   }
@@ -423,7 +442,7 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
   Iterable<Object> generateForAll(void globalData) sync* {
     yield '''
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
     ''';
 
     yield '''
@@ -450,7 +469,7 @@ const _sentinel = _Sentinel();
   }
 
   @override
-  void parseGlobalData(LibraryElement library) {}
+  GlobalData parseGlobalData(LibraryElement library) => GlobalData();
 }
 
 extension on ClassElement {
@@ -528,5 +547,10 @@ extension on Element {
     }
 
     return false;
+  }
+
+  bool hasId() {
+    const checker = TypeChecker.fromRuntime(Id);
+    return checker.hasAnnotationOf(this);
   }
 }

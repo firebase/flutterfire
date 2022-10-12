@@ -534,7 +534,7 @@ class _AuthGateState extends State<AuthGate> {
     if (kIsWeb) {
       await _auth.signInWithPopup(twitterProvider);
     } else {
-      await _auth.signInWithAuthProvider(twitterProvider);
+      await _auth.signInWithProvider(twitterProvider);
     }
   }
 
@@ -546,7 +546,7 @@ class _AuthGateState extends State<AuthGate> {
       // Once signed in, return the UserCredential
       await _auth.signInWithPopup(appleProvider);
     } else {
-      await _auth.signInWithAuthProvider(appleProvider);
+      await _auth.signInWithProvider(appleProvider);
     }
   }
 
@@ -557,7 +557,7 @@ class _AuthGateState extends State<AuthGate> {
       // Once signed in, return the UserCredential
       await _auth.signInWithPopup(yahooProvider);
     } else {
-      await _auth.signInWithAuthProvider(yahooProvider);
+      await _auth.signInWithProvider(yahooProvider);
     }
   }
 
@@ -567,7 +567,7 @@ class _AuthGateState extends State<AuthGate> {
     if (kIsWeb) {
       await _auth.signInWithPopup(githubProvider);
     } else {
-      await _auth.signInWithAuthProvider(githubProvider);
+      await _auth.signInWithProvider(githubProvider);
     }
   }
 
@@ -577,8 +577,12 @@ class _AuthGateState extends State<AuthGate> {
     if (kIsWeb) {
       await _auth.signInWithPopup(microsoftProvider);
     } else {
-      await _auth.signInWithAuthProvider(microsoftProvider);
+      await _auth.signInWithProvider(microsoftProvider);
     }
+
+    await FirebaseAuth.instance.currentUser?.reauthenticateWithProvider(
+      microsoftProvider,
+    );
   }
 }
 

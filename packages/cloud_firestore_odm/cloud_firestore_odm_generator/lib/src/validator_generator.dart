@@ -14,7 +14,7 @@ class ValidatorGenerator extends Generator {
         final validators = field.metadata.where(isValidatorAnnotation);
 
         for (final validator in validators) {
-          yield '${validator.toSource().replaceFirst('@', 'const ')}.validate(instance.${field.name}, "${field.name}");';
+          yield "${validator.toSource().replaceFirst('@', 'const ')}.validate(instance.${field.name}, '${field.name}');";
         }
       }).toList();
 

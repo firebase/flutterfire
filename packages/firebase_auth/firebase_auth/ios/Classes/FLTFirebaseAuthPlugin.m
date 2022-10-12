@@ -10,7 +10,7 @@
 #import "Private/FLTIdTokenChannelStreamHandler.h"
 #import "Private/FLTPhoneNumberVerificationStreamHandler.h"
 
-#import "Private/CustomPigeonHeader.h"
+#import "Public/CustomPigeonHeader.h"
 #import "Public/FLTFirebaseAuthPlugin.h"
 @import CommonCrypto;
 #import <AuthenticationServices/AuthenticationServices.h>
@@ -241,8 +241,8 @@ NSString *const kErrMsgInvalidCredential =
     [self useEmulator:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#verifyPasswordResetCode" isEqualToString:call.method]) {
     [self verifyPasswordResetCode:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Auth#signInWithAuthProvider" isEqualToString:call.method]) {
-    [self signInWithAuthProvider:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Auth#signInWithProvider" isEqualToString:call.method]) {
+    [self signInWithProvider:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#verifyPhoneNumber" isEqualToString:call.method]) {
     [self verifyPhoneNumber:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"User#delete" isEqualToString:call.method]) {
@@ -253,6 +253,8 @@ NSString *const kErrMsgInvalidCredential =
     [self userLinkWithCredential:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"User#linkWithProvider" isEqualToString:call.method]) {
     [self userLinkWithProvider:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"User#reauthenticateWithProvider" isEqualToString:call.method]) {
+    [self reauthenticateWithProvider:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"User#reauthenticateUserWithCredential" isEqualToString:call.method]) {
     [self userReauthenticateUserWithCredential:call.arguments
                           withMethodCallResult:methodCallResult];
@@ -609,8 +611,8 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
   self.appleResult.error(nil, nil, nil, error);
 }
 
-- (void)signInWithAuthProvider:(id)arguments
-          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)signInWithProvider:(id)arguments
+      withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
     if (@available(iOS 13.0, macOS 10.15, *)) {
       launchAppleSignInRequest(self, arguments, result);
@@ -996,6 +998,50 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
             completion:^(FIRAuthDataResult *authResult, NSError *error) {
               handleAppleAuthResult(self, arguments, auth, authResult.credential, error, result);
             }];
+#endif
+}
+
+- (void)reauthenticateWithProvider:(id)arguments
+              withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
+
+  FIRUser *currentUser = auth.currentUser;
+  if (currentUser == nil) {
+    result.error(kErrCodeNoCurrentUser, kErrMsgNoCurrentUser, nil, nil);
+    return;
+  }
+
+  if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
+    if (@available(iOS 13.0, macOS 10.15, *)) {
+      self.linkWithAppleUser = currentUser;
+      launchAppleSignInRequest(self, arguments, result);
+    } else {
+      NSLog(@"Sign in with Apple was introduced in iOS 13, update your Podfile with platform :ios, "
+            @"'13.0'");
+    }
+    return;
+  }
+#if TARGET_OS_OSX
+  NSLog(@"reauthenticateWithProvider is not supported on the "
+        @"MacOS platform.");
+  result.success(nil);
+#else
+  self.authProvider = [FIROAuthProvider providerWithProviderID:arguments[@"signInProvider"]];
+  NSArray *scopes = arguments[kArgumentProviderScope];
+  if (scopes != nil) {
+    [self.authProvider setScopes:scopes];
+  }
+  NSDictionary *customParameters = arguments[kArgumentProviderCustomParameters];
+  if (customParameters != nil) {
+    [self.authProvider setCustomParameters:customParameters];
+  }
+
+  [currentUser reauthenticateWithProvider:self.authProvider
+                               UIDelegate:nil
+                               completion:^(FIRAuthDataResult *authResult, NSError *error) {
+                                 handleAppleAuthResult(self, arguments, auth, authResult.credential,
+                                                       error, result);
+                               }];
 #endif
 }
 
@@ -1630,12 +1676,23 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
     return [NSNull null];
   }
 
+  NSString *accessToken = nil;
+  if ([authCredential isKindOfClass:[FIROAuthCredential class]]) {
+    if (((FIROAuthCredential *)authCredential).accessToken != nil) {
+      accessToken = ((FIROAuthCredential *)authCredential).accessToken;
+    } else if (((FIROAuthCredential *)authCredential).IDToken != nil) {
+      // For Sign In With Apple, the token is stored in IDToken
+      accessToken = ((FIROAuthCredential *)authCredential).IDToken;
+    }
+  }
+
   return @{
     kArgumentProviderId : authCredential.provider,
     // Note: "signInMethod" does not exist on iOS SDK, so using provider
     // instead.
     kArgumentSignInMethod : authCredential.provider,
     kArgumentToken : @([authCredential hash]),
+    kArgumentAccessToken : accessToken ?: [NSNull null],
   };
 }
 

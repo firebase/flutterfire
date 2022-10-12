@@ -273,3 +273,137 @@ class _Application extends State<Application> {
 ```
 
 How you handle interaction depends on your application setup. The above example shows a basic illustration using a StatefulWidget.
+
+## Localize Messages
+
+You can send localized strings in two different ways:
+
+* Store the preferred language of each of your users in your server and send customized notifications for each language
+* Embed localized strings in your app and make use of the operating system's native locale settings
+
+Here's how to use the second method:
+
+### Android
+
+1. Specify your default-language messages in `resources/values/strings.xml`:
+
+   ```xml
+   <string name="notification_title">Hello world</string>
+   <string name="notification_message">This is a message</string>
+   ```
+
+2. Specify the translated messages in the <code>values-<var>language</var></code> directory. For example, specify French messages in `resources/values-fr/strings.xml`:
+
+   ```xml
+   <string name="notification_title">Bonjour le monde</string>
+   <string name="notification_message">C'est un message</string>
+   ```
+
+3. In the server payload, instead of using `title`, `message`, and `body`  keys, use `title_loc_key` and `body_loc_key` for your localized message, and set them to the `name` attribute of the message you want to display.
+
+   The message payload would look like this:
+
+   ```json
+   {
+     "data": {
+       "title_loc_key": "notification_title",
+       "body_loc_key": "notification_message"
+     },
+   }
+   ```
+
+
+### iOS
+
+1. Specify your default-language messages in `Base.lproj/Localizable.strings`:
+
+   ```
+   "NOTIFICATION_TITLE" = "Hello World";
+   "NOTIFICATION_MESSAGE" = "This is a message";
+   ```
+
+2. Specify the translated messages in the <code><var>language</var>.lproj</code> directory. For example, specify French messages in `fr.lproj/Localizable.strings`:
+
+   ```
+   "NOTIFICATION_TITLE" = "Bonjour le monde";
+   "NOTIFICATION_MESSAGE" = "C'est un message";
+   ```
+
+   The message payload would look like this:
+
+   ```json
+   {
+     "data": {
+       "title_loc_key": "NOTIFICATION_TITLE",
+       "body_loc_key": "NOTIFICATION_MESSAGE"
+     },
+   }
+   ```
+
+
+## Enable message delivery data export
+
+You can export your message data into BigQuery for further analysis. BigQuery allows you to analyze the data using BigQuery SQL, 
+export it to another cloud provider, or use the data for your custom ML models. An export to BigQuery 
+includes all available data for messages, regardless of message type or whether the message is sent via 
+the API or the Notifications composer.
+
+To enable the export, first follow the steps [described here](https://firebase.google.com/docs/cloud-messaging/understand-delivery?platform=ios#bigquery-data-export),
+then follow these instructions:
+
+### Android
+
+You can use the following code:
+```dart
+await FirebaseMessaging.instance.setDeliveryMetricsExportToBigQuery(true);
+```
+
+### iOS
+
+For iOS, you need to change the `AppDelegate.m` with the following content.
+
+```objective-c
+#import "AppDelegate.h"
+#import "GeneratedPluginRegistrant.h"
+#import <Firebase/Firebase.h>
+
+@implementation AppDelegate
+
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [GeneratedPluginRegistrant registerWithRegistry:self];
+  // Override point for customization after application launch.
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+
+- (void)application:(UIApplication *)application
+    didReceiveRemoteNotification:(NSDictionary *)userInfo
+          fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+  [[FIRMessaging extensionHelper] exportDeliveryMetricsToBigQueryWithMessageInfo:userInfo];
+}
+
+@end
+``` 
+
+### Web
+
+For Web, you need to change your service worker in order to use the v9 version of the SDK.
+The v9 version needs to be bundled, so you need to use a bundler like `esbuild` for instance 
+to get the service worker to work.
+See [the example app](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/bundled-service-worker) to see how to achieve this.
+
+Once you've migrated to the v9 SDK, you can use the following code:
+
+``` typescript
+import {
+  experimentalSetDeliveryMetricsExportedToBigQueryEnabled,
+  getMessaging,
+} from 'firebase/messaging/sw';
+
+...
+
+const messaging = getMessaging(app);
+experimentalSetDeliveryMetricsExportedToBigQueryEnabled(messaging, true);
+```
+
+Don't forget to run `yarn build` in order to export the new version of your service worker to the `web` folder.

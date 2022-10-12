@@ -30,6 +30,7 @@ Movie createMovie({
   String runtime = '',
   String title = '',
   int year = 1990,
+  String id = '',
 }) {
   return Movie(
     genre: genre,
@@ -39,6 +40,7 @@ Movie createMovie({
     runtime: runtime,
     title: title,
     year: year,
+    id: id,
   );
 }
 

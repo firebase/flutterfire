@@ -140,6 +140,12 @@ public class FlutterFirebaseCrashlyticsPlugin
             final String information =
                 (String) Objects.requireNonNull(arguments.get(Constants.INFORMATION));
             final boolean fatal = (boolean) Objects.requireNonNull(arguments.get(Constants.FATAL));
+            final String buildId =
+                (String) Objects.requireNonNull(arguments.get(Constants.BUILD_ID));
+
+            if (buildId.length() > 0) {
+              FlutterFirebaseCrashlyticsInternal.setFlutterBuildId(buildId);
+            }
 
             Exception exception;
             if (reason != null) {

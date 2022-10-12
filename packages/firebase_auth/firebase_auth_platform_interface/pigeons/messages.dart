@@ -13,7 +13,7 @@ import 'package:pigeon/pigeon.dart';
       package: 'io.flutter.plugins.firebase.auth',
       className: 'GeneratedAndroidFirebaseAuth',
     ),
-    objcHeaderOut: '../firebase_auth/ios/Classes/messages.g.h',
+    objcHeaderOut: '../firebase_auth/ios/Classes/Public/messages.g.h',
     objcSourceOut: '../firebase_auth/ios/Classes/messages.g.m',
   ),
 )
