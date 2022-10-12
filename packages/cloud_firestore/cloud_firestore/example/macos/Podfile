@@ -51,7 +51,6 @@ target 'Runner' do
   end
 
   pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => "#{firebase_sdk_version}"
-  pod 'nanopb'
 end
 
 post_install do |installer|
