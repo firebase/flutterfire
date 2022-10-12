@@ -37,9 +37,7 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   /// Returns an instance using the specified [FirebaseApp].
   static FirebaseRemoteConfig instanceFor({required FirebaseApp app}) {
     return _firebaseRemoteConfigInstances.putIfAbsent(app.name, () {
-      final instance = FirebaseRemoteConfig._(app: app);
-      FirebasePluginPlatform.verify(instance);
-      return instance;
+      return FirebaseRemoteConfig._(app: app);
     });
   }
 
