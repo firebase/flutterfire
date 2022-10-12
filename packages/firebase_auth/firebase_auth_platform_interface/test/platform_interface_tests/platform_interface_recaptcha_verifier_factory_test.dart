@@ -46,7 +46,7 @@ void main() {
     group('verify()', () {
       test('calls successfully', () {
         try {
-          RecaptchaVerifierFactoryPlatform.verify(
+          RecaptchaVerifierFactoryPlatform.verifyExtends(
               recaptchaVerifierFactoryPlatform);
           return;
         } catch (_) {

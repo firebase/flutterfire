@@ -11,9 +11,7 @@ part of cloud_functions;
 class FirebaseFunctions extends FirebasePluginPlatform {
   FirebaseFunctions._({required this.app, String? region})
       : _region = region ??= 'us-central1',
-        super(app.name, 'plugins.flutter.io/firebase_functions') {
-    FirebasePluginPlatform.verify(instance);
-  }
+        super(app.name, 'plugins.flutter.io/firebase_functions');
 
   // Cached and lazily loaded instance of [FirebaseFunctionsPlatform] to avoid
   // creating a [MethodChannelFirebaseFunctions] when not needed or creating an

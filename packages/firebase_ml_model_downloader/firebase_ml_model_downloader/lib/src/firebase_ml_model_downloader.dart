@@ -6,9 +6,7 @@ part of firebase_ml_model_downloader;
 
 class FirebaseModelDownloader extends FirebasePluginPlatform {
   FirebaseModelDownloader._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_ml_model_downloader') {
-    FirebasePluginPlatform.verify(instance);
-  }
+      : super(app.name, 'plugins.flutter.io/firebase_ml_model_downloader');
 
   // Cached and lazily loaded instance of [FirebaseModelDownloaderPlatform] to avoid
   // creating a [MethodChannelFirebaseFunctions] when not needed or creating an

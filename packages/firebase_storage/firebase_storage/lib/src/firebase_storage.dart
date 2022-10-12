@@ -8,9 +8,7 @@ part of firebase_storage;
 /// The entrypoint for [FirebaseStorage].
 class FirebaseStorage extends FirebasePluginPlatform {
   FirebaseStorage._({required this.app, required this.bucket})
-      : super(app.name, 'plugins.flutter.io/firebase_storage') {
-    FirebasePluginPlatform.verify(instance);
-  }
+      : super(app.name, 'plugins.flutter.io/firebase_storage');
 
   // Cached and lazily loaded instance of [FirebaseStoragePlatform] to avoid
   // creating a [MethodChannelStorage] when not needed or creating an

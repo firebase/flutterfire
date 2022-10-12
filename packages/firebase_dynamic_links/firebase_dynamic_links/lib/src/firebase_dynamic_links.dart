@@ -9,9 +9,7 @@ part of firebase_dynamic_links;
 /// You can get an instance by calling [FirebaseDynamicLinks.instance].
 class FirebaseDynamicLinks extends FirebasePluginPlatform {
   FirebaseDynamicLinks._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_dynamic_links') {
-    FirebasePluginPlatform.verify(instance);
-  }
+      : super(app.name, 'plugins.flutter.io/firebase_dynamic_links');
 
   static final Map<String, FirebaseDynamicLinks> _cachedInstances = {};
 

@@ -66,7 +66,7 @@ abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
   }
 
   /// Ensures that a delegate class extends [RecaptchaVerifierFactoryPlatform].
-  static void verify(RecaptchaVerifierFactoryPlatform instance) {
+  static void verifyExtends(RecaptchaVerifierFactoryPlatform instance) {
     PlatformInterface.verify(instance, _token);
   }
 

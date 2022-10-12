@@ -37,9 +37,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
 
   FirebaseAuth._({required this.app, Persistence? persistence})
       : _persistence = persistence,
-        super(app.name, 'plugins.flutter.io/firebase_auth') {
-    FirebasePluginPlatform.verify(instance);
-  }
+        super(app.name, 'plugins.flutter.io/firebase_auth');
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseAuth get instance {

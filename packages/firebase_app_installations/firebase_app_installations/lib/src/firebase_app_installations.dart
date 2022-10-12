@@ -6,9 +6,7 @@ part of firebase_app_installations;
 
 class FirebaseInstallations extends FirebasePluginPlatform {
   FirebaseInstallations._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_app_installations') {
-    FirebasePluginPlatform.verify(instance);
-  }
+      : super(app.name, 'plugins.flutter.io/firebase_app_installations');
 
   // Cached and lazily loaded instance of [FirebaseAppInstallationsPlatform] to avoid
   // creating a [MethodChannelFirebaseInstallations] when not needed or creating an

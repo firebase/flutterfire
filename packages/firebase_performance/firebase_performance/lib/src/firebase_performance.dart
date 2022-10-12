@@ -9,9 +9,7 @@ part of firebase_performance;
 /// You can get an instance by calling [FirebasePerformance.instance].
 class FirebasePerformance extends FirebasePluginPlatform {
   FirebasePerformance._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_performance') {
-    FirebasePluginPlatform.verify(instance);
-  }
+      : super(app.name, 'plugins.flutter.io/firebase_performance');
 
   // Cached and lazily loaded instance of [FirebasePerformancePlatform] to avoid
   // creating a [MethodChannelFirebasePerformance] when not needed or creating an
