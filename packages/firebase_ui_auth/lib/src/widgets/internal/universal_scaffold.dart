@@ -26,7 +26,7 @@ class UniversalScaffold extends PlatformWidget {
   @override
   Widget buildMaterial(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset ?? true,
       body: body,
     );
   }

@@ -118,6 +118,7 @@ class ResponsivePage extends StatefulWidget {
 
 class _ResponsivePageState extends State<ResponsivePage> {
   final ctrl = ScrollController();
+  final paddingListenable = ValueNotifier<double>(0);
 
   void _onKeyboardPositionChanged(double position) {
     if (!ctrl.hasClients) {
@@ -125,6 +126,8 @@ class _ResponsivePageState extends State<ResponsivePage> {
     }
 
     if (widget.headerBuilder == null) return;
+
+    paddingListenable.value = position;
 
     final max = widget.headerMaxExtent ?? defaultHeaderImageHeight;
     final ctrlPosition = position.clamp(0.0, max);
@@ -194,7 +197,15 @@ class _ResponsivePageState extends State<ResponsivePage> {
                     ),
                   SliverList(
                     delegate: SliverChildListDelegate.fixed(
-                      [widget.child],
+                      [
+                        widget.child,
+                        ValueListenableBuilder<double>(
+                          valueListenable: paddingListenable,
+                          builder: (context, value, _) {
+                            return SizedBox(height: value);
+                          },
+                        ),
+                      ],
                     ),
                   )
                 ],
