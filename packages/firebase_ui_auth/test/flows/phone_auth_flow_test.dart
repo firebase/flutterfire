@@ -319,8 +319,14 @@ void main() {
           ctrl.acceptPhoneNumber('+123456789');
 
           final invocation = verify(
-            provider.sendVerificationCode(phoneNumber: captureAny),
-          );
+            provider.sendVerificationCode(
+              phoneNumber: captureAnyNamed('phoneNumber'),
+              action: anyNamed('action'),
+              forceResendingToken: anyNamed('forceResendingToken'),
+              hint: anyNamed('hint'),
+              multiFactorSession: anyNamed('multiFactorSession'),
+            ),
+          )..called(1);
 
           expect(invocation.callCount, 1);
           expect(invocation.captured, ['+123456789']);
