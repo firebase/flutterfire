@@ -33,8 +33,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_svg: ^1.0.0
-  firebase_ui_auth:
-    path: ../
+  firebase_ui_auth: ^1.0.0-dev.0
   firebase_ui_localizations: ^1.0.0-dev.0
   firebase_ui_oauth: ^1.0.0-dev.0
   firebase_ui_oauth_apple: ^1.0.0-dev.0
