@@ -18,7 +18,7 @@ class AppleProvider extends OAuthProvider {
   void mobileSignIn(AuthAction action) {
     authListener.onBeforeSignIn();
 
-    auth.signInWithAuthProvider(firebaseAuthProvider).then((userCred) {
+    auth.signInWithProvider(firebaseAuthProvider).then((userCred) {
       if (action == AuthAction.signIn) {
         authListener.onSignedIn(userCred);
       } else {

@@ -464,14 +464,15 @@ class _MFABadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = FirebaseUILocalizations.labelsOf(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // TODO(lesnitsky): update once labels available
-          const Subtitle(text: '2-step verification'),
+          Subtitle(text: l.mfaTitle),
           const SizedBox(height: 8),
           _MFAToggle(
             enrolled: enrolled,
@@ -570,7 +571,6 @@ class _MFAToggleState extends State<_MFAToggle> {
         rethrow;
       }
     } on Exception catch (e) {
-      // TODO(lesnitsky): handle recent login
       setState(() {
         exception = e;
       });
@@ -627,6 +627,8 @@ class _MFAToggleState extends State<_MFAToggle> {
 
   @override
   Widget build(BuildContext context) {
+    final l = FirebaseUILocalizations.labelsOf(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -640,13 +642,11 @@ class _MFAToggleState extends State<_MFAToggle> {
             ),
             const SizedBox(width: 8),
             Expanded(
-              // TODO(lesnitsky): update once labels available
-              child: Text(widget.enrolled ? 'On' : 'Off'),
+              child: Text(widget.enrolled ? l.on : l.off),
             ),
             LoadingButton(
               variant: ButtonVariant.text,
-              // TODO(lesnitsky): update once labels available
-              label: widget.enrolled ? 'Disable' : 'Enable',
+              label: widget.enrolled ? l.disable : l.enable,
               onTap: widget.enrolled ? _disable : _enable,
               isLoading: isLoading,
             )

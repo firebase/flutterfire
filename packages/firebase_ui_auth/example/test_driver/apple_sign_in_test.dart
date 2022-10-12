@@ -53,7 +53,7 @@ void main() async {
           await tester.tap(button);
 
           await tester.pumpAndSettle();
-          verify(auth.signInWithAuthProvider(fbProvider)).called(1);
+          verify(auth.signInWithProvider(fbProvider)).called(1);
 
           expect(true, isTrue);
         },

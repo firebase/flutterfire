@@ -6,8 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
-import 'auth_state.dart';
-
 /// An exception that is being thrown when user cancels the authentication
 /// process.
 class AuthCancelledException implements Exception {

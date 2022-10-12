@@ -1,9 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart'
-    show
-        FirebaseAuth,
-        MultiFactorInfo,
-        MultiFactorSession,
-        PhoneMultiFactorInfo;
+    show FirebaseAuth, MultiFactorSession, PhoneMultiFactorInfo;
 import 'package:flutter/widgets.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
