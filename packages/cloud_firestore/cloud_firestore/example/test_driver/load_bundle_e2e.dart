@@ -178,6 +178,7 @@ void runLoadBundleTests() {
           'named-bundle-test-$number',
           options: const GetOptions(source: Source.cache),
           fromFirestore: ConverterPlaceholder.new,
+          toFirestore: (value, options) => value.toFirestore(),
         );
 
         expect(
@@ -198,6 +199,7 @@ void runLoadBundleTests() {
             'wrong-name',
             options: const GetOptions(source: Source.cache),
             fromFirestore: ConverterPlaceholder.new,
+            toFirestore: (value, options) => value.toFirestore(),
           ),
           throwsA(
             isA<FirebaseException>()
@@ -214,4 +216,6 @@ class ConverterPlaceholder {
 
   final DocumentSnapshot<Map<String, Object?>> firestore;
   final SnapshotOptions? getOptions;
+
+  Map<String, Object?> toFirestore() => firestore.data()!;
 }

@@ -141,14 +141,11 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     String name, {
     GetOptions options = const GetOptions(),
     required FromFirestore<T> fromFirestore,
+    required ToFirestore<T> toFirestore,
   }) async {
     final snapshot = await namedQueryGet(name, options: options);
 
-    return _WithConverterQuerySnapshot<T>(
-      snapshot,
-      fromFirestore,
-      (value, setOptions) => throw StateError('How did we get there?'),
-    );
+    return _WithConverterQuerySnapshot<T>(snapshot, fromFirestore, toFirestore);
   }
 
   /// Reads a [QuerySnapshot] if a namedQuery has been retrieved and passed as a [Buffer] to [loadBundle()]. To read from cache, pass [GetOptions.source] value as [Source.cache].
