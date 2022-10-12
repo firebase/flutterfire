@@ -1,4 +1,5 @@
 import '../collection_generator.dart';
+import '../named_query_data.dart';
 
 class NamedQueryTemplate {
   NamedQueryTemplate(this.data, this.globalData);

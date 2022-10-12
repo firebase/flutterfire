@@ -2,6 +2,7 @@ import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_provider.dart';
 
+import '../collection_data.dart';
 import '../collection_generator.dart';
 
 class QueryTemplate {

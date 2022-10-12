@@ -1,3 +1,4 @@
+import '../collection_data.dart';
 import '../collection_generator.dart';
 
 class DocumentReferenceTemplate {
