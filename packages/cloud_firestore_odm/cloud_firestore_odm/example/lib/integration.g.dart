@@ -239,7 +239,6 @@ class _$ManualJsonDocumentReference
     );
     final json = {
       if (value != _sentinel) 'value': value as String,
-      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -256,7 +255,6 @@ class _$ManualJsonDocumentReference
     );
     final json = {
       if (value != _sentinel) 'value': value as String,
-      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);
@@ -600,17 +598,16 @@ class _$ManualJsonQuery
     return _$ManualJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        FieldPath.documentId,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          FieldPath.documentId,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -628,18 +625,16 @@ class _$ManualJsonQuery
   }) {
     return _$ManualJsonQuery(
       _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        'value',
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+      $referenceWithoutCursor: $referenceWithoutCursor.where('value',
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -1035,11 +1030,8 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
       if (hashCode != _sentinel) 'hashCode': hashCode as int,
-      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     return reference.update(json);
@@ -1068,11 +1060,8 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
       if (hashCode != _sentinel) 'hashCode': hashCode as int,
-      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1463,17 +1452,16 @@ class _$AdvancedJsonQuery
     return _$AdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        FieldPath.documentId,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          FieldPath.documentId,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -1492,17 +1480,16 @@ class _$AdvancedJsonQuery
     return _$AdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AdvancedJsonFieldMap['firstName']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$AdvancedJsonFieldMap['firstName']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -1521,17 +1508,16 @@ class _$AdvancedJsonQuery
     return _$AdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AdvancedJsonFieldMap['lastName']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$AdvancedJsonFieldMap['lastName']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -1550,17 +1536,16 @@ class _$AdvancedJsonQuery
     return _$AdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AdvancedJsonFieldMap['hashCode']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$AdvancedJsonFieldMap['hashCode']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -2110,11 +2095,8 @@ class _$_PrivateAdvancedJsonDocumentReference
     );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
       if (hashCode != _sentinel) 'hashCode': hashCode as int,
-      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     return reference.update(json);
@@ -2143,11 +2125,8 @@ class _$_PrivateAdvancedJsonDocumentReference
     );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
       if (hashCode != _sentinel) 'hashCode': hashCode as int,
-      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     transaction.update(reference, json);
@@ -2541,17 +2520,16 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     return _$_PrivateAdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        FieldPath.documentId,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          FieldPath.documentId,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -2570,17 +2548,16 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     return _$_PrivateAdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$PrivateAdvancedJsonFieldMap['firstName']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$PrivateAdvancedJsonFieldMap['firstName']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -2599,17 +2576,16 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     return _$_PrivateAdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$PrivateAdvancedJsonFieldMap['lastName']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$PrivateAdvancedJsonFieldMap['lastName']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -2628,17 +2604,16 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     return _$_PrivateAdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$PrivateAdvancedJsonFieldMap['hashCode']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$PrivateAdvancedJsonFieldMap['hashCode']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -3446,17 +3421,16 @@ class _$EmptyModelQuery
     return _$EmptyModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        FieldPath.documentId,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          FieldPath.documentId,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }

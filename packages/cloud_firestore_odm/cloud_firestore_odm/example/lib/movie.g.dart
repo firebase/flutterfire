@@ -11,6 +11,49 @@ part of 'movie.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
+List<String>? _enumConvertList(enumList) {
+  if (enumList == null) {
+    return null;
+  }
+  List<String> _tmpEnumList = [];
+  enumList.forEach((Enum e) {
+    _tmpEnumList.add(e.name);
+  });
+  return (_tmpEnumList.length > 0) ? _tmpEnumList : null;
+}
+
+List<Map<String, String>>? _enumConvertListMap(enumListMap) {
+  if (enumListMap == null) {
+    return null;
+  }
+  List<Map<String, String>> _tmpEnumListMap = [];
+
+  for (var e in enumListMap) {
+    e.forEach((Enum k, v) {
+      // TODO: Test for an enum key or enum value
+      // var _k = (k is Enum) ? k.name : k;
+      // var _v = (v is Enum) ? v.name : v;
+      var _k = k.name;
+      var _v = v;
+      _tmpEnumListMap.add({_k: _v});
+    });
+  }
+  ;
+  return (_tmpEnumListMap.length > 0) ? _tmpEnumListMap : null;
+}
+
+Map<String, dynamic>? _enumConvertMap(enumMap) {
+  if (enumMap == null) {
+    return null;
+  }
+  Map<String, dynamic> _tmpEnumMap = {};
+
+  enumMap?.forEach((Enum k, v) {
+    _tmpEnumMap.addAll({k.name: v});
+  });
+  return (_tmpEnumMap.length > 0) ? _tmpEnumMap : null;
+}
+
 class _Sentinel {
   const _Sentinel();
 }
@@ -147,6 +190,12 @@ abstract class MovieDocumentReference
     FieldValue ratedFieldValue,
     List<String>? genre,
     FieldValue genreFieldValue,
+    List<LanguageType>? language,
+    FieldValue languageFieldValue,
+    CertificationType certification,
+    FieldValue certificationFieldValue,
+    List<Map<CastType, String>> cast,
+    FieldValue castFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -168,6 +217,12 @@ abstract class MovieDocumentReference
     FieldValue ratedFieldValue,
     List<String>? genre,
     FieldValue genreFieldValue,
+    List<LanguageType>? language,
+    FieldValue languageFieldValue,
+    CertificationType certification,
+    FieldValue certificationFieldValue,
+    List<Map<CastType, String>> cast,
+    FieldValue castFieldValue,
   });
 }
 
@@ -233,6 +288,12 @@ class _$MovieDocumentReference
     FieldValue? ratedFieldValue,
     Object? genre = _sentinel,
     FieldValue? genreFieldValue,
+    Object? language = _sentinel,
+    FieldValue? languageFieldValue,
+    Object? certification = _sentinel,
+    FieldValue? certificationFieldValue,
+    Object? cast = _sentinel,
+    FieldValue? castFieldValue,
   }) async {
     assert(
       poster == _sentinel || posterFieldValue == null,
@@ -262,21 +323,32 @@ class _$MovieDocumentReference
       genre == _sentinel || genreFieldValue == null,
       "Cannot specify both genre and genreFieldValue",
     );
+    assert(
+      language == _sentinel || languageFieldValue == null,
+      "Cannot specify both language and languageFieldValue",
+    );
+    assert(
+      certification == _sentinel || certificationFieldValue == null,
+      "Cannot specify both certification and certificationFieldValue",
+    );
+    assert(
+      cast == _sentinel || castFieldValue == null,
+      "Cannot specify both cast and castFieldValue",
+    );
     final json = {
       if (poster != _sentinel) 'poster': poster as String,
-      if (posterFieldValue != null) 'poster': posterFieldValue,
       if (likes != _sentinel) 'likes': likes as int,
-      if (likesFieldValue != null) 'likes': likesFieldValue,
       if (title != _sentinel) 'title': title as String,
-      if (titleFieldValue != null) 'title': titleFieldValue,
       if (year != _sentinel) 'year': year as int,
-      if (yearFieldValue != null) 'year': yearFieldValue,
       if (runtime != _sentinel) 'runtime': runtime as String,
-      if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
       if (rated != _sentinel) 'rated': rated as String,
-      if (ratedFieldValue != null) 'rated': ratedFieldValue,
       if (genre != _sentinel) 'genre': genre as List<String>?,
-      if (genreFieldValue != null) 'genre': genreFieldValue,
+      if (language != _sentinel)
+        'language': _enumConvertList(language as List<LanguageType>?),
+      if (certification != _sentinel)
+        'certification': certification as CertificationType,
+      if (cast != _sentinel)
+        'cast': _enumConvertListMap(cast as List<Map<CastType, String>>),
     };
 
     return reference.update(json);
@@ -298,6 +370,12 @@ class _$MovieDocumentReference
     FieldValue? ratedFieldValue,
     Object? genre = _sentinel,
     FieldValue? genreFieldValue,
+    Object? language = _sentinel,
+    FieldValue? languageFieldValue,
+    Object? certification = _sentinel,
+    FieldValue? certificationFieldValue,
+    Object? cast = _sentinel,
+    FieldValue? castFieldValue,
   }) {
     assert(
       poster == _sentinel || posterFieldValue == null,
@@ -327,21 +405,32 @@ class _$MovieDocumentReference
       genre == _sentinel || genreFieldValue == null,
       "Cannot specify both genre and genreFieldValue",
     );
+    assert(
+      language == _sentinel || languageFieldValue == null,
+      "Cannot specify both language and languageFieldValue",
+    );
+    assert(
+      certification == _sentinel || certificationFieldValue == null,
+      "Cannot specify both certification and certificationFieldValue",
+    );
+    assert(
+      cast == _sentinel || castFieldValue == null,
+      "Cannot specify both cast and castFieldValue",
+    );
     final json = {
       if (poster != _sentinel) 'poster': poster as String,
-      if (posterFieldValue != null) 'poster': posterFieldValue,
       if (likes != _sentinel) 'likes': likes as int,
-      if (likesFieldValue != null) 'likes': likesFieldValue,
       if (title != _sentinel) 'title': title as String,
-      if (titleFieldValue != null) 'title': titleFieldValue,
       if (year != _sentinel) 'year': year as int,
-      if (yearFieldValue != null) 'year': yearFieldValue,
       if (runtime != _sentinel) 'runtime': runtime as String,
-      if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
       if (rated != _sentinel) 'rated': rated as String,
-      if (ratedFieldValue != null) 'rated': ratedFieldValue,
       if (genre != _sentinel) 'genre': genre as List<String>?,
-      if (genreFieldValue != null) 'genre': genreFieldValue,
+      if (language != _sentinel)
+        'language': _enumConvertList(language as List<LanguageType>?),
+      if (certification != _sentinel)
+        'certification': certification as CertificationType,
+      if (cast != _sentinel)
+        'cast': _enumConvertListMap(cast as List<Map<CastType, String>>),
     };
 
     transaction.update(reference, json);
@@ -539,6 +628,39 @@ abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
     String? arrayContains,
     List<String>? arrayContainsAny,
   });
+  MovieQuery whereLanguage({
+    List<LanguageType>? isEqualTo,
+    List<LanguageType>? isNotEqualTo,
+    List<LanguageType>? isLessThan,
+    List<LanguageType>? isLessThanOrEqualTo,
+    List<LanguageType>? isGreaterThan,
+    List<LanguageType>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    LanguageType? arrayContains,
+    List<LanguageType>? arrayContainsAny,
+  });
+  MovieQuery whereCertification({
+    CertificationType? isEqualTo,
+    CertificationType? isNotEqualTo,
+    CertificationType? isLessThan,
+    CertificationType? isLessThanOrEqualTo,
+    CertificationType? isGreaterThan,
+    CertificationType? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<CertificationType>? whereIn,
+    List<CertificationType>? whereNotIn,
+  });
+  MovieQuery whereCast({
+    List<Map<CastType, String>>? isEqualTo,
+    List<Map<CastType, String>>? isNotEqualTo,
+    List<Map<CastType, String>>? isLessThan,
+    List<Map<CastType, String>>? isLessThanOrEqualTo,
+    List<Map<CastType, String>>? isGreaterThan,
+    List<Map<CastType, String>>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    Map<CastType, String>? arrayContains,
+    List<Map<CastType, String>>? arrayContainsAny,
+  });
 
   MovieQuery orderByDocumentId({
     bool descending = false,
@@ -630,6 +752,42 @@ abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
     List<String>? startAfter,
     List<String>? endAt,
     List<String>? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  MovieQuery orderByLanguage({
+    bool descending = false,
+    List<LanguageType>? startAt,
+    List<LanguageType>? startAfter,
+    List<LanguageType>? endAt,
+    List<LanguageType>? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  MovieQuery orderByCertification({
+    bool descending = false,
+    CertificationType startAt,
+    CertificationType startAfter,
+    CertificationType endAt,
+    CertificationType endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  MovieQuery orderByCast({
+    bool descending = false,
+    List<Map<CastType, String>> startAt,
+    List<Map<CastType, String>> startAfter,
+    List<Map<CastType, String>> endAt,
+    List<Map<CastType, String>> endBefore,
     MovieDocumentSnapshot? startAtDocument,
     MovieDocumentSnapshot? endAtDocument,
     MovieDocumentSnapshot? endBeforeDocument,
@@ -821,17 +979,16 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        FieldPath.documentId,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          FieldPath.documentId,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -850,17 +1007,16 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap['poster']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$MovieFieldMap['poster']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -879,17 +1035,16 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap['likes']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$MovieFieldMap['likes']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -908,17 +1063,16 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap['title']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$MovieFieldMap['title']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -937,17 +1091,16 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap['year']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$MovieFieldMap['year']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -966,17 +1119,16 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap['runtime']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$MovieFieldMap['runtime']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -995,17 +1147,16 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap['rated']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$MovieFieldMap['rated']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -1024,18 +1175,139 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap['genre']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        arrayContains: arrayContains,
-        arrayContainsAny: arrayContainsAny,
-      ),
+          _$MovieFieldMap['genre']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          arrayContains: arrayContains,
+          arrayContainsAny: arrayContainsAny),
       $queryCursor: $queryCursor,
+    );
+  }
+
+  MovieQuery whereLanguage({
+    List<LanguageType>? isEqualTo,
+    List<LanguageType>? isNotEqualTo,
+    List<LanguageType>? isLessThan,
+    List<LanguageType>? isLessThanOrEqualTo,
+    List<LanguageType>? isGreaterThan,
+    List<LanguageType>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    LanguageType? arrayContains,
+    List<LanguageType>? arrayContainsAny,
+  }) {
+    return _$MovieQuery(
+      reference.where(
+        'language',
+        isEqualTo: _enumConvertList(isEqualTo),
+        isNotEqualTo: _enumConvertList(isNotEqualTo),
+        isLessThan: _enumConvertList(isLessThan),
+        isLessThanOrEqualTo: _enumConvertList(isLessThanOrEqualTo),
+        isGreaterThan: _enumConvertList(isGreaterThan),
+        isGreaterThanOrEqualTo: _enumConvertList(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: arrayContains?.name,
+        arrayContainsAny: _enumConvertList(arrayContainsAny),
+      ),
+      _collection,
+    );
+  }
+
+  MovieQuery whereCertification({
+    CertificationType? isEqualTo,
+    CertificationType? isNotEqualTo,
+    CertificationType? isLessThan,
+    CertificationType? isLessThanOrEqualTo,
+    CertificationType? isGreaterThan,
+    CertificationType? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<CertificationType>? whereIn,
+    List<CertificationType>? whereNotIn,
+  }) {
+    List<String>? _whereInList;
+    whereIn?.forEach((e) {
+      _whereInList?.add(e.name);
+    });
+    List<String>? _whereNotInList;
+    whereNotIn?.forEach((e) {
+      _whereNotInList?.add(e.name);
+    });
+
+    return _$MovieQuery(
+      reference.where(
+        'certification',
+        isEqualTo: isEqualTo?.name,
+        isNotEqualTo: isNotEqualTo?.name,
+        isLessThan: isLessThan?.name,
+        isLessThanOrEqualTo: isLessThanOrEqualTo?.name,
+        isGreaterThan: isGreaterThan?.name,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,
+        isNull: isNull,
+        whereIn: _whereInList,
+        whereNotIn: _whereNotInList,
+      ),
+      _collection,
+    );
+  }
+
+  MovieQuery whereCast({
+    List<Map<CastType, String>>? isEqualTo,
+    List<Map<CastType, String>>? isNotEqualTo,
+    List<Map<CastType, String>>? isLessThan,
+    List<Map<CastType, String>>? isLessThanOrEqualTo,
+    List<Map<CastType, String>>? isGreaterThan,
+    List<Map<CastType, String>>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    Map<CastType, String>? arrayContains,
+    List<Map<CastType, String>>? arrayContainsAny,
+  }) {
+    List<Map<String, String>>? _enumConvertListMap(
+        List<Map<CastType, String>>? enumListMap) {
+      if (enumListMap == null) {
+        return null;
+      }
+      List<Map<String, String>>? _tmpEnumListMap;
+
+      for (var e in enumListMap) {
+        e.forEach((k, v) {
+          // TODO: Test for an enum key or enum value
+          // var _k = (k is Enum) ? k.name : k;
+          // var _v = (v is Enum) ? v.name : v;
+          var _k = k.name;
+          var _v = v;
+          _tmpEnumListMap?.add({_k: _v});
+        });
+      }
+      ;
+      return _tmpEnumListMap;
+    }
+
+    Map<String, String>? _enumConvertMap(Map<CastType, String>? enumMap) {
+      Map<String, String>? _tmpEnumMap;
+      enumMap?.forEach((k, v) {
+        _tmpEnumMap?.update(k.name, (oldVal) => v);
+      });
+      return _tmpEnumMap;
+    }
+
+    return _$MovieQuery(
+      reference.where(
+        'cast',
+        isEqualTo: _enumConvertListMap(isEqualTo),
+        isNotEqualTo: _enumConvertListMap(isNotEqualTo),
+        isLessThan: _enumConvertListMap(isLessThan),
+        isLessThanOrEqualTo: _enumConvertListMap(isLessThanOrEqualTo),
+        isGreaterThan: _enumConvertListMap(isGreaterThan),
+        isGreaterThanOrEqualTo: _enumConvertListMap(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: _enumConvertMap(arrayContains),
+        arrayContainsAny: _enumConvertListMap(arrayContainsAny),
+      ),
+      _collection,
     );
   }
 
@@ -1615,6 +1887,222 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     );
   }
 
+  MovieQuery orderByLanguage({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['language']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$MovieQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  MovieQuery orderByCertification({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$MovieFieldMap['certification']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$MovieQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  MovieQuery orderByCast({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['cast']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$MovieQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is _$MovieQuery &&
@@ -1866,9 +2354,7 @@ class _$CommentDocumentReference
     );
     final json = {
       if (authorName != _sentinel) 'authorName': authorName as String,
-      if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
       if (message != _sentinel) 'message': message as String,
-      if (messageFieldValue != null) 'message': messageFieldValue,
     };
 
     return reference.update(json);
@@ -1891,9 +2377,7 @@ class _$CommentDocumentReference
     );
     final json = {
       if (authorName != _sentinel) 'authorName': authorName as String,
-      if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
       if (message != _sentinel) 'message': message as String,
-      if (messageFieldValue != null) 'message': messageFieldValue,
     };
 
     transaction.update(reference, json);
@@ -2259,17 +2743,16 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     return _$CommentQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        FieldPath.documentId,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          FieldPath.documentId,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -2288,17 +2771,16 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     return _$CommentQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$CommentFieldMap['authorName']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$CommentFieldMap['authorName']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -2317,17 +2799,16 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     return _$CommentQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$CommentFieldMap['message']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$CommentFieldMap['message']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -2616,6 +3097,20 @@ Movie _$MovieFromJson(Map<String, dynamic> json) => Movie(
       title: json['title'] as String,
       year: json['year'] as int,
       id: json['id'] as String,
+      language: (json['language'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$LanguageTypeEnumMap, e))
+          .toList(),
+      certification:
+          $enumDecode(_$CertificationTypeEnumMap, json['certification']),
+      cast: (json['cast'] as List<dynamic>)
+          .map((e) => (e as Map<String, dynamic>).map(
+                (k, e) =>
+                    MapEntry($enumDecode(_$CastTypeEnumMap, k), e as String),
+              ))
+          .toList(),
+      majorCast: (json['majorCast'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry($enumDecode(_$CastTypeEnumMap, k), e as String),
+      ),
     );
 
 const _$MovieFieldMap = <String, String>{
@@ -2627,6 +3122,10 @@ const _$MovieFieldMap = <String, String>{
   'runtime': 'runtime',
   'rated': 'rated',
   'genre': 'genre',
+  'language': 'language',
+  'certification': 'certification',
+  'cast': 'cast',
+  'majorCast': 'majorCast',
 };
 
 Map<String, dynamic> _$MovieToJson(Movie instance) => <String, dynamic>{
@@ -2638,7 +3137,43 @@ Map<String, dynamic> _$MovieToJson(Movie instance) => <String, dynamic>{
       'runtime': instance.runtime,
       'rated': instance.rated,
       'genre': instance.genre,
+      'language':
+          instance.language?.map((e) => _$LanguageTypeEnumMap[e]!).toList(),
+      'certification': _$CertificationTypeEnumMap[instance.certification]!,
+      'cast': instance.cast
+          .map((e) => e.map((k, e) => MapEntry(_$CastTypeEnumMap[k]!, e)))
+          .toList(),
+      'majorCast':
+          instance.majorCast.map((k, e) => MapEntry(_$CastTypeEnumMap[k]!, e)),
     };
+
+const _$LanguageTypeEnumMap = {
+  LanguageType.english: 'english',
+  LanguageType.french: 'french',
+  LanguageType.spanish: 'spanish',
+  LanguageType.chinese: 'chinese',
+  LanguageType.korean: 'korean',
+};
+
+const _$CertificationTypeEnumMap = {
+  CertificationType.none: 'none',
+  CertificationType.g: 'g',
+  CertificationType.pg: 'pg',
+  CertificationType.pg13: 'pg13',
+  CertificationType.R: 'R',
+  CertificationType.tvpg: 'tvpg',
+  CertificationType.tvma: 'tvma',
+};
+
+const _$CastTypeEnumMap = {
+  CastType.background: 'background',
+  CastType.cameo: 'cameo',
+  CastType.recurring: 'recurring',
+  CastType.side: 'side',
+  CastType.star: 'star',
+  CastType.coStar: 'coStar',
+  CastType.guestStar: 'guestStar',
+};
 
 Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       authorName: json['authorName'] as String,

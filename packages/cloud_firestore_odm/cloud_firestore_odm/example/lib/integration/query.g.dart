@@ -245,7 +245,6 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (time != _sentinel) 'time': time as DateTime,
-      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     return reference.update(json);
@@ -262,7 +261,6 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (time != _sentinel) 'time': time as DateTime,
-      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     transaction.update(reference, json);
@@ -607,17 +605,16 @@ class _$DateTimeQueryQuery
     return _$DateTimeQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        FieldPath.documentId,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          FieldPath.documentId,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -636,17 +633,16 @@ class _$DateTimeQueryQuery
     return _$DateTimeQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$DateTimeQueryFieldMap['time']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$DateTimeQueryFieldMap['time']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -1027,7 +1023,6 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (time != _sentinel) 'time': time as Timestamp,
-      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     return reference.update(json);
@@ -1044,7 +1039,6 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (time != _sentinel) 'time': time as Timestamp,
-      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1389,17 +1383,16 @@ class _$TimestampQueryQuery
     return _$TimestampQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        FieldPath.documentId,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          FieldPath.documentId,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -1418,17 +1411,16 @@ class _$TimestampQueryQuery
     return _$TimestampQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$TimestampQueryFieldMap['time']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$TimestampQueryFieldMap['time']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -1810,7 +1802,6 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (point != _sentinel) 'point': point as GeoPoint,
-      if (pointFieldValue != null) 'point': pointFieldValue,
     };
 
     return reference.update(json);
@@ -1827,7 +1818,6 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (point != _sentinel) 'point': point as GeoPoint,
-      if (pointFieldValue != null) 'point': pointFieldValue,
     };
 
     transaction.update(reference, json);
@@ -2172,17 +2162,16 @@ class _$GeoPointQueryQuery
     return _$GeoPointQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        FieldPath.documentId,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          FieldPath.documentId,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -2201,17 +2190,16 @@ class _$GeoPointQueryQuery
     return _$GeoPointQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$GeoPointQueryFieldMap['point']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$GeoPointQueryFieldMap['point']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -2597,7 +2585,6 @@ class _$DocumentReferenceQueryDocumentReference
     final json = {
       if (ref != _sentinel)
         'ref': ref as DocumentReference<Map<String, dynamic>>,
-      if (refFieldValue != null) 'ref': refFieldValue,
     };
 
     return reference.update(json);
@@ -2615,7 +2602,6 @@ class _$DocumentReferenceQueryDocumentReference
     final json = {
       if (ref != _sentinel)
         'ref': ref as DocumentReference<Map<String, dynamic>>,
-      if (refFieldValue != null) 'ref': refFieldValue,
     };
 
     transaction.update(reference, json);
@@ -2964,17 +2950,16 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
     return _$DocumentReferenceQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        FieldPath.documentId,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          FieldPath.documentId,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }
@@ -2993,17 +2978,16 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
     return _$DocumentReferenceQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$DocumentReferenceQueryFieldMap['ref']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
+          _$DocumentReferenceQueryFieldMap['ref']!,
+          isEqualTo: isEqualTo,
+          isNotEqualTo: isNotEqualTo,
+          isLessThan: isLessThan,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+          isGreaterThan: isGreaterThan,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+          isNull: isNull,
+          whereIn: whereIn,
+          whereNotIn: whereNotIn),
       $queryCursor: $queryCursor,
     );
   }

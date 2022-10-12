@@ -500,7 +500,7 @@ class ${data.queryReferenceImplName}
       } else if (_isEnumList) {
         buffer.writeln(
           '''
-  ${data.queryReferenceInterfaceName} where$titledNamed({$prototype,}) {
+  ${data.queryReferenceInterfaceName} where$titledNamed({$prototype}) {
 
     return ${data.queryReferenceImplName}(
       reference.where('${field.name}', $parameters,),
@@ -512,7 +512,7 @@ class ${data.queryReferenceImplName}
       } else if (_isEnumListMap) {
         buffer.writeln(
           '''
-  ${data.queryReferenceInterfaceName} where$titledNamed({$prototype,}) {
+  ${data.queryReferenceInterfaceName} where$titledNamed({$prototype}) {
     List<Map<String, String>>? _enumConvertListMap($nullableType enumListMap) {
       if (enumListMap == null) {
         return null;
@@ -551,7 +551,7 @@ class ${data.queryReferenceImplName}
       } else if (_isEnum) {
         buffer.writeln(
           '''
-  ${data.queryReferenceInterfaceName} where$titledNamed({$prototype,}) {
+  ${data.queryReferenceInterfaceName} where$titledNamed({$prototype}) {
     List<String>? _whereInList;
     whereIn?.forEach((e) { _whereInList?.add(e.name); });
     List<String>? _whereNotInList;

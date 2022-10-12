@@ -157,6 +157,10 @@ void main() {
                   title: 'title',
                   year: 0,
                   id: '_',
+                  language: [LanguageType.english],
+                  certification: CertificationType.g,
+                  cast: [{CastType.cameo: ''}],
+                  majorCast: {CastType.coStar: 'fooMan'}
                 ),
               );
 
@@ -514,6 +518,7 @@ void main() {
                   CastType.coStar: 'William Shatner',
                   CastType.cameo: 'Harlan Ellison'
                 },
+                id: '_',
               ),
             );
 
@@ -559,6 +564,7 @@ void main() {
                     CastType.coStar: 'William Shatner',
                     CastType.cameo: 'Harlan Ellison'
                   },
+                  id: '_',
                 ),
               );
 
