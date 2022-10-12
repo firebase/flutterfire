@@ -136,6 +136,21 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     }
   }
 
+  /// Performs a [namedQueryGet] and decode the result using [Query.withConverter].
+  Future<QuerySnapshot<T>> namedQueryWithConverterGet<T>(
+    String name, {
+    GetOptions options = const GetOptions(),
+    required FromFirestore<T> fromFirestore,
+  }) async {
+    final snapshot = await namedQueryGet(name, options: options);
+
+    return _WithConverterQuerySnapshot<T>(
+      snapshot,
+      fromFirestore,
+      (value, setOptions) => throw StateError('How did we get there?'),
+    );
+  }
+
   /// Reads a [QuerySnapshot] if a namedQuery has been retrieved and passed as a [Buffer] to [loadBundle()]. To read from cache, pass [GetOptions.source] value as [Source.cache].
   /// To read from the Firestore backend, use [GetOptions.source] as [Source.server].
   Future<QuerySnapshot<Map<String, dynamic>>> namedQueryGet(
