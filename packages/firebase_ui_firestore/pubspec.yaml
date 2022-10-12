@@ -8,7 +8,7 @@ environment:
   flutter: '>=1.17.0'
 
 dependencies:
-  cloud_firestore: ^3.4.3
+  cloud_firestore: ^3.5.1
   firebase_ui_localizations: ^1.0.0-dev.0
   flutter:
     sdk: flutter
