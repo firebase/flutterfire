@@ -214,12 +214,15 @@ class SMSCodeInputState extends State<SMSCodeInput> {
                   style: TextStyle(color: primaryColor),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (int i = 0; i < 6; i++)
-                    _NumberSlot(number: code.length > i ? code[i] : ''),
-                ],
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    for (int i = 0; i < 6; i++)
+                      _NumberSlot(number: code.length > i ? code[i] : ''),
+                  ],
+                ),
               ),
               if (widget.text != null || text != null)
                 Padding(
