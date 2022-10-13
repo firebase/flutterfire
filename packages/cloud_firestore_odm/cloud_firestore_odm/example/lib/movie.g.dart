@@ -1201,20 +1201,24 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     List<LanguageType>? arrayContainsAny,
   }) {
     return _$MovieQuery(
-      reference.where(
-        'language',
-        isEqualTo: _enumConvertList(isEqualTo),
-        isNotEqualTo: _enumConvertList(isNotEqualTo),
-        isLessThan: _enumConvertList(isLessThan),
-        isLessThanOrEqualTo: _enumConvertList(isLessThanOrEqualTo),
-        isGreaterThan: _enumConvertList(isGreaterThan),
-        isGreaterThanOrEqualTo: _enumConvertList(isGreaterThanOrEqualTo),
-        isNull: isNull,
-        arrayContains: arrayContains?.name,
-        arrayContainsAny: _enumConvertList(arrayContainsAny),
-      ),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+          _$MovieFieldMap['language']!,
+          isEqualTo: _enumConvertList(isEqualTo),
+          isNotEqualTo: _enumConvertList(isNotEqualTo),
+          isLessThan: _enumConvertList(isLessThan),
+          isLessThanOrEqualTo: _enumConvertList(isLessThanOrEqualTo),
+          isGreaterThan: _enumConvertList(isGreaterThan),
+          isGreaterThanOrEqualTo: _enumConvertList(isGreaterThanOrEqualTo),
+          isNull: isNull,
+          arrayContains: arrayContains?.name,
+          arrayContainsAny: _enumConvertList(arrayContainsAny)),
+      $queryCursor: $queryCursor,
     );
+    // return _$MovieQuery(
+    //   reference.where('language', isEqualTo: _enumConvertList(isEqualTo),isNotEqualTo: _enumConvertList(isNotEqualTo),isLessThan: _enumConvertList(isLessThan),isLessThanOrEqualTo: _enumConvertList(isLessThanOrEqualTo),isGreaterThan: _enumConvertList(isGreaterThan),isGreaterThanOrEqualTo: _enumConvertList(isGreaterThanOrEqualTo),isNull: isNull,arrayContains: arrayContains?.name,arrayContainsAny: _enumConvertList(arrayContainsAny),),
+    //   _collection,
+    // );
   }
 
   MovieQuery whereCertification({
@@ -1238,20 +1242,24 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     });
 
     return _$MovieQuery(
-      reference.where(
-        'certification',
-        isEqualTo: isEqualTo?.name,
-        isNotEqualTo: isNotEqualTo?.name,
-        isLessThan: isLessThan?.name,
-        isLessThanOrEqualTo: isLessThanOrEqualTo?.name,
-        isGreaterThan: isGreaterThan?.name,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,
-        isNull: isNull,
-        whereIn: _whereInList,
-        whereNotIn: _whereNotInList,
-      ),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+          _$MovieFieldMap['certification']!,
+          isEqualTo: isEqualTo?.name,
+          isNotEqualTo: isNotEqualTo?.name,
+          isLessThan: isLessThan?.name,
+          isLessThanOrEqualTo: isLessThanOrEqualTo?.name,
+          isGreaterThan: isGreaterThan?.name,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,
+          isNull: isNull,
+          whereIn: _whereInList,
+          whereNotIn: _whereNotInList),
+      $queryCursor: $queryCursor,
     );
+    // return _$MovieQuery(
+    //   reference.where('certification', isEqualTo: isEqualTo?.name,isNotEqualTo: isNotEqualTo?.name,isLessThan: isLessThan?.name,isLessThanOrEqualTo: isLessThanOrEqualTo?.name,isGreaterThan: isGreaterThan?.name,isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,isNull: isNull,whereIn: _whereInList,whereNotIn: _whereNotInList,),
+    //   _collection,
+    // );
   }
 
   MovieQuery whereCast({
@@ -1295,20 +1303,24 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     }
 
     return _$MovieQuery(
-      reference.where(
-        'cast',
-        isEqualTo: _enumConvertListMap(isEqualTo),
-        isNotEqualTo: _enumConvertListMap(isNotEqualTo),
-        isLessThan: _enumConvertListMap(isLessThan),
-        isLessThanOrEqualTo: _enumConvertListMap(isLessThanOrEqualTo),
-        isGreaterThan: _enumConvertListMap(isGreaterThan),
-        isGreaterThanOrEqualTo: _enumConvertListMap(isGreaterThanOrEqualTo),
-        isNull: isNull,
-        arrayContains: _enumConvertMap(arrayContains),
-        arrayContainsAny: _enumConvertListMap(arrayContainsAny),
-      ),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+          _$MovieFieldMap['cast']!,
+          isEqualTo: _enumConvertListMap(isEqualTo),
+          isNotEqualTo: _enumConvertListMap(isNotEqualTo),
+          isLessThan: _enumConvertListMap(isLessThan),
+          isLessThanOrEqualTo: _enumConvertListMap(isLessThanOrEqualTo),
+          isGreaterThan: _enumConvertListMap(isGreaterThan),
+          isGreaterThanOrEqualTo: _enumConvertListMap(isGreaterThanOrEqualTo),
+          isNull: isNull,
+          arrayContains: _enumConvertMap(arrayContains),
+          arrayContainsAny: _enumConvertListMap(arrayContainsAny)),
+      $queryCursor: $queryCursor,
     );
+    // return _$MovieQuery(
+    //   reference.where('cast', isEqualTo: _enumConvertListMap(isEqualTo),isNotEqualTo: _enumConvertListMap(isNotEqualTo),isLessThan: _enumConvertListMap(isLessThan),isLessThanOrEqualTo: _enumConvertListMap(isLessThanOrEqualTo),isGreaterThan: _enumConvertListMap(isGreaterThan),isGreaterThanOrEqualTo: _enumConvertListMap(isGreaterThanOrEqualTo),isNull: isNull,arrayContains: _enumConvertMap(arrayContains),arrayContainsAny: _enumConvertListMap(arrayContainsAny),),
+    //   _collection,
+    // );
   }
 
   MovieQuery orderByDocumentId({

@@ -503,9 +503,14 @@ class ${data.queryReferenceImplName}
   ${data.queryReferenceInterfaceName} where$titledNamed({$prototype}) {
 
     return ${data.queryReferenceImplName}(
-      reference.where('${field.name}', $parameters,),
       _collection,
+      \$referenceWithoutCursor: \$referenceWithoutCursor.where(${field.field}, $parameters),
+      \$queryCursor: \$queryCursor,
     );
+    // return ${data.queryReferenceImplName}(
+    //   reference.where('${field.name}', $parameters,),
+    //   _collection,
+    // );
   }
 ''',
         );
@@ -542,9 +547,14 @@ class ${data.queryReferenceImplName}
     }
 
     return ${data.queryReferenceImplName}(
-      reference.where('${field.name}', $parameters,),
       _collection,
+      \$referenceWithoutCursor: \$referenceWithoutCursor.where(${field.field}, $parameters),
+      \$queryCursor: \$queryCursor,
     );
+    // return ${data.queryReferenceImplName}(
+    //   reference.where('${field.name}', $parameters,),
+    //   _collection,
+    // );
   }
 ''',
         );
@@ -558,9 +568,14 @@ class ${data.queryReferenceImplName}
     whereNotIn?.forEach((e) { _whereNotInList?.add(e.name); });
 
     return ${data.queryReferenceImplName}(
-      reference.where('${field.name}', $parameters,),
       _collection,
+      \$referenceWithoutCursor: \$referenceWithoutCursor.where(${field.field}, $parameters),
+      \$queryCursor: \$queryCursor,
     );
+    // return ${data.queryReferenceImplName}(
+    //   reference.where('${field.name}', $parameters,),
+    //   _collection,
+    // );
   }
 ''',
         );
