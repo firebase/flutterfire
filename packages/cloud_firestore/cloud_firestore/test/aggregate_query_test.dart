@@ -22,7 +22,7 @@ void main() {
   );
 
   MethodChannelFirebaseFirestore.channel.setMockMethodCallHandler((call) async {
-    if (call.method == 'AggregateQuery#countGet') {
+    if (call.method == 'AggregateQuery#count') {
       return {
         'count': kCount,
       };
