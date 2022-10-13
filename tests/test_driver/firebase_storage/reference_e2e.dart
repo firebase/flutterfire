@@ -135,9 +135,12 @@ void setupReferenceTests() {
         expect(downloadUrl, isA<String>());
         expect(downloadUrl, contains('ok.txt'));
         expect(downloadUrl, contains(storage.app.options.projectId));
-      });
+        // Fails on emulator since iOS SDK 10. See PR notes:
+        // https://github.com/firebase/flutterfire/pull/9708
+      },
+          skip: defaultTargetPlatform == TargetPlatform.iOS ||
+              defaultTargetPlatform == TargetPlatform.macOS);
 
-      // TODO(ehesp): Emulator rules issue - comment back in once fixed
       test('errors if permission denied', () async {
         Reference ref = storage.ref('writeOnly.txt');
 
