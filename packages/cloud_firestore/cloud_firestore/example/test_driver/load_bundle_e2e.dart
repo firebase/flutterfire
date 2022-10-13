@@ -161,5 +161,61 @@ void runLoadBundleTests() {
         );
       });
     });
+
+    group('FirebaeFirestore.namedQueryWithConverterGet()', () {
+      test('namedQueryWithConverterGet() successful', () async {
+        const int number = 4;
+        Uint8List buffer = await loadBundleSetup(number);
+        LoadBundleTask task = firestore.loadBundle(buffer);
+
+        // ensure the bundle has been completely cached
+        await task.stream.last;
+
+        // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
+        // with 'number' property
+        QuerySnapshot<ConverterPlaceholder> snapshot =
+            await firestore.namedQueryWithConverterGet<ConverterPlaceholder>(
+          'named-bundle-test-$number',
+          options: const GetOptions(source: Source.cache),
+          fromFirestore: ConverterPlaceholder.new,
+          toFirestore: (value, options) => value.toFirestore(),
+        );
+
+        expect(
+          snapshot.docs.map((document) => document['number']),
+          everyElement(anyOf(1, 2, 3)),
+        );
+      });
+
+      test('namedQueryWithConverterGet() error', () async {
+        Uint8List buffer = await loadBundleSetup(4);
+        LoadBundleTask task = firestore.loadBundle(buffer);
+
+        // ensure the bundle has been completely cached
+        await task.stream.last;
+
+        await expectLater(
+          firestore.namedQueryWithConverterGet<ConverterPlaceholder>(
+            'wrong-name',
+            options: const GetOptions(source: Source.cache),
+            fromFirestore: ConverterPlaceholder.new,
+            toFirestore: (value, options) => value.toFirestore(),
+          ),
+          throwsA(
+            isA<FirebaseException>()
+                .having((e) => e.code, 'code', 'non-existent-named-query'),
+          ),
+        );
+      });
+    });
   });
+}
+
+class ConverterPlaceholder {
+  ConverterPlaceholder(this.firestore, this.getOptions);
+
+  final DocumentSnapshot<Map<String, Object?>> firestore;
+  final SnapshotOptions? getOptions;
+
+  Map<String, Object?> toFirestore() => firestore.data()!;
 }
