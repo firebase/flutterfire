@@ -1,5 +1,4 @@
 import '../collection_data.dart';
-import '../collection_generator.dart';
 
 class CollectionReferenceTemplate {
   CollectionReferenceTemplate(this.data);
