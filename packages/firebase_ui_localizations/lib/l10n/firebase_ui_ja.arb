@@ -1,0 +1,427 @@
+{
+  "@@locale": "ja",
+  "@@last_modified": "2022-09-14T18:25:39.449",
+  "accessDisabledErrorText": "このアカウントへのアクセスが一時的に無効になっています",
+  "@accessDisabledErrorText": {
+    "description": "Used as an error message when account is blocked and user tries to perform some actions with the account (e.g. unlinking a credential).",
+    "placeholders": {}
+  },
+  "arrayLabel": "配列",
+  "@arrayLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "booleanLabel": "ブール値",
+  "@booleanLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "cancelLabel": "キャンセル",
+  "@cancelLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "chooseACountry": "国を選択",
+  "@chooseACountry": {
+    "description": "Used as a label of the country code picker dropdown.",
+    "placeholders": {}
+  },
+  "confirmPasswordDoesNotMatchErrorText": "パスワードが一致しません",
+  "@confirmPasswordDoesNotMatchErrorText": {
+    "description": "Used as an error text when provided passwords do not match.",
+    "placeholders": {}
+  },
+  "confirmPasswordInputLabel": "パスワードを確認",
+  "@confirmPasswordInputLabel": {
+    "description": "Used as a label of the PasswordInput that confirms a provided password.",
+    "placeholders": {}
+  },
+  "confirmPasswordIsRequiredErrorText": "パスワードを確認してください",
+  "@confirmPasswordIsRequiredErrorText": {
+    "description": "Used as an error text when PasswordInput used to confirm the password is empty.",
+    "placeholders": {}
+  },
+  "continueText": "続行",
+  "@continueText": {
+    "description": "Used as a label of the submit button that takes the user to the next step of the authenticatiion flow.",
+    "placeholders": {}
+  },
+  "countryCode": "コード",
+  "@countryCode": {
+    "description": "Used as a placeholder of the country code input.",
+    "placeholders": {}
+  },
+  "credentialAlreadyInUseErrorText": "このプロバイダは、すでに別のユーザー アカウントに関連付けられています。",
+  "@credentialAlreadyInUseErrorText": {
+    "description": "Error text that is show when user tries to use an OAuth provider that doesn't belong to currently signed in user account.",
+    "placeholders": {}
+  },
+  "deleteAccount": "アカウントを削除",
+  "@deleteAccount": {
+    "description": "Used as a label of the DeleteAccountButton.",
+    "placeholders": {}
+  },
+  "differentMethodsSignInTitleText": "次のいずれかの方法を使用してログインします",
+  "@differentMethodsSignInTitleText": {
+    "description": "Used as a title of the dialog that indicates that there are different available sign in methods for a provided email.",
+    "placeholders": {}
+  },
+  "disable": "無効にする",
+  "@disable": {
+    "description": "Button label that suggests to disable 2FA",
+    "placeholders": {}
+  },
+  "eastInitialLabel": "E",
+  "@eastInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "emailInputLabel": "メール",
+  "@emailInputLabel": {
+    "description": "Used as a label of the EmailInput.",
+    "placeholders": {}
+  },
+  "emailIsRequiredErrorText": "メールアドレスは必須です",
+  "@emailIsRequiredErrorText": {
+    "description": "Used as an error text of the EmailInput when the email is empty.",
+    "placeholders": {}
+  },
+  "emailLinkSignInButtonLabel": "マジックリンクでログイン",
+  "@emailLinkSignInButtonLabel": {
+    "description": "Used as a label of the EmailLinkSignInButton.",
+    "placeholders": {}
+  },
+  "emailTakenErrorText": "このようなメールアドレスを持つアカウントはすでに存在します",
+  "@emailTakenErrorText": {
+    "description": "Used as an error message when the user tries to sign up with an email that is already used.",
+    "placeholders": {}
+  },
+  "enable": "有効にする",
+  "@enable": {
+    "description": "Button label that suggests to enable 2FA",
+    "placeholders": {}
+  },
+  "enableMoreSignInMethods": "その他のログイン方法を有効にします",
+  "@enableMoreSignInMethods": {
+    "description": "Used as a hint to connect more providers.",
+    "placeholders": {}
+  },
+  "enterSMSCodeText": "SMS コードを入力",
+  "@enterSMSCodeText": {
+    "description": "Used as a label of the SMSCodeInput.",
+    "placeholders": {}
+  },
+  "findProviderForEmailTitleText": "メールアドレスを入力して続行",
+  "@findProviderForEmailTitleText": {
+    "description": "Used as a title of the FindProvidersForEmailView.",
+    "placeholders": {}
+  },
+  "forgotPasswordButtonLabel": "パスワードをお忘れの場合",
+  "@forgotPasswordButtonLabel": {
+    "description": "Used as a label of the ForgotPasswordButton.",
+    "placeholders": {}
+  },
+  "forgotPasswordHintText": "メールアドレスを入力してください。パスワードを再設定するためのリンクが送信されます",
+  "@forgotPasswordHintText": {
+    "description": "Used as a hint on a ForgotPasswordView.",
+    "placeholders": {}
+  },
+  "forgotPasswordViewTitle": "パスワードをお忘れの場合",
+  "@forgotPasswordViewTitle": {
+    "description": "Used as a title of the ForgotPasswordView.",
+    "placeholders": {}
+  },
+  "geopointLabel": "地理位置情報",
+  "@geopointLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "goBackButtonLabel": "戻る",
+  "@goBackButtonLabel": {
+    "description": "Used as a label of the back button.",
+    "placeholders": {}
+  },
+  "@hashCode": {
+    "description": "The hash code for this object.",
+    "placeholders": {}
+  },
+  "invalidCountryCode": "コードが無効です",
+  "@invalidCountryCode": {
+    "description": "Used as an error text when provide country code is invalid.",
+    "placeholders": {}
+  },
+  "isNotAValidEmailErrorText": "有効なメールアドレスを入力してください",
+  "@isNotAValidEmailErrorText": {
+    "description": "Used as an error text of the EmailInput if the provided email is not valid.",
+    "placeholders": {}
+  },
+  "latitudeLabel": "緯度",
+  "@latitudeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "linkEmailButtonText": "次へ",
+  "@linkEmailButtonText": {
+    "description": "Used as a label of the EmailForm submit button when the AuthAction is AuthAction.link.",
+    "placeholders": {}
+  },
+  "longitudeLabel": "経度",
+  "@longitudeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "mapLabel": "地図",
+  "@mapLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "mfaTitle": "2 段階認証プロセス",
+  "@mfaTitle": {
+    "description": "2-step verification settings tile title.",
+    "placeholders": {}
+  },
+  "name": "名前",
+  "@name": {
+    "description": "Used as a placeholder of the EditableUserDisplayName.",
+    "placeholders": {}
+  },
+  "northInitialLabel": "N",
+  "@northInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "nullLabel": "null",
+  "@nullLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "numberLabel": "番号",
+  "@numberLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "off": "オフ",
+  "@off": {
+    "description": "Label that suggests that 2-step verification is not enabled",
+    "placeholders": {}
+  },
+  "on": "オン",
+  "@on": {
+    "description": "Label that suggests that 2-step verification is enabled",
+    "placeholders": {}
+  },
+  "passwordInputLabel": "パスワード",
+  "@passwordInputLabel": {
+    "description": "Used as a label of the PasswordInput.",
+    "placeholders": {}
+  },
+  "passwordIsRequiredErrorText": "パスワードは必須です",
+  "@passwordIsRequiredErrorText": {
+    "description": "Used as an error text when PasswordInput is empty.",
+    "placeholders": {}
+  },
+  "passwordResetEmailSentText": "パスワードを再設定するためのリンクをメールでお送りしました。メールをご確認ください。",
+  "@passwordResetEmailSentText": {
+    "description": "Indicates that the password reset email was sent.",
+    "placeholders": {}
+  },
+  "phoneInputLabel": "電話番号",
+  "@phoneInputLabel": {
+    "description": "Used as a label of the PhoneInput.",
+    "placeholders": {}
+  },
+  "phoneNumberInvalidErrorText": "電話番号が無効です",
+  "@phoneNumberInvalidErrorText": {
+    "description": "Used as an error text when PhoneInput contains an invalid phone number.",
+    "placeholders": {}
+  },
+  "phoneNumberIsRequiredErrorText": "電話番号は必須です",
+  "@phoneNumberIsRequiredErrorText": {
+    "description": "Used as an error text when PhoneInput is empty.",
+    "placeholders": {}
+  },
+  "phoneVerificationViewTitleText": "電話番号を入力してください",
+  "@phoneVerificationViewTitleText": {
+    "description": "Used as a title of the PhoneInputView.",
+    "placeholders": {}
+  },
+  "profile": "プロファイル",
+  "@profile": {
+    "description": "A title of the ProfileScreen.",
+    "placeholders": {}
+  },
+  "provideEmail": "メールアドレスとパスワードの入力",
+  "@provideEmail": {
+    "description": "Used as a title of the EmailSignUpDialog.",
+    "placeholders": {}
+  },
+  "referenceLabel": "リファレンス",
+  "@referenceLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "registerActionText": "登録",
+  "@registerActionText": {
+    "description": "Used as a label of the EmailForm submit button when the AuthAction is AuthAction.signUp.",
+    "placeholders": {}
+  },
+  "registerHintText": "アカウントをお持ちでない場合",
+  "@registerHintText": {
+    "description": "Used as a hint text of the LoginView suggesting to create a new account.",
+    "placeholders": {}
+  },
+  "registerText": "登録",
+  "@registerText": {
+    "description": "Used as a title of the LoginView when AuthAction is AuthAction.signUp.",
+    "placeholders": {}
+  },
+  "resetPasswordButtonLabel": "パスワードを再設定",
+  "@resetPasswordButtonLabel": {
+    "description": "Used as a label of submit button of the ForgotPasswordView.",
+    "placeholders": {}
+  },
+  "@runtimeType": {
+    "description": "A representation of the runtime type of the object.",
+    "placeholders": {}
+  },
+  "sendLinkButtonLabel": "マジックリンクで送信",
+  "@sendLinkButtonLabel": {
+    "description": "Used as a label of the submit button on the EmailLinkSignInView.",
+    "placeholders": {}
+  },
+  "signInActionText": "ログイン",
+  "@signInActionText": {
+    "description": "Used as a label of the EmailForm submit button when the AuthAction is AuthAction.signIn.",
+    "placeholders": {}
+  },
+  "signInHintText": "すでにアカウントをお持ちの場合",
+  "@signInHintText": {
+    "description": "Used as a hint text of the LoginView suggesting to sign in instead of registering a new account.",
+    "placeholders": {}
+  },
+  "signInMethods": "ログイン方法",
+  "@signInMethods": {
+    "description": "Used as a label of the row showing connected providers.",
+    "placeholders": {}
+  },
+  "signInText": "ログイン",
+  "@signInText": {
+    "description": "Used as a title of the LoginView when AuthAction is AuthAction.signIn.",
+    "placeholders": {}
+  },
+  "signInWithAppleButtonText": "Apple アカウントでログイン",
+  "@signInWithAppleButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Apple provider.",
+    "placeholders": {}
+  },
+  "signInWithEmailLinkSentText": "マジックリンクをメールでお送りしました。メールを確認し、リンクを使用してログインしてください",
+  "@signInWithEmailLinkSentText": {
+    "description": "Indicates that email with a sign in link was sent.",
+    "placeholders": {}
+  },
+  "signInWithEmailLinkViewTitleText": "マジックリンクでログイン",
+  "@signInWithEmailLinkViewTitleText": {
+    "description": "Used as a title on the EmailLinkSignInView.",
+    "placeholders": {}
+  },
+  "signInWithFacebookButtonText": "Facebook でログイン",
+  "@signInWithFacebookButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Facebook provider.",
+    "placeholders": {}
+  },
+  "signInWithGoogleButtonText": "Google でログイン",
+  "@signInWithGoogleButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Google provider.",
+    "placeholders": {}
+  },
+  "signInWithPhoneButtonText": "携帯電話を使用してログイン",
+  "@signInWithPhoneButtonText": {
+    "description": "Used as a label of the PhoneVerificationButton.",
+    "placeholders": {}
+  },
+  "signInWithTwitterButtonText": "Twitter でログイン",
+  "@signInWithTwitterButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Twitter provider.",
+    "placeholders": {}
+  },
+  "signOutButtonText": "ログアウト",
+  "@signOutButtonText": {
+    "description": "Used as a label of the SignOutButton.",
+    "placeholders": {}
+  },
+  "smsAutoresolutionFailedError": "SMS コードを自動で解決できませんでした。コードを手動で入力してください",
+  "@smsAutoresolutionFailedError": {
+    "description": "Used as an error text when AutoresolutionFailedException is being thrown.",
+    "placeholders": {}
+  },
+  "southInitialLabel": "S",
+  "@southInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "stringLabel": "文字列",
+  "@stringLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "timestampLabel": "タイムスタンプ",
+  "@timestampLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "typeLabel": "タイプ",
+  "@typeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "unknownError": "不明なエラーが発生しました",
+  "@unknownError": {
+    "description": "Used as a generic error message when unable to resolve error details from Exception or FirebaseAuthException.",
+    "placeholders": {}
+  },
+  "updateLabel": "アップデート",
+  "@updateLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "userNotFoundErrorText": "アカウントが存在しません",
+  "@userNotFoundErrorText": {
+    "description": "Used as an error message when the account for provided email was not found.",
+    "placeholders": {}
+  },
+  "valueLabel": "値",
+  "@valueLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "verifyCodeButtonText": "確認",
+  "@verifyCodeButtonText": {
+    "description": "Used as a label of the submit button of the SMSCodeInputView.",
+    "placeholders": {}
+  },
+  "verifyingSMSCodeText": "SMS コードを確認しています...",
+  "@verifyingSMSCodeText": {
+    "description": "Used as a status text of the SMSCodeInput when code verification is in progress.",
+    "placeholders": {}
+  },
+  "verifyItsYouText": "ご本人確認",
+  "@verifyItsYouText": {
+    "description": "Used as a title of the dialog that requires re-authentication of the user when performing destructive actions.",
+    "placeholders": {}
+  },
+  "verifyPhoneNumberButtonText": "次へ",
+  "@verifyPhoneNumberButtonText": {
+    "description": "Used as a label of the submit button of the PhoneInputView.",
+    "placeholders": {}
+  },
+  "westInitialLabel": "W",
+  "@westInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "wrongOrNoPasswordErrorText": "パスワードが無効か、ユーザーにパスワードが設定されていません",
+  "@wrongOrNoPasswordErrorText": {
+    "description": "Used as an error text of the PasswordInput when provided password is empty or is not correct.",
+    "placeholders": {}
+  }
+}
