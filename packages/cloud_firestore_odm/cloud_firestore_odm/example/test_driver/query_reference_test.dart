@@ -198,7 +198,7 @@ void main() {
       );
 
       expect(
-        snapshot.docs.map((document) => document.data.value),
+        snapshot.docs.map((document) => document.data.number),
         everyElement(anyOf(1, 2, 3)),
       );
     });

@@ -148,8 +148,8 @@ abstract class ConflictDocumentReference
   ///
   /// If no document exists yet, the update will fail.
   Future<void> update({
-    int value,
-    FieldValue valueFieldValue,
+    num number,
+    FieldValue numberFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -157,8 +157,8 @@ abstract class ConflictDocumentReference
   /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
-    int value,
-    FieldValue valueFieldValue,
+    num number,
+    FieldValue numberFieldValue,
   });
 }
 
@@ -191,16 +191,16 @@ class _$ConflictDocumentReference
   }
 
   Future<void> update({
-    Object? value = _sentinel,
-    FieldValue? valueFieldValue,
+    Object? number = _sentinel,
+    FieldValue? numberFieldValue,
   }) async {
     assert(
-      value == _sentinel || valueFieldValue == null,
-      "Cannot specify both value and valueFieldValue",
+      number == _sentinel || numberFieldValue == null,
+      "Cannot specify both number and numberFieldValue",
     );
     final json = {
-      if (value != _sentinel) 'value': value as int,
-      if (valueFieldValue != null) 'value': valueFieldValue,
+      if (number != _sentinel) 'number': number as num,
+      if (numberFieldValue != null) 'number': numberFieldValue,
     };
 
     return reference.update(json);
@@ -208,16 +208,16 @@ class _$ConflictDocumentReference
 
   void transactionUpdate(
     Transaction transaction, {
-    Object? value = _sentinel,
-    FieldValue? valueFieldValue,
+    Object? number = _sentinel,
+    FieldValue? numberFieldValue,
   }) {
     assert(
-      value == _sentinel || valueFieldValue == null,
-      "Cannot specify both value and valueFieldValue",
+      number == _sentinel || numberFieldValue == null,
+      "Cannot specify both number and numberFieldValue",
     );
     final json = {
-      if (value != _sentinel) 'value': value as int,
-      if (valueFieldValue != null) 'value': valueFieldValue,
+      if (number != _sentinel) 'number': number as num,
+      if (numberFieldValue != null) 'number': numberFieldValue,
     };
 
     transaction.update(reference, json);
@@ -319,16 +319,16 @@ abstract class ConflictQuery
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
-  ConflictQuery whereValue({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
+  ConflictQuery whereNumber({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
   });
 
   ConflictQuery orderByDocumentId({
@@ -343,12 +343,12 @@ abstract class ConflictQuery
     ConflictDocumentSnapshot? startAfterDocument,
   });
 
-  ConflictQuery orderByValue({
+  ConflictQuery orderByNumber({
     bool descending = false,
-    int startAt,
-    int startAfter,
-    int endAt,
-    int endBefore,
+    num startAt,
+    num startAfter,
+    num endAt,
+    num endBefore,
     ConflictDocumentSnapshot? startAtDocument,
     ConflictDocumentSnapshot? endAtDocument,
     ConflictDocumentSnapshot? endBeforeDocument,
@@ -534,21 +534,21 @@ class _$ConflictQuery extends QueryReference<Conflict, ConflictQuerySnapshot>
     );
   }
 
-  ConflictQuery whereValue({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
+  ConflictQuery whereNumber({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
   }) {
     return _$ConflictQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$ConflictFieldMap['value']!,
+        _$ConflictFieldMap['number']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -635,7 +635,7 @@ class _$ConflictQuery extends QueryReference<Conflict, ConflictQuerySnapshot>
     );
   }
 
-  ConflictQuery orderByValue({
+  ConflictQuery orderByNumber({
     bool descending = false,
     Object? startAt = _sentinel,
     Object? startAfter = _sentinel,
@@ -646,7 +646,7 @@ class _$ConflictQuery extends QueryReference<Conflict, ConflictQuerySnapshot>
     ConflictDocumentSnapshot? endBeforeDocument,
     ConflictDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$ConflictFieldMap['value']!,
+    final query = $referenceWithoutCursor.orderBy(_$ConflictFieldMap['number']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -806,13 +806,13 @@ class ConflictQueryDocumentSnapshot
 // **************************************************************************
 
 Conflict _$ConflictFromJson(Map<String, dynamic> json) => Conflict(
-      json['value'] as int,
+      json['number'] as num,
     );
 
 const _$ConflictFieldMap = <String, String>{
-  'value': 'value',
+  'number': 'number',
 };
 
 Map<String, dynamic> _$ConflictToJson(Conflict instance) => <String, dynamic>{
-      'value': instance.value,
+      'number': instance.number,
     };
