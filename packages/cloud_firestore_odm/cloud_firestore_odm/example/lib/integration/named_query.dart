@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'named_query.g.dart';
 
-@NamedQuery<Conflict>('conflict-query')
+@NamedQuery<Conflict>('named-bundle-test-4')
 @Collection<Conflict>('firestore-example-app/42/named-query-conflict')
 @JsonSerializable()
 class Conflict {

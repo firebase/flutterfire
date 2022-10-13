@@ -14,8 +14,15 @@ class NamedQueryTemplate {
 extension ${data.namedQueryExtensionName} on FirebaseFirestore {
   /// Performs [FirebaseFirestore.namedQueryGet] and decode the result into
   /// a [${data.type}] snashot.
-  Future<${data.querySnapshotName}> ${data.namedQueryGetName}() async {
-    final snapshot = await namedQueryGet(r'${data.queryName}');
+  Future<${data.querySnapshotName}> ${data.namedQueryGetName}({
+    GetOptions options = const GetOptions(),
+  }) async {
+    final snapshot = await namedQueryWithConverterGet(
+      r'${data.queryName}',
+      fromFirestore: ${data.collectionReferenceInterfaceName}.fromFirestore,
+      toFirestore: ${data.collectionReferenceInterfaceName}.toFirestore,
+      options: options,
+    );
     return ${data.querySnapshotName}._fromQuerySnapshot(snapshot);
   }
 }

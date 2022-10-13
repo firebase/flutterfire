@@ -127,26 +127,6 @@ const _sentinel = _Sentinel();
 
     for (final namedQuery in globalData.namedQueries) {
       yield NamedQueryTemplate(namedQuery, globalData);
-
-      // // It is safe to generate snapshots here and in [generateForData]
-      // // as parse_generator will filter duplicate generations.
-      // yield QuerySnapshotTemplate(
-      //   documentSnapshotName: namedQuery.documentSnapshotName,
-      //   queryDocumentSnapshotName: namedQuery.queryDocumentSnapshotName,
-      //   querySnapshotName: namedQuery.querySnapshotName,
-      //   type: namedQuery.type,
-      // );
-      // yield QueryDocumentSnapshotTemplate(
-      //   documentSnapshotName: namedQuery.documentSnapshotName,
-      //   documentReferenceName: namedQuery.documentReferenceName,
-      //   queryDocumentSnapshotName: namedQuery.queryDocumentSnapshotName,
-      //   type: namedQuery.type,
-      // );
-      // yield DocumentSnapshotTemplate(
-      //   documentSnapshotName: namedQuery.documentSnapshotName,
-      //   documentReferenceName: namedQuery.documentReferenceName,
-      //   type: namedQuery.type,
-      // );
     }
   }
 

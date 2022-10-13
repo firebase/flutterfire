@@ -17,12 +17,19 @@ class _Sentinel {
 
 const _sentinel = _Sentinel();
 
-/// Adds [conflictQueryGet] to [FirebaseFirestore].
-extension ConflictQueryExtrension on FirebaseFirestore {
+/// Adds [namedBundleTest4Get] to [FirebaseFirestore].
+extension NamedBundleTest4Extrension on FirebaseFirestore {
   /// Performs [FirebaseFirestore.namedQueryGet] and decode the result into
   /// a [Conflict] snashot.
-  Future<ConflictQuerySnapshot> conflictQueryGet() async {
-    final snapshot = await namedQueryGet(r'conflict-query');
+  Future<ConflictQuerySnapshot> namedBundleTest4Get({
+    GetOptions options = const GetOptions(),
+  }) async {
+    final snapshot = await namedQueryWithConverterGet(
+      r'named-bundle-test-4',
+      fromFirestore: ConflictCollectionReference.fromFirestore,
+      toFirestore: ConflictCollectionReference.toFirestore,
+      options: options,
+    );
     return ConflictQuerySnapshot._fromQuerySnapshot(snapshot);
   }
 }
