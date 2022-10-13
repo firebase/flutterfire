@@ -10,6 +10,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
@@ -482,6 +485,32 @@ public class FlutterFirebaseFirestorePlugin
     return taskCompletionSource.getTask();
   }
 
+  private Task<Map<String, Object>> aggregateQuery(Map<String, Object> arguments) {
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            Query query = (Query) Objects.requireNonNull(arguments.get("query"));
+            // NOTE: There is only "server" as the source at the moment. So this
+            // is unused for the time being. Using "AggregateSource.SERVER".
+            // String source = (String) Objects.requireNonNull(arguments.get("source"));
+
+            AggregateQuery aggregateQuery = query.count();
+            AggregateQuerySnapshot aggregateQuerySnapshot =
+                Tasks.await(aggregateQuery.get(AggregateSource.SERVER));
+            Map<String, Object> result = new HashMap<>();
+            result.put("count", aggregateQuerySnapshot.getCount());
+            taskCompletionSource.setResult(result);
+
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
   @Override
   public void onMethodCall(MethodCall call, @NonNull final MethodChannel.Result result) {
     Task<?> methodCallTask;
@@ -559,6 +588,9 @@ public class FlutterFirebaseFirestorePlugin
         break;
       case "Firestore#waitForPendingWrites":
         methodCallTask = waitForPendingWrites(call.arguments());
+        break;
+      case "AggregateQuery#count":
+        methodCallTask = aggregateQuery(call.arguments());
         break;
       default:
         result.notImplemented();

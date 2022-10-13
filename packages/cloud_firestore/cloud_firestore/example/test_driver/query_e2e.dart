@@ -1827,9 +1827,7 @@ void runQueryTests() {
             snapshot.count,
             2,
           );
-          // TODO(russellwheatley): remove when android code implemented
         },
-        skip: defaultTargetPlatform == TargetPlatform.android,
       );
     });
   });
