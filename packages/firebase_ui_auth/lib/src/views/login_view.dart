@@ -50,6 +50,9 @@ class LoginView extends StatefulWidget {
 
   final List<AuthProvider> providers;
 
+  /// A label that would be used for the "Sign in" button.
+  final String? actionButtonLabelOverride;
+
   /// {@macro ui.auth.views.login_view}
   const LoginView({
     Key? key,
@@ -62,6 +65,7 @@ class LoginView extends StatefulWidget {
     this.showAuthActionSwitch,
     this.footerBuilder,
     this.subtitleBuilder,
+    this.actionButtonLabelOverride,
   }) : super(key: key);
 
   @override
@@ -214,6 +218,7 @@ class _LoginViewState extends State<LoginView> {
                   action: _action,
                   provider: provider,
                   email: widget.email,
+                  actionButtonLabelOverride: widget.actionButtonLabelOverride,
                 )
               ] else if (provider is PhoneAuthProvider) ...[
                 const SizedBox(height: 8),

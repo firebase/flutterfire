@@ -15,12 +15,16 @@ class ReauthenticateView extends StatelessWidget {
   /// A callback that is being called when the user has successfuly signed in.
   final VoidCallback? onSignedIn;
 
+  /// A label that would be used for the "Sign in" button.
+  final String? actionButtonLabelOverride;
+
   /// {@macro ui.auth.views.reauthenticate_view}
   const ReauthenticateView({
     Key? key,
     required this.providers,
     this.auth,
     this.onSignedIn,
+    this.actionButtonLabelOverride,
   }) : super(key: key);
 
   @override
@@ -53,6 +57,8 @@ class ReauthenticateView extends StatelessWidget {
         action: AuthAction.signIn,
         providers: providers,
         showTitle: false,
+        showAuthActionSwitch: false,
+        actionButtonLabelOverride: actionButtonLabelOverride,
       ),
       listener: (oldState, newState, ctrl) {
         if (newState is SignedIn) {

@@ -93,6 +93,9 @@ class EmailForm extends StatelessWidget {
   /// An email that should be pre-filled in the form.
   final String? email;
 
+  /// A label that would be used for the "Sign in" button.
+  final String? actionButtonLabelOverride;
+
   /// {@macro ui.auth.widgets.email_form}
   const EmailForm({
     Key? key,
@@ -101,6 +104,7 @@ class EmailForm extends StatelessWidget {
     this.provider,
     this.onSubmit,
     this.email,
+    this.actionButtonLabelOverride,
   }) : super(key: key);
 
   @override
@@ -111,6 +115,7 @@ class EmailForm extends StatelessWidget {
       provider: provider,
       email: email,
       onSubmit: onSubmit,
+      actionButtonLabelOverride: actionButtonLabelOverride,
     );
 
     return AuthFlowBuilder<EmailAuthController>(
@@ -132,6 +137,8 @@ class _SignInFormContent extends StatefulWidget {
   final String? email;
   final EmailAuthProvider? provider;
 
+  final String? actionButtonLabelOverride;
+
   const _SignInFormContent({
     Key? key,
     this.auth,
@@ -139,6 +146,7 @@ class _SignInFormContent extends StatefulWidget {
     this.action,
     this.email,
     this.provider,
+    this.actionButtonLabelOverride,
   }) : super(key: key);
 
   @override
@@ -161,7 +169,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
 
     switch (ctrl.action) {
       case AuthAction.signIn:
-        return l.signInActionText;
+        return widget.actionButtonLabelOverride ?? l.signInActionText;
       case AuthAction.signUp:
         return l.registerActionText;
       case AuthAction.link:

@@ -20,12 +20,16 @@ class ReauthenticateDialog extends StatelessWidget {
   /// A callback that is being called when the user has successfully signed in.
   final VoidCallback? onSignedIn;
 
+  /// A label that would be used for the "Sign in" button.
+  final String? actionButtonLabelOverride;
+
   /// {@macro ui.auth.widgets.reauthenticate_dialog}
   const ReauthenticateDialog({
     Key? key,
     required this.providers,
     this.auth,
     this.onSignedIn,
+    this.actionButtonLabelOverride,
   }) : super(key: key);
 
   @override

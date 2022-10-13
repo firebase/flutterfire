@@ -731,11 +731,14 @@ class ProfileScreen extends MultiProviderScreen {
   }) : super(key: key, providers: providers, auth: auth);
 
   Future<bool> _reauthenticate(BuildContext context) {
+    final l = FirebaseUILocalizations.labelsOf(context);
+
     return showReauthenticateDialog(
       context: context,
       providers: providers,
       auth: auth,
       onSignedIn: () => Navigator.of(context).pop(true),
+      actionButtonLabelOverride: l.deleteAccount,
     );
   }
 

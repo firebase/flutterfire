@@ -15,6 +15,9 @@ Future<bool> showReauthenticateDialog({
 
   /// A callback that is being called after user has successfully signed in.
   VoidCallback? onSignedIn,
+
+  /// A label that would be used for the "Sign in" button.
+  String? actionButtonLabelOverride,
 }) async {
   final l = FirebaseUILocalizations.labelsOf(context);
 
@@ -28,6 +31,7 @@ Future<bool> showReauthenticateDialog({
         providers: providers,
         auth: auth,
         onSignedIn: onSignedIn,
+        actionButtonLabelOverride: actionButtonLabelOverride,
       ),
     ),
   );
