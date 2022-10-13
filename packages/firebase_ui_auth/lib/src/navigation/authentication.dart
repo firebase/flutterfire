@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
@@ -15,9 +16,12 @@ Future<bool> showReauthenticateDialog({
   /// A callback that is being called after user has successfully signed in.
   VoidCallback? onSignedIn,
 }) async {
+  final l = FirebaseUILocalizations.labelsOf(context);
+
   final reauthenticated = await showGeneralDialog<bool>(
     context: context,
     barrierDismissible: true,
+    barrierLabel: l.cancelLabel,
     pageBuilder: (_, __, ___) => FirebaseUIActions.inherit(
       from: context,
       child: ReauthenticateDialog(
@@ -48,9 +52,12 @@ Future<void> showDifferentMethodSignInDialog({
   /// A callback that is being called after user has successfully signed in.
   VoidCallback? onSignedIn,
 }) async {
+  final l = FirebaseUILocalizations.labelsOf(context);
+
   await showGeneralDialog(
     context: context,
     barrierDismissible: true,
+    barrierLabel: l.cancelLabel,
     pageBuilder: (context, _, __) => DifferentMethodSignInDialog(
       availableProviders: availableProviders,
       providers: providers,
