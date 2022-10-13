@@ -102,7 +102,7 @@ class SignInScreen extends MultiProviderScreen {
     this.sideBuilder,
     this.oauthButtonVariant = OAuthButtonVariant.icon_and_text,
     this.desktopLayoutDirection,
-    this.resizeToAvoidBottomInset = false,
+    this.resizeToAvoidBottomInset = true,
     this.showAuthActionSwitch,
     this.email,
     this.subtitleBuilder,
