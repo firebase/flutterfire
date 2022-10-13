@@ -27,12 +27,12 @@ Future<void> testsMain() async {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   });
 
-  // collection_reference_test.main();
-  // document_reference_test.main();
+  collection_reference_test.main();
+  document_reference_test.main();
   // TODO CI tests configuration currently not compatible with widget testing
   // firestore_builder_test.main();
   query_reference_test.main();
-  // path_test.main();
+  path_test.main();
 }
 
 void main() => drive.main(testsMain);
