@@ -314,9 +314,28 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 - (void)referenceUpdateMetadata:(id)arguments
            withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];
-  FIRStorageMetadata *metadata =
-      [self FIRStorageMetadataFromNSDictionary:arguments[kFLTFirebaseStorageKeyMetadata]
-                                      fullPath:[reference fullPath]];
+  FIRStorageMetadata *metadata = [[FIRStorageMetadata alloc] init];
+  NSDictionary *dictionary = arguments[kFLTFirebaseStorageKeyMetadata];
+
+  if (dictionary[kFLTFirebaseStorageKeyCacheControl] != [NSNull null]) {
+    metadata.cacheControl = dictionary[kFLTFirebaseStorageKeyCacheControl];
+  }
+  if (dictionary[kFLTFirebaseStorageKeyContentDisposition] != [NSNull null]) {
+    metadata.contentDisposition = dictionary[kFLTFirebaseStorageKeyContentDisposition];
+  }
+  if (dictionary[kFLTFirebaseStorageKeyContentEncoding] != [NSNull null]) {
+    metadata.contentEncoding = dictionary[kFLTFirebaseStorageKeyContentEncoding];
+  }
+  if (dictionary[kFLTFirebaseStorageKeyContentLanguage] != [NSNull null]) {
+    metadata.contentLanguage = dictionary[kFLTFirebaseStorageKeyContentLanguage];
+  }
+  if (dictionary[kFLTFirebaseStorageKeyContentType] != [NSNull null]) {
+    metadata.contentType = dictionary[kFLTFirebaseStorageKeyContentType];
+  }
+  if (dictionary[kFLTFirebaseStorageKeyCustomMetadata] != [NSNull null]) {
+    metadata.customMetadata = dictionary[kFLTFirebaseStorageKeyCustomMetadata];
+  }
+
   [reference updateMetadata:metadata
                  completion:^(FIRStorageMetadata *updatedMetadata, NSError *error) {
                    if (error != nil) {
