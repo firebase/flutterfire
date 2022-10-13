@@ -225,8 +225,8 @@ FlutterStandardMethodCodec *_codec;
                              withMethodCallResult:methodCallResult];
   } else if ([@"LoadBundle#snapshots" isEqualToString:call.method]) {
     [self setupLoadBundleListener:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"AggregateQuery#countGet" isEqualToString:call.method]) {
-    [self aggregateQueryCountGet:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"AggregateQuery#count" isEqualToString:call.method]) {
+    [self aggregateQuery:call.arguments withMethodCallResult:methodCallResult];
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
   }
@@ -537,14 +537,12 @@ FlutterStandardMethodCodec *_codec;
   }];
 }
 
-- (void)aggregateQueryCountGet:(id)arguments
-          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRFirestore *firestore = arguments[@"firestore"];
+- (void)aggregateQuery:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRQuery *query = arguments[@"query"];
 
   // NOTE: There is only "server" as the source at the moment. So this
   // is unused for the time being. Using "FIRAggregateSourceServer".
-  NSString *source = arguments[@"source"];
+  // NSString *source = arguments[@"source"];
 
   FIRAggregateQuery *aggregateQuery = [query count];
 
