@@ -161,8 +161,8 @@ class _LoginViewState extends State<LoginView> {
           _action,
         ),
       if (_showAuthActionSwitch) ...[
-        RichText(
-          text: TextSpan(
+        Text.rich(
+          TextSpan(
             children: [
               TextSpan(
                 text: '$hint ',
