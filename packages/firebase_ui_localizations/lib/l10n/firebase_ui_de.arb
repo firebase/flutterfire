@@ -1,0 +1,427 @@
+{
+  "@@locale": "de",
+  "@@last_modified": "2022-09-14T18:25:39.449",
+  "accessDisabledErrorText": "Der Zugriff auf dieses Konto wurde vorübergehend gesperrt",
+  "@accessDisabledErrorText": {
+    "description": "Used as an error message when account is blocked and user tries to perform some actions with the account (e.g. unlinking a credential).",
+    "placeholders": {}
+  },
+  "arrayLabel": "array",
+  "@arrayLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "booleanLabel": "boolean",
+  "@booleanLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "cancelLabel": "cancel",
+  "@cancelLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "chooseACountry": "Land auswählen",
+  "@chooseACountry": {
+    "description": "Used as a label of the country code picker dropdown.",
+    "placeholders": {}
+  },
+  "confirmPasswordDoesNotMatchErrorText": "Die Passwörter stimmen nicht überein",
+  "@confirmPasswordDoesNotMatchErrorText": {
+    "description": "Used as an error text when provided passwords do not match.",
+    "placeholders": {}
+  },
+  "confirmPasswordInputLabel": "Passwort bestätigen",
+  "@confirmPasswordInputLabel": {
+    "description": "Used as a label of the PasswordInput that confirms a provided password.",
+    "placeholders": {}
+  },
+  "confirmPasswordIsRequiredErrorText": "Passwort bestätigen",
+  "@confirmPasswordIsRequiredErrorText": {
+    "description": "Used as an error text when PasswordInput used to confirm the password is empty.",
+    "placeholders": {}
+  },
+  "continueText": "Weiter",
+  "@continueText": {
+    "description": "Used as a label of the submit button that takes the user to the next step of the authenticatiion flow.",
+    "placeholders": {}
+  },
+  "countryCode": "Code",
+  "@countryCode": {
+    "description": "Used as a placeholder of the country code input.",
+    "placeholders": {}
+  },
+  "credentialAlreadyInUseErrorText": "Dieser Anbieter ist mit einem anderen Nutzerkonto verknüpft.",
+  "@credentialAlreadyInUseErrorText": {
+    "description": "Error text that is show when user tries to use an OAuth provider that doesn't belong to currently signed in user account.",
+    "placeholders": {}
+  },
+  "deleteAccount": "Konto löschen",
+  "@deleteAccount": {
+    "description": "Used as a label of the DeleteAccountButton.",
+    "placeholders": {}
+  },
+  "differentMethodsSignInTitleText": "Eine der folgenden Anmeldemethoden verwenden",
+  "@differentMethodsSignInTitleText": {
+    "description": "Used as a title of the dialog that indicates that there are different available sign in methods for a provided email.",
+    "placeholders": {}
+  },
+  "disable": "Deaktivieren",
+  "@disable": {
+    "description": "Button label that suggests to disable 2FA",
+    "placeholders": {}
+  },
+  "eastInitialLabel": "E",
+  "@eastInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "emailInputLabel": "E-Mail",
+  "@emailInputLabel": {
+    "description": "Used as a label of the EmailInput.",
+    "placeholders": {}
+  },
+  "emailIsRequiredErrorText": "E-Mail-Adresse ist erforderlich",
+  "@emailIsRequiredErrorText": {
+    "description": "Used as an error text of the EmailInput when the email is empty.",
+    "placeholders": {}
+  },
+  "emailLinkSignInButtonLabel": "Mit Magic Link anmelden",
+  "@emailLinkSignInButtonLabel": {
+    "description": "Used as a label of the EmailLinkSignInButton.",
+    "placeholders": {}
+  },
+  "emailTakenErrorText": "Konto mit dieser E-Mail-Adresse ist bereits vorhanden",
+  "@emailTakenErrorText": {
+    "description": "Used as an error message when the user tries to sign up with an email that is already used.",
+    "placeholders": {}
+  },
+  "enable": "Aktivieren",
+  "@enable": {
+    "description": "Button label that suggests to enable 2FA",
+    "placeholders": {}
+  },
+  "enableMoreSignInMethods": "Weitere Anmeldemethoden aktivieren",
+  "@enableMoreSignInMethods": {
+    "description": "Used as a hint to connect more providers.",
+    "placeholders": {}
+  },
+  "enterSMSCodeText": "SMS-Code eingeben",
+  "@enterSMSCodeText": {
+    "description": "Used as a label of the SMSCodeInput.",
+    "placeholders": {}
+  },
+  "findProviderForEmailTitleText": "E-Mail-Adresse eingeben, um fortzufahren",
+  "@findProviderForEmailTitleText": {
+    "description": "Used as a title of the FindProvidersForEmailView.",
+    "placeholders": {}
+  },
+  "forgotPasswordButtonLabel": "Passwort vergessen?",
+  "@forgotPasswordButtonLabel": {
+    "description": "Used as a label of the ForgotPasswordButton.",
+    "placeholders": {}
+  },
+  "forgotPasswordHintText": "Geben Sie Ihre E-Mail-Adresse ein. Wir senden Ihnen dann einen Link zum Zurücksetzen Ihres Passworts.",
+  "@forgotPasswordHintText": {
+    "description": "Used as a hint on a ForgotPasswordView.",
+    "placeholders": {}
+  },
+  "forgotPasswordViewTitle": "Passwort vergessen",
+  "@forgotPasswordViewTitle": {
+    "description": "Used as a title of the ForgotPasswordView.",
+    "placeholders": {}
+  },
+  "geopointLabel": "geopoint",
+  "@geopointLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "goBackButtonLabel": "Zurück",
+  "@goBackButtonLabel": {
+    "description": "Used as a label of the back button.",
+    "placeholders": {}
+  },
+  "@hashCode": {
+    "description": "The hash code for this object.",
+    "placeholders": {}
+  },
+  "invalidCountryCode": "Ungültiger Code",
+  "@invalidCountryCode": {
+    "description": "Used as an error text when provide country code is invalid.",
+    "placeholders": {}
+  },
+  "isNotAValidEmailErrorText": "Geben Sie eine gültige E-Mail-Adresse an",
+  "@isNotAValidEmailErrorText": {
+    "description": "Used as an error text of the EmailInput if the provided email is not valid.",
+    "placeholders": {}
+  },
+  "latitudeLabel": "latitude",
+  "@latitudeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "linkEmailButtonText": "Weiter",
+  "@linkEmailButtonText": {
+    "description": "Used as a label of the EmailForm submit button when the AuthAction is AuthAction.link.",
+    "placeholders": {}
+  },
+  "longitudeLabel": "longitude",
+  "@longitudeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "mapLabel": "map",
+  "@mapLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "mfaTitle": "Bestätigung in zwei Schritten",
+  "@mfaTitle": {
+    "description": "2-step verification settings tile title.",
+    "placeholders": {}
+  },
+  "name": "Name",
+  "@name": {
+    "description": "Used as a placeholder of the EditableUserDisplayName.",
+    "placeholders": {}
+  },
+  "northInitialLabel": "N",
+  "@northInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "nullLabel": "null",
+  "@nullLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "numberLabel": "number",
+  "@numberLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "off": "Aus",
+  "@off": {
+    "description": "Label that suggests that 2-step verification is not enabled",
+    "placeholders": {}
+  },
+  "on": "An",
+  "@on": {
+    "description": "Label that suggests that 2-step verification is enabled",
+    "placeholders": {}
+  },
+  "passwordInputLabel": "Passwort",
+  "@passwordInputLabel": {
+    "description": "Used as a label of the PasswordInput.",
+    "placeholders": {}
+  },
+  "passwordIsRequiredErrorText": "Passwort ist erforderlich",
+  "@passwordIsRequiredErrorText": {
+    "description": "Used as an error text when PasswordInput is empty.",
+    "placeholders": {}
+  },
+  "passwordResetEmailSentText": "Sie haben von uns eine E-Mail mit einem Link zum Zurücksetzen Ihres Passworts erhalten. Sehen Sie in Ihrem Posteingang nach.",
+  "@passwordResetEmailSentText": {
+    "description": "Indicates that the password reset email was sent.",
+    "placeholders": {}
+  },
+  "phoneInputLabel": "Telefonnummer",
+  "@phoneInputLabel": {
+    "description": "Used as a label of the PhoneInput.",
+    "placeholders": {}
+  },
+  "phoneNumberInvalidErrorText": "Telefonnummer ist ungültig",
+  "@phoneNumberInvalidErrorText": {
+    "description": "Used as an error text when PhoneInput contains an invalid phone number.",
+    "placeholders": {}
+  },
+  "phoneNumberIsRequiredErrorText": "Telefonnummer ist erforderlich",
+  "@phoneNumberIsRequiredErrorText": {
+    "description": "Used as an error text when PhoneInput is empty.",
+    "placeholders": {}
+  },
+  "phoneVerificationViewTitleText": "Telefonnummer eingeben",
+  "@phoneVerificationViewTitleText": {
+    "description": "Used as a title of the PhoneInputView.",
+    "placeholders": {}
+  },
+  "profile": "Profil",
+  "@profile": {
+    "description": "A title of the ProfileScreen.",
+    "placeholders": {}
+  },
+  "provideEmail": "E-Mail-Adresse und Passwort angeben",
+  "@provideEmail": {
+    "description": "Used as a title of the EmailSignUpDialog.",
+    "placeholders": {}
+  },
+  "referenceLabel": "reference",
+  "@referenceLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "registerActionText": "Registrieren",
+  "@registerActionText": {
+    "description": "Used as a label of the EmailForm submit button when the AuthAction is AuthAction.signUp.",
+    "placeholders": {}
+  },
+  "registerHintText": "Sie haben noch kein Konto?",
+  "@registerHintText": {
+    "description": "Used as a hint text of the LoginView suggesting to create a new account.",
+    "placeholders": {}
+  },
+  "registerText": "Registrieren",
+  "@registerText": {
+    "description": "Used as a title of the LoginView when AuthAction is AuthAction.signUp.",
+    "placeholders": {}
+  },
+  "resetPasswordButtonLabel": "Passwort zurücksetzen",
+  "@resetPasswordButtonLabel": {
+    "description": "Used as a label of submit button of the ForgotPasswordView.",
+    "placeholders": {}
+  },
+  "@runtimeType": {
+    "description": "A representation of the runtime type of the object.",
+    "placeholders": {}
+  },
+  "sendLinkButtonLabel": "Magic Link senden",
+  "@sendLinkButtonLabel": {
+    "description": "Used as a label of the submit button on the EmailLinkSignInView.",
+    "placeholders": {}
+  },
+  "signInActionText": "Anmelden",
+  "@signInActionText": {
+    "description": "Used as a label of the EmailForm submit button when the AuthAction is AuthAction.signIn.",
+    "placeholders": {}
+  },
+  "signInHintText": "Sie haben bereits ein Konto?",
+  "@signInHintText": {
+    "description": "Used as a hint text of the LoginView suggesting to sign in instead of registering a new account.",
+    "placeholders": {}
+  },
+  "signInMethods": "Anmeldemethoden",
+  "@signInMethods": {
+    "description": "Used as a label of the row showing connected providers.",
+    "placeholders": {}
+  },
+  "signInText": "Anmelden",
+  "@signInText": {
+    "description": "Used as a title of the LoginView when AuthAction is AuthAction.signIn.",
+    "placeholders": {}
+  },
+  "signInWithAppleButtonText": "Über Apple anmelden",
+  "@signInWithAppleButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Apple provider.",
+    "placeholders": {}
+  },
+  "signInWithEmailLinkSentText": "Sie haben von uns eine E-Mail mit einem Magic Link erhalten. Sehen Sie in Ihrem Posteingang nach und melden Sie sich über den Link an.",
+  "@signInWithEmailLinkSentText": {
+    "description": "Indicates that email with a sign in link was sent.",
+    "placeholders": {}
+  },
+  "signInWithEmailLinkViewTitleText": "Mit Magic Link anmelden",
+  "@signInWithEmailLinkViewTitleText": {
+    "description": "Used as a title on the EmailLinkSignInView.",
+    "placeholders": {}
+  },
+  "signInWithFacebookButtonText": "Über Facebook anmelden",
+  "@signInWithFacebookButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Facebook provider.",
+    "placeholders": {}
+  },
+  "signInWithGoogleButtonText": "Über Google anmelden",
+  "@signInWithGoogleButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Google provider.",
+    "placeholders": {}
+  },
+  "signInWithPhoneButtonText": "Mit einer Telefonnummer anmelden",
+  "@signInWithPhoneButtonText": {
+    "description": "Used as a label of the PhoneVerificationButton.",
+    "placeholders": {}
+  },
+  "signInWithTwitterButtonText": "Über Twitter anmelden",
+  "@signInWithTwitterButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Twitter provider.",
+    "placeholders": {}
+  },
+  "signOutButtonText": "Abmelden",
+  "@signOutButtonText": {
+    "description": "Used as a label of the SignOutButton.",
+    "placeholders": {}
+  },
+  "smsAutoresolutionFailedError": "Der SMS-Code konnte nicht automatisch aufgelöst werden. Geben Sie den Code manuell ein.",
+  "@smsAutoresolutionFailedError": {
+    "description": "Used as an error text when AutoresolutionFailedException is being thrown.",
+    "placeholders": {}
+  },
+  "southInitialLabel": "S",
+  "@southInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "stringLabel": "string",
+  "@stringLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "timestampLabel": "timestamp",
+  "@timestampLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "typeLabel": "type",
+  "@typeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "unknownError": "Ein unbekannter Fehler ist aufgetreten",
+  "@unknownError": {
+    "description": "Used as a generic error message when unable to resolve error details from Exception or FirebaseAuthException.",
+    "placeholders": {}
+  },
+  "updateLabel": "update",
+  "@updateLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "userNotFoundErrorText": "Konto existiert nicht",
+  "@userNotFoundErrorText": {
+    "description": "Used as an error message when the account for provided email was not found.",
+    "placeholders": {}
+  },
+  "valueLabel": "value",
+  "@valueLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "verifyCodeButtonText": "Überprüfen",
+  "@verifyCodeButtonText": {
+    "description": "Used as a label of the submit button of the SMSCodeInputView.",
+    "placeholders": {}
+  },
+  "verifyingSMSCodeText": "SMS-Code wird überprüft…",
+  "@verifyingSMSCodeText": {
+    "description": "Used as a status text of the SMSCodeInput when code verification is in progress.",
+    "placeholders": {}
+  },
+  "verifyItsYouText": "Identität bestätigen",
+  "@verifyItsYouText": {
+    "description": "Used as a title of the dialog that requires re-authentication of the user when performing destructive actions.",
+    "placeholders": {}
+  },
+  "verifyPhoneNumberButtonText": "Weiter",
+  "@verifyPhoneNumberButtonText": {
+    "description": "Used as a label of the submit button of the PhoneInputView.",
+    "placeholders": {}
+  },
+  "westInitialLabel": "W",
+  "@westInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "wrongOrNoPasswordErrorText": "Das Passwort ist ungültig oder der Nutzer hat kein Passwort",
+  "@wrongOrNoPasswordErrorText": {
+    "description": "Used as an error text of the PasswordInput when provided password is empty or is not correct.",
+    "placeholders": {}
+  }
+}
