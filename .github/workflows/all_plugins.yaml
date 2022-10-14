@@ -64,9 +64,7 @@ jobs:
       - uses: bluefireteam/melos-action@v2
       # See https://github.com/actions/runner-images/issues/6283
       - name: Set up Homebrew
-        id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
-        shell: bash
       - name: 'Install Tools'
         run: |
           ./.github/workflows/scripts/install-tools.sh
