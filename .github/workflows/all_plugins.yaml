@@ -68,11 +68,12 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           brew install swiftformat
+          brew install clang-format
+          echo 'export PATH="/home/linuxbrew/.linuxbrew/opt/clang-format/bin:$PATH"' >> /home/runner/.bash_profile
       - name: 'Bootstrap Workspace'
         run: melos bootstrap
       - name: 'Formatter version'
         run: |
-          brew install clang-format
           clang-format --version
           swiftformat --version
       - name: 'Dart, Java and Objective-C '
