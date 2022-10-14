@@ -58,11 +58,14 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
-      - name: 'Install Flutter'
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable' 
+      - uses: bluefireteam/melos-action@v2
       # See https://github.com/actions/runner-images/issues/6283
-      - name: Add Homebrew to PATH
-        run: echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> $GITHUB_PATH
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
         shell: bash
       - name: 'Install Tools'
         run: |
@@ -70,8 +73,6 @@ jobs:
           brew install swiftformat
           brew install clang-format
           echo 'export PATH="/home/linuxbrew/.linuxbrew/opt/clang-format/bin:$PATH"' >> /home/runner/.bash_profile
-      - name: 'Bootstrap Workspace'
-        run: melos bootstrap
       - name: 'Formatter version'
         run: |
           clang-format --version
