@@ -76,8 +76,6 @@ jobs:
           cache: true
       - name: "Install Tools"
         run: |
-          ./.github/workflows/scripts/install-tools.sh
-          flutter config --no-enable-web --no-enable-ios --no-enable-macos-desktop
           sudo npm i -g firebase-tools
       - name: "Build Application"
         working-directory: tests
@@ -152,7 +150,6 @@ jobs:
           cache: true
       - name: "Install Tools"
         run: |
-          ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
       - name: "Build Application"
         working-directory: tests
@@ -220,7 +217,6 @@ jobs:
           cache: true
       - name: "Install Tools"
         run: |
-          ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
       - name: "Build Application"
         working-directory: tests
@@ -259,7 +255,6 @@ jobs:
           cache: true
       - name: "Install Tools"
         run: |
-          ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
       - name: Cache Firebase Emulator
         uses: actions/cache@v2

@@ -26,15 +26,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v3.3.4
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
-      - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
+      - uses: bluefireteam/melos-action@v2
       - name: "Bootstrap Workspace"
         run: |
           melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
@@ -51,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v3.3.4
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: actions/setup-java@v2
