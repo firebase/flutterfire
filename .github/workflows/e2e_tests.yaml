@@ -29,7 +29,7 @@ jobs:
     runs-on: macos-11
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
@@ -70,8 +70,10 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v2-${{ github.run_id }}
           restore-keys: firebase-emulators-v2
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
@@ -117,7 +119,7 @@ jobs:
     runs-on: macos-12
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
@@ -144,8 +146,10 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
           restore-keys: firebase-emulators-v1
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
@@ -183,7 +187,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
@@ -210,8 +214,10 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
           restore-keys: firebase-emulators-v1
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
@@ -238,7 +244,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
@@ -247,8 +253,10 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "11"
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
