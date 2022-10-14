@@ -52,3 +52,19 @@ List<Map<String, String>> getStackTraceElements(StackTrace stackTrace) {
 
   return elements;
 }
+
+String? getBuildId(StackTrace stackTrace) {
+  final Trace trace = Trace.parseVM(stackTrace.toString()).terse;
+
+  for (final Frame frame in trace.frames) {
+    if (frame is UnparsedFrame) {
+      if (frame.member.startsWith("build_id: '") &&
+          frame.member.endsWith("'")) {
+        // format is: "build_id: '8deece9b0e5bf1aa541b5a91e171282e'"
+        return frame.member.substring(11, frame.member.length - 1);
+      }
+    }
+  }
+
+  return null;
+}

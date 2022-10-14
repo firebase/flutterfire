@@ -27,7 +27,7 @@ dependencies:
   firebase_auth: ^3.10.0
   firebase_core: ^1.10.3
   firebase_database: ^9.1.7
-  firebase_dynamic_links: ^4.3.10
+  firebase_dynamic_links: ^4.3.11
   flutter:
     sdk: flutter
   flutter_facebook_auth: ^4.0.1
