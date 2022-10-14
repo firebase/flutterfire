@@ -39,7 +39,6 @@ jobs:
           cache: true
       - name: "Install Tools"
         run: |
-          ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android
@@ -73,7 +72,6 @@ jobs:
           cache: true
       - name: "Install Tools"
         run: |
-          ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios
@@ -105,7 +103,6 @@ jobs:
           cache: true
       - name: "Install Tools"
         run: |
-          ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh

@@ -37,8 +37,6 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android
       - name: "Drive Example"
