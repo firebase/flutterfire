@@ -70,6 +70,10 @@ jobs:
           brew install swiftformat
       - name: 'Bootstrap Workspace'
         run: melos bootstrap
+      - name: 'Formatter version'
+        run: |
+          clang-format --version
+          swiftformat --version
       - name: 'Dart, Java and Objective-C '
         run: |
           flutter pub global run flutter_plugin_tools format
