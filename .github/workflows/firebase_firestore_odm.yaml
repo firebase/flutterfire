@@ -63,7 +63,7 @@ jobs:
           cache: true
       - name: "Install Tools"
         run: |
-          ./.github/workflows/scripts/install-tools.sh
+          flutter pub global activate melos 
           sudo npm i -g firebase-tools
       - name: "Bootstrap Workspace"
         run: |
