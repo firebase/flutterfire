@@ -1805,20 +1805,24 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     List<SimpleEnum>? arrayContainsAny,
   }) {
     return _$NestedQuery(
-      reference.where(
-        'enumList',
-        isEqualTo: _enumConvertList(isEqualTo),
-        isNotEqualTo: _enumConvertList(isNotEqualTo),
-        isLessThan: _enumConvertList(isLessThan),
-        isLessThanOrEqualTo: _enumConvertList(isLessThanOrEqualTo),
-        isGreaterThan: _enumConvertList(isGreaterThan),
-        isGreaterThanOrEqualTo: _enumConvertList(isGreaterThanOrEqualTo),
-        isNull: isNull,
-        arrayContains: arrayContains?.name,
-        arrayContainsAny: _enumConvertList(arrayContainsAny),
-      ),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+          _$NestedFieldMap['enumList']!,
+          isEqualTo: _enumConvertList(isEqualTo),
+          isNotEqualTo: _enumConvertList(isNotEqualTo),
+          isLessThan: _enumConvertList(isLessThan),
+          isLessThanOrEqualTo: _enumConvertList(isLessThanOrEqualTo),
+          isGreaterThan: _enumConvertList(isGreaterThan),
+          isGreaterThanOrEqualTo: _enumConvertList(isGreaterThanOrEqualTo),
+          isNull: isNull,
+          arrayContains: arrayContains?.name,
+          arrayContainsAny: _enumConvertList(arrayContainsAny)),
+      $queryCursor: $queryCursor,
     );
+    // return _$NestedQuery(
+    //   reference.where('enumList', isEqualTo: _enumConvertList(isEqualTo),isNotEqualTo: _enumConvertList(isNotEqualTo),isLessThan: _enumConvertList(isLessThan),isLessThanOrEqualTo: _enumConvertList(isLessThanOrEqualTo),isGreaterThan: _enumConvertList(isGreaterThan),isGreaterThanOrEqualTo: _enumConvertList(isGreaterThanOrEqualTo),isNull: isNull,arrayContains: arrayContains?.name,arrayContainsAny: _enumConvertList(arrayContainsAny),),
+    //   _collection,
+    // );
   }
 
   NestedQuery orderByDocumentId({
@@ -10008,20 +10012,24 @@ class _$EnumTestQuery extends QueryReference<EnumTest, EnumTestQuerySnapshot>
     });
 
     return _$EnumTestQuery(
-      reference.where(
-        'nonNullable',
-        isEqualTo: isEqualTo?.name,
-        isNotEqualTo: isNotEqualTo?.name,
-        isLessThan: isLessThan?.name,
-        isLessThanOrEqualTo: isLessThanOrEqualTo?.name,
-        isGreaterThan: isGreaterThan?.name,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,
-        isNull: isNull,
-        whereIn: _whereInList,
-        whereNotIn: _whereNotInList,
-      ),
       _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+          _$EnumTestFieldMap['nonNullable']!,
+          isEqualTo: isEqualTo?.name,
+          isNotEqualTo: isNotEqualTo?.name,
+          isLessThan: isLessThan?.name,
+          isLessThanOrEqualTo: isLessThanOrEqualTo?.name,
+          isGreaterThan: isGreaterThan?.name,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,
+          isNull: isNull,
+          whereIn: _whereInList,
+          whereNotIn: _whereNotInList),
+      $queryCursor: $queryCursor,
     );
+    // return _$EnumTestQuery(
+    //   reference.where('nonNullable', isEqualTo: isEqualTo?.name,isNotEqualTo: isNotEqualTo?.name,isLessThan: isLessThan?.name,isLessThanOrEqualTo: isLessThanOrEqualTo?.name,isGreaterThan: isGreaterThan?.name,isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,isNull: isNull,whereIn: _whereInList,whereNotIn: _whereNotInList,),
+    //   _collection,
+    // );
   }
 
   EnumTestQuery orderByDocumentId({
