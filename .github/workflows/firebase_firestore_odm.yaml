@@ -33,7 +33,9 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@v2
+      - uses: bluefireteam/melos-action@v1
+        with:
+          run-bootstrap: false
       - name: "Bootstrap Workspace"
         run: |
           melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
@@ -61,9 +63,11 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+      - uses: bluefireteam/melos-action@v1
+        with:
+          run-bootstrap: false
       - name: "Install Tools"
         run: |
-          flutter pub global activate melos 
           sudo npm i -g firebase-tools
       - name: "Bootstrap Workspace"
         run: |

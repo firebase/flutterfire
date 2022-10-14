@@ -37,6 +37,9 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+      - uses: bluefireteam/melos-action@v1
+        with:
+          run-bootstrap: false
       - name: "Install Tools"
         run: |
           sudo npm i -g firebase-tools
@@ -70,6 +73,9 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+      - uses: bluefireteam/melos-action@v1
+        with:
+          run-bootstrap: false
       - name: "Install Tools"
         run: |
           sudo npm i -g firebase-tools
@@ -101,6 +107,9 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+      - uses: bluefireteam/melos-action@v1
+        with:
+          run-bootstrap: false
       - name: "Install Tools"
         run: |
           sudo npm i -g firebase-tools
