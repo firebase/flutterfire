@@ -70,7 +70,7 @@ jobs:
           ./.github/workflows/scripts/install-tools.sh
           brew install swiftformat
           brew install clang-format
-          echo 'export PATH="/home/linuxbrew/.linuxbrew/opt/clang-format/bin:$PATH"' >> /home/runner/.bash_profile
+          brew link --overwrite clang-format
       - name: 'Formatter version'
         run: |
           clang-format --version
