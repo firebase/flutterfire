@@ -72,6 +72,7 @@ jobs:
         run: melos bootstrap
       - name: 'Formatter version'
         run: |
+          brew install clang-format
           clang-format --version
           swiftformat --version
       - name: 'Dart, Java and Objective-C '
