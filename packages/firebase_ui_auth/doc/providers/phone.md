@@ -70,7 +70,7 @@ MaterialApp(
 
 ## Using view
 
-If the pre-built screens don't suite the app needs, you could use a `PhoneInputView` to build your custom screen:
+If the pre-built screens don't suit the app's needs, you could use a `PhoneInputView` to build your custom screen:
 
 ```dart
 final _flowKey = Object();
@@ -108,7 +108,7 @@ class MyLoginScreen extends StatelessWidget {
 
 ## Using widget
 
-If a view is also not flexible enough, there is an `PhoneInput` and `SMSCodeInput` widgets:
+If a view is also not flexible enough, there are `PhoneInput` and `SMSCodeInput` widgets:
 
 ```dart
 class MyCustomWidget extends StatefulWidget {
@@ -144,7 +144,7 @@ class _MyCustomWidgetState extends State<MyCustomWidget> {
 }
 ```
 
-## Building a custom widget with AuthFlowBuilder
+## Building a custom widget with `AuthFlowBuilder`
 
 You could also use `AuthFlowBuilder` to facilitate the functionality of the `PhoneAuthFlow`:
 

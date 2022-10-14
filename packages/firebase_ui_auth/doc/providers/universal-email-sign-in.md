@@ -21,7 +21,7 @@ UniversalEmailSignInScreen(
 
 ## Using view
 
-If the pre-built screens don't suit the app needs, you could use a `FindProvidersForEmailView` to build your custom screen:
+If the pre-built screens don't suit the app's needs, you could use a `FindProvidersForEmailView` to build your custom screen:
 
 ```dart
 class MyLoginScreen extends StatelessWidget {
@@ -47,7 +47,7 @@ class MyLoginScreen extends StatelessWidget {
 }
 ```
 
-## Building a custom widget with AuthFlowBuilder
+## Building a custom widget with `AuthFlowBuilder`
 
 You could also use `AuthFlowBuilder` to facilitate the functionality of the `UniversalEmailSignInFlow`:
 
@@ -92,7 +92,7 @@ class MyCustomWidget extends StatelessWidget {
 
 ## Building a custom stateful widget
 
-For a full control over every phase of the authentication lifecycle you could build a stateful widget, which implements `UniversalEmailSignInListener`:
+For full control over every phase of the authentication lifecycle, you could build a stateful widget which implements `UniversalEmailSignInListener`:
 
 ```dart
 class CustomUniversalEmailSignIn extends StatefulWidget {

@@ -51,7 +51,7 @@ SignInScreen(
 
 ## Using view
 
-If the pre-built screens don't suite the app needs, you could use a `LoginView` to build your custom screen:
+If the pre-built screens don't suit the app's needs, you could use a `LoginView` to build your custom screen:
 
 ```dart
 class MyLoginScreen extends StatelessWidget {
@@ -107,7 +107,7 @@ class MyCustomWidget extends StatelessWidget {
 }
 ```
 
-## Building a custom widget with AuthFlowBuilder
+## Building a custom widget with `AuthFlowBuilder`
 
 You could also use `AuthFlowBuilder` to facilitate the functionality of the `EmailAuthFlow`:
 
@@ -134,7 +134,7 @@ class MyCustomWidget extends StatelessWidget {
 
 ## Building a custom stateful widget
 
-For full control over every phase of the authentication lifecycle you could build a stateful widget, which implements `EmailAuthListener`:
+For full control over every phase of the authentication lifecycle, you could build a stateful widget which implements `EmailAuthListener`:
 
 ```dart
 class CustomEmailSignIn extends StatefulWidget {

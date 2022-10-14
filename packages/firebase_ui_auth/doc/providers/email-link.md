@@ -73,7 +73,7 @@ MaterialApp(
 
 ## Using view
 
-If the pre-built screen don't suite the app needs, you could use a `EmailLinkSignInView` to build your custom screen:
+If the pre-built screen don't suit the app's needs, you could use a `EmailLinkSignInView` to build your custom screen:
 
 ```dart
 class MyEmailLinkSignInScreen extends StatelessWidget {
@@ -103,7 +103,7 @@ class MyEmailLinkSignInScreen extends StatelessWidget {
 }
 ```
 
-## Building a custom widget with AuthFlowBuilder
+## Building a custom widget with `AuthFlowBuilder`
 
 You could also use `AuthFlowBuilder` to facilitate the functionality of the `EmailLinkFlow`:
 
@@ -141,7 +141,7 @@ class MyCustomWidget extends StatelessWidget {
 
 ## Building a custom stateful widget
 
-For a full control over every phase of the authentication lifecylce you could build a stateful widget, which implements `EmailLinkAuthListener`:
+For full control over every phase of the authentication lifecycle you could build a stateful widget, which implements `EmailLinkAuthListener`:
 
 ```dart
 class CustomEmailLinkSignIn extends StatefulWidget {

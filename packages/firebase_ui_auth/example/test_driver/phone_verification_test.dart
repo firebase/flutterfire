@@ -22,7 +22,7 @@ void main() {
 
   group('PhoneInputScreen', () {
     testWidgets(
-      'allows to pick country code',
+      'pick country code',
       (tester) async {
         await render(
           tester,

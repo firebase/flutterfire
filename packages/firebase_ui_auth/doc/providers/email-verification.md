@@ -43,7 +43,7 @@ class App extends StatelessWidget {
 }
 ```
 
-Once opened, it triggers a verification email to be sent and awaits for a dynamic link to be received by the app (on supported platforms).
+Once opened, it triggers a verification email to be sent and will wait for a dynamic link to be received by the app (on supported platforms).
 
 ## Using `EmailVerificatioController`
 

@@ -5,7 +5,7 @@ Firebase UI widgets are built on top of Material and Cupertino design patterns p
 To provide consistency across your application, the Firebase UI widgets depend on the [`ThemeData`](https://api.flutter.dev/flutter/material/ThemeData-class.html)
 or [`CupertinoThemeData`](https://api.flutter.dev/flutter/cupertino/CupertinoThemeData-class.html) instances provided to your `MaterialApp` or `CupertinoApp` widget.
 
-For example, the `SignInScreen` widget with an email provider, wrapped in a `MaterialApp` will use the following widgets:
+For example, the `SignInScreen` widget with an email provider wrapped in a `MaterialApp` will use the following widgets:
 
 - [`TextFormField`](https://api.flutter.dev/flutter/material/TextFormField-class.html)
 - [`TextButton`](https://api.flutter.dev/flutter/material/TextButton-class.html)
