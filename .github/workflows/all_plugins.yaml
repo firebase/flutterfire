@@ -70,7 +70,7 @@ jobs:
           ./.github/workflows/scripts/install-tools.sh
           brew install swiftformat
           brew install clang-format
-          brew link --overwrite clang-format
+          brew link --overwrite --force clang-format
       - name: 'Formatter version'
         run: |
           clang-format --version
