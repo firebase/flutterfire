@@ -37,6 +37,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+      - uses: bluefireteam/melos-action@v2
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android
       - name: "Drive Example"
