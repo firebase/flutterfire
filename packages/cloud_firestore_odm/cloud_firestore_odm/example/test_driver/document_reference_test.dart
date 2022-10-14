@@ -149,19 +149,20 @@ void main() {
 
           await ref.doc('123').set(
                 Movie(
-                  genre: [],
-                  likes: 42,
-                  poster: 'foo',
-                  rated: 'good',
-                  runtime: 'runtime',
-                  title: 'title',
-                  year: 0,
-                  id: '_',
-                  language: [LanguageType.english],
-                  certification: CertificationType.g,
-                  cast: [{CastType.cameo: ''}],
-                  majorCast: {CastType.coStar: 'fooMan'}
-                ),
+                    genre: [],
+                    likes: 42,
+                    poster: 'foo',
+                    rated: 'good',
+                    runtime: 'runtime',
+                    title: 'title',
+                    year: 0,
+                    id: '_',
+                    language: [LanguageType.english],
+                    certification: CertificationType.g,
+                    cast: [
+                      {CastType.cameo: ''}
+                    ],
+                    majorCast: {CastType.coStar: 'fooMan'}),
               );
 
           expect(
