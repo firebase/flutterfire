@@ -193,24 +193,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 #pragma mark - Firebase Storage API
 
 - (void)useEmulator:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRStorage *storage;
-  NSString *appName = arguments[kFLTFirebaseStorageKeyAppName];
-  NSString *bucket = arguments[kFLTFirebaseStorageKeyBucket];
-  FIRApp *firebaseApp = [FLTFirebasePlugin firebaseAppNamed:appName];
-
-  if (![bucket isEqual:[NSNull null]] && bucket != nil) {
-    NSString *url = [@"gs://" stringByAppendingString:bucket];
-    storage = [FIRStorage storageForApp:firebaseApp URL:url];
-  } else {
-    storage = [FIRStorage storageForApp:firebaseApp];
-  }
-
-  NSString *emulatorHost = arguments[@"host"];
-
-  if (![emulatorHost isEqual:[NSNull null]] && emulatorHost != nil && hasEmulatorBooted == false) {
-    [storage useEmulatorWithHost:emulatorHost port:[arguments[@"port"] integerValue]];
-    hasEmulatorBooted = true;
-  }
+  [self FIRStorageForArguments:arguments];
   result.success(nil);
 }
 
@@ -902,6 +885,12 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   NSNumber *maxUploadRetryTime = arguments[kFLTFirebaseStorageKeyMaxUploadRetryTime];
   if (![maxUploadRetryTime isEqual:[NSNull null]]) {
     storage.maxUploadRetryTime = [maxUploadRetryTime longLongValue] / 1000.0;
+  }
+
+  NSString *emulatorHost = arguments[@"host"];
+  if (![emulatorHost isEqual:[NSNull null]] && emulatorHost != nil && hasEmulatorBooted == false) {
+    [storage useEmulatorWithHost:emulatorHost port:[arguments[@"port"] integerValue]];
+    hasEmulatorBooted = true;
   }
 
   storage.callbackQueue = _callbackQueue;
