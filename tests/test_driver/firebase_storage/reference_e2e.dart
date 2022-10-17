@@ -339,7 +339,7 @@ void setupReferenceTests() {
       // putFile is not supported in web.
       // iOS works locally but times out on CI. We ought to check this periodically
       // as it may be OS version specific.
-      skip: kIsWeb && defaultTargetPlatform == TargetPlatform.iOS,
+      skip: kIsWeb || defaultTargetPlatform == TargetPlatform.iOS,
     );
 
     group('putString', () {
