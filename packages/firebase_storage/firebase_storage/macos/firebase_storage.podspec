@@ -46,8 +46,6 @@ Pod::Spec.new do |s|
   s.source_files     = 'Classes/**/*.{h,m}'
   s.public_header_files = 'Classes/*.h'
 
-  s.platform = :osx, '10.13'
-
   # Flutter dependencies
   s.dependency 'FlutterMacOS'
 
