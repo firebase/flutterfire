@@ -230,16 +230,19 @@ void setupReferenceTests() {
       () {
         test('uploads a file', () async {
           final File file = await createFile('flt-ok.txt');
+          print('QQQQQQQQ 11111');
           final Reference ref =
               storage.ref('flutter-tests').child('flt-ok.txt');
 
+          print('QQQQQQQQ 222222');
           final TaskSnapshot complete = await ref.putFile(
             file,
-            SettableMetadata(
-              contentLanguage: 'en',
-              customMetadata: <String, String>{'activity': 'test'},
-            ),
+            // SettableMetadata(
+            //   contentLanguage: 'en',
+            //   customMetadata: <String, String>{'activity': 'test'},
+            // ),
           );
+          print('QQQQQQQQ 333333');
 
           expect(complete.metadata?.size, kTestString.length);
           // Metadata isn't saved on objects when using the emulator which fails test
