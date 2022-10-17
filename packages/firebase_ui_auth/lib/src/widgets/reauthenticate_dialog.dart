@@ -36,30 +36,61 @@ class ReauthenticateDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
 
+    const verticalPadding = EdgeInsets.symmetric(vertical: 16);
+    const horizontalPadding = EdgeInsets.symmetric(horizontal: 16);
+
+    final reauthenticateView = ReauthenticateView(
+      auth: auth,
+      providers: providers,
+      onSignedIn: onSignedIn,
+      actionButtonLabelOverride: actionButtonLabelOverride,
+    );
+
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 400),
         child: Dialog(
           child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Title(text: l.verifyItsYouText),
-                const SizedBox(height: 16),
-                ReauthenticateView(
-                  auth: auth,
-                  providers: providers,
-                  onSignedIn: onSignedIn,
-                ),
-                const SizedBox(height: 16),
-                UniversalButton(
-                  text: l.cancelLabel,
-                  variant: ButtonVariant.text,
-                  onPressed: () => Navigator.of(context).pop(),
-                )
-              ],
+            padding: verticalPadding,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: horizontalPadding,
+                      child: Title(text: l.verifyItsYouText),
+                    ),
+                    const SizedBox(height: 16),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: constraints.maxHeight < 500
+                            ? 300
+                            : constraints.maxHeight,
+                      ),
+                      child: ListView(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        children: [
+                          reauthenticateView,
+                          const SizedBox(height: 16),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: horizontalPadding.copyWith(
+                        top: verticalPadding.top,
+                      ),
+                      child: UniversalButton(
+                        text: l.cancelLabel,
+                        variant: ButtonVariant.text,
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    )
+                  ],
+                );
+              },
             ),
           ),
         ),

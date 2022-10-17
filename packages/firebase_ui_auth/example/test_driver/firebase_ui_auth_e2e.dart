@@ -15,6 +15,7 @@ import 'google_sign_in_test.dart' as google_sign_in;
 import 'twitter_sign_in_test.dart' as twitter_sign_in;
 import 'apple_sign_in_test.dart' as apple_sign_in;
 import 'facebook_sign_in_test.dart' as facebook_sign_in;
+import 'layout_test.dart' as layout;
 
 import 'utils.dart';
 
@@ -38,4 +39,6 @@ Future<void> main() async {
     apple_sign_in.main();
     facebook_sign_in.main();
   }
+
+  layout.main();
 }
