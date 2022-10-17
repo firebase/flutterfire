@@ -321,9 +321,6 @@ void setupReferenceTests() {
             // expect(complete.metadata?.contentLanguage, 'en');
             // expect(complete.metadata?.customMetadata!['activity'], 'test');
           },
-          // iOS works locally but times out on CI. We ought to check this periodically
-          // as it may be OS version specific.
-          skip: defaultTargetPlatform == TargetPlatform.iOS,
         );
 
         // TODO(ehesp): Emulator rules issue - comment back in once fixed
@@ -340,7 +337,9 @@ void setupReferenceTests() {
         // });
       },
       // putFile is not supported in web.
-      skip: kIsWeb,
+      // iOS works locally but times out on CI. We ought to check this periodically
+      // as it may be OS version specific.
+      skip: kIsWeb && defaultTargetPlatform == TargetPlatform.iOS,
     );
 
     group('putString', () {
