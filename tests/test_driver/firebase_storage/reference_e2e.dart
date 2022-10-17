@@ -15,46 +15,6 @@ void setupReferenceTests() {
       storage = FirebaseStorage.instance;
     });
 
-    group(
-      'putFile',
-      () {
-        test('uploads a file', () async {
-          final File file = await createFile('flt-ok.txt');
-
-          final Reference ref =
-              storage.ref('flutter-tests').child('flt-ok.txt');
-
-          final TaskSnapshot complete = await ref.putFile(
-            file,
-            // SettableMetadata(
-            //   contentLanguage: 'en',
-            //   customMetadata: <String, String>{'activity': 'test'},
-            // ),
-          );
-
-          expect(complete.metadata?.size, kTestString.length);
-          // Metadata isn't saved on objects when using the emulator which fails test
-          // expect(complete.metadata?.contentLanguage, 'en');
-          // expect(complete.metadata?.customMetadata!['activity'], 'test');
-        }, timeout: const Timeout(Duration(seconds: 55)));
-
-        // TODO(ehesp): Emulator rules issue - comment back in once fixed
-        // test('errors if permission denied', () async {
-        //   File file = await createFile('flt-ok.txt');
-        //   final Reference ref = storage.ref('uploadNope.jpeg');
-
-        //   await expectLater(
-        //       () => ref.putFile(file),
-        //       throwsA(isA<FirebaseException>()
-        //           .having((e) => e.code, 'code', 'unauthorized')
-        //           .having((e) => e.message, 'message',
-        //               'User is not authorized to perform the desired action.')));
-        // });
-        // putFile is not supported in web.
-      },
-      skip: kIsWeb,
-    );
-
     group('bucket', () {
       test('returns the storage bucket as a string', () async {
         expect(
@@ -336,6 +296,52 @@ void setupReferenceTests() {
         skip: kIsWeb,
       );
     });
+
+    group(
+      'putFile',
+      () {
+        test(
+          'uploads a file',
+          () async {
+            final File file = await createFile('flt-ok.txt');
+
+            final Reference ref =
+                storage.ref('flutter-tests').child('flt-ok.txt');
+
+            final TaskSnapshot complete = await ref.putFile(
+              file,
+              // SettableMetadata(
+              //   contentLanguage: 'en',
+              //   customMetadata: <String, String>{'activity': 'test'},
+              // ),
+            );
+
+            expect(complete.metadata?.size, kTestString.length);
+            // Metadata isn't saved on objects when using the emulator which fails test
+            // expect(complete.metadata?.contentLanguage, 'en');
+            // expect(complete.metadata?.customMetadata!['activity'], 'test');
+          },
+          // iOS works locally but times out on CI. We ought to check this periodically
+          // as it may be OS version specific.
+          skip: defaultTargetPlatform == TargetPlatform.iOS,
+        );
+
+        // TODO(ehesp): Emulator rules issue - comment back in once fixed
+        // test('errors if permission denied', () async {
+        //   File file = await createFile('flt-ok.txt');
+        //   final Reference ref = storage.ref('uploadNope.jpeg');
+
+        //   await expectLater(
+        //       () => ref.putFile(file),
+        //       throwsA(isA<FirebaseException>()
+        //           .having((e) => e.code, 'code', 'unauthorized')
+        //           .having((e) => e.message, 'message',
+        //               'User is not authorized to perform the desired action.')));
+        // });
+      },
+      // putFile is not supported in web.
+      skip: kIsWeb,
+    );
 
     group('putString', () {
       test('uploads a string', () async {
