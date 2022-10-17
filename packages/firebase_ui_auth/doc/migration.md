@@ -1,4 +1,4 @@
-# FlutterFireUI ➡️ FirebaseUI migration guide.
+# FlutterFireUI ➡️ FirebaseUI migration guide
 
 To migrate from `flutterfire_ui` package to `firebase_ui_*` family, you need to do the following:
 
@@ -82,3 +82,41 @@ fonts:
     fonts:
       - asset: packages/firebase_ui_auth/fonts/SocialIcons.ttf
 ```
+
+## Migrating to `firebase_ui_firestore`
+
+To migrate from `flutterfire_ui` to `firebase_ui_firestore` you need to update your dependencies:
+
+```diff
+dependencies:
+-  flutterfire_ui: ^0.4.0
++  firebase_ui_firestore: ^1.0.0
+```
+
+and imports:
+
+```diff
+- import 'package:flutterfire_ui/firestore.dart';
++ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
+```
+
+## Migrating to `firebase_ui_database`
+
+To migrate from `flutterfire_ui` to `firebase_ui_database` you need to update your dependencies:
+
+```diff
+dependencies:
+-  flutterfire_ui: ^0.4.0
++  firebase_ui_database: ^1.0.0
+```
+
+and imports:
+
+```diff
+- import 'package:flutterfire_ui/database.dart';
++ import 'package:firebase_ui_database/firebase_ui_database.dart';
+```
+
+---
+
+> Check out [full documentation](./README.md) for more details.
