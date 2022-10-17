@@ -310,10 +310,10 @@ void setupReferenceTests() {
 
             final TaskSnapshot complete = await ref.putFile(
               file,
-              // SettableMetadata(
-              //   contentLanguage: 'en',
-              //   customMetadata: <String, String>{'activity': 'test'},
-              // ),
+              SettableMetadata(
+                contentLanguage: 'en',
+                customMetadata: <String, String>{'activity': 'test'},
+              ),
             );
 
             expect(complete.metadata?.size, kTestString.length);
