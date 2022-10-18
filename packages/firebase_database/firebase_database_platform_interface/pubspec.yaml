@@ -6,7 +6,7 @@ homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_
 dependencies:
   _flutterfire_internals: ^1.0.3
   collection: ^1.14.3
-  firebase_core: ^1.10.0
+  firebase_core: ^2.0.0
   flutter:
     sdk: flutter
   meta: ^1.3.0
