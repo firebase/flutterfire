@@ -3,61 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 2022-10-18
-
-### Changes
-
----
-
-Packages with breaking changes:
-
- - [`firebase_ui_auth` - `v1.0.0`](#firebase_ui_auth---v100)
- - [`firebase_ui_database` - `v1.0.0`](#firebase_ui_database---v100)
- - [`firebase_ui_firestore` - `v1.0.0`](#firebase_ui_firestore---v100)
- - [`firebase_ui_localizations` - `v1.0.0`](#firebase_ui_localizations---v100)
- - [`firebase_ui_oauth` - `v1.0.0`](#firebase_ui_oauth---v100)
- - [`firebase_ui_oauth_apple` - `v1.0.0`](#firebase_ui_oauth_apple---v100)
- - [`firebase_ui_oauth_facebook` - `v1.0.0`](#firebase_ui_oauth_facebook---v100)
- - [`firebase_ui_oauth_google` - `v1.0.0`](#firebase_ui_oauth_google---v100)
- - [`firebase_ui_oauth_twitter` - `v1.0.0`](#firebase_ui_oauth_twitter---v100)
-
-Packages with other changes:
-
- - There are no other changes in this release.
-
-Packages graduated to a stable release (see pre-releases prior to the stable version for changelog entries):
-
- - `firebase_ui_auth` - `v1.0.0`
- - `firebase_ui_database` - `v1.0.0`
- - `firebase_ui_firestore` - `v1.0.0`
- - `firebase_ui_localizations` - `v1.0.0`
- - `firebase_ui_oauth` - `v1.0.0`
- - `firebase_ui_oauth_apple` - `v1.0.0`
- - `firebase_ui_oauth_facebook` - `v1.0.0`
- - `firebase_ui_oauth_google` - `v1.0.0`
- - `firebase_ui_oauth_twitter` - `v1.0.0`
-
----
-
-#### `firebase_ui_auth` - `v1.0.0`
-
-#### `firebase_ui_database` - `v1.0.0`
-
-#### `firebase_ui_firestore` - `v1.0.0`
-
-#### `firebase_ui_localizations` - `v1.0.0`
-
-#### `firebase_ui_oauth` - `v1.0.0`
-
-#### `firebase_ui_oauth_apple` - `v1.0.0`
-
-#### `firebase_ui_oauth_facebook` - `v1.0.0`
-
-#### `firebase_ui_oauth_google` - `v1.0.0`
-
-#### `firebase_ui_oauth_twitter` - `v1.0.0`
-
-
 ## 2022-10-11
 
 ### Changes
