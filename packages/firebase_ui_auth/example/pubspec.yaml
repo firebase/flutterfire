@@ -21,25 +21,25 @@ environment:
   sdk: '>=2.16.0 <3.0.0'
 
 dependencies:
-  cloud_firestore: ^4.0.0
+  cloud_firestore: ^3.5.1
   crypto: ^3.0.1
   cupertino_icons: ^1.0.2
   firebase_auth: ^3.10.0
   firebase_core: ^1.10.3
-  firebase_database: ^10.0.0
-  firebase_dynamic_links: ^5.0.0
+  firebase_database: ^9.1.7
+  firebase_dynamic_links: ^4.3.11
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
   flutter_svg: ^1.0.0
-  firebase_ui_auth: ^1.0.0-dev.1
-  firebase_ui_localizations: ^1.0.0-dev.1
-  firebase_ui_oauth: ^1.0.0-dev.1
-  firebase_ui_oauth_apple: ^1.0.0-dev.1
-  firebase_ui_oauth_facebook: ^1.0.0-dev.1
-  firebase_ui_oauth_google: ^1.0.0-dev.1
-  firebase_ui_oauth_twitter: ^1.0.0-dev.1
+  firebase_ui_auth: ^1.0.0-dev.0
+  firebase_ui_localizations: ^1.0.0-dev.0
+  firebase_ui_oauth: ^1.0.0-dev.0
+  firebase_ui_oauth_apple: ^1.0.0-dev.0
+  firebase_ui_oauth_facebook: ^1.0.0-dev.0
+  firebase_ui_oauth_google: ^1.0.0-dev.0
+  firebase_ui_oauth_twitter: ^1.0.0-dev.0
 dev_dependencies:
   drive: ^1.0.0-1.0.nullsafety.1
   flutter_driver:
