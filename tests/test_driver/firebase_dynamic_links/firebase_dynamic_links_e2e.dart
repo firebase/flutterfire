@@ -87,7 +87,7 @@ void setupTests() {
           FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
           const String oflLink = 'https://ofl-link.com';
           final Uri dynamicLink = Uri.parse(
-            'https://$urlHost?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.invertase.testing&imv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=$oflLink',
+            'https://$urlHost?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.flutter.plugins.firebase.tests&imv=0&link=https%3A%2F%2Fapp-test%2Fhelloworld&ofl=$oflLink',
           );
           final DynamicLinkParameters parameters = DynamicLinkParameters(
             uriPrefix: 'https://$urlHost',
