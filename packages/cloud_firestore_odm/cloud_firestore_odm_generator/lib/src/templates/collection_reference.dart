@@ -1,9 +1,12 @@
-import '../collection_generator.dart';
-import 'template.dart';
+import '../collection_data.dart';
 
-class CollectionReferenceTemplate extends Template<CollectionData> {
+class CollectionReferenceTemplate {
+  CollectionReferenceTemplate(this.data);
+
+  final CollectionData data;
+
   @override
-  String generate(CollectionData data) {
+  String toString() {
     final idKey = data.idKey;
 
     String fromFirestoreBody;
