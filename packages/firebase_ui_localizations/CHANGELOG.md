@@ -1,3 +1,8 @@
+## 1.0.0-dev.1
+
+ - **FIX**: improve pub score ([#9722](https://github.com/firebase/flutterfire/issues/9722)). ([f27d89a1](https://github.com/firebase/flutterfire/commit/f27d89a12cbb5830eb5518854dcfbca72efedb5b))
+ - **FEAT**: generate labels from .arb ([#9340](https://github.com/firebase/flutterfire/issues/9340)). ([f3e4e991](https://github.com/firebase/flutterfire/commit/f3e4e991b0f0f57dbd0c4ff1ff6f0704d9c9a38b))
+
 ## 1.0.0-dev.0
 
  - Bump "firebase_ui_localizations" to `1.0.0-dev.0`.
