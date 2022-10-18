@@ -1,3 +1,7 @@
+## 5.8.1
+
+ - Update a dependency to the latest release.
+
 ## 5.8.0
 
  - **FEAT**: `count()` feature for counting documents without retrieving documents. ([#9699](https://github.com/firebase/flutterfire/issues/9699)). ([ac0bf733](https://github.com/firebase/flutterfire/commit/ac0bf7330d7de73d0ea36c740b79a426187291d2))
