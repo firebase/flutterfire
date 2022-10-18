@@ -135,6 +135,7 @@ abstract class DateTimeQueryDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     DateTime time,
+    FieldValue timeFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -143,6 +144,7 @@ abstract class DateTimeQueryDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     DateTime time,
+    FieldValue timeFieldValue,
   });
 }
 
@@ -192,9 +194,15 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? time = _sentinel,
+    FieldValue? timeFieldValue,
   }) async {
+    assert(
+      time == _sentinel || timeFieldValue == null,
+      "Cannot specify both time and timeFieldValue",
+    );
     final json = {
       if (time != _sentinel) 'time': time as DateTime,
+      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     return reference.update(json);
@@ -203,9 +211,15 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     Object? time = _sentinel,
+    FieldValue? timeFieldValue,
   }) {
+    assert(
+      time == _sentinel || timeFieldValue == null,
+      "Cannot specify both time and timeFieldValue",
+    );
     final json = {
-      if (time != _sentinel) "time": time as DateTime,
+      if (time != _sentinel) 'time': time as DateTime,
+      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     transaction.update(reference, json);
@@ -903,6 +917,7 @@ abstract class TimestampQueryDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     Timestamp time,
+    FieldValue timeFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -911,6 +926,7 @@ abstract class TimestampQueryDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     Timestamp time,
+    FieldValue timeFieldValue,
   });
 }
 
@@ -960,9 +976,15 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? time = _sentinel,
+    FieldValue? timeFieldValue,
   }) async {
+    assert(
+      time == _sentinel || timeFieldValue == null,
+      "Cannot specify both time and timeFieldValue",
+    );
     final json = {
       if (time != _sentinel) 'time': time as Timestamp,
+      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     return reference.update(json);
@@ -971,9 +993,15 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     Object? time = _sentinel,
+    FieldValue? timeFieldValue,
   }) {
+    assert(
+      time == _sentinel || timeFieldValue == null,
+      "Cannot specify both time and timeFieldValue",
+    );
     final json = {
-      if (time != _sentinel) "time": time as Timestamp,
+      if (time != _sentinel) 'time': time as Timestamp,
+      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1672,6 +1700,7 @@ abstract class GeoPointQueryDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     GeoPoint point,
+    FieldValue pointFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -1680,6 +1709,7 @@ abstract class GeoPointQueryDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     GeoPoint point,
+    FieldValue pointFieldValue,
   });
 }
 
@@ -1729,9 +1759,15 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
 
   Future<void> update({
     Object? point = _sentinel,
+    FieldValue? pointFieldValue,
   }) async {
+    assert(
+      point == _sentinel || pointFieldValue == null,
+      "Cannot specify both point and pointFieldValue",
+    );
     final json = {
       if (point != _sentinel) 'point': point as GeoPoint,
+      if (pointFieldValue != null) 'point': pointFieldValue,
     };
 
     return reference.update(json);
@@ -1740,9 +1776,15 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     Object? point = _sentinel,
+    FieldValue? pointFieldValue,
   }) {
+    assert(
+      point == _sentinel || pointFieldValue == null,
+      "Cannot specify both point and pointFieldValue",
+    );
     final json = {
-      if (point != _sentinel) "point": point as GeoPoint,
+      if (point != _sentinel) 'point': point as GeoPoint,
+      if (pointFieldValue != null) 'point': pointFieldValue,
     };
 
     transaction.update(reference, json);
@@ -2443,6 +2485,7 @@ abstract class DocumentReferenceQueryDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     DocumentReference<Map<String, dynamic>> ref,
+    FieldValue refFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -2451,6 +2494,7 @@ abstract class DocumentReferenceQueryDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     DocumentReference<Map<String, dynamic>> ref,
+    FieldValue refFieldValue,
   });
 }
 
@@ -2501,10 +2545,16 @@ class _$DocumentReferenceQueryDocumentReference
 
   Future<void> update({
     Object? ref = _sentinel,
+    FieldValue? refFieldValue,
   }) async {
+    assert(
+      ref == _sentinel || refFieldValue == null,
+      "Cannot specify both ref and refFieldValue",
+    );
     final json = {
       if (ref != _sentinel)
         'ref': ref as DocumentReference<Map<String, dynamic>>,
+      if (refFieldValue != null) 'ref': refFieldValue,
     };
 
     return reference.update(json);
@@ -2513,10 +2563,16 @@ class _$DocumentReferenceQueryDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     Object? ref = _sentinel,
+    FieldValue? refFieldValue,
   }) {
+    assert(
+      ref == _sentinel || refFieldValue == null,
+      "Cannot specify both ref and refFieldValue",
+    );
     final json = {
       if (ref != _sentinel)
-        "ref": ref as DocumentReference<Map<String, dynamic>>,
+        'ref': ref as DocumentReference<Map<String, dynamic>>,
+      if (refFieldValue != null) 'ref': refFieldValue,
     };
 
     transaction.update(reference, json);

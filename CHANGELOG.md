@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-10-11
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore_odm` - `v1.0.0-dev.34`](#cloud_firestore_odm---v100-dev34)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.34`](#cloud_firestore_odm_generator---v100-dev34)
+ - [`firebase_crashlytics` - `v2.9.0`](#firebase_crashlytics---v290)
+ - [`firebase_crashlytics_platform_interface` - `v3.3.0`](#firebase_crashlytics_platform_interface---v330)
+ - [`firebase_dynamic_links` - `v4.3.11`](#firebase_dynamic_links---v4311)
+ - [`flutterfire_ui` - `v0.4.3+14`](#flutterfire_ui---v04314)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.3+14`
+
+---
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.34`
+
+ - **FEAT**: Add support for FieldValue ([#9684](https://github.com/firebase/flutterfire/issues/9684)). ([467c403a](https://github.com/firebase/flutterfire/commit/467c403aad5dc9a829450eee22750e172e88f90b))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.34`
+
+ - **FEAT**: Add support for FieldValue ([#9684](https://github.com/firebase/flutterfire/issues/9684)). ([467c403a](https://github.com/firebase/flutterfire/commit/467c403aad5dc9a829450eee22750e172e88f90b))
+
+#### `firebase_crashlytics` - `v2.9.0`
+
+ - **FEAT**: Send Flutter Build Id to Crashlytics to get --split-debug-info working ([#9409](https://github.com/firebase/flutterfire/issues/9409)). ([17931f30](https://github.com/firebase/flutterfire/commit/17931f307434c88e87318c97e2d81c7eb3219ed9))
+
+#### `firebase_crashlytics_platform_interface` - `v3.3.0`
+
+ - **FEAT**: Send Flutter Build Id to Crashlytics to get --split-debug-info working ([#9409](https://github.com/firebase/flutterfire/issues/9409)). ([17931f30](https://github.com/firebase/flutterfire/commit/17931f307434c88e87318c97e2d81c7eb3219ed9))
+
+#### `firebase_dynamic_links` - `v4.3.11`
+
+ - **FIX**: Add speculative fix for null object reference crash ([#9671](https://github.com/firebase/flutterfire/issues/9671)). ([6c003685](https://github.com/firebase/flutterfire/commit/6c00368580a0e5e3f153543302006967747cb4ef))
+
+
 ## 2022-10-06
 
 ### Changes

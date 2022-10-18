@@ -220,6 +220,38 @@ void main() {
       });
 
       group('update', () {
+        test('can use FieldValue', () async {
+          final ref = await initializeTest(moviesRef);
+
+          await ref.doc('123').set(createMovie(title: 'title', likes: 10));
+
+          expect(
+            await ref.doc('123').get().then((e) => e.data),
+            isA<Movie>()
+                .having((e) => e.title, 'title', 'title')
+                .having((e) => e.likes, 'likes', 10),
+          );
+
+          await ref.doc('123').update(likesFieldValue: FieldValue.increment(1));
+
+          expect(
+            await ref.doc('123').get().then((e) => e.data),
+            isA<Movie>()
+                .having((e) => e.title, 'title', 'title')
+                .having((e) => e.likes, 'likes', 11),
+          );
+        });
+
+        test('asserts that we cannot specify both FieldValue and normal value',
+            () async {
+          expect(
+            () => moviesRef
+                .doc('123')
+                .update(likes: 10, likesFieldValue: FieldValue.increment(10)),
+            throwsAssertionError,
+          );
+        });
+
         test('allows modifying only one property of an object', () async {
           final ref = await initializeTest(moviesRef);
 
