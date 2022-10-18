@@ -1807,6 +1807,27 @@ void runQueryTests() {
         },
         timeout: const Timeout.factor(3),
       );
+
+      test(
+        'count()',
+        () async {
+          final collection = await initializeTest('count');
+
+          await Future.wait([
+            collection.add({'foo': 'bar'}),
+            collection.add({'bar': 'baz'})
+          ]);
+
+          AggregateQuery query = collection.count();
+
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.count,
+            2,
+          );
+        },
+      );
     });
   });
 }

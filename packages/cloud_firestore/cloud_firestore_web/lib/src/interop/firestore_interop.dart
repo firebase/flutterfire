@@ -651,3 +651,13 @@ external Object get arrayRemove;
 
 @JS()
 external Object get arrayUnion;
+
+@JS()
+external PromiseJsImpl<AggregateQuerySnapshotJsImpl> getCountFromServer(
+  QueryJsImpl query,
+);
+
+@JS('AggregateQuerySnapshot')
+abstract class AggregateQuerySnapshotJsImpl {
+  external Map<String, Object> data();
+}

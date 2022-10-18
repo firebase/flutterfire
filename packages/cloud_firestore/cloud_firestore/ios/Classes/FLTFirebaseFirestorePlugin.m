@@ -225,6 +225,8 @@ FlutterStandardMethodCodec *_codec;
                              withMethodCallResult:methodCallResult];
   } else if ([@"LoadBundle#snapshots" isEqualToString:call.method]) {
     [self setupLoadBundleListener:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"AggregateQuery#count" isEqualToString:call.method]) {
+    [self aggregateQuery:call.arguments withMethodCallResult:methodCallResult];
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
   }
@@ -533,6 +535,29 @@ FlutterStandardMethodCodec *_codec;
       result.success(nil);
     }
   }];
+}
+
+- (void)aggregateQuery:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRQuery *query = arguments[@"query"];
+
+  // NOTE: There is only "server" as the source at the moment. So this
+  // is unused for the time being. Using "FIRAggregateSourceServer".
+  // NSString *source = arguments[@"source"];
+
+  FIRAggregateQuery *aggregateQuery = [query count];
+
+  [aggregateQuery aggregationWithSource:FIRAggregateSourceServer
+                             completion:^(FIRAggregateQuerySnapshot *_Nullable snapshot,
+                                          NSError *_Nullable error) {
+                               if (error != nil) {
+                                 result.error(nil, nil, nil, error);
+                               } else {
+                                 NSMutableDictionary *response = [NSMutableDictionary dictionary];
+                                 response[@"count"] = snapshot.count;
+
+                                 result.success(response);
+                               }
+                             }];
 }
 
 - (NSString *)registerEventChannelWithPrefix:(NSString *)prefix

@@ -11,6 +11,7 @@ import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 
+import 'method_channel_aggregate_query.dart';
 import 'method_channel_firestore.dart';
 import 'method_channel_query_snapshot.dart';
 import 'utils/source.dart';
@@ -210,6 +211,13 @@ class MethodChannelQuery extends QueryPlatform {
     return _copyWithParameters(<String, dynamic>{
       'where': conditions,
     });
+  }
+
+  @override
+  AggregateQueryPlatform count() {
+    return MethodChannelAggregateQuery(
+      this,
+    );
   }
 
   @override

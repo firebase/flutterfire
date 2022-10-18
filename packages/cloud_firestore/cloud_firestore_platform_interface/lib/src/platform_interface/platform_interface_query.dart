@@ -228,4 +228,10 @@ abstract class QueryPlatform extends PlatformInterface {
   QueryPlatform where(List<List<dynamic>> conditions) {
     throw UnimplementedError('where() is not implemented');
   }
+
+  /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
+  /// metadata
+  AggregateQueryPlatform count() {
+    throw UnimplementedError('count() is not implemented');
+  }
 }
