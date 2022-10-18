@@ -6,7 +6,7 @@ version: 0.5.0
 
 environment:
   sdk: '>=2.16.0 <3.0.0'
-  flutter: '>=1.12.13+hotfix.4'
+  flutter: '>=1.20.0'
 
 dependencies:
   _flutterfire_internals: ^1.0.3
