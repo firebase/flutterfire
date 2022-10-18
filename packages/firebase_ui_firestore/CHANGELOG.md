@@ -1,6 +1,21 @@
 ## 1.0.0
 
- - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+ - Graduate package to a stable release.
+
+To migrate from `flutterfire_ui` to `firebase_ui_firestore` you need to update your dependencies:
+
+```diff
+dependencies:
+-  flutterfire_ui: ^0.4.0
++  firebase_ui_firestore: ^1.0.0
+```
+
+and imports:
+
+```diff
+- import 'package:flutterfire_ui/firestore.dart';
++ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
+```
 
 ## 1.0.0-dev.2
 

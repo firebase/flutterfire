@@ -1,6 +1,8 @@
 ## 1.0.0
 
- - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+- Graduate package to a stable release. 
+
+Check out [migration guide](https://github.com/firebase/flutterfire/blob/master/packages/firebase_ui_auth/doc/migration.md) to migrate from `flutterfire_ui`.
 
 ## 1.0.0-dev.2
 
