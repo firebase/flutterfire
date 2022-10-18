@@ -1,3 +1,7 @@
+## 1.0.0-dev.2
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.1
 
  - **FIX**: fix reauthenticate dialog overflow ([#9734](https://github.com/firebase/flutterfire/issues/9734)). ([defaa207](https://github.com/firebase/flutterfire/commit/defaa20781512166e95cf63c73d4c27f8daa8b72))

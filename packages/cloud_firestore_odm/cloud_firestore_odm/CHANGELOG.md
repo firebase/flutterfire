@@ -1,3 +1,7 @@
+## 1.0.0-dev.36
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.35
 
  - **FEAT**: Add support for FirebaseFirestore.myNamedQueryGet() ([#9721](https://github.com/firebase/flutterfire/issues/9721)). ([82152a00](https://github.com/firebase/flutterfire/commit/82152a0081343a6f7b7d1f5725818825e2b1191a))

@@ -1,10 +1,10 @@
 name: firebase_database_platform_interface
 description: A common platform interface for the firebase_database plugin.
-version: 0.2.2+8
+version: 0.2.2+9
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_database/firebase_database_platform_interface
 
 dependencies:
-  _flutterfire_internals: ^1.0.3
+  _flutterfire_internals: ^1.0.4
   collection: ^1.14.3
   firebase_core: ^2.0.0
   flutter:

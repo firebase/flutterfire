@@ -31,7 +31,7 @@ dependencies:
     sdk: flutter
   firebase_ui_firestore:
     path: ../
-  cloud_firestore: ^4.0.0
+  cloud_firestore: ^4.0.1
   cupertino_icons: ^1.0.2
   firebase_core: ^1.20.0
 

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-10-18 Part 2
+
+Bumping packages to depend on `firebase_core` `2.0.0`.
+
 ## 2022-10-18
 
 ### Changes
