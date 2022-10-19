@@ -1,3 +1,22 @@
+## 1.0.0
+
+ - Graduate package to a stable release.
+
+To migrate from `flutterfire_ui` to `firebase_ui_database` you need to update your dependencies:
+
+```diff
+dependencies:
+-  flutterfire_ui: ^0.4.0
++  firebase_ui_database: ^1.0.0
+```
+
+and imports:
+
+```diff
+- import 'package:flutterfire_ui/database.dart';
++ import 'package:firebase_ui_database/firebase_ui_database.dart';
+```
+
 ## 1.0.0-dev.2
 
  - Update a dependency to the latest release.
