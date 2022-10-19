@@ -9,14 +9,10 @@ environment:
   flutter: '>=1.17.0'
 
 dependencies:
-  cloud_firestore: ^4.0.1
-  collection: ^1.15.0
-  crypto: ^3.0.1
   desktop_webview_auth: ^0.0.9
   email_validator: ^2.0.1
-  firebase_auth: ^3.10.0
-  firebase_core: ^1.10.2
-  firebase_database: ^10.0.0
+  firebase_auth: ^4.0.0
+  firebase_core: ^2.0.0
   firebase_dynamic_links: ^5.0.1
   firebase_ui_localizations: ^1.0.0
   firebase_ui_oauth: ^1.0.0

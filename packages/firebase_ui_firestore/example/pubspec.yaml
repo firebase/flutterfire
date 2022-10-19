@@ -33,7 +33,7 @@ dependencies:
     path: ../
   cloud_firestore: ^4.0.1
   cupertino_icons: ^1.0.2
-  firebase_core: ^1.20.0
+  firebase_core: ^2.0.0
 
 dev_dependencies:
   drive: ^0.1.0
