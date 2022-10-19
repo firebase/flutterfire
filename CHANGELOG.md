@@ -11,6 +11,60 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 Packages with breaking changes:
 
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.0.1`](#firebase_ui_auth---v101)
+ - [`firebase_ui_database` - `v1.0.1`](#firebase_ui_database---v101)
+ - [`firebase_ui_firestore` - `v1.0.1`](#firebase_ui_firestore---v101)
+ - [`firebase_ui_localizations` - `v1.0.1`](#firebase_ui_localizations---v101)
+ - [`firebase_ui_oauth` - `v1.0.1`](#firebase_ui_oauth---v101)
+ - [`firebase_ui_oauth_apple` - `v1.0.1`](#firebase_ui_oauth_apple---v101)
+ - [`firebase_ui_oauth_google` - `v1.0.1`](#firebase_ui_oauth_google---v101)
+ - [`firebase_ui_oauth_facebook` - `v1.0.1`](#firebase_ui_oauth_facebook---v101)
+ - [`firebase_ui_oauth_twitter` - `v1.0.1`](#firebase_ui_oauth_twitter---v101)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth_apple` - `v1.0.1`
+ - `firebase_ui_oauth_google` - `v1.0.1`
+ - `firebase_ui_oauth_facebook` - `v1.0.1`
+ - `firebase_ui_oauth_twitter` - `v1.0.1`
+
+---
+
+#### `firebase_ui_auth` - `v1.0.1`
+
+ - **FIX**: bump dependencies ([#9756](https://github.com/firebase/flutterfire/issues/9756)). ([595a7daa](https://github.com/firebase/flutterfire/commit/595a7daa3e856cad152463e543d152f71f61cee9))
+
+#### `firebase_ui_database` - `v1.0.1`
+
+ - **FIX**: bump dependencies ([#9756](https://github.com/firebase/flutterfire/issues/9756)). ([595a7daa](https://github.com/firebase/flutterfire/commit/595a7daa3e856cad152463e543d152f71f61cee9))
+
+#### `firebase_ui_firestore` - `v1.0.1`
+
+ - **FIX**: bump dependencies ([#9756](https://github.com/firebase/flutterfire/issues/9756)). ([595a7daa](https://github.com/firebase/flutterfire/commit/595a7daa3e856cad152463e543d152f71f61cee9))
+
+#### `firebase_ui_localizations` - `v1.0.1`
+
+ - **FIX**: bump dependencies ([#9756](https://github.com/firebase/flutterfire/issues/9756)). ([595a7daa](https://github.com/firebase/flutterfire/commit/595a7daa3e856cad152463e543d152f71f61cee9))
+
+#### `firebase_ui_oauth` - `v1.0.1`
+
+ - **FIX**: bump dependencies ([#9756](https://github.com/firebase/flutterfire/issues/9756)). ([595a7daa](https://github.com/firebase/flutterfire/commit/595a7daa3e856cad152463e543d152f71f61cee9))
+
+
+## 2022-10-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
  - [`firebase_ui_auth` - `v1.0.0`](#firebase_ui_auth---v100)
  - [`firebase_ui_database` - `v1.0.0`](#firebase_ui_database---v100)
  - [`firebase_ui_firestore` - `v1.0.0`](#firebase_ui_firestore---v100)

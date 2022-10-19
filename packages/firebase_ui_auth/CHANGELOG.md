@@ -1,3 +1,7 @@
+## 1.0.1
+
+ - **FIX**: bump dependencies ([#9756](https://github.com/firebase/flutterfire/issues/9756)). ([595a7daa](https://github.com/firebase/flutterfire/commit/595a7daa3e856cad152463e543d152f71f61cee9))
+
 ## 1.0.0
 
 - Graduate package to a stable release.
