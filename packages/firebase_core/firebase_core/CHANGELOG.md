@@ -1,7 +1,5 @@
 ## 2.1.0
 
-> Note: This release has breaking changes.
-
  - **FEAT**: Firebase android SDK BOM - `31.0.1` ([#9767](https://github.com/firebase/flutterfire/issues/9767)). ([7088b2de](https://github.com/firebase/flutterfire/commit/7088b2de4198bf3d0e647fc8f2ff4165f6515387))
 
 ## 2.0.0
