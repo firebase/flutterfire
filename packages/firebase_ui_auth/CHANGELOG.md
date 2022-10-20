@@ -1,3 +1,7 @@
+## 1.0.2
+
+ - **DOCS**: update platform support matrix ([#9764](https://github.com/firebase/flutterfire/issues/9764)). ([dd83af99](https://github.com/firebase/flutterfire/commit/dd83af99d9e2c1ea7caf1fa7b58546c1937bc0d3))
+
 ## 1.0.1
 
  - **FIX**: bump dependencies ([#9756](https://github.com/firebase/flutterfire/issues/9756)). ([595a7daa](https://github.com/firebase/flutterfire/commit/595a7daa3e856cad152463e543d152f71f61cee9))
