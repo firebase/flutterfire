@@ -16,7 +16,7 @@ environment:
 dependencies:
   firebase_analytics_platform_interface: ^3.3.10
   firebase_analytics_web: ^0.5.1+1
-  firebase_core: ^3.0.0
+  firebase_core: ^2.1.0
   firebase_core_platform_interface: ^4.5.1
   flutter:
     sdk: flutter

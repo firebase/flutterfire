@@ -18,7 +18,7 @@ dependencies:
   desktop_webview_auth: ^0.0.5
   email_validator: ^2.0.1
   firebase_auth: ^4.0.2
-  firebase_core: ^3.0.0
+  firebase_core: ^2.1.0
   firebase_database: ^10.0.1
   firebase_dynamic_links: ^5.0.2
   flutter:

@@ -12,7 +12,7 @@ dependencies:
   desktop_webview_auth: ^0.0.9
   email_validator: ^2.0.1
   firebase_auth: ^4.0.2
-  firebase_core: ^3.0.0
+  firebase_core: ^2.1.0
   firebase_dynamic_links: ^5.0.2
   firebase_ui_localizations: ^1.0.1
   firebase_ui_oauth: ^1.0.2
