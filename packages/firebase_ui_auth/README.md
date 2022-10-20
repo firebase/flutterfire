@@ -14,7 +14,7 @@ Firebase UI Auth is a set of Flutter widgets and utilities designed to help you 
 | Phone              | ✓       | ✓   | ✓                | ╳                | ╳                | ╳                |
 | Email link         | ✓       | ✓   | ╳                | ╳                | ╳                | ╳                |
 | Email verification | ✓       | ✓   | ✓ <sup>(2)</sup> | ✓ <sup>(2)</sup> | ✓ <sup>(1)</sup> | ✓ <sup>(1)</sup> |
-| Sign in with Apple | ╳       | ✓   | ╳                | ✓                | ╳                | ╳                |
+| Sign in with Apple | ✓       | ✓   | ✓                | ✓                | ╳                | ╳                |
 | Google Sign in     | ✓       | ✓   | ✓                | ✓                | ✓ <sup>(1)</sup> | ✓ <sup>(1)</sup> |
 | Twitter Login      | ✓       | ✓   | ✓                | ✓                | ✓ <sup>(1)</sup> | ✓ <sup>(1)</sup> |
 | Facebook Sign in   | ✓       | ✓   | ✓                | ✓                | ✓ <sup>(1)</sup> | ✓ <sup>(1)</sup> |
