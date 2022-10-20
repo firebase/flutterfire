@@ -385,6 +385,9 @@ extension on ClassElement {
       final uniqueFields = <String, FieldElement>{};
 
       for (final field in fields) {
+        if (field.getter != null && !field.getter!.isSynthetic) {
+          continue;
+        }
         uniqueFields[field.name] ??= field;
       }
 
@@ -392,6 +395,9 @@ extension on ClassElement {
         if (supertype.isDartCoreObject) continue;
 
         for (final field in supertype.element2.fields) {
+          if (field.getter != null && !field.getter!.isSynthetic) {
+            continue;
+          }
           uniqueFields[field.name] ??= field;
         }
       }

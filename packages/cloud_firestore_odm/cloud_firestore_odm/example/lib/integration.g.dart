@@ -904,8 +904,6 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     FieldValue firstNameFieldValue,
     String? lastName,
     FieldValue lastNameFieldValue,
-    int hashCode,
-    FieldValue hashCodeFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -917,8 +915,6 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     FieldValue firstNameFieldValue,
     String? lastName,
     FieldValue lastNameFieldValue,
-    int hashCode,
-    FieldValue hashCodeFieldValue,
   });
 }
 
@@ -955,8 +951,6 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
     FieldValue? lastNameFieldValue,
-    Object? hashCode = _sentinel,
-    FieldValue? hashCodeFieldValue,
   }) async {
     assert(
       firstName == _sentinel || firstNameFieldValue == null,
@@ -966,17 +960,11 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
       lastName == _sentinel || lastNameFieldValue == null,
       "Cannot specify both lastName and lastNameFieldValue",
     );
-    assert(
-      hashCode == _sentinel || hashCodeFieldValue == null,
-      "Cannot specify both hashCode and hashCodeFieldValue",
-    );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
-      if (hashCode != _sentinel) 'hashCode': hashCode as int,
-      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     return reference.update(json);
@@ -988,8 +976,6 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
     FieldValue? lastNameFieldValue,
-    Object? hashCode = _sentinel,
-    FieldValue? hashCodeFieldValue,
   }) {
     assert(
       firstName == _sentinel || firstNameFieldValue == null,
@@ -999,17 +985,11 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
       lastName == _sentinel || lastNameFieldValue == null,
       "Cannot specify both lastName and lastNameFieldValue",
     );
-    assert(
-      hashCode == _sentinel || hashCodeFieldValue == null,
-      "Cannot specify both hashCode and hashCodeFieldValue",
-    );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
-      if (hashCode != _sentinel) 'hashCode': hashCode as int,
-      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1133,17 +1113,6 @@ abstract class AdvancedJsonQuery
     List<String?>? whereIn,
     List<String?>? whereNotIn,
   });
-  AdvancedJsonQuery whereHashCode({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
-  });
 
   AdvancedJsonQuery orderByDocumentId({
     bool descending = false,
@@ -1175,18 +1144,6 @@ abstract class AdvancedJsonQuery
     String? startAfter,
     String? endAt,
     String? endBefore,
-    AdvancedJsonDocumentSnapshot? startAtDocument,
-    AdvancedJsonDocumentSnapshot? endAtDocument,
-    AdvancedJsonDocumentSnapshot? endBeforeDocument,
-    AdvancedJsonDocumentSnapshot? startAfterDocument,
-  });
-
-  AdvancedJsonQuery orderByHashCode({
-    bool descending = false,
-    int startAt,
-    int startAfter,
-    int endAt,
-    int endBefore,
     AdvancedJsonDocumentSnapshot? startAtDocument,
     AdvancedJsonDocumentSnapshot? endAtDocument,
     AdvancedJsonDocumentSnapshot? endBeforeDocument,
@@ -1433,35 +1390,6 @@ class _$AdvancedJsonQuery
     );
   }
 
-  AdvancedJsonQuery whereHashCode({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
-  }) {
-    return _$AdvancedJsonQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AdvancedJsonFieldMap['hashCode']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
   AdvancedJsonQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1619,78 +1547,6 @@ class _$AdvancedJsonQuery
   }) {
     final query = $referenceWithoutCursor
         .orderBy(_$AdvancedJsonFieldMap['lastName']!, descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-
-    return _$AdvancedJsonQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
-  AdvancedJsonQuery orderByHashCode({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    AdvancedJsonDocumentSnapshot? startAtDocument,
-    AdvancedJsonDocumentSnapshot? endAtDocument,
-    AdvancedJsonDocumentSnapshot? endBeforeDocument,
-    AdvancedJsonDocumentSnapshot? startAfterDocument,
-  }) {
-    final query = $referenceWithoutCursor
-        .orderBy(_$AdvancedJsonFieldMap['hashCode']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -1973,8 +1829,6 @@ abstract class _PrivateAdvancedJsonDocumentReference
     FieldValue firstNameFieldValue,
     String? lastName,
     FieldValue lastNameFieldValue,
-    int hashCode,
-    FieldValue hashCodeFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -1986,8 +1840,6 @@ abstract class _PrivateAdvancedJsonDocumentReference
     FieldValue firstNameFieldValue,
     String? lastName,
     FieldValue lastNameFieldValue,
-    int hashCode,
-    FieldValue hashCodeFieldValue,
   });
 }
 
@@ -2028,8 +1880,6 @@ class _$_PrivateAdvancedJsonDocumentReference
     FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
     FieldValue? lastNameFieldValue,
-    Object? hashCode = _sentinel,
-    FieldValue? hashCodeFieldValue,
   }) async {
     assert(
       firstName == _sentinel || firstNameFieldValue == null,
@@ -2039,17 +1889,11 @@ class _$_PrivateAdvancedJsonDocumentReference
       lastName == _sentinel || lastNameFieldValue == null,
       "Cannot specify both lastName and lastNameFieldValue",
     );
-    assert(
-      hashCode == _sentinel || hashCodeFieldValue == null,
-      "Cannot specify both hashCode and hashCodeFieldValue",
-    );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
-      if (hashCode != _sentinel) 'hashCode': hashCode as int,
-      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     return reference.update(json);
@@ -2061,8 +1905,6 @@ class _$_PrivateAdvancedJsonDocumentReference
     FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
     FieldValue? lastNameFieldValue,
-    Object? hashCode = _sentinel,
-    FieldValue? hashCodeFieldValue,
   }) {
     assert(
       firstName == _sentinel || firstNameFieldValue == null,
@@ -2072,17 +1914,11 @@ class _$_PrivateAdvancedJsonDocumentReference
       lastName == _sentinel || lastNameFieldValue == null,
       "Cannot specify both lastName and lastNameFieldValue",
     );
-    assert(
-      hashCode == _sentinel || hashCodeFieldValue == null,
-      "Cannot specify both hashCode and hashCodeFieldValue",
-    );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
-      if (hashCode != _sentinel) 'hashCode': hashCode as int,
-      if (hashCodeFieldValue != null) 'hashCode': hashCodeFieldValue,
     };
 
     transaction.update(reference, json);
@@ -2208,17 +2044,6 @@ abstract class _PrivateAdvancedJsonQuery
     List<String?>? whereIn,
     List<String?>? whereNotIn,
   });
-  _PrivateAdvancedJsonQuery whereHashCode({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
-  });
 
   _PrivateAdvancedJsonQuery orderByDocumentId({
     bool descending = false,
@@ -2250,18 +2075,6 @@ abstract class _PrivateAdvancedJsonQuery
     String? startAfter,
     String? endAt,
     String? endBefore,
-    _PrivateAdvancedJsonDocumentSnapshot? startAtDocument,
-    _PrivateAdvancedJsonDocumentSnapshot? endAtDocument,
-    _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
-    _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
-  });
-
-  _PrivateAdvancedJsonQuery orderByHashCode({
-    bool descending = false,
-    int startAt,
-    int startAfter,
-    int endAt,
-    int endBefore,
     _PrivateAdvancedJsonDocumentSnapshot? startAtDocument,
     _PrivateAdvancedJsonDocumentSnapshot? endAtDocument,
     _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
@@ -2508,35 +2321,6 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     );
   }
 
-  _PrivateAdvancedJsonQuery whereHashCode({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
-  }) {
-    return _$_PrivateAdvancedJsonQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$PrivateAdvancedJsonFieldMap['hashCode']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
   _PrivateAdvancedJsonQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -2695,79 +2479,6 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
   }) {
     final query = $referenceWithoutCursor.orderBy(
         _$PrivateAdvancedJsonFieldMap['lastName']!,
-        descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-
-    return _$_PrivateAdvancedJsonQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
-  _PrivateAdvancedJsonQuery orderByHashCode({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    _PrivateAdvancedJsonDocumentSnapshot? startAtDocument,
-    _PrivateAdvancedJsonDocumentSnapshot? endAtDocument,
-    _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
-    _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
-  }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$PrivateAdvancedJsonFieldMap['hashCode']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
