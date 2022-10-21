@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
   s.source_files     = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '11.0'
 
   # Flutter dependencies
   s.dependency 'Flutter'

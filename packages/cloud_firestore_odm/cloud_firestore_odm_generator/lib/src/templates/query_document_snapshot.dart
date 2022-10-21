@@ -2,26 +2,37 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import '../collection_generator.dart';
-import 'template.dart';
+import 'package:analyzer/dart/element/type.dart';
 
-class QueryDocumentSnapshotTemplate extends Template<CollectionData> {
+class QueryDocumentSnapshotTemplate {
+  QueryDocumentSnapshotTemplate({
+    required this.queryDocumentSnapshotName,
+    required this.documentSnapshotName,
+    required this.documentReferenceName,
+    required this.type,
+  });
+
+  final String queryDocumentSnapshotName;
+  final String documentSnapshotName;
+  final String documentReferenceName;
+  final DartType type;
+
   @override
-  String generate(CollectionData data) {
+  String toString() {
     return '''
-class ${data.queryDocumentSnapshotName} extends FirestoreQueryDocumentSnapshot<${data.type}> implements ${data.documentSnapshotName} {
-  ${data.queryDocumentSnapshotName}._(this.snapshot, this.data);
+class $queryDocumentSnapshotName extends FirestoreQueryDocumentSnapshot<$type> implements $documentSnapshotName {
+  $queryDocumentSnapshotName._(this.snapshot): data = snapshot.data();
 
   @override
-  final QueryDocumentSnapshot<${data.type}> snapshot;
+  final QueryDocumentSnapshot<$type> snapshot;
 
   @override
-  ${data.documentReferenceName} get reference {
-    return ${data.documentReferenceName}(snapshot.reference);
+  final $type data;
+
+  @override
+  $documentReferenceName get reference {
+    return $documentReferenceName(snapshot.reference);
   }
-
-  @override
-  final ${data.type} data;
 }
 ''';
   }

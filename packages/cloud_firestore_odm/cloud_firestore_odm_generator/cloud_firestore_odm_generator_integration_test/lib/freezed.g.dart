@@ -160,32 +160,17 @@ class _$PersonDocumentReference
 
   @override
   Stream<PersonDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return PersonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(PersonDocumentSnapshot._);
   }
 
   @override
   Future<PersonDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return PersonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(PersonDocumentSnapshot._);
   }
 
   @override
   Future<PersonDocumentSnapshot> transactionGet(Transaction transaction) {
-    return transaction.get(reference).then((snapshot) {
-      return PersonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return transaction.get(reference).then(PersonDocumentSnapshot._);
   }
 
   Future<void> update({
@@ -247,26 +232,6 @@ class _$PersonDocumentReference
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class PersonDocumentSnapshot extends FirestoreDocumentSnapshot<Person> {
-  PersonDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<Person> snapshot;
-
-  @override
-  PersonDocumentReference get reference {
-    return PersonDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final Person? data;
 }
 
 abstract class PersonQuery
@@ -426,37 +391,14 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
 
   final CollectionReference<Object?> _collection;
 
-  PersonQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<Person> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return PersonQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<PersonDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: PersonDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return PersonQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<PersonQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference.snapshots().map(PersonQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<PersonQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference.get(options).then(PersonQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -897,6 +839,23 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class PersonDocumentSnapshot extends FirestoreDocumentSnapshot<Person> {
+  PersonDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<Person> snapshot;
+
+  @override
+  PersonDocumentReference get reference {
+    return PersonDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Person? data;
+}
+
 class PersonQuerySnapshot
     extends FirestoreQuerySnapshot<Person, PersonQueryDocumentSnapshot> {
   PersonQuerySnapshot._(
@@ -904,6 +863,38 @@ class PersonQuerySnapshot
     this.docs,
     this.docChanges,
   );
+
+  factory PersonQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<Person> snapshot,
+  ) {
+    final docs = snapshot.docs.map(PersonQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        PersonDocumentSnapshot._,
+      );
+    }).toList();
+
+    return PersonQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<PersonDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    PersonDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<PersonDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<Person> snapshot;
 
@@ -916,18 +907,18 @@ class PersonQuerySnapshot
 
 class PersonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Person>
     implements PersonDocumentSnapshot {
-  PersonQueryDocumentSnapshot._(this.snapshot, this.data);
+  PersonQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<Person> snapshot;
 
   @override
+  final Person data;
+
+  @override
   PersonDocumentReference get reference {
     return PersonDocumentReference(snapshot.reference);
   }
-
-  @override
-  final Person data;
 }
 
 /// A collection reference object can be used for adding documents,
@@ -1077,33 +1068,18 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
 
   @override
   Stream<PublicRedirectedDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return PublicRedirectedDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(PublicRedirectedDocumentSnapshot._);
   }
 
   @override
   Future<PublicRedirectedDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return PublicRedirectedDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(PublicRedirectedDocumentSnapshot._);
   }
 
   @override
   Future<PublicRedirectedDocumentSnapshot> transactionGet(
       Transaction transaction) {
-    return transaction.get(reference).then((snapshot) {
-      return PublicRedirectedDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return transaction.get(reference).then(PublicRedirectedDocumentSnapshot._);
   }
 
   Future<void> update({
@@ -1149,27 +1125,6 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class PublicRedirectedDocumentSnapshot
-    extends FirestoreDocumentSnapshot<PublicRedirected> {
-  PublicRedirectedDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<PublicRedirected> snapshot;
-
-  @override
-  PublicRedirectedDocumentReference get reference {
-    return PublicRedirectedDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final PublicRedirected? data;
 }
 
 abstract class PublicRedirectedQuery
@@ -1307,37 +1262,18 @@ class _$PublicRedirectedQuery
 
   final CollectionReference<Object?> _collection;
 
-  PublicRedirectedQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<PublicRedirected> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return PublicRedirectedQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<PublicRedirectedDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: PublicRedirectedDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return PublicRedirectedQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<PublicRedirectedQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference
+        .snapshots()
+        .map(PublicRedirectedQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<PublicRedirectedQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference
+        .get(options)
+        .then(PublicRedirectedQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -1678,6 +1614,24 @@ class _$PublicRedirectedQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class PublicRedirectedDocumentSnapshot
+    extends FirestoreDocumentSnapshot<PublicRedirected> {
+  PublicRedirectedDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<PublicRedirected> snapshot;
+
+  @override
+  PublicRedirectedDocumentReference get reference {
+    return PublicRedirectedDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final PublicRedirected? data;
+}
+
 class PublicRedirectedQuerySnapshot extends FirestoreQuerySnapshot<
     PublicRedirected, PublicRedirectedQueryDocumentSnapshot> {
   PublicRedirectedQuerySnapshot._(
@@ -1685,6 +1639,40 @@ class PublicRedirectedQuerySnapshot extends FirestoreQuerySnapshot<
     this.docs,
     this.docChanges,
   );
+
+  factory PublicRedirectedQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<PublicRedirected> snapshot,
+  ) {
+    final docs =
+        snapshot.docs.map(PublicRedirectedQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        PublicRedirectedDocumentSnapshot._,
+      );
+    }).toList();
+
+    return PublicRedirectedQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<PublicRedirectedDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    PublicRedirectedDocumentSnapshot Function(DocumentSnapshot<T> doc)
+        decodeDoc,
+  ) {
+    return FirestoreDocumentChange<PublicRedirectedDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<PublicRedirected> snapshot;
 
@@ -1699,18 +1687,19 @@ class PublicRedirectedQuerySnapshot extends FirestoreQuerySnapshot<
 class PublicRedirectedQueryDocumentSnapshot
     extends FirestoreQueryDocumentSnapshot<PublicRedirected>
     implements PublicRedirectedDocumentSnapshot {
-  PublicRedirectedQueryDocumentSnapshot._(this.snapshot, this.data);
+  PublicRedirectedQueryDocumentSnapshot._(this.snapshot)
+      : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<PublicRedirected> snapshot;
 
   @override
+  final PublicRedirected data;
+
+  @override
   PublicRedirectedDocumentReference get reference {
     return PublicRedirectedDocumentReference(snapshot.reference);
   }
-
-  @override
-  final PublicRedirected data;
 }
 
 // **************************************************************************

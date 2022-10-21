@@ -9,6 +9,24 @@ import 'model.dart';
 
 part 'simple.g.dart';
 
+final ignoredGetterRef = IgnoredGetterCollectionReference();
+
+@Collection<IgnoredGetter>('firestore-example-app/test/getter')
+@JsonSerializable()
+class IgnoredGetter {
+  IgnoredGetter(this.value);
+
+  final int value;
+
+  int get count => 42;
+
+  @JsonKey(ignore: true)
+  int get count2 => 42;
+
+  @JsonKey(ignore: false)
+  int get count3 => 42;
+}
+
 @Collection<Model>('root')
 @JsonSerializable()
 class Model {

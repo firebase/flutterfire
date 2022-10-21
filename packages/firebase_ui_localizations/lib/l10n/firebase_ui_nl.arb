@@ -1,0 +1,427 @@
+{
+  "@@locale": "nl",
+  "@@last_modified": "2022-09-14T18:25:39.449",
+  "accessDisabledErrorText": "De toegang tot dit account is tijdelijk uitgezet",
+  "@accessDisabledErrorText": {
+    "description": "Used as an error message when account is blocked and user tries to perform some actions with the account (e.g. unlinking a credential).",
+    "placeholders": {}
+  },
+  "arrayLabel": "matrix",
+  "@arrayLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "booleanLabel": "booleaans",
+  "@booleanLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "cancelLabel": "annuleren",
+  "@cancelLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "chooseACountry": "Kies een land",
+  "@chooseACountry": {
+    "description": "Used as a label of the country code picker dropdown.",
+    "placeholders": {}
+  },
+  "confirmPasswordDoesNotMatchErrorText": "De wachtwoorden komen niet overeen",
+  "@confirmPasswordDoesNotMatchErrorText": {
+    "description": "Used as an error text when provided passwords do not match.",
+    "placeholders": {}
+  },
+  "confirmPasswordInputLabel": "Wachtwoord bevestigen",
+  "@confirmPasswordInputLabel": {
+    "description": "Used as a label of the PasswordInput that confirms a provided password.",
+    "placeholders": {}
+  },
+  "confirmPasswordIsRequiredErrorText": "Je wachtwoord bevestigen",
+  "@confirmPasswordIsRequiredErrorText": {
+    "description": "Used as an error text when PasswordInput used to confirm the password is empty.",
+    "placeholders": {}
+  },
+  "continueText": "Doorgaan",
+  "@continueText": {
+    "description": "Used as a label of the submit button that takes the user to the next step of the authenticatiion flow.",
+    "placeholders": {}
+  },
+  "countryCode": "Code",
+  "@countryCode": {
+    "description": "Used as a placeholder of the country code input.",
+    "placeholders": {}
+  },
+  "credentialAlreadyInUseErrorText": "Deze aanbieder is gekoppeld aan een ander gebruikersaccount.",
+  "@credentialAlreadyInUseErrorText": {
+    "description": "Error text that is show when user tries to use an OAuth provider that doesn't belong to currently signed in user account.",
+    "placeholders": {}
+  },
+  "deleteAccount": "Account verwijderen",
+  "@deleteAccount": {
+    "description": "Used as a label of the DeleteAccountButton.",
+    "placeholders": {}
+  },
+  "differentMethodsSignInTitleText": "Gebruik een van de volgende methoden om in te loggen",
+  "@differentMethodsSignInTitleText": {
+    "description": "Used as a title of the dialog that indicates that there are different available sign in methods for a provided email.",
+    "placeholders": {}
+  },
+  "disable": "Uitzetten",
+  "@disable": {
+    "description": "Button label that suggests to disable 2FA",
+    "placeholders": {}
+  },
+  "eastInitialLabel": "E",
+  "@eastInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "emailInputLabel": "E-mail",
+  "@emailInputLabel": {
+    "description": "Used as a label of the EmailInput.",
+    "placeholders": {}
+  },
+  "emailIsRequiredErrorText": "E-mailadres is vereist",
+  "@emailIsRequiredErrorText": {
+    "description": "Used as an error text of the EmailInput when the email is empty.",
+    "placeholders": {}
+  },
+  "emailLinkSignInButtonLabel": "Inloggen met magic link",
+  "@emailLinkSignInButtonLabel": {
+    "description": "Used as a label of the EmailLinkSignInButton.",
+    "placeholders": {}
+  },
+  "emailTakenErrorText": "Er bestaat al een account met dit e-mailadres",
+  "@emailTakenErrorText": {
+    "description": "Used as an error message when the user tries to sign up with an email that is already used.",
+    "placeholders": {}
+  },
+  "enable": "Aanzetten",
+  "@enable": {
+    "description": "Button label that suggests to enable 2FA",
+    "placeholders": {}
+  },
+  "enableMoreSignInMethods": "Meer inlogmethoden aanzetten",
+  "@enableMoreSignInMethods": {
+    "description": "Used as a hint to connect more providers.",
+    "placeholders": {}
+  },
+  "enterSMSCodeText": "Sms-code opgeven",
+  "@enterSMSCodeText": {
+    "description": "Used as a label of the SMSCodeInput.",
+    "placeholders": {}
+  },
+  "findProviderForEmailTitleText": "Vul uw e-mailadres in om door te gaan",
+  "@findProviderForEmailTitleText": {
+    "description": "Used as a title of the FindProvidersForEmailView.",
+    "placeholders": {}
+  },
+  "forgotPasswordButtonLabel": "Wachtwoord vergeten?",
+  "@forgotPasswordButtonLabel": {
+    "description": "Used as a label of the ForgotPasswordButton.",
+    "placeholders": {}
+  },
+  "forgotPasswordHintText": "Vul uw e-mailadres in en we sturen u een link om uw wachtwoord te resetten",
+  "@forgotPasswordHintText": {
+    "description": "Used as a hint on a ForgotPasswordView.",
+    "placeholders": {}
+  },
+  "forgotPasswordViewTitle": "Wachtwoord vergeten",
+  "@forgotPasswordViewTitle": {
+    "description": "Used as a title of the ForgotPasswordView.",
+    "placeholders": {}
+  },
+  "geopointLabel": "geografisch punt",
+  "@geopointLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "goBackButtonLabel": "Terug",
+  "@goBackButtonLabel": {
+    "description": "Used as a label of the back button.",
+    "placeholders": {}
+  },
+  "@hashCode": {
+    "description": "The hash code for this object.",
+    "placeholders": {}
+  },
+  "invalidCountryCode": "Ongeldige code",
+  "@invalidCountryCode": {
+    "description": "Used as an error text when provide country code is invalid.",
+    "placeholders": {}
+  },
+  "isNotAValidEmailErrorText": "Vul een geldig e-mailadres in",
+  "@isNotAValidEmailErrorText": {
+    "description": "Used as an error text of the EmailInput if the provided email is not valid.",
+    "placeholders": {}
+  },
+  "latitudeLabel": "breedtegraad",
+  "@latitudeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "linkEmailButtonText": "Volgende",
+  "@linkEmailButtonText": {
+    "description": "Used as a label of the EmailForm submit button when the AuthAction is AuthAction.link.",
+    "placeholders": {}
+  },
+  "longitudeLabel": "lengtegraad",
+  "@longitudeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "mapLabel": "kaart",
+  "@mapLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "mfaTitle": "Verificatie in 2 stappen",
+  "@mfaTitle": {
+    "description": "2-step verification settings tile title.",
+    "placeholders": {}
+  },
+  "name": "Naam",
+  "@name": {
+    "description": "Used as a placeholder of the EditableUserDisplayName.",
+    "placeholders": {}
+  },
+  "northInitialLabel": "N",
+  "@northInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "nullLabel": "null",
+  "@nullLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "numberLabel": "getal",
+  "@numberLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "off": "Uit",
+  "@off": {
+    "description": "Label that suggests that 2-step verification is not enabled",
+    "placeholders": {}
+  },
+  "on": "Aan",
+  "@on": {
+    "description": "Label that suggests that 2-step verification is enabled",
+    "placeholders": {}
+  },
+  "passwordInputLabel": "Wachtwoord",
+  "@passwordInputLabel": {
+    "description": "Used as a label of the PasswordInput.",
+    "placeholders": {}
+  },
+  "passwordIsRequiredErrorText": "Wachtwoord is vereist",
+  "@passwordIsRequiredErrorText": {
+    "description": "Used as an error text when PasswordInput is empty.",
+    "placeholders": {}
+  },
+  "passwordResetEmailSentText": "We hebben u een e-mail gestuurd om uw wachtwoorden te resetten. Check uw e-mail.",
+  "@passwordResetEmailSentText": {
+    "description": "Indicates that the password reset email was sent.",
+    "placeholders": {}
+  },
+  "phoneInputLabel": "Telefoonnummer",
+  "@phoneInputLabel": {
+    "description": "Used as a label of the PhoneInput.",
+    "placeholders": {}
+  },
+  "phoneNumberInvalidErrorText": "Telefoonnummer is ongeldig",
+  "@phoneNumberInvalidErrorText": {
+    "description": "Used as an error text when PhoneInput contains an invalid phone number.",
+    "placeholders": {}
+  },
+  "phoneNumberIsRequiredErrorText": "Telefoonnummer is vereist",
+  "@phoneNumberIsRequiredErrorText": {
+    "description": "Used as an error text when PhoneInput is empty.",
+    "placeholders": {}
+  },
+  "phoneVerificationViewTitleText": "Vul uw telefoonnummer in",
+  "@phoneVerificationViewTitleText": {
+    "description": "Used as a title of the PhoneInputView.",
+    "placeholders": {}
+  },
+  "profile": "Profiel",
+  "@profile": {
+    "description": "A title of the ProfileScreen.",
+    "placeholders": {}
+  },
+  "provideEmail": "Geef uw e-mailadres en wachtwoord op",
+  "@provideEmail": {
+    "description": "Used as a title of the EmailSignUpDialog.",
+    "placeholders": {}
+  },
+  "referenceLabel": "referentie",
+  "@referenceLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "registerActionText": "Registreren",
+  "@registerActionText": {
+    "description": "Used as a label of the EmailForm submit button when the AuthAction is AuthAction.signUp.",
+    "placeholders": {}
+  },
+  "registerHintText": "Heeft u nog geen account?",
+  "@registerHintText": {
+    "description": "Used as a hint text of the LoginView suggesting to create a new account.",
+    "placeholders": {}
+  },
+  "registerText": "Registreren",
+  "@registerText": {
+    "description": "Used as a title of the LoginView when AuthAction is AuthAction.signUp.",
+    "placeholders": {}
+  },
+  "resetPasswordButtonLabel": "Wachtwoord resetten",
+  "@resetPasswordButtonLabel": {
+    "description": "Used as a label of submit button of the ForgotPasswordView.",
+    "placeholders": {}
+  },
+  "@runtimeType": {
+    "description": "A representation of the runtime type of the object.",
+    "placeholders": {}
+  },
+  "sendLinkButtonLabel": "Magic link verzenden",
+  "@sendLinkButtonLabel": {
+    "description": "Used as a label of the submit button on the EmailLinkSignInView.",
+    "placeholders": {}
+  },
+  "signInActionText": "Inloggen",
+  "@signInActionText": {
+    "description": "Used as a label of the EmailForm submit button when the AuthAction is AuthAction.signIn.",
+    "placeholders": {}
+  },
+  "signInHintText": "Heeft u al een account?",
+  "@signInHintText": {
+    "description": "Used as a hint text of the LoginView suggesting to sign in instead of registering a new account.",
+    "placeholders": {}
+  },
+  "signInMethods": "Inlogmethoden",
+  "@signInMethods": {
+    "description": "Used as a label of the row showing connected providers.",
+    "placeholders": {}
+  },
+  "signInText": "Inloggen",
+  "@signInText": {
+    "description": "Used as a title of the LoginView when AuthAction is AuthAction.signIn.",
+    "placeholders": {}
+  },
+  "signInWithAppleButtonText": "Inloggen met Apple",
+  "@signInWithAppleButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Apple provider.",
+    "placeholders": {}
+  },
+  "signInWithEmailLinkSentText": "We hebben u een e-mail gestuurd met een magic link. Check uw e-mail en volg de link om in te loggen.",
+  "@signInWithEmailLinkSentText": {
+    "description": "Indicates that email with a sign in link was sent.",
+    "placeholders": {}
+  },
+  "signInWithEmailLinkViewTitleText": "Inloggen met magic link",
+  "@signInWithEmailLinkViewTitleText": {
+    "description": "Used as a title on the EmailLinkSignInView.",
+    "placeholders": {}
+  },
+  "signInWithFacebookButtonText": "Inloggen met Facebook",
+  "@signInWithFacebookButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Facebook provider.",
+    "placeholders": {}
+  },
+  "signInWithGoogleButtonText": "Inloggen met Google",
+  "@signInWithGoogleButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Google provider.",
+    "placeholders": {}
+  },
+  "signInWithPhoneButtonText": "Inloggen met telefoon",
+  "@signInWithPhoneButtonText": {
+    "description": "Used as a label of the PhoneVerificationButton.",
+    "placeholders": {}
+  },
+  "signInWithTwitterButtonText": "Inloggen met Twitter",
+  "@signInWithTwitterButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Twitter provider.",
+    "placeholders": {}
+  },
+  "signOutButtonText": "Uitloggen",
+  "@signOutButtonText": {
+    "description": "Used as a label of the SignOutButton.",
+    "placeholders": {}
+  },
+  "smsAutoresolutionFailedError": "Kan sms-code niet automatisch omzetten. Vul uw code handmatig in",
+  "@smsAutoresolutionFailedError": {
+    "description": "Used as an error text when AutoresolutionFailedException is being thrown.",
+    "placeholders": {}
+  },
+  "southInitialLabel": "S",
+  "@southInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "stringLabel": "tekenreeks",
+  "@stringLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "timestampLabel": "tijdstempel",
+  "@timestampLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "typeLabel": "type",
+  "@typeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "unknownError": "Er is een onbekende fout opgetreden",
+  "@unknownError": {
+    "description": "Used as a generic error message when unable to resolve error details from Exception or FirebaseAuthException.",
+    "placeholders": {}
+  },
+  "updateLabel": "update",
+  "@updateLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "userNotFoundErrorText": "Account bestaat niet",
+  "@userNotFoundErrorText": {
+    "description": "Used as an error message when the account for provided email was not found.",
+    "placeholders": {}
+  },
+  "valueLabel": "waarde",
+  "@valueLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "verifyCodeButtonText": "Verifiëren",
+  "@verifyCodeButtonText": {
+    "description": "Used as a label of the submit button of the SMSCodeInputView.",
+    "placeholders": {}
+  },
+  "verifyingSMSCodeText": "Sms-code verifiëren...",
+  "@verifyingSMSCodeText": {
+    "description": "Used as a status text of the SMSCodeInput when code verification is in progress.",
+    "placeholders": {}
+  },
+  "verifyItsYouText": "Bevestigen dat u het bent",
+  "@verifyItsYouText": {
+    "description": "Used as a title of the dialog that requires re-authentication of the user when performing destructive actions.",
+    "placeholders": {}
+  },
+  "verifyPhoneNumberButtonText": "Volgende",
+  "@verifyPhoneNumberButtonText": {
+    "description": "Used as a label of the submit button of the PhoneInputView.",
+    "placeholders": {}
+  },
+  "westInitialLabel": "W",
+  "@westInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "wrongOrNoPasswordErrorText": "Het wachtwoord is ongeldig of de gebruiker heeft geen wachtwoord",
+  "@wrongOrNoPasswordErrorText": {
+    "description": "Used as an error text of the PasswordInput when provided password is empty or is not correct.",
+    "placeholders": {}
+  }
+}

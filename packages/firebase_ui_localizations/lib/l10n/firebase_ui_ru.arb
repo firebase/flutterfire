@@ -1,0 +1,427 @@
+{
+  "@@locale": "ru",
+  "@@last_modified": "2022-09-14T18:25:39.449",
+  "accessDisabledErrorText": "Доступ к этому аккаунту временно заблокирован.",
+  "@accessDisabledErrorText": {
+    "description": "Used as an error message when account is blocked and user tries to perform some actions with the account (e.g. unlinking a credential).",
+    "placeholders": {}
+  },
+  "arrayLabel": "массив",
+  "@arrayLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "booleanLabel": "логическое значение",
+  "@booleanLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "cancelLabel": "отменить",
+  "@cancelLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "chooseACountry": "Choose a country (Выберите страну)",
+  "@chooseACountry": {
+    "description": "Used as a label of the country code picker dropdown.",
+    "placeholders": {}
+  },
+  "confirmPasswordDoesNotMatchErrorText": "Пароли не совпадают.",
+  "@confirmPasswordDoesNotMatchErrorText": {
+    "description": "Used as an error text when provided passwords do not match.",
+    "placeholders": {}
+  },
+  "confirmPasswordInputLabel": "Confirm password (Введите пароль ещё раз)",
+  "@confirmPasswordInputLabel": {
+    "description": "Used as a label of the PasswordInput that confirms a provided password.",
+    "placeholders": {}
+  },
+  "confirmPasswordIsRequiredErrorText": "Подтвердите пароль",
+  "@confirmPasswordIsRequiredErrorText": {
+    "description": "Used as an error text when PasswordInput used to confirm the password is empty.",
+    "placeholders": {}
+  },
+  "continueText": "Continue (Далее)",
+  "@continueText": {
+    "description": "Used as a label of the submit button that takes the user to the next step of the authenticatiion flow.",
+    "placeholders": {}
+  },
+  "countryCode": "Code (Код)",
+  "@countryCode": {
+    "description": "Used as a placeholder of the country code input.",
+    "placeholders": {}
+  },
+  "credentialAlreadyInUseErrorText": "Этот поставщик связан с аккаунтом другого пользователя.",
+  "@credentialAlreadyInUseErrorText": {
+    "description": "Error text that is show when user tries to use an OAuth provider that doesn't belong to currently signed in user account.",
+    "placeholders": {}
+  },
+  "deleteAccount": "Delete account (Удалить аккаунт)",
+  "@deleteAccount": {
+    "description": "Used as a label of the DeleteAccountButton.",
+    "placeholders": {}
+  },
+  "differentMethodsSignInTitleText": "Используйте один из следующих способов для входа",
+  "@differentMethodsSignInTitleText": {
+    "description": "Used as a title of the dialog that indicates that there are different available sign in methods for a provided email.",
+    "placeholders": {}
+  },
+  "disable": "Disable (Отключить)",
+  "@disable": {
+    "description": "Button label that suggests to disable 2FA",
+    "placeholders": {}
+  },
+  "eastInitialLabel": "E",
+  "@eastInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "emailInputLabel": "Email (Электронная почта)",
+  "@emailInputLabel": {
+    "description": "Used as a label of the EmailInput.",
+    "placeholders": {}
+  },
+  "emailIsRequiredErrorText": "Укажите адрес электронной почты.",
+  "@emailIsRequiredErrorText": {
+    "description": "Used as an error text of the EmailInput when the email is empty.",
+    "placeholders": {}
+  },
+  "emailLinkSignInButtonLabel": "Sign in with magic link (Войти по ссылке)",
+  "@emailLinkSignInButtonLabel": {
+    "description": "Used as a label of the EmailLinkSignInButton.",
+    "placeholders": {}
+  },
+  "emailTakenErrorText": "К этой электронной почте уже привязан аккаунт.",
+  "@emailTakenErrorText": {
+    "description": "Used as an error message when the user tries to sign up with an email that is already used.",
+    "placeholders": {}
+  },
+  "enable": "Enable (Включить)",
+  "@enable": {
+    "description": "Button label that suggests to enable 2FA",
+    "placeholders": {}
+  },
+  "enableMoreSignInMethods": "Включить больше способов для входа.",
+  "@enableMoreSignInMethods": {
+    "description": "Used as a hint to connect more providers.",
+    "placeholders": {}
+  },
+  "enterSMSCodeText": "Enter SMS code (Ввести код из SMS)",
+  "@enterSMSCodeText": {
+    "description": "Used as a label of the SMSCodeInput.",
+    "placeholders": {}
+  },
+  "findProviderForEmailTitleText": "Введите свой адрес электронной почты, чтобы продолжить",
+  "@findProviderForEmailTitleText": {
+    "description": "Used as a title of the FindProvidersForEmailView.",
+    "placeholders": {}
+  },
+  "forgotPasswordButtonLabel": "Forgot password? (Забыли пароль?)",
+  "@forgotPasswordButtonLabel": {
+    "description": "Used as a label of the ForgotPasswordButton.",
+    "placeholders": {}
+  },
+  "forgotPasswordHintText": "Укажите свой адрес электронной почты, чтобы получить ссылку для сброса пароля.",
+  "@forgotPasswordHintText": {
+    "description": "Used as a hint on a ForgotPasswordView.",
+    "placeholders": {}
+  },
+  "forgotPasswordViewTitle": "Не помню пароль",
+  "@forgotPasswordViewTitle": {
+    "description": "Used as a title of the ForgotPasswordView.",
+    "placeholders": {}
+  },
+  "geopointLabel": "геоточка",
+  "@geopointLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "goBackButtonLabel": "Go back (Назад)",
+  "@goBackButtonLabel": {
+    "description": "Used as a label of the back button.",
+    "placeholders": {}
+  },
+  "@hashCode": {
+    "description": "The hash code for this object.",
+    "placeholders": {}
+  },
+  "invalidCountryCode": "Неверный код.",
+  "@invalidCountryCode": {
+    "description": "Used as an error text when provide country code is invalid.",
+    "placeholders": {}
+  },
+  "isNotAValidEmailErrorText": "Укажите действительный адрес электронной почты.",
+  "@isNotAValidEmailErrorText": {
+    "description": "Used as an error text of the EmailInput if the provided email is not valid.",
+    "placeholders": {}
+  },
+  "latitudeLabel": "широта",
+  "@latitudeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "linkEmailButtonText": "Далее",
+  "@linkEmailButtonText": {
+    "description": "Used as a label of the EmailForm submit button when the AuthAction is AuthAction.link.",
+    "placeholders": {}
+  },
+  "longitudeLabel": "долгота",
+  "@longitudeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "mapLabel": "карта",
+  "@mapLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "mfaTitle": "Двухэтапная аутентификация",
+  "@mfaTitle": {
+    "description": "2-step verification settings tile title.",
+    "placeholders": {}
+  },
+  "name": "Название",
+  "@name": {
+    "description": "Used as a placeholder of the EditableUserDisplayName.",
+    "placeholders": {}
+  },
+  "northInitialLabel": "N",
+  "@northInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "nullLabel": "null",
+  "@nullLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "numberLabel": "число",
+  "@numberLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "off": "Off (Откл.)",
+  "@off": {
+    "description": "Label that suggests that 2-step verification is not enabled",
+    "placeholders": {}
+  },
+  "on": "On (Вкл.)",
+  "@on": {
+    "description": "Label that suggests that 2-step verification is enabled",
+    "placeholders": {}
+  },
+  "passwordInputLabel": "Password (Пароль)",
+  "@passwordInputLabel": {
+    "description": "Used as a label of the PasswordInput.",
+    "placeholders": {}
+  },
+  "passwordIsRequiredErrorText": "Укажите пароль.",
+  "@passwordIsRequiredErrorText": {
+    "description": "Used as an error text when PasswordInput is empty.",
+    "placeholders": {}
+  },
+  "passwordResetEmailSentText": "Мы отправили вам электронное письмо со ссылкой для сброса пароля. Проверьте почту.",
+  "@passwordResetEmailSentText": {
+    "description": "Indicates that the password reset email was sent.",
+    "placeholders": {}
+  },
+  "phoneInputLabel": "Phone number (Номер телефона)",
+  "@phoneInputLabel": {
+    "description": "Used as a label of the PhoneInput.",
+    "placeholders": {}
+  },
+  "phoneNumberInvalidErrorText": "Недействительный номер телефона.",
+  "@phoneNumberInvalidErrorText": {
+    "description": "Used as an error text when PhoneInput contains an invalid phone number.",
+    "placeholders": {}
+  },
+  "phoneNumberIsRequiredErrorText": "Укажите номер телефона.",
+  "@phoneNumberIsRequiredErrorText": {
+    "description": "Used as an error text when PhoneInput is empty.",
+    "placeholders": {}
+  },
+  "phoneVerificationViewTitleText": "Введите номер телефона",
+  "@phoneVerificationViewTitleText": {
+    "description": "Used as a title of the PhoneInputView.",
+    "placeholders": {}
+  },
+  "profile": "Профиль",
+  "@profile": {
+    "description": "A title of the ProfileScreen.",
+    "placeholders": {}
+  },
+  "provideEmail": "Укажите адрес электронной почты и пароль",
+  "@provideEmail": {
+    "description": "Used as a title of the EmailSignUpDialog.",
+    "placeholders": {}
+  },
+  "referenceLabel": "ссылка",
+  "@referenceLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "registerActionText": "Register (Зарегистрировать)",
+  "@registerActionText": {
+    "description": "Used as a label of the EmailForm submit button when the AuthAction is AuthAction.signUp.",
+    "placeholders": {}
+  },
+  "registerHintText": "У вас ещё нет аккаунта?",
+  "@registerHintText": {
+    "description": "Used as a hint text of the LoginView suggesting to create a new account.",
+    "placeholders": {}
+  },
+  "registerText": "Register (Зарегистрировать)",
+  "@registerText": {
+    "description": "Used as a title of the LoginView when AuthAction is AuthAction.signUp.",
+    "placeholders": {}
+  },
+  "resetPasswordButtonLabel": "Reset password (Сбросить пароль)",
+  "@resetPasswordButtonLabel": {
+    "description": "Used as a label of submit button of the ForgotPasswordView.",
+    "placeholders": {}
+  },
+  "@runtimeType": {
+    "description": "A representation of the runtime type of the object.",
+    "placeholders": {}
+  },
+  "sendLinkButtonLabel": "Send magic link (Отправить ссылку)",
+  "@sendLinkButtonLabel": {
+    "description": "Used as a label of the submit button on the EmailLinkSignInView.",
+    "placeholders": {}
+  },
+  "signInActionText": "Sign in (Войти)",
+  "@signInActionText": {
+    "description": "Used as a label of the EmailForm submit button when the AuthAction is AuthAction.signIn.",
+    "placeholders": {}
+  },
+  "signInHintText": "Уже зарегистрированы?",
+  "@signInHintText": {
+    "description": "Used as a hint text of the LoginView suggesting to sign in instead of registering a new account.",
+    "placeholders": {}
+  },
+  "signInMethods": "Sign in methods (Как войти в систему)",
+  "@signInMethods": {
+    "description": "Used as a label of the row showing connected providers.",
+    "placeholders": {}
+  },
+  "signInText": "Sign in (Войти)",
+  "@signInText": {
+    "description": "Used as a title of the LoginView when AuthAction is AuthAction.signIn.",
+    "placeholders": {}
+  },
+  "signInWithAppleButtonText": "Sign in with Apple (Войти через аккаунт Apple)",
+  "@signInWithAppleButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Apple provider.",
+    "placeholders": {}
+  },
+  "signInWithEmailLinkSentText": "Мы отправили вам электронное письмо со ссылкой. Проверьте свой ящик и перейдите по ссылке, чтобы войти в систему.",
+  "@signInWithEmailLinkSentText": {
+    "description": "Indicates that email with a sign in link was sent.",
+    "placeholders": {}
+  },
+  "signInWithEmailLinkViewTitleText": "Sign in with magic link (Войти по ссылке)",
+  "@signInWithEmailLinkViewTitleText": {
+    "description": "Used as a title on the EmailLinkSignInView.",
+    "placeholders": {}
+  },
+  "signInWithFacebookButtonText": "Sign in with Facebook (Войти через аккаунт Facebook)",
+  "@signInWithFacebookButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Facebook provider.",
+    "placeholders": {}
+  },
+  "signInWithGoogleButtonText": "Sign in with Google (Войти с аккаунтом Google)",
+  "@signInWithGoogleButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Google provider.",
+    "placeholders": {}
+  },
+  "signInWithPhoneButtonText": "Sign in with phone (Войти по номеру телефона)",
+  "@signInWithPhoneButtonText": {
+    "description": "Used as a label of the PhoneVerificationButton.",
+    "placeholders": {}
+  },
+  "signInWithTwitterButtonText": "Sign in with Twitter (Войти через аккаунт Twitter)",
+  "@signInWithTwitterButtonText": {
+    "description": "Used as a label of the OAuthProviderButton for Twitter provider.",
+    "placeholders": {}
+  },
+  "signOutButtonText": "Sign out (Выйти)",
+  "@signOutButtonText": {
+    "description": "Used as a label of the SignOutButton.",
+    "placeholders": {}
+  },
+  "smsAutoresolutionFailedError": "Не удалось автоматически подставить код из SMS. Введите свой код вручную.",
+  "@smsAutoresolutionFailedError": {
+    "description": "Used as an error text when AutoresolutionFailedException is being thrown.",
+    "placeholders": {}
+  },
+  "southInitialLabel": "S",
+  "@southInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "stringLabel": "строка",
+  "@stringLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "timestampLabel": "временная метка",
+  "@timestampLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "typeLabel": "тип",
+  "@typeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "unknownError": "Произошла неизвестная ошибка.",
+  "@unknownError": {
+    "description": "Used as a generic error message when unable to resolve error details from Exception or FirebaseAuthException.",
+    "placeholders": {}
+  },
+  "updateLabel": "обновление",
+  "@updateLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "userNotFoundErrorText": "Аккаунт не существует.",
+  "@userNotFoundErrorText": {
+    "description": "Used as an error message when the account for provided email was not found.",
+    "placeholders": {}
+  },
+  "valueLabel": "значение",
+  "@valueLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "verifyCodeButtonText": "Verify (Подтвердить)",
+  "@verifyCodeButtonText": {
+    "description": "Used as a label of the submit button of the SMSCodeInputView.",
+    "placeholders": {}
+  },
+  "verifyingSMSCodeText": "Идет подтверждение кода из SMS...",
+  "@verifyingSMSCodeText": {
+    "description": "Used as a status text of the SMSCodeInput when code verification is in progress.",
+    "placeholders": {}
+  },
+  "verifyItsYouText": "Подтверждение личности",
+  "@verifyItsYouText": {
+    "description": "Used as a title of the dialog that requires re-authentication of the user when performing destructive actions.",
+    "placeholders": {}
+  },
+  "verifyPhoneNumberButtonText": "Далее",
+  "@verifyPhoneNumberButtonText": {
+    "description": "Used as a label of the submit button of the PhoneInputView.",
+    "placeholders": {}
+  },
+  "westInitialLabel": "W",
+  "@westInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "wrongOrNoPasswordErrorText": "Пароль недействителен или не установлен для этого пользователя.",
+  "@wrongOrNoPasswordErrorText": {
+    "description": "Used as an error text of the PasswordInput when provided password is empty or is not correct.",
+    "placeholders": {}
+  }
+}
