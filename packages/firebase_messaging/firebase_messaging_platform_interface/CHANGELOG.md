@@ -1,3 +1,7 @@
+## 4.2.1
+
+ - Update a dependency to the latest release.
+
 ## 4.2.0
 
  - **FEAT**: add support for exporting delivery metrics to BigQuery ([#9636](https://github.com/firebase/flutterfire/issues/9636)). ([170b99b9](https://github.com/firebase/flutterfire/commit/170b99b91573f28316172e43188d57ca14600446))
