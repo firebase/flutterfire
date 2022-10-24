@@ -184,10 +184,16 @@ class User {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
   Future<UserCredential> linkWithCredential(AuthCredential credential) async {
-    return UserCredential._(
-      _auth,
-      await _delegate.linkWithCredential(credential),
-    );
+    try {
+      return UserCredential._(
+        _auth,
+        await _delegate.linkWithCredential(credential),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(_auth, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Links with an AuthProvider using native authentication flow.
@@ -273,10 +279,16 @@ class User {
   Future<UserCredential> reauthenticateWithProvider(
     AuthProvider provider,
   ) async {
-    return UserCredential._(
-      _auth,
-      await _delegate.reauthenticateWithProvider(provider),
-    );
+    try {
+      return UserCredential._(
+        _auth,
+        await _delegate.reauthenticateWithProvider(provider),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(_auth, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Re-authenticates a user using a popup on Web.
@@ -480,12 +492,18 @@ class User {
     // also clear that instance before proceeding.
     bool mustClear = verifier == null;
     verifier ??= RecaptchaVerifier(auth: _delegate.auth);
-    final result =
-        await _delegate.linkWithPhoneNumber(phoneNumber, verifier.delegate);
-    if (mustClear) {
-      verifier.clear();
+    try {
+      final result =
+          await _delegate.linkWithPhoneNumber(phoneNumber, verifier.delegate);
+      if (mustClear) {
+        verifier.clear();
+      }
+      return ConfirmationResult._(_auth, result);
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(_auth, e);
+    } catch (e) {
+      rethrow;
     }
-    return ConfirmationResult._(_auth, result);
   }
 
   /// Re-authenticates a user using a fresh credential.
@@ -520,10 +538,16 @@ class User {
   Future<UserCredential> reauthenticateWithCredential(
     AuthCredential credential,
   ) async {
-    return UserCredential._(
-      _auth,
-      await _delegate.reauthenticateWithCredential(credential),
-    );
+    try {
+      return UserCredential._(
+        _auth,
+        await _delegate.reauthenticateWithCredential(credential),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(_auth, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Refreshes the current user, if signed in.
