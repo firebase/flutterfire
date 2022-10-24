@@ -64,7 +64,7 @@ class MultiFactorAssertion {
   final MultiFactorAssertionPlatform _delegate;
 
   MultiFactorAssertion._(this._delegate) {
-    MultiFactorAssertionPlatform.verifyExtends(_delegate);
+    MultiFactorAssertionPlatform.verify(_delegate);
   }
 }
 
@@ -75,7 +75,7 @@ class MultiFactorResolver {
   final MultiFactorResolverPlatform _delegate;
 
   MultiFactorResolver._(this._auth, this._delegate) {
-    MultiFactorResolverPlatform.verifyExtends(_delegate);
+    MultiFactorResolverPlatform.verify(_delegate);
   }
 
   /// List of [MultiFactorInfo] which represents the available

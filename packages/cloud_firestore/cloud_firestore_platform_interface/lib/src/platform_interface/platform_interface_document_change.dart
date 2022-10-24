@@ -3,9 +3,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// An enumeration of document change types.
 enum DocumentChangeType {
@@ -42,8 +41,8 @@ class DocumentChangePlatform extends PlatformInterface {
   /// This is used by the app-facing [DocumentChange] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(DocumentChangePlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(DocumentChangePlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The type of change that occurred (added, modified, or removed).

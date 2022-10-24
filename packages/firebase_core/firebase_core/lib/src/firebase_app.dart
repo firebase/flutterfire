@@ -15,7 +15,7 @@ class FirebaseApp {
   /// This constructor ensures that the delegate instance it is
   /// constructed with is one which extends [FirebaseAppPlatform].
   FirebaseApp._(this._delegate) {
-    FirebaseAppPlatform.verifyExtends(_delegate);
+    FirebaseAppPlatform.verify(_delegate);
   }
 
   final FirebaseAppPlatform _delegate;

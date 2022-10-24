@@ -49,7 +49,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseAppCheckPlatform.instance]
   static set instance(FirebaseAppCheckPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

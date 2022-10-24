@@ -75,7 +75,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseAuthPlatform.instance]
   static set instance(FirebaseAuthPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

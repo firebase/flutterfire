@@ -13,7 +13,7 @@ class User {
   MultiFactor? _multiFactor;
 
   User._(this._auth, this._delegate) {
-    UserPlatform.verifyExtends(_delegate);
+    UserPlatform.verify(_delegate);
   }
 
   /// The users display name.

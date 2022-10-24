@@ -52,7 +52,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseRemoteConfigPlatform] instance.
   static set instance(FirebaseRemoteConfigPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

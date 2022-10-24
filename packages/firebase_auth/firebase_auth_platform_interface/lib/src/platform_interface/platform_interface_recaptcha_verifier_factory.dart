@@ -61,13 +61,13 @@ abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
   /// Sets a factory delegate as the current [RecaptchaVerifierFactoryPlatform]
   /// instance.
   static set instance(RecaptchaVerifierFactoryPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 
   /// Ensures that a delegate class extends [RecaptchaVerifierFactoryPlatform].
   static void verifyExtends(RecaptchaVerifierFactoryPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
   }
 
   /// Returns the assigned factory delegate.
