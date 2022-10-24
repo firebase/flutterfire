@@ -279,6 +279,79 @@ class User {
     );
   }
 
+  /// Re-authenticates a user using a popup on Web.
+  ///
+  /// Use before operations such as [User.updatePassword] that require tokens
+  /// from recent sign-in attempts.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **user-mismatch**:
+  ///  - Thrown if the credential given does not correspond to the user.
+  /// - **user-not-found**:
+  ///  - Thrown if the credential given does not correspond to any existing
+  ///    user.
+  /// - **invalid-credential**:
+  ///  - Thrown if the provider's credential is not valid. This can happen if it
+  ///    has already expired when calling link, or if it used invalid token(s).
+  ///    See the Firebase documentation for your provider, and make sure you
+  ///    pass in the correct parameters to the credential method.
+  /// - **invalid-email**:
+  ///  - Thrown if the email used in a [EmailAuthProvider.credential] is
+  ///    invalid.
+  /// - **wrong-password**:
+  ///  - Thrown if the password used in a [EmailAuthProvider.credential] is not
+  ///    correct or when the user associated with the email does not have a
+  ///    password.
+  /// - **invalid-verification-code**:
+  ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
+  ///    verification code of the credential is not valid.
+  /// - **invalid-verification-id**:
+  ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
+  ///    verification ID of the credential is not valid.
+  Future<UserCredential> reauthenticateWithPopup(
+    AuthProvider provider,
+  ) async {
+    return UserCredential._(
+      _auth,
+      await _delegate.reauthenticateWithPopup(provider),
+    );
+  }
+
+  /// Re-authenticates a user using a redirection on Web.
+  ///
+  /// Use before operations such as [User.updatePassword] that require tokens
+  /// from recent sign-in attempts.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **user-mismatch**:
+  ///  - Thrown if the credential given does not correspond to the user.
+  /// - **user-not-found**:
+  ///  - Thrown if the credential given does not correspond to any existing
+  ///    user.
+  /// - **invalid-credential**:
+  ///  - Thrown if the provider's credential is not valid. This can happen if it
+  ///    has already expired when calling link, or if it used invalid token(s).
+  ///    See the Firebase documentation for your provider, and make sure you
+  ///    pass in the correct parameters to the credential method.
+  /// - **invalid-email**:
+  ///  - Thrown if the email used in a [EmailAuthProvider.credential] is
+  ///    invalid.
+  /// - **wrong-password**:
+  ///  - Thrown if the password used in a [EmailAuthProvider.credential] is not
+  ///    correct or when the user associated with the email does not have a
+  ///    password.
+  /// - **invalid-verification-code**:
+  ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
+  ///    verification code of the credential is not valid.
+  /// - **invalid-verification-id**:
+  ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
+  ///    verification ID of the credential is not valid.
+  Future<void> reauthenticateWithRedirect(
+    AuthProvider provider,
+  ) async {
+    await _delegate.reauthenticateWithRedirect(provider);
+  }
+
   /// Links the user account with the given provider.
   ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:

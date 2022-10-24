@@ -422,6 +422,9 @@ final appleProvider = AppleAuthProvider();
 
 if (kIsWeb) {
   await FirebaseAuth.instance.currentUser?.reauthenticateWithPopup(appleProvider);
+  
+  // Or you can reauthenticate with a redirection
+  // await FirebaseAuth.instance.currentUser?.reauthenticateWithRedirect(appleProvider);
 } else {
   await FirebaseAuth.instance.currentUser?.reauthenticateWithProvider(appleProvider);
 }
