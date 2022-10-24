@@ -16,6 +16,8 @@ dependencies:
   http: ^0.13.0
 
 dependency_overrides:
+  _flutterfire_internals:
+    path: ../../../_flutterfire_internals
   firebase_core:
     path: ../../../firebase_core/firebase_core
   firebase_core_platform_interface:
@@ -29,7 +31,7 @@ dependency_overrides:
   firebase_messaging_web:
     path: ../../firebase_messaging_web
   # Override for `flutter_local_notifications`:
-  plugin_platform_interface: ^2.0.0
+  plugin_platform_interface: ^2.1.3
 
 flutter:
   uses-material-design: true

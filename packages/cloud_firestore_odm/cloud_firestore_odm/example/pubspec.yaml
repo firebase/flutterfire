@@ -28,10 +28,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^2.0.0
+  http: ^0.13.5
   json_serializable: ^6.3.0
   mockito: ^5.0.0
 
 dependency_overrides:
+  _flutterfire_internals:
+    path: ../../../_flutterfire_internals
   cloud_firestore:
     path: ../../../cloud_firestore/cloud_firestore
   cloud_firestore_odm:

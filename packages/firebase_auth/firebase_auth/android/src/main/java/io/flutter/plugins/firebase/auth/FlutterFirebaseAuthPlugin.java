@@ -40,6 +40,7 @@ import com.google.firebase.auth.MultiFactorAssertion;
 import com.google.firebase.auth.MultiFactorInfo;
 import com.google.firebase.auth.MultiFactorResolver;
 import com.google.firebase.auth.MultiFactorSession;
+import com.google.firebase.auth.OAuthCredential;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -104,6 +105,9 @@ public class FlutterFirebaseAuthPlugin
     output.put(Constants.PROVIDER_ID, authCredential.getProvider());
     output.put(Constants.SIGN_IN_METHOD, authCredential.getSignInMethod());
     output.put(Constants.TOKEN, authCredentialHashCode);
+    if (authCredential instanceof OAuthCredential) {
+      output.put(Constants.ACCESS_TOKEN, ((OAuthCredential) authCredential).getAccessToken());
+    }
 
     return output;
   }
@@ -1124,6 +1128,10 @@ public class FlutterFirebaseAuthPlugin
 
             taskCompletionSource.setResult(parseAuthResult(authResult));
           } catch (Exception e) {
+            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+              handleMultiFactorException(arguments, taskCompletionSource, e);
+              return;
+            }
             String message = e.getMessage();
 
             if (message != null
@@ -1165,7 +1173,11 @@ public class FlutterFirebaseAuthPlugin
                 Tasks.await(firebaseUser.reauthenticateAndRetrieveData(credential));
             taskCompletionSource.setResult(parseAuthResult(authResult));
           } catch (Exception e) {
-            taskCompletionSource.setException(e);
+            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+              handleMultiFactorException(arguments, taskCompletionSource, e);
+            } else {
+              taskCompletionSource.setException(e);
+            }
           }
         });
 

@@ -10,7 +10,7 @@ class DatabaseEvent {
   final DatabaseEventPlatform _delegate;
 
   DatabaseEvent._(this._delegate) {
-    DatabaseEventPlatform.verifyExtends(_delegate);
+    DatabaseEventPlatform.verify(_delegate);
   }
 
   /// The type of event.

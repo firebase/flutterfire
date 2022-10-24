@@ -31,6 +31,8 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dependency_overrides:
+  _flutterfire_internals:
+    path: ../../../_flutterfire_internals
   firebase_core:
     path: ../../../firebase_core/firebase_core
   firebase_core_platform_interface:

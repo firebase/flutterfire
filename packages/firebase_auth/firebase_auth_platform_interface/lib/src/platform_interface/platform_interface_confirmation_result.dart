@@ -18,8 +18,8 @@ abstract class ConfirmationResultPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Ensures that any delegate instances extend this class.
-  static void verifyExtends(ConfirmationResultPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(ConfirmationResultPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The phone number authentication operation's verification ID.

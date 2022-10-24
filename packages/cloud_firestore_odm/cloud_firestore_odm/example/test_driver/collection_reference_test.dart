@@ -35,6 +35,33 @@ void main() {
       );
     });
 
+    test('Injects document ID when annotated by @Id', () async {
+      final collection = await initializeTest(MovieCollectionReference());
+
+      await collection.doc('123').set(createMovie(title: 'a'));
+      await collection.doc('456').set(createMovie(title: 'b'));
+
+      final a = await collection.doc('123').get();
+      final b = await collection.doc('456').get();
+
+      expect(a.data?.id, '123');
+      expect(b.data?.id, '456');
+    });
+
+    test(
+        'When using @Id, set/update do not insert an "id" property in the document',
+        () async {
+      final collection = await initializeTest(MovieCollectionReference());
+
+      await collection.doc('123').set(createMovie(title: 'a', id: '42'));
+
+      final snapshot = await FirebaseFirestore.instance
+          .doc(collection.doc('123').path)
+          .get();
+
+      expect(snapshot.data()?.containsKey('id'), false);
+    });
+
     group('any collection', () {
       test('reference', () async {
         expect(
@@ -739,6 +766,7 @@ void main() {
             runtime: 'runtime',
             title: 'title',
             year: 1999,
+            id: '_',
           ),
         );
         final snapshot = StreamQueue(doc.snapshots());
@@ -762,6 +790,7 @@ void main() {
             runtime: 'runtime2',
             title: 'title2',
             year: 14242,
+            id: '_',
           ),
         );
 
@@ -795,6 +824,7 @@ void main() {
             runtime: 'runtime',
             title: 'title',
             year: 1999,
+            id: '_',
           ),
         );
 
@@ -817,6 +847,7 @@ void main() {
             runtime: 'runtime2',
             title: 'title2',
             year: 14242,
+            id: '_',
           ),
         );
 

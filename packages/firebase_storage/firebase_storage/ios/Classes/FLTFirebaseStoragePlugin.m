@@ -67,6 +67,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 @implementation FLTFirebaseStoragePlugin {
   NSMutableDictionary<NSNumber *, FIRStorageObservableTask<FIRStorageTaskManagement> *> *_tasks;
   dispatch_queue_t _callbackQueue;
+  bool hasEmulatorBooted;
 }
 
 #pragma mark - FlutterPlugin
@@ -92,6 +93,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
         dictionary];
     _callbackQueue =
         dispatch_queue_create("io.flutter.plugins.firebase.storage", DISPATCH_QUEUE_SERIAL);
+    hasEmulatorBooted = false;
   }
   return self;
 }
@@ -295,8 +297,28 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 - (void)referenceUpdateMetadata:(id)arguments
            withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];
-  FIRStorageMetadata *metadata =
-      [self FIRStorageMetadataFromNSDictionary:arguments[kFLTFirebaseStorageKeyMetadata]];
+  FIRStorageMetadata *metadata = [[FIRStorageMetadata alloc] init];
+  NSDictionary *dictionary = arguments[kFLTFirebaseStorageKeyMetadata];
+
+  if (dictionary[kFLTFirebaseStorageKeyCacheControl] != [NSNull null]) {
+    metadata.cacheControl = dictionary[kFLTFirebaseStorageKeyCacheControl];
+  }
+  if (dictionary[kFLTFirebaseStorageKeyContentDisposition] != [NSNull null]) {
+    metadata.contentDisposition = dictionary[kFLTFirebaseStorageKeyContentDisposition];
+  }
+  if (dictionary[kFLTFirebaseStorageKeyContentEncoding] != [NSNull null]) {
+    metadata.contentEncoding = dictionary[kFLTFirebaseStorageKeyContentEncoding];
+  }
+  if (dictionary[kFLTFirebaseStorageKeyContentLanguage] != [NSNull null]) {
+    metadata.contentLanguage = dictionary[kFLTFirebaseStorageKeyContentLanguage];
+  }
+  if (dictionary[kFLTFirebaseStorageKeyContentType] != [NSNull null]) {
+    metadata.contentType = dictionary[kFLTFirebaseStorageKeyContentType];
+  }
+  if (dictionary[kFLTFirebaseStorageKeyCustomMetadata] != [NSNull null]) {
+    metadata.customMetadata = dictionary[kFLTFirebaseStorageKeyCustomMetadata];
+  }
+
   [reference updateMetadata:metadata
                  completion:^(FIRStorageMetadata *updatedMetadata, NSError *error) {
                    if (error != nil) {
@@ -538,7 +560,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     FIRStorageObservableTask<FIRStorageTaskManagement> *task;
     FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];
     FIRStorageMetadata *metadata =
-        [self FIRStorageMetadataFromNSDictionary:arguments[kFLTFirebaseStorageKeyMetadata]];
+        [self FIRStorageMetadataFromNSDictionary:arguments[kFLTFirebaseStorageKeyMetadata]
+                                        fullPath:[reference fullPath]];
 
     if (type == FLTFirebaseStorageTaskTypeFile) {
       NSURL *fileUrl = [NSURL fileURLWithPath:arguments[@"filePath"]];
@@ -746,28 +769,38 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   return dictionary;
 }
 
-- (FIRStorageMetadata *)FIRStorageMetadataFromNSDictionary:(NSDictionary *)dictionary {
+- (FIRStorageMetadata *)FIRStorageMetadataFromNSDictionary:(NSDictionary *)dictionary
+                                                  fullPath:(NSString *)fullPath {
+  NSMutableDictionary *metadata = [NSMutableDictionary dictionary];
+
+  // NOTE: Firebase iOS SDK 10 requires a "path" property on `FIRStorageMetadata`. We do this by
+  // "initWithDictionary()" which uses "name" property as "path" under the hood.
+  // See
+  // https://github.com/firebase/firebase-ios-sdk/blob/970b4c45098319e40e6e5157d340d16cb73a2b88/FirebaseStorage/Sources/StorageMetadata.swift#L156-L178
+  metadata[@"name"] = fullPath;
+
   if (dictionary == nil || [dictionary isEqual:[NSNull null]]) return nil;
-  FIRStorageMetadata *metadata = [[FIRStorageMetadata alloc] init];
+
   if (dictionary[kFLTFirebaseStorageKeyCacheControl] != [NSNull null]) {
-    metadata.cacheControl = dictionary[kFLTFirebaseStorageKeyCacheControl];
+    metadata[@"cacheControl"] = dictionary[kFLTFirebaseStorageKeyCacheControl];
   }
   if (dictionary[kFLTFirebaseStorageKeyContentDisposition] != [NSNull null]) {
-    metadata.contentDisposition = dictionary[kFLTFirebaseStorageKeyContentDisposition];
+    metadata[@"contentDisposition"] = dictionary[kFLTFirebaseStorageKeyContentDisposition];
   }
   if (dictionary[kFLTFirebaseStorageKeyContentEncoding] != [NSNull null]) {
-    metadata.contentEncoding = dictionary[kFLTFirebaseStorageKeyContentEncoding];
+    metadata[@"contentEncoding"] = dictionary[kFLTFirebaseStorageKeyContentEncoding];
   }
   if (dictionary[kFLTFirebaseStorageKeyContentLanguage] != [NSNull null]) {
-    metadata.contentLanguage = dictionary[kFLTFirebaseStorageKeyContentLanguage];
+    metadata[@"contentLanguage"] = dictionary[kFLTFirebaseStorageKeyContentLanguage];
   }
   if (dictionary[kFLTFirebaseStorageKeyContentType] != [NSNull null]) {
-    metadata.contentType = dictionary[kFLTFirebaseStorageKeyContentType];
+    metadata[@"contentType"] = dictionary[kFLTFirebaseStorageKeyContentType];
   }
   if (dictionary[kFLTFirebaseStorageKeyCustomMetadata] != [NSNull null]) {
-    metadata.customMetadata = dictionary[kFLTFirebaseStorageKeyCustomMetadata];
+    metadata[@"metadata"] = dictionary[kFLTFirebaseStorageKeyCustomMetadata];
   }
-  return metadata;
+
+  return [[FIRStorageMetadata alloc] initWithDictionary:metadata];
 }
 
 - (NSDictionary *)NSDictionaryFromFIRStorageMetadata:(FIRStorageMetadata *)metadata {
@@ -855,14 +888,9 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   }
 
   NSString *emulatorHost = arguments[@"host"];
-  if (![emulatorHost isEqual:[NSNull null]] && emulatorHost != nil) {
-    @try {
-      [storage useEmulatorWithHost:emulatorHost port:[arguments[@"port"] integerValue]];
-    } @catch (NSException *e) {
-      NSLog(@"WARNING: Unable to set the Firebase Storage emulator settings. These must be set "
-            @"before any usages of Firebase Storage. If you see this log after a hot "
-            @"reload/restart you can safely ignore it.");
-    }
+  if (![emulatorHost isEqual:[NSNull null]] && emulatorHost != nil && hasEmulatorBooted == false) {
+    [storage useEmulatorWithHost:emulatorHost port:[arguments[@"port"] integerValue]];
+    hasEmulatorBooted = true;
   }
 
   storage.callbackQueue = _callbackQueue;

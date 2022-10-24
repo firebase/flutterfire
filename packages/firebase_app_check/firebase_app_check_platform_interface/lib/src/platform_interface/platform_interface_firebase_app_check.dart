@@ -49,7 +49,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseAppCheckPlatform.instance]
   static set instance(FirebaseAppCheckPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 
@@ -58,7 +58,8 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   /// On web, provide the reCAPTCHA v3 Site Key which can be found in the
   /// Firebase Console. For more information, see
   /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web?authuser=0).
-  Future<void> activate({String? webRecaptchaSiteKey}) {
+  Future<void> activate(
+      {String? webRecaptchaSiteKey, bool? androidDebugProvider}) {
     throw UnimplementedError('activate() is not implemented');
   }
 

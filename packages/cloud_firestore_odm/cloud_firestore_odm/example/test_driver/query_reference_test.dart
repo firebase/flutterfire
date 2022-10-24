@@ -2,11 +2,15 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore_odm_example/integration/named_query.dart';
 import 'package:cloud_firestore_odm_example/integration/query.dart';
 import 'package:cloud_firestore_odm_example/movie.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
 
 import 'common.dart';
 
@@ -168,5 +172,35 @@ void main() {
       },
       skip: 'Blocked by FlutterFire support for querying document references',
     );
+  });
+
+  group('FirebaeFirestore.myCustomNamedQuery()', () {
+    Future<Uint8List> loadBundleSetup() async {
+      // endpoint serves a bundle with 3 documents each containing
+      // a 'number' property that increments in value 1-3.
+      final url = Uri.https('api.rnfirebase.io', '/firestore/bundle-4');
+      final response = await http.get(url);
+      final string = response.body;
+      return Uint8List.fromList(string.codeUnits);
+    }
+
+    test('myCustomNamedQuery() successful', () async {
+      final buffer = await loadBundleSetup();
+      final task = FirebaseFirestore.instance.loadBundle(buffer);
+
+      // ensure the bundle has been completely cached
+      await task.stream.last;
+
+      // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
+      // with 'number' property
+      final snapshot = await FirebaseFirestore.instance.namedBundleTest4Get(
+        options: const GetOptions(source: Source.cache),
+      );
+
+      expect(
+        snapshot.docs.map((document) => document.data.number),
+        everyElement(anyOf(1, 2, 3)),
+      );
+    });
   });
 }

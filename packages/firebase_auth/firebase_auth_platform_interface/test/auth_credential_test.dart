@@ -53,7 +53,7 @@ void main() {
 
       expect(
         result,
-        'AuthCredential(providerId: $kMockProviderId, signInMethod: $kMockSignInMethod, token: $kMockToken)',
+        'AuthCredential(providerId: $kMockProviderId, signInMethod: $kMockSignInMethod, token: $kMockToken, accessToken: null)',
       );
     });
   });

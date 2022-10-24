@@ -7,6 +7,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:collection/collection.dart';
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 
+import 'aggregate_query_web.dart';
 import 'internals.dart';
 import 'interop/firestore.dart' as firestore_interop;
 import 'utils/web_utils.dart';
@@ -231,5 +232,10 @@ class QueryWeb extends QueryPlatform {
     return _copyWithParameters(<String, dynamic>{
       'where': conditions,
     });
+  }
+
+  @override
+  AggregateQueryPlatform count() {
+    return AggregateQueryWeb(this, _webQuery);
   }
 }

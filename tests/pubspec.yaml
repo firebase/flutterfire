@@ -8,12 +8,6 @@ environment:
   sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
-  cloud_firestore:
-    path: ../packages/cloud_firestore/cloud_firestore
-  cloud_firestore_platform_interface:
-    path: ../packages/cloud_firestore/cloud_firestore_platform_interface
-  cloud_firestore_web:
-    path: ../packages/cloud_firestore/cloud_firestore_web
   cloud_functions:
     path: ../packages/cloud_functions/cloud_functions
   cloud_functions_platform_interface:
@@ -104,12 +98,8 @@ dependencies:
   http: ^0.13.4
 
 dependency_overrides:
-  cloud_firestore:
-    path: ../packages/cloud_firestore/cloud_firestore
-  cloud_firestore_platform_interface:
-    path: ../packages/cloud_firestore/cloud_firestore_platform_interface
-  cloud_firestore_web:
-    path: ../packages/cloud_firestore/cloud_firestore_web
+  _flutterfire_internals:
+    path: ../packages/_flutterfire_internals
   cloud_functions:
     path: ../packages/cloud_functions/cloud_functions
   cloud_functions_platform_interface:
