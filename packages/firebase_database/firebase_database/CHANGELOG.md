@@ -1,3 +1,21 @@
+## 10.0.2
+
+ - Update a dependency to the latest release.
+
+## 10.0.1
+
+ - Update a dependency to the latest release.
+
+## 10.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 9.1.7
+
+ - Update a dependency to the latest release.
+
 ## 9.1.6
 
  - **DOCS**: removed duplicate words in dart doc comment ([#9620](https://github.com/firebase/flutterfire/issues/9620)). ([cb980a6e](https://github.com/firebase/flutterfire/commit/cb980a6eb3cc08878ca6205e01e4d3e57add81cf))

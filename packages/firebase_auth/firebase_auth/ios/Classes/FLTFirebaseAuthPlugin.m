@@ -1064,7 +1064,13 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
   [currentUser linkWithCredential:credential
                        completion:^(FIRAuthDataResult *authResult, NSError *error) {
                          if (error != nil) {
-                           result.error(nil, nil, nil, error);
+                           if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+                             [self handleMultiFactorError:arguments
+                                               withResult:result
+                                                withError:error];
+                           } else {
+                             result.error(nil, nil, nil, error);
+                           }
                          } else {
                            result.success(authResult);
                          }
@@ -1090,7 +1096,13 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
   [currentUser reauthenticateWithCredential:credential
                                  completion:^(FIRAuthDataResult *authResult, NSError *error) {
                                    if (error != nil) {
-                                     result.error(nil, nil, nil, error);
+                                     if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+                                       [self handleMultiFactorError:arguments
+                                                         withResult:result
+                                                          withError:error];
+                                     } else {
+                                       result.error(nil, nil, nil, error);
+                                     }
                                    } else {
                                      result.success(authResult);
                                    }
@@ -1676,15 +1688,23 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
     return [NSNull null];
   }
 
+  NSString *accessToken = nil;
+  if ([authCredential isKindOfClass:[FIROAuthCredential class]]) {
+    if (((FIROAuthCredential *)authCredential).accessToken != nil) {
+      accessToken = ((FIROAuthCredential *)authCredential).accessToken;
+    } else if (((FIROAuthCredential *)authCredential).IDToken != nil) {
+      // For Sign In With Apple, the token is stored in IDToken
+      accessToken = ((FIROAuthCredential *)authCredential).IDToken;
+    }
+  }
+
   return @{
     kArgumentProviderId : authCredential.provider,
     // Note: "signInMethod" does not exist on iOS SDK, so using provider
     // instead.
     kArgumentSignInMethod : authCredential.provider,
     kArgumentToken : @([authCredential hash]),
-    kArgumentAccessToken : ([authCredential isKindOfClass:[FIROAuthCredential class]])
-        ? ((FIROAuthCredential *)authCredential).accessToken
-        : nil,
+    kArgumentAccessToken : accessToken ?: [NSNull null],
   };
 }
 

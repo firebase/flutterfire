@@ -80,6 +80,7 @@ FirebaseAuthException getFirebaseAuthException(
         MultiFactorSessionWeb('web', resolverWeb.session),
         FirebaseAuthWeb.instance,
         resolverWeb,
+        auth,
       ),
     );
   }

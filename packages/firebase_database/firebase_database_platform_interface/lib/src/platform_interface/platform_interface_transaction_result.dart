@@ -17,8 +17,8 @@ class TransactionResultPlatform extends PlatformInterface {
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [TransactionResultPlatform].
-  static void verifyExtends(TransactionResultPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(TransactionResultPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   static final Object _token = Object();

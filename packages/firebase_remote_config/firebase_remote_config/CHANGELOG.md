@@ -1,3 +1,21 @@
+## 3.0.2
+
+ - Update a dependency to the latest release.
+
+## 3.0.1
+
+ - Update a dependency to the latest release.
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 2.0.20
+
+ - Update a dependency to the latest release.
+
 ## 2.0.19
 
  - Update a dependency to the latest release.

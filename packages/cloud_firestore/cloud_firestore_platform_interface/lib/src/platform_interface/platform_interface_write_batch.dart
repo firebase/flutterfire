@@ -27,8 +27,8 @@ abstract class WriteBatchPlatform extends PlatformInterface {
   /// This is used by the app-facing [WriteBatch] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(WriteBatchPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(WriteBatchPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// Commits all of the writes in this write batch as a single atomic unit.

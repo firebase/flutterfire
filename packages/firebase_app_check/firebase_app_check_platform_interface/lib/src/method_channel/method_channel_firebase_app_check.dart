@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +24,9 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       'appName': app.name,
     }).then((channelName) {
       final events = EventChannel(channelName!, channel.codec);
-      events.receiveBroadcastStream().listen(
+      events
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
+          .listen(
         (arguments) {
           // ignore: close_sinks
           StreamController<String?> controller =

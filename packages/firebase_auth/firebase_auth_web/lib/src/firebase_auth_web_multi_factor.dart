@@ -10,6 +10,7 @@ import 'package:firebase_auth_web/firebase_auth_web.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_user_credential.dart';
 
 import 'interop/auth.dart' as auth;
+import 'interop/auth.dart' as auth_interop;
 import 'interop/multi_factor.dart' as multi_factor_interop;
 import 'utils/web_utils.dart';
 
@@ -92,9 +93,11 @@ class MultiFactorResolverWeb extends MultiFactorResolverPlatform {
     MultiFactorSession session,
     this._auth,
     this._webMultiFactorResolver,
+    this._webAuth,
   ) : super(hints, session);
 
   final multi_factor_interop.MultiFactorResolver _webMultiFactorResolver;
+  final auth_interop.Auth? _webAuth;
   final FirebaseAuthWeb _auth;
 
   @override
@@ -106,6 +109,7 @@ class MultiFactorResolverWeb extends MultiFactorResolverPlatform {
     return UserCredentialWeb(
       _auth,
       await _webMultiFactorResolver.resolveSignIn(webAssertion.assertion),
+      _webAuth,
     );
   }
 }

@@ -64,8 +64,8 @@ abstract class DatabaseEventPlatform extends PlatformInterface {
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [DatabaseEventPlatform].
-  static void verifyExtends(DatabaseEventPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(DatabaseEventPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   DataSnapshotPlatform get snapshot {

@@ -1,28 +1,38 @@
-import '../collection_generator.dart';
-import 'template.dart';
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
-class DocumentSnapshotTemplate extends Template<CollectionData> {
+import 'package:analyzer/dart/element/type.dart';
+
+class DocumentSnapshotTemplate {
+  DocumentSnapshotTemplate({
+    required this.documentSnapshotName,
+    required this.documentReferenceName,
+    required this.type,
+  });
+
+  final String documentSnapshotName;
+  final String documentReferenceName;
+  final DartType type;
+
   @override
-  String generate(CollectionData data) {
+  String toString() {
     return '''
-class ${data.documentSnapshotName} extends FirestoreDocumentSnapshot<${data.type}> {
-  ${data.documentSnapshotName}._(
-    this.snapshot,
-    this.data,
-  );
+class $documentSnapshotName extends FirestoreDocumentSnapshot<$type> {
+  $documentSnapshotName._(this.snapshot): data = snapshot.data();
 
   @override
-  final DocumentSnapshot<${data.type}> snapshot;
+  final DocumentSnapshot<$type> snapshot;
 
   @override
-  ${data.documentReferenceName} get reference {
-    return ${data.documentReferenceName}(
+  $documentReferenceName get reference {
+    return $documentReferenceName(
       snapshot.reference,
     );
   }
 
   @override
-  final ${data.type}? data;
+  final $type? data;
 }
 ''';
   }

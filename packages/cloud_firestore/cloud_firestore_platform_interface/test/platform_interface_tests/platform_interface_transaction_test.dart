@@ -34,9 +34,9 @@ void main() {
       expect(transaction, isInstanceOf<TransactionPlatform>());
     });
 
-    test('verifyExtends()', () {
+    test('verify()', () {
       final transaction = TestTransaction._();
-      TransactionPlatform.verifyExtends(transaction);
+      TransactionPlatform.verify(transaction);
       expect(transaction, isInstanceOf<TransactionPlatform>());
     });
 

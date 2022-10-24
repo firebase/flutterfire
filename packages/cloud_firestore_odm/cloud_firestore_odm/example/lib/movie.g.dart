@@ -9,7 +9,7 @@ part of 'movie.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
 class _Sentinel {
   const _Sentinel();
@@ -128,17 +128,47 @@ abstract class MovieDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String poster,
+    FieldValue posterFieldValue,
     int likes,
+    FieldValue likesFieldValue,
     String title,
+    FieldValue titleFieldValue,
     int year,
+    FieldValue yearFieldValue,
     String runtime,
+    FieldValue runtimeFieldValue,
     String rated,
+    FieldValue ratedFieldValue,
     List<String>? genre,
+    FieldValue genreFieldValue,
   });
 
-  Future<void> set(Movie value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String poster,
+    FieldValue posterFieldValue,
+    int likes,
+    FieldValue likesFieldValue,
+    String title,
+    FieldValue titleFieldValue,
+    int year,
+    FieldValue yearFieldValue,
+    String runtime,
+    FieldValue runtimeFieldValue,
+    String rated,
+    FieldValue ratedFieldValue,
+    List<String>? genre,
+    FieldValue genreFieldValue,
+  });
 }
 
 class _$MovieDocumentReference
@@ -160,53 +190,146 @@ class _$MovieDocumentReference
 
   @override
   Stream<MovieDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return MovieDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(MovieDocumentSnapshot._);
   }
 
   @override
   Future<MovieDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return MovieDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(MovieDocumentSnapshot._);
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<MovieDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then(MovieDocumentSnapshot._);
   }
 
   Future<void> update({
     Object? poster = _sentinel,
+    FieldValue? posterFieldValue,
     Object? likes = _sentinel,
+    FieldValue? likesFieldValue,
     Object? title = _sentinel,
+    FieldValue? titleFieldValue,
     Object? year = _sentinel,
+    FieldValue? yearFieldValue,
     Object? runtime = _sentinel,
+    FieldValue? runtimeFieldValue,
     Object? rated = _sentinel,
+    FieldValue? ratedFieldValue,
     Object? genre = _sentinel,
+    FieldValue? genreFieldValue,
   }) async {
+    assert(
+      poster == _sentinel || posterFieldValue == null,
+      "Cannot specify both poster and posterFieldValue",
+    );
+    assert(
+      likes == _sentinel || likesFieldValue == null,
+      "Cannot specify both likes and likesFieldValue",
+    );
+    assert(
+      title == _sentinel || titleFieldValue == null,
+      "Cannot specify both title and titleFieldValue",
+    );
+    assert(
+      year == _sentinel || yearFieldValue == null,
+      "Cannot specify both year and yearFieldValue",
+    );
+    assert(
+      runtime == _sentinel || runtimeFieldValue == null,
+      "Cannot specify both runtime and runtimeFieldValue",
+    );
+    assert(
+      rated == _sentinel || ratedFieldValue == null,
+      "Cannot specify both rated and ratedFieldValue",
+    );
+    assert(
+      genre == _sentinel || genreFieldValue == null,
+      "Cannot specify both genre and genreFieldValue",
+    );
     final json = {
-      if (poster != _sentinel) "poster": poster as String,
-      if (likes != _sentinel) "likes": likes as int,
-      if (title != _sentinel) "title": title as String,
-      if (year != _sentinel) "year": year as int,
-      if (runtime != _sentinel) "runtime": runtime as String,
-      if (rated != _sentinel) "rated": rated as String,
-      if (genre != _sentinel) "genre": genre as List<String>?,
+      if (poster != _sentinel) 'poster': poster as String,
+      if (posterFieldValue != null) 'poster': posterFieldValue,
+      if (likes != _sentinel) 'likes': likes as int,
+      if (likesFieldValue != null) 'likes': likesFieldValue,
+      if (title != _sentinel) 'title': title as String,
+      if (titleFieldValue != null) 'title': titleFieldValue,
+      if (year != _sentinel) 'year': year as int,
+      if (yearFieldValue != null) 'year': yearFieldValue,
+      if (runtime != _sentinel) 'runtime': runtime as String,
+      if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
+      if (rated != _sentinel) 'rated': rated as String,
+      if (ratedFieldValue != null) 'rated': ratedFieldValue,
+      if (genre != _sentinel) 'genre': genre as List<String>?,
+      if (genreFieldValue != null) 'genre': genreFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(Movie value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? poster = _sentinel,
+    FieldValue? posterFieldValue,
+    Object? likes = _sentinel,
+    FieldValue? likesFieldValue,
+    Object? title = _sentinel,
+    FieldValue? titleFieldValue,
+    Object? year = _sentinel,
+    FieldValue? yearFieldValue,
+    Object? runtime = _sentinel,
+    FieldValue? runtimeFieldValue,
+    Object? rated = _sentinel,
+    FieldValue? ratedFieldValue,
+    Object? genre = _sentinel,
+    FieldValue? genreFieldValue,
+  }) {
+    assert(
+      poster == _sentinel || posterFieldValue == null,
+      "Cannot specify both poster and posterFieldValue",
+    );
+    assert(
+      likes == _sentinel || likesFieldValue == null,
+      "Cannot specify both likes and likesFieldValue",
+    );
+    assert(
+      title == _sentinel || titleFieldValue == null,
+      "Cannot specify both title and titleFieldValue",
+    );
+    assert(
+      year == _sentinel || yearFieldValue == null,
+      "Cannot specify both year and yearFieldValue",
+    );
+    assert(
+      runtime == _sentinel || runtimeFieldValue == null,
+      "Cannot specify both runtime and runtimeFieldValue",
+    );
+    assert(
+      rated == _sentinel || ratedFieldValue == null,
+      "Cannot specify both rated and ratedFieldValue",
+    );
+    assert(
+      genre == _sentinel || genreFieldValue == null,
+      "Cannot specify both genre and genreFieldValue",
+    );
+    final json = {
+      if (poster != _sentinel) 'poster': poster as String,
+      if (posterFieldValue != null) 'poster': posterFieldValue,
+      if (likes != _sentinel) 'likes': likes as int,
+      if (likesFieldValue != null) 'likes': likesFieldValue,
+      if (title != _sentinel) 'title': title as String,
+      if (titleFieldValue != null) 'title': titleFieldValue,
+      if (year != _sentinel) 'year': year as int,
+      if (yearFieldValue != null) 'year': yearFieldValue,
+      if (runtime != _sentinel) 'runtime': runtime as String,
+      if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
+      if (rated != _sentinel) 'rated': rated as String,
+      if (ratedFieldValue != null) 'rated': ratedFieldValue,
+      if (genre != _sentinel) 'genre': genre as List<String>?,
+      if (genreFieldValue != null) 'genre': genreFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -219,26 +342,6 @@ class _$MovieDocumentReference
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class MovieDocumentSnapshot extends FirestoreDocumentSnapshot<Movie> {
-  MovieDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<Movie> snapshot;
-
-  @override
-  MovieDocumentReference get reference {
-    return MovieDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final Movie? data;
 }
 
 abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
@@ -512,37 +615,14 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
 
   final CollectionReference<Object?> _collection;
 
-  MovieQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<Movie> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return MovieQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<MovieDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: MovieDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return MovieQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<MovieQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference.snapshots().map(MovieQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<MovieQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference.get(options).then(MovieQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -712,7 +792,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["poster"]!,
+        _$MovieFieldMap['poster']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -741,7 +821,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["likes"]!,
+        _$MovieFieldMap['likes']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -770,7 +850,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["title"]!,
+        _$MovieFieldMap['title']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -799,7 +879,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["year"]!,
+        _$MovieFieldMap['year']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -828,7 +908,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["runtime"]!,
+        _$MovieFieldMap['runtime']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -857,7 +937,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["rated"]!,
+        _$MovieFieldMap['rated']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -886,7 +966,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$MovieFieldMap["genre"]!,
+        _$MovieFieldMap['genre']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -984,7 +1064,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["poster"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['poster']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1056,7 +1136,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["likes"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['likes']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1128,7 +1208,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["title"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['title']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1200,7 +1280,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["year"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['year']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1272,7 +1352,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["runtime"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['runtime']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1344,7 +1424,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["rated"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['rated']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1416,7 +1496,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["genre"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['genre']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1488,6 +1568,23 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class MovieDocumentSnapshot extends FirestoreDocumentSnapshot<Movie> {
+  MovieDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<Movie> snapshot;
+
+  @override
+  MovieDocumentReference get reference {
+    return MovieDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Movie? data;
+}
+
 class MovieQuerySnapshot
     extends FirestoreQuerySnapshot<Movie, MovieQueryDocumentSnapshot> {
   MovieQuerySnapshot._(
@@ -1495,6 +1592,38 @@ class MovieQuerySnapshot
     this.docs,
     this.docChanges,
   );
+
+  factory MovieQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<Movie> snapshot,
+  ) {
+    final docs = snapshot.docs.map(MovieQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        MovieDocumentSnapshot._,
+      );
+    }).toList();
+
+    return MovieQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<MovieDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    MovieDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<MovieDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<Movie> snapshot;
 
@@ -1507,18 +1636,18 @@ class MovieQuerySnapshot
 
 class MovieQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Movie>
     implements MovieDocumentSnapshot {
-  MovieQueryDocumentSnapshot._(this.snapshot, this.data);
+  MovieQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<Movie> snapshot;
 
   @override
+  final Movie data;
+
+  @override
   MovieDocumentReference get reference {
     return MovieDocumentReference(snapshot.reference);
   }
-
-  @override
-  final Movie data;
 }
 
 /// A collection reference object can be used for adding documents,
@@ -1641,12 +1770,27 @@ abstract class CommentDocumentReference
   @override
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
   Future<void> update({
     String authorName,
+    FieldValue authorNameFieldValue,
     String message,
+    FieldValue messageFieldValue,
   });
 
-  Future<void> set(Comment value);
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String authorName,
+    FieldValue authorNameFieldValue,
+    String message,
+    FieldValue messageFieldValue,
+  });
 }
 
 class _$CommentDocumentReference
@@ -1669,43 +1813,66 @@ class _$CommentDocumentReference
 
   @override
   Stream<CommentDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return CommentDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(CommentDocumentSnapshot._);
   }
 
   @override
   Future<CommentDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return CommentDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(CommentDocumentSnapshot._);
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<CommentDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then(CommentDocumentSnapshot._);
   }
 
   Future<void> update({
     Object? authorName = _sentinel,
+    FieldValue? authorNameFieldValue,
     Object? message = _sentinel,
+    FieldValue? messageFieldValue,
   }) async {
+    assert(
+      authorName == _sentinel || authorNameFieldValue == null,
+      "Cannot specify both authorName and authorNameFieldValue",
+    );
+    assert(
+      message == _sentinel || messageFieldValue == null,
+      "Cannot specify both message and messageFieldValue",
+    );
     final json = {
-      if (authorName != _sentinel) "authorName": authorName as String,
-      if (message != _sentinel) "message": message as String,
+      if (authorName != _sentinel) 'authorName': authorName as String,
+      if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
+      if (message != _sentinel) 'message': message as String,
+      if (messageFieldValue != null) 'message': messageFieldValue,
     };
 
     return reference.update(json);
   }
 
-  Future<void> set(Comment value) {
-    return reference.set(value);
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? authorName = _sentinel,
+    FieldValue? authorNameFieldValue,
+    Object? message = _sentinel,
+    FieldValue? messageFieldValue,
+  }) {
+    assert(
+      authorName == _sentinel || authorNameFieldValue == null,
+      "Cannot specify both authorName and authorNameFieldValue",
+    );
+    assert(
+      message == _sentinel || messageFieldValue == null,
+      "Cannot specify both message and messageFieldValue",
+    );
+    final json = {
+      if (authorName != _sentinel) 'authorName': authorName as String,
+      if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
+      if (message != _sentinel) 'message': message as String,
+      if (messageFieldValue != null) 'message': messageFieldValue,
+    };
+
+    transaction.update(reference, json);
   }
 
   @override
@@ -1718,26 +1885,6 @@ class _$CommentDocumentReference
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class CommentDocumentSnapshot extends FirestoreDocumentSnapshot<Comment> {
-  CommentDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<Comment> snapshot;
-
-  @override
-  CommentDocumentReference get reference {
-    return CommentDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final Comment? data;
 }
 
 abstract class CommentQuery
@@ -1897,37 +2044,14 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
 
   final CollectionReference<Object?> _collection;
 
-  CommentQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<Comment> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return CommentQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<CommentDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: CommentDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return CommentQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<CommentQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference.snapshots().map(CommentQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<CommentQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference.get(options).then(CommentQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -2097,7 +2221,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     return _$CommentQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$CommentFieldMap["authorName"]!,
+        _$CommentFieldMap['authorName']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2126,7 +2250,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     return _$CommentQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$CommentFieldMap["message"]!,
+        _$CommentFieldMap['message']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2225,7 +2349,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     CommentDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor
-        .orderBy(_$CommentFieldMap["authorName"]!, descending: descending);
+        .orderBy(_$CommentFieldMap['authorName']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -2296,7 +2420,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     CommentDocumentSnapshot? endBeforeDocument,
     CommentDocumentSnapshot? startAfterDocument,
   }) {
-    final query = $referenceWithoutCursor.orderBy(_$CommentFieldMap["message"]!,
+    final query = $referenceWithoutCursor.orderBy(_$CommentFieldMap['message']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2368,6 +2492,23 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class CommentDocumentSnapshot extends FirestoreDocumentSnapshot<Comment> {
+  CommentDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<Comment> snapshot;
+
+  @override
+  CommentDocumentReference get reference {
+    return CommentDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Comment? data;
+}
+
 class CommentQuerySnapshot
     extends FirestoreQuerySnapshot<Comment, CommentQueryDocumentSnapshot> {
   CommentQuerySnapshot._(
@@ -2375,6 +2516,38 @@ class CommentQuerySnapshot
     this.docs,
     this.docChanges,
   );
+
+  factory CommentQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<Comment> snapshot,
+  ) {
+    final docs = snapshot.docs.map(CommentQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        CommentDocumentSnapshot._,
+      );
+    }).toList();
+
+    return CommentQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<CommentDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    CommentDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<CommentDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<Comment> snapshot;
 
@@ -2388,18 +2561,18 @@ class CommentQuerySnapshot
 class CommentQueryDocumentSnapshot
     extends FirestoreQueryDocumentSnapshot<Comment>
     implements CommentDocumentSnapshot {
-  CommentQueryDocumentSnapshot._(this.snapshot, this.data);
+  CommentQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<Comment> snapshot;
 
   @override
+  final Comment data;
+
+  @override
   CommentDocumentReference get reference {
     return CommentDocumentReference(snapshot.reference);
   }
-
-  @override
-  final Comment data;
 }
 
 // **************************************************************************
@@ -2407,8 +2580,8 @@ class CommentQueryDocumentSnapshot
 // **************************************************************************
 
 void _$assertMovie(Movie instance) {
-  const Min(0).validate(instance.likes, "likes");
-  const Min(0).validate(instance.year, "year");
+  const Min(0).validate(instance.likes, 'likes');
+  const Min(0).validate(instance.year, 'year');
 }
 
 // **************************************************************************

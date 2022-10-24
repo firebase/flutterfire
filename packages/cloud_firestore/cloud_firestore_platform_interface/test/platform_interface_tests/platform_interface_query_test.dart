@@ -44,9 +44,9 @@ void main() {
       expect(query, isInstanceOf<QueryPlatform>());
     });
 
-    test('verifyExtends()', () {
+    test('verify()', () {
       final query = TestQuery._();
-      QueryPlatform.verifyExtends(query);
+      QueryPlatform.verify(query);
       expect(query, isInstanceOf<QueryPlatform>());
     });
 

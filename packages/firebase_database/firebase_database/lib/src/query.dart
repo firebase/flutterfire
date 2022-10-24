@@ -7,7 +7,9 @@ part of firebase_database;
 /// Represents a query over the data at a particular location.
 class Query {
   Query._(this._queryDelegate, [QueryModifiers? modifiers])
-      : _modifiers = modifiers ?? QueryModifiers([]);
+      : _modifiers = modifiers ?? QueryModifiers([]) {
+    QueryPlatform.verify(_queryDelegate);
+  }
 
   final QueryPlatform _queryDelegate;
 
