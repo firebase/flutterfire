@@ -9,10 +9,9 @@ import 'utils/exception.dart';
 class MethodChannelTrace extends TracePlatform {
   MethodChannelTrace(this._name) : super();
 
-  late final int _traceHandle;
+  int? _traceHandle;
   final String _name;
 
-  bool _hasStarted = false;
   bool _hasStopped = false;
 
   final Map<String, int> _metrics = <String, int>{};
@@ -22,16 +21,14 @@ class MethodChannelTrace extends TracePlatform {
 
   @override
   Future<void> start() async {
-    if (_hasStopped || _hasStarted) return;
+    if (_traceHandle != null) return;
 
     try {
       _traceHandle =
-          (await MethodChannelFirebasePerformance.channel.invokeMethod<int>(
+          await MethodChannelFirebasePerformance.channel.invokeMethod<int>(
         'FirebasePerformance#traceStart',
         <String, Object?>{'name': _name},
-      ))!;
-
-      _hasStarted = true;
+      );
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -39,7 +36,7 @@ class MethodChannelTrace extends TracePlatform {
 
   @override
   Future<void> stop() async {
-    if (!_hasStarted || _hasStopped) return;
+    if (_hasStopped) return;
 
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(

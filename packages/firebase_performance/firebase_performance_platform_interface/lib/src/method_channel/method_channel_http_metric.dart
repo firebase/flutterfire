@@ -12,7 +12,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
     this._httpMethod,
   ) : super();
 
-  late final int _httpMetricHandle;
+  int? _httpMetricHandle;
   final String _url;
   final HttpMethod _httpMethod;
   int? _httpResponseCode;
@@ -20,7 +20,6 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   String? _responseContentType;
   int? _responsePayloadSize;
 
-  bool _hasStarted = false;
   bool _hasStopped = false;
 
   final Map<String, String> _attributes = <String, String>{};
@@ -59,18 +58,16 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
 
   @override
   Future<void> start() async {
-    if (_hasStopped || _hasStarted) return;
+    if (_httpMetricHandle != null) return;
     try {
       _httpMetricHandle =
-          (await MethodChannelFirebasePerformance.channel.invokeMethod<int>(
+          await MethodChannelFirebasePerformance.channel.invokeMethod<int>(
         'FirebasePerformance#httpMetricStart',
         <String, Object?>{
           'url': _url,
           'httpMethod': _httpMethod.toString(),
         },
-      ))!;
-
-      _hasStarted = true;
+      );
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -78,7 +75,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
 
   @override
   Future<void> stop() async {
-    if (!_hasStarted || _hasStopped) return;
+    if (_hasStopped) return;
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'FirebasePerformance#httpMetricStop',
