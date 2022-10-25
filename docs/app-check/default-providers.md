@@ -6,7 +6,7 @@ Book: /docs/_book.yaml
 # Get started using App Check in Flutter apps
 
 This page shows you how to enable App Check in a Flutter app, using the
-default providers: SafetyNet on Android, Device Check on Apple platforms, and
+default providers: Play Integrity on Android, Device Check on Apple platforms, and
 reCAPTCHA v3 on web. When you enable App Check, you help ensure that
 only your app can access your project's Firebase resources. See an
 [Overview](/docs/app-check) of this feature.
@@ -17,7 +17,7 @@ only your app can access your project's Firebase resources. See an
 1.  [Install and initialize FlutterFire](/docs/flutter/setup) if you haven't
     already done so.
 
-1.  Register your apps to use App Check with the SafetyNet, Device Check, and reCAPTCHA providers in the
+1.  Register your apps to use App Check with the Play Integrity, Device Check, and reCAPTCHA providers in the
     [**Project Settings > App Check**](https://console.firebase.google.com/project/_/settings/appcheck)
     section of the Firebase console.
 
@@ -79,6 +79,12 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
     webRecaptchaSiteKey: 'recaptcha-v3-site-key',
+    // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
+    // your preferred provider. Choose from:
+    // 1. debug provider
+    // 2. safety net provider
+    // 3. play integrity provider
+    androidProvider: AndroidProvider.debug,
   );
   runApp(App());
 }
