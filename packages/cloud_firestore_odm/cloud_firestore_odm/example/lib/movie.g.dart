@@ -190,32 +190,17 @@ class _$MovieDocumentReference
 
   @override
   Stream<MovieDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return MovieDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(MovieDocumentSnapshot._);
   }
 
   @override
   Future<MovieDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return MovieDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(MovieDocumentSnapshot._);
   }
 
   @override
   Future<MovieDocumentSnapshot> transactionGet(Transaction transaction) {
-    return transaction.get(reference).then((snapshot) {
-      return MovieDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return transaction.get(reference).then(MovieDocumentSnapshot._);
   }
 
   Future<void> update({
@@ -357,26 +342,6 @@ class _$MovieDocumentReference
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class MovieDocumentSnapshot extends FirestoreDocumentSnapshot<Movie> {
-  MovieDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<Movie> snapshot;
-
-  @override
-  MovieDocumentReference get reference {
-    return MovieDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final Movie? data;
 }
 
 abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
@@ -650,37 +615,14 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
 
   final CollectionReference<Object?> _collection;
 
-  MovieQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<Movie> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return MovieQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<MovieDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: MovieDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return MovieQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<MovieQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference.snapshots().map(MovieQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<MovieQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference.get(options).then(MovieQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -1626,6 +1568,23 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class MovieDocumentSnapshot extends FirestoreDocumentSnapshot<Movie> {
+  MovieDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<Movie> snapshot;
+
+  @override
+  MovieDocumentReference get reference {
+    return MovieDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Movie? data;
+}
+
 class MovieQuerySnapshot
     extends FirestoreQuerySnapshot<Movie, MovieQueryDocumentSnapshot> {
   MovieQuerySnapshot._(
@@ -1633,6 +1592,38 @@ class MovieQuerySnapshot
     this.docs,
     this.docChanges,
   );
+
+  factory MovieQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<Movie> snapshot,
+  ) {
+    final docs = snapshot.docs.map(MovieQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        MovieDocumentSnapshot._,
+      );
+    }).toList();
+
+    return MovieQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<MovieDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    MovieDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<MovieDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<Movie> snapshot;
 
@@ -1645,18 +1636,18 @@ class MovieQuerySnapshot
 
 class MovieQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Movie>
     implements MovieDocumentSnapshot {
-  MovieQueryDocumentSnapshot._(this.snapshot, this.data);
+  MovieQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<Movie> snapshot;
 
   @override
+  final Movie data;
+
+  @override
   MovieDocumentReference get reference {
     return MovieDocumentReference(snapshot.reference);
   }
-
-  @override
-  final Movie data;
 }
 
 /// A collection reference object can be used for adding documents,
@@ -1822,32 +1813,17 @@ class _$CommentDocumentReference
 
   @override
   Stream<CommentDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return CommentDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(CommentDocumentSnapshot._);
   }
 
   @override
   Future<CommentDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return CommentDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(CommentDocumentSnapshot._);
   }
 
   @override
   Future<CommentDocumentSnapshot> transactionGet(Transaction transaction) {
-    return transaction.get(reference).then((snapshot) {
-      return CommentDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return transaction.get(reference).then(CommentDocumentSnapshot._);
   }
 
   Future<void> update({
@@ -1909,26 +1885,6 @@ class _$CommentDocumentReference
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class CommentDocumentSnapshot extends FirestoreDocumentSnapshot<Comment> {
-  CommentDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<Comment> snapshot;
-
-  @override
-  CommentDocumentReference get reference {
-    return CommentDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final Comment? data;
 }
 
 abstract class CommentQuery
@@ -2088,37 +2044,14 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
 
   final CollectionReference<Object?> _collection;
 
-  CommentQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<Comment> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return CommentQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<CommentDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: CommentDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return CommentQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<CommentQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference.snapshots().map(CommentQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<CommentQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference.get(options).then(CommentQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -2559,6 +2492,23 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class CommentDocumentSnapshot extends FirestoreDocumentSnapshot<Comment> {
+  CommentDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<Comment> snapshot;
+
+  @override
+  CommentDocumentReference get reference {
+    return CommentDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Comment? data;
+}
+
 class CommentQuerySnapshot
     extends FirestoreQuerySnapshot<Comment, CommentQueryDocumentSnapshot> {
   CommentQuerySnapshot._(
@@ -2566,6 +2516,38 @@ class CommentQuerySnapshot
     this.docs,
     this.docChanges,
   );
+
+  factory CommentQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<Comment> snapshot,
+  ) {
+    final docs = snapshot.docs.map(CommentQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        CommentDocumentSnapshot._,
+      );
+    }).toList();
+
+    return CommentQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<CommentDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    CommentDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<CommentDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<Comment> snapshot;
 
@@ -2579,18 +2561,18 @@ class CommentQuerySnapshot
 class CommentQueryDocumentSnapshot
     extends FirestoreQueryDocumentSnapshot<Comment>
     implements CommentDocumentSnapshot {
-  CommentQueryDocumentSnapshot._(this.snapshot, this.data);
+  CommentQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<Comment> snapshot;
 
   @override
+  final Comment data;
+
+  @override
   CommentDocumentReference get reference {
     return CommentDocumentReference(snapshot.reference);
   }
-
-  @override
-  final Comment data;
 }
 
 // **************************************************************************

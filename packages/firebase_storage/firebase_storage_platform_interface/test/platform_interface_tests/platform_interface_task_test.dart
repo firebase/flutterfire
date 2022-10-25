@@ -28,10 +28,10 @@ void main() {
       expect(taskPlatform, isA<PlatformInterface>());
     });
 
-    group('verifyExtends()', () {
+    group('verify()', () {
       test('calls successfully', () {
         try {
-          TaskPlatform.verifyExtends(taskPlatform!);
+          TaskPlatform.verify(taskPlatform!);
           return;
         } catch (_) {
           fail('thrown an unexpected exception');

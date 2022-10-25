@@ -69,10 +69,10 @@ void main() {
       });
     });
 
-    group('verifyExtends()', () {
+    group('verify()', () {
       test('calls successfully', () {
         try {
-          UserPlatform.verifyExtends(userPlatform);
+          UserPlatform.verify(userPlatform);
           return;
         } catch (_) {
           fail('thrown an unexpected exception');
