@@ -75,7 +75,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
 
   @override
   Future<void> stop() async {
-    if (_httpMetricHandle != null && _hasStopped) return;
+    if (_httpMetricHandle == null || _hasStopped) return;
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'FirebasePerformance#httpMetricStop',
