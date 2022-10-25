@@ -195,6 +195,7 @@ void setupTests() {
             const topic = 'test-topic';
             await messaging.subscribeToTopic(topic);
           },
+          skip: kIsWeb,
         );
       });
 
