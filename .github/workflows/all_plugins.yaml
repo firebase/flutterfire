@@ -125,9 +125,9 @@ jobs:
       # Go is used by addlicense command (addlicense is used in melos run
       # check-license-header)
       - run: go install github.com/google/addlicense@latest
-      - name: 'Install Flutter'
-        run: ./.github/workflows/scripts/install-flutter.sh stable
-      - name: 'Install Tools'
-        run: ./.github/workflows/scripts/install-tools.sh
+      - name: Install Dart
+        uses: dart-lang/setup-dart@v1.3
+      - name: Install Melos
+        uses: bluefireteam/melos-action@v2
       - name: Check license header
         run: melos run check-license-header 
