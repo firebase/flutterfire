@@ -195,8 +195,6 @@ void setupTests() {
             const topic = 'test-topic';
             await messaging.subscribeToTopic(topic);
           },
-          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
         );
       });
 
@@ -207,8 +205,7 @@ void setupTests() {
             const topic = 'test-topic';
             await messaging.unsubscribeFromTopic(topic);
           },
-          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+          skip: kIsWeb,
         );
       });
 

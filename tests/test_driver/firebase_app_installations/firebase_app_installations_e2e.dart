@@ -6,7 +6,6 @@ import 'package:firebase_app_installations/firebase_app_installations.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:drive/drive.dart';
-import 'package:flutter/foundation.dart';
 import '../firebase_default_options.dart';
 
 void setupTests() {
@@ -24,9 +23,7 @@ void setupTests() {
         () async {
           final id = await FirebaseInstallations.instance.getId();
           expect(id, isNotEmpty);
-          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
         },
-        skip: defaultTargetPlatform == TargetPlatform.macOS,
       );
 
       test(
@@ -44,9 +41,7 @@ void setupTests() {
 
           final newId = await FirebaseInstallations.instance.getId();
           expect(newId, isNot(equals(id)));
-          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
         },
-        skip: defaultTargetPlatform == TargetPlatform.macOS,
       );
 
       test(
@@ -54,9 +49,7 @@ void setupTests() {
         () async {
           final token = await FirebaseInstallations.instance.getToken();
           expect(token, isNotEmpty);
-          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
         },
-        skip: defaultTargetPlatform == TargetPlatform.macOS,
       );
     },
   );
