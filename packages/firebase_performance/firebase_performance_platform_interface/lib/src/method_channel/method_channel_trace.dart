@@ -36,7 +36,7 @@ class MethodChannelTrace extends TracePlatform {
 
   @override
   Future<void> stop() async {
-    if (_hasStopped) return;
+    if (_traceHandle != null && _hasStopped) return;
 
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
