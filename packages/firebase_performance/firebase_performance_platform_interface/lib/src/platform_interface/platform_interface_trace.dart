@@ -9,8 +9,8 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 abstract class TracePlatform extends PlatformInterface {
   TracePlatform() : super(token: _token);
 
-  static void verifyExtends(TracePlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(TracePlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   static final Object _token = Object();

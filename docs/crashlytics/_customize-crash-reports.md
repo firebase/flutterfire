@@ -118,6 +118,18 @@ await FirebaseCrashlytics.instance.recordError(
 await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
 ```
 
+You may also wish to log further information about the error which is possible
+using the `information` property:
+
+```dart
+await FirebaseCrashlytics.instance.recordError(
+  error,
+  stackTrace,
+  reason: 'a non-fatal error',
+  information: ['further diagnostic information about the error', 'version 2.0'],
+);
+```
+
 Warning: If you want to include a unique value (for example, a user ID or a
 timestamp) in your exception message, use a [custom key](#add-keys) instead of
 adding the value directly in the exception message. Adding values directly can

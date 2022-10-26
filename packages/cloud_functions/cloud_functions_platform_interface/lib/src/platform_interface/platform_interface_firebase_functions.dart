@@ -49,7 +49,7 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseFunctionsPlatform.instance]
   static set instance(FirebaseFunctionsPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

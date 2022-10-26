@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'firestore_builder.dart';
@@ -63,7 +67,35 @@ abstract class FirestoreDocumentReference<Model,
   String get path => reference.path;
 
   /// Deletes the document referred to by this DocumentReference.
-  Future<void> delete();
+  Future<void> delete() {
+    return reference.delete();
+  }
+
+  /// Deletes the document using the transaction API.
+  void transactionDelete(Transaction transaction) {
+    transaction.delete(reference);
+  }
+
+  /// Sets data on the document, overwriting any existing data. If the document
+  /// does not yet exist, it will be created.
+  ///
+  /// If [SetOptions] are provided, the data will be merged into an existing
+  /// document instead of overwriting.
+  Future<void> set(Model model, [SetOptions? setOptions]) {
+    return reference.set(model, setOptions);
+  }
+
+  /// Writes to the document using the transaction API.
+  ///
+  /// If the document does not exist yet, it will be created. If you pass
+  /// [SetOptions], the provided data can be merged into the existing document.
+  void transactionSet(
+    Transaction transaction,
+    Model model, [
+    SetOptions? setOptions,
+  ]) {
+    transaction.set(reference, model, setOptions);
+  }
 
   /// Reads the document referred to by this DocumentReference.
   ///
@@ -74,6 +106,12 @@ abstract class FirestoreDocumentReference<Model,
   /// altered via the GetOptions parameter.
   @override
   Future<Snapshot> get([GetOptions options]);
+
+  /// Reads the document using the transaction API.
+  ///
+  /// If the document changes whilst the transaction is in progress, it will
+  /// be re-tried up to five times.
+  Future<Snapshot> transactionGet(Transaction transaction);
 }
 
 abstract class FirestoreCollectionReference<

@@ -36,7 +36,7 @@ abstract class FirebaseInAppMessagingPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseInAppMessagingPlatform.instance]
   static set instance(FirebaseInAppMessagingPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "firebase": "9"
+  },
+  "devDependencies": {
+    "esbuild": "^0.15.10"
+  },
+  "scripts": {
+    "build": "esbuild firebase-messaging-sw.ts --outdir=../web --bundle --sourcemap --minify --format=esm"
+  }
+}

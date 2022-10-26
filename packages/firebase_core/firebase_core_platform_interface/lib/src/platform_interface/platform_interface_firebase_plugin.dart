@@ -29,8 +29,8 @@ abstract class FirebasePluginPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   // ignore: public_member_api_docs
-  static void verifyExtends(FirebasePluginPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(FirebasePluginPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// Returns any plugin constants this plugin app instance has initialized.

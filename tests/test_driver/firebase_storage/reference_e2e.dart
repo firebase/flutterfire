@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -127,17 +131,23 @@ void setupReferenceTests() {
     });
 
     group('getDownloadURL', () {
-      test('gets a download url', () async {
-        Reference ref = storage.ref('flutter-tests/ok.txt');
-        await ref.putString('ok');
+      test(
+        'gets a download url',
+        () async {
+          Reference ref = storage.ref('flutter-tests/ok.txt');
+          await ref.putString('ok');
 
-        String downloadUrl = await ref.getDownloadURL();
-        expect(downloadUrl, isA<String>());
-        expect(downloadUrl, contains('ok.txt'));
-        expect(downloadUrl, contains(storage.app.options.projectId));
-      });
+          String downloadUrl = await ref.getDownloadURL();
+          expect(downloadUrl, isA<String>());
+          expect(downloadUrl, contains('ok.txt'));
+          expect(downloadUrl, contains(storage.app.options.projectId));
+        },
+        // Fails on emulator since iOS SDK 10. See PR notes:
+        // https://github.com/firebase/flutterfire/pull/9708
+        skip: defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS,
+      );
 
-      // TODO(ehesp): Emulator rules issue - comment back in once fixed
       test('errors if permission denied', () async {
         Reference ref = storage.ref('writeOnly.txt');
 
@@ -294,24 +304,28 @@ void setupReferenceTests() {
     group(
       'putFile',
       () {
-        test('uploads a file', () async {
-          final File file = await createFile('flt-ok.txt');
-          final Reference ref =
-              storage.ref('flutter-tests').child('flt-ok.txt');
+        test(
+          'uploads a file',
+          () async {
+            final File file = await createFile('flt-ok.txt');
 
-          final TaskSnapshot complete = await ref.putFile(
-            file,
-            SettableMetadata(
-              contentLanguage: 'en',
-              customMetadata: <String, String>{'activity': 'test'},
-            ),
-          );
+            final Reference ref =
+                storage.ref('flutter-tests').child('flt-ok.txt');
 
-          expect(complete.metadata?.size, kTestString.length);
-          // Metadata isn't saved on objects when using the emulator which fails test
-          // expect(complete.metadata?.contentLanguage, 'en');
-          // expect(complete.metadata?.customMetadata!['activity'], 'test');
-        });
+            final TaskSnapshot complete = await ref.putFile(
+              file,
+              SettableMetadata(
+                contentLanguage: 'en',
+                customMetadata: <String, String>{'activity': 'test'},
+              ),
+            );
+
+            expect(complete.metadata?.size, kTestString.length);
+            // Metadata isn't saved on objects when using the emulator which fails test
+            // expect(complete.metadata?.contentLanguage, 'en');
+            // expect(complete.metadata?.customMetadata!['activity'], 'test');
+          },
+        );
 
         // TODO(ehesp): Emulator rules issue - comment back in once fixed
         // test('errors if permission denied', () async {
@@ -325,9 +339,11 @@ void setupReferenceTests() {
         //           .having((e) => e.message, 'message',
         //               'User is not authorized to perform the desired action.')));
         // });
-        // putFile is not supported in web.
       },
-      skip: kIsWeb,
+      // putFile is not supported in web.
+      // iOS & macOS work locally but times out on CI. We ought to check this periodically
+      // as it may be OS version specific.
+      skip: kIsWeb || defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS,
     );
 
     group('putString', () {

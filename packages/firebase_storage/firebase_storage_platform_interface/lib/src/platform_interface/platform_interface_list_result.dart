@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
 import '../../firebase_storage_platform_interface.dart';
 
 /// Result returned by [list].
@@ -19,8 +20,8 @@ abstract class ListResultPlatform extends PlatformInterface {
   /// This is used by the app-facing [Reference] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(ListResultPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(ListResultPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The [FirebaseStoragePlatform] used when fetching list items.

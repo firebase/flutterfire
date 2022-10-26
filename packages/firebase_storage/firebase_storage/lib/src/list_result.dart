@@ -9,7 +9,7 @@ part of firebase_storage;
 /// on a [Reference].
 class ListResult {
   ListResult._(this.storage, this._delegate) {
-    ListResultPlatform.verifyExtends(_delegate);
+    ListResultPlatform.verify(_delegate);
   }
 
   ListResultPlatform _delegate;

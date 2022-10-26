@@ -1,4 +1,45 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 export 'src/validator.dart' show Min, Validator, Max;
+
+/// {@macro cloud_firestore_odm.named_query}
+class NamedQuery<T> {
+  /// {@template cloud_firestore_odm.named_query}
+  /// Defines a named query, allowing the ODM to generate utilities to interact
+  /// with the query in a type-safe way.
+  ///
+  /// By doing:
+  ///
+  /// ```dart
+  /// @NamedQuery<Person>('my-query-name')
+  /// @Collection<Person>(...)
+  /// class Anything {}
+  /// ```
+  ///
+  /// The ODM will generate a `myQueryNameGet` utility, which can be used as followed:
+  ///
+  /// ```dart
+  /// void main() async {
+  ///   Future<PersonSnapshot> snapshot = myQueryNameGet();
+  /// }
+  /// ```
+  ///
+  ///
+  /// **Note**:
+  /// Named queries **must** be associated with a [Collection] that has a
+  /// matching generic argument.
+  ///
+  /// This is necessary to ensure that `FirestoreDocumentSnapshot.reference` is
+  /// properly set.
+  ///
+  /// {@endtemplate}
+  const NamedQuery(this.queryName);
+
+  /// The name of the Firestore query that will be performed.
+  final String queryName;
+}
 
 /// {@template cloud_firestore_odm.collection}
 /// Defines a collection reference.

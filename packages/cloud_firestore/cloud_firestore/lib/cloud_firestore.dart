@@ -17,6 +17,7 @@ import 'package:meta/meta.dart';
 
 export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
     show
+        AggregateSource,
         ListEquality,
         FieldPath,
         Blob,
@@ -46,3 +47,5 @@ part 'src/snapshot_metadata.dart';
 part 'src/transaction.dart';
 part 'src/utils/codec_utility.dart';
 part 'src/write_batch.dart';
+part 'src/aggregate_query.dart';
+part 'src/aggregate_query_snapshot.dart';
