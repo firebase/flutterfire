@@ -22,9 +22,8 @@ to disk to be sent along with the next fatal report or when the app restarts.
 
 You can automatically catch all "fatal" errors that are thrown within the Flutter
 framework by overriding `FlutterError.onError` with
-`FirebaseCrashlytics.instance.recordFlutterFatalError`. Alternatively, if you wish
-to catch "non-fatal" exceptions, please use: `FirebaseCrashlytics.instance.recordFlutterError`:
-
+`FirebaseCrashlytics.instance.recordFlutterFatalError`. Alternatively,
+to also catch "non-fatal" exceptions, override `FlutterError.onError` with `FirebaseCrashlytics.instance.recordFlutterError`:
 
 ```dart
 void main() async {
