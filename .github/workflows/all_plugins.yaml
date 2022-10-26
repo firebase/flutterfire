@@ -129,5 +129,9 @@ jobs:
         uses: dart-lang/setup-dart@v1.3
       - name: Install Melos
         uses: bluefireteam/melos-action@v2
+        with:
+          # Running `melos bootstrap` is not needed because we use Melos just
+          # for the `check-license-header` script.
+          run-bootstrap: false
       - name: Check license header
         run: melos run check-license-header 
