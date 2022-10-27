@@ -1,3 +1,7 @@
+## 0.4.3+18
+
+ - Update a dependency to the latest release.
+
 ## 0.4.3+17
 
  - **FIX**: update dependencies to latest. Last release as `flutterfire_ui` is deprecated and no longer supported. ([#9762](https://github.com/firebase/flutterfire/issues/9762)). ([82f5a71a](https://github.com/firebase/flutterfire/commit/82f5a71a06d1d7e7cd4bff06ddcf27aa7ede02ca))

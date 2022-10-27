@@ -1,3 +1,7 @@
+## 1.0.0-dev.38
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.37
 
  - **FIX**: The ODM correctly no-longer generates query utilities for getters. ([#9766](https://github.com/firebase/flutterfire/issues/9766)). ([cfb56939](https://github.com/firebase/flutterfire/commit/cfb569395cadf6b7bcd8727b680d0b52e4e9297d))
