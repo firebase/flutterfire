@@ -13,7 +13,7 @@ class User {
   MultiFactor? _multiFactor;
 
   User._(this._auth, this._delegate) {
-    UserPlatform.verifyExtends(_delegate);
+    UserPlatform.verify(_delegate);
   }
 
   /// The users display name.
@@ -184,10 +184,16 @@ class User {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
   Future<UserCredential> linkWithCredential(AuthCredential credential) async {
-    return UserCredential._(
-      _auth,
-      await _delegate.linkWithCredential(credential),
-    );
+    try {
+      return UserCredential._(
+        _auth,
+        await _delegate.linkWithCredential(credential),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(_auth, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Links with an AuthProvider using native authentication flow.
@@ -273,10 +279,89 @@ class User {
   Future<UserCredential> reauthenticateWithProvider(
     AuthProvider provider,
   ) async {
+    try {
+      return UserCredential._(
+        _auth,
+        await _delegate.reauthenticateWithProvider(provider),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(_auth, e);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Re-authenticates a user using a popup on Web.
+  ///
+  /// Use before operations such as [User.updatePassword] that require tokens
+  /// from recent sign-in attempts.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **user-mismatch**:
+  ///  - Thrown if the credential given does not correspond to the user.
+  /// - **user-not-found**:
+  ///  - Thrown if the credential given does not correspond to any existing
+  ///    user.
+  /// - **invalid-credential**:
+  ///  - Thrown if the provider's credential is not valid. This can happen if it
+  ///    has already expired when calling link, or if it used invalid token(s).
+  ///    See the Firebase documentation for your provider, and make sure you
+  ///    pass in the correct parameters to the credential method.
+  /// - **invalid-email**:
+  ///  - Thrown if the email used in a [EmailAuthProvider.credential] is
+  ///    invalid.
+  /// - **wrong-password**:
+  ///  - Thrown if the password used in a [EmailAuthProvider.credential] is not
+  ///    correct or when the user associated with the email does not have a
+  ///    password.
+  /// - **invalid-verification-code**:
+  ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
+  ///    verification code of the credential is not valid.
+  /// - **invalid-verification-id**:
+  ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
+  ///    verification ID of the credential is not valid.
+  Future<UserCredential> reauthenticateWithPopup(
+    AuthProvider provider,
+  ) async {
     return UserCredential._(
       _auth,
-      await _delegate.reauthenticateWithProvider(provider),
+      await _delegate.reauthenticateWithPopup(provider),
     );
+  }
+
+  /// Re-authenticates a user using a redirection on Web.
+  ///
+  /// Use before operations such as [User.updatePassword] that require tokens
+  /// from recent sign-in attempts.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **user-mismatch**:
+  ///  - Thrown if the credential given does not correspond to the user.
+  /// - **user-not-found**:
+  ///  - Thrown if the credential given does not correspond to any existing
+  ///    user.
+  /// - **invalid-credential**:
+  ///  - Thrown if the provider's credential is not valid. This can happen if it
+  ///    has already expired when calling link, or if it used invalid token(s).
+  ///    See the Firebase documentation for your provider, and make sure you
+  ///    pass in the correct parameters to the credential method.
+  /// - **invalid-email**:
+  ///  - Thrown if the email used in a [EmailAuthProvider.credential] is
+  ///    invalid.
+  /// - **wrong-password**:
+  ///  - Thrown if the password used in a [EmailAuthProvider.credential] is not
+  ///    correct or when the user associated with the email does not have a
+  ///    password.
+  /// - **invalid-verification-code**:
+  ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
+  ///    verification code of the credential is not valid.
+  /// - **invalid-verification-id**:
+  ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
+  ///    verification ID of the credential is not valid.
+  Future<void> reauthenticateWithRedirect(
+    AuthProvider provider,
+  ) async {
+    await _delegate.reauthenticateWithRedirect(provider);
   }
 
   /// Links the user account with the given provider.
@@ -407,12 +492,18 @@ class User {
     // also clear that instance before proceeding.
     bool mustClear = verifier == null;
     verifier ??= RecaptchaVerifier(auth: _delegate.auth);
-    final result =
-        await _delegate.linkWithPhoneNumber(phoneNumber, verifier.delegate);
-    if (mustClear) {
-      verifier.clear();
+    try {
+      final result =
+          await _delegate.linkWithPhoneNumber(phoneNumber, verifier.delegate);
+      if (mustClear) {
+        verifier.clear();
+      }
+      return ConfirmationResult._(_auth, result);
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(_auth, e);
+    } catch (e) {
+      rethrow;
     }
-    return ConfirmationResult._(_auth, result);
   }
 
   /// Re-authenticates a user using a fresh credential.
@@ -447,10 +538,16 @@ class User {
   Future<UserCredential> reauthenticateWithCredential(
     AuthCredential credential,
   ) async {
-    return UserCredential._(
-      _auth,
-      await _delegate.reauthenticateWithCredential(credential),
-    );
+    try {
+      return UserCredential._(
+        _auth,
+        await _delegate.reauthenticateWithCredential(credential),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(_auth, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Refreshes the current user, if signed in.

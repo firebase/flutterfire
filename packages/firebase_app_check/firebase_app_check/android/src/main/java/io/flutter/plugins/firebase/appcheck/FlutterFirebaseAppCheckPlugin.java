@@ -15,6 +15,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.AppCheckTokenResult;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory;
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -33,6 +34,11 @@ public class FlutterFirebaseAppCheckPlugin
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_app_check";
   private final Map<EventChannel, TokenChannelStreamHandler> streamHandlers = new HashMap<>();
+  private final String TAG = "FLTAppCheckPlugin";
+
+  private final String debugProvider = "debug";
+  private final String safetyNetProvider = "safetyNet";
+  private final String playIntegrity = "playIntegrity";
 
   @Nullable private BinaryMessenger messenger;
 
@@ -78,16 +84,30 @@ public class FlutterFirebaseAppCheckPlugin
     cachedThreadPool.execute(
         () -> {
           try {
-            Boolean debug = (Boolean) arguments.get("androidDebugProvider");
+            String provider = (String) Objects.requireNonNull(arguments.get("androidProvider"));
 
-            if (Boolean.TRUE.equals(debug)) {
-              FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
-              firebaseAppCheck.installAppCheckProviderFactory(
-                  DebugAppCheckProviderFactory.getInstance());
-            } else {
-              FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-              firebaseAppCheck.installAppCheckProviderFactory(
-                  SafetyNetAppCheckProviderFactory.getInstance());
+            switch (provider) {
+              case debugProvider:
+                {
+                  FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+                  firebaseAppCheck.installAppCheckProviderFactory(
+                      DebugAppCheckProviderFactory.getInstance());
+                  break;
+                }
+              case safetyNetProvider:
+                {
+                  FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+                  firebaseAppCheck.installAppCheckProviderFactory(
+                      SafetyNetAppCheckProviderFactory.getInstance());
+                  break;
+                }
+              case playIntegrity:
+                {
+                  FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+                  firebaseAppCheck.installAppCheckProviderFactory(
+                      PlayIntegrityAppCheckProviderFactory.getInstance());
+                  break;
+                }
             }
             taskCompletionSource.setResult(null);
           } catch (Exception e) {

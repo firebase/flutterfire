@@ -25,7 +25,6 @@ void main() {
         await expectLater(
           FirebaseAppCheck.instance.activate(
             webRecaptchaSiteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
-            androidDebugProvider: true,
           ),
           completes,
         );

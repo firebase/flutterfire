@@ -32,7 +32,7 @@ abstract class DocumentChange<T extends Object?> {
 
 class _JsonDocumentChange implements DocumentChange<Map<String, dynamic>> {
   _JsonDocumentChange(this._firestore, this._delegate) {
-    DocumentChangePlatform.verifyExtends(_delegate);
+    DocumentChangePlatform.verify(_delegate);
   }
 
   final DocumentChangePlatform _delegate;

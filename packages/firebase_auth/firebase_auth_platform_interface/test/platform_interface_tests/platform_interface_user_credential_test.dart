@@ -82,10 +82,10 @@ void main() {
       });
     });
 
-    group('verifyExtends()', () {
+    group('verify()', () {
       test('calls successfully', () {
         try {
-          UserCredentialPlatform.verifyExtends(userCredentialPlatform);
+          UserCredentialPlatform.verify(userCredentialPlatform);
           return;
         } catch (_) {
           fail('thrown an unexpected exception');

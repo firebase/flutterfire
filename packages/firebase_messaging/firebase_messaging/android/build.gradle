@@ -53,6 +53,9 @@ android {
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
     implementation 'androidx.annotation:annotation:1.4.0'
+    implementation ('com.google.firebase:firebase-iid:21.1.0') {
+      transitive = true
+    }
   }
 }
 

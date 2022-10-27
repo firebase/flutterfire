@@ -1,3 +1,19 @@
+## 0.0.5+5
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 0.0.5+4
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+3
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+2
+
+ - Update a dependency to the latest release.
+
 ## 0.0.5+1
 
  - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))

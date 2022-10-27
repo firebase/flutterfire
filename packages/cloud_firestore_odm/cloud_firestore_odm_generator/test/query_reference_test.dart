@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:expect_error/expect_error.dart';
 import 'package:test/test.dart';
 
@@ -9,6 +13,29 @@ Future<void> main() async {
   );
 
   group('query', () {
+    test('does not generate utilities for getters', () {
+      expect(
+        library.withCode(
+          '''
+import 'simple.dart';
+
+void main() {
+  ignoredGetterRef.whereValue();
+  // expect-error: UNDEFINED_METHOD
+  ignoredGetterRef.whereCount();
+  // expect-error: UNDEFINED_METHOD
+  ignoredGetterRef.whereCount2();
+  // expect-error: UNDEFINED_METHOD
+  ignoredGetterRef.whereCount3();
+  // expect-error: UNDEFINED_METHOD
+  ignoredGetterRef.whereHashCode();
+}
+''',
+        ),
+        compiles,
+      );
+    });
+
     test('property type offset queries from value', () {
       expect(
         library.withCode(

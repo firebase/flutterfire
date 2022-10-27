@@ -130,6 +130,7 @@ abstract class ManualJsonDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     String value,
+    FieldValue valueFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -138,6 +139,7 @@ abstract class ManualJsonDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     String value,
+    FieldValue valueFieldValue,
   });
 }
 
@@ -156,39 +158,30 @@ class _$ManualJsonDocumentReference
 
   @override
   Stream<ManualJsonDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return ManualJsonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(ManualJsonDocumentSnapshot._);
   }
 
   @override
   Future<ManualJsonDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return ManualJsonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(ManualJsonDocumentSnapshot._);
   }
 
   @override
   Future<ManualJsonDocumentSnapshot> transactionGet(Transaction transaction) {
-    return transaction.get(reference).then((snapshot) {
-      return ManualJsonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return transaction.get(reference).then(ManualJsonDocumentSnapshot._);
   }
 
   Future<void> update({
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) async {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
       if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -197,9 +190,15 @@ class _$ManualJsonDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     Object? value = _sentinel,
+    FieldValue? valueFieldValue,
   }) {
+    assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
     final json = {
-      if (value != _sentinel) "value": value as String,
+      if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);
@@ -215,26 +214,6 @@ class _$ManualJsonDocumentReference
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class ManualJsonDocumentSnapshot extends FirestoreDocumentSnapshot<ManualJson> {
-  ManualJsonDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<ManualJson> snapshot;
-
-  @override
-  ManualJsonDocumentReference get reference {
-    return ManualJsonDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final ManualJson? data;
 }
 
 abstract class ManualJsonQuery
@@ -372,37 +351,18 @@ class _$ManualJsonQuery
 
   final CollectionReference<Object?> _collection;
 
-  ManualJsonQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<ManualJson> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return ManualJsonQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<ManualJsonDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: ManualJsonDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return ManualJsonQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<ManualJsonQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference
+        .snapshots()
+        .map(ManualJsonQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<ManualJsonQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference
+        .get(options)
+        .then(ManualJsonQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -742,6 +702,23 @@ class _$ManualJsonQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class ManualJsonDocumentSnapshot extends FirestoreDocumentSnapshot<ManualJson> {
+  ManualJsonDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<ManualJson> snapshot;
+
+  @override
+  ManualJsonDocumentReference get reference {
+    return ManualJsonDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final ManualJson? data;
+}
+
 class ManualJsonQuerySnapshot extends FirestoreQuerySnapshot<ManualJson,
     ManualJsonQueryDocumentSnapshot> {
   ManualJsonQuerySnapshot._(
@@ -749,6 +726,38 @@ class ManualJsonQuerySnapshot extends FirestoreQuerySnapshot<ManualJson,
     this.docs,
     this.docChanges,
   );
+
+  factory ManualJsonQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<ManualJson> snapshot,
+  ) {
+    final docs = snapshot.docs.map(ManualJsonQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        ManualJsonDocumentSnapshot._,
+      );
+    }).toList();
+
+    return ManualJsonQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<ManualJsonDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    ManualJsonDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<ManualJsonDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<ManualJson> snapshot;
 
@@ -762,18 +771,18 @@ class ManualJsonQuerySnapshot extends FirestoreQuerySnapshot<ManualJson,
 class ManualJsonQueryDocumentSnapshot
     extends FirestoreQueryDocumentSnapshot<ManualJson>
     implements ManualJsonDocumentSnapshot {
-  ManualJsonQueryDocumentSnapshot._(this.snapshot, this.data);
+  ManualJsonQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<ManualJson> snapshot;
 
   @override
+  final ManualJson data;
+
+  @override
   ManualJsonDocumentReference get reference {
     return ManualJsonDocumentReference(snapshot.reference);
   }
-
-  @override
-  final ManualJson data;
 }
 
 /// A collection reference object can be used for adding documents,
@@ -892,8 +901,9 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
   /// If no document exists yet, the update will fail.
   Future<void> update({
     String? firstName,
+    FieldValue firstNameFieldValue,
     String? lastName,
-    int hashCode,
+    FieldValue lastNameFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -902,8 +912,9 @@ abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     String? firstName,
+    FieldValue firstNameFieldValue,
     String? lastName,
-    int hashCode,
+    FieldValue lastNameFieldValue,
   });
 }
 
@@ -922,43 +933,38 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
 
   @override
   Stream<AdvancedJsonDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return AdvancedJsonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(AdvancedJsonDocumentSnapshot._);
   }
 
   @override
   Future<AdvancedJsonDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return AdvancedJsonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(AdvancedJsonDocumentSnapshot._);
   }
 
   @override
   Future<AdvancedJsonDocumentSnapshot> transactionGet(Transaction transaction) {
-    return transaction.get(reference).then((snapshot) {
-      return AdvancedJsonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return transaction.get(reference).then(AdvancedJsonDocumentSnapshot._);
   }
 
   Future<void> update({
     Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
-    Object? hashCode = _sentinel,
+    FieldValue? lastNameFieldValue,
   }) async {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
-      if (hashCode != _sentinel) 'hashCode': hashCode as int,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
     return reference.update(json);
@@ -967,13 +973,23 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
   void transactionUpdate(
     Transaction transaction, {
     Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
-    Object? hashCode = _sentinel,
+    FieldValue? lastNameFieldValue,
   }) {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
     final json = {
-      if (firstName != _sentinel) "firstName": firstName as String?,
-      if (lastName != _sentinel) "lastName": lastName as String?,
-      if (hashCode != _sentinel) "hashCode": hashCode as int,
+      if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
+      if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
     transaction.update(reference, json);
@@ -989,27 +1005,6 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class AdvancedJsonDocumentSnapshot
-    extends FirestoreDocumentSnapshot<AdvancedJson> {
-  AdvancedJsonDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<AdvancedJson> snapshot;
-
-  @override
-  AdvancedJsonDocumentReference get reference {
-    return AdvancedJsonDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final AdvancedJson? data;
 }
 
 abstract class AdvancedJsonQuery
@@ -1118,17 +1113,6 @@ abstract class AdvancedJsonQuery
     List<String?>? whereIn,
     List<String?>? whereNotIn,
   });
-  AdvancedJsonQuery whereHashCode({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
-  });
 
   AdvancedJsonQuery orderByDocumentId({
     bool descending = false,
@@ -1165,18 +1149,6 @@ abstract class AdvancedJsonQuery
     AdvancedJsonDocumentSnapshot? endBeforeDocument,
     AdvancedJsonDocumentSnapshot? startAfterDocument,
   });
-
-  AdvancedJsonQuery orderByHashCode({
-    bool descending = false,
-    int startAt,
-    int startAfter,
-    int endAt,
-    int endBefore,
-    AdvancedJsonDocumentSnapshot? startAtDocument,
-    AdvancedJsonDocumentSnapshot? endAtDocument,
-    AdvancedJsonDocumentSnapshot? endBeforeDocument,
-    AdvancedJsonDocumentSnapshot? startAfterDocument,
-  });
 }
 
 class _$AdvancedJsonQuery
@@ -1193,37 +1165,18 @@ class _$AdvancedJsonQuery
 
   final CollectionReference<Object?> _collection;
 
-  AdvancedJsonQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<AdvancedJson> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return AdvancedJsonQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<AdvancedJsonDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: AdvancedJsonDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return AdvancedJsonQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<AdvancedJsonQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference
+        .snapshots()
+        .map(AdvancedJsonQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<AdvancedJsonQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference
+        .get(options)
+        .then(AdvancedJsonQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -1423,35 +1376,6 @@ class _$AdvancedJsonQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$AdvancedJsonFieldMap['lastName']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  AdvancedJsonQuery whereHashCode({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
-  }) {
-    return _$AdvancedJsonQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$AdvancedJsonFieldMap['hashCode']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1682,78 +1606,6 @@ class _$AdvancedJsonQuery
     );
   }
 
-  AdvancedJsonQuery orderByHashCode({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    AdvancedJsonDocumentSnapshot? startAtDocument,
-    AdvancedJsonDocumentSnapshot? endAtDocument,
-    AdvancedJsonDocumentSnapshot? endBeforeDocument,
-    AdvancedJsonDocumentSnapshot? startAfterDocument,
-  }) {
-    final query = $referenceWithoutCursor
-        .orderBy(_$AdvancedJsonFieldMap['hashCode']!, descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-
-    return _$AdvancedJsonQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
   @override
   bool operator ==(Object other) {
     return other is _$AdvancedJsonQuery &&
@@ -1765,6 +1617,24 @@ class _$AdvancedJsonQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class AdvancedJsonDocumentSnapshot
+    extends FirestoreDocumentSnapshot<AdvancedJson> {
+  AdvancedJsonDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<AdvancedJson> snapshot;
+
+  @override
+  AdvancedJsonDocumentReference get reference {
+    return AdvancedJsonDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final AdvancedJson? data;
+}
+
 class AdvancedJsonQuerySnapshot extends FirestoreQuerySnapshot<AdvancedJson,
     AdvancedJsonQueryDocumentSnapshot> {
   AdvancedJsonQuerySnapshot._(
@@ -1772,6 +1642,39 @@ class AdvancedJsonQuerySnapshot extends FirestoreQuerySnapshot<AdvancedJson,
     this.docs,
     this.docChanges,
   );
+
+  factory AdvancedJsonQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<AdvancedJson> snapshot,
+  ) {
+    final docs =
+        snapshot.docs.map(AdvancedJsonQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        AdvancedJsonDocumentSnapshot._,
+      );
+    }).toList();
+
+    return AdvancedJsonQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<AdvancedJsonDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    AdvancedJsonDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<AdvancedJsonDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<AdvancedJson> snapshot;
 
@@ -1785,18 +1688,18 @@ class AdvancedJsonQuerySnapshot extends FirestoreQuerySnapshot<AdvancedJson,
 class AdvancedJsonQueryDocumentSnapshot
     extends FirestoreQueryDocumentSnapshot<AdvancedJson>
     implements AdvancedJsonDocumentSnapshot {
-  AdvancedJsonQueryDocumentSnapshot._(this.snapshot, this.data);
+  AdvancedJsonQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<AdvancedJson> snapshot;
 
   @override
+  final AdvancedJson data;
+
+  @override
   AdvancedJsonDocumentReference get reference {
     return AdvancedJsonDocumentReference(snapshot.reference);
   }
-
-  @override
-  final AdvancedJson data;
 }
 
 /// A collection reference object can be used for adding documents,
@@ -1923,8 +1826,9 @@ abstract class _PrivateAdvancedJsonDocumentReference
   /// If no document exists yet, the update will fail.
   Future<void> update({
     String? firstName,
+    FieldValue firstNameFieldValue,
     String? lastName,
-    int hashCode,
+    FieldValue lastNameFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -1933,8 +1837,9 @@ abstract class _PrivateAdvancedJsonDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     String? firstName,
+    FieldValue firstNameFieldValue,
     String? lastName,
-    int hashCode,
+    FieldValue lastNameFieldValue,
   });
 }
 
@@ -1954,44 +1859,41 @@ class _$_PrivateAdvancedJsonDocumentReference
 
   @override
   Stream<_PrivateAdvancedJsonDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return _PrivateAdvancedJsonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(_PrivateAdvancedJsonDocumentSnapshot._);
   }
 
   @override
   Future<_PrivateAdvancedJsonDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return _PrivateAdvancedJsonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(_PrivateAdvancedJsonDocumentSnapshot._);
   }
 
   @override
   Future<_PrivateAdvancedJsonDocumentSnapshot> transactionGet(
       Transaction transaction) {
-    return transaction.get(reference).then((snapshot) {
-      return _PrivateAdvancedJsonDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return transaction
+        .get(reference)
+        .then(_PrivateAdvancedJsonDocumentSnapshot._);
   }
 
   Future<void> update({
     Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
-    Object? hashCode = _sentinel,
+    FieldValue? lastNameFieldValue,
   }) async {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
-      if (hashCode != _sentinel) 'hashCode': hashCode as int,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
     return reference.update(json);
@@ -2000,13 +1902,23 @@ class _$_PrivateAdvancedJsonDocumentReference
   void transactionUpdate(
     Transaction transaction, {
     Object? firstName = _sentinel,
+    FieldValue? firstNameFieldValue,
     Object? lastName = _sentinel,
-    Object? hashCode = _sentinel,
+    FieldValue? lastNameFieldValue,
   }) {
+    assert(
+      firstName == _sentinel || firstNameFieldValue == null,
+      "Cannot specify both firstName and firstNameFieldValue",
+    );
+    assert(
+      lastName == _sentinel || lastNameFieldValue == null,
+      "Cannot specify both lastName and lastNameFieldValue",
+    );
     final json = {
-      if (firstName != _sentinel) "firstName": firstName as String?,
-      if (lastName != _sentinel) "lastName": lastName as String?,
-      if (hashCode != _sentinel) "hashCode": hashCode as int,
+      if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
+      if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
     transaction.update(reference, json);
@@ -2022,27 +1934,6 @@ class _$_PrivateAdvancedJsonDocumentReference
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class _PrivateAdvancedJsonDocumentSnapshot
-    extends FirestoreDocumentSnapshot<_PrivateAdvancedJson> {
-  _PrivateAdvancedJsonDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<_PrivateAdvancedJson> snapshot;
-
-  @override
-  _PrivateAdvancedJsonDocumentReference get reference {
-    return _PrivateAdvancedJsonDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final _PrivateAdvancedJson? data;
 }
 
 abstract class _PrivateAdvancedJsonQuery
@@ -2153,17 +2044,6 @@ abstract class _PrivateAdvancedJsonQuery
     List<String?>? whereIn,
     List<String?>? whereNotIn,
   });
-  _PrivateAdvancedJsonQuery whereHashCode({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
-  });
 
   _PrivateAdvancedJsonQuery orderByDocumentId({
     bool descending = false,
@@ -2200,18 +2080,6 @@ abstract class _PrivateAdvancedJsonQuery
     _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
     _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
   });
-
-  _PrivateAdvancedJsonQuery orderByHashCode({
-    bool descending = false,
-    int startAt,
-    int startAfter,
-    int endAt,
-    int endBefore,
-    _PrivateAdvancedJsonDocumentSnapshot? startAtDocument,
-    _PrivateAdvancedJsonDocumentSnapshot? endAtDocument,
-    _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
-    _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
-  });
 }
 
 class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
@@ -2227,39 +2095,19 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
 
   final CollectionReference<Object?> _collection;
 
-  _PrivateAdvancedJsonQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<_PrivateAdvancedJson> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return _PrivateAdvancedJsonQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<_PrivateAdvancedJsonDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: _PrivateAdvancedJsonDocumentSnapshot._(
-            change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return _PrivateAdvancedJsonQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<_PrivateAdvancedJsonQuerySnapshot> snapshots(
       [SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference
+        .snapshots()
+        .map(_PrivateAdvancedJsonQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<_PrivateAdvancedJsonQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference
+        .get(options)
+        .then(_PrivateAdvancedJsonQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -2459,35 +2307,6 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$PrivateAdvancedJsonFieldMap['lastName']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  _PrivateAdvancedJsonQuery whereHashCode({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
-  }) {
-    return _$_PrivateAdvancedJsonQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$PrivateAdvancedJsonFieldMap['hashCode']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2720,79 +2539,6 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     );
   }
 
-  _PrivateAdvancedJsonQuery orderByHashCode({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    _PrivateAdvancedJsonDocumentSnapshot? startAtDocument,
-    _PrivateAdvancedJsonDocumentSnapshot? endAtDocument,
-    _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
-    _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
-  }) {
-    final query = $referenceWithoutCursor.orderBy(
-        _$PrivateAdvancedJsonFieldMap['hashCode']!,
-        descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-
-    return _$_PrivateAdvancedJsonQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
   @override
   bool operator ==(Object other) {
     return other is _$_PrivateAdvancedJsonQuery &&
@@ -2804,6 +2550,25 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class _PrivateAdvancedJsonDocumentSnapshot
+    extends FirestoreDocumentSnapshot<_PrivateAdvancedJson> {
+  _PrivateAdvancedJsonDocumentSnapshot._(this.snapshot)
+      : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<_PrivateAdvancedJson> snapshot;
+
+  @override
+  _PrivateAdvancedJsonDocumentReference get reference {
+    return _PrivateAdvancedJsonDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final _PrivateAdvancedJson? data;
+}
+
 class _PrivateAdvancedJsonQuerySnapshot extends FirestoreQuerySnapshot<
     _PrivateAdvancedJson, _PrivateAdvancedJsonQueryDocumentSnapshot> {
   _PrivateAdvancedJsonQuerySnapshot._(
@@ -2811,6 +2576,40 @@ class _PrivateAdvancedJsonQuerySnapshot extends FirestoreQuerySnapshot<
     this.docs,
     this.docChanges,
   );
+
+  factory _PrivateAdvancedJsonQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<_PrivateAdvancedJson> snapshot,
+  ) {
+    final docs =
+        snapshot.docs.map(_PrivateAdvancedJsonQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        _PrivateAdvancedJsonDocumentSnapshot._,
+      );
+    }).toList();
+
+    return _PrivateAdvancedJsonQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<_PrivateAdvancedJsonDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    _PrivateAdvancedJsonDocumentSnapshot Function(DocumentSnapshot<T> doc)
+        decodeDoc,
+  ) {
+    return FirestoreDocumentChange<_PrivateAdvancedJsonDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<_PrivateAdvancedJson> snapshot;
 
@@ -2825,18 +2624,19 @@ class _PrivateAdvancedJsonQuerySnapshot extends FirestoreQuerySnapshot<
 class _PrivateAdvancedJsonQueryDocumentSnapshot
     extends FirestoreQueryDocumentSnapshot<_PrivateAdvancedJson>
     implements _PrivateAdvancedJsonDocumentSnapshot {
-  _PrivateAdvancedJsonQueryDocumentSnapshot._(this.snapshot, this.data);
+  _PrivateAdvancedJsonQueryDocumentSnapshot._(this.snapshot)
+      : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<_PrivateAdvancedJson> snapshot;
 
   @override
+  final _PrivateAdvancedJson data;
+
+  @override
   _PrivateAdvancedJsonDocumentReference get reference {
     return _PrivateAdvancedJsonDocumentReference(snapshot.reference);
   }
-
-  @override
-  final _PrivateAdvancedJson data;
 }
 
 /// A collection reference object can be used for adding documents,
@@ -2962,32 +2762,17 @@ class _$EmptyModelDocumentReference
 
   @override
   Stream<EmptyModelDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return EmptyModelDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(EmptyModelDocumentSnapshot._);
   }
 
   @override
   Future<EmptyModelDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return EmptyModelDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(EmptyModelDocumentSnapshot._);
   }
 
   @override
   Future<EmptyModelDocumentSnapshot> transactionGet(Transaction transaction) {
-    return transaction.get(reference).then((snapshot) {
-      return EmptyModelDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return transaction.get(reference).then(EmptyModelDocumentSnapshot._);
   }
 
   @override
@@ -3000,26 +2785,6 @@ class _$EmptyModelDocumentReference
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class EmptyModelDocumentSnapshot extends FirestoreDocumentSnapshot<EmptyModel> {
-  EmptyModelDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<EmptyModel> snapshot;
-
-  @override
-  EmptyModelDocumentReference get reference {
-    return EmptyModelDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final EmptyModel? data;
 }
 
 abstract class EmptyModelQuery
@@ -3134,37 +2899,18 @@ class _$EmptyModelQuery
 
   final CollectionReference<Object?> _collection;
 
-  EmptyModelQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<EmptyModel> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return EmptyModelQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<EmptyModelDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: EmptyModelDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return EmptyModelQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<EmptyModelQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference
+        .snapshots()
+        .map(EmptyModelQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<EmptyModelQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference
+        .get(options)
+        .then(EmptyModelQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -3403,6 +3149,23 @@ class _$EmptyModelQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class EmptyModelDocumentSnapshot extends FirestoreDocumentSnapshot<EmptyModel> {
+  EmptyModelDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<EmptyModel> snapshot;
+
+  @override
+  EmptyModelDocumentReference get reference {
+    return EmptyModelDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final EmptyModel? data;
+}
+
 class EmptyModelQuerySnapshot extends FirestoreQuerySnapshot<EmptyModel,
     EmptyModelQueryDocumentSnapshot> {
   EmptyModelQuerySnapshot._(
@@ -3410,6 +3173,38 @@ class EmptyModelQuerySnapshot extends FirestoreQuerySnapshot<EmptyModel,
     this.docs,
     this.docChanges,
   );
+
+  factory EmptyModelQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<EmptyModel> snapshot,
+  ) {
+    final docs = snapshot.docs.map(EmptyModelQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        EmptyModelDocumentSnapshot._,
+      );
+    }).toList();
+
+    return EmptyModelQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<EmptyModelDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    EmptyModelDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<EmptyModelDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<EmptyModel> snapshot;
 
@@ -3423,18 +3218,18 @@ class EmptyModelQuerySnapshot extends FirestoreQuerySnapshot<EmptyModel,
 class EmptyModelQueryDocumentSnapshot
     extends FirestoreQueryDocumentSnapshot<EmptyModel>
     implements EmptyModelDocumentSnapshot {
-  EmptyModelQueryDocumentSnapshot._(this.snapshot, this.data);
+  EmptyModelQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<EmptyModel> snapshot;
 
   @override
+  final EmptyModel data;
+
+  @override
   EmptyModelDocumentReference get reference {
     return EmptyModelDocumentReference(snapshot.reference);
   }
-
-  @override
-  final EmptyModel data;
 }
 
 // **************************************************************************

@@ -1064,7 +1064,13 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
   [currentUser linkWithCredential:credential
                        completion:^(FIRAuthDataResult *authResult, NSError *error) {
                          if (error != nil) {
-                           result.error(nil, nil, nil, error);
+                           if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+                             [self handleMultiFactorError:arguments
+                                               withResult:result
+                                                withError:error];
+                           } else {
+                             result.error(nil, nil, nil, error);
+                           }
                          } else {
                            result.success(authResult);
                          }
@@ -1090,7 +1096,13 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
   [currentUser reauthenticateWithCredential:credential
                                  completion:^(FIRAuthDataResult *authResult, NSError *error) {
                                    if (error != nil) {
-                                     result.error(nil, nil, nil, error);
+                                     if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+                                       [self handleMultiFactorError:arguments
+                                                         withResult:result
+                                                          withError:error];
+                                     } else {
+                                       result.error(nil, nil, nil, error);
+                                     }
                                    } else {
                                      result.success(authResult);
                                    }

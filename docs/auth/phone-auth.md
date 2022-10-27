@@ -56,6 +56,9 @@ await FirebaseAuth.instance.verifyPhoneNumber(
 );
 ```
 
+Note: Depending on your billing plan, you might be limited to a daily quota of
+SMS messages sent. See [Firebase Auth Limits](/docs/auth/limits#phone-auth).
+
 There are 4 separate callbacks that you must handle, each will determine how you update the application UI:
 
 1. **[verificationCompleted](#verificationCompleted)**: Automatic handling of the SMS code on Android devices.

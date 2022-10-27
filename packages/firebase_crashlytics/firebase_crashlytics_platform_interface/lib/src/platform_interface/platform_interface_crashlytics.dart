@@ -60,7 +60,7 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseCrashlyticsPlatform.instance]
   static set instance(FirebaseCrashlyticsPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 
@@ -113,6 +113,7 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
     required String information,
     required String reason,
     bool fatal = false,
+    String? buildId,
     List<Map<String, String>>? stackTraceElements,
   }) {
     throw UnimplementedError('recordError() is not implemented');

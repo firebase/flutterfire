@@ -18,8 +18,8 @@ abstract class LoadBundleTaskPlatform<T> extends PlatformInterface {
   /// This is used by the app-facing [LoadBundleTask] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(LoadBundleTaskPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(LoadBundleTaskPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   Stream<T> get stream;

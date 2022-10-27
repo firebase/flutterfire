@@ -3,3 +3,4 @@
 --wrapparameters afterfirst
 --disable sortedImports,unusedArguments,wrapMultilineStatementBraces
 --exclude Pods,**/MainFlutterWindow.swift,**/AppDelegate.swift,**/.symlinks/**
+--swiftversion 5.7
