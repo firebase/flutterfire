@@ -120,7 +120,7 @@ To start the Firebase Emulator, run these commands:
 
 ```bash
 cd .github/workflows/scripts
-firebase emulators:start --only auth,firestore,functions,storage,database --project flutterfire-e2e-tests
+melos run firebase:emulator
 ```
 
 To run tests against Android, iOS or macOS environments, run these commands:
