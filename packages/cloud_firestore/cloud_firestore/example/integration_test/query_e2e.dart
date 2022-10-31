@@ -1828,6 +1828,28 @@ void runQueryTests() {
           );
         },
       );
+
+      test(
+        'count() with query',
+        () async {
+          final collection = await initializeTest('count');
+
+          await Future.wait([
+            collection.add({'foo': 'bar'}),
+            collection.add({'foo': 'baz'})
+          ]);
+
+          AggregateQuery query =
+              collection.where('foo', isEqualTo: 'bar').count();
+
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.count,
+            1,
+          );
+        },
+      );
     });
   });
 }
