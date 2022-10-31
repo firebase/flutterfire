@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
 import '../../cloud_firestore_platform_interface.dart';
 
 /// [AggregateQueryPlatform] represents the data at a particular location for retrieving metadata
@@ -18,8 +19,8 @@ abstract class AggregateQueryPlatform extends PlatformInterface {
   /// This is used by the app-facing [AggregateQuery] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(AggregateQueryPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(AggregateQueryPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The [QueryPlatform] instance to which this [AggregateQueryPlatform] queries against to retrieve the metadata.
