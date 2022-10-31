@@ -11,8 +11,20 @@ class AppleProvider extends OAuthProvider {
   @override
   final style = const AppleProviderButtonStyle();
 
+  /// {@template ui.auth.oauth.apple_provider.scopes}
+  /// The scopes that will be passed down to the [fba.AppleAuthProvider].
+  /// {@endtemplate}
+  final Set<String> scopes;
+
   @override
   fba.AppleAuthProvider firebaseAuthProvider = fba.AppleAuthProvider();
+
+  AppleProvider({
+    /// {@macro ui.auth.oauth.apple_provider.scopes}
+    this.scopes = const <String>{'email'},
+  }) {
+    scopes.forEach(firebaseAuthProvider.addScope);
+  }
 
   @override
   void mobileSignIn(AuthAction action) {
