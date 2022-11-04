@@ -47,7 +47,7 @@ abstract class ThemedOAuthProviderButtonStyle {
   String get assetsPackage;
 
   /// A custom label string.
-  /// 
+  ///
   /// Required for custom OAuth providers.
   String? get label => null;
 
