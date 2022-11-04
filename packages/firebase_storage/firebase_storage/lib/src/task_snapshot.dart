@@ -8,7 +8,7 @@ part of firebase_storage;
 /// A [TaskSnapshot] is returned as the result or on-going process of a [Task].
 class TaskSnapshot {
   TaskSnapshot._(this.storage, this._delegate) {
-    TaskSnapshotPlatform.verifyExtends(_delegate);
+    TaskSnapshotPlatform.verify(_delegate);
   }
 
   TaskSnapshotPlatform _delegate;

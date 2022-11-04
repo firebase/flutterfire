@@ -18,8 +18,8 @@ abstract class UserPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Ensures that any delegate class has extended a [UserPlatform].
-  static void verifyExtends(UserPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(UserPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The [FirebaseAuthPlatform] instance.
@@ -275,6 +275,25 @@ abstract class UserPlatform extends PlatformInterface {
     AuthProvider provider,
   ) {
     throw UnimplementedError('reauthenticateWithPopup() is not implemented');
+  }
+
+  /// Renews the user’s authentication using the provided auth provider instance.
+  /// On mobile you should use [reauthenticateWithProvider] instead.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **invalid-credential**:
+  ///  - Thrown if the provider's credential is not valid. This can happen if it
+  ///    has already expired when calling link, or if it used invalid token(s).
+  ///    See the Firebase documentation for your provider, and make sure you
+  ///    pass in the correct parameters to the credential method.
+  /// - **operation-not-allowed**:
+  ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
+  ///    to the Firebase Console for your project, in the Auth section and the
+  ///    Sign in Method tab and configure the provider.
+  Future<void> reauthenticateWithRedirect(
+    AuthProvider provider,
+  ) {
+    throw UnimplementedError('reauthenticateWithRedirect() is not implemented');
   }
 
   /// Links the user account with the given provider.

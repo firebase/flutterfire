@@ -23,10 +23,10 @@ void main() {
       expect(confirmationResultPlatform, isA<PlatformInterface>());
     });
 
-    group('verifyExtends()', () {
+    group('verify()', () {
       test('calls successfully', () {
         try {
-          ConfirmationResultPlatform.verifyExtends(confirmationResultPlatform);
+          ConfirmationResultPlatform.verify(confirmationResultPlatform);
           return;
         } catch (_) {
           fail('thrown an unexpected exception');

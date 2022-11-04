@@ -198,7 +198,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     this.firestore,
     this._delegate,
   ) {
-    QueryPlatform.verifyExtends(_delegate);
+    QueryPlatform.verify(_delegate);
   }
 
   @override

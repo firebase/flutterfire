@@ -66,29 +66,31 @@ void main() async {
 
   await Firebase.initializeApp();
 
-  // Pass all uncaught errors from the framework to Crashlytics.
+  // Pass all uncaught "fatal" errors from the framework to Crashlytics
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
   runApp(MyApp());
 }
 ```
 
-If you're using zones, instrumenting the zone’s error handler will catch errors
-that aren't caught by the Flutter framework (for example, in a button’s
-`onPressed` handler):
+To catch asynchronous errors that aren't handled by the Flutter framework, use
+`PlatformDispatcher.instance.onError`:
+
 
 ```dart
-void main() async {
-  runZonedGuarded<Future<void>>(() async {
+Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-
-    FlutterError.onError =
-       FirebaseCrashlytics.instance.recordFlutterFatalError;
-
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
+    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
     runApp(MyApp());
-  }, (error, stack) =>
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
+
 }
 ```
 

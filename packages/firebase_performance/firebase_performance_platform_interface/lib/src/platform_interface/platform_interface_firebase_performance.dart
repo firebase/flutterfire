@@ -41,7 +41,7 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
 
   /// Sets the [FirebasePerformancePlatform] instance.
   static set instance(FirebasePerformancePlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

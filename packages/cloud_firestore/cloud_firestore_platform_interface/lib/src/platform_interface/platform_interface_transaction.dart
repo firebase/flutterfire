@@ -26,8 +26,8 @@ abstract class TransactionPlatform extends PlatformInterface {
   /// This is used by the app-facing [Transaction] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(TransactionPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(TransactionPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// Returns all transaction commands for the current instance.

@@ -1,3 +1,12 @@
+## 5.1.1
+
+ - **FIX**: use correct UTC time from server for _webUser.metadata.creationTime & _webUser.metadata.lastSignInTime ([#9789](https://github.com/firebase/flutterfire/issues/9789)). ([44ac2a36](https://github.com/firebase/flutterfire/commit/44ac2a3665a1006d444b4725c131ad4f084fe3d1))
+
+## 5.1.0
+
+ - **FIX**: properly propagate the `FirebaseAuthMultiFactorException` for all reauthenticate and link methods ([#9700](https://github.com/firebase/flutterfire/issues/9700)). ([9ad97c82](https://github.com/firebase/flutterfire/commit/9ad97c82ead0f5c6f1307625374c34e0dcde730b))
+ - **FEAT**: expose reauthenticateWithRedirect and reauthenticateWithPopup ([#9696](https://github.com/firebase/flutterfire/issues/9696)). ([2a1f910f](https://github.com/firebase/flutterfire/commit/2a1f910ff6cab21a126c62fd4322a14ec263b629))
+
 ## 5.0.2
 
  - Update a dependency to the latest release.

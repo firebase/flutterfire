@@ -15,8 +15,8 @@ class FirebaseAppPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   // ignore: public_member_api_docs
-  static void verifyExtends(FirebaseAppPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(FirebaseAppPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The name of this Firebase app.

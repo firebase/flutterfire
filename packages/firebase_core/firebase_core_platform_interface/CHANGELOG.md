@@ -1,3 +1,7 @@
+## 4.5.2
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
 ## 4.5.1
 
  - **FIX**: Prepare for fix to https://github.com/flutter/flutter/issues/109339. ([#9364](https://github.com/firebase/flutterfire/issues/9364)). ([7418dfd9](https://github.com/firebase/flutterfire/commit/7418dfd91c4fc7982c6bc6b1e8de80f9bccd575b))

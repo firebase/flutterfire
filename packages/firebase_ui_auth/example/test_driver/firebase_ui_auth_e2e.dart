@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -36,8 +37,10 @@ Future<void> main() async {
     phone_verification.main();
     google_sign_in.main();
     twitter_sign_in.main();
-    apple_sign_in.main();
     facebook_sign_in.main();
+    apple_sign_in.main();
+  } else if (defaultTargetPlatform == TargetPlatform.macOS) {
+    apple_sign_in.main();
   }
 
   layout.main();
