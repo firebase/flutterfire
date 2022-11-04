@@ -28,10 +28,6 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   mockito: ^5.2.0
 
-dependency_overrides:
-  firebase_ui_oauth:
-    path: ../firebase_ui_oauth
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
