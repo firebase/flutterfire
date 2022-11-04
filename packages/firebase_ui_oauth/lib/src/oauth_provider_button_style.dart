@@ -52,6 +52,7 @@ abstract class ThemedOAuthProviderButtonStyle {
   OAuthProviderButtonStyle withBrightness(Brightness brightness) {
     return OAuthProviderButtonStyle(
       iconSrc: iconSrc.getValue(brightness),
+      iconPadding: iconPadding,
       backgroundColor: backgroundColor.getValue(brightness),
       color: color.getValue(brightness),
       borderColor: borderColor.getValue(brightness),
@@ -63,6 +64,7 @@ abstract class ThemedOAuthProviderButtonStyle {
 
 class OAuthProviderButtonStyle {
   final String iconSrc;
+  final double iconPadding;
   final Color backgroundColor;
   final Color color;
   final Color borderColor;
@@ -71,6 +73,7 @@ class OAuthProviderButtonStyle {
 
   OAuthProviderButtonStyle({
     required this.iconSrc,
+    required this.iconPadding,
     required this.backgroundColor,
     required this.color,
     required this.borderColor,
