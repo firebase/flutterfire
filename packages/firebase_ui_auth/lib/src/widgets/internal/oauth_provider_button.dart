@@ -91,6 +91,7 @@ class OAuthProviderButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final labels = FirebaseUILocalizations.labelsOf(context);
     final brightness = Theme.of(context).brightness;
+    final label = provider.style.label;
 
     return AuthFlowBuilder<OAuthController>(
       provider: provider,
@@ -110,7 +111,8 @@ class OAuthProviderButton extends StatelessWidget {
           ),
           label: variant == OAuthButtonVariant.icon
               ? ''
-              : resolveProviderButtonLabel(provider.providerId, labels),
+              : label ??
+                  resolveProviderButtonLabel(provider.providerId, labels),
           auth: auth,
         );
 

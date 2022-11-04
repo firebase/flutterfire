@@ -45,6 +45,7 @@ abstract class ThemedOAuthProviderButtonStyle {
   ThemedColor get borderColor => backgroundColor;
   double get iconPadding => 0;
   String get assetsPackage;
+  String? get label => null;
 
   /// {@macro ui.oauth.themed_oauth_provider_button_style}
   const ThemedOAuthProviderButtonStyle();
