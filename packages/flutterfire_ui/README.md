@@ -130,7 +130,7 @@ dependencies:
 Run in your terminal
 
 ```sh
-flutter pub add firebase_ui_firestore
+flutter pub add firebase_ui_database
 ```
 
 and imports:
