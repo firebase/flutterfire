@@ -8,12 +8,6 @@ environment:
   sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
-  cloud_firestore:
-    path: ../packages/cloud_firestore/cloud_firestore
-  cloud_firestore_platform_interface:
-    path: ../packages/cloud_firestore/cloud_firestore_platform_interface
-  cloud_firestore_web:
-    path: ../packages/cloud_firestore/cloud_firestore_web
   cloud_functions:
     path: ../packages/cloud_functions/cloud_functions
   cloud_functions_platform_interface:
@@ -106,12 +100,6 @@ dependencies:
 dependency_overrides:
   _flutterfire_internals:
     path: ../packages/_flutterfire_internals
-  cloud_firestore:
-    path: ../packages/cloud_firestore/cloud_firestore
-  cloud_firestore_platform_interface:
-    path: ../packages/cloud_firestore/cloud_firestore_platform_interface
-  cloud_firestore_web:
-    path: ../packages/cloud_firestore/cloud_firestore_web
   cloud_functions:
     path: ../packages/cloud_functions/cloud_functions
   cloud_functions_platform_interface:
@@ -198,10 +186,9 @@ dependency_overrides:
     path: ../packages/firebase_storage/firebase_storage_web
 
 dev_dependencies:
-  drive: ^1.0.0-1.0.nullsafety.5
-  flutter_driver:
-    sdk: flutter
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
 flutter:

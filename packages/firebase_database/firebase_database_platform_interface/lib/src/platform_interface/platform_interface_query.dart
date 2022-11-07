@@ -12,6 +12,16 @@ abstract class QueryPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
+  /// Throws an [AssertionError] if [instance] does not extend
+  /// [QueryPlatform].
+  ///
+  /// This is used by the app-facing [Query] to ensure that
+  /// the object in which it's going to delegate calls has been
+  /// constructed properly.
+  static void verify(QueryPlatform instance) {
+    PlatformInterface.verify(instance, _token);
+  }
+
   /// Create a [QueryPlatform] instance
   QueryPlatform({
     required this.database,

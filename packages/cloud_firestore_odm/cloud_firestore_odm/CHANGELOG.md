@@ -1,3 +1,23 @@
+## 1.0.0-dev.39
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.38
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.37
+
+ - **FIX**: The ODM correctly no-longer generates query utilities for getters. ([#9766](https://github.com/firebase/flutterfire/issues/9766)). ([cfb56939](https://github.com/firebase/flutterfire/commit/cfb569395cadf6b7bcd8727b680d0b52e4e9297d))
+
+## 1.0.0-dev.36
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.35
+
+ - **FEAT**: Add support for FirebaseFirestore.myNamedQueryGet() ([#9721](https://github.com/firebase/flutterfire/issues/9721)). ([82152a00](https://github.com/firebase/flutterfire/commit/82152a0081343a6f7b7d1f5725818825e2b1191a))
+
 ## 1.0.0-dev.34
 
  - **FEAT**: Add support for FieldValue ([#9684](https://github.com/firebase/flutterfire/issues/9684)). ([467c403a](https://github.com/firebase/flutterfire/commit/467c403aad5dc9a829450eee22750e172e88f90b))

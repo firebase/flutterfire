@@ -30,10 +30,5 @@ dependency_overrides:
   firebase_in_app_messaging_platform_interface:
     path: ../../firebase_in_app_messaging_platform_interface
 
-dev_dependencies:
-  drive: 1.0.0-1.0.nullsafety.1
-  flutter_driver:
-    sdk: flutter
-
 flutter:
   uses-material-design: true

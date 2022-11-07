@@ -1,76 +1,145 @@
 # FlutterFire UI
 
-[![pub package](https://img.shields.io/pub/v/flutterfire_ui.svg)](https://pub.dev/packages/flutterfire_ui)
+## ⚠️ FlutterFire UI is deprecated
 
-FlutterFire UI is a set of Flutter widgets and utilities designed to help you build and integrate your user interface with Firebase.
+Here's what you can use instead:
 
-> FlutterFire UI is still in beta and is subject to change. Please contribute to the [discussion](https://github.com/firebase/flutterfire/discussions/6978) with feedback.
+- [firebase_ui_auth](https://pub.dev/packages/firebase_ui_auth)
+- [firebase_ui_firestore](https://pub.dev/packages/firebase_ui_firestore)
+- [firebase_ui_database](https://pub.dev/packages/firebase_ui_database)
 
-## Installation
+## Migrating from FlutterFire UI to `firebase_ui_*`
+
+To migrate from `flutterfire_ui` package to `firebase_ui_*` family, you need to do the following:
+
+### Updating dependencies
+
+For Firebase Auth widgets:
+
+```diff
+dependencies:
+-  flutterfire_ui: ^0.4.0
+```
+
+Run in your terminal
 
 ```sh
-flutter pub add flutterfire_ui
+flutter pub add firebase_ui_auth
 ```
 
-## Getting Started
+If you're using OAuth providers:
 
-Here's a quick example that shows how to build a `SignInScreen` and `ProfileScreen` in your app
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutterfire_ui/auth.dart';
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    const providerConfigs = [EmailProviderConfiguration()];
-
-    return MaterialApp(
-      initialRoute: FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/profile',
-      routes: {
-        '/sign-in': (context) {
-          return SignInScreen(
-            providerConfigs: providerConfigs,
-            actions: [
-              AuthStateChangeAction<SignedIn>((context, state) {
-                Navigator.pushReplacementNamed(context, '/profile');
-              }),
-            ],
-          );
-        },
-        '/profile': (context) {
-          return ProfileScreen(
-            providerConfigs: providerConfigs,
-            actions: [
-              SignedOutAction((context) {
-                Navigator.pushReplacementNamed(context, '/sign-in');
-              }),
-            ],
-          );
-        },
-      },
-    );
-  }
-}
+```sh
+flutter pub add firebase_ui_oauth
+flutter pub add firebase_ui_oauth_google
 ```
 
-Learn more in the [Integrating your first screen section](doc/auth/integrating-your-first-screen.md) of the documentation
+Please make sure to depend only on those providers that are actually being used in your app. Having the provider included, but not configured might lead to unexpected behaviour.
 
-## Roadmap / Features
+All supported OAuth providers:
 
-FlutterFire UI is still in active development.
+- [firebase_ui_oauth_apple](https://pub.dev/packages/firebase_ui_oauth_apple)
+- [firebase_ui_oauth_facebook](https://pub.dev/packages/firebase_ui_oauth_facebook)
+- [firebase_ui_oauth_google](https://pub.dev/packages/firebase_ui_oauth_google)
+- [firebase_ui_oauth_twitter](https://pub.dev/packages/firebase_ui_oauth_twitter)
 
-- For issues, please create a new [issue on the repository](https://github.com/firebase/flutterfire/issues).
-- For feature requests, & questions, please participate on the [discussion](https://github.com/firebase/flutterfire/discussions/6978) thread.
-- To contribute a change to this plugin, please review our [contribution guide](https://github.com/firebase/flutterfire/blob/master/CONTRIBUTING.md) and open a [pull request](https://github.com/firebase/flutterfire/pulls).
+Make sure to update your imports as well:
 
-Please contribute to the [discussion](https://github.com/firebase/flutterfire/discussions/6978) with feedback.
+```diff
+- import 'package:flutterfire_ui/auth.dart';
++ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+```
 
-## Next Steps
+If you're using OAuth providers, you need to import those from corresponding packages:
 
-Once installed, you can read the following documentation to learn more about the FlutterFire UI widgets and utilities:
+```diff
+// All OAuth providers used to be under flutterfire_ui
+- import 'package:flutterfire_ui/auth.dart';
++ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+```
 
-- [Authentication](doc/auth.md)
-- [Firestore](doc/firestore.md)
-- [Realtime Database](doc/database.md)
+### Code adjustments
+
+Below is the list of necessary changes that you have to make to migrate to `firebase_ui_*` packages.
+
+#### Configuration
+
+- `FlutterFireUIAuth` was renamed to `FirebaseUIAuth`
+- instead of passing an instance of `<provider name>ProviderConfiguration` you need to pass an instance of the `<provider name>Provider`
+
+```diff
+- FlutterFireUIAuth.configureProviders([
+-    const EmailProviderConfiguration(),
+- ]);
+
++ FirebaseUIAuth.configureProviders([
++    const EmailProvider(),
++ ]);
+```
+
+### Sign out
+
+```diff
+- await FlutterFireUIAuth.signOut();
++ await FirebaseUIAuth.signOut();
+```
+
+### Profile screen
+
+If you're using `ProfileScreen` – make sure to add the following to your `pubspec.yaml`:
+
+```yaml
+fonts:
+  - family: SocialIcons
+    fonts:
+      - asset: packages/firebase_ui_auth/fonts/SocialIcons.ttf
+```
+
+### Migrating to `firebase_ui_firestore`
+
+To migrate from `flutterfire_ui` to `firebase_ui_firestore` you need to update your dependencies:
+
+```diff
+dependencies:
+-  flutterfire_ui: ^0.4.0
+```
+
+Run in your terminal
+
+```sh
+flutter pub add firebase_ui_firestore
+```
+
+and imports:
+
+```diff
+- import 'package:flutterfire_ui/firestore.dart';
++ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
+```
+
+### Migrating to `firebase_ui_database`
+
+To migrate from `flutterfire_ui` to `firebase_ui_database` you need to update your dependencies:
+
+```diff
+dependencies:
+-  flutterfire_ui: ^0.4.0
++  firebase_ui_database: ^1.0.0
+```
+
+Run in your terminal
+
+```sh
+flutter pub add firebase_ui_firestore
+```
+
+and imports:
+
+```diff
+- import 'package:flutterfire_ui/database.dart';
++ import 'package:firebase_ui_database/firebase_ui_database.dart';
+```
+
+---
+
+> Check out [full documentation](https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_auth/doc) for more details.

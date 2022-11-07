@@ -60,7 +60,7 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseCrashlyticsPlatform.instance]
   static set instance(FirebaseCrashlyticsPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

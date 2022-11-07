@@ -59,7 +59,7 @@ abstract class DocumentSnapshot<T extends Object?> {
 
 class _JsonDocumentSnapshot implements DocumentSnapshot<Map<String, dynamic>> {
   _JsonDocumentSnapshot(this._firestore, this._delegate) {
-    DocumentSnapshotPlatform.verifyExtends(_delegate);
+    DocumentSnapshotPlatform.verify(_delegate);
   }
 
   final FirebaseFirestore _firestore;

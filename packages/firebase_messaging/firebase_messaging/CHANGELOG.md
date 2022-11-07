@@ -1,3 +1,27 @@
+## 14.0.4
+
+ - Update a dependency to the latest release.
+
+## 14.0.3
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 14.0.2
+
+ - Update a dependency to the latest release.
+
+## 14.0.1
+
+ - Update a dependency to the latest release.
+
+## 14.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: improve pub score ([#9722](https://github.com/firebase/flutterfire/issues/9722)). ([f27d89a1](https://github.com/firebase/flutterfire/commit/f27d89a12cbb5830eb5518854dcfbca72efedb5b))
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+ - **BREAKING** **FEAT**: Firebase android SDK BOM `31.0.0` ([#9724](https://github.com/firebase/flutterfire/issues/9724)). ([29ba1a08](https://github.com/firebase/flutterfire/commit/29ba1a082e026c4f0f0913c10183a72eadb23343))
+
 ## 13.1.0
 
  - **FEAT**: add support for exporting delivery metrics to BigQuery ([#9636](https://github.com/firebase/flutterfire/issues/9636)). ([170b99b9](https://github.com/firebase/flutterfire/commit/170b99b91573f28316172e43188d57ca14600446))

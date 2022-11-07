@@ -1,3 +1,23 @@
+## 3.3.12
+
+ - Update a dependency to the latest release.
+
+## 3.3.11
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 3.3.10
+
+ - Update a dependency to the latest release.
+
+## 3.3.9
+
+ - Update a dependency to the latest release.
+
+## 3.3.8
+
+ - Update a dependency to the latest release.
+
 ## 3.3.7
 
  - Update a dependency to the latest release.

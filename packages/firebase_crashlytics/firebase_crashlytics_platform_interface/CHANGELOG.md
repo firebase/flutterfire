@@ -1,3 +1,23 @@
+## 3.3.5
+
+ - Update a dependency to the latest release.
+
+## 3.3.4
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 3.3.3
+
+ - Update a dependency to the latest release.
+
+## 3.3.2
+
+ - Update a dependency to the latest release.
+
+## 3.3.1
+
+ - Update a dependency to the latest release.
+
 ## 3.3.0
 
  - **FEAT**: Send Flutter Build Id to Crashlytics to get --split-debug-info working ([#9409](https://github.com/firebase/flutterfire/issues/9409)). ([17931f30](https://github.com/firebase/flutterfire/commit/17931f307434c88e87318c97e2d81c7eb3219ed9))

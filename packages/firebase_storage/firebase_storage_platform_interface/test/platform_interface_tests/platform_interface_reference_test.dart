@@ -32,10 +32,10 @@ void main() {
       expect(referencePlatform, isA<PlatformInterface>());
     });
 
-    group('verifyExtends()', () {
+    group('verify()', () {
       test('calls successfully', () {
         try {
-          ReferencePlatform.verifyExtends(referencePlatform!);
+          ReferencePlatform.verify(referencePlatform!);
           return;
         } catch (_) {
           fail('thrown an unexpected exception');

@@ -31,7 +31,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseCrashlytics get instance {
     _instance ??= FirebaseCrashlytics._(app: Firebase.app());
-
     return _instance!;
   }
 
