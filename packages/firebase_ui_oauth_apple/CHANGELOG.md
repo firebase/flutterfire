@@ -1,3 +1,11 @@
+## 1.0.4
+
+ - **FIX**: set default scope to 'email' and add a way to provide custom scopes ([#9784](https://github.com/firebase/flutterfire/issues/9784)). ([19a54edc](https://github.com/firebase/flutterfire/commit/19a54edc5921e567cfc22f1f55240c2f0b5fa56c))
+
+## 1.0.3
+
+ - Update a dependency to the latest release.
+
 ## 1.0.2
 
  - Update a dependency to the latest release.

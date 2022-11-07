@@ -8,7 +8,7 @@ part of cloud_firestore;
 /// without retrieving the actual documents.
 class AggregateQuery {
   AggregateQuery._(this._delegate, this.query) {
-    AggregateQueryPlatform.verifyExtends(_delegate);
+    AggregateQueryPlatform.verify(_delegate);
   }
 
   /// [Query] represents the query over the data at a particular location used by the [AggregateQuery] to

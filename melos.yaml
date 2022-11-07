@@ -151,18 +151,18 @@ scripts:
   test:e2e:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter drive --no-pub --target=./test_driver/driver_e2e.dart"
+        "flutter test integration_test/e2e_test.dart --no-pub"
     description: |
       Run all e2e tests.
     select-package:
       dir-exists:
-        - test_driver
+        - integration_test
       scope: '*tests*'
 
   test:e2e:web:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter drive --no-pub --target=./test_driver/driver_e2e.dart -d chrome"
+        "flutter drive --no-pub --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome"
     description: |
       Run all e2e tests on web platform. Please ensure you have "chromedriver" installed and running.
     select-package:

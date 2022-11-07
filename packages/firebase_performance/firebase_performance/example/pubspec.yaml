@@ -32,10 +32,9 @@ dependency_overrides:
     path: ../../firebase_performance_web
 
 dev_dependencies:
-  drive: 1.0.0-1.0.nullsafety.1
-  flutter_driver:
-    sdk: flutter
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
   pedantic: ^1.8.0
 
