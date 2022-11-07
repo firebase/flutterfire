@@ -4,8 +4,8 @@
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/dart/element/type_provider.dart';
 
+import '../collection_data.dart';
 import '../collection_generator.dart';
 
 class FieldEnum {
@@ -20,19 +20,19 @@ class FieldEnum {
 
           final _mapTypeArguments = (subType as InterfaceType).typeArguments;
           for (final subSubType in _mapTypeArguments) {
-            if (subSubType.element2?.kind == ElementKind.ENUM) {
+            if (subSubType.element?.kind == ElementKind.ENUM) {
               _isEnumListMap = true;
             }
-            // _isEnumListMap = subSubType.element2?.kind == ElementKind.ENUM;
+            // _isEnumListMap = subSubType.element?.kind == ElementKind.ENUM;
           }
-        } else if (subType.element2?.kind == ElementKind.ENUM) {
+        } else if (subType.element?.kind == ElementKind.ENUM) {
           _isEnumList = true;
         }
       }
     } else if (field.type.isDartCoreMap) {
       final _mapTypeArguments = (field.type as InterfaceType).typeArguments;
       for (final subSubType in _mapTypeArguments) {
-        if (subSubType.element2?.kind == ElementKind.ENUM) {
+        if (subSubType.element?.kind == ElementKind.ENUM) {
           _isEnumMap = true;
         }
       }
@@ -48,8 +48,6 @@ class FieldEnum {
   bool get isEnumListMap => _isEnumListMap;
   bool get isEnumMap => _isEnumMap;
 }
-
-import '../collection_data.dart';
 
 class DocumentReferenceTemplate {
   DocumentReferenceTemplate(this.data);
@@ -150,7 +148,7 @@ void transactionUpdate(Transaction transaction, {${parameters.join()}});
     ];
 
     // TODO support nested objects
-    var json = <String>[];
+    final json = <String>[];
 
     for (final field in data.updatableFields) {
       if (FieldEnum(field).isEnumList) {

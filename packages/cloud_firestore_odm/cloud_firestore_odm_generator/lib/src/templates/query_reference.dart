@@ -371,7 +371,7 @@ class ${data.queryReferenceImplName}
     final buffer = StringBuffer();
 
     for (final field in data.queryableFields) {
-      final _isEnum = field.type.element2?.kind == ElementKind.ENUM;
+      final _isEnum = field.type.element?.kind == ElementKind.ENUM;
       var _isEnumList = false;
       var _isEnumListMap = false;
       var _isEnumMap = false;
@@ -386,19 +386,19 @@ class ${data.queryReferenceImplName}
 
             final _mapTypeArguments = (subType as InterfaceType).typeArguments;
             for (final subSubType in _mapTypeArguments) {
-              if (subSubType.element2?.kind == ElementKind.ENUM) {
+              if (subSubType.element?.kind == ElementKind.ENUM) {
                 _isEnumListMap = true;
               }
-              // _isEnumListMap = subSubType.element2?.kind == ElementKind.ENUM;
+              // _isEnumListMap = subSubType.element?.kind == ElementKind.ENUM;
             }
-          } else if (subType.element2?.kind == ElementKind.ENUM) {
+          } else if (subType.element?.kind == ElementKind.ENUM) {
             _isEnumList = true;
           }
         }
       } else if (field.type.isDartCoreMap) {
         final _mapTypeArguments = (field.type as InterfaceType).typeArguments;
         for (final subSubType in _mapTypeArguments) {
-          if (subSubType.element2?.kind == ElementKind.ENUM) {
+          if (subSubType.element?.kind == ElementKind.ENUM) {
             _isEnumMap = true;
           }
         }
@@ -599,7 +599,7 @@ class ${data.queryReferenceImplName}
 
 extension on TypeProvider {
   DartType asNullable(DartType type) {
-    final typeSystem = nullType.element2.library.typeSystem;
+    final typeSystem = nullType.element.library.typeSystem;
     if (typeSystem.isNullable(type)) return type;
 
     return typeSystem.leastUpperBound(type, nullType);
