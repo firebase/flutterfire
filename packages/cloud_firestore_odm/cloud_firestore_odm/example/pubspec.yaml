@@ -27,9 +27,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^2.0.0
+  http: ^0.13.5
   integration_test:
     sdk: flutter
-  http: ^0.13.5
   json_serializable: ^6.3.0
   mockito: ^5.0.0
 
