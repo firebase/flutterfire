@@ -2,6 +2,7 @@ import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:cloud_firestore_odm/annotation.dart';
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:recase/recase.dart';
 import 'package:source_gen/source_gen.dart';
