@@ -180,6 +180,19 @@ class CollectionData with Names {
     final fromJson = collectionTargetElement.constructors.firstWhereOrNull(
       (ctor) => ctor.name == 'fromJson',
     );
+    if (hasJsonSerializable && !modelAndReferenceInTheSameLibrary) {
+      throw InvalidGenerationSourceError(
+        '''
+When using json_serializable, the `@Collection` annotation and the class that
+represents the content of the collection must be in the same file.
+
+- @Collection is from $annotatedElementSource
+- `$collectionTargetElement` is from ${collectionTargetElement.librarySource}
+''',
+        element: annotatedElement,
+      );
+    }
+
     if ((!hasJsonSerializable || !modelAndReferenceInTheSameLibrary) &&
         fromJson == null) {
       throw InvalidGenerationSourceError(
