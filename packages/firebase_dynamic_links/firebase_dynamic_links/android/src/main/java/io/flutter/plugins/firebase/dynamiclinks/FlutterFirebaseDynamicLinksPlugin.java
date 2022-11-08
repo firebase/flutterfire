@@ -108,7 +108,7 @@ public class FlutterFirebaseDynamicLinksPlugin
         .addOnSuccessListener(
             pendingDynamicLinkData -> {
               Map<String, Object> dynamicLink =
-                  io.flutter.plugins.firebase.dynamiclinks.Utils.getMapFromPendingDynamicLinkData(pendingDynamicLinkData);
+                  Utils.getMapFromPendingDynamicLinkData(pendingDynamicLinkData);
               if (dynamicLink != null) {
                 channel.invokeMethod("FirebaseDynamicLink#onLinkSuccess", dynamicLink);
               }
@@ -116,7 +116,7 @@ public class FlutterFirebaseDynamicLinksPlugin
         .addOnFailureListener(
             exception ->
                 channel.invokeMethod(
-                    "FirebaseDynamicLink#onLinkError", io.flutter.plugins.firebase.dynamiclinks.Utils.getExceptionDetails(exception)));
+                    "FirebaseDynamicLink#onLinkError", Utils.getExceptionDetails(exception)));
     return false;
   }
 
@@ -151,7 +151,7 @@ public class FlutterFirebaseDynamicLinksPlugin
             result.error(
                 io.flutter.plugins.firebase.dynamiclinks.Constants.DEFAULT_ERROR_CODE,
                 exception != null ? exception.getMessage() : null,
-                io.flutter.plugins.firebase.dynamiclinks.Utils.getExceptionDetails(exception));
+                Utils.getExceptionDetails(exception));
           }
         });
   }
@@ -240,7 +240,7 @@ public class FlutterFirebaseDynamicLinksPlugin
             }
 
             taskCompletionSource.setResult(
-                io.flutter.plugins.firebase.dynamiclinks.Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink));
+                Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink));
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
