@@ -1418,25 +1418,37 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$MoviePerFieldToJson.poster(startAt as String)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$MoviePerFieldToJson.poster(startAfter as String)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$MoviePerFieldToJson.poster(endAt as String)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$MoviePerFieldToJson.poster(endBefore as String)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -1490,25 +1502,37 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$MoviePerFieldToJson.likes(startAt as int)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$MoviePerFieldToJson.likes(startAfter as int)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$MoviePerFieldToJson.likes(endAt as int)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$MoviePerFieldToJson.likes(endBefore as int)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -1562,25 +1586,37 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$MoviePerFieldToJson.title(startAt as String)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$MoviePerFieldToJson.title(startAfter as String)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$MoviePerFieldToJson.title(endAt as String)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$MoviePerFieldToJson.title(endBefore as String)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -1634,25 +1670,34 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$MoviePerFieldToJson.year(startAt as int)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$MoviePerFieldToJson.year(startAfter as int)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [...queryCursor.endAt, _$MoviePerFieldToJson.year(endAt as int)],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$MoviePerFieldToJson.year(endBefore as int)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -1706,25 +1751,37 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$MoviePerFieldToJson.runtime(startAt as String)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$MoviePerFieldToJson.runtime(startAfter as String)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$MoviePerFieldToJson.runtime(endAt as String)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$MoviePerFieldToJson.runtime(endBefore as String)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -1778,25 +1835,37 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$MoviePerFieldToJson.rated(startAt as String)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$MoviePerFieldToJson.rated(startAfter as String)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$MoviePerFieldToJson.rated(endAt as String)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$MoviePerFieldToJson.rated(endBefore as String)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -1850,25 +1919,37 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$MoviePerFieldToJson.genre(startAt as List<String>?)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$MoviePerFieldToJson.genre(startAfter as List<String>?)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$MoviePerFieldToJson.genre(endAt as List<String>?)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$MoviePerFieldToJson.genre(endBefore as List<String>?)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -1922,25 +2003,37 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$MoviePerFieldToJson.language(startAt as List<LanguageType>?)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$MoviePerFieldToJson.language(startAfter as List<LanguageType>?)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$MoviePerFieldToJson.language(endAt as List<LanguageType>?)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$MoviePerFieldToJson.language(endBefore as List<LanguageType>?)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -1994,25 +2087,37 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$MoviePerFieldToJson.certification(startAt as CertificationType)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$MoviePerFieldToJson.certification(startAfter as CertificationType)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$MoviePerFieldToJson.certification(endAt as CertificationType)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$MoviePerFieldToJson.certification(endBefore as CertificationType)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -2066,25 +2171,37 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$MoviePerFieldToJson.cast(startAt as List<Map<CastType, String>>)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$MoviePerFieldToJson.cast(startAfter as List<Map<CastType, String>>)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$MoviePerFieldToJson.cast(endAt as List<Map<CastType, String>>)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$MoviePerFieldToJson.cast(endBefore as List<Map<CastType, String>>)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -2138,25 +2255,37 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$MoviePerFieldToJson.majorCast(startAt as Map<CastType, String>)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$MoviePerFieldToJson.majorCast(startAfter as Map<CastType, String>)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$MoviePerFieldToJson.majorCast(endAt as Map<CastType, String>)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$MoviePerFieldToJson.majorCast(endBefore as Map<CastType, String>)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -3003,25 +3132,37 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$CommentPerFieldToJson.authorName(startAt as String)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$CommentPerFieldToJson.authorName(startAfter as String)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$CommentPerFieldToJson.authorName(endAt as String)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$CommentPerFieldToJson.authorName(endBefore as String)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -3075,25 +3216,37 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$CommentPerFieldToJson.message(startAt as String)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$CommentPerFieldToJson.message(startAfter as String)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$CommentPerFieldToJson.message(endAt as String)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$CommentPerFieldToJson.message(endBefore as String)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }

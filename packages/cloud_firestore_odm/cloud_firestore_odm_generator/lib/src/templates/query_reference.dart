@@ -297,6 +297,10 @@ class ${data.queryReferenceImplName}
         (match) => match.group(0)!.toUpperCase(),
       );
 
+      String serializeValue(String value) {
+        return field.toJsonBuilder?.call('$value as ${field.type}') ?? value;
+      }
+
       buffer.writeln(
         '''
   ${data.queryReferenceInterfaceName} orderBy$titledNamed({
@@ -340,25 +344,25 @@ class ${data.queryReferenceImplName}
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [...queryCursor.startAt, ${serializeValue('startAt')}],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [...queryCursor.startAfter, ${serializeValue('startAfter')}],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [...queryCursor.endAt, ${serializeValue('endAt')}],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [...queryCursor.endBefore, ${serializeValue('endBefore')}],
         endBeforeDocumentSnapshot: null,
       );
     }

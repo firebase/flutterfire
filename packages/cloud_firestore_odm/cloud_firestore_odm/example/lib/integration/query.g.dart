@@ -672,25 +672,37 @@ class _$DateTimeQueryQuery
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$DateTimeQueryPerFieldToJson.time(startAt as DateTime)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$DateTimeQueryPerFieldToJson.time(startAfter as DateTime)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$DateTimeQueryPerFieldToJson.time(endAt as DateTime)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$DateTimeQueryPerFieldToJson.time(endBefore as DateTime)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -1455,25 +1467,37 @@ class _$TimestampQueryQuery
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$TimestampQueryPerFieldToJson.time(startAt as Timestamp)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$TimestampQueryPerFieldToJson.time(startAfter as Timestamp)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$TimestampQueryPerFieldToJson.time(endAt as Timestamp)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$TimestampQueryPerFieldToJson.time(endBefore as Timestamp)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -2241,25 +2265,37 @@ class _$GeoPointQueryQuery
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$GeoPointQueryPerFieldToJson.point(startAt as GeoPoint)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$GeoPointQueryPerFieldToJson.point(startAfter as GeoPoint)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$GeoPointQueryPerFieldToJson.point(endAt as GeoPoint)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$GeoPointQueryPerFieldToJson.point(endBefore as GeoPoint)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -3040,25 +3076,41 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$DocumentReferenceQueryPerFieldToJson
+              .ref(startAt as DocumentReference<Map<String, dynamic>>)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$DocumentReferenceQueryPerFieldToJson
+              .ref(startAfter as DocumentReference<Map<String, dynamic>>)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$DocumentReferenceQueryPerFieldToJson
+              .ref(endAt as DocumentReference<Map<String, dynamic>>)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$DocumentReferenceQueryPerFieldToJson
+              .ref(endBefore as DocumentReference<Map<String, dynamic>>)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
