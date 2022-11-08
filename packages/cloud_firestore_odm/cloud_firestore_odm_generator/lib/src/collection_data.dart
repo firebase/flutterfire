@@ -299,7 +299,7 @@ represents the content of the collection must be in the same file.
               field: key,
               toJsonBuilder: (variableName) {
                 if (hasJsonSerializable) {
-                  return '_\$${collectionTargetElement.name.public}PerfFieldToJson.${e.name}($variableName)';
+                  return '_\$${collectionTargetElement.name.public}PerFieldToJson.${e.name}($variableName)';
                 }
                 return variableName;
               },

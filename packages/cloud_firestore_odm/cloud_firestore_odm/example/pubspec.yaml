@@ -3,7 +3,7 @@ version: 1.0.0-dev.1
 publish_to: none
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
+  sdk: '>=2.16.0 <3.0.0'
 
 dependencies:
   cloud_firestore:
@@ -54,6 +54,16 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_platform_interface
   firebase_core_web:
     path: ../../../firebase_core/firebase_core_web
+  json_annotation:
+    git:
+      url: https://github.com/google/json_serializable.dart/
+      ref: master
+      path: json_annotation
+  json_serializable:
+    git:
+      url: https://github.com/google/json_serializable.dart/
+      ref: master
+      path: json_serializable
 
 flutter:
   uses-material-design: true

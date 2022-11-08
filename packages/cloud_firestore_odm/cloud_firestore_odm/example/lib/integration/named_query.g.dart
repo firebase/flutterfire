@@ -243,7 +243,7 @@ class _$ConflictDocumentReference
     );
     final json = {
       if (number != _sentinel)
-        'number': _$ConflictPerfFieldToJson.number(number),
+        'number': _$ConflictPerFieldToJson.number(number),
       if (numberFieldValue != null) 'number': numberFieldValue,
     };
 
@@ -261,7 +261,7 @@ class _$ConflictDocumentReference
     );
     final json = {
       if (number != _sentinel)
-        'number': _$ConflictPerfFieldToJson.number(number),
+        'number': _$ConflictPerFieldToJson.number(number),
       if (numberFieldValue != null) 'number': numberFieldValue,
     };
 
@@ -855,6 +855,12 @@ Conflict _$ConflictFromJson(Map<String, dynamic> json) => Conflict(
 const _$ConflictFieldMap = <String, String>{
   'number': 'number',
 };
+
+// ignore: unused_element
+abstract class _$ConflictPerFieldToJson {
+  // ignore: unused_element
+  static Object? number(num instance) => instance;
+}
 
 Map<String, dynamic> _$ConflictToJson(Conflict instance) => <String, dynamic>{
       'number': instance.number,

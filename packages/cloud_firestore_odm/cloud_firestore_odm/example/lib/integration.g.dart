@@ -1002,10 +1002,10 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (firstName != _sentinel)
-        'firstName': _$AdvancedJsonPerfFieldToJson.firstName(firstName),
+        'firstName': _$AdvancedJsonPerFieldToJson.firstName(firstName),
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel)
-        'lastName': _$AdvancedJsonPerfFieldToJson.lastName(lastName),
+        'lastName': _$AdvancedJsonPerFieldToJson.lastName(lastName),
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
@@ -1029,10 +1029,10 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (firstName != _sentinel)
-        'firstName': _$AdvancedJsonPerfFieldToJson.firstName(firstName),
+        'firstName': _$AdvancedJsonPerFieldToJson.firstName(firstName),
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel)
-        'lastName': _$AdvancedJsonPerfFieldToJson.lastName(lastName),
+        'lastName': _$AdvancedJsonPerFieldToJson.lastName(lastName),
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
@@ -1932,10 +1932,10 @@ class _$_PrivateAdvancedJsonDocumentReference
     );
     final json = {
       if (firstName != _sentinel)
-        'firstName': _$PrivateAdvancedJsonPerfFieldToJson.firstName(firstName),
+        'firstName': _$PrivateAdvancedJsonPerFieldToJson.firstName(firstName),
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel)
-        'lastName': _$PrivateAdvancedJsonPerfFieldToJson.lastName(lastName),
+        'lastName': _$PrivateAdvancedJsonPerFieldToJson.lastName(lastName),
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
@@ -1959,10 +1959,10 @@ class _$_PrivateAdvancedJsonDocumentReference
     );
     final json = {
       if (firstName != _sentinel)
-        'firstName': _$PrivateAdvancedJsonPerfFieldToJson.firstName(firstName),
+        'firstName': _$PrivateAdvancedJsonPerFieldToJson.firstName(firstName),
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel)
-        'lastName': _$PrivateAdvancedJsonPerfFieldToJson.lastName(lastName),
+        'lastName': _$PrivateAdvancedJsonPerFieldToJson.lastName(lastName),
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
@@ -3281,6 +3281,9 @@ EmptyModel _$EmptyModelFromJson(Map<String, dynamic> json) => EmptyModel();
 
 const _$EmptyModelFieldMap = <String, String>{};
 
+// ignore: unused_element
+abstract class _$EmptyModelPerFieldToJson {}
+
 Map<String, dynamic> _$EmptyModelToJson(EmptyModel instance) =>
     <String, dynamic>{};
 
@@ -3293,6 +3296,14 @@ const _$AdvancedJsonFieldMap = <String, String>{
   'firstName': 'first_name',
   'lastName': 'LAST_NAME',
 };
+
+// ignore: unused_element
+abstract class _$AdvancedJsonPerFieldToJson {
+  // ignore: unused_element
+  static Object? firstName(String? instance) => instance;
+  // ignore: unused_element
+  static Object? lastName(String? instance) => instance;
+}
 
 Map<String, dynamic> _$AdvancedJsonToJson(AdvancedJson instance) =>
     <String, dynamic>{
@@ -3310,6 +3321,14 @@ const _$PrivateAdvancedJsonFieldMap = <String, String>{
   'firstName': 'first_name',
   'lastName': 'LAST_NAME',
 };
+
+// ignore: unused_element
+abstract class _$PrivateAdvancedJsonPerFieldToJson {
+  // ignore: unused_element
+  static Object? firstName(String? instance) => instance;
+  // ignore: unused_element
+  static Object? lastName(String? instance) => instance;
+}
 
 Map<String, dynamic> _$PrivateAdvancedJsonToJson(
         _PrivateAdvancedJson instance) =>

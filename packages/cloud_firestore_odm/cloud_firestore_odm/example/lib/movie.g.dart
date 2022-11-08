@@ -331,32 +331,32 @@ class _$MovieDocumentReference
       "Cannot specify both majorCast and majorCastFieldValue",
     );
     final json = {
-      if (poster != _sentinel) 'poster': _$MoviePerfFieldToJson.poster(poster),
+      if (poster != _sentinel) 'poster': _$MoviePerFieldToJson.poster(poster),
       if (posterFieldValue != null) 'poster': posterFieldValue,
-      if (likes != _sentinel) 'likes': _$MoviePerfFieldToJson.likes(likes),
+      if (likes != _sentinel) 'likes': _$MoviePerFieldToJson.likes(likes),
       if (likesFieldValue != null) 'likes': likesFieldValue,
-      if (title != _sentinel) 'title': _$MoviePerfFieldToJson.title(title),
+      if (title != _sentinel) 'title': _$MoviePerFieldToJson.title(title),
       if (titleFieldValue != null) 'title': titleFieldValue,
-      if (year != _sentinel) 'year': _$MoviePerfFieldToJson.year(year),
+      if (year != _sentinel) 'year': _$MoviePerFieldToJson.year(year),
       if (yearFieldValue != null) 'year': yearFieldValue,
       if (runtime != _sentinel)
-        'runtime': _$MoviePerfFieldToJson.runtime(runtime),
+        'runtime': _$MoviePerFieldToJson.runtime(runtime),
       if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
-      if (rated != _sentinel) 'rated': _$MoviePerfFieldToJson.rated(rated),
+      if (rated != _sentinel) 'rated': _$MoviePerFieldToJson.rated(rated),
       if (ratedFieldValue != null) 'rated': ratedFieldValue,
-      if (genre != _sentinel) 'genre': _$MoviePerfFieldToJson.genre(genre),
+      if (genre != _sentinel) 'genre': _$MoviePerFieldToJson.genre(genre),
       if (genreFieldValue != null) 'genre': genreFieldValue,
       if (language != _sentinel)
-        'language': _$MoviePerfFieldToJson.language(language),
+        'language': _$MoviePerFieldToJson.language(language),
       if (languageFieldValue != null) 'language': languageFieldValue,
       if (certification != _sentinel)
-        'certification': _$MoviePerfFieldToJson.certification(certification),
+        'certification': _$MoviePerFieldToJson.certification(certification),
       if (certificationFieldValue != null)
         'certification': certificationFieldValue,
-      if (cast != _sentinel) 'cast': _$MoviePerfFieldToJson.cast(cast),
+      if (cast != _sentinel) 'cast': _$MoviePerFieldToJson.cast(cast),
       if (castFieldValue != null) 'cast': castFieldValue,
       if (majorCast != _sentinel)
-        'majorCast': _$MoviePerfFieldToJson.majorCast(majorCast),
+        'majorCast': _$MoviePerFieldToJson.majorCast(majorCast),
       if (majorCastFieldValue != null) 'majorCast': majorCastFieldValue,
     };
 
@@ -433,32 +433,32 @@ class _$MovieDocumentReference
       "Cannot specify both majorCast and majorCastFieldValue",
     );
     final json = {
-      if (poster != _sentinel) 'poster': _$MoviePerfFieldToJson.poster(poster),
+      if (poster != _sentinel) 'poster': _$MoviePerFieldToJson.poster(poster),
       if (posterFieldValue != null) 'poster': posterFieldValue,
-      if (likes != _sentinel) 'likes': _$MoviePerfFieldToJson.likes(likes),
+      if (likes != _sentinel) 'likes': _$MoviePerFieldToJson.likes(likes),
       if (likesFieldValue != null) 'likes': likesFieldValue,
-      if (title != _sentinel) 'title': _$MoviePerfFieldToJson.title(title),
+      if (title != _sentinel) 'title': _$MoviePerFieldToJson.title(title),
       if (titleFieldValue != null) 'title': titleFieldValue,
-      if (year != _sentinel) 'year': _$MoviePerfFieldToJson.year(year),
+      if (year != _sentinel) 'year': _$MoviePerFieldToJson.year(year),
       if (yearFieldValue != null) 'year': yearFieldValue,
       if (runtime != _sentinel)
-        'runtime': _$MoviePerfFieldToJson.runtime(runtime),
+        'runtime': _$MoviePerFieldToJson.runtime(runtime),
       if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
-      if (rated != _sentinel) 'rated': _$MoviePerfFieldToJson.rated(rated),
+      if (rated != _sentinel) 'rated': _$MoviePerFieldToJson.rated(rated),
       if (ratedFieldValue != null) 'rated': ratedFieldValue,
-      if (genre != _sentinel) 'genre': _$MoviePerfFieldToJson.genre(genre),
+      if (genre != _sentinel) 'genre': _$MoviePerFieldToJson.genre(genre),
       if (genreFieldValue != null) 'genre': genreFieldValue,
       if (language != _sentinel)
-        'language': _$MoviePerfFieldToJson.language(language),
+        'language': _$MoviePerFieldToJson.language(language),
       if (languageFieldValue != null) 'language': languageFieldValue,
       if (certification != _sentinel)
-        'certification': _$MoviePerfFieldToJson.certification(certification),
+        'certification': _$MoviePerFieldToJson.certification(certification),
       if (certificationFieldValue != null)
         'certification': certificationFieldValue,
-      if (cast != _sentinel) 'cast': _$MoviePerfFieldToJson.cast(cast),
+      if (cast != _sentinel) 'cast': _$MoviePerFieldToJson.cast(cast),
       if (castFieldValue != null) 'cast': castFieldValue,
       if (majorCast != _sentinel)
-        'majorCast': _$MoviePerfFieldToJson.majorCast(majorCast),
+        'majorCast': _$MoviePerFieldToJson.majorCast(majorCast),
       if (majorCastFieldValue != null) 'majorCast': majorCastFieldValue,
     };
 
@@ -2509,10 +2509,10 @@ class _$CommentDocumentReference
     );
     final json = {
       if (authorName != _sentinel)
-        'authorName': _$CommentPerfFieldToJson.authorName(authorName),
+        'authorName': _$CommentPerFieldToJson.authorName(authorName),
       if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
       if (message != _sentinel)
-        'message': _$CommentPerfFieldToJson.message(message),
+        'message': _$CommentPerFieldToJson.message(message),
       if (messageFieldValue != null) 'message': messageFieldValue,
     };
 
@@ -2536,10 +2536,10 @@ class _$CommentDocumentReference
     );
     final json = {
       if (authorName != _sentinel)
-        'authorName': _$CommentPerfFieldToJson.authorName(authorName),
+        'authorName': _$CommentPerFieldToJson.authorName(authorName),
       if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
       if (message != _sentinel)
-        'message': _$CommentPerfFieldToJson.message(message),
+        'message': _$CommentPerFieldToJson.message(message),
       if (messageFieldValue != null) 'message': messageFieldValue,
     };
 
@@ -3297,6 +3297,39 @@ const _$MovieFieldMap = <String, String>{
   'majorCast': 'majorCast',
 };
 
+// ignore: unused_element
+abstract class _$MoviePerFieldToJson {
+  // ignore: unused_element
+  static Object? id(String instance) => instance;
+  // ignore: unused_element
+  static Object? poster(String instance) => instance;
+  // ignore: unused_element
+  static Object? likes(int instance) => instance;
+  // ignore: unused_element
+  static Object? title(String instance) => instance;
+  // ignore: unused_element
+  static Object? year(int instance) => instance;
+  // ignore: unused_element
+  static Object? runtime(String instance) => instance;
+  // ignore: unused_element
+  static Object? rated(String instance) => instance;
+  // ignore: unused_element
+  static Object? genre(List<String>? instance) => instance;
+  // ignore: unused_element
+  static Object? language(List<LanguageType>? instance) =>
+      instance?.map((e) => _$LanguageTypeEnumMap[e]!).toList();
+  // ignore: unused_element
+  static Object? certification(CertificationType instance) =>
+      _$CertificationTypeEnumMap[instance]!;
+  // ignore: unused_element
+  static Object? cast(List<Map<CastType, String>> instance) => instance
+      .map((e) => e.map((k, e) => MapEntry(_$CastTypeEnumMap[k]!, e)))
+      .toList();
+  // ignore: unused_element
+  static Object? majorCast(Map<CastType, String> instance) =>
+      instance.map((k, e) => MapEntry(_$CastTypeEnumMap[k]!, e));
+}
+
 Map<String, dynamic> _$MovieToJson(Movie instance) => <String, dynamic>{
       'id': instance.id,
       'poster': instance.poster,
@@ -3353,6 +3386,14 @@ const _$CommentFieldMap = <String, String>{
   'authorName': 'authorName',
   'message': 'message',
 };
+
+// ignore: unused_element
+abstract class _$CommentPerFieldToJson {
+  // ignore: unused_element
+  static Object? authorName(String instance) => instance;
+  // ignore: unused_element
+  static Object? message(String instance) => instance;
+}
 
 Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
       'authorName': instance.authorName,

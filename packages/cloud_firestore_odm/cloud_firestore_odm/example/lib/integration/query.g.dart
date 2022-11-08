@@ -229,7 +229,7 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) 'time': _$DateTimeQueryPerfFieldToJson.time(time),
+      if (time != _sentinel) 'time': _$DateTimeQueryPerFieldToJson.time(time),
       if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
@@ -246,7 +246,7 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) 'time': _$DateTimeQueryPerfFieldToJson.time(time),
+      if (time != _sentinel) 'time': _$DateTimeQueryPerFieldToJson.time(time),
       if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
@@ -1005,7 +1005,7 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) 'time': _$TimestampQueryPerfFieldToJson.time(time),
+      if (time != _sentinel) 'time': _$TimestampQueryPerFieldToJson.time(time),
       if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
@@ -1022,7 +1022,7 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) 'time': _$TimestampQueryPerfFieldToJson.time(time),
+      if (time != _sentinel) 'time': _$TimestampQueryPerFieldToJson.time(time),
       if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
@@ -1783,7 +1783,7 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (point != _sentinel)
-        'point': _$GeoPointQueryPerfFieldToJson.point(point),
+        'point': _$GeoPointQueryPerFieldToJson.point(point),
       if (pointFieldValue != null) 'point': pointFieldValue,
     };
 
@@ -1801,7 +1801,7 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (point != _sentinel)
-        'point': _$GeoPointQueryPerfFieldToJson.point(point),
+        'point': _$GeoPointQueryPerFieldToJson.point(point),
       if (pointFieldValue != null) 'point': pointFieldValue,
     };
 
@@ -2569,7 +2569,7 @@ class _$DocumentReferenceQueryDocumentReference
     );
     final json = {
       if (ref != _sentinel)
-        'ref': _$DocumentReferenceQueryPerfFieldToJson.ref(ref),
+        'ref': _$DocumentReferenceQueryPerFieldToJson.ref(ref),
       if (refFieldValue != null) 'ref': refFieldValue,
     };
 
@@ -2587,7 +2587,7 @@ class _$DocumentReferenceQueryDocumentReference
     );
     final json = {
       if (ref != _sentinel)
-        'ref': _$DocumentReferenceQueryPerfFieldToJson.ref(ref),
+        'ref': _$DocumentReferenceQueryPerFieldToJson.ref(ref),
       if (refFieldValue != null) 'ref': refFieldValue,
     };
 
@@ -3197,6 +3197,13 @@ const _$DateTimeQueryFieldMap = <String, String>{
   'time': 'time',
 };
 
+// ignore: unused_element
+abstract class _$DateTimeQueryPerFieldToJson {
+  // ignore: unused_element
+  static Object? time(DateTime instance) =>
+      const FirestoreDateTimeConverter().toJson(instance);
+}
+
 Map<String, dynamic> _$DateTimeQueryToJson(DateTimeQuery instance) =>
     <String, dynamic>{
       'time': const FirestoreDateTimeConverter().toJson(instance.time),
@@ -3211,6 +3218,13 @@ const _$TimestampQueryFieldMap = <String, String>{
   'time': 'time',
 };
 
+// ignore: unused_element
+abstract class _$TimestampQueryPerFieldToJson {
+  // ignore: unused_element
+  static Object? time(Timestamp instance) =>
+      const FirestoreTimestampConverter().toJson(instance);
+}
+
 Map<String, dynamic> _$TimestampQueryToJson(TimestampQuery instance) =>
     <String, dynamic>{
       'time': const FirestoreTimestampConverter().toJson(instance.time),
@@ -3224,6 +3238,13 @@ GeoPointQuery _$GeoPointQueryFromJson(Map<String, dynamic> json) =>
 const _$GeoPointQueryFieldMap = <String, String>{
   'point': 'point',
 };
+
+// ignore: unused_element
+abstract class _$GeoPointQueryPerFieldToJson {
+  // ignore: unused_element
+  static Object? point(GeoPoint instance) =>
+      const FirestoreGeoPointConverter().toJson(instance);
+}
 
 Map<String, dynamic> _$GeoPointQueryToJson(GeoPointQuery instance) =>
     <String, dynamic>{
@@ -3240,6 +3261,13 @@ DocumentReferenceQuery _$DocumentReferenceQueryFromJson(
 const _$DocumentReferenceQueryFieldMap = <String, String>{
   'ref': 'ref',
 };
+
+// ignore: unused_element
+abstract class _$DocumentReferenceQueryPerFieldToJson {
+  // ignore: unused_element
+  static Object? ref(DocumentReference<Map<String, dynamic>> instance) =>
+      const FirestoreDocumentReferenceConverter().toJson(instance);
+}
 
 Map<String, dynamic> _$DocumentReferenceQueryToJson(
         DocumentReferenceQuery instance) =>
