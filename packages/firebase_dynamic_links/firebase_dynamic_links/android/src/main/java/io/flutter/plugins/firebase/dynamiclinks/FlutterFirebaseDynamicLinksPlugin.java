@@ -41,8 +41,9 @@ public class FlutterFirebaseDynamicLinksPlugin
         NewIntentListener {
   private final AtomicReference<Activity> activity = new AtomicReference<>(null);
 
+  private static final String TAG = "FLTFirebaseDynamicLinks";
+
   private MethodChannel channel;
-  @Nullable private BinaryMessenger messenger;
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_dynamic_links";
 
@@ -50,8 +51,6 @@ public class FlutterFirebaseDynamicLinksPlugin
     channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
     channel.setMethodCallHandler(this);
     FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this);
-
-    this.messenger = messenger;
   }
 
   @Override
@@ -62,8 +61,6 @@ public class FlutterFirebaseDynamicLinksPlugin
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
-    channel = null;
-    messenger = null;
   }
 
   @Override
@@ -94,7 +91,7 @@ public class FlutterFirebaseDynamicLinksPlugin
 
   static FirebaseDynamicLinks getDynamicLinkInstance(@Nullable Map<String, Object> arguments) {
     if (arguments != null) {
-      String appName = (String) arguments.get(Constants.APP_NAME);
+      String appName = (String) arguments.get(io.flutter.plugins.firebase.dynamiclinks.Constants.APP_NAME);
       if (appName != null) {
         FirebaseApp app = FirebaseApp.getInstance(appName);
         return FirebaseDynamicLinks.getInstance(app);
@@ -105,13 +102,13 @@ public class FlutterFirebaseDynamicLinksPlugin
   }
 
   @Override
-  public boolean onNewIntent(Intent intent) {
+  public boolean onNewIntent(@NonNull Intent intent) {
     getDynamicLinkInstance(null)
         .getDynamicLink(intent)
         .addOnSuccessListener(
             pendingDynamicLinkData -> {
               Map<String, Object> dynamicLink =
-                  Utils.getMapFromPendingDynamicLinkData(pendingDynamicLinkData);
+                  io.flutter.plugins.firebase.dynamiclinks.Utils.getMapFromPendingDynamicLinkData(pendingDynamicLinkData);
               if (dynamicLink != null) {
                 channel.invokeMethod("FirebaseDynamicLink#onLinkSuccess", dynamicLink);
               }
@@ -119,7 +116,7 @@ public class FlutterFirebaseDynamicLinksPlugin
         .addOnFailureListener(
             exception ->
                 channel.invokeMethod(
-                    "FirebaseDynamicLink#onLinkError", Utils.getExceptionDetails(exception)));
+                    "FirebaseDynamicLink#onLinkError", io.flutter.plugins.firebase.dynamiclinks.Utils.getExceptionDetails(exception)));
     return false;
   }
 
@@ -152,7 +149,7 @@ public class FlutterFirebaseDynamicLinksPlugin
           } else {
             Exception exception = task.getException();
             result.error(
-                Constants.DEFAULT_ERROR_CODE,
+                io.flutter.plugins.firebase.dynamiclinks.Constants.DEFAULT_ERROR_CODE,
                 exception != null ? exception.getMessage() : null,
                 io.flutter.plugins.firebase.dynamiclinks.Utils.getExceptionDetails(exception));
           }
@@ -243,7 +240,7 @@ public class FlutterFirebaseDynamicLinksPlugin
             }
 
             taskCompletionSource.setResult(
-                Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink));
+                io.flutter.plugins.firebase.dynamiclinks.Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink));
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
