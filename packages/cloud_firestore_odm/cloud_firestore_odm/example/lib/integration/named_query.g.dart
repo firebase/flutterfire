@@ -242,7 +242,8 @@ class _$ConflictDocumentReference
       "Cannot specify both number and numberFieldValue",
     );
     final json = {
-      if (number != _sentinel) 'number': number as num,
+      if (number != _sentinel)
+        'number': _$ConflictPerfFieldToJson.number(number),
       if (numberFieldValue != null) 'number': numberFieldValue,
     };
 
@@ -259,7 +260,8 @@ class _$ConflictDocumentReference
       "Cannot specify both number and numberFieldValue",
     );
     final json = {
-      if (number != _sentinel) 'number': number as num,
+      if (number != _sentinel)
+        'number': _$ConflictPerfFieldToJson.number(number),
       if (numberFieldValue != null) 'number': numberFieldValue,
     };
 

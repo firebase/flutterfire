@@ -229,7 +229,7 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) 'time': time as DateTime,
+      if (time != _sentinel) 'time': _$DateTimeQueryPerfFieldToJson.time(time),
       if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
@@ -246,7 +246,7 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) 'time': time as DateTime,
+      if (time != _sentinel) 'time': _$DateTimeQueryPerfFieldToJson.time(time),
       if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
@@ -1005,7 +1005,7 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) 'time': time as Timestamp,
+      if (time != _sentinel) 'time': _$TimestampQueryPerfFieldToJson.time(time),
       if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
@@ -1022,7 +1022,7 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) 'time': time as Timestamp,
+      if (time != _sentinel) 'time': _$TimestampQueryPerfFieldToJson.time(time),
       if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
@@ -1782,7 +1782,8 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both point and pointFieldValue",
     );
     final json = {
-      if (point != _sentinel) 'point': point as GeoPoint,
+      if (point != _sentinel)
+        'point': _$GeoPointQueryPerfFieldToJson.point(point),
       if (pointFieldValue != null) 'point': pointFieldValue,
     };
 
@@ -1799,7 +1800,8 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both point and pointFieldValue",
     );
     final json = {
-      if (point != _sentinel) 'point': point as GeoPoint,
+      if (point != _sentinel)
+        'point': _$GeoPointQueryPerfFieldToJson.point(point),
       if (pointFieldValue != null) 'point': pointFieldValue,
     };
 
@@ -2567,7 +2569,7 @@ class _$DocumentReferenceQueryDocumentReference
     );
     final json = {
       if (ref != _sentinel)
-        'ref': ref as DocumentReference<Map<String, dynamic>>,
+        'ref': _$DocumentReferenceQueryPerfFieldToJson.ref(ref),
       if (refFieldValue != null) 'ref': refFieldValue,
     };
 
@@ -2585,7 +2587,7 @@ class _$DocumentReferenceQueryDocumentReference
     );
     final json = {
       if (ref != _sentinel)
-        'ref': ref as DocumentReference<Map<String, dynamic>>,
+        'ref': _$DocumentReferenceQueryPerfFieldToJson.ref(ref),
       if (refFieldValue != null) 'ref': refFieldValue,
     };
 

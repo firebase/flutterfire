@@ -233,9 +233,9 @@ class _$PersonDocumentReference
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String,
+      if (firstName != _sentinel) 'firstName': firstName,
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String,
+      if (lastName != _sentinel) 'lastName': lastName,
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
@@ -258,9 +258,9 @@ class _$PersonDocumentReference
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String,
+      if (firstName != _sentinel) 'firstName': firstName,
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String,
+      if (lastName != _sentinel) 'lastName': lastName,
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
@@ -1133,7 +1133,7 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) 'value': value as String,
+      if (value != _sentinel) 'value': value,
       if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
@@ -1150,7 +1150,7 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) 'value': value as String,
+      if (value != _sentinel) 'value': value,
       if (valueFieldValue != null) 'value': valueFieldValue,
     };
 

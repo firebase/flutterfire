@@ -223,7 +223,7 @@ class _$ManualJsonDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) 'value': value as String,
+      if (value != _sentinel) 'value': value,
       if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
@@ -240,7 +240,7 @@ class _$ManualJsonDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) 'value': value as String,
+      if (value != _sentinel) 'value': value,
       if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
@@ -1001,9 +1001,11 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstName != _sentinel)
+        'firstName': _$AdvancedJsonPerfFieldToJson.firstName(firstName),
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastName != _sentinel)
+        'lastName': _$AdvancedJsonPerfFieldToJson.lastName(lastName),
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
@@ -1026,9 +1028,11 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstName != _sentinel)
+        'firstName': _$AdvancedJsonPerfFieldToJson.firstName(firstName),
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastName != _sentinel)
+        'lastName': _$AdvancedJsonPerfFieldToJson.lastName(lastName),
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
@@ -1927,9 +1931,11 @@ class _$_PrivateAdvancedJsonDocumentReference
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstName != _sentinel)
+        'firstName': _$PrivateAdvancedJsonPerfFieldToJson.firstName(firstName),
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastName != _sentinel)
+        'lastName': _$PrivateAdvancedJsonPerfFieldToJson.lastName(lastName),
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
@@ -1952,9 +1958,11 @@ class _$_PrivateAdvancedJsonDocumentReference
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstName != _sentinel)
+        'firstName': _$PrivateAdvancedJsonPerfFieldToJson.firstName(firstName),
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String?,
+      if (lastName != _sentinel)
+        'lastName': _$PrivateAdvancedJsonPerfFieldToJson.lastName(lastName),
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 

@@ -331,30 +331,32 @@ class _$MovieDocumentReference
       "Cannot specify both majorCast and majorCastFieldValue",
     );
     final json = {
-      if (poster != _sentinel) 'poster': poster as String,
+      if (poster != _sentinel) 'poster': _$MoviePerfFieldToJson.poster(poster),
       if (posterFieldValue != null) 'poster': posterFieldValue,
-      if (likes != _sentinel) 'likes': likes as int,
+      if (likes != _sentinel) 'likes': _$MoviePerfFieldToJson.likes(likes),
       if (likesFieldValue != null) 'likes': likesFieldValue,
-      if (title != _sentinel) 'title': title as String,
+      if (title != _sentinel) 'title': _$MoviePerfFieldToJson.title(title),
       if (titleFieldValue != null) 'title': titleFieldValue,
-      if (year != _sentinel) 'year': year as int,
+      if (year != _sentinel) 'year': _$MoviePerfFieldToJson.year(year),
       if (yearFieldValue != null) 'year': yearFieldValue,
-      if (runtime != _sentinel) 'runtime': runtime as String,
+      if (runtime != _sentinel)
+        'runtime': _$MoviePerfFieldToJson.runtime(runtime),
       if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
-      if (rated != _sentinel) 'rated': rated as String,
+      if (rated != _sentinel) 'rated': _$MoviePerfFieldToJson.rated(rated),
       if (ratedFieldValue != null) 'rated': ratedFieldValue,
-      if (genre != _sentinel) 'genre': genre as List<String>?,
+      if (genre != _sentinel) 'genre': _$MoviePerfFieldToJson.genre(genre),
       if (genreFieldValue != null) 'genre': genreFieldValue,
-      if (language != _sentinel) 'language': language as List<LanguageType>?,
+      if (language != _sentinel)
+        'language': _$MoviePerfFieldToJson.language(language),
       if (languageFieldValue != null) 'language': languageFieldValue,
       if (certification != _sentinel)
-        'certification': certification as CertificationType,
+        'certification': _$MoviePerfFieldToJson.certification(certification),
       if (certificationFieldValue != null)
         'certification': certificationFieldValue,
-      if (cast != _sentinel) 'cast': cast as List<Map<CastType, String>>,
+      if (cast != _sentinel) 'cast': _$MoviePerfFieldToJson.cast(cast),
       if (castFieldValue != null) 'cast': castFieldValue,
       if (majorCast != _sentinel)
-        'majorCast': majorCast as Map<CastType, String>,
+        'majorCast': _$MoviePerfFieldToJson.majorCast(majorCast),
       if (majorCastFieldValue != null) 'majorCast': majorCastFieldValue,
     };
 
@@ -431,30 +433,32 @@ class _$MovieDocumentReference
       "Cannot specify both majorCast and majorCastFieldValue",
     );
     final json = {
-      if (poster != _sentinel) 'poster': poster as String,
+      if (poster != _sentinel) 'poster': _$MoviePerfFieldToJson.poster(poster),
       if (posterFieldValue != null) 'poster': posterFieldValue,
-      if (likes != _sentinel) 'likes': likes as int,
+      if (likes != _sentinel) 'likes': _$MoviePerfFieldToJson.likes(likes),
       if (likesFieldValue != null) 'likes': likesFieldValue,
-      if (title != _sentinel) 'title': title as String,
+      if (title != _sentinel) 'title': _$MoviePerfFieldToJson.title(title),
       if (titleFieldValue != null) 'title': titleFieldValue,
-      if (year != _sentinel) 'year': year as int,
+      if (year != _sentinel) 'year': _$MoviePerfFieldToJson.year(year),
       if (yearFieldValue != null) 'year': yearFieldValue,
-      if (runtime != _sentinel) 'runtime': runtime as String,
+      if (runtime != _sentinel)
+        'runtime': _$MoviePerfFieldToJson.runtime(runtime),
       if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
-      if (rated != _sentinel) 'rated': rated as String,
+      if (rated != _sentinel) 'rated': _$MoviePerfFieldToJson.rated(rated),
       if (ratedFieldValue != null) 'rated': ratedFieldValue,
-      if (genre != _sentinel) 'genre': genre as List<String>?,
+      if (genre != _sentinel) 'genre': _$MoviePerfFieldToJson.genre(genre),
       if (genreFieldValue != null) 'genre': genreFieldValue,
-      if (language != _sentinel) 'language': language as List<LanguageType>?,
+      if (language != _sentinel)
+        'language': _$MoviePerfFieldToJson.language(language),
       if (languageFieldValue != null) 'language': languageFieldValue,
       if (certification != _sentinel)
-        'certification': certification as CertificationType,
+        'certification': _$MoviePerfFieldToJson.certification(certification),
       if (certificationFieldValue != null)
         'certification': certificationFieldValue,
-      if (cast != _sentinel) 'cast': cast as List<Map<CastType, String>>,
+      if (cast != _sentinel) 'cast': _$MoviePerfFieldToJson.cast(cast),
       if (castFieldValue != null) 'cast': castFieldValue,
       if (majorCast != _sentinel)
-        'majorCast': majorCast as Map<CastType, String>,
+        'majorCast': _$MoviePerfFieldToJson.majorCast(majorCast),
       if (majorCastFieldValue != null) 'majorCast': majorCastFieldValue,
     };
 
@@ -2504,9 +2508,11 @@ class _$CommentDocumentReference
       "Cannot specify both message and messageFieldValue",
     );
     final json = {
-      if (authorName != _sentinel) 'authorName': authorName as String,
+      if (authorName != _sentinel)
+        'authorName': _$CommentPerfFieldToJson.authorName(authorName),
       if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
-      if (message != _sentinel) 'message': message as String,
+      if (message != _sentinel)
+        'message': _$CommentPerfFieldToJson.message(message),
       if (messageFieldValue != null) 'message': messageFieldValue,
     };
 
@@ -2529,9 +2535,11 @@ class _$CommentDocumentReference
       "Cannot specify both message and messageFieldValue",
     );
     final json = {
-      if (authorName != _sentinel) 'authorName': authorName as String,
+      if (authorName != _sentinel)
+        'authorName': _$CommentPerfFieldToJson.authorName(authorName),
       if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
-      if (message != _sentinel) 'message': message as String,
+      if (message != _sentinel)
+        'message': _$CommentPerfFieldToJson.message(message),
       if (messageFieldValue != null) 'message': messageFieldValue,
     };
 
