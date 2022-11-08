@@ -1,3 +1,7 @@
+## 1.0.0-dev.39
+
+ - **FIX**: Upgrade analyzer version. ([#9828](https://github.com/firebase/flutterfire/issues/9828)). ([b7f5887d](https://github.com/firebase/flutterfire/commit/b7f5887d76ba11de5041f39d2bb5fdcb8aec288d))
+
 ## 1.0.0-dev.38
 
  - Update a dependency to the latest release.
