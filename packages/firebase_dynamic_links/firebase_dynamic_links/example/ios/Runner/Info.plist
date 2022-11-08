@@ -29,7 +29,7 @@
 			<string>Bundle ID</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>io.invertase.testing</string>
+				<string>io.flutter.plugins.firebase.dynamiclinksexample</string>
 			</array>
 		</dict>
 	</array>
