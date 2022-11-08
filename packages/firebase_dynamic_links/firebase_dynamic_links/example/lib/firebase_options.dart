@@ -54,7 +54,8 @@ class DefaultFirebaseOptions {
     appId: '1:406099696497:android:40da41183cb3d3ff3574d0',
     messagingSenderId: '406099696497',
     projectId: 'flutterfire-e2e-tests',
-    databaseURL: 'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'flutterfire-e2e-tests.appspot.com',
   );
 
@@ -63,10 +64,13 @@ class DefaultFirebaseOptions {
     appId: '1:406099696497:ios:e666f0a995aa455a3574d0',
     messagingSenderId: '406099696497',
     projectId: 'flutterfire-e2e-tests',
-    databaseURL: 'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'flutterfire-e2e-tests.appspot.com',
-    androidClientId: '406099696497-17qn06u8a0dc717u8ul7s49ampk13lul.apps.googleusercontent.com',
-    iosClientId: '406099696497-nm88pgddt7a91g44caeck9rjjj6kr2fm.apps.googleusercontent.com',
+    androidClientId:
+        '406099696497-17qn06u8a0dc717u8ul7s49ampk13lul.apps.googleusercontent.com',
+    iosClientId:
+        '406099696497-nm88pgddt7a91g44caeck9rjjj6kr2fm.apps.googleusercontent.com',
     iosBundleId: 'io.flutter.plugins.firebase.dynamiclinksexample',
   );
 }
