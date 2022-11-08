@@ -224,6 +224,7 @@ class _$ManualJsonDocumentReference
     );
     final json = {
       if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -240,6 +241,7 @@ class _$ManualJsonDocumentReference
     );
     final json = {
       if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1000,6 +1002,7 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
@@ -1024,6 +1027,7 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
@@ -1924,6 +1928,7 @@ class _$_PrivateAdvancedJsonDocumentReference
     );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
@@ -1948,6 +1953,7 @@ class _$_PrivateAdvancedJsonDocumentReference
     );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String?,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String?,
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };

@@ -79,6 +79,22 @@ class CollectionGraph {
   }
 }
 
+class QueryingField {
+  QueryingField(
+    this.name,
+    this.type, {
+    required this.field,
+    required this.updatable,
+    required this.toJsonBuilder,
+  });
+
+  final String name;
+  final DartType type;
+  final String field;
+  final bool updatable;
+  final String Function(String variableName) toJsonBuilder;
+}
+
 class CollectionData with Names {
   CollectionData({
     required this.type,
@@ -238,6 +254,9 @@ class CollectionData with Names {
           annotatedElement.library!.typeProvider.stringType,
           field: 'FieldPath.documentId',
           updatable: false,
+          toJsonBuilder: (_) {
+            throw StateError('documentId should not be serialized');
+          },
         ),
         ...collectionTargetElement
             .allFields(
@@ -245,7 +264,7 @@ class CollectionData with Names {
               freezedConstructors: redirectedFreezedConstructors,
             )
             .where((f) => f.isPublic)
-            .where((f) => _isSupportedType(f.type))
+            .where((f) => _isSupportedType(f.type) || hasJsonSerializable)
             .where((f) => !f.hasId())
             .where((f) => !f.isJsonIgnored())
             .map(
@@ -265,6 +284,12 @@ class CollectionData with Names {
               e.type,
               updatable: true,
               field: key,
+              toJsonBuilder: (variableName) {
+                if (hasJsonSerializable) {
+                  return '_\$${collectionTargetElement.name.public}PerfFieldToJson.${e.name}($variableName)';
+                }
+                return variableName;
+              },
             );
           },
         ).toList(),

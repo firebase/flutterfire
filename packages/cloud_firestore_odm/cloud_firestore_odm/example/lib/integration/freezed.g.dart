@@ -234,7 +234,9 @@ class _$PersonDocumentReference
     );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
     return reference.update(json);
@@ -257,7 +259,9 @@ class _$PersonDocumentReference
     );
     final json = {
       if (firstName != _sentinel) 'firstName': firstName as String,
+      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel) 'lastName': lastName as String,
+      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1130,6 +1134,7 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     return reference.update(json);
@@ -1146,6 +1151,7 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (value != _sentinel) 'value': value as String,
+      if (valueFieldValue != null) 'value': valueFieldValue,
     };
 
     transaction.update(reference, json);

@@ -230,6 +230,7 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (time != _sentinel) 'time': time as DateTime,
+      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     return reference.update(json);
@@ -246,6 +247,7 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (time != _sentinel) 'time': time as DateTime,
+      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1004,6 +1006,7 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (time != _sentinel) 'time': time as Timestamp,
+      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     return reference.update(json);
@@ -1020,6 +1023,7 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (time != _sentinel) 'time': time as Timestamp,
+      if (timeFieldValue != null) 'time': timeFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1779,6 +1783,7 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (point != _sentinel) 'point': point as GeoPoint,
+      if (pointFieldValue != null) 'point': pointFieldValue,
     };
 
     return reference.update(json);
@@ -1795,6 +1800,7 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (point != _sentinel) 'point': point as GeoPoint,
+      if (pointFieldValue != null) 'point': pointFieldValue,
     };
 
     transaction.update(reference, json);
@@ -2562,6 +2568,7 @@ class _$DocumentReferenceQueryDocumentReference
     final json = {
       if (ref != _sentinel)
         'ref': ref as DocumentReference<Map<String, dynamic>>,
+      if (refFieldValue != null) 'ref': refFieldValue,
     };
 
     return reference.update(json);
@@ -2579,6 +2586,7 @@ class _$DocumentReferenceQueryDocumentReference
     final json = {
       if (ref != _sentinel)
         'ref': ref as DocumentReference<Map<String, dynamic>>,
+      if (refFieldValue != null) 'ref': refFieldValue,
     };
 
     transaction.update(reference, json);

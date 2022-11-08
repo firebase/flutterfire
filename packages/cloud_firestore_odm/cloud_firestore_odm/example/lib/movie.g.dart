@@ -196,6 +196,8 @@ abstract class MovieDocumentReference
     FieldValue certificationFieldValue,
     List<Map<CastType, String>> cast,
     FieldValue castFieldValue,
+    Map<CastType, String> majorCast,
+    FieldValue majorCastFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -223,6 +225,8 @@ abstract class MovieDocumentReference
     FieldValue certificationFieldValue,
     List<Map<CastType, String>> cast,
     FieldValue castFieldValue,
+    Map<CastType, String> majorCast,
+    FieldValue majorCastFieldValue,
   });
 }
 
@@ -279,6 +283,8 @@ class _$MovieDocumentReference
     FieldValue? certificationFieldValue,
     Object? cast = _sentinel,
     FieldValue? castFieldValue,
+    Object? majorCast = _sentinel,
+    FieldValue? majorCastFieldValue,
   }) async {
     assert(
       poster == _sentinel || posterFieldValue == null,
@@ -320,20 +326,36 @@ class _$MovieDocumentReference
       cast == _sentinel || castFieldValue == null,
       "Cannot specify both cast and castFieldValue",
     );
+    assert(
+      majorCast == _sentinel || majorCastFieldValue == null,
+      "Cannot specify both majorCast and majorCastFieldValue",
+    );
     final json = {
       if (poster != _sentinel) 'poster': poster as String,
+      if (posterFieldValue != null) 'poster': posterFieldValue,
       if (likes != _sentinel) 'likes': likes as int,
+      if (likesFieldValue != null) 'likes': likesFieldValue,
       if (title != _sentinel) 'title': title as String,
+      if (titleFieldValue != null) 'title': titleFieldValue,
       if (year != _sentinel) 'year': year as int,
+      if (yearFieldValue != null) 'year': yearFieldValue,
       if (runtime != _sentinel) 'runtime': runtime as String,
+      if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
       if (rated != _sentinel) 'rated': rated as String,
+      if (ratedFieldValue != null) 'rated': ratedFieldValue,
       if (genre != _sentinel) 'genre': genre as List<String>?,
-      if (language != _sentinel)
-        'language': _enumConvertList(language as List<LanguageType>?),
+      if (genreFieldValue != null) 'genre': genreFieldValue,
+      if (language != _sentinel) 'language': language as List<LanguageType>?,
+      if (languageFieldValue != null) 'language': languageFieldValue,
       if (certification != _sentinel)
         'certification': certification as CertificationType,
-      if (cast != _sentinel)
-        'cast': _enumConvertListMap(cast as List<Map<CastType, String>>),
+      if (certificationFieldValue != null)
+        'certification': certificationFieldValue,
+      if (cast != _sentinel) 'cast': cast as List<Map<CastType, String>>,
+      if (castFieldValue != null) 'cast': castFieldValue,
+      if (majorCast != _sentinel)
+        'majorCast': majorCast as Map<CastType, String>,
+      if (majorCastFieldValue != null) 'majorCast': majorCastFieldValue,
     };
 
     return reference.update(json);
@@ -361,6 +383,8 @@ class _$MovieDocumentReference
     FieldValue? certificationFieldValue,
     Object? cast = _sentinel,
     FieldValue? castFieldValue,
+    Object? majorCast = _sentinel,
+    FieldValue? majorCastFieldValue,
   }) {
     assert(
       poster == _sentinel || posterFieldValue == null,
@@ -402,20 +426,36 @@ class _$MovieDocumentReference
       cast == _sentinel || castFieldValue == null,
       "Cannot specify both cast and castFieldValue",
     );
+    assert(
+      majorCast == _sentinel || majorCastFieldValue == null,
+      "Cannot specify both majorCast and majorCastFieldValue",
+    );
     final json = {
       if (poster != _sentinel) 'poster': poster as String,
+      if (posterFieldValue != null) 'poster': posterFieldValue,
       if (likes != _sentinel) 'likes': likes as int,
+      if (likesFieldValue != null) 'likes': likesFieldValue,
       if (title != _sentinel) 'title': title as String,
+      if (titleFieldValue != null) 'title': titleFieldValue,
       if (year != _sentinel) 'year': year as int,
+      if (yearFieldValue != null) 'year': yearFieldValue,
       if (runtime != _sentinel) 'runtime': runtime as String,
+      if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
       if (rated != _sentinel) 'rated': rated as String,
+      if (ratedFieldValue != null) 'rated': ratedFieldValue,
       if (genre != _sentinel) 'genre': genre as List<String>?,
-      if (language != _sentinel)
-        'language': _enumConvertList(language as List<LanguageType>?),
+      if (genreFieldValue != null) 'genre': genreFieldValue,
+      if (language != _sentinel) 'language': language as List<LanguageType>?,
+      if (languageFieldValue != null) 'language': languageFieldValue,
       if (certification != _sentinel)
         'certification': certification as CertificationType,
-      if (cast != _sentinel)
-        'cast': _enumConvertListMap(cast as List<Map<CastType, String>>),
+      if (certificationFieldValue != null)
+        'certification': certificationFieldValue,
+      if (cast != _sentinel) 'cast': cast as List<Map<CastType, String>>,
+      if (castFieldValue != null) 'cast': castFieldValue,
+      if (majorCast != _sentinel)
+        'majorCast': majorCast as Map<CastType, String>,
+      if (majorCastFieldValue != null) 'majorCast': majorCastFieldValue,
     };
 
     transaction.update(reference, json);
@@ -626,6 +666,17 @@ abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
     Map<CastType, String>? arrayContains,
     List<Map<CastType, String>>? arrayContainsAny,
   });
+  MovieQuery whereMajorCast({
+    Map<CastType, String>? isEqualTo,
+    Map<CastType, String>? isNotEqualTo,
+    Map<CastType, String>? isLessThan,
+    Map<CastType, String>? isLessThanOrEqualTo,
+    Map<CastType, String>? isGreaterThan,
+    Map<CastType, String>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<Map<CastType, String>>? whereIn,
+    List<Map<CastType, String>>? whereNotIn,
+  });
 
   MovieQuery orderByDocumentId({
     bool descending = false,
@@ -753,6 +804,18 @@ abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
     List<Map<CastType, String>> startAfter,
     List<Map<CastType, String>> endAt,
     List<Map<CastType, String>> endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  MovieQuery orderByMajorCast({
+    bool descending = false,
+    Map<CastType, String> startAt,
+    Map<CastType, String> startAfter,
+    Map<CastType, String> endAt,
+    Map<CastType, String> endBefore,
     MovieDocumentSnapshot? startAtDocument,
     MovieDocumentSnapshot? endAtDocument,
     MovieDocumentSnapshot? endBeforeDocument,
@@ -1263,6 +1326,34 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     //   reference.where('cast', isEqualTo: _enumConvertListMap(isEqualTo),isNotEqualTo: _enumConvertListMap(isNotEqualTo),isLessThan: _enumConvertListMap(isLessThan),isLessThanOrEqualTo: _enumConvertListMap(isLessThanOrEqualTo),isGreaterThan: _enumConvertListMap(isGreaterThan),isGreaterThanOrEqualTo: _enumConvertListMap(isGreaterThanOrEqualTo),isNull: isNull,arrayContains: _enumConvertMap(arrayContains),arrayContainsAny: _enumConvertListMap(arrayContainsAny),),
     //   _collection,
     // );
+  }
+
+  MovieQuery whereMajorCast({
+    Map<CastType, String>? isEqualTo,
+    Map<CastType, String>? isNotEqualTo,
+    Map<CastType, String>? isLessThan,
+    Map<CastType, String>? isLessThanOrEqualTo,
+    Map<CastType, String>? isGreaterThan,
+    Map<CastType, String>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<Map<CastType, String>>? whereIn,
+    List<Map<CastType, String>>? whereNotIn,
+  }) {
+    return _$MovieQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+          _$MovieFieldMap['majorCast']!,
+          isEqualTo: isEqualTo?.name,
+          isNotEqualTo: isNotEqualTo?.name,
+          isLessThan: isLessThan?.name,
+          isLessThanOrEqualTo: isLessThanOrEqualTo?.name,
+          isGreaterThan: isGreaterThan?.name,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,
+          isNull: isNull?.name,
+          whereIn: whereIn?.name,
+          whereNotIn: whereNotIn?.name),
+      $queryCursor: $queryCursor,
+    );
   }
 
   MovieQuery orderByDocumentId({
@@ -2057,6 +2148,78 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     );
   }
 
+  MovieQuery orderByMajorCast({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['majorCast']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$MovieQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is _$MovieQuery &&
@@ -2342,7 +2505,9 @@ class _$CommentDocumentReference
     );
     final json = {
       if (authorName != _sentinel) 'authorName': authorName as String,
+      if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
       if (message != _sentinel) 'message': message as String,
+      if (messageFieldValue != null) 'message': messageFieldValue,
     };
 
     return reference.update(json);
@@ -2365,7 +2530,9 @@ class _$CommentDocumentReference
     );
     final json = {
       if (authorName != _sentinel) 'authorName': authorName as String,
+      if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
       if (message != _sentinel) 'message': message as String,
+      if (messageFieldValue != null) 'message': messageFieldValue,
     };
 
     transaction.update(reference, json);
