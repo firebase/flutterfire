@@ -11,49 +11,6 @@ part of 'query.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
-List<String>? _enumConvertList(enumList) {
-  if (enumList == null) {
-    return null;
-  }
-  List<String> _tmpEnumList = [];
-  enumList.forEach((Enum e) {
-    _tmpEnumList.add(e.name);
-  });
-  return (_tmpEnumList.length > 0) ? _tmpEnumList : null;
-}
-
-List<Map<String, String>>? _enumConvertListMap(enumListMap) {
-  if (enumListMap == null) {
-    return null;
-  }
-  List<Map<String, String>> _tmpEnumListMap = [];
-
-  for (var e in enumListMap) {
-    e.forEach((Enum k, v) {
-      // TODO: Test for an enum key or enum value
-      // var _k = (k is Enum) ? k.name : k;
-      // var _v = (v is Enum) ? v.name : v;
-      var _k = k.name;
-      var _v = v;
-      _tmpEnumListMap.add({_k: _v});
-    });
-  }
-  ;
-  return (_tmpEnumListMap.length > 0) ? _tmpEnumListMap : null;
-}
-
-Map<String, dynamic>? _enumConvertMap(enumMap) {
-  if (enumMap == null) {
-    return null;
-  }
-  Map<String, dynamic> _tmpEnumMap = {};
-
-  enumMap?.forEach((Enum k, v) {
-    _tmpEnumMap.addAll({k.name: v});
-  });
-  return (_tmpEnumMap.length > 0) ? _tmpEnumMap : null;
-}
-
 class _Sentinel {
   const _Sentinel();
 }
@@ -552,16 +509,17 @@ class _$DateTimeQueryQuery
     return _$DateTimeQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -580,16 +538,22 @@ class _$DateTimeQueryQuery
     return _$DateTimeQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$DateTimeQueryFieldMap['time']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$DateTimeQueryFieldMap['time']!,
+        isEqualTo: _$DateTimeQueryPerFieldToJson.time(isEqualTo),
+        isNotEqualTo: _$DateTimeQueryPerFieldToJson.time(isNotEqualTo),
+        isLessThan: _$DateTimeQueryPerFieldToJson.time(isLessThan),
+        isLessThanOrEqualTo:
+            _$DateTimeQueryPerFieldToJson.time(isLessThanOrEqualTo),
+        isGreaterThan: _$DateTimeQueryPerFieldToJson.time(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$DateTimeQueryPerFieldToJson.time(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn:
+            whereIn.map((e) => _$DateTimeQueryPerFieldToJson.time(e)).toList(),
+        whereNotIn: whereNotIn
+            .map((e) => _$DateTimeQueryPerFieldToJson.time(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1328,16 +1292,17 @@ class _$TimestampQueryQuery
     return _$TimestampQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1356,16 +1321,22 @@ class _$TimestampQueryQuery
     return _$TimestampQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$TimestampQueryFieldMap['time']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$TimestampQueryFieldMap['time']!,
+        isEqualTo: _$TimestampQueryPerFieldToJson.time(isEqualTo),
+        isNotEqualTo: _$TimestampQueryPerFieldToJson.time(isNotEqualTo),
+        isLessThan: _$TimestampQueryPerFieldToJson.time(isLessThan),
+        isLessThanOrEqualTo:
+            _$TimestampQueryPerFieldToJson.time(isLessThanOrEqualTo),
+        isGreaterThan: _$TimestampQueryPerFieldToJson.time(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$TimestampQueryPerFieldToJson.time(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn:
+            whereIn.map((e) => _$TimestampQueryPerFieldToJson.time(e)).toList(),
+        whereNotIn: whereNotIn
+            .map((e) => _$TimestampQueryPerFieldToJson.time(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2107,16 +2078,17 @@ class _$GeoPointQueryQuery
     return _$GeoPointQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2135,16 +2107,22 @@ class _$GeoPointQueryQuery
     return _$GeoPointQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$GeoPointQueryFieldMap['point']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$GeoPointQueryFieldMap['point']!,
+        isEqualTo: _$GeoPointQueryPerFieldToJson.point(isEqualTo),
+        isNotEqualTo: _$GeoPointQueryPerFieldToJson.point(isNotEqualTo),
+        isLessThan: _$GeoPointQueryPerFieldToJson.point(isLessThan),
+        isLessThanOrEqualTo:
+            _$GeoPointQueryPerFieldToJson.point(isLessThanOrEqualTo),
+        isGreaterThan: _$GeoPointQueryPerFieldToJson.point(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$GeoPointQueryPerFieldToJson.point(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn:
+            whereIn.map((e) => _$GeoPointQueryPerFieldToJson.point(e)).toList(),
+        whereNotIn: whereNotIn
+            .map((e) => _$GeoPointQueryPerFieldToJson.point(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2896,16 +2874,17 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
     return _$DocumentReferenceQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2924,16 +2903,24 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
     return _$DocumentReferenceQueryQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$DocumentReferenceQueryFieldMap['ref']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$DocumentReferenceQueryFieldMap['ref']!,
+        isEqualTo: _$DocumentReferenceQueryPerFieldToJson.ref(isEqualTo),
+        isNotEqualTo: _$DocumentReferenceQueryPerFieldToJson.ref(isNotEqualTo),
+        isLessThan: _$DocumentReferenceQueryPerFieldToJson.ref(isLessThan),
+        isLessThanOrEqualTo:
+            _$DocumentReferenceQueryPerFieldToJson.ref(isLessThanOrEqualTo),
+        isGreaterThan:
+            _$DocumentReferenceQueryPerFieldToJson.ref(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$DocumentReferenceQueryPerFieldToJson.ref(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn
+            .map((e) => _$DocumentReferenceQueryPerFieldToJson.ref(e))
+            .toList(),
+        whereNotIn: whereNotIn
+            .map((e) => _$DocumentReferenceQueryPerFieldToJson.ref(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }

@@ -11,49 +11,6 @@ part of 'movie.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
-List<String>? _enumConvertList(enumList) {
-  if (enumList == null) {
-    return null;
-  }
-  List<String> _tmpEnumList = [];
-  enumList.forEach((Enum e) {
-    _tmpEnumList.add(e.name);
-  });
-  return (_tmpEnumList.length > 0) ? _tmpEnumList : null;
-}
-
-List<Map<String, String>>? _enumConvertListMap(enumListMap) {
-  if (enumListMap == null) {
-    return null;
-  }
-  List<Map<String, String>> _tmpEnumListMap = [];
-
-  for (var e in enumListMap) {
-    e.forEach((Enum k, v) {
-      // TODO: Test for an enum key or enum value
-      // var _k = (k is Enum) ? k.name : k;
-      // var _v = (v is Enum) ? v.name : v;
-      var _k = k.name;
-      var _v = v;
-      _tmpEnumListMap.add({_k: _v});
-    });
-  }
-  ;
-  return (_tmpEnumListMap.length > 0) ? _tmpEnumListMap : null;
-}
-
-Map<String, dynamic>? _enumConvertMap(enumMap) {
-  if (enumMap == null) {
-    return null;
-  }
-  Map<String, dynamic> _tmpEnumMap = {};
-
-  enumMap?.forEach((Enum k, v) {
-    _tmpEnumMap.addAll({k.name: v});
-  });
-  return (_tmpEnumMap.length > 0) ? _tmpEnumMap : null;
-}
-
 class _Sentinel {
   const _Sentinel();
 }
@@ -988,16 +945,17 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1016,16 +974,19 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$MovieFieldMap['poster']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$MovieFieldMap['poster']!,
+        isEqualTo: _$MoviePerFieldToJson.poster(isEqualTo),
+        isNotEqualTo: _$MoviePerFieldToJson.poster(isNotEqualTo),
+        isLessThan: _$MoviePerFieldToJson.poster(isLessThan),
+        isLessThanOrEqualTo: _$MoviePerFieldToJson.poster(isLessThanOrEqualTo),
+        isGreaterThan: _$MoviePerFieldToJson.poster(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$MoviePerFieldToJson.poster(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn.map((e) => _$MoviePerFieldToJson.poster(e)).toList(),
+        whereNotIn:
+            whereNotIn.map((e) => _$MoviePerFieldToJson.poster(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1044,16 +1005,19 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$MovieFieldMap['likes']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$MovieFieldMap['likes']!,
+        isEqualTo: _$MoviePerFieldToJson.likes(isEqualTo),
+        isNotEqualTo: _$MoviePerFieldToJson.likes(isNotEqualTo),
+        isLessThan: _$MoviePerFieldToJson.likes(isLessThan),
+        isLessThanOrEqualTo: _$MoviePerFieldToJson.likes(isLessThanOrEqualTo),
+        isGreaterThan: _$MoviePerFieldToJson.likes(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$MoviePerFieldToJson.likes(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn.map((e) => _$MoviePerFieldToJson.likes(e)).toList(),
+        whereNotIn:
+            whereNotIn.map((e) => _$MoviePerFieldToJson.likes(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1072,16 +1036,19 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$MovieFieldMap['title']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$MovieFieldMap['title']!,
+        isEqualTo: _$MoviePerFieldToJson.title(isEqualTo),
+        isNotEqualTo: _$MoviePerFieldToJson.title(isNotEqualTo),
+        isLessThan: _$MoviePerFieldToJson.title(isLessThan),
+        isLessThanOrEqualTo: _$MoviePerFieldToJson.title(isLessThanOrEqualTo),
+        isGreaterThan: _$MoviePerFieldToJson.title(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$MoviePerFieldToJson.title(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn.map((e) => _$MoviePerFieldToJson.title(e)).toList(),
+        whereNotIn:
+            whereNotIn.map((e) => _$MoviePerFieldToJson.title(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1100,16 +1067,19 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$MovieFieldMap['year']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$MovieFieldMap['year']!,
+        isEqualTo: _$MoviePerFieldToJson.year(isEqualTo),
+        isNotEqualTo: _$MoviePerFieldToJson.year(isNotEqualTo),
+        isLessThan: _$MoviePerFieldToJson.year(isLessThan),
+        isLessThanOrEqualTo: _$MoviePerFieldToJson.year(isLessThanOrEqualTo),
+        isGreaterThan: _$MoviePerFieldToJson.year(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$MoviePerFieldToJson.year(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn.map((e) => _$MoviePerFieldToJson.year(e)).toList(),
+        whereNotIn:
+            whereNotIn.map((e) => _$MoviePerFieldToJson.year(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1128,16 +1098,19 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$MovieFieldMap['runtime']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$MovieFieldMap['runtime']!,
+        isEqualTo: _$MoviePerFieldToJson.runtime(isEqualTo),
+        isNotEqualTo: _$MoviePerFieldToJson.runtime(isNotEqualTo),
+        isLessThan: _$MoviePerFieldToJson.runtime(isLessThan),
+        isLessThanOrEqualTo: _$MoviePerFieldToJson.runtime(isLessThanOrEqualTo),
+        isGreaterThan: _$MoviePerFieldToJson.runtime(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$MoviePerFieldToJson.runtime(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn.map((e) => _$MoviePerFieldToJson.runtime(e)).toList(),
+        whereNotIn:
+            whereNotIn.map((e) => _$MoviePerFieldToJson.runtime(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1156,16 +1129,19 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$MovieFieldMap['rated']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$MovieFieldMap['rated']!,
+        isEqualTo: _$MoviePerFieldToJson.rated(isEqualTo),
+        isNotEqualTo: _$MoviePerFieldToJson.rated(isNotEqualTo),
+        isLessThan: _$MoviePerFieldToJson.rated(isLessThan),
+        isLessThanOrEqualTo: _$MoviePerFieldToJson.rated(isLessThanOrEqualTo),
+        isGreaterThan: _$MoviePerFieldToJson.rated(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$MoviePerFieldToJson.rated(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn.map((e) => _$MoviePerFieldToJson.rated(e)).toList(),
+        whereNotIn:
+            whereNotIn.map((e) => _$MoviePerFieldToJson.rated(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1184,16 +1160,18 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$MovieFieldMap['genre']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          arrayContains: arrayContains,
-          arrayContainsAny: arrayContainsAny),
+        _$MovieFieldMap['genre']!,
+        isEqualTo: _$MoviePerFieldToJson.genre(isEqualTo),
+        isNotEqualTo: _$MoviePerFieldToJson.genre(isNotEqualTo),
+        isLessThan: _$MoviePerFieldToJson.genre(isLessThan),
+        isLessThanOrEqualTo: _$MoviePerFieldToJson.genre(isLessThanOrEqualTo),
+        isGreaterThan: _$MoviePerFieldToJson.genre(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$MoviePerFieldToJson.genre(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: _$MoviePerFieldToJson.genre(arrayContainsAny),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1212,22 +1190,21 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$MovieFieldMap['language']!,
-          isEqualTo: _enumConvertList(isEqualTo),
-          isNotEqualTo: _enumConvertList(isNotEqualTo),
-          isLessThan: _enumConvertList(isLessThan),
-          isLessThanOrEqualTo: _enumConvertList(isLessThanOrEqualTo),
-          isGreaterThan: _enumConvertList(isGreaterThan),
-          isGreaterThanOrEqualTo: _enumConvertList(isGreaterThanOrEqualTo),
-          isNull: isNull,
-          arrayContains: arrayContains?.name,
-          arrayContainsAny: _enumConvertList(arrayContainsAny)),
+        _$MovieFieldMap['language']!,
+        isEqualTo: _$MoviePerFieldToJson.language(isEqualTo),
+        isNotEqualTo: _$MoviePerFieldToJson.language(isNotEqualTo),
+        isLessThan: _$MoviePerFieldToJson.language(isLessThan),
+        isLessThanOrEqualTo:
+            _$MoviePerFieldToJson.language(isLessThanOrEqualTo),
+        isGreaterThan: _$MoviePerFieldToJson.language(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$MoviePerFieldToJson.language(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: _$MoviePerFieldToJson.language(arrayContainsAny),
+      ),
       $queryCursor: $queryCursor,
     );
-    // return _$MovieQuery(
-    //   reference.where('language', isEqualTo: _enumConvertList(isEqualTo),isNotEqualTo: _enumConvertList(isNotEqualTo),isLessThan: _enumConvertList(isLessThan),isLessThanOrEqualTo: _enumConvertList(isLessThanOrEqualTo),isGreaterThan: _enumConvertList(isGreaterThan),isGreaterThanOrEqualTo: _enumConvertList(isGreaterThanOrEqualTo),isNull: isNull,arrayContains: arrayContains?.name,arrayContainsAny: _enumConvertList(arrayContainsAny),),
-    //   _collection,
-    // );
   }
 
   MovieQuery whereCertification({
@@ -1241,34 +1218,27 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     List<CertificationType>? whereIn,
     List<CertificationType>? whereNotIn,
   }) {
-    List<String>? _whereInList;
-    whereIn?.forEach((e) {
-      _whereInList?.add(e.name);
-    });
-    List<String>? _whereNotInList;
-    whereNotIn?.forEach((e) {
-      _whereNotInList?.add(e.name);
-    });
-
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$MovieFieldMap['certification']!,
-          isEqualTo: isEqualTo?.name,
-          isNotEqualTo: isNotEqualTo?.name,
-          isLessThan: isLessThan?.name,
-          isLessThanOrEqualTo: isLessThanOrEqualTo?.name,
-          isGreaterThan: isGreaterThan?.name,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,
-          isNull: isNull,
-          whereIn: _whereInList,
-          whereNotIn: _whereNotInList),
+        _$MovieFieldMap['certification']!,
+        isEqualTo: _$MoviePerFieldToJson.certification(isEqualTo),
+        isNotEqualTo: _$MoviePerFieldToJson.certification(isNotEqualTo),
+        isLessThan: _$MoviePerFieldToJson.certification(isLessThan),
+        isLessThanOrEqualTo:
+            _$MoviePerFieldToJson.certification(isLessThanOrEqualTo),
+        isGreaterThan: _$MoviePerFieldToJson.certification(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$MoviePerFieldToJson.certification(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn:
+            whereIn.map((e) => _$MoviePerFieldToJson.certification(e)).toList(),
+        whereNotIn: whereNotIn
+            .map((e) => _$MoviePerFieldToJson.certification(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
-    // return _$MovieQuery(
-    //   reference.where('certification', isEqualTo: isEqualTo?.name,isNotEqualTo: isNotEqualTo?.name,isLessThan: isLessThan?.name,isLessThanOrEqualTo: isLessThanOrEqualTo?.name,isGreaterThan: isGreaterThan?.name,isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,isNull: isNull,whereIn: _whereInList,whereNotIn: _whereNotInList,),
-    //   _collection,
-    // );
   }
 
   MovieQuery whereCast({
@@ -1282,54 +1252,23 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     Map<CastType, String>? arrayContains,
     List<Map<CastType, String>>? arrayContainsAny,
   }) {
-    List<Map<String, String>>? _enumConvertListMap(
-        List<Map<CastType, String>>? enumListMap) {
-      if (enumListMap == null) {
-        return null;
-      }
-      List<Map<String, String>>? _tmpEnumListMap;
-
-      for (var e in enumListMap) {
-        e.forEach((k, v) {
-          // TODO: Test for an enum key or enum value
-          // var _k = (k is Enum) ? k.name : k;
-          // var _v = (v is Enum) ? v.name : v;
-          var _k = k.name;
-          var _v = v;
-          _tmpEnumListMap?.add({_k: _v});
-        });
-      }
-      ;
-      return _tmpEnumListMap;
-    }
-
-    Map<String, String>? _enumConvertMap(Map<CastType, String>? enumMap) {
-      Map<String, String>? _tmpEnumMap;
-      enumMap?.forEach((k, v) {
-        _tmpEnumMap?.update(k.name, (oldVal) => v);
-      });
-      return _tmpEnumMap;
-    }
-
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$MovieFieldMap['cast']!,
-          isEqualTo: _enumConvertListMap(isEqualTo),
-          isNotEqualTo: _enumConvertListMap(isNotEqualTo),
-          isLessThan: _enumConvertListMap(isLessThan),
-          isLessThanOrEqualTo: _enumConvertListMap(isLessThanOrEqualTo),
-          isGreaterThan: _enumConvertListMap(isGreaterThan),
-          isGreaterThanOrEqualTo: _enumConvertListMap(isGreaterThanOrEqualTo),
-          isNull: isNull,
-          arrayContains: _enumConvertMap(arrayContains),
-          arrayContainsAny: _enumConvertListMap(arrayContainsAny)),
+        _$MovieFieldMap['cast']!,
+        isEqualTo: _$MoviePerFieldToJson.cast(isEqualTo),
+        isNotEqualTo: _$MoviePerFieldToJson.cast(isNotEqualTo),
+        isLessThan: _$MoviePerFieldToJson.cast(isLessThan),
+        isLessThanOrEqualTo: _$MoviePerFieldToJson.cast(isLessThanOrEqualTo),
+        isGreaterThan: _$MoviePerFieldToJson.cast(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$MoviePerFieldToJson.cast(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: _$MoviePerFieldToJson.cast(arrayContainsAny),
+      ),
       $queryCursor: $queryCursor,
     );
-    // return _$MovieQuery(
-    //   reference.where('cast', isEqualTo: _enumConvertListMap(isEqualTo),isNotEqualTo: _enumConvertListMap(isNotEqualTo),isLessThan: _enumConvertListMap(isLessThan),isLessThanOrEqualTo: _enumConvertListMap(isLessThanOrEqualTo),isGreaterThan: _enumConvertListMap(isGreaterThan),isGreaterThanOrEqualTo: _enumConvertListMap(isGreaterThanOrEqualTo),isNull: isNull,arrayContains: _enumConvertMap(arrayContains),arrayContainsAny: _enumConvertListMap(arrayContainsAny),),
-    //   _collection,
-    // );
   }
 
   MovieQuery whereMajorCast({
@@ -1346,16 +1285,21 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     return _$MovieQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$MovieFieldMap['majorCast']!,
-          isEqualTo: isEqualTo?.name,
-          isNotEqualTo: isNotEqualTo?.name,
-          isLessThan: isLessThan?.name,
-          isLessThanOrEqualTo: isLessThanOrEqualTo?.name,
-          isGreaterThan: isGreaterThan?.name,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,
-          isNull: isNull?.name,
-          whereIn: whereIn?.name,
-          whereNotIn: whereNotIn?.name),
+        _$MovieFieldMap['majorCast']!,
+        isEqualTo: _$MoviePerFieldToJson.majorCast(isEqualTo),
+        isNotEqualTo: _$MoviePerFieldToJson.majorCast(isNotEqualTo),
+        isLessThan: _$MoviePerFieldToJson.majorCast(isLessThan),
+        isLessThanOrEqualTo:
+            _$MoviePerFieldToJson.majorCast(isLessThanOrEqualTo),
+        isGreaterThan: _$MoviePerFieldToJson.majorCast(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$MoviePerFieldToJson.majorCast(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn:
+            whereIn.map((e) => _$MoviePerFieldToJson.majorCast(e)).toList(),
+        whereNotIn:
+            whereNotIn.map((e) => _$MoviePerFieldToJson.majorCast(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2863,16 +2807,17 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     return _$CommentQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2891,16 +2836,22 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     return _$CommentQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$CommentFieldMap['authorName']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$CommentFieldMap['authorName']!,
+        isEqualTo: _$CommentPerFieldToJson.authorName(isEqualTo),
+        isNotEqualTo: _$CommentPerFieldToJson.authorName(isNotEqualTo),
+        isLessThan: _$CommentPerFieldToJson.authorName(isLessThan),
+        isLessThanOrEqualTo:
+            _$CommentPerFieldToJson.authorName(isLessThanOrEqualTo),
+        isGreaterThan: _$CommentPerFieldToJson.authorName(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$CommentPerFieldToJson.authorName(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn:
+            whereIn.map((e) => _$CommentPerFieldToJson.authorName(e)).toList(),
+        whereNotIn: whereNotIn
+            .map((e) => _$CommentPerFieldToJson.authorName(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2919,16 +2870,21 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     return _$CommentQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$CommentFieldMap['message']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$CommentFieldMap['message']!,
+        isEqualTo: _$CommentPerFieldToJson.message(isEqualTo),
+        isNotEqualTo: _$CommentPerFieldToJson.message(isNotEqualTo),
+        isLessThan: _$CommentPerFieldToJson.message(isLessThan),
+        isLessThanOrEqualTo:
+            _$CommentPerFieldToJson.message(isLessThanOrEqualTo),
+        isGreaterThan: _$CommentPerFieldToJson.message(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$CommentPerFieldToJson.message(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn:
+            whereIn.map((e) => _$CommentPerFieldToJson.message(e)).toList(),
+        whereNotIn:
+            whereNotIn.map((e) => _$CommentPerFieldToJson.message(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }

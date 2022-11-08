@@ -92,7 +92,7 @@ class QueryingField {
   final DartType type;
   final String field;
   final bool updatable;
-  final String Function(String variableName) toJsonBuilder;
+  final String Function(String variableName)? toJsonBuilder;
 }
 
 class CollectionData with Names {
@@ -267,9 +267,7 @@ represents the content of the collection must be in the same file.
           annotatedElement.library!.typeProvider.stringType,
           field: 'FieldPath.documentId',
           updatable: false,
-          toJsonBuilder: (_) {
-            throw StateError('documentId should not be serialized');
-          },
+          toJsonBuilder: null,
         ),
         ...collectionTargetElement
             .allFields(

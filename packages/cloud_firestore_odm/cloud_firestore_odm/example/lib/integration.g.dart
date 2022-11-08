@@ -11,49 +11,6 @@ part of 'integration.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
-List<String>? _enumConvertList(enumList) {
-  if (enumList == null) {
-    return null;
-  }
-  List<String> _tmpEnumList = [];
-  enumList.forEach((Enum e) {
-    _tmpEnumList.add(e.name);
-  });
-  return (_tmpEnumList.length > 0) ? _tmpEnumList : null;
-}
-
-List<Map<String, String>>? _enumConvertListMap(enumListMap) {
-  if (enumListMap == null) {
-    return null;
-  }
-  List<Map<String, String>> _tmpEnumListMap = [];
-
-  for (var e in enumListMap) {
-    e.forEach((Enum k, v) {
-      // TODO: Test for an enum key or enum value
-      // var _k = (k is Enum) ? k.name : k;
-      // var _v = (v is Enum) ? v.name : v;
-      var _k = k.name;
-      var _v = v;
-      _tmpEnumListMap.add({_k: _v});
-    });
-  }
-  ;
-  return (_tmpEnumListMap.length > 0) ? _tmpEnumListMap : null;
-}
-
-Map<String, dynamic>? _enumConvertMap(enumMap) {
-  if (enumMap == null) {
-    return null;
-  }
-  Map<String, dynamic> _tmpEnumMap = {};
-
-  enumMap?.forEach((Enum k, v) {
-    _tmpEnumMap.addAll({k.name: v});
-  });
-  return (_tmpEnumMap.length > 0) ? _tmpEnumMap : null;
-}
-
 class _Sentinel {
   const _Sentinel();
 }
@@ -546,16 +503,17 @@ class _$ManualJsonQuery
     return _$ManualJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -573,16 +531,18 @@ class _$ManualJsonQuery
   }) {
     return _$ManualJsonQuery(
       _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where('value',
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        'value',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn.map((e) => e).toList(),
+        whereNotIn: whereNotIn.map((e) => e).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1361,16 +1321,17 @@ class _$AdvancedJsonQuery
     return _$AdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1389,16 +1350,23 @@ class _$AdvancedJsonQuery
     return _$AdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$AdvancedJsonFieldMap['firstName']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$AdvancedJsonFieldMap['firstName']!,
+        isEqualTo: _$AdvancedJsonPerFieldToJson.firstName(isEqualTo),
+        isNotEqualTo: _$AdvancedJsonPerFieldToJson.firstName(isNotEqualTo),
+        isLessThan: _$AdvancedJsonPerFieldToJson.firstName(isLessThan),
+        isLessThanOrEqualTo:
+            _$AdvancedJsonPerFieldToJson.firstName(isLessThanOrEqualTo),
+        isGreaterThan: _$AdvancedJsonPerFieldToJson.firstName(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$AdvancedJsonPerFieldToJson.firstName(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn
+            .map((e) => _$AdvancedJsonPerFieldToJson.firstName(e))
+            .toList(),
+        whereNotIn: whereNotIn
+            .map((e) => _$AdvancedJsonPerFieldToJson.firstName(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1417,16 +1385,23 @@ class _$AdvancedJsonQuery
     return _$AdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$AdvancedJsonFieldMap['lastName']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$AdvancedJsonFieldMap['lastName']!,
+        isEqualTo: _$AdvancedJsonPerFieldToJson.lastName(isEqualTo),
+        isNotEqualTo: _$AdvancedJsonPerFieldToJson.lastName(isNotEqualTo),
+        isLessThan: _$AdvancedJsonPerFieldToJson.lastName(isLessThan),
+        isLessThanOrEqualTo:
+            _$AdvancedJsonPerFieldToJson.lastName(isLessThanOrEqualTo),
+        isGreaterThan: _$AdvancedJsonPerFieldToJson.lastName(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$AdvancedJsonPerFieldToJson.lastName(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn
+            .map((e) => _$AdvancedJsonPerFieldToJson.lastName(e))
+            .toList(),
+        whereNotIn: whereNotIn
+            .map((e) => _$AdvancedJsonPerFieldToJson.lastName(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2293,16 +2268,17 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     return _$_PrivateAdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2321,16 +2297,25 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     return _$_PrivateAdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$PrivateAdvancedJsonFieldMap['firstName']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$PrivateAdvancedJsonFieldMap['firstName']!,
+        isEqualTo: _$PrivateAdvancedJsonPerFieldToJson.firstName(isEqualTo),
+        isNotEqualTo:
+            _$PrivateAdvancedJsonPerFieldToJson.firstName(isNotEqualTo),
+        isLessThan: _$PrivateAdvancedJsonPerFieldToJson.firstName(isLessThan),
+        isLessThanOrEqualTo:
+            _$PrivateAdvancedJsonPerFieldToJson.firstName(isLessThanOrEqualTo),
+        isGreaterThan:
+            _$PrivateAdvancedJsonPerFieldToJson.firstName(isGreaterThan),
+        isGreaterThanOrEqualTo: _$PrivateAdvancedJsonPerFieldToJson
+            .firstName(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn
+            .map((e) => _$PrivateAdvancedJsonPerFieldToJson.firstName(e))
+            .toList(),
+        whereNotIn: whereNotIn
+            .map((e) => _$PrivateAdvancedJsonPerFieldToJson.firstName(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2349,16 +2334,25 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
     return _$_PrivateAdvancedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$PrivateAdvancedJsonFieldMap['lastName']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$PrivateAdvancedJsonFieldMap['lastName']!,
+        isEqualTo: _$PrivateAdvancedJsonPerFieldToJson.lastName(isEqualTo),
+        isNotEqualTo:
+            _$PrivateAdvancedJsonPerFieldToJson.lastName(isNotEqualTo),
+        isLessThan: _$PrivateAdvancedJsonPerFieldToJson.lastName(isLessThan),
+        isLessThanOrEqualTo:
+            _$PrivateAdvancedJsonPerFieldToJson.lastName(isLessThanOrEqualTo),
+        isGreaterThan:
+            _$PrivateAdvancedJsonPerFieldToJson.lastName(isGreaterThan),
+        isGreaterThanOrEqualTo: _$PrivateAdvancedJsonPerFieldToJson
+            .lastName(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn
+            .map((e) => _$PrivateAdvancedJsonPerFieldToJson.lastName(e))
+            .toList(),
+        whereNotIn: whereNotIn
+            .map((e) => _$PrivateAdvancedJsonPerFieldToJson.lastName(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -3093,16 +3087,17 @@ class _$EmptyModelQuery
     return _$EmptyModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }

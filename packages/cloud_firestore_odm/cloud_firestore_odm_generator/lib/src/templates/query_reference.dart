@@ -9,6 +9,16 @@ import 'package:analyzer/dart/element/type_provider.dart';
 
 import '../collection_data.dart';
 
+class _WhereOperatorData {
+  _WhereOperatorData({
+    required this.type,
+    required this.toJsonBuilder,
+  });
+
+  final String type;
+  final String Function(String) toJsonBuilder;
+}
+
 class QueryTemplate {
   QueryTemplate(this.data);
 
@@ -371,39 +381,6 @@ class ${data.queryReferenceImplName}
     final buffer = StringBuffer();
 
     for (final field in data.queryableFields) {
-      final _isEnum = field.type.element?.kind == ElementKind.ENUM;
-      var _isEnumList = false;
-      var _isEnumListMap = false;
-      var _isEnumMap = false;
-
-      if (field.type.isDartCoreList) {
-        final _typeArguments = (field.type as InterfaceType).typeArguments;
-        for (final subType in _typeArguments) {
-          if (subType.isDartCoreMap) {
-            // We have something like this: Map<CastType, String>
-            // TODO: Need to get the subtypes of subtype. In this case CastTYpe
-            // and then test it to see if it is an Enum
-
-            final _mapTypeArguments = (subType as InterfaceType).typeArguments;
-            for (final subSubType in _mapTypeArguments) {
-              if (subSubType.element?.kind == ElementKind.ENUM) {
-                _isEnumListMap = true;
-              }
-              // _isEnumListMap = subSubType.element?.kind == ElementKind.ENUM;
-            }
-          } else if (subType.element?.kind == ElementKind.ENUM) {
-            _isEnumList = true;
-          }
-        }
-      } else if (field.type.isDartCoreMap) {
-        final _mapTypeArguments = (field.type as InterfaceType).typeArguments;
-        for (final subSubType in _mapTypeArguments) {
-          if (subSubType.element?.kind == ElementKind.ENUM) {
-            _isEnumMap = true;
-          }
-        }
-      }
-
       final titledNamed = field.name.replaceFirstMapped(
         RegExp('[a-zA-Z]'),
         (match) => match.group(0)!.toUpperCase(),
@@ -414,62 +391,55 @@ class ${data.queryReferenceImplName}
               ? '${field.type}'
               : '${field.type}?';
 
-      final operators = {
-        'isEqualTo': nullableType,
-        'isNotEqualTo': nullableType,
-        'isLessThan': nullableType,
-        'isLessThanOrEqualTo': nullableType,
-        'isGreaterThan': nullableType,
-        'isGreaterThanOrEqualTo': nullableType,
-        'isNull': 'bool?',
+      // Operator parameters typed as T? instead of anything fancy like List<T>
+      final identityOperatorData = _WhereOperatorData(
+        type: nullableType,
+        toJsonBuilder: field.toJsonBuilder ?? (e) => e,
+      );
+
+      final operators = <String, _WhereOperatorData>{
+        'isEqualTo': identityOperatorData,
+        'isNotEqualTo': identityOperatorData,
+        'isLessThan': identityOperatorData,
+        'isLessThanOrEqualTo': identityOperatorData,
+        'isGreaterThan': identityOperatorData,
+        'isGreaterThanOrEqualTo': identityOperatorData,
+        'isNull': _WhereOperatorData(
+          type: 'bool?',
+          toJsonBuilder: (v) => v,
+        ),
         if (field.type.isDartCoreList) ...{
-          'arrayContains': data.libraryElement.typeProvider
-              .asNullable((field.type as InterfaceType).typeArguments.first),
-          'arrayContainsAny': nullableType,
+          'arrayContains': _WhereOperatorData(
+            type: data.libraryElement.typeProvider
+                .asNullable((field.type as InterfaceType).typeArguments.first)
+                .toString(),
+            toJsonBuilder: (e) => e,
+          ),
+          'arrayContainsAny': identityOperatorData,
         } else ...{
-          'whereIn': 'List<${field.type}>?',
-          'whereNotIn': 'List<${field.type}>?',
+          'whereIn': _WhereOperatorData(
+            type: 'List<${field.type}>?',
+            toJsonBuilder: (variableName) {
+              if (field.toJsonBuilder == null) return variableName;
+              return '$variableName.map((e) => ${field.toJsonBuilder!('e')}).toList()';
+            },
+          ),
+          'whereNotIn': _WhereOperatorData(
+            type: 'List<${field.type}>?',
+            toJsonBuilder: (variableName) {
+              if (field.toJsonBuilder == null) return variableName;
+              return '$variableName.map((e) => ${field.toJsonBuilder!('e')}).toList()';
+            },
+          ),
         }
       };
 
       final prototype =
-          operators.entries.map((e) => '${e.value} ${e.key},').join();
+          operators.entries.map((e) => '${e.value.type} ${e.key},').join();
 
-      // final parameters = operators.keys.map((e) => '$e: $e').join(',');
-      final parameters = operators.keys.map((e) {
-        if (_isEnumList) {
-          if (e == 'arrayContains') {
-            return '$e: $e?.name';
-          } else if (e == 'isNull') {
-            return '$e: $e';
-          } else {
-            return '$e: _enumConvertList($e)';
-          }
-        } else if (_isEnumListMap) {
-          if (e == 'arrayContains') {
-            return '$e: _enumConvertMap($e)';
-          } else if (e == 'isNull') {
-            return '$e: $e';
-          } else {
-            return '$e: _enumConvertListMap($e)';
-          }
-        } else if (_isEnum) {
-          if (e == 'whereIn') {
-            return '$e: _whereInList';
-          } else if (e == 'whereNotIn') {
-            return '$e: _whereNotInList';
-          } else if (e == 'isNull') {
-            return '$e: isNull';
-          } else {
-            return '$e: $e?.name';
-          }
-        } else if (_isEnumMap) {
-          // TODO fully support a Map of Enums
-          return '$e: $e?.name';
-        } else {
-          return '$e: $e';
-        }
-      }).join(',');
+      final parameters = operators.entries
+          .map((e) => '${e.key}: ${e.value.toJsonBuilder(e.key)},')
+          .join();
 
       // TODO support whereX(isEqual: null);
       // TODO handle JsonSerializable case change and JsonKey(name: ...)
@@ -477,88 +447,6 @@ class ${data.queryReferenceImplName}
       if (isAbstract) {
         buffer.writeln(
           '${data.queryReferenceInterfaceName} where$titledNamed({$prototype});',
-        );
-      } else if (_isEnumList) {
-        buffer.writeln(
-          '''
-  ${data.queryReferenceInterfaceName} where$titledNamed({$prototype}) {
-
-    return ${data.queryReferenceImplName}(
-      _collection,
-      \$referenceWithoutCursor: \$referenceWithoutCursor.where(${field.field}, $parameters),
-      \$queryCursor: \$queryCursor,
-    );
-    // return ${data.queryReferenceImplName}(
-    //   reference.where('${field.name}', $parameters,),
-    //   _collection,
-    // );
-  }
-''',
-        );
-      } else if (_isEnumListMap) {
-        buffer.writeln(
-          '''
-  ${data.queryReferenceInterfaceName} where$titledNamed({$prototype}) {
-    List<Map<String, String>>? _enumConvertListMap($nullableType enumListMap) {
-      if (enumListMap == null) {
-        return null;
-      }
-      List<Map<String, String>>? _tmpEnumListMap;
-
-      for (var e in enumListMap) {
-        e.forEach((k,v) {
-          // TODO: Test for an enum key or enum value
-          // var _k = (k is Enum) ? k.name : k;
-          // var _v = (v is Enum) ? v.name : v;
-          var _k = k.name;
-          var _v = v;
-          _tmpEnumListMap?.add({_k: _v});
-        });
-      };
-      return _tmpEnumListMap;
-    }
-
-    Map<String, String>? _enumConvertMap(${data.libraryElement.typeProvider.asNullable((field.type as InterfaceType).typeArguments.first)} enumMap) {
-
-      Map<String, String>? _tmpEnumMap;
-      enumMap?.forEach((k,v) {
-        _tmpEnumMap?.update(k.name, (oldVal) => v);
-      });
-      return _tmpEnumMap;
-    }
-
-    return ${data.queryReferenceImplName}(
-      _collection,
-      \$referenceWithoutCursor: \$referenceWithoutCursor.where(${field.field}, $parameters),
-      \$queryCursor: \$queryCursor,
-    );
-    // return ${data.queryReferenceImplName}(
-    //   reference.where('${field.name}', $parameters,),
-    //   _collection,
-    // );
-  }
-''',
-        );
-      } else if (_isEnum) {
-        buffer.writeln(
-          '''
-  ${data.queryReferenceInterfaceName} where$titledNamed({$prototype}) {
-    List<String>? _whereInList;
-    whereIn?.forEach((e) { _whereInList?.add(e.name); });
-    List<String>? _whereNotInList;
-    whereNotIn?.forEach((e) { _whereNotInList?.add(e.name); });
-
-    return ${data.queryReferenceImplName}(
-      _collection,
-      \$referenceWithoutCursor: \$referenceWithoutCursor.where(${field.field}, $parameters),
-      \$queryCursor: \$queryCursor,
-    );
-    // return ${data.queryReferenceImplName}(
-    //   reference.where('${field.name}', $parameters,),
-    //   _collection,
-    // );
-  }
-''',
         );
       } else {
         buffer.writeln(

@@ -11,49 +11,6 @@ part of 'freezed.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
-List<String>? _enumConvertList(enumList) {
-  if (enumList == null) {
-    return null;
-  }
-  List<String> _tmpEnumList = [];
-  enumList.forEach((Enum e) {
-    _tmpEnumList.add(e.name);
-  });
-  return (_tmpEnumList.length > 0) ? _tmpEnumList : null;
-}
-
-List<Map<String, String>>? _enumConvertListMap(enumListMap) {
-  if (enumListMap == null) {
-    return null;
-  }
-  List<Map<String, String>> _tmpEnumListMap = [];
-
-  for (var e in enumListMap) {
-    e.forEach((Enum k, v) {
-      // TODO: Test for an enum key or enum value
-      // var _k = (k is Enum) ? k.name : k;
-      // var _v = (v is Enum) ? v.name : v;
-      var _k = k.name;
-      var _v = v;
-      _tmpEnumListMap.add({_k: _v});
-    });
-  }
-  ;
-  return (_tmpEnumListMap.length > 0) ? _tmpEnumListMap : null;
-}
-
-Map<String, dynamic>? _enumConvertMap(enumMap) {
-  if (enumMap == null) {
-    return null;
-  }
-  Map<String, dynamic> _tmpEnumMap = {};
-
-  enumMap?.forEach((Enum k, v) {
-    _tmpEnumMap.addAll({k.name: v});
-  });
-  return (_tmpEnumMap.length > 0) ? _tmpEnumMap : null;
-}
-
 class _Sentinel {
   const _Sentinel();
 }
@@ -584,16 +541,17 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
     return _$PersonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -612,16 +570,17 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
     return _$PersonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$$_PersonFieldMap['firstName']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$$_PersonFieldMap['firstName']!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn.map((e) => e).toList(),
+        whereNotIn: whereNotIn.map((e) => e).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -640,16 +599,17 @@ class _$PersonQuery extends QueryReference<Person, PersonQuerySnapshot>
     return _$PersonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$$_PersonFieldMap['lastName']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$$_PersonFieldMap['lastName']!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn.map((e) => e).toList(),
+        whereNotIn: whereNotIn.map((e) => e).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1456,16 +1416,17 @@ class _$PublicRedirectedQuery
     return _$PublicRedirectedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1484,16 +1445,17 @@ class _$PublicRedirectedQuery
     return _$PublicRedirectedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$$PublicRedirected2FieldMap['value']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$$PublicRedirected2FieldMap['value']!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn.map((e) => e).toList(),
+        whereNotIn: whereNotIn.map((e) => e).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
