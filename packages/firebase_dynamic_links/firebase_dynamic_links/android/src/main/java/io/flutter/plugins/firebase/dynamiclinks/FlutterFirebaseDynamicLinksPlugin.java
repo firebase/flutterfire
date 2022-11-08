@@ -91,7 +91,7 @@ public class FlutterFirebaseDynamicLinksPlugin
 
   static FirebaseDynamicLinks getDynamicLinkInstance(@Nullable Map<String, Object> arguments) {
     if (arguments != null) {
-      String appName = (String) arguments.get(io.flutter.plugins.firebase.dynamiclinks.Constants.APP_NAME);
+      String appName = (String) arguments.get(Constants.APP_NAME);
       if (appName != null) {
         FirebaseApp app = FirebaseApp.getInstance(appName);
         return FirebaseDynamicLinks.getInstance(app);
@@ -149,7 +149,7 @@ public class FlutterFirebaseDynamicLinksPlugin
           } else {
             Exception exception = task.getException();
             result.error(
-                io.flutter.plugins.firebase.dynamiclinks.Constants.DEFAULT_ERROR_CODE,
+                Constants.DEFAULT_ERROR_CODE,
                 exception != null ? exception.getMessage() : null,
                 Utils.getExceptionDetails(exception));
           }
