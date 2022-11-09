@@ -6,7 +6,9 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -66,7 +68,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       'appName': app.name,
     }).then((channelName) {
       final events = EventChannel(channelName!, channel.codec);
-      events.receiveBroadcastStream().listen(
+      events
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
+          .listen(
         (arguments) {
           _handleIdTokenChangesListener(app.name, arguments);
         },
@@ -77,7 +81,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       'appName': app.name,
     }).then((channelName) {
       final events = EventChannel(channelName!, channel.codec);
-      events.receiveBroadcastStream().listen(
+      events
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
+          .listen(
         (arguments) {
           _handleAuthStateChangesListener(app.name, arguments);
         },
@@ -573,14 +579,23 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<UserCredentialPlatform> signInWithAuthProvider(
+  Future<UserCredentialPlatform> signInWithProvider(
     AuthProvider provider,
   ) async {
     try {
+      // To extract scopes and custom parameters from the provider
+      final convertedProvider = convertToOAuthProvider(provider);
+
       Map<String, dynamic> data =
           (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#signInWithAuthProvider',
-              _withChannelDefaults({'signInProvider': provider.providerId})))!;
+              'Auth#signInWithProvider',
+              _withChannelDefaults({
+                'signInProvider': convertedProvider.providerId,
+                if (convertedProvider is OAuthProvider) ...{
+                  'scopes': convertedProvider.scopes,
+                  'customParameters': convertedProvider.parameters
+                },
+              })))!;
 
       MethodChannelUserCredential userCredential =
           MethodChannelUserCredential(this, data);
@@ -626,7 +641,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           }));
 
       EventChannel(eventChannelName!)
-          .receiveBroadcastStream()
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
           .listen((arguments) {
         final name = arguments['name'];
         if (name == 'Auth#phoneVerificationCompleted') {

@@ -67,6 +67,9 @@ dynamic jsify(
   Object? Function(Object? object)? customJsify,
 ]) {
   if (_isBasicType(dartObject)) {
+    if (dartObject == null) {
+      return null;
+    }
     return dartObject;
   }
 

@@ -34,9 +34,9 @@ void main() {
       expect(batch, isInstanceOf<WriteBatchPlatform>());
     });
 
-    test('verifyExtends()', () {
+    test('verify()', () {
       final batch = TestWriteBatch._();
-      WriteBatchPlatform.verifyExtends(batch);
+      WriteBatchPlatform.verify(batch);
       expect(batch, isInstanceOf<WriteBatchPlatform>());
     });
 

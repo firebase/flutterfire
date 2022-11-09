@@ -1,8 +1,16 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'firebase_options.dart';
+
+const kWebRecaptchaSiteKey = '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +21,8 @@ Future<void> main() async {
   await FirebaseAppCheck.instance
       // Your personal reCaptcha public key goes here:
       .activate(
-    webRecaptchaSiteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
+    androidProvider: AndroidProvider.debug,
+    webRecaptchaSiteKey: kWebRecaptchaSiteKey,
   );
 
   runApp(MyApp());
@@ -78,12 +87,33 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
           children: [
             ElevatedButton(
               onPressed: () async {
+                // Use this button to check whether the request was validated on the Firebase console
+                // Gets first document in collection
+                final result = await FirebaseFirestore.instance
+                    .collection('flutter-tests')
+                    .limit(1)
+                    .get();
+
+                if (result.docs.isNotEmpty) {
+                  setMessage('Document found');
+                } else {
+                  setMessage(
+                    'Document not found, please add a document to the collection',
+                  );
+                }
+              },
+              child: const Text('Test App Check validates requests'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
                 if (kIsWeb) {
                   print(
                     'Pass in your "webRecaptchaSiteKey" key found on you Firebase Console to activate if using on the web platform.',
                   );
                 }
-                await appCheck.activate();
+                await appCheck.activate(
+                  webRecaptchaSiteKey: kWebRecaptchaSiteKey,
+                );
                 setMessage('activated!!');
               },
               child: const Text('activate()'),

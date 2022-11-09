@@ -177,8 +177,6 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   Future<void> linkWithRedirect(AuthProvider provider) => handleThenable(
       auth_interop.linkWithRedirect(jsObject, provider.jsObject));
 
-  // FYI: as of 2017-07-03 – the return type of this guy is documented as
-  // Promise (Future)<nothing> - Filed a bug internally.
   /// Re-authenticates a user using a fresh credential, and returns any
   /// available additional user information, such as user name.
   Future<UserCredential> reauthenticateWithCredential(
@@ -899,6 +897,11 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
   auth_interop.OAuthCredential credential(
           auth_interop.OAuthCredentialOptions credentialOptions) =>
       jsObject.credential(credentialOptions);
+
+  /// Used to extract the underlying OAuthCredential from a UserCredential.
+  static auth_interop.OAuthCredential? credentialFromResult(
+          auth_interop.UserCredentialJsImpl userCredential) =>
+      auth_interop.OAuthProviderJsImpl.credentialFromResult(userCredential);
 }
 
 /// Twitter auth provider.
@@ -1080,9 +1083,6 @@ class UserCredential
     extends JsObjectWrapper<auth_interop.UserCredentialJsImpl> {
   /// Returns the user.
   User? get user => User.getInstance(jsObject.user);
-
-  /// Returns the auth credential.
-  auth_interop.OAuthCredential get credential => jsObject.credential;
 
   /// Returns the operation type.
   String get operationType => jsObject.operationType;

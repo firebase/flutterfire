@@ -1,3 +1,46 @@
+## 0.7.0+4
+
+ - Update a dependency to the latest release.
+
+## 0.7.0+3
+
+ - Update a dependency to the latest release.
+
+## 0.7.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.7.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.7.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 0.6.0+27
+
+ - Update a dependency to the latest release.
+
+## 0.6.0+26
+
+ - Update a dependency to the latest release.
+
+## 0.6.0+25
+
+ - Update a dependency to the latest release.
+
+## 0.6.0+24
+
+ - Update a dependency to the latest release.
+
+## 0.6.0+23
+
+ - **REFACTOR**: update deprecated `Tasks.call()` to `TaskCompletionSource` API ([#9407](https://github.com/firebase/flutterfire/pull/9407)). ([837d68ea](https://github.com/firebase/flutterfire/commit/bb9b3b23c683d28730a1952f54384caed78674d7))
+ - Update a dependency to the latest release.
+
 ## 0.6.0+22
 
  - Update a dependency to the latest release.

@@ -1,5 +1,11 @@
-Project: /docs/_project.yaml
+Project: /docs/cloud-messaging/_project.yaml
 Book: /docs/_book.yaml
+page_type: guide
+
+{% include "_shared/apis/console/_local_variables.html" %}
+{% include "_local_variables.html" %}
+{% include "docs/cloud-messaging/_local_variables.html" %}
+{% include "docs/android/_local_variables.html" %}
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
@@ -58,25 +64,8 @@ final fcmToken = await FirebaseMessaging.instance.getToken();
 
 ## Send a test notification message
 
-1. Install and run the app on the target device. On Apple devices, you'll need
-   to accept the request for permission to receive remote notifications.
-
-1. Make sure the app is in the background on the device.
-
-1. Open the <a href="//console.firebase.google.com/project/_/notification">
-Notifications composer</a> and select **New notification**.
-
-1. Enter the message text.
-
-1. Select **Send test message**.
-
-1. In the field labeled **Add an FCM registration token**, enter the
-   registration token you obtained in a previous section of this guide.
-
-1. Click **Test**
-
-After you click **Test**, the targeted client device (with the app in
-the background) should receive the notification.
+{# Google-internal include #}
+<<../_send-to-device.md>>
 
 For insight into message delivery to your app, see the
 <a href="//console.firebase.google.com/project/_/notification/reporting">FCM reporting dashboard</a>,

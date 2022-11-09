@@ -3,6 +3,1743 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-11-03
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.0.4`](#cloud_firestore---v404)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.39`](#cloud_firestore_odm_generator---v100-dev39)
+ - [`cloud_firestore_platform_interface` - `v5.8.4`](#cloud_firestore_platform_interface---v584)
+ - [`cloud_firestore_web` - `v3.0.4`](#cloud_firestore_web---v304)
+ - [`firebase_auth_web` - `v5.1.1`](#firebase_auth_web---v511)
+ - [`firebase_ui_auth` - `v1.0.4`](#firebase_ui_auth---v104)
+ - [`firebase_ui_oauth_apple` - `v1.0.4`](#firebase_ui_oauth_apple---v104)
+ - [`flutterfire_ui` - `v0.4.3+19`](#flutterfire_ui---v04319)
+ - [`firebase_ui_firestore` - `v1.0.4`](#firebase_ui_firestore---v104)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.39`](#cloud_firestore_odm---v100-dev39)
+ - [`_flutterfire_internals` - `v1.0.7`](#_flutterfire_internals---v107)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.1+24`](#firebase_in_app_messaging_platform_interface---v02124)
+ - [`firebase_remote_config_platform_interface` - `v1.1.24`](#firebase_remote_config_platform_interface---v1124)
+ - [`firebase_crashlytics_platform_interface` - `v3.3.5`](#firebase_crashlytics_platform_interface---v335)
+ - [`firebase_performance_web` - `v0.1.1+13`](#firebase_performance_web---v01113)
+ - [`firebase_storage_web` - `v3.3.14`](#firebase_storage_web---v3314)
+ - [`firebase_app_check_web` - `v0.0.7+6`](#firebase_app_check_web---v0076)
+ - [`firebase_app_installations_web` - `v0.1.1+13`](#firebase_app_installations_web---v01113)
+ - [`firebase_messaging_web` - `v3.2.5`](#firebase_messaging_web---v325)
+ - [`firebase_analytics_web` - `v0.5.1+3`](#firebase_analytics_web---v0513)
+ - [`firebase_performance_platform_interface` - `v0.1.1+24`](#firebase_performance_platform_interface---v01124)
+ - [`firebase_app_check_platform_interface` - `v0.0.5+6`](#firebase_app_check_platform_interface---v0056)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.3+20`](#firebase_dynamic_links_platform_interface---v02320)
+ - [`firebase_auth_platform_interface` - `v6.11.1`](#firebase_auth_platform_interface---v6111)
+ - [`firebase_app_installations_platform_interface` - `v0.1.1+24`](#firebase_app_installations_platform_interface---v01124)
+ - [`firebase_messaging_platform_interface` - `v4.2.5`](#firebase_messaging_platform_interface---v425)
+ - [`firebase_analytics_platform_interface` - `v3.3.12`](#firebase_analytics_platform_interface---v3312)
+ - [`firebase_database_platform_interface` - `v0.2.2+12`](#firebase_database_platform_interface---v02212)
+ - [`firebase_in_app_messaging` - `v0.7.0+4`](#firebase_in_app_messaging---v0704)
+ - [`firebase_remote_config_web` - `v1.1.13`](#firebase_remote_config_web---v1113)
+ - [`firebase_remote_config` - `v3.0.4`](#firebase_remote_config---v304)
+ - [`firebase_crashlytics` - `v3.0.4`](#firebase_crashlytics---v304)
+ - [`firebase_performance` - `v0.9.0+4`](#firebase_performance---v0904)
+ - [`firebase_storage` - `v11.0.4`](#firebase_storage---v1104)
+ - [`firebase_app_check` - `v0.1.1+3`](#firebase_app_check---v0113)
+ - [`firebase_app_installations` - `v0.2.1+3`](#firebase_app_installations---v0213)
+ - [`firebase_messaging` - `v14.0.4`](#firebase_messaging---v1404)
+ - [`firebase_analytics` - `v10.0.4`](#firebase_analytics---v1004)
+ - [`firebase_dynamic_links` - `v5.0.4`](#firebase_dynamic_links---v504)
+ - [`firebase_auth` - `v4.1.1`](#firebase_auth---v411)
+ - [`firebase_database` - `v10.0.4`](#firebase_database---v1004)
+ - [`firebase_database_web` - `v0.2.1+14`](#firebase_database_web---v02114)
+ - [`firebase_ui_oauth` - `v1.0.4`](#firebase_ui_oauth---v104)
+ - [`firebase_ui_oauth_facebook` - `v1.0.4`](#firebase_ui_oauth_facebook---v104)
+ - [`firebase_ui_oauth_google` - `v1.0.4`](#firebase_ui_oauth_google---v104)
+ - [`firebase_ui_oauth_twitter` - `v1.0.4`](#firebase_ui_oauth_twitter---v104)
+ - [`firebase_ui_database` - `v1.0.4`](#firebase_ui_database---v104)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.3+19`
+ - `firebase_ui_firestore` - `v1.0.4`
+ - `cloud_firestore_odm` - `v1.0.0-dev.39`
+ - `_flutterfire_internals` - `v1.0.7`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.1+24`
+ - `firebase_remote_config_platform_interface` - `v1.1.24`
+ - `firebase_crashlytics_platform_interface` - `v3.3.5`
+ - `firebase_performance_web` - `v0.1.1+13`
+ - `firebase_storage_web` - `v3.3.14`
+ - `firebase_app_check_web` - `v0.0.7+6`
+ - `firebase_app_installations_web` - `v0.1.1+13`
+ - `firebase_messaging_web` - `v3.2.5`
+ - `firebase_analytics_web` - `v0.5.1+3`
+ - `firebase_performance_platform_interface` - `v0.1.1+24`
+ - `firebase_app_check_platform_interface` - `v0.0.5+6`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.3+20`
+ - `firebase_auth_platform_interface` - `v6.11.1`
+ - `firebase_app_installations_platform_interface` - `v0.1.1+24`
+ - `firebase_messaging_platform_interface` - `v4.2.5`
+ - `firebase_analytics_platform_interface` - `v3.3.12`
+ - `firebase_database_platform_interface` - `v0.2.2+12`
+ - `firebase_in_app_messaging` - `v0.7.0+4`
+ - `firebase_remote_config_web` - `v1.1.13`
+ - `firebase_remote_config` - `v3.0.4`
+ - `firebase_crashlytics` - `v3.0.4`
+ - `firebase_performance` - `v0.9.0+4`
+ - `firebase_storage` - `v11.0.4`
+ - `firebase_app_check` - `v0.1.1+3`
+ - `firebase_app_installations` - `v0.2.1+3`
+ - `firebase_messaging` - `v14.0.4`
+ - `firebase_analytics` - `v10.0.4`
+ - `firebase_dynamic_links` - `v5.0.4`
+ - `firebase_auth` - `v4.1.1`
+ - `firebase_database` - `v10.0.4`
+ - `firebase_database_web` - `v0.2.1+14`
+ - `firebase_ui_oauth` - `v1.0.4`
+ - `firebase_ui_oauth_facebook` - `v1.0.4`
+ - `firebase_ui_oauth_google` - `v1.0.4`
+ - `firebase_ui_oauth_twitter` - `v1.0.4`
+ - `firebase_ui_database` - `v1.0.4`
+
+---
+
+#### `cloud_firestore` - `v4.0.4`
+
+ - **FIX**: fix aggregated count to use the current query and not only the collection on Web ([#9824](https://github.com/firebase/flutterfire/issues/9824)). ([ada39355](https://github.com/firebase/flutterfire/commit/ada39355722e316217934ad8cf1dfa789e47f058))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.39`
+
+ - **FIX**: Upgrade analyzer version. ([#9828](https://github.com/firebase/flutterfire/issues/9828)). ([b7f5887d](https://github.com/firebase/flutterfire/commit/b7f5887d76ba11de5041f39d2bb5fdcb8aec288d))
+
+#### `cloud_firestore_platform_interface` - `v5.8.4`
+
+ - **FIX**: fix aggregated count to use the current query and not only the collection on Web ([#9824](https://github.com/firebase/flutterfire/issues/9824)). ([ada39355](https://github.com/firebase/flutterfire/commit/ada39355722e316217934ad8cf1dfa789e47f058))
+
+#### `cloud_firestore_web` - `v3.0.4`
+
+ - **FIX**: fix aggregated count to use the current query and not only the collection on Web ([#9824](https://github.com/firebase/flutterfire/issues/9824)). ([ada39355](https://github.com/firebase/flutterfire/commit/ada39355722e316217934ad8cf1dfa789e47f058))
+
+#### `firebase_auth_web` - `v5.1.1`
+
+ - **FIX**: use correct UTC time from server for _webUser.metadata.creationTime & _webUser.metadata.lastSignInTime ([#9789](https://github.com/firebase/flutterfire/issues/9789)). ([44ac2a36](https://github.com/firebase/flutterfire/commit/44ac2a3665a1006d444b4725c131ad4f084fe3d1))
+
+#### `firebase_ui_auth` - `v1.0.4`
+
+ - **FIX**: set default scope to 'email' and add a way to provide custom scopes ([#9784](https://github.com/firebase/flutterfire/issues/9784)). ([19a54edc](https://github.com/firebase/flutterfire/commit/19a54edc5921e567cfc22f1f55240c2f0b5fa56c))
+
+#### `firebase_ui_oauth_apple` - `v1.0.4`
+
+ - **FIX**: set default scope to 'email' and add a way to provide custom scopes ([#9784](https://github.com/firebase/flutterfire/issues/9784)). ([19a54edc](https://github.com/firebase/flutterfire/commit/19a54edc5921e567cfc22f1f55240c2f0b5fa56c))
+
+
+## 2022-10-27
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.0.3`](#cloud_firestore---v403)
+ - [`cloud_firestore_platform_interface` - `v5.8.3`](#cloud_firestore_platform_interface---v583)
+ - [`cloud_functions` - `v4.0.3`](#cloud_functions---v403)
+ - [`cloud_functions_platform_interface` - `v5.1.22`](#cloud_functions_platform_interface---v5122)
+ - [`firebase_analytics_platform_interface` - `v3.3.11`](#firebase_analytics_platform_interface---v3311)
+ - [`firebase_app_check` - `v0.1.1+2`](#firebase_app_check---v0112)
+ - [`firebase_app_check_platform_interface` - `v0.0.5+5`](#firebase_app_check_platform_interface---v0055)
+ - [`firebase_app_installations` - `v0.2.1+2`](#firebase_app_installations---v0212)
+ - [`firebase_app_installations_platform_interface` - `v0.1.1+23`](#firebase_app_installations_platform_interface---v01123)
+ - [`firebase_auth` - `v4.1.0`](#firebase_auth---v410)
+ - [`firebase_auth_platform_interface` - `v6.11.0`](#firebase_auth_platform_interface---v6110)
+ - [`firebase_auth_web` - `v5.1.0`](#firebase_auth_web---v510)
+ - [`firebase_core` - `v2.1.1`](#firebase_core---v211)
+ - [`firebase_core_platform_interface` - `v4.5.2`](#firebase_core_platform_interface---v452)
+ - [`firebase_crashlytics` - `v3.0.3`](#firebase_crashlytics---v303)
+ - [`firebase_crashlytics_platform_interface` - `v3.3.4`](#firebase_crashlytics_platform_interface---v334)
+ - [`firebase_database` - `v10.0.3`](#firebase_database---v1003)
+ - [`firebase_database_platform_interface` - `v0.2.2+11`](#firebase_database_platform_interface---v02211)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.3+19`](#firebase_dynamic_links_platform_interface---v02319)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.1+23`](#firebase_in_app_messaging_platform_interface---v02123)
+ - [`firebase_messaging` - `v14.0.3`](#firebase_messaging---v1403)
+ - [`firebase_messaging_platform_interface` - `v4.2.4`](#firebase_messaging_platform_interface---v424)
+ - [`firebase_ml_model_downloader` - `v0.2.0+3`](#firebase_ml_model_downloader---v0203)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.1+22`](#firebase_ml_model_downloader_platform_interface---v01122)
+ - [`firebase_performance` - `v0.9.0+3`](#firebase_performance---v0903)
+ - [`firebase_performance_platform_interface` - `v0.1.1+23`](#firebase_performance_platform_interface---v01123)
+ - [`firebase_remote_config` - `v3.0.3`](#firebase_remote_config---v303)
+ - [`firebase_remote_config_platform_interface` - `v1.1.23`](#firebase_remote_config_platform_interface---v1123)
+ - [`firebase_storage` - `v11.0.3`](#firebase_storage---v1103)
+ - [`firebase_storage_platform_interface` - `v4.1.22`](#firebase_storage_platform_interface---v4122)
+ - [`flutterfire_ui` - `v0.4.3+18`](#flutterfire_ui---v04318)
+ - [`firebase_ui_firestore` - `v1.0.3`](#firebase_ui_firestore---v103)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.38`](#cloud_firestore_odm---v100-dev38)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.38`](#cloud_firestore_odm_generator---v100-dev38)
+ - [`_flutterfire_internals` - `v1.0.6`](#_flutterfire_internals---v106)
+ - [`cloud_firestore_web` - `v3.0.3`](#cloud_firestore_web---v303)
+ - [`firebase_performance_web` - `v0.1.1+12`](#firebase_performance_web---v01112)
+ - [`firebase_storage_web` - `v3.3.13`](#firebase_storage_web---v3313)
+ - [`firebase_app_check_web` - `v0.0.7+5`](#firebase_app_check_web---v0075)
+ - [`firebase_app_installations_web` - `v0.1.1+12`](#firebase_app_installations_web---v01112)
+ - [`firebase_messaging_web` - `v3.2.4`](#firebase_messaging_web---v324)
+ - [`firebase_analytics_web` - `v0.5.1+2`](#firebase_analytics_web---v0512)
+ - [`firebase_remote_config_web` - `v1.1.12`](#firebase_remote_config_web---v1112)
+ - [`firebase_in_app_messaging` - `v0.7.0+3`](#firebase_in_app_messaging---v0703)
+ - [`firebase_analytics` - `v10.0.3`](#firebase_analytics---v1003)
+ - [`firebase_dynamic_links` - `v5.0.3`](#firebase_dynamic_links---v503)
+ - [`firebase_database_web` - `v0.2.1+13`](#firebase_database_web---v02113)
+ - [`firebase_ui_auth` - `v1.0.3`](#firebase_ui_auth---v103)
+ - [`firebase_ui_oauth_apple` - `v1.0.3`](#firebase_ui_oauth_apple---v103)
+ - [`firebase_ui_oauth` - `v1.0.3`](#firebase_ui_oauth---v103)
+ - [`firebase_ui_oauth_facebook` - `v1.0.3`](#firebase_ui_oauth_facebook---v103)
+ - [`firebase_ui_oauth_google` - `v1.0.3`](#firebase_ui_oauth_google---v103)
+ - [`firebase_ui_oauth_twitter` - `v1.0.3`](#firebase_ui_oauth_twitter---v103)
+ - [`firebase_ui_database` - `v1.0.3`](#firebase_ui_database---v103)
+ - [`cloud_functions_web` - `v4.3.11`](#cloud_functions_web---v4311)
+ - [`firebase_core_web` - `v2.0.1`](#firebase_core_web---v201)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.3+18`
+ - `firebase_ui_firestore` - `v1.0.3`
+ - `cloud_firestore_odm` - `v1.0.0-dev.38`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.38`
+ - `_flutterfire_internals` - `v1.0.6`
+ - `cloud_firestore_web` - `v3.0.3`
+ - `firebase_performance_web` - `v0.1.1+12`
+ - `firebase_storage_web` - `v3.3.13`
+ - `firebase_app_check_web` - `v0.0.7+5`
+ - `firebase_app_installations_web` - `v0.1.1+12`
+ - `firebase_messaging_web` - `v3.2.4`
+ - `firebase_analytics_web` - `v0.5.1+2`
+ - `firebase_remote_config_web` - `v1.1.12`
+ - `firebase_in_app_messaging` - `v0.7.0+3`
+ - `firebase_analytics` - `v10.0.3`
+ - `firebase_dynamic_links` - `v5.0.3`
+ - `firebase_database_web` - `v0.2.1+13`
+ - `firebase_ui_auth` - `v1.0.3`
+ - `firebase_ui_oauth_apple` - `v1.0.3`
+ - `firebase_ui_oauth` - `v1.0.3`
+ - `firebase_ui_oauth_facebook` - `v1.0.3`
+ - `firebase_ui_oauth_google` - `v1.0.3`
+ - `firebase_ui_oauth_twitter` - `v1.0.3`
+ - `firebase_ui_database` - `v1.0.3`
+ - `cloud_functions_web` - `v4.3.11`
+ - `firebase_core_web` - `v2.0.1`
+
+---
+
+#### `cloud_firestore` - `v4.0.3`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `cloud_firestore_platform_interface` - `v5.8.3`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `cloud_functions` - `v4.0.3`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `cloud_functions_platform_interface` - `v5.1.22`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_analytics_platform_interface` - `v3.3.11`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_app_check` - `v0.1.1+2`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_app_check_platform_interface` - `v0.0.5+5`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_app_installations` - `v0.2.1+2`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_app_installations_platform_interface` - `v0.1.1+23`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_auth` - `v4.1.0`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+ - **FIX**: properly propagate the `FirebaseAuthMultiFactorException` for all reauthenticate and link methods ([#9700](https://github.com/firebase/flutterfire/issues/9700)). ([9ad97c82](https://github.com/firebase/flutterfire/commit/9ad97c82ead0f5c6f1307625374c34e0dcde730b))
+ - **FEAT**: expose reauthenticateWithRedirect and reauthenticateWithPopup ([#9696](https://github.com/firebase/flutterfire/issues/9696)). ([2a1f910f](https://github.com/firebase/flutterfire/commit/2a1f910ff6cab21a126c62fd4322a14ec263b629))
+
+#### `firebase_auth_platform_interface` - `v6.11.0`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+ - **FEAT**: expose reauthenticateWithRedirect and reauthenticateWithPopup ([#9696](https://github.com/firebase/flutterfire/issues/9696)). ([2a1f910f](https://github.com/firebase/flutterfire/commit/2a1f910ff6cab21a126c62fd4322a14ec263b629))
+
+#### `firebase_auth_web` - `v5.1.0`
+
+ - **FIX**: properly propagate the `FirebaseAuthMultiFactorException` for all reauthenticate and link methods ([#9700](https://github.com/firebase/flutterfire/issues/9700)). ([9ad97c82](https://github.com/firebase/flutterfire/commit/9ad97c82ead0f5c6f1307625374c34e0dcde730b))
+ - **FEAT**: expose reauthenticateWithRedirect and reauthenticateWithPopup ([#9696](https://github.com/firebase/flutterfire/issues/9696)). ([2a1f910f](https://github.com/firebase/flutterfire/commit/2a1f910ff6cab21a126c62fd4322a14ec263b629))
+
+#### `firebase_core` - `v2.1.1`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_core_platform_interface` - `v4.5.2`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_crashlytics` - `v3.0.3`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+ - **DOCS**: Use `PlatformDispatcher.instance.onError` for async errors. Update Crashlytics example app to use "flutterfire-e2e-tests" project. ([#9669](https://github.com/firebase/flutterfire/issues/9669)). ([8a0caa05](https://github.com/firebase/flutterfire/commit/8a0caa05d5abf6fef5bf0e654654dcd0b6ec874a))
+
+#### `firebase_crashlytics_platform_interface` - `v3.3.4`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_database` - `v10.0.3`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_database_platform_interface` - `v0.2.2+11`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_dynamic_links_platform_interface` - `v0.2.3+19`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_in_app_messaging_platform_interface` - `v0.2.1+23`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_messaging` - `v14.0.3`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_messaging_platform_interface` - `v4.2.4`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_ml_model_downloader` - `v0.2.0+3`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_ml_model_downloader_platform_interface` - `v0.1.1+22`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_performance` - `v0.9.0+3`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_performance_platform_interface` - `v0.1.1+23`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_remote_config` - `v3.0.3`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_remote_config_platform_interface` - `v1.1.23`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_storage` - `v11.0.3`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+#### `firebase_storage_platform_interface` - `v4.1.22`
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+
+## 2022-10-20
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_core` - `v2.1.0`](#firebase_core---v210)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.37`](#cloud_firestore_odm---v100-dev37)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.37`](#cloud_firestore_odm_generator---v100-dev37)
+ - [`firebase_ui_auth` - `v1.0.2`](#firebase_ui_auth---v102)
+ - [`flutterfire_ui` - `v0.4.3+17`](#flutterfire_ui---v04317)
+ - [`firebase_database_web` - `v0.2.1+12`](#firebase_database_web---v02112)
+ - [`cloud_firestore_web` - `v3.0.2`](#cloud_firestore_web---v302)
+ - [`firebase_performance` - `v0.9.0+2`](#firebase_performance---v0902)
+ - [`firebase_app_check` - `v0.1.1+1`](#firebase_app_check---v0111)
+ - [`firebase_storage` - `v11.0.2`](#firebase_storage---v1102)
+ - [`firebase_dynamic_links` - `v5.0.2`](#firebase_dynamic_links---v502)
+ - [`firebase_in_app_messaging` - `v0.7.0+2`](#firebase_in_app_messaging---v0702)
+ - [`firebase_analytics` - `v10.0.2`](#firebase_analytics---v1002)
+ - [`firebase_app_installations` - `v0.2.1+1`](#firebase_app_installations---v0211)
+ - [`firebase_storage_platform_interface` - `v4.1.21`](#firebase_storage_platform_interface---v4121)
+ - [`firebase_messaging` - `v14.0.2`](#firebase_messaging---v1402)
+ - [`firebase_performance_platform_interface` - `v0.1.1+22`](#firebase_performance_platform_interface---v01122)
+ - [`firebase_app_check_platform_interface` - `v0.0.5+4`](#firebase_app_check_platform_interface---v0054)
+ - [`firebase_app_installations_platform_interface` - `v0.1.1+22`](#firebase_app_installations_platform_interface---v01122)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.3+18`](#firebase_dynamic_links_platform_interface---v02318)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.1+22`](#firebase_in_app_messaging_platform_interface---v02122)
+ - [`firebase_analytics_platform_interface` - `v3.3.10`](#firebase_analytics_platform_interface---v3310)
+ - [`firebase_messaging_platform_interface` - `v4.2.3`](#firebase_messaging_platform_interface---v423)
+ - [`firebase_remote_config_web` - `v1.1.11`](#firebase_remote_config_web---v1111)
+ - [`firebase_auth_web` - `v5.0.2`](#firebase_auth_web---v502)
+ - [`cloud_functions` - `v4.0.2`](#cloud_functions---v402)
+ - [`cloud_functions_web` - `v4.3.10`](#cloud_functions_web---v4310)
+ - [`firebase_database_platform_interface` - `v0.2.2+10`](#firebase_database_platform_interface---v02210)
+ - [`cloud_firestore_platform_interface` - `v5.8.2`](#cloud_firestore_platform_interface---v582)
+ - [`_flutterfire_internals` - `v1.0.5`](#_flutterfire_internals---v105)
+ - [`firebase_crashlytics` - `v3.0.2`](#firebase_crashlytics---v302)
+ - [`firebase_remote_config` - `v3.0.2`](#firebase_remote_config---v302)
+ - [`firebase_ml_model_downloader` - `v0.2.0+2`](#firebase_ml_model_downloader---v0202)
+ - [`firebase_auth` - `v4.0.2`](#firebase_auth---v402)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.1+21`](#firebase_ml_model_downloader_platform_interface---v01121)
+ - [`firebase_remote_config_platform_interface` - `v1.1.22`](#firebase_remote_config_platform_interface---v1122)
+ - [`firebase_crashlytics_platform_interface` - `v3.3.3`](#firebase_crashlytics_platform_interface---v333)
+ - [`firebase_auth_platform_interface` - `v6.10.4`](#firebase_auth_platform_interface---v6104)
+ - [`firebase_performance_web` - `v0.1.1+11`](#firebase_performance_web---v01111)
+ - [`firebase_app_installations_web` - `v0.1.1+11`](#firebase_app_installations_web---v01111)
+ - [`firebase_app_check_web` - `v0.0.7+4`](#firebase_app_check_web---v0074)
+ - [`firebase_messaging_web` - `v3.2.3`](#firebase_messaging_web---v323)
+ - [`firebase_storage_web` - `v3.3.12`](#firebase_storage_web---v3312)
+ - [`firebase_analytics_web` - `v0.5.1+1`](#firebase_analytics_web---v0511)
+ - [`firebase_database` - `v10.0.2`](#firebase_database---v1002)
+ - [`cloud_firestore` - `v4.0.2`](#cloud_firestore---v402)
+ - [`cloud_functions_platform_interface` - `v5.1.21`](#cloud_functions_platform_interface---v5121)
+ - [`firebase_ui_oauth` - `v1.0.2`](#firebase_ui_oauth---v102)
+ - [`firebase_ui_oauth_apple` - `v1.0.2`](#firebase_ui_oauth_apple---v102)
+ - [`firebase_ui_oauth_google` - `v1.0.2`](#firebase_ui_oauth_google---v102)
+ - [`firebase_ui_oauth_facebook` - `v1.0.2`](#firebase_ui_oauth_facebook---v102)
+ - [`firebase_ui_oauth_twitter` - `v1.0.2`](#firebase_ui_oauth_twitter---v102)
+ - [`firebase_ui_database` - `v1.0.2`](#firebase_ui_database---v102)
+ - [`firebase_ui_firestore` - `v1.0.2`](#firebase_ui_firestore---v102)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_database_web` - `v0.2.1+12`
+ - `cloud_firestore_web` - `v3.0.2`
+ - `firebase_performance` - `v0.9.0+2`
+ - `firebase_app_check` - `v0.1.1+1`
+ - `firebase_storage` - `v11.0.2`
+ - `firebase_dynamic_links` - `v5.0.2`
+ - `firebase_in_app_messaging` - `v0.7.0+2`
+ - `firebase_analytics` - `v10.0.2`
+ - `firebase_app_installations` - `v0.2.1+1`
+ - `firebase_storage_platform_interface` - `v4.1.21`
+ - `firebase_messaging` - `v14.0.2`
+ - `firebase_performance_platform_interface` - `v0.1.1+22`
+ - `firebase_app_check_platform_interface` - `v0.0.5+4`
+ - `firebase_app_installations_platform_interface` - `v0.1.1+22`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.3+18`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.1+22`
+ - `firebase_analytics_platform_interface` - `v3.3.10`
+ - `firebase_messaging_platform_interface` - `v4.2.3`
+ - `firebase_remote_config_web` - `v1.1.11`
+ - `firebase_auth_web` - `v5.0.2`
+ - `cloud_functions` - `v4.0.2`
+ - `cloud_functions_web` - `v4.3.10`
+ - `firebase_database_platform_interface` - `v0.2.2+10`
+ - `cloud_firestore_platform_interface` - `v5.8.2`
+ - `_flutterfire_internals` - `v1.0.5`
+ - `firebase_crashlytics` - `v3.0.2`
+ - `firebase_remote_config` - `v3.0.2`
+ - `firebase_ml_model_downloader` - `v0.2.0+2`
+ - `firebase_auth` - `v4.0.2`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.1+21`
+ - `firebase_remote_config_platform_interface` - `v1.1.22`
+ - `firebase_crashlytics_platform_interface` - `v3.3.3`
+ - `firebase_auth_platform_interface` - `v6.10.4`
+ - `firebase_performance_web` - `v0.1.1+11`
+ - `firebase_app_installations_web` - `v0.1.1+11`
+ - `firebase_app_check_web` - `v0.0.7+4`
+ - `firebase_messaging_web` - `v3.2.3`
+ - `firebase_storage_web` - `v3.3.12`
+ - `firebase_analytics_web` - `v0.5.1+1`
+ - `firebase_database` - `v10.0.2`
+ - `cloud_firestore` - `v4.0.2`
+ - `cloud_functions_platform_interface` - `v5.1.21`
+ - `firebase_ui_oauth` - `v1.0.2`
+ - `firebase_ui_oauth_apple` - `v1.0.2`
+ - `firebase_ui_oauth_google` - `v1.0.2`
+ - `firebase_ui_oauth_facebook` - `v1.0.2`
+ - `firebase_ui_oauth_twitter` - `v1.0.2`
+ - `firebase_ui_database` - `v1.0.2`
+ - `firebase_ui_firestore` - `v1.0.2`
+
+---
+
+#### `firebase_core` - `v2.1.0`
+
+ - **FEAT**: Firebase android SDK BOM - `31.0.1` ([#9767](https://github.com/firebase/flutterfire/issues/9767)). ([7088b2de](https://github.com/firebase/flutterfire/commit/7088b2de4198bf3d0e647fc8f2ff4165f6515387))
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.37`
+
+ - **FIX**: The ODM correctly no-longer generates query utilities for getters. ([#9766](https://github.com/firebase/flutterfire/issues/9766)). ([cfb56939](https://github.com/firebase/flutterfire/commit/cfb569395cadf6b7bcd8727b680d0b52e4e9297d))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.37`
+
+ - **FIX**: The ODM correctly no-longer generates query utilities for getters. ([#9766](https://github.com/firebase/flutterfire/issues/9766)). ([cfb56939](https://github.com/firebase/flutterfire/commit/cfb569395cadf6b7bcd8727b680d0b52e4e9297d))
+
+#### `firebase_ui_auth` - `v1.0.2`
+
+ - **DOCS**: update platform support matrix ([#9764](https://github.com/firebase/flutterfire/issues/9764)). ([dd83af99](https://github.com/firebase/flutterfire/commit/dd83af99d9e2c1ea7caf1fa7b58546c1937bc0d3))
+
+#### `flutterfire_ui` - `v0.4.3+17`
+
+ - **FIX**: update dependencies to latest. Last release as `flutterfire_ui` is deprecated and no longer supported. ([#9762](https://github.com/firebase/flutterfire/issues/9762)). ([82f5a71a](https://github.com/firebase/flutterfire/commit/82f5a71a06d1d7e7cd4bff06ddcf27aa7ede02ca))
+
+
+## 2022-10-19 Part 2
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.0.1`](#firebase_ui_auth---v101)
+ - [`firebase_ui_database` - `v1.0.1`](#firebase_ui_database---v101)
+ - [`firebase_ui_firestore` - `v1.0.1`](#firebase_ui_firestore---v101)
+ - [`firebase_ui_localizations` - `v1.0.1`](#firebase_ui_localizations---v101)
+ - [`firebase_ui_oauth` - `v1.0.1`](#firebase_ui_oauth---v101)
+ - [`firebase_ui_oauth_apple` - `v1.0.1`](#firebase_ui_oauth_apple---v101)
+ - [`firebase_ui_oauth_google` - `v1.0.1`](#firebase_ui_oauth_google---v101)
+ - [`firebase_ui_oauth_facebook` - `v1.0.1`](#firebase_ui_oauth_facebook---v101)
+ - [`firebase_ui_oauth_twitter` - `v1.0.1`](#firebase_ui_oauth_twitter---v101)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth_apple` - `v1.0.1`
+ - `firebase_ui_oauth_google` - `v1.0.1`
+ - `firebase_ui_oauth_facebook` - `v1.0.1`
+ - `firebase_ui_oauth_twitter` - `v1.0.1`
+
+---
+
+#### `firebase_ui_auth` - `v1.0.1`
+
+ - **FIX**: bump dependencies ([#9756](https://github.com/firebase/flutterfire/issues/9756)). ([595a7daa](https://github.com/firebase/flutterfire/commit/595a7daa3e856cad152463e543d152f71f61cee9))
+
+#### `firebase_ui_database` - `v1.0.1`
+
+ - **FIX**: bump dependencies ([#9756](https://github.com/firebase/flutterfire/issues/9756)). ([595a7daa](https://github.com/firebase/flutterfire/commit/595a7daa3e856cad152463e543d152f71f61cee9))
+
+#### `firebase_ui_firestore` - `v1.0.1`
+
+ - **FIX**: bump dependencies ([#9756](https://github.com/firebase/flutterfire/issues/9756)). ([595a7daa](https://github.com/firebase/flutterfire/commit/595a7daa3e856cad152463e543d152f71f61cee9))
+
+#### `firebase_ui_localizations` - `v1.0.1`
+
+ - **FIX**: bump dependencies ([#9756](https://github.com/firebase/flutterfire/issues/9756)). ([595a7daa](https://github.com/firebase/flutterfire/commit/595a7daa3e856cad152463e543d152f71f61cee9))
+
+#### `firebase_ui_oauth` - `v1.0.1`
+
+ - **FIX**: bump dependencies ([#9756](https://github.com/firebase/flutterfire/issues/9756)). ([595a7daa](https://github.com/firebase/flutterfire/commit/595a7daa3e856cad152463e543d152f71f61cee9))
+
+
+## 2022-10-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`firebase_ui_auth` - `v1.0.0`](#firebase_ui_auth---v100)
+ - [`firebase_ui_database` - `v1.0.0`](#firebase_ui_database---v100)
+ - [`firebase_ui_firestore` - `v1.0.0`](#firebase_ui_firestore---v100)
+ - [`firebase_ui_localizations` - `v1.0.0`](#firebase_ui_localizations---v100)
+ - [`firebase_ui_oauth` - `v1.0.0`](#firebase_ui_oauth---v100)
+ - [`firebase_ui_oauth_apple` - `v1.0.0`](#firebase_ui_oauth_apple---v100)
+ - [`firebase_ui_oauth_facebook` - `v1.0.0`](#firebase_ui_oauth_facebook---v100)
+ - [`firebase_ui_oauth_google` - `v1.0.0`](#firebase_ui_oauth_google---v100)
+ - [`firebase_ui_oauth_twitter` - `v1.0.0`](#firebase_ui_oauth_twitter---v100)
+
+Packages with other changes:
+
+ - There are no other changes in this release.
+
+Packages graduated to a stable release (see pre-releases prior to the stable version for changelog entries):
+
+ - `firebase_ui_auth` - `v1.0.0`
+ - `firebase_ui_database` - `v1.0.0`
+ - `firebase_ui_firestore` - `v1.0.0`
+ - `firebase_ui_localizations` - `v1.0.0`
+ - `firebase_ui_oauth` - `v1.0.0`
+ - `firebase_ui_oauth_apple` - `v1.0.0`
+ - `firebase_ui_oauth_facebook` - `v1.0.0`
+ - `firebase_ui_oauth_google` - `v1.0.0`
+ - `firebase_ui_oauth_twitter` - `v1.0.0`
+
+---
+
+#### `firebase_ui_auth` - `v1.0.0`
+
+#### `firebase_ui_database` - `v1.0.0`
+
+#### `firebase_ui_firestore` - `v1.0.0`
+
+#### `firebase_ui_localizations` - `v1.0.0`
+
+#### `firebase_ui_oauth` - `v1.0.0`
+
+#### `firebase_ui_oauth_apple` - `v1.0.0`
+
+#### `firebase_ui_oauth_facebook` - `v1.0.0`
+
+#### `firebase_ui_oauth_google` - `v1.0.0`
+
+#### `firebase_ui_oauth_twitter` - `v1.0.0`
+
+
+## 2022-10-18 Part 2
+
+Bumping packages to depend on `firebase_core` `2.0.0`.
+
+## 2022-10-18
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`cloud_firestore` - `v4.0.0`](#cloud_firestore---v400)
+ - [`cloud_firestore_web` - `v3.0.0`](#cloud_firestore_web---v300)
+ - [`cloud_functions` - `v4.0.0`](#cloud_functions---v400)
+ - [`firebase_analytics` - `v10.0.0`](#firebase_analytics---v1000)
+ - [`firebase_analytics_web` - `v0.5.0`](#firebase_analytics_web---v050)
+ - [`firebase_app_check` - `v0.1.0`](#firebase_app_check---v010)
+ - [`firebase_app_installations` - `v0.2.0`](#firebase_app_installations---v020)
+ - [`firebase_auth` - `v4.0.0`](#firebase_auth---v400)
+ - [`firebase_auth_web` - `v5.0.0`](#firebase_auth_web---v500)
+ - [`firebase_core` - `v2.0.0`](#firebase_core---v200)
+ - [`firebase_core_web` - `v2.0.0`](#firebase_core_web---v200)
+ - [`firebase_crashlytics` - `v3.0.0`](#firebase_crashlytics---v300)
+ - [`firebase_database` - `v10.0.0`](#firebase_database---v1000)
+ - [`firebase_dynamic_links` - `v5.0.0`](#firebase_dynamic_links---v500)
+ - [`firebase_in_app_messaging` - `v0.7.0`](#firebase_in_app_messaging---v070)
+ - [`firebase_messaging` - `v14.0.0`](#firebase_messaging---v1400)
+ - [`firebase_ml_model_downloader` - `v0.2.0`](#firebase_ml_model_downloader---v020)
+ - [`firebase_performance` - `v0.9.0`](#firebase_performance---v090)
+ - [`firebase_remote_config` - `v3.0.0`](#firebase_remote_config---v300)
+ - [`firebase_storage` - `v11.0.0`](#firebase_storage---v1100)
+
+Packages with other changes:
+
+ - [`cloud_firestore_odm` - `v1.0.0-dev.35`](#cloud_firestore_odm---v100-dev35)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.35`](#cloud_firestore_odm_generator---v100-dev35)
+ - [`cloud_firestore_platform_interface` - `v5.8.0`](#cloud_firestore_platform_interface---v580)
+ - [`firebase_ui_auth` - `v1.0.0-dev.1`](#firebase_ui_auth---v100-dev1)
+ - [`firebase_ui_database` - `v1.0.0-dev.1`](#firebase_ui_database---v100-dev1)
+ - [`firebase_ui_firestore` - `v1.0.0-dev.1`](#firebase_ui_firestore---v100-dev1)
+ - [`firebase_ui_localizations` - `v1.0.0-dev.1`](#firebase_ui_localizations---v100-dev1)
+ - [`firebase_ui_oauth` - `v1.0.0-dev.1`](#firebase_ui_oauth---v100-dev1)
+ - [`firebase_ui_oauth_apple` - `v1.0.0-dev.1`](#firebase_ui_oauth_apple---v100-dev1)
+ - [`firebase_ui_oauth_facebook` - `v1.0.0-dev.1`](#firebase_ui_oauth_facebook---v100-dev1)
+ - [`firebase_ui_oauth_google` - `v1.0.0-dev.1`](#firebase_ui_oauth_google---v100-dev1)
+ - [`firebase_ui_oauth_twitter` - `v1.0.0-dev.1`](#firebase_ui_oauth_twitter---v100-dev1)
+ - [`flutterfire_ui` - `v0.4.3+15`](#flutterfire_ui---v04315)
+ - [`_flutterfire_internals` - `v1.0.3`](#_flutterfire_internals---v103)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.1+20`](#firebase_in_app_messaging_platform_interface---v02120)
+ - [`firebase_crashlytics_platform_interface` - `v3.3.1`](#firebase_crashlytics_platform_interface---v331)
+ - [`firebase_database_platform_interface` - `v0.2.2+8`](#firebase_database_platform_interface---v0228)
+ - [`firebase_remote_config_platform_interface` - `v1.1.20`](#firebase_remote_config_platform_interface---v1120)
+ - [`firebase_auth_platform_interface` - `v6.10.2`](#firebase_auth_platform_interface---v6102)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.3+16`](#firebase_dynamic_links_platform_interface---v02316)
+ - [`firebase_messaging_web` - `v3.2.1`](#firebase_messaging_web---v321)
+ - [`firebase_messaging_platform_interface` - `v4.2.1`](#firebase_messaging_platform_interface---v421)
+ - [`firebase_app_installations_web` - `v0.1.1+9`](#firebase_app_installations_web---v0119)
+ - [`firebase_app_installations_platform_interface` - `v0.1.1+20`](#firebase_app_installations_platform_interface---v01120)
+ - [`firebase_analytics_platform_interface` - `v3.3.8`](#firebase_analytics_platform_interface---v338)
+ - [`firebase_app_check_platform_interface` - `v0.0.5+2`](#firebase_app_check_platform_interface---v0052)
+ - [`firebase_storage_web` - `v3.3.10`](#firebase_storage_web---v3310)
+ - [`firebase_app_check_web` - `v0.0.7+2`](#firebase_app_check_web---v0072)
+ - [`firebase_performance_platform_interface` - `v0.1.1+20`](#firebase_performance_platform_interface---v01120)
+ - [`firebase_performance_web` - `v0.1.1+9`](#firebase_performance_web---v0119)
+ - [`firebase_database_web` - `v0.2.1+10`](#firebase_database_web---v02110)
+ - [`firebase_remote_config_web` - `v1.1.9`](#firebase_remote_config_web---v119)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.1+19`](#firebase_ml_model_downloader_platform_interface---v01119)
+ - [`cloud_functions_web` - `v4.3.8`](#cloud_functions_web---v438)
+ - [`firebase_storage_platform_interface` - `v4.1.19`](#firebase_storage_platform_interface---v4119)
+ - [`cloud_functions_platform_interface` - `v5.1.19`](#cloud_functions_platform_interface---v5119)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.3+15`
+ - `_flutterfire_internals` - `v1.0.3`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.1+20`
+ - `firebase_crashlytics_platform_interface` - `v3.3.1`
+ - `firebase_database_platform_interface` - `v0.2.2+8`
+ - `firebase_remote_config_platform_interface` - `v1.1.20`
+ - `firebase_auth_platform_interface` - `v6.10.2`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.3+16`
+ - `firebase_messaging_web` - `v3.2.1`
+ - `firebase_messaging_platform_interface` - `v4.2.1`
+ - `firebase_app_installations_web` - `v0.1.1+9`
+ - `firebase_app_installations_platform_interface` - `v0.1.1+20`
+ - `firebase_analytics_platform_interface` - `v3.3.8`
+ - `firebase_app_check_platform_interface` - `v0.0.5+2`
+ - `firebase_storage_web` - `v3.3.10`
+ - `firebase_app_check_web` - `v0.0.7+2`
+ - `firebase_performance_platform_interface` - `v0.1.1+20`
+ - `firebase_performance_web` - `v0.1.1+9`
+ - `firebase_database_web` - `v0.2.1+10`
+ - `firebase_remote_config_web` - `v1.1.9`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.1+19`
+ - `cloud_functions_web` - `v4.3.8`
+ - `firebase_storage_platform_interface` - `v4.1.19`
+ - `cloud_functions_platform_interface` - `v5.1.19`
+
+---
+
+#### `cloud_firestore` - `v4.0.0`
+
+ - **FEAT**: `count()` feature for counting documents without retrieving documents. ([#9699](https://github.com/firebase/flutterfire/issues/9699)). ([ac0bf733](https://github.com/firebase/flutterfire/commit/ac0bf7330d7de73d0ea36c740b79a426187291d2))
+ - **FEAT**: Add namedQueryWithConverterGet ([#9715](https://github.com/firebase/flutterfire/issues/9715)). ([6d025fd4](https://github.com/firebase/flutterfire/commit/6d025fd4c89830d5975f4ed981aa0aa0777c13d8))
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `cloud_firestore_web` - `v3.0.0`
+
+ - **FEAT**: `count()` feature for counting documents without retrieving documents. ([#9699](https://github.com/firebase/flutterfire/issues/9699)). ([ac0bf733](https://github.com/firebase/flutterfire/commit/ac0bf7330d7de73d0ea36c740b79a426187291d2))
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `cloud_functions` - `v4.0.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_analytics` - `v10.0.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_analytics_web` - `v0.5.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_app_check` - `v0.1.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_app_installations` - `v0.2.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_auth` - `v4.0.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_auth_web` - `v5.0.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_core` - `v2.0.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+ - **BREAKING** **FEAT**: Firebase android SDK BOM `31.0.0` ([#9724](https://github.com/firebase/flutterfire/issues/9724)). ([29ba1a08](https://github.com/firebase/flutterfire/commit/29ba1a082e026c4f0f0913c10183a72eadb23343))
+
+#### `firebase_core_web` - `v2.0.0`
+
+ - **FEAT**: Firebase JS web SDK version: `9.11.0` ([#9742](https://github.com/firebase/flutterfire/issues/9742)). ([1829ee7d](https://github.com/firebase/flutterfire/commit/1829ee7d62625bd13f0a336d44b9ed2a701725af))
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_crashlytics` - `v3.0.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_database` - `v10.0.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_dynamic_links` - `v5.0.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_in_app_messaging` - `v0.7.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_messaging` - `v14.0.0`
+
+ - **FIX**: improve pub score ([#9722](https://github.com/firebase/flutterfire/issues/9722)). ([f27d89a1](https://github.com/firebase/flutterfire/commit/f27d89a12cbb5830eb5518854dcfbca72efedb5b))
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+ - **BREAKING** **FEAT**: Firebase android SDK BOM `31.0.0` ([#9724](https://github.com/firebase/flutterfire/issues/9724)). ([29ba1a08](https://github.com/firebase/flutterfire/commit/29ba1a082e026c4f0f0913c10183a72eadb23343))
+
+#### `firebase_ml_model_downloader` - `v0.2.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_performance` - `v0.9.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_remote_config` - `v3.0.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `firebase_storage` - `v11.0.0`
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.35`
+
+ - **FEAT**: Add support for FirebaseFirestore.myNamedQueryGet() ([#9721](https://github.com/firebase/flutterfire/issues/9721)). ([82152a00](https://github.com/firebase/flutterfire/commit/82152a0081343a6f7b7d1f5725818825e2b1191a))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.35`
+
+ - **FEAT**: Add support for FirebaseFirestore.myNamedQueryGet() ([#9721](https://github.com/firebase/flutterfire/issues/9721)). ([82152a00](https://github.com/firebase/flutterfire/commit/82152a0081343a6f7b7d1f5725818825e2b1191a))
+
+#### `cloud_firestore_platform_interface` - `v5.8.0`
+
+ - **FEAT**: `count()` feature for counting documents without retrieving documents. ([#9699](https://github.com/firebase/flutterfire/issues/9699)). ([ac0bf733](https://github.com/firebase/flutterfire/commit/ac0bf7330d7de73d0ea36c740b79a426187291d2))
+
+#### `firebase_ui_auth` - `v1.0.0-dev.1`
+
+ - **FIX**: fix reauthenticate dialog overflow ([#9734](https://github.com/firebase/flutterfire/issues/9734)). ([defaa207](https://github.com/firebase/flutterfire/commit/defaa20781512166e95cf63c73d4c27f8daa8b72))
+ - **FEAT**: add firebase_ui_auth and oauth providers ([#9343](https://github.com/firebase/flutterfire/issues/9343)). ([db5a5e1c](https://github.com/firebase/flutterfire/commit/db5a5e1c37defa47f18784176d165e3546efa778))
+
+#### `firebase_ui_database` - `v1.0.0-dev.1`
+
+ - **FIX**: improve pub score ([#9722](https://github.com/firebase/flutterfire/issues/9722)). ([f27d89a1](https://github.com/firebase/flutterfire/commit/f27d89a12cbb5830eb5518854dcfbca72efedb5b))
+ - **FEAT**: add firebase_ui_database ([#9341](https://github.com/firebase/flutterfire/issues/9341)). ([49e1beb5](https://github.com/firebase/flutterfire/commit/49e1beb514aae652c962f6b72a6539b01ca6915f))
+
+#### `firebase_ui_firestore` - `v1.0.0-dev.1`
+
+ - **FIX**: improve pub score ([#9722](https://github.com/firebase/flutterfire/issues/9722)). ([f27d89a1](https://github.com/firebase/flutterfire/commit/f27d89a12cbb5830eb5518854dcfbca72efedb5b))
+ - **FEAT**: add firebase_ui_firestore ([#9342](https://github.com/firebase/flutterfire/issues/9342)). ([75cd372b](https://github.com/firebase/flutterfire/commit/75cd372b110fb5ca65ec684f525a4333e50c450c))
+
+#### `firebase_ui_localizations` - `v1.0.0-dev.1`
+
+ - **FIX**: improve pub score ([#9722](https://github.com/firebase/flutterfire/issues/9722)). ([f27d89a1](https://github.com/firebase/flutterfire/commit/f27d89a12cbb5830eb5518854dcfbca72efedb5b))
+ - **FEAT**: generate labels from .arb ([#9340](https://github.com/firebase/flutterfire/issues/9340)). ([f3e4e991](https://github.com/firebase/flutterfire/commit/f3e4e991b0f0f57dbd0c4ff1ff6f0704d9c9a38b))
+
+#### `firebase_ui_oauth` - `v1.0.0-dev.1`
+
+ - **FEAT**: add firebase_ui_auth and oauth providers ([#9343](https://github.com/firebase/flutterfire/issues/9343)). ([db5a5e1c](https://github.com/firebase/flutterfire/commit/db5a5e1c37defa47f18784176d165e3546efa778))
+
+#### `firebase_ui_oauth_apple` - `v1.0.0-dev.1`
+
+ - **FEAT**: add firebase_ui_auth and oauth providers ([#9343](https://github.com/firebase/flutterfire/issues/9343)). ([db5a5e1c](https://github.com/firebase/flutterfire/commit/db5a5e1c37defa47f18784176d165e3546efa778))
+
+#### `firebase_ui_oauth_facebook` - `v1.0.0-dev.1`
+
+ - **FEAT**: add firebase_ui_auth and oauth providers ([#9343](https://github.com/firebase/flutterfire/issues/9343)). ([db5a5e1c](https://github.com/firebase/flutterfire/commit/db5a5e1c37defa47f18784176d165e3546efa778))
+
+#### `firebase_ui_oauth_google` - `v1.0.0-dev.1`
+
+ - **FEAT**: add firebase_ui_auth and oauth providers ([#9343](https://github.com/firebase/flutterfire/issues/9343)). ([db5a5e1c](https://github.com/firebase/flutterfire/commit/db5a5e1c37defa47f18784176d165e3546efa778))
+
+#### `firebase_ui_oauth_twitter` - `v1.0.0-dev.1`
+
+ - **FEAT**: add firebase_ui_auth and oauth providers ([#9343](https://github.com/firebase/flutterfire/issues/9343)). ([db5a5e1c](https://github.com/firebase/flutterfire/commit/db5a5e1c37defa47f18784176d165e3546efa778))
+
+
+## 2022-10-11
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore_odm` - `v1.0.0-dev.34`](#cloud_firestore_odm---v100-dev34)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.34`](#cloud_firestore_odm_generator---v100-dev34)
+ - [`firebase_crashlytics` - `v2.9.0`](#firebase_crashlytics---v290)
+ - [`firebase_crashlytics_platform_interface` - `v3.3.0`](#firebase_crashlytics_platform_interface---v330)
+ - [`firebase_dynamic_links` - `v4.3.11`](#firebase_dynamic_links---v4311)
+ - [`flutterfire_ui` - `v0.4.3+14`](#flutterfire_ui---v04314)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.3+14`
+
+---
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.34`
+
+ - **FEAT**: Add support for FieldValue ([#9684](https://github.com/firebase/flutterfire/issues/9684)). ([467c403a](https://github.com/firebase/flutterfire/commit/467c403aad5dc9a829450eee22750e172e88f90b))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.34`
+
+ - **FEAT**: Add support for FieldValue ([#9684](https://github.com/firebase/flutterfire/issues/9684)). ([467c403a](https://github.com/firebase/flutterfire/commit/467c403aad5dc9a829450eee22750e172e88f90b))
+
+#### `firebase_crashlytics` - `v2.9.0`
+
+ - **FEAT**: Send Flutter Build Id to Crashlytics to get --split-debug-info working ([#9409](https://github.com/firebase/flutterfire/issues/9409)). ([17931f30](https://github.com/firebase/flutterfire/commit/17931f307434c88e87318c97e2d81c7eb3219ed9))
+
+#### `firebase_crashlytics_platform_interface` - `v3.3.0`
+
+ - **FEAT**: Send Flutter Build Id to Crashlytics to get --split-debug-info working ([#9409](https://github.com/firebase/flutterfire/issues/9409)). ([17931f30](https://github.com/firebase/flutterfire/commit/17931f307434c88e87318c97e2d81c7eb3219ed9))
+
+#### `firebase_dynamic_links` - `v4.3.11`
+
+ - **FIX**: Add speculative fix for null object reference crash ([#9671](https://github.com/firebase/flutterfire/issues/9671)). ([6c003685](https://github.com/firebase/flutterfire/commit/6c00368580a0e5e3f153543302006967747cb4ef))
+
+
+## 2022-10-06
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`_flutterfire_internals` - `v1.0.2`](#_flutterfire_internals---v102)
+ - [`cloud_firestore` - `v3.5.1`](#cloud_firestore---v351)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.33`](#cloud_firestore_odm---v100-dev33)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.33`](#cloud_firestore_odm_generator---v100-dev33)
+ - [`cloud_firestore_platform_interface` - `v5.7.7`](#cloud_firestore_platform_interface---v577)
+ - [`cloud_firestore_web` - `v2.8.10`](#cloud_firestore_web---v2810)
+ - [`firebase_app_check_platform_interface` - `v0.0.5+1`](#firebase_app_check_platform_interface---v0051)
+ - [`firebase_app_installations_platform_interface` - `v0.1.1+19`](#firebase_app_installations_platform_interface---v01119)
+ - [`firebase_auth` - `v3.11.2`](#firebase_auth---v3112)
+ - [`firebase_auth_platform_interface` - `v6.10.1`](#firebase_auth_platform_interface---v6101)
+ - [`firebase_crashlytics` - `v2.8.13`](#firebase_crashlytics---v2813)
+ - [`firebase_crashlytics_platform_interface` - `v3.2.19`](#firebase_crashlytics_platform_interface---v3219)
+ - [`firebase_database_platform_interface` - `v0.2.2+7`](#firebase_database_platform_interface---v0227)
+ - [`firebase_messaging` - `v13.1.0`](#firebase_messaging---v1310)
+ - [`firebase_messaging_platform_interface` - `v4.2.0`](#firebase_messaging_platform_interface---v420)
+ - [`firebase_messaging_web` - `v3.2.0`](#firebase_messaging_web---v320)
+ - [`firebase_remote_config_platform_interface` - `v1.1.19`](#firebase_remote_config_platform_interface---v1119)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.1+19`](#firebase_in_app_messaging_platform_interface---v02119)
+ - [`firebase_app_check_web` - `v0.0.7+1`](#firebase_app_check_web---v0071)
+ - [`firebase_app_installations_web` - `v0.1.1+8`](#firebase_app_installations_web---v0118)
+ - [`firebase_performance_platform_interface` - `v0.1.1+19`](#firebase_performance_platform_interface---v01119)
+ - [`firebase_analytics_web` - `v0.4.2+7`](#firebase_analytics_web---v0427)
+ - [`firebase_storage_web` - `v3.3.9`](#firebase_storage_web---v339)
+ - [`firebase_performance_web` - `v0.1.1+8`](#firebase_performance_web---v0118)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.3+15`](#firebase_dynamic_links_platform_interface---v02315)
+ - [`firebase_analytics_platform_interface` - `v3.3.7`](#firebase_analytics_platform_interface---v337)
+ - [`firebase_remote_config_web` - `v1.1.8`](#firebase_remote_config_web---v118)
+ - [`firebase_remote_config` - `v2.0.20`](#firebase_remote_config---v2020)
+ - [`firebase_in_app_messaging` - `v0.6.0+27`](#firebase_in_app_messaging---v06027)
+ - [`firebase_app_check` - `v0.0.9+1`](#firebase_app_check---v0091)
+ - [`firebase_app_installations` - `v0.1.1+10`](#firebase_app_installations---v01110)
+ - [`firebase_performance` - `v0.8.3+3`](#firebase_performance---v0833)
+ - [`firebase_analytics` - `v9.3.8`](#firebase_analytics---v938)
+ - [`firebase_storage` - `v10.3.11`](#firebase_storage---v10311)
+ - [`firebase_auth_web` - `v4.6.1`](#firebase_auth_web---v461)
+ - [`firebase_dynamic_links` - `v4.3.10`](#firebase_dynamic_links---v4310)
+ - [`firebase_database` - `v9.1.7`](#firebase_database---v917)
+ - [`firebase_database_web` - `v0.2.1+9`](#firebase_database_web---v0219)
+ - [`flutterfire_ui` - `v0.4.3+13`](#flutterfire_ui---v04313)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_remote_config_platform_interface` - `v1.1.19`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.1+19`
+ - `firebase_app_check_web` - `v0.0.7+1`
+ - `firebase_app_installations_web` - `v0.1.1+8`
+ - `firebase_performance_platform_interface` - `v0.1.1+19`
+ - `firebase_analytics_web` - `v0.4.2+7`
+ - `firebase_storage_web` - `v3.3.9`
+ - `firebase_performance_web` - `v0.1.1+8`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.3+15`
+ - `firebase_analytics_platform_interface` - `v3.3.7`
+ - `firebase_remote_config_web` - `v1.1.8`
+ - `firebase_remote_config` - `v2.0.20`
+ - `firebase_in_app_messaging` - `v0.6.0+27`
+ - `firebase_app_check` - `v0.0.9+1`
+ - `firebase_app_installations` - `v0.1.1+10`
+ - `firebase_performance` - `v0.8.3+3`
+ - `firebase_analytics` - `v9.3.8`
+ - `firebase_storage` - `v10.3.11`
+ - `firebase_auth_web` - `v4.6.1`
+ - `firebase_dynamic_links` - `v4.3.10`
+ - `firebase_database` - `v9.1.7`
+ - `firebase_database_web` - `v0.2.1+9`
+ - `flutterfire_ui` - `v0.4.3+13`
+
+---
+
+#### `_flutterfire_internals` - `v1.0.2`
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+
+#### `cloud_firestore` - `v3.5.1`
+
+ - **FIX**: fix a query error in Flutter Web that was affecting the parsing of ancient dates ([#9633](https://github.com/firebase/flutterfire/issues/9633)). ([9250d45f](https://github.com/firebase/flutterfire/commit/9250d45f1d7ece9335b2c4c4795fecc728df3de5))
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.33`
+
+ - **FIX**: Update ignored lints in generated files ([#9683](https://github.com/firebase/flutterfire/issues/9683)). ([3ab283bb](https://github.com/firebase/flutterfire/commit/3ab283bb3ec6e5dbc0befefb062c5069959f9fb5))
+ - **FEAT**: Add transaction utilities to the ODM ([#9670](https://github.com/firebase/flutterfire/issues/9670)). ([7d84d70a](https://github.com/firebase/flutterfire/commit/7d84d70a1120f7751f5ff817d7b10b330dcf7e06))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.33`
+
+ - **FIX**: Update ignored lints in generated files ([#9683](https://github.com/firebase/flutterfire/issues/9683)). ([3ab283bb](https://github.com/firebase/flutterfire/commit/3ab283bb3ec6e5dbc0befefb062c5069959f9fb5))
+ - **FEAT**: Add transaction utilities to the ODM ([#9670](https://github.com/firebase/flutterfire/issues/9670)). ([7d84d70a](https://github.com/firebase/flutterfire/commit/7d84d70a1120f7751f5ff817d7b10b330dcf7e06))
+
+#### `cloud_firestore_platform_interface` - `v5.7.7`
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+
+#### `cloud_firestore_web` - `v2.8.10`
+
+ - **FIX**: fix a query error in Flutter Web that was affecting the parsing of ancient dates ([#9633](https://github.com/firebase/flutterfire/issues/9633)). ([9250d45f](https://github.com/firebase/flutterfire/commit/9250d45f1d7ece9335b2c4c4795fecc728df3de5))
+
+#### `firebase_app_check_platform_interface` - `v0.0.5+1`
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+
+#### `firebase_app_installations_platform_interface` - `v0.1.1+19`
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+
+#### `firebase_auth` - `v3.11.2`
+
+ - **DOCS**: update `setSettings()` inline documentation ([#9655](https://github.com/firebase/flutterfire/issues/9655)). ([39ca0029](https://github.com/firebase/flutterfire/commit/39ca00299ec5c6e0f2dc9b0b5a8d71b8d59d51d4))
+
+#### `firebase_auth_platform_interface` - `v6.10.1`
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+ - **DOCS**: update `setSettings()` inline documentation ([#9655](https://github.com/firebase/flutterfire/issues/9655)). ([39ca0029](https://github.com/firebase/flutterfire/commit/39ca00299ec5c6e0f2dc9b0b5a8d71b8d59d51d4))
+
+#### `firebase_crashlytics` - `v2.8.13`
+
+ - **FIX**: parameter `information` accepts `Iterable<Object>` for further diagnostic logging information ([#9678](https://github.com/firebase/flutterfire/issues/9678)). ([2d2b5b03](https://github.com/firebase/flutterfire/commit/2d2b5b03901b68976047e5f2888beb0296f4af45))
+ - **DOCS**: add note for `crash()` that the app needs to be restarted to send a crash report ([#9586](https://github.com/firebase/flutterfire/issues/9586)). ([3a3e5212](https://github.com/firebase/flutterfire/commit/3a3e52123f04eac6d73c21474155e6e67cb357c1))
+
+#### `firebase_crashlytics_platform_interface` - `v3.2.19`
+
+ - **DOCS**: add note for `crash()` that the app needs to be restarted to send a crash report ([#9586](https://github.com/firebase/flutterfire/issues/9586)). ([3a3e5212](https://github.com/firebase/flutterfire/commit/3a3e52123f04eac6d73c21474155e6e67cb357c1))
+
+#### `firebase_database_platform_interface` - `v0.2.2+7`
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+
+#### `firebase_messaging` - `v13.1.0`
+
+ - **FEAT**: add support for exporting delivery metrics to BigQuery ([#9636](https://github.com/firebase/flutterfire/issues/9636)). ([170b99b9](https://github.com/firebase/flutterfire/commit/170b99b91573f28316172e43188d57ca14600446))
+
+#### `firebase_messaging_platform_interface` - `v4.2.0`
+
+ - **FEAT**: add support for exporting delivery metrics to BigQuery ([#9636](https://github.com/firebase/flutterfire/issues/9636)). ([170b99b9](https://github.com/firebase/flutterfire/commit/170b99b91573f28316172e43188d57ca14600446))
+
+#### `firebase_messaging_web` - `v3.2.0`
+
+ - **FEAT**: add support for exporting delivery metrics to BigQuery ([#9636](https://github.com/firebase/flutterfire/issues/9636)). ([170b99b9](https://github.com/firebase/flutterfire/commit/170b99b91573f28316172e43188d57ca14600446))
+
+
+## 2022-10-03
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_app_check` - `v0.0.9`](#firebase_app_check---v009)
+ - [`firebase_auth` - `v3.11.1`](#firebase_auth---v3120)
+ - [`flutterfire_ui` - `v0.4.3+12`](#flutterfire_ui---v04312)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.3+12`
+
+---
+
+#### `firebase_app_check` - `v0.0.9`
+
+ - **FEAT**: provide `androidDebugProvider` boolean for android debug provider & update app check example app ([#9412](https://github.com/firebase/flutterfire/issues/9412)). ([f1f26748](https://github.com/firebase/flutterfire/commit/f1f26748615c7c9d406e1d3d605e2987e1134ee7))
+
+#### `firebase_auth` - `v3.11.1`
+
+ - **FIX**: fix an iOS crash when using Sign In With Apple due to invalid return of nil instead of NSNull ([#9644](https://github.com/firebase/flutterfire/issues/9644)). ([3f76b53f](https://github.com/firebase/flutterfire/commit/3f76b53f375f4398652abfa7c9236571ee0bd87f))
+
+
+## 2022-09-29
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v3.5.0`](#cloud_firestore---v350)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.32`](#cloud_firestore_odm---v100-dev32)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.32`](#cloud_firestore_odm_generator---v100-dev32)
+ - [`firebase_app_check` - `v0.0.8`](#firebase_app_check---v008)
+ - [`firebase_app_check_platform_interface` - `v0.0.5`](#firebase_app_check_platform_interface---v005)
+ - [`firebase_app_check_web` - `v0.0.7`](#firebase_app_check_web---v007)
+ - [`firebase_auth` - `v3.11.0`](#firebase_auth---v3110)
+ - [`firebase_auth_platform_interface` - `v6.10.0`](#firebase_auth_platform_interface---v6100)
+ - [`firebase_auth_web` - `v4.6.0`](#firebase_auth_web---v460)
+ - [`firebase_core` - `v1.24.0`](#firebase_core---v1240)
+ - [`firebase_core_web` - `v1.7.3`](#firebase_core_web---v173)
+ - [`firebase_database` - `v9.1.6`](#firebase_database---v916)
+ - [`flutterfire_ui` - `v0.4.3+11`](#flutterfire_ui---v04311)
+ - [`cloud_functions` - `v3.3.9`](#cloud_functions---v339)
+ - [`firebase_remote_config_web` - `v1.1.7`](#firebase_remote_config_web---v117)
+ - [`firebase_remote_config_platform_interface` - `v1.1.18`](#firebase_remote_config_platform_interface---v1118)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.1+18`](#firebase_in_app_messaging_platform_interface---v02118)
+ - [`firebase_crashlytics_platform_interface` - `v3.2.18`](#firebase_crashlytics_platform_interface---v3218)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.1+18`](#firebase_ml_model_downloader_platform_interface---v01118)
+ - [`firebase_crashlytics` - `v2.8.12`](#firebase_crashlytics---v2812)
+ - [`firebase_in_app_messaging` - `v0.6.0+26`](#firebase_in_app_messaging---v06026)
+ - [`firebase_remote_config` - `v2.0.19`](#firebase_remote_config---v2019)
+ - [`firebase_ml_model_downloader` - `v0.1.1+9`](#firebase_ml_model_downloader---v0119)
+ - [`_flutterfire_internals` - `v1.0.1`](#_flutterfire_internals---v101)
+ - [`cloud_functions_web` - `v4.3.7`](#cloud_functions_web---v437)
+ - [`cloud_functions_platform_interface` - `v5.1.18`](#cloud_functions_platform_interface---v5118)
+ - [`firebase_performance_web` - `v0.1.1+7`](#firebase_performance_web---v0117)
+ - [`firebase_storage_web` - `v3.3.8`](#firebase_storage_web---v338)
+ - [`firebase_app_installations_web` - `v0.1.1+7`](#firebase_app_installations_web---v0117)
+ - [`firebase_messaging_web` - `v3.1.6`](#firebase_messaging_web---v316)
+ - [`firebase_analytics_web` - `v0.4.2+6`](#firebase_analytics_web---v0426)
+ - [`firebase_storage_platform_interface` - `v4.1.18`](#firebase_storage_platform_interface---v4118)
+ - [`firebase_performance_platform_interface` - `v0.1.1+18`](#firebase_performance_platform_interface---v01118)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.3+14`](#firebase_dynamic_links_platform_interface---v02314)
+ - [`firebase_app_installations_platform_interface` - `v0.1.1+18`](#firebase_app_installations_platform_interface---v01118)
+ - [`firebase_messaging_platform_interface` - `v4.1.6`](#firebase_messaging_platform_interface---v416)
+ - [`firebase_analytics_platform_interface` - `v3.3.6`](#firebase_analytics_platform_interface---v336)
+ - [`firebase_performance` - `v0.8.3+2`](#firebase_performance---v0832)
+ - [`firebase_storage` - `v10.3.10`](#firebase_storage---v10310)
+ - [`firebase_dynamic_links` - `v4.3.9`](#firebase_dynamic_links---v439)
+ - [`firebase_app_installations` - `v0.1.1+9`](#firebase_app_installations---v0119)
+ - [`firebase_messaging` - `v13.0.4`](#firebase_messaging---v1304)
+ - [`firebase_analytics` - `v9.3.7`](#firebase_analytics---v937)
+ - [`cloud_firestore_web` - `v2.8.9`](#cloud_firestore_web---v289)
+ - [`firebase_database_web` - `v0.2.1+8`](#firebase_database_web---v0218)
+ - [`firebase_database_platform_interface` - `v0.2.2+6`](#firebase_database_platform_interface---v0226)
+ - [`cloud_firestore_platform_interface` - `v5.7.6`](#cloud_firestore_platform_interface---v576)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.3+11`
+ - `cloud_functions` - `v3.3.9`
+ - `firebase_remote_config_web` - `v1.1.7`
+ - `firebase_remote_config_platform_interface` - `v1.1.18`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.1+18`
+ - `firebase_crashlytics_platform_interface` - `v3.2.18`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.1+18`
+ - `firebase_crashlytics` - `v2.8.12`
+ - `firebase_in_app_messaging` - `v0.6.0+26`
+ - `firebase_remote_config` - `v2.0.19`
+ - `firebase_ml_model_downloader` - `v0.1.1+9`
+ - `_flutterfire_internals` - `v1.0.1`
+ - `cloud_functions_web` - `v4.3.7`
+ - `cloud_functions_platform_interface` - `v5.1.18`
+ - `firebase_performance_web` - `v0.1.1+7`
+ - `firebase_storage_web` - `v3.3.8`
+ - `firebase_app_installations_web` - `v0.1.1+7`
+ - `firebase_messaging_web` - `v3.1.6`
+ - `firebase_analytics_web` - `v0.4.2+6`
+ - `firebase_storage_platform_interface` - `v4.1.18`
+ - `firebase_performance_platform_interface` - `v0.1.1+18`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.3+14`
+ - `firebase_app_installations_platform_interface` - `v0.1.1+18`
+ - `firebase_messaging_platform_interface` - `v4.1.6`
+ - `firebase_analytics_platform_interface` - `v3.3.6`
+ - `firebase_performance` - `v0.8.3+2`
+ - `firebase_storage` - `v10.3.10`
+ - `firebase_dynamic_links` - `v4.3.9`
+ - `firebase_app_installations` - `v0.1.1+9`
+ - `firebase_messaging` - `v13.0.4`
+ - `firebase_analytics` - `v9.3.7`
+ - `cloud_firestore_web` - `v2.8.9`
+ - `firebase_database_web` - `v0.2.1+8`
+ - `firebase_database_platform_interface` - `v0.2.2+6`
+ - `cloud_firestore_platform_interface` - `v5.7.6`
+
+---
+
+#### `cloud_firestore` - `v3.5.0`
+
+ - **FEAT**: add OAuth Access Token support to sign in with providers ([#9593](https://github.com/firebase/flutterfire/issues/9593)). ([cb6661bb](https://github.com/firebase/flutterfire/commit/cb6661bbc701031d6f920ace3a6efc8e8d56aa4c))
+ - **FEAT**: Bump Firebase iOS SDK to `9.6.0` ([#9531](https://github.com/firebase/flutterfire/issues/9531)). ([2138f4aa](https://github.com/firebase/flutterfire/commit/2138f4aaaace51d5dce4809fb42e1e4ff20ed251))
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.32`
+
+ - **FEAT**: Allow injecting the document ID in the ODM model ([#9600](https://github.com/firebase/flutterfire/issues/9600)). ([c7e93cfe](https://github.com/firebase/flutterfire/commit/c7e93cfec14e0e00bcabb232760ae5a968a1c2a1))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.32`
+
+ - **FEAT**: Allow injecting the document ID in the ODM model ([#9600](https://github.com/firebase/flutterfire/issues/9600)). ([c7e93cfe](https://github.com/firebase/flutterfire/commit/c7e93cfec14e0e00bcabb232760ae5a968a1c2a1))
+
+#### `firebase_app_check` - `v0.0.8`
+
+ - **FEAT**: provide `androidDebugProvider` boolean for android debug provider & update app check example app ([#9412](https://github.com/firebase/flutterfire/issues/9412)). ([f1f26748](https://github.com/firebase/flutterfire/commit/f1f26748615c7c9d406e1d3d605e2987e1134ee7))
+
+#### `firebase_app_check_platform_interface` - `v0.0.5`
+
+ - **FEAT**: provide `androidDebugProvider` boolean for android debug provider & update app check example app ([#9412](https://github.com/firebase/flutterfire/issues/9412)). ([f1f26748](https://github.com/firebase/flutterfire/commit/f1f26748615c7c9d406e1d3d605e2987e1134ee7))
+
+#### `firebase_app_check_web` - `v0.0.7`
+
+ - **FEAT**: provide `androidDebugProvider` boolean for android debug provider & update app check example app ([#9412](https://github.com/firebase/flutterfire/issues/9412)). ([f1f26748](https://github.com/firebase/flutterfire/commit/f1f26748615c7c9d406e1d3d605e2987e1134ee7))
+
+#### `firebase_auth` - `v3.11.0`
+
+ - **FEAT**: add OAuth Access Token support to sign in with providers ([#9593](https://github.com/firebase/flutterfire/issues/9593)). ([cb6661bb](https://github.com/firebase/flutterfire/commit/cb6661bbc701031d6f920ace3a6efc8e8d56aa4c))
+ - **FEAT**: add `linkWithRedirect` to the web ([#9580](https://github.com/firebase/flutterfire/issues/9580)). ([d834b90f](https://github.com/firebase/flutterfire/commit/d834b90f29fc1929a195d7d546170e4ea03c6ab1))
+
+#### `firebase_auth_platform_interface` - `v6.10.0`
+
+ - **FEAT**: add OAuth Access Token support to sign in with providers ([#9593](https://github.com/firebase/flutterfire/issues/9593)). ([cb6661bb](https://github.com/firebase/flutterfire/commit/cb6661bbc701031d6f920ace3a6efc8e8d56aa4c))
+ - **FEAT**: add `linkWithRedirect` to the web ([#9580](https://github.com/firebase/flutterfire/issues/9580)). ([d834b90f](https://github.com/firebase/flutterfire/commit/d834b90f29fc1929a195d7d546170e4ea03c6ab1))
+
+#### `firebase_auth_web` - `v4.6.0`
+
+ - **FEAT**: add OAuth Access Token support to sign in with providers ([#9593](https://github.com/firebase/flutterfire/issues/9593)). ([cb6661bb](https://github.com/firebase/flutterfire/commit/cb6661bbc701031d6f920ace3a6efc8e8d56aa4c))
+ - **FEAT**: add `linkWithRedirect` to the web ([#9580](https://github.com/firebase/flutterfire/issues/9580)). ([d834b90f](https://github.com/firebase/flutterfire/commit/d834b90f29fc1929a195d7d546170e4ea03c6ab1))
+
+#### `firebase_core` - `v1.24.0`
+
+ - **FEAT**: Bump Firebase iOS SDK to `9.6.0` ([#9531](https://github.com/firebase/flutterfire/issues/9531)). ([2138f4aa](https://github.com/firebase/flutterfire/commit/2138f4aaaace51d5dce4809fb42e1e4ff20ed251))
+
+#### `firebase_core_web` - `v1.7.3`
+
+ - **FIX**: explicitly set `null` value on Firestore data object property value ([#9599](https://github.com/firebase/flutterfire/issues/9599)). ([e61b6039](https://github.com/firebase/flutterfire/commit/e61b60390cfe8fc985203a4d3e3ed30eb8d020c6))
+
+#### `firebase_database` - `v9.1.6`
+
+ - **DOCS**: removed duplicate words in dart doc comment ([#9620](https://github.com/firebase/flutterfire/issues/9620)). ([cb980a6e](https://github.com/firebase/flutterfire/commit/cb980a6eb3cc08878ca6205e01e4d3e57add81cf))
+
+
+## 2022-09-22
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore_odm` - `v1.0.0-dev.31`](#cloud_firestore_odm---v100-dev31)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.31`](#cloud_firestore_odm_generator---v100-dev31)
+ - [`firebase_analytics` - `v9.3.6`](#firebase_analytics---v936)
+ - [`firebase_auth` - `v3.10.0`](#firebase_auth---v3100)
+ - [`firebase_auth_platform_interface` - `v6.9.0`](#firebase_auth_platform_interface---v690)
+ - [`firebase_auth_web` - `v4.5.0`](#firebase_auth_web---v450)
+ - [`firebase_core` - `v1.23.0`](#firebase_core---v1230)
+ - [`flutterfire_ui` - `v0.4.3+10`](#flutterfire_ui---v04310)
+ - [`cloud_functions` - `v3.3.8`](#cloud_functions---v338)
+ - [`firebase_in_app_messaging` - `v0.6.0+25`](#firebase_in_app_messaging---v06025)
+ - [`firebase_crashlytics_platform_interface` - `v3.2.17`](#firebase_crashlytics_platform_interface---v3217)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.1+17`](#firebase_in_app_messaging_platform_interface---v02117)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.1+17`](#firebase_ml_model_downloader_platform_interface---v01117)
+ - [`firebase_remote_config_web` - `v1.1.6`](#firebase_remote_config_web---v116)
+ - [`firebase_remote_config_platform_interface` - `v1.1.17`](#firebase_remote_config_platform_interface---v1117)
+ - [`firebase_crashlytics` - `v2.8.11`](#firebase_crashlytics---v2811)
+ - [`firebase_remote_config` - `v2.0.18`](#firebase_remote_config---v2018)
+ - [`firebase_ml_model_downloader` - `v0.1.1+8`](#firebase_ml_model_downloader---v0118)
+ - [`cloud_functions_web` - `v4.3.6`](#cloud_functions_web---v436)
+ - [`cloud_functions_platform_interface` - `v5.1.17`](#cloud_functions_platform_interface---v5117)
+ - [`cloud_firestore` - `v3.4.9`](#cloud_firestore---v349)
+ - [`firebase_performance_web` - `v0.1.1+6`](#firebase_performance_web---v0116)
+ - [`firebase_database` - `v9.1.5`](#firebase_database---v915)
+ - [`firebase_app_check_web` - `v0.0.6+6`](#firebase_app_check_web---v0066)
+ - [`firebase_storage_web` - `v3.3.7`](#firebase_storage_web---v337)
+ - [`firebase_app_installations_web` - `v0.1.1+6`](#firebase_app_installations_web---v0116)
+ - [`firebase_messaging_web` - `v3.1.5`](#firebase_messaging_web---v315)
+ - [`firebase_analytics_web` - `v0.4.2+5`](#firebase_analytics_web---v0425)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.3+13`](#firebase_dynamic_links_platform_interface---v02313)
+ - [`firebase_storage_platform_interface` - `v4.1.17`](#firebase_storage_platform_interface---v4117)
+ - [`firebase_performance_platform_interface` - `v0.1.1+17`](#firebase_performance_platform_interface---v01117)
+ - [`firebase_messaging_platform_interface` - `v4.1.5`](#firebase_messaging_platform_interface---v415)
+ - [`firebase_app_installations_platform_interface` - `v0.1.1+17`](#firebase_app_installations_platform_interface---v01117)
+ - [`firebase_analytics_platform_interface` - `v3.3.5`](#firebase_analytics_platform_interface---v335)
+ - [`firebase_app_check_platform_interface` - `v0.0.4+17`](#firebase_app_check_platform_interface---v00417)
+ - [`firebase_storage` - `v10.3.9`](#firebase_storage---v1039)
+ - [`firebase_performance` - `v0.8.3+1`](#firebase_performance---v0831)
+ - [`firebase_dynamic_links` - `v4.3.8`](#firebase_dynamic_links---v438)
+ - [`firebase_app_installations` - `v0.1.1+8`](#firebase_app_installations---v0118)
+ - [`firebase_messaging` - `v13.0.3`](#firebase_messaging---v1303)
+ - [`firebase_app_check` - `v0.0.7+2`](#firebase_app_check---v0072)
+ - [`cloud_firestore_web` - `v2.8.8`](#cloud_firestore_web---v288)
+ - [`firebase_database_web` - `v0.2.1+7`](#firebase_database_web---v0217)
+ - [`firebase_database_platform_interface` - `v0.2.2+5`](#firebase_database_platform_interface---v0225)
+ - [`cloud_firestore_platform_interface` - `v5.7.5`](#cloud_firestore_platform_interface---v575)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.3+10`
+ - `cloud_functions` - `v3.3.8`
+ - `firebase_in_app_messaging` - `v0.6.0+25`
+ - `firebase_crashlytics_platform_interface` - `v3.2.17`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.1+17`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.1+17`
+ - `firebase_remote_config_web` - `v1.1.6`
+ - `firebase_remote_config_platform_interface` - `v1.1.17`
+ - `firebase_crashlytics` - `v2.8.11`
+ - `firebase_remote_config` - `v2.0.18`
+ - `firebase_ml_model_downloader` - `v0.1.1+8`
+ - `cloud_functions_web` - `v4.3.6`
+ - `cloud_functions_platform_interface` - `v5.1.17`
+ - `cloud_firestore` - `v3.4.9`
+ - `firebase_performance_web` - `v0.1.1+6`
+ - `firebase_database` - `v9.1.5`
+ - `firebase_app_check_web` - `v0.0.6+6`
+ - `firebase_storage_web` - `v3.3.7`
+ - `firebase_app_installations_web` - `v0.1.1+6`
+ - `firebase_messaging_web` - `v3.1.5`
+ - `firebase_analytics_web` - `v0.4.2+5`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.3+13`
+ - `firebase_storage_platform_interface` - `v4.1.17`
+ - `firebase_performance_platform_interface` - `v0.1.1+17`
+ - `firebase_messaging_platform_interface` - `v4.1.5`
+ - `firebase_app_installations_platform_interface` - `v0.1.1+17`
+ - `firebase_analytics_platform_interface` - `v3.3.5`
+ - `firebase_app_check_platform_interface` - `v0.0.4+17`
+ - `firebase_storage` - `v10.3.9`
+ - `firebase_performance` - `v0.8.3+1`
+ - `firebase_dynamic_links` - `v4.3.8`
+ - `firebase_app_installations` - `v0.1.1+8`
+ - `firebase_messaging` - `v13.0.3`
+ - `firebase_app_check` - `v0.0.7+2`
+ - `cloud_firestore_web` - `v2.8.8`
+ - `firebase_database_web` - `v0.2.1+7`
+ - `firebase_database_platform_interface` - `v0.2.2+5`
+ - `cloud_firestore_platform_interface` - `v5.7.5`
+
+---
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.31`
+
+ - **FIX**: handle query.orderBy(startAt:).orderBy() ([#9185](https://github.com/firebase/flutterfire/issues/9185)). ([62396e8a](https://github.com/firebase/flutterfire/commit/62396e8a4a229dfc096d6280964bb559c00b3511))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.31`
+
+ - **FIX**: a false positive by checking that there are no prefix duplicates.  ([#9576](https://github.com/firebase/flutterfire/issues/9576)). ([d6f619c9](https://github.com/firebase/flutterfire/commit/d6f619c90fadb5057a8db1d69921cd4e2f5c1816))
+ - **FIX**: handle query.orderBy(startAt:).orderBy() ([#9185](https://github.com/firebase/flutterfire/issues/9185)). ([62396e8a](https://github.com/firebase/flutterfire/commit/62396e8a4a229dfc096d6280964bb559c00b3511))
+
+#### `firebase_analytics` - `v9.3.6`
+
+ - **FIX**: suppress unchecked warnings that aren't necessary ([#9532](https://github.com/firebase/flutterfire/issues/9532)). ([3ebd4593](https://github.com/firebase/flutterfire/commit/3ebd4593d11fbbd359b8d514a9c0577654859992))
+
+#### `firebase_auth` - `v3.10.0`
+
+ - **FIX**: fix path of generated Pigeon files to prevent name collision ([#9569](https://github.com/firebase/flutterfire/issues/9569)). ([71bde27d](https://github.com/firebase/flutterfire/commit/71bde27d4e613096f121abb16d7ea8483c3fbcd8))
+ - **FEAT**: add `reauthenticateWithProvider` ([#9570](https://github.com/firebase/flutterfire/issues/9570)). ([dad6b481](https://github.com/firebase/flutterfire/commit/dad6b4813c682e35315dda3965ea8aaf5ba030e8))
+
+#### `firebase_auth_platform_interface` - `v6.9.0`
+
+ - **FIX**: fix path of generated Pigeon files to prevent name collision ([#9569](https://github.com/firebase/flutterfire/issues/9569)). ([71bde27d](https://github.com/firebase/flutterfire/commit/71bde27d4e613096f121abb16d7ea8483c3fbcd8))
+ - **FEAT**: add `reauthenticateWithProvider` ([#9570](https://github.com/firebase/flutterfire/issues/9570)). ([dad6b481](https://github.com/firebase/flutterfire/commit/dad6b4813c682e35315dda3965ea8aaf5ba030e8))
+
+#### `firebase_auth_web` - `v4.5.0`
+
+ - **FEAT**: add `reauthenticateWithProvider` ([#9570](https://github.com/firebase/flutterfire/issues/9570)). ([dad6b481](https://github.com/firebase/flutterfire/commit/dad6b4813c682e35315dda3965ea8aaf5ba030e8))
+
+#### `firebase_core` - `v1.23.0`
+
+ - **FEAT**: Bump Firebase android SDK to 30.5.0 ([#9573](https://github.com/firebase/flutterfire/issues/9573)). ([3ec750e1](https://github.com/firebase/flutterfire/commit/3ec750e1612671527fe7c0e576ca900821c1535b))
+ - **DOCS**: update inline documentation on `initializeApp()` behaviour ([#9431](https://github.com/firebase/flutterfire/issues/9431)). ([3af5b676](https://github.com/firebase/flutterfire/commit/3af5b67664149b54ec73b328a04d94c06f389221))
+
+
+## 2022-09-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v3.4.8`](#cloud_firestore---v348)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.30`](#cloud_firestore_odm---v100-dev30)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.30`](#cloud_firestore_odm_generator---v100-dev30)
+ - [`firebase_analytics` - `v9.3.5`](#firebase_analytics---v935)
+ - [`firebase_auth` - `v3.9.0`](#firebase_auth---v390)
+ - [`firebase_auth_platform_interface` - `v6.8.0`](#firebase_auth_platform_interface---v680)
+ - [`firebase_messaging` - `v13.0.2`](#firebase_messaging---v1302)
+ - [`flutterfire_ui` - `v0.4.3+9`](#flutterfire_ui---v0439)
+ - [`firebase_auth_web` - `v4.4.1`](#firebase_auth_web---v441)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.3+9`
+ - `firebase_auth_web` - `v4.4.1`
+
+---
+
+#### `cloud_firestore` - `v3.4.8`
+
+ - **FIX**: fix `queryGet()` & `namedQueryGet()`. Check if `query` is `[NSNull null]` value ([#9410](https://github.com/firebase/flutterfire/issues/9410)). ([ae035fe2](https://github.com/firebase/flutterfire/commit/ae035fe2b060264153386ae5c2a1eb90c22e90f3))
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.30`
+
+ - **FEAT**: add support for specifying class name prefix ([#9453](https://github.com/firebase/flutterfire/issues/9453)). ([49921a43](https://github.com/firebase/flutterfire/commit/49921a4362c5965d2efeed17eb73775302007ea8))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.30`
+
+ - **FEAT**: add support for specifying class name prefix ([#9453](https://github.com/firebase/flutterfire/issues/9453)). ([49921a43](https://github.com/firebase/flutterfire/commit/49921a4362c5965d2efeed17eb73775302007ea8))
+
+#### `firebase_analytics` - `v9.3.5`
+
+ - **REFACTOR**: deprecate `signInWithAuthProvider` in favor of `signInWithProvider` ([#9542](https://github.com/firebase/flutterfire/issues/9542)). ([ca340ea1](https://github.com/firebase/flutterfire/commit/ca340ea19c8dbb340f083e48cf1b0de36f7d64c4))
+
+#### `firebase_auth` - `v3.9.0`
+
+ - **REFACTOR**: deprecate `signInWithAuthProvider` in favor of `signInWithProvider` ([#9542](https://github.com/firebase/flutterfire/issues/9542)). ([ca340ea1](https://github.com/firebase/flutterfire/commit/ca340ea19c8dbb340f083e48cf1b0de36f7d64c4))
+ - **FEAT**: add `linkWithProvider` to support for linking auth providers ([#9535](https://github.com/firebase/flutterfire/issues/9535)). ([1ac14fb1](https://github.com/firebase/flutterfire/commit/1ac14fb147f83cf5c7874004a9dc61838dce8da8))
+
+#### `firebase_auth_platform_interface` - `v6.8.0`
+
+ - **REFACTOR**: deprecate `signInWithAuthProvider` in favor of `signInWithProvider` ([#9542](https://github.com/firebase/flutterfire/issues/9542)). ([ca340ea1](https://github.com/firebase/flutterfire/commit/ca340ea19c8dbb340f083e48cf1b0de36f7d64c4))
+ - **FEAT**: add `linkWithProvider` to support for linking auth providers ([#9535](https://github.com/firebase/flutterfire/issues/9535)). ([1ac14fb1](https://github.com/firebase/flutterfire/commit/1ac14fb147f83cf5c7874004a9dc61838dce8da8))
+
+#### `firebase_messaging` - `v13.0.2`
+
+ - **DOCS**: update docs to use `@pragma('vm:entry-point')` annotation for messaging background handler ([#9494](https://github.com/firebase/flutterfire/issues/9494)). ([27a7f44e](https://github.com/firebase/flutterfire/commit/27a7f44e02f2ed533e0249622afdd0a421261385))
+
+
+## 2022-09-08
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore_odm` - `v1.0.0-dev.29`](#cloud_firestore_odm---v100-dev29)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.29`](#cloud_firestore_odm_generator---v100-dev29)
+ - [`firebase_auth` - `v3.8.0`](#firebase_auth---v380)
+ - [`firebase_auth_platform_interface` - `v6.7.0`](#firebase_auth_platform_interface---v670)
+ - [`firebase_auth_web` - `v4.4.0`](#firebase_auth_web---v440)
+ - [`firebase_core` - `v1.22.0`](#firebase_core---v1220)
+ - [`firebase_crashlytics` - `v2.8.10`](#firebase_crashlytics---v2810)
+ - [`firebase_messaging` - `v13.0.1`](#firebase_messaging---v1301)
+ - [`firebase_performance` - `v0.8.3`](#firebase_performance---v083)
+ - [`flutterfire_ui` - `v0.4.3+8`](#flutterfire_ui---v0438)
+ - [`firebase_crashlytics_platform_interface` - `v3.2.16`](#firebase_crashlytics_platform_interface---v3216)
+ - [`firebase_remote_config` - `v2.0.17`](#firebase_remote_config---v2017)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.1+16`](#firebase_in_app_messaging_platform_interface---v02116)
+ - [`firebase_in_app_messaging` - `v0.6.0+24`](#firebase_in_app_messaging---v06024)
+ - [`firebase_remote_config_web` - `v1.1.5`](#firebase_remote_config_web---v115)
+ - [`firebase_remote_config_platform_interface` - `v1.1.16`](#firebase_remote_config_platform_interface---v1116)
+ - [`firebase_database` - `v9.1.4`](#firebase_database---v914)
+ - [`firebase_database_web` - `v0.2.1+6`](#firebase_database_web---v0216)
+ - [`firebase_database_platform_interface` - `v0.2.2+4`](#firebase_database_platform_interface---v0224)
+ - [`firebase_dynamic_links` - `v4.3.7`](#firebase_dynamic_links---v437)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.3+12`](#firebase_dynamic_links_platform_interface---v02312)
+ - [`cloud_firestore` - `v3.4.7`](#cloud_firestore---v347)
+ - [`cloud_firestore_platform_interface` - `v5.7.4`](#cloud_firestore_platform_interface---v574)
+ - [`cloud_firestore_web` - `v2.8.7`](#cloud_firestore_web---v287)
+ - [`firebase_app_installations_web` - `v0.1.1+5`](#firebase_app_installations_web---v0115)
+ - [`firebase_app_installations` - `v0.1.1+7`](#firebase_app_installations---v0117)
+ - [`firebase_app_installations_platform_interface` - `v0.1.1+16`](#firebase_app_installations_platform_interface---v01116)
+ - [`firebase_messaging_web` - `v3.1.4`](#firebase_messaging_web---v314)
+ - [`firebase_analytics_platform_interface` - `v3.3.4`](#firebase_analytics_platform_interface---v334)
+ - [`firebase_messaging_platform_interface` - `v4.1.4`](#firebase_messaging_platform_interface---v414)
+ - [`firebase_ml_model_downloader` - `v0.1.1+7`](#firebase_ml_model_downloader---v0117)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.1+16`](#firebase_ml_model_downloader_platform_interface---v01116)
+ - [`firebase_analytics` - `v9.3.4`](#firebase_analytics---v934)
+ - [`firebase_app_check_platform_interface` - `v0.0.4+16`](#firebase_app_check_platform_interface---v00416)
+ - [`firebase_analytics_web` - `v0.4.2+4`](#firebase_analytics_web---v0424)
+ - [`firebase_app_check` - `v0.0.7+1`](#firebase_app_check---v0071)
+ - [`firebase_app_check_web` - `v0.0.6+5`](#firebase_app_check_web---v0065)
+ - [`cloud_functions_web` - `v4.3.5`](#cloud_functions_web---v435)
+ - [`cloud_functions` - `v3.3.7`](#cloud_functions---v337)
+ - [`cloud_functions_platform_interface` - `v5.1.16`](#cloud_functions_platform_interface---v5116)
+ - [`firebase_storage_web` - `v3.3.6`](#firebase_storage_web---v336)
+ - [`firebase_storage_platform_interface` - `v4.1.16`](#firebase_storage_platform_interface---v4116)
+ - [`firebase_storage` - `v10.3.8`](#firebase_storage---v1038)
+ - [`firebase_performance_web` - `v0.1.1+5`](#firebase_performance_web---v0115)
+ - [`firebase_performance_platform_interface` - `v0.1.1+16`](#firebase_performance_platform_interface---v01116)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.3+8`
+ - `firebase_crashlytics_platform_interface` - `v3.2.16`
+ - `firebase_remote_config` - `v2.0.17`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.1+16`
+ - `firebase_in_app_messaging` - `v0.6.0+24`
+ - `firebase_remote_config_web` - `v1.1.5`
+ - `firebase_remote_config_platform_interface` - `v1.1.16`
+ - `firebase_database` - `v9.1.4`
+ - `firebase_database_web` - `v0.2.1+6`
+ - `firebase_database_platform_interface` - `v0.2.2+4`
+ - `firebase_dynamic_links` - `v4.3.7`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.3+12`
+ - `cloud_firestore` - `v3.4.7`
+ - `cloud_firestore_platform_interface` - `v5.7.4`
+ - `cloud_firestore_web` - `v2.8.7`
+ - `firebase_app_installations_web` - `v0.1.1+5`
+ - `firebase_app_installations` - `v0.1.1+7`
+ - `firebase_app_installations_platform_interface` - `v0.1.1+16`
+ - `firebase_messaging_web` - `v3.1.4`
+ - `firebase_analytics_platform_interface` - `v3.3.4`
+ - `firebase_messaging_platform_interface` - `v4.1.4`
+ - `firebase_ml_model_downloader` - `v0.1.1+7`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.1+16`
+ - `firebase_analytics` - `v9.3.4`
+ - `firebase_app_check_platform_interface` - `v0.0.4+16`
+ - `firebase_analytics_web` - `v0.4.2+4`
+ - `firebase_app_check` - `v0.0.7+1`
+ - `firebase_app_check_web` - `v0.0.6+5`
+ - `cloud_functions_web` - `v4.3.5`
+ - `cloud_functions` - `v3.3.7`
+ - `cloud_functions_platform_interface` - `v5.1.16`
+ - `firebase_storage_web` - `v3.3.6`
+ - `firebase_storage_platform_interface` - `v4.1.16`
+ - `firebase_storage` - `v10.3.8`
+ - `firebase_performance_web` - `v0.1.1+5`
+ - `firebase_performance_platform_interface` - `v0.1.1+16`
+
+---
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.29`
+
+ - **FEAT**: Add support using Freezed classes as collection models ([#9483](https://github.com/firebase/flutterfire/issues/9483)). ([ce238f71](https://github.com/firebase/flutterfire/commit/ce238f713b250f523890b9e7e42d395f433ed80f))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.29`
+
+ - **FIX**: bump minimum analyzer version ([#9493](https://github.com/firebase/flutterfire/issues/9493)). ([5137a646](https://github.com/firebase/flutterfire/commit/5137a6469fb57fb003757459222cb6c4e39fb0f8))
+ - **FEAT**: Add support using Freezed classes as collection models ([#9483](https://github.com/firebase/flutterfire/issues/9483)). ([ce238f71](https://github.com/firebase/flutterfire/commit/ce238f713b250f523890b9e7e42d395f433ed80f))
+
+#### `firebase_auth` - `v3.8.0`
+
+ - **FIX**: remove default scopes on iOS for Sign in With Apple ([#9477](https://github.com/firebase/flutterfire/issues/9477)). ([3fe02b29](https://github.com/firebase/flutterfire/commit/3fe02b2937135ea6d576c7e445da5f4266ff0fdf))
+ - **FEAT**: add Twitter login for Android, iOS and Web ([#9421](https://github.com/firebase/flutterfire/issues/9421)). ([0bc6e6d5](https://github.com/firebase/flutterfire/commit/0bc6e6d5333e6be0d5749a083206f3f5bb79a7ba))
+ - **FEAT**: add Yahoo as provider for iOS, Android and Web ([#9443](https://github.com/firebase/flutterfire/issues/9443)). ([6c3108a7](https://github.com/firebase/flutterfire/commit/6c3108a767aca3b1a844b2b5da04b2da45bc9fbd))
+ - **DOCS**: fix typo "apperance" in `platform_interface_firebase_auth.dart` ([#9472](https://github.com/firebase/flutterfire/issues/9472)). ([323b917b](https://github.com/firebase/flutterfire/commit/323b917b5eecf0e5161a61c66f6cabac5b23e1b8))
+
+#### `firebase_auth_platform_interface` - `v6.7.0`
+
+ - **FIX**: fix enrollementTimestamp parsing on Web ([#9440](https://github.com/firebase/flutterfire/issues/9440)). ([639cab7b](https://github.com/firebase/flutterfire/commit/639cab7b84aa33cc1dda144fc89db2236a1945b2))
+ - **FEAT**: add Twitter login for Android, iOS and Web ([#9421](https://github.com/firebase/flutterfire/issues/9421)). ([0bc6e6d5](https://github.com/firebase/flutterfire/commit/0bc6e6d5333e6be0d5749a083206f3f5bb79a7ba))
+ - **FEAT**: add Yahoo as provider for iOS, Android and Web ([#9443](https://github.com/firebase/flutterfire/issues/9443)). ([6c3108a7](https://github.com/firebase/flutterfire/commit/6c3108a767aca3b1a844b2b5da04b2da45bc9fbd))
+ - **DOCS**: fix typo "apperance" in `platform_interface_firebase_auth.dart` ([#9472](https://github.com/firebase/flutterfire/issues/9472)). ([323b917b](https://github.com/firebase/flutterfire/commit/323b917b5eecf0e5161a61c66f6cabac5b23e1b8))
+
+#### `firebase_auth_web` - `v4.4.0`
+
+ - **FIX**: fix enrollementTimestamp parsing on Web ([#9440](https://github.com/firebase/flutterfire/issues/9440)). ([639cab7b](https://github.com/firebase/flutterfire/commit/639cab7b84aa33cc1dda144fc89db2236a1945b2))
+ - **FEAT**: add Yahoo as provider for iOS, Android and Web ([#9443](https://github.com/firebase/flutterfire/issues/9443)). ([6c3108a7](https://github.com/firebase/flutterfire/commit/6c3108a767aca3b1a844b2b5da04b2da45bc9fbd))
+
+#### `firebase_core` - `v1.22.0`
+
+ - **FEAT**: Bump Firebase iOS SDK to 9.5.0 ([#9492](https://github.com/firebase/flutterfire/issues/9492)). ([d246ba2a](https://github.com/firebase/flutterfire/commit/d246ba2aeec3da0bf5e2b4171ea2d1ec67618226))
+
+#### `firebase_crashlytics` - `v2.8.10`
+
+ - **FIX**: Replace null or empty stack traces with the current stack trace ([#9490](https://github.com/firebase/flutterfire/issues/9490)). ([c54a95f3](https://github.com/firebase/flutterfire/commit/c54a95f365c5a61d2df52fb89467ab6103aa0146))
+
+#### `firebase_messaging` - `v13.0.1`
+
+ - **FIX**: ensure only messaging permission request is processed ([#9486](https://github.com/firebase/flutterfire/issues/9486)). ([5b31e71b](https://github.com/firebase/flutterfire/commit/5b31e71b6cbca0e6a149482436e00598f4eaa2de))
+
+#### `firebase_performance` - `v0.8.3`
+
+ - **FEAT**: Bump Firebase iOS SDK to 9.5.0 ([#9492](https://github.com/firebase/flutterfire/issues/9492)). ([d246ba2a](https://github.com/firebase/flutterfire/commit/d246ba2aeec3da0bf5e2b4171ea2d1ec67618226))
+
+
+## 2022-08-25
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`firebase_messaging` - `v13.0.0`](#firebase_messaging---v1300)
+
+Packages with other changes:
+
+ - [`firebase_analytics_web` - `v0.4.2+3`](#firebase_analytics_web---v0423)
+ - [`firebase_app_check` - `v0.0.7`](#firebase_app_check---v007)
+ - [`firebase_auth` - `v3.7.0`](#firebase_auth---v370)
+ - [`firebase_auth_platform_interface` - `v6.6.0`](#firebase_auth_platform_interface---v660)
+ - [`firebase_auth_web` - `v4.3.0`](#firebase_auth_web---v430)
+ - [`firebase_core_platform_interface` - `v4.5.1`](#firebase_core_platform_interface---v451)
+ - [`firebase_crashlytics` - `v2.8.9`](#firebase_crashlytics---v289)
+ - [`firebase_crashlytics_platform_interface` - `v3.2.15`](#firebase_crashlytics_platform_interface---v3215)
+ - [`firebase_remote_config` - `v2.0.16`](#firebase_remote_config---v2016)
+ - [`firebase_analytics` - `v9.3.3`](#firebase_analytics---v933)
+ - [`flutterfire_ui` - `v0.4.3+7`](#flutterfire_ui---v0437)
+ - [`firebase_in_app_messaging` - `v0.6.0+23`](#firebase_in_app_messaging---v06023)
+ - [`firebase_dynamic_links` - `v4.3.6`](#firebase_dynamic_links---v436)
+ - [`firebase_database` - `v9.1.3`](#firebase_database---v913)
+ - [`cloud_firestore` - `v3.4.6`](#cloud_firestore---v346)
+ - [`firebase_app_installations` - `v0.1.1+6`](#firebase_app_installations---v0116)
+ - [`firebase_ml_model_downloader` - `v0.1.1+6`](#firebase_ml_model_downloader---v0116)
+ - [`cloud_functions` - `v3.3.6`](#cloud_functions---v336)
+ - [`firebase_core` - `v1.21.1`](#firebase_core---v1211)
+ - [`firebase_storage` - `v10.3.7`](#firebase_storage---v1037)
+ - [`firebase_core_web` - `v1.7.2`](#firebase_core_web---v172)
+ - [`firebase_performance` - `v0.8.2+4`](#firebase_performance---v0824)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.28`](#cloud_firestore_odm---v100-dev28)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.1+15`](#firebase_in_app_messaging_platform_interface---v02115)
+ - [`firebase_remote_config_web` - `v1.1.4`](#firebase_remote_config_web---v114)
+ - [`firebase_remote_config_platform_interface` - `v1.1.15`](#firebase_remote_config_platform_interface---v1115)
+ - [`firebase_database_platform_interface` - `v0.2.2+3`](#firebase_database_platform_interface---v0223)
+ - [`firebase_database_web` - `v0.2.1+5`](#firebase_database_web---v0215)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.3+11`](#firebase_dynamic_links_platform_interface---v02311)
+ - [`cloud_firestore_web` - `v2.8.6`](#cloud_firestore_web---v286)
+ - [`cloud_firestore_platform_interface` - `v5.7.3`](#cloud_firestore_platform_interface---v573)
+ - [`firebase_app_installations_web` - `v0.1.1+4`](#firebase_app_installations_web---v0114)
+ - [`firebase_messaging_platform_interface` - `v4.1.3`](#firebase_messaging_platform_interface---v413)
+ - [`firebase_app_check_platform_interface` - `v0.0.4+15`](#firebase_app_check_platform_interface---v00415)
+ - [`firebase_messaging_web` - `v3.1.3`](#firebase_messaging_web---v313)
+ - [`firebase_app_check_web` - `v0.0.6+4`](#firebase_app_check_web---v0064)
+ - [`firebase_app_installations_platform_interface` - `v0.1.1+15`](#firebase_app_installations_platform_interface---v01115)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.1+15`](#firebase_ml_model_downloader_platform_interface---v01115)
+ - [`cloud_functions_web` - `v4.3.4`](#cloud_functions_web---v434)
+ - [`firebase_analytics_platform_interface` - `v3.3.3`](#firebase_analytics_platform_interface---v333)
+ - [`cloud_functions_platform_interface` - `v5.1.15`](#cloud_functions_platform_interface---v5115)
+ - [`firebase_storage_web` - `v3.3.5`](#firebase_storage_web---v335)
+ - [`firebase_storage_platform_interface` - `v4.1.15`](#firebase_storage_platform_interface---v4115)
+ - [`firebase_performance_platform_interface` - `v0.1.1+15`](#firebase_performance_platform_interface---v01115)
+ - [`firebase_performance_web` - `v0.1.1+4`](#firebase_performance_web---v0114)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.28`](#cloud_firestore_odm_generator---v100-dev28)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_analytics` - `v9.3.3`
+ - `flutterfire_ui` - `v0.4.3+7`
+ - `firebase_crashlytics` - `v2.8.9`
+ - `firebase_crashlytics_platform_interface` - `v3.2.15`
+ - `firebase_dynamic_links` - `v4.3.6`
+ - `firebase_database` - `v9.1.3`
+ - `cloud_firestore` - `v3.4.6`
+ - `firebase_app_installations` - `v0.1.1+6`
+ - `firebase_ml_model_downloader` - `v0.1.1+6`
+ - `cloud_functions` - `v3.3.6`
+ - `firebase_core` - `v1.21.1`
+ - `firebase_storage` - `v10.3.7`
+ - `firebase_core_web` - `v1.7.2`
+ - `firebase_performance` - `v0.8.2+4`
+ - `cloud_firestore_odm` - `v1.0.0-dev.28`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.1+15`
+ - `firebase_remote_config_web` - `v1.1.4`
+ - `firebase_remote_config_platform_interface` - `v1.1.15`
+ - `firebase_database_platform_interface` - `v0.2.2+3`
+ - `firebase_database_web` - `v0.2.1+5`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.3+11`
+ - `cloud_firestore_web` - `v2.8.6`
+ - `cloud_firestore_platform_interface` - `v5.7.3`
+ - `firebase_app_installations_web` - `v0.1.1+4`
+ - `firebase_messaging_platform_interface` - `v4.1.3`
+ - `firebase_app_check_platform_interface` - `v0.0.4+15`
+ - `firebase_messaging_web` - `v3.1.3`
+ - `firebase_app_check_web` - `v0.0.6+4`
+ - `firebase_app_installations_platform_interface` - `v0.1.1+15`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.1+15`
+ - `cloud_functions_web` - `v4.3.4`
+ - `firebase_analytics_platform_interface` - `v3.3.3`
+ - `cloud_functions_platform_interface` - `v5.1.15`
+ - `firebase_storage_web` - `v3.3.5`
+ - `firebase_storage_platform_interface` - `v4.1.15`
+ - `firebase_performance_platform_interface` - `v0.1.1+15`
+ - `firebase_performance_web` - `v0.1.1+4`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.28`
+
+---
+
+#### `firebase_messaging` - `v13.0.0`
+
+ - **BREAKING** **FEAT**: android 13 notifications permission request ([#9348](https://github.com/firebase/flutterfire/issues/9348)). ([43b3b06b](https://github.com/firebase/flutterfire/commit/43b3b06b64739658f79c994110654f5a56abca05))
+   `firebase_messaging` now includes this permission: `Manifest.permission.POST_NOTIFICATIONS` in its `AndroidManifest.xml` file which requires updating your `android/app/build.gradle` to target API level 33.
+
+#### `firebase_analytics_web` - `v0.4.2+3`
+
+ - **FIX**: `setCurrentScreen()` API is now obsolete, using `logEvent()` instead ([#9397](https://github.com/firebase/flutterfire/issues/9397)). ([490ef204](https://github.com/firebase/flutterfire/commit/490ef204b9873fca994f1a69ddf7962e6d735c4b))
+
+#### `firebase_app_check` - `v0.0.7`
+
+ - **FEAT**: update the example app with webRecaptcha in activate button ([#9373](https://github.com/firebase/flutterfire/issues/9373)). ([1ff76c1b](https://github.com/firebase/flutterfire/commit/1ff76c1b87b623ff21c921d6a6cc2c586cf43ac3))
+ - **REFACTOR**: update deprecated `Tasks.call()` to `TaskCompletionSource` API ([#9404](https://github.com/firebase/flutterfire/pull/9404)). ([837d68ea](https://github.com/firebase/flutterfire/commit/5aa9f665e70297fecb88bd0fda5445753470660f))
+
+#### `firebase_auth` - `v3.7.0`
+
+ - **FEAT**: add Microsoft login for Android, iOS and Web ([#9415](https://github.com/firebase/flutterfire/issues/9415)). ([1610ce8a](https://github.com/firebase/flutterfire/commit/1610ce8ac96d6da202ef014e9a3dfeb4acfacec9))
+ - **FEAT**: add Sign in with Apple directly in Firebase Auth for Android, iOS 13+ and Web ([#9408](https://github.com/firebase/flutterfire/issues/9408)). ([da36b986](https://github.com/firebase/flutterfire/commit/da36b9861b7d635382705b4893eed85fd672125c))
+
+#### `firebase_auth_platform_interface` - `v6.6.0`
+
+ - **FEAT**: add Microsoft login for Android, iOS and Web ([#9415](https://github.com/firebase/flutterfire/issues/9415)). ([1610ce8a](https://github.com/firebase/flutterfire/commit/1610ce8ac96d6da202ef014e9a3dfeb4acfacec9))
+ - **FEAT**: add Sign in with Apple directly in Firebase Auth for Android, iOS 13+ and Web ([#9408](https://github.com/firebase/flutterfire/issues/9408)). ([da36b986](https://github.com/firebase/flutterfire/commit/da36b9861b7d635382705b4893eed85fd672125c))
+
+#### `firebase_auth_web` - `v4.3.0`
+
+ - **FEAT**: add Microsoft login for Android, iOS and Web ([#9415](https://github.com/firebase/flutterfire/issues/9415)). ([1610ce8a](https://github.com/firebase/flutterfire/commit/1610ce8ac96d6da202ef014e9a3dfeb4acfacec9))
+ - **FEAT**: add Sign in with Apple directly in Firebase Auth for Android, iOS 13+ and Web ([#9408](https://github.com/firebase/flutterfire/issues/9408)). ([da36b986](https://github.com/firebase/flutterfire/commit/da36b9861b7d635382705b4893eed85fd672125c))
+
+#### `firebase_core_platform_interface` - `v4.5.1`
+
+ - **FIX**: Prepare for fix to https://github.com/flutter/flutter/issues/109339. ([#9364](https://github.com/firebase/flutterfire/issues/9364)). ([7418dfd9](https://github.com/firebase/flutterfire/commit/7418dfd91c4fc7982c6bc6b1e8de80f9bccd575b))
+
+	#### `firebase_in_app_messaging` - `v0.6.0+23`
+
+ - **REFACTOR**: update deprecated `Tasks.call()` to `TaskCompletionSource` API ([#9407](https://github.com/firebase/flutterfire/pull/9407)). ([837d68ea](https://github.com/firebase/flutterfire/commit/bb9b3b23c683d28730a1952f54384caed78674d7))
+
+#### `firebase_remote_config` - `v2.0.16`
+
+ - **REFACTOR**: update deprecated `Tasks.call()` to `TaskCompletionSource` API ([#9405](https://github.com/firebase/flutterfire/issues/9405)). ([837d68ea](https://github.com/firebase/flutterfire/commit/837d68ea60649fa1fb1c7f8254e4ae67874e9bf2))
+
+
 ## 2022-08-18
 
 ### Changes

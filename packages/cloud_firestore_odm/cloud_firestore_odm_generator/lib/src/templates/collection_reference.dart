@@ -1,9 +1,30 @@
-import '../collection_generator.dart';
-import 'template.dart';
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
-class CollectionReferenceTemplate extends Template<CollectionData> {
+import '../collection_data.dart';
+
+class CollectionReferenceTemplate {
+  CollectionReferenceTemplate(this.data);
+
+  final CollectionData data;
+
   @override
-  String generate(CollectionData data) {
+  String toString() {
+    final idKey = data.idKey;
+
+    String fromFirestoreBody;
+    String toFirestoreBody;
+    if (idKey != null) {
+      fromFirestoreBody =
+          'return ${data.fromJson("{'$idKey': snapshot.id, ...?snapshot.data()}")};';
+      toFirestoreBody =
+          "return {...${data.toJson('value')}}..remove('$idKey');";
+    } else {
+      fromFirestoreBody = 'return ${data.fromJson('snapshot.data()!')};';
+      toFirestoreBody = 'return ${data.toJson('value')};';
+    }
+
     return '''
 /// A collection reference object can be used for adding documents,
 /// getting document references, and querying for documents
@@ -18,14 +39,14 @@ abstract class ${data.collectionReferenceInterfaceName}
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return ${data.fromJson('snapshot.data()!')};
+    $fromFirestoreBody
   }
  
   static Map<String, Object?> toFirestore(
     ${data.type} value,
     SetOptions? options,
   ) {
-    return ${data.toJson('value')};
+    $toFirestoreBody
   }
 
   @override
@@ -152,7 +173,7 @@ ${_parentProperty(data)}
   ${data.collectionReferenceImplName}._(
     this.parent,
     CollectionReference<${data.type}> reference,
-  ) : super(reference, reference);
+  ) : super(reference, \$referenceWithoutCursor: reference);
 ''';
   }
 
@@ -183,7 +204,7 @@ factory ${data.collectionReferenceInterfaceName}([
 
   ${data.collectionReferenceImplName}._(
     CollectionReference<${data.type}> reference,
-  ) : super(reference, reference);
+  ) : super(reference, \$referenceWithoutCursor: reference);
 ''';
   }
 }

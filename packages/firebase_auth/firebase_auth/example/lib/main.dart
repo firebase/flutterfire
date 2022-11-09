@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -53,11 +57,11 @@ class AuthExampleApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.amber),
       home: Scaffold(
         body: LayoutBuilder(
-          builder: (context, constraines) {
+          builder: (context, constraints) {
             return Row(
               children: [
                 Visibility(
-                  visible: constraines.maxWidth >= 1200,
+                  visible: constraints.maxWidth >= 1200,
                   child: Expanded(
                     child: Container(
                       height: double.infinity,
@@ -77,9 +81,9 @@ class AuthExampleApp extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: constraines.maxWidth >= 1200
-                      ? constraines.maxWidth / 2
-                      : constraines.maxWidth,
+                  width: constraints.maxWidth >= 1200
+                      ? constraints.maxWidth / 2
+                      : constraints.maxWidth,
                   child: StreamBuilder<User?>(
                     stream: FirebaseAuth.instance.authStateChanges(),
                     builder: (context, snapshot) {

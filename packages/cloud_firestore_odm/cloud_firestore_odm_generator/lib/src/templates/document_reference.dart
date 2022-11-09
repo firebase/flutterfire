@@ -1,9 +1,16 @@
-import '../collection_generator.dart';
-import 'template.dart';
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
-class DocumentReferenceTemplate extends Template<CollectionData> {
+import '../collection_data.dart';
+
+class DocumentReferenceTemplate {
+  DocumentReferenceTemplate(this.data);
+
+  final CollectionData data;
+
   @override
-  String generate(CollectionData data) {
+  String toString() {
     return '''
 abstract class ${data.documentReferenceName} extends FirestoreDocumentReference<${data.type}, ${data.documentSnapshotName}> {
   factory ${data.documentReferenceName}(DocumentReference<${data.type}> reference) = _\$${data.documentReferenceName};
@@ -24,8 +31,6 @@ abstract class ${data.documentReferenceName} extends FirestoreDocumentReference<
   Future<void> delete();
 
   ${_updatePrototype(data)}
-
-  Future<void> set(${data.type} value);
 }
 
 class _\$${data.documentReferenceName}
@@ -42,34 +47,20 @@ class _\$${data.documentReferenceName}
 
   @override
   Stream<${data.documentSnapshotName}> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return ${data.documentSnapshotName}._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(${data.documentSnapshotName}._);
   }
 
   @override
   Future<${data.documentSnapshotName}> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return ${data.documentSnapshotName}._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(${data.documentSnapshotName}._);
   }
 
   @override
-  Future<void> delete() {
-    return reference.delete();
+  Future<${data.documentSnapshotName}> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then(${data.documentSnapshotName}._);
   }
 
-  ${_update(data)}
-
-  Future<void> set(${data.type} value) {
-    return reference.set(value);
-  }
+  ${_update(data)} 
 
   ${_equalAndHashCode(data)}
 }
@@ -81,36 +72,74 @@ class _\$${data.documentReferenceName}
 
     final parameters = [
       for (final field in data.updatableFields)
-        if (field.updatable)
-          '${field.type.getDisplayString(withNullability: true)} ${field.name},'
+        if (field.updatable) ...[
+          '${field.type.getDisplayString(withNullability: true)} ${field.name},',
+          'FieldValue ${field.name}FieldValue,'
+        ]
     ];
 
-    return 'Future<void> update({${parameters.join()}});';
+    return '''
+/// Updates data on the document. Data will be merged with any existing
+/// document data.
+///
+/// If no document exists yet, the update will fail.
+Future<void> update({${parameters.join()}});
+
+/// Updates fields in the current document using the transaction API.
+///
+/// The update will fail if applied to a document that does not exist.
+void transactionUpdate(Transaction transaction, {${parameters.join()}});
+''';
   }
 
   String _update(CollectionData data) {
     if (data.updatableFields.isEmpty) return '';
 
     final parameters = [
-      for (final field in data.updatableFields)
-        'Object? ${field.name} = _sentinel,'
+      for (final field in data.updatableFields) ...[
+        'Object? ${field.name} = _sentinel,',
+        'FieldValue? ${field.name}FieldValue,',
+      ]
     ];
 
     // TODO support nested objects
     final json = [
+      for (final field in data.updatableFields) ...[
+        """
+        if (${field.name} != _sentinel)
+          '${field.name}': ${field.name} as ${field.type},
+        """,
+        """
+        if (${field.name}FieldValue != null)
+          '${field.name}': ${field.name}FieldValue ,
+        """
+      ],
+    ];
+
+    final asserts = [
       for (final field in data.updatableFields)
         '''
-        if (${field.name} != _sentinel)
-          "${field.name}": ${field.name} as ${field.type},
-        '''
-    ];
+        assert(
+          ${field.name} == _sentinel || ${field.name}FieldValue == null,
+          "Cannot specify both ${field.name} and ${field.name}FieldValue",
+        );''',
+    ].join();
 
     return '''
 Future<void> update({${parameters.join()}}) async {
+  $asserts
   final json = {${json.join()}};
 
   return reference.update(json);
-}''';
+}
+
+void transactionUpdate(Transaction transaction, {${parameters.join()}}) {
+  $asserts
+  final json = {${json.join()}};
+
+  transaction.update(reference, json);
+}
+''';
   }
 
   String _parent(CollectionData data) {

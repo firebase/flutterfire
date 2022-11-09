@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
@@ -14,7 +18,7 @@ class ValidatorGenerator extends Generator {
         final validators = field.metadata.where(isValidatorAnnotation);
 
         for (final validator in validators) {
-          yield '${validator.toSource().replaceFirst('@', 'const ')}.validate(instance.${field.name}, "${field.name}");';
+          yield "${validator.toSource().replaceFirst('@', 'const ')}.validate(instance.${field.name}, '${field.name}');";
         }
       }).toList();
 

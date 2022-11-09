@@ -9,7 +9,7 @@ class TransactionResult {
   TransactionResultPlatform _delegate;
 
   TransactionResult._(this._delegate) {
-    TransactionResultPlatform.verifyExtends(_delegate);
+    TransactionResultPlatform.verify(_delegate);
   }
 
   /// The [committed] status associated to this transaction result.

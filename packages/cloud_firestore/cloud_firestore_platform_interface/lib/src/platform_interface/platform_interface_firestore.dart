@@ -4,6 +4,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+// TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
+// ignore: unnecessary_import
 import 'dart:typed_data';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -55,7 +57,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
 
   /// Sets the [FirebaseFirestorePlatform.instance]
   static set instance(FirebaseFirestorePlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

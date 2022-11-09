@@ -40,6 +40,7 @@ public class FlutterFirebaseAnalyticsPlugin
     FlutterFirebasePluginRegistry.registerPlugin(channelName, this);
   }
 
+  @SuppressWarnings("unchecked")
   private static Bundle createBundleFromMap(Map<String, Object> map) {
     if (map == null) {
       return null;

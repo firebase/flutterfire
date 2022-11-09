@@ -21,8 +21,8 @@ abstract class UserCredentialPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Ensures that any delegate class has extended a [UserCredentialPlatform].
-  static void verifyExtends(UserCredentialPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(UserCredentialPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The current FirebaseAuth instance.

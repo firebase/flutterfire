@@ -19,6 +19,8 @@ dependencies:
     sdk: flutter
 
 dependency_overrides:
+  _flutterfire_internals:
+    path: ../../../_flutterfire_internals
   firebase_core:
     path: ../../../firebase_core/firebase_core
   firebase_core_platform_interface:
@@ -27,11 +29,6 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_web
   firebase_in_app_messaging_platform_interface:
     path: ../../firebase_in_app_messaging_platform_interface
-
-dev_dependencies:
-  drive: 1.0.0-1.0.nullsafety.1
-  flutter_driver:
-    sdk: flutter
 
 flutter:
   uses-material-design: true
