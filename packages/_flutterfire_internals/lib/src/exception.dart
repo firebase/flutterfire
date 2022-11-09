@@ -11,10 +11,15 @@ import 'package:flutter/services.dart';
 /// If the [Exception] is a [PlatformException], a [FirebaseException] is returned.
 Never convertPlatformExceptionToFirebaseException(
   Object exception,
-  StackTrace stackTrace, {
+  StackTrace rawStackTrace, {
   required String plugin,
 }) {
-  if (exception is! Exception || exception is! PlatformException) {
+  var stackTrace = rawStackTrace;
+  if (stackTrace == StackTrace.empty) {
+    stackTrace = StackTrace.current;
+  }
+
+  if (exception is! PlatformException) {
     Error.throwWithStackTrace(exception, stackTrace);
   }
 
@@ -50,4 +55,22 @@ FirebaseException platformExceptionToFirebaseException(
     code: code,
     message: message,
   );
+}
+
+/// A custom [EventChannel] with default error handling logic.
+extension EventChannelExtension on EventChannel {
+  /// Similar to [receiveBroadcastStream], but with enforced error handling.
+  Stream<dynamic> receiveGuardedBroadcastStream({
+    dynamic arguments,
+    required dynamic Function(Object error, StackTrace stackTrace) onError,
+  }) {
+    final incomingStackTrace = StackTrace.current;
+
+    return receiveBroadcastStream(arguments).handleError((Object error) {
+      // TODO(rrousselGit): use package:stack_trace to merge the error's StackTrace with "incomingStackTrace"
+      // This TODO assumes that EventChannel is updated to actually pass a StackTrace
+      // (as it currently only sends StackTrace.empty)
+      return onError(error, incomingStackTrace);
+    });
+  }
 }

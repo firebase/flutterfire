@@ -7,16 +7,12 @@ targets:
           include:
             - lib/*
             - lib/**
-            - test_driver/integration/*
-            - test_driver/integration/**/*
       json_serializable:
         enabled: true
         generate_for:
           include:
             - lib/*
             - lib/**
-            - test_driver/integration/*
-            - test_driver/integration/**/*
         options:
           create_field_map: true
       source_gen|combining_builder:

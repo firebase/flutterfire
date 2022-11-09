@@ -15,8 +15,8 @@ a popup or redirect.
 ## Google
 
 Most configuration is already setup when using Google Sign-In with Firebase, however you need to ensure your machine's
-SHA1 key has been configured for use with Android. You can see how to generate the key on the
-[Installation](../manual-installation/android#generating-firebase-credentials) documentation.
+SHA1 key has been configured for use with Android. You can see how to generate the key in the
+[authentication documentation](https://developers.google.com/android/guides/client-auth).
 
 Ensure the "Google" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
 
@@ -422,6 +422,9 @@ final appleProvider = AppleAuthProvider();
 
 if (kIsWeb) {
   await FirebaseAuth.instance.currentUser?.reauthenticateWithPopup(appleProvider);
+  
+  // Or you can reauthenticate with a redirection
+  // await FirebaseAuth.instance.currentUser?.reauthenticateWithRedirect(appleProvider);
 } else {
   await FirebaseAuth.instance.currentUser?.reauthenticateWithProvider(appleProvider);
 }

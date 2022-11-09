@@ -24,10 +24,12 @@ dev_dependencies:
     path: ../../cloud_firestore_odm_generator
   cloud_firestore_odm_generator_integration_test:
     path: ../../cloud_firestore_odm_generator/cloud_firestore_odm_generator_integration_test
-  drive: ^1.0.0-1.0.nullsafety.1
   flutter_test:
     sdk: flutter
   freezed: ^2.0.0
+  http: ^0.13.5
+  integration_test:
+    sdk: flutter
   json_serializable: ^6.3.0
   mockito: ^5.0.0
 

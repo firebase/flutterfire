@@ -1,3 +1,14 @@
+## 2.0.1
+
+ - Update a dependency to the latest release.
+
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: Firebase JS web SDK version: `9.11.0` ([#9742](https://github.com/firebase/flutterfire/issues/9742)). ([1829ee7d](https://github.com/firebase/flutterfire/commit/1829ee7d62625bd13f0a336d44b9ed2a701725af))
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
 ## 1.7.3
 
  - **FIX**: explicitly set `null` value on Firestore data object property value ([#9599](https://github.com/firebase/flutterfire/issues/9599)). ([e61b6039](https://github.com/firebase/flutterfire/commit/e61b60390cfe8fc985203a4d3e3ed30eb8d020c6))

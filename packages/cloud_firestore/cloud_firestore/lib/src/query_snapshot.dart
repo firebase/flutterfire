@@ -25,7 +25,7 @@ abstract class QuerySnapshot<T extends Object?> {
 /// It can contain zero or more [DocumentSnapshot] objects.
 class _JsonQuerySnapshot implements QuerySnapshot<Map<String, dynamic>> {
   _JsonQuerySnapshot(this._firestore, this._delegate) {
-    QuerySnapshotPlatform.verifyExtends(_delegate);
+    QuerySnapshotPlatform.verify(_delegate);
   }
 
   final FirebaseFirestore _firestore;

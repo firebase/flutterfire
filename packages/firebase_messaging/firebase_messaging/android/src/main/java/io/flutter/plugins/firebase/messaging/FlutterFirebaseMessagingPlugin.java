@@ -25,7 +25,6 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
-import io.flutter.embedding.engine.FlutterShellArgs;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -251,6 +250,25 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     return taskCompletionSource.getTask();
   }
 
+  private Task<Void> setDeliveryMetricsExportToBigQuery(Map<String, Object> arguments) {
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseMessaging firebaseMessaging =
+                FlutterFirebaseMessagingUtils.getFirebaseMessagingForArguments(arguments);
+            Boolean enabled = (Boolean) Objects.requireNonNull(arguments.get("enabled"));
+            firebaseMessaging.setDeliveryMetricsExportToBigQuery(enabled);
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
   private Task<Map<String, Object>> getInitialMessage() {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -411,19 +429,9 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
           userCallbackHandle = Long.valueOf((Integer) arg2);
         }
 
-        FlutterShellArgs shellArgs = null;
-        if (mainActivity != null) {
-          // Supports both Flutter Activity types:
-          //    io.flutter.embedding.android.FlutterFragmentActivity
-          //    io.flutter.embedding.android.FlutterActivity
-          // We could use `getFlutterShellArgs()` but this is only available on `FlutterActivity`.
-          shellArgs = FlutterShellArgs.fromIntent(mainActivity.getIntent());
-        }
-
         FlutterFirebaseMessagingBackgroundService.setCallbackDispatcher(pluginCallbackHandle);
         FlutterFirebaseMessagingBackgroundService.setUserCallbackHandle(userCallbackHandle);
-        FlutterFirebaseMessagingBackgroundService.startBackgroundIsolate(
-            pluginCallbackHandle, shellArgs);
+        FlutterFirebaseMessagingBackgroundService.startBackgroundIsolate(pluginCallbackHandle);
         methodCallTask = Tasks.forResult(null);
         break;
       case "Messaging#getInitialMessage":
@@ -446,6 +454,9 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         break;
       case "Messaging#setAutoInitEnabled":
         methodCallTask = setAutoInitEnabled(call.arguments());
+        break;
+      case "Messaging#setDeliveryMetricsExportToBigQuery":
+        methodCallTask = setDeliveryMetricsExportToBigQuery(call.arguments());
         break;
       case "Messaging#requestPermission":
         if (Build.VERSION.SDK_INT >= 33) {

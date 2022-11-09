@@ -26,15 +26,15 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files     = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
-  
-  s.ios.deployment_target = '10.0'
+
+  s.ios.deployment_target = '11.0'
 
   s.swift_version = '5.5'
-  
+
   s.dependency 'Flutter'
   s.dependency 'firebase_core'
   s.dependency 'Firebase/Installations', firebase_sdk_version
-  
+
   s.static_framework = true
   s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-installations\\\"",

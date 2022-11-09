@@ -6,6 +6,7 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -67,7 +68,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       'appName': app.name,
     }).then((channelName) {
       final events = EventChannel(channelName!, channel.codec);
-      events.receiveBroadcastStream().listen(
+      events
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
+          .listen(
         (arguments) {
           _handleIdTokenChangesListener(app.name, arguments);
         },
@@ -78,7 +81,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       'appName': app.name,
     }).then((channelName) {
       final events = EventChannel(channelName!, channel.codec);
-      events.receiveBroadcastStream().listen(
+      events
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
+          .listen(
         (arguments) {
           _handleAuthStateChangesListener(app.name, arguments);
         },
@@ -636,7 +641,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           }));
 
       EventChannel(eventChannelName!)
-          .receiveBroadcastStream()
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
           .listen((arguments) {
         final name = arguments['name'];
         if (name == 'Auth#phoneVerificationCompleted') {

@@ -30,7 +30,7 @@ abstract class FirebasePlatform extends PlatformInterface {
   static FirebasePlatform _instance = MethodChannelFirebase();
 
   static set instance(FirebasePlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

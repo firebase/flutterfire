@@ -5,6 +5,7 @@
 
 import 'dart:async';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:flutter/services.dart';
@@ -103,38 +104,37 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     late StreamController<DocumentSnapshotPlatform>
         controller; // ignore: close_sinks
 
-    StreamSubscription<dynamic>? snapshotStream;
+    StreamSubscription<dynamic>? snapshotStreamSubscription;
     controller = StreamController<DocumentSnapshotPlatform>.broadcast(
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.channel
             .invokeMethod<String>('DocumentReference#snapshots');
-        snapshotStream =
+        snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId!)
-                .receiveBroadcastStream(
-                  <String, dynamic>{
-                    'reference': this,
-                    'includeMetadataChanges': includeMetadataChanges,
-                  },
-                )
-                .handleError(convertPlatformException)
-                .listen(
-                  (snapshot) {
-                    controller.add(
-                      DocumentSnapshotPlatform(
-                        firestore,
-                        snapshot['path'],
-                        <String, dynamic>{
-                          'data': snapshot['data'],
-                          'metadata': snapshot['metadata'],
-                        },
-                      ),
-                    );
-                  },
-                  onError: controller.addError,
-                );
+                .receiveGuardedBroadcastStream(
+          arguments: <String, dynamic>{
+            'reference': this,
+            'includeMetadataChanges': includeMetadataChanges,
+          },
+          onError: convertPlatformException,
+        ).listen(
+          (snapshot) {
+            controller.add(
+              DocumentSnapshotPlatform(
+                firestore,
+                snapshot['path'],
+                <String, dynamic>{
+                  'data': snapshot['data'],
+                  'metadata': snapshot['metadata'],
+                },
+              ),
+            );
+          },
+          onError: controller.addError,
+        );
       },
       onCancel: () {
-        snapshotStream?.cancel();
+        snapshotStreamSubscription?.cancel();
       },
     );
 

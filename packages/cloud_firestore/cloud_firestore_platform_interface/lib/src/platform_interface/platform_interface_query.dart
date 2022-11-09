@@ -5,9 +5,9 @@
 
 import 'dart:async';
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 Map<String, dynamic> _initialParameters = Map<String, dynamic>.unmodifiable({
   'where': List<List<dynamic>>.unmodifiable([]),
@@ -36,10 +36,8 @@ abstract class QueryPlatform extends PlatformInterface {
   /// This is used by the app-facing [Query] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(QueryPlatform instance) {
-    if (instance is! CollectionReferencePlatform) {
-      PlatformInterface.verifyToken(instance, _token);
-    }
+  static void verify(QueryPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The [FirebaseFirestorePlatform] interface for this current query.
@@ -227,5 +225,11 @@ abstract class QueryPlatform extends PlatformInterface {
   /// set.
   QueryPlatform where(List<List<dynamic>> conditions) {
     throw UnimplementedError('where() is not implemented');
+  }
+
+  /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
+  /// metadata
+  AggregateQueryPlatform count() {
+    throw UnimplementedError('count() is not implemented');
   }
 }

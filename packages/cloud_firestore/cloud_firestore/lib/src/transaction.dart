@@ -14,7 +14,7 @@ class Transaction {
   final TransactionPlatform _delegate;
 
   Transaction._(this._firestore, this._delegate) {
-    TransactionPlatform.verifyExtends(_delegate);
+    TransactionPlatform.verify(_delegate);
   }
 
   /// Reads the document referenced by the provided [DocumentReference].

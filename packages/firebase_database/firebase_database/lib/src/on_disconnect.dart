@@ -24,7 +24,7 @@ class OnDisconnect {
   OnDisconnectPlatform _delegate;
 
   OnDisconnect._(this._delegate) {
-    OnDisconnectPlatform.verifyExtends(_delegate);
+    OnDisconnectPlatform.verify(_delegate);
   }
 
   /// Ensures the data at this location is set to the specified value when the
