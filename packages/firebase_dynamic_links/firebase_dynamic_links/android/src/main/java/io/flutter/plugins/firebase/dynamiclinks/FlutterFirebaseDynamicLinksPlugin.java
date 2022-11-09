@@ -61,6 +61,7 @@ public class FlutterFirebaseDynamicLinksPlugin
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
+    channel = null;
   }
 
   @Override
@@ -109,14 +110,18 @@ public class FlutterFirebaseDynamicLinksPlugin
             pendingDynamicLinkData -> {
               Map<String, Object> dynamicLink =
                   Utils.getMapFromPendingDynamicLinkData(pendingDynamicLinkData);
-              if (dynamicLink != null) {
+              // We check if channel is `null` as this may be called after the plugin is detached from FlutterEngine
+              if (dynamicLink != null && channel != null) {
                 channel.invokeMethod("FirebaseDynamicLink#onLinkSuccess", dynamicLink);
               }
             })
         .addOnFailureListener(
-            exception ->
+            exception -> {
+              if (channel != null) {
                 channel.invokeMethod(
-                    "FirebaseDynamicLink#onLinkError", Utils.getExceptionDetails(exception)));
+                    "FirebaseDynamicLink#onLinkError", Utils.getExceptionDetails(exception));
+              }
+            });
     return false;
   }
 
