@@ -43,6 +43,9 @@ public class FlutterFirebaseDynamicLinksPlugin
 
   private static final String TAG = "FLTFirebaseDynamicLinks";
 
+  private Map<String, Object> cachedDynamicLinkData;
+  private Map<String, Object> cachedDynamicLinkException;
+
   private MethodChannel channel;
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_dynamic_links";
@@ -51,6 +54,7 @@ public class FlutterFirebaseDynamicLinksPlugin
     channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
     channel.setMethodCallHandler(this);
     FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this);
+    checkForCachedData();
   }
 
   @Override
@@ -110,16 +114,25 @@ public class FlutterFirebaseDynamicLinksPlugin
             pendingDynamicLinkData -> {
               Map<String, Object> dynamicLink =
                   Utils.getMapFromPendingDynamicLinkData(pendingDynamicLinkData);
-              // We check if channel is `null` as this may be called after the plugin is detached from FlutterEngine
-              if (dynamicLink != null && channel != null) {
-                channel.invokeMethod("FirebaseDynamicLink#onLinkSuccess", dynamicLink);
+              if (dynamicLink != null) {
+                if( channel != null) {
+                  channel.invokeMethod("FirebaseDynamicLink#onLinkSuccess", dynamicLink);
+                } else {
+                  // If channel is `null`, we store the dynamic link in the `cachedDynamicLinkData` to be sent once channel is initialized.
+                  // Not sure if this is occurring at start up time or when FlutterEngine is destroyed and recreated.
+                  // See https://github.com/firebase/flutterfire/issues/8516
+                  cachedDynamicLinkData = dynamicLink;
+                }
               }
             })
         .addOnFailureListener(
             exception -> {
+             Map<String, Object> dynamicLinkException = Utils.getExceptionDetails(exception);
               if (channel != null) {
                 channel.invokeMethod(
                     "FirebaseDynamicLink#onLinkError", Utils.getExceptionDetails(exception));
+              } else {
+                cachedDynamicLinkException = dynamicLinkException;
               }
             });
     return false;
@@ -159,6 +172,17 @@ public class FlutterFirebaseDynamicLinksPlugin
                 Utils.getExceptionDetails(exception));
           }
         });
+  }
+
+  private void checkForCachedData(){
+    if(cachedDynamicLinkData != null) {
+      channel.invokeMethod("FirebaseDynamicLink#onLinkSuccess", cachedDynamicLinkData);
+      cachedDynamicLinkData = null;
+    }
+    if(cachedDynamicLinkException != null) {
+      channel.invokeMethod("FirebaseDynamicLink#onLinkError", cachedDynamicLinkException);
+      cachedDynamicLinkException = null;
+    }
   }
 
   private String buildLink(Map<String, Object> arguments) {
