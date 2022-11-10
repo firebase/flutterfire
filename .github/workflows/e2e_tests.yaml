@@ -26,7 +26,7 @@ on:
 
 jobs:
   android:
-    runs-on: macos-11
+    runs-on: macos-12
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v3
@@ -34,7 +34,7 @@ jobs:
         name: Install Node.js 16
         with:
           node-version: "16"
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v3
         with:
           distribution: "temurin"
           java-version: "11"
@@ -122,7 +122,7 @@ jobs:
         name: Install Node.js 16
         with:
           node-version: "16"
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v3
         with:
           distribution: "temurin"
           java-version: "11"
@@ -181,7 +181,7 @@ jobs:
           exit $FLUTTER_DRIVE_EXIT_CODE
 
   macos:
-    runs-on: macos-latest
+    runs-on: macos-12
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v3
@@ -189,7 +189,7 @@ jobs:
         name: Install Node.js 16
         with:
           node-version: "16"
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v3
         with:
           distribution: "temurin"
           java-version: "11"
@@ -248,7 +248,7 @@ jobs:
         name: Install Node.js 16
         with:
           node-version: "16"
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v3
         with:
           distribution: "temurin"
           java-version: "11"
