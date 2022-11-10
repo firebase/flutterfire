@@ -130,7 +130,7 @@ public class FlutterFirebaseDynamicLinksPlugin
              Map<String, Object> dynamicLinkException = Utils.getExceptionDetails(exception);
               if (channel != null) {
                 channel.invokeMethod(
-                    "FirebaseDynamicLink#onLinkError", Utils.getExceptionDetails(exception));
+                    "FirebaseDynamicLink#onLinkError", dynamicLinkException);
               } else {
                 cachedDynamicLinkException = dynamicLinkException;
               }
