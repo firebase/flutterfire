@@ -115,7 +115,7 @@ public class FlutterFirebaseDynamicLinksPlugin
               Map<String, Object> dynamicLink =
                   Utils.getMapFromPendingDynamicLinkData(pendingDynamicLinkData);
               if (dynamicLink != null) {
-                if(channel != null) {
+                if (channel != null) {
                   channel.invokeMethod("FirebaseDynamicLink#onLinkSuccess", dynamicLink);
                 } else {
                   // If channel is `null`, we store the dynamic link in the `cachedDynamicLinkData` to be sent once channel is initialized.
@@ -127,10 +127,9 @@ public class FlutterFirebaseDynamicLinksPlugin
             })
         .addOnFailureListener(
             exception -> {
-             Map<String, Object> dynamicLinkException = Utils.getExceptionDetails(exception);
+              Map<String, Object> dynamicLinkException = Utils.getExceptionDetails(exception);
               if (channel != null) {
-                channel.invokeMethod(
-                    "FirebaseDynamicLink#onLinkError", dynamicLinkException);
+                channel.invokeMethod("FirebaseDynamicLink#onLinkError", dynamicLinkException);
               } else {
                 cachedDynamicLinkException = dynamicLinkException;
               }
@@ -174,12 +173,12 @@ public class FlutterFirebaseDynamicLinksPlugin
         });
   }
 
-  private void checkForCachedData(){
-    if(cachedDynamicLinkData != null) {
+  private void checkForCachedData() {
+    if (cachedDynamicLinkData != null) {
       channel.invokeMethod("FirebaseDynamicLink#onLinkSuccess", cachedDynamicLinkData);
       cachedDynamicLinkData = null;
     }
-    if(cachedDynamicLinkException != null) {
+    if (cachedDynamicLinkException != null) {
       channel.invokeMethod("FirebaseDynamicLink#onLinkError", cachedDynamicLinkException);
       cachedDynamicLinkException = null;
     }
