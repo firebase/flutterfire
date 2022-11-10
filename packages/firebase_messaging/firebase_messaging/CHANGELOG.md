@@ -1,3 +1,7 @@
+## 14.1.0
+
+ - **FEAT**: use FlutterEngineGroup to improve performance of background handlers ([#9867](https://github.com/firebase/flutterfire/issues/9867)). ([2e9deac0](https://github.com/firebase/flutterfire/commit/2e9deac08e3c1a9a2b35f850f8519e7c5ae43b37))
+
 ## 14.0.4
 
  - Update a dependency to the latest release.
