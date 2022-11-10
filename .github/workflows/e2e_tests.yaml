@@ -29,7 +29,7 @@ jobs:
     runs-on: macos-11
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
@@ -70,12 +70,12 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v2-${{ github.run_id }}
           restore-keys: firebase-emulators-v2
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
       - name: "Install Tools"
         run: |
-          ./.github/workflows/scripts/install-tools.sh
-          flutter config --no-enable-web --no-enable-ios --no-enable-macos-desktop
           sudo npm i -g firebase-tools
       - name: "Build Application"
         working-directory: tests
@@ -117,7 +117,7 @@ jobs:
     runs-on: macos-12
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
@@ -144,11 +144,12 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
           restore-keys: firebase-emulators-v1
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
       - name: "Install Tools"
         run: |
-          ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
       - name: "Build Application"
         working-directory: tests
@@ -183,7 +184,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
@@ -210,11 +211,12 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
           restore-keys: firebase-emulators-v1
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
       - name: "Install Tools"
         run: |
-          ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
       - name: "Build Application"
         working-directory: tests
@@ -241,7 +243,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
@@ -250,11 +252,12 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "11"
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
       - name: "Install Tools"
         run: |
-          ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
       - name: Cache Firebase Emulator
         uses: actions/cache@v2
