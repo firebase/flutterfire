@@ -115,7 +115,7 @@ public class FlutterFirebaseDynamicLinksPlugin
               Map<String, Object> dynamicLink =
                   Utils.getMapFromPendingDynamicLinkData(pendingDynamicLinkData);
               if (dynamicLink != null) {
-                if( channel != null) {
+                if(channel != null) {
                   channel.invokeMethod("FirebaseDynamicLink#onLinkSuccess", dynamicLink);
                 } else {
                   // If channel is `null`, we store the dynamic link in the `cachedDynamicLinkData` to be sent once channel is initialized.
