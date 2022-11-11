@@ -23,14 +23,12 @@ jobs:
     timeout-minutes: 45
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: 'Install Flutter'
-        run: ./.github/workflows/scripts/install-flutter.sh stable
-      - name: 'Install Tools'
-        run: |
-          ./.github/workflows/scripts/install-tools.sh
-      - name: 'Bootstrap Workspace'
-        run: melos bootstrap
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@v2
       - name: 'Run Analyze'
         run: melos run analyze
       - name: 'Pub Check'
@@ -42,12 +40,12 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: 'Install Flutter'
-        run: ./.github/workflows/scripts/install-flutter.sh stable
-      - name: 'Install Tools'
-        run: |
-          ./.github/workflows/scripts/install-tools.sh
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@v2
       - name: 'Flutter Pub Get'
         run: |
           melos exec -c 1 --scope="*example*" -- \
@@ -57,19 +55,23 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
-      - name: 'Install Flutter'
-        run: ./.github/workflows/scripts/install-flutter.sh stable
-      # See https://github.com/actions/runner-images/issues/6283
-      - name: Add Homebrew to PATH
-        run: echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> $GITHUB_PATH
-        shell: bash
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@v2
+      - uses: Homebrew/actions/setup-homebrew@master
       - name: 'Install Tools'
         run: |
-          ./.github/workflows/scripts/install-tools.sh
+          flutter pub global activate flutter_plugin_tools
           brew install swiftformat
-      - name: 'Bootstrap Workspace'
-        run: melos bootstrap
+          brew install clang-format
+          brew link --overwrite --force clang-format
+      - name: 'Formatter version'
+        run: |
+          clang-format --version
+          swiftformat --version
       - name: 'Dart, Java and Objective-C '
         run: |
           flutter pub global run flutter_plugin_tools format
@@ -84,15 +86,12 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: 'Install Flutter'
-        run: ./.github/workflows/scripts/install-flutter.sh stable
-      - name: 'Install Tools'
-        run: |
-          ./.github/workflows/scripts/install-tools.sh
-          flutter config --enable-web
-      - name: 'Bootstrap Workspace'
-        run: melos bootstrap
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@v2
       - name: 'Build Examples'
         run: |
           melos exec -c 1 --scope="*example*" --dir-exists="web" -- \
@@ -102,13 +101,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v2
-      - name: 'Install Flutter'
-        run: ./.github/workflows/scripts/install-flutter.sh stable
-      - name: 'Install Tools'
-        run: ./.github/workflows/scripts/install-tools.sh
-      - name: 'Bootstrap Workspace'
-        run: melos bootstrap
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@v2
       - name: 'Flutter Test'
         run: melos run test --no-select
       - name: 'Flutter Test - Web'

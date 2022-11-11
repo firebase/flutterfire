@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.firebase.messaging.RemoteMessage;
-import io.flutter.embedding.engine.FlutterShellArgs;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,13 +51,13 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
    * </ul>
    */
   @SuppressWarnings("JavadocReference")
-  public static void startBackgroundIsolate(long callbackHandle, FlutterShellArgs shellArgs) {
+  public static void startBackgroundIsolate(long callbackHandle) {
     if (flutterBackgroundExecutor != null) {
       Log.w(TAG, "Attempted to start a duplicate background isolate. Returning...");
       return;
     }
     flutterBackgroundExecutor = new FlutterFirebaseMessagingBackgroundExecutor();
-    flutterBackgroundExecutor.startBackgroundIsolate(callbackHandle, shellArgs);
+    flutterBackgroundExecutor.startBackgroundIsolate(callbackHandle);
   }
 
   /**
