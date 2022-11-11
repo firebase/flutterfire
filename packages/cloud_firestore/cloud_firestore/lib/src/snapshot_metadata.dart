@@ -24,7 +24,7 @@ class SnapshotMetadata {
   ///
   /// If you called [DocumentReference.snapshots] or [Query.snapshots] with
   /// `includeMetadataChanges` parameter set to `true` you will receive another
-  /// snapshot with `isFomCache` equal to `false` once the client has received
+  /// snapshot with `isFromCache` equal to `false` once the client has received
   /// up-to-date data from the backend.
   bool get isFromCache => _delegate.isFromCache;
 }

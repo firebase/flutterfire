@@ -46,8 +46,8 @@ class _MainScreenState extends State<_MainScreen> {
       'is properly setup. Look at firebase_dynamic_links/README.md for more '
       'details.';
 
-  final String DynamicLink = 'https://test-app/helloworld';
-  final String Link = 'https://reactnativefirebase.page.link/bFkn';
+  final String DynamicLink = 'https://example/helloworld';
+  final String Link = 'https://flutterfiretests.page.link/MEGs';
 
   @override
   void initState() {
@@ -70,9 +70,9 @@ class _MainScreenState extends State<_MainScreen> {
     });
 
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://reactnativefirebase.page.link',
+      uriPrefix: 'https://flutterfiretests.page.link',
       longDynamicLink: Uri.parse(
-        'https://reactnativefirebase.page.link/?efr=0&ibi=io.invertase.testing&apn=io.flutter.plugins.firebase.dynamiclinksexample&imv=0&amv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=https://ofl-example.com',
+        'https://flutterfiretests.page.link?efr=0&ibi=io.flutter.plugins.firebase.dynamiclinksexample&apn=io.flutter.plugins.firebase.dynamiclinksexample&imv=0&amv=0&link=https%3A%2F%2Fexample%2Fhelloworld&ofl=https://ofl-example.com',
       ),
       link: Uri.parse(DynamicLink),
       androidParameters: const AndroidParameters(
@@ -80,7 +80,7 @@ class _MainScreenState extends State<_MainScreen> {
         minimumVersion: 0,
       ),
       iosParameters: const IOSParameters(
-        bundleId: 'io.invertase.testing',
+        bundleId: 'io.flutter.plugins.firebase.dynamiclinksexample',
         minimumVersion: '0',
       ),
     );
