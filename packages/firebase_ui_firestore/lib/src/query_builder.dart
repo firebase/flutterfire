@@ -362,6 +362,9 @@ typedef FirestoreErrorBuilder = Widget Function(
   StackTrace stackTrace,
 );
 
+/// A type representing the function passed to [FirestoreListView] for its `emptyBuilder`.
+typedef FirestoreEmptyBuilder = Widget Function(BuildContext context);
+
 /// {@template firebase_ui.firestorelistview}
 /// A [ListView.builder] that obtains its items from a Firestore query.
 ///
@@ -422,6 +425,7 @@ class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
     int pageSize = 10,
     FirestoreLoadingBuilder? loadingBuilder,
     FirestoreErrorBuilder? errorBuilder,
+    FirestoreEmptyBuilder? emptyBuilder,
     Axis scrollDirection = Axis.vertical,
     bool reverse = false,
     ScrollController? controller,
@@ -457,6 +461,10 @@ class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
                 snapshot.error!,
                 snapshot.stackTrace!,
               );
+            }
+            
+            if (snapshot.docs.isEmpty && emptyBuilder != null) {
+              return emptyBuilder(context);
             }
 
             return ListView.builder(
