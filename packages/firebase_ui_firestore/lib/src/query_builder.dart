@@ -462,7 +462,7 @@ class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
                 snapshot.stackTrace!,
               );
             }
-            
+
             if (snapshot.docs.isEmpty && emptyBuilder != null) {
               return emptyBuilder(context);
             }
