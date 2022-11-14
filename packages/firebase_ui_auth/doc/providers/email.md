@@ -20,7 +20,7 @@ void main() {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   FirebaseUIAuth.configureProviders([
-    EmailProvider(),
+    EmailAuthProvider(),
     // ... other providers
   ]);
 }
@@ -28,7 +28,7 @@ void main() {
 
 ## Using screen
 
-After adding `EmailProvider` to the `FirebaseUIAuth.configureProviders` email form would be displayed on the `SignInScreen` or `RegisterScren`.
+After adding `EmailAuthProvider` to the `FirebaseUIAuth.configureProviders` email form would be displayed on the `SignInScreen` or `RegisterScren`.
 
 ```dart
 SignInScreen(
