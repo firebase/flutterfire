@@ -53,7 +53,8 @@ When users open a Dynamic Link with a deep link to the scheme and host you speci
 start the activity with this intent filter to handle the link.
 
 The next step is to ensure the SHA-256 fingerprint of the signing certificate is registered in the Firebase console
-for the app. You can find more details on how to retrieve your [SHA-256 fingerprint here](https://developers.google.com/android/guides/client-auth?authuser=0&hl=en).
+for the app. You can find more details on how to retrieve your SHA-256 fingerprint on the
+[Authenticating Your Client](https://developers.google.com/android/guides/client-auth) page.
 
 ### Apple platforms
 
