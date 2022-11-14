@@ -16,8 +16,12 @@ class DatabaseEvent {
   /// The type of event.
   DatabaseEventType get type => _delegate.type;
 
+  /// The cached [DataSnapshot] for the event.
+  DataSnapshot? _dataSnapshot;
+
   /// The [DataSnapshot] for this event.
-  DataSnapshot get snapshot => DataSnapshot._(_delegate.snapshot);
+  DataSnapshot get snapshot =>
+      _dataSnapshot ??= DataSnapshot._(_delegate.snapshot);
 
   /// A string containing the key of the previous sibling child by sort order,
   /// or null if it is the first child.
