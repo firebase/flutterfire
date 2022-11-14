@@ -232,7 +232,7 @@ typedef AuthStateListenerCallback<T extends AuthController> = bool? Function(
 /// AuthStateListener<EmailAuthController>(
 ///   child: LoginView(
 ///     actions: AuthAction.signIn,
-///     providers: [EmailProvider()],
+///     providers: [EmailAuthProvider()],
 ///   ),
 ///   listener: (oldState, state, controller) {
 ///     if (state is AuthFailed) {
