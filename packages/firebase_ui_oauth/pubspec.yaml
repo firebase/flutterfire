@@ -8,6 +8,7 @@ environment:
   flutter: '>=1.17.0'
 
 dependencies:
+  desktop_webview_auth: ^0.0.10
   firebase_auth: ^4.1.2
   firebase_ui_auth: ^1.0.5
   flutter_svg: ^1.1.2
