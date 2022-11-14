@@ -47,7 +47,7 @@ class _MainScreenState extends State<_MainScreen> {
       'details.';
 
   final String DynamicLink = 'https://example/helloworld';
-  final String Link = 'https://flutterfiretests.page.link/bFkn';
+  final String Link = 'https://flutterfiretests.page.link/MEGs';
 
   @override
   void initState() {

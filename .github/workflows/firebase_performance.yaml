@@ -27,7 +27,7 @@ env:
 jobs:
   android:
     if: github.event_name == 'pull_request'
-    runs-on: macos-latest
+    runs-on: macos-12
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v3
@@ -50,7 +50,7 @@ jobs:
           script: ./.github/workflows/scripts/drive-example.sh android
 
   ios:
-    runs-on: macos-latest
+    runs-on: macos-12
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v3
