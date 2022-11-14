@@ -302,6 +302,18 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return _delegate.waitForPendingWrites();
   }
 
+  Future<void> setIndexConfiguration(
+      {required List<Index> indexes,
+      List<FieldOverrides>? fieldOverrides}) async {
+    String json = jsonEncode({
+      'indexes': indexes.map((index) => index.toMap()).toList(),
+      'fieldOverrides':
+          fieldOverrides?.map((index) => index.toMap()).toList() ?? []
+    });
+
+    return _delegate.setIndexConfiguration(json);
+  }
+
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>

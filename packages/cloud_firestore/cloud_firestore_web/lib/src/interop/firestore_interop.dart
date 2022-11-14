@@ -34,6 +34,9 @@ external PromiseJsImpl<void> clearIndexedDbPersistence(
 );
 
 @JS()
+external PromiseJsImpl<void> setIndexConfiguration(String indexConfiguration);
+
+@JS()
 external CollectionReferenceJsImpl collection(
   FirestoreJsImpl firestore,
   String collectionPath,

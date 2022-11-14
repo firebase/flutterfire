@@ -136,6 +136,57 @@ void runInstanceTests() {
         await firestore.terminate();
         await firestore.clearPersistence();
       });
+
+      test('setIndexConfiguration()', () async {
+        Index index1 = Index(
+            collectionGroup: 'bar',
+            queryScope: QueryScope.collectionGroup,
+            fields: [
+              IndexField(fieldPath: 'fieldPath', order: Order.ascending)
+            ]);
+        Index index2 = Index(
+            collectionGroup: 'baz',
+            queryScope: QueryScope.collectionGroup,
+            fields: [
+              IndexField(fieldPath: 'foo', arrayConfig: ArrayConfig.contains)
+            ]);
+        await firestore.setIndexConfiguration(indexes: [index1, index2]);
+      });
+
+      test('setIndexConfiguration() two', () async {
+        Index index1 = Index(
+            collectionGroup: 'bar',
+            queryScope: QueryScope.collectionGroup,
+            fields: [
+              IndexField(
+                  fieldPath: 'fieldPath',
+                  order: Order.ascending,
+                  arrayConfig: ArrayConfig.contains)
+            ]);
+        await firestore.setIndexConfiguration(indexes: [index1]);
+      });
+
+      test('setIndexConfiguration() three', () async {
+        Index index1 = Index(
+            collectionGroup: 'bar',
+            queryScope: QueryScope.collectionGroup,
+            fields: [
+              IndexField(
+                  fieldPath: 'fieldPath',
+                  order: Order.ascending,
+                  arrayConfig: ArrayConfig.contains)
+            ]);
+        FieldOverrideIndex overrideIndex = FieldOverrideIndex(
+            queryScope: 'foo',
+            order: Order.ascending,
+            arrayConfig: ArrayConfig.contains);
+        FieldOverrides fieldOverrides = FieldOverrides(
+            fieldPath: 'fieldPath',
+            indexes: [overrideIndex],
+            collectionGroup: 'bar');
+        await firestore.setIndexConfiguration(
+            indexes: [index1], fieldOverrides: [fieldOverrides]);
+      });
     },
     skip: kIsWeb,
   );

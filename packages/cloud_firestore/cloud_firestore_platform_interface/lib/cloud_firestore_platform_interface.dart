@@ -26,6 +26,7 @@ export 'src/platform_interface/platform_interface_load_bundle_task.dart';
 export 'src/platform_interface/platform_interface_load_bundle_task_snapshot.dart';
 export 'src/platform_interface/platform_interface_aggregate_query.dart';
 export 'src/platform_interface/platform_interface_aggregate_query_snapshot.dart';
+export 'src/platform_interface/platform_interface_index_definitions.dart';
 export 'src/aggregate_source.dart';
 export 'src/snapshot_metadata.dart';
 export 'src/source.dart';

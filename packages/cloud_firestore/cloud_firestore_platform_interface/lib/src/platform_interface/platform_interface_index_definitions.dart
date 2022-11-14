@@ -1,0 +1,92 @@
+// Copyright 2022 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+class Index {
+  Index(
+      {required this.collectionGroup,
+      required this.fields,
+      required this.queryScope});
+
+  final String collectionGroup;
+  final QueryScope queryScope;
+  final List<IndexField> fields;
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'collectionGroup': collectionGroup,
+      'fields': fields.map((IndexField field) => field.toMap()).toList(),
+      'queryScope': queryScope == QueryScope.collection
+          ? 'collection'
+          : 'collectionGroup',
+    };
+  }
+}
+
+class IndexField {
+  IndexField({required this.fieldPath, this.order, this.arrayConfig});
+
+  final String fieldPath;
+  final Order? order;
+  final ArrayConfig? arrayConfig;
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'fieldPath': fieldPath,
+      if (order != null)
+        'order': order == Order.ascending ? 'ascending' : 'descending',
+      if (arrayConfig != null) 'arrayConfig': 'contains',
+    };
+  }
+}
+
+class FieldOverrides {
+  FieldOverrides(
+      {required this.collectionGroup,
+      required this.fieldPath,
+      required this.indexes});
+
+  final String collectionGroup;
+  final String fieldPath;
+  final List<FieldOverrideIndex> indexes;
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'collectionGroup': collectionGroup,
+      'fieldPath': fieldPath,
+      'indexes':
+          indexes.map((FieldOverrideIndex index) => index.toMap()).toList(),
+    };
+  }
+}
+
+class FieldOverrideIndex {
+  FieldOverrideIndex({required this.queryScope, this.order, this.arrayConfig});
+
+  final String queryScope;
+  final Order? order;
+  final ArrayConfig? arrayConfig;
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'queryScope': queryScope,
+      if (order != null)
+        'order': order == Order.ascending ? 'ascending' : 'descending',
+      if (arrayConfig != null) 'arrayConfig': 'contains',
+    };
+  }
+}
+
+enum Order {
+  ascending,
+  descending,
+}
+
+enum ArrayConfig {
+  contains,
+}
+
+enum QueryScope {
+  collection,
+  collectionGroup,
+}
