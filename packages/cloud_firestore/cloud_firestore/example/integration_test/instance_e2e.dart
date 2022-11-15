@@ -166,15 +166,20 @@ void runInstanceTests() {
           collectionGroup: 'baz',
           queryScope: QueryScope.collection,
           fields: [
-            IndexField(fieldPath: 'foo', arrayConfig: ArrayConfig.contains),
             IndexField(
-                fieldPath: 'bar',
-                order: Order.descending,
-                arrayConfig: ArrayConfig.contains),
+              fieldPath: 'foo',
+              arrayConfig: ArrayConfig.contains,
+            ),
             IndexField(
-                fieldPath: 'baz',
-                order: Order.descending,
-                arrayConfig: ArrayConfig.contains),
+              fieldPath: 'bar',
+              order: Order.descending,
+              arrayConfig: ArrayConfig.contains,
+            ),
+            IndexField(
+              fieldPath: 'baz',
+              order: Order.descending,
+              arrayConfig: ArrayConfig.contains,
+            ),
           ],
         );
 
