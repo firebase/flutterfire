@@ -18,7 +18,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
     return const MaterialApp(
       home: SignInScreen(
         providers: [
-          EmailProvider(),
+          EmailAuthProvider(),
         ],
       ),
     );
@@ -47,7 +47,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
       ),
       home: const SignInScreen(
         providers: [
-          EmailProvider(),
+          EmailAuthProvider(),
         ],
       ),
     );
@@ -84,7 +84,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
       ),
       home: const SignInScreen(
         providers: [
-          EmailProvider(),
+          EmailAuthProvider(),
         ],
       ),
     );
