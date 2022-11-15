@@ -212,6 +212,8 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// The index entries themselves are created asynchronously. You can continue to use queries that
   /// require indexing even if the indices are not yet available. Query execution will automatically
   /// start using the index once the index entries have been written.
+  ///
+  /// This API is in preview mode and is subject to change.
   Future<void> setIndexConfiguration(String indexConfiguration) {
     throw UnimplementedError('setIndexConfiguration() is not implemented');
   }
