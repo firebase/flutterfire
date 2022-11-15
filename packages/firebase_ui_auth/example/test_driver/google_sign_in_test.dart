@@ -88,6 +88,20 @@ void main() async {
         expect(user.displayName, 'Test User');
         expect(user.email, 'test@test.com');
       });
+
+      testWidgets('works standalone', (tester) async {
+        await render(
+          tester,
+          const GoogleSignInButton(
+            loadingIndicator: CircularProgressIndicator(),
+            clientId: 'test',
+          ),
+        );
+
+        final button = find.byType(GoogleSignInButton);
+        await tester.tap(button);
+        await tester.pump();
+      });
     },
     skip: !provider.supportsPlatform(defaultTargetPlatform),
   );
