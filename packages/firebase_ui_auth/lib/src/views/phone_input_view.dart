@@ -121,7 +121,7 @@ class _PhoneInputViewState extends State<PhoneInputView> {
               widget.subtitleBuilder!(context),
             if (state is AwaitingPhoneNumber || state is SMSCodeRequested) ...[
               PhoneInput(
-                initialCountryCode: countryCode!,
+                initialCountryCode: countryCode,
                 onSubmit: onSubmit(ctrl),
                 key: phoneInputKey,
               ),
