@@ -302,11 +302,10 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return _delegate.waitForPendingWrites();
   }
 
-  Future<void> setIndexConfiguration(
-      {required List<Index> indexes,
-      List<FieldOverrides>? fieldOverrides,
-      }
-  ) async {
+  Future<void> setIndexConfiguration({
+    required List<Index> indexes,
+    List<FieldOverrides>? fieldOverrides,
+  }) async {
     String json = jsonEncode({
       'indexes': indexes.map((index) => index.toMap()).toList(),
       'fieldOverrides':

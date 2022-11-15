@@ -3,11 +3,11 @@
 // found in the LICENSE file.
 
 class Index {
-  Index(
-      {required this.collectionGroup,
-      required this.fields,
-      required this.queryScope,
-      });
+  Index({
+    required this.collectionGroup,
+    required this.fields,
+    required this.queryScope,
+  });
 
   final String collectionGroup;
   final QueryScope queryScope;
@@ -42,11 +42,11 @@ class IndexField {
 }
 
 class FieldOverrides {
-  FieldOverrides(
-      {required this.collectionGroup,
-      required this.fieldPath,
-      required this.indexes,
-      });
+  FieldOverrides({
+    required this.collectionGroup,
+    required this.fieldPath,
+    required this.indexes,
+  });
 
   final String collectionGroup;
   final String fieldPath;
