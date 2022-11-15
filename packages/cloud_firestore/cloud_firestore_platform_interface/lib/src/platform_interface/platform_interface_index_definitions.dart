@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+/// The Index class follows the [Index definition](https://firebase.google.com/docs/reference/firestore/indexes/#indexes).
 class Index {
   Index({
     required this.collectionGroup,
@@ -41,6 +42,7 @@ class IndexField {
   }
 }
 
+/// The FieldOverrides class follows the [FieldOverrides definition](https://firebase.google.com/docs/reference/firestore/indexes/#fieldoverrides).
 class FieldOverrides {
   FieldOverrides({
     required this.collectionGroup,
