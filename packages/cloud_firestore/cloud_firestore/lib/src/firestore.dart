@@ -304,7 +304,9 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   Future<void> setIndexConfiguration(
       {required List<Index> indexes,
-      List<FieldOverrides>? fieldOverrides}) async {
+      List<FieldOverrides>? fieldOverrides,
+      }
+  ) async {
     String json = jsonEncode({
       'indexes': indexes.map((index) => index.toMap()).toList(),
       'fieldOverrides':

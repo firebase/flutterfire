@@ -143,13 +143,15 @@ void runInstanceTests() {
             queryScope: QueryScope.collectionGroup,
             fields: [
               IndexField(fieldPath: 'fieldPath', order: Order.ascending)
-            ]);
+            ],
+        );
         Index index2 = Index(
             collectionGroup: 'baz',
             queryScope: QueryScope.collectionGroup,
             fields: [
               IndexField(fieldPath: 'foo', arrayConfig: ArrayConfig.contains)
-            ]);
+            ],
+        );
         await firestore.setIndexConfiguration(indexes: [index1, index2]);
       });
 
@@ -161,8 +163,10 @@ void runInstanceTests() {
               IndexField(
                   fieldPath: 'fieldPath',
                   order: Order.ascending,
-                  arrayConfig: ArrayConfig.contains)
-            ]);
+                  arrayConfig: ArrayConfig.contains,
+              )
+            ],
+        );
         await firestore.setIndexConfiguration(indexes: [index1]);
       });
 
@@ -174,18 +178,23 @@ void runInstanceTests() {
               IndexField(
                   fieldPath: 'fieldPath',
                   order: Order.ascending,
-                  arrayConfig: ArrayConfig.contains)
-            ]);
+                  arrayConfig: ArrayConfig.contains,
+              )
+            ],
+        );
         FieldOverrideIndex overrideIndex = FieldOverrideIndex(
             queryScope: 'foo',
             order: Order.ascending,
-            arrayConfig: ArrayConfig.contains);
+            arrayConfig: ArrayConfig.contains,
+        );
         FieldOverrides fieldOverrides = FieldOverrides(
             fieldPath: 'fieldPath',
             indexes: [overrideIndex],
-            collectionGroup: 'bar');
+            collectionGroup: 'bar',
+        );
         await firestore.setIndexConfiguration(
-            indexes: [index1], fieldOverrides: [fieldOverrides]);
+            indexes: [index1], fieldOverrides: [fieldOverrides],
+        );
       });
     },
     skip: kIsWeb,

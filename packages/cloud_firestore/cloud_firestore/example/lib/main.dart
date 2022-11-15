@@ -100,18 +100,28 @@ class _FilmListState extends State<FilmList> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text('Firestore Example: Movies'),
-
+            ElevatedButton(
+              onPressed: () async {
+                Index index1 = Index(
+                    collectionGroup: 'bar',
+                    queryScope: QueryScope.collection,
+                    fields: [
+                      IndexField(fieldPath: 'fieldPath', order: Order.ascending)
+                    ]);
+                Index index2 = Index(
+                    collectionGroup: 'baz',
+                    queryScope: QueryScope.collectionGroup,
+                    fields: [
+                      IndexField(
+                          fieldPath: 'foo', arrayConfig: ArrayConfig.contains)
+                    ]);
+                await FirebaseFirestore.instance
+                    .setIndexConfiguration(indexes: [index1, index2]);
+              },
+              child: const Text('press me'),
+            ),
             // This is a example use for 'snapshots in sync'.
             // The view reflects the time of the last Firestore sync; which happens any time a field is updated.
-            StreamBuilder(
-              stream: FirebaseFirestore.instance.snapshotsInSync(),
-              builder: (context, _) {
-                return Text(
-                  'Latest Snapshot: ${DateTime.now()}',
-                  style: Theme.of(context).textTheme.caption,
-                );
-              },
-            )
           ],
         ),
         actions: <Widget>[
@@ -160,32 +170,7 @@ class _FilmListState extends State<FilmList> {
           ),
         ],
       ),
-      body: StreamBuilder<QuerySnapshot<Movie>>(
-        stream: moviesRef.queryBy(query).snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          }
-
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final data = snapshot.requireData;
-
-          return ListView.builder(
-            itemCount: data.size,
-            itemBuilder: (context, index) {
-              return _MovieItem(
-                data.docs[index].data(),
-                data.docs[index].reference,
-              );
-            },
-          );
-        },
-      ),
+      body: Text('stuff'),
     );
   }
 
