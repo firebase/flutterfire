@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -43,6 +44,8 @@ class FakeOAuthProvider extends OAuthProvider {
   }
 }
 
+class FakeAuth extends Fake implements FirebaseAuth {}
+
 void main() {
   final provider = FakeOAuthProvider();
 
@@ -54,6 +57,7 @@ void main() {
       provider: provider,
       label: 'Sign in with Google',
       loadingIndicator: const CircularProgressIndicator(),
+      auth: FakeAuth(),
     );
 
     return DefaultAssetBundle(
