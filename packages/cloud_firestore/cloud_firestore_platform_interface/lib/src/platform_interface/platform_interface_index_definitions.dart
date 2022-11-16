@@ -19,8 +19,8 @@ class Index {
       'collectionGroup': collectionGroup,
       'fields': fields.map((IndexField field) => field.toMap()).toList(),
       'queryScope': queryScope == QueryScope.collection
-          ? 'collection'
-          : 'collectionGroup',
+          ? 'COLLECTION'
+          : 'COLLECTION_GROUP',
     };
   }
 }
@@ -36,8 +36,8 @@ class IndexField {
     return <String, dynamic>{
       'fieldPath': fieldPath,
       if (order != null)
-        'order': order == Order.ascending ? 'ascending' : 'descending',
-      if (arrayConfig != null) 'arrayConfig': 'contains',
+        'order': order == Order.ascending ? 'ASCENDING' : 'DESCENDING',
+      if (arrayConfig != null) 'arrayConfig': 'CONTAINS',
     };
   }
 }
@@ -75,8 +75,8 @@ class FieldOverrideIndex {
     return <String, dynamic>{
       'queryScope': queryScope,
       if (order != null)
-        'order': order == Order.ascending ? 'ascending' : 'descending',
-      if (arrayConfig != null) 'arrayConfig': 'contains',
+        'order': order == Order.ascending ? 'ASCENDING' : 'DESCENDING',
+      if (arrayConfig != null) 'arrayConfig': 'CONTAINS',
     };
   }
 }
