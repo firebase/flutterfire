@@ -511,6 +511,29 @@ public class FlutterFirebaseFirestorePlugin
     return taskCompletionSource.getTask();
   }
 
+  private Task<Void> setIndexConfiguration(Map<String, Object> arguments) {
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseFirestore firestore =
+                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
+
+            Tasks.await(
+                firestore.setIndexConfiguration(
+                    (String) Objects.requireNonNull(arguments.get("indexConfiguration"))));
+
+            taskCompletionSource.setResult(null);
+
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
   @Override
   public void onMethodCall(MethodCall call, @NonNull final MethodChannel.Result result) {
     Task<?> methodCallTask;
@@ -591,6 +614,9 @@ public class FlutterFirebaseFirestorePlugin
         break;
       case "AggregateQuery#count":
         methodCallTask = aggregateQuery(call.arguments());
+        break;
+      case "Firestore#setIndexConfiguration":
+        methodCallTask = setIndexConfiguration(call.arguments());
         break;
       default:
         result.notImplemented();
