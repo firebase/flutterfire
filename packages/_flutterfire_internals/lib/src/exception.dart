@@ -45,7 +45,7 @@ FirebaseException platformExceptionToFirebaseException(
   String? code;
   String message = platformException.message ?? '';
 
-  if (details != null) {    
+  if (details != null) {
     code = (details['code'] as String?) ?? code;
     message = (details['message'] as String?) ?? message;
   }
