@@ -143,6 +143,11 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
         [temp removeObjectForKey:NSUnderlyingErrorKey];
       }
 
+      if ([errorDetails[kMessage] containsString:@"An unknown error has occurred"] &&
+          [temp[NSLocalizedDescriptionKey] containsString:@"The request timed out"]) {
+        message = temp[NSLocalizedDescriptionKey];
+      }
+
       if (errorDetails[@"additionalData"][NSLocalizedFailureReasonErrorKey] != nil) {
         // This stops an uncaught type cast exception in dart
         [temp removeObjectForKey:NSLocalizedFailureReasonErrorKey];
