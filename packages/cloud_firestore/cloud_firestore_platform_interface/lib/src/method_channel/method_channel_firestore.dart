@@ -330,4 +330,17 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       convertPlatformException(e, stack);
     }
   }
+
+  @override
+  Future<void> setIndexConfiguration(String indexConfiguration) async {
+    try {
+      await channel.invokeMethod<void>(
+          'Firestore#setIndexConfiguration', <String, dynamic>{
+        'firestore': this,
+        'indexConfiguration': indexConfiguration,
+      });
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
 }

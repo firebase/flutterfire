@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:reactnativefirebase.page.link</string>
+		<string>applinks:flutterfiretests.page.link</string>
 	</array>
 </dict>
 </plist>

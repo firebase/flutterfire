@@ -69,6 +69,7 @@ NSString *const kErrMsgInvalidCredential =
 @property(strong, nonatomic) FIROAuthProvider *authProvider;
 // Used to keep the user who wants to link with Apple Sign In
 @property(strong, nonatomic) FIRUser *linkWithAppleUser;
+@property BOOL isReauthenticatingWithApple;
 @property(strong, nonatomic) NSString *currentNonce;
 @property(strong, nonatomic) FLTFirebaseMethodCallResult *appleResult;
 @property(strong, nonatomic) id appleArguments;
@@ -588,8 +589,16 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
     FIROAuthCredential *credential = [FIROAuthProvider credentialWithProviderID:@"apple.com"
                                                                         IDToken:idToken
                                                                        rawNonce:rawNonce];
+    if (self.isReauthenticatingWithApple == YES) {
+      self.isReauthenticatingWithApple = NO;
+      [[FIRAuth.auth currentUser]
+          reauthenticateWithCredential:credential
+                            completion:^(FIRAuthDataResult *_Nullable authResult,
+                                         NSError *_Nullable error) {
+                              handleSignInWithApple(self, authResult, error);
+                            }];
 
-    if (self.linkWithAppleUser != nil) {
+    } else if (self.linkWithAppleUser != nil) {
       [self.linkWithAppleUser linkWithCredential:credential
                                       completion:^(FIRAuthDataResult *authResult, NSError *error) {
                                         handleSignInWithApple(self, authResult, error);
@@ -1013,7 +1022,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
 
   if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
     if (@available(iOS 13.0, macOS 10.15, *)) {
-      self.linkWithAppleUser = currentUser;
+      self.isReauthenticatingWithApple = YES;
       launchAppleSignInRequest(self, arguments, result);
     } else {
       NSLog(@"Sign in with Apple was introduced in iOS 13, update your Podfile with platform :ios, "
