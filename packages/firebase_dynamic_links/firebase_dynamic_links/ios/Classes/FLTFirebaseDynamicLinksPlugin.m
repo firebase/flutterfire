@@ -135,7 +135,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
         temp = [errorDetails mutableCopy];
       }
 
-      // "NSErrorFailingURLStringKey" doesn't work
+      // "NSErrorFailingURLStringKey" key does not work for removing this object. So we use our own String to retrieve,
       if (temp[@"NSErrorFailingURLKey"] != nil) {
         [temp removeObjectForKey:@"NSErrorFailingURLKey"];
       }
