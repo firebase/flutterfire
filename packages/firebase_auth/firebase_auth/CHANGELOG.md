@@ -1,3 +1,11 @@
+## 4.1.3
+
+ - **FIX**: fix reauthenticateWithProvider on iOS with Sign In With Apple that would throw a linked exception ([#9919](https://github.com/firebase/flutterfire/issues/9919)). ([7318a8f3](https://github.com/firebase/flutterfire/commit/7318a8f32de07bd47026d3e07b80b4bab5df1e6a))
+
+## 4.1.2
+
+ - Update a dependency to the latest release.
+
 ## 4.1.1
 
  - Update a dependency to the latest release.

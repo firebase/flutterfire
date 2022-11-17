@@ -18,7 +18,7 @@ First, we define the root route that checks for authentication state and renders
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const providers = [EmailProvider()];
+    const providers = [EmailAuthProvider()];
 
     return MaterialApp(
       initialRoute: FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/profile',
@@ -68,7 +68,7 @@ navigate to a named route, provide the `actions` list with a `ForgotPasswordActi
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const providers = [EmailProvider()];
+    const providers = [EmailAuthProvider()];
 
     return MaterialApp(
       initialRoute: FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/profile',

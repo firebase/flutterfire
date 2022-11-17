@@ -142,6 +142,14 @@ class _OAuthProviderButtonBaseState extends State<OAuthProviderButtonBase>
   double get _height => widget.size + widget._padding * 2;
   late bool isLoading = widget.isLoading;
 
+  @override
+  void initState() {
+    super.initState();
+
+    widget.provider.auth = widget.auth ?? FirebaseAuth.instance;
+    widget.provider.authListener = this;
+  }
+
   void _signIn() {
     final platform = Theme.of(context).platform;
 

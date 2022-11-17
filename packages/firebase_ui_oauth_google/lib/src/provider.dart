@@ -11,7 +11,10 @@ class GoogleProvider extends OAuthProvider {
   final String? redirectUri;
   final List<String>? scopes;
 
-  late GoogleSignIn provider = GoogleSignIn(scopes: scopes ?? []);
+  late GoogleSignIn provider = GoogleSignIn(
+    scopes: scopes ?? [],
+    clientId: clientId,
+  );
 
   @override
   final GoogleAuthProvider firebaseAuthProvider = GoogleAuthProvider();

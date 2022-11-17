@@ -437,7 +437,11 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       // origin as a single string
       delegate.useAuthEmulator('http://$host:$port');
     } catch (e) {
-      throw getFirebaseAuthException(e);
+      final String code = (e as auth_interop.AuthError).code;
+      // this catches Firebase Error from web that occurs after hot reloading & hot restarting
+      if (code != 'auth/emulator-config-failed') {
+        throw getFirebaseAuthException(e);
+      }
     }
   }
 

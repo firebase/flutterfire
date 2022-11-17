@@ -2,14 +2,14 @@
 
 [![pub package](https://img.shields.io/pub/v/firebase_ui_oauth_twitter.svg)](https://pub.dev/packages/firebase_ui_oauth_twitter)
 
-Twitter Sign In for [Firebase UI](https://pub.dev/packages/firebase_ui)
+Twitter Sign In for [Firebase UI Auth](https://pub.dev/packages/firebase_ui_auth)
 
 ## Installation
 
 Add dependencies
 
 ```sh
-flutter pub add firebase_ui
+flutter pub add firebase_ui_auth
 flutter pub add firebase_ui_oauth_twitter
 
 flutter pub global activate flutterfire_cli

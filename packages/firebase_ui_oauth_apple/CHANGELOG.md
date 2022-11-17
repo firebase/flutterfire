@@ -1,3 +1,11 @@
+## 1.0.6
+
+ - **DOCS**: Fixed typo in firebase_ui_oauth packages for firebase_ui_auth package. ([#9931](https://github.com/firebase/flutterfire/issues/9931)). ([8cfc803e](https://github.com/firebase/flutterfire/commit/8cfc803eea8103701aeb1791d00c743582ccdb40))
+
+## 1.0.5
+
+ - Update a dependency to the latest release.
+
 ## 1.0.4
 
  - **FIX**: set default scope to 'email' and add a way to provide custom scopes ([#9784](https://github.com/firebase/flutterfire/issues/9784)). ([19a54edc](https://github.com/firebase/flutterfire/commit/19a54edc5921e567cfc22f1f55240c2f0b5fa56c))

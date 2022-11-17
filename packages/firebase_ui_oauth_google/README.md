@@ -2,14 +2,14 @@
 
 [![pub package](https://img.shields.io/pub/v/firebase_ui_oauth_google.svg)](https://pub.dev/packages/firebase_ui_oauth_google)
 
-Google Sign In for [Firebase UI](https://pub.dev/packages/firebase_ui)
+Google Sign In for [Firebase UI Auth](https://pub.dev/packages/firebase_ui_auth)
 
 ## Installation
 
 Add dependencies
 
 ```sh
-flutter pub add firebase_ui
+flutter pub add firebase_ui_auth
 flutter pub add firebase_ui_oauth_google
 
 flutter pub global activate flutterfire_cli

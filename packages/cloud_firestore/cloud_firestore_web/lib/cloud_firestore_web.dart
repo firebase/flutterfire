@@ -194,4 +194,11 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
     return convertWebQuerySnapshot(this, snapshot);
   }
+
+  @override
+  Future<void> setIndexConfiguration(String indexConfiguration) async {
+    return _delegate.setIndexConfiguration(
+      indexConfiguration,
+    );
+  }
 }

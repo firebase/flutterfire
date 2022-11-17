@@ -1,3 +1,14 @@
+## 1.0.6
+
+ - **FIX**: initialize auth and auth listener in standalone OAuth buttons ([#9926](https://github.com/firebase/flutterfire/issues/9926)). ([24450803](https://github.com/firebase/flutterfire/commit/24450803ba97a8a8a384a0a06d1d724c90d7953c))
+ - **FIX**: upgrade dependency to fix platform support for firebase_ui_auth ([#9924](https://github.com/firebase/flutterfire/issues/9924)). ([a972a790](https://github.com/firebase/flutterfire/commit/a972a790cea7eb6755e70478d994048e06122f76))
+ - **FIX**: fix docs typo for EmailAuthProvider. ([#9927](https://github.com/firebase/flutterfire/issues/9927)). ([b1b3b437](https://github.com/firebase/flutterfire/commit/b1b3b4376d674ea5ec95405dc0a7fd9d3d6254fd))
+ - **FIX**: fix docs typo ([#9925](https://github.com/firebase/flutterfire/issues/9925)). ([beba8598](https://github.com/firebase/flutterfire/commit/beba859896cfc30bac183a61e4a88d5e1c95a30c))
+
+## 1.0.5
+
+ - Update a dependency to the latest release.
+
 ## 1.0.4
 
  - **FIX**: set default scope to 'email' and add a way to provide custom scopes ([#9784](https://github.com/firebase/flutterfire/issues/9784)). ([19a54edc](https://github.com/firebase/flutterfire/commit/19a54edc5921e567cfc22f1f55240c2f0b5fa56c))
