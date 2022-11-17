@@ -1,3 +1,7 @@
+## 5.1.3
+
+ - **FIX**: catch hot reload & hot restart exception for web emulator ([#9601](https://github.com/firebase/flutterfire/issues/9601)). ([3467483b](https://github.com/firebase/flutterfire/commit/3467483be993a65f76203400721dc07e0729cac3))
+
 ## 5.1.2
 
  - Update a dependency to the latest release.
