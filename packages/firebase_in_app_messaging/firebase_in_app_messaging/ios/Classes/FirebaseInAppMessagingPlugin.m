@@ -33,9 +33,9 @@ NSString *const kFLTFirebaseInAppMessagingChannelName =
     result(nil);
   } else if ([@"FirebaseInAppMessaging#setAutomaticDataCollectionEnabled"
                  isEqualToString:call.method]) {
-    NSNumber *enabled = [NSNumber numberWithBool:(NSNumber *)call.arguments[@"enabled"]];
+    BOOL enabled = [[call.arguments objectForKey:@"enabled"] boolValue];
     FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
-    fiam.automaticDataCollectionEnabled = [enabled boolValue];
+    fiam.automaticDataCollectionEnabled = enabled;
     result(nil);
   } else {
     result(FlutterMethodNotImplemented);
