@@ -22,6 +22,13 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   NSObject<FlutterPluginRegistrar> *_registrar;
   NSData *_apnsToken;
   NSDictionary *_initialNotification;
+
+  // Used to track if everything as been initialized before answering
+  // to the initialNotification request
+  BOOL _initialNotificationGathered;
+  BOOL _initialNotificationIdGathered;
+  FLTFirebaseMethodCallResult *_initialNotificationResult;
+
   NSString *_initialNoticationID;
   NSString *_notificationOpenedAppID;
 
@@ -43,6 +50,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                    andFlutterPluginRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   self = [super init];
   if (self) {
+    _initialNotificationGathered = NO;
+    _initialNotificationIdGathered = NO;
     _channel = channel;
     _registrar = registrar;
     // Application
@@ -109,7 +118,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   [self ensureAPNSTokenSetting];
 
   if ([@"Messaging#getInitialMessage" isEqualToString:call.method]) {
-    methodCallResult.success([self copyInitialNotification]);
+    if (_initialNotificationGathered && _initialNotificationIdGathered) {
+      methodCallResult.success([self copyInitialNotification]);
+    } else {
+      _initialNotificationResult = methodCallResult;
+    }
   } else if ([@"Messaging#deleteToken" isEqualToString:call.method]) {
     [self messagingDeleteToken:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getAPNSToken" isEqualToString:call.method]) {
@@ -206,6 +219,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     _initialNotification =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     _initialNoticationID = remoteNotification[@"gcm.message_id"];
+  }
+  _initialNotificationGathered = YES;
+  if (_initialNotificationResult != nil && _initialNotificationIdGathered) {
+    _initialNotificationResult.success([self copyInitialNotification]);
+    _initialNotificationResult = nil;
   }
 
 #if TARGET_OS_OSX
@@ -344,6 +362,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
+  }
+
+  _initialNotificationIdGathered = YES;
+  if (_initialNotificationResult != nil && _initialNotificationGathered) {
+    _initialNotificationResult.success([self copyInitialNotification]);
+    _initialNotificationResult = nil;
   }
 
   // Forward on to any other delegates.
