@@ -26,7 +26,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // Used to track if everything as been initialized before answering
   // to the initialNotification request
   BOOL _initialNotificationGathered;
-  BOOL _initialNotificationIdGathered;
   FLTFirebaseMethodCallResult *_initialNotificationResult;
 
   NSString *_initialNoticationID;
@@ -51,7 +50,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   self = [super init];
   if (self) {
     _initialNotificationGathered = NO;
-    _initialNotificationIdGathered = NO;
     _channel = channel;
     _registrar = registrar;
     // Application
@@ -118,11 +116,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   [self ensureAPNSTokenSetting];
 
   if ([@"Messaging#getInitialMessage" isEqualToString:call.method]) {
-    if (_initialNotificationGathered && _initialNotificationIdGathered) {
-      methodCallResult.success([self copyInitialNotification]);
-    } else {
       _initialNotificationResult = methodCallResult;
-    }
+      [self initialNotificationCallback];
+    
   } else if ([@"Messaging#deleteToken" isEqualToString:call.method]) {
     [self messagingDeleteToken:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getAPNSToken" isEqualToString:call.method]) {
@@ -219,12 +215,10 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     _initialNotification =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     _initialNoticationID = remoteNotification[@"gcm.message_id"];
+            
   }
   _initialNotificationGathered = YES;
-  if (_initialNotificationResult != nil && _initialNotificationIdGathered) {
-    _initialNotificationResult.success([self copyInitialNotification]);
-    _initialNotificationResult = nil;
-  }
+  [self initialNotificationCallback];
 
 #if TARGET_OS_OSX
   // For macOS we use swizzling to intercept as addApplicationDelegate does not exist on the macOS
@@ -348,7 +342,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }
 }
 
-// Called when a use interacts with a notification.
+// Called when a user interacts with a notification.
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
     didReceiveNotificationResponse:(UNNotificationResponse *)response
              withCompletionHandler:(void (^)(void))completionHandler
@@ -362,12 +356,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
-  }
-
-  _initialNotificationIdGathered = YES;
-  if (_initialNotificationResult != nil && _initialNotificationGathered) {
-    _initialNotificationResult.success([self copyInitialNotification]);
-    _initialNotificationResult = nil;
   }
 
   // Forward on to any other delegates.
@@ -1026,8 +1014,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   @synchronized(self) {
     // Only return if initial notification was sent when app is terminated. Also ensure that
     // it was the initial notification that was tapped to open the app.
-    if (_initialNotification != nil &&
-        [_initialNoticationID isEqualToString:_notificationOpenedAppID]) {
+    if (_initialNotification != nil) {
       NSDictionary *initialNotificationCopy = [_initialNotification copy];
       _initialNotification = nil;
       return initialNotificationCopy;
@@ -1035,6 +1022,14 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }
 
   return nil;
+}
+
+- (void)initialNotificationCallback {
+  if (_initialNotificationGathered &&
+      _initialNotificationResult != nil) {
+    _initialNotificationResult.success([self copyInitialNotification]);
+    _initialNotificationResult = nil;
+  }
 }
 
 - (NSDictionary *)NSDictionaryForNSError:(NSError *)error {

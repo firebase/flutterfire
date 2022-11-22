@@ -172,6 +172,7 @@ class Application extends StatefulWidget {
 class _Application extends State<Application> {
   String? _token;
   String? initialMessage;
+  bool _resolved = false;
 
   @override
   void initState() {
@@ -180,6 +181,7 @@ class _Application extends State<Application> {
     FirebaseMessaging.instance.getInitialMessage().then(
           (value) => setState(
             () {
+              _resolved = true;
               initialMessage = value?.data.toString();
             },
           ),
@@ -298,7 +300,15 @@ class _Application extends State<Application> {
         child: Column(
           children: [
             MetaCard('Permissions', Permissions()),
-            MetaCard('Initial Message', Text(initialMessage ?? 'None')),
+            MetaCard(
+              'Initial Message',
+              Column(
+                children: [
+                  Text(_resolved ? 'Resolved' : 'Resolving'),
+                  Text(initialMessage ?? 'None'),
+                ],
+              ),
+            ),
             MetaCard(
               'FCM Token',
               TokenMonitor((token) {
