@@ -271,6 +271,7 @@ scripts:
         --ignore "**/*.g.h" \
         --ignore "**/*.g.m" \
         --ignore "**/*.rb" \
+        --ignore "**/*.txt" \
         --ignore "**/Runner/AppDelegate.swift" \
         --ignore "**/Runner/MainFlutterWindow.swift" \
         --ignore "**/Runner/Runner-Bridging-Header.h" \
@@ -302,6 +303,7 @@ scripts:
         --ignore "**/*.g.h" \
         --ignore "**/*.g.m" \
         --ignore "**/*.rb" \
+        --ignore "**/*.txt" \
         --ignore "**/Runner/AppDelegate.swift" \
         --ignore "**/Runner/MainFlutterWindow.swift" \
         --ignore "**/Runner/Runner-Bridging-Header.h" \
