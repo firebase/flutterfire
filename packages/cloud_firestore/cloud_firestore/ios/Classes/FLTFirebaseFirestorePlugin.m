@@ -227,6 +227,8 @@ FlutterStandardMethodCodec *_codec;
     [self setupLoadBundleListener:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"AggregateQuery#count" isEqualToString:call.method]) {
     [self aggregateQuery:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Firestore#setIndexConfiguration" isEqualToString:call.method]) {
+    [self setIndexConfiguration:call.arguments withMethodCallResult:methodCallResult];
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
   }
@@ -255,6 +257,21 @@ FlutterStandardMethodCodec *_codec;
 }
 
 #pragma mark - Firestore API
+
+- (void)setIndexConfiguration:(id)arguments
+         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRFirestore *firestore = arguments[@"firestore"];
+  NSString *indexConfiguration = arguments[@"indexConfiguration"];
+
+  [firestore setIndexConfigurationFromJSON:indexConfiguration
+                                completion:^(NSError *_Nullable error) {
+                                  if (error != nil) {
+                                    result.error(nil, nil, nil, error);
+                                  } else {
+                                    result.success(nil);
+                                  }
+                                }];
+}
 
 - (void)setupSnapshotsInSyncListener:(id)arguments
                 withMethodCallResult:(FLTFirebaseMethodCallResult *)result {

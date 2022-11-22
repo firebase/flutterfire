@@ -1,3 +1,19 @@
+## 1.0.0-dev.41
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.40
+
+ - **FIX**: Improve error handling if a collection and the associated model are defined in separate files. ([#9827](https://github.com/firebase/flutterfire/issues/9827)). ([294e1085](https://github.com/firebase/flutterfire/commit/294e1085ae7af92573657489b78ae0a82ab5e4b4))
+
+## 1.0.0-dev.39
+
+ - **FIX**: Upgrade analyzer version. ([#9828](https://github.com/firebase/flutterfire/issues/9828)). ([b7f5887d](https://github.com/firebase/flutterfire/commit/b7f5887d76ba11de5041f39d2bb5fdcb8aec288d))
+
+## 1.0.0-dev.38
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.37
 
  - **FIX**: The ODM correctly no-longer generates query utilities for getters. ([#9766](https://github.com/firebase/flutterfire/issues/9766)). ([cfb56939](https://github.com/firebase/flutterfire/commit/cfb569395cadf6b7bcd8727b680d0b52e4e9297d))

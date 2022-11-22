@@ -1,3 +1,19 @@
+## 1.0.9
+
+ - Update a dependency to the latest release.
+
+## 1.0.8
+
+ - Update a dependency to the latest release.
+
+## 1.0.7
+
+ - Update a dependency to the latest release.
+
+## 1.0.6
+
+ - Update a dependency to the latest release.
+
 ## 1.0.5
 
  - Update a dependency to the latest release.

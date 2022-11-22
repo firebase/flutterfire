@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 
 import '../../firebase_app_check_platform_interface.dart';
 import 'utils/exception.dart';
+import 'utils/provider_to_string.dart';
 
 class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   /// Create an instance of [MethodChannelFirebaseAppCheck].
@@ -76,13 +77,14 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   @override
   Future<void> activate({
     String? webRecaptchaSiteKey,
-    bool? androidDebugProvider,
+    AndroidProvider? androidProvider,
   }) async {
     try {
       await channel.invokeMethod<void>('FirebaseAppCheck#activate', {
         'appName': app.name,
+        // Allow value to pass for debug mode for unit testing
         if (Platform.isAndroid || kDebugMode)
-          'androidDebugProvider': androidDebugProvider,
+          'androidProvider': getProviderString(androidProvider),
       });
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);

@@ -1,3 +1,19 @@
+## 14.1.1
+
+ - **FIX**: Revert "feat(messaging): use FlutterEngineGroup to improve performance of background handlers". ([8cd90b1a](https://github.com/firebase/flutterfire/commit/8cd90b1aeffc8b44383dc6a60eb8a39d0c08e3b7))
+
+## 14.1.0
+
+ - **FEAT**: use FlutterEngineGroup to improve performance of background handlers ([#9867](https://github.com/firebase/flutterfire/issues/9867)). ([2e9deac0](https://github.com/firebase/flutterfire/commit/2e9deac08e3c1a9a2b35f850f8519e7c5ae43b37))
+
+## 14.0.4
+
+ - Update a dependency to the latest release.
+
+## 14.0.3
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
 ## 14.0.2
 
  - Update a dependency to the latest release.

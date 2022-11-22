@@ -61,7 +61,7 @@ Below is the list of necessary changes that you have to make to migrate to `fire
 - ]);
 
 + FirebaseUIAuth.configureProviders([
-+    const EmailProvider(),
++    const EmailAuthProvider(),
 + ]);
 ```
 

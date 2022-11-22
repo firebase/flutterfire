@@ -32,12 +32,12 @@ class UserWeb extends UserPlatform {
           'metadata': <String, int?>{
             'creationTime': _webUser.metadata.creationTime != null
                 ? _dateFormat
-                    .parse(_webUser.metadata.creationTime!)
+                    .parse(_webUser.metadata.creationTime!, true)
                     .millisecondsSinceEpoch
                 : null,
             'lastSignInTime': _webUser.metadata.lastSignInTime != null
                 ? _dateFormat
-                    .parse(_webUser.metadata.lastSignInTime!)
+                    .parse(_webUser.metadata.lastSignInTime!, true)
                     .millisecondsSinceEpoch
                 : null,
           },

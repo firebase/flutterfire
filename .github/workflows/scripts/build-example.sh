@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEFAULT_TARGET="./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
+DEFAULT_TARGET="./integration_test/MELOS_PARENT_PACKAGE_NAME_e2e_test.dart"
 
 ACTION=$1
 TARGET_FILE=${2:-$DEFAULT_TARGET}
