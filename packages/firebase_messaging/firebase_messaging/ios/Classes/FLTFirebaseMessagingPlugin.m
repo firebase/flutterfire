@@ -116,9 +116,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   [self ensureAPNSTokenSetting];
 
   if ([@"Messaging#getInitialMessage" isEqualToString:call.method]) {
-      _initialNotificationResult = methodCallResult;
-      [self initialNotificationCallback];
-    
+    _initialNotificationResult = methodCallResult;
+    [self initialNotificationCallback];
+
   } else if ([@"Messaging#deleteToken" isEqualToString:call.method]) {
     [self messagingDeleteToken:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getAPNSToken" isEqualToString:call.method]) {
@@ -215,7 +215,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     _initialNotification =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     _initialNoticationID = remoteNotification[@"gcm.message_id"];
-            
   }
   _initialNotificationGathered = YES;
   [self initialNotificationCallback];
@@ -1014,7 +1013,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   @synchronized(self) {
     // Only return if initial notification was sent when app is terminated. Also ensure that
     // it was the initial notification that was tapped to open the app.
-    if (_initialNotification != nil) {
+    if (_initialNotification != nil &&
+        [_initialNoticationID isEqualToString:_notificationOpenedAppID]) {
       NSDictionary *initialNotificationCopy = [_initialNotification copy];
       _initialNotification = nil;
       return initialNotificationCopy;
@@ -1025,8 +1025,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 }
 
 - (void)initialNotificationCallback {
-  if (_initialNotificationGathered &&
-      _initialNotificationResult != nil) {
+  if (_initialNotificationGathered && _initialNotificationResult != nil) {
     _initialNotificationResult.success([self copyInitialNotification]);
     _initialNotificationResult = nil;
   }
