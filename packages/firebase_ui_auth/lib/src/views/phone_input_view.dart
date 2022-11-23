@@ -90,7 +90,8 @@ class _PhoneInputViewState extends State<PhoneInputView> {
   @override
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
-    final countryCode = Localizations.localeOf(context).countryCode;
+    final countryCode = Localizations.localeOf(context).countryCode ??
+        WidgetsBinding.instance.platformDispatcher.locale.countryCode;
 
     return AuthFlowBuilder<PhoneAuthController>(
       flowKey: widget.flowKey,
