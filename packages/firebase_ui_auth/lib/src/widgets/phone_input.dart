@@ -85,7 +85,7 @@ class PhoneInput extends StatefulWidget {
 
   /// An initial country code that should be selected in the country code
   /// picker.
-  final String initialCountryCode;
+  final String? initialCountryCode;
 
   /// Returns a phone number from the [PhoneInput] that was provided a [key].
   static String? getPhoneNumber(GlobalKey<PhoneInputState> key) {
@@ -101,7 +101,7 @@ class PhoneInput extends StatefulWidget {
   /// {@macro ui.auth.widgets.phone_input}
   const PhoneInput({
     Key? key,
-    required this.initialCountryCode,
+    this.initialCountryCode,
     this.onSubmit,
   }) : super(key: key);
 
