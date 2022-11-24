@@ -1,3 +1,9 @@
+## 1.1.0
+
+ - **FIX**: allow null countryCode for phone input ([#9937](https://github.com/firebase/flutterfire/issues/9937)). ([e87ec8a9](https://github.com/firebase/flutterfire/commit/e87ec8a9422d3608fcd5357c899f388321bc0a44))
+ - **FEAT**: [firebase_ui_auth] [firebase_ui_oauth] Allow for custom labels to be used for custom OAuth providers ([#9858](https://github.com/firebase/flutterfire/issues/9858)). ([fd0b815d](https://github.com/firebase/flutterfire/commit/fd0b815dbf82327caa9867dfe4b72571cc1bfe9a))
+ - **DOCS**: improve phone.md  ([#9774](https://github.com/firebase/flutterfire/issues/9774)). ([1f1ffd19](https://github.com/firebase/flutterfire/commit/1f1ffd19ab6383ed1fcac43b2011ee0b0a471c12))
+
 ## 1.0.6
 
  - **FIX**: initialize auth and auth listener in standalone OAuth buttons ([#9926](https://github.com/firebase/flutterfire/issues/9926)). ([24450803](https://github.com/firebase/flutterfire/commit/24450803ba97a8a8a384a0a06d1d724c90d7953c))
