@@ -248,20 +248,22 @@ class _$MovieDocumentReference
       "Cannot specify both genre and genreFieldValue",
     );
     final json = {
-      if (poster != _sentinel) 'poster': poster as String,
-      if (posterFieldValue != null) 'poster': posterFieldValue,
-      if (likes != _sentinel) 'likes': likes as int,
-      if (likesFieldValue != null) 'likes': likesFieldValue,
-      if (title != _sentinel) 'title': title as String,
-      if (titleFieldValue != null) 'title': titleFieldValue,
-      if (year != _sentinel) 'year': year as int,
-      if (yearFieldValue != null) 'year': yearFieldValue,
-      if (runtime != _sentinel) 'runtime': runtime as String,
-      if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
-      if (rated != _sentinel) 'rated': rated as String,
-      if (ratedFieldValue != null) 'rated': ratedFieldValue,
-      if (genre != _sentinel) 'genre': genre as List<String>?,
-      if (genreFieldValue != null) 'genre': genreFieldValue,
+      if (poster != _sentinel) _$MovieFieldMap['poster']!: poster as String,
+      if (posterFieldValue != null)
+        _$MovieFieldMap['poster']!: posterFieldValue,
+      if (likes != _sentinel) _$MovieFieldMap['likes']!: likes as int,
+      if (likesFieldValue != null) _$MovieFieldMap['likes']!: likesFieldValue,
+      if (title != _sentinel) _$MovieFieldMap['title']!: title as String,
+      if (titleFieldValue != null) _$MovieFieldMap['title']!: titleFieldValue,
+      if (year != _sentinel) _$MovieFieldMap['year']!: year as int,
+      if (yearFieldValue != null) _$MovieFieldMap['year']!: yearFieldValue,
+      if (runtime != _sentinel) _$MovieFieldMap['runtime']!: runtime as String,
+      if (runtimeFieldValue != null)
+        _$MovieFieldMap['runtime']!: runtimeFieldValue,
+      if (rated != _sentinel) _$MovieFieldMap['rated']!: rated as String,
+      if (ratedFieldValue != null) _$MovieFieldMap['rated']!: ratedFieldValue,
+      if (genre != _sentinel) _$MovieFieldMap['genre']!: genre as List<String>?,
+      if (genreFieldValue != null) _$MovieFieldMap['genre']!: genreFieldValue,
     };
 
     return reference.update(json);
@@ -313,20 +315,22 @@ class _$MovieDocumentReference
       "Cannot specify both genre and genreFieldValue",
     );
     final json = {
-      if (poster != _sentinel) 'poster': poster as String,
-      if (posterFieldValue != null) 'poster': posterFieldValue,
-      if (likes != _sentinel) 'likes': likes as int,
-      if (likesFieldValue != null) 'likes': likesFieldValue,
-      if (title != _sentinel) 'title': title as String,
-      if (titleFieldValue != null) 'title': titleFieldValue,
-      if (year != _sentinel) 'year': year as int,
-      if (yearFieldValue != null) 'year': yearFieldValue,
-      if (runtime != _sentinel) 'runtime': runtime as String,
-      if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
-      if (rated != _sentinel) 'rated': rated as String,
-      if (ratedFieldValue != null) 'rated': ratedFieldValue,
-      if (genre != _sentinel) 'genre': genre as List<String>?,
-      if (genreFieldValue != null) 'genre': genreFieldValue,
+      if (poster != _sentinel) _$MovieFieldMap['poster']!: poster as String,
+      if (posterFieldValue != null)
+        _$MovieFieldMap['poster']!: posterFieldValue,
+      if (likes != _sentinel) _$MovieFieldMap['likes']!: likes as int,
+      if (likesFieldValue != null) _$MovieFieldMap['likes']!: likesFieldValue,
+      if (title != _sentinel) _$MovieFieldMap['title']!: title as String,
+      if (titleFieldValue != null) _$MovieFieldMap['title']!: titleFieldValue,
+      if (year != _sentinel) _$MovieFieldMap['year']!: year as int,
+      if (yearFieldValue != null) _$MovieFieldMap['year']!: yearFieldValue,
+      if (runtime != _sentinel) _$MovieFieldMap['runtime']!: runtime as String,
+      if (runtimeFieldValue != null)
+        _$MovieFieldMap['runtime']!: runtimeFieldValue,
+      if (rated != _sentinel) _$MovieFieldMap['rated']!: rated as String,
+      if (ratedFieldValue != null) _$MovieFieldMap['rated']!: ratedFieldValue,
+      if (genre != _sentinel) _$MovieFieldMap['genre']!: genre as List<String>?,
+      if (genreFieldValue != null) _$MovieFieldMap['genre']!: genreFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1841,10 +1845,14 @@ class _$CommentDocumentReference
       "Cannot specify both message and messageFieldValue",
     );
     final json = {
-      if (authorName != _sentinel) 'authorName': authorName as String,
-      if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
-      if (message != _sentinel) 'message': message as String,
-      if (messageFieldValue != null) 'message': messageFieldValue,
+      if (authorName != _sentinel)
+        _$CommentFieldMap['authorName']!: authorName as String,
+      if (authorNameFieldValue != null)
+        _$CommentFieldMap['authorName']!: authorNameFieldValue,
+      if (message != _sentinel)
+        _$CommentFieldMap['message']!: message as String,
+      if (messageFieldValue != null)
+        _$CommentFieldMap['message']!: messageFieldValue,
     };
 
     return reference.update(json);
@@ -1866,10 +1874,14 @@ class _$CommentDocumentReference
       "Cannot specify both message and messageFieldValue",
     );
     final json = {
-      if (authorName != _sentinel) 'authorName': authorName as String,
-      if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
-      if (message != _sentinel) 'message': message as String,
-      if (messageFieldValue != null) 'message': messageFieldValue,
+      if (authorName != _sentinel)
+        _$CommentFieldMap['authorName']!: authorName as String,
+      if (authorNameFieldValue != null)
+        _$CommentFieldMap['authorName']!: authorNameFieldValue,
+      if (message != _sentinel)
+        _$CommentFieldMap['message']!: message as String,
+      if (messageFieldValue != null)
+        _$CommentFieldMap['message']!: messageFieldValue,
     };
 
     transaction.update(reference, json);
