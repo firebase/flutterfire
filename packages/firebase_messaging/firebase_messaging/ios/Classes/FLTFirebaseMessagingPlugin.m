@@ -22,6 +22,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   NSObject<FlutterPluginRegistrar> *_registrar;
   NSData *_apnsToken;
   NSDictionary *_initialNotification;
+
+  // Used to track if everything as been initialized before answering
+  // to the initialNotification request
+  BOOL _initialNotificationGathered;
+  FLTFirebaseMethodCallResult *_initialNotificationResult;
+
   NSString *_initialNoticationID;
   NSString *_notificationOpenedAppID;
 
@@ -43,6 +49,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                    andFlutterPluginRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   self = [super init];
   if (self) {
+    _initialNotificationGathered = NO;
     _channel = channel;
     _registrar = registrar;
     // Application
@@ -109,7 +116,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   [self ensureAPNSTokenSetting];
 
   if ([@"Messaging#getInitialMessage" isEqualToString:call.method]) {
-    methodCallResult.success([self copyInitialNotification]);
+    _initialNotificationResult = methodCallResult;
+    [self initialNotificationCallback];
+
   } else if ([@"Messaging#deleteToken" isEqualToString:call.method]) {
     [self messagingDeleteToken:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getAPNSToken" isEqualToString:call.method]) {
@@ -207,6 +216,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     _initialNoticationID = remoteNotification[@"gcm.message_id"];
   }
+  _initialNotificationGathered = YES;
+  [self initialNotificationCallback];
 
 #if TARGET_OS_OSX
   // For macOS we use swizzling to intercept as addApplicationDelegate does not exist on the macOS
@@ -330,7 +341,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }
 }
 
-// Called when a use interacts with a notification.
+// Called when a user interacts with a notification.
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
     didReceiveNotificationResponse:(UNNotificationResponse *)response
              withCompletionHandler:(void (^)(void))completionHandler
@@ -1011,6 +1022,13 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }
 
   return nil;
+}
+
+- (void)initialNotificationCallback {
+  if (_initialNotificationGathered && _initialNotificationResult != nil) {
+    _initialNotificationResult.success([self copyInitialNotification]);
+    _initialNotificationResult = nil;
+  }
 }
 
 - (NSDictionary *)NSDictionaryForNSError:(NSError *)error {
