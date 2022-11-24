@@ -46,6 +46,11 @@ abstract class ThemedOAuthProviderButtonStyle {
   double get iconPadding => 0;
   String get assetsPackage;
 
+  /// A custom label string.
+  ///
+  /// Required for custom OAuth providers.
+  String? get label => null;
+
   /// {@macro ui.oauth.themed_oauth_provider_button_style}
   const ThemedOAuthProviderButtonStyle();
 
