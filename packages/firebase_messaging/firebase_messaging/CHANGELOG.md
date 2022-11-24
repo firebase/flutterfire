@@ -1,3 +1,7 @@
+## 14.1.2
+
+ - **FIX**: prevent getInitialMessage from being null at the start of the app ([#9969](https://github.com/firebase/flutterfire/issues/9969)). ([0b0fea8b](https://github.com/firebase/flutterfire/commit/0b0fea8b42ff61aabc0d2cdcd4d5ab1ea8192c61))
+
 ## 14.1.1
 
  - **FIX**: Revert "feat(messaging): use FlutterEngineGroup to improve performance of background handlers". ([8cd90b1a](https://github.com/firebase/flutterfire/commit/8cd90b1aeffc8b44383dc6a60eb8a39d0c08e3b7))

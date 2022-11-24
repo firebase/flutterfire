@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-11-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore_odm` - `v1.0.0-dev.42`](#cloud_firestore_odm---v100-dev42)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.42`](#cloud_firestore_odm_generator---v100-dev42)
+ - [`firebase_auth` - `v4.1.4`](#firebase_auth---v414)
+ - [`firebase_in_app_messaging` - `v0.7.0+7`](#firebase_in_app_messaging---v0707)
+ - [`firebase_messaging` - `v14.1.2`](#firebase_messaging---v1412)
+ - [`firebase_ui_auth` - `v1.1.0`](#firebase_ui_auth---v110)
+ - [`firebase_ui_oauth` - `v1.1.0`](#firebase_ui_oauth---v110)
+ - [`firebase_ui_oauth_apple` - `v1.0.7`](#firebase_ui_oauth_apple---v107)
+ - [`firebase_ui_oauth_facebook` - `v1.0.7`](#firebase_ui_oauth_facebook---v107)
+ - [`firebase_ui_oauth_google` - `v1.0.7`](#firebase_ui_oauth_google---v107)
+ - [`firebase_ui_oauth_twitter` - `v1.0.7`](#firebase_ui_oauth_twitter---v107)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth_apple` - `v1.0.7`
+ - `firebase_ui_oauth_facebook` - `v1.0.7`
+ - `firebase_ui_oauth_google` - `v1.0.7`
+ - `firebase_ui_oauth_twitter` - `v1.0.7`
+
+---
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.42`
+
+ - **FIX**: a bug where the ODM does not respect JSON case renaming ([#9988](https://github.com/firebase/flutterfire/issues/9988)). ([02d394b6](https://github.com/firebase/flutterfire/commit/02d394b6b0917f7dc98711b9939630c0b423ed63))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.42`
+
+ - **FIX**: a bug where the ODM does not respect JSON case renaming ([#9988](https://github.com/firebase/flutterfire/issues/9988)). ([02d394b6](https://github.com/firebase/flutterfire/commit/02d394b6b0917f7dc98711b9939630c0b423ed63))
+
+#### `firebase_auth` - `v4.1.4`
+
+ - **FIX**: tentative fix for null pointer exception in paruseUserInfoList ([#9960](https://github.com/firebase/flutterfire/issues/9960)). ([dad17407](https://github.com/firebase/flutterfire/commit/dad1740792b893920867528039a9c54398ae7e3e))
+
+#### `firebase_in_app_messaging` - `v0.7.0+7`
+
+ - **FIX**: in app messages were suppressed on iOS ([#9959](https://github.com/firebase/flutterfire/issues/9959)). ([929e3686](https://github.com/firebase/flutterfire/commit/929e3686b76c1ce57cf87f19498cd52fb577a8c6))
+
+#### `firebase_messaging` - `v14.1.2`
+
+ - **FIX**: prevent getInitialMessage from being null at the start of the app ([#9969](https://github.com/firebase/flutterfire/issues/9969)). ([0b0fea8b](https://github.com/firebase/flutterfire/commit/0b0fea8b42ff61aabc0d2cdcd4d5ab1ea8192c61))
+
+#### `firebase_ui_auth` - `v1.1.0`
+
+ - **FIX**: allow null countryCode for phone input ([#9937](https://github.com/firebase/flutterfire/issues/9937)). ([e87ec8a9](https://github.com/firebase/flutterfire/commit/e87ec8a9422d3608fcd5357c899f388321bc0a44))
+ - **FEAT**: [firebase_ui_auth] [firebase_ui_oauth] Allow for custom labels to be used for custom OAuth providers ([#9858](https://github.com/firebase/flutterfire/issues/9858)). ([fd0b815d](https://github.com/firebase/flutterfire/commit/fd0b815dbf82327caa9867dfe4b72571cc1bfe9a))
+ - **DOCS**: improve phone.md  ([#9774](https://github.com/firebase/flutterfire/issues/9774)). ([1f1ffd19](https://github.com/firebase/flutterfire/commit/1f1ffd19ab6383ed1fcac43b2011ee0b0a471c12))
+
+#### `firebase_ui_oauth` - `v1.1.0`
+
+ - **FEAT**: [firebase_ui_auth] [firebase_ui_oauth] Allow for custom labels to be used for custom OAuth providers ([#9858](https://github.com/firebase/flutterfire/issues/9858)). ([fd0b815d](https://github.com/firebase/flutterfire/commit/fd0b815dbf82327caa9867dfe4b72571cc1bfe9a))
+
+
 ## 2022-11-17
 
 ### Changes
