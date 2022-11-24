@@ -1,5 +1,9 @@
 import 'package:flutter/widgets.dart';
 
+/// Padding widget that takes into account current layout flow.
+/// If nearest ancestor is [Row] (or [Flex] with [Flex.direction] equal to
+/// [Axis.horizontal]) – horizontal paddings are ignored.
+/// Otherwise vertical paddings are ignored.
 class LayoutFlowAwarePadding extends StatelessWidget {
   final Widget child;
   final EdgeInsets padding;
