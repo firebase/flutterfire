@@ -48,7 +48,7 @@ Packages with dependency updates only:
 
 #### `firebase_auth` - `v4.1.4`
 
- - **FIX**: tentative fix for null pointer exception in paruseUserInfoList ([#9960](https://github.com/firebase/flutterfire/issues/9960)). ([dad17407](https://github.com/firebase/flutterfire/commit/dad1740792b893920867528039a9c54398ae7e3e))
+ - **FIX**: tentative fix for null pointer exception in `parseUserInfoList` ([#9960](https://github.com/firebase/flutterfire/issues/9960)). ([dad17407](https://github.com/firebase/flutterfire/commit/dad1740792b893920867528039a9c54398ae7e3e))
 
 #### `firebase_in_app_messaging` - `v0.7.0+7`
 
