@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -25,6 +26,8 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
+
+import io.flutter.Log;
 import io.flutter.embedding.engine.FlutterShellArgs;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -313,7 +316,13 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
             if (remoteMessage == null) {
               remoteMessage =
                   FlutterFirebaseMessagingStore.getInstance().getFirebaseMessage(messageId);
-              FlutterFirebaseMessagingStore.getInstance().removeFirebaseMessage(messageId);
+              Log.d(
+                  "COUCOU",
+                  "getInitialMessage: "
+                      + (remoteMessage == null
+                          ? "No remote message found in store"
+                          : "Found remote message in store"));
+              // FlutterFirebaseMessagingStore.getInstance().removeFirebaseMessage(messageId);
             }
 
             if (remoteMessage == null) {
@@ -515,6 +524,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
   @Override
   public boolean onNewIntent(Intent intent) {
     if (intent == null || intent.getExtras() == null) {
+      Log.w("COUCOU", "onNewIntent: intent or extras are null");
       return false;
     }
 
@@ -525,7 +535,10 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
       return false;
     }
 
+    Log.w("COUCOU", "messageId: " + messageId);
+
     RemoteMessage remoteMessage = FlutterFirebaseMessagingReceiver.notifications.get(messageId);
+    Log.w("COUCOU", "onNewIntent: remoteMessage: " + FlutterFirebaseMessagingReceiver.notifications.toString());
 
     // If we can't find a copy of the remote message in memory then check from our persisted store.
     if (remoteMessage == null) {
@@ -534,6 +547,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     }
 
     if (remoteMessage == null) {
+      Log.w("COUCOU", "onNewIntent: intent or extras are null");
       return false;
     }
 

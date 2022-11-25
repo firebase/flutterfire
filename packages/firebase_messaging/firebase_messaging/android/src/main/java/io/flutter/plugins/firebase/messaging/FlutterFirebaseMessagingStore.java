@@ -6,6 +6,8 @@ package io.flutter.plugins.firebase.messaging;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+
 import com.google.firebase.messaging.RemoteMessage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,6 +76,7 @@ public class FlutterFirebaseMessagingStore {
 
   public RemoteMessage getFirebaseMessage(String remoteMessageId) {
     String remoteMessageString = getPreferencesStringValue(remoteMessageId, null);
+    Log.w("COUCOU", "getFirebaseMessage: " + remoteMessageString);
     if (remoteMessageString != null) {
       try {
         Map<String, Object> argumentsMap = new HashMap<>(1);
@@ -83,6 +86,7 @@ public class FlutterFirebaseMessagingStore {
         argumentsMap.put("message", messageOutMap);
         return FlutterFirebaseMessagingUtils.getRemoteMessageForArguments(argumentsMap);
       } catch (JSONException e) {
+        Log.e("COUCOU", "Error parsing remote message", e);
         e.printStackTrace();
       }
     }
