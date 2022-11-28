@@ -76,7 +76,6 @@ public class FlutterFirebaseMessagingStore {
 
   public Map<String, Object> getFirebaseMessageMap(String remoteMessageId) {
     String remoteMessageString = getPreferencesStringValue(remoteMessageId, null);
-    Log.w("COUCOU", "getFirebaseMessage: " + remoteMessageString);
     if (remoteMessageString != null) {
       try {
         Map<String, Object> argumentsMap = new HashMap<>(1);
@@ -84,10 +83,8 @@ public class FlutterFirebaseMessagingStore {
         // Add a fake 'to' - as it's required to construct a RemoteMessage instance.
         messageOutMap.put("to", remoteMessageId);
         argumentsMap.put("message", messageOutMap);
-        Log.w("COUCOU", "getFirebaseMessage result: " + argumentsMap);
         return argumentsMap;
       } catch (JSONException e) {
-        Log.e("COUCOU", "Error parsing remote message", e);
         e.printStackTrace();
       }
     }
@@ -116,7 +113,6 @@ public class FlutterFirebaseMessagingStore {
       }
       map.put(key, value);
     }
-    Log.w("COUCOU", "jsonObjectToMap: " + map);
     return map;
   }
 

@@ -285,11 +285,9 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     cachedThreadPool.execute(
         () -> {
           try {
-            Log.w("COUCOU", "Step 1");
             if (initialMessage != null) {
               Map<String, Object> remoteMessageMap =
                   FlutterFirebaseMessagingUtils.remoteMessageToMap(initialMessage);
-              Log.w("COUCOU", "Step 1_" + initialMessageNotification);
               if (initialMessageNotification != null) {
                 remoteMessageMap.put(
                     "notification", initialMessageNotification);
@@ -300,7 +298,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
               return;
             }
 
-            Log.w("COUCOU", "Step 2");
 
 
             if (mainActivity == null) {
@@ -308,7 +305,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
               return;
             }
 
-            Log.w("COUCOU", "Step 3");
 
 
             Intent intent = mainActivity.getIntent();
@@ -552,7 +548,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
   @Override
   public boolean onNewIntent(Intent intent) {
     if (intent == null || intent.getExtras() == null) {
-      Log.w("COUCOU", "onNewIntent: intent or extras are null");
       return false;
     }
 
@@ -563,7 +558,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
       return false;
     }
 
-    Log.w("COUCOU", "messageId: " + messageId);
 
     RemoteMessage remoteMessage = FlutterFirebaseMessagingReceiver.notifications.get(messageId);
     Map<String, Object> notificationMap = null;
@@ -580,7 +574,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     }
 
     if (remoteMessage == null) {
-      Log.w("COUCOU", "onNewIntent: intent or extras are null");
       return false;
     }
 

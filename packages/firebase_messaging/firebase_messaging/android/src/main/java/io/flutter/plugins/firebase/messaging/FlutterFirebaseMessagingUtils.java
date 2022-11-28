@@ -78,7 +78,6 @@ class FlutterFirebaseMessagingUtils {
 
 
 
-    Log.w("COUCOU", "Parsing notification: " + remoteMessage.getNotification());
     if (remoteMessage.getNotification() != null) {
       messageMap.put(
           "notification", remoteMessageNotificationToMap(remoteMessage.getNotification()));
