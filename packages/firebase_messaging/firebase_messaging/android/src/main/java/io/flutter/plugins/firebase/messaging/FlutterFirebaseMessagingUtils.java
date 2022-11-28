@@ -7,7 +7,6 @@ package io.flutter.plugins.firebase.messaging;
 import android.app.ActivityManager;
 import android.app.KeyguardManager;
 import android.content.Context;
-
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 import java.util.Arrays;
@@ -17,7 +16,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import io.flutter.Log;
 
 @FunctionalInterface
 interface ErrorCallback {
@@ -75,8 +73,6 @@ class FlutterFirebaseMessagingUtils {
     messageMap.put(KEY_DATA, dataMap);
     messageMap.put(KEY_TTL, remoteMessage.getTtl());
     messageMap.put(KEY_SENT_TIME, remoteMessage.getSentTime());
-
-
 
     if (remoteMessage.getNotification() != null) {
       messageMap.put(
@@ -251,7 +247,6 @@ class FlutterFirebaseMessagingUtils {
       builder.setData(data);
     }
 
-
     return builder.build();
   }
 
@@ -261,19 +256,19 @@ class FlutterFirebaseMessagingUtils {
    * @param arguments Method channel call arguments.
    * @return RemoteMessage
    */
-  static Map<String, Object> getRemoteMessageNotificationForArguments(Map<String, Object> arguments) {
+  static Map<String, Object> getRemoteMessageNotificationForArguments(
+      Map<String, Object> arguments) {
     @SuppressWarnings("unchecked")
     Map<String, Object> messageMap =
-      (Map<String, Object>) Objects.requireNonNull(arguments.get("message"));
+        (Map<String, Object>) Objects.requireNonNull(arguments.get("message"));
 
     if (messageMap.get("notification") == null) {
       return null;
     }
 
-
     @SuppressWarnings("unchecked")
     Map<String, Object> notification = (Map<String, Object>) messageMap.get("notification");
 
-return notification;  }
-
+    return notification;
+  }
 }

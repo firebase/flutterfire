@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -26,8 +25,6 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
-
-import io.flutter.Log;
 import io.flutter.embedding.engine.FlutterShellArgs;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -55,10 +52,10 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
   private MethodChannel channel;
   private Activity mainActivity;
 
-  // We store the initial notification in a separate
+  private RemoteMessage initialMessage;
+  // We store the initial notification in a separate variable
   // because we cannot set the notification key in
   // the initialMessage Java Builder
-  private RemoteMessage initialMessage;
   private Map<String, Object> initialMessageNotification;
 
   FlutterFirebasePermissionManager permissionManager;
@@ -289,23 +286,18 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
               Map<String, Object> remoteMessageMap =
                   FlutterFirebaseMessagingUtils.remoteMessageToMap(initialMessage);
               if (initialMessageNotification != null) {
-                remoteMessageMap.put(
-                    "notification", initialMessageNotification);
+                remoteMessageMap.put("notification", initialMessageNotification);
               }
-              initialMessage = null;
               taskCompletionSource.setResult(remoteMessageMap);
+              initialMessage = null;
               initialMessageNotification = null;
               return;
             }
-
-
 
             if (mainActivity == null) {
               taskCompletionSource.setResult(null);
               return;
             }
-
-
 
             Intent intent = mainActivity.getIntent();
 
@@ -333,11 +325,12 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
               Map<String, Object> messageMap =
                   FlutterFirebaseMessagingStore.getInstance().getFirebaseMessageMap(messageId);
               if (messageMap != null) {
-                remoteMessage = FlutterFirebaseMessagingUtils.getRemoteMessageForArguments(messageMap);
+                remoteMessage =
+                    FlutterFirebaseMessagingUtils.getRemoteMessageForArguments(messageMap);
 
                 if (messageMap.get("notification") != null) {
                   // noinspection unchecked
-                    notificationMap = (Map<String, Object>) messageMap.get("notification");
+                  notificationMap = (Map<String, Object>) messageMap.get("notification");
                 }
               }
               FlutterFirebaseMessagingStore.getInstance().removeFirebaseMessage(messageId);
@@ -356,8 +349,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
               remoteMessageMap.put("notification", notificationMap);
             }
 
-            taskCompletionSource.setResult(
-              remoteMessageMap);
+            taskCompletionSource.setResult(remoteMessageMap);
 
           } catch (Exception e) {
             taskCompletionSource.setException(e);
@@ -558,17 +550,17 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
       return false;
     }
 
-
     RemoteMessage remoteMessage = FlutterFirebaseMessagingReceiver.notifications.get(messageId);
     Map<String, Object> notificationMap = null;
 
     // If we can't find a copy of the remote message in memory then check from our persisted store.
     if (remoteMessage == null) {
       Map<String, Object> messageMap =
-        FlutterFirebaseMessagingStore.getInstance().getFirebaseMessageMap(messageId);
+          FlutterFirebaseMessagingStore.getInstance().getFirebaseMessageMap(messageId);
       if (messageMap != null) {
         remoteMessage = FlutterFirebaseMessagingUtils.getRemoteMessageForArguments(messageMap);
-        notificationMap = FlutterFirebaseMessagingUtils.getRemoteMessageNotificationForArguments(messageMap);
+        notificationMap =
+            FlutterFirebaseMessagingUtils.getRemoteMessageNotificationForArguments(messageMap);
       }
       // Note we don't remove it here as the user may still call getInitialMessage.
     }
@@ -588,10 +580,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
       message.put("notification", initialMessageNotification);
     }
 
-    channel.invokeMethod(
-        "Messaging#onMessageOpenedApp",
-      message
-        );
+    channel.invokeMethod("Messaging#onMessageOpenedApp", message);
     mainActivity.setIntent(intent);
     return true;
   }
