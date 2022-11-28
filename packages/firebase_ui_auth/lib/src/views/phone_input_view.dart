@@ -90,7 +90,8 @@ class _PhoneInputViewState extends State<PhoneInputView> {
   @override
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
-    final countryCode = Localizations.localeOf(context).countryCode;
+    final countryCode = Localizations.localeOf(context).countryCode ??
+        WidgetsBinding.instance.platformDispatcher.locale.countryCode;
 
     return AuthFlowBuilder<PhoneAuthController>(
       flowKey: widget.flowKey,
@@ -121,7 +122,7 @@ class _PhoneInputViewState extends State<PhoneInputView> {
               widget.subtitleBuilder!(context),
             if (state is AwaitingPhoneNumber || state is SMSCodeRequested) ...[
               PhoneInput(
-                initialCountryCode: countryCode!,
+                initialCountryCode: countryCode,
                 onSubmit: onSubmit(ctrl),
                 key: phoneInputKey,
               ),

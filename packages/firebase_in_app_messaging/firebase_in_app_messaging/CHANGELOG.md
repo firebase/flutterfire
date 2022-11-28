@@ -1,3 +1,15 @@
+## 0.7.0+7
+
+ - **FIX**: in app messages were suppressed on iOS ([#9959](https://github.com/firebase/flutterfire/issues/9959)). ([929e3686](https://github.com/firebase/flutterfire/commit/929e3686b76c1ce57cf87f19498cd52fb577a8c6))
+
+## 0.7.0+6
+
+ - Update a dependency to the latest release.
+
+## 0.7.0+5
+
+ - Update a dependency to the latest release.
+
 ## 0.7.0+4
 
  - Update a dependency to the latest release.

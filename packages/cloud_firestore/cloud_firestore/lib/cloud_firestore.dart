@@ -7,7 +7,7 @@ library cloud_firestore;
 // TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
 // ignore: unnecessary_import
 import 'dart:typed_data';
-
+import 'dart:convert';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
@@ -28,7 +28,15 @@ export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
         SetOptions,
         DocumentChangeType,
         PersistenceSettings,
-        Settings;
+        Settings,
+        IndexField,
+        Index,
+        FieldOverrides,
+        FieldOverrideIndex,
+        Order,
+        ArrayConfig,
+        QueryScope;
+
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;
 

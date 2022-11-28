@@ -27,15 +27,15 @@ NSString *const kFLTFirebaseInAppMessagingChannelName =
     [fiam triggerEvent:eventName];
     result(nil);
   } else if ([@"FirebaseInAppMessaging#setMessagesSuppressed" isEqualToString:call.method]) {
-    NSNumber *suppress = [NSNumber numberWithBool:(NSNumber *)call.arguments[@"suppress"]];
+    BOOL suppress = [[call.arguments objectForKey:@"suppress"] boolValue];
     FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
-    fiam.messageDisplaySuppressed = [suppress boolValue];
+    fiam.messageDisplaySuppressed = suppress;
     result(nil);
   } else if ([@"FirebaseInAppMessaging#setAutomaticDataCollectionEnabled"
                  isEqualToString:call.method]) {
-    NSNumber *enabled = [NSNumber numberWithBool:(NSNumber *)call.arguments[@"enabled"]];
+    BOOL enabled = [[call.arguments objectForKey:@"enabled"] boolValue];
     FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
-    fiam.automaticDataCollectionEnabled = [enabled boolValue];
+    fiam.automaticDataCollectionEnabled = enabled;
     result(nil);
   } else {
     result(FlutterMethodNotImplemented);

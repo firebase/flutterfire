@@ -1,3 +1,15 @@
+## 1.0.7
+
+ - Update a dependency to the latest release.
+
+## 1.0.6
+
+ - **DOCS**: Fixed typo in firebase_ui_oauth packages for firebase_ui_auth package. ([#9931](https://github.com/firebase/flutterfire/issues/9931)). ([8cfc803e](https://github.com/firebase/flutterfire/commit/8cfc803eea8103701aeb1791d00c743582ccdb40))
+
+## 1.0.5
+
+ - Update a dependency to the latest release.
+
 ## 1.0.4
 
  - Update a dependency to the latest release.

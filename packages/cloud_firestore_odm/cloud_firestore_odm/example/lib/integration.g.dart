@@ -962,11 +962,13 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (firstName != _sentinel)
-        'firstName': _$AdvancedJsonPerFieldToJson.firstName(firstName),
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
+        _$AdvancedJsonFieldMap['firstName']!: firstName as String?,
+      if (firstNameFieldValue != null)
+        _$AdvancedJsonFieldMap['firstName']!: firstNameFieldValue,
       if (lastName != _sentinel)
-        'lastName': _$AdvancedJsonPerFieldToJson.lastName(lastName),
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+        _$AdvancedJsonFieldMap['lastName']!: lastName as String?,
+      if (lastNameFieldValue != null)
+        _$AdvancedJsonFieldMap['lastName']!: lastNameFieldValue,
     };
 
     return reference.update(json);
@@ -989,11 +991,14 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (firstName != _sentinel)
+<<<<<<< HEAD
         'firstName': _$AdvancedJsonPerFieldToJson.firstName(firstName),
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel)
         'lastName': _$AdvancedJsonPerFieldToJson.lastName(lastName),
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+=======
+        _$AdvancedJsonFieldMap['firstName']!: firstName as String?,
     };
 
     transaction.update(reference, json);
@@ -1001,7 +1006,6 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
 
   @override
   bool operator ==(Object other) {
-    return other is AdvancedJsonDocumentReference &&
         other.runtimeType == runtimeType &&
         other.parent == parent &&
         other.id == id;
@@ -1931,11 +1935,21 @@ class _$_PrivateAdvancedJsonDocumentReference
     );
     final json = {
       if (firstName != _sentinel)
+<<<<<<< HEAD
         'firstName': _$PrivateAdvancedJsonPerFieldToJson.firstName(firstName),
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel)
         'lastName': _$PrivateAdvancedJsonPerFieldToJson.lastName(lastName),
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+=======
+        _$PrivateAdvancedJsonFieldMap['firstName']!: firstName as String?,
+      if (firstNameFieldValue != null)
+        _$PrivateAdvancedJsonFieldMap['firstName']!: firstNameFieldValue,
+      if (lastName != _sentinel)
+        _$PrivateAdvancedJsonFieldMap['lastName']!: lastName as String?,
+      if (lastNameFieldValue != null)
+        _$PrivateAdvancedJsonFieldMap['lastName']!: lastNameFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -1958,11 +1972,21 @@ class _$_PrivateAdvancedJsonDocumentReference
     );
     final json = {
       if (firstName != _sentinel)
+<<<<<<< HEAD
         'firstName': _$PrivateAdvancedJsonPerFieldToJson.firstName(firstName),
       if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
       if (lastName != _sentinel)
         'lastName': _$PrivateAdvancedJsonPerFieldToJson.lastName(lastName),
       if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+=======
+        _$PrivateAdvancedJsonFieldMap['firstName']!: firstName as String?,
+      if (firstNameFieldValue != null)
+        _$PrivateAdvancedJsonFieldMap['firstName']!: firstNameFieldValue,
+      if (lastName != _sentinel)
+        _$PrivateAdvancedJsonFieldMap['lastName']!: lastName as String?,
+      if (lastNameFieldValue != null)
+        _$PrivateAdvancedJsonFieldMap['lastName']!: lastNameFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);

@@ -38,16 +38,16 @@ FirebaseException platformExceptionToFirebaseException(
   PlatformException platformException, {
   required String plugin,
 }) {
-  Map<String, String>? details = platformException.details != null
-      ? Map<String, String>.from(platformException.details)
+  Map<String, Object>? details = platformException.details != null
+      ? Map<String, Object>.from(platformException.details)
       : null;
 
   String? code;
   String message = platformException.message ?? '';
 
   if (details != null) {
-    code = details['code'] ?? code;
-    message = details['message'] ?? message;
+    code = (details['code'] as String?) ?? code;
+    message = (details['message'] as String?) ?? message;
   }
 
   return FirebaseException(

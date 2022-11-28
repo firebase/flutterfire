@@ -2,14 +2,14 @@
 
 [![pub package](https://img.shields.io/pub/v/firebase_ui_oauth_apple.svg)](https://pub.dev/packages/firebase_ui_oauth_apple)
 
-Apple Sign In for [Firebase UI](https://pub.dev/packages/firebase_ui_auth)
+Apple Sign In for [Firebase UI Auth](https://pub.dev/packages/firebase_ui_auth)
 
 ## Installation
 
 Add dependency
 
 ```sh
-flutter pub add firebase_ui
+flutter pub add firebase_ui_auth
 flutter pub add firebase_ui_oauth_apple
 
 flutter pub global activate flutterfire_cli

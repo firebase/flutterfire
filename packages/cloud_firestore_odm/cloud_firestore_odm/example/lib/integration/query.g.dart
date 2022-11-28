@@ -186,8 +186,14 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (time != _sentinel) 'time': _$DateTimeQueryPerFieldToJson.time(time),
       if (timeFieldValue != null) 'time': timeFieldValue,
+=======
+      if (time != _sentinel) _$DateTimeQueryFieldMap['time']!: time as DateTime,
+      if (timeFieldValue != null)
+        _$DateTimeQueryFieldMap['time']!: timeFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -203,8 +209,14 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (time != _sentinel) 'time': _$DateTimeQueryPerFieldToJson.time(time),
       if (timeFieldValue != null) 'time': timeFieldValue,
+=======
+      if (time != _sentinel) _$DateTimeQueryFieldMap['time']!: time as DateTime,
+      if (timeFieldValue != null)
+        _$DateTimeQueryFieldMap['time']!: timeFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -981,8 +993,15 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (time != _sentinel) 'time': _$TimestampQueryPerFieldToJson.time(time),
       if (timeFieldValue != null) 'time': timeFieldValue,
+=======
+      if (time != _sentinel)
+        _$TimestampQueryFieldMap['time']!: time as Timestamp,
+      if (timeFieldValue != null)
+        _$TimestampQueryFieldMap['time']!: timeFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -998,8 +1017,15 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (time != _sentinel) 'time': _$TimestampQueryPerFieldToJson.time(time),
       if (timeFieldValue != null) 'time': timeFieldValue,
+=======
+      if (time != _sentinel)
+        _$TimestampQueryFieldMap['time']!: time as Timestamp,
+      if (timeFieldValue != null)
+        _$TimestampQueryFieldMap['time']!: timeFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -1778,8 +1804,14 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (point != _sentinel)
+<<<<<<< HEAD
         'point': _$GeoPointQueryPerFieldToJson.point(point),
       if (pointFieldValue != null) 'point': pointFieldValue,
+=======
+        _$GeoPointQueryFieldMap['point']!: point as GeoPoint,
+      if (pointFieldValue != null)
+        _$GeoPointQueryFieldMap['point']!: pointFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -1796,8 +1828,14 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (point != _sentinel)
+<<<<<<< HEAD
         'point': _$GeoPointQueryPerFieldToJson.point(point),
       if (pointFieldValue != null) 'point': pointFieldValue,
+=======
+        _$GeoPointQueryFieldMap['point']!: point as GeoPoint,
+      if (pointFieldValue != null)
+        _$GeoPointQueryFieldMap['point']!: pointFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -2583,8 +2621,15 @@ class _$DocumentReferenceQueryDocumentReference
     );
     final json = {
       if (ref != _sentinel)
+<<<<<<< HEAD
         'ref': _$DocumentReferenceQueryPerFieldToJson.ref(ref),
       if (refFieldValue != null) 'ref': refFieldValue,
+=======
+        _$DocumentReferenceQueryFieldMap['ref']!:
+            ref as DocumentReference<Map<String, dynamic>>,
+      if (refFieldValue != null)
+        _$DocumentReferenceQueryFieldMap['ref']!: refFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -2601,8 +2646,15 @@ class _$DocumentReferenceQueryDocumentReference
     );
     final json = {
       if (ref != _sentinel)
+<<<<<<< HEAD
         'ref': _$DocumentReferenceQueryPerFieldToJson.ref(ref),
       if (refFieldValue != null) 'ref': refFieldValue,
+=======
+        _$DocumentReferenceQueryFieldMap['ref']!:
+            ref as DocumentReference<Map<String, dynamic>>,
+      if (refFieldValue != null)
+        _$DocumentReferenceQueryFieldMap['ref']!: refFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);

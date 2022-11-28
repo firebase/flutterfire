@@ -227,8 +227,9 @@ class _$IgnoredGetterDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) 'value': value as int,
-      if (valueFieldValue != null) 'value': valueFieldValue,
+      if (value != _sentinel) _$IgnoredGetterFieldMap['value']!: value as int,
+      if (valueFieldValue != null)
+        _$IgnoredGetterFieldMap['value']!: valueFieldValue,
     };
 
     return reference.update(json);
@@ -244,8 +245,9 @@ class _$IgnoredGetterDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) 'value': value as int,
-      if (valueFieldValue != null) 'value': valueFieldValue,
+      if (value != _sentinel) _$IgnoredGetterFieldMap['value']!: value as int,
+      if (valueFieldValue != null)
+        _$IgnoredGetterFieldMap['value']!: valueFieldValue,
     };
 
     transaction.update(reference, json);
@@ -997,7 +999,12 @@ class _$ModelDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as String,
+=======
+      if (value != _sentinel) _$ModelFieldMap['value']!: value as String,
+      if (valueFieldValue != null) _$ModelFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -1013,7 +1020,12 @@ class _$ModelDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as String,
+=======
+      if (value != _sentinel) _$ModelFieldMap['value']!: value as String,
+      if (valueFieldValue != null) _$ModelFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -1814,6 +1826,7 @@ class _$NestedDocumentReference
       "Cannot specify both enumList and enumListFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (simple != _sentinel) 'simple': simple as int?,
       if (boolList != _sentinel) 'boolList': boolList as List<bool>?,
       if (stringList != _sentinel) 'stringList': stringList as List<String>?,
@@ -1823,6 +1836,31 @@ class _$NestedDocumentReference
         'dynamicList': dynamicList as List<dynamic>?,
       if (enumList != _sentinel)
         'enumList': _enumConvertList(enumList as List<SimpleEnum>?),
+=======
+      if (simple != _sentinel) _$NestedFieldMap['simple']!: simple as int?,
+      if (simpleFieldValue != null)
+        _$NestedFieldMap['simple']!: simpleFieldValue,
+      if (boolList != _sentinel)
+        _$NestedFieldMap['boolList']!: boolList as List<bool>?,
+      if (boolListFieldValue != null)
+        _$NestedFieldMap['boolList']!: boolListFieldValue,
+      if (stringList != _sentinel)
+        _$NestedFieldMap['stringList']!: stringList as List<String>?,
+      if (stringListFieldValue != null)
+        _$NestedFieldMap['stringList']!: stringListFieldValue,
+      if (numList != _sentinel)
+        _$NestedFieldMap['numList']!: numList as List<num>?,
+      if (numListFieldValue != null)
+        _$NestedFieldMap['numList']!: numListFieldValue,
+      if (objectList != _sentinel)
+        _$NestedFieldMap['objectList']!: objectList as List<Object?>?,
+      if (objectListFieldValue != null)
+        _$NestedFieldMap['objectList']!: objectListFieldValue,
+      if (dynamicList != _sentinel)
+        _$NestedFieldMap['dynamicList']!: dynamicList as List<dynamic>?,
+      if (dynamicListFieldValue != null)
+        _$NestedFieldMap['dynamicList']!: dynamicListFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -1874,6 +1912,7 @@ class _$NestedDocumentReference
       "Cannot specify both enumList and enumListFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (simple != _sentinel) 'simple': simple as int?,
       if (boolList != _sentinel) 'boolList': boolList as List<bool>?,
       if (stringList != _sentinel) 'stringList': stringList as List<String>?,
@@ -1883,6 +1922,31 @@ class _$NestedDocumentReference
         'dynamicList': dynamicList as List<dynamic>?,
       if (enumList != _sentinel)
         'enumList': _enumConvertList(enumList as List<SimpleEnum>?),
+=======
+      if (simple != _sentinel) _$NestedFieldMap['simple']!: simple as int?,
+      if (simpleFieldValue != null)
+        _$NestedFieldMap['simple']!: simpleFieldValue,
+      if (boolList != _sentinel)
+        _$NestedFieldMap['boolList']!: boolList as List<bool>?,
+      if (boolListFieldValue != null)
+        _$NestedFieldMap['boolList']!: boolListFieldValue,
+      if (stringList != _sentinel)
+        _$NestedFieldMap['stringList']!: stringList as List<String>?,
+      if (stringListFieldValue != null)
+        _$NestedFieldMap['stringList']!: stringListFieldValue,
+      if (numList != _sentinel)
+        _$NestedFieldMap['numList']!: numList as List<num>?,
+      if (numListFieldValue != null)
+        _$NestedFieldMap['numList']!: numListFieldValue,
+      if (objectList != _sentinel)
+        _$NestedFieldMap['objectList']!: objectList as List<Object?>?,
+      if (objectListFieldValue != null)
+        _$NestedFieldMap['objectList']!: objectListFieldValue,
+      if (dynamicList != _sentinel)
+        _$NestedFieldMap['dynamicList']!: dynamicList as List<dynamic>?,
+      if (dynamicListFieldValue != null)
+        _$NestedFieldMap['dynamicList']!: dynamicListFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -4562,7 +4626,13 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as int,
+=======
+      if (value != _sentinel) _$OptionalJsonFieldMap['value']!: value as int,
+      if (valueFieldValue != null)
+        _$OptionalJsonFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -4578,7 +4648,13 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as int,
+=======
+      if (value != _sentinel) _$OptionalJsonFieldMap['value']!: value as int,
+      if (valueFieldValue != null)
+        _$OptionalJsonFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -5328,7 +5404,13 @@ class _$MixedJsonDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as int,
+=======
+      if (value != _sentinel) _$MixedJsonFieldMap['value']!: value as int,
+      if (valueFieldValue != null)
+        _$MixedJsonFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -5344,7 +5426,13 @@ class _$MixedJsonDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as int,
+=======
+      if (value != _sentinel) _$MixedJsonFieldMap['value']!: value as int,
+      if (valueFieldValue != null)
+        _$MixedJsonFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -6137,8 +6225,18 @@ class _$RootDocumentReference
       "Cannot specify both nullable and nullableFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
       if (nullable != _sentinel) 'nullable': nullable as int?,
+=======
+      if (nonNullable != _sentinel)
+        _$RootFieldMap['nonNullable']!: nonNullable as String,
+      if (nonNullableFieldValue != null)
+        _$RootFieldMap['nonNullable']!: nonNullableFieldValue,
+      if (nullable != _sentinel) _$RootFieldMap['nullable']!: nullable as int?,
+      if (nullableFieldValue != null)
+        _$RootFieldMap['nullable']!: nullableFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -6160,8 +6258,18 @@ class _$RootDocumentReference
       "Cannot specify both nullable and nullableFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
       if (nullable != _sentinel) 'nullable': nullable as int?,
+=======
+      if (nonNullable != _sentinel)
+        _$RootFieldMap['nonNullable']!: nonNullable as String,
+      if (nonNullableFieldValue != null)
+        _$RootFieldMap['nonNullable']!: nonNullableFieldValue,
+      if (nullable != _sentinel) _$RootFieldMap['nullable']!: nullable as int?,
+      if (nullableFieldValue != null)
+        _$RootFieldMap['nullable']!: nullableFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -7050,8 +7158,18 @@ class _$SubDocumentReference
       "Cannot specify both nullable and nullableFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
       if (nullable != _sentinel) 'nullable': nullable as int?,
+=======
+      if (nonNullable != _sentinel)
+        _$SubFieldMap['nonNullable']!: nonNullable as String,
+      if (nonNullableFieldValue != null)
+        _$SubFieldMap['nonNullable']!: nonNullableFieldValue,
+      if (nullable != _sentinel) _$SubFieldMap['nullable']!: nullable as int?,
+      if (nullableFieldValue != null)
+        _$SubFieldMap['nullable']!: nullableFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -7073,8 +7191,18 @@ class _$SubDocumentReference
       "Cannot specify both nullable and nullableFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
       if (nullable != _sentinel) 'nullable': nullable as int?,
+=======
+      if (nonNullable != _sentinel)
+        _$SubFieldMap['nonNullable']!: nonNullable as String,
+      if (nonNullableFieldValue != null)
+        _$SubFieldMap['nonNullable']!: nonNullableFieldValue,
+      if (nullable != _sentinel) _$SubFieldMap['nullable']!: nullable as int?,
+      if (nullableFieldValue != null)
+        _$SubFieldMap['nullable']!: nullableFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -7958,7 +8086,13 @@ class _$AsCamelCaseDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as num,
+=======
+      if (value != _sentinel) _$AsCamelCaseFieldMap['value']!: value as num,
+      if (valueFieldValue != null)
+        _$AsCamelCaseFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -7974,7 +8108,13 @@ class _$AsCamelCaseDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as num,
+=======
+      if (value != _sentinel) _$AsCamelCaseFieldMap['value']!: value as num,
+      if (valueFieldValue != null)
+        _$AsCamelCaseFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -8747,7 +8887,13 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as num,
+=======
+      if (value != _sentinel) _$CustomSubNameFieldMap['value']!: value as num,
+      if (valueFieldValue != null)
+        _$CustomSubNameFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -8763,7 +8909,13 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as num,
+=======
+      if (value != _sentinel) _$CustomSubNameFieldMap['value']!: value as num,
+      if (valueFieldValue != null)
+        _$CustomSubNameFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -9540,7 +9692,14 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as num,
+=======
+      if (value != _sentinel)
+        _$CustomClassPrefixFieldMap['value']!: value as num,
+      if (valueFieldValue != null)
+        _$CustomClassPrefixFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -9556,7 +9715,14 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as num,
+=======
+      if (value != _sentinel)
+        _$CustomClassPrefixFieldMap['value']!: value as num,
+      if (valueFieldValue != null)
+        _$CustomClassPrefixFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -10311,7 +10477,13 @@ class _$EnumTestDocumentReference
       "Cannot specify both nonNullable and nonNullableFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (nonNullable != _sentinel) 'nonNullable': nonNullable as SimpleEnum,
+=======
+      if (value != _sentinel) _$ExplicitPathFieldMap['value']!: value as num,
+      if (valueFieldValue != null)
+        _$ExplicitPathFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -10327,7 +10499,13 @@ class _$EnumTestDocumentReference
       "Cannot specify both nonNullable and nonNullableFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (nonNullable != _sentinel) 'nonNullable': nonNullable as SimpleEnum,
+=======
+      if (value != _sentinel) _$ExplicitPathFieldMap['value']!: value as num,
+      if (valueFieldValue != null)
+        _$ExplicitPathFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -11896,7 +12074,13 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as num,
+=======
+      if (value != _sentinel) _$ExplicitSubPathFieldMap['value']!: value as num,
+      if (valueFieldValue != null)
+        _$ExplicitSubPathFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -11912,7 +12096,13 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
+<<<<<<< HEAD
       if (value != _sentinel) 'value': value as num,
+=======
+      if (value != _sentinel) _$ExplicitSubPathFieldMap['value']!: value as num,
+      if (valueFieldValue != null)
+        _$ExplicitSubPathFieldMap['value']!: valueFieldValue,
+>>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
