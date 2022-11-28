@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-
 @FunctionalInterface
 interface ErrorCallback {
   void onError(String errorDescription);

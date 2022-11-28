@@ -345,7 +345,9 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
 
             Map<String, Object> remoteMessageMap =
                 FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
-            if (notificationMap != null) {
+
+            // If no notification map is available in the remote message we override with the one we got
+            if (remoteMessage.getNotification() == null && notificationMap != null) {
               remoteMessageMap.put("notification", notificationMap);
             }
 
@@ -576,7 +578,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     FlutterFirebaseMessagingReceiver.notifications.remove(messageId);
     Map<String, Object> message = FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
 
-    if (initialMessageNotification != null) {
+    if (remoteMessage.getNotification() == null && initialMessageNotification != null) {
       message.put("notification", initialMessageNotification);
     }
 
