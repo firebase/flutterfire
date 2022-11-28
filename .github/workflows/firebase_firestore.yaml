@@ -35,7 +35,7 @@ jobs:
           java-version: '11'
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: 'master'
           cache: true
       - uses: bluefireteam/melos-action@v1
         with:
@@ -71,7 +71,7 @@ jobs:
           java-version: '11'
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: 'master'
           cache: true
       - uses: bluefireteam/melos-action@v1
         with:
@@ -105,7 +105,7 @@ jobs:
           java-version: '11'
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: 'master'
           cache: true
       - uses: bluefireteam/melos-action@v1
         with:

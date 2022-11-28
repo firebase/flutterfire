@@ -35,7 +35,7 @@ jobs:
           fetch-depth: 0
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: 'master'
           cache: true
       - uses: bluefireteam/melos-action@v2
       - name: "Build Example"
@@ -58,7 +58,7 @@ jobs:
           fetch-depth: 0
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: 'master'
           cache: true
       - uses: bluefireteam/melos-action@v2
       - name: "Build Example"

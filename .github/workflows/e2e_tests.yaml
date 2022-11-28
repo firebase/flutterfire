@@ -72,7 +72,7 @@ jobs:
           restore-keys: firebase-emulators-v2
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: 'master'
           cache: true
       - name: "Install Tools"
         run: |
@@ -146,7 +146,7 @@ jobs:
           restore-keys: firebase-emulators-v1
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: 'master'
           cache: true
       - name: "Install Tools"
         run: |
@@ -213,7 +213,7 @@ jobs:
           restore-keys: firebase-emulators-v1
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: 'master'
           cache: true
       - name: "Install Tools"
         run: |
@@ -254,7 +254,7 @@ jobs:
           java-version: "11"
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: 'master'
           cache: true
       - name: "Install Tools"
         run: |
