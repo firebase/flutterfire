@@ -115,6 +115,7 @@ public class FlutterFirebaseMessagingStore {
       }
       map.put(key, value);
     }
+    Log.w("COUCOU", "jsonObjectToMap: " + map);
     return map;
   }
 

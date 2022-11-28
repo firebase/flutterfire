@@ -279,6 +279,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     cachedThreadPool.execute(
         () -> {
           try {
+            Log.w("COUCOU", "Step 1");
             if (initialMessage != null) {
               Map<String, Object> remoteMessageMap =
                   FlutterFirebaseMessagingUtils.remoteMessageToMap(initialMessage);
@@ -287,10 +288,16 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
               return;
             }
 
+            Log.w("COUCOU", "Step 2");
+
+
             if (mainActivity == null) {
               taskCompletionSource.setResult(null);
               return;
             }
+
+            Log.w("COUCOU", "Step 3");
+
 
             Intent intent = mainActivity.getIntent();
 
@@ -316,7 +323,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
             if (remoteMessage == null) {
               remoteMessage =
                   FlutterFirebaseMessagingStore.getInstance().getFirebaseMessage(messageId);
-              Log.d(
+              Log.w(
                   "COUCOU",
                   "getInitialMessage: "
                       + (remoteMessage == null
@@ -336,6 +343,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
                 FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage));
 
           } catch (Exception e) {
+            Log.w("COUCOU", "EXCEPTION: ", e);
             taskCompletionSource.setException(e);
           }
         });

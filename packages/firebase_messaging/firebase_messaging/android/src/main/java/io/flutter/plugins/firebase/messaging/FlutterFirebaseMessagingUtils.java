@@ -76,7 +76,7 @@ class FlutterFirebaseMessagingUtils {
     messageMap.put(KEY_TTL, remoteMessage.getTtl());
     messageMap.put(KEY_SENT_TIME, remoteMessage.getSentTime());
 
-    Log.w("COUCOU", "Remote message notification" +( remoteMessage.getNotification() != null ? " not null" : " null"));
+    Log.w("COUCOU", "Parsing notification: " + remoteMessage.getNotification());
     if (remoteMessage.getNotification() != null) {
       messageMap.put(
           "notification", remoteMessageNotificationToMap(remoteMessage.getNotification()));
