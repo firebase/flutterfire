@@ -190,21 +190,12 @@ class _$PersonDocumentReference
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (firstName != _sentinel) 'firstName': firstName,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
-=======
-      if (firstName != _sentinel)
-        _$$_PersonFieldMap['firstName']!: firstName as String,
+      if (firstName != _sentinel) _$$_PersonFieldMap['firstName']!: firstName,
       if (firstNameFieldValue != null)
         _$$_PersonFieldMap['firstName']!: firstNameFieldValue,
-      if (lastName != _sentinel)
-        _$$_PersonFieldMap['lastName']!: lastName as String,
+      if (lastName != _sentinel) _$$_PersonFieldMap['lastName']!: lastName,
       if (lastNameFieldValue != null)
         _$$_PersonFieldMap['lastName']!: lastNameFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -226,21 +217,12 @@ class _$PersonDocumentReference
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (firstName != _sentinel) 'firstName': firstName,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
-=======
-      if (firstName != _sentinel)
-        _$$_PersonFieldMap['firstName']!: firstName as String,
+      if (firstName != _sentinel) _$$_PersonFieldMap['firstName']!: firstName,
       if (firstNameFieldValue != null)
         _$$_PersonFieldMap['firstName']!: firstNameFieldValue,
-      if (lastName != _sentinel)
-        _$$_PersonFieldMap['lastName']!: lastName as String,
+      if (lastName != _sentinel) _$$_PersonFieldMap['lastName']!: lastName,
       if (lastNameFieldValue != null)
         _$$_PersonFieldMap['lastName']!: lastNameFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -1115,15 +1097,9 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value,
-      if (valueFieldValue != null) 'value': valueFieldValue,
-=======
-      if (value != _sentinel)
-        _$$PublicRedirected2FieldMap['value']!: value as String,
+      if (value != _sentinel) _$$PublicRedirected2FieldMap['value']!: value,
       if (valueFieldValue != null)
         _$$PublicRedirected2FieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -1139,15 +1115,9 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value,
-      if (valueFieldValue != null) 'value': valueFieldValue,
-=======
-      if (value != _sentinel)
-        _$$PublicRedirected2FieldMap['value']!: value as String,
+      if (value != _sentinel) _$$PublicRedirected2FieldMap['value']!: value,
       if (valueFieldValue != null)
         _$$PublicRedirected2FieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);

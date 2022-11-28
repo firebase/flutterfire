@@ -288,52 +288,46 @@ class _$MovieDocumentReference
       "Cannot specify both majorCast and majorCastFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (poster != _sentinel) 'poster': _$MoviePerFieldToJson.poster(poster),
-      if (posterFieldValue != null) 'poster': posterFieldValue,
-      if (likes != _sentinel) 'likes': _$MoviePerFieldToJson.likes(likes),
-      if (likesFieldValue != null) 'likes': likesFieldValue,
-      if (title != _sentinel) 'title': _$MoviePerFieldToJson.title(title),
-      if (titleFieldValue != null) 'title': titleFieldValue,
-      if (year != _sentinel) 'year': _$MoviePerFieldToJson.year(year),
-      if (yearFieldValue != null) 'year': yearFieldValue,
-      if (runtime != _sentinel)
-        'runtime': _$MoviePerFieldToJson.runtime(runtime),
-      if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
-      if (rated != _sentinel) 'rated': _$MoviePerFieldToJson.rated(rated),
-      if (ratedFieldValue != null) 'rated': ratedFieldValue,
-      if (genre != _sentinel) 'genre': _$MoviePerFieldToJson.genre(genre),
-      if (genreFieldValue != null) 'genre': genreFieldValue,
-      if (language != _sentinel)
-        'language': _$MoviePerFieldToJson.language(language),
-      if (languageFieldValue != null) 'language': languageFieldValue,
-      if (certification != _sentinel)
-        'certification': _$MoviePerFieldToJson.certification(certification),
-      if (certificationFieldValue != null)
-        'certification': certificationFieldValue,
-      if (cast != _sentinel) 'cast': _$MoviePerFieldToJson.cast(cast),
-      if (castFieldValue != null) 'cast': castFieldValue,
-      if (majorCast != _sentinel)
-        'majorCast': _$MoviePerFieldToJson.majorCast(majorCast),
-      if (majorCastFieldValue != null) 'majorCast': majorCastFieldValue,
-=======
-      if (poster != _sentinel) _$MovieFieldMap['poster']!: poster as String,
+      if (poster != _sentinel)
+        _$MovieFieldMap['poster']!: _$MoviePerFieldToJson.poster(poster),
       if (posterFieldValue != null)
         _$MovieFieldMap['poster']!: posterFieldValue,
-      if (likes != _sentinel) _$MovieFieldMap['likes']!: likes as int,
+      if (likes != _sentinel)
+        _$MovieFieldMap['likes']!: _$MoviePerFieldToJson.likes(likes),
       if (likesFieldValue != null) _$MovieFieldMap['likes']!: likesFieldValue,
-      if (title != _sentinel) _$MovieFieldMap['title']!: title as String,
+      if (title != _sentinel)
+        _$MovieFieldMap['title']!: _$MoviePerFieldToJson.title(title),
       if (titleFieldValue != null) _$MovieFieldMap['title']!: titleFieldValue,
-      if (year != _sentinel) _$MovieFieldMap['year']!: year as int,
+      if (year != _sentinel)
+        _$MovieFieldMap['year']!: _$MoviePerFieldToJson.year(year),
       if (yearFieldValue != null) _$MovieFieldMap['year']!: yearFieldValue,
-      if (runtime != _sentinel) _$MovieFieldMap['runtime']!: runtime as String,
+      if (runtime != _sentinel)
+        _$MovieFieldMap['runtime']!: _$MoviePerFieldToJson.runtime(runtime),
       if (runtimeFieldValue != null)
         _$MovieFieldMap['runtime']!: runtimeFieldValue,
-      if (rated != _sentinel) _$MovieFieldMap['rated']!: rated as String,
+      if (rated != _sentinel)
+        _$MovieFieldMap['rated']!: _$MoviePerFieldToJson.rated(rated),
       if (ratedFieldValue != null) _$MovieFieldMap['rated']!: ratedFieldValue,
-      if (genre != _sentinel) _$MovieFieldMap['genre']!: genre as List<String>?,
+      if (genre != _sentinel)
+        _$MovieFieldMap['genre']!: _$MoviePerFieldToJson.genre(genre),
       if (genreFieldValue != null) _$MovieFieldMap['genre']!: genreFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
+      if (language != _sentinel)
+        _$MovieFieldMap['language']!: _$MoviePerFieldToJson.language(language),
+      if (languageFieldValue != null)
+        _$MovieFieldMap['language']!: languageFieldValue,
+      if (certification != _sentinel)
+        _$MovieFieldMap['certification']!:
+            _$MoviePerFieldToJson.certification(certification),
+      if (certificationFieldValue != null)
+        _$MovieFieldMap['certification']!: certificationFieldValue,
+      if (cast != _sentinel)
+        _$MovieFieldMap['cast']!: _$MoviePerFieldToJson.cast(cast),
+      if (castFieldValue != null) _$MovieFieldMap['cast']!: castFieldValue,
+      if (majorCast != _sentinel)
+        _$MovieFieldMap['majorCast']!:
+            _$MoviePerFieldToJson.majorCast(majorCast),
+      if (majorCastFieldValue != null)
+        _$MovieFieldMap['majorCast']!: majorCastFieldValue,
     };
 
     return reference.update(json);
@@ -409,52 +403,46 @@ class _$MovieDocumentReference
       "Cannot specify both majorCast and majorCastFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (poster != _sentinel) 'poster': _$MoviePerFieldToJson.poster(poster),
-      if (posterFieldValue != null) 'poster': posterFieldValue,
-      if (likes != _sentinel) 'likes': _$MoviePerFieldToJson.likes(likes),
-      if (likesFieldValue != null) 'likes': likesFieldValue,
-      if (title != _sentinel) 'title': _$MoviePerFieldToJson.title(title),
-      if (titleFieldValue != null) 'title': titleFieldValue,
-      if (year != _sentinel) 'year': _$MoviePerFieldToJson.year(year),
-      if (yearFieldValue != null) 'year': yearFieldValue,
-      if (runtime != _sentinel)
-        'runtime': _$MoviePerFieldToJson.runtime(runtime),
-      if (runtimeFieldValue != null) 'runtime': runtimeFieldValue,
-      if (rated != _sentinel) 'rated': _$MoviePerFieldToJson.rated(rated),
-      if (ratedFieldValue != null) 'rated': ratedFieldValue,
-      if (genre != _sentinel) 'genre': _$MoviePerFieldToJson.genre(genre),
-      if (genreFieldValue != null) 'genre': genreFieldValue,
-      if (language != _sentinel)
-        'language': _$MoviePerFieldToJson.language(language),
-      if (languageFieldValue != null) 'language': languageFieldValue,
-      if (certification != _sentinel)
-        'certification': _$MoviePerFieldToJson.certification(certification),
-      if (certificationFieldValue != null)
-        'certification': certificationFieldValue,
-      if (cast != _sentinel) 'cast': _$MoviePerFieldToJson.cast(cast),
-      if (castFieldValue != null) 'cast': castFieldValue,
-      if (majorCast != _sentinel)
-        'majorCast': _$MoviePerFieldToJson.majorCast(majorCast),
-      if (majorCastFieldValue != null) 'majorCast': majorCastFieldValue,
-=======
-      if (poster != _sentinel) _$MovieFieldMap['poster']!: poster as String,
+      if (poster != _sentinel)
+        _$MovieFieldMap['poster']!: _$MoviePerFieldToJson.poster(poster),
       if (posterFieldValue != null)
         _$MovieFieldMap['poster']!: posterFieldValue,
-      if (likes != _sentinel) _$MovieFieldMap['likes']!: likes as int,
+      if (likes != _sentinel)
+        _$MovieFieldMap['likes']!: _$MoviePerFieldToJson.likes(likes),
       if (likesFieldValue != null) _$MovieFieldMap['likes']!: likesFieldValue,
-      if (title != _sentinel) _$MovieFieldMap['title']!: title as String,
+      if (title != _sentinel)
+        _$MovieFieldMap['title']!: _$MoviePerFieldToJson.title(title),
       if (titleFieldValue != null) _$MovieFieldMap['title']!: titleFieldValue,
-      if (year != _sentinel) _$MovieFieldMap['year']!: year as int,
+      if (year != _sentinel)
+        _$MovieFieldMap['year']!: _$MoviePerFieldToJson.year(year),
       if (yearFieldValue != null) _$MovieFieldMap['year']!: yearFieldValue,
-      if (runtime != _sentinel) _$MovieFieldMap['runtime']!: runtime as String,
+      if (runtime != _sentinel)
+        _$MovieFieldMap['runtime']!: _$MoviePerFieldToJson.runtime(runtime),
       if (runtimeFieldValue != null)
         _$MovieFieldMap['runtime']!: runtimeFieldValue,
-      if (rated != _sentinel) _$MovieFieldMap['rated']!: rated as String,
+      if (rated != _sentinel)
+        _$MovieFieldMap['rated']!: _$MoviePerFieldToJson.rated(rated),
       if (ratedFieldValue != null) _$MovieFieldMap['rated']!: ratedFieldValue,
-      if (genre != _sentinel) _$MovieFieldMap['genre']!: genre as List<String>?,
+      if (genre != _sentinel)
+        _$MovieFieldMap['genre']!: _$MoviePerFieldToJson.genre(genre),
       if (genreFieldValue != null) _$MovieFieldMap['genre']!: genreFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
+      if (language != _sentinel)
+        _$MovieFieldMap['language']!: _$MoviePerFieldToJson.language(language),
+      if (languageFieldValue != null)
+        _$MovieFieldMap['language']!: languageFieldValue,
+      if (certification != _sentinel)
+        _$MovieFieldMap['certification']!:
+            _$MoviePerFieldToJson.certification(certification),
+      if (certificationFieldValue != null)
+        _$MovieFieldMap['certification']!: certificationFieldValue,
+      if (cast != _sentinel)
+        _$MovieFieldMap['cast']!: _$MoviePerFieldToJson.cast(cast),
+      if (castFieldValue != null) _$MovieFieldMap['cast']!: castFieldValue,
+      if (majorCast != _sentinel)
+        _$MovieFieldMap['majorCast']!:
+            _$MoviePerFieldToJson.majorCast(majorCast),
+      if (majorCastFieldValue != null)
+        _$MovieFieldMap['majorCast']!: majorCastFieldValue,
     };
 
     transaction.update(reference, json);
@@ -2620,21 +2608,14 @@ class _$CommentDocumentReference
     );
     final json = {
       if (authorName != _sentinel)
-<<<<<<< HEAD
-        'authorName': _$CommentPerFieldToJson.authorName(authorName),
-      if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
-      if (message != _sentinel)
-        'message': _$CommentPerFieldToJson.message(message),
-      if (messageFieldValue != null) 'message': messageFieldValue,
-=======
-        _$CommentFieldMap['authorName']!: authorName as String,
+        _$CommentFieldMap['authorName']!:
+            _$CommentPerFieldToJson.authorName(authorName),
       if (authorNameFieldValue != null)
         _$CommentFieldMap['authorName']!: authorNameFieldValue,
       if (message != _sentinel)
-        _$CommentFieldMap['message']!: message as String,
+        _$CommentFieldMap['message']!: _$CommentPerFieldToJson.message(message),
       if (messageFieldValue != null)
         _$CommentFieldMap['message']!: messageFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -2657,21 +2638,14 @@ class _$CommentDocumentReference
     );
     final json = {
       if (authorName != _sentinel)
-<<<<<<< HEAD
-        'authorName': _$CommentPerFieldToJson.authorName(authorName),
-      if (authorNameFieldValue != null) 'authorName': authorNameFieldValue,
-      if (message != _sentinel)
-        'message': _$CommentPerFieldToJson.message(message),
-      if (messageFieldValue != null) 'message': messageFieldValue,
-=======
-        _$CommentFieldMap['authorName']!: authorName as String,
+        _$CommentFieldMap['authorName']!:
+            _$CommentPerFieldToJson.authorName(authorName),
       if (authorNameFieldValue != null)
         _$CommentFieldMap['authorName']!: authorNameFieldValue,
       if (message != _sentinel)
-        _$CommentFieldMap['message']!: message as String,
+        _$CommentFieldMap['message']!: _$CommentPerFieldToJson.message(message),
       if (messageFieldValue != null)
         _$CommentFieldMap['message']!: messageFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);

@@ -199,15 +199,10 @@ class _$ConflictDocumentReference
       "Cannot specify both number and numberFieldValue",
     );
     final json = {
-<<<<<<< HEAD
       if (number != _sentinel)
-        'number': _$ConflictPerFieldToJson.number(number),
-      if (numberFieldValue != null) 'number': numberFieldValue,
-=======
-      if (number != _sentinel) _$ConflictFieldMap['number']!: number as num,
+        _$ConflictFieldMap['number']!: _$ConflictPerFieldToJson.number(number),
       if (numberFieldValue != null)
         _$ConflictFieldMap['number']!: numberFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -223,15 +218,10 @@ class _$ConflictDocumentReference
       "Cannot specify both number and numberFieldValue",
     );
     final json = {
-<<<<<<< HEAD
       if (number != _sentinel)
-        'number': _$ConflictPerFieldToJson.number(number),
-      if (numberFieldValue != null) 'number': numberFieldValue,
-=======
-      if (number != _sentinel) _$ConflictFieldMap['number']!: number as num,
+        _$ConflictFieldMap['number']!: _$ConflictPerFieldToJson.number(number),
       if (numberFieldValue != null)
         _$ConflictFieldMap['number']!: numberFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
