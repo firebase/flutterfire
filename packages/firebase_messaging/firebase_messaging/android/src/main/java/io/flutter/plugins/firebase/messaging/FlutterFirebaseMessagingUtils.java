@@ -76,6 +76,8 @@ class FlutterFirebaseMessagingUtils {
     messageMap.put(KEY_TTL, remoteMessage.getTtl());
     messageMap.put(KEY_SENT_TIME, remoteMessage.getSentTime());
 
+
+
     Log.w("COUCOU", "Parsing notification: " + remoteMessage.getNotification());
     if (remoteMessage.getNotification() != null) {
       messageMap.put(
@@ -250,6 +252,29 @@ class FlutterFirebaseMessagingUtils {
       builder.setData(data);
     }
 
+
     return builder.build();
   }
+
+  /**
+   * Returns the notification associated to a RemoteMessage map.
+   *
+   * @param arguments Method channel call arguments.
+   * @return RemoteMessage
+   */
+  static Map<String, Object> getRemoteMessageNotificationForArguments(Map<String, Object> arguments) {
+    @SuppressWarnings("unchecked")
+    Map<String, Object> messageMap =
+      (Map<String, Object>) Objects.requireNonNull(arguments.get("message"));
+
+    if (messageMap.get("notification") == null) {
+      return null;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    Map<String, Object> notification = (Map<String, Object>) messageMap.get("notification");
+
+return notification;  }
+
 }

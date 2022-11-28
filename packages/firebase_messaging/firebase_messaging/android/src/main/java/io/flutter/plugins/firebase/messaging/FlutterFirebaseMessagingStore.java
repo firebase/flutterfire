@@ -74,7 +74,7 @@ public class FlutterFirebaseMessagingStore {
     setPreferencesStringValue(KEY_NOTIFICATION_IDS, notifications);
   }
 
-  public RemoteMessage getFirebaseMessage(String remoteMessageId) {
+  public Map<String, Object> getFirebaseMessageMap(String remoteMessageId) {
     String remoteMessageString = getPreferencesStringValue(remoteMessageId, null);
     Log.w("COUCOU", "getFirebaseMessage: " + remoteMessageString);
     if (remoteMessageString != null) {
@@ -84,7 +84,8 @@ public class FlutterFirebaseMessagingStore {
         // Add a fake 'to' - as it's required to construct a RemoteMessage instance.
         messageOutMap.put("to", remoteMessageId);
         argumentsMap.put("message", messageOutMap);
-        return FlutterFirebaseMessagingUtils.getRemoteMessageForArguments(argumentsMap);
+        Log.w("COUCOU", "getFirebaseMessage result: " + argumentsMap);
+        return argumentsMap;
       } catch (JSONException e) {
         Log.e("COUCOU", "Error parsing remote message", e);
         e.printStackTrace();
