@@ -5,6 +5,7 @@ environment:
   sdk: '>=2.16.0 <3.0.0'
 
 dependencies:
+  cloud_firestore: ^4.1.0
   firebase_auth:
     path: ../
   firebase_core:
