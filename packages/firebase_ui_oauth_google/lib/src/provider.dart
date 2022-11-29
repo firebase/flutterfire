@@ -7,14 +7,15 @@ import 'package:google_sign_in/google_sign_in.dart';
 class GoogleProvider extends OAuthProvider {
   @override
   final providerId = 'google.com';
+
+  /// The Google client ID.
+  /// Will be ignored on Android since it's not needed.
   final String clientId;
+
   final String? redirectUri;
   final List<String>? scopes;
 
-  late GoogleSignIn provider = GoogleSignIn(
-    scopes: scopes ?? [],
-    clientId: clientId,
-  );
+  late GoogleSignIn provider;
 
   @override
   final GoogleAuthProvider firebaseAuthProvider = GoogleAuthProvider();
@@ -36,6 +37,19 @@ class GoogleProvider extends OAuthProvider {
     firebaseAuthProvider.setCustomParameters(const {
       'prompt': 'select_account',
     });
+
+    // `clientId` is not supported on Android and is misinterpreted as a
+    // `serverClientId`. This is a workaround to avoid the error.
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      provider = GoogleSignIn(
+        scopes: scopes ?? [],
+      );
+    } else {
+      provider = GoogleSignIn(
+        scopes: scopes ?? [],
+        clientId: clientId,
+      );
+    }
   }
 
   @override
