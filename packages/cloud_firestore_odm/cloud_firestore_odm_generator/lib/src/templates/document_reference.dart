@@ -107,7 +107,7 @@ void transactionUpdate(Transaction transaction, {${parameters.join()}});
       for (final field in data.updatableFields) ...[
         '''
         if (${field.name} != _sentinel)
-          ${field.field}: ${field.toJsonBuilder?.call(field.name) ?? field.name},
+          ${field.field}: ${field.toJsonBuilder?.call('${field.name} as ${field.type}') ?? field.name},
         ''',
         '''
         if (${field.name}FieldValue != null)

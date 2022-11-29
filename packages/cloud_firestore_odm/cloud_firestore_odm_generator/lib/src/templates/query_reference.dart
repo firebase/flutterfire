@@ -425,14 +425,14 @@ class ${data.queryReferenceImplName}
             type: 'List<${field.type}>?',
             toJsonBuilder: (variableName) {
               if (field.toJsonBuilder == null) return variableName;
-              return '$variableName.map((e) => ${field.toJsonBuilder!('e')}).toList()';
+              return '$variableName?.map((e) => ${field.toJsonBuilder!('e')}).toList()';
             },
           ),
           'whereNotIn': _WhereOperatorData(
             type: 'List<${field.type}>?',
             toJsonBuilder: (variableName) {
               if (field.toJsonBuilder == null) return variableName;
-              return '$variableName.map((e) => ${field.toJsonBuilder!('e')}).toList()';
+              return '$variableName?.map((e) => ${field.toJsonBuilder!('e')}).toList()';
             },
           ),
         }
