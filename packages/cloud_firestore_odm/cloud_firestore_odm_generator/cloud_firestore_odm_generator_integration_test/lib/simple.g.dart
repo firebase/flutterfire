@@ -9,49 +9,6 @@ part of 'simple.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
 
-List<String>? _enumConvertList(enumList) {
-  if (enumList == null) {
-    return null;
-  }
-  List<String> _tmpEnumList = [];
-  enumList.forEach((Enum e) {
-    _tmpEnumList.add(e.name);
-  });
-  return (_tmpEnumList.length > 0) ? _tmpEnumList : null;
-}
-
-List<Map<String, String>>? _enumConvertListMap(enumListMap) {
-  if (enumListMap == null) {
-    return null;
-  }
-  List<Map<String, String>> _tmpEnumListMap = [];
-
-  for (var e in enumListMap) {
-    e.forEach((Enum k, v) {
-      // TODO: Test for an enum key or enum value
-      // var _k = (k is Enum) ? k.name : k;
-      // var _v = (v is Enum) ? v.name : v;
-      var _k = k.name;
-      var _v = v;
-      _tmpEnumListMap.add({_k: _v});
-    });
-  }
-  ;
-  return (_tmpEnumListMap.length > 0) ? _tmpEnumListMap : null;
-}
-
-Map<String, dynamic>? _enumConvertMap(enumMap) {
-  if (enumMap == null) {
-    return null;
-  }
-  Map<String, dynamic> _tmpEnumMap = {};
-
-  enumMap?.forEach((Enum k, v) {
-    _tmpEnumMap.addAll({k.name: v});
-  });
-  return (_tmpEnumMap.length > 0) ? _tmpEnumMap : null;
-}
-
 class _Sentinel {
   const _Sentinel();
 }
@@ -227,7 +184,9 @@ class _$IgnoredGetterDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$IgnoredGetterFieldMap['value']!: value as int,
+      if (value != _sentinel)
+        _$IgnoredGetterFieldMap['value']!:
+            _$IgnoredGetterPerFieldToJson.value(value as int),
       if (valueFieldValue != null)
         _$IgnoredGetterFieldMap['value']!: valueFieldValue,
     };
@@ -245,7 +204,9 @@ class _$IgnoredGetterDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$IgnoredGetterFieldMap['value']!: value as int,
+      if (value != _sentinel)
+        _$IgnoredGetterFieldMap['value']!:
+            _$IgnoredGetterPerFieldToJson.value(value as int),
       if (valueFieldValue != null)
         _$IgnoredGetterFieldMap['value']!: valueFieldValue,
     };
@@ -582,15 +543,21 @@ class _$IgnoredGetterQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$IgnoredGetterFieldMap['value']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: _$IgnoredGetterPerFieldToJson.value(isEqualTo),
+        isNotEqualTo: _$IgnoredGetterPerFieldToJson.value(isNotEqualTo),
+        isLessThan: _$IgnoredGetterPerFieldToJson.value(isLessThan),
+        isLessThanOrEqualTo:
+            _$IgnoredGetterPerFieldToJson.value(isLessThanOrEqualTo),
+        isGreaterThan: _$IgnoredGetterPerFieldToJson.value(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$IgnoredGetterPerFieldToJson.value(isGreaterThanOrEqualTo),
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn
+            ?.map((e) => _$IgnoredGetterPerFieldToJson.value(e))
+            .toList(),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$IgnoredGetterPerFieldToJson.value(e))
+            .toList(),
       ),
       $queryCursor: $queryCursor,
     );
@@ -710,25 +677,37 @@ class _$IgnoredGetterQuery
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$IgnoredGetterPerFieldToJson.value(startAt as int)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$IgnoredGetterPerFieldToJson.value(startAfter as int)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$IgnoredGetterPerFieldToJson.value(endAt as int)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$IgnoredGetterPerFieldToJson.value(endBefore as int)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -999,12 +978,9 @@ class _$ModelDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as String,
-=======
-      if (value != _sentinel) _$ModelFieldMap['value']!: value as String,
+      if (value != _sentinel)
+        _$ModelFieldMap['value']!: _$ModelPerFieldToJson.value(value as String),
       if (valueFieldValue != null) _$ModelFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -1020,12 +996,9 @@ class _$ModelDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as String,
-=======
-      if (value != _sentinel) _$ModelFieldMap['value']!: value as String,
+      if (value != _sentinel)
+        _$ModelFieldMap['value']!: _$ModelPerFieldToJson.value(value as String),
       if (valueFieldValue != null) _$ModelFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -1324,16 +1297,17 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     return _$ModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1352,16 +1326,19 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     return _$ModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$ModelFieldMap['value']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$ModelFieldMap['value']!,
+        isEqualTo: _$ModelPerFieldToJson.value(isEqualTo),
+        isNotEqualTo: _$ModelPerFieldToJson.value(isNotEqualTo),
+        isLessThan: _$ModelPerFieldToJson.value(isLessThan),
+        isLessThanOrEqualTo: _$ModelPerFieldToJson.value(isLessThanOrEqualTo),
+        isGreaterThan: _$ModelPerFieldToJson.value(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$ModelPerFieldToJson.value(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn?.map((e) => _$ModelPerFieldToJson.value(e)).toList(),
+        whereNotIn:
+            whereNotIn?.map((e) => _$ModelPerFieldToJson.value(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -1480,25 +1457,37 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$ModelPerFieldToJson.value(startAt as String)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$ModelPerFieldToJson.value(startAfter as String)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$ModelPerFieldToJson.value(endAt as String)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$ModelPerFieldToJson.value(endBefore as String)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -1715,8 +1704,12 @@ abstract class NestedDocumentReference
   ///
   /// If no document exists yet, the update will fail.
   Future<void> update({
+    Nested? value,
+    FieldValue valueFieldValue,
     int? simple,
     FieldValue simpleFieldValue,
+    List<Nested>? valueList,
+    FieldValue valueListFieldValue,
     List<bool>? boolList,
     FieldValue boolListFieldValue,
     List<String>? stringList,
@@ -1736,8 +1729,12 @@ abstract class NestedDocumentReference
   /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
+    Nested? value,
+    FieldValue valueFieldValue,
     int? simple,
     FieldValue simpleFieldValue,
+    List<Nested>? valueList,
+    FieldValue valueListFieldValue,
     List<bool>? boolList,
     FieldValue boolListFieldValue,
     List<String>? stringList,
@@ -1782,8 +1779,12 @@ class _$NestedDocumentReference
   }
 
   Future<void> update({
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
     Object? simple = _sentinel,
     FieldValue? simpleFieldValue,
+    Object? valueList = _sentinel,
+    FieldValue? valueListFieldValue,
     Object? boolList = _sentinel,
     FieldValue? boolListFieldValue,
     Object? stringList = _sentinel,
@@ -1798,8 +1799,16 @@ class _$NestedDocumentReference
     FieldValue? enumListFieldValue,
   }) async {
     assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
+    assert(
       simple == _sentinel || simpleFieldValue == null,
       "Cannot specify both simple and simpleFieldValue",
+    );
+    assert(
+      valueList == _sentinel || valueListFieldValue == null,
+      "Cannot specify both valueList and valueListFieldValue",
     );
     assert(
       boolList == _sentinel || boolListFieldValue == null,
@@ -1826,41 +1835,50 @@ class _$NestedDocumentReference
       "Cannot specify both enumList and enumListFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (simple != _sentinel) 'simple': simple as int?,
-      if (boolList != _sentinel) 'boolList': boolList as List<bool>?,
-      if (stringList != _sentinel) 'stringList': stringList as List<String>?,
-      if (numList != _sentinel) 'numList': numList as List<num>?,
-      if (objectList != _sentinel) 'objectList': objectList as List<Object?>?,
-      if (dynamicList != _sentinel)
-        'dynamicList': dynamicList as List<dynamic>?,
-      if (enumList != _sentinel)
-        'enumList': _enumConvertList(enumList as List<SimpleEnum>?),
-=======
-      if (simple != _sentinel) _$NestedFieldMap['simple']!: simple as int?,
+      if (value != _sentinel)
+        _$NestedFieldMap['value']!:
+            _$NestedPerFieldToJson.value(value as Nested?),
+      if (valueFieldValue != null) _$NestedFieldMap['value']!: valueFieldValue,
+      if (simple != _sentinel)
+        _$NestedFieldMap['simple']!:
+            _$NestedPerFieldToJson.simple(simple as int?),
       if (simpleFieldValue != null)
         _$NestedFieldMap['simple']!: simpleFieldValue,
+      if (valueList != _sentinel)
+        _$NestedFieldMap['valueList']!:
+            _$NestedPerFieldToJson.valueList(valueList as List<Nested>?),
+      if (valueListFieldValue != null)
+        _$NestedFieldMap['valueList']!: valueListFieldValue,
       if (boolList != _sentinel)
-        _$NestedFieldMap['boolList']!: boolList as List<bool>?,
+        _$NestedFieldMap['boolList']!:
+            _$NestedPerFieldToJson.boolList(boolList as List<bool>?),
       if (boolListFieldValue != null)
         _$NestedFieldMap['boolList']!: boolListFieldValue,
       if (stringList != _sentinel)
-        _$NestedFieldMap['stringList']!: stringList as List<String>?,
+        _$NestedFieldMap['stringList']!:
+            _$NestedPerFieldToJson.stringList(stringList as List<String>?),
       if (stringListFieldValue != null)
         _$NestedFieldMap['stringList']!: stringListFieldValue,
       if (numList != _sentinel)
-        _$NestedFieldMap['numList']!: numList as List<num>?,
+        _$NestedFieldMap['numList']!:
+            _$NestedPerFieldToJson.numList(numList as List<num>?),
       if (numListFieldValue != null)
         _$NestedFieldMap['numList']!: numListFieldValue,
       if (objectList != _sentinel)
-        _$NestedFieldMap['objectList']!: objectList as List<Object?>?,
+        _$NestedFieldMap['objectList']!:
+            _$NestedPerFieldToJson.objectList(objectList as List<Object?>?),
       if (objectListFieldValue != null)
         _$NestedFieldMap['objectList']!: objectListFieldValue,
       if (dynamicList != _sentinel)
-        _$NestedFieldMap['dynamicList']!: dynamicList as List<dynamic>?,
+        _$NestedFieldMap['dynamicList']!:
+            _$NestedPerFieldToJson.dynamicList(dynamicList as List<dynamic>?),
       if (dynamicListFieldValue != null)
         _$NestedFieldMap['dynamicList']!: dynamicListFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
+      if (enumList != _sentinel)
+        _$NestedFieldMap['enumList']!:
+            _$NestedPerFieldToJson.enumList(enumList as List<SimpleEnum>?),
+      if (enumListFieldValue != null)
+        _$NestedFieldMap['enumList']!: enumListFieldValue,
     };
 
     return reference.update(json);
@@ -1868,8 +1886,12 @@ class _$NestedDocumentReference
 
   void transactionUpdate(
     Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
     Object? simple = _sentinel,
     FieldValue? simpleFieldValue,
+    Object? valueList = _sentinel,
+    FieldValue? valueListFieldValue,
     Object? boolList = _sentinel,
     FieldValue? boolListFieldValue,
     Object? stringList = _sentinel,
@@ -1884,8 +1906,16 @@ class _$NestedDocumentReference
     FieldValue? enumListFieldValue,
   }) {
     assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
+    assert(
       simple == _sentinel || simpleFieldValue == null,
       "Cannot specify both simple and simpleFieldValue",
+    );
+    assert(
+      valueList == _sentinel || valueListFieldValue == null,
+      "Cannot specify both valueList and valueListFieldValue",
     );
     assert(
       boolList == _sentinel || boolListFieldValue == null,
@@ -1912,41 +1942,50 @@ class _$NestedDocumentReference
       "Cannot specify both enumList and enumListFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (simple != _sentinel) 'simple': simple as int?,
-      if (boolList != _sentinel) 'boolList': boolList as List<bool>?,
-      if (stringList != _sentinel) 'stringList': stringList as List<String>?,
-      if (numList != _sentinel) 'numList': numList as List<num>?,
-      if (objectList != _sentinel) 'objectList': objectList as List<Object?>?,
-      if (dynamicList != _sentinel)
-        'dynamicList': dynamicList as List<dynamic>?,
-      if (enumList != _sentinel)
-        'enumList': _enumConvertList(enumList as List<SimpleEnum>?),
-=======
-      if (simple != _sentinel) _$NestedFieldMap['simple']!: simple as int?,
+      if (value != _sentinel)
+        _$NestedFieldMap['value']!:
+            _$NestedPerFieldToJson.value(value as Nested?),
+      if (valueFieldValue != null) _$NestedFieldMap['value']!: valueFieldValue,
+      if (simple != _sentinel)
+        _$NestedFieldMap['simple']!:
+            _$NestedPerFieldToJson.simple(simple as int?),
       if (simpleFieldValue != null)
         _$NestedFieldMap['simple']!: simpleFieldValue,
+      if (valueList != _sentinel)
+        _$NestedFieldMap['valueList']!:
+            _$NestedPerFieldToJson.valueList(valueList as List<Nested>?),
+      if (valueListFieldValue != null)
+        _$NestedFieldMap['valueList']!: valueListFieldValue,
       if (boolList != _sentinel)
-        _$NestedFieldMap['boolList']!: boolList as List<bool>?,
+        _$NestedFieldMap['boolList']!:
+            _$NestedPerFieldToJson.boolList(boolList as List<bool>?),
       if (boolListFieldValue != null)
         _$NestedFieldMap['boolList']!: boolListFieldValue,
       if (stringList != _sentinel)
-        _$NestedFieldMap['stringList']!: stringList as List<String>?,
+        _$NestedFieldMap['stringList']!:
+            _$NestedPerFieldToJson.stringList(stringList as List<String>?),
       if (stringListFieldValue != null)
         _$NestedFieldMap['stringList']!: stringListFieldValue,
       if (numList != _sentinel)
-        _$NestedFieldMap['numList']!: numList as List<num>?,
+        _$NestedFieldMap['numList']!:
+            _$NestedPerFieldToJson.numList(numList as List<num>?),
       if (numListFieldValue != null)
         _$NestedFieldMap['numList']!: numListFieldValue,
       if (objectList != _sentinel)
-        _$NestedFieldMap['objectList']!: objectList as List<Object?>?,
+        _$NestedFieldMap['objectList']!:
+            _$NestedPerFieldToJson.objectList(objectList as List<Object?>?),
       if (objectListFieldValue != null)
         _$NestedFieldMap['objectList']!: objectListFieldValue,
       if (dynamicList != _sentinel)
-        _$NestedFieldMap['dynamicList']!: dynamicList as List<dynamic>?,
+        _$NestedFieldMap['dynamicList']!:
+            _$NestedPerFieldToJson.dynamicList(dynamicList as List<dynamic>?),
       if (dynamicListFieldValue != null)
         _$NestedFieldMap['dynamicList']!: dynamicListFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
+      if (enumList != _sentinel)
+        _$NestedFieldMap['enumList']!:
+            _$NestedPerFieldToJson.enumList(enumList as List<SimpleEnum>?),
+      if (enumListFieldValue != null)
+        _$NestedFieldMap['enumList']!: enumListFieldValue,
     };
 
     transaction.update(reference, json);
@@ -2048,6 +2087,17 @@ abstract class NestedQuery
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
+  NestedQuery whereValue({
+    Nested? isEqualTo,
+    Nested? isNotEqualTo,
+    Nested? isLessThan,
+    Nested? isLessThanOrEqualTo,
+    Nested? isGreaterThan,
+    Nested? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<Nested?>? whereIn,
+    List<Nested?>? whereNotIn,
+  });
   NestedQuery whereSimple({
     int? isEqualTo,
     int? isNotEqualTo,
@@ -2058,6 +2108,17 @@ abstract class NestedQuery
     bool? isNull,
     List<int?>? whereIn,
     List<int?>? whereNotIn,
+  });
+  NestedQuery whereValueList({
+    List<Nested>? isEqualTo,
+    List<Nested>? isNotEqualTo,
+    List<Nested>? isLessThan,
+    List<Nested>? isLessThanOrEqualTo,
+    List<Nested>? isGreaterThan,
+    List<Nested>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    Nested? arrayContains,
+    List<Nested>? arrayContainsAny,
   });
   NestedQuery whereBoolList({
     List<bool>? isEqualTo,
@@ -2138,12 +2199,36 @@ abstract class NestedQuery
     NestedDocumentSnapshot? startAfterDocument,
   });
 
+  NestedQuery orderByValue({
+    bool descending = false,
+    Nested? startAt,
+    Nested? startAfter,
+    Nested? endAt,
+    Nested? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
   NestedQuery orderBySimple({
     bool descending = false,
     int? startAt,
     int? startAfter,
     int? endAt,
     int? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByValueList({
+    bool descending = false,
+    List<Nested>? startAt,
+    List<Nested>? startAfter,
+    List<Nested>? endAt,
+    List<Nested>? endBefore,
     NestedDocumentSnapshot? startAtDocument,
     NestedDocumentSnapshot? endAtDocument,
     NestedDocumentSnapshot? endBeforeDocument,
@@ -2384,16 +2469,48 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  NestedQuery whereValue({
+    Nested? isEqualTo,
+    Nested? isNotEqualTo,
+    Nested? isLessThan,
+    Nested? isLessThanOrEqualTo,
+    Nested? isGreaterThan,
+    Nested? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<Nested?>? whereIn,
+    List<Nested?>? whereNotIn,
+  }) {
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$NestedFieldMap['value']!,
+        isEqualTo: _$NestedPerFieldToJson.value(isEqualTo),
+        isNotEqualTo: _$NestedPerFieldToJson.value(isNotEqualTo),
+        isLessThan: _$NestedPerFieldToJson.value(isLessThan),
+        isLessThanOrEqualTo: _$NestedPerFieldToJson.value(isLessThanOrEqualTo),
+        isGreaterThan: _$NestedPerFieldToJson.value(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$NestedPerFieldToJson.value(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn?.map((e) => _$NestedPerFieldToJson.value(e)).toList(),
+        whereNotIn:
+            whereNotIn?.map((e) => _$NestedPerFieldToJson.value(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2412,16 +2529,50 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$NestedFieldMap['simple']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$NestedFieldMap['simple']!,
+        isEqualTo: _$NestedPerFieldToJson.simple(isEqualTo),
+        isNotEqualTo: _$NestedPerFieldToJson.simple(isNotEqualTo),
+        isLessThan: _$NestedPerFieldToJson.simple(isLessThan),
+        isLessThanOrEqualTo: _$NestedPerFieldToJson.simple(isLessThanOrEqualTo),
+        isGreaterThan: _$NestedPerFieldToJson.simple(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$NestedPerFieldToJson.simple(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn?.map((e) => _$NestedPerFieldToJson.simple(e)).toList(),
+        whereNotIn:
+            whereNotIn?.map((e) => _$NestedPerFieldToJson.simple(e)).toList(),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  NestedQuery whereValueList({
+    List<Nested>? isEqualTo,
+    List<Nested>? isNotEqualTo,
+    List<Nested>? isLessThan,
+    List<Nested>? isLessThanOrEqualTo,
+    List<Nested>? isGreaterThan,
+    List<Nested>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    Nested? arrayContains,
+    List<Nested>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$NestedFieldMap['valueList']!,
+        isEqualTo: _$NestedPerFieldToJson.valueList(isEqualTo),
+        isNotEqualTo: _$NestedPerFieldToJson.valueList(isNotEqualTo),
+        isLessThan: _$NestedPerFieldToJson.valueList(isLessThan),
+        isLessThanOrEqualTo:
+            _$NestedPerFieldToJson.valueList(isLessThanOrEqualTo),
+        isGreaterThan: _$NestedPerFieldToJson.valueList(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$NestedPerFieldToJson.valueList(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: _$NestedPerFieldToJson.valueList(arrayContainsAny),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2440,16 +2591,19 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$NestedFieldMap['boolList']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          arrayContains: arrayContains,
-          arrayContainsAny: arrayContainsAny),
+        _$NestedFieldMap['boolList']!,
+        isEqualTo: _$NestedPerFieldToJson.boolList(isEqualTo),
+        isNotEqualTo: _$NestedPerFieldToJson.boolList(isNotEqualTo),
+        isLessThan: _$NestedPerFieldToJson.boolList(isLessThan),
+        isLessThanOrEqualTo:
+            _$NestedPerFieldToJson.boolList(isLessThanOrEqualTo),
+        isGreaterThan: _$NestedPerFieldToJson.boolList(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$NestedPerFieldToJson.boolList(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: _$NestedPerFieldToJson.boolList(arrayContainsAny),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2468,16 +2622,19 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$NestedFieldMap['stringList']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          arrayContains: arrayContains,
-          arrayContainsAny: arrayContainsAny),
+        _$NestedFieldMap['stringList']!,
+        isEqualTo: _$NestedPerFieldToJson.stringList(isEqualTo),
+        isNotEqualTo: _$NestedPerFieldToJson.stringList(isNotEqualTo),
+        isLessThan: _$NestedPerFieldToJson.stringList(isLessThan),
+        isLessThanOrEqualTo:
+            _$NestedPerFieldToJson.stringList(isLessThanOrEqualTo),
+        isGreaterThan: _$NestedPerFieldToJson.stringList(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$NestedPerFieldToJson.stringList(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: _$NestedPerFieldToJson.stringList(arrayContainsAny),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2496,16 +2653,19 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$NestedFieldMap['numList']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          arrayContains: arrayContains,
-          arrayContainsAny: arrayContainsAny),
+        _$NestedFieldMap['numList']!,
+        isEqualTo: _$NestedPerFieldToJson.numList(isEqualTo),
+        isNotEqualTo: _$NestedPerFieldToJson.numList(isNotEqualTo),
+        isLessThan: _$NestedPerFieldToJson.numList(isLessThan),
+        isLessThanOrEqualTo:
+            _$NestedPerFieldToJson.numList(isLessThanOrEqualTo),
+        isGreaterThan: _$NestedPerFieldToJson.numList(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$NestedPerFieldToJson.numList(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: _$NestedPerFieldToJson.numList(arrayContainsAny),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2524,16 +2684,19 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$NestedFieldMap['objectList']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          arrayContains: arrayContains,
-          arrayContainsAny: arrayContainsAny),
+        _$NestedFieldMap['objectList']!,
+        isEqualTo: _$NestedPerFieldToJson.objectList(isEqualTo),
+        isNotEqualTo: _$NestedPerFieldToJson.objectList(isNotEqualTo),
+        isLessThan: _$NestedPerFieldToJson.objectList(isLessThan),
+        isLessThanOrEqualTo:
+            _$NestedPerFieldToJson.objectList(isLessThanOrEqualTo),
+        isGreaterThan: _$NestedPerFieldToJson.objectList(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$NestedPerFieldToJson.objectList(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: _$NestedPerFieldToJson.objectList(arrayContainsAny),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2552,16 +2715,19 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$NestedFieldMap['dynamicList']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          arrayContains: arrayContains,
-          arrayContainsAny: arrayContainsAny),
+        _$NestedFieldMap['dynamicList']!,
+        isEqualTo: _$NestedPerFieldToJson.dynamicList(isEqualTo),
+        isNotEqualTo: _$NestedPerFieldToJson.dynamicList(isNotEqualTo),
+        isLessThan: _$NestedPerFieldToJson.dynamicList(isLessThan),
+        isLessThanOrEqualTo:
+            _$NestedPerFieldToJson.dynamicList(isLessThanOrEqualTo),
+        isGreaterThan: _$NestedPerFieldToJson.dynamicList(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$NestedPerFieldToJson.dynamicList(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: _$NestedPerFieldToJson.dynamicList(arrayContainsAny),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -2580,22 +2746,21 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     return _$NestedQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$NestedFieldMap['enumList']!,
-          isEqualTo: _enumConvertList(isEqualTo),
-          isNotEqualTo: _enumConvertList(isNotEqualTo),
-          isLessThan: _enumConvertList(isLessThan),
-          isLessThanOrEqualTo: _enumConvertList(isLessThanOrEqualTo),
-          isGreaterThan: _enumConvertList(isGreaterThan),
-          isGreaterThanOrEqualTo: _enumConvertList(isGreaterThanOrEqualTo),
-          isNull: isNull,
-          arrayContains: arrayContains?.name,
-          arrayContainsAny: _enumConvertList(arrayContainsAny)),
+        _$NestedFieldMap['enumList']!,
+        isEqualTo: _$NestedPerFieldToJson.enumList(isEqualTo),
+        isNotEqualTo: _$NestedPerFieldToJson.enumList(isNotEqualTo),
+        isLessThan: _$NestedPerFieldToJson.enumList(isLessThan),
+        isLessThanOrEqualTo:
+            _$NestedPerFieldToJson.enumList(isLessThanOrEqualTo),
+        isGreaterThan: _$NestedPerFieldToJson.enumList(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$NestedPerFieldToJson.enumList(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: _$NestedPerFieldToJson.enumList(arrayContainsAny),
+      ),
       $queryCursor: $queryCursor,
     );
-    // return _$NestedQuery(
-    //   reference.where('enumList', isEqualTo: _enumConvertList(isEqualTo),isNotEqualTo: _enumConvertList(isNotEqualTo),isLessThan: _enumConvertList(isLessThan),isLessThanOrEqualTo: _enumConvertList(isLessThanOrEqualTo),isGreaterThan: _enumConvertList(isGreaterThan),isGreaterThanOrEqualTo: _enumConvertList(isGreaterThanOrEqualTo),isNull: isNull,arrayContains: arrayContains?.name,arrayContainsAny: _enumConvertList(arrayContainsAny),),
-    //   _collection,
-    // );
   }
 
   NestedQuery orderByDocumentId({
@@ -2670,6 +2835,90 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     );
   }
 
+  NestedQuery orderByValue({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['value']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [
+          ...queryCursor.startAt,
+          _$NestedPerFieldToJson.value(startAt as Nested?)
+        ],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$NestedPerFieldToJson.value(startAfter as Nested?)
+        ],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [
+          ...queryCursor.endAt,
+          _$NestedPerFieldToJson.value(endAt as Nested?)
+        ],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$NestedPerFieldToJson.value(endBefore as Nested?)
+        ],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
   NestedQuery orderBySimple({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -2712,25 +2961,121 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$NestedPerFieldToJson.simple(startAt as int?)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$NestedPerFieldToJson.simple(startAfter as int?)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$NestedPerFieldToJson.simple(endAt as int?)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$NestedPerFieldToJson.simple(endBefore as int?)
+        ],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  NestedQuery orderByValueList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$NestedFieldMap['valueList']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [
+          ...queryCursor.startAt,
+          _$NestedPerFieldToJson.valueList(startAt as List<Nested>?)
+        ],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$NestedPerFieldToJson.valueList(startAfter as List<Nested>?)
+        ],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [
+          ...queryCursor.endAt,
+          _$NestedPerFieldToJson.valueList(endAt as List<Nested>?)
+        ],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$NestedPerFieldToJson.valueList(endBefore as List<Nested>?)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -2784,25 +3129,37 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$NestedPerFieldToJson.boolList(startAt as List<bool>?)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$NestedPerFieldToJson.boolList(startAfter as List<bool>?)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$NestedPerFieldToJson.boolList(endAt as List<bool>?)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$NestedPerFieldToJson.boolList(endBefore as List<bool>?)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -2856,25 +3213,37 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$NestedPerFieldToJson.stringList(startAt as List<String>?)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$NestedPerFieldToJson.stringList(startAfter as List<String>?)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$NestedPerFieldToJson.stringList(endAt as List<String>?)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$NestedPerFieldToJson.stringList(endBefore as List<String>?)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -2928,25 +3297,37 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$NestedPerFieldToJson.numList(startAt as List<num>?)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$NestedPerFieldToJson.numList(startAfter as List<num>?)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$NestedPerFieldToJson.numList(endAt as List<num>?)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$NestedPerFieldToJson.numList(endBefore as List<num>?)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -3000,25 +3381,37 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$NestedPerFieldToJson.objectList(startAt as List<Object?>?)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$NestedPerFieldToJson.objectList(startAfter as List<Object?>?)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$NestedPerFieldToJson.objectList(endAt as List<Object?>?)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$NestedPerFieldToJson.objectList(endBefore as List<Object?>?)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -3072,25 +3465,37 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$NestedPerFieldToJson.dynamicList(startAt as List<dynamic>?)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$NestedPerFieldToJson.dynamicList(startAfter as List<dynamic>?)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$NestedPerFieldToJson.dynamicList(endAt as List<dynamic>?)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$NestedPerFieldToJson.dynamicList(endBefore as List<dynamic>?)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -3144,25 +3549,37 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$NestedPerFieldToJson.enumList(startAt as List<SimpleEnum>?)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$NestedPerFieldToJson.enumList(startAfter as List<SimpleEnum>?)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$NestedPerFieldToJson.enumList(endAt as List<SimpleEnum>?)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$NestedPerFieldToJson.enumList(endBefore as List<SimpleEnum>?)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -3685,16 +4102,17 @@ class _$SplitFileModelQuery
     return _$SplitFileModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -4280,16 +4698,17 @@ class _$EmptyModelQuery
     return _$EmptyModelQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -4626,13 +5045,11 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as int,
-=======
-      if (value != _sentinel) _$OptionalJsonFieldMap['value']!: value as int,
+      if (value != _sentinel)
+        _$OptionalJsonFieldMap['value']!:
+            _$OptionalJsonPerFieldToJson.value(value as int),
       if (valueFieldValue != null)
         _$OptionalJsonFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -4648,13 +5065,11 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as int,
-=======
-      if (value != _sentinel) _$OptionalJsonFieldMap['value']!: value as int,
+      if (value != _sentinel)
+        _$OptionalJsonFieldMap['value']!:
+            _$OptionalJsonPerFieldToJson.value(value as int),
       if (valueFieldValue != null)
         _$OptionalJsonFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -4959,16 +5374,17 @@ class _$OptionalJsonQuery
     return _$OptionalJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -4987,16 +5403,22 @@ class _$OptionalJsonQuery
     return _$OptionalJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$OptionalJsonFieldMap['value']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$OptionalJsonFieldMap['value']!,
+        isEqualTo: _$OptionalJsonPerFieldToJson.value(isEqualTo),
+        isNotEqualTo: _$OptionalJsonPerFieldToJson.value(isNotEqualTo),
+        isLessThan: _$OptionalJsonPerFieldToJson.value(isLessThan),
+        isLessThanOrEqualTo:
+            _$OptionalJsonPerFieldToJson.value(isLessThanOrEqualTo),
+        isGreaterThan: _$OptionalJsonPerFieldToJson.value(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$OptionalJsonPerFieldToJson.value(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn:
+            whereIn?.map((e) => _$OptionalJsonPerFieldToJson.value(e)).toList(),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$OptionalJsonPerFieldToJson.value(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -5115,25 +5537,37 @@ class _$OptionalJsonQuery
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$OptionalJsonPerFieldToJson.value(startAt as int)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$OptionalJsonPerFieldToJson.value(startAfter as int)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$OptionalJsonPerFieldToJson.value(endAt as int)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$OptionalJsonPerFieldToJson.value(endBefore as int)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -5404,13 +5838,11 @@ class _$MixedJsonDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as int,
-=======
-      if (value != _sentinel) _$MixedJsonFieldMap['value']!: value as int,
+      if (value != _sentinel)
+        _$MixedJsonFieldMap['value']!:
+            _$MixedJsonPerFieldToJson.value(value as int),
       if (valueFieldValue != null)
         _$MixedJsonFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -5426,13 +5858,11 @@ class _$MixedJsonDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as int,
-=======
-      if (value != _sentinel) _$MixedJsonFieldMap['value']!: value as int,
+      if (value != _sentinel)
+        _$MixedJsonFieldMap['value']!:
+            _$MixedJsonPerFieldToJson.value(value as int),
       if (valueFieldValue != null)
         _$MixedJsonFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -5734,16 +6164,17 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     return _$MixedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -5762,16 +6193,21 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     return _$MixedJsonQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$MixedJsonFieldMap['value']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$MixedJsonFieldMap['value']!,
+        isEqualTo: _$MixedJsonPerFieldToJson.value(isEqualTo),
+        isNotEqualTo: _$MixedJsonPerFieldToJson.value(isNotEqualTo),
+        isLessThan: _$MixedJsonPerFieldToJson.value(isLessThan),
+        isLessThanOrEqualTo:
+            _$MixedJsonPerFieldToJson.value(isLessThanOrEqualTo),
+        isGreaterThan: _$MixedJsonPerFieldToJson.value(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$MixedJsonPerFieldToJson.value(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn:
+            whereIn?.map((e) => _$MixedJsonPerFieldToJson.value(e)).toList(),
+        whereNotIn:
+            whereNotIn?.map((e) => _$MixedJsonPerFieldToJson.value(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -5890,25 +6326,37 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$MixedJsonPerFieldToJson.value(startAt as int)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$MixedJsonPerFieldToJson.value(startAfter as int)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$MixedJsonPerFieldToJson.value(endAt as int)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$MixedJsonPerFieldToJson.value(endBefore as int)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -6225,18 +6673,16 @@ class _$RootDocumentReference
       "Cannot specify both nullable and nullableFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
-      if (nullable != _sentinel) 'nullable': nullable as int?,
-=======
       if (nonNullable != _sentinel)
-        _$RootFieldMap['nonNullable']!: nonNullable as String,
+        _$RootFieldMap['nonNullable']!:
+            _$RootPerFieldToJson.nonNullable(nonNullable as String),
       if (nonNullableFieldValue != null)
         _$RootFieldMap['nonNullable']!: nonNullableFieldValue,
-      if (nullable != _sentinel) _$RootFieldMap['nullable']!: nullable as int?,
+      if (nullable != _sentinel)
+        _$RootFieldMap['nullable']!:
+            _$RootPerFieldToJson.nullable(nullable as int?),
       if (nullableFieldValue != null)
         _$RootFieldMap['nullable']!: nullableFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -6258,18 +6704,16 @@ class _$RootDocumentReference
       "Cannot specify both nullable and nullableFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
-      if (nullable != _sentinel) 'nullable': nullable as int?,
-=======
       if (nonNullable != _sentinel)
-        _$RootFieldMap['nonNullable']!: nonNullable as String,
+        _$RootFieldMap['nonNullable']!:
+            _$RootPerFieldToJson.nonNullable(nonNullable as String),
       if (nonNullableFieldValue != null)
         _$RootFieldMap['nonNullable']!: nonNullableFieldValue,
-      if (nullable != _sentinel) _$RootFieldMap['nullable']!: nullable as int?,
+      if (nullable != _sentinel)
+        _$RootFieldMap['nullable']!:
+            _$RootPerFieldToJson.nullable(nullable as int?),
       if (nullableFieldValue != null)
         _$RootFieldMap['nullable']!: nullableFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -6591,16 +7035,17 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     return _$RootQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -6619,16 +7064,22 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     return _$RootQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$RootFieldMap['nonNullable']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$RootFieldMap['nonNullable']!,
+        isEqualTo: _$RootPerFieldToJson.nonNullable(isEqualTo),
+        isNotEqualTo: _$RootPerFieldToJson.nonNullable(isNotEqualTo),
+        isLessThan: _$RootPerFieldToJson.nonNullable(isLessThan),
+        isLessThanOrEqualTo:
+            _$RootPerFieldToJson.nonNullable(isLessThanOrEqualTo),
+        isGreaterThan: _$RootPerFieldToJson.nonNullable(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$RootPerFieldToJson.nonNullable(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn:
+            whereIn?.map((e) => _$RootPerFieldToJson.nonNullable(e)).toList(),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$RootPerFieldToJson.nonNullable(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -6647,16 +7098,19 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     return _$RootQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$RootFieldMap['nullable']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$RootFieldMap['nullable']!,
+        isEqualTo: _$RootPerFieldToJson.nullable(isEqualTo),
+        isNotEqualTo: _$RootPerFieldToJson.nullable(isNotEqualTo),
+        isLessThan: _$RootPerFieldToJson.nullable(isLessThan),
+        isLessThanOrEqualTo: _$RootPerFieldToJson.nullable(isLessThanOrEqualTo),
+        isGreaterThan: _$RootPerFieldToJson.nullable(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$RootPerFieldToJson.nullable(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn?.map((e) => _$RootPerFieldToJson.nullable(e)).toList(),
+        whereNotIn:
+            whereNotIn?.map((e) => _$RootPerFieldToJson.nullable(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -6775,25 +7229,37 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$RootPerFieldToJson.nonNullable(startAt as String)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$RootPerFieldToJson.nonNullable(startAfter as String)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$RootPerFieldToJson.nonNullable(endAt as String)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$RootPerFieldToJson.nonNullable(endBefore as String)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -6847,25 +7313,37 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$RootPerFieldToJson.nullable(startAt as int?)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$RootPerFieldToJson.nullable(startAfter as int?)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$RootPerFieldToJson.nullable(endAt as int?)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$RootPerFieldToJson.nullable(endBefore as int?)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -7158,18 +7636,16 @@ class _$SubDocumentReference
       "Cannot specify both nullable and nullableFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
-      if (nullable != _sentinel) 'nullable': nullable as int?,
-=======
       if (nonNullable != _sentinel)
-        _$SubFieldMap['nonNullable']!: nonNullable as String,
+        _$SubFieldMap['nonNullable']!:
+            _$SubPerFieldToJson.nonNullable(nonNullable as String),
       if (nonNullableFieldValue != null)
         _$SubFieldMap['nonNullable']!: nonNullableFieldValue,
-      if (nullable != _sentinel) _$SubFieldMap['nullable']!: nullable as int?,
+      if (nullable != _sentinel)
+        _$SubFieldMap['nullable']!:
+            _$SubPerFieldToJson.nullable(nullable as int?),
       if (nullableFieldValue != null)
         _$SubFieldMap['nullable']!: nullableFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -7191,18 +7667,16 @@ class _$SubDocumentReference
       "Cannot specify both nullable and nullableFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (nonNullable != _sentinel) 'nonNullable': nonNullable as String,
-      if (nullable != _sentinel) 'nullable': nullable as int?,
-=======
       if (nonNullable != _sentinel)
-        _$SubFieldMap['nonNullable']!: nonNullable as String,
+        _$SubFieldMap['nonNullable']!:
+            _$SubPerFieldToJson.nonNullable(nonNullable as String),
       if (nonNullableFieldValue != null)
         _$SubFieldMap['nonNullable']!: nonNullableFieldValue,
-      if (nullable != _sentinel) _$SubFieldMap['nullable']!: nullable as int?,
+      if (nullable != _sentinel)
+        _$SubFieldMap['nullable']!:
+            _$SubPerFieldToJson.nullable(nullable as int?),
       if (nullableFieldValue != null)
         _$SubFieldMap['nullable']!: nullableFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -7524,16 +7998,17 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     return _$SubQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -7552,16 +8027,21 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     return _$SubQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$SubFieldMap['nonNullable']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$SubFieldMap['nonNullable']!,
+        isEqualTo: _$SubPerFieldToJson.nonNullable(isEqualTo),
+        isNotEqualTo: _$SubPerFieldToJson.nonNullable(isNotEqualTo),
+        isLessThan: _$SubPerFieldToJson.nonNullable(isLessThan),
+        isLessThanOrEqualTo:
+            _$SubPerFieldToJson.nonNullable(isLessThanOrEqualTo),
+        isGreaterThan: _$SubPerFieldToJson.nonNullable(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$SubPerFieldToJson.nonNullable(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn:
+            whereIn?.map((e) => _$SubPerFieldToJson.nonNullable(e)).toList(),
+        whereNotIn:
+            whereNotIn?.map((e) => _$SubPerFieldToJson.nonNullable(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -7580,16 +8060,19 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     return _$SubQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$SubFieldMap['nullable']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$SubFieldMap['nullable']!,
+        isEqualTo: _$SubPerFieldToJson.nullable(isEqualTo),
+        isNotEqualTo: _$SubPerFieldToJson.nullable(isNotEqualTo),
+        isLessThan: _$SubPerFieldToJson.nullable(isLessThan),
+        isLessThanOrEqualTo: _$SubPerFieldToJson.nullable(isLessThanOrEqualTo),
+        isGreaterThan: _$SubPerFieldToJson.nullable(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$SubPerFieldToJson.nullable(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn?.map((e) => _$SubPerFieldToJson.nullable(e)).toList(),
+        whereNotIn:
+            whereNotIn?.map((e) => _$SubPerFieldToJson.nullable(e)).toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -7708,25 +8191,37 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$SubPerFieldToJson.nonNullable(startAt as String)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$SubPerFieldToJson.nonNullable(startAfter as String)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$SubPerFieldToJson.nonNullable(endAt as String)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$SubPerFieldToJson.nonNullable(endBefore as String)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -7780,25 +8275,37 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$SubPerFieldToJson.nullable(startAt as int?)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$SubPerFieldToJson.nullable(startAfter as int?)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$SubPerFieldToJson.nullable(endAt as int?)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$SubPerFieldToJson.nullable(endBefore as int?)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -8086,13 +8593,11 @@ class _$AsCamelCaseDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as num,
-=======
-      if (value != _sentinel) _$AsCamelCaseFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$AsCamelCaseFieldMap['value']!:
+            _$AsCamelCasePerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$AsCamelCaseFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -8108,13 +8613,11 @@ class _$AsCamelCaseDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as num,
-=======
-      if (value != _sentinel) _$AsCamelCaseFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$AsCamelCaseFieldMap['value']!:
+            _$AsCamelCasePerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$AsCamelCaseFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -8419,16 +8922,17 @@ class _$AsCamelCaseQuery
     return _$AsCamelCaseQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -8447,16 +8951,22 @@ class _$AsCamelCaseQuery
     return _$AsCamelCaseQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$AsCamelCaseFieldMap['value']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$AsCamelCaseFieldMap['value']!,
+        isEqualTo: _$AsCamelCasePerFieldToJson.value(isEqualTo),
+        isNotEqualTo: _$AsCamelCasePerFieldToJson.value(isNotEqualTo),
+        isLessThan: _$AsCamelCasePerFieldToJson.value(isLessThan),
+        isLessThanOrEqualTo:
+            _$AsCamelCasePerFieldToJson.value(isLessThanOrEqualTo),
+        isGreaterThan: _$AsCamelCasePerFieldToJson.value(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$AsCamelCasePerFieldToJson.value(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn:
+            whereIn?.map((e) => _$AsCamelCasePerFieldToJson.value(e)).toList(),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$AsCamelCasePerFieldToJson.value(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -8575,25 +9085,37 @@ class _$AsCamelCaseQuery
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$AsCamelCasePerFieldToJson.value(startAt as num)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$AsCamelCasePerFieldToJson.value(startAfter as num)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$AsCamelCasePerFieldToJson.value(endAt as num)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$AsCamelCasePerFieldToJson.value(endBefore as num)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -8887,13 +9409,11 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as num,
-=======
-      if (value != _sentinel) _$CustomSubNameFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$CustomSubNameFieldMap['value']!:
+            _$CustomSubNamePerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$CustomSubNameFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -8909,13 +9429,11 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as num,
-=======
-      if (value != _sentinel) _$CustomSubNameFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$CustomSubNameFieldMap['value']!:
+            _$CustomSubNamePerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$CustomSubNameFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -9220,16 +9738,17 @@ class _$CustomSubNameQuery
     return _$CustomSubNameQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -9248,16 +9767,23 @@ class _$CustomSubNameQuery
     return _$CustomSubNameQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$CustomSubNameFieldMap['value']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$CustomSubNameFieldMap['value']!,
+        isEqualTo: _$CustomSubNamePerFieldToJson.value(isEqualTo),
+        isNotEqualTo: _$CustomSubNamePerFieldToJson.value(isNotEqualTo),
+        isLessThan: _$CustomSubNamePerFieldToJson.value(isLessThan),
+        isLessThanOrEqualTo:
+            _$CustomSubNamePerFieldToJson.value(isLessThanOrEqualTo),
+        isGreaterThan: _$CustomSubNamePerFieldToJson.value(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$CustomSubNamePerFieldToJson.value(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn
+            ?.map((e) => _$CustomSubNamePerFieldToJson.value(e))
+            .toList(),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$CustomSubNamePerFieldToJson.value(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -9376,25 +9902,37 @@ class _$CustomSubNameQuery
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$CustomSubNamePerFieldToJson.value(startAt as num)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$CustomSubNamePerFieldToJson.value(startAfter as num)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$CustomSubNamePerFieldToJson.value(endAt as num)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$CustomSubNamePerFieldToJson.value(endBefore as num)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -9692,14 +10230,11 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as num,
-=======
       if (value != _sentinel)
-        _$CustomClassPrefixFieldMap['value']!: value as num,
+        _$CustomClassPrefixFieldMap['value']!:
+            _$CustomClassPrefixPerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$CustomClassPrefixFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -9715,14 +10250,11 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as num,
-=======
       if (value != _sentinel)
-        _$CustomClassPrefixFieldMap['value']!: value as num,
+        _$CustomClassPrefixFieldMap['value']!:
+            _$CustomClassPrefixPerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$CustomClassPrefixFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -10029,16 +10561,17 @@ class _$ThisIsACustomPrefixQuery
     return _$ThisIsACustomPrefixQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -10057,16 +10590,23 @@ class _$ThisIsACustomPrefixQuery
     return _$ThisIsACustomPrefixQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$CustomClassPrefixFieldMap['value']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$CustomClassPrefixFieldMap['value']!,
+        isEqualTo: _$CustomClassPrefixPerFieldToJson.value(isEqualTo),
+        isNotEqualTo: _$CustomClassPrefixPerFieldToJson.value(isNotEqualTo),
+        isLessThan: _$CustomClassPrefixPerFieldToJson.value(isLessThan),
+        isLessThanOrEqualTo:
+            _$CustomClassPrefixPerFieldToJson.value(isLessThanOrEqualTo),
+        isGreaterThan: _$CustomClassPrefixPerFieldToJson.value(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$CustomClassPrefixPerFieldToJson.value(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn
+            ?.map((e) => _$CustomClassPrefixPerFieldToJson.value(e))
+            .toList(),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$CustomClassPrefixPerFieldToJson.value(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -10185,25 +10725,37 @@ class _$ThisIsACustomPrefixQuery
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$CustomClassPrefixPerFieldToJson.value(startAt as num)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$CustomClassPrefixPerFieldToJson.value(startAfter as num)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$CustomClassPrefixPerFieldToJson.value(endAt as num)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$CustomClassPrefixPerFieldToJson.value(endBefore as num)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -10454,18 +11006,18 @@ class _$EnumTestDocumentReference
   }
 
   @override
-  Stream<ExplicitPathDocumentSnapshot> snapshots() {
-    return reference.snapshots().map(ExplicitPathDocumentSnapshot._);
+  Stream<EnumTestDocumentSnapshot> snapshots() {
+    return reference.snapshots().map(EnumTestDocumentSnapshot._);
   }
 
   @override
-  Future<ExplicitPathDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(ExplicitPathDocumentSnapshot._);
+  Future<EnumTestDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(EnumTestDocumentSnapshot._);
   }
 
   @override
-  Future<ExplicitPathDocumentSnapshot> transactionGet(Transaction transaction) {
-    return transaction.get(reference).then(ExplicitPathDocumentSnapshot._);
+  Future<EnumTestDocumentSnapshot> transactionGet(Transaction transaction) {
+    return transaction.get(reference).then(EnumTestDocumentSnapshot._);
   }
 
   Future<void> update({
@@ -10477,13 +11029,11 @@ class _$EnumTestDocumentReference
       "Cannot specify both nonNullable and nonNullableFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (nonNullable != _sentinel) 'nonNullable': nonNullable as SimpleEnum,
-=======
-      if (value != _sentinel) _$ExplicitPathFieldMap['value']!: value as num,
-      if (valueFieldValue != null)
-        _$ExplicitPathFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
+      if (nonNullable != _sentinel)
+        _$EnumTestFieldMap['nonNullable']!:
+            _$EnumTestPerFieldToJson.nonNullable(nonNullable as SimpleEnum),
+      if (nonNullableFieldValue != null)
+        _$EnumTestFieldMap['nonNullable']!: nonNullableFieldValue,
     };
 
     return reference.update(json);
@@ -10499,13 +11049,11 @@ class _$EnumTestDocumentReference
       "Cannot specify both nonNullable and nonNullableFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (nonNullable != _sentinel) 'nonNullable': nonNullable as SimpleEnum,
-=======
-      if (value != _sentinel) _$ExplicitPathFieldMap['value']!: value as num,
-      if (valueFieldValue != null)
-        _$ExplicitPathFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
+      if (nonNullable != _sentinel)
+        _$EnumTestFieldMap['nonNullable']!:
+            _$EnumTestPerFieldToJson.nonNullable(nonNullable as SimpleEnum),
+      if (nonNullableFieldValue != null)
+        _$EnumTestFieldMap['nonNullable']!: nonNullableFieldValue,
     };
 
     transaction.update(reference, json);
@@ -10523,8 +11071,8 @@ class _$EnumTestDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-abstract class ExplicitPathQuery
-    implements QueryReference<ExplicitPath, ExplicitPathQuerySnapshot> {
+abstract class EnumTestQuery
+    implements QueryReference<EnumTest, EnumTestQuerySnapshot> {
   @override
   EnumTestQuery limit(int limit);
 
@@ -10657,37 +11205,16 @@ class _$EnumTestQuery extends QueryReference<EnumTest, EnumTestQuerySnapshot>
 
   final CollectionReference<Object?> _collection;
 
-  EnumTestQuerySnapshot _decodeSnapshot(
-    QuerySnapshot<EnumTest> snapshot,
-  ) {
-    final docs = snapshot.docs.map((e) {
-      return EnumTestQueryDocumentSnapshot._(e, e.data());
-    }).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<EnumTestDocumentSnapshot>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: EnumTestDocumentSnapshot._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return EnumTestQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<EnumTestQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference.snapshots().map(EnumTestQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
   Future<EnumTestQuerySnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference
+        .get(options)
+        .then(EnumTestQuerySnapshot._fromQuerySnapshot);
   }
 
   @override
@@ -10828,16 +11355,17 @@ class _$EnumTestQuery extends QueryReference<EnumTest, EnumTestQuerySnapshot>
     return _$EnumTestQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -10853,34 +11381,28 @@ class _$EnumTestQuery extends QueryReference<EnumTest, EnumTestQuerySnapshot>
     List<SimpleEnum>? whereIn,
     List<SimpleEnum>? whereNotIn,
   }) {
-    List<String>? _whereInList;
-    whereIn?.forEach((e) {
-      _whereInList?.add(e.name);
-    });
-    List<String>? _whereNotInList;
-    whereNotIn?.forEach((e) {
-      _whereNotInList?.add(e.name);
-    });
-
     return _$EnumTestQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$EnumTestFieldMap['nonNullable']!,
-          isEqualTo: isEqualTo?.name,
-          isNotEqualTo: isNotEqualTo?.name,
-          isLessThan: isLessThan?.name,
-          isLessThanOrEqualTo: isLessThanOrEqualTo?.name,
-          isGreaterThan: isGreaterThan?.name,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,
-          isNull: isNull,
-          whereIn: _whereInList,
-          whereNotIn: _whereNotInList),
+        _$EnumTestFieldMap['nonNullable']!,
+        isEqualTo: _$EnumTestPerFieldToJson.nonNullable(isEqualTo),
+        isNotEqualTo: _$EnumTestPerFieldToJson.nonNullable(isNotEqualTo),
+        isLessThan: _$EnumTestPerFieldToJson.nonNullable(isLessThan),
+        isLessThanOrEqualTo:
+            _$EnumTestPerFieldToJson.nonNullable(isLessThanOrEqualTo),
+        isGreaterThan: _$EnumTestPerFieldToJson.nonNullable(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$EnumTestPerFieldToJson.nonNullable(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn
+            ?.map((e) => _$EnumTestPerFieldToJson.nonNullable(e))
+            .toList(),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$EnumTestPerFieldToJson.nonNullable(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
-    // return _$EnumTestQuery(
-    //   reference.where('nonNullable', isEqualTo: isEqualTo?.name,isNotEqualTo: isNotEqualTo?.name,isLessThan: isLessThan?.name,isLessThanOrEqualTo: isLessThanOrEqualTo?.name,isGreaterThan: isGreaterThan?.name,isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,isNull: isNull,whereIn: _whereInList,whereNotIn: _whereNotInList,),
-    //   _collection,
-    // );
   }
 
   EnumTestQuery orderByDocumentId({
@@ -10997,25 +11519,37 @@ class _$EnumTestQuery extends QueryReference<EnumTest, EnumTestQuerySnapshot>
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$EnumTestPerFieldToJson.nonNullable(startAt as SimpleEnum)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$EnumTestPerFieldToJson.nonNullable(startAfter as SimpleEnum)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$EnumTestPerFieldToJson.nonNullable(endAt as SimpleEnum)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$EnumTestPerFieldToJson.nonNullable(endBefore as SimpleEnum)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -11038,6 +11572,23 @@ class _$EnumTestQuery extends QueryReference<EnumTest, EnumTestQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
+class EnumTestDocumentSnapshot extends FirestoreDocumentSnapshot<EnumTest> {
+  EnumTestDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<EnumTest> snapshot;
+
+  @override
+  EnumTestDocumentReference get reference {
+    return EnumTestDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final EnumTest? data;
+}
+
 class EnumTestQuerySnapshot
     extends FirestoreQuerySnapshot<EnumTest, EnumTestQueryDocumentSnapshot> {
   EnumTestQuerySnapshot._(
@@ -11045,6 +11596,38 @@ class EnumTestQuerySnapshot
     this.docs,
     this.docChanges,
   );
+
+  factory EnumTestQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<EnumTest> snapshot,
+  ) {
+    final docs = snapshot.docs.map(EnumTestQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        EnumTestDocumentSnapshot._,
+      );
+    }).toList();
+
+    return EnumTestQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<EnumTestDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    EnumTestDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<EnumTestDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
 
   final QuerySnapshot<EnumTest> snapshot;
 
@@ -11058,18 +11641,18 @@ class EnumTestQuerySnapshot
 class EnumTestQueryDocumentSnapshot
     extends FirestoreQueryDocumentSnapshot<EnumTest>
     implements EnumTestDocumentSnapshot {
-  EnumTestQueryDocumentSnapshot._(this.snapshot, this.data);
+  EnumTestQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
 
   @override
   final QueryDocumentSnapshot<EnumTest> snapshot;
 
   @override
+  final EnumTest data;
+
+  @override
   EnumTestDocumentReference get reference {
     return EnumTestDocumentReference(snapshot.reference);
   }
-
-  @override
-  final EnumTest data;
 }
 
 /// A collection reference object can be used for adding documents,
@@ -11226,32 +11809,17 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
 
   @override
   Stream<ExplicitPathDocumentSnapshot> snapshots() {
-    return reference.snapshots().map((snapshot) {
-      return ExplicitPathDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.snapshots().map(ExplicitPathDocumentSnapshot._);
   }
 
   @override
   Future<ExplicitPathDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then((snapshot) {
-      return ExplicitPathDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return reference.get(options).then(ExplicitPathDocumentSnapshot._);
   }
 
   @override
   Future<ExplicitPathDocumentSnapshot> transactionGet(Transaction transaction) {
-    return transaction.get(reference).then((snapshot) {
-      return ExplicitPathDocumentSnapshot._(
-        snapshot,
-        snapshot.data(),
-      );
-    });
+    return transaction.get(reference).then(ExplicitPathDocumentSnapshot._);
   }
 
   Future<void> update({
@@ -11263,7 +11831,11 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) 'value': value as num,
+      if (value != _sentinel)
+        _$ExplicitPathFieldMap['value']!:
+            _$ExplicitPathPerFieldToJson.value(value as num),
+      if (valueFieldValue != null)
+        _$ExplicitPathFieldMap['value']!: valueFieldValue,
     };
 
     return reference.update(json);
@@ -11279,7 +11851,11 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) 'value': value as num,
+      if (value != _sentinel)
+        _$ExplicitPathFieldMap['value']!:
+            _$ExplicitPathPerFieldToJson.value(value as num),
+      if (valueFieldValue != null)
+        _$ExplicitPathFieldMap['value']!: valueFieldValue,
     };
 
     transaction.update(reference, json);
@@ -11295,27 +11871,6 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
 
   @override
   int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-class ExplicitPathDocumentSnapshot
-    extends FirestoreDocumentSnapshot<ExplicitPath> {
-  ExplicitPathDocumentSnapshot._(
-    this.snapshot,
-    this.data,
-  );
-
-  @override
-  final DocumentSnapshot<ExplicitPath> snapshot;
-
-  @override
-  ExplicitPathDocumentReference get reference {
-    return ExplicitPathDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final ExplicitPath? data;
 }
 
 abstract class ExplicitPathQuery
@@ -11605,16 +12160,17 @@ class _$ExplicitPathQuery
     return _$ExplicitPathQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -11633,16 +12189,22 @@ class _$ExplicitPathQuery
     return _$ExplicitPathQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$ExplicitPathFieldMap['value']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$ExplicitPathFieldMap['value']!,
+        isEqualTo: _$ExplicitPathPerFieldToJson.value(isEqualTo),
+        isNotEqualTo: _$ExplicitPathPerFieldToJson.value(isNotEqualTo),
+        isLessThan: _$ExplicitPathPerFieldToJson.value(isLessThan),
+        isLessThanOrEqualTo:
+            _$ExplicitPathPerFieldToJson.value(isLessThanOrEqualTo),
+        isGreaterThan: _$ExplicitPathPerFieldToJson.value(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$ExplicitPathPerFieldToJson.value(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn:
+            whereIn?.map((e) => _$ExplicitPathPerFieldToJson.value(e)).toList(),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$ExplicitPathPerFieldToJson.value(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -11761,25 +12323,37 @@ class _$ExplicitPathQuery
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$ExplicitPathPerFieldToJson.value(startAt as num)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$ExplicitPathPerFieldToJson.value(startAfter as num)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$ExplicitPathPerFieldToJson.value(endAt as num)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$ExplicitPathPerFieldToJson.value(endBefore as num)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
@@ -12074,13 +12648,11 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as num,
-=======
-      if (value != _sentinel) _$ExplicitSubPathFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$ExplicitSubPathFieldMap['value']!:
+            _$ExplicitSubPathPerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$ExplicitSubPathFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     return reference.update(json);
@@ -12096,13 +12668,11 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-<<<<<<< HEAD
-      if (value != _sentinel) 'value': value as num,
-=======
-      if (value != _sentinel) _$ExplicitSubPathFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$ExplicitSubPathFieldMap['value']!:
+            _$ExplicitSubPathPerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$ExplicitSubPathFieldMap['value']!: valueFieldValue,
->>>>>>> 26087bb2d1747eb5db82c98424b6d63071137529
     };
 
     transaction.update(reference, json);
@@ -12407,16 +12977,17 @@ class _$ExplicitSubPathQuery
     return _$ExplicitSubPathQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          FieldPath.documentId,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -12435,16 +13006,23 @@ class _$ExplicitSubPathQuery
     return _$ExplicitSubPathQuery(
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
-          _$ExplicitSubPathFieldMap['value']!,
-          isEqualTo: isEqualTo,
-          isNotEqualTo: isNotEqualTo,
-          isLessThan: isLessThan,
-          isLessThanOrEqualTo: isLessThanOrEqualTo,
-          isGreaterThan: isGreaterThan,
-          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-          isNull: isNull,
-          whereIn: whereIn,
-          whereNotIn: whereNotIn),
+        _$ExplicitSubPathFieldMap['value']!,
+        isEqualTo: _$ExplicitSubPathPerFieldToJson.value(isEqualTo),
+        isNotEqualTo: _$ExplicitSubPathPerFieldToJson.value(isNotEqualTo),
+        isLessThan: _$ExplicitSubPathPerFieldToJson.value(isLessThan),
+        isLessThanOrEqualTo:
+            _$ExplicitSubPathPerFieldToJson.value(isLessThanOrEqualTo),
+        isGreaterThan: _$ExplicitSubPathPerFieldToJson.value(isGreaterThan),
+        isGreaterThanOrEqualTo:
+            _$ExplicitSubPathPerFieldToJson.value(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        whereIn: whereIn
+            ?.map((e) => _$ExplicitSubPathPerFieldToJson.value(e))
+            .toList(),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$ExplicitSubPathPerFieldToJson.value(e))
+            .toList(),
+      ),
       $queryCursor: $queryCursor,
     );
   }
@@ -12563,25 +13141,37 @@ class _$ExplicitSubPathQuery
 
     if (startAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
+        startAt: [
+          ...queryCursor.startAt,
+          _$ExplicitSubPathPerFieldToJson.value(startAt as num)
+        ],
         startAtDocumentSnapshot: null,
       );
     }
     if (startAfter != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfter: [
+          ...queryCursor.startAfter,
+          _$ExplicitSubPathPerFieldToJson.value(startAfter as num)
+        ],
         startAfterDocumentSnapshot: null,
       );
     }
     if (endAt != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
+        endAt: [
+          ...queryCursor.endAt,
+          _$ExplicitSubPathPerFieldToJson.value(endAt as num)
+        ],
         endAtDocumentSnapshot: null,
       );
     }
     if (endBefore != _sentinel) {
       queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
+        endBefore: [
+          ...queryCursor.endBefore,
+          _$ExplicitSubPathPerFieldToJson.value(endBefore as num)
+        ],
         endBeforeDocumentSnapshot: null,
       );
     }
