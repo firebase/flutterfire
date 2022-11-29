@@ -200,7 +200,8 @@ class _$ConflictDocumentReference
     );
     final json = {
       if (number != _sentinel)
-        _$ConflictFieldMap['number']!: _$ConflictPerFieldToJson.number(number),
+        _$ConflictFieldMap['number']!:
+            _$ConflictPerFieldToJson.number(number as num),
       if (numberFieldValue != null)
         _$ConflictFieldMap['number']!: numberFieldValue,
     };
@@ -219,7 +220,8 @@ class _$ConflictDocumentReference
     );
     final json = {
       if (number != _sentinel)
-        _$ConflictFieldMap['number']!: _$ConflictPerFieldToJson.number(number),
+        _$ConflictFieldMap['number']!:
+            _$ConflictPerFieldToJson.number(number as num),
       if (numberFieldValue != null)
         _$ConflictFieldMap['number']!: numberFieldValue,
     };
@@ -563,9 +565,9 @@ class _$ConflictQuery extends QueryReference<Conflict, ConflictQuerySnapshot>
             _$ConflictPerFieldToJson.number(isGreaterThanOrEqualTo),
         isNull: isNull,
         whereIn:
-            whereIn.map((e) => _$ConflictPerFieldToJson.number(e)).toList(),
+            whereIn?.map((e) => _$ConflictPerFieldToJson.number(e)).toList(),
         whereNotIn:
-            whereNotIn.map((e) => _$ConflictPerFieldToJson.number(e)).toList(),
+            whereNotIn?.map((e) => _$ConflictPerFieldToJson.number(e)).toList(),
       ),
       $queryCursor: $queryCursor,
     );
