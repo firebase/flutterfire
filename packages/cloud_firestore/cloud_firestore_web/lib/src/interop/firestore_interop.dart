@@ -265,8 +265,8 @@ class CollectionReferenceJsImpl extends QueryJsImpl {
 @anonymous
 @JS()
 class PersistenceSettings {
-  external bool get synchronizeTabs;
-  external factory PersistenceSettings({bool? synchronizeTabs});
+  external bool get forceOwnership;
+  external factory PersistenceSettings({bool? forceOwnership});
 }
 
 @JS()
