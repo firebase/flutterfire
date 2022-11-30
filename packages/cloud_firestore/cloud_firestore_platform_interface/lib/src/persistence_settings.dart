@@ -11,6 +11,8 @@ class PersistenceSettings {
   /// shared execution of queries and latency-compensated local document updates across all connected instances.
   /// To enable this mode, synchronizeTabs:true needs to be set globally in all active tabs.
   /// If omitted or set to 'false', enablePersistence() will fail in all but the first tab.
+  @Deprecated(
+      'This property will be replaced by "forceOwnership" in a future release.')
   final bool synchronizeTabs;
 
   /// Creates a [PersistenceSettings] instance.
