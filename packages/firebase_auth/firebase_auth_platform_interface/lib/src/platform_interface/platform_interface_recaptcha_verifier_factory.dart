@@ -61,13 +61,13 @@ abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
   /// Sets a factory delegate as the current [RecaptchaVerifierFactoryPlatform]
   /// instance.
   static set instance(RecaptchaVerifierFactoryPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 
   /// Ensures that a delegate class extends [RecaptchaVerifierFactoryPlatform].
   static void verifyExtends(RecaptchaVerifierFactoryPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
   }
 
   /// Returns the assigned factory delegate.
@@ -80,6 +80,7 @@ abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
   /// Underlying implementations can use this method to create the underlying
   /// implementation of a Recaptcha Verifier.
   RecaptchaVerifierFactoryPlatform delegateFor({
+    required FirebaseAuthPlatform auth,
     String? container,
     RecaptchaVerifierSize size = RecaptchaVerifierSize.normal,
     RecaptchaVerifierTheme theme = RecaptchaVerifierTheme.light,

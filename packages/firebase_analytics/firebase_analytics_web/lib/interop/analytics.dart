@@ -9,7 +9,6 @@ import 'dart:js_util' as util;
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
-import 'firebase_interop.dart' as firebase_interop;
 import 'analytics_interop.dart' as analytics_interop;
 
 export 'analytics_interop.dart';
@@ -18,8 +17,8 @@ export 'analytics_interop.dart';
 Analytics getAnalyticsInstance([App? app]) {
   return Analytics.getInstance(
     app != null
-        ? firebase_interop.analytics(app.jsObject)
-        : firebase_interop.analytics(),
+        ? analytics_interop.getAnalytics(app.jsObject)
+        : analytics_interop.getAnalytics(),
   );
 }
 
@@ -33,6 +32,10 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     return _expando[jsObject] ??= Analytics._fromJsObject(jsObject);
   }
 
+  static Future<bool> isSupported() {
+    return handleThenable(analytics_interop.isSupported());
+  }
+
   /// Non-null App for this instance of analytics service.
   App get app => App.getInstance(jsObject.app);
 
@@ -41,19 +44,26 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
-    return jsObject.logEvent(name, util.jsify(parameters ?? {}), callOptions);
+    return analytics_interop.logEvent(
+      jsObject,
+      name,
+      util.jsify(parameters ?? {}),
+      callOptions,
+    );
   }
 
   void setAnalyticsCollectionEnabled({required bool enabled}) {
-    return jsObject.setAnalyticsCollectionEnabled(enabled);
+    return analytics_interop.setAnalyticsCollectionEnabled(jsObject, enabled);
   }
 
   void setCurrentScreen({
     String? screenName,
     AnalyticsCallOptions? callOptions,
   }) {
-    return jsObject.setCurrentScreen(
-      screenName,
+    return analytics_interop.logEvent(
+      jsObject,
+      'screen_view',
+      jsify({'firebase_screen': screenName}),
       callOptions,
     );
   }
@@ -62,7 +72,8 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     String? id,
     AnalyticsCallOptions? callOptions,
   }) {
-    return jsObject.setUserId(
+    return analytics_interop.setUserId(
+      jsObject,
       id,
       callOptions,
     );
@@ -73,8 +84,9 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     required String? value,
     AnalyticsCallOptions? callOptions,
   }) {
-    return jsObject.setUserProperties(
-      {name: value},
+    return analytics_interop.setUserProperties(
+      jsObject,
+      util.jsify({name: value}),
       callOptions,
     );
   }

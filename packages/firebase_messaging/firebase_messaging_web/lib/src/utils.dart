@@ -11,7 +11,7 @@ import 'interop/messaging.dart';
 ///
 /// See https://developer.mozilla.org/en-US/docs/Web/API/Notification/requestPermission
 /// for more information.
-AuthorizationStatus convertToAuthorizationStatus(String status) {
+AuthorizationStatus convertToAuthorizationStatus(String? status) {
   switch (status) {
     case 'granted':
       return AuthorizationStatus.authorized;
@@ -25,7 +25,7 @@ AuthorizationStatus convertToAuthorizationStatus(String status) {
 }
 
 /// Returns a [NotificationSettings] instance for all Web platforms devices.
-NotificationSettings getNotificationSettings(String status) {
+NotificationSettings getNotificationSettings(String? status) {
   return NotificationSettings(
     authorizationStatus: convertToAuthorizationStatus(status),
     alert: AppleNotificationSetting.notSupported,
@@ -36,6 +36,8 @@ NotificationSettings getNotificationSettings(String status) {
     notificationCenter: AppleNotificationSetting.notSupported,
     showPreviews: AppleShowPreviewSetting.notSupported,
     sound: AppleNotificationSetting.notSupported,
+    timeSensitive: AppleNotificationSetting.notSupported,
+    criticalAlert: AppleNotificationSetting.notSupported,
   );
 }
 

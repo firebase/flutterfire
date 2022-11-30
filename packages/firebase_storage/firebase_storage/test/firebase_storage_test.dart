@@ -6,7 +6,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -145,7 +144,7 @@ void main() {
         verify(kMockStoragePlatform.ref(testPath));
       });
 
-      // https://github.com/FirebaseExtended/flutterfire/issues/5673
+      // https://github.com/firebase/flutterfire/issues/5673
       test('verify delegate method is called for http urls with + symbol', () {
         const String customBucket = 'test.appspot.com';
         const String testPath = 'foo+bar/file.gif';
@@ -228,7 +227,7 @@ void main() {
       test('returns the correct value', () {
         expect(
           storage.hashCode,
-          hashValues(app.name, kBucket.replaceFirst('gs://', '')),
+          Object.hash(app.name, kBucket.replaceFirst('gs://', '')),
         );
       });
     });

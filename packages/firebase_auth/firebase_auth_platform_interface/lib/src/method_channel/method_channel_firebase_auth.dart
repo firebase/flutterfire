@@ -6,6 +6,9 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -22,9 +25,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     'plugins.flutter.io/firebase_auth',
   );
 
+  /// Map of [MethodChannelFirebaseAuth] that can be get with Firebase App Name.
   static Map<String, MethodChannelFirebaseAuth>
-      _methodChannelFirebaseAuthInstances =
+      methodChannelFirebaseAuthInstances =
       <String, MethodChannelFirebaseAuth>{};
+
+  static Map<String, MethodChannelMultiFactor> _multiFactorInstances =
+      <String, MethodChannelMultiFactor>{};
 
   static final Map<String, StreamController<_ValueWrapper<UserPlatform>>>
       _authStateChangesListeners =
@@ -61,7 +68,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       'appName': app.name,
     }).then((channelName) {
       final events = EventChannel(channelName!, channel.codec);
-      events.receiveBroadcastStream().listen(
+      events
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
+          .listen(
         (arguments) {
           _handleIdTokenChangesListener(app.name, arguments);
         },
@@ -72,7 +81,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       'appName': app.name,
     }).then((channelName) {
       final events = EventChannel(channelName!, channel.codec);
-      events.receiveBroadcastStream().listen(
+      events
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
+          .listen(
         (arguments) {
           _handleAuthStateChangesListener(app.name, arguments);
         },
@@ -109,15 +120,22 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     // ignore: close_sinks
     final streamController = _authStateChangesListeners[appName]!;
     MethodChannelFirebaseAuth instance =
-        _methodChannelFirebaseAuthInstances[appName]!;
+        methodChannelFirebaseAuthInstances[appName]!;
+
+    MethodChannelMultiFactor? multiFactorInstance =
+        _multiFactorInstances[appName];
+    if (multiFactorInstance == null) {
+      multiFactorInstance = MethodChannelMultiFactor(instance);
+      _multiFactorInstances[appName] = multiFactorInstance;
+    }
 
     final userMap = arguments['user'];
     if (userMap == null) {
       instance.currentUser = null;
       streamController.add(const _ValueWrapper.absent());
     } else {
-      final MethodChannelUser user =
-          MethodChannelUser(instance, userMap.cast<String, dynamic>());
+      final MethodChannelUser user = MethodChannelUser(
+          instance, multiFactorInstance, userMap.cast<String, dynamic>());
 
       // TODO(rousselGit): should this logic be moved to the setter instead?
       instance.currentUser = user;
@@ -138,7 +156,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         // ignore: close_sinks
         userChangesStreamController = _userChangesListeners[appName]!;
     MethodChannelFirebaseAuth instance =
-        _methodChannelFirebaseAuthInstances[appName]!;
+        methodChannelFirebaseAuthInstances[appName]!;
+    MethodChannelMultiFactor? multiFactorInstance =
+        _multiFactorInstances[appName];
+    if (multiFactorInstance == null) {
+      multiFactorInstance = MethodChannelMultiFactor(instance);
+      _multiFactorInstances[appName] = multiFactorInstance;
+    }
 
     final userMap = arguments['user'];
     if (userMap == null) {
@@ -146,8 +170,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       idTokenStreamController.add(const _ValueWrapper.absent());
       userChangesStreamController.add(const _ValueWrapper.absent());
     } else {
-      final MethodChannelUser user =
-          MethodChannelUser(instance, userMap.cast<String, dynamic>());
+      final MethodChannelUser user = MethodChannelUser(
+          instance, multiFactorInstance, userMap.cast<String, dynamic>());
 
       // TODO(rousselGit): should this logic be moved to the setter instead?
       instance.currentUser = user;
@@ -169,8 +193,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   ///
   /// Instances are cached and reused for incoming event handlers.
   @override
-  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
-    return _methodChannelFirebaseAuthInstances.putIfAbsent(app.name, () {
+  FirebaseAuthPlatform delegateFor(
+      {required FirebaseApp app, Persistence? persistence}) {
+    return methodChannelFirebaseAuthInstances.putIfAbsent(app.name, () {
       return MethodChannelFirebaseAuth(app: app);
     });
   }
@@ -181,7 +206,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     String? languageCode,
   }) {
     if (currentUser != null) {
-      this.currentUser = MethodChannelUser(this, currentUser);
+      final multiFactor = MethodChannelMultiFactor(this);
+      this.currentUser = MethodChannelUser(this, multiFactor, currentUser);
     }
 
     this.languageCode = languageCode;
@@ -197,8 +223,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
             'host': host,
             'port': port,
           }));
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -210,8 +236,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           _withChannelDefaults({
             'code': code,
           }));
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -229,8 +255,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         operation: result['operation'],
         data: Map<String, dynamic>.from(result['data']),
       );
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -243,8 +269,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
             'code': code,
             'newPassword': newPassword,
           }));
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -265,8 +291,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
       currentUser = userCredential.user;
       return userCredential;
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -281,8 +307,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
               })))!;
 
       return List<String>.from(data['providers']);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -320,8 +346,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
             'email': email,
             'actionCodeSettings': actionCodeSettings?.asMap(),
           }));
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -337,8 +363,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
             'email': email,
             'actionCodeSettings': actionCodeSettings.asMap(),
           }));
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -354,8 +380,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
               })))!;
 
       this.languageCode = data['languageCode'];
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -396,8 +422,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     try {
       await channel.invokeMethod(
           'Auth#setSettings', _withChannelDefaults(arguments));
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -419,8 +445,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
       currentUser = userCredential.user;
       return userCredential;
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -441,8 +467,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
       currentUser = userCredential.user;
       return userCredential;
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -461,8 +487,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
       currentUser = userCredential.user;
       return userCredential;
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -483,8 +509,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
       currentUser = userCredential.user;
       return userCredential;
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -505,8 +531,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
       currentUser = userCredential.user;
       return userCredential;
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -531,8 +557,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           'Auth#signOut', _withChannelDefaults({}));
 
       currentUser = null;
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -547,14 +573,44 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
               })))!;
 
       return data['email'];
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<UserCredentialPlatform> signInWithProvider(
+    AuthProvider provider,
+  ) async {
+    try {
+      // To extract scopes and custom parameters from the provider
+      final convertedProvider = convertToOAuthProvider(provider);
+
+      Map<String, dynamic> data =
+          (await channel.invokeMapMethod<String, dynamic>(
+              'Auth#signInWithProvider',
+              _withChannelDefaults({
+                'signInProvider': convertedProvider.providerId,
+                if (convertedProvider is OAuthProvider) ...{
+                  'scopes': convertedProvider.scopes,
+                  'customParameters': convertedProvider.parameters
+                },
+              })))!;
+
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, data);
+
+      currentUser = userCredential.user;
+      return userCredential;
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
   @override
   Future<void> verifyPhoneNumber({
-    required String phoneNumber,
+    String? phoneNumber,
+    MultiFactorInfo? multiFactorInfo,
     required PhoneVerificationCompleted verificationCompleted,
     required PhoneVerificationFailed verificationFailed,
     required PhoneCodeSent codeSent,
@@ -562,6 +618,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     String? autoRetrievedSmsCodeForTesting,
     Duration timeout = const Duration(seconds: 30),
     int? forceResendingToken,
+    MultiFactorSession? multiFactorSession,
   }) async {
     if (defaultTargetPlatform == TargetPlatform.macOS) {
       throw UnimplementedError(
@@ -573,14 +630,18 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       final eventChannelName = await channel.invokeMethod<String>(
           'Auth#verifyPhoneNumber',
           _withChannelDefaults({
-            'phoneNumber': phoneNumber,
+            if (phoneNumber != null) 'phoneNumber': phoneNumber,
+            if (multiFactorInfo?.uid != null)
+              'multiFactorInfo': multiFactorInfo?.uid,
             'timeout': timeout.inMilliseconds,
             'forceResendingToken': forceResendingToken,
             'autoRetrievedSmsCodeForTesting': autoRetrievedSmsCodeForTesting,
+            if (multiFactorSession?.id != null)
+              'multiFactorSessionId': multiFactorSession!.id,
           }));
 
       EventChannel(eventChannelName!)
-          .receiveBroadcastStream()
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
           .listen((arguments) {
         final name = arguments['name'];
         if (name == 'Auth#phoneVerificationCompleted') {
@@ -611,8 +672,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           codeAutoRetrievalTimeout(verificationId);
         }
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 }

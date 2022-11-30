@@ -5,12 +5,13 @@
 
 import 'dart:async';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
+import 'method_channel_aggregate_query.dart';
 import 'method_channel_firestore.dart';
 import 'method_channel_query_snapshot.dart';
 import 'utils/source.dart';
@@ -106,8 +107,8 @@ class MethodChannelQuery extends QueryPlatform {
       );
 
       return MethodChannelQuerySnapshot(firestore, data!);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -136,27 +137,30 @@ class MethodChannelQuery extends QueryPlatform {
     late StreamController<QuerySnapshotPlatform>
         controller; // ignore: close_sinks
 
-    StreamSubscription<dynamic>? snapshotStream;
+    StreamSubscription<dynamic>? snapshotStreamSubscription;
+
     controller = StreamController<QuerySnapshotPlatform>.broadcast(
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.channel
             .invokeMethod<String>('Query#snapshots');
 
-        snapshotStream =
+        snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.querySnapshotChannel(observerId!)
-                .receiveBroadcastStream(
-          <String, dynamic>{
+                .receiveGuardedBroadcastStream(
+          arguments: <String, dynamic>{
             'query': this,
             'includeMetadataChanges': includeMetadataChanges,
           },
-        ).listen((snapshot) {
-          controller.add(MethodChannelQuerySnapshot(firestore, snapshot));
-        }, onError: (error, stack) {
-          controller.addError(convertPlatformException(error), stack);
-        });
+          onError: convertPlatformException,
+        ).listen(
+          (snapshot) {
+            controller.add(MethodChannelQuerySnapshot(firestore, snapshot));
+          },
+          onError: controller.addError,
+        );
       },
       onCancel: () {
-        snapshotStream?.cancel();
+        snapshotStreamSubscription?.cancel();
       },
     );
 
@@ -210,6 +214,13 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
+  AggregateQueryPlatform count() {
+    return MethodChannelAggregateQuery(
+      this,
+    );
+  }
+
+  @override
   bool operator ==(Object other) {
     return runtimeType == other.runtimeType &&
         other is MethodChannelQuery &&
@@ -220,7 +231,7 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         runtimeType,
         firestore,
         _pointer,

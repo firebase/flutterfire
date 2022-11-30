@@ -7,8 +7,8 @@ import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../custom_model.dart';
-import '../download_type.dart';
 import '../download_conditions.dart';
+import '../download_type.dart';
 import '../method_channel/method_channel_firebase_ml_model_downloader.dart';
 
 abstract class FirebaseModelDownloaderPlatform extends PlatformInterface {
@@ -40,7 +40,7 @@ abstract class FirebaseModelDownloaderPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseModelDownloaderPlatform.instance]
   static set instance(FirebaseModelDownloaderPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

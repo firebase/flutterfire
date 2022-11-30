@@ -1,19 +1,148 @@
+## 10.0.6
+
+ - Update a dependency to the latest release.
+
+## 10.0.5
+
+ - Update a dependency to the latest release.
+
+## 10.0.4
+
+ - Update a dependency to the latest release.
+
+## 10.0.3
+
+ - Update a dependency to the latest release.
+
+## 10.0.2
+
+ - Update a dependency to the latest release.
+
+## 10.0.1
+
+- Update a dependency to the latest release.
+
+## 10.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 9.3.8
+
+ - Update a dependency to the latest release.
+
+## 9.3.7
+
+ - Update a dependency to the latest release.
+
+## 9.3.6
+
+ - **FIX**: suppress unchecked warnings that aren't necessary ([#9532](https://github.com/firebase/flutterfire/issues/9532)). ([3ebd4593](https://github.com/firebase/flutterfire/commit/3ebd4593d11fbbd359b8d514a9c0577654859992))
+
+## 9.3.5
+
+ - **REFACTOR**: deprecate `signInWithAuthProvider` in favor of `signInWithProvider` ([#9542](https://github.com/firebase/flutterfire/issues/9542)). ([ca340ea1](https://github.com/firebase/flutterfire/commit/ca340ea19c8dbb340f083e48cf1b0de36f7d64c4))
+
+## 9.3.4
+
+ - Update a dependency to the latest release.
+
+## 9.3.3
+
+ - Update a dependency to the latest release.
+
+## 9.3.2
+
+ - Update a dependency to the latest release.
+
+## 9.3.1
+
+ - Update a dependency to the latest release.
+
+## 9.3.0
+
+ - **FEAT**: retrieves `appInstanceId` property on native platforms if available ([#8689](https://github.com/firebase/flutterfire/issues/8689)). ([7132d771](https://github.com/firebase/flutterfire/commit/7132d771ed5ada7a0433232b9f0d996ef0d61481))
+
+## 9.2.1
+
+ - **FIX**: allow `null` values for `setDefaultEventParameters()` which removes defaults. Permissible on android and iOS. ([#9135](https://github.com/firebase/flutterfire/issues/9135)). ([dff46a3f](https://github.com/firebase/flutterfire/commit/dff46a3f33d0b9881864f79be659b2770526677d))
+
+## 9.2.0
+
+ - **FEAT**: upgrade to support v9.8.1 Firebase JS SDK ([#8235](https://github.com/firebase/flutterfire/issues/8235)). ([4b417af5](https://github.com/firebase/flutterfire/commit/4b417af574bb8a32ca8e4b3ab2ff253a22be9903))
+
+## 9.1.12
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 9.1.11
+
+ - Update a dependency to the latest release.
+
+## 9.1.10
+
+ - **REFACTOR**: remove deprecated `Tasks.call` for android and replace with `TaskCompletionSource`. (#8583). ([94310ab3](https://github.com/firebase/flutterfire/commit/94310ab338ad1bf34174b19d1d5db8a856e8d161))
+ - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8726). ([ab2cdfcd](https://github.com/firebase/flutterfire/commit/ab2cdfcd291a1045add1ba196b758e1d46571934))
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **DOCS**: point to "firebase.google" domain for hyperlinks in the usage section of `README.md` files (for the missing packages) (#8818). ([5bda8c92](https://github.com/firebase/flutterfire/commit/5bda8c92be1651a941d1285d36e885ee0b967b11))
+
+## 9.1.9
+
+ - Update a dependency to the latest release.
+
+## 9.1.8
+
+ - Update a dependency to the latest release.
+
+## 9.1.7
+
+ - Update a dependency to the latest release.
+
+## 9.1.6
+
+ - **REFACTOR**: Update deployment target to `10.0` for Firebase Analytics podspec. (#8371). ([fe709da9](https://github.com/firebase/flutterfire/commit/fe709da998162a3b884070df6666690ae560d0d1))
+
+## 9.1.5
+
+ - Update a dependency to the latest release.
+
+## 9.1.4
+
+ - **FIX**: Send default parameters for iOS when using `setDefaultEventParameters()` API. (#8402). ([7d3e5ba6](https://github.com/firebase/flutterfire/commit/7d3e5ba6e4ee0bff178c5cfb73d34cdd3a7064e0))
+
+## 9.1.3
+
+ - Update a dependency to the latest release.
+
+## 9.1.2
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 9.1.1
+
+ - **DOCS**: code comment typo - `logAdImpression` mentions wrong event (#8180). ([960a75a7](https://github.com/firebase/flutterfire/commit/960a75a77dc8c575e7f8f9c4350ad564a3814eb8))
+
+## 9.1.0
+
+ - **FEAT**: Improve `FirebaseAnalyticsObserver` so that it also fires events when the modal route changes. (#7711). ([f3bb2055](https://github.com/firebase/flutterfire/commit/f3bb205594b3920f37eb4476c324e463f942c451))
+
 ## 9.0.5
 
- - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
- - **FIX**: user id and user properties can be null so `NSNull` should be converted to `nil` on iOS/macOS (#7810). ([f588cf38](https://github.com/FirebaseExtended/flutterfire/commit/f588cf381135c6d51d472e7f744e72d7f6a69240))
- - **FIX**: `setUserProperty` should now accept null as a valid value on Android (#7735). ([c2237acb](https://github.com/FirebaseExtended/flutterfire/commit/c2237acb25903d2466db76a9c4fd2f14701369b6))
- - **DOCS**: example app initialization and docs support status (#7745). ([ac21f485](https://github.com/FirebaseExtended/flutterfire/commit/ac21f4855359d9c8452e60917b1992d8ad0f7a5e))
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/firebase/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+ - **FIX**: user id and user properties can be null so `NSNull` should be converted to `nil` on iOS/macOS (#7810). ([f588cf38](https://github.com/firebase/flutterfire/commit/f588cf381135c6d51d472e7f744e72d7f6a69240))
+ - **FIX**: `setUserProperty` should now accept null as a valid value on Android (#7735). ([c2237acb](https://github.com/firebase/flutterfire/commit/c2237acb25903d2466db76a9c4fd2f14701369b6))
+ - **DOCS**: example app initialization and docs support status (#7745). ([ac21f485](https://github.com/firebase/flutterfire/commit/ac21f4855359d9c8452e60917b1992d8ad0f7a5e))
 
 ## 9.0.4
 
- - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/firebase/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
 
 ## 9.0.3
 
- - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522). ([9a83f121](https://github.com/FirebaseExtended/flutterfire/commit/9a83f1219e33090bc8dbdd9bf26316e7fc6e7979))
- - **FIX**: reinstate Analytics screen navigation observer. (#7529). ([caf2986e](https://github.com/FirebaseExtended/flutterfire/commit/caf2986ec76b0d761c2ef863af4c16f02fc4638f))
- - **FIX**: userId can be null (#7545). ([0d3b523c](https://github.com/FirebaseExtended/flutterfire/commit/0d3b523c3a2d1cd1d8c1ec17f7579727e88e5cb6))
+ - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522). ([9a83f121](https://github.com/firebase/flutterfire/commit/9a83f1219e33090bc8dbdd9bf26316e7fc6e7979))
+ - **FIX**: reinstate Analytics screen navigation observer. (#7529). ([caf2986e](https://github.com/firebase/flutterfire/commit/caf2986ec76b0d761c2ef863af4c16f02fc4638f))
+ - **FIX**: userId can be null (#7545). ([0d3b523c](https://github.com/firebase/flutterfire/commit/0d3b523c3a2d1cd1d8c1ec17f7579727e88e5cb6))
 
 ## 9.0.2
 
@@ -27,7 +156,7 @@
 
 > Note: This release has breaking changes.
 
-As part of our on-going work for [#6769](https://github.com/FirebaseExtended/flutterfire/issues/6979) this is our Firebase Analytics rework changes.
+As part of our on-going work for [#6769](https://github.com/firebase/flutterfire/issues/6979) this is our Firebase Analytics rework changes.
 
 Overall, Firebase Analytics has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
 documentation and updating unit and end-to-end tests.

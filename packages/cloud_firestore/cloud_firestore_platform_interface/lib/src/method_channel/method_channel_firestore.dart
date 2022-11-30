@@ -4,8 +4,11 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+// TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
+// ignore: unnecessary_import
 import 'dart:typed_data';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_load_bundle_task.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query_snapshot.dart';
@@ -18,8 +21,8 @@ import 'method_channel_document_reference.dart';
 import 'method_channel_query.dart';
 import 'method_channel_transaction.dart';
 import 'method_channel_write_batch.dart';
-import 'utils/firestore_message_codec.dart';
 import 'utils/exception.dart';
+import 'utils/firestore_message_codec.dart';
 
 /// The entry point for accessing a Firestore.
 ///
@@ -107,16 +110,20 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         FirebaseFirestorePlatform.instance,
         data!,
       );
-    } catch (e) {
+    } catch (e, stack) {
       if (e.toString().contains('Named query has not been found')) {
-        throw FirebaseException(
+        Error.throwWithStackTrace(
+          FirebaseException(
             plugin: 'cloud_firestore',
             code: 'non-existent-named-query',
-            message:
-                'Named query has not been found. Please check it has been loaded properly via loadBundle().');
+            message: 'Named query has not been found. '
+                'Please check it has been loaded properly via loadBundle().',
+          ),
+          stack,
+        );
       }
 
-      throw convertPlatformException(e);
+      convertPlatformException(e, stack);
     }
   }
 
@@ -130,8 +137,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           .invokeMethod<void>('Firestore#clearPersistence', <String, dynamic>{
         'firestore': this,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -160,8 +167,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           .invokeMethod<void>('Firestore#disableNetwork', <String, dynamic>{
         'firestore': this,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -177,14 +184,14 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           .invokeMethod<void>('Firestore#enableNetwork', <String, dynamic>{
         'firestore': this,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
   @override
   Stream<void> snapshotsInSync() {
-    StreamSubscription<dynamic>? snapshotStream;
+    StreamSubscription<dynamic>? snapshotStreamSubscription;
     late StreamController<void> controller; // ignore: close_sinks
 
     controller = StreamController<void>.broadcast(
@@ -192,20 +199,18 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         final observerId = await MethodChannelFirebaseFirestore.channel
             .invokeMethod<String>('SnapshotsInSync#setup');
 
-        snapshotStream =
+        snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId!)
-                .receiveBroadcastStream(
-          <String, dynamic>{
-            'firestore': this,
-          },
-        ).listen((event) {
-          controller.add(null);
-        }, onError: (error, stack) {
-          controller.addError(convertPlatformException(error), stack);
-        });
+                .receiveGuardedBroadcastStream(
+          arguments: <String, dynamic>{'firestore': this},
+          onError: convertPlatformException,
+        ).listen(
+          (event) => controller.add(null),
+          onError: controller.addError,
+        );
       },
       onCancel: () {
-        snapshotStream?.cancel();
+        snapshotStreamSubscription?.cancel();
       },
     );
 
@@ -216,6 +221,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   Future<T> runTransaction<T>(
     TransactionHandler<T> transactionHandler, {
     Duration timeout = const Duration(seconds: 30),
+    int maxAttempts = 5,
   }) async {
     assert(timeout.inMilliseconds > 0,
         'Transaction timeout must be more than 0 milliseconds');
@@ -224,8 +230,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         await MethodChannelFirebaseFirestore.channel.invokeMethod<String>(
       'Transaction#create',
     );
-
-    StreamSubscription<dynamic> snapshotStream;
 
     Completer<T> completer = Completer();
 
@@ -237,8 +241,14 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       const StandardMethodCodec(FirestoreMessageCodec()),
     );
 
-    snapshotStream = eventChannel.receiveBroadcastStream(
-      <String, dynamic>{'firestore': this, 'timeout': timeout.inMilliseconds},
+    final snapshotStreamSubscription =
+        eventChannel.receiveGuardedBroadcastStream(
+      arguments: <String, dynamic>{
+        'firestore': this,
+        'timeout': timeout.inMilliseconds,
+        'maxAttempts': maxAttempts,
+      },
+      onError: convertPlatformException,
     ).listen(
       (event) async {
         if (event['error'] != null) {
@@ -292,9 +302,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       },
     );
 
-    return completer.future.whenComplete(() {
-      snapshotStream.cancel();
-    });
+    return completer.future.whenComplete(snapshotStreamSubscription.cancel);
   }
 
   @override
@@ -306,8 +314,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       await channel.invokeMethod<void>('Firestore#terminate', <String, dynamic>{
         'firestore': this,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -318,8 +326,21 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           'Firestore#waitForPendingWrites', <String, dynamic>{
         'firestore': this,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<void> setIndexConfiguration(String indexConfiguration) async {
+    try {
+      await channel.invokeMethod<void>(
+          'Firestore#setIndexConfiguration', <String, dynamic>{
+        'firestore': this,
+        'indexConfiguration': indexConfiguration,
+      });
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 }

@@ -13,27 +13,25 @@ void main() {
     test('should throw any exception', () async {
       AssertionError assertionError = AssertionError();
 
-      try {
-        throw convertPlatformException(assertionError);
-      } on FirebaseAuthException catch (_) {
-        fail('should have thrown the original exception');
-      } catch (_) {
-        return;
-      }
+      expect(
+        () => convertPlatformException(assertionError, StackTrace.empty),
+        throwsA(assertionError),
+      );
     });
 
     test('should catch a [PlatformException] and throw a [FirebaseException]',
         () async {
       PlatformException platformException = PlatformException(code: 'UNKNOWN');
-      try {
-        throw convertPlatformException(platformException);
-      } on FirebaseAuthException catch (_) {
-        return;
-      } catch (_) {
-        fail('should have thrown an FirebaseAuthException');
-      }
+
+      expect(
+        () => convertPlatformException(platformException, StackTrace.empty),
+        throwsA(
+          isA<FirebaseAuthException>().having((e) => e.code, 'code', 'unknown'),
+        ),
+      );
     });
   });
+
   group('platformExceptionToFirebaseAuthException()', () {
     test('sets code to default value', () {
       AuthCredential authCredential = const AuthCredential(

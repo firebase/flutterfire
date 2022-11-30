@@ -94,7 +94,7 @@ abstract class DocumentReference<T extends Object?> {
 class _JsonDocumentReference
     implements DocumentReference<Map<String, dynamic>> {
   _JsonDocumentReference(this.firestore, this._delegate) {
-    DocumentReferencePlatform.verifyExtends(_delegate);
+    DocumentReferencePlatform.verify(_delegate);
   }
 
   @override
@@ -190,7 +190,7 @@ class _JsonDocumentReference
       other.path == path;
 
   @override
-  int get hashCode => hashValues(firestore, path);
+  int get hashCode => Object.hash(firestore, path);
 
   @override
   String toString() => 'DocumentReference<Map<String, dynamic>>($path)';
@@ -307,7 +307,7 @@ class _WithConverterDocumentReference<T extends Object?>
       other._toFirestore == _toFirestore;
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         runtimeType,
         _originalDocumentReference,
         _fromFirestore,

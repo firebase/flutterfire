@@ -17,6 +17,8 @@ class NotificationSettings {
       required this.lockScreen,
       required this.notificationCenter,
       required this.showPreviews,
+      required this.timeSensitive,
+      required this.criticalAlert,
       required this.sound});
 
   /// Whether or not messages containing a notification will alert the user.
@@ -32,6 +34,17 @@ class NotificationSettings {
 
   /// The overall notification authorization status for the user.
   final AuthorizationStatus authorizationStatus;
+
+  /// The setting that indicates the system treats the notification as time-sensitive.
+  ///
+  /// Apple devices only.
+  final AppleNotificationSetting timeSensitive;
+
+  /// Whether or not "critical alerts" are permitted, i.e., alerts that will be
+  /// shown as highest priority, overriding the phone's focus and mute settings.
+  ///
+  /// Apple devices only.
+  final AppleNotificationSetting criticalAlert;
 
   /// Whether or not messages containing a notification can update the application badge.
   ///

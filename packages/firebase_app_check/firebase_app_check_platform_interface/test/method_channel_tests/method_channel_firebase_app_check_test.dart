@@ -67,13 +67,18 @@ void main() {
     });
 
     test('activate', () async {
-      await appCheck.activate(webRecaptchaSiteKey: 'test-key');
+      await appCheck.activate(
+        webRecaptchaSiteKey: 'test-key',
+      );
       expect(
         methodCallLogger,
         <Matcher>[
           isMethodCall(
             'FirebaseAppCheck#activate',
-            arguments: {'appName': defaultFirebaseAppName},
+            arguments: {
+              'appName': defaultFirebaseAppName,
+              'androidProvider': 'playIntegrity'
+            },
           ),
         ],
       );

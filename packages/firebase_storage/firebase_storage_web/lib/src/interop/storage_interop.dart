@@ -5,13 +5,66 @@
 
 // ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, public_member_api_docs
 
-@JS('firebase.storage')
+@JS('firebase_storage')
 library firebase.storage_interop;
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:js/js.dart';
 
-@JS('Storage')
+@JS()
+external StorageJsImpl getStorage([AppJsImpl? app, String? bucketUrl]);
+
+@JS()
+external void connectStorageEmulator(
+    StorageJsImpl storage, String host, int port,
+    [EmulatorOptions? options]);
+
+@JS()
+external PromiseJsImpl<void> deleteObject(ReferenceJsImpl ref);
+
+@JS()
+external PromiseJsImpl<String> getDownloadURL(ReferenceJsImpl ref);
+
+@JS()
+external PromiseJsImpl<String> getBlob(ReferenceJsImpl ref,
+    [int? maxDownloadSizeBytes]);
+
+@JS()
+external PromiseJsImpl<List<String>> getBytes(ReferenceJsImpl ref,
+    [int? maxDownloadSizeBytes]);
+
+@JS()
+external PromiseJsImpl<FullMetadataJsImpl> getMetadata(ReferenceJsImpl ref);
+
+@JS()
+external PromiseJsImpl<ListResultJsImpl> list(ReferenceJsImpl ref,
+    [ListOptionsJsImpl? listOptions]);
+
+@JS()
+external PromiseJsImpl<ListResultJsImpl> listAll(ReferenceJsImpl ref);
+
+@JS()
+/* if 2nd arg is `url`, first arg has to be StorageJsImpl */
+/* if 2nd arg is `path`, first arg can be StorageJsImpl || ReferenceJsImpl */
+external ReferenceJsImpl ref(Object storageOrRef, [String? urlOrPath]);
+
+@JS()
+external PromiseJsImpl<FullMetadataJsImpl> updateMetadata(
+    ReferenceJsImpl ref, SettableMetadataJsImpl settableMetadata);
+
+@JS()
+external UploadTaskJsImpl uploadBytesResumable(
+    ReferenceJsImpl ref, dynamic /* Blob | Uint8Array | ArrayBuffer */ data,
+    [UploadMetadataJsImpl? metadata]);
+
+@JS()
+@anonymous
+class EmulatorOptions {
+  external factory EmulatorOptions({mockUserToken});
+  external String get mockUserToken;
+}
+
+@JS('FirebaseStorage')
 abstract class StorageJsImpl {
   external AppJsImpl get app;
   external set app(AppJsImpl a);
@@ -19,14 +72,9 @@ abstract class StorageJsImpl {
   external set maxOperationRetryTime(int t);
   external int get maxUploadRetryTime;
   external set maxUploadRetryTime(int t);
-  external ReferenceJsImpl ref([String? path]);
-  external ReferenceJsImpl refFromURL(String url);
-  external void setMaxOperationRetryTime(int time);
-  external void setMaxUploadRetryTime(int time);
-  external void useEmulator(String host, int port);
 }
 
-@JS('Reference')
+@JS('StorageReference')
 abstract class ReferenceJsImpl {
   external String get bucket;
   external set bucket(String s);
@@ -40,19 +88,9 @@ abstract class ReferenceJsImpl {
   external set root(ReferenceJsImpl r);
   external StorageJsImpl get storage;
   external set storage(StorageJsImpl s);
-  external ReferenceJsImpl child(String path);
-  external PromiseJsImpl<void> delete();
-  external PromiseJsImpl<String> getDownloadURL();
-  external PromiseJsImpl<FullMetadataJsImpl> getMetadata();
-  external PromiseJsImpl<ListResultJsImpl> list([ListOptionsJsImpl? options]);
-  external PromiseJsImpl<ListResultJsImpl> listAll();
-  external UploadTaskJsImpl put(dynamic blob, [UploadMetadataJsImpl? metadata]);
-  external UploadTaskJsImpl putString(String value,
-      [String? format, UploadMetadataJsImpl? metadata]);
+
   @override
   external String toString();
-  external PromiseJsImpl<Object?> updateMetadata(
-      SettableMetadataJsImpl metadata);
 }
 
 //@JS('FullMetadata')
@@ -69,6 +107,10 @@ class FullMetadataJsImpl extends UploadMetadataJsImpl {
       dynamic customMetadata});
 
   external String get bucket;
+  // TODO - new API.
+  external List<String>? get downloadTokens;
+  // TODO - new API.
+  external ReferenceJsImpl? get ref;
   external String? get fullPath;
   external String? get generation;
   external String? get metageneration;
@@ -187,11 +229,4 @@ class StringFormat {
   external static String get DATA_URL;
 }
 
-// ignore: avoid_classes_with_only_static_members
-/// An event that is triggered on a task.
-///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.storage#.TaskEvent>.
-@JS()
-abstract class TaskEvent {
-  external static String get STATE_CHANGED;
-}
+external String get TaskEvent;

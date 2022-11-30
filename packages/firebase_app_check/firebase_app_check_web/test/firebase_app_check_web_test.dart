@@ -31,7 +31,9 @@ void main() {
     });
 
     test('activate', () async {
-      await appCheck.activate(webRecaptchaSiteKey: 'key');
+      await appCheck.activate(
+        webRecaptchaSiteKey: 'key',
+      );
       verify(appCheck.activate(webRecaptchaSiteKey: 'key'));
       verifyNoMoreInteractions(appCheck);
     });

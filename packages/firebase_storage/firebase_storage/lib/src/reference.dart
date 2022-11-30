@@ -9,7 +9,7 @@ part of firebase_storage;
 /// upload, download, and delete objects, as well as get/set object metadata.
 class Reference {
   Reference._(this.storage, this._delegate) {
-    ReferencePlatform.verifyExtends(_delegate);
+    ReferencePlatform.verify(_delegate);
   }
 
   ReferencePlatform _delegate;
@@ -202,7 +202,7 @@ class Reference {
       other.storage == storage;
 
   @override
-  int get hashCode => hashValues(storage, fullPath);
+  int get hashCode => Object.hash(storage, fullPath);
 
   @override
   String toString() =>

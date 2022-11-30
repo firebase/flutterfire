@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
@@ -14,14 +18,14 @@ class ValidatorGenerator extends Generator {
         final validators = field.metadata.where(isValidatorAnnotation);
 
         for (final validator in validators) {
-          yield '${validator.toSource().replaceFirst('@', 'const ')}.validate(instance.${field.name}, "${field.name}");';
+          yield "${validator.toSource().replaceFirst('@', 'const ')}.validate(instance.${field.name}, '${field.name}');";
         }
       }).toList();
 
       if (validations.isNotEmpty) {
         buffer
           ..write(
-            '_\$assert${classElement.name}(${classElement.name} instance) {',
+            'void _\$assert${classElement.name}(${classElement.name} instance) {',
           )
           ..writeAll(validations)
           ..write('}');
@@ -36,9 +40,9 @@ bool isValidatorAnnotation(ElementAnnotation annotation) {
   final element = annotation.element;
   if (element == null || element is! ConstructorElement) return false;
 
-  return element.enclosingElement.allSupertypes.any((superType) {
-    return superType.element.name == 'Validator' &&
-        superType.element.librarySource.uri.toString() ==
+  return element.enclosingElement3.allSupertypes.any((superType) {
+    return superType.element2.name == 'Validator' &&
+        superType.element2.librarySource.uri.toString() ==
             'package:cloud_firestore_odm/src/validator.dart';
   });
 }

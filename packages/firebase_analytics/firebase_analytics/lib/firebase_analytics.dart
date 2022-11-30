@@ -4,16 +4,13 @@
 
 library firebase_analytics;
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 export 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart'
     show AnalyticsEventItem, AnalyticsCallOptions;
-
+export 'observer.dart';
 part 'src/firebase_analytics.dart';
-part 'src/observer.dart';

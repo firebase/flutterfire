@@ -3,19 +3,26 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:collection/collection.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/utils/pigeon_helper.dart';
+import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseAuthException]
 /// if it was intentionally caught on the native platform.
-Object convertPlatformException(Object exception) {
+Never convertPlatformException(Object exception, StackTrace stackTrace) {
   if (exception is! PlatformException) {
-    // TODO(rrousselGit): Is this dead code?
-    return exception;
+    Error.throwWithStackTrace(exception, stackTrace);
   }
 
-  return platformExceptionToFirebaseAuthException(exception);
+  Error.throwWithStackTrace(
+    platformExceptionToFirebaseAuthException(exception),
+    stackTrace,
+  );
 }
 
 /// Converts a [PlatformException] into a [FirebaseAuthException].
@@ -38,6 +45,10 @@ FirebaseException platformExceptionToFirebaseAuthException(
 
   if (details != null) {
     code = details['code'] ?? code;
+    if (code == 'second-factor-required') {
+      return parseMultiFactorError(details);
+    }
+
     message = details['message'] ?? message;
 
     if (details['additionalData'] != null) {
@@ -60,5 +71,62 @@ FirebaseException platformExceptionToFirebaseAuthException(
     message: message,
     email: email,
     credential: credential,
+  );
+}
+
+FirebaseAuthMultiFactorExceptionPlatform parseMultiFactorError(
+    Map<String, Object?> details) {
+  final code = details['code'] as String?;
+  final message = details['message'] as String?;
+  final additionalData = details['additionalData'] as Map<Object?, Object?>?;
+
+  if (additionalData == null) {
+    throw FirebaseAuthException(
+      code: "Can't parse multi factor error",
+      message: message,
+    );
+  }
+
+  final pigeonMultiFactorInfo =
+      (additionalData['multiFactorHints'] as List<Object?>? ?? [])
+          .whereNotNull()
+          .map(
+            PigeonMultiFactorInfo.decode,
+          )
+          .toList();
+
+  final multiFactorInfo = multiFactorInfoPigeonToObject(
+    pigeonMultiFactorInfo,
+  );
+
+  final auth = MethodChannelFirebaseAuth
+      .methodChannelFirebaseAuthInstances[additionalData['appName']];
+
+  if (auth == null) {
+    throw FirebaseAuthException(
+      code: code ?? 'Unknown',
+      message: message,
+    );
+  }
+
+  final sessionId = additionalData['multiFactorSessionId'] as String?;
+  final resolverId = additionalData['multiFactorResolverId'] as String?;
+  if (sessionId == null || resolverId == null) {
+    throw FirebaseAuthException(
+      code: "Can't parse multi factor error",
+      message: message,
+    );
+  }
+  final multiFactorResolver = MethodChannelMultiFactorResolver(
+    multiFactorInfo,
+    MultiFactorSession(sessionId),
+    resolverId,
+    auth,
+  );
+
+  return FirebaseAuthMultiFactorExceptionPlatform(
+    code: code ?? 'Unknown',
+    message: message,
+    resolver: multiFactorResolver,
   );
 }

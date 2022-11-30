@@ -5,6 +5,7 @@
 
 import 'dart:async';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:flutter/services.dart';
@@ -40,8 +41,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
           },
         },
       );
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -56,8 +57,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
           'data': data,
         },
       );
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -77,8 +78,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
       );
 
       return DocumentSnapshotPlatform(firestore, _pointer.path, data!);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -89,8 +90,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         'DocumentReference#delete',
         <String, dynamic>{'firestore': firestore, 'reference': this},
       );
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -103,35 +104,37 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     late StreamController<DocumentSnapshotPlatform>
         controller; // ignore: close_sinks
 
-    StreamSubscription<dynamic>? snapshotStream;
+    StreamSubscription<dynamic>? snapshotStreamSubscription;
     controller = StreamController<DocumentSnapshotPlatform>.broadcast(
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.channel
             .invokeMethod<String>('DocumentReference#snapshots');
-        snapshotStream =
+        snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId!)
-                .receiveBroadcastStream(
-          <String, dynamic>{
+                .receiveGuardedBroadcastStream(
+          arguments: <String, dynamic>{
             'reference': this,
             'includeMetadataChanges': includeMetadataChanges,
           },
-        ).listen((snapshot) {
-          controller.add(
-            DocumentSnapshotPlatform(
-              firestore,
-              snapshot['path'],
-              <String, dynamic>{
-                'data': snapshot['data'],
-                'metadata': snapshot['metadata'],
-              },
-            ),
-          );
-        }, onError: (error, stack) {
-          controller.addError(convertPlatformException(error), stack);
-        });
+          onError: convertPlatformException,
+        ).listen(
+          (snapshot) {
+            controller.add(
+              DocumentSnapshotPlatform(
+                firestore,
+                snapshot['path'],
+                <String, dynamic>{
+                  'data': snapshot['data'],
+                  'metadata': snapshot['metadata'],
+                },
+              ),
+            );
+          },
+          onError: controller.addError,
+        );
       },
       onCancel: () {
-        snapshotStream?.cancel();
+        snapshotStreamSubscription?.cancel();
       },
     );
 

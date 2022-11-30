@@ -52,13 +52,21 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   /// On web, provide the reCAPTCHA v3 Site Key which can be found in the
   /// Firebase Console. For more information, see
   /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web).
-  Future<void> activate({String? webRecaptchaSiteKey}) {
-    return _delegate.activate(webRecaptchaSiteKey: webRecaptchaSiteKey);
+  ///
+  /// On Android, the default provider is "play integrity". If you wish to set the provider to "safety net" or "debug", you may set the `androidProvider` property using the `AndroidProvider` enum
+  /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
+  Future<void> activate(
+      {String? webRecaptchaSiteKey,
+      AndroidProvider androidProvider = AndroidProvider.playIntegrity}) {
+    return _delegate.activate(
+        webRecaptchaSiteKey: webRecaptchaSiteKey,
+        androidProvider: androidProvider);
   }
 
-  /// Get the current App Check token. Attaches to the most recent in-flight
-  /// request if one is present. Returns null if no token is present and no
-  /// token requests are in-flight.
+  /// Get the current App Check token.
+  ///
+  /// Attaches to the most recent in-flight request if one is present. Returns
+  /// null if no token is present and no token requests are in-flight.
   ///
   /// If `forceRefresh` is true, will always try to fetch a fresh token. If
   /// false, will use a cached token if found in storage.

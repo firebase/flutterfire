@@ -1,12 +1,153 @@
+## 3.0.6
+
+ - Update a dependency to the latest release.
+
+## 3.0.5
+
+ - Update a dependency to the latest release.
+
+## 3.0.4
+
+ - Update a dependency to the latest release.
+
+## 3.0.3
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+ - **DOCS**: Use `PlatformDispatcher.instance.onError` for async errors. Update Crashlytics example app to use "flutterfire-e2e-tests" project. ([#9669](https://github.com/firebase/flutterfire/issues/9669)). ([8a0caa05](https://github.com/firebase/flutterfire/commit/8a0caa05d5abf6fef5bf0e654654dcd0b6ec874a))
+
+## 3.0.2
+
+ - Update a dependency to the latest release.
+
+## 3.0.1
+
+ - Update a dependency to the latest release.
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 2.9.0
+
+ - **FEAT**: Send Flutter Build Id to Crashlytics to get --split-debug-info working ([#9409](https://github.com/firebase/flutterfire/issues/9409)). ([17931f30](https://github.com/firebase/flutterfire/commit/17931f307434c88e87318c97e2d81c7eb3219ed9))
+
+## 2.8.13
+
+ - **FIX**: parameter `information` accepts `Iterable<Object>` for further diagnostic logging information ([#9678](https://github.com/firebase/flutterfire/issues/9678)). ([2d2b5b03](https://github.com/firebase/flutterfire/commit/2d2b5b03901b68976047e5f2888beb0296f4af45))
+ - **DOCS**: add note for `crash()` that the app needs to be restarted to send a crash report ([#9586](https://github.com/firebase/flutterfire/issues/9586)). ([3a3e5212](https://github.com/firebase/flutterfire/commit/3a3e52123f04eac6d73c21474155e6e67cb357c1))
+
+## 2.8.12
+
+ - Update a dependency to the latest release.
+
+## 2.8.11
+
+ - Update a dependency to the latest release.
+
+## 2.8.10
+
+ - **FIX**: Replace null or empty stack traces with the current stack trace ([#9490](https://github.com/firebase/flutterfire/issues/9490)). ([c54a95f3](https://github.com/firebase/flutterfire/commit/c54a95f365c5a61d2df52fb89467ab6103aa0146))
+
+## 2.8.9
+
+ - Update a dependency to the latest release.
+
+## 2.8.8
+
+ - Update a dependency to the latest release.
+
+## 2.8.7
+
+ - Update a dependency to the latest release.
+
+## 2.8.6
+
+ - Update a dependency to the latest release.
+
+## 2.8.5
+
+ - **FIX**: `[core/duplicate-app]` exception when running the example ([#8991](https://github.com/firebase/flutterfire/issues/8991)). ([c70e66a5](https://github.com/firebase/flutterfire/commit/c70e66a546cf9236e728796c5b59a3d4e39caeb2))
+
+## 2.8.4
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 2.8.3
+
+ - Update a dependency to the latest release.
+
+## 2.8.2
+
+ - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8731). ([c534eb04](https://github.com/firebase/flutterfire/commit/c534eb045a2ced454fdc803d438c3cd0f0b8097a))
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **FIX**: fix deprecation warning in Android (#8903). ([f2e03484](https://github.com/firebase/flutterfire/commit/f2e03484f99bd2efcb065d31721b9a2b6e801bf5))
+ - **DOCS**: point to "firebase.google" domain for hyperlinks in the usage section of `README.md` files (for the missing packages) (#8818). ([5bda8c92](https://github.com/firebase/flutterfire/commit/5bda8c92be1651a941d1285d36e885ee0b967b11))
+
+## 2.8.1
+
+ - **DOCS**: use camel case style for "FlutterFire" in `README.md` (#8750). ([e9e1c1bf](https://github.com/firebase/flutterfire/commit/e9e1c1bf19d32e5b8967da162b03d0254843a836))
+
+## 2.8.0
+
+ - **REFACTOR**: remove deprecated `Tasks.call` for android and replace with `TaskCompletionSource`. ([#8582](https://github.com/firebase/flutterfire/issues/8582)). ([9539c92a](https://github.com/firebase/flutterfire/commit/9539c92a53f73bf57b9c61ae9e0ce5042b4b8ca4))
+ - **FIX**: symlink `ExceptionModel_Platform.h` to macOS. ([#8570](https://github.com/firebase/flutterfire/issues/8570)). ([9991b7a5](https://github.com/firebase/flutterfire/commit/9991b7a5389738a7bbba8f2210f8379b887d90e7))
+ - **FEAT**: bump Firebase Android SDK to 30.0.0 ([#8617](https://github.com/firebase/flutterfire/issues/8617)). ([72158aaf](https://github.com/firebase/flutterfire/commit/72158aaf9721dbf5f20c362f0c99853273507538))
+
+## 2.7.2
+
+ - Update a dependency to the latest release.
+
+## 2.7.1
+
+ - **FIX**: re-add support for `recordFlutterFatalError` method from previous EAP API (#8550). ([8ef8b55c](https://github.com/firebase/flutterfire/commit/8ef8b55c113f24abac783170723c7f784f5d1fe5))
+
+## 2.7.0
+
+ - **FEAT**: add support for on-demand exception reporting (#8540). ([dfec7d60](https://github.com/firebase/flutterfire/commit/dfec7d60592abe0a5c6523e13feabffb8b03020b))
+
+## 2.6.3
+
+ - Update a dependency to the latest release.
+
+## 2.6.2
+
+ - Update a dependency to the latest release.
+
+## 2.6.1
+
+ - **FIX**: Exit the add crashlytics upload-symbols script if the required json isn't present. ([94077929](https://github.com/firebase/flutterfire/commit/940779290a3039181a92567fe8492a720af899e1))
+
+## 2.6.0
+
+ - **FEAT**: add automatic Crashlytics symbol uploads for iOS & macOS apps (#8157). ([c4a3eaa7](https://github.com/firebase/flutterfire/commit/c4a3eaa7200d924f9ec71370dd3c875813804935))
+
+## 2.5.3
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 2.5.2
+
+ - Update a dependency to the latest release.
+
+## 2.5.1
+
+ - Fixed macOS project not compiling by symlinking missing header file: `Crashlytics_Platform.h`
+
+## 2.5.0
+
+ - **FEAT**: Set the dSYM file format through the Crashlytic's podspec to allow symbolicating crash reports. (#7872). ([d5d7e26a](https://github.com/firebase/flutterfire/commit/d5d7e26a4828963f375b656c6e1a397d26aac980))
+
 ## 2.4.5
 
- - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/firebase/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
 
 ## 2.4.4
 
- - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
- - **FIX**: set build id as not required, to allow Dart default app initialization (#7594). ([c15fdda3](https://github.com/FirebaseExtended/flutterfire/commit/c15fdda33b447ddd0c8e066e9c9ec7cabf9cd6fd))
- - **FIX**: Return app constants for default app only on `Android`. (#7592). ([b803c425](https://github.com/FirebaseExtended/flutterfire/commit/b803c425b420acae155fea93a62ab9b3de4556a5))
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/firebase/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **FIX**: set build id as not required, to allow Dart default app initialization (#7594). ([c15fdda3](https://github.com/firebase/flutterfire/commit/c15fdda33b447ddd0c8e066e9c9ec7cabf9cd6fd))
+ - **FIX**: Return app constants for default app only on `Android`. (#7592). ([b803c425](https://github.com/firebase/flutterfire/commit/b803c425b420acae155fea93a62ab9b3de4556a5))
 
 ## 2.4.3
 

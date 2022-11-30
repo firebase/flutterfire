@@ -159,7 +159,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
         'port': emulatorPort
       });
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 

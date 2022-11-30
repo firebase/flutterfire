@@ -43,7 +43,7 @@ void main() {
       }
     });
 
-    group('verifyExtends()', () {
+    group('verify()', () {
       test('calls successfully', () {
         try {
           RecaptchaVerifierFactoryPlatform.verifyExtends(
@@ -68,7 +68,9 @@ void main() {
     group('delegateFor()', () {
       test('throws UnimplementedError error', () async {
         try {
-          recaptchaVerifierFactoryPlatform.delegateFor();
+          recaptchaVerifierFactoryPlatform.delegateFor(
+            auth: FirebaseAuthPlatform.instance,
+          );
         } on UnimplementedError catch (e) {
           expect(e.message, equals('delegateFor() is not implemented'));
           return;

@@ -16,18 +16,28 @@ class SettableMetadata {
   });
 
   /// Served as the 'Cache-Control' header on object download.
+  ///
+  /// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control.
   final String? cacheControl;
 
-  /// Served as the 'Cache-Disposition' header on object download.
+  /// Served as the 'Content-Disposition' header on object download.
+  ///
+  /// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition.
   final String? contentDisposition;
 
   /// Served as the 'Content-Encoding' header on object download.
+  ///
+  /// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding.
   final String? contentEncoding;
 
   /// Served as the 'Content-Language' header on object download.
+  ///
+  /// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language.
   final String? contentLanguage;
 
   /// Served as the 'Content-Type' header on object download.
+  ///
+  /// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type.
   final String? contentType;
 
   /// Additional user-defined custom metadata.

@@ -8,7 +8,7 @@ part of firebase_storage;
 /// A [TaskSnapshot] is returned as the result or on-going process of a [Task].
 class TaskSnapshot {
   TaskSnapshot._(this.storage, this._delegate) {
-    TaskSnapshotPlatform.verifyExtends(_delegate);
+    TaskSnapshotPlatform.verify(_delegate);
   }
 
   TaskSnapshotPlatform _delegate;
@@ -46,7 +46,7 @@ class TaskSnapshot {
       other is TaskSnapshot && other.ref == ref && other.storage == storage;
 
   @override
-  int get hashCode => hashValues(storage, ref);
+  int get hashCode => Object.hash(storage, ref);
 
   @override
   String toString() => '$TaskSnapshot(ref: $ref, state: $state)';

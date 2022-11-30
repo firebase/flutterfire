@@ -10,6 +10,7 @@ class DynamicLinkParameters {
   DynamicLinkParameters({
     required this.link,
     required this.uriPrefix,
+    this.longDynamicLink,
     this.androidParameters,
     this.iosParameters,
     this.googleAnalyticsParameters,
@@ -52,11 +53,17 @@ class DynamicLinkParameters {
   /// Social Meta Tag parameters for a generated Dynamic Link URL.
   final SocialMetaTagParameters? socialMetaTagParameters;
 
+  /// Set the long Dynamic Link when building a short link (i.e. using `buildShortLink()` API). This allows the user to append
+  /// additional query strings that would otherwise not be possible (e.g. "ofl" parameter). This will not work if using buildLink() API.
+  final Uri? longDynamicLink;
+
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() {
     return <String, dynamic>{
       'uriPrefix': uriPrefix,
       'link': link.toString(),
+      if (longDynamicLink != null)
+        'longDynamicLink': longDynamicLink.toString(),
       if (androidParameters != null)
         'androidParameters': androidParameters?.asMap(),
       if (googleAnalyticsParameters != null)
@@ -74,6 +81,6 @@ class DynamicLinkParameters {
 
   @override
   String toString() {
-    return '$DynamicLinkParameters($asMap)';
+    return '$DynamicLinkParameters(${asMap()})';
   }
 }

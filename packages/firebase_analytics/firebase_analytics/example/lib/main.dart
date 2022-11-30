@@ -113,6 +113,20 @@ class _MyHomePageState extends State<MyHomePage> {
     setMessage('setUserProperty succeeded');
   }
 
+  Future<void> _testAppInstanceId() async {
+    String? id = await widget.analytics.appInstanceId;
+    if (id != null) {
+      setMessage('appInstanceId succeeded: $id');
+    } else {
+      setMessage('appInstanceId failed, consent declined');
+    }
+  }
+
+  Future<void> _testResetAnalyticsData() async {
+    await widget.analytics.resetAnalyticsData();
+    setMessage('resetAnalyticsData succeeded');
+  }
+
   AnalyticsEventItem itemCreator() {
     return AnalyticsEventItem(
       affiliation: 'affil',
@@ -302,6 +316,14 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialButton(
             onPressed: _testSetUserProperty,
             child: const Text('Test setUserProperty'),
+          ),
+          MaterialButton(
+            onPressed: _testAppInstanceId,
+            child: const Text('Test appInstanceId'),
+          ),
+          MaterialButton(
+            onPressed: _testResetAnalyticsData,
+            child: const Text('Test resetAnalyticsData'),
           ),
           Text(
             _message,

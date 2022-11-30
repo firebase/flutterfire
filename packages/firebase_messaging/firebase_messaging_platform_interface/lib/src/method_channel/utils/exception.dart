@@ -6,35 +6,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
-/// Catches a [PlatformException] and converts it into a [FirebaseException] if
-/// it was intentionally caught on the native platform.
-Exception convertPlatformException(Object exception) {
-  if (exception is! Exception || exception is! PlatformException) {
-    throw exception;
-  }
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 
-  return platformExceptionToFirebaseException(exception);
-}
-
-/// Converts a [PlatformException] into a [FirebaseException].
+/// Catches a [PlatformException] and returns an [Exception].
 ///
-/// A [PlatformException] can only be converted to a [FirebaseException] if the
-/// `details` of the exception exist. Firebase returns specific codes and messages
-/// which can be converted into user friendly exceptions.
-FirebaseException platformExceptionToFirebaseException(
-    PlatformException platformException) {
-  Map<String, String>? details = platformException.details != null
-      ? Map<String, String>.from(platformException.details)
-      : null;
-
-  String code = 'unknown';
-  String? message = platformException.message;
-
-  if (details != null) {
-    code = details['code'] ?? code;
-    message = details['message'] ?? message;
-  }
-
-  return FirebaseException(
-      plugin: 'firebase_messaging', code: code, message: message);
+/// If the [Exception] is a [PlatformException], a [FirebaseException] is returned.
+Never convertPlatformException(Object exception, StackTrace stackTrace) {
+  convertPlatformExceptionToFirebaseException(
+    exception,
+    stackTrace,
+    plugin: 'firebase_messaging',
+  );
 }

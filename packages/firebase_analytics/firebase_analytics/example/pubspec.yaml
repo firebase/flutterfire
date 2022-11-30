@@ -2,7 +2,7 @@ name: firebase_analytics_example
 description: Demonstrates how to use the firebase_analytics plugin.
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
@@ -14,6 +14,8 @@ dependencies:
     sdk: flutter
 
 dependency_overrides:
+  _flutterfire_internals:
+    path: ../../../_flutterfire_internals
   firebase_analytics_platform_interface:
     path: ../../firebase_analytics_platform_interface
   firebase_analytics_web:
@@ -24,14 +26,6 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_platform_interface
   firebase_core_web:
     path: ../../../firebase_core/firebase_core_web
-
-dev_dependencies:
-  drive: ^1.0.0-1.0.nullsafety.1
-  flutter_driver:
-    sdk: flutter
-  flutter_test:
-    sdk: flutter
-  test: any
 
 flutter:
   uses-material-design: true

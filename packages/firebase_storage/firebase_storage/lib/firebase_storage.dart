@@ -8,6 +8,8 @@ library firebase_storage;
 import 'dart:async';
 import 'dart:convert' show utf8, base64;
 import 'dart:io' show File;
+// TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
+// ignore: unnecessary_import
 import 'dart:typed_data' show Uint8List;
 
 // import 'package:flutter/foundation.dart';
@@ -16,7 +18,6 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
     show FirebasePluginPlatform;
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 
 import 'src/utils.dart';
 

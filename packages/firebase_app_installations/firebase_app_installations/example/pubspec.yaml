@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.16.0 <3.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -27,13 +27,15 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  firebase_core: ^1.10.0
+  firebase_core: ^2.3.0
   firebase_app_installations:
     path: ../
   flutter:
     sdk: flutter
 
 dependency_overrides:
+  _flutterfire_internals:
+    path: ../../../_flutterfire_internals
   firebase_core:
     path: ../../../firebase_core/firebase_core
   firebase_app_installations_web:
@@ -42,16 +44,12 @@ dependency_overrides:
     path: ../../firebase_app_installations_platform_interface
 
 dev_dependencies:
-  flutter_driver:
-    sdk: flutter
-
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
-  test: any
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

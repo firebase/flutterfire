@@ -3,6 +3,9 @@ targets:
     builders:
       cloud_firestore_odm_generator:
         enabled: true
+      json_serializable:
+        options:
+          create_field_map: true
 
 builders:
   cloud_firestore_odm_generator:
@@ -12,3 +15,4 @@ builders:
     auto_apply: dependents
     build_to: cache
     applies_builders: ["source_gen|combining_builder"]
+    required_inputs: [".freezed.dart"]

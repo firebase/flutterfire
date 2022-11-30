@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart' show protected;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -53,13 +54,24 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseAnalyticsPlatform.instance]
   static set instance(FirebaseAnalyticsPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 
   /// Enables delegates to create new instances of themselves
   FirebaseAnalyticsPlatform delegateFor({required FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
+  }
+
+  /// isSupported() informs web users whether
+  /// the browser supports Firebase.Analytics
+  Future<bool> isSupported() {
+    throw UnimplementedError('isSupported() is not implemented');
+  }
+
+  /// Retrieves the app instance id from the service.
+  Future<String?> getAppInstanceId() {
+    throw UnimplementedError('getAppInstanceId() is not implemented');
   }
 
   /// Logs the given event [name] with the given [parameters].
@@ -133,7 +145,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
 
   /// Adds parameters that will be set on every event logged from the SDK, including automatic ones.
   Future<void> setDefaultEventParameters(
-    Map<String, Object> defaultParameters,
+    Map<String, Object?>? defaultParameters,
   ) {
     throw UnimplementedError('setDefaultEventParameters() is not implemented');
   }

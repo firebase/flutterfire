@@ -10,15 +10,23 @@ class FirebaseWebService {
   /// The name which matches the Firebase JS Web SDK postfix.
   String name;
 
+  /// Naming of Firebase web products is different from Flutterfire plugins. This
+  /// property allows overriding of web naming to Flutterfire plugin naming.
+  String? override;
+
   /// Creates a new [FirebaseWebService].
-  FirebaseWebService._(this.name);
+  FirebaseWebService._(this.name, [this.override]);
 }
 
 /// The entry point for accessing Firebase.
 ///
 /// You can get an instance by calling [FirebaseCore.instance].
 class FirebaseCoreWeb extends FirebasePlatform {
-  static Map<String, FirebaseWebService> _services = {};
+  static Map<String, FirebaseWebService> _services = {
+    'core': FirebaseWebService._('app', 'core'),
+    'app-check': FirebaseWebService._('app-check', 'app_check'),
+    'remote-config': FirebaseWebService._('remote-config', 'remote_config'),
+  };
 
   /// Internally registers a Firebase Service to be initialized.
   static void registerService(String service) {
@@ -28,12 +36,6 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
   static void registerWith(Registrar registrar) {
     FirebasePlatform.instance = FirebaseCoreWeb();
-  }
-
-  /// Returns whether `requirejs` is within the global context (usually the
-  /// case in development).
-  bool get _isRequireJsDefined {
-    return context['require'] != null;
   }
 
   /// Returns the Firebase JS SDK Version to use.
@@ -75,107 +77,24 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
   /// Injects a `script` with a `src` dynamically into the head of the current
   /// document.
-  Future<void> _injectSrcScript(String src) async {
+  Future<void> _injectSrcScript(String src, String windowVar) async {
     ScriptElement script = ScriptElement();
     script.type = 'text/javascript';
-    script.src = src;
-    script.async = true;
+    script.crossOrigin = 'anonymous';
+    script.text = '''
+      window.ff_trigger_$windowVar = async (callback) => {
+        callback(await import("$src"));
+      };
+    ''';
+
     assert(document.head != null);
     document.head!.append(script);
-    await script.onLoad.first;
-  }
-
-  /// Initializes the Firebase JS SDKs by injecting them into the `head` of the
-  /// document when Firebase is initalized.
-  Future<void> _initializeCore() async {
-    // If Firebase is already available, core has already been initialized
-    // (or the user has added the scripts to their html file).
-    if (context['firebase'] != null) {
-      return;
-    }
-
-    String version = _firebaseSDKVersion;
-    List<String> ignored = _ignoredServiceScripts;
-
-    // This must be loaded first!
-    await _injectSrcScript(
-      'https://www.gstatic.com/firebasejs/$version/firebase-app.js',
-    );
-
-    await Future.wait(
-      _services.values.map((service) {
-        if (ignored.contains(service.name)) {
-          return Future.value();
-        }
-
-        return _injectSrcScript(
-          'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
-        );
-      }),
-    );
-  }
-
-  /// In development (or manually added), requirejs is added to the window.
-  ///
-  /// The Firebase JS SDKs define their modules via requirejs (if it exists),
-  /// otherwise they attach to the window. This code loads Firebase from
-  /// requirejs manually attaches it to the window.
-  Future<void> _initializeCoreRequireJs() async {
-    // If Firebase is already available, core has already been initialized
-    // (or the user has added the scripts to their html file).
-    if (context['firebase'] != null) {
-      return;
-    }
-
-    String version = _firebaseSDKVersion;
-    List<String> ignored = _ignoredServiceScripts;
-
-    // In dev, requirejs is loaded in
-    JsObject require = JsObject.fromBrowserObject(context['require']);
-    require.callMethod('config', [
-      JsObject.jsify({
-        'paths': {
-          '@firebase/app':
-              'https://www.gstatic.com/firebasejs/$version/firebase-app',
-          '@firebase/analytics':
-              'https://www.gstatic.com/firebasejs/$version/firebase-analytics',
-          '@firebase/app-check':
-              'https://www.gstatic.com/firebasejs/$version/firebase-app-check',
-          '@firebase/auth':
-              'https://www.gstatic.com/firebasejs/$version/firebase-auth',
-          '@firebase/firestore':
-              'https://www.gstatic.com/firebasejs/$version/firebase-firestore',
-          '@firebase/functions':
-              'https://www.gstatic.com/firebasejs/$version/firebase-functions',
-          '@firebase/messaging':
-              'https://www.gstatic.com/firebasejs/$version/firebase-messaging',
-          '@firebase/storage':
-              'https://www.gstatic.com/firebasejs/$version/firebase-storage',
-          '@firebase/database':
-              'https://www.gstatic.com/firebasejs/$version/firebase-database',
-          '@firebase/remote-config':
-              'https://www.gstatic.com/firebasejs/$version/firebase-remote-config',
-          '@firebase/performance':
-              'https://www.gstatic.com/firebasejs/$version/firebase-performance',
-          '@firebase/installations':
-              'https://www.gstatic.com/firebasejs/$version/firebase-installations',
-        },
-      })
-    ]);
-
     Completer completer = Completer();
 
-    List<String> services = ['@firebase/app'];
-    _services.values.forEach((service) {
-      if (!ignored.contains(service.name)) {
-        services.add('@firebase/${service.name}');
-      }
-    });
-
-    context.callMethod('require', [
-      JsObject.jsify(services),
-      (app) {
-        context['firebase'] = app;
+    context.callMethod('ff_trigger_$windowVar', [
+      (module) {
+        context[windowVar] = module;
+        context.deleteProperty('ff_trigger_$windowVar');
         completer.complete();
       }
     ]);
@@ -183,10 +102,38 @@ class FirebaseCoreWeb extends FirebasePlatform {
     await completer.future;
   }
 
+  /// Initializes the Firebase JS SDKs by injecting them into the `head` of the
+  /// document when Firebase is initialized.
+  Future<void> _initializeCore() async {
+    // If Firebase is already available, core has already been initialized
+    // (or the user has added the scripts to their html file).
+    if (context['firebase_core'] != null) {
+      return;
+    }
+
+    String version = _firebaseSDKVersion;
+    List<String> ignored = _ignoredServiceScripts;
+
+    await Future.wait(
+      _services.values.map((service) {
+        if (ignored.contains(service.override ?? service.name)) {
+          return Future.value();
+        }
+
+        return _injectSrcScript(
+          'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
+          'firebase_${service.override ?? service.name}',
+        );
+      }),
+    );
+  }
+
   /// Returns all created [FirebaseAppPlatform] instances.
   @override
   List<FirebaseAppPlatform> get apps {
-    return firebase.apps.map(_createFromJsApp).toList(growable: false);
+    return guardNotInitialized(
+      () => firebase.apps.map(_createFromJsApp).toList(growable: false),
+    );
   }
 
   /// Initializes a new [FirebaseAppPlatform] instance by [name] and [options] and returns
@@ -199,21 +146,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
     String? name,
     FirebaseOptions? options,
   }) async {
-    if (!_isRequireJsDefined) {
-      await _initializeCore();
-    } else {
-      await _initializeCoreRequireJs();
-    }
-
-    try {
-      firebase.SDK_VERSION;
-    } catch (e) {
-      if (e
-          .toString()
-          .contains("Cannot read property 'SDK_VERSION' of undefined")) {
-        throw coreNotInitialized();
-      }
-    }
+    await _initializeCore();
+    guardNotInitialized(() => firebase.SDK_VERSION);
 
     assert(
       () {
@@ -226,7 +160,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
             file or by providing an override - this may lead to unexpected issues in your application. It is recommended that you change all of the versions of the
             Firebase JS SDK version "$supportedFirebaseJsSdkVersion":
 
-            If you override the version manully:
+            If you override the version manually:
               change:
                 <script>window.flutterfire_web_sdk_version = '${firebase.SDK_VERSION}';</script>
               to:
@@ -329,14 +263,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
     firebase.App app;
 
     try {
-      app = firebase.app(name);
+      app = guardNotInitialized(() => firebase.app(name));
     } catch (e) {
-      if ((e.toString().contains('Cannot read property') ||
-              e.toString().contains('Cannot read properties')) &&
-          e.toString().contains("'app'")) {
-        throw coreNotInitialized();
-      }
-
       if (_getJSErrorCode(e) == 'app/no-app') {
         throw noAppExists(name);
       }
@@ -345,5 +273,31 @@ class FirebaseCoreWeb extends FirebasePlatform {
     }
 
     return _createFromJsApp(app);
+  }
+}
+
+/// Converts a Exception to a FirebaseAdminException.
+Never _handleException(Object exception, StackTrace stackTrace) {
+  if (exception.toString().contains('of undefined')) {
+    throw coreNotInitialized();
+  }
+
+  Error.throwWithStackTrace(exception, stackTrace);
+}
+
+/// A generic guard wrapper for API calls to handle exceptions.
+R guardNotInitialized<R>(R Function() cb) {
+  try {
+    final value = cb();
+
+    if (value is Future) {
+      return value.catchError(
+        _handleException,
+      ) as R;
+    }
+
+    return value;
+  } catch (error, stackTrace) {
+    _handleException(error, stackTrace);
   }
 }

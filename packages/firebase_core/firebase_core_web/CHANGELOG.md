@@ -1,10 +1,70 @@
+## 2.0.1
+
+ - Update a dependency to the latest release.
+
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: Firebase JS web SDK version: `9.11.0` ([#9742](https://github.com/firebase/flutterfire/issues/9742)). ([1829ee7d](https://github.com/firebase/flutterfire/commit/1829ee7d62625bd13f0a336d44b9ed2a701725af))
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 1.7.3
+
+ - **FIX**: explicitly set `null` value on Firestore data object property value ([#9599](https://github.com/firebase/flutterfire/issues/9599)). ([e61b6039](https://github.com/firebase/flutterfire/commit/e61b60390cfe8fc985203a4d3e3ed30eb8d020c6))
+
+## 1.7.2
+
+ - Update a dependency to the latest release.
+
+## 1.7.1
+
+ - Update a dependency to the latest release.
+
+## 1.7.0
+
+ - **FEAT**: web JS v9.9.0 SDK bump ([#9075](https://github.com/firebase/flutterfire/issues/9075)). ([200a7747](https://github.com/firebase/flutterfire/commit/200a7747945155a99694d245c9b53ee3526a1da9))
+ - **FEAT**: upgrade to support v9.8.1 Firebase JS SDK ([#8235](https://github.com/firebase/flutterfire/issues/8235)). ([4b417af5](https://github.com/firebase/flutterfire/commit/4b417af574bb8a32ca8e4b3ab2ff253a22be9903))
+
+## 1.6.6
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 1.6.5
+
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+
+## 1.6.4
+
+ - Update a dependency to the latest release.
+
+## 1.6.3
+
+ - Update a dependency to the latest release.
+
+## 1.6.2
+
+ - **DOCS**: Fix typo in "firebase_core_web.dart" documentation. ([658c1db7](https://github.com/firebase/flutterfire/commit/658c1db71cc47b3eddec3a1f33d5d55d1a6ff98a))
+
+## 1.6.1
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 1.6.0
+
+ - **FEAT**: Bump Firebase Web SDK version to 8.10.1 (CVE-2022-0235) for security patch purposes. (#8162). ([7624f777](https://github.com/firebase/flutterfire/commit/7624f7779f4a49f2353f3f593b31be9139197028))
+
+## 1.5.4
+
+ - Update a dependency to the latest release.
+
 ## 1.5.3
 
  - Update a dependency to the latest release.
 
 ## 1.5.2
 
- - **FIX**: correctly detect `not-initialized` errors and provide a better error message. ([0578423e](https://github.com/FirebaseExtended/flutterfire/commit/0578423e9868352556bfdd326eef1cca8dbe04aa))
+ - **FIX**: correctly detect `not-initialized` errors and provide a better error message. ([0578423e](https://github.com/firebase/flutterfire/commit/0578423e9868352556bfdd326eef1cca8dbe04aa))
 
 ## 1.5.1
 
@@ -48,7 +108,7 @@
 
 ## 1.0.1
 
- - **FIX**: Fix wrong cast (FirebaseExtended#5050) (#5242).
+ - **FIX**: Fix wrong cast (firebase#5050) (#5242).
 
 ## 1.0.0
 

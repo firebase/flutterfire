@@ -1,3 +1,9 @@
+/*
+ * Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+ * for details. All rights reserved. Use of this source code is governed by a
+ * BSD-style license that can be found in the LICENSE file.
+ */
+
 package io.flutter.plugins.firebase.auth;
 
 import static io.flutter.plugins.firebase.auth.FlutterFirebaseAuthPlugin.parseAuthCredential;
@@ -22,6 +28,15 @@ public class FlutterFirebaseAuthPluginException extends Exception {
 
     this.code = code;
     this.message = message;
+  }
+
+  FlutterFirebaseAuthPluginException(
+      @NonNull String code, @NonNull String message, @NonNull Map<String, Object> additionalData) {
+    super(message, null);
+
+    this.code = code;
+    this.message = message;
+    this.additionalData = additionalData;
   }
 
   FlutterFirebaseAuthPluginException(@NonNull Exception nativeException, Throwable cause) {
@@ -73,6 +88,11 @@ public class FlutterFirebaseAuthPluginException extends Exception {
   static FlutterFirebaseAuthPluginException noSuchProvider() {
     return new FlutterFirebaseAuthPluginException(
         "NO_SUCH_PROVIDER", "User was not linked to an account with the given provider.");
+  }
+
+  static FlutterFirebaseAuthPluginException alreadyLinkedProvider() {
+    return new FlutterFirebaseAuthPluginException(
+        "PROVIDER_ALREADY_LINKED", "User has already been linked to the given provider.");
   }
 
   public String getCode() {

@@ -22,6 +22,9 @@ void main() {
         methodCallLogger.add(call);
 
         switch (call.method) {
+          case 'Analytics#getAppInstanceId':
+            return 'ABCD1234';
+
           default:
             return true;
         }
@@ -111,6 +114,19 @@ void main() {
         <Matcher>[
           isMethodCall(
             'Analytics#resetAnalyticsData',
+            arguments: null,
+          ),
+        ],
+      );
+    });
+
+    test('getAppInstanceId', () async {
+      await analytics.getAppInstanceId();
+      expect(
+        methodCallLogger,
+        <Matcher>[
+          isMethodCall(
+            'Analytics#getAppInstanceId',
             arguments: null,
           ),
         ],

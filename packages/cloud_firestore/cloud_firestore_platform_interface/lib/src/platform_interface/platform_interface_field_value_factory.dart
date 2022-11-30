@@ -3,10 +3,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-
-import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value_factory.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// An interface for a factory that is used to build a [FieldValuePlatform] according to
 /// Platform (web or mobile)
@@ -24,7 +23,7 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// Sets the default instance of [FieldValueFactoryPlatform] which is used to build
   /// [FieldValuePlatform] items
   static set instance(FieldValueFactoryPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 
@@ -36,8 +35,8 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// This is used by the app-facing [FieldValueFactory] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(FieldValueFactoryPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(FieldValueFactoryPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// Returns a special value that tells the server to union the given elements

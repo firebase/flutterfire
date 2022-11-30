@@ -15,11 +15,9 @@ class MethodChannelFirebase extends FirebasePlatform {
   @visibleForTesting
   static bool isCoreInitialized = false;
 
-  /// The [MethodChannel] to which calls will be delegated.
+  /// Keeps track of whether users have initialized core.
   @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_core',
-  );
+  static FirebaseCoreHostApi api = FirebaseCoreHostApi();
 
   /// Calls the native Firebase#initializeCore method.
   ///
@@ -28,29 +26,31 @@ class MethodChannelFirebase extends FirebasePlatform {
   /// any Firebase apps created natively and any constants which are required
   /// for a plugin to function correctly before usage.
   Future<void> _initializeCore() async {
-    List<Map> apps = (await channel.invokeListMethod<Map>(
-      'Firebase#initializeCore',
-    ))!;
+    List<PigeonInitializeResponse?> apps = await api.initializeCore();
 
-    apps.forEach(_initializeFirebaseAppFromMap);
+    apps
+        .where((element) => element != null)
+        .cast<PigeonInitializeResponse>()
+        .forEach(_initializeFirebaseAppFromMap);
     isCoreInitialized = true;
   }
 
   /// Creates and attaches a new [MethodChannelFirebaseApp] to the [MethodChannelFirebase]
   /// and adds any constants to the [FirebasePluginPlatform] class.
-  void _initializeFirebaseAppFromMap(Map<dynamic, dynamic> map) {
+  void _initializeFirebaseAppFromMap(PigeonInitializeResponse response) {
     MethodChannelFirebaseApp methodChannelFirebaseApp =
         MethodChannelFirebaseApp(
-      map['name'],
-      FirebaseOptions.fromMap(map['options']),
-      isAutomaticDataCollectionEnabled: map['isAutomaticDataCollectionEnabled'],
+      response.name,
+      FirebaseOptions.fromPigeon(response.options),
+      isAutomaticDataCollectionEnabled:
+          response.isAutomaticDataCollectionEnabled,
     );
 
     appInstances[methodChannelFirebaseApp.name] = methodChannelFirebaseApp;
 
     FirebasePluginPlatform
             ._constantsForPluginApps[methodChannelFirebaseApp.name] =
-        map['pluginConstants'];
+        response.pluginConstants;
   }
 
   /// Returns the created [FirebaseAppPlatform] instances.
@@ -79,23 +79,44 @@ class MethodChannelFirebase extends FirebasePlatform {
     if (name == null || name == defaultFirebaseAppName) {
       MethodChannelFirebaseApp? defaultApp =
           appInstances[defaultFirebaseAppName];
+      FirebaseOptions? _options = options;
+      // If no default app and no options are provided then
+      // attempt to read options from native resources on Android,
+      // e.g. this calls to `FirebaseOptions.fromResource(context)`.
+      if (defaultTargetPlatform == TargetPlatform.android &&
+          defaultApp == null &&
+          _options == null) {
+        final options = await api.optionsFromResource();
+        _options = FirebaseOptions.fromPigeon(options);
+      }
 
-      // If options are present & no default app has been setup, the user is
-      // trying to initialize default from dart
-      if (defaultApp == null && options != null) {
-        _initializeFirebaseAppFromMap((await channel.invokeMapMethod(
-          'Firebase#initializeApp',
-          <String, dynamic>{
-            'appName': defaultFirebaseAppName,
-            'options': options.asMap
-          },
-        ))!);
+      // If no options are present & no default app has been setup, the user is
+      // trying to initialize default from Dart
+      if (defaultApp == null && _options != null) {
+        _initializeFirebaseAppFromMap(await api.initializeApp(
+            defaultFirebaseAppName,
+            PigeonFirebaseOptions(
+              apiKey: _options.apiKey,
+              appId: _options.appId,
+              messagingSenderId: _options.messagingSenderId,
+              projectId: _options.projectId,
+              authDomain: _options.authDomain,
+              databaseURL: _options.databaseURL,
+              storageBucket: _options.storageBucket,
+              measurementId: _options.measurementId,
+              trackingId: _options.trackingId,
+              deepLinkURLScheme: _options.deepLinkURLScheme,
+              androidClientId: _options.androidClientId,
+              iosClientId: _options.iosClientId,
+              iosBundleId: _options.iosBundleId,
+              appGroupId: _options.appGroupId,
+            )));
         defaultApp = appInstances[defaultFirebaseAppName];
       }
 
-      // If there is no native default app and the user didnt provide options to
+      // If there is no native default app and the user didn't provide options to
       // create one, throw.
-      if (defaultApp == null && options == null) {
+      if (defaultApp == null && _options == null) {
         throw coreNotInitialized();
       }
 
@@ -103,12 +124,12 @@ class MethodChannelFirebase extends FirebasePlatform {
       // check to see if options are roughly identical (so we don't unnecessarily
       // throw on minor differences such as platform specific keys missing
       // e.g. hot reloads/restarts).
-      if (defaultApp != null && options != null) {
-        if (options.apiKey != defaultApp.options.apiKey ||
-            (options.databaseURL != null &&
-                options.databaseURL != defaultApp.options.databaseURL) ||
-            (options.storageBucket != null &&
-                options.storageBucket != defaultApp.options.storageBucket)) {
+      if (defaultApp != null && _options != null) {
+        if (_options.apiKey != defaultApp.options.apiKey ||
+            (_options.databaseURL != null &&
+                _options.databaseURL != defaultApp.options.databaseURL) ||
+            (_options.storageBucket != null &&
+                _options.storageBucket != defaultApp.options.storageBucket)) {
           // Options are different; throw.
           throw duplicateApp(defaultFirebaseAppName);
         }
@@ -125,14 +146,37 @@ class MethodChannelFirebase extends FirebasePlatform {
 
     // Check whether the app has already been initialized
     if (appInstances.containsKey(name)) {
-      throw duplicateApp(name);
+      final existingApp = appInstances[name]!;
+      if (options!.apiKey != existingApp.options.apiKey ||
+          (options.databaseURL != null &&
+              options.databaseURL != existingApp.options.databaseURL) ||
+          (options.storageBucket != null &&
+              options.storageBucket != existingApp.options.storageBucket)) {
+        // Options are different; throw.
+        throw duplicateApp(name);
+      } else {
+        return existingApp;
+      }
     }
 
-    _initializeFirebaseAppFromMap((await channel.invokeMapMethod(
-      'Firebase#initializeApp',
-      <String, dynamic>{'appName': name, 'options': options!.asMap},
-    ))!);
-
+    _initializeFirebaseAppFromMap(await api.initializeApp(
+        name,
+        PigeonFirebaseOptions(
+          apiKey: options!.apiKey,
+          appId: options.appId,
+          messagingSenderId: options.messagingSenderId,
+          projectId: options.projectId,
+          authDomain: options.authDomain,
+          databaseURL: options.databaseURL,
+          storageBucket: options.storageBucket,
+          measurementId: options.measurementId,
+          trackingId: options.trackingId,
+          deepLinkURLScheme: options.deepLinkURLScheme,
+          androidClientId: options.androidClientId,
+          iosClientId: options.iosClientId,
+          iosBundleId: options.iosBundleId,
+          appGroupId: options.appGroupId,
+        )));
     return appInstances[name]!;
   }
 

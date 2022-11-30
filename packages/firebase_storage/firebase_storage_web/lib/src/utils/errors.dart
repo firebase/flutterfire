@@ -3,9 +3,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart'
+    as internals;
 import 'package:firebase_core/firebase_core.dart';
-// ignore: implementation_imports
-import 'package:firebase_core/src/internals.dart' as internals;
 
 Map<String, String?> _errorCodeToMessage = {
   'unauthorized': 'User is not authorized to perform the desired action.',
@@ -17,7 +17,7 @@ Map<String, String?> _errorCodeToMessage = {
 /// Will return a [FirebaseException] from a thrown web error.
 /// Any other errors will be propagated as normal.
 R guard<R>(R Function() cb) {
-  return internals.guard(
+  return internals.guardWebExceptions(
     cb,
     plugin: 'firebase_storage',
     codeParser: (code) => code.split('/').last,

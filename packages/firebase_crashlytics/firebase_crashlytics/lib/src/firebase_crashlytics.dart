@@ -31,7 +31,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseCrashlytics get instance {
     _instance ??= FirebaseCrashlytics._(app: Firebase.app());
-
     return _instance!;
   }
 
@@ -59,7 +58,8 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// This should only be used for testing purposes in cases where you wish to
   /// simulate a native crash to view the results on the Firebase Console.
   ///
-  /// Note: crash reports will not include a stack trace.
+  /// Note: crash reports will not include a stack trace and crash reports are
+  /// not sent until the next application startup.
   void crash() {
     return _delegate.crash();
   }
@@ -78,7 +78,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// Submits a Crashlytics report of a caught error.
   Future<void> recordError(dynamic exception, StackTrace? stack,
       {dynamic reason,
-      Iterable<DiagnosticsNode> information = const [],
+      Iterable<Object> information = const [],
       bool? printDetails,
       bool fatal = false}) async {
     // Use the debug flag if printDetails is not provided
@@ -114,34 +114,48 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
       print('----------------------------------------------------');
     }
 
-    final StackTrace stackTrace = stack ?? StackTrace.current;
+    // Replace null or empty stack traces with the current stack trace.
+    final StackTrace stackTrace = (stack == null || stack.toString().isEmpty)
+        ? StackTrace.current
+        : stack;
 
     // Report error.
     final List<Map<String, String>> stackTraceElements =
         getStackTraceElements(stackTrace);
+    final String? buildId = getBuildId(stackTrace);
 
     return _delegate.recordError(
       exception: exception.toString(),
       reason: reason.toString(),
       information: _information,
       stackTraceElements: stackTraceElements,
+      buildId: buildId,
       fatal: fatal,
     );
   }
 
-  /// Submits a Crashlytics report of a non-fatal error caught by the Flutter framework.
-  Future<void> recordFlutterError(FlutterErrorDetails flutterErrorDetails) {
+  /// Submits a Crashlytics report of an error caught by the Flutter framework.
+  /// Use [fatal] to indicate whether the error is a fatal or not.
+  Future<void> recordFlutterError(FlutterErrorDetails flutterErrorDetails,
+      {bool fatal = false}) {
     FlutterError.presentError(flutterErrorDetails);
+
+    final information = flutterErrorDetails.informationCollector?.call() ?? [];
 
     return recordError(
       flutterErrorDetails.exceptionAsString(),
       flutterErrorDetails.stack,
       reason: flutterErrorDetails.context,
-      information: flutterErrorDetails.informationCollector == null
-          ? []
-          : flutterErrorDetails.informationCollector!(),
+      information: information,
       printDetails: false,
+      fatal: fatal,
     );
+  }
+
+  /// Submits a Crashlytics report of a fatal error caught by the Flutter framework.
+  Future<void> recordFlutterFatalError(
+      FlutterErrorDetails flutterErrorDetails) {
+    return recordFlutterError(flutterErrorDetails, fatal: true);
   }
 
   /// Logs a message that's included in the next fatal or non-fatal report.

@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
@@ -47,15 +48,18 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseAuthPlatform.instanceFor({
-    required FirebaseApp app,
-    required Map<dynamic, dynamic> pluginConstants,
-  }) {
-    return FirebaseAuthPlatform.instance.delegateFor(app: app).setInitialValues(
-        languageCode: pluginConstants['APP_LANGUAGE_CODE'],
-        currentUser: pluginConstants['APP_CURRENT_USER'] == null
-            ? null
-            : Map<String, dynamic>.from(pluginConstants['APP_CURRENT_USER']));
+  factory FirebaseAuthPlatform.instanceFor(
+      {required FirebaseApp app,
+      required Map<dynamic, dynamic> pluginConstants,
+      Persistence? persistence}) {
+    return FirebaseAuthPlatform.instance
+        .delegateFor(app: app, persistence: persistence)
+        .setInitialValues(
+            languageCode: pluginConstants['APP_LANGUAGE_CODE'],
+            currentUser: pluginConstants['APP_CURRENT_USER'] == null
+                ? null
+                : Map<String, dynamic>.from(
+                    pluginConstants['APP_CURRENT_USER']));
   }
 
   /// The current default [FirebaseAuthPlatform] instance.
@@ -71,14 +75,17 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseAuthPlatform.instance]
   static set instance(FirebaseAuthPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
+  ///
+  /// Setting a [persistence] type is only available on web based platforms.
   @protected
-  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
+  FirebaseAuthPlatform delegateFor(
+      {required FirebaseApp app, Persistence? persistence}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -324,7 +331,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Updates the current instance with the provided settings.
   ///
-  /// [appVerificationDisabledForTesting] This setting applies to android, iOS and
+  /// [appVerificationDisabledForTesting] This setting applies to Android, iOS and
   ///   web platforms. When set to `true`, this property disables app
   ///   verification for the purpose of testing phone authentication. For this
   ///   property to take effect, it needs to be set before handling a reCAPTCHA
@@ -338,22 +345,22 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///
   ///   The default value is `false` (app verification is enabled).
   ///
-  ///  [forceRecaptchaFlow] This setting applies to android only. When set to 'true',
-  ///  it forces the application verification to use the web reCAPTCHA flow for Phone Authentication.
-  ///  Once this has been called, every call to PhoneAuthProvider#verifyPhoneNumber() will skip the SafetyNet verification flow and use the reCAPTCHA flow instead.
-  ///  Calling this method a second time will overwrite the previously passed parameter.
+  /// [forceRecaptchaFlow] This setting applies to Android only. When set to 'true',
+  ///   it forces the application verification to use the web reCAPTCHA flow for Phone Authentication.
+  ///   Once this has been called, every call to PhoneAuthProvider#verifyPhoneNumber() will skip the SafetyNet verification flow and use the reCAPTCHA flow instead.
+  ///   Calling this method a second time will overwrite the previously passed parameter.
   ///
-  ///  [phoneNumber] & [smsCode] These settings apply to android only. The phone number and SMS code here must have been configured in the Firebase Console (Authentication > Sign In Method > Phone).
-  ///  Once this has been called, every call to PhoneAuthProvider#verifyPhoneNumber() with the same phone number as the one that is configured here will have onVerificationCompleted() triggered as the callback.
-  ///  Calling this method a second time will overwrite the previously passed parameters. Only one number can be configured at a given time.
-  ///  Calling this method with either parameter set to null removes this functionality until valid parameters are passed.
-  ///  Verifying a phone number other than the one configured here will trigger normal behavior. If the phone number is configured as a test phone number in the console, the regular testing flow occurs. Otherwise, normal phone number verification will take place.
-  ///  When this is set and PhoneAuthProvider#verifyPhoneNumber() is called with a matching phone number, PhoneAuthProvider.OnVerificationStateChangedCallbacks.onCodeAutoRetrievalTimeOut(String) will never be called.
+  /// [phoneNumber] & [smsCode] These settings apply to Android only. The phone number and SMS code here must have been configured in the Firebase Console (Authentication > Sign In Method > Phone).
+  ///   Once this has been called, every call to PhoneAuthProvider#verifyPhoneNumber() with the same phone number as the one that is configured here will have onVerificationCompleted() triggered as the callback.
+  ///   Calling this method a second time will overwrite the previously passed parameters. Only one number can be configured at a given time.
+  ///   Calling this method with either parameter set to null removes this functionality until valid parameters are passed.
+  ///   Verifying a phone number other than the one configured here will trigger normal behavior. If the phone number is configured as a test phone number in the console, the regular testing flow occurs. Otherwise, normal phone number verification will take place.
+  ///   When this is set and PhoneAuthProvider#verifyPhoneNumber() is called with a matching phone number, PhoneAuthProvider.OnVerificationStateChangedCallbacks.onCodeAutoRetrievalTimeOut(String) will never be called.
   ///
-  ///  [userAccessGroup] This setting only applies to iOS and MacOS platforms.
-  ///  When set, it allows you to share authentication state between
-  ///  applications. Set the property to your team group ID or set to `null`
-  ///  to remove sharing capabilities.
+  /// [userAccessGroup] This setting only applies to iOS and MacOS platforms.
+  ///   When set, it allows you to share authentication state between
+  ///   applications. Set the property to your team group ID or set to `null`
+  ///   to remove sharing capabilities.
   ///
   ///   Key Sharing capabilities must be enabled for your app via XCode (Project
   ///   settings > Capabilities). To learn more, visit the
@@ -502,6 +509,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///
   /// Confirm the link is a sign-in email link before calling this method,
   /// using [isSignInWithEmailLink].
+
   ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **expired-action-code**:
@@ -517,10 +525,21 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     throw UnimplementedError('signInWithEmailLink() is not implemented');
   }
 
+  /// Signs in with an AuthProvider using native authentication flow.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **user-disabled**:
+  ///  - Thrown if the user corresponding to the given email has been disabled.
+  Future<UserCredentialPlatform> signInWithProvider(
+    AuthProvider provider,
+  ) async {
+    throw UnimplementedError('signInWithProvider() is not implemented');
+  }
+
   /// Starts a sign-in flow for a phone number.
   ///
   /// You can optionally provide a [RecaptchaVerifier] instance to control the
-  /// reCAPTCHA widget apperance and behavior.
+  /// reCAPTCHA widget appearance and behavior.
   ///
   /// Once the reCAPTCHA verification has completed, called [ConfirmationResult.confirm]
   /// with the users SMS verification code to complete the authentication flow.
@@ -624,13 +643,15 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// [codeAutoRetrievalTimeout] Triggered when SMS auto-retrieval times out and
   ///   provide a [verificationId].
   Future<void> verifyPhoneNumber({
-    required String phoneNumber,
+    String? phoneNumber,
+    PhoneMultiFactorInfo? multiFactorInfo,
     required PhoneVerificationCompleted verificationCompleted,
     required PhoneVerificationFailed verificationFailed,
     required PhoneCodeSent codeSent,
     required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
     Duration timeout = const Duration(seconds: 30),
     int? forceResendingToken,
+    MultiFactorSession? multiFactorSession,
     // ignore: invalid_use_of_visible_for_testing_member
     @visibleForTesting String? autoRetrievedSmsCodeForTesting,
   }) {

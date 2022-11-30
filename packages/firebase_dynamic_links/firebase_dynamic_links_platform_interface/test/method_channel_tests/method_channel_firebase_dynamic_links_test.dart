@@ -2,8 +2,6 @@
 // Copyright 2021, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links_platform_interface.dart';
 import 'package:firebase_dynamic_links_platform_interface/src/method_channel/method_channel_firebase_dynamic_links.dart';
@@ -52,9 +50,12 @@ DynamicLinkParameters buildDynamicLinkParameters() {
       title: 'title');
 
   String uriPrefix = 'https://';
+  final longDynamicLink = Uri.parse(
+      'https://reactnativefirebase.page.link?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.invertase.testing&imv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=https://ofl-link.com');
 
   return DynamicLinkParameters(
     uriPrefix: uriPrefix,
+    longDynamicLink: longDynamicLink,
     link: link,
     androidParameters: android,
     googleAnalyticsParameters: google,
@@ -229,9 +230,7 @@ void main() {
 
     group('buildLink()', () {
       test('buildLink', () async {
-        DynamicLinkParameters options = buildDynamicLinkParameters();
-
-        await dynamicLinks.buildLink(options);
+        await dynamicLinks.buildLink(buildDynamicLinkParameters());
 
         expect(logger, <Matcher>[
           isMethodCall(
@@ -239,6 +238,8 @@ void main() {
             arguments: <String, dynamic>{
               'appName': '[DEFAULT]',
               'uriPrefix': 'https://',
+              'longDynamicLink':
+                  'https://reactnativefirebase.page.link?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.invertase.testing&imv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=https://ofl-link.com',
               'link': 'link',
               'androidParameters': {
                 'fallbackUrl': 'fallbackUrl',
@@ -290,12 +291,6 @@ void main() {
     });
 
     group('onLink()', () {
-      StreamSubscription<PendingDynamicLinkData?>? subscription;
-
-      tearDown(() {
-        subscription?.cancel();
-      });
-
       test('returns [Stream<PendingDynamicLinkData>]', () async {
         // Checks that `onLink` does not throw UnimplementedError
         expect(dynamicLinks.onLink, isNotNull);
@@ -330,6 +325,8 @@ void main() {
               'appName': '[DEFAULT]',
               'shortLinkType': ShortDynamicLinkType.short.index,
               'uriPrefix': 'https://',
+              'longDynamicLink':
+                  'https://reactnativefirebase.page.link?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.invertase.testing&imv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=https://ofl-link.com',
               'link': 'link',
               'androidParameters': {
                 'fallbackUrl': 'fallbackUrl',

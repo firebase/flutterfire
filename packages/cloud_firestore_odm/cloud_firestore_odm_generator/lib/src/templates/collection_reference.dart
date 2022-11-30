@@ -1,9 +1,30 @@
-import '../collection_generator.dart';
-import 'template.dart';
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
-class CollectionReferenceTemplate extends Template<CollectionData> {
+import '../collection_data.dart';
+
+class CollectionReferenceTemplate {
+  CollectionReferenceTemplate(this.data);
+
+  final CollectionData data;
+
   @override
-  String generate(CollectionData data) {
+  String toString() {
+    final idKey = data.idKey;
+
+    String fromFirestoreBody;
+    String toFirestoreBody;
+    if (idKey != null) {
+      fromFirestoreBody =
+          'return ${data.fromJson("{'$idKey': snapshot.id, ...?snapshot.data()}")};';
+      toFirestoreBody =
+          "return {...${data.toJson('value')}}..remove('$idKey');";
+    } else {
+      fromFirestoreBody = 'return ${data.fromJson('snapshot.data()!')};';
+      toFirestoreBody = 'return ${data.toJson('value')};';
+    }
+
     return '''
 /// A collection reference object can be used for adding documents,
 /// getting document references, and querying for documents
@@ -11,22 +32,25 @@ class CollectionReferenceTemplate extends Template<CollectionData> {
 abstract class ${data.collectionReferenceInterfaceName}
       implements
         ${data.queryReferenceInterfaceName},
-        FirestoreCollectionReference<${data.querySnapshotName}> {
+        FirestoreCollectionReference<${data.type}, ${data.querySnapshotName}> {
   ${data.parent != null ? _subCollectionConstructors(data, asbtract: true) : _rootCollectionConstructors(data, abstract: true)}
 
   static ${data.type} fromFirestore(
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return ${data.fromJson('snapshot.data()!')};
+    $fromFirestoreBody
   }
  
   static Map<String, Object?> toFirestore(
     ${data.type} value,
     SetOptions? options,
   ) {
-    return ${data.toJson('value')};
+    $toFirestoreBody
   }
+
+  @override
+  CollectionReference<${data.type}> get reference;
 
 ${_parentProperty(data, abstract: true)}
 
@@ -53,6 +77,10 @@ ${_parentProperty(data)}
 
   @override
   ${data.documentReferenceName} doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return ${data.documentReferenceName}(
       reference.doc(id),
     );
@@ -145,7 +173,7 @@ ${_parentProperty(data)}
   ${data.collectionReferenceImplName}._(
     this.parent,
     CollectionReference<${data.type}> reference,
-  ) : super(reference, reference);
+  ) : super(reference, \$referenceWithoutCursor: reference);
 ''';
   }
 
@@ -176,7 +204,7 @@ factory ${data.collectionReferenceInterfaceName}([
 
   ${data.collectionReferenceImplName}._(
     CollectionReference<${data.type}> reference,
-  ) : super(reference, reference);
+  ) : super(reference, \$referenceWithoutCursor: reference);
 ''';
   }
 }

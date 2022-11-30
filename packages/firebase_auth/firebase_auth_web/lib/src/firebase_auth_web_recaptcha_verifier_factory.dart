@@ -6,8 +6,10 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'interop/auth.dart' as auth_interop;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_web/firebase_auth_web.dart';
+
+import 'interop/auth.dart' as auth_interop;
 import 'utils/web_utils.dart';
 
 const String _kInvisibleElementId = '__ff-recaptcha-container';
@@ -32,6 +34,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
 
   /// Creates a new [RecaptchaVerifierFactoryWeb] with a container and parameters.
   RecaptchaVerifierFactoryWeb({
+    required FirebaseAuthWeb auth,
     String? container,
     RecaptchaVerifierSize size = RecaptchaVerifierSize.normal,
     RecaptchaVerifierTheme theme = RecaptchaVerifierTheme.light,
@@ -86,11 +89,16 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
       element = container;
     }
 
-    _delegate = auth_interop.RecaptchaVerifier(element, parameters);
+    _delegate = auth_interop.RecaptchaVerifier(
+      element,
+      parameters,
+      auth.delegate,
+    );
   }
 
   @override
   RecaptchaVerifierFactoryPlatform delegateFor({
+    required FirebaseAuthPlatform auth,
     String? container,
     RecaptchaVerifierSize size = RecaptchaVerifierSize.normal,
     RecaptchaVerifierTheme theme = RecaptchaVerifierTheme.light,
@@ -98,13 +106,16 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
     RecaptchaVerifierOnError? onError,
     RecaptchaVerifierOnExpired? onExpired,
   }) {
+    final _webAuth = auth as FirebaseAuthWeb;
     return RecaptchaVerifierFactoryWeb(
-        container: container,
-        size: size,
-        theme: theme,
-        onSuccess: onSuccess,
-        onError: onError,
-        onExpired: onExpired);
+      auth: _webAuth,
+      container: container,
+      size: size,
+      theme: theme,
+      onSuccess: onSuccess,
+      onError: onError,
+      onExpired: onExpired,
+    );
   }
 
   @override
@@ -117,7 +128,8 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
 
   @override
   void clear() {
-    return _delegate.clear();
+    _delegate.clear();
+    window.document.getElementById(_kInvisibleElementId)?.remove();
   }
 
   @override

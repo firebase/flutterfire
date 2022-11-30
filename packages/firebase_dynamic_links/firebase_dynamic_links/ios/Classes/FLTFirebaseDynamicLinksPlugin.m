@@ -24,6 +24,24 @@ static NSMutableDictionary *getDictionaryFromDynamicLink(FIRDynamicLink *dynamic
     if (dynamicLink.minimumAppVersion) {
       iosData[@"minimumVersion"] = dynamicLink.minimumAppVersion;
     }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeNone) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:0];
+    }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeWeak) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:1];
+    }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeDefault) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:2];
+    }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeUnique) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:3];
+    }
+
+    dictionary[@"utmParameters"] = dynamicLink.utmParametersDictionary;
     dictionary[@"ios"] = iosData;
     return dictionary;
   } else {
@@ -71,6 +89,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];
     _binaryMessenger = messenger;
     _channel = channel;
+    _initiated = NO;
   }
   return self;
 }
@@ -104,11 +123,42 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   FLTFirebaseMethodCallErrorBlock errorBlock = ^(
       NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
       NSError *_Nullable error) {
+    NSMutableDictionary *temp;
     if (code == nil) {
       NSDictionary *errorDetails = getDictionaryFromNSError(error);
       code = errorDetails[kCode];
       message = errorDetails[kMessage];
-      details = errorDetails;
+
+      if (errorDetails[@"additionalData"] != nil) {
+        temp = [errorDetails[@"additionalData"] mutableCopy];
+      } else {
+        temp = [errorDetails mutableCopy];
+      }
+
+      // "NSErrorFailingURLStringKey" key does not work for removing this object. So we use our own
+      // String to retrieve
+      if (temp[@"NSErrorFailingURLKey"] != nil) {
+        [temp removeObjectForKey:@"NSErrorFailingURLKey"];
+      }
+      if (temp[NSUnderlyingErrorKey] != nil) {
+        [temp removeObjectForKey:NSUnderlyingErrorKey];
+      }
+
+      if ([errorDetails[kMessage] containsString:@"An unknown error has occurred"] &&
+          [temp[NSLocalizedDescriptionKey] containsString:@"The request timed out"]) {
+        message = temp[NSLocalizedDescriptionKey];
+      }
+
+      if (errorDetails[@"additionalData"][NSLocalizedFailureReasonErrorKey] != nil) {
+        // This stops an uncaught type cast exception in dart
+        [temp removeObjectForKey:NSLocalizedFailureReasonErrorKey];
+        // provides a useful message to the user. e.g. "Universal link URL could not be parsed".
+        if ([message containsString:@"unknown error"]) {
+          message = errorDetails[@"additionalData"][NSLocalizedFailureReasonErrorKey];
+        }
+      }
+
+      details = temp;
     } else {
       details = @{
         kCode : code,
@@ -158,34 +208,64 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 }
 
 - (void)buildShortLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRDynamicLinkComponents *components = [self setupParameters:arguments];
+  FIRDynamicLinkComponentsOptions *options = [self setupOptions:arguments];
+  NSString *longDynamicLink = arguments[@"longDynamicLink"];
 
-  [components
-      shortenWithCompletion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
-                              NSError *_Nullable error) {
-        if (error != nil) {
-          result.error(nil, nil, nil, error);
-        } else {
-          if (warnings == nil) {
-            warnings = [NSMutableArray array];
+  if (longDynamicLink != nil) {
+    NSURL *url = [NSURL URLWithString:longDynamicLink];
+    [FIRDynamicLinkComponents
+        shortenURL:url
+           options:options
+        completion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
+                     NSError *_Nullable error) {
+          if (error != nil) {
+            result.error(nil, nil, nil, error);
+          } else {
+            if (warnings == nil) {
+              warnings = [NSMutableArray array];
+            }
+
+            result.success(@{
+              kUrl : [shortURL absoluteString],
+              @"warnings" : warnings,
+            });
           }
+        }];
+  } else {
+    FIRDynamicLinkComponents *components = [self setupParameters:arguments];
+    components.options = options;
+    [components
+        shortenWithCompletion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
+                                NSError *_Nullable error) {
+          if (error != nil) {
+            result.error(nil, nil, nil, error);
+          } else {
+            if (warnings == nil) {
+              warnings = [NSMutableArray array];
+            }
 
-          result.success(@{
-            kUrl : [shortURL absoluteString],
-            @"warnings" : warnings,
-          });
-        }
-      }];
+            result.success(@{
+              kUrl : [shortURL absoluteString],
+              @"warnings" : warnings,
+            });
+          }
+        }];
+  }
 }
 
 - (void)getInitialLink:(FLTFirebaseMethodCallResult *)result {
-  _initiated = YES;
+  if (_initiated == YES) {
+    result.success(nil);
+    return;
+  }
+
   NSMutableDictionary *dict = getDictionaryFromDynamicLink(_initialLink);
   if (dict == nil && self.initialError != nil) {
     result.error(nil, nil, nil, self.initialError);
   } else {
     result.success(dict);
   }
+  _initiated = YES;
 }
 
 - (void)getDynamicLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -291,7 +371,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     }
   }
 
-  if (_initialLink == nil && dynamicLink.url != nil) {
+  if (_initialLink == nil && _initiated == NO && dynamicLink.url != nil) {
     _initialLink = dynamicLink;
   }
 

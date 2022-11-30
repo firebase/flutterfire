@@ -1,0 +1,27 @@
+name: publish_old_docs
+
+on:
+  push:
+    branches:    
+      - 'old-docs'
+    paths:
+      - 'docs/**'
+      - 'website/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2.1.5
+        with:
+          node-version: '12'
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FLUTTER_FIREBASE_DOCS }}'
+          projectId: flutter-firebase-docs
+          entryPoint: 'website'
+          channelId: 'live'
+        env:
+          FIREBASE_CLI_PREVIEWS: hostingchannels

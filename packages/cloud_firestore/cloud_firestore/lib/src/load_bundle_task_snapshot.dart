@@ -7,7 +7,7 @@ part of cloud_firestore;
 /// A [LoadBundleTaskSnapshot] is returned as the result or on-going process of a [LoadBundleTask].
 class LoadBundleTaskSnapshot {
   LoadBundleTaskSnapshot._(this._delegate) {
-    LoadBundleTaskSnapshotPlatform.verifyExtends(_delegate);
+    LoadBundleTaskSnapshotPlatform.verify(_delegate);
   }
   LoadBundleTaskSnapshotPlatform _delegate;
 

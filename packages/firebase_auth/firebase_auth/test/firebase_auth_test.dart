@@ -93,7 +93,8 @@ void main() {
       auth = FirebaseAuth.instanceFor(app: app);
       user = kMockUser;
 
-      mockUserPlatform = MockUserPlatform(mockAuthPlatform, user);
+      mockUserPlatform = MockUserPlatform(
+          mockAuthPlatform, TestMultiFactorPlatform(mockAuthPlatform), user);
       mockConfirmationResultPlatform = MockConfirmationResultPlatform();
       mockAdditionalUserInfo = AdditionalUserInfo(
         isNewUser: false,
@@ -727,7 +728,8 @@ class MockFirebaseAuth extends Mock
   }
 
   @override
-  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
+  FirebaseAuthPlatform delegateFor(
+      {FirebaseApp? app, Persistence? persistence}) {
     return super.noSuchMethod(
       Invocation.method(#delegateFor, [], {#app: app}),
       returnValue: TestFirebaseAuthPlatform(),
@@ -987,6 +989,8 @@ class MockFirebaseAuth extends Mock
   @override
   Future<void> verifyPhoneNumber({
     String? phoneNumber,
+    PhoneMultiFactorInfo? multiFactorInfo,
+    MultiFactorSession? multiFactorSession,
     Object? verificationCompleted,
     Object? verificationFailed,
     Object? codeSent,
@@ -1021,7 +1025,8 @@ class FakeFirebaseAuthPlatform extends Fake
   String? tenantId;
 
   @override
-  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
+  FirebaseAuthPlatform delegateFor(
+      {required FirebaseApp app, Persistence? persistence}) {
     return this;
   }
 
@@ -1037,8 +1042,9 @@ class FakeFirebaseAuthPlatform extends Fake
 class MockUserPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserPlatform {
-  MockUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> _user) {
-    TestUserPlatform(auth, _user);
+  MockUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
+      Map<String, dynamic> _user) {
+    TestUserPlatform(auth, multiFactor, _user);
   }
 }
 
@@ -1081,7 +1087,8 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   }) {}
 
   @override
-  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
+  FirebaseAuthPlatform delegateFor(
+      {FirebaseApp? app, Persistence? persistence}) {
     return this;
   }
 
@@ -1155,8 +1162,13 @@ class TestAuthProvider extends AuthProvider {
 }
 
 class TestUserPlatform extends UserPlatform {
-  TestUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> data)
-      : super(auth, data);
+  TestUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
+      Map<String, dynamic> data)
+      : super(auth, multiFactor, data);
+}
+
+class TestMultiFactorPlatform extends MultiFactorPlatform {
+  TestMultiFactorPlatform(FirebaseAuthPlatform auth) : super(auth);
 }
 
 class TestUserCredentialPlatform extends UserCredentialPlatform {

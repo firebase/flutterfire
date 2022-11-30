@@ -18,19 +18,22 @@ class OAuthProvider extends AuthProvider {
   Map<dynamic, dynamic> _parameters = {};
 
   /// Returns the currently assigned scopes to this provider instance.
-  /// This is a Web only API.
   List<String> get scopes {
     return _scopes;
   }
 
   /// Returns the parameters for this provider instance.
-  /// This is a Web only API.
   Map<dynamic, dynamic> get parameters {
     return _parameters;
   }
 
+  /// Returns the parameters for this provider instance.
+  OAuthProvider setScopes(List<String> scopes) {
+    _scopes = scopes;
+    return this;
+  }
+
   /// Adds OAuth scope.
-  /// This is a Web only API.
   OAuthProvider addScope(String scope) {
     _scopes.add(scope);
     return this;
@@ -38,7 +41,6 @@ class OAuthProvider extends AuthProvider {
 
   /// Sets the OAuth custom parameters to pass in a OAuth request for popup and
   /// redirect sign-in operations.
-  /// This is a Web only API.
   OAuthProvider setCustomParameters(
     Map<dynamic, dynamic> customOAuthParameters,
   ) {
@@ -52,10 +54,11 @@ class OAuthProvider extends AuthProvider {
     String? secret,
     String? idToken,
     String? rawNonce,
+    String? signInMethod,
   }) {
     return OAuthCredential(
       providerId: providerId,
-      signInMethod: 'oauth',
+      signInMethod: signInMethod ?? 'oauth',
       accessToken: accessToken,
       secret: secret,
       idToken: idToken,
@@ -74,15 +77,15 @@ class OAuthCredential extends AuthCredential {
   const OAuthCredential({
     required String providerId,
     required String signInMethod,
-    this.accessToken,
+    String? accessToken,
     this.idToken,
     this.secret,
     this.rawNonce,
-  }) : super(providerId: providerId, signInMethod: signInMethod);
-
-  /// The OAuth access token associated with the credential if it belongs to an
-  /// OAuth provider, such as `facebook.com`, `twitter.com`, etc.
-  final String? accessToken;
+  }) : super(
+          providerId: providerId,
+          signInMethod: signInMethod,
+          accessToken: accessToken,
+        );
 
   /// The OAuth ID token associated with the credential if it belongs to an
   /// OIDC provider, such as `google.com`.

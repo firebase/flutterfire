@@ -9,7 +9,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   FirebaseAnalytics._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_analytics');
 
-  /// Namespace for analytics API available on Android only. This is deprecated in favour of calling directly
+  /// Namespace for analytics API available on Android only. This is deprecated in favor of
   /// `FirebaseAnalytics.instance.setSessionTimeoutDuration()`.
   ///
   /// The value of this field is `null` on non-Android platforms. If you are
@@ -65,6 +65,16 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return FirebaseAnalytics.instanceFor(app: defaultAppInstance);
   }
 
+  Future<bool> isSupported() {
+    return _delegate.isSupported();
+  }
+
+  /// Retrieves the app instance id from the service, or null if consent has
+  /// been denied.
+  Future<String?> get appInstanceId {
+    return _delegate.getAppInstanceId();
+  }
+
   /// Logs a custom Flutter Analytics event with the given [name] and event [parameters].
   Future<void> logEvent({
     required String name,
@@ -116,7 +126,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
 
   /// Adds parameters that will be set on every event logged from the SDK, including automatic ones.
   Future<void> setDefaultEventParameters(
-    Map<String, Object> defaultParameters,
+    Map<String, Object?>? defaultParameters,
   ) async {
     await _delegate.setDefaultEventParameters(defaultParameters);
   }
@@ -379,14 +389,13 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     );
   }
 
-  /// Logs the standard `add_to_wishlist` event.
+  /// Logs the standard `ad_impression` event.
   ///
-  /// This event signifies that an item was added to a wishlist. Use this event
-  /// to identify popular gift items in your app. Note: If you supply the
-  /// [value] parameter, you must also supply the [currency] parameter so that
+  /// This event signifies when a user sees an ad impression. Note: If you supply
+  /// the [value] parameter, you must also supply the [currency] parameter so that
   /// revenue metrics can be computed accurately.
   ///
-  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ADD_TO_WISHLIST
+  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#AD_IMPRESSION
   Future<void> logAdImpression({
     String? adPlatform,
     String? adSource,

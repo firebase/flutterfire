@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 // ignore_for_file: require_trailing_commas
 import 'dart:async';
 
@@ -108,7 +112,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
         'appName': app.name,
       });
     } catch (exception, stackTrace) {
-      throw convertPlatformException(exception, stackTrace);
+      convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -122,7 +126,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       await _updateConfigParameters();
       return configChanged!;
     } catch (exception, stackTrace) {
-      throw convertPlatformException(exception, stackTrace);
+      convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -136,7 +140,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     } catch (exception, stackTrace) {
       // Ensure that fetch status is updated.
       await _updateConfigProperties();
-      throw convertPlatformException(exception, stackTrace);
+      convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -153,7 +157,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     } catch (exception, stackTrace) {
       // Ensure that fetch status is updated.
       await _updateConfigProperties();
-      throw convertPlatformException(exception, stackTrace);
+      convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -216,7 +220,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       });
       await _updateConfigProperties();
     } catch (exception, stackTrace) {
-      throw convertPlatformException(exception, stackTrace);
+      convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -229,7 +233,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       });
       await _updateConfigParameters();
     } catch (exception, stackTrace) {
-      throw convertPlatformException(exception, stackTrace);
+      convertPlatformException(exception, stackTrace);
     }
   }
 

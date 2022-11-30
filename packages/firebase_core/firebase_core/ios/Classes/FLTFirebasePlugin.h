@@ -2,10 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// Note: Don't use <Firebase/Firebase.h> umbrella header here - will cause a build
-//       failure on MacOS builds (Flutter MacOS uses Swift) when this file is included
-//       in other Flutter plugins like Firestore with an error of "Include of non-modular header
-//       inside framework module".
+// Note: Don't use <Firebase/Firebase.h> umbrella header here - will cause a
+// build
+//       failure on MacOS builds (Flutter MacOS uses Swift) when this file is
+//       included in other Flutter plugins like Firestore with an error of
+//       "Include of non-modular header inside framework module".
 #import <FirebaseCore/FirebaseCore.h>
 #import <Foundation/Foundation.h>
 #import <TargetConditionals.h>
@@ -17,14 +18,14 @@
 #endif
 
 /**
- * Block that is capable of sending a success response to a method call operation.
- * Use this for returning success data to a Method call.
+ * Block that is capable of sending a success response to a method call
+ * operation. Use this for returning success data to a Method call.
  */
 typedef void (^FLTFirebaseMethodCallSuccessBlock)(id _Nullable result);
 
 /**
- * Block that is capable of sending an error response to a method call operation.
- * Use this for returning error information to a Method call.
+ * Block that is capable of sending an error response to a method call
+ * operation. Use this for returning error information to a Method call.
  */
 typedef void (^FLTFirebaseMethodCallErrorBlock)(NSString *_Nullable code,
                                                 NSString *_Nullable message,
@@ -36,18 +37,21 @@ typedef void (^FLTFirebaseMethodCallErrorBlock)(NSString *_Nullable code,
  */
 @protocol FLTFirebasePlugin <NSObject>
 /**
- * FlutterFire plugins implementing FLTFirebasePlugin should provide this method to be notified when
- * FirebaseCore#initializeCore was called again (first time is ignored).
+ * FlutterFire plugins implementing FLTFirebasePlugin should provide this method
+ * to be notified when FirebaseCore#initializeCore was called again (first time
+ * is ignored).
  *
  * This can be used by plugins to know when they might need to cleanup previous
- * resources between Hot Restarts as `initializeCore` can only be called once in Dart.
+ * resources between Hot Restarts as `initializeCore` can only be called once in
+ * Dart.
  */
 @required
 - (void)didReinitializeFirebaseCore:(void (^_Nonnull)(void))completion;
 
 /**
- * FlutterFire plugins implementing FLTFirebasePlugin must provide this method to provide it's
- * constants that are initialized during FirebaseCore.initializeApp in Dart.
+ * FlutterFire plugins implementing FLTFirebasePlugin must provide this method
+ * to provide it's constants that are initialized during
+ * FirebaseCore.initializeApp in Dart.
  *
  * @param registrar A helper providing application context and methods for
  *     registering callbacks.
@@ -78,9 +82,9 @@ typedef void (^FLTFirebaseMethodCallErrorBlock)(NSString *_Nullable code,
 - (NSString *_Nonnull)firebaseLibraryVersion;
 
 /**
- * FlutterFire plugins implementing FLTFirebasePlugin must provide this method to provide
- * its main method channel name, used by FirebaseCore.initializeApp in Dart to identify
- * constants specific to a plugin.
+ * FlutterFire plugins implementing FLTFirebasePlugin must provide this method
+ * to provide its main method channel name, used by FirebaseCore.initializeApp
+ * in Dart to identify constants specific to a plugin.
  */
 @required
 - (NSString *_Nonnull)flutterChannelName;
@@ -111,12 +115,13 @@ typedef void (^FLTFirebaseMethodCallErrorBlock)(NSString *_Nullable code,
 
 @interface FLTFirebasePlugin : NSObject
 /**
- * Creates a standardized instance of FlutterError using the values returned through
- * FLTFirebaseMethodCallErrorBlock.
+ * Creates a standardized instance of FlutterError using the values returned
+ * through FLTFirebaseMethodCallErrorBlock.
  *
  * @param code Error Code.
  * @param message Error Message.
- * @param details Optional dictionary of additional key/values to return to Dart.
+ * @param details Optional dictionary of additional key/values to return to
+ * Dart.
  * @param error Optional NSError that this error relates to.
  *
  * @return FlutterError
@@ -127,10 +132,11 @@ typedef void (^FLTFirebaseMethodCallErrorBlock)(NSString *_Nullable code,
                                   andOptionalNSError:(NSError *_Nullable)error;
 
 /**
- * Converts the '[DEFAULT]' app name used in dart and other SDKs to the '__FIRAPP_DEFAULT' iOS
- * equivalent.
+ * Converts the '[DEFAULT]' app name used in dart and other SDKs to the
+ * '__FIRAPP_DEFAULT' iOS equivalent.
  *
- * If name is not '[DEFAULT]' then just returns the same name that was passed in.
+ * If name is not '[DEFAULT]' then just returns the same name that was passed
+ * in.
  *
  * @param appName The name of the Firebase App.
  *
@@ -139,9 +145,11 @@ typedef void (^FLTFirebaseMethodCallErrorBlock)(NSString *_Nullable code,
 + (NSString *_Nonnull)firebaseAppNameFromDartName:(NSString *_Nonnull)appName;
 
 /**
- * Converts the '__FIRAPP_DEFAULT' app name used in iOS to '[DEFAULT]' - used in Dart & other SDKs.
+ * Converts the '__FIRAPP_DEFAULT' app name used in iOS to '[DEFAULT]' - used in
+ * Dart & other SDKs.
  *
- * If name is not '__FIRAPP_DEFAULT' then just returns the same name that was passed in.
+ * If name is not '__FIRAPP_DEFAULT' then just returns the same name that was
+ * passed in.
  *
  * @param appName The name of the Firebase App.
  *

@@ -112,7 +112,8 @@ public class FirebaseInstallationsPluginSwift: FLTFirebasePlugin, FlutterPlugin 
   }
 
   internal func mapInstallationsErrorCodes(code: UInt) -> NSString {
-    let error = InstallationsErrorCode(rawValue: code) ?? InstallationsErrorCode.unknown
+    let error = InstallationsErrorCode(InstallationsErrorCode
+      .Code(rawValue: Int(code)) ?? InstallationsErrorCode.unknown)
 
     switch error {
     case InstallationsErrorCode.invalidConfiguration:

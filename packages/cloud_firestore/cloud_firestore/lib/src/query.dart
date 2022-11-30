@@ -94,7 +94,7 @@ abstract class Query<T extends Object?> {
   /// calls.
   ///
   /// Furthermore, you may not use [orderBy] on the [FieldPath.documentId] [field] when
-  /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
+  /// using [startAfterDocument], [startAtDocument], [endBeforeDocument],
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
   Query<T> orderBy(Object field, {bool descending = false});
@@ -186,6 +186,8 @@ abstract class Query<T extends Object?> {
     required FromFirestore<R> fromFirestore,
     required ToFirestore<R> toFirestore,
   });
+
+  AggregateQuery count();
 }
 
 /// Represents a [Query] over the data at a particular location.
@@ -196,7 +198,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     this.firestore,
     this._delegate,
   ) {
-    QueryPlatform.verifyExtends(_delegate);
+    QueryPlatform.verify(_delegate);
   }
 
   @override
@@ -432,7 +434,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   /// calls.
   ///
   /// Furthermore, you may not use [orderBy] on the [FieldPath.documentId] [field] when
-  /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
+  /// using [startAfterDocument], [startAtDocument], [endBeforeDocument],
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
   @override
@@ -807,7 +809,14 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   }
 
   @override
-  int get hashCode => hashValues(runtimeType, firestore, _delegate);
+  int get hashCode => Object.hash(runtimeType, firestore, _delegate);
+
+  /// Represents an [AggregateQuery] over the data at a particular location for retrieving metadata
+  /// without retrieving the actual documents.
+  @override
+  AggregateQuery count() {
+    return AggregateQuery._(_delegate.count(), this);
+  }
 }
 
 class _WithConverterQuery<T extends Object?> implements Query<T> {
@@ -969,5 +978,12 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
 
   @override
   int get hashCode =>
-      hashValues(runtimeType, _fromFirestore, _toFirestore, _originalQuery);
+      Object.hash(runtimeType, _fromFirestore, _toFirestore, _originalQuery);
+
+  /// Represents an [AggregateQuery] over the data at a particular location for retrieving metadata
+  /// without retrieving the actual documents.
+  @override
+  AggregateQuery count() {
+    return _originalQuery.count();
+  }
 }

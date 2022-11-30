@@ -8,9 +8,10 @@
 import 'dart:async';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:firebase_core_web/firebase_core_web_interop.dart'
+    as core_interop;
 import 'package:js/js.dart';
 
-import 'firebase_interop.dart' as firebase_interop;
 import 'storage_interop.dart' as storage_interop;
 
 export 'storage_interop.dart';
@@ -23,11 +24,12 @@ enum TaskState { RUNNING, PAUSED, SUCCESS, CANCELED, ERROR }
 
 /// Given an AppJSImp, return the Storage instance.
 Storage getStorageInstance([App? app, String? bucket]) {
-  firebase_interop.AppStorageJsImpl appImpl =
-      app != null ? firebase_interop.app(app.name) : firebase_interop.app();
+  core_interop.App appImpl =
+      app != null ? core_interop.app(app.name) : core_interop.app();
 
-  return Storage.getInstance(
-      bucket != null ? appImpl.storage(bucket) : appImpl.storage());
+  return Storage.getInstance(bucket != null
+      ? storage_interop.getStorage(appImpl.jsObject, bucket)
+      : storage_interop.getStorage(appImpl.jsObject));
 }
 
 /// A service for uploading and downloading large objects to and from the
@@ -57,25 +59,28 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
 
   /// Returns a [StorageReference] for the given [path] in the default bucket.
   StorageReference ref([String? path]) =>
-      StorageReference.getInstance(jsObject.ref(path));
+      StorageReference.getInstance(storage_interop.ref(jsObject, path));
 
   /// Returns a [StorageReference] for the given absolute [url].
   StorageReference refFromURL(String url) =>
-      StorageReference.getInstance(jsObject.refFromURL(url));
+      StorageReference.getInstance(storage_interop.ref(jsObject, url));
 
   /// Sets the maximum operation retry time to a value of [time].
-  void setMaxOperationRetryTime(int time) =>
-      jsObject.setMaxOperationRetryTime(time);
+  set maxOperationRetryTime(int time) {
+    jsObject.maxOperationRetryTime = time;
+  }
 
   /// Sets the maximum upload retry time to a value of [time].
-  void setMaxUploadRetryTime(int time) => jsObject.setMaxUploadRetryTime(time);
+  set maxUploadRetryTime(int time) {
+    jsObject.maxUploadRetryTime = time;
+  }
 
   /// Configures the Storage instance to work with a local emulator.
   ///
   /// Note: must be called before using storage methods, do not use
   /// with production credentials as local connections are unencrypted
   void useStorageEmulator(String host, int port) =>
-      jsObject.useEmulator(host, port);
+      storage_interop.connectStorageEmulator(jsObject, host, port);
 }
 
 /// StorageReference is a reference to a Google Cloud Storage object.
@@ -118,20 +123,22 @@ class StorageReference
   /// Returns a child StorageReference to a relative [path]
   /// from the actual reference.
   StorageReference child(String path) =>
-      StorageReference.getInstance(jsObject.child(path));
+      StorageReference.getInstance(storage_interop.ref(jsObject, path));
 
   /// Deletes the object at the actual location.
-  Future delete() => handleThenable(jsObject.delete());
+  Future delete() => handleThenable(storage_interop.deleteObject(jsObject));
 
   /// Returns a long lived download URL for this reference.
   Future<Uri> getDownloadURL() async {
-    var uriString = await handleThenable(jsObject.getDownloadURL());
+    var uriString =
+        await handleThenable(storage_interop.getDownloadURL(jsObject));
     return Uri.parse(uriString);
   }
 
   /// Returns a [FullMetadata] from this reference at actual location.
   Future<FullMetadata> getMetadata() =>
-      handleThenable(jsObject.getMetadata()).then(FullMetadata.getInstance);
+      handleThenable(storage_interop.getMetadata(jsObject))
+          .then(FullMetadata.getInstance);
 
   /// List items (files) and prefixes (folders) under this storage reference.
   /// List API is only available for Firebase Storage Rules Version 2.
@@ -144,7 +151,7 @@ class StorageReference
   /// Firebase Storage List API will filter these unsupported objects.
   /// [list()] may fail if there are too many unsupported objects in the bucket.
   Future<ListResult> list(ListOptions? options) =>
-      handleThenable(jsObject.list(options?.jsObject))
+      handleThenable(storage_interop.list(jsObject, options?.jsObject))
           .then(ListResult.getInstance);
 
   /// List all items (files) and prefixes (folders) under this storage reference.
@@ -159,7 +166,8 @@ class StorageReference
   /// Warning: [listAll] may potentially consume too many resources if there are
   /// too many results.
   Future<ListResult> listAll() =>
-      handleThenable(jsObject.listAll()).then(ListResult.getInstance);
+      handleThenable(storage_interop.listAll(jsObject))
+          .then(ListResult.getInstance);
 
   /// Uploads data [blob] to the actual location with optional [metadata].
   /// Returns the [UploadTask] which can be used to monitor and manage
@@ -167,29 +175,10 @@ class StorageReference
   UploadTask put(dynamic blob, [UploadMetadata? metadata]) {
     storage_interop.UploadTaskJsImpl taskImpl;
     if (metadata != null) {
-      taskImpl = jsObject.put(blob, metadata.jsObject);
+      taskImpl = storage_interop.uploadBytesResumable(
+          jsObject, blob, metadata.jsObject);
     } else {
-      taskImpl = jsObject.put(blob);
-    }
-    return UploadTask.getInstance(taskImpl);
-  }
-
-  /// Uploads String [data] to the actual location with optional String [format]
-  /// and [metadata].
-  ///
-  /// See allowed [format] values in [storage_interop.StringFormat] class.
-  ///
-  /// Returns the [UploadTask] which can be used to monitor and manage
-  /// the upload.
-  UploadTask putString(String data,
-      [String? format, UploadMetadata? metadata]) {
-    storage_interop.UploadTaskJsImpl taskImpl;
-    if (metadata != null) {
-      taskImpl = jsObject.putString(data, format, metadata.jsObject);
-    } else if (format != null) {
-      taskImpl = jsObject.putString(data, format);
-    } else {
-      taskImpl = jsObject.putString(data);
+      taskImpl = storage_interop.uploadBytesResumable(jsObject, blob);
     }
     return UploadTask.getInstance(taskImpl);
   }
@@ -201,7 +190,8 @@ class StorageReference
   /// Updates metadata from this reference at actual location with
   /// the new [metadata].
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) async {
-    await handleThenable(jsObject.updateMetadata(metadata.jsObject));
+    await handleThenable(
+        storage_interop.updateMetadata(jsObject, metadata.jsObject));
     return getMetadata();
   }
 }
@@ -343,10 +333,11 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
 
     void startListen() {
       onStateChangedUnsubscribe = jsObject.on(
-          storage_interop.TaskEvent.STATE_CHANGED,
-          nextWrapper,
-          errorWrapper,
-          onCompletion);
+        storage_interop.TaskEvent,
+        nextWrapper,
+        errorWrapper,
+        onCompletion,
+      );
     }
 
     void stopListen() {
@@ -539,6 +530,7 @@ class ListResult extends JsObjectWrapper<storage_interop.ListResultJsImpl> {
   /// Objects in this directory. You can call [getMetadata()] and
   /// [getDownloadUrl()] on them.
   List<StorageReference> get items => jsObject.items
+      // ignore: unnecessary_lambdas, false positive, data is dynamic
       .map((dynamic data) => StorageReference._fromJsObject(data))
       .toList();
 
@@ -552,6 +544,7 @@ class ListResult extends JsObjectWrapper<storage_interop.ListResultJsImpl> {
   /// if a bucket has two objects '/a/b/1' and '/a/b/2', [list('/a')] will
   /// return '/a/b' as a prefix.
   List<StorageReference> get prefixes => jsObject.prefixes
+      // ignore: unnecessary_lambdas, false positive, data is dynamic
       .map((dynamic data) => StorageReference._fromJsObject(data))
       .toList();
 

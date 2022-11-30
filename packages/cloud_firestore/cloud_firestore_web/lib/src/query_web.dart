@@ -4,10 +4,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:collection/collection.dart';
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
-import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
+import 'aggregate_query_web.dart';
 import 'internals.dart';
 import 'interop/firestore.dart' as firestore_interop;
 import 'utils/web_utils.dart';
@@ -42,7 +42,7 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         runtimeType,
         firestore,
         _path,
@@ -146,7 +146,7 @@ class QueryWeb extends QueryPlatform {
 
   @override
   Future<QuerySnapshotPlatform> get([GetOptions options = const GetOptions()]) {
-    return guard(() async {
+    return convertWebExceptions(() async {
       return convertWebQuerySnapshot(
         firestore,
         await _buildWebQueryWithParameters().get(convertGetOptions(options)),
@@ -181,7 +181,7 @@ class QueryWeb extends QueryPlatform {
       querySnapshots = _buildWebQueryWithParameters().onSnapshot;
     }
 
-    return guard(
+    return convertWebExceptions(
       () => querySnapshots.map((webQuerySnapshot) {
         return convertWebQuerySnapshot(firestore, webQuerySnapshot);
       }),
@@ -232,5 +232,10 @@ class QueryWeb extends QueryPlatform {
     return _copyWithParameters(<String, dynamic>{
       'where': conditions,
     });
+  }
+
+  @override
+  AggregateQueryPlatform count() {
+    return AggregateQueryWeb(this, _buildWebQueryWithParameters());
   }
 }

@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links_platform_interface/src/method_channel/utils/convert_match_type.dart';
 import 'package:flutter/services.dart';
 
 import 'utils/exception.dart';
@@ -32,9 +33,13 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
           }
           break;
         case 'FirebaseDynamicLink#onLinkError':
-          Map<String, dynamic> error =
-              Map<String, dynamic>.from(call.arguments);
-          _onLinkController.addError(convertPlatformException(error));
+          try {
+            Map<String, dynamic> error =
+                Map<String, dynamic>.from(call.arguments);
+            convertPlatformException(error, StackTrace.current);
+          } catch (err, stack) {
+            _onLinkController.addError(err, stack);
+          }
           break;
         default:
           throw UnimplementedError('${call.method} has not been implemented');
@@ -92,14 +97,21 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
     PendingDynamicLinkDataIOS? iosData;
     if (linkData['ios'] != null) {
       final Map<dynamic, dynamic> data = linkData['ios'];
-      iosData =
-          PendingDynamicLinkDataIOS(minimumVersion: data['minimumVersion']);
+
+      MatchType? matchType = convertMatchType(data['matchType']);
+      iosData = PendingDynamicLinkDataIOS(
+        minimumVersion: data['minimumVersion'],
+        matchType: matchType,
+      );
     }
 
     return PendingDynamicLinkData(
       link: Uri.parse(link),
       android: androidData,
       ios: iosData,
+      utmParameters: linkData['utmParameters'] == null
+          ? {}
+          : Map<String, String>.from(linkData['utmParameters']),
     );
   }
 
@@ -114,7 +126,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
 
       return _getPendingDynamicLinkDataFromMap(linkData);
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -129,7 +141,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
 
       return _getPendingDynamicLinkDataFromMap(linkData);
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -149,7 +161,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
 
       return Uri.parse(url!);
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -181,7 +193,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
             : null,
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 }

@@ -1,79 +1,103 @@
-// Copyright 2020 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/button_builder.dart';
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_example/firebase_config.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
-import './register_page.dart';
-import './signin_page.dart';
+import 'auth.dart';
+import 'profile.dart';
 
+/// Requires that a Firebase local emulator is running locally.
+/// See https://firebase.flutter.dev/docs/auth/start/#optional-prototype-and-test-with-firebase-local-emulator-suite
+bool shouldUseFirebaseEmulator = false;
+
+// Requires that the Firebase Auth emulator is running locally
+// e.g via `melos run firebase:emulator`.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
-  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-  runApp(AuthExampleApp());
+  // We're using the manual installation on non-web platforms since Google sign in plugin doesn't yet support Dart initialization.
+  // See related issue: https://github.com/flutter/flutter/issues/96391
+  if (!kIsWeb) {
+    await Firebase.initializeApp();
+  } else {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
+        appId: '1:448618578101:web:0b650370bb29e29cac3efc',
+        messagingSenderId: '448618578101',
+        projectId: 'react-native-firebase-testing',
+        authDomain: 'react-native-firebase-testing.firebaseapp.com',
+        databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+        storageBucket: 'react-native-firebase-testing.appspot.com',
+        measurementId: 'G-F79DJ0VFGS',
+      ),
+    );
+  }
+
+  if (shouldUseFirebaseEmulator) {
+    await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  }
+
+  runApp(const AuthExampleApp());
 }
 
 /// The entry point of the application.
 ///
 /// Returns a [MaterialApp].
 class AuthExampleApp extends StatelessWidget {
+  const AuthExampleApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Firebase Example App',
-      theme: ThemeData.dark(),
+      theme: ThemeData(primarySwatch: Colors.amber),
       home: Scaffold(
-        body: AuthTypeSelector(),
-      ),
-    );
-  }
-}
-
-/// Provides a UI to select a authentication type page
-class AuthTypeSelector extends StatelessWidget {
-  // Navigates to a new page
-  void _pushPage(BuildContext context, Widget page) {
-    Navigator.of(context) /*!*/ .push(
-      MaterialPageRoute<void>(builder: (_) => page),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Firebase Example App'),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
-            child: SignInButtonBuilder(
-              icon: Icons.person_add,
-              backgroundColor: Colors.indigo,
-              text: 'Registration',
-              onPressed: () => _pushPage(context, RegisterPage()),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
-            child: SignInButtonBuilder(
-              icon: Icons.verified_user,
-              backgroundColor: Colors.orange,
-              text: 'Sign In',
-              onPressed: () => _pushPage(context, SignInPage()),
-            ),
-          ),
-        ],
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return Row(
+              children: [
+                Visibility(
+                  visible: constraints.maxWidth >= 1200,
+                  child: Expanded(
+                    child: Container(
+                      height: double.infinity,
+                      color: Theme.of(context).colorScheme.primary,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Firebase Auth Desktop',
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: constraints.maxWidth >= 1200
+                      ? constraints.maxWidth / 2
+                      : constraints.maxWidth,
+                  child: StreamBuilder<User?>(
+                    stream: FirebaseAuth.instance.authStateChanges(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return const ProfilePage();
+                      }
+                      return const AuthGate();
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

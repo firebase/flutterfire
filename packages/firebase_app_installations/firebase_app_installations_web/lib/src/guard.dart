@@ -4,15 +4,13 @@
 
 import 'package:firebase_core/firebase_core.dart';
 
-// ignore: implementation_imports
-import 'package:firebase_core/src/internals.dart' as internals;
-
-export 'package:firebase_core/src/internals.dart' hide guard;
+import 'package:_flutterfire_internals/_flutterfire_internals.dart'
+    as internals;
 
 /// Will return a [FirebaseException] from a thrown web error.
 /// Any other errors will be propagated as normal.
-R guard<R>(R Function() cb) {
-  return internals.guard(
+R convertWebExceptions<R>(R Function() cb) {
+  return internals.guardWebExceptions(
     cb,
     plugin: 'firebase_app_installations',
     codeParser: (code) => code.replaceFirst('installations/', ''),

@@ -8,8 +8,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import '../method_channel/method_channel_firebase_app_check.dart';
-
 abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
   FirebaseAppCheckPlatform({this.appInstance}) : super(token: _token);
@@ -49,7 +47,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseAppCheckPlatform.instance]
   static set instance(FirebaseAppCheckPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 
@@ -57,8 +55,12 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   ///
   /// On web, provide the reCAPTCHA v3 Site Key which can be found in the
   /// Firebase Console. For more information, see
-  /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web?authuser=0).
-  Future<void> activate({String? webRecaptchaSiteKey}) {
+  /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web).
+  ///
+  /// On Android, the default provider is "play integrity". If you wish to set the provider to "safety net" or "debug", you may set the `androidProvider` property using the `AndroidProvider` enum
+  /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
+  Future<void> activate(
+      {String? webRecaptchaSiteKey, AndroidProvider? androidProvider}) {
     throw UnimplementedError('activate() is not implemented');
   }
 

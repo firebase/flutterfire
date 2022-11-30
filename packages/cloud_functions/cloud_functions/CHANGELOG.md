@@ -1,10 +1,126 @@
+## 4.0.5
+
+ - Update a dependency to the latest release.
+
+## 4.0.4
+
+ - Update a dependency to the latest release.
+
+## 4.0.3
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 4.0.2
+
+ - Update a dependency to the latest release.
+
+## 4.0.1
+
+- Update a dependency to the latest release.
+
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 3.3.9
+
+ - Update a dependency to the latest release.
+
+## 3.3.8
+
+ - Update a dependency to the latest release.
+
+## 3.3.7
+
+ - Update a dependency to the latest release.
+
+## 3.3.6
+
+ - Update a dependency to the latest release.
+
+## 3.3.5
+
+ - Update a dependency to the latest release.
+
+## 3.3.4
+
+ - Update a dependency to the latest release.
+
+## 3.3.3
+
+ - Update a dependency to the latest release.
+
+## 3.3.2
+
+ - Update a dependency to the latest release.
+
+## 3.3.1
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 3.3.0
+
+ - **FEAT**: Bump Firebase iOS SDK to `9.2.0` (#8594). ([79610162](https://github.com/firebase/flutterfire/commit/79610162460b8877f3bc727464a7065106f08079))
+
+## 3.2.17
+
+ - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8725). ([520f59d4](https://github.com/firebase/flutterfire/commit/520f59d4f2a998a646edf20cad6df1c614e5b4c3))
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **DOCS**: point to "firebase.google" domain for hyperlinks in the usage section of `README.md` files (for the missing packages) (#8818). ([5bda8c92](https://github.com/firebase/flutterfire/commit/5bda8c92be1651a941d1285d36e885ee0b967b11))
+
+## 3.2.16
+
+ - **DOCS**: use camel case style for "FlutterFire" in `README.md` (#8746). ([53813627](https://github.com/firebase/flutterfire/commit/53813627720e1e1ad729839519f7374ebc91470f))
+
+## 3.2.15
+
+ - Update a dependency to the latest release.
+
+## 3.2.14
+
+ - Update a dependency to the latest release.
+
+## 3.2.13
+
+ - Update a dependency to the latest release.
+
+## 3.2.12
+
+ - Update a dependency to the latest release.
+
+## 3.2.11
+
+ - Update a dependency to the latest release.
+
+## 3.2.10
+
+ - **FIX**: Allow raw data arguments to be passed as data to Cloud Function for `Android` & `iOS`. (#7994). ([8288b811](https://github.com/firebase/flutterfire/commit/8288b811f2b82df263a092428905960960e537c6))
+
+## 3.2.9
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 3.2.8
+
+ - Update a dependency to the latest release.
+
+## 3.2.7
+
+- **REFACTOR**: remove deprecated Android API usages (#7986). ([232e5f89](https://github.com/firebase/flutterfire/commit/232e5f8972df8ef22bfb76ce8cf1e631d823a1b5))
+
+## 3.2.6
+
+ - Update a dependency to the latest release.
+
 ## 3.2.5
 
- - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/firebase/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
 
 ## 3.2.4
 
- - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/firebase/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
 
 ## 3.2.3
 

@@ -1,54 +1,52 @@
 name: all_plugins
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   pull_request:
     paths-ignore:
-      - "docs/**"
-      - "website/**"
-      - "**.md"
+      - 'docs/**'
+      - 'website/**'
+      - '**.md'
   push:
     branches:
       - master
     paths-ignore:
-      - "docs/**"
-      - "website/**"
-      - "**.md"
+      - 'docs/**'
+      - 'website/**'
+      - '**.md'
 
 jobs:
   analyze:
-    timeout-minutes: 30
+    timeout-minutes: 45
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
         with:
-          fetch-depth: 0
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
-      - name: "Install Tools"
-        run: |
-          ./.github/workflows/scripts/install-tools.sh
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
-      - name: "Run Analyze"
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@v2
+      - name: 'Run Analyze'
         run: melos run analyze
-      - name: "Pub Check"
+      - name: 'Pub Check'
         run: |
           melos exec -c 1 --no-private --ignore="*example*" -- \
-            pub publish --dry-run
+            dart pub publish --dry-run
 
   pub_get_check:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
         with:
-          fetch-depth: 0
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
-      - name: "Install Tools"
-        run: |
-          ./.github/workflows/scripts/install-tools.sh
-      - name: "Flutter Pub Get"
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@v2
+      - name: 'Flutter Pub Get'
         run: |
           melos exec -c 1 --scope="*example*" -- \
             "flutter pub get"
@@ -57,51 +55,44 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
         with:
-          fetch-depth: 0
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
-      - name: "Install Tools"
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@v2
+      - uses: Homebrew/actions/setup-homebrew@master
+      - name: 'Install Tools'
         run: |
-          ./.github/workflows/scripts/install-tools.sh
-          curl -sL https://github.com/google/google-java-format/releases/download/google-java-format-1.3/google-java-format-1.3-all-deps.jar -o $HOME/google-java-format.jar
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
-      - name: "Dart"
+          flutter pub global activate flutter_plugin_tools
+          brew install swiftformat
+          brew install clang-format
+          brew link --overwrite --force clang-format
+      - name: 'Formatter version'
         run: |
-          melos exec -c 1 -- \
-            "flutter format ."
+          clang-format --version
+          swiftformat --version
+      - name: 'Dart, Java and Objective-C '
+        run: |
+          flutter pub global run flutter_plugin_tools format
           ./.github/workflows/scripts/validate-formatting.sh
-      - name: "Objective-C"
+      - name: 'Swift'
         if: ${{ success() || failure() }}
         run: |
-          melos exec -c 4 --ignore="*platform_interface*" --ignore="*web*" --dir-exists="ios" -- \
-            find . -maxdepth 3 -name "*.h" -o -name "*.m" -print0 \| xargs -0 clang-format -i --style=Google --verbose
-          ./.github/workflows/scripts/validate-formatting.sh
-      - name: "Java"
-        if: ${{ success() || failure() }}
-        run: |
-          melos exec -c 4 --ignore="*platform_interface*" --ignore="*web*" --dir-exists="android" -- \
-            find . -maxdepth 12 -name "*.java" -print0 \| xargs -0 java -jar $HOME/google-java-format.jar --replace
+          swiftformat .
           ./.github/workflows/scripts/validate-formatting.sh
 
   build_examples_dart:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
         with:
-          fetch-depth: 0
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
-      - name: "Install Tools"
-        run: |
-          ./.github/workflows/scripts/install-tools.sh
-          flutter config --enable-web
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
-      - name: "Build Examples"
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@v2
+      - name: 'Build Examples'
         run: |
           melos exec -c 1 --scope="*example*" --dir-exists="web" -- \
             "flutter build web --no-pub"
@@ -110,16 +101,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
         with:
-          fetch-depth: 0
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
-      - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
-      - name: "Flutter Test"
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@v2
+      - name: 'Flutter Test'
         run: melos run test --no-select
-      - name: "Flutter Test - Web"
+      - name: 'Flutter Test - Web'
         run: melos run test:web --no-select
