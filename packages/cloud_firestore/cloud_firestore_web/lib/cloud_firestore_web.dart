@@ -159,7 +159,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     if (settings != null) {
       firestore_interop.PersistenceSettings interopSettings =
           firestore_interop.PersistenceSettings(
-              forceOwnership: settings.forceOwnership);
+              forceOwnership: settings.synchronizeTabs);
 
       return convertWebExceptions(
           () => _delegate.enablePersistence(interopSettings));
