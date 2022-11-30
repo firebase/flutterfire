@@ -168,13 +168,14 @@ abstract class AuthProvider<T extends AuthListener, K extends AuthCredential> {
         linkWithCredential(credential);
         break;
       case AuthAction.signIn:
+      // Only email provider has a different action for sing in and sign up
+      // and implements it's own sign up logic.
+      case AuthAction.signUp:
         signInWithCredential(credential);
         break;
       case AuthAction.none:
         authListener.onCredentialReceived(credential);
         break;
-      default:
-        throw Exception('$runtimeType should handle $action');
     }
   }
 }
