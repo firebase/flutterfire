@@ -64,6 +64,7 @@ abstract class NotificationPayloadJsImpl {
 @JS()
 @anonymous
 abstract class MessagePayloadJsImpl {
+  external String get messageId;
   external String? get collapseKey;
   external FcmOptionsJsImpl? get fcmOptions;
   external NotificationPayloadJsImpl? get notification;
