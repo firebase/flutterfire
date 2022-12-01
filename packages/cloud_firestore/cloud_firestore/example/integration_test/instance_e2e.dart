@@ -233,21 +233,21 @@ void runInstanceTests() {
 
       test('setIndexConfigurationFromJSON()', () async {
         final json = jsonEncode({
-          "indexes": [
+          'indexes': [
             {
-              "collectionGroup": "posts",
-              "queryScope": "COLLECTION",
-              "fields": [
-                {"fieldPath": "author", "arrayConfig": "CONTAINS"},
-                {"fieldPath": "timestamp", "order": "DESCENDING"}
+              'collectionGroup': 'posts',
+              'queryScope': 'COLLECTION',
+              'fields': [
+                {'fieldPath': 'author', 'arrayConfig': 'CONTAINS'},
+                {'fieldPath': 'timestamp', 'order': 'DESCENDING'}
               ]
             }
           ],
-          "fieldOverrides": [
+          'fieldOverrides': [
             {
-              "collectionGroup": "posts",
-              "fieldPath": "myBigMapField",
-              "indexes": []
+              'collectionGroup': 'posts',
+              'fieldPath': 'myBigMapField',
+              'indexes': []
             }
           ]
         });
