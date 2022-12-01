@@ -189,6 +189,7 @@ class _OAuthProviderButtonBaseState extends State<OAuthProviderButtonBase>
               child: _ButtonContent(
                 assetsPackage: style.assetsPackage,
                 iconSrc: style.iconSrc,
+                iconPadding: style.iconPadding,
                 isLoading: isLoading,
                 label: widget.label,
                 height: _height,
@@ -228,6 +229,7 @@ class _OAuthProviderButtonBaseState extends State<OAuthProviderButtonBase>
           _ButtonContent(
             assetsPackage: style.assetsPackage,
             iconSrc: style.iconSrc,
+            iconPadding: style.iconPadding,
             isLoading: isLoading,
             label: widget.label,
             height: _height,
@@ -363,6 +365,7 @@ class _OAuthProviderButtonBaseState extends State<OAuthProviderButtonBase>
 class _ButtonContent extends StatelessWidget {
   final double height;
   final String iconSrc;
+  final double iconPadding;
   final String assetsPackage;
   final String label;
   final bool isLoading;
@@ -377,6 +380,7 @@ class _ButtonContent extends StatelessWidget {
     Key? key,
     required this.height,
     required this.iconSrc,
+    required this.iconPadding,
     required this.assetsPackage,
     required this.label,
     required this.isLoading,
@@ -398,10 +402,13 @@ class _ButtonContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget child = SvgPicture.string(
-      iconSrc,
-      width: height,
-      height: height,
+    Widget child = Padding(
+      padding: EdgeInsets.all(iconPadding),
+      child: SvgPicture.string(
+        iconSrc,
+        width: height,
+        height: height,
+      ),
     );
 
     if (label.isNotEmpty) {
