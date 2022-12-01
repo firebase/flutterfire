@@ -53,7 +53,11 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   FirebaseAuthException? exception;
 
   Future<void> _submit(String email) async {
-    setState(() => isLoading = true);
+    setState(() {
+      exception = null;
+      isLoading = true;
+    });
+
     try {
       await auth.sendPasswordResetEmail(
         email: email,
