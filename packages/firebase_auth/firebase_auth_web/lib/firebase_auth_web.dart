@@ -90,11 +90,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
     FirebaseCoreWeb.registerService('auth', () async {
-      print('coucou');
-      FirebaseAuthWeb.instance.authStateChanges().listen((event) {
-        print('authStateChanges: $event');
-      });
-      print('coucou 2');
+      await FirebaseAuthWeb.instance.delegate.onAuthStateChanged.first;
     });
     FirebaseAuthPlatform.instance = FirebaseAuthWeb.instance;
     PhoneMultiFactorGeneratorPlatform.instance = PhoneMultiFactorGeneratorWeb();

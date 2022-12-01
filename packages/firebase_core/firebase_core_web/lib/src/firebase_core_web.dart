@@ -17,10 +17,11 @@ class FirebaseWebService {
   /// Function to call to ensure the Firebase Service is initalized.
   /// Usually used to ensure that the Web SDK match the behavior
   /// of native SDKs.
-  EnsureInitializedFunction ensureInitialized;
+  EnsureInitializedFunction ensureInitializedFunction;
 
   /// Creates a new [FirebaseWebService].
-  FirebaseWebService._(this.name, {this.override, this.ensureInitialized});
+  FirebaseWebService._(this.name,
+      {this.override, this.ensureInitializedFunction});
 }
 
 typedef EnsureInitializedFunction = Future<void> Function()?;
@@ -39,13 +40,13 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// Internally registers a Firebase Service to be initialized.
   static void registerService(
     String service, [
-    EnsureInitializedFunction? ensureInitialized,
+    EnsureInitializedFunction? ensureInitializedFunction,
   ]) {
     _services.putIfAbsent(
       service,
       () => FirebaseWebService._(
         service,
-        ensureInitialized: ensureInitialized,
+        ensureInitializedFunction: ensureInitializedFunction,
       ),
     );
   }
@@ -143,24 +144,6 @@ class FirebaseCoreWeb extends FirebasePlatform {
         );
       }),
     );
-
-    await Future.wait(
-      _services.values.map((service) {
-        if (ignored.contains(service.override ?? service.name)) {
-          return Future.value();
-        }
-
-        final ensureInitialized = service.ensureInitialized;
-
-        if (ensureInitialized == null) {
-          return Future.value();
-        }
-
-        return ensureInitialized();
-      }),
-    );
-
-    print("end");
   }
 
   /// Returns all created [FirebaseAppPlatform] instances.
@@ -285,6 +268,18 @@ class FirebaseCoreWeb extends FirebasePlatform {
         throw _catchJSError(e);
       }
     }
+
+    await Future.wait(
+      _services.values.map((service) {
+        final ensureInitializedFunction = service.ensureInitializedFunction;
+
+        if (ensureInitializedFunction == null) {
+          return Future.value();
+        }
+
+        return ensureInitializedFunction();
+      }),
+    );
 
     return _createFromJsApp(app!);
   }
