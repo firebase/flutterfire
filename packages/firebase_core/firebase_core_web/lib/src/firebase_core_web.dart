@@ -14,23 +14,40 @@ class FirebaseWebService {
   /// property allows overriding of web naming to Flutterfire plugin naming.
   String? override;
 
+  /// Function to call to ensure the Firebase Service is initalized.
+  /// Usually used to ensure that the Web SDK match the behavior
+  /// of native SDKs.
+  EnsureInitializedFunction ensureInitialized;
+
   /// Creates a new [FirebaseWebService].
-  FirebaseWebService._(this.name, [this.override]);
+  FirebaseWebService._(this.name, {this.override, this.ensureInitialized});
 }
+
+typedef EnsureInitializedFunction = Future<void> Function()?;
 
 /// The entry point for accessing Firebase.
 ///
 /// You can get an instance by calling [FirebaseCore.instance].
 class FirebaseCoreWeb extends FirebasePlatform {
   static Map<String, FirebaseWebService> _services = {
-    'core': FirebaseWebService._('app', 'core'),
-    'app-check': FirebaseWebService._('app-check', 'app_check'),
-    'remote-config': FirebaseWebService._('remote-config', 'remote_config'),
+    'core': FirebaseWebService._('app', override: 'core'),
+    'app-check': FirebaseWebService._('app-check', override: 'app_check'),
+    'remote-config':
+        FirebaseWebService._('remote-config', override: 'remote_config'),
   };
 
   /// Internally registers a Firebase Service to be initialized.
-  static void registerService(String service) {
-    _services.putIfAbsent(service, () => FirebaseWebService._(service));
+  static void registerService(
+    String service, [
+    EnsureInitializedFunction? ensureInitialized,
+  ]) {
+    _services.putIfAbsent(
+      service,
+      () => FirebaseWebService._(
+        service,
+        ensureInitialized: ensureInitialized,
+      ),
+    );
   }
 
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
@@ -116,7 +133,6 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
     await Future.wait(
       _services.values.map((service) {
-        print(service);
         if (ignored.contains(service.override ?? service.name)) {
           return Future.value();
         }
@@ -127,6 +143,24 @@ class FirebaseCoreWeb extends FirebasePlatform {
         );
       }),
     );
+
+    await Future.wait(
+      _services.values.map((service) {
+        if (ignored.contains(service.override ?? service.name)) {
+          return Future.value();
+        }
+
+        final ensureInitialized = service.ensureInitialized;
+
+        if (ensureInitialized == null) {
+          return Future.value();
+        }
+
+        return ensureInitialized();
+      }),
+    );
+
+    print("end");
   }
 
   /// Returns all created [FirebaseAppPlatform] instances.
