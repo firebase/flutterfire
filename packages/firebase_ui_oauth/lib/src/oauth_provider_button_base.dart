@@ -169,7 +169,7 @@ class _OAuthProviderButtonBaseState extends State<OAuthProviderButtonBase>
   ) {
     final br = BorderRadius.circular(borderRadius);
 
-    return Padding(
+    return LayoutFlowAwarePadding(
       padding: EdgeInsets.all(margin),
       child: CupertinoTheme(
         data: CupertinoThemeData(
@@ -488,7 +488,7 @@ class _ButtonContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return LayoutFlowAwarePadding(
       padding: EdgeInsets.all(margin),
       child: SizedBox(
         height: height,
