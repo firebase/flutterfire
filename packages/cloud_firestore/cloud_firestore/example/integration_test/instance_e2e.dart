@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -228,6 +229,30 @@ void runInstanceTests() {
           indexes: [index1, index2],
           fieldOverrides: [fieldOverride1, fieldOverride2],
         );
+      });
+
+      test('setIndexConfigurationFromJSON()', () async {
+        final json = jsonEncode({
+          "indexes": [
+            {
+              "collectionGroup": "posts",
+              "queryScope": "COLLECTION",
+              "fields": [
+                {"fieldPath": "author", "arrayConfig": "CONTAINS"},
+                {"fieldPath": "timestamp", "order": "DESCENDING"}
+              ]
+            }
+          ],
+          "fieldOverrides": [
+            {
+              "collectionGroup": "posts",
+              "fieldPath": "myBigMapField",
+              "indexes": []
+            }
+          ]
+        });
+
+        await firestore.setIndexConfigurationFromJSON(json);
       });
     },
   );

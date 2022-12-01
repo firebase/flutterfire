@@ -323,6 +323,20 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return _delegate.setIndexConfiguration(json);
   }
 
+  /// Configures indexing for local query execution. Any previous index configuration is overridden.
+  ///
+  /// The index entries themselves are created asynchronously. You can continue to use queries that
+  /// require indexing even if the indices are not yet available. Query execution will automatically
+  /// start using the index once the index entries have been written.
+  /// See Firebase documentation to learn how to configure your index configuration JSON file:
+  /// https://firebase.google.com/docs/reference/firestore/indexes
+  ///
+  /// This API is in preview mode and is subject to change.
+  @experimental
+  Future<void> setIndexConfigurationFromJSON(String json) async {
+    return _delegate.setIndexConfiguration(json);
+  }
+
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
