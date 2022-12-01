@@ -116,6 +116,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
     await Future.wait(
       _services.values.map((service) {
+        print(service);
         if (ignored.contains(service.override ?? service.name)) {
           return Future.value();
         }
