@@ -17,17 +17,17 @@ class FirebaseWebService {
   /// Function to call to ensure the Firebase Service is initalized.
   /// Usually used to ensure that the Web SDK match the behavior
   /// of native SDKs.
-  EnsureInitializedFunction ensureInitializedFunction;
+  EnsurePluginInitialized ensurePluginInitialized;
 
   /// Creates a new [FirebaseWebService].
   FirebaseWebService._(
     this.name, {
     this.override,
-    this.ensureInitializedFunction,
+    this.ensurePluginInitialized,
   });
 }
 
-typedef EnsureInitializedFunction = Future<void> Function()?;
+typedef EnsurePluginInitialized = Future<void> Function()?;
 
 /// The entry point for accessing Firebase.
 ///
@@ -43,13 +43,13 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// Internally registers a Firebase Service to be initialized.
   static void registerService(
     String service, [
-    EnsureInitializedFunction? ensureInitializedFunction,
+    EnsurePluginInitialized? ensurePluginInitialized,
   ]) {
     _services.putIfAbsent(
       service,
       () => FirebaseWebService._(
         service,
-        ensureInitializedFunction: ensureInitializedFunction,
+        ensurePluginInitialized: ensurePluginInitialized,
       ),
     );
   }
@@ -274,7 +274,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
     await Future.wait(
       _services.values.map((service) {
-        final ensureInitializedFunction = service.ensureInitializedFunction;
+        final ensureInitializedFunction = service.ensurePluginInitialized;
 
         if (ensureInitializedFunction == null) {
           return Future.value();
