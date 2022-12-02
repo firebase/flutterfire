@@ -15,17 +15,17 @@ import 'package:flutter/foundation.dart'
 /// );
 /// ```
 class DefaultFirebaseOptions {
-  static FirebaseOptions? get currentPlatform {
+  static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return null;
+        return android;
       case TargetPlatform.iOS:
-        return null;
+        return ios;
       case TargetPlatform.macOS:
-        return null;
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -52,5 +52,38 @@ class DefaultFirebaseOptions {
     databaseURL: 'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'flutterfire-e2e-tests.appspot.com',
     measurementId: 'G-JN95N1JV2E',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyCdRjCVZlhrq72RuEklEyyxYlBRCYhI2Sw',
+    appId: '1:406099696497:android:175ea7a64b2faf5e3574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    databaseURL: 'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c',
+    appId: '1:406099696497:ios:0670bc5fe8574a9c3574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    databaseURL: 'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+    androidClientId: '406099696497-17qn06u8a0dc717u8ul7s49ampk13lul.apps.googleusercontent.com',
+    iosClientId: '406099696497-l9gojfp6b3h1cgie1se28a9ol9fmsvvk.apps.googleusercontent.com',
+    iosBundleId: 'io.flutter.plugins.firebase.firestore.example',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c',
+    appId: '1:406099696497:ios:0670bc5fe8574a9c3574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    databaseURL: 'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+    androidClientId: '406099696497-17qn06u8a0dc717u8ul7s49ampk13lul.apps.googleusercontent.com',
+    iosClientId: '406099696497-l9gojfp6b3h1cgie1se28a9ol9fmsvvk.apps.googleusercontent.com',
+    iosBundleId: 'io.flutter.plugins.firebase.firestore.example',
   );
 }
