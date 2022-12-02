@@ -10,6 +10,7 @@
 .pub/
 .dart_tool/
 pubspec.lock
+pubspec_overrides.yaml
 flutter_export_environment.sh
 
 examples/all_plugins/pubspec.yaml

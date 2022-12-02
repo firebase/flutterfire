@@ -95,7 +95,7 @@ jobs:
       - name: 'Build Examples'
         run: |
           melos exec -c 1 --scope="*example*" --dir-exists="web" -- \
-            "flutter build web --no-pub"
+            "flutter build web"
 
   test:
     runs-on: ubuntu-latest
@@ -132,4 +132,4 @@ jobs:
           # for the `check-license-header` script.
           run-bootstrap: false
       - name: Check license header
-        run: melos run check-license-header 
+        run: melos run check-license-header
