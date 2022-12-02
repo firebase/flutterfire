@@ -961,10 +961,14 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String?,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String?,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+      if (firstName != _sentinel)
+        _$AdvancedJsonFieldMap['firstName']!: firstName as String?,
+      if (firstNameFieldValue != null)
+        _$AdvancedJsonFieldMap['firstName']!: firstNameFieldValue,
+      if (lastName != _sentinel)
+        _$AdvancedJsonFieldMap['lastName']!: lastName as String?,
+      if (lastNameFieldValue != null)
+        _$AdvancedJsonFieldMap['lastName']!: lastNameFieldValue,
     };
 
     return reference.update(json);
@@ -986,10 +990,14 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String?,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String?,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+      if (firstName != _sentinel)
+        _$AdvancedJsonFieldMap['firstName']!: firstName as String?,
+      if (firstNameFieldValue != null)
+        _$AdvancedJsonFieldMap['firstName']!: firstNameFieldValue,
+      if (lastName != _sentinel)
+        _$AdvancedJsonFieldMap['lastName']!: lastName as String?,
+      if (lastNameFieldValue != null)
+        _$AdvancedJsonFieldMap['lastName']!: lastNameFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1890,10 +1898,14 @@ class _$_PrivateAdvancedJsonDocumentReference
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String?,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String?,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+      if (firstName != _sentinel)
+        _$PrivateAdvancedJsonFieldMap['firstName']!: firstName as String?,
+      if (firstNameFieldValue != null)
+        _$PrivateAdvancedJsonFieldMap['firstName']!: firstNameFieldValue,
+      if (lastName != _sentinel)
+        _$PrivateAdvancedJsonFieldMap['lastName']!: lastName as String?,
+      if (lastNameFieldValue != null)
+        _$PrivateAdvancedJsonFieldMap['lastName']!: lastNameFieldValue,
     };
 
     return reference.update(json);
@@ -1915,10 +1927,14 @@ class _$_PrivateAdvancedJsonDocumentReference
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String?,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String?,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+      if (firstName != _sentinel)
+        _$PrivateAdvancedJsonFieldMap['firstName']!: firstName as String?,
+      if (firstNameFieldValue != null)
+        _$PrivateAdvancedJsonFieldMap['firstName']!: firstNameFieldValue,
+      if (lastName != _sentinel)
+        _$PrivateAdvancedJsonFieldMap['lastName']!: lastName as String?,
+      if (lastNameFieldValue != null)
+        _$PrivateAdvancedJsonFieldMap['lastName']!: lastNameFieldValue,
     };
 
     transaction.update(reference, json);

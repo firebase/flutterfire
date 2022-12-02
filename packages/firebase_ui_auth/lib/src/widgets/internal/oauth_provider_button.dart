@@ -114,7 +114,8 @@ class OAuthProviderButton extends StatelessWidget {
           ),
           label: variant == OAuthButtonVariant.icon
               ? ''
-              : resolveProviderButtonLabel(provider.providerId, labels),
+              : provider.style.label ??
+                  resolveProviderButtonLabel(provider.providerId, labels),
           auth: auth,
         );
 

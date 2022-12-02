@@ -1,3 +1,16 @@
+## 1.1.1
+
+ - **FIX**: fix OAuth provider buttons paddings ([#9991](https://github.com/firebase/flutterfire/issues/9991)). ([cadf2f21](https://github.com/firebase/flutterfire/commit/cadf2f21e9d279d81f6a98624a3a5ff10e654cf2))
+ - **FIX**: fix OAuth providers on RegisterScreen ([#10026](https://github.com/firebase/flutterfire/issues/10026)). ([5b11e80f](https://github.com/firebase/flutterfire/commit/5b11e80fbef217d667161c5c31500dd9507ba77b))
+ - **FIX**: preserve UI form state when device rotates ([#9993](https://github.com/firebase/flutterfire/issues/9993)). ([55dcd329](https://github.com/firebase/flutterfire/commit/55dcd329489962e2c37bb4140802ffe4b4232c5c))
+ - **FIX**: clear the error on ForgotPasswordScreen after submitting a valid email ([#9992](https://github.com/firebase/flutterfire/issues/9992)). ([6c90b6bd](https://github.com/firebase/flutterfire/commit/6c90b6bdd09ef411261aaae5a83328ce0fa3177f))
+
+## 1.1.0
+
+ - **FIX**: allow null countryCode for phone input ([#9937](https://github.com/firebase/flutterfire/issues/9937)). ([e87ec8a9](https://github.com/firebase/flutterfire/commit/e87ec8a9422d3608fcd5357c899f388321bc0a44))
+ - **FEAT**: [firebase_ui_auth] [firebase_ui_oauth] Allow for custom labels to be used for custom OAuth providers ([#9858](https://github.com/firebase/flutterfire/issues/9858)). ([fd0b815d](https://github.com/firebase/flutterfire/commit/fd0b815dbf82327caa9867dfe4b72571cc1bfe9a))
+ - **DOCS**: improve phone.md  ([#9774](https://github.com/firebase/flutterfire/issues/9774)). ([1f1ffd19](https://github.com/firebase/flutterfire/commit/1f1ffd19ab6383ed1fcac43b2011ee0b0a471c12))
+
 ## 1.0.6
 
  - **FIX**: initialize auth and auth listener in standalone OAuth buttons ([#9926](https://github.com/firebase/flutterfire/issues/9926)). ([24450803](https://github.com/firebase/flutterfire/commit/24450803ba97a8a8a384a0a06d1d724c90d7953c))

@@ -123,6 +123,7 @@ class ResponsivePage extends StatefulWidget {
 class _ResponsivePageState extends State<ResponsivePage> {
   final ctrl = ScrollController();
   final paddingListenable = ValueNotifier<double>(0);
+  final key = GlobalKey();
 
   void _onKeyboardPositionChanged(double position) {
     if (!ctrl.hasClients) {
@@ -141,6 +142,11 @@ class _ResponsivePageState extends State<ResponsivePage> {
   @override
   Widget build(BuildContext context) {
     final breakpoint = widget.breakpoint;
+
+    final content = KeyedSubtree(
+      key: key,
+      child: widget.child,
+    );
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -170,9 +176,7 @@ class _ResponsivePageState extends State<ResponsivePage> {
                           Center(
                             child: ConstrainedBox(
                               constraints: BoxConstraints(maxWidth: breakpoint),
-                              child: IntrinsicHeight(
-                                child: widget.child,
-                              ),
+                              child: IntrinsicHeight(child: content),
                             ),
                           ),
                         ],
@@ -202,7 +206,7 @@ class _ResponsivePageState extends State<ResponsivePage> {
                   SliverList(
                     delegate: SliverChildListDelegate.fixed(
                       [
-                        widget.child,
+                        content,
                         ValueListenableBuilder<double>(
                           valueListenable: paddingListenable,
                           builder: (context, value, _) {
@@ -221,7 +225,7 @@ class _ResponsivePageState extends State<ResponsivePage> {
             child: ListView(
               shrinkWrap: true,
               children: [
-                widget.child,
+                content,
               ],
             ),
           );

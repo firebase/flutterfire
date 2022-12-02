@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -141,6 +142,28 @@ void main() {
       );
 
       expect(iconFinder, findsOneWidget);
+    });
+
+    testWidgets('has layout flow aware padding', (tester) async {
+      await tester.pumpWidget(DefaultAssetBundle(
+        bundle: FakeAssetBundle(),
+        child: MaterialApp(
+          home: Scaffold(
+            body: Row(
+              children: [
+                OAuthProviderButtonBase(
+                  provider: provider,
+                  auth: FakeAuth(),
+                  label: 'Sign in with Fake provider',
+                  loadingIndicator: const CircularProgressIndicator(),
+                )
+              ],
+            ),
+          ),
+        ),
+      ));
+
+      expect(find.byType(LayoutFlowAwarePadding), findsOneWidget);
     });
   });
 }

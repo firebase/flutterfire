@@ -1,3 +1,11 @@
+## 4.1.5
+
+ - **FIX**: Apple Sign In on a secondary app doesnt sign in the correct Firebase Auth instance ([#10018](https://github.com/firebase/flutterfire/issues/10018)). ([f746d5da](https://github.com/firebase/flutterfire/commit/f746d5da0c784e28f08b9fcedfce18933a9e448e))
+
+## 4.1.4
+
+ - **FIX**: tentative fix for null pointer exception in `parseUserInfoList` ([#9960](https://github.com/firebase/flutterfire/issues/9960)). ([dad17407](https://github.com/firebase/flutterfire/commit/dad1740792b893920867528039a9c54398ae7e3e))
+
 ## 4.1.3
 
  - **FIX**: fix reauthenticateWithProvider on iOS with Sign In With Apple that would throw a linked exception ([#9919](https://github.com/firebase/flutterfire/issues/9919)). ([7318a8f3](https://github.com/firebase/flutterfire/commit/7318a8f32de07bd47026d3e07b80b4bab5df1e6a))

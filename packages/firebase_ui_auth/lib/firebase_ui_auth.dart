@@ -65,6 +65,7 @@ export 'src/widgets/reauthenticate_dialog.dart';
 export 'src/widgets/different_method_sign_in_dialog.dart';
 export 'src/widgets/email_sign_up_dialog.dart';
 export 'src/widgets/email_link_sign_in_button.dart';
+export 'src/widgets/layout_flow_aware_padding.dart';
 
 export 'src/views/login_view.dart';
 export 'src/views/phone_input_view.dart';

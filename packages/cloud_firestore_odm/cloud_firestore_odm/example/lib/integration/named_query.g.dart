@@ -199,8 +199,9 @@ class _$ConflictDocumentReference
       "Cannot specify both number and numberFieldValue",
     );
     final json = {
-      if (number != _sentinel) 'number': number as num,
-      if (numberFieldValue != null) 'number': numberFieldValue,
+      if (number != _sentinel) _$ConflictFieldMap['number']!: number as num,
+      if (numberFieldValue != null)
+        _$ConflictFieldMap['number']!: numberFieldValue,
     };
 
     return reference.update(json);
@@ -216,8 +217,9 @@ class _$ConflictDocumentReference
       "Cannot specify both number and numberFieldValue",
     );
     final json = {
-      if (number != _sentinel) 'number': number as num,
-      if (numberFieldValue != null) 'number': numberFieldValue,
+      if (number != _sentinel) _$ConflictFieldMap['number']!: number as num,
+      if (numberFieldValue != null)
+        _$ConflictFieldMap['number']!: numberFieldValue,
     };
 
     transaction.update(reference, json);

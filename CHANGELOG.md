@@ -3,6 +3,140 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-12-01
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_auth` - `v4.1.5`](#firebase_auth---v415)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.3+23`](#firebase_dynamic_links_platform_interface---v02323)
+ - [`firebase_messaging` - `v14.1.3`](#firebase_messaging---v1413)
+ - [`firebase_messaging_web` - `v3.2.8`](#firebase_messaging_web---v328)
+ - [`firebase_ui_auth` - `v1.1.1`](#firebase_ui_auth---v111)
+ - [`firebase_ui_oauth` - `v1.1.1`](#firebase_ui_oauth---v111)
+ - [`firebase_ui_oauth_google` - `v1.0.8`](#firebase_ui_oauth_google---v108)
+ - [`firebase_ui_oauth_apple` - `v1.0.8`](#firebase_ui_oauth_apple---v108)
+ - [`firebase_ui_oauth_facebook` - `v1.0.8`](#firebase_ui_oauth_facebook---v108)
+ - [`firebase_ui_oauth_twitter` - `v1.0.8`](#firebase_ui_oauth_twitter---v108)
+ - [`firebase_dynamic_links` - `v5.0.7`](#firebase_dynamic_links---v507)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth_apple` - `v1.0.8`
+ - `firebase_ui_oauth_facebook` - `v1.0.8`
+ - `firebase_ui_oauth_twitter` - `v1.0.8`
+ - `firebase_dynamic_links` - `v5.0.7`
+
+---
+
+#### `firebase_auth` - `v4.1.5`
+
+ - **FIX**: Apple Sign In on a secondary app doesnt sign in the correct Firebase Auth instance ([#10018](https://github.com/firebase/flutterfire/issues/10018)). ([f746d5da](https://github.com/firebase/flutterfire/commit/f746d5da0c784e28f08b9fcedfce18933a9e448e))
+
+#### `firebase_dynamic_links_platform_interface` - `v0.2.3+23`
+
+ - **FIX**: allow for nullable utm values as send per the iOS SDK ([#10021](https://github.com/firebase/flutterfire/issues/10021)). ([4e974b2d](https://github.com/firebase/flutterfire/commit/4e974b2d82bff0f7e72120282bdddeea0e27f3a4))
+
+#### `firebase_messaging` - `v14.1.3`
+
+ - **FIX**: fix an issue where the notification wasn't restored when going into terminated state ([#9997](https://github.com/firebase/flutterfire/issues/9997)). ([d468dcb7](https://github.com/firebase/flutterfire/commit/d468dcb7519e1cb97359316f4f8f86b42b2ea9c9))
+
+#### `firebase_messaging_web` - `v3.2.8`
+
+ - **FIX**: Retrieve `messageId` from `MessagePayload` received on message event for Web platform. ([#7846](https://github.com/firebase/flutterfire/issues/7846)). ([d796d33f](https://github.com/firebase/flutterfire/commit/d796d33f722d92404217f9b153c301ab4e50b370))
+
+#### `firebase_ui_auth` - `v1.1.1`
+
+ - **FIX**: fix OAuth provider buttons paddings ([#9991](https://github.com/firebase/flutterfire/issues/9991)). ([cadf2f21](https://github.com/firebase/flutterfire/commit/cadf2f21e9d279d81f6a98624a3a5ff10e654cf2))
+ - **FIX**: fix OAuth providers on RegisterScreen ([#10026](https://github.com/firebase/flutterfire/issues/10026)). ([5b11e80f](https://github.com/firebase/flutterfire/commit/5b11e80fbef217d667161c5c31500dd9507ba77b))
+ - **FIX**: preserve UI form state when device rotates ([#9993](https://github.com/firebase/flutterfire/issues/9993)). ([55dcd329](https://github.com/firebase/flutterfire/commit/55dcd329489962e2c37bb4140802ffe4b4232c5c))
+ - **FIX**: clear the error on ForgotPasswordScreen after submitting a valid email ([#9992](https://github.com/firebase/flutterfire/issues/9992)). ([6c90b6bd](https://github.com/firebase/flutterfire/commit/6c90b6bdd09ef411261aaae5a83328ce0fa3177f))
+
+#### `firebase_ui_oauth` - `v1.1.1`
+
+ - **FIX**: fix OAuth provider buttons paddings ([#9991](https://github.com/firebase/flutterfire/issues/9991)). ([cadf2f21](https://github.com/firebase/flutterfire/commit/cadf2f21e9d279d81f6a98624a3a5ff10e654cf2))
+ - **FIX**: Made ThemedOAuthProviderButtonStyle.iconPadding work. ([5f2002fa](https://github.com/firebase/flutterfire/commit/5f2002fa6bada11b0c726a7722242fec6479fdb3))
+
+#### `firebase_ui_oauth_google` - `v1.0.8`
+
+ - **FIX**: fix an issue with Google Sign In where the clientId was passed on Android ([#10017](https://github.com/firebase/flutterfire/issues/10017)). ([cba4344c](https://github.com/firebase/flutterfire/commit/cba4344c05fb489cafd627420e2f7e0391ec625d))
+
+
+## 2022-11-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore_odm` - `v1.0.0-dev.42`](#cloud_firestore_odm---v100-dev42)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.42`](#cloud_firestore_odm_generator---v100-dev42)
+ - [`firebase_auth` - `v4.1.4`](#firebase_auth---v414)
+ - [`firebase_in_app_messaging` - `v0.7.0+7`](#firebase_in_app_messaging---v0707)
+ - [`firebase_messaging` - `v14.1.2`](#firebase_messaging---v1412)
+ - [`firebase_ui_auth` - `v1.1.0`](#firebase_ui_auth---v110)
+ - [`firebase_ui_oauth` - `v1.1.0`](#firebase_ui_oauth---v110)
+ - [`firebase_ui_oauth_apple` - `v1.0.7`](#firebase_ui_oauth_apple---v107)
+ - [`firebase_ui_oauth_facebook` - `v1.0.7`](#firebase_ui_oauth_facebook---v107)
+ - [`firebase_ui_oauth_google` - `v1.0.7`](#firebase_ui_oauth_google---v107)
+ - [`firebase_ui_oauth_twitter` - `v1.0.7`](#firebase_ui_oauth_twitter---v107)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth_apple` - `v1.0.7`
+ - `firebase_ui_oauth_facebook` - `v1.0.7`
+ - `firebase_ui_oauth_google` - `v1.0.7`
+ - `firebase_ui_oauth_twitter` - `v1.0.7`
+
+---
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.42`
+
+ - **FIX**: a bug where the ODM does not respect JSON case renaming ([#9988](https://github.com/firebase/flutterfire/issues/9988)). ([02d394b6](https://github.com/firebase/flutterfire/commit/02d394b6b0917f7dc98711b9939630c0b423ed63))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.42`
+
+ - **FIX**: a bug where the ODM does not respect JSON case renaming ([#9988](https://github.com/firebase/flutterfire/issues/9988)). ([02d394b6](https://github.com/firebase/flutterfire/commit/02d394b6b0917f7dc98711b9939630c0b423ed63))
+
+#### `firebase_auth` - `v4.1.4`
+
+ - **FIX**: tentative fix for null pointer exception in `parseUserInfoList` ([#9960](https://github.com/firebase/flutterfire/issues/9960)). ([dad17407](https://github.com/firebase/flutterfire/commit/dad1740792b893920867528039a9c54398ae7e3e))
+
+#### `firebase_in_app_messaging` - `v0.7.0+7`
+
+ - **FIX**: in app messages were suppressed on iOS ([#9959](https://github.com/firebase/flutterfire/issues/9959)). ([929e3686](https://github.com/firebase/flutterfire/commit/929e3686b76c1ce57cf87f19498cd52fb577a8c6))
+
+#### `firebase_messaging` - `v14.1.2`
+
+ - **FIX**: prevent getInitialMessage from being null at the start of the app ([#9969](https://github.com/firebase/flutterfire/issues/9969)). ([0b0fea8b](https://github.com/firebase/flutterfire/commit/0b0fea8b42ff61aabc0d2cdcd4d5ab1ea8192c61))
+
+#### `firebase_ui_auth` - `v1.1.0`
+
+ - **FIX**: allow null countryCode for phone input ([#9937](https://github.com/firebase/flutterfire/issues/9937)). ([e87ec8a9](https://github.com/firebase/flutterfire/commit/e87ec8a9422d3608fcd5357c899f388321bc0a44))
+ - **FEAT**: [firebase_ui_auth] [firebase_ui_oauth] Allow for custom labels to be used for custom OAuth providers ([#9858](https://github.com/firebase/flutterfire/issues/9858)). ([fd0b815d](https://github.com/firebase/flutterfire/commit/fd0b815dbf82327caa9867dfe4b72571cc1bfe9a))
+ - **DOCS**: improve phone.md  ([#9774](https://github.com/firebase/flutterfire/issues/9774)). ([1f1ffd19](https://github.com/firebase/flutterfire/commit/1f1ffd19ab6383ed1fcac43b2011ee0b0a471c12))
+
+#### `firebase_ui_oauth` - `v1.1.0`
+
+ - **FEAT**: [firebase_ui_auth] [firebase_ui_oauth] Allow for custom labels to be used for custom OAuth providers ([#9858](https://github.com/firebase/flutterfire/issues/9858)). ([fd0b815d](https://github.com/firebase/flutterfire/commit/fd0b815dbf82327caa9867dfe4b72571cc1bfe9a))
+
+
 ## 2022-11-17
 
 ### Changes
