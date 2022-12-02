@@ -20,8 +20,11 @@ class FirebaseWebService {
   EnsureInitializedFunction ensureInitializedFunction;
 
   /// Creates a new [FirebaseWebService].
-  FirebaseWebService._(this.name,
-      {this.override, this.ensureInitializedFunction});
+  FirebaseWebService._(
+    this.name, {
+    this.override,
+    this.ensureInitializedFunction,
+  });
 }
 
 typedef EnsureInitializedFunction = Future<void> Function()?;
