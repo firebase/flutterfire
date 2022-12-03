@@ -289,6 +289,8 @@ scripts:
         --ignore "**/FlutterMultiDexApplication.java" \
         --ignore "**/GeneratedPluginRegistrant.swift" \
         --ignore "**/Pods/**" \
+        --ignore "**/flutter/generated_plugin_registrant.h" \
+        --ignore "**/flutter/generated_plugin_registrant.cc" \
         .
     description: Add a license header to all necessary files.
 
@@ -322,5 +324,7 @@ scripts:
         --ignore "**/FlutterMultiDexApplication.java" \
         --ignore "**/GeneratedPluginRegistrant.swift" \
         --ignore "**/Pods/**" \
+        --ignore "**/flutter/generated_plugin_registrant.h" \
+        --ignore "**/flutter/generated_plugin_registrant.cc" \
         .
     description: Add a license header to all necessary files.
