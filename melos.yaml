@@ -67,8 +67,7 @@ scripts:
     run: |
       melos run build:example_ios_pub --no-select && \
       melos run build:example_android_pub --no-select && \
-      melos run build:example_macos --no-select && \
-      melos bootstrap
+      melos run build:example_macos --no-select
     description: Build all example apps.
 
   build:example_android:

@@ -41,8 +41,6 @@ jobs:
           melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
           melos run odm:example_build_runner:build
           melos run odm:generator_test_build_runner:build
-          # Needed because generating breaks the local linking of melos
-          melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
       - name: "Flutter Test"
         run: melos run odm:test:flutter --no-select
       - name: "Dart Test"
