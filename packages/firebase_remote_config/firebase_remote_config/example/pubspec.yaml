@@ -16,19 +16,5 @@ dependencies:
   flutter:
     sdk: flutter
 
-dependency_overrides:
-  _flutterfire_internals:
-    path: ../../../_flutterfire_internals
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../../firebase_core/firebase_core_platform_interface
-  firebase_core_web:
-    path: ../../../firebase_core/firebase_core_web
-  firebase_remote_config_platform_interface:
-    path: ../../firebase_remote_config_platform_interface
-  firebase_remote_config_web:
-    path: ../../firebase_remote_config_web
-
 flutter:
   uses-material-design: true

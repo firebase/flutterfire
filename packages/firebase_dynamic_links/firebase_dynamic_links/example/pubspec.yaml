@@ -14,17 +14,5 @@ dependencies:
     sdk: flutter
   url_launcher: ^6.1.0
 
-dependency_overrides:
-  _flutterfire_internals:
-    path: ../../../_flutterfire_internals
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../../firebase_core/firebase_core_platform_interface
-  firebase_dynamic_links:
-    path: ../
-  firebase_dynamic_links_platform_interface:
-    path: ../../firebase_dynamic_links_platform_interface
-
 flutter:
   uses-material-design: true

@@ -33,27 +33,5 @@ dev_dependencies:
   json_serializable: ^6.3.0
   mockito: ^5.0.0
 
-dependency_overrides:
-  _flutterfire_internals:
-    path: ../../../_flutterfire_internals
-  cloud_firestore:
-    path: ../../../cloud_firestore/cloud_firestore
-  cloud_firestore_odm:
-    path: ../../cloud_firestore_odm
-  cloud_firestore_odm_generator:
-    path: ../../cloud_firestore_odm_generator
-  cloud_firestore_odm_generator_integration_test:
-    path: ../../cloud_firestore_odm_generator/cloud_firestore_odm_generator_integration_test
-  cloud_firestore_platform_interface:
-    path: ../../../cloud_firestore/cloud_firestore_platform_interface
-  cloud_firestore_web:
-    path: ../../../cloud_firestore/cloud_firestore_web
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../../firebase_core/firebase_core_platform_interface
-  firebase_core_web:
-    path: ../../../firebase_core/firebase_core_web
-
 flutter:
   uses-material-design: true

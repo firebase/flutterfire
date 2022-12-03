@@ -15,19 +15,5 @@ dependencies:
   flutter:
     sdk: flutter
 
-dependency_overrides:
-  _flutterfire_internals:
-    path: ../../../_flutterfire_internals
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../../firebase_core/firebase_core_platform_interface
-  firebase_core_web:
-    path: ../../../firebase_core/firebase_core_web
-  firebase_crashlytics:
-    path: ../
-  firebase_crashlytics_platform_interface:
-    path: ../../firebase_crashlytics_platform_interface
-
 flutter:
   uses-material-design: true

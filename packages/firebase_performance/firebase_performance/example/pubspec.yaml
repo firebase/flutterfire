@@ -15,22 +15,6 @@ dependencies:
     sdk: flutter
   http: ^0.13.0
 
-dependency_overrides:
-  _flutterfire_internals:
-    path: ../../../_flutterfire_internals
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../../firebase_core/firebase_core_platform_interface
-  firebase_core_web:
-    path: ../../../firebase_core/firebase_core_web
-  firebase_performance:
-    path: ../
-  firebase_performance_platform_interface:
-    path: ../../firebase_performance_platform_interface
-  firebase_performance_web:
-    path: ../../firebase_performance_web
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
