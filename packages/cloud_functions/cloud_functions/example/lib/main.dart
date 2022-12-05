@@ -8,6 +8,38 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cloud_functions_example/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'main.g.dart';
+
+@JsonSerializable(explicitToJson: true)
+class Fruits {
+  /// The generated code assumes these values exist in JSON.
+  final Fruit apple;
+
+  Fruits({
+    required this.apple,
+  });
+
+  factory Fruits.fromJson(Map<String, dynamic> json) => _$FruitsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FruitsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Fruit {
+  final String color;
+  final String size;
+
+  Fruit({
+    required this.color,
+    required this.size,
+  });
+
+  factory Fruit.fromJson(Map<String, dynamic> json) => _$FruitFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FruitToJson(this);
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,7 +85,7 @@ class _MyAppState extends State<MyApp> {
               // See index.js in .github/workflows/scripts for the example function we
               // are using for this example
               HttpsCallable callable = FirebaseFunctions.instance.httpsCallable(
-                'listFruit',
+                'nestedFruit',
                 options: HttpsCallableOptions(
                   timeout: const Duration(seconds: 5),
                 ),
@@ -61,6 +93,9 @@ class _MyAppState extends State<MyApp> {
 
               try {
                 final result = await callable();
+                print(result.data);
+                final data = Fruits.fromJson(result.data['fruits']);
+                print(data.toJson());
                 setState(() {
                   fruit.clear();
                   result.data.forEach((f) {
