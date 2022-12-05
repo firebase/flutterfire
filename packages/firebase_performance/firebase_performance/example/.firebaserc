@@ -1,5 +1,5 @@
 {
   "projects": {
-    "default": "flutterfire-fireperf-example"
+    "default": "flutterfire-e2e-tests"
   }
 }
