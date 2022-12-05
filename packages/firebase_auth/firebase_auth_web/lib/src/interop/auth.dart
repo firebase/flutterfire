@@ -362,6 +362,28 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
   auth_interop.AuthSettings get settings => jsObject.settings;
 
+  User? _initUser;
+
+  /// On web we need to wait for the first onAuthStateChanged event to fire
+  /// in order to be sure that the currentUser is set.
+  /// To preserve behavior on web and mobile we store the initial user
+  /// in `_initUser` and add it manually to the `_changeController`.
+  Future<void> onWaitInitState() async {
+    final completer = Completer();
+    final nextWrapper = allowInterop((auth_interop.UserJsImpl? user) {
+      _initUser = User.getInstance(user);
+      completer.complete();
+    });
+
+    final errorWrapper = allowInterop((e) => _changeController!.addError(e));
+
+    final unsubscribe = jsObject.onAuthStateChanged(nextWrapper, errorWrapper);
+
+    await completer.future;
+
+    unsubscribe();
+  }
+
   Func0? _onAuthUnsubscribe;
   // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
   // ignore: close_sinks
@@ -397,6 +419,8 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         onCancel: stopListen,
         sync: true,
       );
+
+      _changeController!.add(_initUser);
     }
     return _changeController!.stream;
   }
