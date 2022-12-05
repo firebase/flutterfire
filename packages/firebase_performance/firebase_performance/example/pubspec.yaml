@@ -7,10 +7,8 @@ environment:
   sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_performance:
-    path: ../
+  firebase_core: any
+  firebase_performance: any
   flutter:
     sdk: flutter
   http: ^0.13.0

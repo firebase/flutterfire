@@ -9,13 +9,10 @@ environment:
   sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
-  cloud_firestore:
-    path: ../../../cloud_firestore/cloud_firestore
+  cloud_firestore: any
   cupertino_icons: ^0.1.2
-  firebase_app_check:
-    path: ../
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
+  firebase_app_check: any
+  firebase_core: any
   flutter:
     sdk: flutter
 

@@ -6,12 +6,9 @@ environment:
   flutter: '>=1.12.13+hotfix.5'
 
 dependencies:
-  firebase_analytics:
-    path: ../../../firebase_analytics/firebase_analytics
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_crashlytics:
-    path: ../
+  firebase_analytics: any
+  firebase_core: any
+  firebase_crashlytics: any
   flutter:
     sdk: flutter
 

@@ -5,10 +5,8 @@ environment:
   sdk: '>=2.16.0 <3.0.0'
 
 dependencies:
-  firebase_auth:
-    path: ../
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
+  firebase_auth: any
+  firebase_core: any
   flutter:
     sdk: flutter
   flutter_signin_button: ^2.0.0

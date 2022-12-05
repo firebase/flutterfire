@@ -19,8 +19,7 @@ dependencies:
   js: ^0.6.3
 
 dev_dependencies:
-  firebase_app_check:
-    path: ../firebase_app_check
+  firebase_app_check: any
   firebase_core_platform_interface: ^4.5.2
   flutter_test:
     sdk: flutter

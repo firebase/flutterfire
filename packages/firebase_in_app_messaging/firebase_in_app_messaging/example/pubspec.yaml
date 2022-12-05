@@ -7,14 +7,10 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.2
-  firebase_analytics:
-    path: ../../../firebase_analytics/firebase_analytics
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_in_app_messaging:
-    path: ../
-  firebase_in_app_messaging_platform_interface:
-    path: ../../firebase_in_app_messaging_platform_interface
+  firebase_analytics: any
+  firebase_core: any
+  firebase_in_app_messaging: any
+  firebase_in_app_messaging_platform_interface: any
   flutter:
     sdk: flutter
 

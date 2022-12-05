@@ -5,8 +5,7 @@ environment:
   sdk: '>=2.16.0 <3.0.0'
 
 dependencies:
-  firebase_core:
-    path: ../
+  firebase_core: any
   flutter:
     sdk: flutter
 

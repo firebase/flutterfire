@@ -28,8 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   firebase_core: ^2.4.1
-  firebase_app_installations:
-    path: ../
+  firebase_app_installations: any
   flutter:
     sdk: flutter
 
