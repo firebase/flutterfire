@@ -7,6 +7,19 @@ export const listFruit = functions.https.onCall(() => {
   return ['Apple', 'Banana', 'Cherry', 'Date', 'Fig', 'Grapes'];
 });
 
+// For example app.
+// noinspection JSUnusedGlobalSymbols
+export const nestedFruit = functions.https.onCall(() => {
+  return {
+    fruits: {
+      apple: {
+        color: 'red',
+        size: 'medium',
+      },
+    }
+  };
+});
+
 // For e2e testing a custom region.
 // noinspection JSUnusedGlobalSymbols
 export const testFunctionCustomRegion = functions
