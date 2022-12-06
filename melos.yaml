@@ -16,7 +16,8 @@ command:
 
     changelogs:
       - path: firebase_ui_changelog.md
-        scope: firebase_ui_*
+        packageFilters: 
+          scope: firebase_ui_*
         description: |
           All notable changes for firebase_ui packages
 
