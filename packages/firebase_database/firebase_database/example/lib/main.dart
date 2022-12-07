@@ -101,6 +101,10 @@ class _MyHomePageState extends State<MyHomePage> {
       print(err);
     }
 
+    _counterRef.startAt('\u{0000}').onValue.listen((event) {
+      print('event: ${event.snapshot.value}');
+    });
+
     _counterSubscription = _counterRef.onValue.listen(
       (DatabaseEvent event) {
         setState(() {
