@@ -107,8 +107,11 @@ class CredentialLinked extends AuthState {
   /// A credential that was linked with the currently signed in user account.
   final AuthCredential credential;
 
+  /// An instance of the [User] the credential was associated with.
+  final User user;
+
   /// {@macro ui.auth.auth_state.credential_linked}
-  CredentialLinked(this.credential);
+  CredentialLinked(this.credential, this.user);
 }
 
 /// {@template ui.auth.auth_state.auth_failed}

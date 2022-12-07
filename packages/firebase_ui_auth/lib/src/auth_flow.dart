@@ -126,7 +126,7 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
 
   @override
   void onCredentialLinked(AuthCredential credential) {
-    value = CredentialLinked(credential);
+    value = CredentialLinked(credential, auth.currentUser!);
   }
 
   @override

@@ -109,8 +109,12 @@ abstract class AuthProvider<T extends AuthListener, K extends AuthCredential> {
   /// {@macro ui.auth.auth_provider}
   AuthProvider();
 
+  /// Indicates whether the user should be upgraded and new credential should be
+  /// linked.
+  bool get shouldUpgradeAnonymous => auth.currentUser?.isAnonymous ?? false;
+
   /// Signs the user in with the provided [AuthCredential].
-  void signInWithCredential(AuthCredential credential) {
+  void signInWithCredential(K credential) {
     authListener.onBeforeSignIn();
     auth
         .signInWithCredential(credential)
@@ -120,8 +124,9 @@ abstract class AuthProvider<T extends AuthListener, K extends AuthCredential> {
 
   /// Links a provided [AuthCredential] with the currently signed in user
   /// account.
-  void linkWithCredential(AuthCredential credential) {
+  void linkWithCredential(K credential) {
     authListener.onCredentialReceived(credential);
+
     try {
       final user = auth.currentUser!;
       user
@@ -175,6 +180,11 @@ abstract class AuthProvider<T extends AuthListener, K extends AuthCredential> {
       // Only email provider has a different action for sign in and sign up
       // and implements it's own sign up logic.
       case AuthAction.signUp:
+        if (shouldUpgradeAnonymous) {
+          linkWithCredential(credential);
+          break;
+        }
+
         signInWithCredential(credential);
         break;
       case AuthAction.none:

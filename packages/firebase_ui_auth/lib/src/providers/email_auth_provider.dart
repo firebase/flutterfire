@@ -55,10 +55,23 @@ class EmailAuthProvider
     fba.EmailAuthCredential credential,
     AuthAction action,
   ) {
-    if (action == AuthAction.signUp) {
-      signUpWithCredential(credential);
-    } else {
-      super.onCredentialReceived(credential, action);
+    switch (action) {
+      case AuthAction.signIn:
+        signInWithCredential(credential);
+        break;
+      case AuthAction.signUp:
+        if (shouldUpgradeAnonymous) {
+          return linkWithCredential(credential);
+        }
+
+        signUpWithCredential(credential);
+        break;
+      case AuthAction.link:
+        linkWithCredential(credential);
+        break;
+      case AuthAction.none:
+        super.onCredentialReceived(credential, action);
+        break;
     }
   }
 }
