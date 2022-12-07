@@ -85,7 +85,8 @@ external PromiseJsImpl<void> enableIndexedDbPersistence(
 
 @JS()
 external PromiseJsImpl<void> enableMultiTabIndexedDbPersistence(
-    FirestoreJsImpl firestore);
+  FirestoreJsImpl firestore,
+);
 
 @JS()
 external PromiseJsImpl<void> enableNetwork(FirestoreJsImpl firestore);
@@ -265,8 +266,8 @@ class CollectionReferenceJsImpl extends QueryJsImpl {
 @anonymous
 @JS()
 class PersistenceSettings {
-  external bool get forceOwnership;
-  external factory PersistenceSettings({bool? forceOwnership});
+  external bool get synchronizeTabs;
+  external factory PersistenceSettings({bool? synchronizeTabs});
 }
 
 @JS()
