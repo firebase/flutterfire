@@ -37,9 +37,6 @@ typedef EnsurePluginInitialized = Future<void> Function(
 class FirebaseCoreWeb extends FirebasePlatform {
   static Map<String, FirebaseWebService> _services = {
     'core': FirebaseWebService._('app', override: 'core'),
-    'app-check': FirebaseWebService._('app-check', override: 'app_check'),
-    'remote-config':
-        FirebaseWebService._('remote-config', override: 'remote_config'),
   };
 
   /// Internally registers a Firebase Service to be initialized.
