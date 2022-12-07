@@ -635,8 +635,8 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
       break;
 
     case ASAuthorizationErrorNotHandled:
-      self.appleResult.error(@"not-handled", @"The authorization request wasn’t handled.",
-                             nil, error);
+      self.appleResult.error(@"not-handled", @"The authorization request wasn’t handled.", nil,
+                             error);
       break;
 
     case ASAuthorizationErrorFailed:
