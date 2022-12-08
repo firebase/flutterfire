@@ -63,9 +63,14 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
       firestore_interop.doc(jsObject, documentPath));
 
   Future<void> enablePersistence(
-          [firestore_interop.PersistenceSettings? settings]) =>
-      handleThenable(
-          firestore_interop.enableIndexedDbPersistence(jsObject, settings));
+      [firestore_interop.PersistenceSettings? settings]) {
+    if (settings != null && settings.synchronizeTabs == true) {
+      return handleThenable(
+          firestore_interop.enableMultiTabIndexedDbPersistence(jsObject));
+    }
+    return handleThenable(
+        firestore_interop.enableIndexedDbPersistence(jsObject));
+  }
 
   Stream<void> snapshotsInSync() {
     late StreamController<void> controller;
