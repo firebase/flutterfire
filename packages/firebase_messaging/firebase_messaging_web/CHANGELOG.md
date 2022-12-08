@@ -1,3 +1,7 @@
+## 3.2.9
+
+ - Update a dependency to the latest release.
+
 ## 3.2.8
 
  - **FIX**: Retrieve `messageId` from `MessagePayload` received on message event for Web platform. ([#7846](https://github.com/firebase/flutterfire/issues/7846)). ([d796d33f](https://github.com/firebase/flutterfire/commit/d796d33f722d92404217f9b153c301ab4e50b370))
