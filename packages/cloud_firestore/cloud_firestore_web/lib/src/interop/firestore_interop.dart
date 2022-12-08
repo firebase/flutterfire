@@ -85,7 +85,8 @@ external PromiseJsImpl<void> enableIndexedDbPersistence(
 
 @JS()
 external PromiseJsImpl<void> enableMultiTabIndexedDbPersistence(
-    FirestoreJsImpl firestore);
+  FirestoreJsImpl firestore,
+);
 
 @JS()
 external PromiseJsImpl<void> enableNetwork(FirestoreJsImpl firestore);

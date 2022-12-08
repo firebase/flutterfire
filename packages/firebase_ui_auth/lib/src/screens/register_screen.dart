@@ -32,6 +32,36 @@ class RegisterScreen extends MultiProviderScreen {
   /// {@macro ui.auth.screens.responsive_page.desktop_layout_direction}
   final TextDirection? desktopLayoutDirection;
 
+  /// [RegisterScreen] could invoke these actions:
+  ///
+  /// * [EmailLinkSignInAction]
+  /// * [VerifyPhoneAction]
+  /// * [AuthStateChangeAction]
+  ///
+  /// These actions could be used to trigger route transtion or display
+  /// a dialog.
+  ///
+  /// ```dart
+  /// SignInScreen(
+  ///   actions: [
+  ///     VerifyPhoneAction((context, _) {
+  ///       Navigator.pushNamed(context, '/phone');
+  ///     }),
+  ///     AuthStateChangeAction<SignedIn>((context, state) {
+  ///       if (!state.user!.emailVerified) {
+  ///         Navigator.pushNamed(context, '/verify-email');
+  ///       } else {
+  ///         Navigator.pushReplacementNamed(context, '/profile');
+  ///       }
+  ///     }),
+  ///     EmailLinkSignInAction((context) {
+  ///       Navigator.pushReplacementNamed(context, '/email-link-sign-in');
+  ///     }),
+  ///   ],
+  /// )
+  /// ```
+  final List<FirebaseUIAction>? actions;
+
   /// An email that [EmailForm] should be pre-filled with.
   final String? email;
 
@@ -62,6 +92,7 @@ class RegisterScreen extends MultiProviderScreen {
     Key? key,
     FirebaseAuth? auth,
     List<AuthProvider>? providers,
+    this.actions,
     this.headerMaxExtent,
     this.headerBuilder,
     this.sideBuilder,
@@ -78,21 +109,24 @@ class RegisterScreen extends MultiProviderScreen {
 
   @override
   Widget build(BuildContext context) {
-    return LoginScreen(
-      styles: styles,
-      action: AuthAction.signUp,
-      providers: providers,
-      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      auth: auth,
-      headerMaxExtent: headerMaxExtent,
-      headerBuilder: headerBuilder,
-      sideBuilder: sideBuilder,
-      desktopLayoutDirection: desktopLayoutDirection,
-      oauthButtonVariant: oauthButtonVariant,
-      email: email,
-      showAuthActionSwitch: showAuthActionSwitch,
-      subtitleBuilder: subtitleBuilder,
-      footerBuilder: footerBuilder,
+    return FirebaseUIActions(
+      actions: actions ?? [],
+      child: LoginScreen(
+        styles: styles,
+        action: AuthAction.signUp,
+        providers: providers,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+        auth: auth,
+        headerMaxExtent: headerMaxExtent,
+        headerBuilder: headerBuilder,
+        sideBuilder: sideBuilder,
+        desktopLayoutDirection: desktopLayoutDirection,
+        oauthButtonVariant: oauthButtonVariant,
+        email: email,
+        showAuthActionSwitch: showAuthActionSwitch,
+        subtitleBuilder: subtitleBuilder,
+        footerBuilder: footerBuilder,
+      ),
     );
   }
 }

@@ -284,6 +284,42 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:406099696497:android:6d1c1fbf4688f39c3574d0",
+        "android_client_info": {
+          "package_name": "io.flutter.plugins.firebase.installations.example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "406099696497-a12gakvts4epfk5pkio7dphc1anjiggc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdRjCVZlhrq72RuEklEyyxYlBRCYhI2Sw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "406099696497-a12gakvts4epfk5pkio7dphc1anjiggc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "406099696497-0mofiof3ofcgmpmirb6q0fllvb372sme.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.flutter.plugins.firebase.example"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:406099696497:android:74ebb073d7727cd43574d0",
         "android_client_info": {
           "package_name": "io.flutter.plugins.firebase.messaging.example"
