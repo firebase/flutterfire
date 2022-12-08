@@ -31,8 +31,8 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   /// This is used by the app-facing [DocumentReference] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(DocumentReferencePlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(DocumentReferencePlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The Firestore instance associated with this document reference

@@ -3,6 +3,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:js/js.dart';
@@ -23,8 +24,7 @@ dynamic dartify(Object? jsObject) {
       return object;
     }
     if (util.instanceof(object, TimestampJsConstructor)) {
-      return DateTime.fromMillisecondsSinceEpoch(
-          (object as TimestampJsImpl).toMillis());
+      return Timestamp((object as TimestampJsImpl).seconds, object.nanoseconds);
     }
     if (util.instanceof(object, BytesConstructor)) {
       return object as BytesJsImpl;
@@ -41,6 +41,10 @@ dynamic jsify(Object? dartObject) {
 
   return core_interop.jsify(dartObject, (Object? object) {
     if (object is DateTime) {
+      return TimestampJsImpl.fromMillis(object.millisecondsSinceEpoch);
+    }
+
+    if (object is Timestamp) {
       return TimestampJsImpl.fromMillis(object.millisecondsSinceEpoch);
     }
 

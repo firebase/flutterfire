@@ -1,0 +1,3 @@
+dependency_overrides:
+  cloud_firestore_odm:
+    path: ../cloud_firestore_odm

@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 // ignore_for_file: require_trailing_commas
 import 'dart:async';
 // TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
@@ -37,6 +41,8 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
           }
         }
       } catch (exception) {
+        // TODO this should be refactored to use `convertPlatformException`,
+        // then change receiveBroadcastStream -> receiveGuardedBroadedStream
         if (exception is! Exception || exception is! PlatformException) {
           rethrow;
         }

@@ -9,7 +9,7 @@ part of firebase_auth;
 /// [createUserWithEmailAndPassword].
 class UserCredential {
   UserCredential._(this._auth, this._delegate) {
-    UserCredentialPlatform.verifyExtends(_delegate);
+    UserCredentialPlatform.verify(_delegate);
   }
 
   final FirebaseAuth _auth;

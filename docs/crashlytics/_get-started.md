@@ -53,6 +53,26 @@ first crash report to Firebase.
     flutter run
     ```
 
+1.  _(Optional)_ If your Flutter project uses the
+   [`--split-debug-info` flag](https://docs.flutter.dev/perf/app-size#reducing-app-size){: .external}
+   (and, optionally, the
+   [`--obfuscate` flag](https://docs.flutter.dev/deployment/obfuscate){: .external}),
+   you need to use the [{{firebase_cli}}](/docs/cli) (v.11.9.0+) to upload
+   Android symbols.
+
+   From the root directory of your Flutter project, run the following command:
+
+   <pre class="devsite-terminal" data-terminal-prefix="your-flutter-proj$ ">firebase crashlytics:symbols:upload --app=<var class="readonly">APP_ID</var> <var class="readonly">PATH/TO</var>/symbols</pre>
+
+   The <code><var>PATH/TO</var>/symbols</code> directory is the same directory
+   that you pass to the `--split-debug-info` flag when building the application.
+
+   Note: Support for `--split-debug-info` is currently only available on
+   Android.<br>For Apple platforms, support for this feature will be
+   available in an upcoming release, but you can access it now by using the
+   [master channel](https://docs.flutter.dev/development/tools/sdk/releases){: .external}
+   of the Flutter SDK.
+
 
 ## **Step 2**: Configure crash handlers {: #configure-crash-handlers}
 
@@ -66,29 +86,31 @@ void main() async {
 
   await Firebase.initializeApp();
 
-  // Pass all uncaught errors from the framework to Crashlytics.
+  // Pass all uncaught "fatal" errors from the framework to Crashlytics
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
   runApp(MyApp());
 }
 ```
 
-If you're using zones, instrumenting the zone’s error handler will catch errors
-that aren't caught by the Flutter framework (for example, in a button’s
-`onPressed` handler):
+To catch asynchronous errors that aren't handled by the Flutter framework, use
+`PlatformDispatcher.instance.onError`:
+
 
 ```dart
-void main() async {
-  runZonedGuarded<Future<void>>(() async {
+Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-
-    FlutterError.onError =
-       FirebaseCrashlytics.instance.recordFlutterFatalError;
-
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
+    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
     runApp(MyApp());
-  }, (error, stack) =>
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
+
 }
 ```
 

@@ -1,7 +1,12 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 export 'annotation.dart';
+
 export 'src/firestore_builder.dart' show FirestoreBuilder;
 export 'src/firestore_reference.dart'
     show
@@ -13,7 +18,8 @@ export 'src/firestore_reference.dart'
         FirestoreQueryDocumentSnapshot,
         FirestoreQuerySnapshot,
         FirestoreReference,
-        QueryReference;
+        QueryReference,
+        $QueryCursor;
 
 /// The list of all [JsonConverter]s that cloud_firestore_odm offers.
 ///

@@ -14,13 +14,17 @@ import 'package:flutter/services.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseAuthException]
 /// if it was intentionally caught on the native platform.
-Never convertPlatformException(Object exception, StackTrace stackTrace) {
+Never convertPlatformException(
+  Object exception,
+  StackTrace stackTrace, {
+  bool fromPigeon = false,
+}) {
   if (exception is! PlatformException) {
     Error.throwWithStackTrace(exception, stackTrace);
   }
 
   Error.throwWithStackTrace(
-    platformExceptionToFirebaseAuthException(exception),
+    platformExceptionToFirebaseAuthException(exception, fromPigeon: fromPigeon),
     stackTrace,
   );
 }
@@ -32,8 +36,17 @@ Never convertPlatformException(Object exception, StackTrace stackTrace) {
 /// messages which can be converted into user friendly exceptions.
 // TODO(rousselGit): Should this return a FirebaseAuthException to avoid having to cast?
 FirebaseException platformExceptionToFirebaseAuthException(
-  PlatformException platformException,
-) {
+  PlatformException platformException, {
+  bool fromPigeon = false,
+}) {
+  if (fromPigeon) {
+    return FirebaseAuthException(
+      code: platformException.code,
+      // Remove leading classname from message
+      message: platformException.message?.split(': ').last,
+    );
+  }
+
   Map<String, dynamic>? details = platformException.details != null
       ? Map<String, dynamic>.from(platformException.details)
       : null;

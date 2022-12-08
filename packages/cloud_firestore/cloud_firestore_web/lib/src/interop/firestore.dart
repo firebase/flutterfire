@@ -63,9 +63,14 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
       firestore_interop.doc(jsObject, documentPath));
 
   Future<void> enablePersistence(
-          [firestore_interop.PersistenceSettings? settings]) =>
-      handleThenable(
-          firestore_interop.enableIndexedDbPersistence(jsObject, settings));
+      [firestore_interop.PersistenceSettings? settings]) {
+    if (settings != null && settings.synchronizeTabs == true) {
+      return handleThenable(
+          firestore_interop.enableMultiTabIndexedDbPersistence(jsObject));
+    }
+    return handleThenable(
+        firestore_interop.enableIndexedDbPersistence(jsObject));
+  }
 
   Stream<void> snapshotsInSync() {
     late StreamController<void> controller;
@@ -128,6 +133,10 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     return LoadBundleTask.getInstance(
         firestore_interop.loadBundle(jsObject, bundle));
   }
+
+  Future<void> setIndexConfiguration(String indexConfiguration) =>
+      handleThenable(firestore_interop.setIndexConfiguration(
+          jsObject, indexConfiguration));
 
   Future<Query> namedQuery(String name) async {
     firestore_interop.QueryJsImpl? query =
@@ -771,4 +780,34 @@ abstract class FieldValue {
 
   static final FieldValue _serverTimestamp = _FieldValueServerTimestamp();
   static final FieldValue _delete = _FieldValueDelete();
+}
+
+class AggregateQuery {
+  AggregateQuery(Query query) : _jsQuery = query.jsObject;
+  final firestore_interop.QueryJsImpl _jsQuery;
+  Future<AggregateQuerySnapshot> get() async {
+    return handleThenable<firestore_interop.AggregateQuerySnapshotJsImpl>(
+            firestore_interop.getCountFromServer(_jsQuery))
+        .then(AggregateQuerySnapshot.getInstance);
+  }
+}
+
+class AggregateQuerySnapshot
+    extends JsObjectWrapper<firestore_interop.AggregateQuerySnapshotJsImpl> {
+  static final _expando = Expando<AggregateQuerySnapshot>();
+  late final Map<String, Object> _data;
+
+  /// Creates a new [AggregateQuerySnapshot] from a [jsObject].
+  static AggregateQuerySnapshot getInstance(
+      firestore_interop.AggregateQuerySnapshotJsImpl jsObject) {
+    return _expando[jsObject] ??=
+        AggregateQuerySnapshot._fromJsObject(jsObject);
+  }
+
+  AggregateQuerySnapshot._fromJsObject(
+      firestore_interop.AggregateQuerySnapshotJsImpl jsObject)
+      : _data = Map.from(dartify(jsObject.data())),
+        super.fromJsObject(jsObject);
+
+  int get count => _data['count']! as int;
 }

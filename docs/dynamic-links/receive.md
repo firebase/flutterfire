@@ -52,6 +52,10 @@ Continue button. In `AndroidManifest.xml`:
 When users open a Dynamic Link with a deep link to the scheme and host you specify, your app will
 start the activity with this intent filter to handle the link.
 
+The next step is to ensure the SHA-256 fingerprint of the signing certificate is registered in the Firebase console
+for the app. You can find more details on how to retrieve your SHA-256 fingerprint on the
+[Authenticating Your Client](https://developers.google.com/android/guides/client-auth) page.
+
 ### Apple platforms
 
 1.  [Create an Apple developer account](https://developer.apple.com/programs/enroll/)
@@ -180,3 +184,8 @@ FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
   // Handle errors
 });
 ```
+
+### Testing A Dynamic Link On iOS Platform
+
+To test a dynamic link on iOS, it is required that you use an actual device. You will also need to run the app in release mode (i.e. `flutter run --release`.),
+if testing a dynamic link from a terminated (i.e. app has been swiped closed.) app state.

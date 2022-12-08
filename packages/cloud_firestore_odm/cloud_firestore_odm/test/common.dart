@@ -1,13 +1,29 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:flutter/foundation.dart';
 
+// ignore: subtype_of_sealed_class
+class _FakeQueryRef<Value> implements Query<Value> {
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError();
+  }
+}
+
 class FakeCollectionReference<Value>
-    extends QueryReference<Value, FakeQuerySnapshot<Value>>
-    implements FirestoreCollectionReference<Value, FakeQuerySnapshot<Value>> {
-  FakeCollectionReference(this.valueListenable);
+    extends FirestoreCollectionReference<Value, FakeQuerySnapshot<Value>> {
+  FakeCollectionReference(this.valueListenable)
+      : super($referenceWithoutCursor: _FakeQueryRef());
+
+  @override
+  CollectionReference<Value> get reference => throw UnimplementedError();
+
   final ValueListenable<List<Value>> valueListenable;
 
   @override

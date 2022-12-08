@@ -6,7 +6,7 @@ environment:
   sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
-  cloud_firestore: ^3.4.7
+  cloud_firestore: ^4.2.0
   cloud_firestore_odm:
     path: ../../cloud_firestore_odm
   flutter:
@@ -25,6 +25,8 @@ dev_dependencies:
   json_serializable: ">=6.3.0 <7.0.0"
 
 dependency_overrides:
+  _flutterfire_internals:
+    path: ../../../_flutterfire_internals
   cloud_firestore:
     path: ../../../cloud_firestore/cloud_firestore
   cloud_firestore_odm:

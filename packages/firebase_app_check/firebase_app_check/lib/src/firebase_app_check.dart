@@ -52,8 +52,15 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   /// On web, provide the reCAPTCHA v3 Site Key which can be found in the
   /// Firebase Console. For more information, see
   /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web).
-  Future<void> activate({String? webRecaptchaSiteKey}) {
-    return _delegate.activate(webRecaptchaSiteKey: webRecaptchaSiteKey);
+  ///
+  /// On Android, the default provider is "play integrity". If you wish to set the provider to "safety net" or "debug", you may set the `androidProvider` property using the `AndroidProvider` enum
+  /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
+  Future<void> activate(
+      {String? webRecaptchaSiteKey,
+      AndroidProvider androidProvider = AndroidProvider.playIntegrity}) {
+    return _delegate.activate(
+        webRecaptchaSiteKey: webRecaptchaSiteKey,
+        androidProvider: androidProvider);
   }
 
   /// Get the current App Check token.

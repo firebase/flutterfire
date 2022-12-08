@@ -3,12 +3,16 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../../firebase_app_check_platform_interface.dart';
 import 'utils/exception.dart';
+import 'utils/provider_to_string.dart';
 
 class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   /// Create an instance of [MethodChannelFirebaseAppCheck].
@@ -20,7 +24,9 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       'appName': app.name,
     }).then((channelName) {
       final events = EventChannel(channelName!, channel.codec);
-      events.receiveBroadcastStream().listen(
+      events
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
+          .listen(
         (arguments) {
           // ignore: close_sinks
           StreamController<String?> controller =
@@ -69,13 +75,19 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   }
 
   @override
-  Future<void> activate({String? webRecaptchaSiteKey}) async {
+  Future<void> activate({
+    String? webRecaptchaSiteKey,
+    AndroidProvider? androidProvider,
+  }) async {
     try {
       await channel.invokeMethod<void>('FirebaseAppCheck#activate', {
         'appName': app.name,
+        // Allow value to pass for debug mode for unit testing
+        if (Platform.isAndroid || kDebugMode)
+          'androidProvider': getProviderString(androidProvider),
       });
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -89,7 +101,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
 
       return result!['token'];
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -106,7 +118,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
         },
       );
     } on PlatformException catch (e, s) {
-      throw platformExceptionToFirebaseException(e, s);
+      convertPlatformException(e, s);
     }
   }
 

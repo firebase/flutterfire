@@ -10,6 +10,7 @@ import 'package:firebase_auth_web/firebase_auth_web.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_user_credential.dart';
 
 import 'interop/auth.dart' as auth;
+import 'interop/auth.dart' as auth_interop;
 import 'interop/multi_factor.dart' as multi_factor_interop;
 import 'utils/web_utils.dart';
 
@@ -57,9 +58,13 @@ class MultiFactorWeb extends MultiFactorPlatform {
       );
     }
 
-    return _webMultiFactorUser.unenroll(
-      uidToUnenroll,
-    );
+    try {
+      return _webMultiFactorUser.unenroll(
+        uidToUnenroll,
+      );
+    } catch (e) {
+      throw getFirebaseAuthException(e);
+    }
   }
 
   @override
@@ -92,9 +97,11 @@ class MultiFactorResolverWeb extends MultiFactorResolverPlatform {
     MultiFactorSession session,
     this._auth,
     this._webMultiFactorResolver,
+    this._webAuth,
   ) : super(hints, session);
 
   final multi_factor_interop.MultiFactorResolver _webMultiFactorResolver;
+  final auth_interop.Auth? _webAuth;
   final FirebaseAuthWeb _auth;
 
   @override
@@ -103,10 +110,15 @@ class MultiFactorResolverWeb extends MultiFactorResolverPlatform {
   ) async {
     final webAssertion = assertion as MultiFactorAssertionWeb;
 
-    return UserCredentialWeb(
-      _auth,
-      await _webMultiFactorResolver.resolveSignIn(webAssertion.assertion),
-    );
+    try {
+      return UserCredentialWeb(
+        _auth,
+        await _webMultiFactorResolver.resolveSignIn(webAssertion.assertion),
+        _webAuth,
+      );
+    } catch (e) {
+      throw getFirebaseAuthException(e);
+    }
   }
 }
 

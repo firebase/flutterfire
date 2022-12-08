@@ -57,7 +57,7 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
 
   /// Sets the [FirebaseStoragePlatform.instance]
   static set instance(FirebaseStoragePlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

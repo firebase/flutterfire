@@ -1,3 +1,53 @@
+## 0.1.1+6
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+5
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+4
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+2
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 0.1.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.1.1
+
+- Update a dependency to the latest release.
+
+## 0.1.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 0.0.9+1
+
+ - Update a dependency to the latest release.
+
+## 0.0.9
+
+ - **FEAT**: provide `androidDebugProvider` boolean for android debug provider & update app check example app ([#9412](https://github.com/firebase/flutterfire/issues/9412)). ([f1f26748](https://github.com/firebase/flutterfire/commit/f1f26748615c7c9d406e1d3d605e2987e1134ee7))
+
+## 0.0.8
+
+ - **FEAT**: provide `androidDebugProvider` boolean for android debug provider & update app check example app ([#9412](https://github.com/firebase/flutterfire/issues/9412)). ([f1f26748](https://github.com/firebase/flutterfire/commit/f1f26748615c7c9d406e1d3d605e2987e1134ee7))
+
+## 0.0.7+2
+
+ - Update a dependency to the latest release.
+
 ## 0.0.7+1
 
  - Update a dependency to the latest release.

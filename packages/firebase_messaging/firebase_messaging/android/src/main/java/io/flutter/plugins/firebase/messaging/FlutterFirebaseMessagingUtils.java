@@ -248,4 +248,26 @@ class FlutterFirebaseMessagingUtils {
 
     return builder.build();
   }
+
+  /**
+   * Returns the notification associated to a RemoteMessage map.
+   *
+   * @param arguments Method channel call arguments.
+   * @return RemoteMessage
+   */
+  static Map<String, Object> getRemoteMessageNotificationForArguments(
+      Map<String, Object> arguments) {
+    @SuppressWarnings("unchecked")
+    Map<String, Object> messageMap =
+        (Map<String, Object>) Objects.requireNonNull(arguments.get("message"));
+
+    if (messageMap.get("notification") == null) {
+      return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    Map<String, Object> notification = (Map<String, Object>) messageMap.get("notification");
+
+    return notification;
+  }
 }
