@@ -8,6 +8,7 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.functions.FirebaseFunctions;
@@ -60,31 +61,40 @@ public class FlutterFirebaseFunctionsPlugin
   }
 
   private Task<Object> httpsFunctionCall(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Object> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          FirebaseFunctions firebaseFunctions = getFunctions(arguments);
+          try {
 
-          String functionName = (String) Objects.requireNonNull(arguments.get("functionName"));
-          String origin = (String) arguments.get("origin");
-          Integer timeout = (Integer) arguments.get("timeout");
-          Object parameters = arguments.get("parameters");
+            FirebaseFunctions firebaseFunctions = getFunctions(arguments);
 
-          if (origin != null) {
-            Uri originUri = Uri.parse(origin);
-            firebaseFunctions.useEmulator(originUri.getHost(), originUri.getPort());
+            String functionName = (String) Objects.requireNonNull(arguments.get("functionName"));
+            String origin = (String) arguments.get("origin");
+            Integer timeout = (Integer) arguments.get("timeout");
+            Object parameters = arguments.get("parameters");
+
+            if (origin != null) {
+              Uri originUri = Uri.parse(origin);
+              firebaseFunctions.useEmulator(originUri.getHost(), originUri.getPort());
+            }
+
+            HttpsCallableReference httpsCallableReference =
+                firebaseFunctions.getHttpsCallable(functionName);
+
+            if (timeout != null) {
+              httpsCallableReference.setTimeout(timeout.longValue(), TimeUnit.MILLISECONDS);
+            }
+
+            HttpsCallableResult result = Tasks.await(httpsCallableReference.call(parameters));
+            taskCompletionSource.setResult(result.getData());
+
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
           }
-
-          HttpsCallableReference httpsCallableReference =
-              firebaseFunctions.getHttpsCallable(functionName);
-
-          if (timeout != null) {
-            httpsCallableReference.setTimeout(timeout.longValue(), TimeUnit.MILLISECONDS);
-          }
-
-          HttpsCallableResult result = Tasks.await(httpsCallableReference.call(parameters));
-          return result.getData();
         });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
@@ -156,11 +166,19 @@ public class FlutterFirebaseFunctionsPlugin
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return Tasks.call(() -> null);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(() -> taskCompletionSource.setResult(null));
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
-    return Tasks.call(() -> null);
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(() -> taskCompletionSource.setResult(null));
+
+    return taskCompletionSource.getTask();
   }
 }
