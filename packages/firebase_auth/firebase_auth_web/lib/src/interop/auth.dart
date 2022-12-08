@@ -963,6 +963,26 @@ class TwitterAuthProvider
       auth_interop.TwitterAuthProviderJsImpl.credential(token, secret);
 }
 
+/// SAML auth provider.
+///
+/// See: <https://firebase.google.com/docs/reference/js/auth.samlauthprovider>.
+class SAMLAuthProvider
+    extends AuthProvider<auth_interop.SAMLAuthProviderJsImpl> {
+  /// Creates a new SAMLAuthProvider with the providerId.
+  /// The providerId must start with "saml."
+  factory SAMLAuthProvider(String providerId) => SAMLAuthProvider.fromJsObject(
+      auth_interop.SAMLAuthProviderJsImpl(providerId));
+
+  /// Creates a new SAMLAuthProvider from a [jsObject].
+  SAMLAuthProvider.fromJsObject(auth_interop.SAMLAuthProviderJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
+  /// Used to extract the underlying OAuthCredential from a UserCredential.
+  static auth_interop.OAuthCredential? credentialFromResult(
+          auth_interop.UserCredentialJsImpl userCredential) =>
+      auth_interop.SAMLAuthProviderJsImpl.credentialFromResult(userCredential);
+}
+
 /// Phone number auth provider.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.PhoneAuthProvider>.
