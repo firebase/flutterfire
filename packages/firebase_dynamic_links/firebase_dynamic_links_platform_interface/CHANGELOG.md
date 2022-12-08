@@ -1,3 +1,7 @@
+## 0.2.3+24
+
+ - Update a dependency to the latest release.
+
 ## 0.2.3+23
 
  - **FIX**: allow for nullable utm values as send per the iOS SDK ([#10021](https://github.com/firebase/flutterfire/issues/10021)). ([4e974b2d](https://github.com/firebase/flutterfire/commit/4e974b2d82bff0f7e72120282bdddeea0e27f3a4))

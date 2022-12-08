@@ -1,3 +1,9 @@
+## 1.1.2
+
+ - **FIX**: automatically upgrade anonymous accounts ([#10071](https://github.com/firebase/flutterfire/issues/10071)). ([7b7e82d0](https://github.com/firebase/flutterfire/commit/7b7e82d0ba1c1213813fee5363414af926ce3951))
+ - **FIX**: allow to pass actions to the RegisterScreen ([#10025](https://github.com/firebase/flutterfire/issues/10025)). ([3f5ca800](https://github.com/firebase/flutterfire/commit/3f5ca80057d7df15aa16212859733a2eca37007d))
+ - **FIX**: `currentUser` is now populated right at the start of the application without needing to wait for `authStateChange` ([#10028](https://github.com/firebase/flutterfire/issues/10028)). ([2bd0dbff](https://github.com/firebase/flutterfire/commit/2bd0dbffb081370da051ec52859b924e1cf06fca))
+
 ## 1.1.1
 
  - **FIX**: fix OAuth provider buttons paddings ([#9991](https://github.com/firebase/flutterfire/issues/9991)). ([cadf2f21](https://github.com/firebase/flutterfire/commit/cadf2f21e9d279d81f6a98624a3a5ff10e654cf2))

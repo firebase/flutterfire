@@ -1,3 +1,7 @@
+## 1.0.9
+
+ - Update a dependency to the latest release.
+
 ## 1.0.8
 
  - **FIX**: fix an issue with Google Sign In where the clientId was passed on Android ([#10017](https://github.com/firebase/flutterfire/issues/10017)). ([cba4344c](https://github.com/firebase/flutterfire/commit/cba4344c05fb489cafd627420e2f7e0391ec625d))

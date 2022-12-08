@@ -1,3 +1,7 @@
+## 14.1.4
+
+ - Update a dependency to the latest release.
+
 ## 14.1.3
 
  - **FIX**: fix an issue where the notification wasn't restored when going into terminated state ([#9997](https://github.com/firebase/flutterfire/issues/9997)). ([d468dcb7](https://github.com/firebase/flutterfire/commit/d468dcb7519e1cb97359316f4f8f86b42b2ea9c9))
