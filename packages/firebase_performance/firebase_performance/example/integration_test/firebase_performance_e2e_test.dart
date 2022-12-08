@@ -8,14 +8,14 @@ import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:integration_test/integration_test.dart';
 
-import 'firebase_config.dart';
+import 'firebase_options.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   setUpAll(() async {
     await Firebase.initializeApp(
-      options: DefaultFirebaseConfig.platformOptions,
+      options: DefaultFirebaseOptions.currentPlatform,
     );
   });
 
