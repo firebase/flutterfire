@@ -261,6 +261,10 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
     return oAuthProvider;
   }
 
+  if (authProvider is SAMLAuthProvider) {
+    return auth_interop.SAMLAuthProvider(authProvider.providerId);
+  }
+
   throw FallThroughError();
 }
 
