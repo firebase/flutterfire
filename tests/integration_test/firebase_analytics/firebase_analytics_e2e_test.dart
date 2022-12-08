@@ -59,10 +59,7 @@ void main() {
       await expectLater(
         FirebaseAnalytics.instance.logEvent(
           name: 'testing-parameters',
-          parameters: EventParameters()
-              .addString('foo', 'bar')
-              .addNumber('number', 500),
-        ),
+          parameters: EventParameters().addString('foo', 'bar').addNumber('bar', 500),),
         completes,
       );
       // test 2 reserved events
