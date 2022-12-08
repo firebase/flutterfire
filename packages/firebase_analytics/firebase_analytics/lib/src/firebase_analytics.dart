@@ -103,9 +103,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
 
   /// Adds parameters that will be set on every event logged from the SDK, including automatic ones.
   Future<void> setDefaultEventParameters(
-    Map<String, Object?>? defaultParameters,
+    EventParameters? defaultParameters,
   ) async {
-    await _delegate.setDefaultEventParameters(defaultParameters);
+    await _delegate.setDefaultEventParameters(defaultParameters?.asMap());
   }
 
   /// Sets whether analytics collection is enabled for this app on this device.

@@ -183,13 +183,13 @@ void main() {
         if (kIsWeb) {
           await expectLater(
             FirebaseAnalytics.instance
-                .setDefaultEventParameters({'default': 'parameters'}),
+                .setDefaultEventParameters(EventParameters().addString('default', 'parameters')),
             throwsA(isA<UnimplementedError>()),
           );
           // reset a single default parameter
           await expectLater(
             FirebaseAnalytics.instance
-                .setDefaultEventParameters({'default': null}),
+                .setDefaultEventParameters(EventParameters().addNull('default')),
             throwsA(isA<UnimplementedError>()),
           );
           // reset all default parameters
@@ -200,13 +200,13 @@ void main() {
         } else {
           await expectLater(
             FirebaseAnalytics.instance
-                .setDefaultEventParameters({'default': 'parameters'}),
+                .setDefaultEventParameters(EventParameters().addString('default', 'parameter')),
             completes,
           );
           // reset a single default parameter
           await expectLater(
             FirebaseAnalytics.instance
-                .setDefaultEventParameters({'default': null}),
+                .setDefaultEventParameters(EventParameters().addNull('default')),
             completes,
           );
           // reset all default parameters

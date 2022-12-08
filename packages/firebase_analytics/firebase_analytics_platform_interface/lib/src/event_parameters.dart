@@ -19,7 +19,7 @@ class EventParameters {
 
   EventParameters._(this._parameters);
 
-  Map<String, Object> _parameters = {};
+  Map<String, Object?> _parameters = {};
 
   EventParameters addString(String key, String value) {
     _parameters[key] = value;
@@ -31,9 +31,15 @@ class EventParameters {
     return this;
   }
 
+  EventParameters addNull(String key) {
+    // used for removing keys when setting default event parameters
+    _parameters[key] = null;
+    return this;
+  }
+
   /// Returns a map for this EventParameters instance.
-  Map<String, Object> asMap() {
-    return Map<String, Object>.from(_parameters);
+  Map<String, Object?> asMap() {
+    return Map<String, Object?>.from(_parameters);
   }
 
   @override
