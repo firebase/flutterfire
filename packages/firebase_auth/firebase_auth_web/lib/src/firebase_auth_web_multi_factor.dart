@@ -58,9 +58,13 @@ class MultiFactorWeb extends MultiFactorPlatform {
       );
     }
 
-    return _webMultiFactorUser.unenroll(
-      uidToUnenroll,
-    );
+    try {
+      return _webMultiFactorUser.unenroll(
+        uidToUnenroll,
+      );
+    } catch (e) {
+      throw getFirebaseAuthException(e);
+    }
   }
 
   @override
@@ -106,11 +110,15 @@ class MultiFactorResolverWeb extends MultiFactorResolverPlatform {
   ) async {
     final webAssertion = assertion as MultiFactorAssertionWeb;
 
-    return UserCredentialWeb(
-      _auth,
-      await _webMultiFactorResolver.resolveSignIn(webAssertion.assertion),
-      _webAuth,
-    );
+    try {
+      return UserCredentialWeb(
+        _auth,
+        await _webMultiFactorResolver.resolveSignIn(webAssertion.assertion),
+        _webAuth,
+      );
+    } catch (e) {
+      throw getFirebaseAuthException(e);
+    }
   }
 }
 
