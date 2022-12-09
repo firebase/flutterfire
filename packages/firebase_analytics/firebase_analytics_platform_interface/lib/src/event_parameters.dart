@@ -25,6 +25,7 @@ class EventParameters extends _BaseParameters {
   }
 }
 
+// Base class for event parameters.
 class _BaseParameters {
   _BaseParameters(Map<String, Object?>? parameters)
       : _parameters = parameters ?? {};
@@ -48,7 +49,7 @@ class _BaseParameters {
 
 class DefaultEventParameters extends _BaseParameters {
   DefaultEventParameters() : super(null);
-  // Constructs an [EventParameters] from a raw Map.
+  // Constructs an [DefaultEventParameters] from a raw Map.
   factory DefaultEventParameters.fromMap(Map<String, Object?> map) {
     Map<String, Object?> parameters = {};
     map.forEach((key, value) {
