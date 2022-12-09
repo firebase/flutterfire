@@ -11,7 +11,7 @@ void main() {
   test('supports field renaming', () async {
     final collection = await initializeTest(PersonCollectionReference());
 
-    await collection.add(Person(firstName: 'A', lastName: 'A'));
+    final aRef = await collection.add(Person(firstName: 'A', lastName: 'A'));
     await collection.add(Person(firstName: 'John', lastName: 'Doe'));
     await collection.add(Person(firstName: 'John', lastName: 'Smith'));
     await collection.add(Person(firstName: 'Mike', lastName: 'Doe'));
@@ -50,6 +50,21 @@ void main() {
           .get()
           .then((value) => value.docs.map((e) => e.data.firstName)),
       unorderedEquals(<Object?>['John', 'Mike']),
+    );
+
+    await aRef.update(firstName: 'A2', lastName: 'B2');
+
+    expect(
+      await aRef.reference
+          .withConverter<Map<String, dynamic>>(
+            fromFirestore: (value, _) => value.data()!,
+            toFirestore: (value, _) => value,
+          )
+          .get(),
+      {
+        'first_name': 'A2',
+        'LAST_NAME': 'B2',
+      },
     );
   });
 }

@@ -208,6 +208,25 @@ You can do this online, and it only takes a minute.
 If you've never submitted code before, you must add your (or your
 organization's) name and contact info to the [AUTHORS](AUTHORS) file.
 
+If you create a new file, do not forget to add the license header. You can use
+[`addlicense`](https://github.com/google/addlicense) to add the license to all
+necessary files.
+
+To install `addlicense`, run:
+```bash
+go install github.com/google/addlicense@latest
+```
+
+Do not forget to add `$HOME/go/bin` to your `PATH`. If you are using Bash on
+Linux or macOS, you need to add `export PATH="$HOME/go/bin:$PATH"` to your
+`.bash_profile`.
+
+To add the license header to all files, run from the root of the repository:
+```bash
+melos run add-license-header
+```
+This command uses `addlicense` with all necessary flags.
+
 ### The review process
 
 Newly opened PRs first go through initial triage which results in one of:

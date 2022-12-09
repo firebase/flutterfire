@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart'
@@ -103,8 +107,11 @@ class CredentialLinked extends AuthState {
   /// A credential that was linked with the currently signed in user account.
   final AuthCredential credential;
 
+  /// An instance of the [User] the credential was associated with.
+  final User user;
+
   /// {@macro ui.auth.auth_state.credential_linked}
-  CredentialLinked(this.credential);
+  CredentialLinked(this.credential, this.user);
 }
 
 /// {@template ui.auth.auth_state.auth_failed}

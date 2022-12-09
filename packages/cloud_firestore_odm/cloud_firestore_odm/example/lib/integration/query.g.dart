@@ -186,8 +186,9 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) 'time': time as DateTime,
-      if (timeFieldValue != null) 'time': timeFieldValue,
+      if (time != _sentinel) _$DateTimeQueryFieldMap['time']!: time as DateTime,
+      if (timeFieldValue != null)
+        _$DateTimeQueryFieldMap['time']!: timeFieldValue,
     };
 
     return reference.update(json);
@@ -203,8 +204,9 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) 'time': time as DateTime,
-      if (timeFieldValue != null) 'time': timeFieldValue,
+      if (time != _sentinel) _$DateTimeQueryFieldMap['time']!: time as DateTime,
+      if (timeFieldValue != null)
+        _$DateTimeQueryFieldMap['time']!: timeFieldValue,
     };
 
     transaction.update(reference, json);
@@ -964,8 +966,10 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) 'time': time as Timestamp,
-      if (timeFieldValue != null) 'time': timeFieldValue,
+      if (time != _sentinel)
+        _$TimestampQueryFieldMap['time']!: time as Timestamp,
+      if (timeFieldValue != null)
+        _$TimestampQueryFieldMap['time']!: timeFieldValue,
     };
 
     return reference.update(json);
@@ -981,8 +985,10 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) 'time': time as Timestamp,
-      if (timeFieldValue != null) 'time': timeFieldValue,
+      if (time != _sentinel)
+        _$TimestampQueryFieldMap['time']!: time as Timestamp,
+      if (timeFieldValue != null)
+        _$TimestampQueryFieldMap['time']!: timeFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1743,8 +1749,10 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both point and pointFieldValue",
     );
     final json = {
-      if (point != _sentinel) 'point': point as GeoPoint,
-      if (pointFieldValue != null) 'point': pointFieldValue,
+      if (point != _sentinel)
+        _$GeoPointQueryFieldMap['point']!: point as GeoPoint,
+      if (pointFieldValue != null)
+        _$GeoPointQueryFieldMap['point']!: pointFieldValue,
     };
 
     return reference.update(json);
@@ -1760,8 +1768,10 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both point and pointFieldValue",
     );
     final json = {
-      if (point != _sentinel) 'point': point as GeoPoint,
-      if (pointFieldValue != null) 'point': pointFieldValue,
+      if (point != _sentinel)
+        _$GeoPointQueryFieldMap['point']!: point as GeoPoint,
+      if (pointFieldValue != null)
+        _$GeoPointQueryFieldMap['point']!: pointFieldValue,
     };
 
     transaction.update(reference, json);
@@ -2530,8 +2540,10 @@ class _$DocumentReferenceQueryDocumentReference
     );
     final json = {
       if (ref != _sentinel)
-        'ref': ref as DocumentReference<Map<String, dynamic>>,
-      if (refFieldValue != null) 'ref': refFieldValue,
+        _$DocumentReferenceQueryFieldMap['ref']!:
+            ref as DocumentReference<Map<String, dynamic>>,
+      if (refFieldValue != null)
+        _$DocumentReferenceQueryFieldMap['ref']!: refFieldValue,
     };
 
     return reference.update(json);
@@ -2548,8 +2560,10 @@ class _$DocumentReferenceQueryDocumentReference
     );
     final json = {
       if (ref != _sentinel)
-        'ref': ref as DocumentReference<Map<String, dynamic>>,
-      if (refFieldValue != null) 'ref': refFieldValue,
+        _$DocumentReferenceQueryFieldMap['ref']!:
+            ref as DocumentReference<Map<String, dynamic>>,
+      if (refFieldValue != null)
+        _$DocumentReferenceQueryFieldMap['ref']!: refFieldValue,
     };
 
     transaction.update(reference, json);

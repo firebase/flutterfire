@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:flutter/widgets.dart';
 
 import '../../widgets/internal/keyboard_appearence_listener.dart';
@@ -119,6 +123,7 @@ class ResponsivePage extends StatefulWidget {
 class _ResponsivePageState extends State<ResponsivePage> {
   final ctrl = ScrollController();
   final paddingListenable = ValueNotifier<double>(0);
+  final key = GlobalKey();
 
   void _onKeyboardPositionChanged(double position) {
     if (!ctrl.hasClients) {
@@ -137,6 +142,11 @@ class _ResponsivePageState extends State<ResponsivePage> {
   @override
   Widget build(BuildContext context) {
     final breakpoint = widget.breakpoint;
+
+    final content = KeyedSubtree(
+      key: key,
+      child: widget.child,
+    );
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -166,9 +176,7 @@ class _ResponsivePageState extends State<ResponsivePage> {
                           Center(
                             child: ConstrainedBox(
                               constraints: BoxConstraints(maxWidth: breakpoint),
-                              child: IntrinsicHeight(
-                                child: widget.child,
-                              ),
+                              child: IntrinsicHeight(child: content),
                             ),
                           ),
                         ],
@@ -198,7 +206,7 @@ class _ResponsivePageState extends State<ResponsivePage> {
                   SliverList(
                     delegate: SliverChildListDelegate.fixed(
                       [
-                        widget.child,
+                        content,
                         ValueListenableBuilder<double>(
                           valueListenable: paddingListenable,
                           builder: (context, value, _) {
@@ -217,7 +225,7 @@ class _ResponsivePageState extends State<ResponsivePage> {
             child: ListView(
               shrinkWrap: true,
               children: [
-                widget.child,
+                content,
               ],
             ),
           );

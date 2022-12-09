@@ -1,3 +1,7 @@
+## 2.0.2
+
+ - **FIX**: `currentUser` is now populated right at the start of the application without needing to wait for `authStateChange` ([#10028](https://github.com/firebase/flutterfire/issues/10028)). ([2bd0dbff](https://github.com/firebase/flutterfire/commit/2bd0dbffb081370da051ec52859b924e1cf06fca))
+
 ## 2.0.1
 
  - Update a dependency to the latest release.

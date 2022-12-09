@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:flutter/services.dart';
 
 /// {@template ui.oauth.themed_value}
@@ -46,12 +50,18 @@ abstract class ThemedOAuthProviderButtonStyle {
   double get iconPadding => 0;
   String get assetsPackage;
 
+  /// A custom label string.
+  ///
+  /// Required for custom OAuth providers.
+  String? get label => null;
+
   /// {@macro ui.oauth.themed_oauth_provider_button_style}
   const ThemedOAuthProviderButtonStyle();
 
   OAuthProviderButtonStyle withBrightness(Brightness brightness) {
     return OAuthProviderButtonStyle(
       iconSrc: iconSrc.getValue(brightness),
+      iconPadding: iconPadding,
       backgroundColor: backgroundColor.getValue(brightness),
       color: color.getValue(brightness),
       borderColor: borderColor.getValue(brightness),
@@ -63,6 +73,7 @@ abstract class ThemedOAuthProviderButtonStyle {
 
 class OAuthProviderButtonStyle {
   final String iconSrc;
+  final double iconPadding;
   final Color backgroundColor;
   final Color color;
   final Color borderColor;
@@ -71,6 +82,7 @@ class OAuthProviderButtonStyle {
 
   OAuthProviderButtonStyle({
     required this.iconSrc,
+    required this.iconPadding,
     required this.backgroundColor,
     required this.color,
     required this.borderColor,

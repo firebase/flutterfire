@@ -190,10 +190,14 @@ class _$PersonDocumentReference
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+      if (firstName != _sentinel)
+        _$$_PersonFieldMap['firstName']!: firstName as String,
+      if (firstNameFieldValue != null)
+        _$$_PersonFieldMap['firstName']!: firstNameFieldValue,
+      if (lastName != _sentinel)
+        _$$_PersonFieldMap['lastName']!: lastName as String,
+      if (lastNameFieldValue != null)
+        _$$_PersonFieldMap['lastName']!: lastNameFieldValue,
     };
 
     return reference.update(json);
@@ -215,10 +219,14 @@ class _$PersonDocumentReference
       "Cannot specify both lastName and lastNameFieldValue",
     );
     final json = {
-      if (firstName != _sentinel) 'firstName': firstName as String,
-      if (firstNameFieldValue != null) 'firstName': firstNameFieldValue,
-      if (lastName != _sentinel) 'lastName': lastName as String,
-      if (lastNameFieldValue != null) 'lastName': lastNameFieldValue,
+      if (firstName != _sentinel)
+        _$$_PersonFieldMap['firstName']!: firstName as String,
+      if (firstNameFieldValue != null)
+        _$$_PersonFieldMap['firstName']!: firstNameFieldValue,
+      if (lastName != _sentinel)
+        _$$_PersonFieldMap['lastName']!: lastName as String,
+      if (lastNameFieldValue != null)
+        _$$_PersonFieldMap['lastName']!: lastNameFieldValue,
     };
 
     transaction.update(reference, json);
@@ -1093,8 +1101,10 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) 'value': value as String,
-      if (valueFieldValue != null) 'value': valueFieldValue,
+      if (value != _sentinel)
+        _$$PublicRedirected2FieldMap['value']!: value as String,
+      if (valueFieldValue != null)
+        _$$PublicRedirected2FieldMap['value']!: valueFieldValue,
     };
 
     return reference.update(json);
@@ -1110,8 +1120,10 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) 'value': value as String,
-      if (valueFieldValue != null) 'value': valueFieldValue,
+      if (value != _sentinel)
+        _$$PublicRedirected2FieldMap['value']!: value as String,
+      if (valueFieldValue != null)
+        _$$PublicRedirected2FieldMap['value']!: valueFieldValue,
     };
 
     transaction.update(reference, json);

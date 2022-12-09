@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart' hide Title;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
@@ -90,7 +94,8 @@ class _PhoneInputViewState extends State<PhoneInputView> {
   @override
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
-    final countryCode = Localizations.localeOf(context).countryCode;
+    final countryCode = Localizations.localeOf(context).countryCode ??
+        WidgetsBinding.instance.platformDispatcher.locale.countryCode;
 
     return AuthFlowBuilder<PhoneAuthController>(
       flowKey: widget.flowKey,
@@ -121,7 +126,7 @@ class _PhoneInputViewState extends State<PhoneInputView> {
               widget.subtitleBuilder!(context),
             if (state is AwaitingPhoneNumber || state is SMSCodeRequested) ...[
               PhoneInput(
-                initialCountryCode: countryCode!,
+                initialCountryCode: countryCode,
                 onSubmit: onSubmit(ctrl),
                 key: phoneInputKey,
               ),

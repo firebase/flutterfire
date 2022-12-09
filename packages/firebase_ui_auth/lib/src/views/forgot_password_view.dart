@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:flutter/material.dart' hide Title;
 
 import 'package:firebase_auth/firebase_auth.dart'
@@ -53,7 +57,11 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   FirebaseAuthException? exception;
 
   Future<void> _submit(String email) async {
-    setState(() => isLoading = true);
+    setState(() {
+      exception = null;
+      isLoading = true;
+    });
+
     try {
       await auth.sendPasswordResetEmail(
         email: email,

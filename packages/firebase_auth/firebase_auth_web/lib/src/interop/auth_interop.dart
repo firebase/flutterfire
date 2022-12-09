@@ -471,6 +471,14 @@ class PhoneAuthProviderJsImpl extends AuthProviderJsImpl {
   );
 }
 
+@JS('SAMLAuthProvider')
+class SAMLAuthProviderJsImpl extends AuthProviderJsImpl {
+  external factory SAMLAuthProviderJsImpl(String providerId);
+  external static OAuthCredential? credentialFromResult(
+    UserCredentialJsImpl userCredential,
+  );
+}
+
 @JS('ApplicationVerifier')
 abstract class ApplicationVerifierJsImpl {
   external String get type;
