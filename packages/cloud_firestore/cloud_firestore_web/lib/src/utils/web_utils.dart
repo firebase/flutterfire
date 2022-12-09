@@ -5,8 +5,8 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
-import '../utils/decode_utility.dart';
 import '../interop/firestore.dart' as firestore_interop;
+import '../utils/decode_utility.dart';
 
 const _kChangeTypeAdded = 'added';
 const _kChangeTypeModified = 'modified';
@@ -68,7 +68,9 @@ DocumentChangeType convertWebDocumentChangeType(String changeType) {
     case _kChangeTypeRemoved:
       return DocumentChangeType.removed;
     default:
-      throw FallThroughError();
+      throw Exception(
+        'Unknown DocumentChangeType: ${changeType.toLowerCase()}',
+      );
   }
 }
 

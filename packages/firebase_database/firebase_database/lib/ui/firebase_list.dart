@@ -103,7 +103,7 @@ class FirebaseList extends ListBase<DataSnapshot>
       }
     }
 
-    throw FallThroughError();
+    throw Exception('Unknown key: key');
   }
 
   void _onChildAdded(DatabaseEvent event) {

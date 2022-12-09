@@ -14,6 +14,6 @@ LoadBundleTaskState convertToTaskState(String state) {
     case 'error':
       return LoadBundleTaskState.error;
     default:
-      throw FallThroughError();
+      throw Exception('Unknown LoadBundleTaskState: $state');
   }
 }
