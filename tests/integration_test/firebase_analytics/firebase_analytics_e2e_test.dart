@@ -59,7 +59,7 @@ void main() {
       await expectLater(
         FirebaseAnalytics.instance.logEvent(
           name: 'testing-parameters',
-          parameters: EventParameters().addString('foo', 'bar').addNumber('bar', 500),),
+          parameters: EventParameters()..addString('foo', 'bar')..addNumber('bar', 500),),
         completes,
       );
       // test 2 reserved events
@@ -183,13 +183,13 @@ void main() {
         if (kIsWeb) {
           await expectLater(
             FirebaseAnalytics.instance
-                .setDefaultEventParameters(EventParameters().addString('default', 'parameters')),
+                .setDefaultEventParameters(DefaultEventParameters()..addString('default', 'parameters')),
             throwsA(isA<UnimplementedError>()),
           );
           // reset a single default parameter
           await expectLater(
             FirebaseAnalytics.instance
-                .setDefaultEventParameters(EventParameters().addNull('default')),
+                .setDefaultEventParameters(DefaultEventParameters().addNull('default')),
             throwsA(isA<UnimplementedError>()),
           );
           // reset all default parameters
@@ -200,13 +200,13 @@ void main() {
         } else {
           await expectLater(
             FirebaseAnalytics.instance
-                .setDefaultEventParameters(EventParameters().addString('default', 'parameter')),
+                .setDefaultEventParameters(DefaultEventParameters()..addString('default', 'parameter')),
             completes,
           );
           // reset a single default parameter
           await expectLater(
             FirebaseAnalytics.instance
-                .setDefaultEventParameters(EventParameters().addNull('default')),
+                .setDefaultEventParameters(DefaultEventParameters().addNull('default')),
             completes,
           );
           // reset all default parameters

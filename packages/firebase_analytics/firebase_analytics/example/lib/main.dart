@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
@@ -68,21 +69,41 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> _setDefaultEventParameters() async {
+    if (kIsWeb) {
+      setMessage(
+        '"setDefaultEventParameters()" is not supported on web platform',
+      );
+    } else {
+      DefaultEventParameters params = DefaultEventParameters();
+      params.addString('bar', 'baz');
+      params.addNumber('someInt', 400);
+      params.addNumber('inter', 9);
+      params.addNumber('longNumber', 230485);
+      params.addNull('removeKey');
+
+      // Only strings and numbers (ints & doubles) are supported for GA custom event parameters:
+      // https://developers.google.com/analytics/devguides/collection/analyticsjs/custom-dims-mets#overview
+      await widget.analytics.setDefaultEventParameters(
+        params,
+      );
+      setMessage('setDefaultEventParameters succeeded');
+    }
+  }
+
   Future<void> _sendAnalyticsEvent() async {
     EventParameters params = EventParameters();
-
     params.addString('string', 'string');
     params.addNumber('int', 42);
     params.addNumber('long', 12345678910);
     params.addNumber('double', 42.0);
     params.addString('bool', true.toString());
-    params.addNull('foo');
 
     // Only strings and numbers (ints & doubles) are supported for GA custom event parameters:
     // https://developers.google.com/analytics/devguides/collection/analyticsjs/custom-dims-mets#overview
     await widget.analytics.logEvent(
       name: 'test_event',
-      parameters: params,
+      parameters: params..addNumber('foo', 3),
     );
     setMessage('logEvent succeeded');
   }
@@ -331,6 +352,10 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialButton(
             onPressed: _testResetAnalyticsData,
             child: const Text('Test resetAnalyticsData'),
+          ),
+          MaterialButton(
+            onPressed: _setDefaultEventParameters,
+            child: const Text('Test setDefaultEventParameters'),
           ),
           Text(
             _message,

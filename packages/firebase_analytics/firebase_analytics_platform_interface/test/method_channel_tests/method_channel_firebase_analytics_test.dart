@@ -136,7 +136,7 @@ void main() {
     test('logEvent', () async {
       await analytics.logEvent(
         name: 'test-event',
-        parameters: <String, Object>{'a': 'b'},
+        parameters: EventParameters().addString('a', 'b').asMap(),
       );
       expect(
         methodCallLogger,
@@ -146,6 +146,29 @@ void main() {
             arguments: <String, Object>{
               'eventName': 'test-event',
               'parameters': <String, Object>{'a': 'b'},
+            },
+          ),
+        ],
+      );
+    });
+
+    test('setDefaultEventParameters', () async {
+      final defaultParameters = DefaultEventParameters()
+        ..addString('a', 'b')
+        ..addNumber('another', 303)
+        ..addNull('something');
+      await analytics.setDefaultEventParameters(
+        defaultParameters.asMap(),
+      );
+      expect(
+        methodCallLogger,
+        <Matcher>[
+          isMethodCall(
+            'Analytics#setDefaultEventParameters',
+            arguments: <String, Object?>{
+              'a': 'b',
+              'another': 303,
+              'something': null
             },
           ),
         ],
