@@ -68,7 +68,7 @@ DocumentChangeType convertWebDocumentChangeType(String changeType) {
     case _kChangeTypeRemoved:
       return DocumentChangeType.removed;
     default:
-      throw FallThroughError();
+      throw UnsupportedError('Unknown DocumentChangeType: $changeType.');
   }
 }
 
