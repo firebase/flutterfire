@@ -46,8 +46,8 @@ class _MainScreenState extends State<_MainScreen> {
       'is properly setup. Look at firebase_dynamic_links/README.md for more '
       'details.';
 
-  final String DynamicLink = 'https://example/helloworld';
-  final String Link = 'https://flutterfiretests.page.link/MEGs';
+  final String dynamicLink = 'https://vakey.app/link/coucou';
+  final String link = 'https://flutterfiretests.page.link/MEGs';
 
   @override
   void initState() {
@@ -70,11 +70,8 @@ class _MainScreenState extends State<_MainScreen> {
     });
 
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://flutterfiretests.page.link',
-      longDynamicLink: Uri.parse(
-        'https://flutterfiretests.page.link?efr=0&ibi=io.flutter.plugins.firebase.dynamiclinksexample&apn=io.flutter.plugins.firebase.dynamiclinksexample&imv=0&amv=0&link=https%3A%2F%2Fexample%2Fhelloworld&ofl=https://ofl-example.com',
-      ),
-      link: Uri.parse(DynamicLink),
+      uriPrefix: 'https://vakey.app/link',
+      link: Uri.parse(dynamicLink),
       androidParameters: const AndroidParameters(
         packageName: 'io.flutter.plugins.firebase.dynamiclinksexample',
         minimumVersion: 0,
@@ -94,6 +91,10 @@ class _MainScreenState extends State<_MainScreen> {
       url = await dynamicLinks.buildLink(parameters);
     }
 
+    print(url.toString());
+
+    final PendingDynamicLinkData? data = await dynamicLinks.getDynamicLink(url);
+    print(data);
     setState(() {
       _linkMessage = url.toString();
       _isCreatingLink = false;
@@ -133,7 +134,7 @@ class _MainScreenState extends State<_MainScreen> {
                         onPressed: () async {
                           final PendingDynamicLinkData? data =
                               await dynamicLinks
-                                  .getDynamicLink(Uri.parse(Link));
+                                  .getDynamicLink(Uri.parse(link));
                           final Uri? deepLink = data?.link;
 
                           if (deepLink != null) {
