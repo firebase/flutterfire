@@ -2,8 +2,9 @@
 
 ## Google Sign In
 
-To support Google as a provider, first install the official [`google_sign_in`](https://pub.dev/packages/google_sign_in)
-plugin to your project as described in the README.
+To support Google as a provider, first install the official [`google_sign_in`](https://pub.dev/packages/google_sign_in) plugin to your project as described in the README.
+
+❗️ Important: you need go through configuration steps for each platform as described on the [README](https://pub.dev/packages/google_sign_in).
 
 Next, enable the "Google" provider in the Firebase Console:
 
@@ -40,11 +41,7 @@ See [Custom screens section](#custom-screens) to learn how to use a button on yo
 
 ## Sign in with Apple
 
-To support Apple as a provider, first install the [`sign_in_with_apple`](https://pub.dev/packages/sign_in_with_apple)
-plugin to your project. Once added, follow the [Integration](https://pub.dev/packages/sign_in_with_apple#integration) steps
-for each platform.
-
-Next, enable the "Apple" provider in the Firebase Console:
+To support Apple as a provider, enable the "Apple" provider in the Firebase Console:
 
 ![Enable Apple Provider](../images/ui-apple-provider.jpg)
 
@@ -109,7 +106,7 @@ See [Custom screens section](#custom-screens) to learn how to use a button on yo
 ## Twitter Login
 
 To support Twitter as a provider, first install the [`twitter_login`](https://pub.dev/packages/twitter_login)
-plugin to your project.
+plugin to your project and make sure you've performed necessary configuration as described on [README](https://pub.dev/packages/twitter_login).
 
 Next, enable the "Twitter" provider in the Firebase Console:
 

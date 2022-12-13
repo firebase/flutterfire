@@ -1,4 +1,4 @@
-# Firebase UI Email provider
+# Firebase UI Email Link provider
 
 ## Configuration
 

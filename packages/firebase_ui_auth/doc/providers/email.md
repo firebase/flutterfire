@@ -13,6 +13,9 @@ Configure email provider:
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
+// If you need to use FirebaseAuth directly, make sure to hide EmailAuthProvider:
+// import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+
 import 'firebase_options.dart';
 
 void main() {
