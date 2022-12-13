@@ -28,13 +28,13 @@ Firebase UI Auth is a set of Flutter widgets and utilities designed to help you 
 flutter pub add firebase_ui_auth
 ```
 
-## Getting Started
+## Example
 
 Here's a quick example that shows how to build a `SignInScreen` and `ProfileScreen` in your app
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
 class MyApp extends StatelessWidget {
@@ -71,7 +71,18 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-Learn more [here](https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_auth/doc).
+## Docs
+
+Find relevant documentation [here](https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_auth/doc)
+
+- [Getting started](https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_auth/doc)
+- Auth providers.
+  - [Email auth provider](https://github.com/firebase/flutterfire/blob/master/packages/firebase_ui_auth/doc/providers/email.md) – sign in using email and password.
+  - [Email verification](https://github.com/firebase/flutterfire/blob/master/packages/firebase_ui_auth/doc/providers/email-verification.md) - verify email.
+  - [Email link sign in](https://github.com/firebase/flutterfire/blob/master/packages/firebase_ui_auth/doc/providers/email-link.md) - sign in using a link sent to email.
+  - [Phone auth provider](https://github.com/firebase/flutterfire/blob/master/packages/firebase_ui_auth/doc/providers/phone.md) - sign in using phone number.
+  - [Universal email sign in](https://github.com/firebase/flutterfire/blob/master/packages/firebase_ui_auth/doc/providers/universal-email-sign-in.md) - resolve connected providers based on email and sign in using one of those.
+  - [OAuth](https://github.com/firebase/flutterfire/blob/master/packages/firebase_ui_auth/doc/providers/oauth.md) - sign in using Apple, Google, Facebook or Twitter.
 
 ## Roadmap / Features
 
