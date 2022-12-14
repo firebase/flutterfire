@@ -318,7 +318,6 @@ class _QueryBuilderSnapshot<Document>
   _QueryBuilderSnapshot<Document> copyWith({
     Object? docs = const _Sentinel(),
     Object? error = const _Sentinel(),
-    Object? aggregateCount = const _Sentinel(),
     Object? hasData = const _Sentinel(),
     Object? hasError = const _Sentinel(),
     Object? hasMore = const _Sentinel(),
