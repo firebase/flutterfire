@@ -100,6 +100,7 @@ class _LoginViewState extends State<LoginView> {
         provider: provider,
         auth: widget.auth,
         action: _action,
+        variant: widget.oauthButtonVariant,
       );
     }).toList();
 
