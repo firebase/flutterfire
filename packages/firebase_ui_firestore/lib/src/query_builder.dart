@@ -530,7 +530,6 @@ class _AggregateQueryBuilderState extends State<AggregateQueryBuilder> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<AggregateQuerySnapshot>(
-      key: ValueKey(queryFuture),
       future: queryFuture,
       builder: (context, snapshot) {
         return widget.builder(context, snapshot);
@@ -544,6 +543,5 @@ class _AggregateQueryBuilderState extends State<AggregateQueryBuilder> {
     if (widget.query != oldWidget.query) {
       queryFuture = widget.query.get();
     }
-
   }
 }
