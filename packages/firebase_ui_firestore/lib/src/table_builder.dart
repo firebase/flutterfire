@@ -849,16 +849,16 @@ class _Source extends DataTableSource {
   @override
   int get selectedRowCount => _selectedRowIds.length;
 
-  int? _aggregateCount;
+  AggregateQuerySnapshot? _aggregateSnapshot;
 
   @override
   bool get isRowCountApproximate =>
-      _aggregateCount != null ||
+      _aggregateSnapshot?.count == null ||
       (_previousSnapshot!.isFetching || _previousSnapshot!.hasMore);
 
   @override
   int get rowCount {
-    if (_aggregateCount != null) return _aggregateCount!;
+    if (_aggregateSnapshot?.count != null) return _aggregateSnapshot!.count;
     // Emitting an extra item during load or before reaching the end
     // allows the DataTable to show a spinner during load & let the user
     // navigate to next page
@@ -923,10 +923,10 @@ class _Source extends DataTableSource {
     AggregateQuerySnapshot? aggregateSnapshot,
   ]) {
     if (aggregateSnapshot != null) {
-      _aggregateCount = aggregateSnapshot.count;
+      _aggregateSnapshot = aggregateSnapshot;
       notifyListeners();
     } else {
-      _aggregateCount = null;
+      _aggregateSnapshot = null;
     }
 
     if (snapshot == _previousSnapshot) return;
