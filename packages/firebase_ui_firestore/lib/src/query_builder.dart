@@ -70,7 +70,6 @@ class FirestoreQueryBuilder<Document> extends StatefulWidget {
     Key? key,
     required this.query,
     required this.builder,
-    this.fetchCount = false,
     this.pageSize = 10,
     this.child,
   })  : assert(pageSize > 1, 'Cannot have a pageSize lower than 1'),
@@ -93,9 +92,6 @@ class FirestoreQueryBuilder<Document> extends StatefulWidget {
   /// Since this widget is not created within [builder], it won't rebuild
   /// when the query emits an update.
   final Widget? child;
-
-  /// Whether to fetch the count of items that satisfy the given query.
-  final bool fetchCount;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -121,8 +117,6 @@ class _FirestoreQueryBuilderState<Document>
     fetchMore: _fetchNextPage,
   );
 
-  late var _countQuery = widget.fetchCount ? widget.query.count().get() : null;
-
   void _fetchNextPage() {
     if (_snapshot.isFetching ||
         !_snapshot.hasMore ||
@@ -145,9 +139,6 @@ class _FirestoreQueryBuilderState<Document>
     super.didUpdateWidget(oldWidget);
     if (oldWidget.query != widget.query) {
       _pageCount = 0;
-      if (widget.fetchCount) {
-        _countQuery = widget.query.count().get();
-      }
       _listenQuery();
     } else if (oldWidget.pageSize != widget.pageSize) {
       // The page size changes, so we re-fetch items, making sure we're
@@ -182,9 +173,7 @@ class _FirestoreQueryBuilderState<Document>
     final query = widget.query.limit(expectedDocsCount);
 
     _querySubscription = query.snapshots().listen(
-      (event) async {
-        final count = (await _countQuery)?.count;
-
+      (event) {
         setState(() {
           if (nextPage) {
             _snapshot = _snapshot.copyWith(isFetchingMore: false);
@@ -197,11 +186,8 @@ class _FirestoreQueryBuilderState<Document>
             docs: event.size < expectedDocsCount
                 ? event.docs
                 : event.docs.take(expectedDocsCount - 1).toList(),
-            aggregateCount: count,
             error: null,
-            hasMore: widget.fetchCount
-                ? _snapshot.docs.length < count!
-                : event.size == expectedDocsCount,
+            hasMore: event.size == expectedDocsCount,
             stackTrace: null,
             hasError: false,
           );
@@ -240,11 +226,6 @@ class _FirestoreQueryBuilderState<Document>
 
 /// The result of a paginated query.
 abstract class FirestoreQueryBuilderSnapshot<Document> {
-  /// Aggregate count of items that satisfy the query.
-  /// This is only available if [FirestoreQueryBuilder.fetchCount] is `true`.
-  /// Indicates the total number available, not the number of items in [docs].
-  int? get aggregateCount;
-
   /// Whether the first page of the query is currently being fetched.
   ///
   /// [isFetching] will reset to `true` when the query changes, in which case
@@ -303,14 +284,10 @@ class _QueryBuilderSnapshot<Document>
     required this.stackTrace,
     required this.hasMore,
     required VoidCallback fetchMore,
-    this.aggregateCount,
   }) : _fetchNextPage = fetchMore;
 
   @override
   final List<QueryDocumentSnapshot<Document>> docs;
-
-  @override
-  final int? aggregateCount;
 
   @override
   final Object? error;
@@ -358,7 +335,6 @@ class _QueryBuilderSnapshot<Document>
 
     return _QueryBuilderSnapshot._(
       docs: valueAs(docs, this.docs),
-      aggregateCount: valueAs(aggregateCount, this.aggregateCount),
       error: valueAs(error, this.error),
       hasData: valueAs(hasData, this.hasData),
       hasMore: valueAs(hasMore, this.hasMore),
@@ -526,4 +502,49 @@ class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
             );
           },
         );
+}
+
+/// Listens to an aggregate query and passes the [AsyncSnapshot] to the builder.
+class AggregateQueryBuilder extends StatefulWidget {
+  /// A query to listen to
+  final AggregateQuery query;
+
+  /// A builder that is called whenever the query is updated.
+  final Widget Function(
+    BuildContext context,
+    AsyncSnapshot<AggregateQuerySnapshot> snapshot,
+  ) builder;
+
+  const AggregateQueryBuilder({
+    super.key,
+    required this.query,
+    required this.builder,
+  });
+
+  @override
+  State<AggregateQueryBuilder> createState() => _AggregateQueryBuilderState();
+}
+
+class _AggregateQueryBuilderState extends State<AggregateQueryBuilder> {
+  late var queryFuture = widget.query.get();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<AggregateQuerySnapshot>(
+      key: ValueKey(queryFuture),
+      future: queryFuture,
+      builder: (context, snapshot) {
+        return widget.builder(context, snapshot);
+      },
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant AggregateQueryBuilder oldWidget) {
+    if (widget.query != oldWidget.query) {
+      queryFuture = widget.query.get();
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
 }

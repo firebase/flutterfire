@@ -83,7 +83,6 @@ class FirestoreDataTable extends StatefulWidget {
     this.enableDefaultCellEditor = true,
     this.onTapCell,
     this.onSelectedRows,
-    this.fetchCount = true,
   })  : assert(
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
@@ -204,10 +203,6 @@ class FirestoreDataTable extends StatefulWidget {
   /// and the content in the first data column. This value defaults to 24.0.
   final double? checkboxHorizontalMargin;
 
-  /// Wheteher to fetch a total number of documents that satsify the query.
-  /// Defaults to true
-  final bool fetchCount;
-
   @override
   // ignore: library_private_types_in_public_api
   _FirestoreTableState createState() => _FirestoreTableState();
@@ -253,46 +248,61 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
 
   @override
   Widget build(BuildContext context) {
-    return FirestoreQueryBuilder<Map<String, Object?>>(
-      query: _query,
-      fetchCount: widget.fetchCount,
-      builder: (context, snapshot, child) {
-        source.setFromSnapshot(snapshot);
+    return StreamBuilder(
+      stream: _query.snapshots(),
+      builder: (context, snapshot) {
+        return AggregateQueryBuilder(
+          query: _query.count(),
+          builder: (context, aggSsnapshot) {
+            return FirestoreQueryBuilder<Map<String, Object?>>(
+              query: _query,
+              builder: (context, snapshot, child) {
+                if (aggSsnapshot.hasData) {
+                  source.setFromSnapshot(snapshot, aggSsnapshot.requireData);
+                } else {
+                  source.setFromSnapshot(snapshot);
+                }
 
-        return AnimatedBuilder(
-          animation: source,
-          builder: (context, child) {
-            final actions = [
-              ...?widget.actions,
-              if (widget.canDeleteItems && source._selectedRowIds.isNotEmpty)
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: source.onDeleteSelectedItems,
-                ),
-            ];
-            return PaginatedDataTable(
-              source: source,
-              onSelectAll: selectionEnabled ? source.onSelectAll : null,
-              onPageChanged: widget.onPageChanged,
-              showCheckboxColumn: widget.showCheckboxColumn,
-              arrowHeadColor: widget.arrowHeadColor,
-              checkboxHorizontalMargin: widget.checkboxHorizontalMargin,
-              columnSpacing: widget.columnSpacing,
-              dataRowHeight: widget.dataRowHeight,
-              dragStartBehavior: widget.dragStartBehavior,
-              headingRowHeight: widget.headingRowHeight,
-              horizontalMargin: widget.horizontalMargin,
-              rowsPerPage: widget.rowsPerPage,
-              showFirstLastButtons: widget.showFirstLastButtons,
-              sortAscending: widget.sortAscending,
-              sortColumnIndex: widget.sortColumnIndex,
-              header:
-                  actions.isEmpty ? null : (widget.header ?? const SizedBox()),
-              actions: actions.isEmpty ? null : actions,
-              columns: [
-                for (final head in widget.columnLabels.values)
-                  DataColumn(label: head)
-              ],
+                return AnimatedBuilder(
+                  animation: source,
+                  builder: (context, child) {
+                    final actions = [
+                      ...?widget.actions,
+                      if (widget.canDeleteItems &&
+                          source._selectedRowIds.isNotEmpty)
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: source.onDeleteSelectedItems,
+                        ),
+                    ];
+                    return PaginatedDataTable(
+                      source: source,
+                      onSelectAll: selectionEnabled ? source.onSelectAll : null,
+                      onPageChanged: widget.onPageChanged,
+                      showCheckboxColumn: widget.showCheckboxColumn,
+                      arrowHeadColor: widget.arrowHeadColor,
+                      checkboxHorizontalMargin: widget.checkboxHorizontalMargin,
+                      columnSpacing: widget.columnSpacing,
+                      dataRowHeight: widget.dataRowHeight,
+                      dragStartBehavior: widget.dragStartBehavior,
+                      headingRowHeight: widget.headingRowHeight,
+                      horizontalMargin: widget.horizontalMargin,
+                      rowsPerPage: widget.rowsPerPage,
+                      showFirstLastButtons: widget.showFirstLastButtons,
+                      sortAscending: widget.sortAscending,
+                      sortColumnIndex: widget.sortColumnIndex,
+                      header: actions.isEmpty
+                          ? null
+                          : (widget.header ?? const SizedBox()),
+                      actions: actions.isEmpty ? null : actions,
+                      columns: [
+                        for (final head in widget.columnLabels.values)
+                          DataColumn(label: head)
+                      ],
+                    );
+                  },
+                );
+              },
             );
           },
         );
@@ -839,16 +849,16 @@ class _Source extends DataTableSource {
   @override
   int get selectedRowCount => _selectedRowIds.length;
 
+  int? _aggregateCount;
+
   @override
   bool get isRowCountApproximate =>
-      _previousSnapshot!.aggregateCount == null &&
+      _aggregateCount != null ||
       (_previousSnapshot!.isFetching || _previousSnapshot!.hasMore);
 
   @override
   int get rowCount {
-    if (_previousSnapshot!.aggregateCount != null) {
-      return _previousSnapshot!.aggregateCount!;
-    }
+    if (_aggregateCount != null) return _aggregateCount!;
     // Emitting an extra item during load or before reaching the end
     // allows the DataTable to show a spinner during load & let the user
     // navigate to next page
@@ -909,8 +919,16 @@ class _Source extends DataTableSource {
   FirestoreQueryBuilderSnapshot<Map<String, Object?>>? _previousSnapshot;
 
   void setFromSnapshot(
-    FirestoreQueryBuilderSnapshot<Map<String, Object?>> snapshot,
-  ) {
+    FirestoreQueryBuilderSnapshot<Map<String, Object?>> snapshot, [
+    AggregateQuerySnapshot? aggregateSnapshot,
+  ]) {
+    if (aggregateSnapshot != null) {
+      _aggregateCount = aggregateSnapshot.count;
+      notifyListeners();
+    } else {
+      _aggregateCount = null;
+    }
+
     if (snapshot == _previousSnapshot) return;
 
     // Try to preserve the selection status when the snapshot got updated,
