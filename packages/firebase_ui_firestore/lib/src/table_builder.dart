@@ -83,6 +83,7 @@ class FirestoreDataTable extends StatefulWidget {
     this.enableDefaultCellEditor = true,
     this.onTapCell,
     this.onSelectedRows,
+    this.fetchCount = true,
   })  : assert(
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
@@ -201,8 +202,11 @@ class FirestoreDataTable extends StatefulWidget {
   /// If null, then [horizontalMargin] is used as the margin between the edge
   /// of the table and the checkbox, as well as the margin between the checkbox
   /// and the content in the first data column. This value defaults to 24.0.
-
   final double? checkboxHorizontalMargin;
+
+  /// Wheteher to fetch a total number of documents that satsify the query.
+  /// Defaults to true
+  final bool fetchCount;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -251,6 +255,7 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
   Widget build(BuildContext context) {
     return FirestoreQueryBuilder<Map<String, Object?>>(
       query: _query,
+      fetchCount: widget.fetchCount,
       builder: (context, snapshot, child) {
         source.setFromSnapshot(snapshot);
 
@@ -286,9 +291,7 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
               actions: actions.isEmpty ? null : actions,
               columns: [
                 for (final head in widget.columnLabels.values)
-                  DataColumn(
-                    label: head,
-                  )
+                  DataColumn(label: head)
               ],
             );
           },
@@ -838,10 +841,14 @@ class _Source extends DataTableSource {
 
   @override
   bool get isRowCountApproximate =>
-      _previousSnapshot!.isFetching || _previousSnapshot!.hasMore;
+      _previousSnapshot!.aggregateCount == null &&
+      (_previousSnapshot!.isFetching || _previousSnapshot!.hasMore);
 
   @override
   int get rowCount {
+    if (_previousSnapshot!.aggregateCount != null) {
+      return _previousSnapshot!.aggregateCount!;
+    }
     // Emitting an extra item during load or before reaching the end
     // allows the DataTable to show a spinner during load & let the user
     // navigate to next page
