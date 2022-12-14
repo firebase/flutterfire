@@ -540,10 +540,10 @@ class _AggregateQueryBuilderState extends State<AggregateQueryBuilder> {
 
   @override
   void didUpdateWidget(covariant AggregateQueryBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (widget.query != oldWidget.query) {
       queryFuture = widget.query.get();
     }
 
-    super.didUpdateWidget(oldWidget);
   }
 }
