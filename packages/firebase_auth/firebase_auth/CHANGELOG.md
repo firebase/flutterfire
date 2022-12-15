@@ -1,3 +1,7 @@
+## 4.2.1
+
+ - Update a dependency to the latest release.
+
 ## 4.2.0
 
  - **FEAT**: improve error message when user cancels a sign in with a provider ([#10060](https://github.com/firebase/flutterfire/issues/10060)). ([6631da6b](https://github.com/firebase/flutterfire/commit/6631da6b6b165a0c1e3260d744df1d60f3c7abe0))

@@ -1,3 +1,8 @@
+## 11.0.8
+
+ - **FIX**: fix usage of storage plugin with an isolate ([#10106](https://github.com/firebase/flutterfire/issues/10106)). ([86f24633](https://github.com/firebase/flutterfire/commit/86f2463364cbd3a0de88b1e6217120a95609b5b2))
+ - **FIX**: fix concurrency issue ([#10099](https://github.com/firebase/flutterfire/issues/10099)). ([d0b6fcf1](https://github.com/firebase/flutterfire/commit/d0b6fcf194afe987dec59d24b47ad197bf8e7cf8))
+
 ## 11.0.7
 
  - Update a dependency to the latest release.

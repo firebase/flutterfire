@@ -1,3 +1,7 @@
+## 5.0.9
+
+ - **FIX**: fix an issue where the status of the dynamic link was not properly reported ([#10100](https://github.com/firebase/flutterfire/issues/10100)). ([521c3375](https://github.com/firebase/flutterfire/commit/521c337570f6daeffc569894218bd5d682d40072))
+
 ## 5.0.8
 
  - Update a dependency to the latest release.

@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-12-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_auth_platform_interface` - `v6.11.5`](#firebase_auth_platform_interface---v6115)
+ - [`firebase_dynamic_links` - `v5.0.9`](#firebase_dynamic_links---v509)
+ - [`firebase_storage` - `v11.0.8`](#firebase_storage---v1108)
+ - [`firebase_ui_auth` - `v1.1.3`](#firebase_ui_auth---v113)
+ - [`firebase_auth_web` - `v5.2.1`](#firebase_auth_web---v521)
+ - [`firebase_auth` - `v4.2.1`](#firebase_auth---v421)
+ - [`firebase_ui_oauth_apple` - `v1.0.10`](#firebase_ui_oauth_apple---v1010)
+ - [`firebase_ui_oauth` - `v1.1.3`](#firebase_ui_oauth---v113)
+ - [`firebase_ui_oauth_facebook` - `v1.0.10`](#firebase_ui_oauth_facebook---v1010)
+ - [`firebase_ui_oauth_google` - `v1.0.10`](#firebase_ui_oauth_google---v1010)
+ - [`firebase_ui_oauth_twitter` - `v1.0.10`](#firebase_ui_oauth_twitter---v1010)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_auth_web` - `v5.2.1`
+ - `firebase_auth` - `v4.2.1`
+ - `firebase_ui_oauth_apple` - `v1.0.10`
+ - `firebase_ui_oauth` - `v1.1.3`
+ - `firebase_ui_oauth_facebook` - `v1.0.10`
+ - `firebase_ui_oauth_google` - `v1.0.10`
+ - `firebase_ui_oauth_twitter` - `v1.0.10`
+
+---
+
+#### `firebase_auth_platform_interface` - `v6.11.5`
+
+ - **FIX**: null check ([#10119](https://github.com/firebase/flutterfire/issues/10119)). ([575c0ccb](https://github.com/firebase/flutterfire/commit/575c0ccbb4d9bf3875e8de0b2131c59ede869754))
+
+#### `firebase_dynamic_links` - `v5.0.9`
+
+ - **FIX**: fix an issue where the status of the dynamic link was not properly reported ([#10100](https://github.com/firebase/flutterfire/issues/10100)). ([521c3375](https://github.com/firebase/flutterfire/commit/521c337570f6daeffc569894218bd5d682d40072))
+
+#### `firebase_storage` - `v11.0.8`
+
+ - **FIX**: fix usage of storage plugin with an isolate ([#10106](https://github.com/firebase/flutterfire/issues/10106)). ([86f24633](https://github.com/firebase/flutterfire/commit/86f2463364cbd3a0de88b1e6217120a95609b5b2))
+ - **FIX**: fix concurrency issue ([#10099](https://github.com/firebase/flutterfire/issues/10099)). ([d0b6fcf1](https://github.com/firebase/flutterfire/commit/d0b6fcf194afe987dec59d24b47ad197bf8e7cf8))
+
+#### `firebase_ui_auth` - `v1.1.3`
+
+ - **DOCS**: add docs links to the package README ([#10104](https://github.com/firebase/flutterfire/issues/10104)). ([dd611cd2](https://github.com/firebase/flutterfire/commit/dd611cd25139f78bc947a68366213902a31ae350))
+
+
 ## 2022-12-08
 
 ### Changes
