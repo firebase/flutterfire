@@ -78,7 +78,7 @@ class HuLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get findProviderForEmailTitleText =>
-      "Írba be az e-mail címét a folytatáshoz!";
+      "Írja be az e-mail címét a folytatáshoz!";
 
   @override
   String get forgotPasswordButtonLabel => "Elfelejtett jelszó?";

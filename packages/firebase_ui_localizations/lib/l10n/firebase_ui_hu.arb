@@ -111,7 +111,7 @@
     "description": "Used as a label of the SMSCodeInput.",
     "placeholders": {}
   },
-  "findProviderForEmailTitleText": "Írba be az e-mail címét a folytatáshoz!",
+  "findProviderForEmailTitleText": "Írja be az e-mail címét a folytatáshoz!",
   "@findProviderForEmailTitleText": {
     "description": "Used as a title of the FindProvidersForEmailView.",
     "placeholders": {}
