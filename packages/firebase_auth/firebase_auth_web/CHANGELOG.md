@@ -1,3 +1,7 @@
+## 5.2.1
+
+ - Update a dependency to the latest release.
+
 ## 5.2.0
 
  - **FIX**: properly cast the PlatformException to FirebaseAuthException ([#10058](https://github.com/firebase/flutterfire/issues/10058)). ([6c8f9515](https://github.com/firebase/flutterfire/commit/6c8f951552ba7f767ce1b7b7ea5328454ba28cce))

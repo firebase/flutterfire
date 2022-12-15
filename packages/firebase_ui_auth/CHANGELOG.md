@@ -1,3 +1,7 @@
+## 1.1.3
+
+ - **DOCS**: add docs links to the package README ([#10104](https://github.com/firebase/flutterfire/issues/10104)). ([dd611cd2](https://github.com/firebase/flutterfire/commit/dd611cd25139f78bc947a68366213902a31ae350))
+
 ## 1.1.2
 
  - **FIX**: automatically upgrade anonymous accounts ([#10071](https://github.com/firebase/flutterfire/issues/10071)). ([7b7e82d0](https://github.com/firebase/flutterfire/commit/7b7e82d0ba1c1213813fee5363414af926ce3951))
