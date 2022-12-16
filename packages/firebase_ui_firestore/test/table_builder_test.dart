@@ -325,6 +325,23 @@ class Address {
 
 class MockFirestore extends Mock implements FirebaseFirestore {}
 
+class MockAggregateQuerySnapshot extends Mock
+    implements AggregateQuerySnapshot {
+  @override
+  int get count => 2;
+}
+
+class MockAggregateQuery extends Mock implements AggregateQuery {
+  @override
+  Future<AggregateQuerySnapshot> get({AggregateSource? source}) {
+    return super.noSuchMethod(
+      Invocation.method(#get, null),
+      returnValue: Future.value(MockAggregateQuerySnapshot()),
+      returnValueForMissingStub: Future.value(MockAggregateQuerySnapshot()),
+    );
+  }
+}
+
 class MockCollection extends Mock
     implements CollectionReference<Map<String, Object?>> {
   @override
@@ -339,6 +356,15 @@ class MockCollection extends Mock
       }),
       returnValue: this,
       returnValueForMissingStub: this,
+    );
+  }
+
+  @override
+  MockAggregateQuery count() {
+    return super.noSuchMethod(
+      Invocation.method(#count, null),
+      returnValue: MockAggregateQuery(),
+      returnValueForMissingStub: MockAggregateQuery(),
     );
   }
 
