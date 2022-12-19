@@ -203,7 +203,7 @@ in the Firebase console, scroll down to the traces table, then click the
 appropriate subtab. The table displays some top metrics for each trace, and you
 can even sort the list by the percentage change for a specific metric.
 
-If you click a trace name in the traces table, you can then click throug
+If you click a trace name in the traces table, you can then click through
 various screens to explore the trace and drill down into metrics of interest.
 On most pages, you can use the **Filter** button (top-left of the screen) to
 filter the data by attribute, for example:
