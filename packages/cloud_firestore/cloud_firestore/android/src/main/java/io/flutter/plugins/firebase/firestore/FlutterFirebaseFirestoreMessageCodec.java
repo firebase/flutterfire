@@ -158,6 +158,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     querySnapshotMap.put("documentChanges", value.getDocumentChanges());
     querySnapshotMap.put("metadata", value.getMetadata());
 
+    FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
     writeValue(stream, querySnapshotMap);
   }
 
@@ -210,6 +211,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
     snapshotMap.put("metadata", value.getMetadata());
 
+    FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
     writeValue(stream, snapshotMap);
   }
 
