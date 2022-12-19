@@ -150,6 +150,7 @@ class QueryWeb extends QueryPlatform {
       return convertWebQuerySnapshot(
         firestore,
         await _buildWebQueryWithParameters().get(convertGetOptions(options)),
+        options.serverTimestampBehavior.name,
       );
     });
   }
@@ -183,7 +184,11 @@ class QueryWeb extends QueryPlatform {
 
     return convertWebExceptions(
       () => querySnapshots.map((webQuerySnapshot) {
-        return convertWebQuerySnapshot(firestore, webQuerySnapshot);
+        return convertWebQuerySnapshot(
+          firestore,
+          webQuerySnapshot,
+          ServerTimestampBehavior.none.name,
+        );
       }),
     );
   }
