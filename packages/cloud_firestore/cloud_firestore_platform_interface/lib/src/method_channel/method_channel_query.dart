@@ -8,7 +8,6 @@ import 'dart:async';
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
-import 'package:cloud_firestore_platform_interface/src/method_channel/utils/server_timestamp_behavior.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 

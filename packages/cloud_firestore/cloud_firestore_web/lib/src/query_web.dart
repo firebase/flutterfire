@@ -150,7 +150,9 @@ class QueryWeb extends QueryPlatform {
       return convertWebQuerySnapshot(
         firestore,
         await _buildWebQueryWithParameters().get(convertGetOptions(options)),
-        options.serverTimestampBehavior.name,
+        getServerTimestampBehaviorString(
+          options.serverTimestampBehavior,
+        ),
       );
     });
   }

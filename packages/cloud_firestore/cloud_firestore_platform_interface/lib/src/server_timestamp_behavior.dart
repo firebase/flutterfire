@@ -8,15 +8,15 @@ enum ServerTimestampBehavior {
   previous,
 }
 
-extension ServerTimestampBehaviorExtension on ServerTimestampBehavior {
-  String get name {
-    switch (this) {
-      case ServerTimestampBehavior.none:
-        return 'none';
-      case ServerTimestampBehavior.estimate:
-        return 'estimate';
-      case ServerTimestampBehavior.previous:
-        return 'previous';
-    }
+String getServerTimestampBehaviorString(
+  ServerTimestampBehavior serverTimestampBehavior,
+) {
+  switch (serverTimestampBehavior) {
+    case ServerTimestampBehavior.none:
+      return 'none';
+    case ServerTimestampBehavior.estimate:
+      return 'estimate';
+    case ServerTimestampBehavior.previous:
+      return 'previous';
   }
 }

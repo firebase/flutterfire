@@ -292,11 +292,6 @@ public class FlutterFirebaseFirestorePlugin
           try {
             Source source = getSource(arguments);
             Query query = (Query) arguments.get("query");
-            String serverTimestampBehaviorString =
-                (String) arguments.get("serverTimestampBehavior");
-            DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
-                ServerTimestampBehaviorConverter.toServerTimestampBehavior(
-                    serverTimestampBehaviorString);
 
             if (query == null) {
               taskCompletionSource.setException(
@@ -305,7 +300,7 @@ public class FlutterFirebaseFirestorePlugin
               return;
             }
             final QuerySnapshot querySnapshot = Tasks.await(query.get(source));
-            serverTimestampBehaviorHashMap.put(querySnapshot.hashCode(), serverTimestampBehavior);
+            saveTimestampBehavior(arguments, querySnapshot.hashCode());
 
             taskCompletionSource.setResult(querySnapshot);
           } catch (Exception e) {
@@ -326,7 +321,10 @@ public class FlutterFirebaseFirestorePlugin
             DocumentReference documentReference =
                 (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
 
-            taskCompletionSource.setResult(Tasks.await(documentReference.get(source)));
+            final DocumentSnapshot documentSnapshot = Tasks.await(documentReference.get(source));
+            saveTimestampBehavior(arguments, documentSnapshot.hashCode());
+
+            taskCompletionSource.setResult(documentSnapshot);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
@@ -355,13 +353,26 @@ public class FlutterFirebaseFirestorePlugin
               return;
             }
 
-            taskCompletionSource.setResult(Tasks.await(query.get(source)));
+            final QuerySnapshot querySnapshot = Tasks.await(query.get(source));
+            saveTimestampBehavior(arguments, querySnapshot.hashCode());
+
+            taskCompletionSource.setResult(querySnapshot);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
         });
 
     return taskCompletionSource.getTask();
+  }
+
+  private void saveTimestampBehavior(Map<String, Object> arguments, int hashCode) {
+    String serverTimestampBehaviorString =
+      (String) arguments.get("serverTimestampBehavior");
+    DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
+      ServerTimestampBehaviorConverter.toServerTimestampBehavior(
+        serverTimestampBehaviorString);
+
+    serverTimestampBehaviorHashMap.put(hashCode, serverTimestampBehavior);
   }
 
   private Task<Void> documentSet(Map<String, Object> arguments) {

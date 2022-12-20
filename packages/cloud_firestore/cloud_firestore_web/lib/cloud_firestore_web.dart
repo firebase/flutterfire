@@ -195,7 +195,9 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     return convertWebQuerySnapshot(
       this,
       snapshot,
-      options.serverTimestampBehavior.name,
+      getServerTimestampBehaviorString(
+        options.serverTimestampBehavior,
+      ),
     );
   }
 
