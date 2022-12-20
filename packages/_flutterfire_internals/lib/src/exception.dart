@@ -47,9 +47,7 @@ FirebaseException platformExceptionToFirebaseException(
 
   if (details != null) {
     code = (details['code'] as String?) ?? code;
-    message = (details['nativeErrorMessage'] as String?) ??
-        (details['message'] as String?) ??
-        message;
+    message = (details['message'] as String?) ?? message;
   }
 
   return FirebaseException(
