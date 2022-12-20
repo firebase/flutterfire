@@ -366,11 +366,9 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   private void saveTimestampBehavior(Map<String, Object> arguments, int hashCode) {
-    String serverTimestampBehaviorString =
-      (String) arguments.get("serverTimestampBehavior");
+    String serverTimestampBehaviorString = (String) arguments.get("serverTimestampBehavior");
     DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
-      ServerTimestampBehaviorConverter.toServerTimestampBehavior(
-        serverTimestampBehaviorString);
+        ServerTimestampBehaviorConverter.toServerTimestampBehavior(serverTimestampBehaviorString);
 
     serverTimestampBehaviorHashMap.put(hashCode, serverTimestampBehavior);
   }

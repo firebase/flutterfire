@@ -464,10 +464,12 @@ FlutterStandardMethodCodec *_codec;
 - (void)documentGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRDocumentReference *document = arguments[@"reference"];
   FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
+  NSString *serverTimestampBehaviorString = arguments[@"serverTimestampBehavior"];
   id completion = ^(FIRDocumentSnapshot *_Nullable snapshot, NSError *_Nullable error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
+      [_serverTimestampMap setObject:serverTimestampBehaviorString forKey:@([snapshot hash])];
       result.success(snapshot);
     }
   };
@@ -506,6 +508,7 @@ FlutterStandardMethodCodec *_codec;
   NSString *name = arguments[@"name"];
 
   FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
+  NSString *serverTimestampBehaviorString = arguments[@"serverTimestampBehavior"];
 
   [firestore getQueryNamed:name
                 completion:^(FIRQuery *_Nullable query) {
@@ -522,6 +525,9 @@ FlutterStandardMethodCodec *_codec;
                                        if (error != nil) {
                                          result.error(nil, nil, nil, error);
                                        } else {
+                                         [_serverTimestampMap
+                                             setObject:serverTimestampBehaviorString
+                                                forKey:@([snapshot hash])];
                                          result.success(snapshot);
                                        }
                                      }];
