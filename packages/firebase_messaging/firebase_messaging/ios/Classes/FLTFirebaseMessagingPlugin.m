@@ -622,7 +622,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)messagingGetToken:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRMessaging *messaging = [FIRMessaging messaging];
 
-  // Keep behaviour consistent with android platform, newly retrieved tokens are streamed via
+  // Keep behavior consistent with android platform, newly retrieved tokens are streamed via
   // onTokenRefresh
   bool refreshToken = messaging.FCMToken == nil ? YES : NO;
   [messaging tokenWithCompletion:^(NSString *_Nullable token, NSError *_Nullable error) {

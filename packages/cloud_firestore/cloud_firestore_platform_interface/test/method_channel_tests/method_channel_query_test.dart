@@ -6,12 +6,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import '../utils/test_common.dart';
 
@@ -243,6 +242,7 @@ void main() {
         expect(log[1].arguments, <String, dynamic>{
           'query': isInstanceOf<MethodChannelQuery>(),
           'includeMetadataChanges': false,
+          'serverTimestampBehavior': 'none'
         });
         //TODO(russellwheatley): NNBD failure. 'cancel' method not being recorded
         // expect(log[2].method, 'cancel');
