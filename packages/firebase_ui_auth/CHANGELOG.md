@@ -1,3 +1,7 @@
+## 1.1.4
+
+ - Update a dependency to the latest release.
+
 ## 1.1.3
 
  - **DOCS**: add docs links to the package README ([#10104](https://github.com/firebase/flutterfire/issues/10104)). ([dd611cd2](https://github.com/firebase/flutterfire/commit/dd611cd25139f78bc947a68366213902a31ae350))
