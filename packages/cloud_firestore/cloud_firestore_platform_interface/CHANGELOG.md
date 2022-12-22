@@ -1,3 +1,7 @@
+## 5.9.2
+
+ - **FIX**: Replace FallThroughError with UnsupportedError ([0592d02b](https://github.com/firebase/flutterfire/commit/0592d02ba036f7abb347e305aff52fdbfd568a56))
+
 ## 5.9.1
 
  - Update a dependency to the latest release.

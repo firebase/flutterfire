@@ -345,6 +345,25 @@ class MockAggregateQuery extends Mock implements AggregateQuery {
 class MockCollection extends Mock
     implements CollectionReference<Map<String, Object?>> {
   @override
+  Stream<QuerySnapshot<Map<String, Object?>>> snapshots({
+    bool includeMetadataChanges = false,
+  }) {
+    return super.noSuchMethod(
+      Invocation.method(#snapshots, null, {
+        #includeMetadataChanges: includeMetadataChanges,
+      }),
+      returnValue: Stream.fromIterable([
+        MockQuerySnapshot(),
+        MockQuerySnapshot(),
+      ]),
+      returnValueForMissingStub: Stream.fromIterable([
+        MockQuerySnapshot(),
+        MockQuerySnapshot(),
+      ]),
+    );
+  }
+
+  @override
   CollectionReference<R> withConverter<R extends Object?>({
     FromFirestore<R>? fromFirestore,
     ToFirestore<R>? toFirestore,

@@ -145,6 +145,28 @@ void runQueryTests() {
         expect(qs.metadata.isFromCache, isFalse);
       });
 
+      test('uses [GetOptions] serverTimestampBehavior previous', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('get');
+        QuerySnapshot<Map<String, dynamic>> qs = await collection.get(
+          const GetOptions(
+            serverTimestampBehavior: ServerTimestampBehavior.previous,
+          ),
+        );
+        expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
+      });
+
+      test('uses [GetOptions] serverTimestampBehavior estimate', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('get');
+        QuerySnapshot<Map<String, dynamic>> qs = await collection.get(
+          const GetOptions(
+            serverTimestampBehavior: ServerTimestampBehavior.estimate,
+          ),
+        );
+        expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
+      });
+
       test('throws a [FirebaseException]', () async {
         CollectionReference<Map<String, dynamic>> collection =
             firestore.collection('not-allowed');

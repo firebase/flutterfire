@@ -575,7 +575,8 @@ class DocumentSnapshot
       firestore_interop.DocumentSnapshotJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  Map<String, dynamic>? data() => dartify(jsObject.data());
+  Map<String, dynamic>? data([firestore_interop.SnapshotOptions? options]) =>
+      dartify(jsObject.data(options));
 
   dynamic get(/*String|FieldPath*/ dynamic fieldPath) =>
       dartify(jsObject.get(fieldPath));

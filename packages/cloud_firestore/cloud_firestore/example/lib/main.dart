@@ -190,7 +190,12 @@ class _FilmListState extends State<FilmList> {
   }
 
   Future<void> _resetLikes() async {
-    final movies = await moviesRef.get();
+    final movies = await moviesRef.get(
+      const GetOptions(
+        serverTimestampBehavior: ServerTimestampBehavior.previous,
+      ),
+    );
+
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     for (final movie in movies.docs) {
