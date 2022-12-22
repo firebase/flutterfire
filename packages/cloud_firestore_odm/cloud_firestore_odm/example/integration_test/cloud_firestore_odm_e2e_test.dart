@@ -9,10 +9,11 @@ import 'package:integration_test/integration_test.dart';
 
 import 'collection_reference_test.dart' as collection_reference_test;
 import 'document_reference_test.dart' as document_reference_test;
-import 'path_test.dart' as path_test;
-import 'query_reference_test.dart' as query_reference_test;
 
 import 'firebase_options.dart';
+
+import 'path_test.dart' as path_test;
+import 'query_reference_test.dart' as query_reference_test;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

@@ -433,7 +433,7 @@ const defaultFirebaseOptions = const FirebaseOptions(
   projectId: 'flutterfire-e2e-tests',
   authDomain: 'flutterfire-e2e-tests.firebaseapp.com',
   databaseURL:
-  'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+      'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
   storageBucket: 'flutterfire-e2e-tests.appspot.com',
   measurementId: 'G-JN95N1JV2E',
 );
