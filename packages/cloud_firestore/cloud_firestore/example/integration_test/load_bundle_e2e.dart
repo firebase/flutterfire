@@ -70,7 +70,9 @@ void runLoadBundleTests() {
 
       test('loadBundle(): error handling for malformed bundle', () async {
         final url = Uri.https(
-            'api.rnfirebase.io', '/firestore/e2e-tests/malformed-bundle');
+          'api.rnfirebase.io',
+          '/firestore/e2e-tests/malformed-bundle',
+        );
         final response = await http.get(url);
         String string = response.body;
         Uint8List buffer = Uint8List.fromList(string.codeUnits);
