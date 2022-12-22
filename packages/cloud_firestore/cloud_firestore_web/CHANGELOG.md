@@ -1,3 +1,7 @@
+## 3.2.0
+
+ - **FEAT**: add ServerTimestampBehavior to the GetOptions class.  ([#9590](https://github.com/firebase/flutterfire/issues/9590)). ([c25bd2fe](https://github.com/firebase/flutterfire/commit/c25bd2fe4c13bc9f13d93410842c00e25aaac2b2))
+
 ## 3.1.1
 
  - **FIX**: use `enableMultiTabIndexedDbPersistence()` API when the user inputs `synchronizeTabs` as `true` ([#10024](https://github.com/firebase/flutterfire/issues/10024)). ([d75786f3](https://github.com/firebase/flutterfire/commit/d75786f3112fac02f3db48b372c73a121f035141))
