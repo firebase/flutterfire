@@ -63,9 +63,14 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
       firestore_interop.doc(jsObject, documentPath));
 
   Future<void> enablePersistence(
-          [firestore_interop.PersistenceSettings? settings]) =>
-      handleThenable(
-          firestore_interop.enableIndexedDbPersistence(jsObject, settings));
+      [firestore_interop.PersistenceSettings? settings]) {
+    if (settings != null && settings.synchronizeTabs == true) {
+      return handleThenable(
+          firestore_interop.enableMultiTabIndexedDbPersistence(jsObject));
+    }
+    return handleThenable(
+        firestore_interop.enableIndexedDbPersistence(jsObject));
+  }
 
   Stream<void> snapshotsInSync() {
     late StreamController<void> controller;
@@ -570,7 +575,8 @@ class DocumentSnapshot
       firestore_interop.DocumentSnapshotJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  Map<String, dynamic>? data() => dartify(jsObject.data());
+  Map<String, dynamic>? data([firestore_interop.SnapshotOptions? options]) =>
+      dartify(jsObject.data(options));
 
   dynamic get(/*String|FieldPath*/ dynamic fieldPath) =>
       dartify(jsObject.get(fieldPath));

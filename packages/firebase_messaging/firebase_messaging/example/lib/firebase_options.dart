@@ -48,50 +48,54 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
-    appId: '1:448618578101:web:a8ebc6ab724e6baaac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-    authDomain: 'react-native-firebase-testing.firebaseapp.com',
-    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-    storageBucket: 'react-native-firebase-testing.appspot.com',
-    measurementId: 'G-RF9GF9MQ1F',
+    apiKey: 'AIzaSyB7wZb2tO1-Fs6GbDADUSTs2Qs3w08Hovw',
+    appId: '1:406099696497:web:87e25e51afe982cd3574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    authDomain: 'flutterfire-e2e-tests.firebaseapp.com',
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+    measurementId: 'G-JN95N1JV2E',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCuu4tbv9CwwTudNOweMNstzZHIDBhgJxA',
-    appId: '1:448618578101:android:0568e76dc62e89bcac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-    storageBucket: 'react-native-firebase-testing.appspot.com',
+    apiKey: 'AIzaSyCdRjCVZlhrq72RuEklEyyxYlBRCYhI2Sw',
+    appId: '1:406099696497:android:74ebb073d7727cd43574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-    appId: '1:448618578101:ios:0b11ed8263232715ac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-    storageBucket: 'react-native-firebase-testing.appspot.com',
+    apiKey: 'AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c',
+    appId: '1:406099696497:ios:1b423b89c63b82053574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
     androidClientId:
-        '448618578101-a9p7bj5jlakabp22fo3cbkj7nsmag24e.apps.googleusercontent.com',
+        '406099696497-17qn06u8a0dc717u8ul7s49ampk13lul.apps.googleusercontent.com',
     iosClientId:
-        '448618578101-evbjdqq9co9v29pi8jcua8bm7kr4smuu.apps.googleusercontent.com',
+        '406099696497-irb7edfevfkhi6t5s9kbuq1mt1og95rg.apps.googleusercontent.com',
     iosBundleId: 'io.flutter.plugins.firebase.messaging',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-    appId: '1:448618578101:ios:0b11ed8263232715ac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-    storageBucket: 'react-native-firebase-testing.appspot.com',
+    apiKey: 'AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c',
+    appId: '1:406099696497:ios:1b423b89c63b82053574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
     androidClientId:
-        '448618578101-a9p7bj5jlakabp22fo3cbkj7nsmag24e.apps.googleusercontent.com',
+        '406099696497-17qn06u8a0dc717u8ul7s49ampk13lul.apps.googleusercontent.com',
     iosClientId:
-        '448618578101-evbjdqq9co9v29pi8jcua8bm7kr4smuu.apps.googleusercontent.com',
+        '406099696497-irb7edfevfkhi6t5s9kbuq1mt1og95rg.apps.googleusercontent.com',
     iosBundleId: 'io.flutter.plugins.firebase.messaging',
   );
 }

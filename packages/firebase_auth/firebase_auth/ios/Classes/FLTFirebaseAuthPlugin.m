@@ -622,7 +622,33 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
 - (void)authorizationController:(ASAuthorizationController *)controller
            didCompleteWithError:(NSError *)error API_AVAILABLE(macos(10.15), ios(13.0)) {
   NSLog(@"Sign in with Apple errored: %@", error);
-  self.appleResult.error(nil, nil, nil, error);
+  switch (error.code) {
+    case ASAuthorizationErrorCanceled:
+      self.appleResult.error(@"canceled", @"The user canceled the authorization attempt.", nil,
+                             error);
+      break;
+
+    case ASAuthorizationErrorInvalidResponse:
+      self.appleResult.error(@"invalid-response",
+                             @"The authorization request received an invalid response.", nil,
+                             error);
+      break;
+
+    case ASAuthorizationErrorNotHandled:
+      self.appleResult.error(@"not-handled", @"The authorization request wasn’t handled.", nil,
+                             error);
+      break;
+
+    case ASAuthorizationErrorFailed:
+      self.appleResult.error(@"failed", @"The authorization attempt failed.", nil, error);
+      break;
+
+    case ASAuthorizationErrorUnknown:
+    default:
+      self.appleResult.error(nil, nil, nil, error);
+      break;
+  }
+  self.appleResult = nil;
 }
 
 - (void)signInWithProvider:(id)arguments

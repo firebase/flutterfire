@@ -76,7 +76,7 @@ for the app. You can find more details on how to retrieve your SHA-256 fingerpri
         your Provisioning Profile is set.
 
     1.  On the Signing & Capabilities page, enable **Associated Domains** and
-        add the following to the Associated Domains list:
+        add the following to the Associated Domains list (replace example with your domain):
 
         ```
         applinks:example.page.link

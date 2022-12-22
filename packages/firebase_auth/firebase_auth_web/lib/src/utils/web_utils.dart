@@ -261,7 +261,11 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
     return oAuthProvider;
   }
 
-  throw FallThroughError();
+  if (authProvider is SAMLAuthProvider) {
+    return auth_interop.SAMLAuthProvider(authProvider.providerId);
+  }
+
+  throw UnsupportedError('Unknown AuthProvider: $authProvider.');
 }
 
 /// Converts a [auth_interop.AuthCredential] into a [AuthCredential].

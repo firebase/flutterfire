@@ -1,3 +1,11 @@
+## 5.9.2
+
+ - **FIX**: Replace FallThroughError with UnsupportedError ([0592d02b](https://github.com/firebase/flutterfire/commit/0592d02ba036f7abb347e305aff52fdbfd568a56))
+
+## 5.9.1
+
+ - Update a dependency to the latest release.
+
 ## 5.9.0
 
  - **FEAT**: experimental `setIndexConfiguration()` API ([#9928](https://github.com/firebase/flutterfire/issues/9928)). ([bf6eda18](https://github.com/firebase/flutterfire/commit/bf6eda1893a4f29c4b501c4aa31026548ad2b286))

@@ -85,7 +85,8 @@ external PromiseJsImpl<void> enableIndexedDbPersistence(
 
 @JS()
 external PromiseJsImpl<void> enableMultiTabIndexedDbPersistence(
-    FirestoreJsImpl firestore);
+  FirestoreJsImpl firestore,
+);
 
 @JS()
 external PromiseJsImpl<void> enableNetwork(FirestoreJsImpl firestore);
@@ -389,7 +390,7 @@ abstract class DocumentSnapshotJsImpl {
   external SnapshotMetadata get metadata;
   external DocumentReferenceJsImpl get ref;
 
-  external dynamic data();
+  external dynamic data([SnapshotOptions? options]);
   external bool exists();
   external dynamic get(/*String|FieldPath*/ dynamic fieldPath);
 }

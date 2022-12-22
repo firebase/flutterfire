@@ -1,3 +1,7 @@
+## 1.0.0-dev.43
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.42
 
  - **FIX**: a bug where the ODM does not respect JSON case renaming ([#9988](https://github.com/firebase/flutterfire/issues/9988)). ([02d394b6](https://github.com/firebase/flutterfire/commit/02d394b6b0917f7dc98711b9939630c0b423ed63))
