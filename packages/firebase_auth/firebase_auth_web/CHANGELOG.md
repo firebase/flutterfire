@@ -1,3 +1,7 @@
+## 5.2.3
+
+ - revert dependency `Intl` to 0.17.0
+
 ## 5.2.2
 
  - Update a dependency to the latest release.
