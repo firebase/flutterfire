@@ -8,14 +8,11 @@ import 'utils/exception.dart';
 
 class MethodChannelHttpMetric extends HttpMetricPlatform {
   MethodChannelHttpMetric(
-    this._methodChannelHandle,
-    this._httpMetricHandle,
     this._url,
     this._httpMethod,
   ) : super();
 
-  final int _methodChannelHandle;
-  final int _httpMetricHandle;
+  int? _httpMetricHandle;
   final String _url;
   final HttpMethod _httpMethod;
   int? _httpResponseCode;
@@ -23,7 +20,6 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   String? _responseContentType;
   int? _responsePayloadSize;
 
-  bool _hasStarted = false;
   bool _hasStopped = false;
 
   final Map<String, String> _attributes = <String, String>{};
@@ -62,23 +58,16 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
 
   @override
   Future<void> start() async {
-    if (_hasStopped) return;
+    if (_httpMetricHandle != null) return;
     try {
-      //TODO: update so that the method call & handle is passed on one method channel call (start()) instead.
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'FirebasePerformance#newHttpMetric',
+      _httpMetricHandle =
+          await MethodChannelFirebasePerformance.channel.invokeMethod<int>(
+        'FirebasePerformance#httpMetricStart',
         <String, Object?>{
-          'handle': _methodChannelHandle,
-          'httpMetricHandle': _httpMetricHandle,
           'url': _url,
           'httpMethod': _httpMethod.toString(),
         },
       );
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'HttpMetric#start',
-        <String, Object?>{'handle': _httpMetricHandle},
-      );
-      _hasStarted = true;
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -86,10 +75,10 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
 
   @override
   Future<void> stop() async {
-    if (!_hasStarted || _hasStopped) return;
+    if (_httpMetricHandle == null || _hasStopped) return;
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'HttpMetric#stop',
+        'FirebasePerformance#httpMetricStop',
         <String, Object?>{
           'handle': _httpMetricHandle,
           'attributes': _attributes,
