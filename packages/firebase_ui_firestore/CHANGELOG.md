@@ -1,3 +1,7 @@
+## 1.2.1
+
+ - Update a dependency to the latest release.
+
 ## 1.2.0
 
  - **FEAT**: use aggregate query to display total rows count in DataTable ([#10113](https://github.com/firebase/flutterfire/issues/10113)). ([bf52bcca](https://github.com/firebase/flutterfire/commit/bf52bcca3eb186cc001344d2522e11245e5e660a))

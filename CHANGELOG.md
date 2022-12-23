@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-12-23
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_localizations` - `v1.0.2`](#firebase_ui_localizations---v102)
+ - [`firebase_auth_web` - `v5.2.3`](#firebase_auth_web---v523)
+ - [`firebase_ui_auth` - `v1.1.5`](#firebase_ui_auth---v115)
+ - [`firebase_ui_database` - `v1.0.9`](#firebase_ui_database---v109)
+ - [`firebase_ui_firestore` - `v1.2.1`](#firebase_ui_firestore---v121)
+ - [`firebase_ui_oauth` - `v1.1.5`](#firebase_ui_oauth---v115)
+ - [`firebase_ui_oauth_apple` - `v1.0.12`](#firebase_ui_oauth_apple---v1012)
+ - [`firebase_ui_oauth_facebook` - `v1.0.12`](#firebase_ui_oauth_facebook---v1012)
+ - [`firebase_ui_oauth_google` - `v1.0.12`](#firebase_ui_oauth_google---v1012)
+ - [`firebase_ui_oauth_twitter` - `v1.0.12`](#firebase_ui_oauth_twitter---v1012)
+ - [`firebase_auth` - `v4.2.3`](#firebase_auth---v423)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_auth` - `v1.1.5`
+ - `firebase_ui_database` - `v1.0.9`
+ - `firebase_ui_firestore` - `v1.2.1`
+ - `firebase_ui_oauth` - `v1.1.5`
+ - `firebase_ui_oauth_apple` - `v1.0.12`
+ - `firebase_ui_oauth_facebook` - `v1.0.12`
+ - `firebase_ui_oauth_google` - `v1.0.12`
+ - `firebase_ui_oauth_twitter` - `v1.0.12`
+ - `firebase_auth` - `v4.2.3`
+
+---
+
+#### `firebase_ui_localizations` - `v1.0.2`
+
+ - revert dependency `Intl` to 0.17.0
+
+#### `firebase_auth_web` - `v5.2.3`
+
+ - revert dependency `Intl` to 0.17.0
+
+
 ## 2022-12-22
 
 ### Changes
