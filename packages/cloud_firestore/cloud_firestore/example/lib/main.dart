@@ -20,7 +20,7 @@ Future<void> main() async {
   if (shouldUseFirestoreEmulator) {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
-  runApp(const TestBugWidget());
+  runApp(const MaterialApp(home: TestBugWidget()));
 }
 
 /// A reference to the list of movies.

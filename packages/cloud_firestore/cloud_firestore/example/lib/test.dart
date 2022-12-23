@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +11,8 @@ class TestBugWidget extends StatefulWidget {
 }
 
 class _TestBugWidgetState extends State<TestBugWidget> {
+  StreamSubscription? _subscription;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,37 +37,48 @@ class _TestBugWidgetState extends State<TestBugWidget> {
   }
 
   void streamListen() {
-    FirebaseFirestore.instance
-        .collection('test')
+    _subscription?.cancel();
+    _subscription = FirebaseFirestore.instance
+        .collection('test_10153')
         .doc('test')
         .snapshots()
         .listen((event) {
-      debugPrint('new test has arrived');
+      print(event.data());
+      print('new test has arrived');
     });
   }
 
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
   Future<void> transactThenGet() async {
-    final docRef = FirebaseFirestore.instance.collection('test').doc('test');
+    final docRef =
+        FirebaseFirestore.instance.collection('test_10153').doc('test');
     var newPopulation;
     await FirebaseFirestore.instance.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
       final prevPopulation = snapshot.get('population');
       newPopulation = prevPopulation + 1;
+      print('Updating to: $newPopulation');
       transaction.update(docRef, {'population': newPopulation});
     });
     Map<String, dynamic> updated = (await docRef.get()).data()!;
-    debugPrint('Expecting : ${newPopulation.toString()}');
-    debugPrint('Got : ${updated['population'].toString()}');
+    print('Expecting : ${newPopulation.toString()}');
+    print('Got : ${updated['population'].toString()}');
   }
 
   Future<void> updateThenGet() async {
-    final docRef = FirebaseFirestore.instance.collection('test').doc('test');
+    final docRef =
+        FirebaseFirestore.instance.collection('test_10153').doc('test');
     final snapshot = await docRef.get();
     final prevPopulation = snapshot.get('population');
     final newPopulation = prevPopulation + 1;
     await docRef.update({'population': newPopulation});
     Map<String, dynamic> updated = (await docRef.get()).data()!;
-    debugPrint('Expecting : ${newPopulation.toString()}');
-    debugPrint('Got : ${updated['population'].toString()}');
+    print('Expecting : ${newPopulation.toString()}');
+    print('Got : ${updated['population'].toString()}');
   }
 }
