@@ -1,6 +1,6 @@
 name: firebase_crashlytics_platform_interface
 description: A common platform interface for the firebase_crashlytics plugin.
-version: 3.3.8
+version: 3.3.9
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_crashlytics/firebase_crashlytics_platform_interface
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_crashlytics/firebase_crashlytics_platform_interface
 
@@ -9,7 +9,7 @@ environment:
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  _flutterfire_internals: ^1.0.10
+  _flutterfire_internals: ^1.0.11
   collection: ^1.15.0
   firebase_core: ^2.4.0
   flutter:

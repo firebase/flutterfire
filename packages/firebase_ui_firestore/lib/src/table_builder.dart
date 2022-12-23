@@ -201,7 +201,6 @@ class FirestoreDataTable extends StatefulWidget {
   /// If null, then [horizontalMargin] is used as the margin between the edge
   /// of the table and the checkbox, as well as the margin between the checkbox
   /// and the content in the first data column. This value defaults to 24.0.
-
   final double? checkboxHorizontalMargin;
 
   @override
@@ -249,47 +248,61 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
 
   @override
   Widget build(BuildContext context) {
-    return FirestoreQueryBuilder<Map<String, Object?>>(
-      query: _query,
-      builder: (context, snapshot, child) {
-        source.setFromSnapshot(snapshot);
+    return StreamBuilder(
+      stream: _query.snapshots(),
+      builder: (context, snapshot) {
+        return AggregateQueryBuilder(
+          query: _query.count(),
+          builder: (context, aggSsnapshot) {
+            return FirestoreQueryBuilder<Map<String, Object?>>(
+              query: _query,
+              builder: (context, snapshot, child) {
+                if (aggSsnapshot.hasData) {
+                  source.setFromSnapshot(snapshot, aggSsnapshot.requireData);
+                } else {
+                  source.setFromSnapshot(snapshot);
+                }
 
-        return AnimatedBuilder(
-          animation: source,
-          builder: (context, child) {
-            final actions = [
-              ...?widget.actions,
-              if (widget.canDeleteItems && source._selectedRowIds.isNotEmpty)
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: source.onDeleteSelectedItems,
-                ),
-            ];
-            return PaginatedDataTable(
-              source: source,
-              onSelectAll: selectionEnabled ? source.onSelectAll : null,
-              onPageChanged: widget.onPageChanged,
-              showCheckboxColumn: widget.showCheckboxColumn,
-              arrowHeadColor: widget.arrowHeadColor,
-              checkboxHorizontalMargin: widget.checkboxHorizontalMargin,
-              columnSpacing: widget.columnSpacing,
-              dataRowHeight: widget.dataRowHeight,
-              dragStartBehavior: widget.dragStartBehavior,
-              headingRowHeight: widget.headingRowHeight,
-              horizontalMargin: widget.horizontalMargin,
-              rowsPerPage: widget.rowsPerPage,
-              showFirstLastButtons: widget.showFirstLastButtons,
-              sortAscending: widget.sortAscending,
-              sortColumnIndex: widget.sortColumnIndex,
-              header:
-                  actions.isEmpty ? null : (widget.header ?? const SizedBox()),
-              actions: actions.isEmpty ? null : actions,
-              columns: [
-                for (final head in widget.columnLabels.values)
-                  DataColumn(
-                    label: head,
-                  )
-              ],
+                return AnimatedBuilder(
+                  animation: source,
+                  builder: (context, child) {
+                    final actions = [
+                      ...?widget.actions,
+                      if (widget.canDeleteItems &&
+                          source._selectedRowIds.isNotEmpty)
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: source.onDeleteSelectedItems,
+                        ),
+                    ];
+                    return PaginatedDataTable(
+                      source: source,
+                      onSelectAll: selectionEnabled ? source.onSelectAll : null,
+                      onPageChanged: widget.onPageChanged,
+                      showCheckboxColumn: widget.showCheckboxColumn,
+                      arrowHeadColor: widget.arrowHeadColor,
+                      checkboxHorizontalMargin: widget.checkboxHorizontalMargin,
+                      columnSpacing: widget.columnSpacing,
+                      dataRowHeight: widget.dataRowHeight,
+                      dragStartBehavior: widget.dragStartBehavior,
+                      headingRowHeight: widget.headingRowHeight,
+                      horizontalMargin: widget.horizontalMargin,
+                      rowsPerPage: widget.rowsPerPage,
+                      showFirstLastButtons: widget.showFirstLastButtons,
+                      sortAscending: widget.sortAscending,
+                      sortColumnIndex: widget.sortColumnIndex,
+                      header: actions.isEmpty
+                          ? null
+                          : (widget.header ?? const SizedBox()),
+                      actions: actions.isEmpty ? null : actions,
+                      columns: [
+                        for (final head in widget.columnLabels.values)
+                          DataColumn(label: head)
+                      ],
+                    );
+                  },
+                );
+              },
             );
           },
         );
@@ -836,12 +849,16 @@ class _Source extends DataTableSource {
   @override
   int get selectedRowCount => _selectedRowIds.length;
 
+  AggregateQuerySnapshot? _aggregateSnapshot;
+
   @override
   bool get isRowCountApproximate =>
-      _previousSnapshot!.isFetching || _previousSnapshot!.hasMore;
+      _aggregateSnapshot?.count == null ||
+      (_previousSnapshot!.isFetching || _previousSnapshot!.hasMore);
 
   @override
   int get rowCount {
+    if (_aggregateSnapshot?.count != null) return _aggregateSnapshot!.count;
     // Emitting an extra item during load or before reaching the end
     // allows the DataTable to show a spinner during load & let the user
     // navigate to next page
@@ -902,8 +919,16 @@ class _Source extends DataTableSource {
   FirestoreQueryBuilderSnapshot<Map<String, Object?>>? _previousSnapshot;
 
   void setFromSnapshot(
-    FirestoreQueryBuilderSnapshot<Map<String, Object?>> snapshot,
-  ) {
+    FirestoreQueryBuilderSnapshot<Map<String, Object?>> snapshot, [
+    AggregateQuerySnapshot? aggregateSnapshot,
+  ]) {
+    if (aggregateSnapshot != null) {
+      _aggregateSnapshot = aggregateSnapshot;
+      notifyListeners();
+    } else {
+      _aggregateSnapshot = null;
+    }
+
     if (snapshot == _previousSnapshot) return;
 
     // Try to preserve the selection status when the snapshot got updated,

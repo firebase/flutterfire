@@ -16,7 +16,8 @@ void runLoadBundleTests() {
     Future<Uint8List> loadBundleSetup(int number) async {
       // endpoint serves a bundle with 3 documents each containing
       // a 'number' property that increments in value 1-3.
-      final url = Uri.https('api.rnfirebase.io', '/firestore/bundle-$number');
+      final url =
+          Uri.https('api.rnfirebase.io', '/firestore/e2e-tests/bundle-$number');
       final response = await http.get(url);
       String string = response.body;
       return Uint8List.fromList(string.codeUnits);
@@ -68,8 +69,10 @@ void runLoadBundleTests() {
       });
 
       test('loadBundle(): error handling for malformed bundle', () async {
-        final url =
-            Uri.https('api.rnfirebase.io', '/firestore/malformed-bundle');
+        final url = Uri.https(
+          'api.rnfirebase.io',
+          '/firestore/e2e-tests/malformed-bundle',
+        );
         final response = await http.get(url);
         String string = response.body;
         Uint8List buffer = Uint8List.fromList(string.codeUnits);

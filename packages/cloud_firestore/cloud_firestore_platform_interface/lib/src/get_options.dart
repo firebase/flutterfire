@@ -3,6 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'server_timestamp_behavior.dart';
 import 'source.dart';
 
 /// An options class that configures the behavior of get() calls on [DocumentReference] and [Query].
@@ -31,8 +32,19 @@ class GetOptions {
   /// QuerySnapshot with no documents.
   final Source source;
 
+  /// If set, controls the return value for server timestamps that have not yet been set to their final value.
+  ///
+  /// By specifying [ServerTimestampBehavior.estimate], pending server timestamps return an estimate based on the local clock.
+  /// This estimate will differ from the final value and cause these values to change once the server result becomes available.
+  ///
+  /// By specifying [ServerTimestampBehavior.previous], pending timestamps will be ignored and return their previous value instead.
+  ///
+  /// If omitted or set to [ServerTimestampBehavior.none], null will be returned by default until the server value becomes available.
+  final ServerTimestampBehavior serverTimestampBehavior;
+
   /// Creates a [GetOptions] instance.
   const GetOptions({
     this.source = Source.serverAndCache,
+    this.serverTimestampBehavior = ServerTimestampBehavior.none,
   });
 }
