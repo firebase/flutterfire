@@ -17,6 +17,7 @@
 
 @interface FLTLoadBundleStreamHandler ()
 @property(readwrite, strong) FIRLoadBundleTask *task;
+@property(readwrite, strong)     dispatch_queue_t queue;
 @end
 
 @implementation FLTLoadBundleStreamHandler
@@ -25,6 +26,8 @@
                                        eventSink:(nonnull FlutterEventSink)events {
   FlutterStandardTypedData *bundle = arguments[@"bundle"];
   FIRFirestore *firestore = arguments[@"firestore"];
+    
+    self.queue = dispatch_queue_create("firestore.stream", DISPATCH_QUEUE_SERIAL);
 
   // use completion handler to inform user of platform error.
   self.task = [firestore
@@ -40,7 +43,7 @@
             @"message" : message,
           };
 
-          dispatch_async(dispatch_get_main_queue(), ^{
+          dispatch_async(self.queue, ^{
             events([FLTFirebasePlugin createFlutterErrorFromCode:code
                                                          message:message
                                                  optionalDetails:details
@@ -49,10 +52,14 @@
         }
       }];
   // use addObserver to update user with snapshot progress
+    __weak typeof(self) weakSelf = self;
+
   [self.task addObserver:^(FIRLoadBundleTaskProgress *_Nullable progress) {
+    dispatch_async(weakSelf.queue, ^{
       if (progress.state != FIRLoadBundleTaskStateError) {
         events(progress);
       }
+    });
   }];
 
   return nil;

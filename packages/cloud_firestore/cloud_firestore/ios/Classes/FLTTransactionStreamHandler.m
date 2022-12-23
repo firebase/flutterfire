@@ -17,6 +17,7 @@
 
 @implementation FLTTransactionStreamHandler {
   NSString *_transactionId;
+    dispatch_queue_t queue;
 }
 
 - (instancetype)initWithId:(NSString *)transactionId
@@ -29,6 +30,7 @@
     self.ended = endedListener;
     self.semaphore = dispatch_semaphore_create(0);
     self.response = [NSMutableDictionary dictionary];
+    queue = dispatch_queue_create("firestore.transaction", DISPATCH_QUEUE_SERIAL);
   }
   return self;
 }
@@ -46,7 +48,7 @@
 
     strongSelf.started(transaction);
 
-    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async(queue, ^{
       events(@{@"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:firestore.app.name]});
     });
 
@@ -61,7 +63,7 @@
                                                         code:FIRFirestoreErrorCodeDeadlineExceeded
                                                     userInfo:@{}]];
 
-      dispatch_async(dispatch_get_main_queue(), ^{
+      dispatch_async(queue, ^{
         events(@{
           @"error" : @{
             @"code" : codeAndMessage[0],
@@ -115,7 +117,7 @@
     if (error) {
       NSArray *details = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
 
-      dispatch_async(dispatch_get_main_queue(), ^{
+      dispatch_async(queue, ^{
         events(@{
           @"error" : @{
             @"code" : details[0],
@@ -124,12 +126,12 @@
         });
       });
     } else {
-      dispatch_async(dispatch_get_main_queue(), ^{
+      dispatch_async(queue, ^{
         events(@{@"complete" : [NSNumber numberWithBool:YES]});
       });
     }
 
-    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async(queue, ^{
       events(FlutterEndOfEventStream);
     });
 
