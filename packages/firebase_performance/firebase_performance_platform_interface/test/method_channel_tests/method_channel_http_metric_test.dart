@@ -36,7 +36,7 @@ void main() {
         }
         switch (call.method) {
           case 'FirebasePerformance#httpMetricStart':
-            return 2;
+            return kHttpMetricHandle;
           case 'FirebasePerformance#httpMetricStop':
             return null;
           default:
