@@ -127,9 +127,9 @@ public class FlutterFirebasePerformancePlugin
             final String name = call.argument("name");
             final Trace trace = FirebasePerformance.getInstance().newTrace(name);
             trace.start();
-            _traceHandle++;
-            _traces.put(_traceHandle, trace);
-            taskCompletionSource.setResult(_traceHandle);
+            final int traceHandle = _traceHandle++;
+            _traces.put(traceHandle, trace);
+            taskCompletionSource.setResult(traceHandle);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
@@ -187,9 +187,9 @@ public class FlutterFirebasePerformancePlugin
             final HttpMetric httpMetric =
                 FirebasePerformance.getInstance().newHttpMetric(url, parseHttpMethod(httpMethod));
             httpMetric.start();
-            _httpMetricHandle++;
-            _httpMetrics.put(_httpMetricHandle, httpMetric);
-            taskCompletionSource.setResult(_httpMetricHandle);
+            final int httpMetricHandle = _httpMetricHandle++;
+            _httpMetrics.put(httpMetricHandle, httpMetric);
+            taskCompletionSource.setResult(httpMetricHandle);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
