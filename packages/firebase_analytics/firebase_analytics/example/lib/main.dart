@@ -75,38 +75,39 @@ class _MyHomePageState extends State<MyHomePage> {
         '"setDefaultEventParameters()" is not supported on web platform',
       );
     } else {
-      DefaultEventParameters params = DefaultEventParameters();
-      params.addString('bar', 'baz');
-      params.addNumber('someInt', 400);
-      params.addNumber('inter', 9);
-      params.addNumber('longNumber', 230485);
-      params.addNull('removeKey');
-
       // Only strings and numbers (longs & doubles for android, ints and doubles for iOS) are supported for GA custom event parameters:
       // https://firebase.google.com/docs/reference/ios/firebaseanalytics/api/reference/Classes/FIRAnalytics#+logeventwithname:parameters:
       // https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics#public-void-logevent-string-name,-bundle-params
-      await widget.analytics.setDefaultEventParameters(
-        params,
-      );
+      await widget.analytics.setDefaultEventParameters(<String, dynamic>{
+        'string': 'string',
+        'int': 42,
+        'long': 12345678910,
+        'double': 42.0,
+        // Only strings and numbers (ints & doubles) are supported for GA custom event parameters:
+        // https://developers.google.com/analytics/devguides/collection/analyticsjs/custom-dims-mets#overview
+        'bool': true.toString(),
+      });
       setMessage('setDefaultEventParameters succeeded');
     }
   }
 
   Future<void> _sendAnalyticsEvent() async {
-    EventParameters params = EventParameters();
-    params.addString('string', 'string');
-    params.addNumber('int', 42);
-    params.addNumber('long', 12345678910);
-    params.addNumber('double', 42.0);
-    params.addString('bool', true.toString());
-
     // Only strings and numbers (longs & doubles for android, ints and doubles for iOS) are supported for GA custom event parameters:
     // https://firebase.google.com/docs/reference/ios/firebaseanalytics/api/reference/Classes/FIRAnalytics#+logeventwithname:parameters:
     // https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics#public-void-logevent-string-name,-bundle-params
     await widget.analytics.logEvent(
       name: 'test_event',
-      parameters: params..addNumber('foo', 3),
+      parameters: <String, dynamic>{
+        'string': 'string',
+        'int': 42,
+        'long': 12345678910,
+        'double': 42.0,
+        // Only strings and numbers (ints & doubles) are supported for GA custom event parameters:
+        // https://developers.google.com/analytics/devguides/collection/analyticsjs/custom-dims-mets#overview
+        'bool': true.toString(),
+      },
     );
+
     setMessage('logEvent succeeded');
   }
 
@@ -183,9 +184,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _testAllEventTypes() async {
-    EventParameters params =
-        EventParameters.fromMap({'foo': 403, 'bar': 'baz'});
-    await widget.analytics.logEvent(name: 'super_test', parameters: params);
     await widget.analytics.logAddPaymentInfo();
     await widget.analytics.logAddToCart(
       currency: 'USD',

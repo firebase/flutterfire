@@ -8,4 +8,3 @@ export 'src/method_channel/method_channel_firebase_analytics.dart';
 export 'src/platform_interface/platform_interface_firebase_analytics.dart';
 export 'src/analytics_event_item.dart';
 export 'src/analytics_call_options.dart';
-export 'src/event_parameters.dart';

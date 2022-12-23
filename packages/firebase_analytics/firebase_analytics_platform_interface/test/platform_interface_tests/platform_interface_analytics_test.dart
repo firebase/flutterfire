@@ -188,7 +188,7 @@ void main() {
 
     test('throws if .setDefaultEventParameters() not implemented', () async {
       await expectLater(
-        () => firebaseAnalyticsPlatform.setDefaultEventParameters(null),
+        () => firebaseAnalyticsPlatform.setDefaultEventParameters({}),
         throwsA(
           isA<UnimplementedError>().having(
             (e) => e.message,

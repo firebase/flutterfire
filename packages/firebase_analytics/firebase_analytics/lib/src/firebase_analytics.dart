@@ -78,14 +78,21 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// Logs a custom Flutter Analytics event with the given [name] and event [parameters].
   Future<void> logEvent({
     required String name,
-    EventParameters? parameters,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) async {
     _logEventNameValidation(name);
 
+    parameters?.forEach((key, value) {
+      assert(
+        value is String || value is num,
+        "'string' OR 'number' must be set as the value of the parameter: $key",
+      );
+    });
+
     await _delegate.logEvent(
       name: name,
-      parameters: parameters?.asMap(),
+      parameters: parameters,
       callOptions: callOptions,
     );
   }
@@ -103,9 +110,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
 
   /// Adds parameters that will be set on every event logged from the SDK, including automatic ones.
   Future<void> setDefaultEventParameters(
-    DefaultEventParameters? defaultParameters,
+    Map<String, Object?>? defaultParameters,
   ) async {
-    await _delegate.setDefaultEventParameters(defaultParameters?.asMap());
+    defaultParameters?.forEach((key, value) {
+      assert(
+        value is String || value is num || value == null,
+        "'string', 'null' or 'number' must be set as the value of the parameter: $key",
+      );
+    });
+    await _delegate.setDefaultEventParameters(defaultParameters);
   }
 
   /// Sets whether analytics collection is enabled for this app on this device.

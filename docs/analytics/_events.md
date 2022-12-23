@@ -52,7 +52,10 @@ Alternatively, you can log the same event using `logEvent()`:
 ```dart
 await FirebaseAnalytics.instance.logEvent(
     name: "select_content",
-    parameters: EventParameters()..addString("content_type", "image")..addString("item_id", itemId),
+    parameters: {
+        "content_type": "image",
+        "item_id": itemId,
+    },
 );
 ```
 
@@ -90,7 +93,10 @@ event type, you can log your own custom events as shown in this example:
 ```dart
 await FirebaseAnalytics.instance.logEvent(
     name: "share_image",
-    parameters: EventParameters()..addString("image_name", "name")..addString("full_text", "text"),
+    parameters: {
+        "image_name": name,
+        "full_text": text,
+    },
 );
 ```
 
@@ -105,7 +111,9 @@ appear in Analytics reports.
 ```dart
 // Not supported on web
 await FirebaseAnalytics.instance
-  .setDefaultEventParameters(DefaultEventParameters()..addString("user_id", "123"));
+  .setDefaultEventParameters({
+    version: '1.2.3'
+  });
 ```
 
 If a parameter is specificed in the `logEvent()` or `log`-
