@@ -1,3 +1,7 @@
+## 3.2.10
+
+ - Update a dependency to the latest release.
+
 ## 3.2.9
 
  - Update a dependency to the latest release.
@@ -256,7 +260,7 @@
 
 ## 0.1.0-dev.4
 
- - **FIX**: null check notification jsObject (#4624).
+ - **FIX**: null check fix that could happen when using verifyPhone notification jsObject (#4624).
 
 ## 0.1.0-dev.3
 

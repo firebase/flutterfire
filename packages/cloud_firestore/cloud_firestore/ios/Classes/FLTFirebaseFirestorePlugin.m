@@ -60,6 +60,8 @@ NSString *const kFLTFirebaseFirestoreLoadBundleChannelName =
                                streamHandler:(NSObject<FlutterStreamHandler> *)handler;
 @end
 
+static NSMutableDictionary<NSNumber *, NSString *> *_serverTimestampMap;
+
 @implementation FLTFirebaseFirestorePlugin {
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
   NSMutableDictionary<NSString *, NSObject<FlutterStreamHandler> *> *_streamHandlers;
@@ -68,6 +70,10 @@ NSString *const kFLTFirebaseFirestoreLoadBundleChannelName =
 }
 
 FlutterStandardMethodCodec *_codec;
+
++ (NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap {
+  return _serverTimestampMap;
+}
 
 + (void)initialize {
   _codec =
@@ -98,6 +104,7 @@ FlutterStandardMethodCodec *_codec;
     _eventChannels = [NSMutableDictionary dictionary];
     _streamHandlers = [NSMutableDictionary dictionary];
     _transactionHandlers = [NSMutableDictionary dictionary];
+    _serverTimestampMap = [NSMutableDictionary dictionary];
   }
   return self;
 }
@@ -457,10 +464,12 @@ FlutterStandardMethodCodec *_codec;
 - (void)documentGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRDocumentReference *document = arguments[@"reference"];
   FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
+  NSString *serverTimestampBehaviorString = arguments[@"serverTimestampBehavior"];
   id completion = ^(FIRDocumentSnapshot *_Nullable snapshot, NSError *_Nullable error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
+      [_serverTimestampMap setObject:serverTimestampBehaviorString forKey:@([snapshot hash])];
       result.success(snapshot);
     }
   };
@@ -479,12 +488,16 @@ FlutterStandardMethodCodec *_codec;
     return;
   }
 
+  NSString *serverTimestampBehaviorString = arguments[@"serverTimestampBehavior"];
+
   FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
   [query getDocumentsWithSource:source
                      completion:^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
                        if (error != nil) {
                          result.error(nil, nil, nil, error);
                        } else {
+                         [_serverTimestampMap setObject:serverTimestampBehaviorString
+                                                 forKey:@([snapshot hash])];
                          result.success(snapshot);
                        }
                      }];
@@ -495,6 +508,7 @@ FlutterStandardMethodCodec *_codec;
   NSString *name = arguments[@"name"];
 
   FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
+  NSString *serverTimestampBehaviorString = arguments[@"serverTimestampBehavior"];
 
   [firestore getQueryNamed:name
                 completion:^(FIRQuery *_Nullable query) {
@@ -511,6 +525,9 @@ FlutterStandardMethodCodec *_codec;
                                        if (error != nil) {
                                          result.error(nil, nil, nil, error);
                                        } else {
+                                         [_serverTimestampMap
+                                             setObject:serverTimestampBehaviorString
+                                                forKey:@([snapshot hash])];
                                          result.success(snapshot);
                                        }
                                      }];

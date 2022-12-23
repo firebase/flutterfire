@@ -42,6 +42,7 @@ import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamH
 import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
+import io.flutter.plugins.firebase.firestore.utils.ServerTimestampBehaviorConverter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -72,6 +73,10 @@ public class FlutterFirebaseFirestorePlugin
   private final Map<String, EventChannel> eventChannels = new HashMap<>();
   private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
   private final Map<String, OnTransactionResultListener> transactionHandlers = new HashMap<>();
+
+  // Used in the decoder to know which ServerTimestampBehavior to use
+  public static final Map<Integer, DocumentSnapshot.ServerTimestampBehavior>
+      serverTimestampBehaviorHashMap = new HashMap<>();
 
   protected static FirebaseFirestore getCachedFirebaseFirestoreInstanceForKey(String key) {
     synchronized (firestoreInstanceCache) {
@@ -294,8 +299,10 @@ public class FlutterFirebaseFirestorePlugin
                       "An error occurred while parsing query arguments, see native logs for more information. Please report this issue."));
               return;
             }
+            final QuerySnapshot querySnapshot = Tasks.await(query.get(source));
+            saveTimestampBehavior(arguments, querySnapshot.hashCode());
 
-            taskCompletionSource.setResult(Tasks.await(query.get(source)));
+            taskCompletionSource.setResult(querySnapshot);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
@@ -314,7 +321,10 @@ public class FlutterFirebaseFirestorePlugin
             DocumentReference documentReference =
                 (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
 
-            taskCompletionSource.setResult(Tasks.await(documentReference.get(source)));
+            final DocumentSnapshot documentSnapshot = Tasks.await(documentReference.get(source));
+            saveTimestampBehavior(arguments, documentSnapshot.hashCode());
+
+            taskCompletionSource.setResult(documentSnapshot);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
@@ -343,13 +353,24 @@ public class FlutterFirebaseFirestorePlugin
               return;
             }
 
-            taskCompletionSource.setResult(Tasks.await(query.get(source)));
+            final QuerySnapshot querySnapshot = Tasks.await(query.get(source));
+            saveTimestampBehavior(arguments, querySnapshot.hashCode());
+
+            taskCompletionSource.setResult(querySnapshot);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
         });
 
     return taskCompletionSource.getTask();
+  }
+
+  private void saveTimestampBehavior(Map<String, Object> arguments, int hashCode) {
+    String serverTimestampBehaviorString = (String) arguments.get("serverTimestampBehavior");
+    DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
+        ServerTimestampBehaviorConverter.toServerTimestampBehavior(serverTimestampBehaviorString);
+
+    serverTimestampBehaviorHashMap.put(hashCode, serverTimestampBehavior);
   }
 
   private Task<Void> documentSet(Map<String, Object> arguments) {

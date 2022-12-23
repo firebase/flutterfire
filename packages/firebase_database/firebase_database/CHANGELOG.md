@@ -1,3 +1,7 @@
+## 10.0.8
+
+ - **REFACTOR**: remove a deprecated FallThroughError ([#10143](https://github.com/firebase/flutterfire/issues/10143)). ([8af7fb41](https://github.com/firebase/flutterfire/commit/8af7fb41b754115e30b73619f3c272d901ab776f))
+
 ## 10.0.7
 
  - Update a dependency to the latest release.

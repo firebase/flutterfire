@@ -103,6 +103,9 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           'name': name,
           'firestore': FirebaseFirestorePlatform.instance,
           'source': getSourceString(options.source),
+          'serverTimestampBehavior': getServerTimestampBehaviorString(
+            options.serverTimestampBehavior,
+          ),
         },
       );
 

@@ -11,7 +11,7 @@ import 'collection_reference_e2e.dart';
 import 'document_change_e2e.dart';
 import 'document_reference_e2e.dart';
 import 'field_value_e2e.dart';
-import 'firebase_config.dart';
+import 'firebase_options.dart';
 import 'geo_point_e2e.dart';
 import 'instance_e2e.dart';
 import 'query_e2e.dart';
@@ -29,7 +29,9 @@ void main() {
 
   group('cloud_firestore', () {
     setUpAll(() async {
-      await Firebase.initializeApp(options: TestFirebaseConfig.platformOptions);
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
 
       if (kUseFirestoreEmulator) {
         FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
