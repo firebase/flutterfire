@@ -36,9 +36,7 @@
     [eventDictionary addEntriesFromDictionary:[FLTFirebaseDatabaseUtils
                                                   dictionaryFromSnapshot:snapshot
                                                     withPreviousChildKey:previousChildKey]];
-    dispatch_async(dispatch_get_main_queue(), ^{
-      events(eventDictionary);
-    });
+    events(eventDictionary);
   };
 
   id cancelBlock = ^(NSError *error) {
