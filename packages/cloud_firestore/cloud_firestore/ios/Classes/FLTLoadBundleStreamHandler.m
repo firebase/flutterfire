@@ -50,11 +50,9 @@
       }];
   // use addObserver to update user with snapshot progress
   [self.task addObserver:^(FIRLoadBundleTaskProgress *_Nullable progress) {
-    dispatch_async(dispatch_get_main_queue(), ^{
-      if (progress.state != FIRLoadBundleTaskStateError) {
-        events(progress);
-      }
-    });
+    if (progress.state != FIRLoadBundleTaskStateError) {
+      events(progress);
+    }
   }];
 
   return nil;
