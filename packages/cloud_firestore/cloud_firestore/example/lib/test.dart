@@ -58,14 +58,18 @@ class _TestBugWidgetState extends State<TestBugWidget> {
     final docRef =
         FirebaseFirestore.instance.collection('test_10153').doc('test');
     var newPopulation;
-    await FirebaseFirestore.instance.runTransaction((transaction) async {
+    final a =
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
       final prevPopulation = snapshot.get('population');
       newPopulation = prevPopulation + 1;
       print('Updating to: $newPopulation');
       transaction.update(docRef, {'population': newPopulation});
+      return newPopulation;
     });
-    Map<String, dynamic> updated = (await docRef.get()).data()!;
+    print('Returned: $a');
+    Map<String, dynamic> updated =
+        (await docRef.get(const GetOptions(source: Source.server))).data()!;
     print('Expecting : ${newPopulation.toString()}');
     print('Got : ${updated['population'].toString()}');
   }
@@ -77,7 +81,8 @@ class _TestBugWidgetState extends State<TestBugWidget> {
     final prevPopulation = snapshot.get('population');
     final newPopulation = prevPopulation + 1;
     await docRef.update({'population': newPopulation});
-    Map<String, dynamic> updated = (await docRef.get()).data()!;
+    Map<String, dynamic> updated =
+        (await docRef.get(const GetOptions(source: Source.server))).data()!;
     print('Expecting : ${newPopulation.toString()}');
     print('Got : ${updated['population'].toString()}');
   }
