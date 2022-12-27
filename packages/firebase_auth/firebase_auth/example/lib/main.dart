@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_example/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,16 +25,7 @@ Future<void> main() async {
     await Firebase.initializeApp();
   } else {
     await Firebase.initializeApp(
-      options: const FirebaseOptions(
-        apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
-        appId: '1:448618578101:web:0b650370bb29e29cac3efc',
-        messagingSenderId: '448618578101',
-        projectId: 'react-native-firebase-testing',
-        authDomain: 'react-native-firebase-testing.firebaseapp.com',
-        databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-        storageBucket: 'react-native-firebase-testing.appspot.com',
-        measurementId: 'G-F79DJ0VFGS',
-      ),
+      options: DefaultFirebaseOptions.web,
     );
   }
 
