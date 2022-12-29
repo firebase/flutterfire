@@ -371,6 +371,13 @@ FlutterStandardMethodCodec *_codec;
 
     FIRTransaction *transaction = self->_transactions[transactionId];
 
+    if (transaction == nil) {
+      result.error(@"missing-transaction",
+                   @"An error occurred while getting the native transaction. "
+                   @"It could be caused by a timeout in a preceding transaction operation.",
+                   nil, nil);
+    }
+
     NSError *error = [[NSError alloc] init];
     FIRDocumentSnapshot *snapshot = [transaction getDocument:document error:&error];
 
