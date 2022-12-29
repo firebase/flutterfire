@@ -374,7 +374,7 @@ FlutterStandardMethodCodec *_codec;
     if (transaction == nil) {
       result.error(@"missing-transaction",
                    @"An error occurred while getting the native transaction. "
-                   @"It could be caused by a timeout in a precedent transaction operation.",
+                   @"It could be caused by a timeout in a preceding transaction operation.",
                    nil, nil);
     }
 
