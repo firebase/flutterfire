@@ -1,3 +1,7 @@
+## 14.2.1
+
+ - Update a dependency to the latest release.
+
 ## 14.2.0
 
  - **FEAT**: add ServerTimestampBehavior to the GetOptions class.  ([#9590](https://github.com/firebase/flutterfire/issues/9590)). ([c25bd2fe](https://github.com/firebase/flutterfire/commit/c25bd2fe4c13bc9f13d93410842c00e25aaac2b2))

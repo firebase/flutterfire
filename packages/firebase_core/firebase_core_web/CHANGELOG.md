@@ -1,3 +1,7 @@
+## 2.1.0
+
+ - **FEAT**: bump Firebase JS SDK to 9.15 ([#10186](https://github.com/firebase/flutterfire/issues/10186)). ([c44f4ba6](https://github.com/firebase/flutterfire/commit/c44f4ba64041f80e0201696672d3453c90c41951))
+
 ## 2.0.2
 
  - **FIX**: `currentUser` is now populated right at the start of the application without needing to wait for `authStateChange` ([#10028](https://github.com/firebase/flutterfire/issues/10028)). ([2bd0dbff](https://github.com/firebase/flutterfire/commit/2bd0dbffb081370da051ec52859b924e1cf06fca))
