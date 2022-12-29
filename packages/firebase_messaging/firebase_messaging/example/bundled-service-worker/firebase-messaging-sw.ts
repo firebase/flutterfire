@@ -14,13 +14,15 @@ self.addEventListener('install', (event) => {
 });
 
 const app = initializeApp({
-  apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
-  authDomain: 'react-native-firebase-testing.firebaseapp.com',
-  databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-  projectId: 'react-native-firebase-testing',
-  storageBucket: 'react-native-firebase-testing.appspot.com',
-  messagingSenderId: '448618578101',
-  appId: '1:448618578101:web:ecaffe2bc4511738',
+  apiKey: 'AIzaSyB7wZb2tO1-Fs6GbDADUSTs2Qs3w08Hovw',
+  appId: '1:406099696497:web:87e25e51afe982cd3574d0',
+  messagingSenderId: '406099696497',
+  projectId: 'flutterfire-e2e-tests',
+  authDomain: 'flutterfire-e2e-tests.firebaseapp.com',
+  databaseURL:
+      'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+  storageBucket: 'flutterfire-e2e-tests.appspot.com',
+  measurementId: 'G-JN95N1JV2E',
 });
 
 isSupported().then((isSupported) => {
