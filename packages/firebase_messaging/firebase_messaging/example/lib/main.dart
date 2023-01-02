@@ -45,6 +45,7 @@ import 'token_monitor.dart';
 /// call. Be sure to annotate the handler with `@pragma('vm:entry-point')` above the function declaration.
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print('In background');
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await setupFlutterNotifications();
   showFlutterNotification(message);
@@ -117,6 +118,8 @@ void showFlutterNotification(RemoteMessage message) {
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 Future<void> main() async {
+  print('In main');
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // Set the background messaging handler early on, as a named top-level function
