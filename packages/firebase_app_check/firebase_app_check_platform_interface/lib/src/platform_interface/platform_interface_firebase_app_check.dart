@@ -70,7 +70,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   ///
   /// If `forceRefresh` is true, will always try to fetch a fresh token. If
   /// false, will use a cached token if found in storage.
-  Future<String?> getToken(bool forceRefresh) async {
+  Future<AppCheckToken?> getToken(bool forceRefresh) async {
     throw UnimplementedError('getToken() is not implemented');
   }
 
@@ -99,5 +99,40 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   @protected
   FirebaseAppCheckPlatform setInitialValues() {
     throw UnimplementedError('setInitialValues() is not implemented');
+  }
+}
+
+/// Class to hold tokens emitted by the Firebase App Check service which are minted upon a successful
+/// application verification.
+///
+/// These tokens are the federated output of a verification flow, the structure
+/// of which is independent of the mechanism by which the application was verified.
+class AppCheckToken {
+  /// The token string.
+  final String token;
+
+  /// The time at which the token expires, in milliseconds since the Unix epoch.
+  final int expireTimeMillis;
+
+  /// The App Check token.
+  AppCheckToken({
+    required this.token,
+    required this.expireTimeMillis,
+  });
+
+  /// Creates a new [AppCheckToken] from a map (decoded JSON).
+  factory AppCheckToken.fromMap(Map<dynamic, dynamic> map) {
+    return AppCheckToken(
+      token: map['token'] as String,
+      expireTimeMillis: map['expireTimeMillis'] as int,
+    );
+  }
+
+  /// Returns the App Check token as a map.
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'token': token,
+      'expireTimeMillis': expireTimeMillis
+    };
   }
 }
