@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.AppCheckToken;
 import com.google.firebase.appcheck.AppCheckTokenResult;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
@@ -72,9 +73,10 @@ public class FlutterFirebaseAppCheckPlugin
     return FirebaseAppCheck.getInstance(app);
   }
 
-  private Map<String, Object> tokenResultToMap(AppCheckTokenResult result) {
+  static public Map<String, Object> tokenToMap(AppCheckToken result) {
     Map<String, Object> output = new HashMap<>();
     output.put("token", result.getToken());
+    output.put("expireTimeMillis", result.getExpireTimeMillis());
     return output;
   }
 
@@ -126,9 +128,9 @@ public class FlutterFirebaseAppCheckPlugin
           try {
             FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
             Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
-            AppCheckTokenResult tokenResult = Tasks.await(firebaseAppCheck.getToken(forceRefresh));
+            AppCheckToken tokenResult = Tasks.await(firebaseAppCheck.getAppCheckToken(forceRefresh));
 
-            taskCompletionSource.setResult(tokenResultToMap(tokenResult));
+            taskCompletionSource.setResult(tokenToMap(tokenResult));
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
