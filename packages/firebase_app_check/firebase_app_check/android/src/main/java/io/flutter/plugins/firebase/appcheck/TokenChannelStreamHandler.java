@@ -27,6 +27,7 @@ public class TokenChannelStreamHandler implements EventChannel.StreamHandler {
         result -> {
           Map<String, Object> event = new HashMap<>();
           event.put("token", result.getToken());
+          event.put("expireTimeMillis", result.getExpireTimeMillis());
           events.success(event);
         };
 
