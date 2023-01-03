@@ -2,11 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'firebase_options.dart';
 
@@ -121,7 +121,9 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
             ElevatedButton(
               onPressed: () async {
                 // Token will be passed to `onTokenChange()` event handler
-                await appCheck.getToken(true);
+                final token = await appCheck.getToken(true);
+                print(token?.expireTimeMillis);
+                print(token?.token);
               },
               child: const Text('getToken()'),
             ),
