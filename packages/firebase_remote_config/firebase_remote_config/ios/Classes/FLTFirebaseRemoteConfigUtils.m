@@ -12,6 +12,7 @@
   switch (error.code) {
     case FIRRemoteConfigErrorInternalError:
       if ([error.userInfo[NSLocalizedDescriptionKey] containsString:@"403"]) {
+        // See PR for details: https://github.com/firebase/flutterfire/pull/9629
         [codeAndMessage setValue:@"forbidden" forKey:@"code"];
         NSString *updateMessage =
             [NSString stringWithFormat:@"%@%@", error.userInfo[NSLocalizedDescriptionKey],
