@@ -2,6 +2,42 @@
 
 All notable changes for firebase_ui packages
 
+## 2023-01-05
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.1.7`](#firebase_ui_auth---v117)
+ - [`firebase_ui_oauth_apple` - `v1.0.14`](#firebase_ui_oauth_apple---v1014)
+ - [`firebase_ui_oauth` - `v1.1.7`](#firebase_ui_oauth---v117)
+ - [`firebase_ui_oauth_facebook` - `v1.0.14`](#firebase_ui_oauth_facebook---v1014)
+ - [`firebase_ui_oauth_google` - `v1.0.14`](#firebase_ui_oauth_google---v1014)
+ - [`firebase_ui_oauth_twitter` - `v1.0.14`](#firebase_ui_oauth_twitter---v1014)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth_apple` - `v1.0.14`
+ - `firebase_ui_oauth` - `v1.1.7`
+ - `firebase_ui_oauth_facebook` - `v1.0.14`
+ - `firebase_ui_oauth_google` - `v1.0.14`
+ - `firebase_ui_oauth_twitter` - `v1.0.14`
+
+---
+
+#### `firebase_ui_auth` - `v1.1.7`
+
+ - **DOCS**: Fixed typo on phone.md ([#10196](https://github.com/firebase/flutterfire/issues/10196)). ([2fb8af45](https://github.com/firebase/flutterfire/commit/2fb8af45f2f6b1c5311de2a3bcfa032625037944))
+
+
 ## 2022-12-29
 
 ### Changes

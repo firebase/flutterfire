@@ -1,3 +1,7 @@
+## 1.1.7
+
+ - **DOCS**: Fixed typo on phone.md ([#10196](https://github.com/firebase/flutterfire/issues/10196)). ([2fb8af45](https://github.com/firebase/flutterfire/commit/2fb8af45f2f6b1c5311de2a3bcfa032625037944))
+
 ## 1.1.6
 
  - Update a dependency to the latest release.
