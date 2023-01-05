@@ -52,6 +52,10 @@ Continue button. In `AndroidManifest.xml`:
 When users open a Dynamic Link with a deep link to the scheme and host you specify, your app will
 start the activity with this intent filter to handle the link.
 
+The next step is to ensure the SHA-256 fingerprint of the signing certificate is registered in the Firebase console
+for the app. You can find more details on how to retrieve your SHA-256 fingerprint on the
+[Authenticating Your Client](https://developers.google.com/android/guides/client-auth) page.
+
 ### Apple platforms
 
 1.  [Create an Apple developer account](https://developer.apple.com/programs/enroll/)
@@ -72,7 +76,7 @@ start the activity with this intent filter to handle the link.
         your Provisioning Profile is set.
 
     1.  On the Signing & Capabilities page, enable **Associated Domains** and
-        add the following to the Associated Domains list:
+        add the following to the Associated Domains list (replace example with your domain):
 
         ```
         applinks:example.page.link

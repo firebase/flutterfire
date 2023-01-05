@@ -1,3 +1,58 @@
+## 6.11.7
+
+ - Update a dependency to the latest release.
+
+## 6.11.6
+
+ - Update a dependency to the latest release.
+
+## 6.11.5
+
+ - **FIX**: null check fix that could happen when using verifyPhone ([#10119](https://github.com/firebase/flutterfire/issues/10119)). ([575c0ccb](https://github.com/firebase/flutterfire/commit/575c0ccbb4d9bf3875e8de0b2131c59ede869754))
+
+## 6.11.4
+
+ - **FIX**: properly cast the PlatformException to FirebaseAuthException ([#10058](https://github.com/firebase/flutterfire/issues/10058)). ([6c8f9515](https://github.com/firebase/flutterfire/commit/6c8f951552ba7f767ce1b7b7ea5328454ba28cce))
+
+## 6.11.3
+
+ - Update a dependency to the latest release.
+
+## 6.11.2
+
+ - Update a dependency to the latest release.
+
+## 6.11.1
+
+ - Update a dependency to the latest release.
+
+## 6.11.0
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+ - **FEAT**: expose reauthenticateWithRedirect and reauthenticateWithPopup ([#9696](https://github.com/firebase/flutterfire/issues/9696)). ([2a1f910f](https://github.com/firebase/flutterfire/commit/2a1f910ff6cab21a126c62fd4322a14ec263b629))
+
+## 6.10.4
+
+ - Update a dependency to the latest release.
+
+## 6.10.3
+
+ - Update a dependency to the latest release.
+
+## 6.10.2
+
+ - Update a dependency to the latest release.
+
+## 6.10.1
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+ - **DOCS**: update `setSettings()` inline documentation ([#9655](https://github.com/firebase/flutterfire/issues/9655)). ([39ca0029](https://github.com/firebase/flutterfire/commit/39ca00299ec5c6e0f2dc9b0b5a8d71b8d59d51d4))
+
+## 6.10.0
+
+ - **FEAT**: add OAuth Access Token support to sign in with providers ([#9593](https://github.com/firebase/flutterfire/issues/9593)). ([cb6661bb](https://github.com/firebase/flutterfire/commit/cb6661bbc701031d6f920ace3a6efc8e8d56aa4c))
+ - **FEAT**: add `linkWithRedirect` to the web ([#9580](https://github.com/firebase/flutterfire/issues/9580)). ([d834b90f](https://github.com/firebase/flutterfire/commit/d834b90f29fc1929a195d7d546170e4ea03c6ab1))
+
 ## 6.9.0
 
  - **FIX**: fix path of generated Pigeon files to prevent name collision ([#9569](https://github.com/firebase/flutterfire/issues/9569)). ([71bde27d](https://github.com/firebase/flutterfire/commit/71bde27d4e613096f121abb16d7ea8483c3fbcd8))

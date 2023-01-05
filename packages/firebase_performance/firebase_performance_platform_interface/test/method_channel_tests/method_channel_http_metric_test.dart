@@ -14,8 +14,7 @@ void main() {
   setupFirebasePerformanceMocks();
 
   late TestMethodChannelHttpMetric httpMetric;
-  const int kMethodChannelHandle = 23;
-  const int kHttpMetricHandle = 24;
+  const int kHttpMetricHandle = 2;
   const String kUrl = 'https://test-url.com';
   const HttpMethod kMethod = HttpMethod.Get;
   final List<MethodCall> log = <MethodCall>[];
@@ -35,11 +34,10 @@ void main() {
         } else if (mockPlatformExceptionThrown) {
           throw PlatformException(code: 'UNKNOWN');
         }
-
         switch (call.method) {
-          case 'FirebasePerformance#newHttpMetric':
-          case 'HttpMetric#start':
-          case 'HttpMetric#stop':
+          case 'FirebasePerformance#httpMetricStart':
+            return kHttpMetricHandle;
+          case 'FirebasePerformance#httpMetricStop':
             return null;
           default:
             return true;
@@ -49,8 +47,6 @@ void main() {
 
     setUp(() async {
       httpMetric = TestMethodChannelHttpMetric(
-        kMethodChannelHandle,
-        kHttpMetricHandle,
         kUrl,
         kMethod,
       );
@@ -75,20 +71,12 @@ void main() {
 
         expect(log, <Matcher>[
           isMethodCall(
-            'FirebasePerformance#newHttpMetric',
+            'FirebasePerformance#httpMetricStart',
             arguments: {
-              'handle': kMethodChannelHandle,
-              'httpMetricHandle': kHttpMetricHandle,
               'url': kUrl,
               'httpMethod': kMethod.toString(),
             },
           ),
-          isMethodCall(
-            'HttpMetric#start',
-            arguments: {
-              'handle': kHttpMetricHandle,
-            },
-          )
         ]);
       });
 
@@ -114,22 +102,11 @@ void main() {
 
         expect(log, <Matcher>[
           isMethodCall(
-            'FirebasePerformance#newHttpMetric',
-            arguments: {
-              'handle': kMethodChannelHandle,
-              'httpMetricHandle': kHttpMetricHandle,
-              'url': kUrl,
-              'httpMethod': kMethod.toString()
-            },
+            'FirebasePerformance#httpMetricStart',
+            arguments: {'url': kUrl, 'httpMethod': kMethod.toString()},
           ),
           isMethodCall(
-            'HttpMetric#start',
-            arguments: {
-              'handle': kHttpMetricHandle,
-            },
-          ),
-          isMethodCall(
-            'HttpMetric#stop',
+            'FirebasePerformance#httpMetricStop',
             arguments: {
               'handle': kHttpMetricHandle,
               'attributes': {
@@ -299,9 +276,7 @@ class TestFirebasePerformancePlatform extends FirebasePerformancePlatform {
 
 class TestMethodChannelHttpMetric extends MethodChannelHttpMetric {
   TestMethodChannelHttpMetric(
-    methodChannelHandle,
-    httpMetricHandle,
     url,
     method,
-  ) : super(methodChannelHandle, httpMetricHandle, url, method);
+  ) : super(url, method);
 }

@@ -192,6 +192,19 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     firestore_interop.QuerySnapshot snapshot =
         await query.get(convertGetOptions(options));
 
-    return convertWebQuerySnapshot(this, snapshot);
+    return convertWebQuerySnapshot(
+      this,
+      snapshot,
+      getServerTimestampBehaviorString(
+        options.serverTimestampBehavior,
+      ),
+    );
+  }
+
+  @override
+  Future<void> setIndexConfiguration(String indexConfiguration) async {
+    return _delegate.setIndexConfiguration(
+      indexConfiguration,
+    );
   }
 }

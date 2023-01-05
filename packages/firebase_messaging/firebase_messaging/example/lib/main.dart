@@ -9,14 +9,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart' as http;
 
+import 'firebase_options.dart';
 import 'message.dart';
 import 'message_list.dart';
 import 'permissions.dart';
 import 'token_monitor.dart';
-import 'firebase_options.dart';
 
 /// Working example of FirebaseMessaging.
 /// Please use this in order to verify messages are working in foreground, background & terminated state.
@@ -171,10 +171,21 @@ class Application extends StatefulWidget {
 
 class _Application extends State<Application> {
   String? _token;
+  String? initialMessage;
+  bool _resolved = false;
 
   @override
   void initState() {
     super.initState();
+
+    FirebaseMessaging.instance.getInitialMessage().then(
+          (value) => setState(
+            () {
+              _resolved = true;
+              initialMessage = value?.data.toString();
+            },
+          ),
+        );
 
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
 
@@ -290,12 +301,24 @@ class _Application extends State<Application> {
           children: [
             MetaCard('Permissions', Permissions()),
             MetaCard(
+              'Initial Message',
+              Column(
+                children: [
+                  Text(_resolved ? 'Resolved' : 'Resolving'),
+                  Text(initialMessage ?? 'None'),
+                ],
+              ),
+            ),
+            MetaCard(
               'FCM Token',
               TokenMonitor((token) {
                 _token = token;
                 return token == null
                     ? const CircularProgressIndicator()
-                    : Text(token, style: const TextStyle(fontSize: 12));
+                    : SelectableText(
+                        token,
+                        style: const TextStyle(fontSize: 12),
+                      );
               }),
             ),
             ElevatedButton(

@@ -1,3 +1,53 @@
+## 10.0.9
+
+ - Update a dependency to the latest release.
+
+## 10.0.8
+
+ - **REFACTOR**: remove a deprecated FallThroughError ([#10143](https://github.com/firebase/flutterfire/issues/10143)). ([8af7fb41](https://github.com/firebase/flutterfire/commit/8af7fb41b754115e30b73619f3c272d901ab776f))
+
+## 10.0.7
+
+ - Update a dependency to the latest release.
+
+## 10.0.6
+
+ - **FIX**: cache the result of event.snapshot to be able to compare the value ([#9899](https://github.com/firebase/flutterfire/issues/9899)). ([5f32b812](https://github.com/firebase/flutterfire/commit/5f32b81248906f2502b196b26be2a67456373c70))
+
+## 10.0.5
+
+ - Update a dependency to the latest release.
+
+## 10.0.4
+
+ - Update a dependency to the latest release.
+
+## 10.0.3
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 10.0.2
+
+ - Update a dependency to the latest release.
+
+## 10.0.1
+
+ - Update a dependency to the latest release.
+
+## 10.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 9.1.7
+
+ - Update a dependency to the latest release.
+
+## 9.1.6
+
+ - **DOCS**: removed duplicate words in dart doc comment ([#9620](https://github.com/firebase/flutterfire/issues/9620)). ([cb980a6e](https://github.com/firebase/flutterfire/commit/cb980a6eb3cc08878ca6205e01e4d3e57add81cf))
+
 ## 9.1.5
 
  - Update a dependency to the latest release.

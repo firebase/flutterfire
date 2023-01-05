@@ -1,13 +1,20 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_provider.dart';
 
-import '../collection_generator.dart';
-import 'template.dart';
+import '../collection_data.dart';
 
-class QueryTemplate extends Template<CollectionData> {
+class QueryTemplate {
+  QueryTemplate(this.data);
+
+  final CollectionData data;
+
   @override
-  String generate(CollectionData data) {
+  String toString() {
     return '''
 abstract class ${data.queryReferenceInterfaceName} implements QueryReference<${data.type}, ${data.querySnapshotName}> {
   @override
@@ -99,41 +106,15 @@ class ${data.queryReferenceImplName}
 
   final CollectionReference<Object?> _collection;
 
-  ${data.querySnapshotName} _decodeSnapshot(
-    QuerySnapshot<${data.type}> snapshot,
-  ) {
-    final docs = snapshot
-      .docs
-      .map((e) {
-        return ${data.queryDocumentSnapshotName}._(e, e.data());
-      })
-      .toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return FirestoreDocumentChange<${data.documentSnapshotName}>(
-        type: change.type,
-        oldIndex: change.oldIndex,
-        newIndex: change.newIndex,
-        doc: ${data.documentSnapshotName}._(change.doc, change.doc.data()),
-      );
-    }).toList();
-
-    return ${data.querySnapshotName}._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
   @override
   Stream<${data.querySnapshotName}> snapshots([SnapshotOptions? options]) {
-    return reference.snapshots().map(_decodeSnapshot);
+    return reference.snapshots().map(${data.querySnapshotName}._fromQuerySnapshot);
   }
   
 
   @override
   Future<${data.querySnapshotName}> get([GetOptions? options]) {
-    return reference.get(options).then(_decodeSnapshot);
+    return reference.get(options).then(${data.querySnapshotName}._fromQuerySnapshot);
   }
 
   @override

@@ -1,3 +1,65 @@
+## 5.2.4
+
+ - Update a dependency to the latest release.
+
+## 5.2.3
+
+ - revert dependency `Intl` to 0.17.0
+
+## 5.2.2
+
+ - Update a dependency to the latest release.
+
+## 5.2.1
+
+ - Update a dependency to the latest release.
+
+## 5.2.0
+
+ - **FIX**: properly cast the PlatformException to FirebaseAuthException ([#10058](https://github.com/firebase/flutterfire/issues/10058)). ([6c8f9515](https://github.com/firebase/flutterfire/commit/6c8f951552ba7f767ce1b7b7ea5328454ba28cce))
+ - **FIX**: `currentUser` is now populated right at the start of the application without needing to wait for `authStateChange` ([#10028](https://github.com/firebase/flutterfire/issues/10028)). ([2bd0dbff](https://github.com/firebase/flutterfire/commit/2bd0dbffb081370da051ec52859b924e1cf06fca))
+ - **FEAT**: add SAMLProvider support to Web ([#10075](https://github.com/firebase/flutterfire/issues/10075)). ([d4c27da1](https://github.com/firebase/flutterfire/commit/d4c27da1589c07f890e67fa11f10e277f19e1570))
+
+## 5.1.3
+
+ - **FIX**: catch hot reload & hot restart exception for web emulator ([#9601](https://github.com/firebase/flutterfire/issues/9601)). ([3467483b](https://github.com/firebase/flutterfire/commit/3467483be993a65f76203400721dc07e0729cac3))
+
+## 5.1.2
+
+ - Update a dependency to the latest release.
+
+## 5.1.1
+
+ - **FIX**: use correct UTC time from server for _webUser.metadata.creationTime & _webUser.metadata.lastSignInTime ([#9789](https://github.com/firebase/flutterfire/issues/9789)). ([44ac2a36](https://github.com/firebase/flutterfire/commit/44ac2a3665a1006d444b4725c131ad4f084fe3d1))
+
+## 5.1.0
+
+ - **FIX**: properly propagate the `FirebaseAuthMultiFactorException` for all reauthenticate and link methods ([#9700](https://github.com/firebase/flutterfire/issues/9700)). ([9ad97c82](https://github.com/firebase/flutterfire/commit/9ad97c82ead0f5c6f1307625374c34e0dcde730b))
+ - **FEAT**: expose reauthenticateWithRedirect and reauthenticateWithPopup ([#9696](https://github.com/firebase/flutterfire/issues/9696)). ([2a1f910f](https://github.com/firebase/flutterfire/commit/2a1f910ff6cab21a126c62fd4322a14ec263b629))
+
+## 5.0.2
+
+ - Update a dependency to the latest release.
+
+## 5.0.1
+
+- Update a dependency to the latest release.
+
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 4.6.1
+
+ - Update a dependency to the latest release.
+
+## 4.6.0
+
+ - **FEAT**: add OAuth Access Token support to sign in with providers ([#9593](https://github.com/firebase/flutterfire/issues/9593)). ([cb6661bb](https://github.com/firebase/flutterfire/commit/cb6661bbc701031d6f920ace3a6efc8e8d56aa4c))
+ - **FEAT**: add `linkWithRedirect` to the web ([#9580](https://github.com/firebase/flutterfire/issues/9580)). ([d834b90f](https://github.com/firebase/flutterfire/commit/d834b90f29fc1929a195d7d546170e4ea03c6ab1))
+
 ## 4.5.0
 
  - **FEAT**: add `reauthenticateWithProvider` ([#9570](https://github.com/firebase/flutterfire/issues/9570)). ([dad6b481](https://github.com/firebase/flutterfire/commit/dad6b4813c682e35315dda3965ea8aaf5ba030e8))

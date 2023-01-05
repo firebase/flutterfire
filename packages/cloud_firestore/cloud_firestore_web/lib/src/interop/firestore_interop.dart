@@ -34,6 +34,10 @@ external PromiseJsImpl<void> clearIndexedDbPersistence(
 );
 
 @JS()
+external PromiseJsImpl<void> setIndexConfiguration(
+    FirestoreJsImpl firestore, String indexConfiguration);
+
+@JS()
 external CollectionReferenceJsImpl collection(
   FirestoreJsImpl firestore,
   String collectionPath,
@@ -81,7 +85,8 @@ external PromiseJsImpl<void> enableIndexedDbPersistence(
 
 @JS()
 external PromiseJsImpl<void> enableMultiTabIndexedDbPersistence(
-    FirestoreJsImpl firestore);
+  FirestoreJsImpl firestore,
+);
 
 @JS()
 external PromiseJsImpl<void> enableNetwork(FirestoreJsImpl firestore);
@@ -385,7 +390,7 @@ abstract class DocumentSnapshotJsImpl {
   external SnapshotMetadata get metadata;
   external DocumentReferenceJsImpl get ref;
 
-  external dynamic data();
+  external dynamic data([SnapshotOptions? options]);
   external bool exists();
   external dynamic get(/*String|FieldPath*/ dynamic fieldPath);
 }
@@ -651,3 +656,13 @@ external Object get arrayRemove;
 
 @JS()
 external Object get arrayUnion;
+
+@JS()
+external PromiseJsImpl<AggregateQuerySnapshotJsImpl> getCountFromServer(
+  QueryJsImpl query,
+);
+
+@JS('AggregateQuerySnapshot')
+abstract class AggregateQuerySnapshotJsImpl {
+  external Map<String, Object> data();
+}

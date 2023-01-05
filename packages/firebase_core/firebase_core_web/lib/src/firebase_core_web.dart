@@ -14,23 +14,44 @@ class FirebaseWebService {
   /// property allows overriding of web naming to Flutterfire plugin naming.
   String? override;
 
+  /// Function to call to ensure the Firebase Service is initalized.
+  /// Usually used to ensure that the Web SDK match the behavior
+  /// of native SDKs.
+  EnsurePluginInitialized ensurePluginInitialized;
+
   /// Creates a new [FirebaseWebService].
-  FirebaseWebService._(this.name, [this.override]);
+  FirebaseWebService._(
+    this.name, {
+    this.override,
+    this.ensurePluginInitialized,
+  });
 }
+
+typedef EnsurePluginInitialized = Future<void> Function()?;
 
 /// The entry point for accessing Firebase.
 ///
 /// You can get an instance by calling [FirebaseCore.instance].
 class FirebaseCoreWeb extends FirebasePlatform {
   static Map<String, FirebaseWebService> _services = {
-    'core': FirebaseWebService._('app', 'core'),
-    'app-check': FirebaseWebService._('app-check', 'app_check'),
-    'remote-config': FirebaseWebService._('remote-config', 'remote_config'),
+    'core': FirebaseWebService._('app', override: 'core'),
+    'app-check': FirebaseWebService._('app-check', override: 'app_check'),
+    'remote-config':
+        FirebaseWebService._('remote-config', override: 'remote_config'),
   };
 
   /// Internally registers a Firebase Service to be initialized.
-  static void registerService(String service) {
-    _services.putIfAbsent(service, () => FirebaseWebService._(service));
+  static void registerService(
+    String service, [
+    EnsurePluginInitialized? ensurePluginInitialized,
+  ]) {
+    _services.putIfAbsent(
+      service,
+      () => FirebaseWebService._(
+        service,
+        ensurePluginInitialized: ensurePluginInitialized,
+      ),
+    );
   }
 
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
@@ -250,6 +271,18 @@ class FirebaseCoreWeb extends FirebasePlatform {
         throw _catchJSError(e);
       }
     }
+
+    await Future.wait(
+      _services.values.map((service) {
+        final ensureInitializedFunction = service.ensurePluginInitialized;
+
+        if (ensureInitializedFunction == null) {
+          return Future.value();
+        }
+
+        return ensureInitializedFunction();
+      }),
+    );
 
     return _createFromJsApp(app!);
   }

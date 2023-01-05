@@ -1,3 +1,55 @@
+## 5.10.1
+
+ - Update a dependency to the latest release.
+
+## 5.10.0
+
+ - **FEAT**: add ServerTimestampBehavior to the GetOptions class.  ([#9590](https://github.com/firebase/flutterfire/issues/9590)). ([c25bd2fe](https://github.com/firebase/flutterfire/commit/c25bd2fe4c13bc9f13d93410842c00e25aaac2b2))
+
+## 5.9.2
+
+ - **FIX**: Replace FallThroughError with UnsupportedError ([0592d02b](https://github.com/firebase/flutterfire/commit/0592d02ba036f7abb347e305aff52fdbfd568a56))
+
+## 5.9.1
+
+ - Update a dependency to the latest release.
+
+## 5.9.0
+
+ - **FEAT**: experimental `setIndexConfiguration()` API ([#9928](https://github.com/firebase/flutterfire/issues/9928)). ([bf6eda18](https://github.com/firebase/flutterfire/commit/bf6eda1893a4f29c4b501c4aa31026548ad2b286))
+
+## 5.8.5
+
+ - Update a dependency to the latest release.
+
+## 5.8.4
+
+ - **FIX**: fix aggregated count to use the current query and not only the collection on Web ([#9824](https://github.com/firebase/flutterfire/issues/9824)). ([ada39355](https://github.com/firebase/flutterfire/commit/ada39355722e316217934ad8cf1dfa789e47f058))
+
+## 5.8.3
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 5.8.2
+
+ - Update a dependency to the latest release.
+
+## 5.8.1
+
+ - Update a dependency to the latest release.
+
+## 5.8.0
+
+ - **FEAT**: `count()` feature for counting documents without retrieving documents. ([#9699](https://github.com/firebase/flutterfire/issues/9699)). ([ac0bf733](https://github.com/firebase/flutterfire/commit/ac0bf7330d7de73d0ea36c740b79a426187291d2))
+
+## 5.7.7
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+
+## 5.7.6
+
+ - Update a dependency to the latest release.
+
 ## 5.7.5
 
  - Update a dependency to the latest release.

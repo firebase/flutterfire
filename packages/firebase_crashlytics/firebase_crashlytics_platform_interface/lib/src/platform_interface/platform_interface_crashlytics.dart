@@ -60,7 +60,7 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseCrashlyticsPlatform.instance]
   static set instance(FirebaseCrashlyticsPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 
@@ -89,7 +89,8 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
   /// This should only be used for testing purposes in cases where you wish to
   /// simulate a native crash to view the results on the Firebase Console.
   ///
-  /// Note: crash reports will not include a stack trace.
+  /// Note: crash reports will not include a stack trace and crash reports are
+  /// not sent until the next application startup.
   void crash() {
     throw UnimplementedError('crash() is not implemented');
   }
@@ -112,6 +113,7 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
     required String information,
     required String reason,
     bool fatal = false,
+    String? buildId,
     List<Map<String, String>>? stackTraceElements,
   }) {
     throw UnimplementedError('recordError() is not implemented');

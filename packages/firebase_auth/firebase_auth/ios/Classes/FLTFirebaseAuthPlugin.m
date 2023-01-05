@@ -69,6 +69,8 @@ NSString *const kErrMsgInvalidCredential =
 @property(strong, nonatomic) FIROAuthProvider *authProvider;
 // Used to keep the user who wants to link with Apple Sign In
 @property(strong, nonatomic) FIRUser *linkWithAppleUser;
+@property(strong, nonatomic) FIRAuth *signInWithAppleAuth;
+@property BOOL isReauthenticatingWithApple;
 @property(strong, nonatomic) NSString *currentNonce;
 @property(strong, nonatomic) FLTFirebaseMethodCallResult *appleResult;
 @property(strong, nonatomic) id appleArguments;
@@ -588,19 +590,31 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
     FIROAuthCredential *credential = [FIROAuthProvider credentialWithProviderID:@"apple.com"
                                                                         IDToken:idToken
                                                                        rawNonce:rawNonce];
+    if (self.isReauthenticatingWithApple == YES) {
+      self.isReauthenticatingWithApple = NO;
+      [[FIRAuth.auth currentUser]
+          reauthenticateWithCredential:credential
+                            completion:^(FIRAuthDataResult *_Nullable authResult,
+                                         NSError *_Nullable error) {
+                              handleSignInWithApple(self, authResult, error);
+                            }];
 
-    if (self.linkWithAppleUser != nil) {
+    } else if (self.linkWithAppleUser != nil) {
       [self.linkWithAppleUser linkWithCredential:credential
                                       completion:^(FIRAuthDataResult *authResult, NSError *error) {
+                                        self.linkWithAppleUser = nil;
                                         handleSignInWithApple(self, authResult, error);
                                       }];
 
     } else {
-      [FIRAuth.auth signInWithCredential:credential
-                              completion:^(FIRAuthDataResult *_Nullable authResult,
-                                           NSError *_Nullable error) {
-                                handleSignInWithApple(self, authResult, error);
-                              }];
+      FIRAuth *signInAuth =
+          self.signInWithAppleAuth != nil ? self.signInWithAppleAuth : FIRAuth.auth;
+      [signInAuth signInWithCredential:credential
+                            completion:^(FIRAuthDataResult *_Nullable authResult,
+                                         NSError *_Nullable error) {
+                              self.signInWithAppleAuth = nil;
+                              handleSignInWithApple(self, authResult, error);
+                            }];
     }
   }
 }
@@ -608,18 +622,42 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
 - (void)authorizationController:(ASAuthorizationController *)controller
            didCompleteWithError:(NSError *)error API_AVAILABLE(macos(10.15), ios(13.0)) {
   NSLog(@"Sign in with Apple errored: %@", error);
-  self.appleResult.error(nil, nil, nil, error);
+  switch (error.code) {
+    case ASAuthorizationErrorCanceled:
+      self.appleResult.error(@"canceled", @"The user canceled the authorization attempt.", nil,
+                             error);
+      break;
+
+    case ASAuthorizationErrorInvalidResponse:
+      self.appleResult.error(@"invalid-response",
+                             @"The authorization request received an invalid response.", nil,
+                             error);
+      break;
+
+    case ASAuthorizationErrorNotHandled:
+      self.appleResult.error(@"not-handled", @"The authorization request wasn’t handled.", nil,
+                             error);
+      break;
+
+    case ASAuthorizationErrorFailed:
+      self.appleResult.error(@"failed", @"The authorization attempt failed.", nil, error);
+      break;
+
+    case ASAuthorizationErrorUnknown:
+    default:
+      self.appleResult.error(nil, nil, nil, error);
+      break;
+  }
+  self.appleResult = nil;
 }
 
 - (void)signInWithProvider:(id)arguments
       withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
+
   if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
-    if (@available(iOS 13.0, macOS 10.15, *)) {
-      launchAppleSignInRequest(self, arguments, result);
-    } else {
-      NSLog(@"Sign in with Apple was introduced in iOS 13, update your Podfile with platform :ios, "
-            @"'13.0'");
-    }
+    self.signInWithAppleAuth = auth;
+    launchAppleSignInRequest(self, arguments, result);
     return;
   }
 #if TARGET_OS_OSX
@@ -627,7 +665,6 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
         @"MacOS platform.");
   result.success(nil);
 #else
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
   self.authProvider = [FIROAuthProvider providerWithProviderID:arguments[@"signInProvider"]];
   NSArray *scopes = arguments[kArgumentProviderScope];
   if (scopes != nil) {
@@ -896,29 +933,34 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
 
 static void launchAppleSignInRequest(FLTFirebaseAuthPlugin *object, id arguments,
                                      FLTFirebaseMethodCallResult *result) {
-  NSString *nonce = [object randomNonce:32];
-  object.currentNonce = nonce;
-  object.appleResult = result;
-  object.appleArguments = arguments;
+  if (@available(iOS 13.0, macOS 10.15, *)) {
+    NSString *nonce = [object randomNonce:32];
+    object.currentNonce = nonce;
+    object.appleResult = result;
+    object.appleArguments = arguments;
 
-  ASAuthorizationAppleIDProvider *appleIDProvider = [[ASAuthorizationAppleIDProvider alloc] init];
+    ASAuthorizationAppleIDProvider *appleIDProvider = [[ASAuthorizationAppleIDProvider alloc] init];
 
-  ASAuthorizationAppleIDRequest *request = [appleIDProvider createRequest];
-  NSMutableArray *requestedScopes = [NSMutableArray arrayWithCapacity:2];
-  if ([arguments[kArgumentProviderScope] containsObject:@"name"]) {
-    [requestedScopes addObject:ASAuthorizationScopeFullName];
+    ASAuthorizationAppleIDRequest *request = [appleIDProvider createRequest];
+    NSMutableArray *requestedScopes = [NSMutableArray arrayWithCapacity:2];
+    if ([arguments[kArgumentProviderScope] containsObject:@"name"]) {
+      [requestedScopes addObject:ASAuthorizationScopeFullName];
+    }
+    if ([arguments[kArgumentProviderScope] containsObject:@"email"]) {
+      [requestedScopes addObject:ASAuthorizationScopeEmail];
+    }
+    request.requestedScopes = [requestedScopes copy];
+    request.nonce = [object stringBySha256HashingString:nonce];
+
+    ASAuthorizationController *authorizationController =
+        [[ASAuthorizationController alloc] initWithAuthorizationRequests:@[ request ]];
+    authorizationController.delegate = object;
+    authorizationController.presentationContextProvider = object;
+    [authorizationController performRequests];
+  } else {
+    NSLog(@"Sign in with Apple was introduced in iOS 13, update your Podfile with platform :ios, "
+          @"'13.0'");
   }
-  if ([arguments[kArgumentProviderScope] containsObject:@"email"]) {
-    [requestedScopes addObject:ASAuthorizationScopeEmail];
-  }
-  request.requestedScopes = [requestedScopes copy];
-  request.nonce = [object stringBySha256HashingString:nonce];
-
-  ASAuthorizationController *authorizationController =
-      [[ASAuthorizationController alloc] initWithAuthorizationRequests:@[ request ]];
-  authorizationController.delegate = object;
-  authorizationController.presentationContextProvider = object;
-  [authorizationController performRequests];
 }
 
 static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, FIRAuth *auth,
@@ -968,13 +1010,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
   }
 
   if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
-    if (@available(iOS 13.0, macOS 10.15, *)) {
-      self.linkWithAppleUser = currentUser;
-      launchAppleSignInRequest(self, arguments, result);
-    } else {
-      NSLog(@"Sign in with Apple was introduced in iOS 13, update your Podfile with platform :ios, "
-            @"'13.0'");
-    }
+    self.linkWithAppleUser = currentUser;
+    launchAppleSignInRequest(self, arguments, result);
     return;
   }
 #if TARGET_OS_OSX
@@ -1012,13 +1049,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
   }
 
   if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
-    if (@available(iOS 13.0, macOS 10.15, *)) {
-      self.linkWithAppleUser = currentUser;
-      launchAppleSignInRequest(self, arguments, result);
-    } else {
-      NSLog(@"Sign in with Apple was introduced in iOS 13, update your Podfile with platform :ios, "
-            @"'13.0'");
-    }
+    self.isReauthenticatingWithApple = YES;
+    launchAppleSignInRequest(self, arguments, result);
     return;
   }
 #if TARGET_OS_OSX
@@ -1064,7 +1096,13 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
   [currentUser linkWithCredential:credential
                        completion:^(FIRAuthDataResult *authResult, NSError *error) {
                          if (error != nil) {
-                           result.error(nil, nil, nil, error);
+                           if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+                             [self handleMultiFactorError:arguments
+                                               withResult:result
+                                                withError:error];
+                           } else {
+                             result.error(nil, nil, nil, error);
+                           }
                          } else {
                            result.success(authResult);
                          }
@@ -1090,7 +1128,13 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
   [currentUser reauthenticateWithCredential:credential
                                  completion:^(FIRAuthDataResult *authResult, NSError *error) {
                                    if (error != nil) {
-                                     result.error(nil, nil, nil, error);
+                                     if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+                                       [self handleMultiFactorError:arguments
+                                                         withResult:result
+                                                          withError:error];
+                                     } else {
+                                       result.error(nil, nil, nil, error);
+                                     }
                                    } else {
                                      result.success(authResult);
                                    }
@@ -1676,15 +1720,23 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
     return [NSNull null];
   }
 
+  NSString *accessToken = nil;
+  if ([authCredential isKindOfClass:[FIROAuthCredential class]]) {
+    if (((FIROAuthCredential *)authCredential).accessToken != nil) {
+      accessToken = ((FIROAuthCredential *)authCredential).accessToken;
+    } else if (((FIROAuthCredential *)authCredential).IDToken != nil) {
+      // For Sign In With Apple, the token is stored in IDToken
+      accessToken = ((FIROAuthCredential *)authCredential).IDToken;
+    }
+  }
+
   return @{
     kArgumentProviderId : authCredential.provider,
     // Note: "signInMethod" does not exist on iOS SDK, so using provider
     // instead.
     kArgumentSignInMethod : authCredential.provider,
     kArgumentToken : @([authCredential hash]),
-    kArgumentAccessToken : ([authCredential isKindOfClass:[FIROAuthCredential class]])
-        ? ((FIROAuthCredential *)authCredential).accessToken
-        : nil,
+    kArgumentAccessToken : accessToken ?: [NSNull null],
   };
 }
 

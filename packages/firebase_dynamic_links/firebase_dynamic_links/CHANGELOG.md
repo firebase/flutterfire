@@ -1,3 +1,65 @@
+## 5.0.11
+
+ - Update a dependency to the latest release.
+
+## 5.0.10
+
+ - Update a dependency to the latest release.
+
+## 5.0.9
+
+ - **FIX**: fix an issue where the status of the dynamic link was not properly reported ([#10100](https://github.com/firebase/flutterfire/issues/10100)). ([521c3375](https://github.com/firebase/flutterfire/commit/521c337570f6daeffc569894218bd5d682d40072))
+
+## 5.0.8
+
+ - Update a dependency to the latest release.
+
+## 5.0.7
+
+ - Update a dependency to the latest release.
+
+## 5.0.6
+
+ - Update a dependency to the latest release.
+
+## 5.0.5
+
+ - Update a dependency to the latest release.
+
+## 5.0.4
+
+ - Update a dependency to the latest release.
+
+## 5.0.3
+
+ - Update a dependency to the latest release.
+
+## 5.0.2
+
+ - Update a dependency to the latest release.
+
+## 5.0.1
+
+ - Update a dependency to the latest release.
+
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 4.3.11
+
+ - **FIX**: Add speculative fix for null object reference crash ([#9671](https://github.com/firebase/flutterfire/issues/9671)). ([6c003685](https://github.com/firebase/flutterfire/commit/6c00368580a0e5e3f153543302006967747cb4ef))
+
+## 4.3.10
+
+ - Update a dependency to the latest release.
+
+## 4.3.9
+
+ - Update a dependency to the latest release.
+
 ## 4.3.8
 
  - Update a dependency to the latest release.

@@ -123,22 +123,42 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   FLTFirebaseMethodCallErrorBlock errorBlock = ^(
       NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
       NSError *_Nullable error) {
+    NSMutableDictionary *temp;
     if (code == nil) {
       NSDictionary *errorDetails = getDictionaryFromNSError(error);
       code = errorDetails[kCode];
       message = errorDetails[kMessage];
-      details = errorDetails;
+
+      if (errorDetails[@"additionalData"] != nil) {
+        temp = [errorDetails[@"additionalData"] mutableCopy];
+      } else {
+        temp = [errorDetails mutableCopy];
+      }
+
+      // "NSErrorFailingURLStringKey" key does not work for removing this object. So we use our own
+      // String to retrieve
+      if (temp[@"NSErrorFailingURLKey"] != nil) {
+        [temp removeObjectForKey:@"NSErrorFailingURLKey"];
+      }
+      if (temp[NSUnderlyingErrorKey] != nil) {
+        [temp removeObjectForKey:NSUnderlyingErrorKey];
+      }
+
+      if ([errorDetails[kMessage] containsString:@"An unknown error has occurred"] &&
+          [temp[NSLocalizedDescriptionKey] containsString:@"The request timed out"]) {
+        message = temp[NSLocalizedDescriptionKey];
+      }
 
       if (errorDetails[@"additionalData"][NSLocalizedFailureReasonErrorKey] != nil) {
         // This stops an uncaught type cast exception in dart
-        NSMutableDictionary *temp = [errorDetails[@"additionalData"] mutableCopy];
         [temp removeObjectForKey:NSLocalizedFailureReasonErrorKey];
-        details = temp;
         // provides a useful message to the user. e.g. "Universal link URL could not be parsed".
         if ([message containsString:@"unknown error"]) {
           message = errorDetails[@"additionalData"][NSLocalizedFailureReasonErrorKey];
         }
       }
+
+      details = temp;
     } else {
       details = @{
         kCode : code,
@@ -307,11 +327,8 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
         }
       };
 
-  [[FIRDynamicLinks dynamicLinks] handleUniversalLink:userActivity.webpageURL
-                                           completion:completionBlock];
-
-  // Results of this are ORed and NO doesn't affect other delegate interceptors' result.
-  return NO;
+  return [[FIRDynamicLinks dynamicLinks] handleUniversalLink:userActivity.webpageURL
+                                                  completion:completionBlock];
 }
 
 #pragma mark - Utilities

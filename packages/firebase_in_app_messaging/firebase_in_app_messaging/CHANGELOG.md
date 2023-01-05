@@ -1,3 +1,57 @@
+## 0.7.0+10
+
+ - Update a dependency to the latest release.
+
+## 0.7.0+9
+
+ - Update a dependency to the latest release.
+
+## 0.7.0+8
+
+ - Update a dependency to the latest release.
+
+## 0.7.0+7
+
+ - **FIX**: in app messages were suppressed on iOS ([#9959](https://github.com/firebase/flutterfire/issues/9959)). ([929e3686](https://github.com/firebase/flutterfire/commit/929e3686b76c1ce57cf87f19498cd52fb577a8c6))
+
+## 0.7.0+6
+
+ - Update a dependency to the latest release.
+
+## 0.7.0+5
+
+ - Update a dependency to the latest release.
+
+## 0.7.0+4
+
+ - Update a dependency to the latest release.
+
+## 0.7.0+3
+
+ - Update a dependency to the latest release.
+
+## 0.7.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.7.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.7.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 0.6.0+27
+
+ - Update a dependency to the latest release.
+
+## 0.6.0+26
+
+ - Update a dependency to the latest release.
+
 ## 0.6.0+25
 
  - Update a dependency to the latest release.

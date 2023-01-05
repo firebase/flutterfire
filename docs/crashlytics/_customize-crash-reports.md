@@ -20,56 +20,61 @@ to disk to be sent along with the next fatal report or when the app restarts.
 
 ## Report uncaught exceptions {: #report-uncaught-exceptions}
 
-You can automatically catch all errors that are thrown within the Flutter
+You can automatically catch all "fatal" errors that are thrown within the Flutter
 framework by overriding `FlutterError.onError` with
-`FirebaseCrashlytics.instance.recordFlutterFatalError`:
+`FirebaseCrashlytics.instance.recordFlutterFatalError`. Alternatively,
+to also catch "non-fatal" exceptions, override `FlutterError.onError` with `FirebaseCrashlytics.instance.recordFlutterError`:
 
 ```dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-
-  // Pass all uncaught errors from the framework to Crashlytics.
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  bool weWantFatalErrorRecording = true;
+  FlutterError.onError = (errorDetails) {
+    if(weWantFatalErrorRecording){
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    } else {
+      FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+    }
+  };
 
   runApp(MyApp());
 }
 ```
 
-### Zoned errors {: #zoned-errors}
 
-Not all errors are caught by Flutter. Sometimes, errors are instead caught by
-`Zones`. A common case where relying on Flutter to catch errors would not be
-enough is when an exception happens inside the `onPressed` handler of a button:
+### Asynchronous errors {: #asynchronous-errors}
+
+Asynchronous errors are not caught by the Flutter framework:
 
 ```dart
 ElevatedButton(
-  onPressed: () {
+  onPressed: () async {
     throw Error();
   }
   ...
 )
 ```
 
-To catch such errors, you can use `runZonedGuarded`:
+To catch such errors, you can use the `PlatformDispatcher.instance.onError` handler:
 
 ```dart
-void main() async {
-  runZonedGuarded<Future<void>>(() async {
+Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-    // The following lines are the same as previously explained in "Handling uncaught errors"
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
+    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
     runApp(MyApp());
-  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
+
 }
 ```
-
-Note: You must call `WidgetsFlutterBinding.ensureInitialized()` _inside_
-`runZonedGuarded`. Error handling wouldn’t work if
-`WidgetsFlutterBinding.ensureInitialized()` was called from the outside.
 
 ### Errors outside of Flutter {: #errors-outside-flutter}
 
@@ -97,7 +102,7 @@ event is reported or when the app restarts.
 Note: {{crashlytics}} only stores the most recent eight recorded non-fatal
 exceptions. If your app throws more than eight, older exceptions are lost. This
 count is reset each time a fatal exception is thrown, since this causes a report
-to be sent to {{crashlytics}}. 
+to be sent to {{crashlytics}}.
 
 Use the `recordError` method to record non-fatal exceptions in your app's catch
 blocks. For example:
@@ -107,6 +112,21 @@ await FirebaseCrashlytics.instance.recordError(
   error,
   stackTrace,
   reason: 'a non-fatal error'
+);
+
+// Or you can use:
+await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+```
+
+You may also wish to log further information about the error which is possible
+using the `information` property:
+
+```dart
+await FirebaseCrashlytics.instance.recordError(
+  error,
+  stackTrace,
+  reason: 'a non-fatal error',
+  information: ['further diagnostic information about the error', 'version 2.0'],
 );
 ```
 

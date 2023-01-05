@@ -1,3 +1,55 @@
+## 0.2.3+26
+
+ - Update a dependency to the latest release.
+
+## 0.2.3+25
+
+ - Update a dependency to the latest release.
+
+## 0.2.3+24
+
+ - Update a dependency to the latest release.
+
+## 0.2.3+23
+
+ - **FIX**: allow for nullable utm values as send per the iOS SDK ([#10021](https://github.com/firebase/flutterfire/issues/10021)). ([4e974b2d](https://github.com/firebase/flutterfire/commit/4e974b2d82bff0f7e72120282bdddeea0e27f3a4))
+
+## 0.2.3+22
+
+ - Update a dependency to the latest release.
+
+## 0.2.3+21
+
+ - Update a dependency to the latest release.
+
+## 0.2.3+20
+
+ - Update a dependency to the latest release.
+
+## 0.2.3+19
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 0.2.3+18
+
+ - Update a dependency to the latest release.
+
+## 0.2.3+17
+
+ - Update a dependency to the latest release.
+
+## 0.2.3+16
+
+ - Update a dependency to the latest release.
+
+## 0.2.3+15
+
+ - Update a dependency to the latest release.
+
+## 0.2.3+14
+
+ - Update a dependency to the latest release.
+
 ## 0.2.3+13
 
  - Update a dependency to the latest release.

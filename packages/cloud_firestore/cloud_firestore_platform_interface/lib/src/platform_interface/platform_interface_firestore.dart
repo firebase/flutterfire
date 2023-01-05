@@ -12,17 +12,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import '../get_options.dart';
+import '../../cloud_firestore_platform_interface.dart';
 import '../method_channel/method_channel_firestore.dart';
-import '../persistence_settings.dart';
-import '../settings.dart';
-import 'platform_interface_collection_reference.dart';
-import 'platform_interface_document_reference.dart';
-import 'platform_interface_load_bundle_task.dart';
-import 'platform_interface_query.dart';
-import 'platform_interface_query_snapshot.dart';
-import 'platform_interface_transaction.dart';
-import 'platform_interface_write_batch.dart';
 
 /// Defines an interface to work with Cloud Firestore on web and mobile
 abstract class FirebaseFirestorePlatform extends PlatformInterface {
@@ -57,7 +48,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
 
   /// Sets the [FirebaseFirestorePlatform.instance]
   static set instance(FirebaseFirestorePlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 
@@ -214,6 +205,17 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// Any outstanding [waitForPendingWrites()] calls are rejected during user changes.
   Future<void> waitForPendingWrites() {
     throw UnimplementedError('waitForPendingWrites() is not implemented');
+  }
+
+  /// Configures indexing for local query execution. Any previous index configuration is overridden.
+  ///
+  /// The index entries themselves are created asynchronously. You can continue to use queries that
+  /// require indexing even if the indices are not yet available. Query execution will automatically
+  /// start using the index once the index entries have been written.
+  ///
+  /// This API is in preview mode and is subject to change.
+  Future<void> setIndexConfiguration(String indexConfiguration) {
+    throw UnimplementedError('setIndexConfiguration() is not implemented');
   }
 
   @override

@@ -139,9 +139,16 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     List<Map<String, Object>> documents = new ArrayList<>();
     List<SnapshotMetadata> metadatas = new ArrayList<>();
 
+    DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
+        FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.get(value.hashCode());
+
     for (DocumentSnapshot document : value.getDocuments()) {
       paths.add(document.getReference().getPath());
-      documents.add(document.getData());
+      if (serverTimestampBehavior != null) {
+        documents.add(document.getData(serverTimestampBehavior));
+      } else {
+        documents.add(document.getData());
+      }
       metadatas.add(document.getMetadata());
     }
 
@@ -151,6 +158,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     querySnapshotMap.put("documentChanges", value.getDocumentChanges());
     querySnapshotMap.put("metadata", value.getMetadata());
 
+    FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
     writeValue(stream, querySnapshotMap);
   }
 
@@ -190,13 +198,20 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     snapshotMap.put("path", value.getReference().getPath());
 
     if (value.exists()) {
-      snapshotMap.put("data", value.getData());
+      DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
+          FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.get(value.hashCode());
+      if (serverTimestampBehavior != null) {
+        snapshotMap.put("data", value.getData(serverTimestampBehavior));
+      } else {
+        snapshotMap.put("data", value.getData());
+      }
     } else {
       snapshotMap.put("data", null);
     }
 
     snapshotMap.put("metadata", value.getMetadata());
 
+    FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
     writeValue(stream, snapshotMap);
   }
 

@@ -101,7 +101,8 @@ NSMutableDictionary<NSString *, FIRFirestore *> *firestoreInstanceCache;
     case FIRFirestoreErrorCodeFailedPrecondition:
       code = @"failed-precondition";
       if ([error.localizedDescription containsString:@"query requires an index"] ||
-          [error.localizedDescription containsString:@"requires a COLLECTION_GROUP_DESC index"]) {
+          [error.localizedDescription containsString:@"requires a COLLECTION_GROUP_DESC index"] ||
+          [error.localizedDescription containsString:@"requires a COLLECTION_GROUP_ASC index"]) {
         message = error.localizedDescription;
       } else {
         message = @"Operation was rejected because the system is not in a state required for the "

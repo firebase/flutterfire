@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:flutter/services.dart';
 
@@ -53,18 +54,13 @@ class MethodChannelQuery extends QueryPlatform {
       }),
     );
 
-    yield* EventChannel(channelName!)
-        .receiveBroadcastStream(<String, Object?>{
-          'eventType': eventTypeToString(eventType),
-        })
-        .map(
-          (event) =>
-              MethodChannelDatabaseEvent(ref, Map<String, dynamic>.from(event)),
-        )
-        .handleError(
-          convertPlatformException,
-          test: (err) => err is PlatformException,
-        );
+    yield* EventChannel(channelName!).receiveGuardedBroadcastStream(
+      arguments: <String, Object?>{'eventType': eventTypeToString(eventType)},
+      onError: convertPlatformException,
+    ).map(
+      (event) =>
+          MethodChannelDatabaseEvent(ref, Map<String, dynamic>.from(event)),
+    );
   }
 
   /// Gets the most up-to-date result for this query.

@@ -1,3 +1,58 @@
+## 11.0.10
+
+ - Update a dependency to the latest release.
+
+## 11.0.9
+
+ - Update a dependency to the latest release.
+
+## 11.0.8
+
+ - **FIX**: fix usage of storage plugin with an isolate ([#10106](https://github.com/firebase/flutterfire/issues/10106)). ([86f24633](https://github.com/firebase/flutterfire/commit/86f2463364cbd3a0de88b1e6217120a95609b5b2))
+ - **FIX**: fix concurrency issue ([#10099](https://github.com/firebase/flutterfire/issues/10099)). ([d0b6fcf1](https://github.com/firebase/flutterfire/commit/d0b6fcf194afe987dec59d24b47ad197bf8e7cf8))
+
+## 11.0.7
+
+ - Update a dependency to the latest release.
+
+## 11.0.6
+
+ - Update a dependency to the latest release.
+
+## 11.0.5
+
+ - Update a dependency to the latest release.
+
+## 11.0.4
+
+ - Update a dependency to the latest release.
+
+## 11.0.3
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 11.0.2
+
+ - Update a dependency to the latest release.
+
+## 11.0.1
+
+ - Update a dependency to the latest release.
+
+## 11.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 10.3.11
+
+ - Update a dependency to the latest release.
+
+## 10.3.10
+
+ - Update a dependency to the latest release.
+
 ## 10.3.9
 
  - Update a dependency to the latest release.

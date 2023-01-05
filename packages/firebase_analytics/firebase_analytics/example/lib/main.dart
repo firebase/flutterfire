@@ -6,14 +6,17 @@ import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'firebase_config.dart';
+import 'firebase_options.dart';
 import 'tabs_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -66,7 +69,28 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> _setDefaultEventParameters() async {
+    if (kIsWeb) {
+      setMessage(
+        '"setDefaultEventParameters()" is not supported on web platform',
+      );
+    } else {
+      // Only strings, numbers & null (longs & doubles for android, ints and doubles for iOS) are supported for default event parameters:
+      await widget.analytics.setDefaultEventParameters(<String, dynamic>{
+        'string': 'string',
+        'int': 42,
+        'long': 12345678910,
+        'double': 42.0,
+        'bool': true.toString(),
+      });
+      setMessage('setDefaultEventParameters succeeded');
+    }
+  }
+
   Future<void> _sendAnalyticsEvent() async {
+    // Only strings and numbers (longs & doubles for android, ints and doubles for iOS) are supported for GA custom event parameters:
+    // https://firebase.google.com/docs/reference/ios/firebaseanalytics/api/reference/Classes/FIRAnalytics#+logeventwithname:parameters:
+    // https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics#public-void-logevent-string-name,-bundle-params
     await widget.analytics.logEvent(
       name: 'test_event',
       parameters: <String, dynamic>{
@@ -77,9 +101,9 @@ class _MyHomePageState extends State<MyHomePage> {
         // Only strings and numbers (ints & doubles) are supported for GA custom event parameters:
         // https://developers.google.com/analytics/devguides/collection/analyticsjs/custom-dims-mets#overview
         'bool': true.toString(),
-        'items': [itemCreator()]
       },
     );
+
     setMessage('logEvent succeeded');
   }
 
@@ -324,6 +348,10 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialButton(
             onPressed: _testResetAnalyticsData,
             child: const Text('Test resetAnalyticsData'),
+          ),
+          MaterialButton(
+            onPressed: _setDefaultEventParameters,
+            child: const Text('Test setDefaultEventParameters'),
           ),
           Text(
             _message,

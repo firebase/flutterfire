@@ -31,7 +31,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseCrashlytics get instance {
     _instance ??= FirebaseCrashlytics._(app: Firebase.app());
-
     return _instance!;
   }
 
@@ -59,7 +58,8 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// This should only be used for testing purposes in cases where you wish to
   /// simulate a native crash to view the results on the Firebase Console.
   ///
-  /// Note: crash reports will not include a stack trace.
+  /// Note: crash reports will not include a stack trace and crash reports are
+  /// not sent until the next application startup.
   void crash() {
     return _delegate.crash();
   }
@@ -78,7 +78,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// Submits a Crashlytics report of a caught error.
   Future<void> recordError(dynamic exception, StackTrace? stack,
       {dynamic reason,
-      Iterable<DiagnosticsNode> information = const [],
+      Iterable<Object> information = const [],
       bool? printDetails,
       bool fatal = false}) async {
     // Use the debug flag if printDetails is not provided
@@ -122,12 +122,14 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     // Report error.
     final List<Map<String, String>> stackTraceElements =
         getStackTraceElements(stackTrace);
+    final String? buildId = getBuildId(stackTrace);
 
     return _delegate.recordError(
       exception: exception.toString(),
       reason: reason.toString(),
       information: _information,
       stackTraceElements: stackTraceElements,
+      buildId: buildId,
       fatal: fatal,
     );
   }
@@ -138,13 +140,13 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
       {bool fatal = false}) {
     FlutterError.presentError(flutterErrorDetails);
 
+    final information = flutterErrorDetails.informationCollector?.call() ?? [];
+
     return recordError(
       flutterErrorDetails.exceptionAsString(),
       flutterErrorDetails.stack,
       reason: flutterErrorDetails.context,
-      information: flutterErrorDetails.informationCollector == null
-          ? []
-          : flutterErrorDetails.informationCollector!(),
+      information: information,
       printDetails: false,
       fatal: fatal,
     );

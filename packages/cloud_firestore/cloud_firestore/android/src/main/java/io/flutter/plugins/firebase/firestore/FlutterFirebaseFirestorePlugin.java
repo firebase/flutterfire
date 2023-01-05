@@ -10,6 +10,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
@@ -39,6 +42,7 @@ import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamH
 import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
+import io.flutter.plugins.firebase.firestore.utils.ServerTimestampBehaviorConverter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -69,6 +73,10 @@ public class FlutterFirebaseFirestorePlugin
   private final Map<String, EventChannel> eventChannels = new HashMap<>();
   private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
   private final Map<String, OnTransactionResultListener> transactionHandlers = new HashMap<>();
+
+  // Used in the decoder to know which ServerTimestampBehavior to use
+  public static final Map<Integer, DocumentSnapshot.ServerTimestampBehavior>
+      serverTimestampBehaviorHashMap = new HashMap<>();
 
   protected static FirebaseFirestore getCachedFirebaseFirestoreInstanceForKey(String key) {
     synchronized (firestoreInstanceCache) {
@@ -291,8 +299,10 @@ public class FlutterFirebaseFirestorePlugin
                       "An error occurred while parsing query arguments, see native logs for more information. Please report this issue."));
               return;
             }
+            final QuerySnapshot querySnapshot = Tasks.await(query.get(source));
+            saveTimestampBehavior(arguments, querySnapshot.hashCode());
 
-            taskCompletionSource.setResult(Tasks.await(query.get(source)));
+            taskCompletionSource.setResult(querySnapshot);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
@@ -311,7 +321,10 @@ public class FlutterFirebaseFirestorePlugin
             DocumentReference documentReference =
                 (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
 
-            taskCompletionSource.setResult(Tasks.await(documentReference.get(source)));
+            final DocumentSnapshot documentSnapshot = Tasks.await(documentReference.get(source));
+            saveTimestampBehavior(arguments, documentSnapshot.hashCode());
+
+            taskCompletionSource.setResult(documentSnapshot);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
@@ -340,13 +353,24 @@ public class FlutterFirebaseFirestorePlugin
               return;
             }
 
-            taskCompletionSource.setResult(Tasks.await(query.get(source)));
+            final QuerySnapshot querySnapshot = Tasks.await(query.get(source));
+            saveTimestampBehavior(arguments, querySnapshot.hashCode());
+
+            taskCompletionSource.setResult(querySnapshot);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
         });
 
     return taskCompletionSource.getTask();
+  }
+
+  private void saveTimestampBehavior(Map<String, Object> arguments, int hashCode) {
+    String serverTimestampBehaviorString = (String) arguments.get("serverTimestampBehavior");
+    DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
+        ServerTimestampBehaviorConverter.toServerTimestampBehavior(serverTimestampBehaviorString);
+
+    serverTimestampBehaviorHashMap.put(hashCode, serverTimestampBehavior);
   }
 
   private Task<Void> documentSet(Map<String, Object> arguments) {
@@ -482,6 +506,55 @@ public class FlutterFirebaseFirestorePlugin
     return taskCompletionSource.getTask();
   }
 
+  private Task<Map<String, Object>> aggregateQuery(Map<String, Object> arguments) {
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            Query query = (Query) Objects.requireNonNull(arguments.get("query"));
+            // NOTE: There is only "server" as the source at the moment. So this
+            // is unused for the time being. Using "AggregateSource.SERVER".
+            // String source = (String) Objects.requireNonNull(arguments.get("source"));
+
+            AggregateQuery aggregateQuery = query.count();
+            AggregateQuerySnapshot aggregateQuerySnapshot =
+                Tasks.await(aggregateQuery.get(AggregateSource.SERVER));
+            Map<String, Object> result = new HashMap<>();
+            result.put("count", aggregateQuerySnapshot.getCount());
+            taskCompletionSource.setResult(result);
+
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
+  private Task<Void> setIndexConfiguration(Map<String, Object> arguments) {
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseFirestore firestore =
+                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
+
+            Tasks.await(
+                firestore.setIndexConfiguration(
+                    (String) Objects.requireNonNull(arguments.get("indexConfiguration"))));
+
+            taskCompletionSource.setResult(null);
+
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
   @Override
   public void onMethodCall(MethodCall call, @NonNull final MethodChannel.Result result) {
     Task<?> methodCallTask;
@@ -559,6 +632,12 @@ public class FlutterFirebaseFirestorePlugin
         break;
       case "Firestore#waitForPendingWrites":
         methodCallTask = waitForPendingWrites(call.arguments());
+        break;
+      case "AggregateQuery#count":
+        methodCallTask = aggregateQuery(call.arguments());
+        break;
+      case "Firestore#setIndexConfiguration":
+        methodCallTask = setIndexConfiguration(call.arguments());
         break;
       default:
         result.notImplemented();

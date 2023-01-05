@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart' show protected;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -53,7 +54,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseAnalyticsPlatform.instance]
   static set instance(FirebaseAnalyticsPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 
