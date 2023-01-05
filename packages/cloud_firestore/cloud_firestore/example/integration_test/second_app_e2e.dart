@@ -4,7 +4,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'firebase_options_secondary.dart';
@@ -48,8 +47,6 @@ void runSecondAppTests() {
           );
         });
       },
-      // Skip on android because the test continually times out on the CI. The test passes when running locally.
-      skip: defaultTargetPlatform == TargetPlatform.android,
     );
   });
 }
