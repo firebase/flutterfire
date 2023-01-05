@@ -1013,6 +1013,36 @@ void runQueryTests() {
         expect(snapshot.docs[1].id, equals('doc2'));
       });
 
+      test('returns documents when querying nested where', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('not-null');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': {
+              'bar': 1,
+            },
+          }),
+          collection.doc('doc2').set({
+            'foo': {
+              'bar': 2,
+            },
+          }),
+          collection.doc('doc3').set({
+            'foo': {
+              'bar': 3,
+            },
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .where('foo.bar', isGreaterThan: 1)
+            .where('foo.bar', isLessThan: 3)
+            .get();
+
+        expect(snapshot.docs.length, equals(1));
+        expect(snapshot.docs[0].id, equals('doc2'));
+      });
+
       test('returns documents when querying properties that are equal to null',
           () async {
         CollectionReference<Map<String, dynamic>> collection =
