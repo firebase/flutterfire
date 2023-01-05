@@ -1037,6 +1037,7 @@ void runQueryTests() {
         QuerySnapshot<Map<String, dynamic>> snapshot = await collection
             .where('foo.bar', isGreaterThan: 1)
             .where('foo.bar', isLessThan: 3)
+            .orderBy('foo.bar')
             .get();
 
         expect(snapshot.docs.length, equals(1));
