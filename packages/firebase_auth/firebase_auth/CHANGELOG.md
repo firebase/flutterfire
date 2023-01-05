@@ -1,3 +1,7 @@
+## 4.2.5
+
+ - **FIX**: fix a null pointer exception that could occur when removing an even listener ([#10210](https://github.com/firebase/flutterfire/issues/10210)). ([72d2e973](https://github.com/firebase/flutterfire/commit/72d2e97363d89d716963dd224a2b9578ba446624))
+
 ## 4.2.4
 
  - Update a dependency to the latest release.
