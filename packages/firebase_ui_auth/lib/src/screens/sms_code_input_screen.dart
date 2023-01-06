@@ -80,7 +80,7 @@ class SMSCodeInputScreen extends StatelessWidget {
     this.sideBuilder,
     this.headerBuilder,
     this.headerMaxExtent,
-    this.breakpoint = 500,
+    this.breakpoint = 670,
     this.contentFlex,
     this.maxWidth,
   }) : super(key: key);
@@ -110,6 +110,7 @@ class SMSCodeInputScreen extends StatelessWidget {
               sideBuilder: sideBuilder,
               headerBuilder: headerBuilder,
               headerMaxExtent: headerMaxExtent,
+              contentFlex: contentFlex,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
