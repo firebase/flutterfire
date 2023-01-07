@@ -86,7 +86,7 @@
     "description": "Used as an error text of the EmailInput when the email is empty.",
     "placeholders": {}
   },
-  "emailLinkSignInButtonLabel": "Belépés varázs hivatkozással",
+  "emailLinkSignInButtonLabel": "Belépés linkkel",
   "@emailLinkSignInButtonLabel": {
     "description": "Used as a label of the EmailLinkSignInButton.",
     "placeholders": {}
@@ -121,7 +121,7 @@
     "description": "Used as a label of the ForgotPasswordButton.",
     "placeholders": {}
   },
-  "forgotPasswordHintText": "Írja be az e-mail címét és küldünk egy levelet a jelszó visszaállításához",
+  "forgotPasswordHintText": "Írja be az e-mail címét és küldünk egy e-mailt a jelszó visszaállításához",
   "@forgotPasswordHintText": {
     "description": "Used as a hint on a ForgotPasswordView.",
     "placeholders": {}
@@ -175,7 +175,7 @@
     "description": "",
     "placeholders": {}
   },
-  "mfaTitle": "2 lépcsős ellenőrzés",
+  "mfaTitle": "Kétlépcsős azonosítás",
   "@mfaTitle": {
     "description": "2-step verification settings tile title.",
     "placeholders": {}
@@ -190,7 +190,7 @@
     "description": "",
     "placeholders": {}
   },
-  "nullLabel": "nulla",
+  "nullLabel": "null érték",
   "@nullLabel": {
     "description": "",
     "placeholders": {}
@@ -220,7 +220,7 @@
     "description": "Used as an error text when PasswordInput is empty.",
     "placeholders": {}
   },
-  "passwordResetEmailSentText": "Küldtünk egy levelet a jelszó visszaállításához. Kérjük, ellenőrizze a postaládáját!",
+  "passwordResetEmailSentText": "Küldtünk egy e-mailt a jelszó visszaállításához. Kérjük, ellenőrizze a postaládáját!",
   "@passwordResetEmailSentText": {
     "description": "Indicates that the password reset email was sent.",
     "placeholders": {}
@@ -284,7 +284,7 @@
     "description": "A representation of the runtime type of the object.",
     "placeholders": {}
   },
-  "sendLinkButtonLabel": "Varázs hivatkozás küldése",
+  "sendLinkButtonLabel": "Belépési link küldése",
   "@sendLinkButtonLabel": {
     "description": "Used as a label of the submit button on the EmailLinkSignInView.",
     "placeholders": {}
@@ -314,12 +314,12 @@
     "description": "Used as a label of the OAuthProviderButton for Apple provider.",
     "placeholders": {}
   },
-  "signInWithEmailLinkSentText": "Küldtünk egy levelet a varázs hivatkozással. Kérjük, ellenőrizze a postaládáját és kattintson a hivatkozásra a belépéshez!",
+  "signInWithEmailLinkSentText": "Küldtünk egy e-mailt a belépési linkkel. Kérjük, ellenőrizze a postaládáját és kattintson a hivatkozásra a belépéshez!",
   "@signInWithEmailLinkSentText": {
     "description": "Indicates that email with a sign in link was sent.",
     "placeholders": {}
   },
-  "signInWithEmailLinkViewTitleText": "Belépés varázs hivatkozással",
+  "signInWithEmailLinkViewTitleText": "Belépés linkkel",
   "@signInWithEmailLinkViewTitleText": {
     "description": "Used as a title on the EmailLinkSignInView.",
     "placeholders": {}

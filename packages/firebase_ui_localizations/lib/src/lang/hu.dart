@@ -62,7 +62,7 @@ class HuLocalizations extends FirebaseUILocalizationLabels {
   String get emailIsRequiredErrorText => "Az e-mail megadása kötelező";
 
   @override
-  String get emailLinkSignInButtonLabel => "Belépés varázs hivatkozással";
+  String get emailLinkSignInButtonLabel => "Belépés linkkel";
 
   @override
   String get emailTakenErrorText => "Ezzel az e-mail címmel már létezik fiók";
@@ -85,7 +85,7 @@ class HuLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get forgotPasswordHintText =>
-      "Írja be az e-mail címét és küldünk egy levelet a jelszó visszaállításához";
+      "Írja be az e-mail címét és küldünk egy e-mailt a jelszó visszaállításához";
 
   @override
   String get forgotPasswordViewTitle => "Elfelejtett jelszó";
@@ -115,7 +115,7 @@ class HuLocalizations extends FirebaseUILocalizationLabels {
   String get mapLabel => "térkép";
 
   @override
-  String get mfaTitle => "2 lépcsős ellenőrzés";
+  String get mfaTitle => "Kétlépcsős azonosítás";
 
   @override
   String get name => "Név";
@@ -124,7 +124,7 @@ class HuLocalizations extends FirebaseUILocalizationLabels {
   String get northInitialLabel => "É";
 
   @override
-  String get nullLabel => "nulla";
+  String get nullLabel => "null érték";
 
   @override
   String get numberLabel => "szám";
@@ -143,7 +143,7 @@ class HuLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get passwordResetEmailSentText =>
-      "Küldtünk egy levelet a jelszó visszaállításához. Kérjük, ellenőrizze a postaládáját!";
+      "Küldtünk egy e-mailt a jelszó visszaállításához. Kérjük, ellenőrizze a postaládáját!";
 
   @override
   String get phoneInputLabel => "Telefonszám";
@@ -179,7 +179,7 @@ class HuLocalizations extends FirebaseUILocalizationLabels {
   String get resetPasswordButtonLabel => "Jelszó visszaállítása";
 
   @override
-  String get sendLinkButtonLabel => "Varázs hivatkozás küldése";
+  String get sendLinkButtonLabel => "Belépési link küldése";
 
   @override
   String get signInActionText => "Belépés";
@@ -198,10 +198,10 @@ class HuLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get signInWithEmailLinkSentText =>
-      "Küldtünk egy levelet a varázs hivatkozással. Kérjük, ellenőrizze a postaládáját és kattintson a hivatkozásra a belépéshez!";
+      "Küldtünk egy e-mailt a belépési linkkel. Kérjük, ellenőrizze a postaládáját és kattintson a hivatkozásra a belépéshez!";
 
   @override
-  String get signInWithEmailLinkViewTitleText => "Belépés varázs hivatkozással";
+  String get signInWithEmailLinkViewTitleText => "Belépés linkkel";
 
   @override
   String get signInWithFacebookButtonText => "Facebook belépés";
