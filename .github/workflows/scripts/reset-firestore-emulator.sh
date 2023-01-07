@@ -1,2 +1,2 @@
 #!/bin/bash
-curl -v -X DELETE "http://localhost:8080/emulator/v1/projects/react-native-firebase-testing/databases/(default)/documents"
+curl -v -X DELETE "http://localhost:8080/emulator/v1/projects/flutterfire-e2e-tests/databases/(default)/documents"

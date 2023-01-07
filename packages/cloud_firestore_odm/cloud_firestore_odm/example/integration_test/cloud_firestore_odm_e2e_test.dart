@@ -9,6 +9,9 @@ import 'package:integration_test/integration_test.dart';
 
 import 'collection_reference_test.dart' as collection_reference_test;
 import 'document_reference_test.dart' as document_reference_test;
+
+import 'firebase_options.dart';
+
 import 'path_test.dart' as path_test;
 import 'query_reference_test.dart' as query_reference_test;
 
@@ -18,15 +21,7 @@ void main() {
   group('cloud_firestore_odm', () {
     setUpAll(() async {
       await Firebase.initializeApp(
-        options: const FirebaseOptions(
-          apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-          appId: '1:448618578101:ios:3a3c8ae9cb0b6408ac3efc',
-          messagingSenderId: '448618578101',
-          projectId: 'react-native-firebase-testing',
-          authDomain: 'react-native-firebase-testing.firebaseapp.com',
-          iosClientId:
-              '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
-        ),
+        options: DefaultFirebaseOptions.currentPlatform,
       );
       FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     });

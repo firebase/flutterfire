@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>448618578101-evbjdqq9co9v29pi8jcua8bm7kr4smuu.apps.googleusercontent.com</string>
+	<string>406099696497-irb7edfevfkhi6t5s9kbuq1mt1og95rg.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.448618578101-evbjdqq9co9v29pi8jcua8bm7kr4smuu</string>
+	<string>com.googleusercontent.apps.406099696497-irb7edfevfkhi6t5s9kbuq1mt1og95rg</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>448618578101-npu5ll2fj4emgvtietpb685fvdm7fg3s.apps.googleusercontent.com</string>
+	<string>406099696497-17qn06u8a0dc717u8ul7s49ampk13lul.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0</string>
+	<string>AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c</string>
 	<key>GCM_SENDER_ID</key>
-	<string>448618578101</string>
+	<string>406099696497</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>io.flutter.plugins.firebase.messaging</string>
 	<key>PROJECT_ID</key>
-	<string>react-native-firebase-testing</string>
+	<string>flutterfire-e2e-tests</string>
 	<key>STORAGE_BUCKET</key>
-	<string>react-native-firebase-testing.appspot.com</string>
+	<string>flutterfire-e2e-tests.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,8 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:448618578101:ios:0b11ed8263232715ac3efc</string>
+	<string>1:406099696497:ios:1b423b89c63b82053574d0</string>
 	<key>DATABASE_URL</key>
-	<string>https://react-native-firebase-testing.firebaseio.com</string>
+	<string>https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>
 </plist>

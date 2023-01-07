@@ -103,7 +103,7 @@ class FirebaseList extends ListBase<DataSnapshot>
       }
     }
 
-    throw FallThroughError();
+    throw UnsupportedError('Key not found: $key');
   }
 
   void _onChildAdded(DatabaseEvent event) {

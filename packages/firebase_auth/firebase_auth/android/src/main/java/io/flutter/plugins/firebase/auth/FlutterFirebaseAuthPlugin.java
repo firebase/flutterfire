@@ -1822,7 +1822,9 @@ public class FlutterFirebaseAuthPlugin
   private void removeEventListeners() {
     for (EventChannel eventChannel : streamHandlers.keySet()) {
       StreamHandler streamHandler = streamHandlers.get(eventChannel);
-      streamHandler.onCancel(null);
+      if (streamHandler != null) {
+        streamHandler.onCancel(null);
+      }
       eventChannel.setStreamHandler(null);
     }
     streamHandlers.clear();
