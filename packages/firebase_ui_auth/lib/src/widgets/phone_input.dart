@@ -287,49 +287,52 @@ class PhoneInputState extends State<PhoneInput> {
           const SizedBox(height: 16),
           Directionality(
             textDirection: TextDirection.ltr,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 90,
-                  child: UniversalTextFormField(
-                    autofillHints: const [
-                      AutofillHints.telephoneNumberCountryCode
-                    ],
-                    controller: countryController,
-                    prefix: const Text('+'),
-                    placeholder: l.countryCode,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    keyboardType: TextInputType.phone,
-                    validator: NotEmpty('').validate,
-                    onSubmitted: (_) {
-                      numberFocusNode.requestFocus();
-                    },
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 90,
+                    child: UniversalTextFormField(
+                      autofillHints: const [
+                        AutofillHints.telephoneNumberCountryCode
+                      ],
+                      controller: countryController,
+                      prefix: const Text('+'),
+                      placeholder: l.countryCode,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      keyboardType: TextInputType.phone,
+                      validator: NotEmpty('').validate,
+                      onSubmitted: (_) {
+                        numberFocusNode.requestFocus();
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: UniversalTextFormField(
-                    autofillHints: const [
-                      AutofillHints.telephoneNumberNational
-                    ],
-                    autofocus: true,
-                    focusNode: numberFocusNode,
-                    controller: numberController,
-                    placeholder: l.phoneInputLabel,
-                    validator: Validator.validateAll([
-                      NotEmpty(l.phoneNumberIsRequiredErrorText),
-                      PhoneValidator(l.phoneNumberInvalidErrorText),
-                    ]),
-                    onSubmitted: _onSubmitted,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    keyboardType: TextInputType.phone,
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: UniversalTextFormField(
+                      autofillHints: const [
+                        AutofillHints.telephoneNumberNational
+                      ],
+                      autofocus: true,
+                      focusNode: numberFocusNode,
+                      controller: numberController,
+                      placeholder: l.phoneInputLabel,
+                      validator: Validator.validateAll([
+                        NotEmpty(l.phoneNumberIsRequiredErrorText),
+                        PhoneValidator(l.phoneNumberInvalidErrorText),
+                      ]),
+                      onSubmitted: _onSubmitted,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      keyboardType: TextInputType.phone,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
