@@ -9,7 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 typedef OAuthSignIn = void Function();
 
@@ -514,22 +513,24 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   Future<void> _signInWithGoogle() async {
-    // Trigger the authentication flow
-    final googleUser = await GoogleSignIn().signIn();
+    await FirebaseAuth.instance.signOut();
+    FirebaseAuth.instance.userChanges().listen((User? user) {
+      print('user auth changed $user');
+    });
+    await FirebaseAuth.instance.signInAnonymously();
+    await Future.delayed(const Duration(seconds: 1));
+    String email = 'flyswatte2r@gmail.com';
+    String password = '123456';
+    AuthCredential credential =
+        EmailAuthProvider.credential(email: email, password: password);
+    await FirebaseAuth.instance.currentUser?.linkWithCredential(credential);
+    await FirebaseAuth.instance.signOut();
+    await Future.delayed(const Duration(seconds: 1));
 
-    // Obtain the auth details from the request
-    final googleAuth = await googleUser?.authentication;
-
-    if (googleAuth != null) {
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      // Once signed in, return the UserCredential
-      await _auth.signInWithCredential(credential);
-    }
+    final a = await FirebaseAuth.instance.signInWithCredential(credential);
+    print(
+      '${a.user?.metadata.creationTime.toString() ?? ''} ${a.user?.metadata.lastSignInTime.toString() ?? ''}',
+    );
   }
 
   Future<void> _signInWithTwitter() async {

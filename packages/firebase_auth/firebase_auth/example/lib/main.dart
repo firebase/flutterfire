@@ -7,8 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'auth.dart';
-import 'profile.dart';
-
 import 'firebase_options.dart';
 
 /// Requires that a Firebase local emulator is running locally.
@@ -73,15 +71,7 @@ class AuthExampleApp extends StatelessWidget {
                   width: constraints.maxWidth >= 1200
                       ? constraints.maxWidth / 2
                       : constraints.maxWidth,
-                  child: StreamBuilder<User?>(
-                    stream: FirebaseAuth.instance.authStateChanges(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return const ProfilePage();
-                      }
-                      return const AuthGate();
-                    },
-                  ),
+                  child: const AuthGate(),
                 ),
               ],
             );
