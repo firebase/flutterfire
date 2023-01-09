@@ -119,6 +119,7 @@ class PhoneInputScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 PhoneInputView(
                   auth: auth,
@@ -129,6 +130,7 @@ class PhoneInputScreen extends StatelessWidget {
                   multiFactorSession: multiFactorSession,
                   mfaHint: mfaHint,
                 ),
+                const SizedBox(height: 8),
                 UniversalButton(
                   text: l.goBackButtonLabel,
                   variant: ButtonVariant.text,
