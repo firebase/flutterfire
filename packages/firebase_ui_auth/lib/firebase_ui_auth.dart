@@ -18,6 +18,7 @@ export 'src/auth_state.dart'
         CredentialReceived,
         SignedIn,
         SigningIn,
+        UserCreated,
         AuthFailed,
         DifferentSignInMethodsFound,
         MFARequired;

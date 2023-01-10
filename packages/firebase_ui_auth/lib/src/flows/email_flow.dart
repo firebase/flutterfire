@@ -10,14 +10,6 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 /// [AwaitingEmailAndPassword].
 class AwaitingEmailAndPassword extends AuthState {}
 
-/// A state that indicates that a new user account was created.
-class UserCreated extends AuthState {
-  /// A [fba.UserCredential] that was obtained during authentication process.
-  final fba.UserCredential credential;
-
-  UserCreated(this.credential);
-}
-
 /// A state that indicates that user registration is in progress.
 /// UIs often reflect this state with a loading indicator.
 class SigningUp extends AuthState {}
