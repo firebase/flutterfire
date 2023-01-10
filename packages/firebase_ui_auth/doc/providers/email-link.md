@@ -39,11 +39,11 @@ See [this doc](https://firebase.google.com/docs/auth/flutter/email-link-auth) fo
 
 ## Using screen
 
-After adding `EmailLinkAuthProvider` to the `FirebaseUIAuth.configureProviders`, `SignInScreen` or `RegisterScren` will have a button that will trigger `EmailLinkSignInAction`, or, if no action provided, will open `EmailLinkSignInScreen` using `Navigator.push`.
+After adding `EmailLinkAuthProvider` to the `FirebaseUIAuth.configureProviders`, `SignInScreen` or `RegisterScreen` will have a button that will trigger `EmailLinkSignInAction`, or, if no action provided, will open `EmailLinkSignInScreen` using `Navigator.push`.
 
 ```dart
 MaterialApp(
-  intiialRoute: '/login',
+  initialRoute: '/login',
   routes: {
     '/login': (context) {
       return SignInScreen(
