@@ -5,7 +5,7 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart'
-    show AuthCredential, MultiFactorResolver, User;
+    show AuthCredential, MultiFactorResolver, User, UserCredential;
 
 /// An abstract class for all auth states.
 /// [AuthState] transitions could be captured with an [AuthStateChangeAction]:
@@ -144,6 +144,14 @@ class SignedIn extends AuthState {
 
   /// {@macro ui.auth.auth_state.signed_in}
   SignedIn(this.user);
+}
+
+/// A state that indicates that a new user account was created.
+class UserCreated extends AuthState {
+  /// A [UserCredential] that was obtained during authentication process.
+  final UserCredential credential;
+
+  UserCreated(this.credential);
 }
 
 /// {@template ui.auth.auth_state.different_sign_in_methods_found}
