@@ -248,7 +248,7 @@ class _CustomEmailLinkSignInState extends State<CustomEmailLinkSignIn>
 
 ## Other topics
 
-- [EmaiAuthProvider](./email.md) - allows registering and signing using email and password.
+- [EmailAuthProvider](./email.md) - allows registering and signing using email and password.
 - [Email verification](./email-verification.md)
 - [PhoneAuthProvider](./phone.md) - allows registering and signing using a phone number
 - [UniversalEmailSignInProvider](./universal-email-sign-in.md) - gets all connected auth providers for a given email.
