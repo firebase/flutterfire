@@ -26,7 +26,7 @@ class App extends StatelessWidget {
         },
         '/profile': (context) => ProfileScreen(),
         '/verify-email': (context) => EmailVerificationScreen(
-          actionCodeSettings: ActionCodeSettngs(...),
+          actionCodeSettings: ActionCodeSettings(...),
           actions: [
             EmailVerified(() {
               Navigator.pushReplacementNamed(context, '/profile');
