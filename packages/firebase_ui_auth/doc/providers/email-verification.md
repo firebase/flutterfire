@@ -28,10 +28,10 @@ class App extends StatelessWidget {
         '/verify-email': (context) => EmailVerificationScreen(
           actionCodeSettings: ActionCodeSettings(...),
           actions: [
-            EmailVerified(() {
+            EmailVerifiedAction(() {
               Navigator.pushReplacementNamed(context, '/profile');
             }),
-            Cancel((context) {
+            AuthCancelledAction((context) {
               FirebaseUIAuth.signOut(context: context);
               Navigator.pushReplacementNamed(context, '/');
             }),
@@ -103,7 +103,7 @@ class _MyEmailVerificationScreenState extends State<MyEmailVerificationScreen> {
 
 ## Other topics
 
-- [EmaiAuthProvider](./email.md) - allows registering and signing using email and password.
+- [EmailAuthProvider](./email.md) - allows registering and signing using email and password.
 - [EmailLinkAuthProvider](./email-link.md) - allows registering and signing using a link sent to email.
 - [PhoneAuthProvider](./phone.md) - allows registering and signing using a phone number
 - [UniversalEmailSignInProvider](./universal-email-sign-in.md) - gets all connected auth providers for a given email.
