@@ -184,6 +184,8 @@ class _SignInFormContentState extends State<_SignInFormContent> {
   }
 
   void _submit([String? password]) {
+    FocusManager.instance.primaryFocus?.unfocus();
+
     final ctrl = AuthController.ofType<EmailAuthController>(context);
     final email = (widget.email ?? emailCtrl.text).trim();
 
