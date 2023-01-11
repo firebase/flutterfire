@@ -130,6 +130,11 @@ NSString *const kFLTFirebasePerformanceChannelName = @"plugins.flutter.io/fireba
   NSString *name = arguments[@"name"];
 
   FIRTrace *trace = [FIRPerformance startTraceWithName:name];
+  if (trace == nil) {
+    // Performance collection is disabled
+    result.success(nil);
+    return;
+  }
   _traceHandle = [NSNumber numberWithInt:[_traceHandle intValue] + 1];
   [_traces setObject:trace forKey:_traceHandle];
 
