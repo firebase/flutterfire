@@ -1,3 +1,7 @@
+## 0.9.0+10
+
+ - **FIX**: fix a crash that would occur when creating a trace with performance collection disabled ([#10243](https://github.com/firebase/flutterfire/issues/10243)). ([0a15ecbe](https://github.com/firebase/flutterfire/commit/0a15ecbe31a5730a6f8be2218c756a5d167e5bbd))
+
 ## 0.9.0+9
 
  - **REFACTOR**: refactor underlying implementation for the "handler system" so the handlers are generated on native side ([#9334](https://github.com/firebase/flutterfire/issues/9334)). ([08a4be6c](https://github.com/firebase/flutterfire/commit/08a4be6c0e86a3288bb6fcafd301f1519b7915ba))
