@@ -98,9 +98,7 @@ To learn more about the available actions, check out the [FirebaseUIActions API 
 
 ## Other topics
 
-## Other topics
-
-- [EmaiAuthProvider](./providers/email.md) - allows registering and signing using email and password.
+- [EmailAuthProvider](./providers/email.md) - allows registering and signing using email and password.
 - [EmailLinkAuthProvider](./providers/email-link.md) - allows registering and signing using a link sent to email.
 - [PhoneAuthProvider](./providers/phone.md) - allows registering and signing using a phone number
 - [UniversalEmailSignInProvider](./providers/universal-email-sign-in.md) - gets all connected auth providers for a given email.
