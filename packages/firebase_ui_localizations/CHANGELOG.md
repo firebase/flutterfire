@@ -1,3 +1,7 @@
+## 1.1.0
+
+ - **FEAT**: added Hungarian localization ([#10111](https://github.com/firebase/flutterfire/issues/10111)). ([794622cd](https://github.com/firebase/flutterfire/commit/794622cd25332e728c2665ee71b843502fa37eff))
+
 ## 1.0.2
 
  - revert dependency `Intl` to 0.17.0

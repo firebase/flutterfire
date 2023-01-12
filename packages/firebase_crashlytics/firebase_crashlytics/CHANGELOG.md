@@ -1,3 +1,7 @@
+## 3.0.10
+
+ - **FIX**: improve reason field handling in recordError ([#10256](https://github.com/firebase/flutterfire/issues/10256)). ([48af8110](https://github.com/firebase/flutterfire/commit/48af8110b34d6c2e635ef5d1023086ab5eadcbf4))
+
 ## 3.0.9
 
  - Update a dependency to the latest release.
