@@ -80,11 +80,15 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
     final l = FirebaseUILocalizations.labelsOf(context);
     bool isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
+    final themeData = Theme.of(context);
+    final colorScheme = themeData.colorScheme;
+
     return LoadingButton(
       isLoading: _isLoading,
-      color: isCupertino ? CupertinoColors.destructiveRed : Colors.red,
+      color: isCupertino ? CupertinoColors.destructiveRed : colorScheme.error,
       icon: isCupertino ? CupertinoIcons.delete : Icons.delete,
       label: l.deleteAccount,
+      labelColor: colorScheme.onError,
       onTap: _deleteAccount,
       variant: widget.variant,
     );

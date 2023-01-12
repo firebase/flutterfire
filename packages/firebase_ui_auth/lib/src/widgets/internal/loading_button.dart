@@ -22,8 +22,17 @@ class _LoadingButtonContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
+    Widget child;
 
-    Widget child = Text(label);
+    if (color != null) {
+      final theme = Theme.of(context).textTheme.button;
+      child = Text(
+        label,
+        style: theme?.copyWith(color: color),
+      );
+    } else {
+      child = Text(label);
+    }
 
     if (isLoading) {
       child = LoadingIndicator(
@@ -42,6 +51,7 @@ class LoadingButton extends StatelessWidget {
   final String label;
   final IconData? icon;
   final Color? color;
+  final Color? labelColor;
   final VoidCallback onTap;
   final ButtonVariant? variant;
 
@@ -52,22 +62,31 @@ class LoadingButton extends StatelessWidget {
     this.isLoading = false,
     this.icon,
     this.color,
+    this.labelColor,
     this.variant = ButtonVariant.outlined,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isMaterial3 = theme.useMaterial3;
+
+    final resolvedColor = variant == ButtonVariant.filled && !isMaterial3
+        ? theme.colorScheme.onPrimary
+        : null;
+
+    final contentColor = labelColor ?? resolvedColor;
+
     final content = _LoadingButtonContent(
       label: label,
       isLoading: isLoading,
-      color: variant == ButtonVariant.filled
-          ? Theme.of(context).colorScheme.onPrimary
-          : null,
+      color: contentColor,
     );
 
     return UniversalButton(
       color: color,
       icon: icon,
+      contentColor: contentColor,
       onPressed: onTap,
       variant: variant,
       child: content,
