@@ -8,8 +8,8 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
-import '../platform_interface/platform_interface_crashlytics.dart';
 import './utils/exception.dart';
+import '../platform_interface/platform_interface_crashlytics.dart';
 
 /// The entry point for accessing a method channel based Crashlytics instance.
 ///
@@ -92,7 +92,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   Future<void> recordError({
     required String exception,
     required String information,
-    required String reason,
+    required String? reason,
     bool fatal = false,
     String? buildId,
     List<Map<String, String>>? stackTraceElements,
