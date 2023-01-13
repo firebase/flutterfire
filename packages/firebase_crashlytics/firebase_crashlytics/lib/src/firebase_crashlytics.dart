@@ -126,7 +126,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
 
     return _delegate.recordError(
       exception: exception.toString(),
-      reason: reason.toString(),
+      reason: reason?.toString(),
       information: _information,
       stackTraceElements: stackTraceElements,
       buildId: buildId,
