@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// A library that mimicks package:firebase_core_web/firebase_core_web_interop.dart
+// A library that mimics package:firebase_core_web/firebase_core_web_interop.dart
 // for platforms that do not target dart2js``
 
 abstract class JSError {
