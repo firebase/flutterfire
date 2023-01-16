@@ -112,11 +112,8 @@ Default parameters are associated with all future events that are logged.
 As with custom parameters, register the default event parameters to ensure they
 appear in Analytics reports.
 
-Parameters to be added to the map of parameters added to every event. They will
-be added to the map of default event parameters, replacing any existing parameter
-with the same name. Valid parameter values are String and num. Setting
-a key's value to null will clear that parameter. Passing in a null value will
-clear all parameters.
+Valid parameter values are String and num. Setting a key's value to null will
+clear that parameter. Passing in a null value will clear all parameters.
 
 ```dart
 // Not supported on web
