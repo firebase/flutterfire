@@ -11,9 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'main.dart';
+
 typedef OAuthSignIn = void Function();
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
+final FirebaseAuth _auth = FirebaseAuth.instanceFor(app: app);
 
 /// Helper class to show a snackbar using the passed context.
 class ScaffoldSnackbar {
@@ -62,8 +64,10 @@ class AuthGate extends StatefulWidget {
 }
 
 class _AuthGateState extends State<AuthGate> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController =
+      TextEditingController(text: 'guillaume@invertase.io');
+  TextEditingController passwordController =
+      TextEditingController(text: 'Azeqsd123@');
   TextEditingController phoneController = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -399,8 +403,8 @@ class _AuthGateState extends State<AuthGate> {
       if (firstHint is! PhoneMultiFactorInfo) {
         return;
       }
-      final auth = FirebaseAuth.instance;
-      await auth.verifyPhoneNumber(
+
+      await _auth.verifyPhoneNumber(
         multiFactorSession: e.resolver.session,
         multiFactorInfo: firstHint,
         verificationCompleted: (_) {},
@@ -425,6 +429,9 @@ class _AuthGateState extends State<AuthGate> {
               print(e.message);
             }
           }
+
+          final user = _auth.currentUser;
+          print(user?.email);
         },
         codeAutoRetrievalTimeout: print,
       );

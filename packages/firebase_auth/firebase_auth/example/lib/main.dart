@@ -7,13 +7,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'auth.dart';
-import 'profile.dart';
-
 import 'firebase_options.dart';
+import 'profile.dart';
 
 /// Requires that a Firebase local emulator is running locally.
 /// See https://firebase.flutter.dev/docs/auth/start/#optional-prototype-and-test-with-firebase-local-emulator-suite
 bool shouldUseFirebaseEmulator = false;
+
+late final FirebaseApp app;
 
 // Requires that the Firebase Auth emulator is running locally
 // e.g via `melos run firebase:emulator`.
@@ -22,9 +23,12 @@ Future<void> main() async {
   // We're using the manual installation on non-web platforms since Google sign in plugin doesn't yet support Dart initialization.
   // See related issue: https://github.com/flutter/flutter/issues/96391
 
-  await Firebase.initializeApp(
+  app = await Firebase.initializeApp(
+    name: 'foo',
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  print(app.name);
 
   if (shouldUseFirebaseEmulator) {
     await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
@@ -74,8 +78,9 @@ class AuthExampleApp extends StatelessWidget {
                       ? constraints.maxWidth / 2
                       : constraints.maxWidth,
                   child: StreamBuilder<User?>(
-                    stream: FirebaseAuth.instance.authStateChanges(),
+                    stream: FirebaseAuth.instanceFor(app: app).userChanges(),
                     builder: (context, snapshot) {
+                      print(snapshot.data);
                       if (snapshot.hasData) {
                         return const ProfilePage();
                       }
