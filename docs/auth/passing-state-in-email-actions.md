@@ -153,7 +153,7 @@ feature, Dynamic Links need to be configured in the Firebase Console.
         intercept the incoming link.
 
 1.  Configuring Android applications:
-    1.  If you plan on handling these links from your Android appliction, the
+    1.  If you plan on handling these links from your Android application, the
         Android package name needs to be specified in the Firebase Console
         project settings. In addition, the SHA-1 and SHA-256 of the application
         certificate need to be provided.
@@ -163,7 +163,7 @@ feature, Dynamic Links need to be configured in the Firebase Console.
         [Receiving Android Dynamic Links instructions](/docs/dynamic-links/android/receive).
 
 1.  Configuring Apple applications:
-    1.  If you plan on handling these links from your appliction, the
+    1.  If you plan on handling these links from your application, the
         bundle ID needs to be specified in the Firebase Console
         project settings. In addition, the App Store ID and the Apple Developer
         Team ID also need to be specified.
