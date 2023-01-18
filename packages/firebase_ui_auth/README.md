@@ -71,6 +71,17 @@ class MyApp extends StatelessWidget {
 }
 ```
 
+## Profile screen icons
+
+If you're using `ProfileScreen`, make sure to add the following to your `pubspec.yaml`:
+
+```yaml
+fonts:
+  - family: SocialIcons
+    fonts:
+      - asset: packages/firebase_ui_auth/fonts/SocialIcons.ttf
+```
+
 ## Docs
 
 Find relevant documentation [here](https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_auth/doc)
