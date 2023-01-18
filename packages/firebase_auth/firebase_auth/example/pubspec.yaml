@@ -12,7 +12,11 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_signin_button: ^2.0.0
-  google_sign_in: ^5.4.2
+  google_sign_in:
+    git:
+      url: git@github.com:ditman/plugins.git
+      path: packages/google_sign_in/google_sign_in
+      ref: google-sign-in-web-using-gis
 
 dependency_overrides:
   _flutterfire_internals:
