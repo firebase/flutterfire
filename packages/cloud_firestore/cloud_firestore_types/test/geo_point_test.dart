@@ -3,8 +3,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:cloud_firestore_types/cloud_firestore_types.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('$GeoPoint', () {
@@ -15,10 +15,10 @@ void main() {
     });
 
     test('throws if invalid values', () {
-      expect(() => GeoPoint(-100, 0), throwsAssertionError);
-      expect(() => GeoPoint(100, 0), throwsAssertionError);
-      expect(() => GeoPoint(0, -190), throwsAssertionError);
-      expect(() => GeoPoint(0, 190), throwsAssertionError);
+      expect(() => GeoPoint(-100, 0), throwsA(isA<AssertionError>()));
+      expect(() => GeoPoint(100, 0), throwsA(isA<AssertionError>()));
+      expect(() => GeoPoint(0, -190), throwsA(isA<AssertionError>()));
+      expect(() => GeoPoint(0, 190), throwsA(isA<AssertionError>()));
     });
   });
 }

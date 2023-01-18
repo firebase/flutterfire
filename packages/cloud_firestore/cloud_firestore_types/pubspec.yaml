@@ -1,0 +1,15 @@
+name: cloud_firestore_types
+description: Common types for the cloud_firestore plugin.
+version: 1.0.0
+homepage: https://github.com/firebase/flutterfire/tree/master/packages/cloud_firestore/cloud_firestore_types
+repository: https://github.com/firebase/flutterfire/tree/master/packages/cloud_firestore/cloud_firestore_types
+
+environment:
+  sdk: ">=2.18.0 <3.0.0"
+
+dependencies:
+  collection: ^1.16.0
+  meta: ^1.8.0
+
+dev_dependencies:
+  test: ^1.22.2

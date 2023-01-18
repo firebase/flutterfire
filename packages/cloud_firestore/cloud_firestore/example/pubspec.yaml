@@ -19,6 +19,8 @@ dependency_overrides:
     path: ../../../_flutterfire_internals
   cloud_firestore_platform_interface:
     path: ../../cloud_firestore_platform_interface
+  cloud_firestore_types:
+    path: ../../cloud_firestore_types
   cloud_firestore_web:
     path: ../../cloud_firestore_web
   firebase_core:

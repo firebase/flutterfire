@@ -7,12 +7,11 @@ library cloud_firestore_platform_interface;
 
 import 'src/internal/pointer.dart';
 
+export 'package:cloud_firestore_types/cloud_firestore_types.dart';
 export 'package:collection/collection.dart' show ListEquality;
 
 export 'src/aggregate_source.dart';
-export 'src/blob.dart';
 export 'src/field_path.dart';
-export 'src/geo_point.dart';
 export 'src/get_options.dart';
 export 'src/load_bundle_task_state.dart';
 export 'src/load_bundle_task_state.dart';
@@ -41,7 +40,6 @@ export 'src/set_options.dart';
 export 'src/settings.dart';
 export 'src/snapshot_metadata.dart';
 export 'src/source.dart';
-export 'src/timestamp.dart';
 
 /// Helper method exposed to determine whether a given [collectionPath] points to
 /// a valid Firestore collection.

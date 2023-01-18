@@ -10,13 +10,13 @@ environment:
 
 dependencies:
   _flutterfire_internals: ^1.0.12
+  cloud_firestore_types: ^1.0.0
   collection: ^1.15.0
   firebase_core: ^2.4.1
   flutter:
     sdk: flutter
   meta: ^1.3.0
   plugin_platform_interface: ^2.1.3
-
 
 dev_dependencies:
   firebase_core_platform_interface: ^4.5.2

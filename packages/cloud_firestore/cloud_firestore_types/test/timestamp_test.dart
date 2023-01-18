@@ -3,8 +3,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:cloud_firestore_types/cloud_firestore_types.dart';
+import 'package:test/test.dart';
 
 const int _kBillion = 1000000000;
 const int _kStartOfTime = -62135596800;
