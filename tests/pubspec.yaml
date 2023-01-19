@@ -27,8 +27,8 @@ dependencies:
   firebase_core: any
   firebase_core_platform_interface: any
   firebase_core_web: any
-  firebase_crashlytics: any
-  firebase_crashlytics_platform_interface: any
+  firebase_crashlytics: ^3.0.11
+  firebase_crashlytics_platform_interface: ^3.3.11
   firebase_database: any
   firebase_database_platform_interface: any
   firebase_database_web: any

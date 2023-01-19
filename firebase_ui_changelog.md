@@ -2,6 +2,42 @@
 
 All notable changes for firebase_ui packages
 
+## 2023-01-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.1.9`](#firebase_ui_auth---v119)
+ - [`firebase_ui_oauth` - `v1.1.9`](#firebase_ui_oauth---v119)
+ - [`firebase_ui_oauth_apple` - `v1.0.16`](#firebase_ui_oauth_apple---v1016)
+ - [`firebase_ui_oauth_facebook` - `v1.0.16`](#firebase_ui_oauth_facebook---v1016)
+ - [`firebase_ui_oauth_google` - `v1.0.16`](#firebase_ui_oauth_google---v1016)
+ - [`firebase_ui_oauth_twitter` - `v1.0.16`](#firebase_ui_oauth_twitter---v1016)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth` - `v1.1.9`
+ - `firebase_ui_oauth_apple` - `v1.0.16`
+ - `firebase_ui_oauth_facebook` - `v1.0.16`
+ - `firebase_ui_oauth_google` - `v1.0.16`
+ - `firebase_ui_oauth_twitter` - `v1.0.16`
+
+---
+
+#### `firebase_ui_auth` - `v1.1.9`
+
+ - **DOCS**: add a font requirement ([#10293](https://github.com/firebase/flutterfire/issues/10293)). ([d94a4ba1](https://github.com/firebase/flutterfire/commit/d94a4ba1c33c0eb49f35292025c3cf964fa21a0d))
+
+
 ## 2023-01-12
 
 ### Changes

@@ -1,6 +1,6 @@
 name: firebase_ui_oauth_apple
 description: Firebase UI widgets for authentication & OAuth.
-version: 1.0.15
+version: 1.0.16
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_oauth_apple
 
 environment:
@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   firebase_auth: ^4.2.5
-  firebase_ui_oauth: ^1.1.8
+  firebase_ui_oauth: ^1.1.9
   flutter:
     sdk: flutter
 
