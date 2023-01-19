@@ -22,8 +22,7 @@ dependencies:
   meta: ^1.3.0
 
 dev_dependencies:
-  firebase_auth:
-    path: ../firebase_auth
+  firebase_auth: any
   firebase_core_platform_interface: ^4.5.2
   flutter_test:
     sdk: flutter

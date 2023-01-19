@@ -28,20 +28,9 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   firebase_core: ^2.4.1
-  firebase_app_installations:
-    path: ../
+  firebase_app_installations: any
   flutter:
     sdk: flutter
-
-dependency_overrides:
-  _flutterfire_internals:
-    path: ../../../_flutterfire_internals
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_app_installations_web:
-    path: ../../firebase_app_installations_web
-  firebase_app_installations_platform_interface:
-    path: ../../firebase_app_installations_platform_interface
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to

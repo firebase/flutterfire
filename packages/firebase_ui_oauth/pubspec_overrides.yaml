@@ -1,0 +1,27 @@
+# melos_managed_dependency_overrides: _flutterfire_internals,firebase_auth,firebase_auth_platform_interface,firebase_auth_web,firebase_core,firebase_core_platform_interface,firebase_core_web,firebase_dynamic_links,firebase_dynamic_links_platform_interface,firebase_ui_auth,firebase_ui_localizations,firebase_ui_oauth_google
+dependency_overrides:
+  intl: ^0.18.0
+  _flutterfire_internals:
+    path: ../_flutterfire_internals
+  firebase_auth:
+    path: ../firebase_auth/firebase_auth
+  firebase_auth_platform_interface:
+    path: ../firebase_auth/firebase_auth_platform_interface
+  firebase_auth_web:
+    path: ../firebase_auth/firebase_auth_web
+  firebase_core:
+    path: ../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../firebase_core/firebase_core_web
+  firebase_dynamic_links:
+    path: ../firebase_dynamic_links/firebase_dynamic_links
+  firebase_dynamic_links_platform_interface:
+    path: ../firebase_dynamic_links/firebase_dynamic_links_platform_interface
+  firebase_ui_auth:
+    path: ../firebase_ui_auth
+  firebase_ui_localizations:
+    path: ../firebase_ui_localizations
+  firebase_ui_oauth_google:
+    path: ../firebase_ui_oauth_google
