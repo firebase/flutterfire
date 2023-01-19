@@ -77,8 +77,6 @@ class User {
 
 :::
 
-**Note**: `JsonSerializable(fieldRename: ...)` and `JsonKey(ignore: true)` are currently not supported
-
 ## Creating references
 
 On their own, a model does not do anything. Instead we create a "reference" using a model.
