@@ -6,28 +6,10 @@ environment:
   flutter: ">=1.9.1+hotfix.2"
 
 dependencies:
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_database:
-    path: ../
+  firebase_core: any
+  firebase_database: any
   flutter:
     sdk: flutter
-
-dependency_overrides:
-  _flutterfire_internals:
-    path: ../../../_flutterfire_internals
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../../firebase_core/firebase_core_platform_interface
-  firebase_core_web:
-    path: ../../../firebase_core/firebase_core_web
-  firebase_database:
-    path: ../
-  firebase_database_platform_interface:
-    path: ../../firebase_database_platform_interface
-  firebase_database_web:
-    path: ../../firebase_database_web
 
 flutter:
   uses-material-design: true

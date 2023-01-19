@@ -7,28 +7,12 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.2
-  firebase_analytics:
-    path: ../../../firebase_analytics/firebase_analytics
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_in_app_messaging:
-    path: ../
-  firebase_in_app_messaging_platform_interface:
-    path: ../../firebase_in_app_messaging_platform_interface
+  firebase_analytics: any
+  firebase_core: any
+  firebase_in_app_messaging: any
+  firebase_in_app_messaging_platform_interface: any
   flutter:
     sdk: flutter
-
-dependency_overrides:
-  _flutterfire_internals:
-    path: ../../../_flutterfire_internals
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../../firebase_core/firebase_core_platform_interface
-  firebase_core_web:
-    path: ../../../firebase_core/firebase_core_web
-  firebase_in_app_messaging_platform_interface:
-    path: ../../firebase_in_app_messaging_platform_interface
 
 flutter:
   uses-material-design: true

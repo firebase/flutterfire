@@ -1,0 +1,2 @@
+dependency_overrides:
+  intl: ^0.18.0

@@ -6,27 +6,11 @@ environment:
   flutter: '>=1.12.13+hotfix.4'
 
 dependencies:
-  cloud_functions:
-    path: ../
+  cloud_functions: any
   cupertino_icons: ^0.1.2
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
+  firebase_core: any
   flutter:
     sdk: flutter
-
-dependency_overrides:
-  _flutterfire_internals:
-    path: ../../../_flutterfire_internals
-  cloud_functions_platform_interface:
-    path: ../../../cloud_functions/cloud_functions_platform_interface
-  cloud_functions_web:
-    path: ../../../cloud_functions/cloud_functions_web
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../../firebase_core/firebase_core_platform_interface
-  firebase_core_web:
-    path: ../../../firebase_core/firebase_core_web
 
 flutter:
   uses-material-design: true

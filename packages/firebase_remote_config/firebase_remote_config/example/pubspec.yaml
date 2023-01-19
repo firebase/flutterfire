@@ -9,26 +9,10 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.0
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_remote_config:
-    path: ../
+  firebase_core: any
+  firebase_remote_config: any
   flutter:
     sdk: flutter
-
-dependency_overrides:
-  _flutterfire_internals:
-    path: ../../../_flutterfire_internals
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../../firebase_core/firebase_core_platform_interface
-  firebase_core_web:
-    path: ../../../firebase_core/firebase_core_web
-  firebase_remote_config_platform_interface:
-    path: ../../firebase_remote_config_platform_interface
-  firebase_remote_config_web:
-    path: ../../firebase_remote_config_web
 
 flutter:
   uses-material-design: true

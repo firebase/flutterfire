@@ -1,0 +1,19 @@
+# melos_managed_dependency_overrides: _flutterfire_internals,firebase_core,firebase_core_platform_interface,firebase_core_web,firebase_database,firebase_database_platform_interface,firebase_database_web,firebase_ui_localizations
+dependency_overrides:
+  intl: ^0.18.0
+  _flutterfire_internals:
+    path: ../_flutterfire_internals
+  firebase_core:
+    path: ../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../firebase_core/firebase_core_web
+  firebase_database:
+    path: ../firebase_database/firebase_database
+  firebase_database_platform_interface:
+    path: ../firebase_database/firebase_database_platform_interface
+  firebase_database_web:
+    path: ../firebase_database/firebase_database_web
+  firebase_ui_localizations:
+    path: ../firebase_ui_localizations
