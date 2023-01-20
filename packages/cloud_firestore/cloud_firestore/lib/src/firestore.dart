@@ -287,7 +287,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// By default transactions are limited to 30 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
   ///
-  /// By default transactions will retry 5 times. You can change the number of attemps
+  /// By default transactions will retry 5 times. You can change the number of attempts
   /// with [maxAttempts]. Attempts should be at least 1.
   Future<T> runTransaction<T>(
     TransactionHandler<T> transactionHandler, {
