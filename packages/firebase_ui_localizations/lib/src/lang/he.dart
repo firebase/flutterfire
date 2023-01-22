@@ -172,7 +172,7 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get registerHintText => "אין לך חשבון?"; //"Don't have an account?";
 
   @override
-  String get registerText => "הרשםה"; //"Register";
+  String get registerText => "הרשמה"; //"Register";
 
   @override
   String get resetPasswordButtonLabel => "איפוס סיסמה"; //"Reset password";
