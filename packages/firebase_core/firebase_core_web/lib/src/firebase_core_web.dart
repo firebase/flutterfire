@@ -96,20 +96,43 @@ class FirebaseCoreWeb extends FirebasePlatform {
     return [];
   }
 
+  final String _defaultTrustedPolicyName = 'flutterfire-';
+
   /// Injects a `script` with a `src` dynamically into the head of the current
   /// document.
   Future<void> _injectSrcScript(String src, String windowVar) async {
+    DomTrustedScriptUrl? trustedUrl;
+    final trustedPolicyName = _defaultTrustedPolicyName + windowVar;
+    if (trustedTypes != null) {
+      console.debug(
+        'TrustedTypes available. Creating policy:',
+        trustedPolicyName,
+      );
+      final DomTrustedTypePolicyFactory factory = trustedTypes!;
+      try {
+        final DomTrustedTypePolicy policy = factory.createPolicy(
+          _defaultTrustedPolicyName,
+          DomTrustedTypePolicyOptions(
+            createScriptURL: allowInterop((String url) => src),
+          ),
+        );
+        trustedUrl = policy.createScriptURL(src);
+      } catch (e) {
+        rethrow;
+      }
+    }
     ScriptElement script = ScriptElement();
     script.type = 'text/javascript';
     script.crossOrigin = 'anonymous';
     script.text = '''
       window.ff_trigger_$windowVar = async (callback) => {
-        callback(await import("$src"));
+        callback(await import("${trustedUrl?.toString() ?? src}"));
       };
     ''';
 
     assert(document.head != null);
     document.head!.append(script);
+
     Completer completer = Completer();
 
     context.callMethod('ff_trigger_$windowVar', [
