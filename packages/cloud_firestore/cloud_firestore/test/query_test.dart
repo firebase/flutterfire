@@ -3,15 +3,42 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_document_reference.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import './mock.dart';
+import 'test_firestore_message_codec.dart';
 
 void main() {
   setupCloudFirestoreMocks();
   late FirebaseFirestore firestore;
   Query? query;
+
+  MethodChannelFirebaseFirestore.channel = const MethodChannel(
+    'plugins.flutter.io/firebase_firestore',
+    StandardMethodCodec(TestFirestoreMessageCodec()),
+  );
+
+  MethodChannelFirebaseFirestore.channel.setMockMethodCallHandler((call) async {
+    if (call.method == 'DocumentReference#get') {
+      DocumentReferencePlatform ref = call.arguments['reference'];
+      if (ref.path == 'movies/exists') {
+        return {
+          'data': {
+            'reference': ref,
+          },
+          'metadata': {
+            'hasPendingWrites': false,
+            'isFromCache': false,
+          }
+        };
+      }
+    }
+  });
 
   group('$Query', () {
     setUpAll(() async {
@@ -308,6 +335,20 @@ void main() {
         q = q.endAt(['456']);
         expect(q.parameters['endBefore'], isNull);
         expect(q.parameters['endAt'], equals(['456']));
+      });
+
+      test('startAfterDocument() encode DocumentReference to Platform class',
+          () async {
+        DocumentSnapshot doc =
+            await firestore.collection('/movies').doc('exists').get();
+        Query q = query!.orderBy('reference').startAfterDocument(doc);
+        expect(
+          q.parameters['startAfter'].first,
+          allOf([
+            isA<MethodChannelDocumentReference>(),
+            isA<DocumentReferencePlatform>(),
+          ]),
+        );
       });
     });
 
