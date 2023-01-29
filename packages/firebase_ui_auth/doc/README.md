@@ -33,7 +33,7 @@ flutterfire configure
 Initialize firebase app:
 
 ```dart
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
