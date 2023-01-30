@@ -18,19 +18,21 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get booleanLabel => "בוליאני"; //"Boolean";
 
   @override
-  String get cancelLabel => "בטל";//"cancel";
+  String get cancelLabel => "בטל"; //"cancel";
 
   @override
   String get chooseACountry => "בחר מדינה"; //"Choose a country";
 
   @override
-  String get confirmPasswordDoesNotMatchErrorText => "הסיסמאות אינן תואמות"; //"Passwords do not match";
+  String get confirmPasswordDoesNotMatchErrorText =>
+      "הסיסמאות אינן תואמות"; //"Passwords do not match";
 
   @override
-  String get confirmPasswordInputLabel => "אשר סיסמה";// "Confirm password";
+  String get confirmPasswordInputLabel => "אשר סיסמה"; // "Confirm password";
 
   @override
-  String get confirmPasswordIsRequiredErrorText => "אשר את הסיסמה שלך"; //"Confirm your password";
+  String get confirmPasswordIsRequiredErrorText =>
+      "אשר את הסיסמה שלך"; //"Confirm your password";
 
   @override
   String get continueText => "המשך"; //"Continue";
@@ -59,28 +61,34 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get emailInputLabel => "דואר אלקטרוני"; //"Email";
 
   @override
-  String get emailIsRequiredErrorText => "דואר אלקטרוני נדרש";//"Email is required";
+  String get emailIsRequiredErrorText =>
+      "דואר אלקטרוני נדרש"; //"Email is required";
 
   @override
-  String get emailLinkSignInButtonLabel => "כניסה באמצעות קישור קסם"; //"Sign in with magic link";
+  String get emailLinkSignInButtonLabel =>
+      "כניסה באמצעות קישור קסם"; //"Sign in with magic link";
 
   @override
-  String get emailTakenErrorText => """"חשבון עם דוא"ל זה כבר קיים"""; //"An account with this email already exists";
+  String get emailTakenErrorText =>
+      """"חשבון עם דוא"ל זה כבר קיים"""; //"An account with this email already exists";
 
   @override
   String get enable => "הפעל"; //"Enable";
 
   @override
-  String get enableMoreSignInMethods => "הפעל שיטות כניסה נוספות"; //"Enable more sign-in methods";
+  String get enableMoreSignInMethods =>
+      "הפעל שיטות כניסה נוספות"; //"Enable more sign-in methods";
 
   @override
   String get enterSMSCodeText => "הזן קוד SMS"; //"Enter SMS code";
 
   @override
-  String get findProviderForEmailTitleText => """הזן את הדוא"ל שלך כדי להמשיך"""; //"Enter your email to continue";
+  String get findProviderForEmailTitleText =>
+      """הזן את הדוא"ל שלך כדי להמשיך"""; //"Enter your email to continue";
 
   @override
-  String get forgotPasswordButtonLabel => "שכחת את הסיסמה?";//"Forgotten password?";
+  String get forgotPasswordButtonLabel =>
+      "שכחת את הסיסמה?"; //"Forgotten password?";
 
   @override
   String get forgotPasswordHintText =>
@@ -99,7 +107,8 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get invalidCountryCode => "קוד מדינה לא חוקי"; //"Invalid code";
 
   @override
-  String get isNotAValidEmailErrorText => """ספק דוא"ל חוקי"""; //Provide a valid email";
+  String get isNotAValidEmailErrorText =>
+      """ספק דוא"ל חוקי"""; //Provide a valid email";
 
   @override
   String get latitudeLabel => "קו רוחב"; //"latitude";
@@ -138,7 +147,8 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get passwordInputLabel => "סיסמה"; //"Password";
 
   @override
-  String get passwordIsRequiredErrorText => "נדרשת סיסמה"; //"Password is required";
+  String get passwordIsRequiredErrorText =>
+      "נדרשת סיסמה"; //"Password is required";
 
   @override
   String get passwordResetEmailSentText =>
@@ -148,19 +158,23 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get phoneInputLabel => "מספר טלפון"; //"Phone number";
 
   @override
-  String get phoneNumberInvalidErrorText => "מספר הטלפון אינו חוקי"; //"Phone number is invalid";
+  String get phoneNumberInvalidErrorText =>
+      "מספר הטלפון אינו חוקי"; //"Phone number is invalid";
 
   @override
-  String get phoneNumberIsRequiredErrorText => "נדרש מספר טלפון"; //"Phone number is required";
+  String get phoneNumberIsRequiredErrorText =>
+      "נדרש מספר טלפון"; //"Phone number is required";
 
   @override
-  String get phoneVerificationViewTitleText => "הזן את מספר הטלפון שלך"; //"Enter your phone number";
+  String get phoneVerificationViewTitleText =>
+      "הזן את מספר הטלפון שלך"; //"Enter your phone number";
 
   @override
   String get profile => "פרופיל משתמש"; //"Profile";
 
   @override
-  String get provideEmail => """הזן את כתובת הדוא"ל והסיסמה שלך"""; //"Provide your email and password";
+  String get provideEmail =>
+      """הזן את כתובת הדוא"ל והסיסמה שלך"""; //"Provide your email and password";
 
   @override
   String get referenceLabel => "הפניה"; //"reference";
@@ -193,26 +207,32 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get signInText => "כניסה"; //"Sign in";
 
   @override
-  String get signInWithAppleButtonText => "התחברות באמצעות חשבון משתמש Apple"; //"Sign in with Apple";
+  String get signInWithAppleButtonText =>
+      "התחברות באמצעות חשבון משתמש Apple"; //"Sign in with Apple";
 
   @override
   String get signInWithEmailLinkSentText =>
       """שלחנו לך דוא"ל עם קישור קסם. בדוק את הדואר האלקטרוני שלך ולחץ על הקישור כדי להיכנס"""; //"We've sent you an email with a magic link. Check your email and follow the link to sign in";
 
   @override
-  String get signInWithEmailLinkViewTitleText => "כניסה באמצעות קישור קסם"; //"Sign in with magic link";
+  String get signInWithEmailLinkViewTitleText =>
+      "כניסה באמצעות קישור קסם"; //"Sign in with magic link";
 
   @override
-  String get signInWithFacebookButtonText => "כניסה באמצעות חשבון משתמש פייסבוק"; //"Sign in with Facebook";
+  String get signInWithFacebookButtonText =>
+      "כניסה באמצעות חשבון משתמש פייסבוק"; //"Sign in with Facebook";
 
   @override
-  String get signInWithGoogleButtonText => "כניסה באמצעות חשבון משתמש של Google"; //"Sign in with Google";
+  String get signInWithGoogleButtonText =>
+      "כניסה באמצעות חשבון משתמש של Google"; //"Sign in with Google";
 
   @override
-  String get signInWithPhoneButtonText => "כניסה באמצעות מספר טלפון"; //"Sign in with phone";
+  String get signInWithPhoneButtonText =>
+      "כניסה באמצעות מספר טלפון"; //"Sign in with phone";
 
   @override
-  String get signInWithTwitterButtonText => "היכנס באמצעות חשבון משתמש בטוויטר"; //"Sign in with Twitter";
+  String get signInWithTwitterButtonText =>
+      "היכנס באמצעות חשבון משתמש בטוויטר"; //"Sign in with Twitter";
 
   @override
   String get signOutButtonText => "התנתקות"; //"Sign out";
@@ -234,13 +254,15 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get typeLabel => "סוג"; //"type";
 
   @override
-  String get unknownError => "אירעה שגיאה לא ידועה"; //"An unknown error occurred";
+  String get unknownError =>
+      "אירעה שגיאה לא ידועה"; //"An unknown error occurred";
 
   @override
   String get updateLabel => "עדכון"; //"update";
 
   @override
-  String get userNotFoundErrorText => "החשבון אינו קיים"; //"Account doesn't exist";
+  String get userNotFoundErrorText =>
+      "החשבון אינו קיים"; //"Account doesn't exist";
 
   @override
   String get valueLabel => "ערך"; //"value";
@@ -249,7 +271,8 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get verifyCodeButtonText => "אמת"; //"Verify";
 
   @override
-  String get verifyingSMSCodeText => "אימות קוד SMS..."; //"Verifying SMS code…";
+  String get verifyingSMSCodeText =>
+      "אימות קוד SMS..."; //"Verifying SMS code…";
 
   @override
   String get verifyItsYouText => "וודא שזה אתה"; //"Verify that it's you";
