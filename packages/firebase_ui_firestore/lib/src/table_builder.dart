@@ -221,7 +221,8 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
     onSelectedRows: widget.onSelectedRows,
   );
 
-  bool get selectionEnabled => widget.canDeleteItems;
+  bool get selectionEnabled =>
+      widget.canDeleteItems || (widget.onSelectedRows != null);
 
   @override
   void initState() {
