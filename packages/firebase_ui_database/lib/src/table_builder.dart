@@ -694,7 +694,7 @@ class _ValueView extends StatelessWidget {
   Widget build(BuildContext context) {
     final value = this.value;
     if (value == null) {
-      return Text('null', style: Theme.of(context).textTheme.caption);
+      return Text('null', style: Theme.of(context).textTheme.bodySmall);
     } else {
       return Text(value.toString());
     }

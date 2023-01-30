@@ -40,9 +40,9 @@ bool isValidatorAnnotation(ElementAnnotation annotation) {
   final element = annotation.element;
   if (element == null || element is! ConstructorElement) return false;
 
-  return element.enclosingElement3.allSupertypes.any((superType) {
-    return superType.element2.name == 'Validator' &&
-        superType.element2.librarySource.uri.toString() ==
+  return element.enclosingElement.allSupertypes.any((superType) {
+    return superType.element.name == 'Validator' &&
+        superType.element.librarySource.uri.toString() ==
             'package:cloud_firestore_odm/src/validator.dart';
   });
 }
