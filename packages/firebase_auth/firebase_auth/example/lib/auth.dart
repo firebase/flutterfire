@@ -138,7 +138,7 @@ class _AuthGateState extends State<AuthGate> {
                             visible: error.isNotEmpty,
                             child: MaterialBanner(
                               backgroundColor: Theme.of(context).errorColor,
-                              content: Text(error),
+                              content: SelectableText(error),
                               actions: [
                                 TextButton(
                                   onPressed: () {
