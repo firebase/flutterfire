@@ -72,7 +72,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           # TODO(Lyokone): upgrade to stable when https://github.com/flutter/flutter/issues/118469 is closed
-          version: '3.3.10'
+          flutter-version: '3.3.10'
           cache: true
       - uses: bluefireteam/melos-action@v1
         with:
