@@ -44,7 +44,7 @@ class AdvancedJson {
   @JsonKey(name: 'LAST_NAME')
   final String? lastName;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final String? ignored;
 
   Map<String, Object?> toJson() => _$AdvancedJsonToJson(this);
@@ -77,7 +77,7 @@ class _PrivateAdvancedJson {
   @JsonKey(name: 'LAST_NAME')
   final String? lastName;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final String? ignored;
 
   Map<String, Object?> toJson() => _$PrivateAdvancedJsonToJson(this);

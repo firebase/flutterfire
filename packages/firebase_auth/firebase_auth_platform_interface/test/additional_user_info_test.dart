@@ -39,7 +39,7 @@ void main() {
         expect(
             result,
             equals(
-                '$AdditionalUserInfo(isNewUser: $kMockIsNewUser, profile: ${kMockProfile.toString()}, providerId: $kMockProviderId, username: $kMockUsername)'));
+                '$AdditionalUserInfo(isNewUser: $kMockIsNewUser, profile: $kMockProfile, providerId: $kMockProviderId, username: $kMockUsername)'));
       });
     });
   });

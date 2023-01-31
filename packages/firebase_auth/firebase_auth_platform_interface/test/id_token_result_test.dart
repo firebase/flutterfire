@@ -59,7 +59,7 @@ void main() {
 
     test('toString()', () {
       expect(idTokenResult.toString(),
-          '$IdTokenResult(authTime: ${idTokenResult.authTime}, claims: ${kMockClaims.toString()}, expirationTime: ${idTokenResult.expirationTime}, issuedAtTime: ${idTokenResult.issuedAtTime}, signInProvider: $kMockSignInProvider, token: $kMockToken)');
+          '$IdTokenResult(authTime: ${idTokenResult.authTime}, claims: $kMockClaims, expirationTime: ${idTokenResult.expirationTime}, issuedAtTime: ${idTokenResult.issuedAtTime}, signInProvider: $kMockSignInProvider, token: $kMockToken)');
     });
   });
 }

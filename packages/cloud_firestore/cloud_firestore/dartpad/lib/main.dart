@@ -3,8 +3,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -100,7 +100,7 @@ class _FilmListState extends State<FilmList> {
               builder: (context, _) {
                 return Text(
                   'Latest Snapshot: ${DateTime.now()}',
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                 );
               },
             )

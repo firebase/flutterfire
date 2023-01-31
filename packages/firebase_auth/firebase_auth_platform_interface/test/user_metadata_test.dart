@@ -53,7 +53,7 @@ void main() {
 
     test('toString()', () {
       expect(userMetadata.toString(),
-          'UserMetadata(creationTime: ${userMetadata.creationTime.toString()}, lastSignInTime: ${userMetadata.lastSignInTime.toString()})');
+          'UserMetadata(creationTime: ${userMetadata.creationTime}, lastSignInTime: ${userMetadata.lastSignInTime})');
     });
   });
 }

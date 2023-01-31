@@ -4,6 +4,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'platform_widget.dart';
 
 class Subtitle extends PlatformWidget {
@@ -30,7 +31,7 @@ class Subtitle extends PlatformWidget {
       text,
       style: Theme.of(context)
           .textTheme
-          .subtitle1!
+          .titleMedium!
           .copyWith(fontWeight: fontWeight),
     );
   }

@@ -51,6 +51,6 @@ class IdTokenResult {
 
   @override
   String toString() {
-    return '$IdTokenResult(authTime: $authTime, claims: ${claims.toString()}, expirationTime: $expirationTime, issuedAtTime: $issuedAtTime, signInProvider: $signInProvider, token: $token)';
+    return '$IdTokenResult(authTime: $authTime, claims: $claims, expirationTime: $expirationTime, issuedAtTime: $issuedAtTime, signInProvider: $signInProvider, token: $token)';
   }
 }

@@ -100,5 +100,5 @@ class Settings {
       );
 
   @override
-  String toString() => 'Settings(${asMap.toString()})';
+  String toString() => 'Settings($asMap)';
 }

@@ -222,7 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onPressed: () => _deleteMessage(snapshot),
                       icon: const Icon(Icons.delete),
                     ),
-                    title: Text('$index: ${snapshot.value.toString()}'),
+                    title: Text('$index: ${snapshot.value}'),
                   ),
                 );
               },
