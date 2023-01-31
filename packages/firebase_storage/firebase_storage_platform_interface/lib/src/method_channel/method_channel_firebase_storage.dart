@@ -24,36 +24,36 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     // is no need to register the caller more than once.
     if (_initialized) return;
 
-    channel.setMethodCallHandler((MethodCall call) async {
-      Map<dynamic, dynamic> arguments = call.arguments;
+    // channel.setMethodCallHandler((MethodCall call) async {
+    //   Map<dynamic, dynamic> arguments = call.arguments;
 
-      switch (call.method) {
-        case 'Task#onProgress':
-          return _handleTaskStateChange(TaskState.running, arguments);
-        case 'Task#onPaused':
-          return _handleTaskStateChange(TaskState.paused, arguments);
-        case 'Task#onSuccess':
-          return _handleTaskStateChange(TaskState.success, arguments);
-        case 'Task#onCanceled':
-          return _sendTaskException(
-              arguments['handle'],
-              FirebaseException(
-                plugin: 'firebase_storage',
-                code: 'canceled',
-                message: 'User canceled the upload/download.',
-              ));
-        case 'Task#onFailure':
-          Map<String, dynamic> errorMap =
-              Map<String, dynamic>.from(arguments['error']);
-          return _sendTaskException(
-              arguments['handle'],
-              FirebaseException(
-                plugin: 'firebase_storage',
-                code: errorMap['code'],
-                message: errorMap['message'],
-              ));
-      }
-    });
+    //   switch (call.method) {
+    //     case 'Task#onProgress':
+    //       return _handleTaskStateChange(TaskState.running, arguments);
+    //     case 'Task#onPaused':
+    //       return _handleTaskStateChange(TaskState.paused, arguments);
+    //     case 'Task#onSuccess':
+    //       return _handleTaskStateChange(TaskState.success, arguments);
+    //     case 'Task#onCanceled':
+    //       return _sendTaskException(
+    //           arguments['handle'],
+    //           FirebaseException(
+    //             plugin: 'firebase_storage',
+    //             code: 'canceled',
+    //             message: 'User canceled the upload/download.',
+    //           ));
+    //     case 'Task#onFailure':
+    //       Map<String, dynamic> errorMap =
+    //           Map<String, dynamic>.from(arguments['error']);
+    //       return _sendTaskException(
+    //           arguments['handle'],
+    //           FirebaseException(
+    //             plugin: 'firebase_storage',
+    //             code: errorMap['code'],
+    //             message: errorMap['message'],
+    //           ));
+    //   }
+    // });
 
     _initialized = true;
   }

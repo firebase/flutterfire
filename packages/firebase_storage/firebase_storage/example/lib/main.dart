@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'dart:io' as io;
+import 'dart:isolate';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,15 +12,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 import 'save_as/save_as.dart';
+
+late RootIsolateToken rootIsolateToken;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  rootIsolateToken = RootIsolateToken.instance!;
 
   final emulatorHost =
       (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)
@@ -41,6 +46,10 @@ enum UploadType {
 
   /// Clears any tasks from the list.
   clear,
+
+  /// Uploads a file using isolate
+  /// (only available on Android and iOS)
+  isolate,
 }
 
 /// The entry point of the application.
@@ -153,6 +162,13 @@ class _TaskManager extends State<TaskManager> {
           _uploadTasks = [];
         });
         break;
+
+      case UploadType.isolate:
+        print('isolate');
+        final result =
+            await Isolate.spawn(_uploadWithIsolate, rootIsolateToken);
+
+        break;
     }
   }
 
@@ -224,6 +240,11 @@ class _TaskManager extends State<TaskManager> {
                 child: Text('Upload local file'),
                 value: UploadType.file,
               ),
+              const PopupMenuItem(
+                // ignore: sort_child_properties_last
+                child: Text('Upload local file with isolate'),
+                value: UploadType.isolate,
+              ),
               if (_uploadTasks.isNotEmpty)
                 const PopupMenuItem(
                   // ignore: sort_child_properties_last
@@ -255,6 +276,29 @@ class _TaskManager extends State<TaskManager> {
             ),
     );
   }
+}
+
+Future<void> _uploadWithIsolate(
+  RootIsolateToken rootIsolateToken,
+) async {
+  BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
+
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  print(sharedPreferences.getBool('isDebug'));
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  String dataUrl = 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==';
+
+  Reference ref = FirebaseStorage.instance
+      .ref()
+      .child('flutter-tests')
+      .child('/put-string-example.txt');
+
+  final result = await ref.putString(dataUrl, format: PutStringFormat.dataUrl);
+  print(result);
+  // return result;
 }
 
 /// Displays the current state of a single UploadTask.
