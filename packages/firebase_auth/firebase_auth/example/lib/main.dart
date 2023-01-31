@@ -7,9 +7,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'auth.dart';
-import 'profile.dart';
-
 import 'firebase_options.dart';
+import 'profile.dart';
 
 /// Requires that a Firebase local emulator is running locally.
 /// See https://firebase.flutter.dev/docs/auth/start/#optional-prototype-and-test-with-firebase-local-emulator-suite
@@ -61,7 +60,7 @@ class AuthExampleApp extends StatelessWidget {
                           children: [
                             Text(
                               'Firebase Auth Desktop',
-                              style: Theme.of(context).textTheme.headline4,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           ],
                         ),
