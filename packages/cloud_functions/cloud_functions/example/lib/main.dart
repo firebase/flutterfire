@@ -3,11 +3,13 @@
 // found in the LICENSE file.
 
 import 'dart:core';
+import 'dart:isolate';
 
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cloud_functions_example/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +23,20 @@ Future<void> main() async {
   FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
 
   runApp(MyApp());
+}
+
+Future<void> _isolateCallFunction(RootIsolateToken rootIsolateToken) async {
+  BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  final result = await FirebaseFunctions.instance.httpsCallable(
+    'listFruit',
+    options: HttpsCallableOptions(
+      timeout: const Duration(seconds: 5),
+    ),
+  )();
+
+  result.data.forEach(print);
 }
 
 class MyApp extends StatefulWidget {
@@ -39,15 +55,27 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Firebase Functions Example'),
         ),
-        body: Center(
-          child: ListView.builder(
-            itemCount: fruit.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text('${fruit[index]}'),
-              );
-            },
-          ),
+        body: Column(
+          children: [
+            Center(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: fruit.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text('${fruit[index]}'),
+                  );
+                },
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                RootIsolateToken rootIsolateToken = RootIsolateToken.instance!;
+                await Isolate.spawn(_isolateCallFunction, rootIsolateToken);
+              },
+              child: const Text('Call Function in isolate'),
+            ),
+          ],
         ),
         floatingActionButton: Builder(
           builder: (context) => FloatingActionButton.extended(
