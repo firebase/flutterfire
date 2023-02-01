@@ -53,27 +53,6 @@ first crash report to Firebase.
     flutter run
     ```
 
-1.  _(Optional)_ If your Flutter project uses the
-   [`--split-debug-info` flag](https://docs.flutter.dev/perf/app-size#reducing-app-size){: .external}
-   (and, optionally, the
-   [`--obfuscate` flag](https://docs.flutter.dev/deployment/obfuscate){: .external}),
-   you need to use the [{{firebase_cli}}](/docs/cli) (v.11.9.0+) to upload
-   Android symbols.
-
-   From the root directory of your Flutter project, run the following command:
-
-   <pre class="devsite-terminal" data-terminal-prefix="your-flutter-proj$ ">firebase crashlytics:symbols:upload --app=<var class="readonly">APP_ID</var> <var class="readonly">PATH/TO</var>/symbols</pre>
-
-   The <code><var>PATH/TO</var>/symbols</code> directory is the same directory
-   that you pass to the `--split-debug-info` flag when building the application.
-
-   Note: Support for `--split-debug-info` is currently only available on
-   Android.<br>For Apple platforms, support for this feature will be
-   available in an upcoming release, but you can access it now by using the
-   [master channel](https://docs.flutter.dev/development/tools/sdk/releases){: .external}
-   of the Flutter SDK.
-
-
 ## **Step 2**: Configure crash handlers {: #configure-crash-handlers}
 
 You can automatically catch all errors that are thrown within the Flutter
