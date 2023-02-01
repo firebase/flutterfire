@@ -2,9 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:isolate';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'firebase_options.dart';
 
@@ -40,6 +43,11 @@ enum MovieQuery {
   rated,
   sciFi,
   fantasy,
+}
+
+enum MenuOptions {
+  resetLikes,
+  requestInIsolate,
 }
 
 extension on Query<Movie> {
@@ -78,6 +86,20 @@ class FirestoreExampleApp extends StatelessWidget {
         body: Center(child: FilmList()),
       ),
     );
+  }
+}
+
+Future<void> _isolateGetDocument(RootIsolateToken rootIsolateToken) async {
+  BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  final movies = await moviesRef.get(
+    const GetOptions(
+      serverTimestampBehavior: ServerTimestampBehavior.previous,
+    ),
+  );
+  for (final movie in movies.docs) {
+    print('Isolate: ${movie.data().title} - ${movie.data().likes}');
   }
 }
 
@@ -148,13 +170,28 @@ class _FilmListState extends State<FilmList> {
               ];
             },
           ),
-          PopupMenuButton<String>(
-            onSelected: (_) => _resetLikes(),
+          PopupMenuButton<MenuOptions>(
+            onSelected: (value) {
+              switch (value) {
+                case MenuOptions.resetLikes:
+                  _resetLikes();
+                  break;
+                case MenuOptions.requestInIsolate:
+                  RootIsolateToken rootIsolateToken =
+                      RootIsolateToken.instance!;
+                  Isolate.spawn(_isolateGetDocument, rootIsolateToken);
+                  break;
+              }
+            },
             itemBuilder: (BuildContext context) {
               return [
                 const PopupMenuItem(
-                  value: 'reset_likes',
+                  value: MenuOptions.resetLikes,
                   child: Text('Reset like counts (WriteBatch)'),
+                ),
+                const PopupMenuItem(
+                  value: MenuOptions.requestInIsolate,
+                  child: Text('Request in isolate'),
                 ),
               ];
             },
