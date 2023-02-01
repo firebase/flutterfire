@@ -289,7 +289,18 @@ public class FlutterFirebasePerformancePlugin
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return Tasks.call(() -> new HashMap<String, Object>() {});
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+      () -> {
+        try {
+          taskCompletionSource.setResult(new HashMap<String, Object>() {});
+        } catch (Exception e) {
+          taskCompletionSource.setException(e);
+        }
+      });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
