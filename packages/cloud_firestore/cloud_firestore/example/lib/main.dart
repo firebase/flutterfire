@@ -101,6 +101,13 @@ Future<void> _isolateGetDocument(RootIsolateToken rootIsolateToken) async {
   for (final movie in movies.docs) {
     print('Isolate: ${movie.data().title} - ${movie.data().likes}');
   }
+
+  // Will NOT work
+  // moviesRef.snapshots().listen((snapshot) {
+  //   for (final movie in snapshot.docs) {
+  //     print('Isolate: ${movie.data().title} - ${movie.data().likes}');
+  //   }
+  // });
 }
 
 /// Holds all example app films
