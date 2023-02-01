@@ -13,10 +13,19 @@ class GoogleProvider extends OAuthProvider {
   final providerId = 'google.com';
 
   /// The Google client ID.
-  /// Will be ignored on Android since it's not needed.
+  /// Primarily required for desktop platforms.
+  /// Ignored on Android and iOS (if `iOSPreferPlist` is true).
   final String clientId;
 
+  /// When true, the Google Sign In plugin will use the GoogleService-Info.plist
+  /// for configuration instead of the `clientId` parameter.
+  final bool iOSPreferPlist;
+
+  /// The redirect URL to use for the Google Sign In plugin.
+  /// Required on desktop platforms.
   final String? redirectUri;
+
+  /// The list of requested authroization scopes requested when signing in.
   final List<String>? scopes;
 
   late GoogleSignIn provider;
@@ -37,23 +46,29 @@ class GoogleProvider extends OAuthProvider {
     required this.clientId,
     this.redirectUri,
     this.scopes,
+    this.iOSPreferPlist = false,
   }) {
     firebaseAuthProvider.setCustomParameters(const {
       'prompt': 'select_account',
     });
 
-    // `clientId` is not supported on Android and is misinterpreted as a
-    // `serverClientId`. This is a workaround to avoid the error.
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      provider = GoogleSignIn(
-        scopes: scopes ?? [],
-      );
+    if (_ignoreClientId()) {
+      provider = GoogleSignIn(scopes: scopes ?? []);
     } else {
       provider = GoogleSignIn(
-        scopes: scopes ?? [],
         clientId: clientId,
+        scopes: scopes ?? [],
       );
     }
+  }
+
+  bool _ignoreClientId() {
+    if (defaultTargetPlatform == TargetPlatform.android) return true;
+    if (defaultTargetPlatform == TargetPlatform.iOS && iOSPreferPlist) {
+      return true;
+    }
+
+    return false;
   }
 
   @override
