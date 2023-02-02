@@ -191,11 +191,15 @@
   NSMutableArray *paths = [NSMutableArray array];
   NSMutableArray *documents = [NSMutableArray array];
   NSMutableArray *metadatas = [NSMutableArray array];
-  FIRServerTimestampBehavior serverTimestampBehavior =
-      [self toServerTimestampBehavior:FLTFirebaseFirestorePlugin
-                                          .serverTimestampMap[@([querySnapshot hash])]];
+  NSString *timestampBehaviorString =
+      FLTFirebaseFirestorePlugin.serverTimestampMap[@([querySnapshot hash])];
 
-  [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:@([querySnapshot hash])];
+  FIRServerTimestampBehavior serverTimestampBehavior =
+      [self toServerTimestampBehavior:timestampBehaviorString];
+
+  if (timestampBehaviorString != nil) {
+    [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:@([querySnapshot hash])];
+  }
 
   for (FIRDocumentSnapshot *document in querySnapshot.documents) {
     [paths addObject:document.reference.path];
