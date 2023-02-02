@@ -9,7 +9,6 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.perf.FirebasePerformance;
 import com.google.firebase.perf.metrics.HttpMetric;
@@ -292,13 +291,13 @@ public class FlutterFirebasePerformancePlugin
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
-      () -> {
-        try {
-          taskCompletionSource.setResult(new HashMap<String, Object>() {});
-        } catch (Exception e) {
-          taskCompletionSource.setException(e);
-        }
-      });
+        () -> {
+          try {
+            taskCompletionSource.setResult(new HashMap<String, Object>() {});
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
 
     return taskCompletionSource.getTask();
   }
