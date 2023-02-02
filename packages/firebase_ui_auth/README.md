@@ -6,7 +6,7 @@ Firebase UI Auth is a set of Flutter widgets and utilities designed to help you 
 
 > Please contribute to the [discussion](https://github.com/firebase/flutterfire/discussions/6978) with feedback.
 
-## Platoform support
+## Platform support
 
 | Feature/platform   | Android | iOS | Web              | macOS            | Windows          | Linux            |
 | ------------------ | ------- | --- | ---------------- | ---------------- | ---------------- | ---------------- |
@@ -69,6 +69,17 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+```
+
+## Profile screen icons
+
+If you're using `ProfileScreen`, make sure to add the following to your `pubspec.yaml`:
+
+```yaml
+fonts:
+  - family: SocialIcons
+    fonts:
+      - asset: packages/firebase_ui_auth/fonts/SocialIcons.ttf
 ```
 
 ## Docs

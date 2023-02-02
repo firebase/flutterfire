@@ -262,7 +262,9 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       // All order by fields must exist within the snapshot
       if (field != FieldPath.documentId) {
         try {
-          values.add(documentSnapshot.get(field));
+          final codecValue =
+              _CodecUtility.valueEncode(documentSnapshot.get(field));
+          values.add(codecValue);
         } on StateError {
           throw "You are trying to start or end a query using a document for which the field '$field' (used as the orderBy) does not exist.";
         }

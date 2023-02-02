@@ -2,16 +2,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:flutter/cupertino.dart' hide Title;
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart' hide Title;
-
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
-
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:firebase_ui_oauth/firebase_ui_oauth.dart'
     hide OAuthProviderButtonBase;
+import 'package:flutter/cupertino.dart' hide Title;
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart' hide Title;
 
 import '../widgets/internal/title.dart';
 
@@ -157,7 +155,7 @@ class _LoginViewState extends State<LoginView> {
       hintStyle = theme.textTheme.textStyle.copyWith(fontSize: 12);
     } else {
       final theme = Theme.of(context);
-      hintStyle = Theme.of(context).textTheme.caption;
+      hintStyle = Theme.of(context).textTheme.bodySmall;
       registerTextColor = theme.colorScheme.primary;
     }
 
@@ -179,7 +177,7 @@ class _LoginViewState extends State<LoginView> {
               ),
               TextSpan(
                 text: actionText,
-                style: Theme.of(context).textTheme.button?.copyWith(
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: registerTextColor,
                     ),
                 mouseCursor: SystemMouseCursors.click,

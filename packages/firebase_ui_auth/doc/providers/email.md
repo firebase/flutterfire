@@ -2,7 +2,7 @@
 
 ## Configuration
 
-To support email a provider, first ensure that the "Email/Password" provider is
+To support email as a provider, first ensure that the "Email/Password" provider is
 enabled in the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers):
 
 ![Enable Email/Password Provider](../images/ui-email-provider.jpg)

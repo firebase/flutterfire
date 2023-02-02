@@ -28,3 +28,7 @@ migrate_working_dir/
 .dart_tool/
 .packages
 build/
+
+# Temporariliy track pubspec_overrides.yaml to override intl dependency until flutter_localizations
+# is reved to 0.18.0.
+!pubspec_overrides.yaml

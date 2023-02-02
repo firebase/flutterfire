@@ -23,7 +23,7 @@ class Title extends PlatformWidget {
   Widget buildMaterial(BuildContext context) {
     return Text(
       text,
-      style: Theme.of(context).textTheme.headline5,
+      style: Theme.of(context).textTheme.headlineSmall,
     );
   }
 }

@@ -281,6 +281,7 @@ Some things to keep in mind before publishing the release:
 9. After successful review and merge of the pull request, switch to `master` branch locally, & run `git pull origin master`.
 10. Run `melos publish --no-dry-run --git-tag-version` to now publish to Pub.dev.
 11. Run `git push --tags` to push tags to repository.
+12. Ping @kevinthecheung to get the changelog in Firebase releases.
 
 ### Graduate packages
 

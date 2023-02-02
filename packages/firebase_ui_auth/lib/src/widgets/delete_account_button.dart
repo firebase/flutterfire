@@ -2,12 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
-import 'package:flutter/cupertino.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 import '../widgets/internal/loading_button.dart';
 
 typedef DeleteFailedCallback = void Function(Exception exception);
@@ -80,11 +81,15 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
     final l = FirebaseUILocalizations.labelsOf(context);
     bool isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
+    final themeData = Theme.of(context);
+    final colorScheme = themeData.colorScheme;
+
     return LoadingButton(
       isLoading: _isLoading,
-      color: isCupertino ? CupertinoColors.destructiveRed : Colors.red,
+      color: isCupertino ? CupertinoColors.destructiveRed : colorScheme.error,
       icon: isCupertino ? CupertinoIcons.delete : Icons.delete,
       label: l.deleteAccount,
+      labelColor: colorScheme.onError,
       onTap: _deleteAccount,
       variant: widget.variant,
     );

@@ -1873,5 +1873,29 @@ void runQueryTests() {
         },
       );
     });
+
+    group('startAfterDocument', () {
+      test('startAfterDocument() accept DocumentReference in query parameters',
+          () async {
+        final collection = await initializeTest('start-after-document');
+
+        final doc1 = collection.doc('1');
+        final doc2 = collection.doc('2');
+        final doc3 = collection.doc('3');
+        final doc4 = collection.doc('4');
+        await doc1.set({'ref': doc1});
+        await doc2.set({'ref': doc2});
+        await doc3.set({'ref': doc3});
+        await doc4.set({'ref': null});
+
+        final q = collection
+            .where('ref', isNull: false)
+            .orderBy('ref')
+            .startAfterDocument(await doc1.get());
+
+        final res = await q.get();
+        expect(res.docs.map((e) => e.reference), [doc2, doc3]);
+      });
+    });
   });
 }

@@ -1,4 +1,4 @@
-# Firebase UI Email provider
+# Firebase UI Phone provider
 
 ## Configuration
 
