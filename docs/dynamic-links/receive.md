@@ -193,5 +193,3 @@ FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
 
 To test a dynamic link on iOS, it is required that you use an actual device. You will also need to run the app in release mode (i.e. `flutter run --release`.),
 if testing a dynamic link from a terminated (i.e. app has been swiped closed.) app state.
-
-###
