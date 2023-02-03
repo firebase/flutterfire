@@ -7,18 +7,26 @@
 
 #import "FLTFirebaseRemoteConfigPlugin.h"
 #import "FLTFirebaseRemoteConfigUtils.h"
+#import "Reachability.h"
 
 NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase_remote_config";
 
 @interface FLTFirebaseRemoteConfigPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
+@property(nonatomic) Reachability *hostReachability;
 @end
 
 @implementation FLTFirebaseRemoteConfigPlugin
 
+BOOL _canConnectToHost;
+BOOL _fetchAndActivateRetry;
+NSString *remoteHostName = @"firebaseremoteconfig.googleapis.com";
+
 + (instancetype)sharedInstance {
   static dispatch_once_t onceToken;
   static FLTFirebaseRemoteConfigPlugin *instance;
+  _canConnectToHost = true;
+  _fetchAndActivateRetry = false;
 
   dispatch_once(&onceToken, ^{
     instance = [[FLTFirebaseRemoteConfigPlugin alloc] init];
@@ -29,6 +37,13 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
 }
 
 - (instancetype)init {
+  self.hostReachability = [Reachability reachabilityWithHostName:remoteHostName];
+  [self.hostReachability startNotifier];
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(reachabilityChanged:)
+                                               name:kReachabilityChangedNotification
+                                             object:nil];
+
   self = [super init];
   return self;
 }
@@ -161,7 +176,19 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
   [remoteConfig fetchAndActivateWithCompletionHandler:^(
                     FIRRemoteConfigFetchAndActivateStatus status, NSError *error) {
     if (error != nil) {
-      result.error(nil, nil, nil, error);
+      if (error.code == 999 && _fetchAndActivateRetry == false) {
+        // Note: see issue for details: https://github.com/firebase/flutterfire/issues/6196
+        // Only calling once as the issue noted describes how it works on second retry
+        // Issue appears to indicate the error code is: 999
+        _fetchAndActivateRetry = true;
+        NSLog(@"FLTFirebaseRemoteConfigPlugin: Retrying `fetchAndActivate()` due to a cancelled "
+              @"request with the error code: 999.");
+        NSLog(@"FLTFirebaseRemoteConfigPlugin: '%@' host connection status: %s", remoteHostName,
+              _canConnectToHost == true ? "REACHABLE" : "NOT REACHABLE");
+        [self fetchAndActivate:arguments withMethodCallResult:result];
+      } else {
+        result.error(nil, nil, nil, error);
+      }
     } else {
       if (status == FIRRemoteConfigFetchAndActivateStatusSuccessFetchedFromRemote) {
         result.success(@(YES));
@@ -221,6 +248,24 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
     return @"remote";
   } else {
     return @"static";
+  }
+}
+
+/*!
+ * Called by Reachability whenever status changes.
+ */
+- (void)reachabilityChanged:(NSNotification *)note {
+  // Reachability code inspired by Apple docs on checking host connectivity:
+  // https://developer.apple.com/library/archive/samplecode/Reachability/Listings/Reachability_APLViewController_m.html#//apple_ref/doc/uid/DTS40007324-Reachability_APLViewController_m-DontLinkElementID_7
+  Reachability *reachability = [note object];
+
+  if (reachability == self.hostReachability) {
+    NetworkStatus netStatus = [reachability currentReachabilityStatus];
+    if (netStatus == NotReachable) {
+      _canConnectToHost = false;
+    } else {
+      _canConnectToHost = true;
+    }
   }
 }
 
