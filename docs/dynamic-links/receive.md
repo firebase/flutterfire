@@ -131,6 +131,10 @@ for the app. You can find more details on how to retrieve your SHA-256 fingerpri
 
 ## Handle deep links {:#handle_deep_links}
 
+Warning: You may have unexpected results if you have enabled Flutter deep linking in your app.
+Please [read more here](https://docs.flutter.dev/development/ui/navigation/deep-linking#migrating-from-plugin-based-deep-linking).
+[Here is an issue](https://github.com/firebase/flutterfire/issues/9469) that illustrates what you ought to be aware of.
+
 To handle a Dynamic Link in your application, two scenarios require implementing.
 
 ### Terminated State
@@ -189,3 +193,5 @@ FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
 
 To test a dynamic link on iOS, it is required that you use an actual device. You will also need to run the app in release mode (i.e. `flutter run --release`.),
 if testing a dynamic link from a terminated (i.e. app has been swiped closed.) app state.
+
+###
