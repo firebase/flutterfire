@@ -63,6 +63,11 @@ NSString *remoteHostName = @"firebaseremoteconfig.googleapis.com";
 }
 
 - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+  // Clean up Reachability observer
+  [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                  name:kReachabilityChangedNotification
+                                                object:nil];
+
   self.channel = nil;
 }
 
