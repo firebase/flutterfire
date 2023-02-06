@@ -4,7 +4,7 @@
  Abstract:
  Basic demonstration of how to use the SystemConfiguration Reachablity APIs.
  */
-
+#if TARGET_OS_IPHONE
 #import <arpa/inet.h>
 #import <ifaddrs.h>
 #import <netdb.h>
@@ -204,3 +204,4 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 }
 
 @end
+#endif
