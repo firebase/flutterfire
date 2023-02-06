@@ -83,19 +83,19 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// The [name] of the event. Should contain 1 to 40 alphanumeric characters or
   /// underscores. The name must start with an alphabetic character. Some event
-  /// names are reserved. See [FirebaseAnalytics.Event][1] for the list of reserved
-  /// event names. The "firebase_", "google_" and "ga_" prefixes are reserved
-  /// and should not be used. Note that event names are case-sensitive and that
-  /// logging two events whose names differ only in case will result in two
-  /// distinct events.
+  /// names are reserved. See [FirebaseAnalytics.Event][1] for the list of
+  /// reserved event names. The "firebase_", "google_" and "ga_" prefixes are
+  /// reserved and should not be used. Note that event names are case-sensitive
+  /// and that logging two events whose names differ only in case will result in
+  /// two distinct events.
   ///
-  /// The map of event [parameters]. Passing null indicates that the event has no
-  /// parameters. Parameter names can be up to 40 characters long and must start
-  /// with an alphabetic character and contain only alphanumeric characters and
-  /// underscores. String, long and double param types are supported. String
-  /// parameter values can be up to 100 characters long. The "firebase_",
-  /// "google_" and "ga_" prefixes are reserved and should not be used for
-  /// parameter names.
+  /// The map of event [parameters]. Passing null indicates that the event has
+  /// no parameters. Parameter names can be up to 40 characters long and must
+  /// start with an alphabetic character and contain only alphanumeric
+  /// characters and underscores. String, long and double param types are
+  /// supported. String parameter values can be up to 100 characters long. The
+  /// "firebase_", "google_" and "ga_" prefixes are reserved and should not be
+  /// used for parameter names.
   ///
   /// See also:
   ///
