@@ -174,7 +174,7 @@ class _JsonDocumentReference
   @override
   Future<void> update(Map<Object, Object?> data) {
     return _delegate
-        .update(_CodecUtility.replaceValueWithDelegatesInMap(data)!);
+        .update(_CodecUtility.replaceValueWithDelegatesInMapFieldPath(data)!);
   }
 
   @override

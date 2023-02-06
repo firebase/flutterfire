@@ -197,12 +197,14 @@ class _FilmListState extends State<FilmList> {
       ),
     );
 
-    WriteBatch batch = FirebaseFirestore.instance.batch();
+    await movies.docs.first.reference.update({'likes': 0});
 
-    for (final movie in movies.docs) {
-      batch.update(movie.reference, {'likes': 0});
-    }
-    await batch.commit();
+    // WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    // for (final movie in movies.docs) {
+    //   batch.update(movie.reference, {'likes': 0});
+    // }
+    // await batch.commit();
   }
 }
 
