@@ -5,6 +5,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 import 'model.dart';
 
 part 'simple.g.dart';
@@ -20,10 +21,10 @@ class IgnoredGetter {
 
   int get count => 42;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   int get count2 => 42;
 
-  @JsonKey(ignore: false)
+  @JsonKey(includeFromJson: true, includeToJson: true)
   int get count3 => 42;
 }
 

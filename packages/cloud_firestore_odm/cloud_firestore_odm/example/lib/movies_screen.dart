@@ -72,7 +72,7 @@ class _FilmListState extends State<FilmList> {
               builder: (context, _) {
                 return Text(
                   'Latest Snapshot: ${DateTime.now()}',
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                 );
               },
             )

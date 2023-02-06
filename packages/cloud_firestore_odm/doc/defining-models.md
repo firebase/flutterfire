@@ -1,15 +1,17 @@
-- [Defining Models](#defining-models)
-  - [Creating references](#creating-references)
-  - [Injecting the document ID in the model](#injecting-the-document-id-in-the-model)
-  - [Model validation](#model-validation)
-    - [Available validators](#available-validators)
-      - [`int`](#int)
-    - [Custom validators](#custom-validators)
-  - [Next Steps](#next-steps)
-
-# Defining Models
+# Defining models
 
 > The Cloud Firestore ODM is currently in **alpha**. Expect breaking changes, API changes and more. The documentation is still a work in progress. See the [discussion](https://github.com/firebase/flutterfire/discussions/7475) for more details.
+
+- [Creating models](#creating-models)
+- [Creating references](#creating-references)
+- [Injecting the document ID in the model](#injecting-the-document-id-in-the-model)
+- [Model validation](#model-validation)
+  - [Available validators](#available-validators)
+    - [`int`](#int)
+  - [Custom validators](#custom-validators)
+- [Next steps](#next-steps)
+
+## Creating models
 
 A model represents exactly what data we expect to both receive and mutate on Firestore. The ODM
 ensures that all data is validated against a model, and if the model is not valid an error will be
@@ -21,6 +23,7 @@ define a model for this data, create a class:
 
 ```dart
 import 'package:json_annotation/json_annotation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 
 // This doesn't exist yet...! See "Next Steps"
@@ -52,6 +55,14 @@ class User {
 
 The `User` model defines that a user must have a name and email as a `String` and age as an `int`.
 
+Supported data types are those of Firestore (string, boolean, number, geo point, timestamp, list), 
+plus `DateTime` and `DocumentReference<Map<String, dynamic>>`. Nested object and custom types are 
+supported with `@JsonKey` (see [json_serializable](https://pub.dev/packages/json_serializable)). 
+In addition to `toJson` and `fromJson`, `@JsonKey` also offer `ignore` and `name` parameters.
+
+A current limitation, typesafe query method and update parameters are not generated for nested object 
+and custom types like enum.
+
 :::caution
 If your model class is defined in a separate file than the Firestore reference,
 you will need to explicitly specify `fromJson`/`toJson` functions as followed:
@@ -76,8 +87,6 @@ class User {
 ```
 
 :::
-
-**Note**: `JsonSerializable(fieldRename: ...)` and `JsonKey(ignore: true)` are currently not supported
 
 ## Creating references
 
@@ -106,7 +115,7 @@ By default, the document ID is not present in the firestore object once decoded.
 
 While you can acccess it using the `DocumentSnapshot`, it isn't always convenient.
 A solution to that is to use the `@Id` annotation, to tell Firestore that a
-a given property in a class would be the document ID:
+given property in a class would be the document ID:
 
 ```dart
 @Collection<Person>('users')
@@ -224,7 +233,7 @@ class User {
 }
 ```
 
-## Next Steps
+## Next steps
 
 Some of the code on this page is created via code generation
 (e.g. `_$assertUser`, `UserCollectionReference`) - you can learn more about

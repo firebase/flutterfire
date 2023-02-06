@@ -70,7 +70,7 @@ class FirebaseException implements Exception {
     String output = '[$plugin/$code] $message';
 
     if (stackTrace != null) {
-      output += '\n\n${stackTrace.toString()}';
+      output += '\n\n$stackTrace';
     }
 
     return output;

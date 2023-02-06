@@ -116,7 +116,7 @@ class CollectionData with Names {
     final type = CollectionData.modelTypeOfAnnotation(annotation);
 
     final hasJsonSerializable =
-        jsonSerializableChecker.hasAnnotationOf(type.element2!);
+        jsonSerializableChecker.hasAnnotationOf(type.element!);
 
     if (type.isDynamic) {
       throw InvalidGenerationSourceError(
@@ -126,7 +126,7 @@ class CollectionData with Names {
       );
     }
 
-    final collectionTargetElement = type.element2;
+    final collectionTargetElement = type.element;
     if (collectionTargetElement is! ClassElement) {
       throw InvalidGenerationSourceError(
         'The annotation @Collection can only receive classes as generic argument. ',
@@ -134,7 +134,7 @@ class CollectionData with Names {
       );
     }
 
-    final hasFreezed = freezedChecker.hasAnnotationOf(type.element2!);
+    final hasFreezed = freezedChecker.hasAnnotationOf(type.element!);
     final redirectedFreezedConstructors =
         collectionTargetElement.constructors.where(
       (element) {
@@ -272,7 +272,7 @@ represents the content of the collection must be in the same file.
             if (hasFreezed) {
               key =
                   // two $ because both Freezed and json_serializable add one
-                  '_\$\$${redirectedFreezedConstructors.single.redirectedConstructor!.enclosingElement3.name}FieldMap[$key]!';
+                  '_\$\$${redirectedFreezedConstructors.single.redirectedConstructor!.enclosingElement.name}FieldMap[$key]!';
             } else if (hasJsonSerializable) {
               key = '_\$${collectionTargetElement.name.public}FieldMap[$key]!';
             }
@@ -411,7 +411,7 @@ extension on ClassElement {
       for (final supertype in allSupertypes) {
         if (supertype.isDartCoreObject) continue;
 
-        for (final field in supertype.element2.fields) {
+        for (final field in supertype.element.fields) {
           if (field.getter != null && !field.getter!.isSynthetic) {
             continue;
           }
@@ -431,10 +431,10 @@ extension on String {
 
 extension on DartType {
   bool get isJsonDocumentReference {
-    return element2?.librarySource?.uri.scheme == 'package' &&
+    return element?.librarySource?.uri.scheme == 'package' &&
         const {'cloud_firestore'}
-            .contains(element2?.librarySource?.uri.pathSegments.first) &&
-        element2?.name == 'DocumentReference' &&
+            .contains(element?.librarySource?.uri.pathSegments.first) &&
+        element?.name == 'DocumentReference' &&
         (this as InterfaceType).typeArguments.single.isDartCoreMap;
   }
 
