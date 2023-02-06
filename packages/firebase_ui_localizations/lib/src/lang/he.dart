@@ -28,11 +28,11 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
       "הסיסמאות אינן תואמות"; //"Passwords do not match";
 
   @override
-  String get confirmPasswordInputLabel => "אשר סיסמה"; // "Confirm password";
+  String get confirmPasswordInputLabel => "וודא סיסמה"; // "Confirm password";
 
   @override
   String get confirmPasswordIsRequiredErrorText =>
-      "אשר את הסיסמה שלך"; //"Confirm your password";
+      "וודא הסיסמה שלך"; //"Confirm your password";
 
   @override
   String get continueText => "המשך"; //"Continue";
@@ -101,7 +101,7 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get geopointLabel => "גיאופוינט"; //"geopoint";
 
   @override
-  String get goBackButtonLabel => "חזרה למסך הקודם"; //"Go back";
+  String get goBackButtonLabel => "חזרה"; //"Go back";
 
   @override
   String get invalidCountryCode => "קוד מדינה לא חוקי"; //"Invalid code";
@@ -170,7 +170,7 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
       "הזן את מספר הטלפון שלך"; //"Enter your phone number";
 
   @override
-  String get profile => "פרופיל משתמש"; //"Profile";
+  String get profile => "פרופיל"; //"Profile";
 
   @override
   String get provideEmail =>
@@ -208,7 +208,7 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get signInWithAppleButtonText =>
-      "התחברות באמצעות חשבון משתמש Apple"; //"Sign in with Apple";
+      "התחברות באמצעות חשבון Apple"; //"Sign in with Apple";
 
   @override
   String get signInWithEmailLinkSentText =>
@@ -220,11 +220,11 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get signInWithFacebookButtonText =>
-      "כניסה באמצעות חשבון משתמש פייסבוק"; //"Sign in with Facebook";
+      "כניסה באמצעות חשבון פייסבוק"; //"Sign in with Facebook";
 
   @override
   String get signInWithGoogleButtonText =>
-      "כניסה באמצעות חשבון משתמש של Google"; //"Sign in with Google";
+      "כניסה באמצעות חשבון של Google"; //"Sign in with Google";
 
   @override
   String get signInWithPhoneButtonText =>
@@ -232,14 +232,14 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get signInWithTwitterButtonText =>
-      "היכנס באמצעות חשבון משתמש בטוויטר"; //"Sign in with Twitter";
+      "היכנס באמצעות חשבון בטוויטר"; //"Sign in with Twitter";
 
   @override
-  String get signOutButtonText => "התנתקות"; //"Sign out";
+  String get signOutButtonText => "התנתק"; //"Sign out";
 
   @override
   String get smsAutoresolutionFailedError =>
-      "הבאת קוד SMS באופן אוטומטי נכשלה. אנא הזן את הקוד שלך באופן ידני"; //"Failed to resolve SMS code automatically. Please enter your code manually";
+      "ייבוא קוד SMS באופן אוטומטי נכשלה. אנא הזן את הקוד שלך באופן ידני"; //"Failed to resolve SMS code automatically. Please enter your code manually";
 
   @override
   String get southInitialLabel => "S";
@@ -272,7 +272,7 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get verifyingSMSCodeText =>
-      "אימות קוד SMS..."; //"Verifying SMS code…";
+      "מאמת קוד SMS..."; //"Verifying SMS code…";
 
   @override
   String get verifyItsYouText => "וודא שזה אתה"; //"Verify that it's you";
