@@ -17,7 +17,7 @@ class _CodecUtility {
   }
 
   static Map<FieldPath, dynamic>? replaceValueWithDelegatesInMapFieldPath(
-    Map<dynamic, dynamic>? data,
+    Map<Object, dynamic>? data,
   ) {
     if (data == null) {
       return null;
