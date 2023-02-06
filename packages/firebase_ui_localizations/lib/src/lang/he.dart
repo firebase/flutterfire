@@ -32,7 +32,7 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get confirmPasswordIsRequiredErrorText =>
-      "וודא הסיסמה שלך"; //"Confirm your password";
+      "וודא את הסיסמה שלך"; //"Confirm your password";
 
   @override
   String get continueText => "המשך"; //"Continue";
@@ -232,14 +232,14 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get signInWithTwitterButtonText =>
-      "היכנס באמצעות חשבון בטוויטר"; //"Sign in with Twitter";
+      "כניסה באמצעות חשבון טוויטר"; //"Sign in with Twitter";
 
   @override
   String get signOutButtonText => "התנתק"; //"Sign out";
 
   @override
   String get smsAutoresolutionFailedError =>
-      "ייבוא קוד SMS באופן אוטומטי נכשלה. אנא הזן את הקוד שלך באופן ידני"; //"Failed to resolve SMS code automatically. Please enter your code manually";
+      "ייבוא קוד ה-SMS באופן אוטומטי נכשל. אנא הזן את הקוד שלך באופן ידני"; //"Failed to resolve SMS code automatically. Please enter your code manually";
 
   @override
   String get southInitialLabel => "S";
