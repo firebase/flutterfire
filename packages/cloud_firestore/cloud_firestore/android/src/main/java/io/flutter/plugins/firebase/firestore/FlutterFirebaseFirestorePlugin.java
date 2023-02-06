@@ -43,7 +43,6 @@ import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStream
 import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import io.flutter.plugins.firebase.firestore.utils.ServerTimestampBehaviorConverter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -438,7 +437,9 @@ public class FlutterFirebaseFirestorePlugin
               flattenData.add(fieldPath);
               flattenData.add(data.get(fieldPath));
             }
-            taskCompletionSource.setResult(Tasks.await(documentReference.update(firstFieldPath, firstObject, flattenData.toArray())));
+            taskCompletionSource.setResult(
+                Tasks.await(
+                    documentReference.update(firstFieldPath, firstObject, flattenData.toArray())));
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
