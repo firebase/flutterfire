@@ -38,7 +38,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   }
 
   @override
-  Future<void> update(Map<String, dynamic> data) {
+  Future<void> update(Map<Object, dynamic> data) {
     return convertWebExceptions(
         () => _delegate.update(EncodeUtility.encodeMapData(data)!));
   }
