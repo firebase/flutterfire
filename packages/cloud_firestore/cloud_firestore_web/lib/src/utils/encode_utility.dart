@@ -21,6 +21,18 @@ class EncodeUtility {
     return output;
   }
 
+  static Map<FieldPath, dynamic>? encodeMapDataFieldPath(
+      Map<Object, dynamic>? data) {
+    if (data == null) {
+      return null;
+    }
+    Map<FieldPath, dynamic> output = <FieldPath, dynamic>{};
+    data.forEach((key, value) {
+      output[valueEncode(key)] = valueEncode(value);
+    });
+    return output;
+  }
+
   /// Encodes an Array of values from their proper types to a serialized version.
   static List<dynamic>? encodeArrayData(List<dynamic>? data) {
     if (data == null) {
