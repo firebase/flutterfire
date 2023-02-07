@@ -240,6 +240,7 @@ BOOL _fetchAndActivateRetry;
 #pragma mark - FLTFirebasePlugin
 
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
+  _fetchAndActivateRetry = false;
   completion();
 }
 
