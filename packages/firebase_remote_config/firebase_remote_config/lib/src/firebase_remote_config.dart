@@ -83,6 +83,9 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   /// Performs a fetch and activate operation, as a convenience.
   ///
   /// Returns [bool] in the same way that is done for [activate].
+  /// A [FirebaseException] maybe thrown with the following error code:
+  /// - **forbidden**:
+  ///  - Thrown if the Google Cloud Platform Firebase Remote Config API is disabled
   Future<bool> fetchAndActivate() async {
     bool configChanged = await _delegate.fetchAndActivate();
     notifyListeners();
