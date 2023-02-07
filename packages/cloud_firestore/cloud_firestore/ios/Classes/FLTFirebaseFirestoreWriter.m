@@ -149,11 +149,15 @@
 }
 
 - (NSDictionary *)FIRDocumentSnapshot:(FIRDocumentSnapshot *)documentSnapshot {
-  FIRServerTimestampBehavior serverTimestampBehavior =
-      [self toServerTimestampBehavior:FLTFirebaseFirestorePlugin
-                                          .serverTimestampMap[@([documentSnapshot hash])]];
+  NSString *timestampBehaviorString =
+      FLTFirebaseFirestorePlugin.serverTimestampMap[@([documentSnapshot hash])];
 
-  [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:@([documentSnapshot hash])];
+  FIRServerTimestampBehavior serverTimestampBehavior =
+      [self toServerTimestampBehavior:timestampBehaviorString];
+
+  if (timestampBehaviorString != nil) {
+    [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:@([documentSnapshot hash])];
+  }
 
   return @{
     @"path" : documentSnapshot.reference.path,
