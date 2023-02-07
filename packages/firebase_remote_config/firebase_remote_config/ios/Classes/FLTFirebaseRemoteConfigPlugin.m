@@ -7,33 +7,20 @@
 
 #import "FLTFirebaseRemoteConfigPlugin.h"
 #import "FLTFirebaseRemoteConfigUtils.h"
-#if TARGET_OS_IPHONE
-#import "Reachability.h"
-#endif
 
 NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase_remote_config";
 
 @interface FLTFirebaseRemoteConfigPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
-#if TARGET_OS_IPHONE
-@property(nonatomic) Reachability *hostReachability;
-#endif
 @end
 
 @implementation FLTFirebaseRemoteConfigPlugin
 
 BOOL _fetchAndActivateRetry;
-#if TARGET_OS_IPHONE
-NSString *remoteHostName = @"firebaseremoteconfig.googleapis.com";
-BOOL _canConnectToHost;
-#endif
 
 + (instancetype)sharedInstance {
   static dispatch_once_t onceToken;
   static FLTFirebaseRemoteConfigPlugin *instance;
-#if TARGET_OS_IPHONE
-  _canConnectToHost = true;
-#endif
   _fetchAndActivateRetry = false;
 
   dispatch_once(&onceToken, ^{
@@ -45,15 +32,6 @@ BOOL _canConnectToHost;
 }
 
 - (instancetype)init {
-#if TARGET_OS_IPHONE
-  self.hostReachability = [Reachability reachabilityWithHostName:remoteHostName];
-  [self.hostReachability startNotifier];
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(reachabilityChanged:)
-                                               name:kReachabilityChangedNotification
-                                             object:nil];
-#endif
-
   self = [super init];
   return self;
 }
@@ -73,12 +51,6 @@ BOOL _canConnectToHost;
 }
 
 - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-#if TARGET_OS_IPHONE
-  // Clean up Reachability observer
-  [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                  name:kReachabilityChangedNotification
-                                                object:nil];
-#endif
   self.channel = nil;
 }
 
@@ -199,10 +171,6 @@ BOOL _canConnectToHost;
         _fetchAndActivateRetry = true;
         NSLog(@"FLTFirebaseRemoteConfigPlugin: Retrying `fetchAndActivate()` due to a cancelled "
               @"request with the error code: 999.");
-#if TARGET_OS_IPHONE
-        NSLog(@"FLTFirebaseRemoteConfigPlugin: '%@' host connection status: %s", remoteHostName,
-              _canConnectToHost == true ? "REACHABLE" : "NOT REACHABLE");
-#endif
         [self fetchAndActivate:arguments withMethodCallResult:result];
       } else {
         result.error(nil, nil, nil, error);
@@ -267,26 +235,6 @@ BOOL _canConnectToHost;
   } else {
     return @"static";
   }
-}
-
-/*!
- * Called by Reachability whenever status changes.
- */
-- (void)reachabilityChanged:(NSNotification *)note {
-  // Reachability code inspired by Apple docs on checking host connectivity:
-  // https://developer.apple.com/library/archive/samplecode/Reachability/Listings/Reachability_APLViewController_m.html#//apple_ref/doc/uid/DTS40007324-Reachability_APLViewController_m-DontLinkElementID_7
-#if TARGET_OS_IPHONE
-  Reachability *reachability = [note object];
-
-  if (reachability == self.hostReachability) {
-    NetworkStatus netStatus = [reachability currentReachabilityStatus];
-    if (netStatus == NotReachable) {
-      _canConnectToHost = false;
-    } else {
-      _canConnectToHost = true;
-    }
-  }
-#endif
 }
 
 #pragma mark - FLTFirebasePlugin
