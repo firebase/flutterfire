@@ -74,7 +74,34 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     throw UnimplementedError('getAppInstanceId() is not implemented');
   }
 
-  /// Logs the given event [name] with the given [parameters].
+  /// Logs a custom Flutter Analytics event with the given [name] and event
+  /// [parameters].
+  ///
+  /// The event can have up to 25 [parameters]. Events with the same [name] must
+  /// have the same [parameters]. Up to 500 event names are supported.
+  ///
+  /// The [name] of the event. Should contain 1 to 40 alphanumeric characters or
+  /// underscores. The name must start with an alphabetic character. Some event
+  /// names are reserved. See [FirebaseAnalytics.Event][1] for the list of
+  /// reserved event names. The "firebase_", "google_" and "ga_" prefixes are
+  /// reserved and should not be used. Note that event names are case-sensitive
+  /// and that logging two events whose names differ only in case will result in
+  /// two distinct events.
+  ///
+  /// The map of event [parameters]. Passing null indicates that the event has
+  /// no parameters. Parameter names can be up to 40 characters long and must
+  /// start with an alphabetic character and contain only alphanumeric
+  /// characters and underscores. String, long and double param types are
+  /// supported. String parameter values can be up to 100 characters long. The
+  /// "firebase_", "google_" and "ga_" prefixes are reserved and should not be
+  /// used for parameter names.
+  ///
+  /// See also:
+  ///
+  ///   * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics#public-void-logevent-string-name,-bundle-params
+  ///   * https://firebase.google.com/docs/reference/swift/firebaseanalytics/api/reference/Classes/Analytics#logevent_:parameters:
+  ///
+  /// [1]: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event
   Future<void> logEvent({
     required String name,
     Map<String, Object?>? parameters,
