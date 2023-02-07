@@ -14,6 +14,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigClientException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigServerException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
 import io.flutter.Log;
@@ -188,6 +189,18 @@ public class FirebaseRemoteConfigPlugin
             } else if (exception instanceof FirebaseRemoteConfigClientException) {
               details.put("code", "internal");
               details.put("message", "internal remote config fetch error");
+            } else if (exception instanceof FirebaseRemoteConfigServerException) {
+              details.put("code", "remote-config-server-error");
+              details.put("message", exception.getMessage());
+
+              Throwable cause = exception.getCause();
+              if (cause != null) {
+                String causeMessage = cause.getMessage();
+                if (causeMessage != null && causeMessage.contains("Forbidden")) {
+                  // Specific error code for 403 status code to indicate the request was forbidden.
+                  details.put("code", "forbidden");
+                }
+              }
             } else {
               details.put("code", "unknown");
               details.put("message", "unknown remote config error");
