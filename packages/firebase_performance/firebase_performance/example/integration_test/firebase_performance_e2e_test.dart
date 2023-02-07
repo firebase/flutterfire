@@ -167,6 +167,20 @@ void main() {
         });
       });
 
+      test('test all Http method values with collection disabled', () async {
+        FirebasePerformance performance = FirebasePerformance.instance;
+        await performance.setPerformanceCollectionEnabled(false);
+
+        await Future.forEach(HttpMethod.values, (HttpMethod method) async {
+          final HttpMetric testMetric = performance.newHttpMetric(
+            'https://www.google.com/',
+            method,
+          );
+          await testMetric.start();
+          await testMetric.stop();
+        });
+      });
+
       test('putAttribute works correctly', () {
         testHttpMetric.putAttribute('apple', 'sauce');
         testHttpMetric.putAttribute('banana', 'pie');

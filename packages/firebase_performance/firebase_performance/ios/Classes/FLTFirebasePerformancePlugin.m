@@ -84,6 +84,11 @@ NSString *const kFLTFirebasePerformanceChannelName = @"plugins.flutter.io/fireba
   FIRHTTPMethod method = [FLTFirebasePerformancePlugin parseHttpMethod:arguments[@"httpMethod"]];
   NSURL *url = [NSURL URLWithString:arguments[@"url"]];
   FIRHTTPMetric *httpMetric = [[FIRHTTPMetric alloc] initWithURL:url HTTPMethod:method];
+  if (httpMetric == nil) {
+    // Performance collection is disabled
+    result.success(nil);
+    return;
+  }
 
   [httpMetric start];
   _httpMetricHandle = [NSNumber numberWithInt:[_httpMetricHandle intValue] + 1];
