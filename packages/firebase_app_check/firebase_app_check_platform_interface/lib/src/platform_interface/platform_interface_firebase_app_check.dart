@@ -59,8 +59,11 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   ///
   /// On Android, the default provider is "play integrity". If you wish to set the provider to "safety net" or "debug", you may set the `androidProvider` property using the `AndroidProvider` enum
   /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
-  Future<void> activate(
-      {String? webRecaptchaSiteKey, AndroidProvider? androidProvider}) {
+  Future<void> activate({
+    String? webRecaptchaSiteKey,
+    AndroidProvider? androidProvider,
+    IosProvider? iosProvider,
+  }) {
     throw UnimplementedError('activate() is not implemented');
   }
 
