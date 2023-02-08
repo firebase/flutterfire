@@ -1,3 +1,7 @@
+## 1.0.13
+
+ - Update a dependency to the latest release.
+
 ## 1.0.12
 
  - **FIX**: remove unused libs from _flutterfire_internals ([#10183](https://github.com/firebase/flutterfire/issues/10183)). ([80df2d02](https://github.com/firebase/flutterfire/commit/80df2d020adec343d7cfe2c17840479cf998f631))

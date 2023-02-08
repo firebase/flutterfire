@@ -1,3 +1,8 @@
+## 3.0.10
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+ - **FIX**: update exception handling to show actual exception ([#9629](https://github.com/firebase/flutterfire/issues/9629)). ([3bb4d1b1](https://github.com/firebase/flutterfire/commit/3bb4d1b19480afff6f94c27a214925380850304b))
+
 ## 3.0.9
 
  - Update a dependency to the latest release.

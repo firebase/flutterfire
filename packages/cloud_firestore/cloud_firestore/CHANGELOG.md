@@ -1,3 +1,10 @@
+## 4.3.2
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+ - **FIX**: fix an issue when removing a value that didn't exist in ServerTimestampBehavior map ([#10391](https://github.com/firebase/flutterfire/issues/10391)). ([2929ac9d](https://github.com/firebase/flutterfire/commit/2929ac9da037bc231d156425166422da380d5a2e))
+ - **FIX**: fix an issue when removing a value that didn't exist in ServerTimestampBehavior map ([#10370](https://github.com/firebase/flutterfire/issues/10370)). ([6da87036](https://github.com/firebase/flutterfire/commit/6da870363a947110ebf80696a7ed3887c4f2c557))
+ - **FIX**: startAfterDocument could throw when used with a DocumentReference ([#10339](https://github.com/firebase/flutterfire/issues/10339)). ([8224acbe](https://github.com/firebase/flutterfire/commit/8224acbee991e508b949c4dac11910df4d6fe323))
+
 ## 4.3.1
 
  - **FIX**: fix crash that could occur when using transactions ([#10184](https://github.com/firebase/flutterfire/issues/10184)). ([d14b545a](https://github.com/firebase/flutterfire/commit/d14b545adb6052f1e5acd7a0e679d790a4741122))
