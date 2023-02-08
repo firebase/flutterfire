@@ -1,3 +1,7 @@
+## 1.1.1
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+
 ## 1.1.0
 
  - **FEAT**: added Hungarian localization ([#10111](https://github.com/firebase/flutterfire/issues/10111)). ([794622cd](https://github.com/firebase/flutterfire/commit/794622cd25332e728c2665ee71b843502fa37eff))
