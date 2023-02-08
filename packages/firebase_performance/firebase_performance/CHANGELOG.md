@@ -1,3 +1,8 @@
+## 0.9.0+11
+
+ - **REFACTOR**: replace deprecated API: `Tasks.call()` ([#10361](https://github.com/firebase/flutterfire/issues/10361)). ([22407847](https://github.com/firebase/flutterfire/commit/2240784774d6673319fdb32a90c52beb015d3714))
+ - **FIX**: fix a crash that could occur with httpMetricStart when disabling collection ([#10392](https://github.com/firebase/flutterfire/issues/10392)). ([db67962b](https://github.com/firebase/flutterfire/commit/db67962b50269de7ebacc496e163fb8bb6608a12))
+
 ## 0.9.0+10
 
  - **FIX**: fix a crash that would occur when creating a trace with performance collection disabled ([#10243](https://github.com/firebase/flutterfire/issues/10243)). ([0a15ecbe](https://github.com/firebase/flutterfire/commit/0a15ecbe31a5730a6f8be2218c756a5d167e5bbd))

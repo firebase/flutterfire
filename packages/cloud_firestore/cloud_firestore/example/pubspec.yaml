@@ -6,8 +6,8 @@ environment:
   flutter: '>=1.12.13+hotfix.4'
 
 dependencies:
-  cloud_firestore: any
-  firebase_core: any
+  cloud_firestore: ^4.3.2
+  firebase_core: ^2.5.0
   flutter:
     sdk: flutter
   http: ^0.13.3
