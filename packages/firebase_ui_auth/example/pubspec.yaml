@@ -22,20 +22,20 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.2
-  firebase_auth: ^4.2.5
-  firebase_core: ^2.4.1
+  firebase_auth: ^4.2.6
+  firebase_core: ^2.5.0
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
   flutter_svg: ^1.0.0
-  firebase_ui_auth: ^1.1.9
-  firebase_ui_localizations: ^1.1.0
-  firebase_ui_oauth: ^1.1.9
-  firebase_ui_oauth_apple: ^1.0.16
-  firebase_ui_oauth_facebook: ^1.0.16
-  firebase_ui_oauth_google: ^1.0.16
-  firebase_ui_oauth_twitter: ^1.0.16
+  firebase_ui_auth: ^1.1.10
+  firebase_ui_localizations: ^1.1.1
+  firebase_ui_oauth: ^1.1.10
+  firebase_ui_oauth_apple: ^1.0.17
+  firebase_ui_oauth_facebook: ^1.0.17
+  firebase_ui_oauth_google: ^1.0.17
+  firebase_ui_oauth_twitter: ^1.0.17
 dev_dependencies:
   drive: ^1.0.0-1.0.nullsafety.1
   flutter_facebook_auth: ^4.4.1
