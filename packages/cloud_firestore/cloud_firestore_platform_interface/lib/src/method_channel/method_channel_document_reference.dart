@@ -47,7 +47,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   }
 
   @override
-  Future<void> update(Map<String, dynamic> data) async {
+  Future<void> update(Map<FieldPath, dynamic> data) async {
     try {
       await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
         'DocumentReference#update',

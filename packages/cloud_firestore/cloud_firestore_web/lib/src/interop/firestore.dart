@@ -366,7 +366,7 @@ class DocumentReference
     return handleThenable(jsObjectSet);
   }
 
-  Future<void> update(Map<String, dynamic> data) =>
+  Future<void> update(Map<FieldPath, dynamic> data) =>
       handleThenable(firestore_interop.updateDoc(jsObject, jsify(data)));
 }
 

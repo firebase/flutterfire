@@ -4,9 +4,9 @@
 
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runDocumentReferenceTests() {
   group('$DocumentReference', () {
@@ -401,6 +401,76 @@ void runDocumentReferenceTests() {
         await document.update({'bar': 'baz'});
         DocumentSnapshot<Map<String, dynamic>> snapshot2 = await document.get();
         expect(snapshot2.data(), equals({'foo': 'bar', 'bar': 'baz'}));
+      });
+
+      test('updates nested data using dots', () async {
+        DocumentReference<Map<String, dynamic>> document =
+            await initializeTest('document-update-field-path');
+        await document.set({
+          'foo': {'bar': 'baz'}
+        });
+        DocumentSnapshot<Map<String, dynamic>> snapshot = await document.get();
+        expect(
+          snapshot.data(),
+          equals({
+            'foo': {'bar': 'baz'}
+          }),
+        );
+
+        await document.update({'foo.bar': 'toto'});
+        DocumentSnapshot<Map<String, dynamic>> snapshot2 = await document.get();
+        expect(
+          snapshot2.data(),
+          equals({
+            'foo': {'bar': 'toto'}
+          }),
+        );
+      });
+
+      test('updates nested data using FieldPath', () async {
+        DocumentReference<Map<String, dynamic>> document =
+            await initializeTest('document-update-field-path');
+        await document.set({
+          'foo': {'bar': 'baz'}
+        });
+        DocumentSnapshot<Map<String, dynamic>> snapshot = await document.get();
+        expect(
+          snapshot.data(),
+          equals({
+            'foo': {'bar': 'baz'}
+          }),
+        );
+
+        await document.update({
+          FieldPath(const ['foo', 'bar']): 'toto'
+        });
+        DocumentSnapshot<Map<String, dynamic>> snapshot2 = await document.get();
+        expect(
+          snapshot2.data(),
+          equals({
+            'foo': {'bar': 'toto'}
+          }),
+        );
+      });
+
+      test('updates nested data containing a dot using FieldPath', () async {
+        DocumentReference<Map<String, dynamic>> document =
+            await initializeTest('document-update-field-path');
+        await document.set({'foo.bar': 'baz'});
+        DocumentSnapshot<Map<String, dynamic>> snapshot = await document.get();
+        expect(
+          snapshot.data(),
+          equals({'foo.bar': 'baz'}),
+        );
+
+        await document.update({
+          FieldPath(const ['foo.bar']): 'toto'
+        });
+        DocumentSnapshot<Map<String, dynamic>> snapshot2 = await document.get();
+        expect(
+          snapshot2.data(),
+          equals({'foo.bar': 'toto'}),
+        );
       });
 
       test('throws if document does not exist', () async {
