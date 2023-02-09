@@ -271,8 +271,7 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get verifyCodeButtonText => "אמת"; //"Verify";
 
   @override
-  String get verifyingSMSCodeText =>
-      "מאמת קוד SMS..."; //"Verifying SMS code…";
+  String get verifyingSMSCodeText => "מאמת קוד SMS..."; //"Verifying SMS code…";
 
   @override
   String get verifyItsYouText => "וודא שזה אתה"; //"Verify that it's you";
