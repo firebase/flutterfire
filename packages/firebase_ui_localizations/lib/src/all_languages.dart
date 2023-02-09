@@ -25,6 +25,7 @@ import 'lang/ja.dart';
 import 'lang/hi.dart';
 import 'lang/ru.dart';
 import 'lang/fr.dart';
+import 'lang/he.dart';
 
 final localizations = <String, FirebaseUILocalizationLabels>{
   'es': const EsLocalizations(),
@@ -48,4 +49,5 @@ final localizations = <String, FirebaseUILocalizationLabels>{
   'hi': const HiLocalizations(),
   'ru': const RuLocalizations(),
   'fr': const FrLocalizations(),
+  'he': const HeLocalizations(),
 };
