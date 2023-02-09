@@ -29,22 +29,22 @@ jobs:
     runs-on: macos-12
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
         name: Install Node.js 16
         with:
           node-version: "16"
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@3f07048e3d294f56e9b90ac5ea2c6f74e9ad0f98
         with:
           distribution: "temurin"
           java-version: "11"
-      - uses: actions/cache@v2
+      - uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
         name: Gradle Cache
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-v2-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle-v2
-      - uses: actions/cache@v2
+      - uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
         id: avd-cache
         with:
           path: |
@@ -53,7 +53,7 @@ jobs:
           key: avd
       - name: Generate AVD snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
         with:
           api-level: 30
           target: google_atd
@@ -65,16 +65,16 @@ jobs:
           channel: canary
           script: echo "Generated AVD snapshot for caching"
       - name: Firebase Emulator Cache
-        uses: actions/cache@v2
+        uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v2-${{ github.run_id }}
           restore-keys: firebase-emulators-v2
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@v2
+      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
       - name: "Bootstrap package"
@@ -89,7 +89,7 @@ jobs:
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "E2E Tests"
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
         timeout-minutes: 30
         with:
           api-level: 30
@@ -111,7 +111,7 @@ jobs:
         shell: bash
 
       - name: Upload Emulator Log
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
         if: always()
         with:
           name: ${{ matrix.api-level }}-${{ matrix.arch }}-${{matrix.target}}-${{matrix.first-boot-delay}}-${{matrix.iteration}}-adb_logs
@@ -122,21 +122,21 @@ jobs:
     runs-on: macos-12
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
         name: Install Node.js 16
         with:
           node-version: "16"
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@3f07048e3d294f56e9b90ac5ea2c6f74e9ad0f98
         with:
           distribution: "temurin"
           java-version: "11"
-      - uses: hendrikmuhs/ccache-action@v1
+      - uses: hendrikmuhs/ccache-action@fba817f3c0db4f854d7a3ee688241d6754da166e
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-ios-v3
           max-size: 700M
-      - uses: actions/cache@v2
+      - uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
         name: Pods Cache
         id: pods-cache
         with:
@@ -144,16 +144,16 @@ jobs:
           key: ${{ runner.os }}-pods-v3-${{ hashFiles('tests/ios/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-ios-pods-v2
       - name: Firebase Emulator Cache
-        uses: actions/cache@v2
+        uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
           restore-keys: firebase-emulators-v1
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@v2
+      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
       - name: "Bootstrap package"
@@ -194,21 +194,21 @@ jobs:
     runs-on: macos-12
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
         name: Install Node.js 16
         with:
           node-version: "16"
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@3f07048e3d294f56e9b90ac5ea2c6f74e9ad0f98
         with:
           distribution: "temurin"
           java-version: "11"
-      - uses: hendrikmuhs/ccache-action@v1
+      - uses: hendrikmuhs/ccache-action@fba817f3c0db4f854d7a3ee688241d6754da166e
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-macos-v2
           max-size: 700M
-      - uses: actions/cache@v2
+      - uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
         name: Pods Cache
         id: pods-cache
         with:
@@ -216,17 +216,17 @@ jobs:
           key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-macos-pods-v1
       - name: Cache Firebase Emulator
-        uses: actions/cache@v2
+        uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
           restore-keys: firebase-emulators-v1
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
         with:
           # TODO(Lyokone): upgrade to stable when https://github.com/flutter/flutter/issues/118469 is closed
           flutter-version: '3.3.10'
           cache: true
-      - uses: bluefireteam/melos-action@v2
+      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
       - name: "Bootstrap package"
@@ -259,20 +259,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
         name: Install Node.js 16
         with:
           node-version: "16"
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@3f07048e3d294f56e9b90ac5ea2c6f74e9ad0f98
         with:
           distribution: "temurin"
           java-version: "11"
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@v2
+      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
       - name: "Bootstrap package"
@@ -281,7 +281,7 @@ jobs:
         run: |
           sudo npm i -g firebase-tools
       - name: Cache Firebase Emulator
-        uses: actions/cache@v2
+        uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
