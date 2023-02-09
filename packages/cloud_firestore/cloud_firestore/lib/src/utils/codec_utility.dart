@@ -16,6 +16,27 @@ class _CodecUtility {
     return output;
   }
 
+  static Map<FieldPath, dynamic>? replaceValueWithDelegatesInMapFieldPath(
+    Map<Object, dynamic>? data,
+  ) {
+    if (data == null) {
+      return null;
+    }
+    Map<FieldPath, dynamic> output = <FieldPath, dynamic>{};
+    data.forEach((key, value) {
+      if (key is FieldPath) {
+        output[key] = valueEncode(value);
+      } else if (key is String) {
+        output[FieldPath.fromString(key)] = valueEncode(value);
+      } else {
+        throw StateError(
+          'Invalid key type for map. Expected String or FieldPath, but got $key: ${key.runtimeType}.',
+        );
+      }
+    });
+    return output;
+  }
+
   static List<dynamic>? replaceValueWithDelegatesInArray(List<dynamic>? data) {
     if (data == null) {
       return null;

@@ -47,9 +47,9 @@ void main() {
 
     test('update', () async {
       bool isMethodCalled = false;
-      final Map<String, dynamic> data = {
-        'test': 'test',
-        'fieldValue': mockFieldValue
+      final Map<FieldPath, dynamic> data = {
+        FieldPath.fromString('test'): 'test',
+        FieldPath.fromString('fieldValue'): mockFieldValue
       };
       handleMethodCall((call) {
         if (call.method == 'DocumentReference#update') {
