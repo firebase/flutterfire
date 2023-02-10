@@ -505,7 +505,7 @@
 
 ## 1.0.4
 
- - **REFACTOR**: Share guard functions accross plugins (#5783).
+ - **REFACTOR**: Share guard functions across plugins (#5783).
  - **CHORE**: update Web plugins to use Firebase JS SDK version 8.4.1 (#4464).
 
 ## 1.0.3
@@ -770,7 +770,7 @@
 
 ## 0.3.2
 
-* Move Android dependency to Gradle BoM to help maintain compatability
+* Move Android dependency to Gradle BoM to help maintain compatibility
   with other FlutterFire plugins.
 
 ## 0.3.1+1
