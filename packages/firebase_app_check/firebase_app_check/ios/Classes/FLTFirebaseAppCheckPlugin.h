@@ -10,6 +10,7 @@
 
 #import <Foundation/Foundation.h>
 #import <firebase_core/FLTFirebasePlugin.h>
+#import <FLTAppCheckProviderFactory.h>
 
 @interface FLTFirebaseAppCheckPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
 @end

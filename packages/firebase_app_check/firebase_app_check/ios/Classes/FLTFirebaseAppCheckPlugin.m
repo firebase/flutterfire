@@ -8,7 +8,7 @@
 #import <Firebase/Firebase.h>
 
 #import <firebase_core/FLTFirebasePluginRegistry.h>
-#import <FLTAppCheckProviderFactory.h>
+#import "FLTAppCheckProviderFactory.h"
 
 NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_app_check";
 
@@ -29,9 +29,8 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
   if (self) {
     self->providerFactory = [[FLTAppCheckProviderFactory alloc] init];
     [FIRAppCheck setAppCheckProviderFactory:self->providerFactory];
-    
-    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];
-    _binaryMessenger = messenger;
+
+    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];    _binaryMessenger = messenger;
     _eventChannels = [NSMutableDictionary dictionary];
     _streamHandlers = [NSMutableDictionary dictionary];
   }
@@ -116,7 +115,7 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 - (void)activate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *appNameDart = arguments[@"appName"];
   NSString *providerName = arguments[@"iosProvider"];
-  
+
   FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
   [self->providerFactory configure:app providerName:providerName];
   result.success(nil);
