@@ -1256,6 +1256,69 @@ void runQueryTests() {
         });
       });
 
+      test('returns with in filter using Iterable', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-in-iterable');
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'status': 'Ordered',
+          }),
+          collection.doc('doc2').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc3').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc4').set({
+            'status': 'Incomplete',
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .where(
+              'status',
+              // To force the list to be an iterable
+              whereIn: ['Ready to Ship', 'Ordered'].map((e) => e),
+            )
+            .get();
+
+        expect(snapshot.docs.length, equals(3));
+        snapshot.docs.forEach((doc) {
+          String status = doc.data()['status'];
+          expect(status == 'Ready to Ship' || status == 'Ordered', isTrue);
+        });
+      });
+
+      test('returns with in filter using Set', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-in');
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'status': 'Ordered',
+          }),
+          collection.doc('doc2').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc3').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc4').set({
+            'status': 'Incomplete',
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .where('status', whereIn: {'Ready to Ship', 'Ordered'}).get();
+
+        expect(snapshot.docs.length, equals(3));
+        snapshot.docs.forEach((doc) {
+          String status = doc.data()['status'];
+          expect(status == 'Ready to Ship' || status == 'Ordered', isTrue);
+        });
+      });
+
       test('returns with in filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-in');
