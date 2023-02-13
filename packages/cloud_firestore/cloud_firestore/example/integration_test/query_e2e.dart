@@ -777,7 +777,7 @@ void runQueryTests() {
 
         QuerySnapshot<Map<String, dynamic>> snapshot = await collection
             .orderBy(FieldPath(const ['bar', 'value']), descending: true)
-            .startAfter([1]).get();
+            .startAfter([3]).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc2'));
