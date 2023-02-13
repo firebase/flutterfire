@@ -743,7 +743,7 @@ void runQueryTests() {
 
         QuerySnapshot<Map<String, dynamic>> snapshot = await collection
             .orderBy('bar.value', descending: true)
-            .startAfter([1]).get();
+            .startAfter([3]).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc2'));
@@ -777,7 +777,7 @@ void runQueryTests() {
 
         QuerySnapshot<Map<String, dynamic>> snapshot = await collection
             .orderBy(FieldPath(const ['bar', 'value']), descending: true)
-            .startAt([1]).get();
+            .startAfter([1]).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc2'));
@@ -785,7 +785,7 @@ void runQueryTests() {
 
         QuerySnapshot<Map<String, dynamic>> snapshot2 = await collection
             .orderBy(FieldPath(const ['foo']))
-            .startAt([1]).get();
+            .startAfter([1]).get();
 
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc2'));
@@ -809,7 +809,7 @@ void runQueryTests() {
         ]);
 
         DocumentSnapshot startAfterSnapshot =
-            await collection.doc('doc1').get();
+            await collection.doc('doc3').get();
 
         QuerySnapshot<Map<String, dynamic>> snapshot = await collection
             .orderBy('bar.value')
