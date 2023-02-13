@@ -89,7 +89,11 @@ class FirestoreExampleApp extends StatelessWidget {
   }
 }
 
-Future<void> _isolateGetDocument(RootIsolateToken rootIsolateToken) async {
+Future<void> _isolateGetTheMostLikes(
+  List<Object> args,
+) async {
+  final rootIsolateToken = args[0] as RootIsolateToken;
+  final sendPort = args[1] as SendPort;
   BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
@@ -98,16 +102,14 @@ Future<void> _isolateGetDocument(RootIsolateToken rootIsolateToken) async {
       serverTimestampBehavior: ServerTimestampBehavior.previous,
     ),
   );
-  for (final movie in movies.docs) {
-    print('Isolate: ${movie.data().title} - ${movie.data().likes}');
-  }
+  final mostLiked = movies.docs
+      .map((doc) => doc.data())
+      .reduce((a, b) => a.likes > b.likes ? a : b);
 
-  // Will NOT work
-  // moviesRef.snapshots().listen((snapshot) {
-  //   for (final movie in snapshot.docs) {
-  //     print('Isolate: ${movie.data().title} - ${movie.data().likes}');
-  //   }
-  // });
+  final mostLikedTitle = mostLiked.title;
+  print('Most liked movie in isolate: $mostLikedTitle');
+
+  sendPort.send(mostLikedTitle);
 }
 
 /// Holds all example app films
@@ -178,15 +180,23 @@ class _FilmListState extends State<FilmList> {
             },
           ),
           PopupMenuButton<MenuOptions>(
-            onSelected: (value) {
+            onSelected: (value) async {
               switch (value) {
                 case MenuOptions.resetLikes:
-                  _resetLikes();
+                  await _resetLikes();
                   break;
                 case MenuOptions.requestInIsolate:
                   RootIsolateToken rootIsolateToken =
                       RootIsolateToken.instance!;
-                  Isolate.spawn(_isolateGetDocument, rootIsolateToken);
+                  ReceivePort receivePort = ReceivePort();
+                  final mostLikedMovie = await Isolate.spawn(
+                    _isolateGetTheMostLikes,
+                    [rootIsolateToken, receivePort.sendPort],
+                  );
+                  mostLikedMovie.addOnExitListener(receivePort.sendPort);
+                  receivePort.listen((message) {
+                    print('Most liked movie in main Thread: $message');
+                  });
                   break;
               }
             },
