@@ -1348,6 +1348,35 @@ void runQueryTests() {
         });
       });
 
+      test('returns with not-in filter with Iterable', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-not-in');
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'status': 'Ordered',
+          }),
+          collection.doc('doc2').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc3').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc4').set({
+            'status': 'Incomplete',
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .where('status', whereNotIn: {'Ready to Ship', 'Ordered'}).get();
+
+        expect(snapshot.docs.length, equals(1));
+        snapshot.docs.forEach((doc) {
+          String status = doc.data()['status'];
+          expect(status == 'Incomplete', isTrue);
+        });
+      });
+
       test('returns with array-contains-any filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-array-contains-any');
@@ -1370,6 +1399,34 @@ void runQueryTests() {
         QuerySnapshot<Map<String, dynamic>> snapshot = await collection.where(
           'category',
           arrayContainsAny: ['Appliances', 'Electronics'],
+        ).get();
+
+        // 2nd record should only be returned once
+        expect(snapshot.docs.length, equals(3));
+      });
+
+      test('returns with array-contains-any filter using Set', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-array-contains-any');
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'category': ['Appliances', 'Housewares', 'Cooking'],
+          }),
+          collection.doc('doc2').set({
+            'category': ['Appliances', 'Electronics', 'Nursery'],
+          }),
+          collection.doc('doc3').set({
+            'category': ['Audio/Video', 'Electronics'],
+          }),
+          collection.doc('doc4').set({
+            'category': ['Beauty'],
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection.where(
+          'category',
+          arrayContainsAny: {'Appliances', 'Electronics'},
         ).get();
 
         // 2nd record should only be returned once
@@ -1677,6 +1734,27 @@ void runQueryTests() {
         );
       });
 
+      test('endAt with Iterable', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
+        );
+
+        await converted.add(1);
+        await converted.add(2);
+        await converted.add(3);
+
+        expect(
+          await converted.orderBy('value').endAt({2}).get().then((d) => d.docs),
+          [
+            isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 1),
+            isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 2),
+          ],
+        );
+      });
+
       test(
         'endAtDocument',
         () async {
@@ -1722,6 +1800,28 @@ void runQueryTests() {
           await converted
               .orderBy('value')
               .endBefore([2])
+              .get()
+              .then((d) => d.docs),
+          [isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 1)],
+        );
+      });
+
+      test('endBefore with Iterable', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
+        );
+
+        await converted.add(1);
+        await converted.add(2);
+        await converted.add(3);
+
+        expect(
+          await converted
+              .orderBy('value')
+              .endBefore({2})
               .get()
               .then((d) => d.docs),
           [isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 1)],
@@ -1784,6 +1884,35 @@ void runQueryTests() {
       );
 
       test(
+        'startAt with Iterable',
+        () async {
+          final collection = await initializeTest('foo');
+
+          final converted = collection.withConverter<int>(
+            fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+            toFirestore: (value, _) => {'value': value},
+          );
+
+          await converted.add(1);
+          await converted.add(2);
+          await converted.add(3);
+
+          expect(
+            await converted
+                .orderBy('value')
+                .startAt({2})
+                .get()
+                .then((d) => d.docs),
+            [
+              isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 2),
+              isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 3),
+            ],
+          );
+        },
+        timeout: const Timeout.factor(3),
+      );
+
+      test(
         'startAtDocument',
         () async {
           final collection = await initializeTest('foo');
@@ -1830,6 +1959,32 @@ void runQueryTests() {
             await converted
                 .orderBy('value')
                 .startAfter([2])
+                .get()
+                .then((d) => d.docs),
+            [isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 3)],
+          );
+        },
+        timeout: const Timeout.factor(3),
+      );
+
+      test(
+        'startAfter with Iterable',
+        () async {
+          final collection = await initializeTest('foo');
+
+          final converted = collection.withConverter<int>(
+            fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+            toFirestore: (value, _) => {'value': value},
+          );
+
+          await converted.add(1);
+          await converted.add(2);
+          await converted.add(3);
+
+          expect(
+            await converted
+                .orderBy('value')
+                .startAfter({2})
                 .get()
                 .then((d) => d.docs),
             [isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 3)],
