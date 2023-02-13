@@ -823,7 +823,7 @@ void runQueryTests() {
 
       test('startAfterDocument() starts after a document', () async {
         CollectionReference<Map<String, dynamic>> collection =
-            await initializeTest('startAt-document');
+            await initializeTest('startAfter-document');
         await Future.wait([
           collection.doc('doc1').set({
             'bar': {'value': 1}
