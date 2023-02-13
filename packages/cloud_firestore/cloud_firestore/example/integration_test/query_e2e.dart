@@ -367,6 +367,40 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc2'));
       });
 
+      test('ends at string field paths with Iterable', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('endAt-string');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 1,
+            'bar': {'value': 1}
+          }),
+          collection.doc('doc2').set({
+            'foo': 2,
+            'bar': {'value': 2}
+          }),
+          collection.doc('doc3').set({
+            'foo': 3,
+            'bar': {'value': 3}
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .orderBy('bar.value', descending: true)
+            .endAt({2}).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc3'));
+        expect(snapshot.docs[1].id, equals('doc2'));
+
+        QuerySnapshot<Map<String, dynamic>> snapshot2 =
+            await collection.orderBy('foo').endAt([2]).get();
+
+        expect(snapshot2.docs.length, equals(2));
+        expect(snapshot2.docs[0].id, equals('doc1'));
+        expect(snapshot2.docs[1].id, equals('doc2'));
+      });
+
       test('ends at field paths', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endAt-field-path');
@@ -497,6 +531,40 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc3'));
       });
 
+      test('starts at string field paths with Iterable', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startAt-string');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 1,
+            'bar': {'value': 1}
+          }),
+          collection.doc('doc2').set({
+            'foo': 2,
+            'bar': {'value': 2}
+          }),
+          collection.doc('doc3').set({
+            'foo': 3,
+            'bar': {'value': 3}
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .orderBy('bar.value', descending: true)
+            .startAt([2]).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc2'));
+        expect(snapshot.docs[1].id, equals('doc1'));
+
+        QuerySnapshot<Map<String, dynamic>> snapshot2 =
+            await collection.orderBy('foo').startAt({2}).get();
+
+        expect(snapshot2.docs.length, equals(2));
+        expect(snapshot2.docs[0].id, equals('doc2'));
+        expect(snapshot2.docs[1].id, equals('doc3'));
+      });
+
       test('starts at field paths', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startAt-field-path');
@@ -614,6 +682,40 @@ void runQueryTests() {
         QuerySnapshot<Map<String, dynamic>> snapshot = await collection
             .orderBy('bar.value', descending: true)
             .endBefore([1]).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc3'));
+        expect(snapshot.docs[1].id, equals('doc2'));
+
+        QuerySnapshot<Map<String, dynamic>> snapshot2 =
+            await collection.orderBy('foo').endBefore([3]).get();
+
+        expect(snapshot2.docs.length, equals(2));
+        expect(snapshot2.docs[0].id, equals('doc1'));
+        expect(snapshot2.docs[1].id, equals('doc2'));
+      });
+
+      test('ends before string field paths with Iterable', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('endBefore-string');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 1,
+            'bar': {'value': 1}
+          }),
+          collection.doc('doc2').set({
+            'foo': 2,
+            'bar': {'value': 2}
+          }),
+          collection.doc('doc3').set({
+            'foo': 3,
+            'bar': {'value': 3}
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .orderBy('bar.value', descending: true)
+            .endBefore({1}).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc3'));
