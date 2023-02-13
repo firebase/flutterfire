@@ -38,7 +38,8 @@ class _CodecUtility {
   }
 
   static List<dynamic>? replaceValueWithDelegatesInArray(
-      Iterable<dynamic>? data) {
+    Iterable<dynamic>? data,
+  ) {
     if (data == null) {
       return null;
     }
