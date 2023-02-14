@@ -720,6 +720,137 @@ void runQueryTests() {
     });
 
     /**
+     * Start after
+     */
+    group('Query.startAfter{Document}()', () {
+      test('starts after string field paths', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startAfter-string');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 1,
+            'bar': {'value': 1}
+          }),
+          collection.doc('doc2').set({
+            'foo': 2,
+            'bar': {'value': 2}
+          }),
+          collection.doc('doc3').set({
+            'foo': 3,
+            'bar': {'value': 3}
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .orderBy('bar.value', descending: true)
+            .startAfter([3]).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc2'));
+        expect(snapshot.docs[1].id, equals('doc1'));
+
+        QuerySnapshot<Map<String, dynamic>> snapshot2 =
+            await collection.orderBy('foo').startAfter([1]).get();
+
+        expect(snapshot2.docs.length, equals(2));
+        expect(snapshot2.docs[0].id, equals('doc2'));
+        expect(snapshot2.docs[1].id, equals('doc3'));
+      });
+
+      test('starts after field paths', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startAfter-field-path');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 1,
+            'bar': {'value': 1}
+          }),
+          collection.doc('doc2').set({
+            'foo': 2,
+            'bar': {'value': 2}
+          }),
+          collection.doc('doc3').set({
+            'foo': 3,
+            'bar': {'value': 3}
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .orderBy(FieldPath(const ['bar', 'value']), descending: true)
+            .startAfter([3]).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc2'));
+        expect(snapshot.docs[1].id, equals('doc1'));
+
+        QuerySnapshot<Map<String, dynamic>> snapshot2 = await collection
+            .orderBy(FieldPath(const ['foo']))
+            .startAfter([1]).get();
+
+        expect(snapshot2.docs.length, equals(2));
+        expect(snapshot2.docs[0].id, equals('doc2'));
+        expect(snapshot2.docs[1].id, equals('doc3'));
+      });
+
+      test('startAfterDocument() starts after a document field value',
+          () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startAfter-document-field-value');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'bar': {'value': 3}
+          }),
+          collection.doc('doc2').set({
+            'bar': {'value': 2}
+          }),
+          collection.doc('doc3').set({
+            'bar': {'value': 1}
+          }),
+        ]);
+
+        DocumentSnapshot startAfterSnapshot =
+            await collection.doc('doc3').get();
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .orderBy('bar.value')
+            .startAfterDocument(startAfterSnapshot)
+            .get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc2'));
+        expect(snapshot.docs[1].id, equals('doc1'));
+      });
+
+      test('startAfterDocument() starts after a document', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startAfter-document');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'bar': {'value': 1}
+          }),
+          collection.doc('doc2').set({
+            'bar': {'value': 2}
+          }),
+          collection.doc('doc3').set({
+            'bar': {'value': 3}
+          }),
+          collection.doc('doc4').set({
+            'bar': {'value': 4}
+          }),
+        ]);
+
+        DocumentSnapshot startAtSnapshot = await collection.doc('doc2').get();
+
+        QuerySnapshot<Map<String, dynamic>> snapshot =
+            await collection.startAfterDocument(startAtSnapshot).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc3'));
+        expect(snapshot.docs[1].id, equals('doc4'));
+      });
+    });
+
+    /**
      * Start & End
      */
 
