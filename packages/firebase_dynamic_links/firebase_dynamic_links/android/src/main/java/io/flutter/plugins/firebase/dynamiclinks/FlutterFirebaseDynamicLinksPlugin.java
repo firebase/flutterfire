@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class FlutterFirebaseDynamicLinksPlugin
@@ -148,7 +149,7 @@ public class FlutterFirebaseDynamicLinksPlugin
         result.success(url);
         return;
       case "FirebaseDynamicLinks#buildShortLink":
-        methodCallTask = buildShortLink(call.arguments());
+        methodCallTask = buildShortLink(Objects.requireNonNull(call.arguments()));
         break;
       case "FirebaseDynamicLinks#getDynamicLink":
       case "FirebaseDynamicLinks#getInitialLink":
@@ -190,7 +191,7 @@ public class FlutterFirebaseDynamicLinksPlugin
     return urlBuilder.buildDynamicLink().getUri().toString();
   }
 
-  private Task<Map<String, Object>> buildShortLink(@Nullable Map<String, Object> arguments) {
+  private Task<Map<String, Object>> buildShortLink(@NonNull Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
@@ -280,12 +281,12 @@ public class FlutterFirebaseDynamicLinksPlugin
   private DynamicLink.Builder setupParameters(Map<String, Object> arguments) {
     DynamicLink.Builder dynamicLinkBuilder = getDynamicLinkInstance(arguments).createDynamicLink();
 
-    String uriPrefix = (String) arguments.get("uriPrefix");
+    String uriPrefix = (String) Objects.requireNonNull(arguments.get("uriPrefix"));
     String link = (String) arguments.get("link");
 
     dynamicLinkBuilder.setDomainUriPrefix(uriPrefix);
     dynamicLinkBuilder.setLink(Uri.parse(link));
-
+    @SuppressWarnings("unchecked")
     Map<String, Object> androidParameters =
         (Map<String, Object>) arguments.get("androidParameters");
     if (androidParameters != null) {
@@ -301,7 +302,7 @@ public class FlutterFirebaseDynamicLinksPlugin
 
       dynamicLinkBuilder.setAndroidParameters(builder.build());
     }
-
+    @SuppressWarnings("unchecked")
     Map<String, Object> googleAnalyticsParameters =
         (Map<String, Object>) arguments.get("googleAnalyticsParameters");
     if (googleAnalyticsParameters != null) {
@@ -322,7 +323,7 @@ public class FlutterFirebaseDynamicLinksPlugin
 
       dynamicLinkBuilder.setGoogleAnalyticsParameters(builder.build());
     }
-
+    @SuppressWarnings("unchecked")
     Map<String, Object> iosParameters = (Map<String, Object>) arguments.get("iosParameters");
     if (iosParameters != null) {
       String bundleId = valueFor("bundleId", iosParameters);
@@ -344,7 +345,7 @@ public class FlutterFirebaseDynamicLinksPlugin
 
       dynamicLinkBuilder.setIosParameters(builder.build());
     }
-
+    @SuppressWarnings("unchecked")
     Map<String, Object> itunesConnectAnalyticsParameters =
         (Map<String, Object>) arguments.get("itunesConnectAnalyticsParameters");
     if (itunesConnectAnalyticsParameters != null) {
@@ -361,7 +362,7 @@ public class FlutterFirebaseDynamicLinksPlugin
 
       dynamicLinkBuilder.setItunesConnectAnalyticsParameters(builder.build());
     }
-
+    @SuppressWarnings("unchecked")
     Map<String, Object> navigationInfoParameters =
         (Map<String, Object>) arguments.get("navigationInfoParameters");
     if (navigationInfoParameters != null) {
@@ -374,7 +375,7 @@ public class FlutterFirebaseDynamicLinksPlugin
 
       dynamicLinkBuilder.setNavigationInfoParameters(builder.build());
     }
-
+    @SuppressWarnings("unchecked")
     Map<String, Object> socialMetaTagParameters =
         (Map<String, Object>) arguments.get("socialMetaTagParameters");
     if (socialMetaTagParameters != null) {
