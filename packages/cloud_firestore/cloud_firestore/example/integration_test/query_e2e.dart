@@ -367,6 +367,40 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc2'));
       });
 
+      test('ends at string field paths with Iterable', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('endAt-string');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 1,
+            'bar': {'value': 1}
+          }),
+          collection.doc('doc2').set({
+            'foo': 2,
+            'bar': {'value': 2}
+          }),
+          collection.doc('doc3').set({
+            'foo': 3,
+            'bar': {'value': 3}
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .orderBy('bar.value', descending: true)
+            .endAt({2}).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc3'));
+        expect(snapshot.docs[1].id, equals('doc2'));
+
+        QuerySnapshot<Map<String, dynamic>> snapshot2 =
+            await collection.orderBy('foo').endAt([2]).get();
+
+        expect(snapshot2.docs.length, equals(2));
+        expect(snapshot2.docs[0].id, equals('doc1'));
+        expect(snapshot2.docs[1].id, equals('doc2'));
+      });
+
       test('ends at field paths', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endAt-field-path');
@@ -497,6 +531,40 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc3'));
       });
 
+      test('starts at string field paths with Iterable', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startAt-string');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 1,
+            'bar': {'value': 1}
+          }),
+          collection.doc('doc2').set({
+            'foo': 2,
+            'bar': {'value': 2}
+          }),
+          collection.doc('doc3').set({
+            'foo': 3,
+            'bar': {'value': 3}
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .orderBy('bar.value', descending: true)
+            .startAt([2]).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc2'));
+        expect(snapshot.docs[1].id, equals('doc1'));
+
+        QuerySnapshot<Map<String, dynamic>> snapshot2 =
+            await collection.orderBy('foo').startAt({2}).get();
+
+        expect(snapshot2.docs.length, equals(2));
+        expect(snapshot2.docs[0].id, equals('doc2'));
+        expect(snapshot2.docs[1].id, equals('doc3'));
+      });
+
       test('starts at field paths', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startAt-field-path');
@@ -614,6 +682,40 @@ void runQueryTests() {
         QuerySnapshot<Map<String, dynamic>> snapshot = await collection
             .orderBy('bar.value', descending: true)
             .endBefore([1]).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc3'));
+        expect(snapshot.docs[1].id, equals('doc2'));
+
+        QuerySnapshot<Map<String, dynamic>> snapshot2 =
+            await collection.orderBy('foo').endBefore([3]).get();
+
+        expect(snapshot2.docs.length, equals(2));
+        expect(snapshot2.docs[0].id, equals('doc1'));
+        expect(snapshot2.docs[1].id, equals('doc2'));
+      });
+
+      test('ends before string field paths with Iterable', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('endBefore-string');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 1,
+            'bar': {'value': 1}
+          }),
+          collection.doc('doc2').set({
+            'foo': 2,
+            'bar': {'value': 2}
+          }),
+          collection.doc('doc3').set({
+            'foo': 3,
+            'bar': {'value': 3}
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .orderBy('bar.value', descending: true)
+            .endBefore({1}).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc3'));
@@ -1387,7 +1489,41 @@ void runQueryTests() {
         });
       });
 
-      test('returns with in filter', () async {
+      test('returns with in filter using Iterable', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-in-iterable');
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'status': 'Ordered',
+          }),
+          collection.doc('doc2').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc3').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc4').set({
+            'status': 'Incomplete',
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .where(
+              'status',
+              // To force the list to be an iterable
+              whereIn: ['Ready to Ship', 'Ordered'].map((e) => e),
+            )
+            .get();
+
+        expect(snapshot.docs.length, equals(3));
+        snapshot.docs.forEach((doc) {
+          String status = doc.data()['status'];
+          expect(status == 'Ready to Ship' || status == 'Ordered', isTrue);
+        });
+      });
+
+      test('returns with in filter using Set', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-in');
 
@@ -1407,7 +1543,7 @@ void runQueryTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot = await collection
-            .where('status', whereIn: ['Ready to Ship', 'Ordered']).get();
+            .where('status', whereIn: {'Ready to Ship', 'Ordered'}).get();
 
         expect(snapshot.docs.length, equals(3));
         snapshot.docs.forEach((doc) {
@@ -1445,6 +1581,35 @@ void runQueryTests() {
         });
       });
 
+      test('returns with not-in filter with Iterable', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-not-in');
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'status': 'Ordered',
+          }),
+          collection.doc('doc2').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc3').set({
+            'status': 'Ready to Ship',
+          }),
+          collection.doc('doc4').set({
+            'status': 'Incomplete',
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .where('status', whereNotIn: {'Ready to Ship', 'Ordered'}).get();
+
+        expect(snapshot.docs.length, equals(1));
+        snapshot.docs.forEach((doc) {
+          String status = doc.data()['status'];
+          expect(status == 'Incomplete', isTrue);
+        });
+      });
+
       test('returns with array-contains-any filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-array-contains-any');
@@ -1467,6 +1632,34 @@ void runQueryTests() {
         QuerySnapshot<Map<String, dynamic>> snapshot = await collection.where(
           'category',
           arrayContainsAny: ['Appliances', 'Electronics'],
+        ).get();
+
+        // 2nd record should only be returned once
+        expect(snapshot.docs.length, equals(3));
+      });
+
+      test('returns with array-contains-any filter using Set', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-array-contains-any');
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'category': ['Appliances', 'Housewares', 'Cooking'],
+          }),
+          collection.doc('doc2').set({
+            'category': ['Appliances', 'Electronics', 'Nursery'],
+          }),
+          collection.doc('doc3').set({
+            'category': ['Audio/Video', 'Electronics'],
+          }),
+          collection.doc('doc4').set({
+            'category': ['Beauty'],
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection.where(
+          'category',
+          arrayContainsAny: {'Appliances', 'Electronics'},
         ).get();
 
         // 2nd record should only be returned once
@@ -1774,6 +1967,27 @@ void runQueryTests() {
         );
       });
 
+      test('endAt with Iterable', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
+        );
+
+        await converted.add(1);
+        await converted.add(2);
+        await converted.add(3);
+
+        expect(
+          await converted.orderBy('value').endAt({2}).get().then((d) => d.docs),
+          [
+            isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 1),
+            isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 2),
+          ],
+        );
+      });
+
       test(
         'endAtDocument',
         () async {
@@ -1819,6 +2033,28 @@ void runQueryTests() {
           await converted
               .orderBy('value')
               .endBefore([2])
+              .get()
+              .then((d) => d.docs),
+          [isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 1)],
+        );
+      });
+
+      test('endBefore with Iterable', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
+        );
+
+        await converted.add(1);
+        await converted.add(2);
+        await converted.add(3);
+
+        expect(
+          await converted
+              .orderBy('value')
+              .endBefore({2})
               .get()
               .then((d) => d.docs),
           [isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 1)],
@@ -1881,6 +2117,35 @@ void runQueryTests() {
       );
 
       test(
+        'startAt with Iterable',
+        () async {
+          final collection = await initializeTest('foo');
+
+          final converted = collection.withConverter<int>(
+            fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+            toFirestore: (value, _) => {'value': value},
+          );
+
+          await converted.add(1);
+          await converted.add(2);
+          await converted.add(3);
+
+          expect(
+            await converted
+                .orderBy('value')
+                .startAt({2})
+                .get()
+                .then((d) => d.docs),
+            [
+              isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 2),
+              isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 3),
+            ],
+          );
+        },
+        timeout: const Timeout.factor(3),
+      );
+
+      test(
         'startAtDocument',
         () async {
           final collection = await initializeTest('foo');
@@ -1927,6 +2192,32 @@ void runQueryTests() {
             await converted
                 .orderBy('value')
                 .startAfter([2])
+                .get()
+                .then((d) => d.docs),
+            [isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 3)],
+          );
+        },
+        timeout: const Timeout.factor(3),
+      );
+
+      test(
+        'startAfter with Iterable',
+        () async {
+          final collection = await initializeTest('foo');
+
+          final converted = collection.withConverter<int>(
+            fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+            toFirestore: (value, _) => {'value': value},
+          );
+
+          await converted.add(1);
+          await converted.add(2);
+          await converted.add(3);
+
+          expect(
+            await converted
+                .orderBy('value')
+                .startAfter({2})
                 .get()
                 .then((d) => d.docs),
             [isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 3)],

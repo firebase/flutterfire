@@ -37,7 +37,9 @@ class _CodecUtility {
     return output;
   }
 
-  static List<dynamic>? replaceValueWithDelegatesInArray(List<dynamic>? data) {
+  static List<dynamic>? replaceValueWithDelegatesInArray(
+    Iterable<dynamic>? data,
+  ) {
     if (data == null) {
       return null;
     }
@@ -71,7 +73,7 @@ class _CodecUtility {
   static dynamic valueEncode(dynamic value) {
     if (value is DocumentReference) {
       return value._delegate;
-    } else if (value is List) {
+    } else if (value is Iterable) {
       return replaceValueWithDelegatesInArray(value);
     } else if (value is Map<dynamic, dynamic>) {
       return replaceValueWithDelegatesInMap(value);
