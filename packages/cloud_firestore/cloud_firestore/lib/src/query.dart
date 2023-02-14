@@ -704,19 +704,19 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
           isNotIn(operator)) {
         assert(
           value is Iterable,
-          "A non-empty [List] is required for '$operator' filters.",
+          "A non-empty [Iterable] is required for '$operator' filters.",
         );
         assert(
           (value as Iterable).length <= 10,
-          "'$operator' filters support a maximum of 10 elements in the value [List].",
+          "'$operator' filters support a maximum of 10 elements in the value [Iterable].",
         );
         assert(
           (value as Iterable).isNotEmpty,
-          "'$operator' filters require a non-empty [List].",
+          "'$operator' filters require a non-empty [Iterable].",
         );
         assert(
           (value as Iterable).where((value) => value == null).isEmpty,
-          "'$operator' filters cannot contain 'null' in the [List].",
+          "'$operator' filters cannot contain 'null' in the [Iterable].",
         );
       }
 
