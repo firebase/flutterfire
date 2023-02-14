@@ -191,33 +191,21 @@ void main() {
       });
 
       group('subscribeToTopic()', () {
-        test(
-          'successfully subscribes from topic',
-          () async {
-            const topic = 'test-topic';
-            await messaging.subscribeToTopic(topic);
-          },
-          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-          // Android skipped because it times out with a likelihood of 98%. See: https://github.com/firebase/flutterfire/issues/9651
-          skip: kIsWeb ||
-              defaultTargetPlatform == TargetPlatform.macOS ||
-              defaultTargetPlatform == TargetPlatform.android,
-        );
+        test('successfully subscribes from topic', () async {
+          const topic = 'test-topic';
+          await messaging.subscribeToTopic(topic);
+        },
+            // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
+            skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS);
       });
 
       group('unsubscribeFromTopic()', () {
-        test(
-          'successfully unsubscribes from topic',
-          () async {
-            const topic = 'test-topic';
-            await messaging.unsubscribeFromTopic(topic);
-          },
-          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-          // Android skipped because it times out with a likelihood of 98%. See: https://github.com/firebase/flutterfire/issues/9650
-          skip: kIsWeb ||
-              defaultTargetPlatform == TargetPlatform.macOS ||
-              defaultTargetPlatform == TargetPlatform.android,
-        );
+        test('successfully unsubscribes from topic', () async {
+          const topic = 'test-topic';
+          await messaging.unsubscribeFromTopic(topic);
+        },
+            // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
+            skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS);
       });
 
       group('setDeliveryMetricsExportToBigQuery()', () {
