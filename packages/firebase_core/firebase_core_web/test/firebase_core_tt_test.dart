@@ -14,7 +14,7 @@ void main() {
   group('injectScript (TrustedTypes configured)', () {
     injectMetaTag(<String, String>{
       'http-equiv': 'Content-Security-Policy',
-      'content': "trusted-types my-custom-policy-name 'allow-duplicates';",
+      'content': 'trusted-types',
     });
 
     test('Should inject Firebase Core script properly', () {
