@@ -64,7 +64,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// You can override the supported version by attaching a version string to
   /// the window (window.flutterfire_web_sdk_version = 'x.x.x'). Do so at your
   /// own risk as the version might be unsupported or untested against.
-  String get _firebaseSDKVersion {
+  @visibleForTesting
+  String get firebaseSDKVersion {
     return context['flutterfire_web_sdk_version'] ??
         supportedFirebaseJsSdkVersion;
   }
@@ -100,7 +101,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
   /// Injects a `script` with a `src` dynamically into the head of the current
   /// document.
-  Future<void> _injectSrcScript(String src, String windowVar) async {
+  @visibleForTesting
+  Future<void> injectSrcScript(String src, String windowVar) async {
     DomTrustedScriptUrl? trustedUrl;
     final trustedPolicyName = _defaultTrustedPolicyName + windowVar;
     if (trustedTypes != null) {
@@ -155,7 +157,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
       return;
     }
 
-    String version = _firebaseSDKVersion;
+    String version = firebaseSDKVersion;
     List<String> ignored = _ignoredServiceScripts;
 
     await Future.wait(
@@ -164,7 +166,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
           return Future.value();
         }
 
-        return _injectSrcScript(
+        return injectSrcScript(
           'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
           'firebase_${service.override ?? service.name}',
         );

@@ -13,6 +13,7 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'package:firebase_core_web/src/interop/js.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:js/js_util.dart' as js_util;
+import 'package:meta/meta.dart';
 
 import 'src/interop/core.dart' as firebase;
 import 'src/interop/js.dart' as js;
