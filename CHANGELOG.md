@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-02-14
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.4.0`](#cloud_firestore---v440)
+ - [`cloud_firestore_platform_interface` - `v5.11.0`](#cloud_firestore_platform_interface---v5110)
+ - [`cloud_firestore_web` - `v3.3.0`](#cloud_firestore_web---v330)
+ - [`firebase_database` - `v10.0.11`](#firebase_database---v10011)
+ - [`firebase_ui_localizations` - `v1.2.0`](#firebase_ui_localizations---v120)
+ - [`firebase_ui_oauth_google` - `v1.0.18`](#firebase_ui_oauth_google---v1018)
+ - [`firebase_ui_firestore` - `v1.2.5`](#firebase_ui_firestore---v125)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.47`](#cloud_firestore_odm---v100-dev47)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.47`](#cloud_firestore_odm_generator---v100-dev47)
+ - [`firebase_ui_database` - `v1.0.13`](#firebase_ui_database---v1013)
+ - [`firebase_ui_auth` - `v1.1.11`](#firebase_ui_auth---v1111)
+ - [`firebase_ui_oauth` - `v1.1.11`](#firebase_ui_oauth---v1111)
+ - [`firebase_ui_oauth_apple` - `v1.0.18`](#firebase_ui_oauth_apple---v1018)
+ - [`firebase_ui_oauth_facebook` - `v1.0.18`](#firebase_ui_oauth_facebook---v1018)
+ - [`firebase_ui_oauth_twitter` - `v1.0.18`](#firebase_ui_oauth_twitter---v1018)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_firestore` - `v1.2.5`
+ - `cloud_firestore_odm` - `v1.0.0-dev.47`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.47`
+ - `firebase_ui_database` - `v1.0.13`
+ - `firebase_ui_auth` - `v1.1.11`
+ - `firebase_ui_oauth` - `v1.1.11`
+ - `firebase_ui_oauth_apple` - `v1.0.18`
+ - `firebase_ui_oauth_facebook` - `v1.0.18`
+ - `firebase_ui_oauth_twitter` - `v1.0.18`
+
+---
+
+#### `cloud_firestore` - `v4.4.0`
+
+ - **FIX**: supports Iterable in queries instead of List ([#10411](https://github.com/firebase/flutterfire/issues/10411)). ([9d91d513](https://github.com/firebase/flutterfire/commit/9d91d513fad326f9c928d7d96d03e2c031875903))
+ - **FEAT**: add support to `update` using FieldPath ([#10388](https://github.com/firebase/flutterfire/issues/10388)). ([538090fc](https://github.com/firebase/flutterfire/commit/538090fc49078b8d6c484d8db9049f06d05157dd))
+
+#### `cloud_firestore_platform_interface` - `v5.11.0`
+
+ - **FIX**: supports Iterable in queries instead of List ([#10411](https://github.com/firebase/flutterfire/issues/10411)). ([9d91d513](https://github.com/firebase/flutterfire/commit/9d91d513fad326f9c928d7d96d03e2c031875903))
+ - **FEAT**: add support to `update` using FieldPath ([#10388](https://github.com/firebase/flutterfire/issues/10388)). ([538090fc](https://github.com/firebase/flutterfire/commit/538090fc49078b8d6c484d8db9049f06d05157dd))
+
+#### `cloud_firestore_web` - `v3.3.0`
+
+ - **FIX**: supports Iterable in queries instead of List ([#10411](https://github.com/firebase/flutterfire/issues/10411)). ([9d91d513](https://github.com/firebase/flutterfire/commit/9d91d513fad326f9c928d7d96d03e2c031875903))
+ - **FEAT**: add support to `update` using FieldPath ([#10388](https://github.com/firebase/flutterfire/issues/10388)). ([538090fc](https://github.com/firebase/flutterfire/commit/538090fc49078b8d6c484d8db9049f06d05157dd))
+
+#### `firebase_database` - `v10.0.11`
+
+ - **DOCS**: remove duplicate wording in documentation ([#10229](https://github.com/firebase/flutterfire/issues/10229)). ([d4feb22e](https://github.com/firebase/flutterfire/commit/d4feb22e06899f0db9923264b5345e538a07fbac))
+
+#### `firebase_ui_localizations` - `v1.2.0`
+
+ - **FEAT**: Added Hebrew language to firebase_ui_localizations ([#10300](https://github.com/firebase/flutterfire/issues/10300)). ([ee4e29b8](https://github.com/firebase/flutterfire/commit/ee4e29b8ef99344d4622d974b55d679e0a1934a5))
+
+#### `firebase_ui_oauth_google` - `v1.0.18`
+
+ - **FIX**: allow GoogleService-Info.plist based configuration ([#10360](https://github.com/firebase/flutterfire/issues/10360)). ([162597f4](https://github.com/firebase/flutterfire/commit/162597f4556b1e0da0601db08574f41ac3585500))
+
+
 ## 2023-02-08
 
 ### Changes
