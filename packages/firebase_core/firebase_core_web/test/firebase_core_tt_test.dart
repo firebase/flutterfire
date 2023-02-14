@@ -9,13 +9,6 @@ import 'tools.dart';
 
 // NOTE: This file needs to be separated from the others because Content
 // Security Policies can never be *relaxed* once set.
-//
-// In order to not introduce a dependency in the order of the tests, we split
-// them in different files, depending on the strictness of their CSP:
-//
-// * js_loader_test.dart : default TT configuration (not enforced)
-// * js_loader_tt_custom_test.dart : TT are customized, but allowed
-// * js_loader_tt_forbidden_test.dart: TT are completely disallowed
 
 void main() {
   group('injectScript (TrustedTypes configured)', () {
