@@ -8,7 +8,7 @@ Firebase UI for Flutter supports localization, so every single label can be cust
 dependencies:
   flutter_localizations:
     sdk: flutter
-  firebase_ui_localizations: ^1.0.0
+  firebase_ui_localizations: ^1.2.0
 ```
 
 ## Usage

@@ -1,3 +1,7 @@
+## 10.0.11
+
+ - **DOCS**: remove duplicate wording in documentation ([#10229](https://github.com/firebase/flutterfire/issues/10229)). ([d4feb22e](https://github.com/firebase/flutterfire/commit/d4feb22e06899f0db9923264b5345e538a07fbac))
+
 ## 10.0.10
 
  - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))

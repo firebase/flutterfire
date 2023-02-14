@@ -9,7 +9,7 @@ environment:
   sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
-  cloud_firestore: ^4.3.2
+  cloud_firestore: ^4.4.0
   cupertino_icons: ^0.1.2
   firebase_app_check: ^0.1.1+9
   firebase_core: ^2.5.0
