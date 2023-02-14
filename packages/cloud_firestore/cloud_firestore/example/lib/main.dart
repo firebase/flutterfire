@@ -189,11 +189,10 @@ class _FilmListState extends State<FilmList> {
                   RootIsolateToken rootIsolateToken =
                       RootIsolateToken.instance!;
                   ReceivePort receivePort = ReceivePort();
-                  final mostLikedMovie = await Isolate.spawn(
+                  await Isolate.spawn(
                     _isolateGetTheMostLikes,
                     [rootIsolateToken, receivePort.sendPort],
                   );
-                  mostLikedMovie.addOnExitListener(receivePort.sendPort);
                   receivePort.listen((message) {
                     print('Most liked movie in main Thread: $message');
                   });
