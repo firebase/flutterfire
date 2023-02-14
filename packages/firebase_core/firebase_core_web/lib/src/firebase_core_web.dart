@@ -113,7 +113,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
       final DomTrustedTypePolicyFactory factory = trustedTypes!;
       try {
         final DomTrustedTypePolicy policy = factory.createPolicy(
-          _defaultTrustedPolicyName,
+          trustedPolicyName,
           DomTrustedTypePolicyOptions(
             createScriptURL: allowInterop((String url) => src),
           ),
