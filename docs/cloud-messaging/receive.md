@@ -127,6 +127,8 @@ There are a few things to keep in mind about your background message handler:
 2. It must be a top-level function (e.g. not a class method which requires initialization).
 3. It must be annotated with `@pragma('vm:entry-point')` right above the function declaration (otherwise it may be removed during tree shaking for release mode).
 
+Note: The `@pragma('vm:entry-point')` annotation is a requirement when using Flutter version `3.3.0` or higher.
+
 ```dart
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -343,9 +345,9 @@ Here's how to use the second method:
 
 ## Enable message delivery data export
 
-You can export your message data into BigQuery for further analysis. BigQuery allows you to analyze the data using BigQuery SQL, 
-export it to another cloud provider, or use the data for your custom ML models. An export to BigQuery 
-includes all available data for messages, regardless of message type or whether the message is sent via 
+You can export your message data into BigQuery for further analysis. BigQuery allows you to analyze the data using BigQuery SQL,
+export it to another cloud provider, or use the data for your custom ML models. An export to BigQuery
+includes all available data for messages, regardless of message type or whether the message is sent via
 the API or the Notifications composer.
 
 To enable the export, first follow the steps [described here](https://firebase.google.com/docs/cloud-messaging/understand-delivery?platform=ios#bigquery-data-export),
@@ -383,12 +385,12 @@ For iOS, you need to change the `AppDelegate.m` with the following content.
 }
 
 @end
-``` 
+```
 
 ### Web
 
 For Web, you need to change your service worker in order to use the v9 version of the SDK.
-The v9 version needs to be bundled, so you need to use a bundler like `esbuild` for instance 
+The v9 version needs to be bundled, so you need to use a bundler like `esbuild` for instance
 to get the service worker to work.
 See [the example app](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/bundled-service-worker) to see how to achieve this.
 
