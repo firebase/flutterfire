@@ -191,21 +191,27 @@ void main() {
       });
 
       group('subscribeToTopic()', () {
-        test('successfully subscribes from topic', () async {
-          const topic = 'test-topic';
-          await messaging.subscribeToTopic(topic);
-        },
-            // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-            skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS);
+        test(
+          'successfully subscribes from topic',
+          () async {
+            const topic = 'test-topic';
+            await messaging.subscribeToTopic(topic);
+          },
+          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+        );
       });
 
       group('unsubscribeFromTopic()', () {
-        test('successfully unsubscribes from topic', () async {
-          const topic = 'test-topic';
-          await messaging.unsubscribeFromTopic(topic);
-        },
-            // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-            skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS);
+        test(
+          'successfully unsubscribes from topic',
+          () async {
+            const topic = 'test-topic';
+            await messaging.unsubscribeFromTopic(topic);
+          },
+          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+        );
       });
 
       group('setDeliveryMetricsExportToBigQuery()', () {
