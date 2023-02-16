@@ -130,6 +130,8 @@ class EncodeUtility {
       return encodeMapData(value);
     } else if (value is List<dynamic>) {
       return encodeArrayData(value);
+    } else if (value is Iterable<dynamic>) {
+      return encodeArrayData(value.toList());
     }
     return value;
   }
