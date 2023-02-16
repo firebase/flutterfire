@@ -216,8 +216,10 @@ external PromiseJsImpl<void> terminate(FirestoreJsImpl firestore);
 @JS()
 external PromiseJsImpl<void> updateDoc(
   DocumentReferenceJsImpl reference,
-  dynamic data,
-);
+  /*string | FieldPath*/ dynamic field,
+  dynamic value, [
+  dynamic moreFieldsAndValues,
+]);
 
 @JS()
 external PromiseJsImpl<void> waitForPendingWrites(FirestoreJsImpl firestore);
