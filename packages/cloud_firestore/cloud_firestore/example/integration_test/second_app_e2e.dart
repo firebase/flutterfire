@@ -27,9 +27,9 @@ void runSecondAppTests() {
     group(
       'Secondary app Firestore instance',
       () {
-        test(
+        testWidgets(
             'Second Firestore instance should fail due to firestore.rules forbidding data writes',
-            () async {
+            (_) async {
           // successful write on default app instance
           await firestore
               .collection('flutter-tests/banned/doc')

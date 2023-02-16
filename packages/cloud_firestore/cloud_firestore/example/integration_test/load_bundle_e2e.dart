@@ -4,9 +4,9 @@
 
 import 'dart:typed_data';
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 
 void runLoadBundleTests() {
@@ -28,7 +28,7 @@ void runLoadBundleTests() {
     });
 
     group('FirebaseFirestore.loadBundle()', () {
-      test('loadBundle()', () async {
+      testWidgets('loadBundle()', (_) async {
         const int number = 1;
         const String collection = 'firestore-bundle-tests-$number';
         Uint8List buffer = await loadBundleSetup(number);
@@ -47,7 +47,8 @@ void runLoadBundleTests() {
         );
       });
 
-      test('loadBundle(): LoadBundleTaskProgress stream snapshots', () async {
+      testWidgets('loadBundle(): LoadBundleTaskProgress stream snapshots',
+          (_) async {
         Uint8List buffer = await loadBundleSetup(2);
         LoadBundleTask task = firestore.loadBundle(buffer);
 
@@ -68,7 +69,8 @@ void runLoadBundleTests() {
         );
       });
 
-      test('loadBundle(): error handling for malformed bundle', () async {
+      testWidgets('loadBundle(): error handling for malformed bundle',
+          (_) async {
         final url = Uri.https(
           'api.rnfirebase.io',
           '/firestore/e2e-tests/malformed-bundle',
@@ -88,7 +90,7 @@ void runLoadBundleTests() {
         );
       });
 
-      test('loadBundle(): pause and resume stream', () async {
+      testWidgets('loadBundle(): pause and resume stream', (_) async {
         Uint8List buffer = await loadBundleSetup(3);
         LoadBundleTask task = firestore.loadBundle(buffer);
         // Illustrates the pause() & resume() function.
@@ -123,7 +125,7 @@ void runLoadBundleTests() {
     });
 
     group('FirebaeFirestore.namedQueryGet()', () {
-      test('namedQueryGet() successful', () async {
+      testWidgets('namedQueryGet() successful', (_) async {
         const int number = 4;
         Uint8List buffer = await loadBundleSetup(number);
         LoadBundleTask task = firestore.loadBundle(buffer);
@@ -145,7 +147,7 @@ void runLoadBundleTests() {
         );
       });
 
-      test('namedQueryGet() error', () async {
+      testWidgets('namedQueryGet() error', (_) async {
         Uint8List buffer = await loadBundleSetup(4);
         LoadBundleTask task = firestore.loadBundle(buffer);
 
@@ -166,7 +168,7 @@ void runLoadBundleTests() {
     });
 
     group('FirebaeFirestore.namedQueryWithConverterGet()', () {
-      test('namedQueryWithConverterGet() successful', () async {
+      testWidgets('namedQueryWithConverterGet() successful', (_) async {
         const int number = 4;
         Uint8List buffer = await loadBundleSetup(number);
         LoadBundleTask task = firestore.loadBundle(buffer);
@@ -190,7 +192,7 @@ void runLoadBundleTests() {
         );
       });
 
-      test('namedQueryWithConverterGet() error', () async {
+      testWidgets('namedQueryWithConverterGet() error', (_) async {
         Uint8List buffer = await loadBundleSetup(4);
         LoadBundleTask task = firestore.loadBundle(buffer);
 
