@@ -91,7 +91,7 @@ void main() {
       expect(nativeFromJson<String>('Test'), equals('Test'));
     });
 
-    // Since protobuf doesn't distinguish between int and double, we need to do the parsing outselves
+    // Since protobuf doesn't distinguish between int and double, we need to do the parsing ourselves
     test('nativeFromJson correctly matches int to int and double to double',
         () {
       double expectedDouble = 42;
