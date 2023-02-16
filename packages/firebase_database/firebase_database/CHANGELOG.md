@@ -1,3 +1,7 @@
+## 10.0.12
+
+ - Update a dependency to the latest release.
+
 ## 10.0.11
 
  - **DOCS**: remove duplicate wording in documentation ([#10229](https://github.com/firebase/flutterfire/issues/10229)). ([d4feb22e](https://github.com/firebase/flutterfire/commit/d4feb22e06899f0db9923264b5345e538a07fbac))
