@@ -1,3 +1,7 @@
+## 3.3.19
+
+ - Update a dependency to the latest release.
+
 ## 3.3.18
 
  - **DOCS**: add more documentation for `logEvent` ([#10389](https://github.com/firebase/flutterfire/issues/10389)). ([8755d776](https://github.com/firebase/flutterfire/commit/8755d776b30ce2db71e00279438c8d3617cf3187))

@@ -1,3 +1,7 @@
+## 0.9.0+12
+
+ - Update a dependency to the latest release.
+
 ## 0.9.0+11
 
  - **REFACTOR**: replace deprecated API: `Tasks.call()` ([#10361](https://github.com/firebase/flutterfire/issues/10361)). ([22407847](https://github.com/firebase/flutterfire/commit/2240784774d6673319fdb32a90c52beb015d3714))

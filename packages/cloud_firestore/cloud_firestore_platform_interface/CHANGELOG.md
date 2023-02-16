@@ -1,3 +1,7 @@
+## 5.11.1
+
+ - Update a dependency to the latest release.
+
 ## 5.11.0
 
  - **FIX**: supports Iterable in queries instead of List ([#10411](https://github.com/firebase/flutterfire/issues/10411)). ([9d91d513](https://github.com/firebase/flutterfire/commit/9d91d513fad326f9c928d7d96d03e2c031875903))
