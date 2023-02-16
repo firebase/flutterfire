@@ -126,6 +126,12 @@ extension DomTrustedTypePolicyExtension on DomTrustedTypePolicy {
 @anonymous
 abstract class DomTrustedScriptUrl {}
 
+/// (Some) methods of the [DomTrustedScriptUrl]
+extension DomTrustedScriptUrlExtension on DomTrustedScriptUrl {
+  @JS('toString')
+  external String toStringJS();
+}
+
 // Getters
 
 /// window.trustedTypes (may or may not be supported by the browser)
