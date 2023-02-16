@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void runFieldValueTests() {
   group('$FieldValue', () {
@@ -22,7 +22,7 @@ void runFieldValueTests() {
     }
 
     group('FieldValue.increment()', () {
-      test('increments a number if it exists', () async {
+      testWidgets('increments a number if it exists', (_) async {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-increment-exists');
         await doc.set({'foo': 2});
@@ -31,7 +31,7 @@ void runFieldValueTests() {
         expect(snapshot.data()!['foo'], equals(3));
       });
 
-      test('decrements a number', () async {
+      testWidgets('decrements a number', (_) async {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-decrement-exists');
         await doc.set({'foo': 2});
@@ -40,7 +40,7 @@ void runFieldValueTests() {
         expect(snapshot.data()!['foo'], equals(1));
       });
 
-      test('sets an increment if it does not exist', () async {
+      testWidgets('sets an increment if it does not exist', (_) async {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-increment-not-exists');
         DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
@@ -52,7 +52,7 @@ void runFieldValueTests() {
     });
 
     group('FieldValue.serverTimestamp()', () {
-      test('sets a new server time value', () async {
+      testWidgets('sets a new server time value', (_) async {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-server-timestamp-new');
         await doc.set({'foo': FieldValue.serverTimestamp()});
@@ -60,7 +60,7 @@ void runFieldValueTests() {
         expect(snapshot.data()!['foo'], isA<Timestamp>());
       });
 
-      test('updates a server time value', () async {
+      testWidgets('updates a server time value', (_) async {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-server-timestamp-update');
         await doc.set({'foo': FieldValue.serverTimestamp()});
@@ -81,7 +81,7 @@ void runFieldValueTests() {
     });
 
     group('FieldValue.delete()', () {
-      test('removes a value', () async {
+      testWidgets('removes a value', (_) async {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-delete');
         await doc.set({'foo': 'bar', 'bar': 'baz'});
@@ -92,7 +92,7 @@ void runFieldValueTests() {
     });
 
     group('FieldValue.arrayUnion()', () {
-      test('updates an existing array', () async {
+      testWidgets('updates an existing array', (_) async {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-array-union-update-array');
         await doc.set({
@@ -105,7 +105,8 @@ void runFieldValueTests() {
         expect(snapshot.data()!['foo'], equals([1, 2, 3, 4]));
       });
 
-      test('updates an array if current value is not an array', () async {
+      testWidgets('updates an array if current value is not an array',
+          (_) async {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-array-union-replace');
         await doc.set({'foo': 'bar'});
@@ -116,7 +117,7 @@ void runFieldValueTests() {
         expect(snapshot.data()!['foo'], equals([3, 4]));
       });
 
-      test('sets an array if current value is not an array', () async {
+      testWidgets('sets an array if current value is not an array', (_) async {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-array-union-replace');
         await doc.set({'foo': 'bar'});
@@ -129,7 +130,7 @@ void runFieldValueTests() {
     });
 
     group('FieldValue.arrayRemove()', () {
-      test('removes items in an array', () async {
+      testWidgets('removes items in an array', (_) async {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-array-remove-existing');
         await doc.set({
@@ -142,8 +143,8 @@ void runFieldValueTests() {
         expect(snapshot.data()!['foo'], equals([1, 2]));
       });
 
-      test('removes & updates an array if existing item is not an array',
-          () async {
+      testWidgets('removes & updates an array if existing item is not an array',
+          (_) async {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-array-remove-replace');
         await doc.set({'foo': 'bar'});
@@ -154,8 +155,8 @@ void runFieldValueTests() {
         expect(snapshot.data()!['foo'], equals([3, 4]));
       });
 
-      test('removes & sets an array if existing item is not an array',
-          () async {
+      testWidgets('removes & sets an array if existing item is not an array',
+          (_) async {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-array-remove-replace');
         await doc.set({'foo': 'bar'});
@@ -168,9 +169,9 @@ void runFieldValueTests() {
 
       // ignore: todo
       // TODO(salakar): test is currently failing on CI but unable to reproduce locally
-      test(
+      testWidgets(
         'updates with nested types',
-        () async {
+        (_) async {
           DocumentReference<Map<String, dynamic>> doc =
               await initializeTest('field-value-nested-types');
 

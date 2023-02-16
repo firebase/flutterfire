@@ -5,9 +5,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runInstanceTests() {
   group(
@@ -19,9 +19,9 @@ void runInstanceTests() {
         firestore = FirebaseFirestore.instance;
       });
 
-      test(
+      testWidgets(
         'snapshotsInSync()',
-        () async {
+        (_) async {
           DocumentReference<Map<String, dynamic>> documentReference =
               firestore.doc('flutter-tests/insync');
 
@@ -66,9 +66,9 @@ void runInstanceTests() {
         skip: kIsWeb,
       );
 
-      test(
+      testWidgets(
         'enableNetwork()',
-        () async {
+        (_) async {
           // Write some data while online
           await firestore.enableNetwork();
           DocumentReference<Map<String, dynamic>> documentReference =
@@ -96,9 +96,9 @@ void runInstanceTests() {
         skip: kIsWeb,
       );
 
-      test(
+      testWidgets(
         'disableNetwork()',
-        () async {
+        (_) async {
           // Write some data while online
           await firestore.enableNetwork();
           DocumentReference<Map<String, dynamic>> documentReference =
@@ -120,17 +120,17 @@ void runInstanceTests() {
         skip: kIsWeb,
       );
 
-      test(
+      testWidgets(
         'waitForPendingWrites()',
-        () async {
+        (_) async {
           await firestore.waitForPendingWrites();
         },
         skip: kIsWeb,
       );
 
-      test(
+      testWidgets(
         'terminate() / clearPersistence()',
-        () async {
+        (_) async {
           // Since the firestore instance has already been used,
           // calling `clearPersistence` will throw a native error.
           // We first check it does throw as expected, then terminate
@@ -150,7 +150,7 @@ void runInstanceTests() {
         skip: kIsWeb,
       );
 
-      test('setIndexConfiguration()', () async {
+      testWidgets('setIndexConfiguration()', (_) async {
         Index index1 = Index(
           collectionGroup: 'bar',
           queryScope: QueryScope.collectionGroup,
@@ -231,7 +231,7 @@ void runInstanceTests() {
         );
       });
 
-      test('setIndexConfigurationFromJSON()', () async {
+      testWidgets('setIndexConfigurationFromJSON()', (_) async {
         final json = jsonEncode({
           'indexes': [
             {
