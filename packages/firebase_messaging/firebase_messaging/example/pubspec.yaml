@@ -6,7 +6,7 @@ environment:
   flutter: '>=1.12.13+hotfix.5'
 
 dependencies:
-  firebase_core: ^2.5.0
+  firebase_core: ^2.6.0
   firebase_messaging: ^14.2.2
   flutter:
     sdk: flutter

@@ -1,3 +1,7 @@
+## 1.1.31
+
+ - Update a dependency to the latest release.
+
 ## 1.1.30
 
  - **FIX**: update exception handling to show actual exception ([#9629](https://github.com/firebase/flutterfire/issues/9629)). ([3bb4d1b1](https://github.com/firebase/flutterfire/commit/3bb4d1b19480afff6f94c27a214925380850304b))
