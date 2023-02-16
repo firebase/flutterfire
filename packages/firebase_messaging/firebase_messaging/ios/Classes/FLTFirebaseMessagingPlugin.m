@@ -946,7 +946,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
         // Apple only
         // message.notification.apple.badge
-        if(apsDict[@"badge"] != nil){
+        if (apsDict[@"badge"] != nil) {
           notificationIOS[@"badge"] = [NSString stringWithFormat:@"%@", apsDict[@"badge"]];
         }
       }
