@@ -3,7 +3,6 @@ description: Demonstrates how to use the firestore plugin.
 
 environment:
   sdk: '>=2.16.0 <3.0.0'
-  flutter: '>=1.12.13+hotfix.4'
 
 dependencies:
   cloud_firestore: ^4.4.0
@@ -13,6 +12,8 @@ dependencies:
   http: ^0.13.3
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   integration_test:
     sdk: flutter
 

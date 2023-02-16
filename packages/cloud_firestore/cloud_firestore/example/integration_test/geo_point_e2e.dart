@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void runGeoPointTests() {
   group('$GeoPoint', () {
@@ -21,7 +21,7 @@ void runGeoPointTests() {
       return firestore.doc(prefixedPath);
     }
 
-    test('sets a $GeoPoint & returns one', () async {
+    testWidgets('sets a $GeoPoint & returns one', (_) async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('geo-point');
 
@@ -35,7 +35,7 @@ void runGeoPointTests() {
       expect(geopoint.longitude, equals(-10));
     });
 
-    test('updates a $GeoPoint & returns', () async {
+    testWidgets('updates a $GeoPoint & returns', (_) async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('geo-point-update');
 

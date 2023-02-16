@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void runTimestampTests() {
   group('$Timestamp', () {
@@ -21,7 +21,7 @@ void runTimestampTests() {
       return firestore.doc(prefixedPath);
     }
 
-    test('sets a $Timestamp & returns one', () async {
+    testWidgets('sets a $Timestamp & returns one', (_) async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('timestamp');
       DateTime date = DateTime.utc(3000);
@@ -37,7 +37,7 @@ void runTimestampTests() {
       );
     });
 
-    test('updates a $Timestamp & returns', () async {
+    testWidgets('updates a $Timestamp & returns', (_) async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('geo-point-update');
       DateTime date = DateTime.utc(3000, 01, 02);
