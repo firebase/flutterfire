@@ -20,6 +20,10 @@ devices. To get a TensorFlow Lite model:
 - Use a pre-built model, such as one of the [official TensorFlow Lite models](https://www.tensorflow.org/lite/models){:.external}
 - [Convert a TensorFlow model, Keras model, or concrete function to TensorFlow Lite.](https://www.tensorflow.org/lite/convert){:.external}
 
+Note that in the absence of a maintained TensorFlow Lite library for Dart, you
+will need to integrate with the native TensorFlow Lite library for your
+platforms. This integration is not documented here.
+
 ## Before you begin
 
 1.  [Install and initialize the Firebase SDKs for Flutter](/docs/flutter/setup)
@@ -120,14 +124,10 @@ so at any point before you need to use the model.
 ## 3. Perform inference on input data
 
 Now that you have your model file on the device you can use it with the
-TensorFlow Lite interpreter to perform inference. For this, you have several
-options:
-
-- The [native TensorFlow Lite libraries](https://www.tensorflow.org/lite){:.external}
-  for iOS and Android.
-- One of the community-developed Flutter plugins, such as
-  [`tflite_flutter`](https://pub.dev/packages/tflite_flutter){:.external} or
-  [`tflite`](https://pub.dev/packages/tflite){:.external}.
+TensorFlow Lite interpreter to perform inference. In the absence of a maintained
+TensorFlow Lite library for Dart, you will need to integrate with the
+[native TensorFlow Lite libraries](https://www.tensorflow.org/lite){:.external}
+for iOS and Android.
 
 
 ## Appendix: Model security {:#model_security}

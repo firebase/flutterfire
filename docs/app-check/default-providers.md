@@ -18,7 +18,7 @@ only your app can access your project's Firebase resources. See an
     already done so.
 
 1.  Register your apps to use App Check with the Play Integrity, Device Check, and reCAPTCHA providers in the
-    [**Project Settings > App Check**](https://console.firebase.google.com/project/_/settings/appcheck)
+    [**Project Settings > App Check**](https://console.firebase.google.com/project/_/appcheck)
     section of the Firebase console.
 
     You usually need to register all of your project's apps, because once you
