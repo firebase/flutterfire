@@ -128,7 +128,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
     script.crossOrigin = 'anonymous';
     script.text = '''
       window.ff_trigger_$windowVar = async (callback) => {
-        callback(await import("${trustedUrl?.toString() ?? src}"));
+        console.debug("Initializing Firebase $windowVar");
+        callback(await import("${trustedUrl != null ? callMethod(trustedUrl, 'toString', []) : src}"));
       };
     ''';
 
