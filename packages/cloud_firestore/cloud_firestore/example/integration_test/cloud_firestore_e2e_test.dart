@@ -14,13 +14,13 @@ import 'field_value_e2e.dart';
 import 'firebase_options.dart';
 import 'geo_point_e2e.dart';
 import 'instance_e2e.dart';
+import 'load_bundle_e2e.dart';
 import 'query_e2e.dart';
+import 'second_app_e2e.dart';
 import 'snapshot_metadata_e2e.dart';
 import 'timestamp_e2e.dart';
 import 'transaction_e2e.dart';
 import 'write_batch_e2e.dart';
-import 'load_bundle_e2e.dart';
-import 'second_app_e2e.dart';
 
 bool kUseFirestoreEmulator = true;
 

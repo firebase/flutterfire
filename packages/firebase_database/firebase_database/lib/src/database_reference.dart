@@ -114,8 +114,8 @@ class DatabaseReference extends Query {
   /// at that location, so extreme care should be taken if mixing [update] and
   /// [runTransaction] to modify the same data.
   ///
-  /// Passing null to a [Map] value in [update] will remove the remove the value
-  /// at the specified location.
+  /// Passing null to a [Map] value in [update] will remove the value at the specified
+  /// location.
   Future<void> update(Map<String, Object?> value) {
     return _delegate.update(value);
   }

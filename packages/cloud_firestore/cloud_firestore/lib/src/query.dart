@@ -46,7 +46,7 @@ abstract class Query<T extends Object?> {
   /// The [values] must be in order of [orderBy] filters.
   ///
   /// Calling this method will replace any existing cursor "end" query modifiers.
-  Query<T> endAt(List<Object?> values);
+  Query<T> endAt(Iterable<Object?> values);
 
   /// Creates and returns a new [Query] that ends before the provided document
   /// snapshot (exclusive). The end position is relative to the order of the query.
@@ -65,7 +65,7 @@ abstract class Query<T extends Object?> {
   /// The [values] must be in order of [orderBy] filters.
   ///
   /// Calling this method will replace any existing cursor "end" query modifiers.
-  Query<T> endBefore(List<Object?> values);
+  Query<T> endBefore(Iterable<Object?> values);
 
   /// Fetch the documents for this query.
   ///
@@ -116,7 +116,7 @@ abstract class Query<T extends Object?> {
   /// The [values] must be in order of [orderBy] filters.
   ///
   /// Calling this method will replace any existing cursor "start" query modifiers.
-  Query<T> startAfter(List<Object?> values);
+  Query<T> startAfter(Iterable<Object?> values);
 
   /// Creates and returns a new [Query] that starts at the provided document
   /// (inclusive). The starting position is relative to the order of the query.
@@ -135,7 +135,7 @@ abstract class Query<T extends Object?> {
   /// The [values] must be in order of [orderBy] filters.
   ///
   /// Calling this method will replace any existing cursor "start" query modifiers.
-  Query<T> startAt(List<Object?> values);
+  Query<T> startAt(Iterable<Object?> values);
 
   /// Creates and returns a new [Query] with additional filter on specified
   /// [field]. [field] refers to a field in a document.
@@ -157,9 +157,9 @@ abstract class Query<T extends Object?> {
     Object? isGreaterThan,
     Object? isGreaterThanOrEqualTo,
     Object? arrayContains,
-    List<Object?>? arrayContainsAny,
-    List<Object?>? whereIn,
-    List<Object?>? whereNotIn,
+    Iterable<Object?>? arrayContainsAny,
+    Iterable<Object?>? whereIn,
+    Iterable<Object?>? whereNotIn,
     bool? isNull,
   });
 
@@ -297,7 +297,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   }
 
   /// Common handler for all non-document based cursor queries.
-  List<dynamic> _assertQueryCursorValues(List<Object?> fields) {
+  Iterable<dynamic> _assertQueryCursorValues(Iterable<Object?> fields) {
     List<List<Object?>> orders = List.from(parameters['orderBy']);
 
     assert(
@@ -347,7 +347,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   ///
   /// Calling this method will replace any existing cursor "end" query modifiers.
   @override
-  Query<Map<String, dynamic>> endAt(List<Object?> values) {
+  Query<Map<String, dynamic>> endAt(Iterable<Object?> values) {
     _assertQueryCursorValues(values);
     return _JsonQuery(firestore, _delegate.endAt(values));
   }
@@ -376,7 +376,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   ///
   /// Calling this method will replace any existing cursor "end" query modifiers.
   @override
-  Query<Map<String, dynamic>> endBefore(List<Object?> values) {
+  Query<Map<String, dynamic>> endBefore(Iterable<Object?> values) {
     _assertQueryCursorValues(values);
     return _JsonQuery(
       firestore,
@@ -542,7 +542,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   ///
   /// Calling this method will replace any existing cursor "start" query modifiers.
   @override
-  Query<Map<String, dynamic>> startAfter(List<Object?> values) {
+  Query<Map<String, dynamic>> startAfter(Iterable<Object?> values) {
     _assertQueryCursorValues(values);
     return _JsonQuery(firestore, _delegate.startAfter(values));
   }
@@ -572,7 +572,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   ///
   /// Calling this method will replace any existing cursor "start" query modifiers.
   @override
-  Query<Map<String, dynamic>> startAt(List<Object?> values) {
+  Query<Map<String, dynamic>> startAt(Iterable<Object?> values) {
     _assertQueryCursorValues(values);
     return _JsonQuery(firestore, _delegate.startAt(values));
   }
@@ -598,9 +598,9 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     Object? isGreaterThan,
     Object? isGreaterThanOrEqualTo,
     Object? arrayContains,
-    List<Object?>? arrayContainsAny,
-    List<Object?>? whereIn,
-    List<Object?>? whereNotIn,
+    Iterable<Object?>? arrayContainsAny,
+    Iterable<Object?>? whereIn,
+    Iterable<Object?>? whereNotIn,
     bool? isNull,
   }) {
     _assertValidFieldType(field);
@@ -703,20 +703,20 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
           operator == 'array-contains-any' ||
           isNotIn(operator)) {
         assert(
-          value is List,
-          "A non-empty [List] is required for '$operator' filters.",
+          value is Iterable,
+          "A non-empty [Iterable] is required for '$operator' filters.",
         );
         assert(
-          (value as List).length <= 10,
-          "'$operator' filters support a maximum of 10 elements in the value [List].",
+          (value as Iterable).length <= 10,
+          "'$operator' filters support a maximum of 10 elements in the value [Iterable].",
         );
         assert(
-          (value as List).isNotEmpty,
-          "'$operator' filters require a non-empty [List].",
+          (value as Iterable).isNotEmpty,
+          "'$operator' filters require a non-empty [Iterable].",
         );
         assert(
-          (value as List).where((value) => value == null).isEmpty,
-          "'$operator' filters cannot contain 'null' in the [List].",
+          (value as Iterable).where((value) => value == null).isEmpty,
+          "'$operator' filters cannot contain 'null' in the [Iterable].",
         );
       }
 
@@ -870,7 +870,7 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   }
 
   @override
-  Query<T> endAt(List<Object?> values) {
+  Query<T> endAt(Iterable<Object?> values) {
     return _mapQuery(_originalQuery.endAt(values));
   }
 
@@ -880,7 +880,7 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   }
 
   @override
-  Query<T> endBefore(List<Object?> values) {
+  Query<T> endBefore(Iterable<Object?> values) {
     return _mapQuery(_originalQuery.endBefore(values));
   }
 
@@ -905,7 +905,7 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   }
 
   @override
-  Query<T> startAfter(List<Object?> values) {
+  Query<T> startAfter(Iterable<Object?> values) {
     return _mapQuery(_originalQuery.startAfter(values));
   }
 
@@ -915,7 +915,7 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   }
 
   @override
-  Query<T> startAt(List<Object?> values) {
+  Query<T> startAt(Iterable<Object?> values) {
     return _mapQuery(_originalQuery.startAt(values));
   }
 
@@ -934,9 +934,9 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
     Object? isGreaterThan,
     Object? isGreaterThanOrEqualTo,
     Object? arrayContains,
-    List<Object?>? arrayContainsAny,
-    List<Object?>? whereIn,
-    List<Object?>? whereNotIn,
+    Iterable<Object?>? arrayContainsAny,
+    Iterable<Object?>? whereIn,
+    Iterable<Object?>? whereNotIn,
     bool? isNull,
   }) {
     return _mapQuery(

@@ -4,8 +4,8 @@
 
 import 'dart:async';
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void runDocumentChangeTests() {
   group('$DocumentChange', () {
@@ -30,9 +30,9 @@ void runDocumentChangeTests() {
       return collection;
     }
 
-    test(
+    testWidgets(
       'can add/update values to null in the document',
-      () async {
+      (_) async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('null-test');
         DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
@@ -82,7 +82,8 @@ void runDocumentChangeTests() {
       timeout: const Timeout.factor(8),
     );
 
-    test('returns the correct metadata when adding and removing', () async {
+    testWidgets('returns the correct metadata when adding and removing',
+        (_) async {
       CollectionReference<Map<String, dynamic>> collection =
           await initializeTest('add-remove-document');
       DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
@@ -133,7 +134,7 @@ void runDocumentChangeTests() {
       await subscription.cancel();
     });
 
-    test('returns the correct metadata when modifying', () async {
+    testWidgets('returns the correct metadata when modifying', (_) async {
       CollectionReference<Map<String, dynamic>> collection =
           await initializeTest('add-modify-document');
       DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
