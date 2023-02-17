@@ -1,3 +1,7 @@
+## 3.3.2
+
+ - **FIX**: fix an issue in the update method using `FieldValue.arrayUnion` or `Map` ([#10481](https://github.com/firebase/flutterfire/issues/10481)). ([d1998aa9](https://github.com/firebase/flutterfire/commit/d1998aa97a9183d3ec2f868c565ec18051126253))
+
 ## 3.3.1
 
  - **FIX**: fix a codec issue with Iterable ([#10466](https://github.com/firebase/flutterfire/issues/10466)). ([d409a7bd](https://github.com/firebase/flutterfire/commit/d409a7bd8de52188969355d3cdfe4e4087a1cc33))
