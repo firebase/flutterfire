@@ -11,8 +11,7 @@
 
 @property id<FIRAppCheckProvider> delegateProvider;
 
-- (void)configure:(FIRApp *)app
-     providerName:(NSString *)providerName;
+- (void)configure:(FIRApp *)app providerName:(NSString *)providerName;
 
 - (id)initWithApp:(FIRApp *)app;
 

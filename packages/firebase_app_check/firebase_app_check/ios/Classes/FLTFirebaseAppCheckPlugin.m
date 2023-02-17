@@ -30,7 +30,8 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
     self->providerFactory = [[FLTAppCheckProviderFactory alloc] init];
     [FIRAppCheck setAppCheckProviderFactory:self->providerFactory];
 
-    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];    _binaryMessenger = messenger;
+    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];
+    _binaryMessenger = messenger;
     _eventChannels = [NSMutableDictionary dictionary];
     _streamHandlers = [NSMutableDictionary dictionary];
   }

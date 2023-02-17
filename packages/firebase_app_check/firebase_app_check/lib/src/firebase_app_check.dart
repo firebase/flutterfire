@@ -61,8 +61,10 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
     IosProvider iosProvider = IosProvider.deviceCheck,
   }) {
     return _delegate.activate(
-        webRecaptchaSiteKey: webRecaptchaSiteKey,
-        androidProvider: androidProvider, iosProvider: iosProvider);
+      webRecaptchaSiteKey: webRecaptchaSiteKey,
+      androidProvider: androidProvider,
+      iosProvider: iosProvider,
+    );
   }
 
   /// Get the current App Check token.

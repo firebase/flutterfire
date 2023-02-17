@@ -14,9 +14,7 @@
   return self;
 }
 
-- (void)configure:(FIRApp *)app
-     providerName:(NSString *)providerName {
-
+- (void)configure:(FIRApp *)app providerName:(NSString *)providerName {
   if ([providerName isEqualToString:@"debug"]) {
     self.delegateProvider = [[FIRAppCheckDebugProvider new] initWithApp:app];
   }

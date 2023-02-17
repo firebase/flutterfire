@@ -4,10 +4,9 @@
 
 #import <FirebaseAppCheck/FIRAppCheck.h>
 
-
-#import "FLTAppCheckProviderFactory.h"
 #import <Firebase/Firebase.h>
 #import <FirebaseAppCheck/FIRAppCheck.h>
+#import "FLTAppCheckProviderFactory.h"
 
 #import "FLTAppCheckProvider.h"
 
@@ -31,9 +30,7 @@
   return self.providers[app.name];
 }
 
-- (void)configure:(FIRApp *)app
-     providerName:(NSString *)providerName {
-
+- (void)configure:(FIRApp *)app providerName:(NSString *)providerName {
   if (self.providers == nil) {
     self.providers = [NSMutableDictionary new];
   }
