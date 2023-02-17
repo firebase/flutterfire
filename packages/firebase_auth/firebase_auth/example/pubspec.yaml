@@ -5,8 +5,8 @@ environment:
   sdk: '>=2.16.0 <3.0.0'
 
 dependencies:
-  firebase_auth: ^4.2.7
-  firebase_core: ^2.6.0
+  firebase_auth: ^4.2.8
+  firebase_core: ^2.6.1
   flutter:
     sdk: flutter
   flutter_signin_button: ^2.0.0

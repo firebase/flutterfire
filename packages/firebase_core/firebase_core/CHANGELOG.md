@@ -1,3 +1,7 @@
+## 2.6.1
+
+ - Update a dependency to the latest release.
+
 ## 2.6.0
 
  - **FEAT**: add support for TrustedType ([#10312](https://github.com/firebase/flutterfire/issues/10312)). ([da74aabb](https://github.com/firebase/flutterfire/commit/da74aabb0aa7350319179c1cb586b7bd3591d415))
