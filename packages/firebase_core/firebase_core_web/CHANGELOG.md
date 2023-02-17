@@ -1,3 +1,15 @@
+## 2.2.1
+
+ - **FIX**: fix wrong toString js interop in TrustedTypes ([#10476](https://github.com/firebase/flutterfire/issues/10476)). ([6388c622](https://github.com/firebase/flutterfire/commit/6388c62287fb66bd84e52bf634dd132b9db64702))
+
+## 2.2.0
+
+ - **FEAT**: add support for TrustedType ([#10312](https://github.com/firebase/flutterfire/issues/10312)). ([da74aabb](https://github.com/firebase/flutterfire/commit/da74aabb0aa7350319179c1cb586b7bd3591d415))
+
+## 2.1.1
+
+ - Update a dependency to the latest release.
+
 ## 2.1.0
 
  - **FEAT**: bump Firebase JS SDK to 9.15 ([#10186](https://github.com/firebase/flutterfire/issues/10186)). ([c44f4ba6](https://github.com/firebase/flutterfire/commit/c44f4ba64041f80e0201696672d3453c90c41951))

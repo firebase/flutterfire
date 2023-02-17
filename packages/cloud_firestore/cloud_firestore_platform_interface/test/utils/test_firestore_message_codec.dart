@@ -3,13 +3,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 
 /// This codec is able to decode FieldValues.
 /// This ability is only required in tests, hence why
@@ -24,6 +23,7 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
   static const int _kDelete = 134;
   static const int _kServerTimestamp = 135;
   static const int _kFirestoreInstance = 144;
+  static const int _kFieldPath = 140;
   static const int _kFirestoreQuery = 145;
   static const int _kFirestoreSettings = 146;
 
@@ -77,6 +77,13 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
             readValue(buffer)! as MethodChannelFirebaseFirestore;
         String path = readValue(buffer)! as String;
         return firestore.doc(path);
+      case _kFieldPath:
+        final int size = readSize(buffer);
+        final List<String> segments = <String>[];
+        for (int i = 0; i < size; i++) {
+          segments.add(readValue(buffer)! as String);
+        }
+        return FieldPath(segments);
       default:
         return super.readValueOfType(type, buffer);
     }

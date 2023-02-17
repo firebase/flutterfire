@@ -4,8 +4,8 @@
 
 import 'dart:math';
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void runCollectionReferenceTests() {
   group('$CollectionReference', () {
@@ -29,7 +29,7 @@ void runCollectionReferenceTests() {
       return collection;
     }
 
-    test('add() adds a document', () async {
+    testWidgets('add() adds a document', (_) async {
       CollectionReference<Map<String, dynamic>> collection =
           await initializeTest('collection-reference-add');
       var rand = Random();
@@ -41,7 +41,7 @@ void runCollectionReferenceTests() {
       expect(randNum, equals(snapshot.data()!['value']));
     });
 
-    test('snapshots() can be reused', () async {
+    testWidgets('snapshots() can be reused', (_) async {
       final foo = await initializeTest('foo');
 
       final snapshot = foo.snapshots();
@@ -79,9 +79,9 @@ void runCollectionReferenceTests() {
     });
 
     group('withConverter', () {
-      test(
+      testWidgets(
         'add/snapshot',
-        () async {
+        (_) async {
           final foo = await initializeTest('foo');
           final fooConverter = foo.withConverter<int>(
             fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,

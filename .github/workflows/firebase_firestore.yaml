@@ -26,18 +26,18 @@ jobs:
     runs-on: macos-12
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           fetch-depth: 0
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@3f07048e3d294f56e9b90ac5ea2c6f74e9ad0f98
         with:
           distribution: 'temurin'
           java-version: '11'
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@v1
+      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
       - name: "Install Tools"
@@ -48,7 +48,7 @@ jobs:
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
         with:
           api-level: 28
           arch: x86_64
@@ -62,19 +62,19 @@ jobs:
     runs-on: macos-12
     timeout-minutes: 35
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           fetch-depth: 0
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@3f07048e3d294f56e9b90ac5ea2c6f74e9ad0f98
         with:
           distribution: 'temurin'
           java-version: '11'
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
         with:
           # TODO(Lyokone): upgrade to stable when https://github.com/flutter/flutter/issues/118469 is closed
           flutter-version: '3.3.10'
           cache: true
-      - uses: bluefireteam/melos-action@v1
+      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
       - name: "Install Tools"
@@ -97,18 +97,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           fetch-depth: 0
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@3f07048e3d294f56e9b90ac5ea2c6f74e9ad0f98
         with:
           distribution: 'temurin'
           java-version: '11'
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
         with:
           channel: 'stable'
           cache: true
-      - uses: bluefireteam/melos-action@v1
+      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
       - name: "Install Tools"
