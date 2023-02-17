@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_app_check_platform_interface/src/android_provider.dart';
-import 'package:firebase_app_check_platform_interface/src/ios_provider.dart';
+import 'package:firebase_app_check_platform_interface/src/apple_provider.dart';
 
 /// Converts [AndroidProvider] to [String]
 String getAndroidProviderString(AndroidProvider? provider) {
