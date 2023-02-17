@@ -8,6 +8,7 @@ library firebase_core_web;
 import 'dart:async';
 import 'dart:html';
 import 'dart:js';
+import 'dart:js_util';
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/src/interop/js.dart';
