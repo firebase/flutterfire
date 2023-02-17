@@ -31,7 +31,7 @@
       self.delegateProvider = [[FIRAppCheckDebugProvider new] initWithApp:app];
     }
   }
-  // TODO - Need to add this enum "appAttestWithDeviceCheckFallback"
+
   if ([providerName isEqualToString:@"appAttestWithDeviceCheckFallback"]) {
     if (@available(iOS 14.0, *)) {
       self.delegateProvider = [[FIRAppAttestProvider alloc] initWithApp:app];
