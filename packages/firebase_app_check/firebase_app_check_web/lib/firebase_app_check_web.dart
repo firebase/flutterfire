@@ -63,7 +63,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   Future<void> activate({
     String? webRecaptchaSiteKey,
     AndroidProvider? androidProvider,
-    IosProvider? iosProvider,
+    AppleProvider? appleProvider,
   }) async {
     // activate API no longer exists, recaptcha key has to be passed on initialization of app-check instance.
     return convertWebExceptions<Future<void>>(() async {

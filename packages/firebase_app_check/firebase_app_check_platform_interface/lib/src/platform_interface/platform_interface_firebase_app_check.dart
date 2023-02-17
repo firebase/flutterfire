@@ -62,7 +62,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   Future<void> activate({
     String? webRecaptchaSiteKey,
     AndroidProvider? androidProvider,
-    IosProvider? iosProvider,
+    AppleProvider? appleProvider,
   }) {
     throw UnimplementedError('activate() is not implemented');
   }

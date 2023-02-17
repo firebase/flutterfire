@@ -78,7 +78,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   Future<void> activate({
     String? webRecaptchaSiteKey,
     AndroidProvider? androidProvider,
-    IosProvider? iosProvider,
+    AppleProvider? appleProvider,
   }) async {
     try {
       await channel.invokeMethod<void>('FirebaseAppCheck#activate', {
@@ -86,8 +86,8 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
         // Allow value to pass for debug mode for unit testing
         if (Platform.isAndroid || kDebugMode)
           'androidProvider': getAndroidProviderString(androidProvider),
-        if (Platform.isIOS || kDebugMode)
-          'iosProvider': getIosProviderString(iosProvider),
+        if (Platform.isIOS || Platform.isMacOS || kDebugMode)
+          'appleProvider': getAppleProviderString(appleProvider),
       });
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);

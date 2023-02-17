@@ -19,16 +19,16 @@ String getAndroidProviderString(AndroidProvider? provider) {
   }
 }
 
-/// Converts [IosProvider] to [String]
-String getIosProviderString(IosProvider? provider) {
+/// Converts [AppleProvider] to [String]
+String getAppleProviderString(AppleProvider? provider) {
   switch (provider) {
-    case IosProvider.debug:
+    case AppleProvider.debug:
       return 'debug';
-    case IosProvider.appAttest:
+    case AppleProvider.appAttest:
       return 'appAttest';
-    case IosProvider.deviceCheck:
+    case AppleProvider.deviceCheck:
       return 'deviceCheck';
-    case IosProvider.appAttestWithDeviceCheckFallback:
+    case AppleProvider.appAttestWithDeviceCheckFallback:
       return 'appAttestWithDeviceCheckFallback';
     default:
       return 'deviceCheck';

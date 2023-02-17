@@ -67,7 +67,7 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': defaultFirebaseAppName,
                 'androidProvider': 'playIntegrity',
-                'iosProvider': 'deviceCheck'
+                'appleProvider': 'deviceCheck'
               },
             )
           ],

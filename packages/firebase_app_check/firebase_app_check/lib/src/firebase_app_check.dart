@@ -58,12 +58,12 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   Future<void> activate({
     String? webRecaptchaSiteKey,
     AndroidProvider androidProvider = AndroidProvider.playIntegrity,
-    IosProvider iosProvider = IosProvider.deviceCheck,
+    AppleProvider appleProvider = AppleProvider.deviceCheck,
   }) {
     return _delegate.activate(
       webRecaptchaSiteKey: webRecaptchaSiteKey,
       androidProvider: androidProvider,
-      iosProvider: iosProvider,
+      appleProvider: appleProvider,
     );
   }
 

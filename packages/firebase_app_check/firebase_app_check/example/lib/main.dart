@@ -24,7 +24,7 @@ Future<void> main() async {
       // Your personal reCaptcha public key goes here:
       .activate(
     androidProvider: AndroidProvider.debug,
-    iosProvider: IosProvider.debug,
+    appleProvider: AppleProvider.debug,
     webRecaptchaSiteKey: kWebRecaptchaSiteKey,
   );
 

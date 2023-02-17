@@ -78,7 +78,7 @@ void main() {
             arguments: {
               'appName': defaultFirebaseAppName,
               'androidProvider': 'playIntegrity',
-              'iosProvider': 'deviceCheck',
+              'appleProvider': 'deviceCheck',
             },
           ),
         ],
