@@ -367,8 +367,10 @@ class DocumentReference
   }
 
   Future<void> update(Map<firestore_interop.FieldPath, dynamic> data) {
-    final alternatingFieldValues =
-        data.keys.map((e) => [e, data[e]]).expand((e) => e).toList();
+    final alternatingFieldValues = data.keys
+        .map((e) => [jsify(e), jsify(data[e])])
+        .expand((e) => e)
+        .toList();
 
     return handleThenable(callMethod(firestore_interop.updateDoc, 'apply', [
       null,
