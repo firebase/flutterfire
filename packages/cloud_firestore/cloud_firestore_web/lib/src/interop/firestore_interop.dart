@@ -213,13 +213,9 @@ external bool snapshotEqual(
 @JS()
 external PromiseJsImpl<void> terminate(FirestoreJsImpl firestore);
 
+// Object type is forced to prevent JS interop from ignoring the value
 @JS()
-external PromiseJsImpl<void> updateDoc(
-  DocumentReferenceJsImpl reference,
-  /*string | FieldPath*/ dynamic field,
-  dynamic value, [
-  dynamic moreFieldsAndValues,
-]);
+external Object get updateDoc;
 
 @JS()
 external PromiseJsImpl<void> waitForPendingWrites(FirestoreJsImpl firestore);
