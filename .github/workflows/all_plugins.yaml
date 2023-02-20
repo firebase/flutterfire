@@ -31,10 +31,23 @@ jobs:
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
       - name: 'Run Analyze'
         run: melos run analyze
+
+  # Separated from analyse as pubspec_override file is not being taken into account when running flutter pub publish --dry-run
+  # Need to run on Flutter 3.3.0
+  pub_dry_run:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+        with:
+          flutter-version: '3.3.0'
+          cache: true
+      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
       - name: 'Pub Check'
-        run: |
-          melos exec -c 1 --no-private --ignore="*example*" -- \
-            dart pub publish --dry-run
+          run: |
+            melos exec -c 1 --no-private --ignore="*example*" -- \
+              dart pub publish --dry-run
 
   pub_get_check:
     timeout-minutes: 30
