@@ -33,7 +33,7 @@ jobs:
         run: melos run analyze
 
   # Separated from analyse as pubspec_override file is not being taken into account when running flutter pub publish --dry-run
-  # Need to run on Flutter 3.3.0
+  # Need to run on Flutter 3.7.0
   pub_dry_run:
     timeout-minutes: 30
     runs-on: ubuntu-latest
