@@ -2,7 +2,7 @@ name: firebase_app_check
 description: App Check works alongside other Firebase services to help protect your backend resources from abuse, such as billing fraud or phishing.
 homepage: https://firebase.google.com/docs/app-check
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_app_check/firebase_app_check
-version: 0.1.1+11
+version: 0.1.1+12
 
 false_secrets:
   - example/**
@@ -12,9 +12,9 @@ environment:
   flutter: ">=1.20.0"
 
 dependencies:
-  firebase_app_check_platform_interface: ^0.0.5+14
-  firebase_app_check_web: ^0.0.7+14
-  firebase_core: ^2.6.1
+  firebase_app_check_platform_interface: ^0.0.5+15
+  firebase_app_check_web: ^0.0.7+15
+  firebase_core: ^2.7.0
   firebase_core_platform_interface: ^4.5.3
   flutter:
     sdk: flutter

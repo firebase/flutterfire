@@ -1,3 +1,7 @@
+## 5.1.30
+
+ - Update a dependency to the latest release.
+
 ## 5.1.29
 
  - Update a dependency to the latest release.

@@ -1,3 +1,7 @@
+## 3.3.3
+
+ - **FIX**: change interop type of updateDoc to force the JS interop to keep the value ([#10491](https://github.com/firebase/flutterfire/issues/10491)). ([c46c9769](https://github.com/firebase/flutterfire/commit/c46c9769eae9e780f3c03622f468bf18f1717d79))
+
 ## 3.3.2
 
  - **FIX**: fix an issue in the update method using `FieldValue.arrayUnion` or `Map` ([#10481](https://github.com/firebase/flutterfire/issues/10481)). ([d1998aa9](https://github.com/firebase/flutterfire/commit/d1998aa97a9183d3ec2f868c565ec18051126253))

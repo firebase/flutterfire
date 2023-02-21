@@ -6,9 +6,9 @@ environment:
   flutter: '>=1.12.13+hotfix.4'
 
 dependencies:
-  cloud_functions: ^4.0.10
+  cloud_functions: ^4.0.11
   cupertino_icons: ^0.1.2
-  firebase_core: ^2.6.1
+  firebase_core: ^2.7.0
   flutter:
     sdk: flutter
 

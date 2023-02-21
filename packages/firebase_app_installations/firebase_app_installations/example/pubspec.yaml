@@ -27,8 +27,8 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  firebase_core: ^2.6.1
-  firebase_app_installations: ^0.2.1+11
+  firebase_core: ^2.7.0
+  firebase_app_installations: ^0.2.1+12
   flutter:
     sdk: flutter
 
