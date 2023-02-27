@@ -1004,12 +1004,14 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // token for the simulator for test environments. A simulator will not work for receiving messages
   // so it should only be used in a CI environment. If device is running, we already set the APNS
   // token below so it works as intended.
+#if TARGET_IPHONE_SIMULATOR
   if (simulatorToken == false) {
     NSString *str = @"fake-apns-token-for-simulator";
     NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
     [[FIRMessaging messaging] setAPNSToken:data type:FIRMessagingAPNSTokenTypeSandbox];
     simulatorToken = true;
   }
+#endif
 
   if (messaging.APNSToken == nil && _apnsToken != nil) {
 #ifdef DEBUG
