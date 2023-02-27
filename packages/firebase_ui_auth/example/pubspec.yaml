@@ -44,7 +44,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  google_sign_in: ^5.4.2
+  google_sign_in: ^6.0.1
   http: ^0.13.4
   integration_test:
     sdk: flutter
