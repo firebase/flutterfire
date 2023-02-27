@@ -12,7 +12,7 @@ dependencies:
   firebase_ui_oauth: ^1.1.14
   flutter:
     sdk: flutter
-  google_sign_in: ^5.4.4
+  google_sign_in: ^6.0.1
 
 dev_dependencies:
   flutter_test:
