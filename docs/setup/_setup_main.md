@@ -141,6 +141,12 @@ flutterfire configure
     flutter run
     ```
 
+#### Using TrustedTypes for web
+
+If you plan to use Firebase on the web, you can use TrustedTypes to prevent
+XSS attacks. If TrustedTypes are enabled, Firebase will inject the
+scripts into the DOM using TrustedTypes. The policy name are defined as
+follows: 'flutterfire-firease_core', 'flutterfire-firebase_auth'... etc.
 
 ## **Step 4**: Add Firebase plugins {: #add-plugins}
 

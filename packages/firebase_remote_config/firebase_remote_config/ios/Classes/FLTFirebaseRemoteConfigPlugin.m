@@ -16,9 +16,12 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
 
 @implementation FLTFirebaseRemoteConfigPlugin
 
+BOOL _fetchAndActivateRetry;
+
 + (instancetype)sharedInstance {
   static dispatch_once_t onceToken;
   static FLTFirebaseRemoteConfigPlugin *instance;
+  _fetchAndActivateRetry = false;
 
   dispatch_once(&onceToken, ^{
     instance = [[FLTFirebaseRemoteConfigPlugin alloc] init];
@@ -161,7 +164,17 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
   [remoteConfig fetchAndActivateWithCompletionHandler:^(
                     FIRRemoteConfigFetchAndActivateStatus status, NSError *error) {
     if (error != nil) {
-      result.error(nil, nil, nil, error);
+      if (error.code == 999 && _fetchAndActivateRetry == false) {
+        // Note: see issue for details: https://github.com/firebase/flutterfire/issues/6196
+        // Only calling once as the issue noted describes how it works on second retry
+        // Issue appears to indicate the error code is: 999
+        _fetchAndActivateRetry = true;
+        NSLog(@"FLTFirebaseRemoteConfigPlugin: Retrying `fetchAndActivate()` due to a cancelled "
+              @"request with the error code: 999.");
+        [self fetchAndActivate:arguments withMethodCallResult:result];
+      } else {
+        result.error(nil, nil, nil, error);
+      }
     } else {
       if (status == FIRRemoteConfigFetchAndActivateStatusSuccessFetchedFromRemote) {
         result.success(@(YES));
@@ -227,6 +240,7 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
 #pragma mark - FLTFirebasePlugin
 
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
+  _fetchAndActivateRetry = false;
   completion();
 }
 

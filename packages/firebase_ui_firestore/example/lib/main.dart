@@ -72,11 +72,11 @@ class UserTile extends StatelessWidget {
           children: [
             Text(
               '${user.firstName} ${user.lastName}',
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             Text(
               user.number,
-              style: Theme.of(context).textTheme.caption,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
         ),

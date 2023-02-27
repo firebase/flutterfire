@@ -1,3 +1,19 @@
+## 0.1.1+33
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+32
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+31
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+30
+
+ - Update a dependency to the latest release.
+
 ## 0.1.1+29
 
  - **REFACTOR**: refactor underlying implementation for the "handler system" so the handlers are generated on native side ([#9334](https://github.com/firebase/flutterfire/issues/9334)). ([08a4be6c](https://github.com/firebase/flutterfire/commit/08a4be6c0e86a3288bb6fcafd301f1519b7915ba))

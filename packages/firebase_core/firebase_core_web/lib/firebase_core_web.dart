@@ -8,15 +8,20 @@ library firebase_core_web;
 import 'dart:async';
 import 'dart:html';
 import 'dart:js';
+import 'dart:js_util';
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_web/src/interop/js.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:js/js_util.dart' as js_util;
+import 'package:meta/meta.dart';
+
 import 'src/interop/core.dart' as firebase;
+import 'src/interop/js.dart' as js;
 
 part 'src/firebase_app_web.dart';
-part 'src/firebase_sdk_version.dart';
 part 'src/firebase_core_web.dart';
+part 'src/firebase_sdk_version.dart';
 
 /// Returns a [FirebaseAppWeb] instance from [firebase.App].
 FirebaseAppPlatform _createFromJsApp(firebase.App jsApp) {

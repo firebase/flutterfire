@@ -5,10 +5,10 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 
 import 'query_builder.dart';
 
@@ -974,7 +974,7 @@ class _ValueView extends StatelessWidget {
   Widget build(BuildContext context) {
     final value = this.value;
     if (value == null) {
-      return Text('null', style: Theme.of(context).textTheme.caption);
+      return Text('null', style: Theme.of(context).textTheme.bodySmall);
     } else if (value is Timestamp) {
       return Text(value.toDate().toString());
     } else if (value is DocumentReference) {

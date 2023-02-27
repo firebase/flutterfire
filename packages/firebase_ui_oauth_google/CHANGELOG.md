@@ -1,3 +1,23 @@
+## 1.0.21
+
+ - Update a dependency to the latest release.
+
+## 1.0.20
+
+ - Update a dependency to the latest release.
+
+## 1.0.19
+
+ - Update a dependency to the latest release.
+
+## 1.0.18
+
+ - **FIX**: allow GoogleService-Info.plist based configuration ([#10360](https://github.com/firebase/flutterfire/issues/10360)). ([162597f4](https://github.com/firebase/flutterfire/commit/162597f4556b1e0da0601db08574f41ac3585500))
+
+## 1.0.17
+
+ - Update a dependency to the latest release.
+
 ## 1.0.16
 
  - Update a dependency to the latest release.

@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
 import 'universal_button.dart';
 
@@ -25,7 +25,7 @@ class _LoadingButtonContent extends StatelessWidget {
     Widget child;
 
     if (color != null) {
-      final theme = Theme.of(context).textTheme.button;
+      final theme = Theme.of(context).textTheme.labelLarge;
       child = Text(
         label,
         style: theme?.copyWith(color: color),

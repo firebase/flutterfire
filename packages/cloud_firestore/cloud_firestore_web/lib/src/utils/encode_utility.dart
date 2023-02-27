@@ -5,19 +5,31 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
-import '../interop/firestore.dart' as firestore_interop;
 import '../document_reference_web.dart';
 import '../field_value_web.dart';
+import '../interop/firestore.dart' as firestore_interop;
 
 /// Class containing static utility methods to encode/decode firestore data.
 class EncodeUtility {
   /// Encodes a Map of values from their proper types to a serialized version.
-  static Map<String, dynamic>? encodeMapData(Map<String, dynamic>? data) {
+  static Map<String, dynamic>? encodeMapData(Map<Object, dynamic>? data) {
     if (data == null) {
       return null;
     }
     Map<String, dynamic> output = Map.from(data);
     output.updateAll((key, value) => valueEncode(value));
+    return output;
+  }
+
+  static Map<firestore_interop.FieldPath, dynamic>? encodeMapDataFieldPath(
+      Map<Object, dynamic>? data) {
+    if (data == null) {
+      return null;
+    }
+    final output = <firestore_interop.FieldPath, dynamic>{};
+    data.forEach((key, value) {
+      output[valueEncode(key)] = valueEncode(value);
+    });
     return output;
   }
 
@@ -118,6 +130,8 @@ class EncodeUtility {
       return encodeMapData(value);
     } else if (value is List<dynamic>) {
       return encodeArrayData(value);
+    } else if (value is Iterable<dynamic>) {
+      return encodeArrayData(value.toList());
     }
     return value;
   }
