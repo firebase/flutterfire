@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runSnapshotMetadataTests() {
   group(
@@ -27,7 +27,8 @@ void runSnapshotMetadataTests() {
         return collection;
       }
 
-      test('a snapshot returns the correct [isFromCache] value', () async {
+      testWidgets('a snapshot returns the correct [isFromCache] value',
+          (_) async {
         CollectionReference collection =
             await initializeTest('snapshot-metadata-is-from-cache');
         QuerySnapshot qs =

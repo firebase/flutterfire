@@ -21,12 +21,12 @@ class EncodeUtility {
     return output;
   }
 
-  static Map<FieldPath, dynamic>? encodeMapDataFieldPath(
+  static Map<firestore_interop.FieldPath, dynamic>? encodeMapDataFieldPath(
       Map<Object, dynamic>? data) {
     if (data == null) {
       return null;
     }
-    Map<FieldPath, dynamic> output = <FieldPath, dynamic>{};
+    final output = <firestore_interop.FieldPath, dynamic>{};
     data.forEach((key, value) {
       output[valueEncode(key)] = valueEncode(value);
     });
@@ -130,6 +130,8 @@ class EncodeUtility {
       return encodeMapData(value);
     } else if (value is List<dynamic>) {
       return encodeArrayData(value);
+    } else if (value is Iterable<dynamic>) {
+      return encodeArrayData(value.toList());
     }
     return value;
   }

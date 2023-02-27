@@ -366,8 +366,17 @@ class DocumentReference
     return handleThenable(jsObjectSet);
   }
 
-  Future<void> update(Map<FieldPath, dynamic> data) =>
-      handleThenable(firestore_interop.updateDoc(jsObject, jsify(data)));
+  Future<void> update(Map<firestore_interop.FieldPath, dynamic> data) {
+    final alternatingFieldValues = data.keys
+        .map((e) => [jsify(e), jsify(data[e])])
+        .expand((e) => e)
+        .toList();
+
+    return handleThenable(callMethod(firestore_interop.updateDoc, 'apply', [
+      null,
+      [jsObject, ...alternatingFieldValues]
+    ]));
+  }
 }
 
 class Query<T extends firestore_interop.QueryJsImpl>
