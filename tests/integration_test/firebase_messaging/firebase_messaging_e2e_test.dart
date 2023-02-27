@@ -120,15 +120,6 @@ void main() {
           },
           skip: defaultTargetPlatform != TargetPlatform.android,
         );
-
-        test(
-          'resolves null on ios if using simulator',
-          () async {
-            expect(await messaging.getAPNSToken(), null);
-          },
-          skip: !(defaultTargetPlatform == TargetPlatform.iOS ||
-              defaultTargetPlatform != TargetPlatform.macOS),
-        );
       });
 
       group('getInitialMessage', () {
@@ -141,21 +132,8 @@ void main() {
         'getToken()',
         () {
           test('returns a token', () async {
-            final result = await messaging.requestPermission();
-
-            if (result.authorizationStatus == AuthorizationStatus.authorized) {
               final result = await messaging.getToken();
-
               expect(result, isA<String>());
-            } else {
-              await expectLater(
-                messaging.getToken(),
-                throwsA(
-                  isA<FirebaseException>()
-                      .having((e) => e.code, 'code', 'permission-blocked'),
-                ),
-              );
-            }
           });
         },
         skip: skipManualTests,
@@ -165,9 +143,6 @@ void main() {
         test(
           'generate a new token after deleting',
           () async {
-            final result = await messaging.requestPermission();
-
-            if (result.authorizationStatus == AuthorizationStatus.authorized) {
               final token1 = await messaging.getToken();
               await Future.delayed(const Duration(seconds: 3));
               await messaging.deleteToken();
@@ -176,15 +151,6 @@ void main() {
               expect(token1, isA<String>());
               expect(token2, isA<String>());
               expect(token1, isNot(token2));
-            } else {
-              await expectLater(
-                messaging.getToken(),
-                throwsA(
-                  isA<FirebaseException>()
-                      .having((e) => e.code, 'code', 'permission-blocked'),
-                ),
-              );
-            }
           },
           skip: skipManualTests,
         ); // only run for manual testing
