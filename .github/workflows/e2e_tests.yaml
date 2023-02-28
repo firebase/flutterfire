@@ -55,10 +55,10 @@ jobs:
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
         with:
+          arch: x86_64
+          target: google_apis
+          profile: Nexus 5X
           api-level: 30
-          target: google_atd
-          arch: x86
-          profile: Galaxy Nexus
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
