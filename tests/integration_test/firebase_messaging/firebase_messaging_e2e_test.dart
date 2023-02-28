@@ -68,6 +68,7 @@ void main() {
         test(
           'sets the value',
           () async {
+            await messaging.setAutoInitEnabled(true);
             expect(messaging.isAutoInitEnabled, isTrue);
             await messaging.setAutoInitEnabled(false);
             expect(messaging.isAutoInitEnabled, isFalse);
