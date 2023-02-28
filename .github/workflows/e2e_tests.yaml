@@ -221,11 +221,8 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
           restore-keys: firebase-emulators-v1
-      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
-        with:
-          # TODO(Lyokone): upgrade to stable when https://github.com/flutter/flutter/issues/118469 is closed
-          flutter-version: '3.3.10'
-          cache: true
+      - name: Install Flutter
+          run: ./.github/workflows/scripts/install-custom-flutter.sh
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
