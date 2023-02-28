@@ -176,7 +176,7 @@ class _ResponsivePageState extends State<ResponsivePage> {
                           Center(
                             child: ConstrainedBox(
                               constraints: BoxConstraints(maxWidth: breakpoint),
-                              child: IntrinsicHeight(child: content),
+                              child: content,
                             ),
                           ),
                         ],
