@@ -223,9 +223,6 @@ jobs:
           restore-keys: firebase-emulators-v1
       - name: Install Flutter
         run: ./.github/workflows/scripts/install-custom-flutter.sh
-      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
-        with:
-          run-bootstrap: false
       - name: "Bootstrap package"
         run: melos bootstrap --scope tests
       - name: "Install Tools"
