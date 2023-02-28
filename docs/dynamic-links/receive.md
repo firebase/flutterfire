@@ -131,11 +131,11 @@ for the app. You can find more details on how to retrieve your SHA-256 fingerpri
 
 ## Handle deep links {:#handle_deep_links}
 
-Warning: You may have unexpected results if you have enabled Flutter deep linking in your app.
-Please [read more here](https://docs.flutter.dev/development/ui/navigation/deep-linking#migrating-from-plugin-based-deep-linking).
-[Here is an issue](https://github.com/firebase/flutterfire/issues/9469) that illustrates what you ought to be aware of.
-
 To handle a Dynamic Link in your application, two scenarios require implementing.
+
+Warning: You may have unexpected results if you have enabled Flutter deep linking in your app.
+See [Migrating from plugin-based deep linking](https://docs.flutter.dev/development/ui/navigation/deep-linking#migrating-from-plugin-based-deep-linking).
+This [GitHub issue](https://github.com/firebase/flutterfire/issues/9469) illustrates what you ought to be aware of.
 
 ### Terminated State
 
