@@ -73,14 +73,13 @@ which records the number of messages sent and opened on Apple and Android
 devices, along with data for "impressions" (notifications seen by users) for
 Android apps.
 
-## Handling Interaction
+## Handling interaction
 
-Since notifications are a visible cue, it is common for users to interact with them (by pressing them).
-The default behavior on both Android & iOS is to open the application. If the application is terminated,
+The default behavior for notifications (e.g. by pressing them) on both Android & iOS is to open the application. If the application is terminated,
 it will be started, and if it is in the background, it will be brought to the foreground.
 
 Depending on the content of a notification, you may wish to handle the user's interaction when the application
-opens. For example, if a new chat message is sent using a notification and the user presses it, you may want to
+opens. For example, if a new chat message is sent using a notification and the user selects it, you may want to
  open the specific conversation when the application opens.
 
 The `firebase-messaging` package provides two ways to handle this interaction:
@@ -89,7 +88,7 @@ The `firebase-messaging` package provides two ways to handle this interaction:
 2. `onMessageOpenedApp`: A `Stream` which posts a `RemoteMessage` when the application is opened from a
     background state.
 
-To ensure a smooth UX for your users, you should handle both scenarios. The code example
+To ensure a smooth experience for your users, you should handle both scenarios. The code example
 below outlines how this can be achieved:
 
 ```dart
