@@ -34,10 +34,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  if (FirebaseAuth.instance.currentUser == null) {
-    await FirebaseAuth.instance.signInAnonymously();
-  }
-
   FirebaseUIAuth.configureProviders([
     EmailAuthProvider(),
     emailLinkProviderConfig,
@@ -71,7 +67,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
   String get initialRoute {
     final auth = FirebaseAuth.instance;
 
-    if (auth.currentUser == null || auth.currentUser!.isAnonymous) {
+    if (auth.currentUser == null) {
       return '/';
     }
 
