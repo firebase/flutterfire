@@ -75,22 +75,21 @@ Android apps.
 
 ## Handling Interaction
 
-Since notifications are a visible cue, it is common for users to interact with it (by pressing them).
-The default behavior on both Android & iOS is to open the application. If the application is terminated
-it will be started, if it is in the background it will be brought to the foreground.
+Since notifications are a visible cue, it is common for users to interact with them (by pressing them).
+The default behavior on both Android & iOS is to open the application. If the application is terminated,
+it will be started, and if it is in the background, it will be brought to the foreground.
 
-Depending on the content of a notification, you may wish to handle the users interaction when the application
-opens. For example, if a new chat message is sent via a notification and the user presses it, you may want to
+Depending on the content of a notification, you may wish to handle the user's interaction when the application
+opens. For example, if a new chat message is sent using a notification and the user presses it, you may want to
  open the specific conversation when the application opens.
 
 The `firebase-messaging` package provides two ways to handle this interaction:
 
-1. `getInitialMessage()`: If the application is opened from a terminated state a `Future` containing a
-    `RemoteMessage` will be returned. Once consumed, the `RemoteMessage` will be removed.
+1. `getInitialMessage()`: If the application is opened from a terminated state, this method returns a `Future` containing a `RemoteMessage`. Once consumed, the `RemoteMessage` will be removed.
 2. `onMessageOpenedApp`: A `Stream` which posts a `RemoteMessage` when the application is opened from a
     background state.
 
-It is recommended that both scenarios are handled to ensure a smooth UX for your users. The code example
+To ensure a smooth UX for your users, you should handle both scenarios. The code example
 below outlines how this can be achieved:
 
 ```dart
