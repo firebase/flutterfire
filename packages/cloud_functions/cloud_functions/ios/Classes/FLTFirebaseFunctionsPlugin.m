@@ -81,6 +81,7 @@ NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase
 - (void)httpsFunctionCall:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *appName = arguments[@"appName"];
   NSString *functionName = arguments[@"functionName"];
+  NSString *functionUri = arguments[@"functionUri"];
   NSString *origin = arguments[@"origin"];
   NSString *region = arguments[@"region"];
   NSNumber *timeout = arguments[@"timeout"];
@@ -93,7 +94,17 @@ NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase
     [functions useEmulatorWithHost:[url host] port:[[url port] intValue]];
   }
 
-  FIRHTTPSCallable *function = [functions HTTPSCallableWithName:functionName];
+  FIRHTTPSCallable *function;
+
+  if (functionName != nil) {
+    function = [functions HTTPSCallableWithName:functionName];
+  } else if (functionUri != nil) {
+    function = [functions HTTPSCallableWithURL:[NSURL URLWithString:functionUri]];
+  } else {
+    result.error(@"WRONG_ARGUMENT", @"Either functionName or functionUri should be provided", nil,
+                 nil);
+    return;
+  }
   if (timeout != nil && ![timeout isEqual:[NSNull null]]) {
     function.timeoutInterval = timeout.doubleValue / 1000;
   }

@@ -86,7 +86,8 @@ public class FlutterFirebaseFunctionsPlugin
             if (functionName != null) {
               httpsCallableReference = firebaseFunctions.getHttpsCallable(functionName);
             } else if (functionUri != null) {
-              httpsCallableReference = firebaseFunctions.getHttpsCallableFromUrl(new URL(functionUri));
+              httpsCallableReference =
+                  firebaseFunctions.getHttpsCallableFromUrl(new URL(functionUri));
             } else {
               throw new IllegalArgumentException("Either functionName or functionUri must be set");
             }
