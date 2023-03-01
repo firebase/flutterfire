@@ -57,7 +57,7 @@ jobs:
         with:
           api-level: 33
           arch: x86_64
-          target: google_apis
+          target: google_atd
           profile: Nexus 5X
           script: echo "Generated AVD snapshot for caching"
       - name: Firebase Emulator Cache
@@ -90,7 +90,7 @@ jobs:
         with:
           api-level: 33
           arch: x86_64
-          target: google_apis
+          target: google_atd
           profile: Nexus 5X
           working-directory: tests
           script: |
