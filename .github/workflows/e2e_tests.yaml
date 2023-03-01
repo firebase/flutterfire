@@ -224,7 +224,7 @@ jobs:
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-custom-flutter.sh stable
       - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
+        run: ./.github/workflows/scripts/install-melos.sh
       - name: "Bootstrap package"
         run: melos bootstrap --scope tests
       - name: "Install Tools"
