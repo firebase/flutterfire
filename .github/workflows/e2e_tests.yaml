@@ -55,10 +55,11 @@ jobs:
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
         with:
-          api-level: 33
+          api-level: 30
           arch: x86_64
           target: google_atd
           profile: Nexus 5X
+          channel: canary
           script: echo "Generated AVD snapshot for caching"
       - name: Firebase Emulator Cache
         uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
@@ -88,10 +89,11 @@ jobs:
         uses: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
         timeout-minutes: 30
         with:
-          api-level: 33
+          api-level: 30
           arch: x86_64
           target: google_atd
           profile: Nexus 5X
+          channel: canary
           working-directory: tests
           script: |
             sleep 15
