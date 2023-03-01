@@ -49,40 +49,75 @@ class _MyAppState extends State<MyApp> {
             },
           ),
         ),
-        floatingActionButton: Builder(
-          builder: (context) => FloatingActionButton.extended(
-            onPressed: () async {
-              // See index.js in .github/workflows/scripts for the example function we
-              // are using for this example
-              HttpsCallable callable = FirebaseFunctions.instance.httpsCallable(
-                'listFruit',
-                options: HttpsCallableOptions(
-                  timeout: const Duration(seconds: 5),
-                ),
-              );
-
-              try {
-                final result = await callable();
-                setState(() {
-                  fruit.clear();
-                  result.data.forEach((f) {
-                    fruit.add(f);
-                  });
-                });
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('ERROR: $e'),
+        floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            FloatingActionButton.extended(
+              onPressed: () async {
+                // See index.js in .github/workflows/scripts for the example function we
+                // are using for this example
+                HttpsCallable callable =
+                    FirebaseFunctions.instance.httpsCallable(
+                  Uri.parse(
+                    'http://localhost:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
+                  ),
+                  options: HttpsCallableOptions(
+                    timeout: const Duration(seconds: 5),
                   ),
                 );
-              }
-            },
-            label: const Text('Call Function'),
-            icon: const Icon(Icons.cloud),
-            backgroundColor: Colors.deepOrange,
-          ),
+
+                await callingFunction(callable, context);
+              },
+              label: const Text('Call Function'),
+              icon: const Icon(Icons.cloud),
+              backgroundColor: Colors.deepOrange,
+            ),
+            const SizedBox(height: 10),
+            FloatingActionButton.extended(
+              onPressed: () async {
+                // See index.js in .github/workflows/scripts for the example function we
+                // are using for this example
+                HttpsCallable callable =
+                    FirebaseFunctions.instance.httpsCallable(
+                  Uri.parse(
+                    'http://localhost:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
+                  ),
+                  options: HttpsCallableOptions(
+                    timeout: const Duration(seconds: 5),
+                  ),
+                );
+
+                await callingFunction(callable, context);
+              },
+              label: const Text('Call 2nd Gen Function'),
+              icon: const Icon(Icons.cloud),
+              backgroundColor: Colors.deepOrange,
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  Future<void> callingFunction(
+    HttpsCallable callable,
+    BuildContext context,
+  ) async {
+    try {
+      final result = await callable();
+      setState(() {
+        fruit.clear();
+        result.data.forEach((f) {
+          fruit.add(f);
+        });
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('ERROR: $e'),
+        ),
+      );
+    }
   }
 }

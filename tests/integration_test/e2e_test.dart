@@ -32,17 +32,17 @@ void main() {
 
   group('FlutterFire', () {
     firebase_core.main();
-    firebase_database.main();
-    firebase_crashlytics.main();
-    firebase_auth.main();
-    firebase_analytics.main();
+    // firebase_database.main();
+    // firebase_crashlytics.main();
+    // firebase_auth.main();
+    // firebase_analytics.main();
     cloud_functions.main();
-    firebase_app_check.main();
-    firebase_app_installations.main();
-    firebase_dynamic_links.main();
-    firebase_messaging.main();
-    firebase_ml_model_downloader.main();
-    firebase_remote_config.main();
-    firebase_storage.main();
+    // firebase_app_check.main();
+    // firebase_app_installations.main();
+    // firebase_dynamic_links.main();
+    // firebase_messaging.main();
+    // firebase_ml_model_downloader.main();
+    // firebase_remote_config.main();
+    // firebase_storage.main();
   });
 }

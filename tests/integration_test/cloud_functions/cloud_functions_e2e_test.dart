@@ -120,6 +120,18 @@ void main() {
           expect(result.data, isA<Map<String, dynamic>>());
         },
       );
+
+      test('can be called using an Uri', () async {
+        HttpsCallable callable = FirebaseFunctions.instance.httpsCallable(
+          Uri.parse(
+            'http://127.0.0.1:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
+          ),
+        );
+
+        HttpsCallableResult result = await callable();
+        print(result.data);
+        expect(result, isA<HttpsCallableResult>());
+      });
     });
 
     group('FirebaseFunctionsException', () {
