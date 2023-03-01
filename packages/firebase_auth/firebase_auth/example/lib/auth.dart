@@ -17,7 +17,7 @@ typedef OAuthSignIn = void Function();
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 // If set to true, the app will request notification permissions to use
-// silent verification for SMS MFA instead of Recapcha.
+// silent verification for SMS MFA instead of Recaptcha.
 const withSilentVerificationSMSMFA = true;
 
 /// Helper class to show a snackbar using the passed context.
