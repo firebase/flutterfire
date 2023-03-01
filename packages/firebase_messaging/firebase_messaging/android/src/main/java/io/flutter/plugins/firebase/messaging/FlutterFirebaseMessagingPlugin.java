@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -23,6 +24,11 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.flutter.embedding.engine.FlutterShellArgs;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -34,7 +40,11 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.NewIntentListener;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -563,6 +573,27 @@ public class FlutterFirebaseMessagingPlugin
       // Note we don't remove it here as the user may still call getInitialMessage.
     }
 
+    // If we can't find a copy of the remote message in persisted store then convert from intent
+    if (remoteMessage == null) {
+      try {
+        RemoteMessage intentRemoteMessage = new RemoteMessage(intent.getExtras());
+        String remoteMessageString =
+          new JSONObject(FlutterFirebaseMessagingUtils.remoteMessageToMap(intentRemoteMessage)).toString();
+        Map<String, Object> argumentsMap = new HashMap<>(1);
+        Map<String, Object> messageOutMap = jsonObjectToMap(new JSONObject(remoteMessageString));
+        // Add a fake 'to' - as it's required to construct a RemoteMessage instance.
+        messageOutMap.put("to", messageId);
+        argumentsMap.put("message", messageOutMap);
+
+        remoteMessage = FlutterFirebaseMessagingUtils.getRemoteMessageForArguments(argumentsMap);
+        notificationMap =
+          FlutterFirebaseMessagingUtils.getRemoteMessageNotificationForArguments(argumentsMap);
+        // Note we don't remove it here as the user may still call getInitialMessage.
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
     if (remoteMessage == null) {
       return false;
     }
@@ -612,5 +643,35 @@ public class FlutterFirebaseMessagingPlugin
     cachedThreadPool.execute(() -> taskCompletionSource.setResult(null));
 
     return taskCompletionSource.getTask();
+  }
+
+  private Map<String, Object> jsonObjectToMap(JSONObject jsonObject) throws JSONException {
+    Map<String, Object> map = new HashMap<>();
+    Iterator<String> keys = jsonObject.keys();
+    while (keys.hasNext()) {
+      String key = keys.next();
+      Object value = jsonObject.get(key);
+      if (value instanceof JSONArray) {
+        value = jsonArrayToList((JSONArray) value);
+      } else if (value instanceof JSONObject) {
+        value = jsonObjectToMap((JSONObject) value);
+      }
+      map.put(key, value);
+    }
+    return map;
+  }
+
+  public List<Object> jsonArrayToList(JSONArray array) throws JSONException {
+    List<Object> list = new ArrayList<>();
+    for (int i = 0; i < array.length(); i++) {
+      Object value = array.get(i);
+      if (value instanceof JSONArray) {
+        value = jsonArrayToList((JSONArray) value);
+      } else if (value instanceof JSONObject) {
+        value = jsonObjectToMap((JSONObject) value);
+      }
+      list.add(value);
+    }
+    return list;
   }
 }
