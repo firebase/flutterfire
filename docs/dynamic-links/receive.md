@@ -133,21 +133,44 @@ for the app. You can find more details on how to retrieve your SHA-256 fingerpri
 
 To handle a Dynamic Link in your application, two scenarios require implementing.
 
+Warning: You may have unexpected results if you have enabled Flutter deep linking in your app.
+See [Migrating from plugin-based deep linking](https://docs.flutter.dev/development/ui/navigation/deep-linking#migrating-from-plugin-based-deep-linking).
+This [GitHub issue](https://github.com/firebase/flutterfire/issues/9469) illustrates what you ought to be aware of.
+
 ### Terminated State
 
-If the application is terminated, the `FirebaseDynamicLinks.getInitialLink`
-method allows you to retrieve the Dynamic Link that opened the application.
+Set up the following methods:
+ 1. `FirebaseDynamicLinks.getInitialLink` - returns a Future<PendingDynamicLinkData?>
+ 2. `FirebaseDynamicLinks.onLink` - event handler that returns a `Stream` containing a `PendingDynamicLinkData?`
 
-This is an asynchronous request, so it makes sense to handle a link before rendering application logic, such as
-a navigator. For example, you could handle this in the `main` function:
+Android will always receive the link via `FirebaseDynamicLinks.getInitialLink` from a terminated state,
+but on iOS, it is not guaranteed. Therefore, it is worth setting them both up in the following order
+to ensure your application receives the link:
 
 ```dart
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
 
-  // Get any initial links
+  // Check if you received the link via `getInitialLink` first
   final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
+
+  if (initialLink != null) {
+    final Uri deepLink = initialLink.link;
+    // Example of using the dynamic link to push the user to a different screen
+    Navigator.pushNamed(context, deepLink.path);
+  }
+
+  FirebaseDynamicLinks.instance.onLink.listen(
+        (pendingDynamicLinkData) {
+          // Set up the `onLink` event listener next as it may be received here
+          if (pendingDynamicLinkData != null) {
+            final Uri deepLink = pendingDynamicLinkData.link;
+            // Example of using the dynamic link to push the user to a different screen
+            Navigator.pushNamed(context, deepLink.path);
+          }
+        },
+      );
 
   runApp(MyApp(initialLink));
 }
@@ -163,19 +186,10 @@ if (initialLink != null) {
 }
 ```
 
-Alternatively, if you wish to identify if an exact Dynamic Link was used to open the application, pass it to
-the `getDynamicLink` method instead:
-
-```dart
-String link = 'https://dynamic-link-domain/ke2Qa';
-
-final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(link));
-```
-
 ### Background / Foreground State
 
-Whilst the application is open, or in the background, you may listen to Dynamic Links events using a stream handler. The `FirebaseDynamicLinks.onLink`
-getter returns a `Stream` containing a `PendingDynamicLinkData`:
+Whilst the application is open, or in the background, use The `FirebaseDynamicLinks.onLink`
+getter:
 
 ```dart
 FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
@@ -183,6 +197,15 @@ FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
 }).onError((error) {
   // Handle errors
 });
+```
+
+Alternatively, if you wish to identify if an exact Dynamic Link was used to open the application, pass it to
+the `getDynamicLink` method instead:
+
+```dart
+String link = 'https://dynamic-link-domain/ke2Qa';
+
+final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(link));
 ```
 
 ### Testing A Dynamic Link On iOS Platform
