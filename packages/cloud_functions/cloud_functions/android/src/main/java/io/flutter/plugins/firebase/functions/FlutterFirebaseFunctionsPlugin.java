@@ -23,6 +23,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -69,7 +70,8 @@ public class FlutterFirebaseFunctionsPlugin
 
             FirebaseFunctions firebaseFunctions = getFunctions(arguments);
 
-            String functionName = (String) Objects.requireNonNull(arguments.get("functionName"));
+            String functionName = (String) arguments.get("functionName");
+            String functionUri = (String) arguments.get("functionUri");
             String origin = (String) arguments.get("origin");
             Integer timeout = (Integer) arguments.get("timeout");
             Object parameters = arguments.get("parameters");
@@ -79,8 +81,15 @@ public class FlutterFirebaseFunctionsPlugin
               firebaseFunctions.useEmulator(originUri.getHost(), originUri.getPort());
             }
 
-            HttpsCallableReference httpsCallableReference =
-                firebaseFunctions.getHttpsCallable(functionName);
+            HttpsCallableReference httpsCallableReference;
+
+            if (functionName != null) {
+              httpsCallableReference = firebaseFunctions.getHttpsCallable(functionName);
+            } else if (functionUri != null) {
+              httpsCallableReference = firebaseFunctions.getHttpsCallableFromUrl(new URL(functionUri));
+            } else {
+              throw new IllegalArgumentException("Either functionName or functionUri must be set");
+            }
 
             if (timeout != null) {
               httpsCallableReference.setTimeout(timeout.longValue(), TimeUnit.MILLISECONDS);

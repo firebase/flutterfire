@@ -75,7 +75,7 @@ class FirebaseFunctions extends FirebasePluginPlatform {
           delegate.httpsCallable(_origin, nameOrUri, options));
     } else if (nameOrUri is Uri) {
       return HttpsCallable._(
-          delegate.httpsCallableWithURI(_origin, nameOrUri, options));
+          delegate.httpsCallableWithUri(_origin, nameOrUri, options));
     }
     throw ArgumentError.value(nameOrUri, 'nameOrUri must be a String or Uri');
   }
