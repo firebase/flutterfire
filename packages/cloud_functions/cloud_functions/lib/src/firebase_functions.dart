@@ -70,7 +70,14 @@ class FirebaseFunctions extends FirebasePluginPlatform {
     assert(nameOrUri is String || nameOrUri is Uri);
     assert(nameOrUri is Uri || (nameOrUri as String).isNotEmpty);
     options ??= HttpsCallableOptions();
-    return HttpsCallable._(delegate.httpsCallable(_origin, name, options));
+    if (nameOrUri is String) {
+      return HttpsCallable._(
+          delegate.httpsCallable(_origin, nameOrUri, options));
+    } else if (nameOrUri is Uri) {
+      return HttpsCallable._(
+          delegate.httpsCallableWithURI(_origin, nameOrUri, options));
+    }
+    throw ArgumentError.value(nameOrUri, 'nameOrUri must be a String or Uri');
   }
 
   /// Changes this instance to point to a Cloud Functions emulator running locally.

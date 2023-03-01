@@ -66,4 +66,10 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
       String? origin, String name, HttpsCallableOptions options) {
     throw UnimplementedError('httpsCallable() is not implemented');
   }
+
+  /// Creates a [HttpsCallablePlatform] instance
+  HttpsCallablePlatform httpsCallableWithURI(
+      String? origin, Uri uri, HttpsCallableOptions options) {
+    throw UnimplementedError('httpsCallable() is not implemented');
+  }
 }
