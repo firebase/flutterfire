@@ -57,9 +57,8 @@ jobs:
         with:
           api-level: 30
           arch: x86_64
-          target: google_atd
+          target: google_apis
           profile: Nexus 5X
-          channel: canary
           script: echo "Generated AVD snapshot for caching"
       - name: Firebase Emulator Cache
         uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
@@ -91,9 +90,8 @@ jobs:
         with:
           api-level: 30
           arch: x86_64
-          target: google_atd
+          target: google_apis
           profile: Nexus 5X
-          channel: canary
           working-directory: tests
           script: |
             sleep 15
