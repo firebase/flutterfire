@@ -55,7 +55,7 @@ jobs:
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
         with:
-          api-level: 28
+          api-level: 33
           arch: x86_64
           target: google_apis
           profile: Nexus 5X
@@ -88,7 +88,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
         timeout-minutes: 30
         with:
-          api-level: 28
+          api-level: 33
           arch: x86_64
           target: google_apis
           profile: Nexus 5X
