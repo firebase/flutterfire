@@ -56,13 +56,9 @@ jobs:
         uses: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
         with:
           api-level: 30
-          target: google_atd
-          arch: x86
-          profile: Galaxy Nexus
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          channel: canary
+          arch: x86_64
+          target: google_apis
+          profile: Nexus 5X
           script: echo "Generated AVD snapshot for caching"
       - name: Firebase Emulator Cache
         uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
@@ -93,18 +89,14 @@ jobs:
         timeout-minutes: 30
         with:
           api-level: 30
-          arch: x86
-          target: google_atd
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          channel: canary
-          profile: Galaxy Nexus
+          arch: x86_64
+          target: google_apis
+          profile: Nexus 5X
           working-directory: tests
           script: |
             sleep 15
             $ANDROID_HOME/platform-tools/adb logcat '*:D' > adb-log.txt &
             flutter test integration_test/e2e_test.dart --dart-define=CI=true
-
       - name: Compress Emulator Log
         if: always()
         run: cd tests/ && gzip -9 adb-log.txt
