@@ -1,6 +1,6 @@
 name: firebase_ui_oauth_facebook
 description: Firebase UI widgets for authentication & OAuth.
-version: 1.0.21
+version: 1.0.22
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_oauth_facebook
 
 environment:
@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   firebase_auth: ^4.2.9
-  firebase_ui_oauth: ^1.1.14
+  firebase_ui_oauth: ^1.1.15
   flutter:
     sdk: flutter
   flutter_facebook_auth: ^4.4.0+1

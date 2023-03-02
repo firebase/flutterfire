@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-03-02
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.1.15`](#firebase_ui_auth---v1115)
+ - [`firebase_ui_oauth_google` - `v1.0.22`](#firebase_ui_oauth_google---v1022)
+ - [`firebase_ui_oauth` - `v1.1.15`](#firebase_ui_oauth---v1115)
+ - [`firebase_ui_oauth_facebook` - `v1.0.22`](#firebase_ui_oauth_facebook---v1022)
+ - [`firebase_ui_oauth_apple` - `v1.0.22`](#firebase_ui_oauth_apple---v1022)
+ - [`firebase_ui_oauth_twitter` - `v1.0.22`](#firebase_ui_oauth_twitter---v1022)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth` - `v1.1.15`
+ - `firebase_ui_oauth_facebook` - `v1.0.22`
+ - `firebase_ui_oauth_apple` - `v1.0.22`
+ - `firebase_ui_oauth_twitter` - `v1.0.22`
+
+---
+
+#### `firebase_ui_auth` - `v1.1.15`
+
+ - **FIX**(ui_auth): fix ResponsivePage layout causing unexpected overflows ([#10533](https://github.com/firebase/flutterfire/issues/10533)). ([80c3c5ef](https://github.com/firebase/flutterfire/commit/80c3c5efbe329a780ae247da281d775f91125b56))
+ - **FIX**(ui_auth_google): bump google_sign_in version ([#10531](https://github.com/firebase/flutterfire/issues/10531)). ([782850d7](https://github.com/firebase/flutterfire/commit/782850d7912c79fbd3da5d96fda2cf3d844a11dc))
+
+#### `firebase_ui_oauth_google` - `v1.0.22`
+
+ - **FIX**(ui_auth_google): bump google_sign_in version ([#10531](https://github.com/firebase/flutterfire/issues/10531)). ([782850d7](https://github.com/firebase/flutterfire/commit/782850d7912c79fbd3da5d96fda2cf3d844a11dc))
+
+
 ## 2023-02-21
 
 ### Changes
