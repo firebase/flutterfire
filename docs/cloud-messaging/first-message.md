@@ -75,7 +75,7 @@ Android apps.
 
 ## Handling interaction
 
-The default behavior for notifications (e.g. by pressing them) on both Android & iOS is to open the application. If the application is terminated,
+When users tap a notification, the default behavior on both Android & iOS is to open the application. If the application is terminated,
 it will be started, and if it is in the background, it will be brought to the foreground.
 
 Depending on the content of a notification, you may wish to handle the user's interaction when the application
