@@ -1,3 +1,11 @@
+## 14.2.5
+
+ - **FIX**: badge is in the `message`, not the `notification` ([#10470](https://github.com/firebase/flutterfire/issues/10470)). ([cf282675](https://github.com/firebase/flutterfire/commit/cf282675a498629887680b37a81014bb939552b4))
+
+## 14.2.4
+
+ - Update a dependency to the latest release.
+
 ## 14.2.3
 
  - Update a dependency to the latest release.
