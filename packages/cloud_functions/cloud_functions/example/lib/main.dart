@@ -3,10 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:core';
+import 'dart:io';
 
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cloud_functions_example/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -34,6 +36,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final localhostMapped =
+        kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -49,52 +54,54 @@ class _MyAppState extends State<MyApp> {
             },
           ),
         ),
-        floatingActionButton: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            FloatingActionButton.extended(
-              onPressed: () async {
-                // See index.js in .github/workflows/scripts for the example function we
-                // are using for this example
-                HttpsCallable callable =
-                    FirebaseFunctions.instance.httpsCallable(
-                  Uri.parse(
-                    'http://localhost:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
-                  ),
-                  options: HttpsCallableOptions(
-                    timeout: const Duration(seconds: 5),
-                  ),
-                );
+        floatingActionButton: Builder(
+          builder: (context) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                FloatingActionButton.extended(
+                  onPressed: () async {
+                    // See index.js in .github/workflows/scripts for the example function we
+                    // are using for this example
+                    HttpsCallable callable =
+                        FirebaseFunctions.instance.httpsCallable(
+                      'listFruit',
+                      options: HttpsCallableOptions(
+                        timeout: const Duration(seconds: 5),
+                      ),
+                    );
 
-                await callingFunction(callable, context);
-              },
-              label: const Text('Call Function'),
-              icon: const Icon(Icons.cloud),
-              backgroundColor: Colors.deepOrange,
-            ),
-            const SizedBox(height: 10),
-            FloatingActionButton.extended(
-              onPressed: () async {
-                // See index.js in .github/workflows/scripts for the example function we
-                // are using for this example
-                HttpsCallable callable =
-                    FirebaseFunctions.instance.httpsCallable(
-                  Uri.parse(
-                    'http://localhost:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
-                  ),
-                  options: HttpsCallableOptions(
-                    timeout: const Duration(seconds: 5),
-                  ),
-                );
+                    await callingFunction(callable, context);
+                  },
+                  label: const Text('Call Function'),
+                  icon: const Icon(Icons.cloud),
+                  backgroundColor: Colors.deepOrange,
+                ),
+                const SizedBox(height: 10),
+                FloatingActionButton.extended(
+                  onPressed: () async {
+                    // See index.js in .github/workflows/scripts for the example function we
+                    // are using for this example
+                    HttpsCallable callable =
+                        FirebaseFunctions.instance.httpsCallable(
+                      Uri.parse(
+                        'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
+                      ),
+                      options: HttpsCallableOptions(
+                        timeout: const Duration(seconds: 5),
+                      ),
+                    );
 
-                await callingFunction(callable, context);
-              },
-              label: const Text('Call 2nd Gen Function'),
-              icon: const Icon(Icons.cloud),
-              backgroundColor: Colors.deepOrange,
-            ),
-          ],
+                    await callingFunction(callable, context);
+                  },
+                  label: const Text('Call 2nd Gen Function'),
+                  icon: const Icon(Icons.cloud),
+                  backgroundColor: Colors.deepOrange,
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
