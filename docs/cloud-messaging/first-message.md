@@ -98,7 +98,7 @@ class Application extends StatefulWidget {
 }
 
 class _Application extends State<Application> {
-  // It is assumed that all messages contain a data field with the key 'type'
+  // In this example, suppose that all messages contain a data field with the key 'type'.
   Future<void> setupInteractedMessage() async {
     // Get any messages which caused the application to open from
     // a terminated state.
