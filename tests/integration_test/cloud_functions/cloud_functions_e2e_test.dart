@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -122,14 +124,16 @@ void main() {
       );
 
       test('can be called using an Uri', () async {
+        final localhostMapped =
+            kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+
         HttpsCallable callable = FirebaseFunctions.instance.httpsCallable(
           Uri.parse(
-            'http://127.0.0.1:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
+            'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
           ),
         );
 
         HttpsCallableResult result = await callable();
-        print(result.data);
         expect(result, isA<HttpsCallableResult>());
       });
     });
