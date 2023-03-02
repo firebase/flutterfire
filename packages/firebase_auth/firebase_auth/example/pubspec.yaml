@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_signin_button: ^2.0.0
-  google_sign_in: ^5.4.2
+  google_sign_in: ^6.0.0
 
 dev_dependencies:
   http: ^0.13.3
