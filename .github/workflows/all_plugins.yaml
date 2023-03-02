@@ -29,6 +29,8 @@ jobs:
           channel: 'stable'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - name: 'Run Analyze'
         run: melos run analyze
 
@@ -45,6 +47,8 @@ jobs:
           channel: 'stable'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - name: 'Pub Check'
         run: |
           melos exec -c 1 --no-private --ignore="*example*" -- \
@@ -60,6 +64,8 @@ jobs:
           channel: 'stable'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - name: 'Flutter Pub Get'
         run: |
           melos exec -c 1 --scope="*example*" -- \
@@ -75,6 +81,8 @@ jobs:
           channel: 'stable'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - uses: Homebrew/actions/setup-homebrew@master
       - name: 'Install Tools'
         run: |
@@ -106,6 +114,8 @@ jobs:
           channel: 'stable'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - name: 'Build Examples'
         run: |
           melos exec -c 1 --scope="*example*" --dir-exists="web" -- \
@@ -121,6 +131,8 @@ jobs:
           channel: 'stable'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - name: 'Flutter Test'
         run: melos run test --no-select
       - name: 'Flutter Test - Web'
