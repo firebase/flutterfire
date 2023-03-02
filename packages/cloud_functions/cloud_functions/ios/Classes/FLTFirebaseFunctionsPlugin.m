@@ -101,8 +101,8 @@ NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase
   } else if (![functionUri isEqual:[NSNull null]]) {
     function = [functions HTTPSCallableWithURL:[NSURL URLWithString:functionUri]];
   } else {
-    result.error(@"WRONG_ARGUMENT", @"Either functionName or functionUri should be provided", nil,
-                 nil);
+    result.error(@"IllegalArgumentException", @"Either functionName or functionUri must be set",
+                 nil, nil);
     return;
   }
   if (timeout != nil && ![timeout isEqual:[NSNull null]]) {
