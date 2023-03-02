@@ -5,6 +5,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 typedef OAuthSignIn = void Function();
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
+
+// If set to true, the app will request notification permissions to use
+// silent verification for SMS MFA instead of Recaptcha.
+const withSilentVerificationSMSMFA = true;
 
 /// Helper class to show a snackbar using the passed context.
 class ScaffoldSnackbar {
@@ -85,6 +90,12 @@ class _AuthGateState extends State<AuthGate> {
   @override
   void initState() {
     super.initState();
+
+    if (withSilentVerificationSMSMFA) {
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      messaging.requestPermission();
+    }
+
     if (!kIsWeb && Platform.isMacOS) {
       authButtons = {
         Buttons.Apple: () => _handleMultiFactorException(
