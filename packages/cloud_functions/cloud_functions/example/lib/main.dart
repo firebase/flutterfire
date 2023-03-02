@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
               children: [
                 FloatingActionButton.extended(
                   onPressed: () async {
-                    // See index.js in .github/workflows/scripts for the example function we
+                    // See .github/workflows/scripts/functions/src/index.ts for the example function we
                     // are using for this example
                     HttpsCallable callable =
                         FirebaseFunctions.instance.httpsCallable(
@@ -81,7 +81,7 @@ class _MyAppState extends State<MyApp> {
                 const SizedBox(height: 10),
                 FloatingActionButton.extended(
                   onPressed: () async {
-                    // See index.js in .github/workflows/scripts for the example function we
+                    // See .github/workflows/scripts/functions/src/index.ts for the example function we
                     // are using for this example
                     HttpsCallable callable =
                         FirebaseFunctions.instance.httpsCallable(
