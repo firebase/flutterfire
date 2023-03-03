@@ -222,6 +222,7 @@ public class FlutterFirebasePerformancePlugin
             final HttpMetric httpMetric = _httpMetrics.get(httpMetricHandle);
 
             if (httpMetric == null) {
+              // If httpMetric is null, it means that the httpMetric has already been stopped.
               taskCompletionSource.setResult(null);
               return;
             }
