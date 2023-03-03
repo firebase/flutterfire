@@ -41,5 +41,6 @@ end
 
 target 'ImageNotification' do
   use_frameworks!
+  pod 'Firebase/Auth'
   pod 'Firebase/Messaging'
 end
