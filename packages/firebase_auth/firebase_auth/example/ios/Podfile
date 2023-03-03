@@ -38,3 +38,8 @@ post_install do |installer|
     flutter_additional_ios_build_settings(target)
   end
 end
+
+target 'ImageNotification' do
+  use_frameworks!
+  pod 'Firebase/Messaging'
+end
