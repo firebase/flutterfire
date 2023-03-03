@@ -217,7 +217,7 @@ scripts:
     description: Run Dart tests for the ODM.
     packageFilters:
       dirExists: 'test'
-      depends-on: 'test'
+      dependsOn: 'test'
       scope: '*odm*'
 
   odm:test:flutter:
@@ -227,7 +227,7 @@ scripts:
     description: Run Flutter tests for the ODM.
     packageFilters:
       dirExists: 'test'
-      no-depends-on: 'test'
+      noDependsOn: 'test'
       scope: '*odm*'
 
   odm:example_build_runner:build:
