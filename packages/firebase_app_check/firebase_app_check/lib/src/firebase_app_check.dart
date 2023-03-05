@@ -70,7 +70,7 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   ///
   /// If `forceRefresh` is true, will always try to fetch a fresh token. If
   /// false, will use a cached token if found in storage.
-  Future<String?> getToken([bool? forceRefresh]) async {
+  Future<AppCheckToken?> getToken([bool? forceRefresh]) async {
     return _delegate.getToken(forceRefresh ?? false);
   }
 

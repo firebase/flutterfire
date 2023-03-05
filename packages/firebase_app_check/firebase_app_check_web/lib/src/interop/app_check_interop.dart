@@ -18,7 +18,7 @@ external AppCheckJsImpl initializeAppCheck(
 ]);
 
 @JS()
-external PromiseJsImpl<AppCheckTokenResult> getToken(
+external PromiseJsImpl<AppCheckToken> getToken(
   AppCheckJsImpl? appCheck,
   bool? forceRefresh,
 );
@@ -35,8 +35,9 @@ class ReCaptchaV3Provider {
 }
 
 @JS()
-abstract class AppCheckTokenResult {
+abstract class AppCheckToken {
   external String get token;
+  external num get expireTimeMillis;
 }
 
 @anonymous

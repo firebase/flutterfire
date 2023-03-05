@@ -6,9 +6,9 @@ import 'dart:async';
 
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/internals.dart';
@@ -78,11 +78,14 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   }
 
   @override
-  Future<String?> getToken(bool forceRefresh) async {
-    return convertWebExceptions<Future<String?>>(() async {
-      app_check_interop.AppCheckTokenResult result =
+  Future<AppCheckToken?> getToken(bool forceRefresh) async {
+    return convertWebExceptions<Future<AppCheckToken?>>(() async {
+      app_check_interop.AppCheckToken result =
           await _delegate!.getToken(forceRefresh);
-      return result.token;
+      return AppCheckToken(
+        token: result.token,
+        expireTimeMillis: result.expireTimeMillis.toInt(),
+      );
     });
   }
 

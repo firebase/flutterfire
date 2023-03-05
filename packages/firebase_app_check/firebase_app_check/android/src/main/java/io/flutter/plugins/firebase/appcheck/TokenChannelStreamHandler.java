@@ -25,9 +25,7 @@ public class TokenChannelStreamHandler implements EventChannel.StreamHandler {
 
     listener =
         result -> {
-          Map<String, Object> event = new HashMap<>();
-          event.put("token", result.getToken());
-          events.success(event);
+          events.success(FlutterFirebaseAppCheckPlugin.tokenToMap(result));
         };
 
     firebaseAppCheck.addAppCheckListener(listener);
