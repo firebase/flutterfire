@@ -287,7 +287,7 @@ void main() {
         expect(elements.length, 1);
         expect(elements.first, <String, String>{
           'method':
-            '    #00 abs 000075f17833027b _kDartIsolateSnapshotInstructions+0x1a127b',
+              '    #00 abs 000075f17833027b _kDartIsolateSnapshotInstructions+0x1a127b',
           'file': '',
           'line': '0',
         });
