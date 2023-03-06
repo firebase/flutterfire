@@ -24,6 +24,8 @@ flutter:
     platforms:
       linux:
         pluginClass: FirebaseCorePlugin
+      windows:
+        pluginClass: FirebaseCorePluginCApi
 
 ffigen:
   output: 'generated_bindings.dart'
