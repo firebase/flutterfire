@@ -41,8 +41,8 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
 
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.
-
-add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
+set(MSVC_RUNTIME_MODE MD)
+add_subdirectory(C:/Users/guill/Downloads/firebase_cpp_sdk_10.5.0/firebase_cpp_sdk C:/Users/guill/Developer/flutterfire/packages/firebase_core/firebase_core/firebase_core/example/bin/ EXCLUDE_FROM_ALL)
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${FIREBASE_CPP_SDK_DIR}/include")
 set(firebase_libs firebase_auth firebase_database firebase_app)
