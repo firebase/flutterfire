@@ -2,6 +2,7 @@
 
 // This must be included before many other Windows headers.
 #include <windows.h>
+#include "firebase/app.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
 #include <VersionHelpers.h>
@@ -12,6 +13,7 @@
 
 #include <memory>
 #include <sstream>
+using ::firebase::App;
 
 namespace firebase_core {
 
@@ -41,6 +43,8 @@ void FirebaseCorePlugin::HandleMethodCall(
     const flutter::MethodCall<flutter::EncodableValue> &method_call,
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
   if (method_call.method_name().compare("getPlatformVersion") == 0) {
+    App* app = App::Create();
+    std::cout << static_cast<int>(reinterpret_cast<intptr_t>(app));
     std::ostringstream version_stream;
     version_stream << "Windows ";
     if (IsWindows10OrGreater()) {
