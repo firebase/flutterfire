@@ -467,7 +467,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
       delegate.useAuthEmulator(origin);
       // Save to local storage so that the emulator is used on refresh
-      window.localStorage['firebaseEmulatorOrigin'] = origin;
+      // only in debug mode
+      if (kDebugMode) {
+        window.localStorage['firebaseEmulatorOrigin'] = origin;
+      }
     } catch (e) {
       final String code = (e as auth_interop.AuthError).code;
       // this catches Firebase Error from web that occurs after hot reloading & hot restarting

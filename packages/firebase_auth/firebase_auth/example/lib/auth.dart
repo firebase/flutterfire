@@ -62,10 +62,10 @@ class AuthGate extends StatefulWidget {
   const AuthGate({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => authGateState();
+  State<StatefulWidget> createState() => _AuthGateState();
 }
 
-class authGateState extends State<AuthGate> {
+class _AuthGateState extends State<AuthGate> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
