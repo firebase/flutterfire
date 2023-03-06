@@ -26,7 +26,6 @@ add_library(${PLUGIN_NAME} SHARED
   ${PLUGIN_SOURCES}
 )
 
-
 # Apply a standard set of build settings that are configured in the
 # application-level CMakeLists.txt. This can be removed for plugins that want
 # full control over build settings.
