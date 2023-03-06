@@ -5,6 +5,9 @@
 
 import 'package:stack_trace/stack_trace.dart';
 
+final _obfuscatedStackTraceLineRegExp =
+    RegExp(r'^(\s*#\d{2} abs )([\da-f]+)((?: virt [\da-f]+)?(?: .*)?)$');
+
 /// Returns a [List] containing detailed output of each line in a stack trace.
 List<Map<String, String>> getStackTraceElements(StackTrace stackTrace) {
   final Trace trace = Trace.parseVM(stackTrace.toString()).terse;
@@ -12,18 +15,20 @@ List<Map<String, String>> getStackTraceElements(StackTrace stackTrace) {
 
   for (final Frame frame in trace.frames) {
     if (frame is UnparsedFrame) {
-      // Same exceptions should be grouped in Crashlytics Console.
-      // Crashlytics Console groups issues with same stack trace.
-      // Obfuscated stack traces contains abs address, virt address
-      // and symbol name + offset. abs addresses are different across
-      // sessions, Crashlytics is smart enough to grouping those errors
-      // in the same issue. For iOS we use abs address for symbolication
-      // and for Android we use virt address.
-      elements.add(<String, String>{
-        'file': '',
-        'line': '0',
-        'method': frame.member,
-      });
+      if (_obfuscatedStackTraceLineRegExp.hasMatch(frame.member)) {
+        // Same exceptions should be grouped in Crashlytics Console.
+        // Crashlytics Console groups issues with same stack trace.
+        // Obfuscated stack traces contains abs address, virt address
+        // and symbol name + offset. abs addresses are different across
+        // sessions, Crashlytics is smart enough to grouping those errors
+        // in the same issue. For iOS we use abs address for symbolication
+        // and for Android we use virt address.
+        elements.add(<String, String>{
+          'file': '',
+          'line': '0',
+          'method': frame.member,
+        });
+      }
     } else {
       final Map<String, String> element = <String, String>{
         'file': frame.library,
