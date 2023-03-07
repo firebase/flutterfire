@@ -409,3 +409,93 @@ experimentalSetDeliveryMetricsExportedToBigQueryEnabled(messaging, true);
 ```
 
 Don't forget to run `yarn build` in order to export the new version of your service worker to the `web` folder.
+
+
+## (Advanced, Optional) Allowing Notification Images on iOS
+
+On Apple devices, in order for incoming FCM Notifications to display images from the FCM payload, you must add an additional notification service extension. This is not a required step.
+
+### Step 1 - Add a notification service extension#
+
+- From Xcode top menu go to: File > New > Target...
+- A modal will present a list of possible targets, scroll down or use the filter to select "Notification Service Extension". Press Next.
+- Add a product name (use ImageNotification to follow along), set Language to Objective-C and click Finish.
+- Enable the scheme by clicking Activate.
+
+### Step 2 - Add target to the Podfile#
+
+Ensure that your new extension has access to Firebase/Messaging pod by adding it in the Podfile:
+
+- From the Navigator open the Podfile: Pods > Podfile
+- Scroll down to the bottom of the file and add:
+
+```ruby
+target 'ImageNotification' do
+  use_frameworks!
+  pod 'Firebase/Auth'
+  pod 'Firebase/Messaging'
+end
+```
+
+- Install or update your pods using pod install from the ios and/or macos directory.
+
+### Step 3 - Use the extension helper
+
+At this point everything should still be running normally. This is the final step which is invoking the extension helper.
+
+- From the navigator select your ImageNotification extension
+- Open the NotificationService.m file
+- At the top of the file import FirebaseMessaging.h right after the NotificationService.h as shown below:
+
+Replace the content of `NotificationService.m` with
+
+```Objective-C
+#import "NotificationService.h"
+#import "FirebaseAuth.h"
+#import "FirebaseMessaging.h"
+#import <UIKit/UIKit.h>
+
+@interface NotificationService ()
+
+@property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
+@property (nonatomic, strong) UNMutableNotificationContent *bestAttemptContent;
+
+@end
+
+@implementation NotificationService
+
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+  if ([[FIRAuth auth] canHandleURL:url]) {
+    return YES;
+  }
+  return NO;
+}
+
+- (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {
+  for (UIOpenURLContext *urlContext in URLContexts) {
+    [FIRAuth.auth canHandleURL:urlContext.URL];
+  }
+}
+
+- (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
+    self.contentHandler = contentHandler;
+    self.bestAttemptContent = [request.content mutableCopy];
+
+    // Modify the notification content here...
+    [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
+}
+
+- (void)serviceExtensionTimeWillExpire {
+    // Called just before the extension will be terminated by the system.
+    // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
+    self.contentHandler(self.bestAttemptContent);
+}
+
+@end
+```
+
+### Step 4 - Add the image to the payload
+
+Your device can now display images in a notification by specifying the imageUrl option in your FCM payload. Keep in mind that a 300KB max image size is enforced by the device.
