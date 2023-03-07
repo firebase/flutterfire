@@ -36,7 +36,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
-    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
     // Set appleProvider to `AppleProvider.debug`
     appleProvider: AppleProvider.debug,
   );
