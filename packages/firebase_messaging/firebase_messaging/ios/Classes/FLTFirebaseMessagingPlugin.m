@@ -1001,8 +1001,10 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   FIRMessaging *messaging = [FIRMessaging messaging];
 
   // With iOS SDK >= 10.4, an APNS token is required for getting/deleting token. We set a dummy
-  // token for the simulator for test environments. Historically, a simulator will not work for messaging.
-  // It will work if environment: iOS 16, running on macOS 13+ & silicon chip. We check the `_apnsToken` is nil. If it is, then the environment does not support and we set dummy token.
+  // token for the simulator for test environments. Historically, a simulator will not work for
+  // messaging. It will work if environment: iOS 16, running on macOS 13+ & silicon chip. We check
+  // the `_apnsToken` is nil. If it is, then the environment does not support and we set dummy
+  // token.
 #if TARGET_IPHONE_SIMULATOR
   if (simulatorToken == false && _apnsToken == nil) {
     NSString *str = @"fake-apns-token-for-simulator";
