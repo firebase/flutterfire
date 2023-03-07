@@ -5,6 +5,7 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -36,12 +37,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    user = FirebaseAuth.instance.currentUser!;
+    user = auth.currentUser!;
     controller = TextEditingController(text: user.displayName);
 
     controller.addListener(_onNameChanged);
 
-    FirebaseAuth.instance.userChanges().listen((event) {
+    auth.userChanges().listen((event) {
       if (event != null && mounted) {
         setState(() {
           user = event;
@@ -200,7 +201,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     TextButton(
                       onPressed: () async {
                         final session = await user.multiFactor.getSession();
-                        final auth = FirebaseAuth.instance;
                         await auth.verifyPhoneNumber(
                           multiFactorSession: session,
                           phoneNumber: phoneController.text,
@@ -306,7 +306,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   /// Example code for sign out.
   Future<void> _signOut() async {
-    await FirebaseAuth.instance.signOut();
+    await auth.signOut();
     await GoogleSignIn().signOut();
   }
 }
