@@ -38,6 +38,8 @@ jobs:
           channel: 'stable'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android
       - name: "Drive Example"
@@ -61,6 +63,8 @@ jobs:
           channel: 'stable'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh ios
       - name: "Drive Example"

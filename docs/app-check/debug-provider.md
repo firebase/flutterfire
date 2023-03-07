@@ -20,63 +20,29 @@ app, and don't share your debug builds with untrusted parties.
 
 ## Apple platforms
 
-To use the debug provider while running your app in a simulator interactively
+To use the debug provider (default is device check provider) while running your app in a simulator interactively
 (during development, for example), do the following:
 
-1.  In the file `ios/Runner/AppDelegate.swift` (or `AppDelegate.m`), create and
-    set the App Check debug provider factory in Debug builds:
+1.  Activate App Check with the debug provider right after you have initialized your Firebase app:
 
-    * {Swift}
+```dart
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-      ```swift
-      import UIKit
-      import Flutter
-      import Firebase  // Add the Firebase import.
+// Import the firebase_app_check plugin
+import 'package:firebase_app_check/firebase_app_check.dart';
 
-      @UIApplicationMain
-      @objc class AppDelegate: FlutterAppDelegate {
-        override func application(
-          _ application: UIApplication,
-          didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-        ) -> Bool {
-          // Use the debug provider in Debug builds:
-      #if DEBUG
-          let providerFactory = AppCheckDebugProviderFactory()
-          AppCheck.setAppCheckProviderFactory(providerFactory)
-      #endif
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(
+    // Set appleProvider to `AppleProvider.debug`
+    appleProvider: AppleProvider.debug,
+  );
+  runApp(App());
+}
 
-          GeneratedPluginRegistrant.register(with: self)
-          return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-        }
-      }
-      ```
-
-      Tip: Confirm in your Xcode project's Build Settings that it passes the
-      `DEBUG` flag to the Swift compiler.
-
-    * {Objective-C}
-
-      ```objc
-      #import "AppDelegate.h"
-      #import "GeneratedPluginRegistrant.h"
-      @import Firebase;  // Add the Firebase import.
-
-      @implementation AppDelegate
-
-      - (BOOL)application:(UIApplication *)application
-          didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-        // Use the debug provider in Debug builds:
-      #if DEBUG
-        FIRAppCheckDebugProviderFactory *providerFactory = [[FIRAppCheckDebugProviderFactory alloc] init];
-        [FIRAppCheck setAppCheckProviderFactory:providerFactory];
-      #endif
-        [GeneratedPluginRegistrant registerWithRegistry:self];
-        // Override point for customization after application launch.
-        return [super application:application didFinishLaunchingWithOptions:launchOptions];
-      }
-
-      @end
-      ```
+```
 
 1.  Enable debug logging in your Xcode project (v11.0 or newer):
 

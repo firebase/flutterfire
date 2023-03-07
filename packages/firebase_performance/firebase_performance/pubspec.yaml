@@ -5,7 +5,7 @@ description:
   iOS.
 homepage: https://firebase.google.com/docs/perf-mon
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_performance/firebase_performance
-version: 0.9.0+13
+version: 0.9.0+14
 
 false_secrets:
   - example/**
@@ -15,10 +15,10 @@ environment:
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  firebase_core: ^2.6.1
+  firebase_core: ^2.7.0
   firebase_core_platform_interface: ^4.5.3
-  firebase_performance_platform_interface: ^0.1.1+32
-  firebase_performance_web: ^0.1.1+21
+  firebase_performance_platform_interface: ^0.1.1+33
+  firebase_performance_web: ^0.1.1+22
   flutter:
     sdk: flutter
 

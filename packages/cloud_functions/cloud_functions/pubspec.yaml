@@ -1,6 +1,6 @@
 name: cloud_functions
 description: A Flutter plugin allowing you to use Firebase Cloud Functions.
-version: 4.0.10
+version: 4.0.11
 homepage: https://firebase.google.com/docs/functions
 repository: https://github.com/firebase/flutterfire/tree/master/packages/cloud_functions/cloud_functions
 
@@ -12,9 +12,9 @@ environment:
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  cloud_functions_platform_interface: ^5.1.29
-  cloud_functions_web: ^4.3.18
-  firebase_core: ^2.6.1
+  cloud_functions_platform_interface: ^5.1.30
+  cloud_functions_web: ^4.3.19
+  firebase_core: ^2.7.0
   firebase_core_platform_interface: ^4.5.3
   flutter:
     sdk: flutter

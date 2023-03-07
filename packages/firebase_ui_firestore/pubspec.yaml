@@ -1,6 +1,6 @@
 name: firebase_ui_firestore
 description: Pre-built widgets and utilites that make it easy to integrate Firebase Firestore into your Flutter app.
-version: 1.2.7
+version: 1.2.8
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_firestore
 
 environment:
@@ -8,7 +8,7 @@ environment:
   flutter: '>=1.17.0'
 
 dependencies:
-  cloud_firestore: ^4.4.2
+  cloud_firestore: ^4.4.3
   firebase_ui_localizations: ^1.2.0
   flutter:
     sdk: flutter
