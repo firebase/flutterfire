@@ -1,3 +1,7 @@
+## 4.2.10
+
+ - **FIX**(auth,web): fix currentUser being null when using emulator or named instance ([#10565](https://github.com/firebase/flutterfire/issues/10565)). ([11e8644d](https://github.com/firebase/flutterfire/commit/11e8644df402a5abbb0d0c37714879272dec024c))
+
 ## 4.2.9
 
  - Update a dependency to the latest release.

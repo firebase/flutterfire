@@ -6,8 +6,8 @@ environment:
   flutter: ">=1.9.1+hotfix.2"
 
 dependencies:
-  firebase_core: ^2.7.0
-  firebase_database: ^10.0.14
+  firebase_core: ^2.7.1
+  firebase_database: ^10.0.15
   flutter:
     sdk: flutter
 

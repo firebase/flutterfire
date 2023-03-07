@@ -1,3 +1,7 @@
+## 1.1.16
+
+ - Update a dependency to the latest release.
+
 ## 1.1.15
 
  - **FIX**(ui_auth): fix ResponsivePage layout causing unexpected overflows ([#10533](https://github.com/firebase/flutterfire/issues/10533)). ([80c3c5ef](https://github.com/firebase/flutterfire/commit/80c3c5efbe329a780ae247da281d775f91125b56))

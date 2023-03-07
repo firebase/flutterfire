@@ -1,3 +1,7 @@
+## 3.3.4
+
+ - Update a dependency to the latest release.
+
 ## 3.3.3
 
  - **FIX**: change interop type of updateDoc to force the JS interop to keep the value ([#10491](https://github.com/firebase/flutterfire/issues/10491)). ([c46c9769](https://github.com/firebase/flutterfire/commit/c46c9769eae9e780f3c03622f468bf18f1717d79))
