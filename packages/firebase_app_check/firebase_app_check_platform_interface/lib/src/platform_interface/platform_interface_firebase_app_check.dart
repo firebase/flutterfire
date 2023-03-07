@@ -54,13 +54,19 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   /// Activates the Firebase App Check service.
   ///
   /// On web, provide the reCAPTCHA v3 Site Key which can be found in the
-  /// Firebase Console. For more information, see
-  /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web).
+  /// Firebase Console.
   ///
   /// On Android, the default provider is "play integrity". If you wish to set the provider to "safety net" or "debug", you may set the `androidProvider` property using the `AndroidProvider` enum
+  ///
+  /// On iOS or macOS, the default provider is "device check". If you wish to set the provider to "app attest", "debug" or "app attest with fallback to device check"
+  /// ("app attest" is only available on iOS 14.0+, macOS 14.0+), you may set the `appleProvider` property using the `AppleProvider` enum
+  ///
   /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
-  Future<void> activate(
-      {String? webRecaptchaSiteKey, AndroidProvider? androidProvider}) {
+  Future<void> activate({
+    String? webRecaptchaSiteKey,
+    AndroidProvider? androidProvider,
+    AppleProvider? appleProvider,
+  }) {
     throw UnimplementedError('activate() is not implemented');
   }
 

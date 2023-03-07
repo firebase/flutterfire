@@ -14,7 +14,9 @@ const kWebRecaptchaSiteKey = '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // Activate app check after initialization, but before
   // usage of any Firebase services.
@@ -22,6 +24,7 @@ Future<void> main() async {
       // Your personal reCaptcha public key goes here:
       .activate(
     androidProvider: AndroidProvider.debug,
+    appleProvider: AppleProvider.debug,
     webRecaptchaSiteKey: kWebRecaptchaSiteKey,
   );
 

@@ -8,6 +8,7 @@
 #import <Flutter/Flutter.h>
 #endif
 
+#import <FLTAppCheckProviderFactory.h>
 #import <Foundation/Foundation.h>
 #import <firebase_core/FLTFirebasePlugin.h>
 
