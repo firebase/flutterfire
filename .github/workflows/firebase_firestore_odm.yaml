@@ -36,6 +36,7 @@ jobs:
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
+          melos-version: '3.0.0-dev.0'
       - name: "Bootstrap Workspace"
         run: |
           melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
@@ -64,6 +65,7 @@ jobs:
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
+          melos-version: '3.0.0-dev.0'
       - name: "Install Tools"
         run: |
           sudo npm i -g firebase-tools
