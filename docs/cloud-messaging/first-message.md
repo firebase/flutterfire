@@ -73,6 +73,75 @@ which records the number of messages sent and opened on Apple and Android
 devices, along with data for "impressions" (notifications seen by users) for
 Android apps.
 
+## Handling interaction
+
+When users tap a notification, the default behavior on both Android & iOS is to open the application. If the application is terminated,
+it will be started, and if it is in the background, it will be brought to the foreground.
+
+Depending on the content of a notification, you may wish to handle the user's interaction when the application
+opens. For example, if a new chat message is sent using a notification and the user selects it, you may want to
+ open the specific conversation when the application opens.
+
+The `firebase-messaging` package provides two ways to handle this interaction:
+
+1. `getInitialMessage()`: If the application is opened from a terminated state, this method returns a `Future` containing a `RemoteMessage`. Once consumed, the `RemoteMessage` will be removed.
+2. `onMessageOpenedApp`: A `Stream` which posts a `RemoteMessage` when the application is opened from a
+    background state.
+
+To ensure a smooth experience for your users, you should handle both scenarios. The code example
+below outlines how this can be achieved:
+
+```dart
+class Application extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _Application();
+}
+
+class _Application extends State<Application> {
+  // In this example, suppose that all messages contain a data field with the key 'type'.
+  Future<void> setupInteractedMessage() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    if (message.data['type'] == 'chat') {
+      Navigator.pushNamed(context, '/chat',
+        arguments: ChatArguments(message),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Run code required to handle interacted messages in an async function
+    // as initState() must not be async
+    setupInteractedMessage();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text("...");
+  }
+}
+```
+
+How you handle interaction depends on your application setup, however the example above
+shows a basic example of using a StatefulWidget.
 
 ## Next steps
 
