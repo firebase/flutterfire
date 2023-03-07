@@ -96,7 +96,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       // if localhost, and emulator was previously set in localStorage, use it
       if (window.location.hostname == 'localhost' && kDebugMode) {
         final String? emulatorOrigin =
-            window.localStorage['firebaseEmulatorOrigin'];
+            window.sessionStorage['firebaseEmulatorOrigin'];
 
         if (emulatorOrigin != null) {
           authDelegate.useAuthEmulator(emulatorOrigin);
@@ -450,9 +450,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<void> useAuthEmulator(String host, int port) async {
     try {
-      // Get current local storage value
+      // Get current session storage value
       final String? emulatorOrigin =
-          window.localStorage['firebaseEmulatorOrigin'];
+          window.sessionStorage['firebaseEmulatorOrigin'];
 
       // The generic platform interface is with host and port split to
       // centralize logic between android/ios native, but web takes the
@@ -466,10 +466,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       }
 
       delegate.useAuthEmulator(origin);
-      // Save to local storage so that the emulator is used on refresh
+      // Save to session storage so that the emulator is used on refresh
       // only in debug mode
       if (kDebugMode) {
-        window.localStorage['firebaseEmulatorOrigin'] = origin;
+        window.sessionStorage['firebaseEmulatorOrigin'] = origin;
       }
     } catch (e) {
       final String code = (e as auth_interop.AuthError).code;
