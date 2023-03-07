@@ -20,7 +20,7 @@ List<Map<String, String>> getStackTraceElements(StackTrace stackTrace) {
         // Crashlytics Console groups issues with same stack trace.
         // Obfuscated stack traces contains abs address, virt address
         // and symbol name + offset. abs addresses are different across
-        // sessions, Crashlytics is smart enough to grouping those errors
+        // sessions, Crashlytics is smart enough to group exceptions
         // in the same issue. For iOS we use abs address for symbolication
         // and for Android we use virt address.
         elements.add(<String, String>{
