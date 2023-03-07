@@ -73,6 +73,7 @@ jobs:
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
+          melos-version: '3.0.0-dev.0'
       - name: "Bootstrap package"
         run: melos bootstrap --scope tests
       - name: "Install Tools"
@@ -148,6 +149,7 @@ jobs:
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
+          melos-version: '3.0.0-dev.0'
       - name: "Bootstrap package"
         run: melos bootstrap --scope tests
       - name: "Install Tools"
@@ -221,6 +223,7 @@ jobs:
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
+          melos-version: '3.0.0-dev.0'
       - name: "Bootstrap package"
         run: melos bootstrap --scope tests
       - name: "Install Tools"
@@ -267,6 +270,7 @@ jobs:
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
+          melos-version: '3.0.0-dev.0'
       - name: "Bootstrap package"
         run: melos bootstrap --scope tests
       - name: "Install Tools"
