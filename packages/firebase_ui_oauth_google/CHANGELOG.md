@@ -1,3 +1,7 @@
+## 1.0.23
+
+ - Update a dependency to the latest release.
+
 ## 1.0.22
 
  - **FIX**(ui_auth_google): bump google_sign_in version ([#10531](https://github.com/firebase/flutterfire/issues/10531)). ([782850d7](https://github.com/firebase/flutterfire/commit/782850d7912c79fbd3da5d96fda2cf3d844a11dc))
