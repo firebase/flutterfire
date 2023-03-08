@@ -241,7 +241,8 @@ void main() {
         test('throws on invalid code', () async {
           try {
             await FirebaseAuth.instance.confirmPasswordReset(
-                code: '!!!!!!', newPassword: 'thingamajig');
+                code: '!!!!!!', newPassword: 'thingamajig',
+            );
             fail('Should have thrown');
           } on FirebaseException catch (e) {
             expect(e.code, equals('invalid-action-code'));
@@ -446,7 +447,8 @@ void main() {
           // Confirm the continue url was passed through to backend correctly.
           final url = Uri.parse(oobCode.oobLink!);
           expect(
-              url.queryParameters['continueUrl'], Uri.encodeFull(continueUrl));
+              url.queryParameters['continueUrl'], Uri.encodeFull(continueUrl),
+          );
         });
       });
 
@@ -568,7 +570,8 @@ void main() {
 
         test('throws if login password is incorrect', () async {
           var credential = EmailAuthProvider.credential(
-              email: testEmail, password: 'sowrong');
+              email: testEmail, password: 'sowrong',
+          );
           try {
             await FirebaseAuth.instance.signInWithCredential(credential);
             fail('Should have thrown');
@@ -745,18 +748,21 @@ void main() {
                   phoneNumber: 'foo',
                   verificationCompleted: (PhoneAuthCredential credential) {
                     return completer.completeError(
-                        Exception('Should not have been called'));
+                        Exception('Should not have been called'),
+                    );
                   },
                   verificationFailed: (FirebaseAuthException e) {
                     completer.complete(e);
                   },
                   codeSent: (String verificationId, int? resetToken) {
                     return completer.completeError(
-                        Exception('Should not have been called'));
+                        Exception('Should not have been called'),
+                    );
                   },
                   codeAutoRetrievalTimeout: (String foo) {
                     return completer.completeError(
-                        Exception('Should not have been called'));
+                        Exception('Should not have been called'),
+                    );
                   },
                 ),
               );
