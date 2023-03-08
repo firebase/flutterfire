@@ -173,7 +173,8 @@ void main() {
         test(
           'should enroll and throw if trying to unenroll an unknown factor',
           () async {
-            String testPhoneNumber = '+441444555666';
+            final email = generateRandomEmail();
+            String testPhoneNumber = '+441444555667';
             User? user;
             UserCredential userCredential;
 
@@ -266,13 +267,12 @@ void main() {
             expect(enrolledFactors.length, 1);
             expect(enrolledFactors.first.displayName, 'My phone number');
 
-            try {
-              await user.multiFactor.unenroll(
+            await expectLater(
+              user.multiFactor.unenroll(
                 factorUid: 'unknown',
-              );
-            } catch (e) {
-              expect(e, isA<FirebaseAuthException>());
-            }
+              ),
+              throwsA(isA<FirebaseAuthException>()),
+            );
 
             final enrolledFactorsAfter = await multiFactor.getEnrolledFactors();
 
