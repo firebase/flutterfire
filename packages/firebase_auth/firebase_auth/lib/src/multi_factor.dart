@@ -36,7 +36,7 @@ class MultiFactor {
     assert(
       (factorUid != null && multiFactorInfo == null) ||
           (factorUid == null && multiFactorInfo != null),
-      'Exactly one of factorUid or multiFactorInfo must be provided',
+      'Exactly one of `factorUid` or `multiFactorInfo` must be provided',
     );
     return _delegate.unenroll(
       factorUid: factorUid,
