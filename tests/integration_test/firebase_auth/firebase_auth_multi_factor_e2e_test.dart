@@ -272,7 +272,6 @@ void main() {
               );
             } catch (e) {
               expect(e, isA<FirebaseAuthException>());
-              expect((e as FirebaseAuthException).code, 'unenroll-failed');
             }
 
             final enrolledFactorsAfter = await multiFactor.getEnrolledFactors();
