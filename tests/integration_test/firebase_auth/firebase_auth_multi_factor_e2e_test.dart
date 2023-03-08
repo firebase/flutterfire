@@ -171,6 +171,119 @@ void main() {
         );
 
         test(
+          'should enroll and throw if trying to unenroll an unknown factor',
+          () async {
+            String testPhoneNumber = '+441444555666';
+            User? user;
+            UserCredential userCredential;
+
+            userCredential =
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: testPassword,
+            );
+            user = userCredential.user;
+
+            await user!.sendEmailVerification();
+            final oobCode = (await emulatorOutOfBandCode(
+              email,
+              EmulatorOobCodeType.verifyEmail,
+            ))!;
+
+            await emulatorVerifyEmail(
+              oobCode.oobCode!,
+            );
+
+            final multiFactor = user.multiFactor;
+            final session = await multiFactor.getSession();
+
+            Future<String> getCredential() async {
+              Completer completer = Completer<String>();
+
+              unawaited(
+                FirebaseAuth.instance.verifyPhoneNumber(
+                  phoneNumber: testPhoneNumber,
+                  multiFactorSession: session,
+                  verificationCompleted: (PhoneAuthCredential credential) {
+                    if (!completer.isCompleted) {
+                      return completer.completeError(
+                        Exception(
+                          'verificationCompleted should not have been called',
+                        ),
+                      );
+                    }
+                  },
+                  verificationFailed: (FirebaseException e) {
+                    if (!completer.isCompleted) {
+                      return completer.completeError(
+                        Exception(
+                          'verificationFailed should not have been called',
+                        ),
+                      );
+                    }
+                  },
+                  codeSent: (String verificationId, int? resetToken) {
+                    completer.complete(verificationId);
+                  },
+                  codeAutoRetrievalTimeout: (String foo) {
+                    if (!completer.isCompleted) {
+                      return completer.completeError(
+                        Exception(
+                          'codeAutoRetrievalTimeout should not have been called',
+                        ),
+                      );
+                    }
+                  },
+                ),
+              );
+
+              return completer.future as FutureOr<String>;
+            }
+
+            final verificationId = await getCredential();
+
+            final smsCode = await emulatorPhoneVerificationCode(
+              testPhoneNumber,
+            );
+
+            final credential = PhoneAuthProvider.credential(
+              verificationId: verificationId,
+              smsCode: smsCode!,
+            );
+
+            expect(credential, isA<PhoneAuthCredential>());
+
+            await user.multiFactor.enroll(
+              PhoneMultiFactorGenerator.getAssertion(
+                credential,
+              ),
+              displayName: 'My phone number',
+            );
+
+            final enrolledFactors = await multiFactor.getEnrolledFactors();
+
+            // Assertions
+            expect(enrolledFactors.length, 1);
+            expect(enrolledFactors.first.displayName, 'My phone number');
+
+            try {
+              await user.multiFactor.unenroll(
+                factorUid: 'unknown',
+              );
+            } catch (e) {
+              expect(e, isA<FirebaseAuthException>());
+              expect((e as FirebaseAuthException).code, 'unenroll-failed');
+            }
+
+            final enrolledFactorsAfter = await multiFactor.getEnrolledFactors();
+
+            // Assertions
+            expect(enrolledFactorsAfter.length, 1);
+          },
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+        );
+
+        test(
           'should not enroll factor if email not verifed',
           () async {
             String testPhoneNumber = '+448444555666';
