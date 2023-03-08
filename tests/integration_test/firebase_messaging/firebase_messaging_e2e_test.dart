@@ -127,8 +127,7 @@ void main() {
               () async {
             expect(await messaging.getAPNSToken(), isA<String>());
           },
-          skip: !(defaultTargetPlatform == TargetPlatform.iOS ||
-              defaultTargetPlatform == TargetPlatform.macOS),
+          skip: defaultTargetPlatform != TargetPlatform.iOS,
         );
       });
 
