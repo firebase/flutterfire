@@ -67,7 +67,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
   Future<void> unenroll({
     String? factorUid,
     MultiFactorInfo? multiFactorInfo,
-  }) {
+  }) async {
     final uidToUnenroll = factorUid ?? multiFactorInfo?.uid;
     if (uidToUnenroll == null) {
       throw ArgumentError(
@@ -76,7 +76,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
     }
 
     try {
-      return _api.unenroll(
+      await _api.unenroll(
         auth.app.name,
         uidToUnenroll,
       );

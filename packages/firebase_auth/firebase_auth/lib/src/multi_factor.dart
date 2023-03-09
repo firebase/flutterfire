@@ -33,6 +33,11 @@ class MultiFactor {
   /// [multiFactorInfo] is the [MultiFactorInfo] of the second factor to unenroll.
   /// Only one of [factorUid] or [multiFactorInfo] should be provided.
   Future<void> unenroll({String? factorUid, MultiFactorInfo? multiFactorInfo}) {
+    assert(
+      (factorUid != null && multiFactorInfo == null) ||
+          (factorUid == null && multiFactorInfo != null),
+      'Exactly one of `factorUid` or `multiFactorInfo` must be provided',
+    );
     return _delegate.unenroll(
       factorUid: factorUid,
       multiFactorInfo: multiFactorInfo,
