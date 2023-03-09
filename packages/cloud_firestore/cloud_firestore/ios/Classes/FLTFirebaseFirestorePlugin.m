@@ -77,7 +77,7 @@ FlutterStandardMethodCodec *_codec;
 
 + (void)initialize {
   _codec =
-  [FlutterStandardMethodCodec codecWithReaderWriter:[FLTFirebaseFirestoreReaderWriter new]];
+      [FlutterStandardMethodCodec codecWithReaderWriter:[FLTFirebaseFirestoreReaderWriter new]];
 }
 
 #pragma mark - FlutterPlugin
@@ -111,12 +111,12 @@ FlutterStandardMethodCodec *_codec;
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel =
-  [FlutterMethodChannel methodChannelWithName:kFLTFirebaseFirestoreChannelName
-                              binaryMessenger:[registrar messenger]
-                                        codec:_codec];
+      [FlutterMethodChannel methodChannelWithName:kFLTFirebaseFirestoreChannelName
+                                  binaryMessenger:[registrar messenger]
+                                            codec:_codec];
 
   FLTFirebaseFirestorePlugin *instance =
-  [[FLTFirebaseFirestorePlugin alloc] init:[registrar messenger]];
+      [[FLTFirebaseFirestorePlugin alloc] init:[registrar messenger]];
   [registrar addMethodCallDelegate:instance channel:channel];
 
 #if TARGET_OS_OSX
