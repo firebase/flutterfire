@@ -24,8 +24,8 @@ FullMetadata fbFullMetadataToFullMetadata(
     'metageneration': metadata.metageneration,
     'name': metadata.name,
     'size': metadata.size,
-    'creationTimeMillis': metadata.timeCreated!.millisecondsSinceEpoch,
-    'updatedTimeMillis': metadata.updated!.millisecondsSinceEpoch,
+    'creationTimeMillis': metadata.timeCreated?.millisecondsSinceEpoch,
+    'updatedTimeMillis': metadata.updated?.millisecondsSinceEpoch,
   });
 }
 
