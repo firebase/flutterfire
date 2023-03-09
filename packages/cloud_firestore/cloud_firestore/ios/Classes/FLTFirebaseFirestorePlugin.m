@@ -246,7 +246,6 @@ FlutterStandardMethodCodec *_codec;
 #pragma mark - FLTFirebasePlugin
 
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
-  NSLog(@"didReinitializeFirebaseCore 111111");
   [self cleanupEventListeners];
   [self cleanupFirestoreInstances:completion];
 }
