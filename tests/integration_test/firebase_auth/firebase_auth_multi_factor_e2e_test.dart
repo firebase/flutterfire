@@ -279,6 +279,7 @@ void main() {
             // Assertions
             expect(enrolledFactorsAfter.length, 1);
           },
+          // iOS is skipped due to Recaptcha trying to load on a simulator in CI
           skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
         );
 
