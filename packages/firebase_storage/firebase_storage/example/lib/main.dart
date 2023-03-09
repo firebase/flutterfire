@@ -54,6 +54,8 @@ class StorageExampleApp extends StatelessWidget {
     return MaterialApp(
       title: 'Storage Example App',
       theme: ThemeData.dark(),
+      // Disable the banner to make the "+" button more visible.
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: TaskManager(),
       ),
