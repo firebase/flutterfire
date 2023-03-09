@@ -50,7 +50,7 @@ class MultiFactorWeb extends MultiFactorPlatform {
   Future<void> unenroll({
     String? factorUid,
     MultiFactorInfo? multiFactorInfo,
-  }) {
+  }) async {
     final uidToUnenroll = factorUid ?? multiFactorInfo?.uid;
     if (uidToUnenroll == null) {
       throw ArgumentError(
@@ -59,7 +59,7 @@ class MultiFactorWeb extends MultiFactorPlatform {
     }
 
     try {
-      return _webMultiFactorUser.unenroll(
+      await _webMultiFactorUser.unenroll(
         uidToUnenroll,
       );
     } catch (e) {

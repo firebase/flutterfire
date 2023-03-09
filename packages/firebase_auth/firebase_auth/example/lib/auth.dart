@@ -178,6 +178,8 @@ class _AuthGateState extends State<AuthGate> {
                                     hintText: 'Email',
                                     border: OutlineInputBorder(),
                                   ),
+                                  keyboardType: TextInputType.emailAddress,
+                                  autofillHints: const [AutofillHints.email],
                                   validator: (value) =>
                                       value != null && value.isNotEmpty
                                           ? null
