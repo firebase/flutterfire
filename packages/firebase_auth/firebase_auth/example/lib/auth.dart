@@ -5,6 +5,8 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_example/main.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 typedef OAuthSignIn = void Function();
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
+// If set to true, the app will request notification permissions to use
+// silent verification for SMS MFA instead of Recaptcha.
+const withSilentVerificationSMSMFA = true;
 
 /// Helper class to show a snackbar using the passed context.
 class ScaffoldSnackbar {
@@ -85,6 +89,12 @@ class _AuthGateState extends State<AuthGate> {
   @override
   void initState() {
     super.initState();
+
+    if (withSilentVerificationSMSMFA && !kIsWeb) {
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      messaging.requestPermission();
+    }
+
     if (!kIsWeb && Platform.isMacOS) {
       authButtons = {
         Buttons.Apple: () => _handleMultiFactorException(
@@ -168,6 +178,8 @@ class _AuthGateState extends State<AuthGate> {
                                     hintText: 'Email',
                                     border: OutlineInputBorder(),
                                   ),
+                                  keyboardType: TextInputType.emailAddress,
+                                  autofillHints: const [AutofillHints.email],
                                   validator: (value) =>
                                       value != null && value.isNotEmpty
                                           ? null
@@ -360,7 +372,7 @@ class _AuthGateState extends State<AuthGate> {
 
     if (email != null) {
       try {
-        await _auth.sendPasswordResetEmail(email: email!);
+        await auth.sendPasswordResetEmail(email: email!);
         ScaffoldSnackbar.of(context).show('Password reset email is sent');
       } catch (e) {
         ScaffoldSnackbar.of(context).show('Error resetting');
@@ -372,7 +384,7 @@ class _AuthGateState extends State<AuthGate> {
     setIsLoading();
 
     try {
-      await _auth.signInAnonymously();
+      await auth.signInAnonymously();
     } on FirebaseAuthException catch (e) {
       setState(() {
         error = '${e.message}';
@@ -400,7 +412,6 @@ class _AuthGateState extends State<AuthGate> {
       if (firstHint is! PhoneMultiFactorInfo) {
         return;
       }
-      final auth = FirebaseAuth.instance;
       await auth.verifyPhoneNumber(
         multiFactorSession: e.resolver.session,
         multiFactorInfo: firstHint,
@@ -446,12 +457,12 @@ class _AuthGateState extends State<AuthGate> {
     if (formKey.currentState?.validate() ?? false) {
       setIsLoading();
       if (mode == AuthMode.login) {
-        await _auth.signInWithEmailAndPassword(
+        await auth.signInWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
         );
       } else if (mode == AuthMode.register) {
-        await _auth.createUserWithEmailAndPassword(
+        await auth.createUserWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
         );
@@ -469,14 +480,14 @@ class _AuthGateState extends State<AuthGate> {
     } else {
       if (kIsWeb) {
         final confirmationResult =
-            await _auth.signInWithPhoneNumber(phoneController.text);
+            await auth.signInWithPhoneNumber(phoneController.text);
         final smsCode = await getSmsCodeFromUser(context);
 
         if (smsCode != null) {
           await confirmationResult.confirm(smsCode);
         }
       } else {
-        await _auth.verifyPhoneNumber(
+        await auth.verifyPhoneNumber(
           phoneNumber: phoneController.text,
           verificationCompleted: (_) {},
           verificationFailed: (e) {
@@ -496,7 +507,7 @@ class _AuthGateState extends State<AuthGate> {
 
               try {
                 // Sign the user in (or link) with the credential
-                await _auth.signInWithCredential(credential);
+                await auth.signInWithCredential(credential);
               } on FirebaseAuthException catch (e) {
                 setState(() {
                   error = e.message ?? '';
@@ -529,7 +540,7 @@ class _AuthGateState extends State<AuthGate> {
       );
 
       // Once signed in, return the UserCredential
-      await _auth.signInWithCredential(credential);
+      await auth.signInWithCredential(credential);
     }
   }
 
@@ -537,9 +548,9 @@ class _AuthGateState extends State<AuthGate> {
     TwitterAuthProvider twitterProvider = TwitterAuthProvider();
 
     if (kIsWeb) {
-      await _auth.signInWithPopup(twitterProvider);
+      await auth.signInWithPopup(twitterProvider);
     } else {
-      await _auth.signInWithProvider(twitterProvider);
+      await auth.signInWithProvider(twitterProvider);
     }
   }
 
@@ -549,9 +560,9 @@ class _AuthGateState extends State<AuthGate> {
 
     if (kIsWeb) {
       // Once signed in, return the UserCredential
-      await _auth.signInWithPopup(appleProvider);
+      await auth.signInWithPopup(appleProvider);
     } else {
-      await _auth.signInWithProvider(appleProvider);
+      await auth.signInWithProvider(appleProvider);
     }
   }
 
@@ -560,9 +571,9 @@ class _AuthGateState extends State<AuthGate> {
 
     if (kIsWeb) {
       // Once signed in, return the UserCredential
-      await _auth.signInWithPopup(yahooProvider);
+      await auth.signInWithPopup(yahooProvider);
     } else {
-      await _auth.signInWithProvider(yahooProvider);
+      await auth.signInWithProvider(yahooProvider);
     }
   }
 
@@ -570,9 +581,9 @@ class _AuthGateState extends State<AuthGate> {
     final githubProvider = GithubAuthProvider();
 
     if (kIsWeb) {
-      await _auth.signInWithPopup(githubProvider);
+      await auth.signInWithPopup(githubProvider);
     } else {
-      await _auth.signInWithProvider(githubProvider);
+      await auth.signInWithProvider(githubProvider);
     }
   }
 
@@ -580,9 +591,9 @@ class _AuthGateState extends State<AuthGate> {
     final microsoftProvider = MicrosoftAuthProvider();
 
     if (kIsWeb) {
-      await _auth.signInWithPopup(microsoftProvider);
+      await auth.signInWithPopup(microsoftProvider);
     } else {
-      await _auth.signInWithProvider(microsoftProvider);
+      await auth.signInWithProvider(microsoftProvider);
     }
   }
 }

@@ -27,7 +27,9 @@ class FirebaseWebService {
   });
 }
 
-typedef EnsurePluginInitialized = Future<void> Function()?;
+typedef EnsurePluginInitialized = Future<void> Function(
+  firebase.App firebaseApp,
+)?;
 
 /// The entry point for accessing Firebase.
 ///
@@ -302,11 +304,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
       _services.values.map((service) {
         final ensureInitializedFunction = service.ensurePluginInitialized;
 
-        if (ensureInitializedFunction == null) {
+        if (ensureInitializedFunction == null || app == null) {
           return Future.value();
         }
 
-        return ensureInitializedFunction();
+        return ensureInitializedFunction(app);
       }),
     );
 

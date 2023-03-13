@@ -75,8 +75,8 @@ scripts:
       melos exec -c 6 --fail-fast -- \
         "flutter build apk"
     description: Build a specific example app for Android.
-    select-package:
-      dir-exists:
+    packageFilters:
+      dirExists:
         - android
       scope: '*example*'
 
@@ -85,8 +85,8 @@ scripts:
       melos exec -c 6 --fail-fast -- \
         "flutter build apk"
     description: Build a specific example app for Android.
-    select-package:
-      dir-exists:
+    packageFilters:
+      dirExists:
         - android
       scope: '*example*'
 
@@ -95,8 +95,8 @@ scripts:
       melos exec -c 6 --fail-fast -- \
         "flutter build ios --no-codesign"
     description: Build a specific example app for iOS.
-    select-package:
-      dir-exists:
+    packageFilters:
+      dirExists:
         - ios
       scope: '*example*'
 
@@ -105,8 +105,8 @@ scripts:
       melos exec -c 6 --fail-fast -- \
         "flutter build ios --no-codesign"
     description: Build a specific example app for iOS.
-    select-package:
-      dir-exists:
+    packageFilters:
+      dirExists:
         - ios
       scope: '*example*'
 
@@ -116,8 +116,8 @@ scripts:
         "flutter build macos"
     description: |
       Build a specific example app for macOS.
-    select-package:
-      dir-exists:
+    packageFilters:
+      dirExists:
         - macos
       scope: '*example*'
 
@@ -134,8 +134,8 @@ scripts:
       melos exec -c 6 --fail-fast -- \
         "flutter test"
     description: Run `flutter test` for a specific package.
-    select-package:
-      dir-exists:
+    packageFilters:
+      dirExists:
         - test
       ignore:
         - '*web*'
@@ -147,8 +147,8 @@ scripts:
       melos exec -c 1 --fail-fast -- \
         "flutter test --platform=chrome"
     description: Run `flutter test --platform=chrome` for a specific '*web' package.
-    select-package:
-      dir-exists:
+    packageFilters:
+      dirExists:
         - test
       scope: '*web*'
 
@@ -158,8 +158,8 @@ scripts:
         "flutter test integration_test/e2e_test.dart"
     description: |
       Run all e2e tests.
-    select-package:
-      dir-exists:
+    packageFilters:
+      dirExists:
         - integration_test
       scope: '*tests*'
 
@@ -169,8 +169,8 @@ scripts:
         "flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome"
     description: |
       Run all e2e tests on web platform. Please ensure you have "chromedriver" installed and running.
-    select-package:
-      dir-exists:
+    packageFilters:
+      dirExists:
         - test_driver
       scope: '*tests*'
 
@@ -193,14 +193,14 @@ scripts:
       melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart" && \
       melos run generate:pigeon:macos --no-select && \
       melos run format --no-select
-    select-package:
+    packageFilters:
       file-exists: 'pigeons/messages.dart'
     description: Generate the pigeon messages for all the supported packages.
 
   generate:pigeon:macos:
     run: |
       melos exec -- "sed -i '' 's;#import <Flutter/Flutter.h>;#if TARGET_OS_OSX\n#import <FlutterMacOS/FlutterMacOS.h>\n#else\n#import <Flutter/Flutter.h>\n#endif;g' ios/Classes/messages.g.m"
-    select-package:
+    packageFilters:
       file-exists: 'ios/Classes/messages.g.m'
     description: Pigeon does not add the condition to import Flutter or FlutterMacOs. Add the condition
 
@@ -215,9 +215,9 @@ scripts:
       melos exec -- \
         "dart test"
     description: Run Dart tests for the ODM.
-    select-package:
-      dir-exists: 'test'
-      depends-on: 'test'
+    packageFilters:
+      dirExists: 'test'
+      dependsOn: 'test'
       scope: '*odm*'
 
   odm:test:flutter:
@@ -225,9 +225,9 @@ scripts:
       melos exec -- \
         "flutter test"
     description: Run Flutter tests for the ODM.
-    select-package:
-      dir-exists: 'test'
-      no-depends-on: 'test'
+    packageFilters:
+      dirExists: 'test'
+      noDependsOn: 'test'
       scope: '*odm*'
 
   odm:example_build_runner:build:
@@ -235,7 +235,7 @@ scripts:
       melos exec -- \
         "flutter pub run build_runner build --delete-conflicting-outputs"
     description: Run a build_runner build in the ODM example app.
-    select-package:
+    packageFilters:
       scope: '*odm_example*'
 
   odm:generator_test_build_runner:build:
@@ -243,7 +243,7 @@ scripts:
       melos exec -c 1 -- \
         "dart pub get && flutter pub run build_runner build --delete-conflicting-outputs"
     description: Run a build_runner build generator test.
-    select-package:
+    packageFilters:
       scope:
         - '*odm_generator_integration*'
 
@@ -252,7 +252,7 @@ scripts:
       melos exec -c 5 -- \
         "flutter pub run build_runner watch --delete-conflicting-outputs"
     description: Run build_runner watch in the ODM example app.
-    select-package:
+    packageFilters:
       scope: '*odm_example*'
 
   # Additional cleanup lifecycle script, executed when `melos clean` is run.

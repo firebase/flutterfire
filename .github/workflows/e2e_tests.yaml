@@ -38,13 +38,13 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "11"
-      - uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
+      - uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
         name: Gradle Cache
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-v2-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle-v2
-      - uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
+      - uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
         id: avd-cache
         with:
           path: |
@@ -56,16 +56,12 @@ jobs:
         uses: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
         with:
           api-level: 30
-          target: google_atd
-          arch: x86
-          profile: Galaxy Nexus
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          channel: canary
+          arch: x86_64
+          target: google_apis
+          profile: Nexus 5X
           script: echo "Generated AVD snapshot for caching"
       - name: Firebase Emulator Cache
-        uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
+        uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v2-${{ github.run_id }}
@@ -77,6 +73,7 @@ jobs:
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
+          melos-version: '3.0.0-dev.0'
       - name: "Bootstrap package"
         run: melos bootstrap --scope tests
       - name: "Install Tools"
@@ -93,18 +90,14 @@ jobs:
         timeout-minutes: 30
         with:
           api-level: 30
-          arch: x86
-          target: google_atd
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          channel: canary
-          profile: Galaxy Nexus
+          arch: x86_64
+          target: google_apis
+          profile: Nexus 5X
           working-directory: tests
           script: |
             sleep 15
             $ANDROID_HOME/platform-tools/adb logcat '*:D' > adb-log.txt &
             flutter test integration_test/e2e_test.dart --dart-define=CI=true
-
       - name: Compress Emulator Log
         if: always()
         run: cd tests/ && gzip -9 adb-log.txt
@@ -136,7 +129,7 @@ jobs:
         with:
           key: ${{ runner.os }}-ios-v3
           max-size: 700M
-      - uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
+      - uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
         name: Pods Cache
         id: pods-cache
         with:
@@ -144,7 +137,7 @@ jobs:
           key: ${{ runner.os }}-pods-v3-${{ hashFiles('tests/ios/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-ios-pods-v2
       - name: Firebase Emulator Cache
-        uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
+        uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
@@ -156,6 +149,7 @@ jobs:
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
+          melos-version: '3.0.0-dev.0'
       - name: "Bootstrap package"
         run: melos bootstrap --scope tests
       - name: "Install Tools"
@@ -208,7 +202,7 @@ jobs:
         with:
           key: ${{ runner.os }}-macos-v2
           max-size: 700M
-      - uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
+      - uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
         name: Pods Cache
         id: pods-cache
         with:
@@ -216,7 +210,7 @@ jobs:
           key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-macos-pods-v1
       - name: Cache Firebase Emulator
-        uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
+        uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
@@ -229,6 +223,7 @@ jobs:
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
+          melos-version: '3.0.0-dev.0'
       - name: "Bootstrap package"
         run: melos bootstrap --scope tests
       - name: "Install Tools"
@@ -275,13 +270,14 @@ jobs:
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
+          melos-version: '3.0.0-dev.0'
       - name: "Bootstrap package"
         run: melos bootstrap --scope tests
       - name: "Install Tools"
         run: |
           sudo npm i -g firebase-tools
       - name: Cache Firebase Emulator
-        uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920
+        uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
