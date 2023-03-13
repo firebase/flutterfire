@@ -743,6 +743,20 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                    }];
 }
 
+
+- (void)handleInternalError:(id)arguments
+                    withResult:(FLTFirebaseMethodCallResult *)result
+                  withError:(NSError *)error {
+    const NSError *underlyingError = error.userInfo[@"NSUnderlyingError"];
+    if (underlyingError != nil) {
+        const NSDictionary *details = underlyingError.userInfo[@"FIRAuthErrorUserInfoDeserializedResponseKey"];
+        if (details != nil && details[@"message"] != nil) {
+            NSLog(@"%@", details[@"message"]);
+        }
+    }
+}
+
+
 - (void)handleMultiFactorError:(id)arguments
                     withResult:(FLTFirebaseMethodCallResult *)result
                      withError:(NSError *_Nullable)error {
@@ -801,6 +815,9 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                if (error != nil) {
                  if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
                    [self handleMultiFactorError:arguments withResult:result withError:error];
+                }
+                else if (error.code == FIRAuthErrorCodeInternalError) {
+                   [self handleInternalError:arguments withResult:result withError:error];
                  } else {
                    result.error(nil, nil, nil, error);
                  }
