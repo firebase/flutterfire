@@ -78,11 +78,12 @@ FirebaseException platformExceptionToFirebaseAuthException(
       if (additionalData['email'] != null) {
         email = additionalData['email'];
       }
-
-      // This code happens when using Enumerate Email protection
-      if (additionalData["message"] == "INVALID_LOGIN_CREDENTIALS") {
-        code = "INVALID_LOGIN_CREDENTIALS";
-      }
+    }
+    // This code happens when using Enumerate Email protection
+    // The error code is only returned in a String on Android
+    if (additionalData?['message'] == 'INVALID_LOGIN_CREDENTIALS' ||
+        (message?.contains('INVALID_LOGIN_CREDENTIALS') ?? false)) {
+      code = 'INVALID_LOGIN_CREDENTIALS';
     }
   }
   return FirebaseAuthException(
