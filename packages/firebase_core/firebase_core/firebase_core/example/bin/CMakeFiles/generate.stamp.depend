@@ -1,5 +1,0 @@
-# CMake generation dependency list for this directory.
-C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/FindPackageHandleStandardArgs.cmake
-C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/FindPackageMessage.cmake
-C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/FindPkgConfig.cmake
-C:/Users/guill/Downloads/firebase_cpp_sdk_10.5.0/firebase_cpp_sdk/CMakeLists.txt
