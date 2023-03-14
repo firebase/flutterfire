@@ -125,7 +125,8 @@ class PigeonInitializeResponse {
       name: result[0]! as String,
       options: PigeonFirebaseOptions.decode(result[1]! as List<Object?>),
       isAutomaticDataCollectionEnabled: result[2] as bool?,
-      pluginConstants: (result[3] as Map<Object?, Object?>?)!.cast<String?, Object?>(),
+      pluginConstants:
+          (result[3] as Map<Object?, Object?>?)!.cast<String?, Object?>(),
     );
   }
 }
@@ -148,9 +149,9 @@ class _FirebaseCoreHostApiCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 128: 
+      case 128:
         return PigeonFirebaseOptions.decode(readValue(buffer)!);
-      case 129: 
+      case 129:
         return PigeonInitializeResponse.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -168,12 +169,14 @@ class FirebaseCoreHostApi {
 
   static const MessageCodec<Object?> codec = _FirebaseCoreHostApiCodec();
 
-  Future<PigeonInitializeResponse> initializeApp(String arg_appName, PigeonFirebaseOptions arg_initializeAppRequest) async {
+  Future<PigeonInitializeResponse> initializeApp(String arg_appName,
+      PigeonFirebaseOptions arg_initializeAppRequest) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_appName, arg_initializeAppRequest]) as List<Object?>?;
+        await channel.send(<Object?>[arg_appName, arg_initializeAppRequest])
+            as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -199,8 +202,7 @@ class FirebaseCoreHostApi {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.FirebaseCoreHostApi.initializeCore', codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -218,7 +220,8 @@ class FirebaseCoreHostApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (replyList[0] as List<Object?>?)!.cast<PigeonInitializeResponse?>();
+      return (replyList[0] as List<Object?>?)!
+          .cast<PigeonInitializeResponse?>();
     }
   }
 
@@ -226,8 +229,7 @@ class FirebaseCoreHostApi {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.FirebaseCoreHostApi.optionsFromResource', codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -260,12 +262,14 @@ class FirebaseAppHostApi {
 
   static const MessageCodec<Object?> codec = StandardMessageCodec();
 
-  Future<void> setAutomaticDataCollectionEnabled(String arg_appName, bool arg_enabled) async {
+  Future<void> setAutomaticDataCollectionEnabled(
+      String arg_appName, bool arg_enabled) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled', codec,
+        'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_appName, arg_enabled]) as List<Object?>?;
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_appName, arg_enabled]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -282,12 +286,14 @@ class FirebaseAppHostApi {
     }
   }
 
-  Future<void> setAutomaticResourceManagementEnabled(String arg_appName, bool arg_enabled) async {
+  Future<void> setAutomaticResourceManagementEnabled(
+      String arg_appName, bool arg_enabled) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled', codec,
+        'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_appName, arg_enabled]) as List<Object?>?;
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_appName, arg_enabled]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
