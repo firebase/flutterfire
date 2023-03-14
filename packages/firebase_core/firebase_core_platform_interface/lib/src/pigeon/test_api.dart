@@ -28,9 +28,9 @@ class _TestFirebaseCoreHostApiCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 128: 
+      case 128:
         return PigeonFirebaseOptions.decode(readValue(buffer)!);
-      case 129: 
+      case 129:
         return PigeonInitializeResponse.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -41,13 +41,15 @@ class _TestFirebaseCoreHostApiCodec extends StandardMessageCodec {
 abstract class TestFirebaseCoreHostApi {
   static const MessageCodec<Object?> codec = _TestFirebaseCoreHostApiCodec();
 
-  Future<PigeonInitializeResponse> initializeApp(String appName, PigeonFirebaseOptions initializeAppRequest);
+  Future<PigeonInitializeResponse> initializeApp(
+      String appName, PigeonFirebaseOptions initializeAppRequest);
 
   Future<List<PigeonInitializeResponse?>> initializeCore();
 
   Future<PigeonFirebaseOptions> optionsFromResource();
 
-  static void setup(TestFirebaseCoreHostApi? api, {BinaryMessenger? binaryMessenger}) {
+  static void setup(TestFirebaseCoreHostApi? api,
+      {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
           'dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp', codec,
@@ -57,15 +59,17 @@ abstract class TestFirebaseCoreHostApi {
       } else {
         channel.setMockMessageHandler((Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp was null.');
+              'Argument for dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
           assert(arg_appName != null,
               'Argument for dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp was null, expected non-null String.');
-          final PigeonFirebaseOptions? arg_initializeAppRequest = (args[1] as PigeonFirebaseOptions?);
+          final PigeonFirebaseOptions? arg_initializeAppRequest =
+              (args[1] as PigeonFirebaseOptions?);
           assert(arg_initializeAppRequest != null,
               'Argument for dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp was null, expected non-null PigeonFirebaseOptions.');
-          final PigeonInitializeResponse output = await api.initializeApp(arg_appName!, arg_initializeAppRequest!);
+          final PigeonInitializeResponse output =
+              await api.initializeApp(arg_appName!, arg_initializeAppRequest!);
           return <Object?>[output];
         });
       }
@@ -79,7 +83,8 @@ abstract class TestFirebaseCoreHostApi {
       } else {
         channel.setMockMessageHandler((Object? message) async {
           // ignore message
-          final List<PigeonInitializeResponse?> output = await api.initializeCore();
+          final List<PigeonInitializeResponse?> output =
+              await api.initializeCore();
           return <Object?>[output];
         });
       }
@@ -106,21 +111,24 @@ abstract class TestFirebaseAppHostApi {
 
   Future<void> setAutomaticDataCollectionEnabled(String appName, bool enabled);
 
-  Future<void> setAutomaticResourceManagementEnabled(String appName, bool enabled);
+  Future<void> setAutomaticResourceManagementEnabled(
+      String appName, bool enabled);
 
   Future<void> delete(String appName);
 
-  static void setup(TestFirebaseAppHostApi? api, {BinaryMessenger? binaryMessenger}) {
+  static void setup(TestFirebaseAppHostApi? api,
+      {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled', codec,
+          'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled',
+          codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
         channel.setMockMessageHandler((Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled was null.');
+              'Argument for dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
           assert(arg_appName != null,
@@ -128,21 +136,23 @@ abstract class TestFirebaseAppHostApi {
           final bool? arg_enabled = (args[1] as bool?);
           assert(arg_enabled != null,
               'Argument for dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled was null, expected non-null bool.');
-          await api.setAutomaticDataCollectionEnabled(arg_appName!, arg_enabled!);
+          await api.setAutomaticDataCollectionEnabled(
+              arg_appName!, arg_enabled!);
           return <Object?>[];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled', codec,
+          'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled',
+          codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
         channel.setMockMessageHandler((Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled was null.');
+              'Argument for dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
           assert(arg_appName != null,
@@ -150,7 +160,8 @@ abstract class TestFirebaseAppHostApi {
           final bool? arg_enabled = (args[1] as bool?);
           assert(arg_enabled != null,
               'Argument for dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled was null, expected non-null bool.');
-          await api.setAutomaticResourceManagementEnabled(arg_appName!, arg_enabled!);
+          await api.setAutomaticResourceManagementEnabled(
+              arg_appName!, arg_enabled!);
           return <Object?>[];
         });
       }
@@ -164,7 +175,7 @@ abstract class TestFirebaseAppHostApi {
       } else {
         channel.setMockMessageHandler((Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.FirebaseAppHostApi.delete was null.');
+              'Argument for dev.flutter.pigeon.FirebaseAppHostApi.delete was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
           assert(arg_appName != null,

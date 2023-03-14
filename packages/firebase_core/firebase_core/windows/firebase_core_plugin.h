@@ -17,8 +17,8 @@ class FirebaseCorePlugin : public flutter::Plugin {
   virtual ~FirebaseCorePlugin();
 
   // Disallow copy and assign.
-  FirebaseCorePlugin(const FirebaseCorePlugin&) = delete;
-  FirebaseCorePlugin& operator=(const FirebaseCorePlugin&) = delete;
+  FirebaseCorePlugin(const FirebaseCorePlugin &) = delete;
+  FirebaseCorePlugin &operator=(const FirebaseCorePlugin &) = delete;
 
  private:
   // Called when a method is called on this plugin's channel from Dart.
