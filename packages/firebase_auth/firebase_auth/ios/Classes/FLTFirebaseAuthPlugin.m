@@ -750,10 +750,10 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
     const NSError *underlyingError = error.userInfo[@"NSUnderlyingError"];
     if (underlyingError != nil) {
         const NSDictionary *details = underlyingError.userInfo[@"FIRAuthErrorUserInfoDeserializedResponseKey"];
-        if (details != nil && details[@"message"] != nil) {
-            NSLog(@"%@", details[@"message"]);
-        }
+        result.error(nil, nil, details, underlyingError);
+        return;
     }
+    result.error(nil, nil, nil, error);
 }
 
 

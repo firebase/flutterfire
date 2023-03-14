@@ -64,18 +64,24 @@ FirebaseException platformExceptionToFirebaseAuthException(
 
     message = details['message'] ?? message;
 
-    if (details['additionalData'] != null) {
-      if (details['additionalData']['authCredential'] != null) {
+    final additionalData = details['additionalData'];
+
+    if (additionalData != null) {
+      if (additionalData['authCredential'] != null) {
         credential = AuthCredential(
-          providerId: details['additionalData']['authCredential']['providerId'],
-          signInMethod: details['additionalData']['authCredential']
-              ['signInMethod'],
-          token: details['additionalData']['authCredential']['token'],
+          providerId: additionalData['authCredential']['providerId'],
+          signInMethod: additionalData['authCredential']['signInMethod'],
+          token: additionalData['authCredential']['token'],
         );
       }
 
-      if (details['additionalData']['email'] != null) {
-        email = details['additionalData']['email'];
+      if (additionalData['email'] != null) {
+        email = additionalData['email'];
+      }
+
+      // This code happens when using Enumerate Email protection
+      if (additionalData["message"] == "INVALID_LOGIN_CREDENTIALS") {
+        code = "INVALID_LOGIN_CREDENTIALS";
       }
     }
   }
