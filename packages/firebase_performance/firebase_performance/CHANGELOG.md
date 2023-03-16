@@ -1,3 +1,7 @@
+## 0.9.0+16
+
+ - Update a dependency to the latest release.
+
 ## 0.9.0+15
 
  - **FIX**(performance,android): fix NullPointerException errors and remove suppressed warnings ([#10560](https://github.com/firebase/flutterfire/issues/10560)). ([a54d33df](https://github.com/firebase/flutterfire/commit/a54d33df6fdc4ccb3ef0b9e955e502b750aa592b))
