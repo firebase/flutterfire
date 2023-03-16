@@ -20,7 +20,7 @@ enum OAuthButtonVariant {
 }
 
 class _ErrorListener extends StatelessWidget {
-  const _ErrorListener({Key? key});
+  const _ErrorListener();
 
   @override
   Widget build(BuildContext context) {

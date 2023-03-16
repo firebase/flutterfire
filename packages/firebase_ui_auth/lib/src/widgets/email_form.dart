@@ -144,7 +144,6 @@ class _SignInFormContent extends StatefulWidget {
   final String? actionButtonLabelOverride;
 
   const _SignInFormContent({
-    super.key,
     this.auth,
     this.onSubmit,
     this.action,

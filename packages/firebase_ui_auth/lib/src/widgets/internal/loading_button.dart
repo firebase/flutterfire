@@ -13,7 +13,6 @@ class _LoadingButtonContent extends StatelessWidget {
   final bool isLoading;
   final Color? color;
   const _LoadingButtonContent({
-    super.key,
     required this.label,
     required this.isLoading,
     required this.color,

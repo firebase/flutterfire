@@ -35,7 +35,7 @@ class _CountryCodeItem {
 typedef SubmitCallback = void Function(String value);
 
 class _CountryPicker extends StatefulWidget {
-  const _CountryPicker({Key? key});
+  const _CountryPicker();
 
   @override
   // ignore: library_private_types_in_public_api

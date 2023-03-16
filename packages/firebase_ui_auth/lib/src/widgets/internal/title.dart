@@ -9,7 +9,7 @@ import 'platform_widget.dart';
 
 class Title extends PlatformWidget {
   final String text;
-  const Title({Key? key, required this.text});
+  const Title({super.key, required this.text});
 
   @override
   Widget buildCupertino(BuildContext context) {
