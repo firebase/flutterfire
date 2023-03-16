@@ -1,3 +1,7 @@
+## 10.0.15
+
+ - Update a dependency to the latest release.
+
 ## 10.0.14
 
  - Update a dependency to the latest release.
