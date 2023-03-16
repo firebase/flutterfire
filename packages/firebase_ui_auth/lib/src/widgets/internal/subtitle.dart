@@ -12,10 +12,10 @@ class Subtitle extends PlatformWidget {
   final FontWeight? fontWeight;
 
   const Subtitle({
-    Key? key,
+    super.key,
     required this.text,
     this.fontWeight,
-  }) : super(key: key);
+  });
 
   @override
   Widget buildCupertino(BuildContext context) {

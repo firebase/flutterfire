@@ -14,10 +14,10 @@ class UniversalScaffold extends PlatformWidget {
   final bool? resizeToAvoidBottomInset;
 
   const UniversalScaffold({
-    Key? key,
+    super.key,
     required this.body,
     this.resizeToAvoidBottomInset,
-  }) : super(key: key);
+  });
 
   @override
   Widget buildCupertino(BuildContext context) {

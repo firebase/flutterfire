@@ -19,7 +19,7 @@ void main() async {
 }
 
 class OAuthProviderButtonExample extends StatelessWidget {
-  const OAuthProviderButtonExample({Key? key}) : super(key: key);
+  const OAuthProviderButtonExample({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +54,10 @@ class Content extends StatefulWidget {
   final ButtonVariant buttonVariant;
 
   const Content({
-    Key? key,
+    super.key,
     required this.designLibrary,
     required this.buttonVariant,
-  }) : super(key: key);
+  });
 
   @override
   State<Content> createState() => _ContentState();

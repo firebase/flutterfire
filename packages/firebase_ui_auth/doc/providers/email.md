@@ -141,7 +141,7 @@ For full control over every phase of the authentication lifecycle, you could bui
 
 ```dart
 class CustomEmailSignIn extends StatefulWidget {
-  const CustomEmailSignIn({Key? key}) : super(key: key);
+  const CustomEmailSignIn({super.key});
 
   @override
   State<CustomEmailSignIn> createState() => _CustomEmailSignInState();

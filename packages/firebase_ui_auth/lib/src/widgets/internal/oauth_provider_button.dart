@@ -20,7 +20,7 @@ enum OAuthButtonVariant {
 }
 
 class _ErrorListener extends StatelessWidget {
-  const _ErrorListener({Key? key}) : super(key: key);
+  const _ErrorListener({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class OAuthProviderButton extends StatelessWidget {
 
   /// {@macro ui.auth.widgets.oauth_provider_button}
   const OAuthProviderButton({
-    Key? key,
+    super.key,
 
     /// {@macro ui.auth.widgets.oauth_provider_button.provider}
     required this.provider,
@@ -89,7 +89,7 @@ class OAuthProviderButton extends StatelessWidget {
 
     /// {@macro ui.auth.auth_controller.auth}
     this.auth,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

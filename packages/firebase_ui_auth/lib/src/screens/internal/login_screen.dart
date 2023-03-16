@@ -53,7 +53,7 @@ class LoginScreen extends StatelessWidget {
   final Set<FirebaseUIStyle>? styles;
 
   const LoginScreen({
-    Key? key,
+    super.key,
     required this.action,
     required this.providers,
     this.auth,
@@ -70,7 +70,7 @@ class LoginScreen extends StatelessWidget {
     this.loginViewKey,
     this.breakpoint = 800,
     this.styles,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -71,7 +71,7 @@ class SMSCodeInputScreen extends StatelessWidget {
   final double breakpoint;
 
   const SMSCodeInputScreen({
-    Key? key,
+    super.key,
     this.action,
     this.actions,
     this.auth,
@@ -83,7 +83,7 @@ class SMSCodeInputScreen extends StatelessWidget {
     this.breakpoint = 670,
     this.contentFlex,
     this.maxWidth,
-  }) : super(key: key);
+  });
 
   void _reset() {
     final ctrl = AuthFlowBuilder.getController<PhoneAuthController>(flowKey);

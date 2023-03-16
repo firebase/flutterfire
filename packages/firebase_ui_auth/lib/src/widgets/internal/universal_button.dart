@@ -32,7 +32,7 @@ class UniversalButton extends PlatformWidget {
   final Color? contentColor;
 
   const UniversalButton({
-    Key? key,
+    super.key,
     this.text,
     this.child,
     this.onPressed,
@@ -41,8 +41,7 @@ class UniversalButton extends PlatformWidget {
     this.variant,
     this.color,
     this.contentColor,
-  })  : assert(text != null || child != null),
-        super(key: key);
+  }) : assert(text != null || child != null);
 
   ButtonVariant get _variant {
     return variant ?? ButtonVariant.filled;

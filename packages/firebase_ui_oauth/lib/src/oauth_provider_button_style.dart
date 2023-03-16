@@ -28,7 +28,7 @@ class ThemedValue<T> {
 }
 
 class ThemedColor extends ThemedValue<Color> {
-  const ThemedColor(Color dark, Color light) : super(dark, light);
+  const ThemedColor(super.dark, super.light);
 }
 
 class ThemedIconSrc extends ThemedValue<String> {

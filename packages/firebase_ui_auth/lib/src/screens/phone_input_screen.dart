@@ -72,7 +72,7 @@ class PhoneInputScreen extends StatelessWidget {
   final PhoneMultiFactorInfo? mfaHint;
 
   const PhoneInputScreen({
-    Key? key,
+    super.key,
     this.action,
     this.actions,
     this.auth,
@@ -85,7 +85,7 @@ class PhoneInputScreen extends StatelessWidget {
     this.breakpoint = 500,
     this.multiFactorSession,
     this.mfaHint,
-  }) : super(key: key);
+  });
 
   void _next(BuildContext context, AuthAction? action, Object flowKey, _) {
     Navigator.of(context).push(

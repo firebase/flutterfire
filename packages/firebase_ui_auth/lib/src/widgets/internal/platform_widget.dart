@@ -5,7 +5,7 @@
 import 'package:flutter/cupertino.dart';
 
 abstract class PlatformWidget extends StatelessWidget {
-  const PlatformWidget({Key? key}) : super(key: key);
+  const PlatformWidget({Key? key});
 
   Widget buildCupertino(BuildContext context);
   Widget buildMaterial(BuildContext context);

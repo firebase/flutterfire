@@ -123,10 +123,10 @@ class FirebaseUIActions extends InheritedWidget {
 
   /// {@macro ui.auth.actions.flutter_fire_ui_actions}
   const FirebaseUIActions({
-    Key? key,
+    super.key,
+    required super.child,
     required this.actions,
-    required Widget child,
-  }) : super(key: key, child: child);
+  });
 
   @override
   bool updateShouldNotify(FirebaseUIActions oldWidget) {
@@ -140,7 +140,7 @@ class FirebaseUIActions extends InheritedWidget {
 }
 
 class _FlutterfireUIAuthActionsElement extends InheritedElement {
-  _FlutterfireUIAuthActionsElement(InheritedWidget widget) : super(widget);
+  _FlutterfireUIAuthActionsElement(super.widget);
 
   @override
   FirebaseUIActions get widget => super.widget as FirebaseUIActions;

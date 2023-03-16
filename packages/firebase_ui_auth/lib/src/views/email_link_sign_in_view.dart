@@ -27,11 +27,11 @@ class EmailLinkSignInView extends StatefulWidget {
 
   /// {@macro ui.auth.views.email_link_sign_in_view}
   const EmailLinkSignInView({
-    Key? key,
+    super.key,
     this.auth,
     required this.provider,
     this.emailInputFocusNode,
-  }) : super(key: key);
+  });
 
   @override
   State<EmailLinkSignInView> createState() => _EmailLinkSignInViewState();

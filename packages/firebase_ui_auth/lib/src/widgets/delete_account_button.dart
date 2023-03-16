@@ -34,12 +34,12 @@ class DeleteAccountButton extends StatefulWidget {
 
   /// {@macro ui.auth.widgets.delete_account_button}
   const DeleteAccountButton({
-    Key? key,
+    super.key,
     this.auth,
     this.onSignInRequired,
     this.onDeleteFailed,
     this.variant,
-  }) : super(key: key);
+  });
 
   @override
   // ignore: library_private_types_in_public_api

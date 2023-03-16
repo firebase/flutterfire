@@ -197,7 +197,7 @@ For full control over every phase of the authentication lifecycle you could buil
 
 ```dart
 class CustomPhoneVerification extends StatefulWidget {
-  const CustomPhoneVerification({Key? key}) : super(key: key);
+  const CustomPhoneVerification({super.key});
 
   @override
   State<CustomPhoneVerification> createState() =>
