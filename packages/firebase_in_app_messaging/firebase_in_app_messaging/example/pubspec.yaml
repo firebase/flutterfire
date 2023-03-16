@@ -7,10 +7,10 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.2
-  firebase_analytics: ^10.1.5
-  firebase_core: ^2.7.1
-  firebase_in_app_messaging: ^0.7.0+15
-  firebase_in_app_messaging_platform_interface: ^0.2.1+34
+  firebase_analytics: ^10.1.6
+  firebase_core: ^2.8.0
+  firebase_in_app_messaging: ^0.7.0+16
+  firebase_in_app_messaging_platform_interface: ^0.2.1+35
   flutter:
     sdk: flutter
 

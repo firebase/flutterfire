@@ -1,3 +1,7 @@
+## 3.3.25
+
+ - **FIX**(firebase_storage_web): fix `Error: Unexpected null value.` when `metadata.timeCreated` or `metadata.updated` ([#10577](https://github.com/firebase/flutterfire/issues/10577)). ([6eb235ba](https://github.com/firebase/flutterfire/commit/6eb235ba1d6805eb142469d6566b665e0e531e77))
+
 ## 3.3.24
 
  - Update a dependency to the latest release.
