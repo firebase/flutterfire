@@ -2,6 +2,43 @@
 
 All notable changes for firebase_ui packages
 
+## 2023-03-16
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_oauth_facebook` - `v1.0.24`](#firebase_ui_oauth_facebook---v1024)
+ - [`firebase_ui_oauth_twitter` - `v1.0.24`](#firebase_ui_oauth_twitter---v1024)
+ - [`firebase_ui_auth` - `v1.1.17`](#firebase_ui_auth---v1117)
+ - [`firebase_ui_oauth` - `v1.1.17`](#firebase_ui_oauth---v1117)
+ - [`firebase_ui_oauth_google` - `v1.0.24`](#firebase_ui_oauth_google---v1024)
+ - [`firebase_ui_oauth_apple` - `v1.0.24`](#firebase_ui_oauth_apple---v1024)
+ - [`firebase_ui_database` - `v1.0.18`](#firebase_ui_database---v1018)
+ - [`firebase_ui_firestore` - `v1.2.10`](#firebase_ui_firestore---v1210)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth_facebook` - `v1.0.24`
+ - `firebase_ui_oauth_twitter` - `v1.0.24`
+ - `firebase_ui_auth` - `v1.1.17`
+ - `firebase_ui_oauth` - `v1.1.17`
+ - `firebase_ui_oauth_google` - `v1.0.24`
+ - `firebase_ui_oauth_apple` - `v1.0.24`
+ - `firebase_ui_database` - `v1.0.18`
+ - `firebase_ui_firestore` - `v1.2.10`
+
+---
+
+
 ## 2023-03-07
 
 ### Changes
