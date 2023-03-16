@@ -67,5 +67,7 @@
   	<array>
   		<string>https://flutterfiretests.page.link/**</string>
   	</array>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>

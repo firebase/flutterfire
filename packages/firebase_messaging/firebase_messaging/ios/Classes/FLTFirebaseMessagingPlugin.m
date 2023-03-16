@@ -22,6 +22,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   NSObject<FlutterPluginRegistrar> *_registrar;
   NSData *_apnsToken;
   NSDictionary *_initialNotification;
+  bool simulatorToken;
 
   // Used to track if everything as been initialized before answering
   // to the initialNotification request
@@ -52,6 +53,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     _initialNotificationGathered = NO;
     _channel = channel;
     _registrar = registrar;
+    simulatorToken = false;
     // Application
     // Dart -> `getInitialNotification`
     // ObjC -> Initialize other delegates & observers
@@ -997,6 +999,22 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)ensureAPNSTokenSetting {
   FIRMessaging *messaging = [FIRMessaging messaging];
+
+  // With iOS SDK >= 10.4, an APNS token is required for getting/deleting token. We set a dummy
+  // token for the simulator for test environments. Historically, a simulator will not work for
+  // messaging. It will work if environment: iOS 16, running on macOS 13+ & silicon chip. We check
+  // the `_apnsToken` is nil. If it is, then the environment does not support and we set dummy
+  // token.
+#if TARGET_IPHONE_SIMULATOR
+  if (simulatorToken == false && _apnsToken == nil) {
+    NSString *str = @"fake-apns-token-for-simulator";
+    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+    [[FIRMessaging messaging] setAPNSToken:data type:FIRMessagingAPNSTokenTypeSandbox];
+  }
+  // We set this either way. We set dummy token once as `_apnsToken` could be nil next time
+  // which could possibly set dummy token unnecessarily
+  simulatorToken = true;
+#endif
 
   if (messaging.APNSToken == nil && _apnsToken != nil) {
 #ifdef DEBUG
