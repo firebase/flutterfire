@@ -24,7 +24,7 @@ class SettingsChip extends StatelessWidget {
     required this.onTap,
     required this.label,
     required this.isActive,
-  }) ;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class Settings extends StatefulWidget {
     this.brightness = Brightness.light,
     this.library = DesignLibrary.material,
     this.buttonVariant = ButtonVariant.full,
-  }) ;
+  });
 
   @override
   State<Settings> createState() => _SettingsState();
