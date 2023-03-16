@@ -448,14 +448,12 @@ class _AuthGateState extends State<AuthGate> {
       setState(() {
         error = '$e';
       });
-    } finally {
-      setIsLoading();
     }
+    setIsLoading();
   }
 
   Future<void> _emailAndPassword() async {
     if (formKey.currentState?.validate() ?? false) {
-      setIsLoading();
       if (mode == AuthMode.login) {
         await auth.signInWithEmailAndPassword(
           email: emailController.text,
