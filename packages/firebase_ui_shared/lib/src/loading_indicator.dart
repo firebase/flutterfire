@@ -11,8 +11,15 @@ import 'package:flutter/material.dart';
 ///
 /// Centered by default.
 class LoadingIndicator extends PlatformWidget {
+  /// The size of the loading indicator.
   final double size;
+
+  /// The width of the loading indicator's border.
+  /// This is only used for [CircularProgressIndicator] under [MaterialApp].
   final double borderWidth;
+
+  /// The color of the loading indicator.
+  /// This is only used for [CircularProgressIndicator] under [MaterialApp].
   final Color? color;
 
   const LoadingIndicator({
