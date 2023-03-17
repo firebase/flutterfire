@@ -2,8 +2,8 @@ name: firebase_analytics_example
 description: Demonstrates how to use the firebase_analytics plugin.
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5"
+  sdk: '>=2.18.0 <3.0.0'
+  flutter: '>=1.12.13+hotfix.5'
 
 dependencies:
   firebase_analytics: ^10.1.6

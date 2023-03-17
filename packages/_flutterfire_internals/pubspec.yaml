@@ -5,7 +5,7 @@ repository: https://github.com/firebase/flutterfire/tree/master/packages/_flutte
 version: 1.0.18
 
 environment:
-  sdk: '>=2.16.0 <3.0.0'
+  sdk: '>=2.18.0 <3.0.0'
   flutter: '>=1.12.13+hotfix.5'
 
 dependencies:
