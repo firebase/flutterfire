@@ -126,6 +126,7 @@ class RegisterScreen extends MultiProviderScreen {
         showAuthActionSwitch: showAuthActionSwitch,
         subtitleBuilder: subtitleBuilder,
         footerBuilder: footerBuilder,
+        breakpoint: breakpoint,
       ),
     );
   }
