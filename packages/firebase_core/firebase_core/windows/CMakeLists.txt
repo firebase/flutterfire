@@ -16,6 +16,8 @@ set(PLUGIN_NAME "firebase_core_plugin")
 list(APPEND PLUGIN_SOURCES
   "firebase_core_plugin.cpp"
   "firebase_core_plugin.h"
+  "messages.g.cpp"
+  "messages.g.h"
 )
 
 # Define the plugin library target. Its name must not be changed (see comment

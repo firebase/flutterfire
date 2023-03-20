@@ -4,6 +4,7 @@
 #include <windows.h>
 
 #include "firebase/app.h"
+#include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
 #include <VersionHelpers.h>
@@ -13,51 +14,74 @@
 
 #include <memory>
 #include <sstream>
+#include <iostream>
+#include <string>
 using ::firebase::App;
 
-namespace firebase_core {
+namespace firebase_core_windows {
 
 // static
 void FirebaseCorePlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows *registrar) {
-  auto channel =
-      std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-          registrar->messenger(), "firebase_core",
-          &flutter::StandardMethodCodec::GetInstance());
 
   auto plugin = std::make_unique<FirebaseCorePlugin>();
 
-  channel->SetMethodCallHandler(
-      [plugin_pointer = plugin.get()](const auto &call, auto result) {
-        plugin_pointer->HandleMethodCall(call, std::move(result));
-      });
+  FirebaseCoreHostApi::SetUp(registrar->messenger(), plugin.get());
 
   registrar->AddPlugin(std::move(plugin));
 }
 
 FirebaseCorePlugin::FirebaseCorePlugin() {}
 
-FirebaseCorePlugin::~FirebaseCorePlugin() {}
+FirebaseCorePlugin::~FirebaseCorePlugin() = default;
 
-void FirebaseCorePlugin::HandleMethodCall(
-    const flutter::MethodCall<flutter::EncodableValue> &method_call,
-    std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-  if (method_call.method_name().compare("getPlatformVersion") == 0) {
-    App *app = App::Create();
-    std::cout << static_cast<int>(reinterpret_cast<intptr_t>(app));
-    std::ostringstream version_stream;
-    version_stream << "Windows ";
-    if (IsWindows10OrGreater()) {
-      version_stream << "10+";
-    } else if (IsWindows8OrGreater()) {
-      version_stream << "8";
-    } else if (IsWindows7OrGreater()) {
-      version_stream << "7";
-    }
-    result->Success(flutter::EncodableValue(version_stream.str()));
-  } else {
-    result->NotImplemented();
-  }
+
+// Convert a Pigeon FirebaseOptions to a Firebase Options.
+firebase::AppOptions PigeonFirebaseOptionsToAppOptions(
+  const PigeonFirebaseOptions& pigeon_options) {
+  firebase::AppOptions options;
+  options.set_api_key(pigeon_options.api_key().c_str());
+  options.set_app_id(pigeon_options.app_id().c_str());
+  options.set_database_url(pigeon_options.database_u_r_l()->c_str());
+  options.set_messaging_sender_id(pigeon_options.messaging_sender_id().c_str());
+  options.set_project_id(pigeon_options.project_id().c_str());
+  options.set_storage_bucket(pigeon_options.storage_bucket()->c_str());
+  return options;
 }
 
-}  // namespace firebase_core
+void FirebaseCorePlugin::InitializeApp(
+    const std::string &app_name,
+    const PigeonFirebaseOptions &initialize_app_request,
+    std::function<void(ErrorOr<PigeonInitializeResponse> reply)> result) {
+  // Create an app
+  App *app;
+  app = App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
+                    app_name.c_str());
+
+  // Send back the result to Flutter
+  result(PigeonInitializeResponse());
+
+  // Log everything is OK
+  std::cout << "FirebaseCorePlugin::InitializeApp: OK" << std::endl;      
+}
+
+void FirebaseCorePlugin::InitializeCore(
+    std::function<void(ErrorOr<flutter::EncodableList> reply)> result) {}
+
+void FirebaseCorePlugin::OptionsFromResource(
+    std::function<void(ErrorOr<PigeonFirebaseOptions> reply)> result) {}
+
+void FirebaseCorePlugin::SetAutomaticDataCollectionEnabled(
+    const std::string &app_name, bool enabled,
+    std::function<void(std::optional<FlutterError> reply)> result) {}
+
+void FirebaseCorePlugin::SetAutomaticResourceManagementEnabled(
+    const std::string &app_name, bool enabled,
+    std::function<void(std::optional<FlutterError> reply)> result) {}
+
+void FirebaseCorePlugin::Delete(
+    const std::string &app_name,
+    std::function<void(std::optional<FlutterError> reply)> result) {}
+
+
+}  // namespace firebase_core_windows
