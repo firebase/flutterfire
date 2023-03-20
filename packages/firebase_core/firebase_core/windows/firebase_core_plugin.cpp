@@ -12,10 +12,13 @@
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
 
+#include <future>
 #include <iostream>
 #include <memory>
 #include <sstream>
+#include <stdexcept>
 #include <string>
+#include <vector>
 using ::firebase::App;
 
 namespace firebase_core_windows {
@@ -44,6 +47,7 @@ firebase::AppOptions PigeonFirebaseOptionsToAppOptions(
   options.set_messaging_sender_id(pigeon_options.messaging_sender_id().c_str());
   options.set_project_id(pigeon_options.project_id().c_str());
   options.set_storage_bucket(pigeon_options.storage_bucket()->c_str());
+  options.set_ga_tracking_id(pigeon_options.tracking_id()->c_str());
   return options;
 }
 
@@ -64,21 +68,43 @@ void FirebaseCorePlugin::InitializeApp(
 }
 
 void FirebaseCorePlugin::InitializeCore(
-    std::function<void(ErrorOr<flutter::EncodableList> reply)> result) {}
+    std::function<void(ErrorOr<flutter::EncodableList> reply)> result) {
+  result(flutter::EncodableList());
+}
 
 void FirebaseCorePlugin::OptionsFromResource(
     std::function<void(ErrorOr<PigeonFirebaseOptions> reply)> result) {}
 
 void FirebaseCorePlugin::SetAutomaticDataCollectionEnabled(
     const std::string &app_name, bool enabled,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  App *firebaseApp = App::GetInstance(app_name.c_str());
+  if (firebaseApp != nullptr) {
+    // Missing method
+  }
+  result(std::nullopt);
+}
 
 void FirebaseCorePlugin::SetAutomaticResourceManagementEnabled(
     const std::string &app_name, bool enabled,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  App *firebaseApp = App::GetInstance(app_name.c_str());
+  if (firebaseApp != nullptr) {
+    // Missing method
+  }
+
+  result(std::nullopt);
+}
 
 void FirebaseCorePlugin::Delete(
     const std::string &app_name,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  App *firebaseApp = App::GetInstance(app_name.c_str());
+  if (firebaseApp != nullptr) {
+    // Missing method
+  }
+
+  result(std::nullopt);
+}
 
 }  // namespace firebase_core_windows
