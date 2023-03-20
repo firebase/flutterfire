@@ -30,6 +30,9 @@ class DefaultFirebaseOptions {
         return ios;
       case TargetPlatform.macOS:
         return macos;
+      // TODO(Lyokone): FIX
+      case TargetPlatform.windows:
+        return android;
       default:
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
