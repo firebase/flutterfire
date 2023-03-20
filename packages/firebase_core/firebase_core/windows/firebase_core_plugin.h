@@ -48,8 +48,8 @@ class FirebaseCorePlugin : public flutter::Plugin, public FirebaseCoreHostApi, p
 
 
 
- private:
-
+private:
+  bool coreInitialized = false;
 };
 
 }  // namespace firebase_core
