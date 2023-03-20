@@ -78,13 +78,16 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   Future<void> activate({
     String? webRecaptchaSiteKey,
     AndroidProvider? androidProvider,
+    AppleProvider? appleProvider,
   }) async {
     try {
       await channel.invokeMethod<void>('FirebaseAppCheck#activate', {
         'appName': app.name,
         // Allow value to pass for debug mode for unit testing
         if (Platform.isAndroid || kDebugMode)
-          'androidProvider': getProviderString(androidProvider),
+          'androidProvider': getAndroidProviderString(androidProvider),
+        if (Platform.isIOS || Platform.isMacOS || kDebugMode)
+          'appleProvider': getAppleProviderString(appleProvider),
       });
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);

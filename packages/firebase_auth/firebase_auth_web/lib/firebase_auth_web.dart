@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:html';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
@@ -13,6 +14,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:flutter/foundation.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/firebase_auth_web_confirmation_result.dart';
@@ -89,8 +91,22 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerService('auth', () async {
-      await FirebaseAuthWeb.instance.delegate.onWaitInitState();
+    FirebaseCoreWeb.registerService('auth', (firebaseApp) async {
+      final authDelegate = auth_interop.getAuthInstance(firebaseApp);
+      // if localhost, and emulator was previously set in localStorage, use it
+      if (window.location.hostname == 'localhost' && kDebugMode) {
+        final String? emulatorOrigin =
+            window.sessionStorage['firebaseEmulatorOrigin'];
+
+        if (emulatorOrigin != null) {
+          authDelegate.useAuthEmulator(emulatorOrigin);
+          // ignore: avoid_print
+          print(
+            'Using previously configured Auth emulator at $emulatorOrigin \nTo switch back to production, restart your app with the emulator turned off.',
+          );
+        }
+      }
+      await authDelegate.onWaitInitState();
     });
     FirebaseAuthPlatform.instance = FirebaseAuthWeb.instance;
     PhoneMultiFactorGeneratorPlatform.instance = PhoneMultiFactorGeneratorWeb();
@@ -434,10 +450,27 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<void> useAuthEmulator(String host, int port) async {
     try {
+      // Get current session storage value
+      final String? emulatorOrigin =
+          window.sessionStorage['firebaseEmulatorOrigin'];
+
       // The generic platform interface is with host and port split to
       // centralize logic between android/ios native, but web takes the
       // origin as a single string
-      delegate.useAuthEmulator('http://$host:$port');
+      final String origin = 'http://$host:$port';
+
+      if (origin == emulatorOrigin) {
+        // If the origin is the same as the current one, do nothing
+        // The emulator was already started at the app start
+        return;
+      }
+
+      delegate.useAuthEmulator(origin);
+      // Save to session storage so that the emulator is used on refresh
+      // only in debug mode
+      if (kDebugMode) {
+        window.sessionStorage['firebaseEmulatorOrigin'] = origin;
+      }
     } catch (e) {
       final String code = (e as auth_interop.AuthError).code;
       // this catches Firebase Error from web that occurs after hot reloading & hot restarting

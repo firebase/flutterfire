@@ -1,0 +1,37 @@
+{
+  "project_info": {
+    "project_number": "406099696497",
+    "firebase_url": "https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "flutterfire-e2e-tests",
+    "storage_bucket": "flutterfire-e2e-tests.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:406099696497:ios:58cbc26aca8e5cf83574d0",
+        "android_client_info": {
+          "package_name": "io.flutter.plugins.firebase.auth.example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "406099696497-134k3722m01rtrsklhf3b7k8sqa5r7in.apps.googleusercontent.com"
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 0
+        },
+        "appinvite_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

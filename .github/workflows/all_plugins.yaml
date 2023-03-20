@@ -29,8 +29,26 @@ jobs:
           channel: 'stable'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - name: 'Run Analyze'
         run: melos run analyze
+
+  # Separated from "analyse" action as pubspec_override file is not being taken into account when running `flutter pub publish --dry-run`
+  # This will fail on CI until this is fixed: https://github.com/invertase/melos/issues/467
+  # You need to switch to Flutter 3.3.0, and run this test manually to check it works and update PR to confirm its success
+  pub_dry_run:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+        with:
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - name: 'Pub Check'
         run: |
           melos exec -c 1 --no-private --ignore="*example*" -- \
@@ -46,6 +64,8 @@ jobs:
           channel: 'stable'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - name: 'Flutter Pub Get'
         run: |
           melos exec -c 1 --scope="*example*" -- \
@@ -61,6 +81,8 @@ jobs:
           channel: 'stable'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - uses: Homebrew/actions/setup-homebrew@master
       - name: 'Install Tools'
         run: |
@@ -92,6 +114,8 @@ jobs:
           channel: 'stable'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - name: 'Build Examples'
         run: |
           melos exec -c 1 --scope="*example*" --dir-exists="web" -- \
@@ -107,6 +131,8 @@ jobs:
           channel: 'stable'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          melos-version: '3.0.0-dev.0'
       - name: 'Flutter Test'
         run: melos run test --no-select
       - name: 'Flutter Test - Web'
@@ -131,5 +157,6 @@ jobs:
           # Running `melos bootstrap` is not needed because we use Melos just
           # for the `check-license-header` script.
           run-bootstrap: false
+          melos-version: '3.0.0-dev.0'
       - name: Check license header
         run: melos run check-license-header

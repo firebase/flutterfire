@@ -8,6 +8,7 @@
 #import <Firebase/Firebase.h>
 
 #import <firebase_core/FLTFirebasePluginRegistry.h>
+#import "FLTAppCheckProviderFactory.h"
 
 NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_app_check";
 
@@ -18,6 +19,7 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
   NSMutableDictionary<NSString *, NSObject<FlutterStreamHandler> *> *_streamHandlers;
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
+  FLTAppCheckProviderFactory *_Nullable providerFactory;
 }
 
 #pragma mark - FlutterPlugin
@@ -25,6 +27,9 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 - (instancetype)init:(NSObject<FlutterBinaryMessenger> *)messenger {
   self = [super init];
   if (self) {
+    self->providerFactory = [[FLTAppCheckProviderFactory alloc] init];
+    [FIRAppCheck setAppCheckProviderFactory:self->providerFactory];
+
     [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];
     _binaryMessenger = messenger;
     _eventChannels = [NSMutableDictionary dictionary];
@@ -109,18 +114,11 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 #pragma mark - Firebase App Check API
 
 - (void)activate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  // TODO the App Check Firebase iOS SDK doesn't allow us to set a provider
-  // TODO after Firebase core has been initialized, which means we can't currently
-  // TODO support changing providers in FlutterFire. So for now we'll do nothing.
+  NSString *appNameDart = arguments[@"appName"];
+  NSString *providerName = arguments[@"appleProvider"];
 
-  //  BOOL debug = [arguments[@"debug"] boolValue];
-  //  id<FIRAppCheckProviderFactory> provider;
-  //  if (debug) {
-  //    provider = [FIRAppCheckDebugProviderFactory alloc];
-  //  } else {
-  //    provider = [FIRDeviceCheckProviderFactory alloc];
-  //  }
-  //  [FIRAppCheck setAppCheckProviderFactory:provider];
+  FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
+  [self->providerFactory configure:app providerName:providerName];
   result.success(nil);
 }
 
