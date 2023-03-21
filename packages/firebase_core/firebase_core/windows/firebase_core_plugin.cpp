@@ -29,6 +29,7 @@ void FirebaseCorePlugin::RegisterWithRegistrar(
   auto plugin = std::make_unique<FirebaseCorePlugin>();
 
   FirebaseCoreHostApi::SetUp(registrar->messenger(), plugin.get());
+  FirebaseAppHostApi::SetUp(registrar->messenger(), plugin.get());
 
   registrar->AddPlugin(std::move(plugin));
 }
