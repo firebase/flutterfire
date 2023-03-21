@@ -43,12 +43,48 @@ firebase::AppOptions PigeonFirebaseOptionsToAppOptions(
   firebase::AppOptions options;
   options.set_api_key(pigeon_options.api_key().c_str());
   options.set_app_id(pigeon_options.app_id().c_str());
-  options.set_database_url(pigeon_options.database_u_r_l()->c_str());
+  if (pigeon_options.database_u_r_l() != nullptr) {
+    options.set_database_url(pigeon_options.database_u_r_l()->c_str());
+  }
+  if (pigeon_options.tracking_id() != nullptr) {
+    options.set_ga_tracking_id(pigeon_options.tracking_id()->c_str());
+  }
   options.set_messaging_sender_id(pigeon_options.messaging_sender_id().c_str());
+
   options.set_project_id(pigeon_options.project_id().c_str());
-  options.set_storage_bucket(pigeon_options.storage_bucket()->c_str());
-  options.set_ga_tracking_id(pigeon_options.tracking_id()->c_str());
+
+  if (pigeon_options.storage_bucket() != nullptr) {
+    options.set_storage_bucket(pigeon_options.storage_bucket()->c_str());
+  }
   return options;
+}
+
+// Convert a AppOptions to PigeonInitializeOption
+PigeonFirebaseOptions optionsFromFIROptions(
+    const firebase::AppOptions &options) {
+  PigeonFirebaseOptions pigeon_options = PigeonFirebaseOptions();
+  pigeon_options.set_api_key(options.api_key());
+  pigeon_options.set_app_id(options.app_id());
+  if (options.database_url() != nullptr) {
+    pigeon_options.set_database_u_r_l(options.database_url());
+  }
+  if (options.ga_tracking_id() != nullptr) {
+    pigeon_options.set_tracking_id(options.ga_tracking_id());
+  }
+  pigeon_options.set_messaging_sender_id(options.messaging_sender_id());
+  pigeon_options.set_project_id(options.project_id());
+  if (options.storage_bucket() != nullptr) {
+    pigeon_options.set_storage_bucket(options.storage_bucket());
+  }
+  return pigeon_options;
+}
+
+// Convert a firebase::App to PigeonInitializeResponse
+PigeonInitializeResponse AppToPigeonInitializeResponse(const App &app) {
+  PigeonInitializeResponse response = PigeonInitializeResponse();
+  response.set_name(app.name());
+  response.set_options(optionsFromFIROptions(app.options()));
+  return response;
 }
 
 void FirebaseCorePlugin::InitializeApp(
@@ -61,14 +97,20 @@ void FirebaseCorePlugin::InitializeApp(
                     app_name.c_str());
 
   // Send back the result to Flutter
-  result(PigeonInitializeResponse());
-
-  // Log everything is OK
-  std::cout << "FirebaseCorePlugin::InitializeApp: OK" << std::endl;
+  result(AppToPigeonInitializeResponse(*app));
 }
 
 void FirebaseCorePlugin::InitializeCore(
     std::function<void(ErrorOr<flutter::EncodableList> reply)> result) {
+  // TODO: Missing function to get the list of currently initialized apps
+  std::vector<PigeonInitializeResponse> initializedApps;
+
+  flutter::EncodableList encodableList;
+
+  // Insert the contents of the vector into the EncodableList
+  // for (const auto &item : initializedApps) {
+  //  encodableList.push_back(flutter::EncodableValue(item));
+  //}
   result(flutter::EncodableList());
 }
 
@@ -80,7 +122,7 @@ void FirebaseCorePlugin::SetAutomaticDataCollectionEnabled(
     std::function<void(std::optional<FlutterError> reply)> result) {
   App *firebaseApp = App::GetInstance(app_name.c_str());
   if (firebaseApp != nullptr) {
-    // Missing method
+    // TODO: Missing method
   }
   result(std::nullopt);
 }
@@ -90,7 +132,7 @@ void FirebaseCorePlugin::SetAutomaticResourceManagementEnabled(
     std::function<void(std::optional<FlutterError> reply)> result) {
   App *firebaseApp = App::GetInstance(app_name.c_str());
   if (firebaseApp != nullptr) {
-    // Missing method
+    // TODO: Missing method
   }
 
   result(std::nullopt);
@@ -101,7 +143,7 @@ void FirebaseCorePlugin::Delete(
     std::function<void(std::optional<FlutterError> reply)> result) {
   App *firebaseApp = App::GetInstance(app_name.c_str());
   if (firebaseApp != nullptr) {
-    // Missing method
+    // TODO: Missing method
   }
 
   result(std::nullopt);
