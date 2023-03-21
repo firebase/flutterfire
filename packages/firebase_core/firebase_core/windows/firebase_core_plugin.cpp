@@ -80,8 +80,7 @@ PigeonFirebaseOptions optionsFromFIROptions(
 }
 
 // Convert a firebase::App to PigeonInitializeResponse
-PigeonInitializeResponse AppToPigeonInitializeResponse(
-  const App& app) {
+PigeonInitializeResponse AppToPigeonInitializeResponse(const App &app) {
   PigeonInitializeResponse response = PigeonInitializeResponse();
   response.set_name(app.name());
   response.set_options(optionsFromFIROptions(app.options()));
