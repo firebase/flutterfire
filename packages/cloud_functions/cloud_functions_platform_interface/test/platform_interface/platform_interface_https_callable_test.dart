@@ -51,7 +51,7 @@ void main() {
 
 class TestHttpsCallablePlatform extends HttpsCallablePlatform {
   TestHttpsCallablePlatform(FirebaseFunctionsPlatform functions)
-      : super(functions, null, 'function_name', HttpsCallableOptions());
+      : super(functions, null, 'function_name', HttpsCallableOptions(), null);
 }
 
 class TestFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {

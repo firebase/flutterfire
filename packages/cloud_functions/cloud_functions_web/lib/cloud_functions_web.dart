@@ -6,9 +6,10 @@
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+
 import 'https_callable_web.dart';
 import 'interop/functions.dart' as functions_interop;
 
@@ -53,6 +54,12 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   @override
   HttpsCallablePlatform httpsCallable(
       String? origin, String name, HttpsCallableOptions options) {
-    return HttpsCallableWeb(this, _delegate, origin, name, options);
+    return HttpsCallableWeb(this, _delegate, origin, name, options, null);
+  }
+
+  @override
+  HttpsCallablePlatform httpsCallableWithUri(
+      String? origin, Uri uri, HttpsCallableOptions options) {
+    return HttpsCallableWeb(this, _delegate, origin, null, options, uri);
   }
 }

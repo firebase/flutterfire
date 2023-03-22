@@ -48,6 +48,19 @@ class Functions extends JsObjectWrapper<functions_interop.FunctionsJsImpl> {
     return HttpsCallable.getInstance(httpCallableImpl);
   }
 
+  HttpsCallable httpsCallableUri(Uri uri,
+      [functions_interop.HttpsCallableOptions? options]) {
+    functions_interop.CustomFunction httpCallableImpl;
+    if (options != null) {
+      httpCallableImpl = functions_interop.httpsCallableFromURL(
+          jsObject, uri.toString(), options);
+    } else {
+      httpCallableImpl =
+          functions_interop.httpsCallableFromURL(jsObject, uri.toString());
+    }
+    return HttpsCallable.getInstance(httpCallableImpl);
+  }
+
   void useFunctionsEmulator(String host, int port) =>
       functions_interop.connectFunctionsEmulator(jsObject, host, port);
 }
