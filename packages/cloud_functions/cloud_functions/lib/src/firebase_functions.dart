@@ -64,18 +64,12 @@ class FirebaseFunctions extends FirebasePluginPlatform {
   /// Should be the name of the Callable function in Firebase
   /// or the URL of the 2nd gen Callable function in Firebase.
   HttpsCallable httpsCallable(
-    String nameOrUri, {
+    String name, {
     HttpsCallableOptions? options,
   }) {
-    assert(nameOrUri.isNotEmpty);
-    final uri = Uri.tryParse(nameOrUri);
+    assert(name.isNotEmpty);
     options ??= HttpsCallableOptions();
-    if (uri == null || uri.scheme.isEmpty) {
-      return HttpsCallable._(
-          delegate.httpsCallable(_origin, nameOrUri, options));
-    }
-    return HttpsCallable._(
-        delegate.httpsCallableWithUri(_origin, uri, options));
+    return HttpsCallable._(delegate.httpsCallable(_origin, name, options));
   }
 
   /// A reference to the Callable HTTPS trigger with the given URL.

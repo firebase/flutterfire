@@ -84,7 +84,7 @@ class _MyAppState extends State<MyApp> {
                     // See .github/workflows/scripts/functions/src/index.ts for the example function we
                     // are using for this example
                     HttpsCallable callable =
-                        FirebaseFunctions.instance.httpsCallable(
+                        FirebaseFunctions.instance.httpsCallableFromUrl(
                       'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
                       options: HttpsCallableOptions(
                         timeout: const Duration(seconds: 5),
