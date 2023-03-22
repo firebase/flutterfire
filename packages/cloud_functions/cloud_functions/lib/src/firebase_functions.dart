@@ -62,22 +62,44 @@ class FirebaseFunctions extends FirebasePluginPlatform {
   /// A reference to the Callable HTTPS trigger with the given name.
   ///
   /// Should be the name of the Callable function in Firebase
-  /// or the URI of the 2nd gen Callable function in Firebase.
+  /// or the URL of the 2nd gen Callable function in Firebase.
   HttpsCallable httpsCallable(
-    Object nameOrUri, {
+    String nameOrUri, {
     HttpsCallableOptions? options,
   }) {
-    assert(nameOrUri is String || nameOrUri is Uri);
-    assert(nameOrUri is Uri || (nameOrUri as String).isNotEmpty);
+    final uri = Uri.tryParse(nameOrUri);
     options ??= HttpsCallableOptions();
-    if (nameOrUri is String) {
+    if (uri == null) {
       return HttpsCallable._(
           delegate.httpsCallable(_origin, nameOrUri, options));
-    } else if (nameOrUri is Uri) {
-      return HttpsCallable._(
-          delegate.httpsCallableWithUri(_origin, nameOrUri, options));
     }
-    throw ArgumentError.value(nameOrUri, 'nameOrUri must be a String or Uri');
+    return HttpsCallable._(
+        delegate.httpsCallableWithUri(_origin, uri, options));
+  }
+
+  /// A reference to the Callable HTTPS trigger with the given URL.
+  ///
+  /// Should be URL of the 2nd gen Callable function in Firebase.
+  HttpsCallable httpsCallableFromUrl(
+    String url, {
+    HttpsCallableOptions? options,
+  }) {
+    final uri = Uri.parse(url);
+    options ??= HttpsCallableOptions();
+    return HttpsCallable._(
+        delegate.httpsCallableWithUri(_origin, uri, options));
+  }
+
+  /// A reference to the Callable HTTPS trigger with the given Uri.
+  ///
+  /// Should be Uri of the 2nd gen Callable function in Firebase.
+  HttpsCallable httpsCallableFromUri(
+    Uri uri, {
+    HttpsCallableOptions? options,
+  }) {
+    options ??= HttpsCallableOptions();
+    return HttpsCallable._(
+        delegate.httpsCallableWithUri(_origin, uri, options));
   }
 
   /// Changes this instance to point to a Cloud Functions emulator running locally.
