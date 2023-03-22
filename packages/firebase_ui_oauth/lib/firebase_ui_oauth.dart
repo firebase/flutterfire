@@ -15,3 +15,6 @@ export './src/oauth_provider_button_style.dart';
 
 export 'package:firebase_ui_auth/firebase_ui_auth.dart'
     show AuthAction, AuthCancelledException;
+
+export 'package:firebase_ui_shared/firebase_ui_shared.dart'
+    show ThemedColor, ThemedIconSrc;

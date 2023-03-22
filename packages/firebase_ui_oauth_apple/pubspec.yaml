@@ -4,7 +4,7 @@ version: 1.0.24
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_oauth_apple
 
 environment:
-  sdk: '>=2.17.6 <3.0.0'
+  sdk: '>=2.18.0 <3.0.0'
   flutter: '>=1.17.0'
 
 dependencies:

@@ -2,12 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
 import 'internal/provider_screen.dart';
 import 'internal/responsive_page.dart';
-import '../widgets/internal/universal_scaffold.dart';
 
 /// {@template ui.auth.screens.email_link_sign_in_screen}
 /// A screen that provides a UI for authentication using email link.

@@ -3,15 +3,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutter/scheduler.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 
-import '../widgets/internal/loading_button.dart';
 import '../widgets/internal/title.dart';
-import '../widgets/internal/universal_button.dart';
-import '../widgets/internal/universal_scaffold.dart';
 
 import 'internal/responsive_page.dart';
 
