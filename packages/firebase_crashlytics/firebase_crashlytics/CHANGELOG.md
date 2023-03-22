@@ -1,3 +1,7 @@
+## 3.0.17
+
+ - **FIX**(crashlytics,ios): fix Crashlytics obfuscation for iOS on the Flutter side ([#10566](https://github.com/firebase/flutterfire/issues/10566)). ([a4fa7eff](https://github.com/firebase/flutterfire/commit/a4fa7effbb1374d6241989fbbbb96d02b712a1c0))
+
 ## 3.0.16
 
  - Update a dependency to the latest release.
