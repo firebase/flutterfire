@@ -2,7 +2,7 @@ name: firebase_auth_example
 description: Demonstrates how to use the firebase_auth plugin.
 
 environment:
-  sdk: '>=2.16.0 <3.0.0'
+  sdk: '>=2.18.0 <3.0.0'
 
 dependencies:
   firebase_auth: ^4.3.0

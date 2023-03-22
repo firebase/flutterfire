@@ -2,8 +2,8 @@ name: firebase_remote_config_example
 description: Demonstrates how to use the firebase_remote_config plugin.
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5"
+  sdk: '>=2.18.0 <3.0.0'
+  flutter: '>=1.12.13+hotfix.5'
 
 dependencies:
   # The following adds the Cupertino Icons font to your application.

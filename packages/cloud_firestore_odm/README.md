@@ -8,10 +8,10 @@ The Cloud Firestore ODM package enables developers to build fully type-safe appl
 
 ## What is an ODM?
 
-The Object Document Mapper or ODM is an interface that treats a document as a tree structure wherein each node is an object representing a part of the document.   
-ODM methods allow programmatic access to the tree making it possible to change the structure, style or content of a document. 
+The Object Document Mapper or ODM is an interface that treats a document as a tree structure wherein each node is an object representing a part of the document.  
+ODM methods allow programmatic access to the tree making it possible to change the structure, style or content of a document.
 
-##  What does it do?
+## What does it do?
 
 The Cloud Firestore ODM package enables developers to build fully type-safe applications for Flutter using the FlutterFire Cloud Firestore plugin.
 
@@ -34,7 +34,7 @@ That is done by adding the following to your `pubspec.yaml`:
 
 ```yaml
 environment:
-  sdk: ">=2.16.0 <3.0.0"
+  sdk: '>=2.18.0 <3.0.0'
 ```
 
 ### 2. FlutterFire Initialization

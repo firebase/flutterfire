@@ -1,12 +1,12 @@
 name: firebase_app_check_example
 description: Firebase App Check example application.
 
-publish_to: "none"
+publish_to: 'none'
 
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
+  sdk: '>=2.18.0 <3.0.0'
 
 dependencies:
   cloud_firestore: ^4.4.5

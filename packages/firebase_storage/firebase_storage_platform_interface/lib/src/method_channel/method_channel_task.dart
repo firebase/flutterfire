@@ -47,7 +47,7 @@ abstract class MethodChannelTask extends TaskPlatform {
 
     // Get the task stream.
     _stream = MethodChannelFirebaseStorage.taskObservers[_handle]!.stream
-        as Stream<TaskSnapshotPlatform>;
+        .cast<TaskSnapshotPlatform>();
     late StreamSubscription _subscription;
 
     // Listen for stream events.
@@ -111,7 +111,7 @@ abstract class MethodChannelTask extends TaskPlatform {
   @override
   Stream<TaskSnapshotPlatform> get snapshotEvents {
     return MethodChannelFirebaseStorage.taskObservers[_handle]!.stream
-        as Stream<TaskSnapshotPlatform>;
+        .cast<TaskSnapshotPlatform>();
   }
 
   @override

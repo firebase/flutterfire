@@ -9,8 +9,8 @@ false_secrets:
   - example/**
 
 environment:
-  sdk: '>=2.16.0 <3.0.0'
-  flutter: ">=1.12.13+hotfix.5"
+  sdk: '>=2.18.0 <3.0.0'
+  flutter: '>=1.12.13+hotfix.5'
 
 dependencies:
   firebase_core: ^2.8.0
