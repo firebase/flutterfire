@@ -15,6 +15,7 @@ dependencies:
   firebase_dynamic_links: ^5.0.17
   firebase_ui_localizations: ^1.2.0
   firebase_ui_oauth: ^1.1.17
+  firebase_ui_shared: ^1.0.0
   flutter:
     sdk: flutter
   flutter_localizations:

@@ -3,7 +3,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
+/// Platform-aware widget that renders a different widget depending on the
+/// type of the app. Requires implementation of [buildCupertino] if
+/// [CupertinoApp] is used, and [buildMaterial] if [MaterialApp] is used.
+/// Optionally, [buildWrapper] can be implemented to have a common wrapper
+/// widget for both types of apps.
 abstract class PlatformWidget extends StatelessWidget {
   const PlatformWidget({Key? key}) : super(key: key);
 

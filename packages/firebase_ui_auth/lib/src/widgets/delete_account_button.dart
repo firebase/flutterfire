@@ -6,10 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../widgets/internal/loading_button.dart';
 
 typedef DeleteFailedCallback = void Function(Exception exception);
 typedef SignInRequiredCallback = Future<bool> Function();
@@ -29,8 +28,8 @@ class DeleteAccountButton extends StatefulWidget {
   /// A callback that is called if the account deletion fails.
   final DeleteFailedCallback? onDeleteFailed;
 
-  /// {@macro ui.auth.widgets.button_variant}
-  final ButtonVariant? variant;
+  /// {@macro ui.shared.widgets.button_variant}
+  final ButtonVariant variant;
 
   /// {@macro ui.auth.widgets.delete_account_button}
   const DeleteAccountButton({
@@ -38,7 +37,7 @@ class DeleteAccountButton extends StatefulWidget {
     this.auth,
     this.onSignInRequired,
     this.onDeleteFailed,
-    this.variant,
+    this.variant = ButtonVariant.filled,
   }) : super(key: key);
 
   @override

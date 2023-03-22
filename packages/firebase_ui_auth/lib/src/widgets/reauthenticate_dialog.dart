@@ -3,12 +3,12 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/material.dart' hide Title;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 
 import 'internal/title.dart';
-import 'internal/universal_button.dart';
 
 /// {@template ui.auth.widgets.reauthenticate_dialog}
 /// A dialog that prompts the user to re-authenticate their account

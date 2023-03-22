@@ -4,13 +4,12 @@
 
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, MultiFactorSession, PhoneMultiFactorInfo;
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 
-import '../widgets/internal/universal_button.dart';
 import '../widgets/internal/universal_page_route.dart';
-import '../widgets/internal/universal_scaffold.dart';
 
 import 'internal/responsive_page.dart';
 

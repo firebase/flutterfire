@@ -2,12 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'platform_widget.dart';
-
-/// {@template ui.auth.widgets.button_variant}
+/// {@template ui.shared.widgets.button_variant}
 /// An enumeration of the possible button variants.
 /// {@endtemplate}
 enum ButtonVariant {
@@ -21,14 +20,36 @@ enum ButtonVariant {
   outlined,
 }
 
+/// Button widget that uses [CupertinoButton] under [CupertinoApp] and
+/// [TextButton], [ElevatedButton] or [OutlinedButton] under [MaterialApp]
+/// depending on provided [variant].
 class UniversalButton extends PlatformWidget {
+  /// A callback that is called when the button is pressed.
   final VoidCallback? onPressed;
+
+  /// The text to display in the button.
+  /// If [child] is provided, this will be ignored.
   final String? text;
+
+  /// The child to display in the button.
   final Widget? child;
+
+  /// The icon to display in the button.
   final IconData? icon;
+
+  /// Defines the order of the icon and the label.
+  /// Icon will be placed on the left if [TextDirection.ltr] and on the right
+  /// if [TextDirection.rtl].
   final TextDirection? direction;
-  final ButtonVariant? variant;
+
+  /// The variant of the button.
+  /// If not provided, [ButtonVariant.filled] will be used.
+  final ButtonVariant variant;
+
+  /// The color of the button background.
   final Color? color;
+
+  /// The color of the button content.
   final Color? contentColor;
 
   const UniversalButton({
@@ -38,15 +59,11 @@ class UniversalButton extends PlatformWidget {
     this.onPressed,
     this.icon,
     this.direction = TextDirection.ltr,
-    this.variant,
+    this.variant = ButtonVariant.filled,
     this.color,
     this.contentColor,
   })  : assert(text != null || child != null),
         super(key: key);
-
-  ButtonVariant get _variant {
-    return variant ?? ButtonVariant.filled;
-  }
 
   @override
   Widget buildCupertino(BuildContext context) {
@@ -65,7 +82,7 @@ class UniversalButton extends PlatformWidget {
       ],
     );
 
-    if (_variant == ButtonVariant.text || _variant == ButtonVariant.outlined) {
+    if (variant == ButtonVariant.text || variant == ButtonVariant.outlined) {
       button = CupertinoButton(
         padding: EdgeInsets.zero,
         onPressed: onPressed,
@@ -115,7 +132,7 @@ class UniversalButton extends PlatformWidget {
     }
 
     if (icon != null) {
-      switch (_variant) {
+      switch (variant) {
         case ButtonVariant.text:
           return TextButton.icon(
             icon: Icon(icon, color: contentColor),
@@ -139,7 +156,7 @@ class UniversalButton extends PlatformWidget {
           );
       }
     } else {
-      switch (_variant) {
+      switch (variant) {
         case ButtonVariant.text:
           return TextButton(
             onPressed: onPressed,

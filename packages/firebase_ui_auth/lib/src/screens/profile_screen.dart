@@ -11,7 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart'
         PhoneAuthCredential,
         PhoneMultiFactorGenerator,
         User;
-import 'package:firebase_ui_auth/src/widgets/internal/universal_icon.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/cupertino.dart' hide Title;
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart' hide Title;
@@ -20,8 +20,6 @@ import 'package:firebase_ui_oauth/firebase_ui_oauth.dart'
     hide OAuthProviderButtonBase;
 import 'package:flutter/services.dart';
 
-import '../widgets/internal/loading_button.dart';
-import '../widgets/internal/universal_button.dart';
 import '../widgets/internal/rebuild_scope.dart';
 import '../widgets/internal/subtitle.dart';
 import '../widgets/internal/universal_icon_button.dart';
