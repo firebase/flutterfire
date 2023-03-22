@@ -5,9 +5,9 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/internal/loading_button.dart';
 import '../validators.dart';
 
 /// {@template ui.auth.widgets.email_form.forgot_password_action}
@@ -56,7 +56,7 @@ typedef EmailFormSubmitCallback = void Function(String email, String password);
 /// {@endtemplate}
 class EmailFormStyle extends FirebaseUIStyle {
   /// A [ButtonVariant] that should be used for the sign in button.
-  final ButtonVariant? signInButtonVariant;
+  final ButtonVariant signInButtonVariant;
 
   /// An override of the global [ThemeData.inputDecorationTheme].
   final InputDecorationTheme? inputDecorationTheme;

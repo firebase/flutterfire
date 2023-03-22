@@ -2,11 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'universal_button.dart';
 
 class _LoadingButtonContent extends StatelessWidget {
   final String label;
@@ -46,14 +44,31 @@ class _LoadingButtonContent extends StatelessWidget {
   }
 }
 
+/// Button widget that uses [CupertinoButton] under [CupertinoApp] and
+/// [TextButton], [ElevatedButton] or [OutlinedButton] under [MaterialApp]
+/// which is also capable of displaying a loading indicator when [isLoading] is
+/// set to true.
 class LoadingButton extends StatelessWidget {
+  /// Indicates that a loading indicator should be displayed.
   final bool isLoading;
+
+  /// The text to display in the button.
   final String label;
+
+  /// The icon to display in the button.
   final IconData? icon;
+
+  /// The color of the button background.
   final Color? color;
+
+  /// The color of the button content.
   final Color? labelColor;
+
+  /// A callback that is called when the button is pressed.
   final VoidCallback onTap;
-  final ButtonVariant? variant;
+
+  /// The variant of the button. See [ButtonVariant] for more information.
+  final ButtonVariant variant;
 
   const LoadingButton({
     Key? key,

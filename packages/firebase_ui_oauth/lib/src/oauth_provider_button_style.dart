@@ -4,39 +4,7 @@
 
 import 'package:flutter/services.dart';
 
-/// {@template ui.oauth.themed_value}
-/// An object that is used to resolve the value base on the current theme
-/// brightness.
-/// {@endtemplate}
-class ThemedValue<T> {
-  /// The value that should be used to when the dark theme is used.
-  final T dark;
-
-  /// The value that should be used to when the light theme is used.
-  final T light;
-
-  const ThemedValue(this.dark, this.light);
-
-  T getValue(Brightness brightness) {
-    switch (brightness) {
-      case Brightness.dark:
-        return dark;
-      case Brightness.light:
-        return light;
-    }
-  }
-}
-
-class ThemedColor extends ThemedValue<Color> {
-  const ThemedColor(Color dark, Color light) : super(dark, light);
-}
-
-class ThemedIconSrc extends ThemedValue<String> {
-  const ThemedIconSrc(
-    String dark,
-    String light,
-  ) : super(dark, light);
-}
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 
 /// {@template ui.oauth.themed_oauth_provider_button_style}
 /// An object that is being used to resolve a style of the button.
