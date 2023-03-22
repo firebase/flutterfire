@@ -67,6 +67,7 @@ class FirebaseFunctions extends FirebasePluginPlatform {
     String nameOrUri, {
     HttpsCallableOptions? options,
   }) {
+    assert(nameOrUri.isNotEmpty);
     final uri = Uri.tryParse(nameOrUri);
     options ??= HttpsCallableOptions();
     if (uri == null || uri.scheme.isEmpty) {
