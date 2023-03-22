@@ -69,7 +69,7 @@ class FirebaseFunctions extends FirebasePluginPlatform {
   }) {
     final uri = Uri.tryParse(nameOrUri);
     options ??= HttpsCallableOptions();
-    if (uri == null) {
+    if (uri == null || uri.scheme.isEmpty) {
       return HttpsCallable._(
           delegate.httpsCallable(_origin, nameOrUri, options));
     }
