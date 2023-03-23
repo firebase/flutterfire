@@ -62,7 +62,6 @@ class FirebaseFunctions extends FirebasePluginPlatform {
   /// A reference to the Callable HTTPS trigger with the given name.
   ///
   /// Should be the name of the Callable function in Firebase
-  /// or the URL of the 2nd gen Callable function in Firebase.
   HttpsCallable httpsCallable(
     String name, {
     HttpsCallableOptions? options,
