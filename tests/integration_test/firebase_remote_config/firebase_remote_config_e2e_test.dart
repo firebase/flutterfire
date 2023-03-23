@@ -127,11 +127,11 @@ void main() {
       // EventChannel here.
       test(
         'onConfigUpdated can run without issue',
-        () {
+        () async {
           final configSubscription =
               FirebaseRemoteConfig.instance.onConfigUpdated.listen((event) {});
 
-          configSubscription.cancel();
+          await configSubscription.cancel();
         },
         skip: kIsWeb ||
             defaultTargetPlatform == TargetPlatform.android ||
