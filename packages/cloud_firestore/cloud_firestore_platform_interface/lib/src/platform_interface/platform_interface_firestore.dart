@@ -114,7 +114,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     throw UnimplementedError('enableNetwork() is not implemented');
   }
 
-  /// Returns a [Steam] which is called each time all of the active listeners
+  /// Returns a [Stream] which is called each time all of the active listeners
   /// have been synchronised.
   Stream<void> snapshotsInSync() {
     throw UnimplementedError('snapshotsInSync() is not implemented');
