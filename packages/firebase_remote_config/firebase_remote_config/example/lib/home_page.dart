@@ -1,3 +1,6 @@
+// Copyright 2019 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
 import 'dart:async';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -79,11 +82,9 @@ class _HomePageState extends State<HomePage> {
                 final FirebaseRemoteConfig remoteConfig =
                     FirebaseRemoteConfig.instance;
                 if (subscription != null) {
+                  await subscription!.cancel();
                   setState(() {
-                    subscription!.cancel();
-                    setState(() {
-                      subscription = null;
-                    });
+                    subscription = null;
                   });
                   return 'Listening cancelled';
                 }
