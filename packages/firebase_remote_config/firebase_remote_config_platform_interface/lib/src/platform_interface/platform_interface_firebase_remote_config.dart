@@ -6,7 +6,6 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_remote_config_platform_interface/src/remote_config_update.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -170,7 +169,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
     throw UnimplementedError('setDefaults() is not implemented');
   }
 
-  /// Get a [Stream] of [RemoteConfigEvent]s.
+  /// Get a [Stream] of [RemoteConfigUpdate]s.
   Stream<RemoteConfigUpdate> get onConfigUpdated {
     throw UnimplementedError('onConfigUpdated getter not implemented');
   }

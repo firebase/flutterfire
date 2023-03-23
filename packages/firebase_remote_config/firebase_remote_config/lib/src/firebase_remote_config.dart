@@ -9,7 +9,7 @@ part of firebase_remote_config;
 /// You can get an instance by calling [FirebaseRemoteConfig.instance]. Note
 /// [FirebaseRemoteConfig.instance] is async.
 // ignore: prefer_mixin
-class FirebaseRemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
+class FirebaseRemoteConfig extends FirebasePluginPlatform {
   FirebaseRemoteConfig._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_remote_config');
 
@@ -66,7 +66,6 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   /// config parameters were already activated.
   Future<bool> activate() async {
     bool configChanged = await _delegate.activate();
-    notifyListeners();
     return configChanged;
   }
 
@@ -88,7 +87,6 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   ///  - Thrown if the Google Cloud Platform Firebase Remote Config API is disabled
   Future<bool> fetchAndActivate() async {
     bool configChanged = await _delegate.fetchAndActivate();
-    notifyListeners();
     return configChanged;
   }
 
