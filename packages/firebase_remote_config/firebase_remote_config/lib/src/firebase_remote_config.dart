@@ -150,6 +150,10 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
       );
     }
   }
+
+  Stream<RemoteConfigUpdate> get onConfigUpdated {
+    return _delegate.onConfigUpdated;
+  }
 }
 
 @Deprecated('Use FirebaseRemoteConfig instead.')
