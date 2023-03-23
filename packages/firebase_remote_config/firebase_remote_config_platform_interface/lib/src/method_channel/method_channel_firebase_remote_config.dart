@@ -298,7 +298,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     return _eventChannelConfigUpdated.receiveBroadcastStream(<String, dynamic>{
       'appName': app.name,
     }).map((event) {
-      final updatedKeys = Set<String>.from(event['updatedKeys']);
+      final updatedKeys = Set<String>.from(event);
       return RemoteConfigUpdate(updatedKeys);
     });
   }

@@ -13,7 +13,6 @@ NSString *const kFirebaseRemoteConfigUpdateChannelName = @"plugins.flutter.io/fi
 
 @interface FLTFirebaseRemoteConfigPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
-@property (nonatomic, strong) NSMutableDictionary<NSString*, FlutterEventSink> *eventSinks;
 @property (nonatomic, strong) NSMutableDictionary<NSString*, FIRConfigUpdateListenerRegistration *> *listenersMap;
 @end
 
@@ -291,7 +290,6 @@ FlutterEventChannel* eventChannel = [FlutterEventChannel eventChannelWithName:kF
     NSString *appName = (NSString *)arguments;
     if (!appName) return nil;
     [self.listenersMap[appName] remove];
-    [self.eventSinks removeObjectForKey:appName];
     [self.listenersMap removeObjectForKey:appName];
     return nil;
 }
@@ -300,7 +298,6 @@ FlutterEventChannel* eventChannel = [FlutterEventChannel eventChannelWithName:kF
     NSString *appName = (NSString *) arguments[@"appName"];
     if (!appName) return nil;
     FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
-    self.eventSinks[appName] = events;
     self.listenersMap[appName] = [remoteConfig addOnConfigUpdateListener:^(FIRRemoteConfigUpdate * _Nullable configUpdate, NSError * _Nullable error) {
         if (error) {
             // Handle the error
@@ -308,7 +305,7 @@ FlutterEventChannel* eventChannel = [FlutterEventChannel eventChannelWithName:kF
             return;
         }
            if (configUpdate) {
-               self.eventSinks[appName](configUpdate.updatedKeys);
+               events([configUpdate.updatedKeys allObjects]);
            }
        }];
     return nil;
