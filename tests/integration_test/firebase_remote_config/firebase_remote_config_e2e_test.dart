@@ -122,6 +122,21 @@ void main() {
           Duration.zero,
         );
       });
+
+      // We cannot change the default values on the fly, so we only test the
+      // EventChannel here.
+      test(
+        'onConfigUpdated can run without issue',
+        () {
+          final configSubscription =
+              FirebaseRemoteConfig.instance.onConfigUpdated.listen((event) {});
+
+          configSubscription.cancel();
+        },
+        skip: kIsWeb ||
+            defaultTargetPlatform == TargetPlatform.android ||
+            defaultTargetPlatform == TargetPlatform.macOS,
+      );
     },
   );
 }
