@@ -4,6 +4,27 @@
 # customers of the plugin.
 cmake_minimum_required(VERSION 3.14)
 
+include(ExternalProject)
+# Setup the Firebase C++ SDK locally
+set(FIREBASE_SDK_VERSION "10.6.0") # Replace with the desired version
+set(FIREBASE_SDK_DOWNLOAD_URL "https://github.com/firebase/firebase-cpp-sdk/releases/download/${FIREBASE_SDK_VERSION}/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
+set(FIREBASE_SDK_DOWNLOAD_DIR "${CMAKE_BINARY_DIR}/external/firebase_sdk")
+set(FIREBASE_SDK_INSTALL_DIR "${CMAKE_BINARY_DIR}/firebase_sdk")
+ExternalProject_Add(
+    firebase_cpp_sdk
+    URL ${FIREBASE_SDK_DOWNLOAD_URL}
+    DOWNLOAD_DIR ${FIREBASE_SDK_DOWNLOAD_DIR}
+    DOWNLOAD_NO_PROGRESS 1
+    TIMEOUT 600
+    LOG_DOWNLOAD 1
+    PREFIX ${FIREBASE_SDK_INSTALL_DIR}
+    CONFIGURE_COMMAND "" # No configuration step
+    BUILD_COMMAND ""     # No build step
+    INSTALL_COMMAND ""   # No install step
+)
+set(FIREBASE_CPP_SDK_DIR "${CMAKE_BINARY_DIR}/firebase_sdk")
+
+
 # Project-level configuration.
 set(PROJECT_NAME "firebase_core")
 project(${PROJECT_NAME} LANGUAGES CXX)
