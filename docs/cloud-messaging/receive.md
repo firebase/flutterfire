@@ -420,15 +420,15 @@ If you are using Firebase phone authentication, you must add the Firebase Auth p
 ### Step 1 - Add a notification service extension
 
 - From XCode top menu go to: **File > New > Target...**
-- A modal will present a list of possible targets, scroll down or use the filter to select "Notification Service Extension". Click Next.
-- Add a product name (use "ImageNotification" to follow along), set Language to Objective-C and click Finish.
-- Enable the scheme by clicking Activate.
+- A modal will present a list of possible targets, scroll down or use the filter to select **Notification Service Extension**. Click **Next**.
+- Add a product name (use "ImageNotification" to follow along with with this tutorial), set Language to Objective-C and click **Finish**.
+- Enable the scheme by clicking **Activate**.
 
 ### Step 2 - Add target to the Podfile
 
 Ensure that your new extension has access to the Firebase/Messaging pod by adding it in the Podfile:
 
-- From the Navigator open the Podfile: Pods > Podfile
+- From the Navigator open the Podfile: **Pods > Podfile**
 - Scroll down to the bottom of the file and add:
 
 ```ruby
