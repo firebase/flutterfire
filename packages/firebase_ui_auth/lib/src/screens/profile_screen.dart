@@ -417,7 +417,8 @@ class _EmailVerificationBadgeState extends State<_EmailVerificationBadge> {
                     state != EmailVerificationState.sending)
                   UniversalButton(
                     variant: ButtonVariant.text,
-                    color: Theme.of(context).colorScheme.error,
+                    materialColor: Theme.of(context).colorScheme.error,
+                    cupertinoColor: CupertinoColors.destructiveRed,
                     text: 'Dismiss',
                     onPressed: () {
                       setState(service.dismiss);
