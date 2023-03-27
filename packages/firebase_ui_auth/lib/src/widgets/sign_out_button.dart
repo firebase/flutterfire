@@ -29,7 +29,6 @@ class SignOutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
-    final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
     return UniversalButton(
       text: l.signOutButtonText,
@@ -37,7 +36,8 @@ class SignOutButton extends StatelessWidget {
         context: context,
         auth: auth,
       ),
-      icon: isCupertino ? CupertinoIcons.arrow_right_circle : Icons.logout,
+      cupertinoIcon: CupertinoIcons.arrow_right_circle,
+      materialIcon: Icons.logout,
       variant: variant,
     );
   }

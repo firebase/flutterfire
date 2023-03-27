@@ -55,11 +55,17 @@ class LoadingButton extends StatelessWidget {
   /// The text to display in the button.
   final String label;
 
-  /// The icon to display in the button.
-  final IconData? icon;
+  /// The icon to display in the button under [MaterialApp].
+  final IconData? materialIcon;
 
-  /// The color of the button background.
-  final Color? color;
+  /// The icon to display in the button under [CupertinoApp].
+  final IconData? cupertinoIcon;
+
+  /// The color of the button background under [MaterialApp].
+  final Color? materialColor;
+
+  /// The color of the button background under [CupertinoApp].
+  final Color? cupertinoColor;
 
   /// The color of the button content.
   final Color? labelColor;
@@ -75,8 +81,10 @@ class LoadingButton extends StatelessWidget {
     required this.label,
     required this.onTap,
     this.isLoading = false,
-    this.icon,
-    this.color,
+    this.materialIcon,
+    this.cupertinoIcon,
+    this.materialColor,
+    this.cupertinoColor,
     this.labelColor,
     this.variant = ButtonVariant.outlined,
   }) : super(key: key);
@@ -99,8 +107,10 @@ class LoadingButton extends StatelessWidget {
     );
 
     return UniversalButton(
-      color: color,
-      icon: icon,
+      materialColor: materialColor,
+      cupertinoColor: cupertinoColor,
+      materialIcon: materialIcon,
+      cupertinoIcon: cupertinoIcon,
       contentColor: contentColor,
       onPressed: onTap,
       variant: variant,
