@@ -51,7 +51,7 @@ how to use the package within your Flutter app.
 
 - Available auth providers:
 
-  - [EmaiAuthProvider](./providers/email.md) - allows registering and signing in using email and password.
+  - [EmailAuthProvider](./providers/email.md) - allows registering and signing in using email and password.
   - [EmailLinkAuthProvider](./providers/email-link.md) - allows registering and signing in using a link sent to email.
   - [PhoneAuthProvider](./providers/phone.md) - allows registering and signing in using a phone number
   - [UniversalEmailSignInProvider](./providers/universal-email-sign-in.md) - gets all connected auth providers for a given email.
