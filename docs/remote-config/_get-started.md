@@ -138,6 +138,8 @@ After you fetch parameter values, you can use real-time Remote Config to listen 
 Real-time Remote Config signals to connected devices when updates are available and automatically 
 fetches the changes after you publish a new Remote Config version.
 
+Please note that real-time Remote Config is not available for Web.
+
 1. In your app, use `onConfigUpdated` to start listening for updates and automatically fetch any new parameter values. Implement the onUpdate() callback to activate the updated config.
    ```dart
     remoteConfig.onConfigUpdated.listen((event) async {

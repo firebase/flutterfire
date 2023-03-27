@@ -152,6 +152,8 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform {
   /// Starts listening for real-time config updates from the Remote Config backend and automatically
   /// fetches updates from the RC backend when they are available.
   ///
+  /// This feature is not supported on Web.
+  ///
   /// If a connection to the Remote Config backend is not already open, calling this method will
   /// open it. Multiple listeners can be added by calling this method again, but subsequent calls
   /// re-use the same connection to the backend.

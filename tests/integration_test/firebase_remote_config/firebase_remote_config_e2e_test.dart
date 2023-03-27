@@ -133,9 +133,8 @@ void main() {
 
           await configSubscription.cancel();
         },
-        skip: kIsWeb ||
-            defaultTargetPlatform == TargetPlatform.android ||
-            defaultTargetPlatform == TargetPlatform.macOS,
+        // This feature is not supported on Web
+        skip: kIsWeb,
       );
     },
   );
