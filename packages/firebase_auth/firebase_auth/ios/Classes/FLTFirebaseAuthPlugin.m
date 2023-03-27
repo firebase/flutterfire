@@ -588,10 +588,12 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
       NSLog(@"Unable to serialize id token from data: %@", appleIDCredential.identityToken);
     }
 
-    // Initialize a Firebase credential.
-    FIROAuthCredential *credential = [FIROAuthProvider credentialWithProviderID:@"apple.com"
-                                                                        IDToken:idToken
-                                                                       rawNonce:rawNonce];
+    // Initialize a Firebase credential, including the user's full name.
+    FIROAuthCredential *credential =
+        [FIROAuthProvider appleCredentialWithIDToken:idToken
+                                            rawNonce:rawNonce
+                                            fullName:appleIDCredential.fullName];
+
     if (self.isReauthenticatingWithApple == YES) {
       self.isReauthenticatingWithApple = NO;
       [[FIRAuth.auth currentUser]
