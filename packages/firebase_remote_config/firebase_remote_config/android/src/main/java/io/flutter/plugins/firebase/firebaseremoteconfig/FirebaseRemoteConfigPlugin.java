@@ -8,10 +8,7 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 
 import android.os.Handler;
 import android.os.Looper;
-
 import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -33,8 +30,6 @@ import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +37,10 @@ import java.util.Objects;
 
 /** FirebaseRemoteConfigPlugin */
 public class FirebaseRemoteConfigPlugin
-    implements FlutterFirebasePlugin, MethodChannel.MethodCallHandler, FlutterPlugin, EventChannel.StreamHandler {
+    implements FlutterFirebasePlugin,
+        MethodChannel.MethodCallHandler,
+        FlutterPlugin,
+        EventChannel.StreamHandler {
 
   static final String TAG = "FRCPlugin";
   static final String METHOD_CHANNEL = "plugins.flutter.io/firebase_remote_config";
@@ -53,7 +51,6 @@ public class FirebaseRemoteConfigPlugin
   private final Map<String, ConfigUpdateListenerRegistration> listenersMap = new HashMap<>();
   private EventChannel eventChannel;
   private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
-
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
@@ -240,7 +237,8 @@ public class FirebaseRemoteConfigPlugin
   private Map<String, Object> parseParameters(Map<String, FirebaseRemoteConfigValue> parameters) {
     Map<String, Object> parsedParameters = new HashMap<>();
     for (String key : parameters.keySet()) {
-      parsedParameters.put(key, createRemoteConfigValueMap(Objects.requireNonNull(parameters.get(key))));
+      parsedParameters.put(
+          key, createRemoteConfigValueMap(Objects.requireNonNull(parameters.get(key))));
     }
     return parsedParameters;
   }
@@ -286,20 +284,21 @@ public class FirebaseRemoteConfigPlugin
     FirebaseRemoteConfig remoteConfig = getRemoteConfig(argumentsMap);
     String appName = (String) Objects.requireNonNull(argumentsMap.get("appName"));
 
-    listenersMap.put(appName, remoteConfig.addOnConfigUpdateListener(
-      new ConfigUpdateListener() {
-        @Override
-        public void onUpdate(@NonNull ConfigUpdate configUpdate) {
-          ArrayList<String> updatedKeys = new ArrayList<>(configUpdate.getUpdatedKeys());
-          mainThreadHandler.post(() -> events.success(updatedKeys));
-        }
+    listenersMap.put(
+        appName,
+        remoteConfig.addOnConfigUpdateListener(
+            new ConfigUpdateListener() {
+              @Override
+              public void onUpdate(@NonNull ConfigUpdate configUpdate) {
+                ArrayList<String> updatedKeys = new ArrayList<>(configUpdate.getUpdatedKeys());
+                mainThreadHandler.post(() -> events.success(updatedKeys));
+              }
 
-        @Override
-        public void onError(@NonNull FirebaseRemoteConfigException error) {
-          events.error("firebase_remote_config", error.getMessage(), null);
-        }
-      }
-    ));
+              @Override
+              public void onError(@NonNull FirebaseRemoteConfigException error) {
+                events.error("firebase_remote_config", error.getMessage(), null);
+              }
+            }));
   }
 
   @SuppressWarnings("unchecked")
