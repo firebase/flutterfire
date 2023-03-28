@@ -131,7 +131,7 @@ void runQueryTests() {
             equals('failed-precondition'),
           );
           expect(
-            (error as FirebaseException).message,
+            error.message,
             'The query requires an index',
           );
         }
@@ -223,7 +223,7 @@ void runQueryTests() {
             equals('failed-precondition'),
           );
           expect(
-            (error as FirebaseException).message,
+            error.message,
             'The query requires an index',
           );
         }
