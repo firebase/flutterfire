@@ -6,15 +6,15 @@ library firebase_remote_config;
 
 import 'dart:async';
 
-import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
-import 'package:flutter/foundation.dart';
+import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 
 export 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart'
     show
         RemoteConfigSettings,
+        RemoteConfigUpdate,
         ValueSource,
         RemoteConfigFetchStatus,
         RemoteConfigValue;

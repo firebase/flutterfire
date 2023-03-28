@@ -9,9 +9,13 @@
 #import "FLTFirebaseRemoteConfigUtils.h"
 
 NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase_remote_config";
+NSString *const kFirebaseRemoteConfigUpdateChannelName =
+    @"plugins.flutter.io/firebase_remote_config_updated";
 
 @interface FLTFirebaseRemoteConfigPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
+@property(nonatomic, strong)
+    NSMutableDictionary<NSString *, FIRConfigUpdateListenerRegistration *> *listenersMap;
 @end
 
 @implementation FLTFirebaseRemoteConfigPlugin
@@ -40,9 +44,14 @@ BOOL _fetchAndActivateRetry;
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:kFirebaseRemoteConfigChannelName
                                   binaryMessenger:[registrar messenger]];
+  FlutterEventChannel *eventChannel =
+      [FlutterEventChannel eventChannelWithName:kFirebaseRemoteConfigUpdateChannelName
+                                binaryMessenger:[registrar messenger]];
+
   FLTFirebaseRemoteConfigPlugin *instance = [FLTFirebaseRemoteConfigPlugin sharedInstance];
 
   [registrar addMethodCallDelegate:instance channel:channel];
+  [eventChannel setStreamHandler:instance];
 
   SEL sel = NSSelectorFromString(@"registerLibrary:withVersion:");
   if ([FIRApp respondsToSelector:sel]) {
@@ -279,6 +288,34 @@ BOOL _fetchAndActivateRetry;
 
 - (NSString *_Nonnull)flutterChannelName {
   return kFirebaseRemoteConfigChannelName;
+}
+
+- (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
+  NSString *appName = (NSString *)arguments;
+  if (!appName) return nil;
+  [self.listenersMap[appName] remove];
+  [self.listenersMap removeObjectForKey:appName];
+  return nil;
+}
+
+- (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
+                                       eventSink:(nonnull FlutterEventSink)events {
+  NSString *appName = (NSString *)arguments[@"appName"];
+  if (!appName) return nil;
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
+  self.listenersMap[appName] =
+      [remoteConfig addOnConfigUpdateListener:^(FIRRemoteConfigUpdate *_Nullable configUpdate,
+                                                NSError *_Nullable error) {
+        if (error) {
+          // Handle the error
+          NSLog(@"Error while receiving remote config update: %@", error.localizedDescription);
+          return;
+        }
+        if (configUpdate) {
+          events([configUpdate.updatedKeys allObjects]);
+        }
+      }];
+  return nil;
 }
 
 @end

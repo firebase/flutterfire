@@ -12,5 +12,6 @@
 #import <Foundation/Foundation.h>
 #import <firebase_core/FLTFirebasePlugin.h>
 
-@interface FLTFirebaseRemoteConfigPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
+@interface FLTFirebaseRemoteConfigPlugin
+    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FlutterStreamHandler>
 @end
