@@ -62,7 +62,7 @@ and make sure that your custom delegate extends `LocalizationsDelegate<FirebaseU
 
 ## Contributing
 
-If you want to add new language, make sure to add a relevant `.arb` file into `lib/i10n`.
+If you want to add a new language, make sure to add a relevant `.arb` file into `lib/i10n`.
 
 - copy `lib/i10n/firebase_ui_en.arb` to `lib/i10n/firebase_ui_<your-language-code>.arb`
 - translate labels
