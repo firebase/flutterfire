@@ -12,6 +12,9 @@
   <a href="https://github.com/invertase/melos">
     <img src="https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square" alt="Maintained with Melos" />
   </a>
+  <a href="https://api.securityscorecards.dev/projects/github.com/firebase/flutterfire">
+    <img src="https://api.securityscorecards.dev/projects/github.com/firebase/flutterfire/badge" alt="OSSF scorecard" />
+  </a>
 </p>
 
 ---
