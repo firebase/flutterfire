@@ -16,7 +16,7 @@ class _FilterQuery extends _FilterObject {
   @override
   Map<String, Object> build() {
     return <String, Object>{
-      'fieldPath': _field.toString(),
+      'fieldPath': _field,
       'op': _operator,
       'value': _value,
     };
