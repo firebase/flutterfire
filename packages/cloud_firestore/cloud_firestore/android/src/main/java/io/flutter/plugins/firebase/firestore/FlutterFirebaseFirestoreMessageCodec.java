@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
   public static final FlutterFirebaseFirestoreMessageCodec INSTANCE =
@@ -366,11 +365,10 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
         default:
           throw new Error("Invalid operator");
       }
-
     }
-      // Deserialize a FilterOperator
-      String op = (String) map.get("op");
-      List<Map<String, Object>> queries = (List<Map<String, Object>>) map.get("queries");
+    // Deserialize a FilterOperator
+    String op = (String) map.get("op");
+    List<Map<String, Object>> queries = (List<Map<String, Object>>) map.get("queries");
 
     // Map queries recursively
     ArrayList<Filter> parsedFilters = new ArrayList<>();
@@ -378,17 +376,13 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       parsedFilters.add(filterFromJson(query));
     }
 
-
     if (op.equals("OR")) {
-        return Filter.or(parsedFilters.toArray(new Filter[0]));
-      } else if (op.equals("AND")) {
+      return Filter.or(parsedFilters.toArray(new Filter[0]));
+    } else if (op.equals("AND")) {
       return Filter.and(parsedFilters.toArray(new Filter[0]));
-      }
-
+    }
 
     throw new Error("Invalid operator");
-
-
   }
 
   private Query readFirestoreQuery(ByteBuffer buffer) {
@@ -403,7 +397,6 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       @SuppressWarnings("unchecked")
       Map<String, Object> parameters = (Map<String, Object>) values.get("parameters");
 
-
       Query query;
       if (isCollectionGroup) {
         query = firestore.collectionGroup(path);
@@ -415,7 +408,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
       boolean isFilterQuery = parameters.containsKey("filters");
       if (isFilterQuery) {
-        Filter filter =  filterFromJson((Map<String, Object>) parameters.get("filters"));
+        Filter filter = filterFromJson((Map<String, Object>) parameters.get("filters"));
         return query.where(filter);
       }
 
