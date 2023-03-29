@@ -63,7 +63,7 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get emailLinkSignInButtonLabel => "כניסה באמצעות קישור קסם";
 
   @override
-  String get emailTakenErrorText => "חשבון עם דוא\"ל זה כבר קיים";
+  String get emailTakenErrorText => """חשבון עם דוא"ל זה כבר קיים""";
 
   @override
   String get enable => "הפעל";
@@ -75,14 +75,15 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get enterSMSCodeText => "הזן קוד SMS";
 
   @override
-  String get findProviderForEmailTitleText => "הזן את הדוא\"ל שלך כדי להמשיך";
+  String get findProviderForEmailTitleText =>
+      """הזן את הדוא"ל שלך כדי להמשיך""";
 
   @override
   String get forgotPasswordButtonLabel => "שכחת את הסיסמה?";
 
   @override
   String get forgotPasswordHintText =>
-      "הזן את הדוא\"ל שלך ואנו נשלח לך קישור לאיפוס הסיסמה";
+      """הזן את הדוא"ל שלך ואנו נשלח לך קישור לאיפוס הסיסמה""";
 
   @override
   String get forgotPasswordViewTitle => "סיסמה נשכחה";
@@ -97,7 +98,7 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get invalidCountryCode => "קוד מדינה לא חוקי";
 
   @override
-  String get isNotAValidEmailErrorText => "ספק דוא\"ל חוקי";
+  String get isNotAValidEmailErrorText => """ספק דוא"ל חוקי""";
 
   @override
   String get latitudeLabel => "קו רוחב";
@@ -140,7 +141,7 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get passwordResetEmailSentText =>
-      "שלחנו לך דוא\"ל עם קישור לאיפוס הסיסמה שלך. אנא בדוק את הדוא\"ל שלך.";
+      """שלחנו לך דוא"ל עם קישור לאיפוס הסיסמה שלך. אנא בדוק את הדוא"ל שלך.""";
 
   @override
   String get phoneInputLabel => "מספר טלפון";
@@ -158,7 +159,7 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
   String get profile => "פרופיל";
 
   @override
-  String get provideEmail => "הזן את כתובת הדוא\"ל והסיסמה שלך";
+  String get provideEmail => """הזן את כתובת הדוא"ל והסיסמה שלך""";
 
   @override
   String get referenceLabel => "הפניה";
@@ -195,7 +196,7 @@ class HeLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get signInWithEmailLinkSentText =>
-      "שלחנו לך דוא\"ל עם קישור קסם. בדוק את הדואר האלקטרוני שלך ולחץ על הקישור כדי להיכנס";
+      """שלחנו לך דוא"ל עם קישור קסם. בדוק את הדואר האלקטרוני שלך ולחץ על הקישור כדי להיכנס""";
 
   @override
   String get signInWithEmailLinkViewTitleText => "כניסה באמצעות קישור קסם";

@@ -129,7 +129,9 @@ Future<void> generateLocalizationsClass({
   out.writeln('  const $className();');
 
   for (var label in labels) {
-    final escapedTranslation = jsonEncode(label.translation);
+    final escapedTranslation = label.translation.contains('"')
+        ? '"""${label.translation}"""'
+        : '"${label.translation}"';
 
     out.writeln();
     out.writeln('  @override');
