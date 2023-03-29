@@ -257,4 +257,13 @@ class Filter {
       ),
     );
   }
+
+  Map<String, Object> toJson() {
+    if (_filterOperator != null) {
+      return _filterOperator!.build();
+    } else if (_filterQuery != null) {
+      return _filterQuery!.build();
+    }
+    throw Exception('Exactly one operator must be specified');
+  }
 }

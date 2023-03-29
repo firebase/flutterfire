@@ -312,8 +312,11 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   /// Asserts that the query [field] is either a String or a [FieldPath].
   void _assertValidFieldType(Object field) {
     assert(
-      field is String || field is FieldPath || field == FieldPath.documentId,
-      'Supported [field] types are [String] and [FieldPath].',
+      field is String ||
+          field is FieldPath ||
+          field == FieldPath.documentId ||
+          field is Filter,
+      'Supported [field] types are [String], [FieldPath], and [Filter].',
     );
   }
 
@@ -604,6 +607,10 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     bool? isNull,
   }) {
     _assertValidFieldType(field);
+
+    if (field is Filter) {
+      return _JsonQuery(firestore, _delegate.whereFilter(field));
+    }
 
     const ListEquality<dynamic> equality = ListEquality<dynamic>();
     final List<List<dynamic>> conditions =
