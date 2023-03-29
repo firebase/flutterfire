@@ -91,7 +91,7 @@
     "description": "Used as a label of the EmailLinkSignInButton.",
     "placeholders": {}
   },
-  "emailTakenErrorText": "חשבון עם דואייל זה כבר קיים",
+  "emailTakenErrorText": "חשבון עם דוא\"ל זה כבר קיים",
   "@emailTakenErrorText": {
     "description": "Used as an error message when the user tries to sign up with an email that is already used.",
     "placeholders": {}
@@ -111,7 +111,7 @@
     "description": "Used as a label of the SMSCodeInput.",
     "placeholders": {}
   },
-  "findProviderForEmailTitleText": "הזן את הדואייל שלך כדי להמשיך",
+  "findProviderForEmailTitleText": "הזן את הדוא\"ל שלך כדי להמשיך",
   "@findProviderForEmailTitleText": {
     "description": "Used as a title of the FindProvidersForEmailView.",
     "placeholders": {}
@@ -121,7 +121,7 @@
     "description": "Used as a label of the ForgotPasswordButton.",
     "placeholders": {}
   },
-  "forgotPasswordHintText": "הזן את הדואייל שלך ואנו נשלח לך קישור לאיפוס הסיסמה",
+  "forgotPasswordHintText": "הזן את הדוא\"ל שלך ואנו נשלח לך קישור לאיפוס הסיסמה",
   "@forgotPasswordHintText": {
     "description": "Used as a hint on a ForgotPasswordView.",
     "placeholders": {}
@@ -150,7 +150,7 @@
     "description": "Used as an error text when provide country code is invalid.",
     "placeholders": {}
   },
-  "isNotAValidEmailErrorText": "ספק דואייל חוקי",
+  "isNotAValidEmailErrorText": "ספק דוא\"ל חוקי",
   "@isNotAValidEmailErrorText": {
     "description": "Used as an error text of the EmailInput if the provided email is not valid.",
     "placeholders": {}
@@ -220,7 +220,7 @@
     "description": "Used as an error text when PasswordInput is empty.",
     "placeholders": {}
   },
-  "passwordResetEmailSentText": "שלחנו לך דואייל עם קישור לאיפוס הסיסמה שלך. אנא בדוק את הדואייל שלך.",
+  "passwordResetEmailSentText": "שלחנו לך דוא\"ל עם קישור לאיפוס הסיסמה שלך. אנא בדוק את הדוא\"ל שלך.",
   "@passwordResetEmailSentText": {
     "description": "Indicates that the password reset email was sent.",
     "placeholders": {}
@@ -250,7 +250,7 @@
     "description": "A title of the ProfileScreen.",
     "placeholders": {}
   },
-  "provideEmail": "הזן את כתובת הדואייל והסיסמה שלך",
+  "provideEmail": "הזן את כתובת הדוא\"ל והסיסמה שלך",
   "@provideEmail": {
     "description": "Used as a title of the EmailSignUpDialog.",
     "placeholders": {}
@@ -314,7 +314,7 @@
     "description": "Used as a label of the OAuthProviderButton for Apple provider.",
     "placeholders": {}
   },
-  "signInWithEmailLinkSentText": "שלחנו לך דואייל עם קישור קסם. בדוק את הדואר האלקטרוני שלך ולחץ על הקישור כדי להיכנס",
+  "signInWithEmailLinkSentText": "שלחנו לך דוא\"ל עם קישור קסם. בדוק את הדואר האלקטרוני שלך ולחץ על הקישור כדי להיכנס",
   "@signInWithEmailLinkSentText": {
     "description": "Indicates that email with a sign in link was sent.",
     "placeholders": {}
