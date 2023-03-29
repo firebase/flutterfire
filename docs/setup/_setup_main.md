@@ -155,7 +155,7 @@ For your convenience, we auto-inject Firebase web JS SDK scripts for the web pla
 1. ignore the script by adding:
 
 ```html
-<!-- Add this to within a <script> tag within your "lib/web/index.html" file in your Flutter project -->
+<!-- Add this property inside a <script> tag within your "lib/web/index.html" file in your Flutter project -->
 <!-- Put in the names of all the plugins you wish to ignore: -->
 window.flutterfire_ignore_scripts = ['analytics', 'firestore'];
 ```
