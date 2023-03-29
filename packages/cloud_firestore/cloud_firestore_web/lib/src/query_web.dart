@@ -66,6 +66,11 @@ class QueryWeb extends QueryPlatform {
   firestore_interop.Query _buildWebQueryWithParameters() {
     firestore_interop.Query query = _webQuery;
 
+    if (parameters['filters'] != null) {
+      final Map<String, Object> filter = parameters['filters']!;
+      return query.filterWith(filter);
+    }
+
     for (final List<dynamic> order in parameters['orderBy']) {
       query = query.orderBy(
           EncodeUtility.valueEncode(order[0]), order[1] ? 'desc' : 'asc');
@@ -240,6 +245,13 @@ class QueryWeb extends QueryPlatform {
   QueryPlatform where(Iterable<List<dynamic>> conditions) {
     return _copyWithParameters(<String, dynamic>{
       'where': conditions,
+    });
+  }
+
+  @override
+  QueryPlatform whereFilter(Filter filter) {
+    return _copyWithParameters(<String, dynamic>{
+      'filters': filter.toJson(),
     });
   }
 

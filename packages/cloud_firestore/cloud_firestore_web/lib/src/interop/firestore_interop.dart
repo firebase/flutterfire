@@ -227,6 +227,16 @@ external QueryConstraintJsImpl where(
   dynamic value,
 );
 
+// Object type is forced to prevent JS interop from ignoring the value
+// when using it with an arbitrary number of arguments
+@JS()
+external Object get or;
+
+// Object type is forced to prevent JS interop from ignoring the value
+// when using it with an arbitrary number of arguments
+@JS()
+external Object get and;
+
 @JS()
 external WriteBatchJsImpl writeBatch(FirestoreJsImpl firestore);
 
