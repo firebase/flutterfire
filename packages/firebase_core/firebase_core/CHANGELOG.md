@@ -1,3 +1,11 @@
+## 2.9.0
+
+ - **FEAT**: bump Firebase Android SDK to 31.4.0 ([#10690](https://github.com/firebase/flutterfire/issues/10690)). ([fcc8e9a6](https://github.com/firebase/flutterfire/commit/fcc8e9a62bc94d5cd4844dcd87c5feefa0821107))
+ - **FEAT**: bump Firebase Android SDK to 31.3.0 ([#10664](https://github.com/firebase/flutterfire/issues/10664)). ([531ce04b](https://github.com/firebase/flutterfire/commit/531ce04bfbddcfe179b0d906ac9728fc29a39f8f))
+ - **FEAT**: bump Firebase Android SDK to 31.2.3 ([#10644](https://github.com/firebase/flutterfire/issues/10644)). ([419ad220](https://github.com/firebase/flutterfire/commit/419ad2205df4f9e8b403df7ebc0b66521b654a43))
+ - **FEAT**: bump Firebase iOS SDK to `10.7.0` ([#10638](https://github.com/firebase/flutterfire/issues/10638)). ([3ba8db57](https://github.com/firebase/flutterfire/commit/3ba8db579a24e244930d9a57fba3c28c3ec5180f))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
 ## 2.8.0
 
  - **FEAT**: bump Firebase iOS SDK 10.6.0 ([#10613](https://github.com/firebase/flutterfire/issues/10613)). ([7a3d0b5d](https://github.com/firebase/flutterfire/commit/7a3d0b5d2074b67470d255da2dd9c37b246a201d))

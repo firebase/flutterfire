@@ -2,6 +2,83 @@
 
 All notable changes for firebase_ui packages
 
+## 2023-03-30
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.2.0`](#firebase_ui_auth---v120)
+ - [`firebase_ui_database` - `v1.1.0`](#firebase_ui_database---v110)
+ - [`firebase_ui_firestore` - `v1.3.0`](#firebase_ui_firestore---v130)
+ - [`firebase_ui_localizations` - `v1.3.0`](#firebase_ui_localizations---v130)
+ - [`firebase_ui_oauth` - `v1.2.0`](#firebase_ui_oauth---v120)
+ - [`firebase_ui_oauth_apple` - `v1.1.0`](#firebase_ui_oauth_apple---v110)
+ - [`firebase_ui_oauth_facebook` - `v1.1.0`](#firebase_ui_oauth_facebook---v110)
+ - [`firebase_ui_oauth_google` - `v1.1.0`](#firebase_ui_oauth_google---v110)
+ - [`firebase_ui_oauth_twitter` - `v1.1.0`](#firebase_ui_oauth_twitter---v110)
+ - [`firebase_ui_shared` - `v1.1.0`](#firebase_ui_shared---v110)
+
+---
+
+#### `firebase_ui_auth` - `v1.2.0`
+
+ - **FIX**(ui_auth): pass breakpoint to LoginScreen ([#10607](https://github.com/firebase/flutterfire/issues/10607)). ([39d77c4d](https://github.com/firebase/flutterfire/commit/39d77c4dcc9e77b9f78db918dc444c0e09fd3228))
+ - **FEAT**(ui_shared): pass platform-specific icons and colors explicitly ([#10655](https://github.com/firebase/flutterfire/issues/10655)). ([60ff1dfe](https://github.com/firebase/flutterfire/commit/60ff1dfe32abe6780fc5aafad63606b00af3f3e2))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+ - **DOCS**(ui_auth): Fixed typo 'EmaiAuthProvider' to 'EmailAuthProvider' ([#10654](https://github.com/firebase/flutterfire/issues/10654)). ([59932020](https://github.com/firebase/flutterfire/commit/599320203ff7c8ea07d9a697c52c995a306f00ea))
+
+#### `firebase_ui_database` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_ui_firestore` - `v1.3.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_ui_localizations` - `v1.3.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth` - `v1.2.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth_apple` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth_facebook` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth_google` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth_twitter` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_shared` - `v1.1.0`
+
+ - **FEAT**(ui_shared): pass platform-specific icons and colors explicitly ([#10655](https://github.com/firebase/flutterfire/issues/10655)). ([60ff1dfe](https://github.com/firebase/flutterfire/commit/60ff1dfe32abe6780fc5aafad63606b00af3f3e2))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+
 ## 2023-03-16
 
 ### Changes

@@ -1,3 +1,7 @@
+## 3.4.0
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
 ## 3.3.25
 
  - **FIX**(firebase_storage_web): fix `Error: Unexpected null value.` when `metadata.timeCreated` or `metadata.updated` ([#10577](https://github.com/firebase/flutterfire/issues/10577)). ([6eb235ba](https://github.com/firebase/flutterfire/commit/6eb235ba1d6805eb142469d6566b665e0e531e77))

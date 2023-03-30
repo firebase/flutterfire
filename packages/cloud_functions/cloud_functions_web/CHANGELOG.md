@@ -1,3 +1,8 @@
+## 4.4.0
+
+ - **FEAT**(functions): add support for 2nd gen functions ([#10545](https://github.com/firebase/flutterfire/issues/10545)). ([204ba39e](https://github.com/firebase/flutterfire/commit/204ba39e34864c7b8be5122fc0a7fcc98d6c8b26))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
 ## 4.3.21
 
  - Update a dependency to the latest release.

@@ -1,3 +1,8 @@
+## 1.2.0
+
+ - **FEAT**: add support for `onConfigUpdated`to listen to config updates ([#10647)](https://github.com/firebase/flutterfire/commit/f702869e6120f10a368c1b32e9f27d615df99641))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
 ## 1.1.24
 
  - Update a dependency to the latest release.

@@ -1,3 +1,8 @@
+## 2.3.0
+
+ - **FEAT**: bump Firebase JS SDK to 9.18.0 ([#10645](https://github.com/firebase/flutterfire/issues/10645)). ([b1e8c919](https://github.com/firebase/flutterfire/commit/b1e8c91923f057537db2e5b2e41cec48804aadeb))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
 ## 2.2.2
 
  - **FIX**(auth,web): fix currentUser being null when using emulator or named instance ([#10565](https://github.com/firebase/flutterfire/issues/10565)). ([11e8644d](https://github.com/firebase/flutterfire/commit/11e8644df402a5abbb0d0c37714879272dec024c))

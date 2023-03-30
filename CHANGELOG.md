@@ -3,6 +3,336 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-03-30
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`firebase_remote_config` - `v4.0.0`](#firebase_remote_config---v400)
+
+Packages with other changes:
+
+ - [`_flutterfire_internals` - `v1.1.0`](#_flutterfire_internals---v110)
+ - [`cloud_firestore` - `v4.5.0`](#cloud_firestore---v450)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.53`](#cloud_firestore_odm---v100-dev53)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.53`](#cloud_firestore_odm_generator---v100-dev53)
+ - [`cloud_firestore_platform_interface` - `v5.12.0`](#cloud_firestore_platform_interface---v5120)
+ - [`cloud_firestore_web` - `v3.4.0`](#cloud_firestore_web---v340)
+ - [`cloud_functions` - `v4.1.0`](#cloud_functions---v410)
+ - [`cloud_functions_platform_interface` - `v5.2.0`](#cloud_functions_platform_interface---v520)
+ - [`cloud_functions_web` - `v4.4.0`](#cloud_functions_web---v440)
+ - [`firebase_analytics` - `v10.2.0`](#firebase_analytics---v1020)
+ - [`firebase_analytics_platform_interface` - `v3.4.0`](#firebase_analytics_platform_interface---v340)
+ - [`firebase_analytics_web` - `v0.5.2`](#firebase_analytics_web---v052)
+ - [`firebase_app_check` - `v0.1.2`](#firebase_app_check---v012)
+ - [`firebase_app_check_platform_interface` - `v0.0.6`](#firebase_app_check_platform_interface---v006)
+ - [`firebase_app_check_web` - `v0.0.8`](#firebase_app_check_web---v008)
+ - [`firebase_app_installations` - `v0.2.2`](#firebase_app_installations---v022)
+ - [`firebase_app_installations_platform_interface` - `v0.1.2`](#firebase_app_installations_platform_interface---v012)
+ - [`firebase_app_installations_web` - `v0.1.2`](#firebase_app_installations_web---v012)
+ - [`firebase_auth` - `v4.4.0`](#firebase_auth---v440)
+ - [`firebase_auth_platform_interface` - `v6.13.0`](#firebase_auth_platform_interface---v6130)
+ - [`firebase_auth_web` - `v5.3.0`](#firebase_auth_web---v530)
+ - [`firebase_core` - `v2.9.0`](#firebase_core---v290)
+ - [`firebase_core_platform_interface` - `v4.6.0`](#firebase_core_platform_interface---v460)
+ - [`firebase_core_web` - `v2.3.0`](#firebase_core_web---v230)
+ - [`firebase_crashlytics` - `v3.1.0`](#firebase_crashlytics---v310)
+ - [`firebase_crashlytics_platform_interface` - `v3.4.0`](#firebase_crashlytics_platform_interface---v340)
+ - [`firebase_database` - `v10.1.0`](#firebase_database---v1010)
+ - [`firebase_database_platform_interface` - `v0.2.3`](#firebase_database_platform_interface---v023)
+ - [`firebase_database_web` - `v0.2.2`](#firebase_database_web---v022)
+ - [`firebase_dynamic_links` - `v5.1.0`](#firebase_dynamic_links---v510)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.4`](#firebase_dynamic_links_platform_interface---v024)
+ - [`firebase_in_app_messaging` - `v0.7.1`](#firebase_in_app_messaging---v071)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.2`](#firebase_in_app_messaging_platform_interface---v022)
+ - [`firebase_messaging` - `v14.4.0`](#firebase_messaging---v1440)
+ - [`firebase_messaging_platform_interface` - `v4.3.0`](#firebase_messaging_platform_interface---v430)
+ - [`firebase_messaging_web` - `v3.3.0`](#firebase_messaging_web---v330)
+ - [`firebase_ml_model_downloader` - `v0.2.1`](#firebase_ml_model_downloader---v021)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.2`](#firebase_ml_model_downloader_platform_interface---v012)
+ - [`firebase_performance` - `v0.9.1`](#firebase_performance---v091)
+ - [`firebase_performance_platform_interface` - `v0.1.2`](#firebase_performance_platform_interface---v012)
+ - [`firebase_performance_web` - `v0.1.2`](#firebase_performance_web---v012)
+ - [`firebase_remote_config` - `v4.0.0`](#firebase_remote_config---v400)
+ - [`firebase_remote_config_platform_interface` - `v1.2.0`](#firebase_remote_config_platform_interface---v120)
+ - [`firebase_remote_config_web` - `v1.2.0`](#firebase_remote_config_web---v120)
+ - [`firebase_storage` - `v11.1.0`](#firebase_storage---v1110)
+ - [`firebase_storage_platform_interface` - `v4.2.0`](#firebase_storage_platform_interface---v420)
+ - [`firebase_storage_web` - `v3.4.0`](#firebase_storage_web---v340)
+ - [`firebase_ui_auth` - `v1.2.0`](#firebase_ui_auth---v120)
+ - [`firebase_ui_database` - `v1.1.0`](#firebase_ui_database---v110)
+ - [`firebase_ui_firestore` - `v1.3.0`](#firebase_ui_firestore---v130)
+ - [`firebase_ui_localizations` - `v1.3.0`](#firebase_ui_localizations---v130)
+ - [`firebase_ui_oauth` - `v1.2.0`](#firebase_ui_oauth---v120)
+ - [`firebase_ui_oauth_apple` - `v1.1.0`](#firebase_ui_oauth_apple---v110)
+ - [`firebase_ui_oauth_facebook` - `v1.1.0`](#firebase_ui_oauth_facebook---v110)
+ - [`firebase_ui_oauth_google` - `v1.1.0`](#firebase_ui_oauth_google---v110)
+ - [`firebase_ui_oauth_twitter` - `v1.1.0`](#firebase_ui_oauth_twitter---v110)
+ - [`firebase_ui_shared` - `v1.1.0`](#firebase_ui_shared---v110)
+
+---
+
+#### `_flutterfire_internals` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `cloud_firestore` - `v4.5.0`
+
+ - **FEAT**(firestore): add the `Filter` class and support for the OR query ([#10678](https://github.com/firebase/flutterfire/issues/10678)). ([ac434044](https://github.com/firebase/flutterfire/commit/ac434044bbfa91d0d8b33ff39736d8eb4062e824))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.53`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.53`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `cloud_firestore_platform_interface` - `v5.12.0`
+
+ - **FEAT**(firestore): add the `Filter` class and support for the OR query ([#10678](https://github.com/firebase/flutterfire/issues/10678)). ([ac434044](https://github.com/firebase/flutterfire/commit/ac434044bbfa91d0d8b33ff39736d8eb4062e824))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **DOCS**(firestore): fix a typo in Stream ([#10646](https://github.com/firebase/flutterfire/issues/10646)). ([3eb11ee2](https://github.com/firebase/flutterfire/commit/3eb11ee28f74f2193e6425eb9a76826f35065f60))
+
+#### `cloud_firestore_web` - `v3.4.0`
+
+ - **FEAT**(firestore): add the `Filter` class and support for the OR query ([#10678](https://github.com/firebase/flutterfire/issues/10678)). ([ac434044](https://github.com/firebase/flutterfire/commit/ac434044bbfa91d0d8b33ff39736d8eb4062e824))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `cloud_functions` - `v4.1.0`
+
+ - **FEAT**(functions): add support for 2nd gen functions ([#10545](https://github.com/firebase/flutterfire/issues/10545)). ([204ba39e](https://github.com/firebase/flutterfire/commit/204ba39e34864c7b8be5122fc0a7fcc98d6c8b26))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **DOCS**(functions): fix an error in the documentation of Cloud Functions ([#10642](https://github.com/firebase/flutterfire/issues/10642)). ([74ee8d47](https://github.com/firebase/flutterfire/commit/74ee8d47d53d6f4a52ec9bb6818cc6598c15e71b))
+
+#### `cloud_functions_platform_interface` - `v5.2.0`
+
+ - **FEAT**(functions): add support for 2nd gen functions ([#10545](https://github.com/firebase/flutterfire/issues/10545)). ([204ba39e](https://github.com/firebase/flutterfire/commit/204ba39e34864c7b8be5122fc0a7fcc98d6c8b26))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `cloud_functions_web` - `v4.4.0`
+
+ - **FEAT**(functions): add support for 2nd gen functions ([#10545](https://github.com/firebase/flutterfire/issues/10545)). ([204ba39e](https://github.com/firebase/flutterfire/commit/204ba39e34864c7b8be5122fc0a7fcc98d6c8b26))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_analytics` - `v10.2.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_analytics_platform_interface` - `v3.4.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_analytics_web` - `v0.5.2`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_app_check` - `v0.1.2`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_app_check_platform_interface` - `v0.0.6`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_app_check_web` - `v0.0.8`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_app_installations` - `v0.2.2`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_app_installations_platform_interface` - `v0.1.2`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_app_installations_web` - `v0.1.2`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_auth` - `v4.4.0`
+
+ - **FEAT**(auth,ios): automatically save the Apple Sign In display name ([#10652](https://github.com/firebase/flutterfire/issues/10652)). ([257f1ffb](https://github.com/firebase/flutterfire/commit/257f1ffbce7abd458df91d8e4b6422d83b5b849f))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_auth_platform_interface` - `v6.13.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_auth_web` - `v5.3.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_core` - `v2.9.0`
+
+ - **FEAT**: bump Firebase Android SDK to 31.4.0 ([#10690](https://github.com/firebase/flutterfire/issues/10690)). ([fcc8e9a6](https://github.com/firebase/flutterfire/commit/fcc8e9a62bc94d5cd4844dcd87c5feefa0821107))
+ - **FEAT**: bump Firebase Android SDK to 31.3.0 ([#10664](https://github.com/firebase/flutterfire/issues/10664)). ([531ce04b](https://github.com/firebase/flutterfire/commit/531ce04bfbddcfe179b0d906ac9728fc29a39f8f))
+ - **FEAT**: bump Firebase Android SDK to 31.2.3 ([#10644](https://github.com/firebase/flutterfire/issues/10644)). ([419ad220](https://github.com/firebase/flutterfire/commit/419ad2205df4f9e8b403df7ebc0b66521b654a43))
+ - **FEAT**: bump Firebase iOS SDK to `10.7.0` ([#10638](https://github.com/firebase/flutterfire/issues/10638)). ([3ba8db57](https://github.com/firebase/flutterfire/commit/3ba8db579a24e244930d9a57fba3c28c3ec5180f))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_core_platform_interface` - `v4.6.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_core_web` - `v2.3.0`
+
+ - **FEAT**: bump Firebase JS SDK to 9.18.0 ([#10645](https://github.com/firebase/flutterfire/issues/10645)). ([b1e8c919](https://github.com/firebase/flutterfire/commit/b1e8c91923f057537db2e5b2e41cec48804aadeb))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_crashlytics` - `v3.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_crashlytics_platform_interface` - `v3.4.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_database` - `v10.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_database_platform_interface` - `v0.2.3`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_database_web` - `v0.2.2`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_dynamic_links` - `v5.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_dynamic_links_platform_interface` - `v0.2.4`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_in_app_messaging` - `v0.7.1`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_in_app_messaging_platform_interface` - `v0.2.2`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_messaging` - `v14.4.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_messaging_platform_interface` - `v4.3.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_messaging_web` - `v3.3.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_ml_model_downloader` - `v0.2.1`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_ml_model_downloader_platform_interface` - `v0.1.2`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_performance` - `v0.9.1`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_performance_platform_interface` - `v0.1.2`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_performance_web` - `v0.1.2`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_remote_config` - `v4.0.0`
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: This PR is a breaking change for Remote Config since we're removing the ChangeNotifier mixin that came with FirebaseRemoteConfig. You should handle the state of the RemoteConfig using your own state provider.
+ - **FEAT**: add support for `onConfigUpdated`to listen to config updates ([#10647)](https://github.com/firebase/flutterfire/commit/f702869e6120f10a368c1b32e9f27d615df99641))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_remote_config_platform_interface` - `v1.2.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_remote_config_web` - `v1.2.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_storage` - `v11.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_storage_platform_interface` - `v4.2.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_storage_web` - `v3.4.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_ui_auth` - `v1.2.0`
+
+ - **FIX**(ui_auth): pass breakpoint to LoginScreen ([#10607](https://github.com/firebase/flutterfire/issues/10607)). ([39d77c4d](https://github.com/firebase/flutterfire/commit/39d77c4dcc9e77b9f78db918dc444c0e09fd3228))
+ - **FEAT**(ui_shared): pass platform-specific icons and colors explicitly ([#10655](https://github.com/firebase/flutterfire/issues/10655)). ([60ff1dfe](https://github.com/firebase/flutterfire/commit/60ff1dfe32abe6780fc5aafad63606b00af3f3e2))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+ - **DOCS**(ui_auth): Fixed typo 'EmaiAuthProvider' to 'EmailAuthProvider' ([#10654](https://github.com/firebase/flutterfire/issues/10654)). ([59932020](https://github.com/firebase/flutterfire/commit/599320203ff7c8ea07d9a697c52c995a306f00ea))
+
+#### `firebase_ui_database` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_ui_firestore` - `v1.3.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_ui_localizations` - `v1.3.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth` - `v1.2.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth_apple` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth_facebook` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth_google` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth_twitter` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_shared` - `v1.1.0`
+
+ - **FEAT**(ui_shared): pass platform-specific icons and colors explicitly ([#10655](https://github.com/firebase/flutterfire/issues/10655)). ([60ff1dfe](https://github.com/firebase/flutterfire/commit/60ff1dfe32abe6780fc5aafad63606b00af3f3e2))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+
 ## 2023-03-16
 
 ### Changes
