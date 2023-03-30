@@ -100,7 +100,7 @@ class QueryWeb extends QueryPlatform {
     }
 
     if (parameters['filters'] != null) {
-      final Map<String, Object> filter = parameters['filters']!;
+      final Map<String, Object?> filter = parameters['filters']!;
       return query.filterWith(filter);
     }
 

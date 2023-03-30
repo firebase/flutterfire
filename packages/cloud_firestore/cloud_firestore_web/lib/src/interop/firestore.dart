@@ -499,7 +499,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
     return callMethod(method, 'apply', [null, jsify(args)]);
   }
 
-  Object _parseFilterWith(Map<String, Object> map) {
+  Object _parseFilterWith(Map<String, Object?> map) {
     if (map['fieldPath'] != null) {
       dynamic fieldPath = EncodeUtility.valueEncode(map['fieldPath']);
       String opStr = map['op']! as String;
@@ -512,7 +512,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
     List<dynamic> filters = map['queries']! as List<dynamic>;
     List<dynamic> jsFilters = [];
 
-    for (final Map<String, Object> filter in filters) {
+    for (final Map<String, Object?> filter in filters) {
       jsFilters.add(_parseFilterWith(filter));
     }
 
@@ -525,7 +525,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
     throw Exception('InvalidOperator');
   }
 
-  Query filterWith(Map<String, Object> map) {
+  Query filterWith(Map<String, Object?> map) {
     return Query.fromJsObject(firestore_interop.query(jsObject,
         _parseFilterWith(map) as firestore_interop.QueryConstraintJsImpl));
   }
