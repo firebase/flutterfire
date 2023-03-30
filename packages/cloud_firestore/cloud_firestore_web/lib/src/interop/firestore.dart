@@ -509,7 +509,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
     }
 
     String opStr = map['op']! as String;
-    List<dynamic> filters = map['queries'] as List<dynamic>;
+    List<dynamic> filters = map['queries']! as List<dynamic>;
     List<dynamic> jsFilters = [];
 
     for (final Map<String, Object> filter in filters) {

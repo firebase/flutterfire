@@ -66,11 +66,6 @@ class QueryWeb extends QueryPlatform {
   firestore_interop.Query _buildWebQueryWithParameters() {
     firestore_interop.Query query = _webQuery;
 
-    if (parameters['filters'] != null) {
-      final Map<String, Object> filter = parameters['filters']!;
-      return query.filterWith(filter);
-    }
-
     for (final List<dynamic> order in parameters['orderBy']) {
       query = query.orderBy(
           EncodeUtility.valueEncode(order[0]), order[1] ? 'desc' : 'asc');
@@ -102,6 +97,11 @@ class QueryWeb extends QueryPlatform {
 
     if (parameters['limitToLast'] != null) {
       query = query.limitToLast(parameters['limitToLast']);
+    }
+
+    if (parameters['filters'] != null) {
+      final Map<String, Object> filter = parameters['filters']!;
+      return query.filterWith(filter);
     }
 
     for (final List<dynamic> condition in parameters['where']) {

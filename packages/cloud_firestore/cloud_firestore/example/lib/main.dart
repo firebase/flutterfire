@@ -199,9 +199,10 @@ class _FilmListState extends State<FilmList> {
             Filter('genre', arrayContainsAny: ['sci-fi']),
           ),
         )
+        .orderBy('title', descending: true)
         .get();
 
-    print(results.docs.map((e) => e.data()));
+    print(results.docs.map((e) => e.data()['title']));
     // final movies = await moviesRef.get(
     //   const GetOptions(
     //     serverTimestampBehavior: ServerTimestampBehavior.previous,

@@ -192,7 +192,7 @@
     if (isFilterQuery) {
       FIRFilter *filter =
           [self filterFromJson:(NSDictionary<NSString *, id> *)parameters[@"filters"]];
-      return [query queryWhereFilter:filter];
+      query = [query queryWhereFilter:filter];
     }
 
     // Filters

@@ -409,7 +409,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       boolean isFilterQuery = parameters.containsKey("filters");
       if (isFilterQuery) {
         Filter filter = filterFromJson((Map<String, Object>) parameters.get("filters"));
-        return query.where(filter);
+        query = query.where(filter);
       }
 
       // "where" filters
