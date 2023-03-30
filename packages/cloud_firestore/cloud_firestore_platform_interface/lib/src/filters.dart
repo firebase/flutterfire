@@ -42,6 +42,8 @@ class _FilterOperator extends _FilterObject {
   }
 }
 
+/// A [Filter] represents a restriction on one or more field values and can be used to refine
+/// the results of a [Query].
 class Filter {
   late final _FilterQuery? _filterQuery;
   late final _FilterOperator? _filterOperator;
@@ -53,18 +55,44 @@ class Filter {
           'Exactly one operator must be specified',
         );
 
+  /// A [Filter] represents a restriction on one or more field values and can be used to refine
+  /// the results of a [Query].
+  ///
+  /// Only one operator can be specified at a time.
   Filter(
+    /// The field or [FieldPath] to filter on.
     Object field, {
+    /// Creates a new filter for checking that the given field is equal to the given value.
     Object? isEqualTo,
+
+    /// Creates a new filter for checking that the given field is not equal to the given value.
     Object? isNotEqualTo,
+
+    /// Creates a new filter for checking that the given field is less than the given value.
     Object? isLessThan,
+
+    /// Creates a new filter for checking that the given field is less than or equal to the given value.
     Object? isLessThanOrEqualTo,
+
+    /// Creates a new filter for checking that the given field is greater than the given value.
     Object? isGreaterThan,
+
+    /// Creates a new filter for checking that the given field is greater than or equal to the given value.
     Object? isGreaterThanOrEqualTo,
+
+    /// Creates a new filter for checking that the given array field contains the given value.
     Object? arrayContains,
+
+    /// Creates a new filter for checking that the given array field contains any of the given values.
     Iterable<Object?>? arrayContainsAny,
+
+    /// Creates a new filter for checking that the given field equals any of the given values.
     Iterable<Object?>? whereIn,
+
+    /// Creates a new filter for checking that the given field does not equal any of the given values.
     Iterable<Object?>? whereNotIn,
+
+    /// Creates a new filter for checking that the given field is null.
     bool? isNull,
   })  : assert(
           () {
@@ -188,11 +216,15 @@ class Filter {
     throw Exception('Exactly one operator must be specified');
   }
 
-  // Number of OR operation is limited on the server side
-  // We let here 10 as a limit
+  /// Creates a new filter that is a disjunction of the given filters.
+  ///
+  /// A disjunction filter includes a document if it satisfies any of the given filters.
   static Filter or(
     Filter filter1,
-    Filter filter2, [
+    Filter filter2,
+    // Number of OR operation is limited on the server side
+    // We let here 10 as a limit
+    [
     Filter? filter3,
     Filter? filter4,
     Filter? filter5,
@@ -219,6 +251,9 @@ class Filter {
     );
   }
 
+  /// Creates a new filter that is a conjunction of the given filters.
+  ///
+  /// A conjunction filter includes document if it satisfies all of the given filters.
   static Filter and(
     Filter filter1,
     Filter filter2, [
@@ -274,6 +309,7 @@ class Filter {
     );
   }
 
+  /// Returns a map representation of this filter.
   Map<String, Object?> toJson() {
     if (_filterOperator != null) {
       return _filterOperator!.build();

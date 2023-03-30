@@ -581,19 +581,20 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   }
 
   /// Creates and returns a new [Query] with additional filter on specified
-  /// [field]. [field] refers to a field in a document.
+  /// [fieldOrFilter]. [fieldOrFilter] refers to a field in a document or a [Filter] object.
   ///
-  /// The [field] may be a [String] consisting of a single field name
+  /// The [fieldOrFilter] may be a [String] consisting of a single field name
   /// (referring to a top level field in the document),
-  /// or a series of field names separated by dots '.'
-  /// (referring to a nested field in the document).
+  /// a series of field names separated by dots '.'
+  /// (referring to a nested field in the document),
+  /// or a [Filter] that can be used to combine multiple conditions.
   /// Alternatively, the [field] can also be a [FieldPath].
   ///
   /// Only documents satisfying provided condition are included in the result
   /// set.
   @override
   Query<Map<String, dynamic>> where(
-    Object field, {
+    Object fieldOrFilter, {
     Object? isEqualTo,
     Object? isNotEqualTo,
     Object? isLessThan,
@@ -606,11 +607,13 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     Iterable<Object?>? whereNotIn,
     bool? isNull,
   }) {
-    _assertValidFieldType(field);
+    _assertValidFieldType(fieldOrFilter);
 
-    if (field is Filter) {
-      return _JsonQuery(firestore, _delegate.whereFilter(field));
+    if (fieldOrFilter is Filter) {
+      return _JsonQuery(firestore, _delegate.whereFilter(fieldOrFilter));
     }
+
+    final field = fieldOrFilter;
 
     const ListEquality<dynamic> equality = ListEquality<dynamic>();
     final List<List<dynamic>> conditions =
