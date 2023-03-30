@@ -191,30 +191,18 @@ class _FilmListState extends State<FilmList> {
   }
 
   Future<void> _resetLikes() async {
-    final results = await FirebaseFirestore.instance
-        .collection('firestore-example-app')
-        .where(
-          Filter.or(
-            Filter('genre', arrayContainsAny: ['fantasy']),
-            Filter('genre', arrayContainsAny: ['sci-fi']),
-          ),
-        )
-        .orderBy('title', descending: true)
-        .get();
+    final movies = await moviesRef.get(
+      const GetOptions(
+        serverTimestampBehavior: ServerTimestampBehavior.previous,
+      ),
+    );
 
-    print(results.docs.map((e) => e.data()['title']));
-    // final movies = await moviesRef.get(
-    //   const GetOptions(
-    //     serverTimestampBehavior: ServerTimestampBehavior.previous,
-    //   ),
-    // );
+    WriteBatch batch = FirebaseFirestore.instance.batch();
 
-    // WriteBatch batch = FirebaseFirestore.instance.batch();
-
-    // for (final movie in movies.docs) {
-    //   batch.update(movie.reference, {'likes': 0});
-    // }
-    // await batch.commit();
+    for (final movie in movies.docs) {
+      batch.update(movie.reference, {'likes': 0});
+    }
+    await batch.commit();
   }
 }
 
