@@ -119,6 +119,59 @@
   return settings;
 }
 
+- (FIRFilter *)filterFromJson:(NSDictionary<NSString *, id> *)map {
+  if (map[@"fieldPath"]) {
+    // Deserialize a FilterQuery
+    NSString *op = map[@"op"];
+    FIRFieldPath *fieldPath = map[@"fieldPath"];
+    id value = map[@"value"];
+
+    // All the operators from Firebase
+    if ([op isEqualToString:@"=="]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath isEqualTo:value];
+    } else if ([op isEqualToString:@"!="]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath isNotEqualTo:value];
+    } else if ([op isEqualToString:@"<"]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath isLessThan:value];
+    } else if ([op isEqualToString:@"<="]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath isLessThanOrEqualTo:value];
+    } else if ([op isEqualToString:@">"]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath isGreaterThan:value];
+    } else if ([op isEqualToString:@">="]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath isGreaterThanOrEqualTo:value];
+    } else if ([op isEqualToString:@"array-contains"]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath arrayContains:value];
+    } else if ([op isEqualToString:@"array-contains-any"]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath arrayContainsAny:value];
+    } else if ([op isEqualToString:@"in"]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath in:value];
+    } else if ([op isEqualToString:@"not-in"]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath notIn:value];
+    } else {
+      @throw [NSException exceptionWithName:@"InvalidOperator"
+                                     reason:@"Invalid operator"
+                                   userInfo:nil];
+    }
+  }
+  // Deserialize a FilterOperator
+  NSString *op = map[@"op"];
+  NSArray<NSDictionary<NSString *, id> *> *queries = map[@"queries"];
+
+  // Map queries recursively
+  NSMutableArray<FIRFilter *> *parsedFilters = [NSMutableArray array];
+  for (NSDictionary<NSString *, id> *query in queries) {
+    [parsedFilters addObject:[self filterFromJson:query]];
+  }
+
+  if ([op isEqualToString:@"OR"]) {
+    return [FIRFilter orFilterWithFilters:parsedFilters];
+  } else if ([op isEqualToString:@"AND"]) {
+    return [FIRFilter andFilterWithFilters:parsedFilters];
+  }
+
+  @throw [NSException exceptionWithName:@"InvalidOperator" reason:@"Invalid operator" userInfo:nil];
+}
+
 - (FIRQuery *)FIRQuery {
   @try {
     FIRQuery *query;
@@ -133,6 +186,13 @@
       query = [firestore collectionGroupWithID:values[@"path"]];
     } else {
       query = (FIRQuery *)[firestore collectionWithPath:values[@"path"]];
+    }
+
+    BOOL isFilterQuery = [parameters objectForKey:@"filters"] != nil;
+    if (isFilterQuery) {
+      FIRFilter *filter =
+          [self filterFromJson:(NSDictionary<NSString *, id> *)parameters[@"filters"]];
+      query = [query queryWhereFilter:filter];
     }
 
     // Filters

@@ -47,10 +47,10 @@ extension on Query<Movie> {
   Query<Movie> queryBy(MovieQuery query) {
     switch (query) {
       case MovieQuery.fantasy:
-        return where('genre', arrayContainsAny: ['Fantasy']);
+        return where('genre', arrayContainsAny: ['fantasy']);
 
       case MovieQuery.sciFi:
-        return where('genre', arrayContainsAny: ['Sci-Fi']);
+        return where('genre', arrayContainsAny: ['sci-fi']);
 
       case MovieQuery.likesAsc:
       case MovieQuery.likesDesc:
@@ -139,11 +139,11 @@ class _FilmListState extends State<FilmList> {
                 ),
                 const PopupMenuItem(
                   value: MovieQuery.fantasy,
-                  child: Text('Filter genre Fantasy'),
+                  child: Text('Filter genre fantasy'),
                 ),
                 const PopupMenuItem(
                   value: MovieQuery.sciFi,
-                  child: Text('Filter genre Sci-Fi'),
+                  child: Text('Filter genre sci-fi'),
                 ),
               ];
             },
