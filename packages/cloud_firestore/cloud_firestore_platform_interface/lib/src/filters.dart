@@ -1,7 +1,7 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 class _FilterObject {
-  Map<String, Object> build() {
+  Map<String, Object?> build() {
     throw UnimplementedError();
   }
 }
@@ -11,11 +11,11 @@ class _FilterQuery extends _FilterObject {
 
   final FieldPath _field;
   final String _operator;
-  final Object _value;
+  final Object? _value;
 
   @override
-  Map<String, Object> build() {
-    return <String, Object>{
+  Map<String, Object?> build() {
+    return <String, Object?>{
       'fieldPath': _field,
       'op': _operator,
       'value': _value,
@@ -141,11 +141,17 @@ class Filter {
     if (arrayContainsAny != null) return 'array-contains-any';
     if (whereIn != null) return 'in';
     if (whereNotIn != null) return 'not-in';
-    if (isNull != null) return '==';
+    if (isNull != null) {
+      if (isNull) {
+        return '==';
+      } else {
+        return '!=';
+      }
+    }
     throw Exception('Exactly one operator must be specified');
   }
 
-  Object _getValue(
+  Object? _getValue(
     Object? isEqualTo,
     Object? isNotEqualTo,
     Object? isLessThan,
@@ -168,7 +174,13 @@ class Filter {
     if (arrayContainsAny != null) return arrayContainsAny;
     if (whereIn != null) return whereIn;
     if (whereNotIn != null) return whereNotIn;
-    if (isNull != null) return isNull;
+    if (isNull != null) {
+      if (isNull == true) {
+        return null;
+      } else {
+        return null;
+      }
+    }
     throw Exception('Exactly one operator must be specified');
   }
 
@@ -258,7 +270,7 @@ class Filter {
     );
   }
 
-  Map<String, Object> toJson() {
+  Map<String, Object?> toJson() {
     if (_filterOperator != null) {
       return _filterOperator!.build();
     } else if (_filterQuery != null) {
