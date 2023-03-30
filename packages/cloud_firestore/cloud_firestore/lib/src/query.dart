@@ -610,6 +610,20 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     _assertValidFieldType(fieldOrFilter);
 
     if (fieldOrFilter is Filter) {
+      assert(
+        isEqualTo == null &&
+            isNotEqualTo == null &&
+            isLessThan == null &&
+            isLessThanOrEqualTo == null &&
+            isGreaterThan == null &&
+            isGreaterThanOrEqualTo == null &&
+            arrayContains == null &&
+            arrayContainsAny == null &&
+            whereIn == null &&
+            whereNotIn == null &&
+            isNull == null,
+        'Conditions cannot be used with a Filter. Use a single Filter instead, or use a String or a FieldPath as the first parameter.',
+      );
       return _JsonQuery(firestore, _delegate.whereFilter(fieldOrFilter));
     }
 
