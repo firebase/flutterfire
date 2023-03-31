@@ -99,6 +99,7 @@ class UniversalButton extends PlatformWidget {
     } else {
       button = CupertinoButton.filled(
         onPressed: onPressed,
+        padding: EdgeInsets.zero,
         child: child,
       );
     }
