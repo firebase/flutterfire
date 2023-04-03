@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -22,8 +21,10 @@ class FieldPath {
   /// Creates a new [FieldPath].
   FieldPath(this.components)
       : assert(components.isNotEmpty),
-        assert(components.where((component) => component.isEmpty).isEmpty,
-            'Expected all FieldPath components to be non-null or non-empty strings.');
+        assert(
+          components.where((component) => component.isEmpty).isEmpty,
+          'Expected all FieldPath components to be non-null or non-empty strings.',
+        );
 
   /// Returns a special sentinel `FieldPath` to refer to the ID of a document.
   ///

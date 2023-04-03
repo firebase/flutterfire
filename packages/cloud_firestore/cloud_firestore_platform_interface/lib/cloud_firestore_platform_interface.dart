@@ -12,6 +12,7 @@ export 'package:collection/collection.dart' show ListEquality;
 export 'src/aggregate_source.dart';
 export 'src/blob.dart';
 export 'src/field_path.dart';
+export 'src/filters.dart';
 export 'src/geo_point.dart';
 export 'src/get_options.dart';
 export 'src/load_bundle_task_state.dart';

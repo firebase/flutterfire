@@ -1759,6 +1759,600 @@ void runQueryTests() {
       });
     });
 
+    group('Query.where() with Filter class', () {
+      testWidgets('returns documents with OR filter for arrayContainsAny',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-array-contains-any');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'genre': ['fantasy', 'action'],
+            'title': 'Book A',
+          }),
+          collection.doc('doc2').set({
+            'genre': ['sci-fi', 'thriller'],
+            'title': 'Book B',
+          }),
+          collection.doc('doc3').set({
+            'genre': ['mystery', 'thriller'],
+            'title': 'Book C',
+          }),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter.or(
+                Filter('genre', arrayContainsAny: ['fantasy']),
+                Filter('genre', arrayContainsAny: ['sci-fi']),
+              ),
+            )
+            .orderBy('title', descending: true)
+            .get();
+
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].data()['title'], equals('Book B'));
+        expect(results.docs[1].data()['title'], equals('Book A'));
+      });
+
+      testWidgets('returns documents with AND filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-and');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'genre': ['fantasy', 'action'],
+            'rating': 4.5,
+          }),
+          collection.doc('doc2').set({
+            'genre': ['sci-fi', 'thriller'],
+            'rating': 3.8,
+          }),
+          collection.doc('doc3').set({
+            'genre': ['sci-fi', 'action'],
+            'rating': 4.2,
+          }),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter.and(
+                Filter('genre', arrayContains: 'sci-fi'),
+                Filter('rating', isGreaterThanOrEqualTo: 4.0),
+              ),
+            )
+            .orderBy('rating', descending: true)
+            .get();
+
+        expect(results.docs.length, equals(1));
+        expect(results.docs[0].id, equals('doc3'));
+        expect(results.docs[0].data()['rating'], equals(4.2));
+        expect(results.docs[0].data()['genre'], equals(['sci-fi', 'action']));
+      });
+
+      testWidgets('returns documents with nested OR and AND filters',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-nested');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'genre': ['fantasy', 'action'],
+            'rating': 4.5,
+          }),
+          collection.doc('doc2').set({
+            'genre': ['sci-fi', 'thriller'],
+            'rating': 3.8,
+          }),
+          collection.doc('doc3').set({
+            'genre': ['sci-fi', 'action'],
+            'rating': 4.2,
+          }),
+          collection.doc('doc4').set({
+            'genre': ['mystery', 'action'],
+            'rating': 4.7,
+          }),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter.or(
+                Filter.and(
+                  Filter('genre', arrayContains: 'sci-fi'),
+                  Filter('rating', isGreaterThanOrEqualTo: 4.0),
+                ),
+                Filter.and(
+                  Filter('genre', arrayContains: 'mystery'),
+                  Filter('rating', isGreaterThanOrEqualTo: 4.5),
+                ),
+              ),
+            )
+            .orderBy('rating', descending: true)
+            .get();
+
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].id, equals('doc4'));
+        expect(results.docs[0].data()['rating'], equals(4.7));
+        expect(
+          results.docs[0].data()['genre'],
+          equals(['mystery', 'action']),
+        );
+        expect(results.docs[1].id, equals('doc3'));
+        expect(results.docs[1].data()['rating'], equals(4.2));
+        expect(results.docs[1].data()['genre'], equals(['sci-fi', 'action']));
+      });
+
+      testWidgets('isEqualTo filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-isequalto');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 5}),
+          collection.doc('doc2').set({'value': 5}),
+          collection.doc('doc3').set({'value': 7}),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter('value', isEqualTo: 5),
+            )
+            .get();
+
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].id, equals('doc1'));
+        expect(results.docs[1].id, equals('doc2'));
+      });
+
+      testWidgets('isNotEqualTo filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-isnotequalto');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 5}),
+          collection.doc('doc2').set({'value': 5}),
+          collection.doc('doc3').set({'value': 7}),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter('value', isNotEqualTo: 5),
+            )
+            .get();
+
+        expect(results.docs.length, equals(1));
+        expect(results.docs[0].id, equals('doc3'));
+      });
+
+      testWidgets('isLessThan filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-islessthan');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 5}),
+          collection.doc('doc2').set({'value': 7}),
+          collection.doc('doc3').set({'value': 9}),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter('value', isLessThan: 7),
+            )
+            .get();
+
+        expect(results.docs.length, equals(1));
+        expect(results.docs[0].id, equals('doc1'));
+      });
+
+      testWidgets('isLessThanOrEqualTo filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-islessthanequalto');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 5}),
+          collection.doc('doc2').set({'value': 7}),
+          collection.doc('doc3').set({'value': 9}),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter('value', isLessThanOrEqualTo: 7),
+            )
+            .get();
+
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].id, equals('doc1'));
+        expect(results.docs[1].id, equals('doc2'));
+      });
+
+      testWidgets('isGreaterThan filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-isgreaterthan');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 5}),
+          collection.doc('doc2').set({'value': 7}),
+          collection.doc('doc3').set({'value': 9}),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter('value', isGreaterThan: 5),
+            )
+            .get();
+
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].id, equals('doc2'));
+        expect(results.docs[1].id, equals('doc3'));
+      });
+
+      testWidgets('isGreaterThanOrEqualTo filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-isgreaterthanequalto');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 5}),
+          collection.doc('doc2').set({'value': 7}),
+          collection.doc('doc3').set({'value': 9}),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter('value', isGreaterThanOrEqualTo: 7),
+            )
+            .get();
+
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].id, equals('doc2'));
+        expect(results.docs[1].id, equals('doc3'));
+      });
+
+      testWidgets('arrayContains filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-arraycontains');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'value': [1, 2, 3]
+          }),
+          collection.doc('doc2').set({
+            'value': [1, 4, 5]
+          }),
+          collection.doc('doc3').set({
+            'value': [6, 7, 8]
+          }),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter('value', arrayContains: 1),
+            )
+            .get();
+
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].id, equals('doc1'));
+        expect(results.docs[1].id, equals('doc2'));
+      });
+
+      testWidgets('arrayContainsAny filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-arraycontainsany');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'value': [1, 2, 3]
+          }),
+          collection.doc('doc2').set({
+            'value': [1, 4, 5]
+          }),
+          collection.doc('doc3').set({
+            'value': [6, 7, 8]
+          }),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter('value', arrayContainsAny: [1, 7]),
+            )
+            .get();
+
+        expect(results.docs.length, equals(3));
+      });
+
+      testWidgets('whereIn filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-wherein');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 'A'}),
+          collection.doc('doc2').set({'value': 'B'}),
+          collection.doc('doc3').set({'value': 'C'}),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter('value', whereIn: ['A', 'C']),
+            )
+            .get();
+
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].id, equals('doc1'));
+        expect(results.docs[1].id, equals('doc3'));
+      });
+
+      testWidgets('whereNotIn filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-wherenotin');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 'A'}),
+          collection.doc('doc2').set({'value': 'B'}),
+          collection.doc('doc3').set({'value': 'C'}),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter('value', whereNotIn: ['A', 'C']),
+            )
+            .get();
+
+        expect(results.docs.length, equals(1));
+        expect(results.docs[0].id, equals('doc2'));
+      });
+
+      testWidgets('isNull filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-isnull');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 'A'}),
+          collection.doc('doc2').set({'value': null}),
+          collection.doc('doc3').set({'value': 'C'}),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter('value', isNull: true),
+            )
+            .get();
+
+        expect(results.docs.length, equals(1));
+        expect(results.docs[0].id, equals('doc2'));
+      });
+
+      testWidgets('endAt filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('endat-filter');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 1, 'title': 'A'}),
+          collection.doc('doc2').set({'value': 2, 'title': 'B'}),
+          collection.doc('doc3').set({'value': 3, 'title': 'C'}),
+          collection.doc('doc4').set({'value': 4, 'title': 'D'}),
+          collection.doc('doc5').set({'value': 5, 'title': 'E'}),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> results;
+
+        results = await collection
+            .where(Filter('value', isGreaterThan: 1))
+            .orderBy('value', descending: false)
+            .endAt([3]).get();
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].data()['title'], equals('B'));
+        expect(results.docs[1].data()['title'], equals('C'));
+      });
+
+      testWidgets('endBefore filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('endbefore-filter');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 1, 'title': 'A'}),
+          collection.doc('doc2').set({'value': 2, 'title': 'B'}),
+          collection.doc('doc3').set({'value': 3, 'title': 'C'}),
+          collection.doc('doc4').set({'value': 4, 'title': 'D'}),
+          collection.doc('doc5').set({'value': 5, 'title': 'E'}),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> results;
+
+        // endBefore
+        results = await collection
+            .where(Filter('value', isGreaterThan: 1))
+            .orderBy('value', descending: false)
+            .endBefore([4]).get();
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].data()['title'], equals('B'));
+        expect(results.docs[1].data()['title'], equals('C'));
+      });
+
+      testWidgets('endBeforeDocument filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('endbeforedocument-filter');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 1, 'title': 'A'}),
+          collection.doc('doc2').set({'value': 2, 'title': 'B'}),
+          collection.doc('doc3').set({'value': 3, 'title': 'C'}),
+          collection.doc('doc4').set({'value': 4, 'title': 'D'}),
+          collection.doc('doc5').set({'value': 5, 'title': 'E'}),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> results;
+
+        final documentSnapshot = await collection.doc('doc4').get();
+
+        // endBeforeDocument
+        results = await collection
+            .where(Filter('value', isGreaterThan: 1))
+            .orderBy('value', descending: false)
+            .endBeforeDocument(documentSnapshot)
+            .get();
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].data()['title'], equals('B'));
+        expect(results.docs[1].data()['title'], equals('C'));
+      });
+
+      testWidgets('limit filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('limit-filter');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 1, 'title': 'A'}),
+          collection.doc('doc2').set({'value': 2, 'title': 'B'}),
+          collection.doc('doc3').set({'value': 3, 'title': 'C'}),
+          collection.doc('doc4').set({'value': 4, 'title': 'D'}),
+          collection.doc('doc5').set({'value': 5, 'title': 'E'}),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> results;
+
+        // limit
+        results = await collection
+            .where(Filter('value', isGreaterThan: 1))
+            .orderBy('value', descending: false)
+            .limit(2)
+            .get();
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].data()['title'], equals('B'));
+        expect(results.docs[1].data()['title'], equals('C'));
+      });
+
+      testWidgets('limitToLast filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('limittolast-filter');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 1, 'title': 'A'}),
+          collection.doc('doc2').set({'value': 2, 'title': 'B'}),
+          collection.doc('doc3').set({'value': 3, 'title': 'C'}),
+          collection.doc('doc4').set({'value': 4, 'title': 'D'}),
+          collection.doc('doc5').set({'value': 5, 'title': 'E'}),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> results;
+
+        // limitToLast
+        results = await collection
+            .where(Filter('value', isGreaterThan: 1))
+            .orderBy('value', descending: false)
+            .limitToLast(2)
+            .get();
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].data()['title'], equals('D'));
+        expect(results.docs[1].data()['title'], equals('E'));
+      });
+
+      testWidgets('orderBy filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('orderby-filter');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 1, 'title': 'A'}),
+          collection.doc('doc2').set({'value': 2, 'title': 'B'}),
+          collection.doc('doc3').set({'value': 3, 'title': 'C'}),
+          collection.doc('doc4').set({'value': 4, 'title': 'D'}),
+          collection.doc('doc5').set({'value': 5, 'title': 'E'}),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> results;
+
+        // orderBy
+        results = await collection
+            .where(Filter('value', isGreaterThan: 1))
+            .orderBy('value', descending: true)
+            .get();
+        expect(results.docs.length, equals(4));
+        expect(results.docs[0].data()['title'], equals('E'));
+        expect(results.docs[1].data()['title'], equals('D'));
+        expect(results.docs[2].data()['title'], equals('C'));
+        expect(results.docs[3].data()['title'], equals('B'));
+      });
+
+      testWidgets('startAfter filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startafter-filter');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 1, 'title': 'A'}),
+          collection.doc('doc2').set({'value': 2, 'title': 'B'}),
+          collection.doc('doc3').set({'value': 3, 'title': 'C'}),
+          collection.doc('doc4').set({'value': 4, 'title': 'D'}),
+          collection.doc('doc5').set({'value': 5, 'title': 'E'}),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> results;
+
+        // startAfter
+        results = await collection
+            .where(Filter('value', isGreaterThan: 3))
+            .orderBy('value', descending: false)
+            .startAfter([2]).get();
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].data()['title'], equals('D'));
+        expect(results.docs[1].data()['title'], equals('E'));
+      });
+
+      testWidgets('startAfterDocument filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startafterdocument-filter');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 1, 'title': 'A'}),
+          collection.doc('doc2').set({'value': 2, 'title': 'B'}),
+          collection.doc('doc3').set({'value': 3, 'title': 'C'}),
+          collection.doc('doc4').set({'value': 4, 'title': 'D'}),
+          collection.doc('doc5').set({'value': 5, 'title': 'E'}),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> results;
+
+        final documentSnapshot = await collection.doc('doc2').get();
+
+// startAfterDocument
+        results = await collection
+            .where(Filter('value', isGreaterThan: 1))
+            .orderBy('value', descending: false)
+            .startAfterDocument(documentSnapshot)
+            .get();
+        expect(results.docs.length, equals(3));
+        expect(results.docs[0].data()['title'], equals('C'));
+        expect(results.docs[1].data()['title'], equals('D'));
+        expect(results.docs[2].data()['title'], equals('E'));
+      });
+
+      testWidgets('startAt filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startat-filter');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 1, 'title': 'A'}),
+          collection.doc('doc2').set({'value': 2, 'title': 'B'}),
+          collection.doc('doc3').set({'value': 3, 'title': 'C'}),
+          collection.doc('doc4').set({'value': 4, 'title': 'D'}),
+          collection.doc('doc5').set({'value': 5, 'title': 'E'}),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> results;
+
+// startAt
+        results = await collection
+            .where(Filter('value', isGreaterThan: 1))
+            .orderBy('value', descending: false)
+            .startAt([2]).get();
+        expect(results.docs.length, equals(4));
+        expect(results.docs[0].data()['title'], equals('B'));
+        expect(results.docs[1].data()['title'], equals('C'));
+        expect(results.docs[2].data()['title'], equals('D'));
+        expect(results.docs[3].data()['title'], equals('E'));
+      });
+
+      testWidgets('startAtDocument filter', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startatdocument-filter');
+        await Future.wait([
+          collection.doc('doc1').set({'value': 1, 'title': 'A'}),
+          collection.doc('doc2').set({'value': 2, 'title': 'B'}),
+          collection.doc('doc3').set({'value': 3, 'title': 'C'}),
+          collection.doc('doc4').set({'value': 4, 'title': 'D'}),
+          collection.doc('doc5').set({'value': 5, 'title': 'E'}),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> results;
+
+        final documentSnapshot = await collection.doc('doc2').get();
+
+// startAtDocument
+        results = await collection
+            .where(Filter('value', isGreaterThan: 1))
+            .orderBy('value', descending: false)
+            .startAtDocument(documentSnapshot)
+            .get();
+        expect(results.docs.length, equals(4));
+        expect(results.docs[0].data()['title'], equals('B'));
+        expect(results.docs[1].data()['title'], equals('C'));
+        expect(results.docs[2].data()['title'], equals('D'));
+        expect(results.docs[3].data()['title'], equals('E'));
+      });
+    });
+
     group('withConverter', () {
       testWidgets(
         'from a query instead of collection',
@@ -1767,6 +2361,56 @@ void runQueryTests() {
 
           final query = collection //
               .where('value', isGreaterThan: 0)
+              .withConverter<int>(
+                fromFirestore: (snapshots, _) =>
+                    snapshots.data()!['value']! as int,
+                toFirestore: (value, _) => {'value': value},
+              );
+
+          await collection.add({'value': 42});
+          await collection.add({'value': -1});
+
+          final snapshot = query.snapshots();
+
+          await expectLater(
+            snapshot,
+            emits(
+              isA<QuerySnapshot<int>>().having((e) => e.docs, 'docs', [
+                isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42)
+              ]),
+            ),
+          );
+
+          await collection.add({'value': 21});
+
+          await expectLater(
+            snapshot,
+            emits(
+              isA<QuerySnapshot<int>>().having(
+                (e) => e.docs,
+                'docs',
+                unorderedEquals(
+                  [
+                    isA<DocumentSnapshot<int>>()
+                        .having((e) => e.data(), 'data', 42),
+                    isA<DocumentSnapshot<int>>()
+                        .having((e) => e.data(), 'data', 21)
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+        timeout: const Timeout.factor(3),
+      );
+
+      testWidgets(
+        'from a Filter query instead of collection',
+        (_) async {
+          final collection = await initializeTest('foo');
+
+          final query = collection //
+              .where(Filter('value', isGreaterThan: 0))
               .withConverter<int>(
                 fromFirestore: (snapshots, _) =>
                     snapshots.data()!['value']! as int,
