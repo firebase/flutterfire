@@ -715,7 +715,7 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
 /// Mixin class for all classes with the [update()] method. We need to call
 /// [_wrapUpdateFunctionCall()] in all [update()] methods to fix that Dart
 /// doesn't support varargs - we need to use [List] to call js function.
-abstract class _Updatable {
+mixin _Updatable {
   /// Calls js [:update():] method on [jsObject] with [data] or list of
   /// [fieldsAndValues] and optionally [documentRef].
   T? _wrapUpdateFunctionCall<T>(jsObject, Map<String, dynamic> data,
