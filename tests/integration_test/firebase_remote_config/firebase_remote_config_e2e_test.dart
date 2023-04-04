@@ -122,6 +122,17 @@ void main() {
           Duration.zero,
         );
       });
+
+      test('default values', () async {
+        // Ensure that the default values are returned when no values are set.
+        //
+        // We test this to be sure that the behaviour is consistent across
+        // platforms.
+        expect(FirebaseRemoteConfig.instance.getString('does-not-exit'), '');
+        expect(FirebaseRemoteConfig.instance.getBool('does-not-exit'), isFalse);
+        expect(FirebaseRemoteConfig.instance.getInt('does-not-exit'), 0);
+        expect(FirebaseRemoteConfig.instance.getDouble('does-not-exit'), 0.0);
+      });
     },
   );
 }
