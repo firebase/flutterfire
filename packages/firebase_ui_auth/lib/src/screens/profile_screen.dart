@@ -236,8 +236,10 @@ class _LinkedProvidersRowState extends State<_LinkedProvidersRow> {
     const animationDuration = Duration(milliseconds: 150);
     const curve = Curves.easeOut;
 
-    void unlink() {
-      _unlinkProvider(context, providerId);
+    VoidCallback? unlink;
+
+    if (isEditing) {
+      unlink = () => _unlinkProvider(context, providerId);
     }
 
     return Stack(
@@ -246,11 +248,9 @@ class _LinkedProvidersRowState extends State<_LinkedProvidersRow> {
           width: size,
           height: size,
           child: unlinkingProvider == providerId
-              ? Center(
-                  child: LoadingIndicator(
-                    size: size - (size / 4),
-                    borderWidth: 1,
-                  ),
+              ? LoadingIndicator(
+                  size: size - (size / 4),
+                  borderWidth: 1,
                 )
               : Icon(providerIcon(context, providerId)),
         ),
@@ -259,28 +259,22 @@ class _LinkedProvidersRowState extends State<_LinkedProvidersRow> {
             duration: animationDuration,
             opacity: isEditing ? 1 : 0,
             curve: curve,
-            child: GestureDetector(
-              onTap: unlink,
-              child: SizedBox(
-                width: size,
-                height: size,
-                child: Align(
-                  alignment: Alignment.topRight,
+            child: SizedBox(
+              width: size,
+              height: size,
+              child: Align(
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: unlink,
                   child: Transform.translate(
-                    offset: const Offset(14, -12),
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: unlink,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Icon(
-                          isCupertino
-                              ? CupertinoIcons.minus_circle_fill
-                              : Icons.remove_circle,
-                          size: 20,
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
+                    offset: const Offset(6, -4),
+                    child: Icon(
+                      isCupertino
+                          ? CupertinoIcons.minus_circle_fill
+                          : Icons.remove_circle,
+                      size: 20,
+                      color: Theme.of(context).colorScheme.error,
                     ),
                   ),
                 ),

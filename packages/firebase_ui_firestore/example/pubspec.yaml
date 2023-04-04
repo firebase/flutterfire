@@ -34,7 +34,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.9.0
 dev_dependencies:
-  drive: ^0.1.0
+  drive: ^1.0.0-1.0.nullsafety.1
   flutter_test:
     sdk: flutter
   integration_test:
