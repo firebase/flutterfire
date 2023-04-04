@@ -2,9 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_ui_auth/src/widgets/internal/platform_widget.dart';
-import 'package:flutter/widgets.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
+/// An icon widget that chooses between [cupertinoIcon] and [materialIcon]
+/// depending on the type of App widget used ([CupertinoApp] or [MaterialApp]).
 class UniversalIcon extends PlatformWidget {
   final IconData cupertinoIcon;
   final IconData materialIcon;
@@ -12,12 +15,12 @@ class UniversalIcon extends PlatformWidget {
   final double? size;
 
   const UniversalIcon({
-    Key? key,
+    super.key,
     required this.cupertinoIcon,
     required this.materialIcon,
     this.color,
     this.size,
-  }) : super(key: key);
+  });
 
   @override
   Widget buildCupertino(BuildContext context) {

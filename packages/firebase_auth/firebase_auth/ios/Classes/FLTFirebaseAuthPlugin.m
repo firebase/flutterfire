@@ -494,6 +494,8 @@ NSString *const kErrMsgInvalidCredential =
                       } else {
                         if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
                           [self handleMultiFactorError:arguments withResult:result withError:error];
+                        } else if (error.code == FIRAuthErrorCodeInternalError) {
+                          [self handleInternalError:arguments withResult:result withError:error];
                         } else {
                           result.error(nil, nil, nil, error);
                         }
@@ -586,10 +588,12 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
       NSLog(@"Unable to serialize id token from data: %@", appleIDCredential.identityToken);
     }
 
-    // Initialize a Firebase credential.
-    FIROAuthCredential *credential = [FIROAuthProvider credentialWithProviderID:@"apple.com"
-                                                                        IDToken:idToken
-                                                                       rawNonce:rawNonce];
+    // Initialize a Firebase credential, including the user's full name.
+    FIROAuthCredential *credential =
+        [FIROAuthProvider appleCredentialWithIDToken:idToken
+                                            rawNonce:rawNonce
+                                            fullName:appleIDCredential.fullName];
+
     if (self.isReauthenticatingWithApple == YES) {
       self.isReauthenticatingWithApple = NO;
       [[FIRAuth.auth currentUser]
@@ -734,6 +738,8 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                      if (error != nil) {
                        if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
                          [self handleMultiFactorError:arguments withResult:result withError:error];
+                       } else if (error.code == FIRAuthErrorCodeInternalError) {
+                         [self handleInternalError:arguments withResult:result withError:error];
                        } else {
                          result.error(nil, nil, nil, error);
                        }
@@ -741,6 +747,19 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                        result.success(authResult);
                      }
                    }];
+}
+
+- (void)handleInternalError:(id)arguments
+                 withResult:(FLTFirebaseMethodCallResult *)result
+                  withError:(NSError *)error {
+  const NSError *underlyingError = error.userInfo[@"NSUnderlyingError"];
+  if (underlyingError != nil) {
+    const NSDictionary *details =
+        underlyingError.userInfo[@"FIRAuthErrorUserInfoDeserializedResponseKey"];
+    result.error(nil, nil, details, underlyingError);
+    return;
+  }
+  result.error(nil, nil, nil, error);
 }
 
 - (void)handleMultiFactorError:(id)arguments
@@ -801,6 +820,8 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                if (error != nil) {
                  if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
                    [self handleMultiFactorError:arguments withResult:result withError:error];
+                 } else if (error.code == FIRAuthErrorCodeInternalError) {
+                   [self handleInternalError:arguments withResult:result withError:error];
                  } else {
                    result.error(nil, nil, nil, error);
                  }
@@ -819,6 +840,8 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                if (error != nil) {
                  if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
                    [self handleMultiFactorError:arguments withResult:result withError:error];
+                 } else if (error.code == FIRAuthErrorCodeInternalError) {
+                   [self handleInternalError:arguments withResult:result withError:error];
                  } else {
                    result.error(nil, nil, nil, error);
                  }

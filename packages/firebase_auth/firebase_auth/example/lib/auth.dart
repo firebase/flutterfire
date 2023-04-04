@@ -178,6 +178,8 @@ class _AuthGateState extends State<AuthGate> {
                                     hintText: 'Email',
                                     border: OutlineInputBorder(),
                                   ),
+                                  keyboardType: TextInputType.emailAddress,
+                                  autofillHints: const [AutofillHints.email],
                                   validator: (value) =>
                                       value != null && value.isNotEmpty
                                           ? null
@@ -446,14 +448,12 @@ class _AuthGateState extends State<AuthGate> {
       setState(() {
         error = '$e';
       });
-    } finally {
-      setIsLoading();
     }
+    setIsLoading();
   }
 
   Future<void> _emailAndPassword() async {
     if (formKey.currentState?.validate() ?? false) {
-      setIsLoading();
       if (mode == AuthMode.login) {
         await auth.signInWithEmailAndPassword(
           email: emailController.text,

@@ -7,6 +7,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_oauth/firebase_ui_oauth.dart';
 import 'package:flutter/widgets.dart';
 
+export 'package:firebase_ui_shared/firebase_ui_shared.dart' show ButtonVariant;
+
 import 'src/actions.dart';
 import 'src/oauth_providers.dart';
 import 'src/providers/auth_provider.dart';
@@ -37,7 +39,6 @@ export 'src/flows/phone_auth_flow.dart';
 export 'src/flows/universal_email_sign_in_flow.dart';
 // ignore_for_file: use_build_context_synchronously
 
-export 'src/loading_indicator.dart';
 export 'src/mfa.dart' show startMFAVerification;
 export 'src/navigation/authentication.dart';
 export 'src/navigation/forgot_password.dart';
@@ -84,7 +85,6 @@ export 'src/widgets/error_text.dart' show ErrorText;
 export 'src/widgets/forgot_password_button.dart';
 export 'src/widgets/internal/oauth_provider_button.dart'
     show OAuthProviderButton, OAuthButtonVariant;
-export 'src/widgets/internal/universal_button.dart' show ButtonVariant;
 export 'src/widgets/layout_flow_aware_padding.dart';
 export 'src/widgets/password_input.dart';
 export 'src/widgets/phone_input.dart' show PhoneInputState, PhoneInput;

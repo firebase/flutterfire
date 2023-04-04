@@ -123,6 +123,20 @@ void main() {
         );
       });
 
+      // We cannot change the default values on the fly, so we only test the
+      // EventChannel here.
+      test(
+        'onConfigUpdated can run without issue',
+        () async {
+          final configSubscription =
+              FirebaseRemoteConfig.instance.onConfigUpdated.listen((event) {});
+
+          await configSubscription.cancel();
+        },
+        // This feature is not supported on Web
+        skip: kIsWeb,
+      );
+
       test('default values', () async {
         // Ensure that the default values are returned when no values are set.
         //

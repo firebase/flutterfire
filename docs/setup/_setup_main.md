@@ -148,6 +148,37 @@ XSS attacks. If TrustedTypes are enabled, Firebase will inject the
 scripts into the DOM using TrustedTypes. The policy name are defined as
 follows: 'flutterfire-firease_core', 'flutterfire-firebase_auth'... etc.
 
+#### Disable Firebase JavaScript SDK auto-injection
+
+For your convenience, the Firebase Flutter SDK auto-injects the Firebase JavaScript SDK when building for the web platform. If you don't want the Firebase JavaScript SDK to be auto-injected (perhaps to be GDPR compliant), you can do the following:
+
+1.  Ignore the autoinjection script by adding the following property inside a
+    `<script>` tag within the `web/index.html` file in your Flutter project:
+
+    ```html
+    <!-- Add this property inside a <script> tag within your "web/index.html" file in your Flutter project -->
+    <!-- Put in the names of all the plugins you wish to ignore: -->
+    window.flutterfire_ignore_scripts = ['analytics', 'firestore'];
+    ```
+
+2.  Load the script manually using one of the following alternatives:
+
+    - Add the SDK explicitly to your "web/index.html" file:
+
+      ```html
+      <script src="https://www.gstatic.com/firebasejs/9.18.0/firebase-analytics.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js"></script>
+      ```
+
+    - Or, download the plugin's Firebase JavaScript SDK code from the "gstatic" domain,
+      and save them to a JavaScript file to be kept within your project and loaded in manually:
+
+      ```html
+      <!-- "web/my-analytics.js" & "web/my-firestore.js" file loaded as a script into your "web/index.html" file: -->
+      <script src="./my-analytics.js"></script>
+      <script src="./my-firestore.js"></script>
+      ```
+
 ## **Step 4**: Add Firebase plugins {: #add-plugins}
 
 You access Firebase in your Flutter app through the various
