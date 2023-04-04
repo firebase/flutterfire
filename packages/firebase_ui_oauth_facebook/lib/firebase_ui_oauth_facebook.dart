@@ -104,7 +104,7 @@ class _FacebookSignInButton extends StatelessWidget {
   final VoidCallback? onCanceled;
 
   const _FacebookSignInButton({
-    Key? key,
+    super.key,
     required this.clientId,
     required this.loadingIndicator,
     String? label,
@@ -121,8 +121,7 @@ class _FacebookSignInButton extends StatelessWidget {
     this.onCanceled,
   })  : label = label ?? 'Sign in with Facebook',
         overrideDefaultTapAction = overrideDefaultTapAction ?? false,
-        size = size ?? 19,
-        super(key: key);
+        size = size ?? 19;
 
   FacebookProvider get provider => FacebookProvider(
         clientId: clientId,

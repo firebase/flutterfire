@@ -57,7 +57,7 @@ class LoginView extends StatefulWidget {
 
   /// {@macro ui.auth.views.login_view}
   const LoginView({
-    Key? key,
+    super.key,
     required this.action,
     required this.providers,
     this.oauthButtonVariant = OAuthButtonVariant.icon_and_text,
@@ -68,7 +68,7 @@ class LoginView extends StatefulWidget {
     this.footerBuilder,
     this.subtitleBuilder,
     this.actionButtonLabelOverride,
-  }) : super(key: key);
+  });
 
   @override
   State<LoginView> createState() => _LoginViewState();

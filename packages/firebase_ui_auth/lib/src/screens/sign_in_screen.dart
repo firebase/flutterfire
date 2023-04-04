@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
 import 'internal/login_screen.dart';
@@ -98,9 +97,9 @@ class SignInScreen extends MultiProviderScreen {
 
   /// {@macro ui.auth.screens.sign_in_screen}
   const SignInScreen({
-    Key? key,
-    List<AuthProvider>? providers,
-    FirebaseAuth? auth,
+    super.key,
+    super.providers,
+    super.auth,
     this.headerMaxExtent,
     this.headerBuilder,
     this.sideBuilder,
@@ -115,7 +114,7 @@ class SignInScreen extends MultiProviderScreen {
     this.actions = const [],
     this.breakpoint = 800,
     this.styles,
-  }) : super(key: key, providers: providers, auth: auth);
+  });
 
   Future<void> _signInWithDifferentProvider(
     BuildContext context,

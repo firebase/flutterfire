@@ -42,7 +42,7 @@ import 'query_builder.dart';
 class FirebaseDatabaseDataTable extends StatefulWidget {
   /// {@macro firebase_ui.database_table}
   const FirebaseDatabaseDataTable({
-    Key? key,
+    super.key,
     required this.query,
     required this.columnLabels,
     this.header,
@@ -62,11 +62,10 @@ class FirebaseDatabaseDataTable extends StatefulWidget {
     this.dragStartBehavior = DragStartBehavior.start,
     this.arrowHeadColor,
     this.checkboxHorizontalMargin,
-  })  : assert(
+  }) : assert(
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
-        ), // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
-        super(key: key);
+        ); // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
 
   /// The firestore query that will be displayed
   final Query query;
@@ -325,10 +324,9 @@ class _FirestoreTableState extends State<FirebaseDatabaseDataTable> {
 /// Takes care of the type-specific form
 class _PropertyTypeForm extends StatelessWidget {
   const _PropertyTypeForm({
-    Key? key,
     required this.formState,
     required this.onFormStateChange,
-  }) : super(key: key);
+  });
 
   final _FormState formState;
   final ValueChanged<_FormState> onFormStateChange;
@@ -376,10 +374,9 @@ class _PropertyTypeForm extends StatelessWidget {
 
 class _EditModalButtonBar extends StatelessWidget {
   const _EditModalButtonBar({
-    Key? key,
     required this.formState,
     required this.ref,
-  }) : super(key: key);
+  });
 
   final _FormState formState;
   final DatabaseReference ref;
@@ -409,10 +406,9 @@ class _EditModalButtonBar extends StatelessWidget {
 
 class _PropertyTypeDropdown extends StatelessWidget {
   const _PropertyTypeDropdown({
-    Key? key,
     required this.formState,
     required this.onTypeChanged,
-  }) : super(key: key);
+  });
 
   final _FormState? formState;
 
@@ -686,7 +682,7 @@ class _Source extends DataTableSource {
 }
 
 class _ValueView extends StatelessWidget {
-  const _ValueView(this.value, {Key? key}) : super(key: key);
+  const _ValueView(this.value);
 
   final Object? value;
 

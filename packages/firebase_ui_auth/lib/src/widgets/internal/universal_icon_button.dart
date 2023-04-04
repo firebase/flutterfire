@@ -14,13 +14,13 @@ class UniversalIconButton extends PlatformWidget {
   final Color? color;
 
   const UniversalIconButton({
-    Key? key,
+    super.key,
     this.onPressed,
     required this.cupertinoIcon,
     required this.materialIcon,
     this.size,
     this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget buildCupertino(BuildContext context) {

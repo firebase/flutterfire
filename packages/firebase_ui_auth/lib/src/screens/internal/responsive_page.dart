@@ -26,7 +26,7 @@ class HeaderImageSliverDelegate extends SliverPersistentHeaderDelegate {
   const HeaderImageSliverDelegate({
     required this.builder,
     this.maxExtent = defaultHeaderImageHeight,
-  }) : super();
+  });
 
   @override
   Widget build(
@@ -105,7 +105,7 @@ class ResponsivePage extends StatefulWidget {
   final double? maxWidth;
 
   const ResponsivePage({
-    Key? key,
+    super.key,
     required this.child,
     this.desktopLayoutDirection,
     this.sideBuilder,
@@ -114,7 +114,7 @@ class ResponsivePage extends StatefulWidget {
     this.breakpoint = 800,
     this.contentFlex,
     this.maxWidth,
-  }) : super(key: key);
+  });
 
   @override
   State<ResponsivePage> createState() => _ResponsivePageState();

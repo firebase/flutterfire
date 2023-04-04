@@ -42,7 +42,7 @@ class ForgotPasswordScreen extends StatelessWidget {
   final double breakpoint;
 
   const ForgotPasswordScreen({
-    Key? key,
+    super.key,
     this.auth,
     this.email,
     this.subtitleBuilder,
@@ -53,7 +53,7 @@ class ForgotPasswordScreen extends StatelessWidget {
     this.desktopLayoutDirection,
     this.resizeToAvoidBottomInset,
     this.breakpoint = 600,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

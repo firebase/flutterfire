@@ -53,7 +53,7 @@ class PhoneInputView extends StatefulWidget {
 
   /// {@macro ui.auth.views.phone_input_view}
   const PhoneInputView({
-    Key? key,
+    super.key,
     required this.flowKey,
     this.onSMSCodeRequested,
     this.auth,
@@ -63,7 +63,7 @@ class PhoneInputView extends StatefulWidget {
     this.footerBuilder,
     this.multiFactorSession,
     this.mfaHint,
-  }) : super(key: key);
+  });
 
   @override
   State<PhoneInputView> createState() => _PhoneInputViewState();

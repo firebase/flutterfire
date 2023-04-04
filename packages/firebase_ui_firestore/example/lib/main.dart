@@ -25,7 +25,7 @@ Future<void> main() async {
 }
 
 class FirebaseUIFirestoreExample extends StatelessWidget {
-  const FirebaseUIFirestoreExample({Key? key}) : super(key: key);
+  const FirebaseUIFirestoreExample({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +53,9 @@ class FirebaseUIFirestoreExample extends StatelessWidget {
 class UserTile extends StatelessWidget {
   final User user;
   const UserTile({
-    Key? key,
+    super.key,
     required this.user,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

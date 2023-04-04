@@ -24,12 +24,12 @@ class ReauthenticateView extends StatelessWidget {
 
   /// {@macro ui.auth.views.reauthenticate_view}
   const ReauthenticateView({
-    Key? key,
+    super.key,
     required this.providers,
     this.auth,
     this.onSignedIn,
     this.actionButtonLabelOverride,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -28,10 +28,10 @@ class EmailLinkSignInButton extends StatelessWidget {
 
   /// {@macro ui.auth.widget.email_link_sign_in_button}
   const EmailLinkSignInButton({
-    Key? key,
+    super.key,
     required this.provider,
     this.auth,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

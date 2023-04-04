@@ -23,11 +23,11 @@ class LoadingIndicator extends PlatformWidget {
   final Color? color;
 
   const LoadingIndicator({
-    Key? key,
+    super.key,
     required this.size,
     required this.borderWidth,
     this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget? buildWrapper(BuildContext context, Widget child) {

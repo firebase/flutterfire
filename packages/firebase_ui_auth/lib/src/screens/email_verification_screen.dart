@@ -67,7 +67,7 @@ class EmailVerificationScreen extends StatelessWidget {
 
   /// {@macro ui.auth.screens.email_verification_screen}
   const EmailVerificationScreen({
-    Key? key,
+    super.key,
     this.auth,
     this.actions = const [],
     this.headerBuilder,
@@ -76,7 +76,7 @@ class EmailVerificationScreen extends StatelessWidget {
     this.desktopLayoutDirection,
     this.breakpoint = 500,
     this.actionCodeSettings,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -118,10 +118,9 @@ class _EmailVerificationScreenContent extends StatefulWidget {
   final ActionCodeSettings? actionCodeSettings;
 
   const _EmailVerificationScreenContent({
-    Key? key,
     required this.auth,
     required this.actionCodeSettings,
-  }) : super(key: key);
+  });
 
   @override
   State<_EmailVerificationScreenContent> createState() =>

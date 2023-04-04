@@ -37,14 +37,14 @@ class PasswordInput extends StatelessWidget {
 
   /// {@macro ui.auth.widgets.password_input}
   const PasswordInput({
-    Key? key,
+    super.key,
     required this.focusNode,
     required this.controller,
     required this.onSubmit,
     required this.placeholder,
     this.autofillHints = const [AutofillHints.password],
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

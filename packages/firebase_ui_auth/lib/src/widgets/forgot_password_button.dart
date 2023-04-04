@@ -15,8 +15,7 @@ class ForgotPasswordButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   /// {@macro ui.auth.widget.forgot_password_button}
-  const ForgotPasswordButton({Key? key, required this.onPressed})
-      : super(key: key);
+  const ForgotPasswordButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

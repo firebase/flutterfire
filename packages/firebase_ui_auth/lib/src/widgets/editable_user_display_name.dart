@@ -22,9 +22,9 @@ class EditableUserDisplayName extends StatefulWidget {
 
   /// {@macro ui.auth.widgets.editable_user_display_name}
   const EditableUserDisplayName({
-    Key? key,
+    super.key,
     this.auth,
-  }) : super(key: key);
+  });
 
   @override
   // ignore: library_private_types_in_public_api

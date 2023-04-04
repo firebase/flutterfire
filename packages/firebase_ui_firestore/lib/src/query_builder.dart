@@ -67,13 +67,12 @@ typedef FirestoreQueryBuilderSnapshotBuilder<T> = Widget Function(
 class FirestoreQueryBuilder<Document> extends StatefulWidget {
   /// {@macro firebase_ui.firestore_query_builder}
   const FirestoreQueryBuilder({
-    Key? key,
+    super.key,
     required this.query,
     required this.builder,
     this.pageSize = 10,
     this.child,
-  })  : assert(pageSize > 1, 'Cannot have a pageSize lower than 1'),
-        super(key: key);
+  }) : assert(pageSize > 1, 'Cannot have a pageSize lower than 1');
 
   /// The query that will be paginated.
   ///

@@ -59,7 +59,7 @@ typedef OnSelectedRows = void Function(
 class FirestoreDataTable extends StatefulWidget {
   /// {@macro firebase_ui.firestore_table}
   const FirestoreDataTable({
-    Key? key,
+    super.key,
     required this.query,
     required this.columnLabels,
     this.header,
@@ -83,11 +83,10 @@ class FirestoreDataTable extends StatefulWidget {
     this.enableDefaultCellEditor = true,
     this.onTapCell,
     this.onSelectedRows,
-  })  : assert(
+  }) : assert(
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
-        ), // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
-        super(key: key);
+        );
 
   /// When specified, the builder will be used to display your own widget for the cell
   final CellBuilder? cellBuilder;
@@ -397,10 +396,9 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
 /// Takes care of the type-specific form
 class _PropertyTypeForm extends StatelessWidget {
   const _PropertyTypeForm({
-    Key? key,
     required this.formState,
     required this.onFormStateChange,
-  }) : super(key: key);
+  });
 
   final _FormState formState;
   final ValueChanged<_FormState> onFormStateChange;
@@ -495,10 +493,9 @@ class _PropertyTypeForm extends StatelessWidget {
 
 class _EditModalButtonBar extends StatelessWidget {
   const _EditModalButtonBar({
-    Key? key,
     required this.formState,
     required this.reference,
-  }) : super(key: key);
+  });
 
   final _FormState formState;
   final DocumentReference reference;
@@ -528,10 +525,9 @@ class _EditModalButtonBar extends StatelessWidget {
 
 class _PropertyTypeDropdown extends StatelessWidget {
   const _PropertyTypeDropdown({
-    Key? key,
     required this.formState,
     required this.onTypeChanged,
-  }) : super(key: key);
+  });
 
   final _FormState? formState;
 
@@ -966,7 +962,7 @@ class _Source extends DataTableSource {
 }
 
 class _ValueView extends StatelessWidget {
-  const _ValueView(this.value, {Key? key}) : super(key: key);
+  const _ValueView(this.value);
 
   final Object? value;
 

@@ -160,7 +160,7 @@ If you want to use a button on your custom screen, use `OAuthProviderButton`:
 
 ```dart
 class MyCustomScreen extends StatelessWidget {
-  const MyCustomScreen({Key? key}) : super(key: key);
+  const MyCustomScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -51,7 +51,7 @@ If you want to build a custom email verification screen, you could use `EmailVer
 
 ```dart
 class MyEmailVerificationScreen extends StatefulWidget {
-  const MyEmailVerificationScreen({Key? key}) : super(key: key);
+  const MyEmailVerificationScreen({super.key});
 
   @override
   State<MyEmailVerificationScreen> createState() =>

@@ -26,11 +26,11 @@ class PhoneVerificationButton extends StatelessWidget {
 
   /// {@macro ui.auth.widgets.phone_verification_button}
   const PhoneVerificationButton({
-    Key? key,
+    super.key,
     required this.label,
     this.action,
     this.auth,
-  }) : super(key: key);
+  });
 
   void _onPressed(BuildContext context) {
     final a = FirebaseUIAction.ofType<VerifyPhoneAction>(context);

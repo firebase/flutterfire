@@ -21,10 +21,10 @@ class SignOutButton extends StatelessWidget {
 
   /// {@macro ui.auth.widgets.sign_out_button}
   const SignOutButton({
-    Key? key,
+    super.key,
     this.auth,
     this.variant = ButtonVariant.filled,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

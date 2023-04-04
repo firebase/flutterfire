@@ -28,7 +28,9 @@ abstract class ProviderScreen<T extends AuthProvider> extends StatelessWidget {
     return config;
   }
 
-  const ProviderScreen({Key? key, T? provider, this.auth})
-      : _provider = provider,
-        super(key: key);
+  const ProviderScreen({
+    super.key,
+    T? provider,
+    this.auth,
+  }) : _provider = provider;
 }

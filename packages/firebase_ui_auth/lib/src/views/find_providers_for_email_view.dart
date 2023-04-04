@@ -27,10 +27,10 @@ class FindProvidersForEmailView extends StatefulWidget {
 
   /// {@macro ui.auth.views.find_providers_for_email_view}
   const FindProvidersForEmailView({
-    Key? key,
+    super.key,
     this.onProvidersFound,
     this.auth,
-  }) : super(key: key);
+  });
 
   @override
   State<FindProvidersForEmailView> createState() =>

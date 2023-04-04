@@ -30,12 +30,12 @@ class DifferentMethodSignInDialog extends StatelessWidget {
 
   /// {@macro ui.auth.widgets.different_method_sign_in_dialog}
   const DifferentMethodSignInDialog({
-    Key? key,
+    super.key,
     required this.availableProviders,
     required this.providers,
     this.auth,
     this.onSignedIn,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

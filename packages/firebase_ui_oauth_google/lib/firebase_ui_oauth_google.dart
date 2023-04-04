@@ -108,7 +108,7 @@ class _GoogleSignInButton extends StatelessWidget {
   final VoidCallback? onCanceled;
 
   const _GoogleSignInButton({
-    Key? key,
+    super.key,
     required this.clientId,
     required this.loadingIndicator,
     this.scopes,
@@ -126,8 +126,7 @@ class _GoogleSignInButton extends StatelessWidget {
     this.onCanceled,
   })  : label = label ?? 'Sign in with Google',
         overrideDefaultTapAction = overrideDefaultTapAction ?? false,
-        size = size ?? 19,
-        super(key: key);
+        size = size ?? 19;
 
   GoogleProvider get provider => GoogleProvider(
         clientId: clientId,

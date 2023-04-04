@@ -93,7 +93,7 @@ class _AppleSignInButton extends StatelessWidget {
   final VoidCallback? onCanceled;
 
   const _AppleSignInButton({
-    Key? key,
+    super.key,
     required this.loadingIndicator,
     String? label,
     bool? overrideDefaultTapAction,
@@ -108,8 +108,7 @@ class _AppleSignInButton extends StatelessWidget {
     this.onCanceled,
   })  : label = label ?? 'Sign in with Apple',
         overrideDefaultTapAction = overrideDefaultTapAction ?? false,
-        size = size ?? 19,
-        super(key: key);
+        size = size ?? 19;
 
   AppleProvider get provider => AppleProvider();
 

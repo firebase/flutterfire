@@ -62,7 +62,7 @@ class LabelOverrides extends DefaultLocalizations {
 }
 
 class FirebaseAuthUIExample extends StatelessWidget {
-  const FirebaseAuthUIExample({Key? key}) : super(key: key);
+  const FirebaseAuthUIExample({super.key});
 
   String get initialRoute {
     final auth = FirebaseAuth.instance;

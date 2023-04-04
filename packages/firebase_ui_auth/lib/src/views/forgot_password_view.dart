@@ -32,13 +32,13 @@ class ForgotPasswordView extends StatefulWidget {
 
   /// {@macro ui.auth.views.forgot_password_view}
   const ForgotPasswordView({
-    Key? key,
+    super.key,
     this.auth,
     this.email,
     this.actionCodeSettings,
     this.subtitleBuilder,
     this.footerBuilder,
-  }) : super(key: key);
+  });
 
   @override
   // ignore: library_private_types_in_public_api

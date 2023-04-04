@@ -29,12 +29,12 @@ class ReauthenticateDialog extends StatelessWidget {
 
   /// {@macro ui.auth.widgets.reauthenticate_dialog}
   const ReauthenticateDialog({
-    Key? key,
+    super.key,
     required this.providers,
     this.auth,
     this.onSignedIn,
     this.actionButtonLabelOverride,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
