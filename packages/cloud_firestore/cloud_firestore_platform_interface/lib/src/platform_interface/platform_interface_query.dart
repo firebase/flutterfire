@@ -229,6 +229,10 @@ abstract class QueryPlatform extends PlatformInterface {
     throw UnimplementedError('where() is not implemented');
   }
 
+  QueryPlatform whereFilter(Filter filter) {
+    throw UnimplementedError('whereFilter() is not implemented');
+  }
+
   /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
   /// metadata
   AggregateQueryPlatform count() {

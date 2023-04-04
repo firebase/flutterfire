@@ -28,19 +28,19 @@ class EmailLinkSignInButton extends StatelessWidget {
 
   /// {@macro ui.auth.widget.email_link_sign_in_button}
   const EmailLinkSignInButton({
-    Key? key,
+    super.key,
     required this.provider,
     this.auth,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
     final l = FirebaseUILocalizations.labelsOf(context);
 
     return UniversalButton(
       text: l.emailLinkSignInButtonLabel,
-      icon: isCupertino ? CupertinoIcons.link : Icons.link,
+      cupertinoIcon: CupertinoIcons.link,
+      materialIcon: Icons.link,
       onPressed: () {
         final action = FirebaseUIAction.ofType<EmailLinkSignInAction>(context);
         if (action != null) {

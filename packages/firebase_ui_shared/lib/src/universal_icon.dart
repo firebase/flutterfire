@@ -15,12 +15,12 @@ class UniversalIcon extends PlatformWidget {
   final double? size;
 
   const UniversalIcon({
-    Key? key,
+    super.key,
     required this.cupertinoIcon,
     required this.materialIcon,
     this.color,
     this.size,
-  }) : super(key: key);
+  });
 
   @override
   Widget buildCupertino(BuildContext context) {

@@ -92,7 +92,7 @@ class OAuthProviderButtonBase extends StatefulWidget {
   final bool isLoading;
 
   const OAuthProviderButtonBase({
-    Key? key,
+    super.key,
 
     /// {@macro ui.oauth.oauth_provider_button.label}
     required this.label,
@@ -133,8 +133,7 @@ class OAuthProviderButtonBase extends StatefulWidget {
     /// {@macro ui.oauth.oauth_provider_button_base.on_cancelled}
     this.onCancelled,
   })  : assert(!overrideDefaultTapAction || onTap != null),
-        _padding = size * 1.33 / 2,
-        super(key: key);
+        _padding = size * 1.33 / 2;
 
   @override
   State<OAuthProviderButtonBase> createState() =>
@@ -381,7 +380,6 @@ class _ButtonContent extends StatelessWidget {
   final Color iconBackgroundColor;
 
   const _ButtonContent({
-    Key? key,
     required this.height,
     required this.iconSrc,
     required this.iconPadding,
@@ -394,7 +392,7 @@ class _ButtonContent extends StatelessWidget {
     required this.borderRadius,
     required this.borderColor,
     required this.iconBackgroundColor,
-  }) : super(key: key);
+  });
 
   Widget _buildLoadingIndicator() {
     return SizedBox(
@@ -455,9 +453,8 @@ class _MaterialForeground extends StatelessWidget {
   final VoidCallback onTap;
 
   const _MaterialForeground({
-    Key? key,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -481,14 +478,13 @@ class _ButtonContainer extends StatelessWidget {
   final Widget child;
 
   const _ButtonContainer({
-    Key? key,
     required this.margin,
     required this.height,
     required this.color,
     required this.borderRadius,
     required this.child,
     this.width,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 /// Optionally, [buildWrapper] can be implemented to have a common wrapper
 /// widget for both types of apps.
 abstract class PlatformWidget extends StatelessWidget {
-  const PlatformWidget({Key? key}) : super(key: key);
+  const PlatformWidget({super.key});
 
   Widget buildCupertino(BuildContext context);
   Widget buildMaterial(BuildContext context);

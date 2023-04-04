@@ -33,12 +33,12 @@ class DeleteAccountButton extends StatefulWidget {
 
   /// {@macro ui.auth.widgets.delete_account_button}
   const DeleteAccountButton({
-    Key? key,
+    super.key,
     this.auth,
     this.onSignInRequired,
     this.onDeleteFailed,
     this.variant = ButtonVariant.filled,
-  }) : super(key: key);
+  });
 
   @override
   // ignore: library_private_types_in_public_api
@@ -78,15 +78,16 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
   @override
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
-    bool isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
     final themeData = Theme.of(context);
     final colorScheme = themeData.colorScheme;
 
     return LoadingButton(
       isLoading: _isLoading,
-      color: isCupertino ? CupertinoColors.destructiveRed : colorScheme.error,
-      icon: isCupertino ? CupertinoIcons.delete : Icons.delete,
+      cupertinoColor: CupertinoColors.destructiveRed,
+      materialColor: colorScheme.error,
+      cupertinoIcon: CupertinoIcons.delete,
+      materialIcon: Icons.delete,
       label: l.deleteAccount,
       labelColor: colorScheme.onError,
       onTap: _deleteAccount,

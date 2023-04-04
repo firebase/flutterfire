@@ -10,7 +10,7 @@ import 'package:mockito/mockito.dart';
 class TestMaterialApp extends StatelessWidget {
   final Widget child;
 
-  const TestMaterialApp({Key? key, required this.child}) : super(key: key);
+  const TestMaterialApp({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

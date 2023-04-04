@@ -35,7 +35,7 @@ class _CountryCodeItem {
 typedef SubmitCallback = void Function(String value);
 
 class _CountryPicker extends StatefulWidget {
-  const _CountryPicker({Key? key}) : super(key: key);
+  const _CountryPicker();
 
   @override
   // ignore: library_private_types_in_public_api
@@ -104,10 +104,10 @@ class PhoneInput extends StatefulWidget {
 
   /// {@macro ui.auth.widgets.phone_input}
   const PhoneInput({
-    Key? key,
+    super.key,
     this.initialCountryCode,
     this.onSubmit,
-  }) : super(key: key);
+  });
 
   @override
   PhoneInputState createState() => PhoneInputState();
