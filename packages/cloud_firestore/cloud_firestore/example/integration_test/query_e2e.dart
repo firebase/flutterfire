@@ -115,6 +115,27 @@ void runQueryTests() {
         expect(groupSnapshot.docs[0].data()['foo'], equals(2));
         expect(groupSnapshot.docs[1].data()['foo'], equals(1));
       });
+
+      testWidgets(
+          'should respond with a FirebaseException, the query requires an index',
+          (_) async {
+        try {
+          await FirebaseFirestore.instance
+              .collectionGroup('collection-group')
+              .where('number', isGreaterThan: 1, isLessThan: 3)
+              .where('foo', isEqualTo: 'bar')
+              .get();
+        } catch (error) {
+          expect(
+            (error as FirebaseException).code,
+            equals('failed-precondition'),
+          );
+          expect(
+            error.message,
+            'The query requires an index',
+          );
+        }
+      });
     });
 
     /**
@@ -185,6 +206,27 @@ void runQueryTests() {
           return;
         }
         fail('Should have thrown a [FirebaseException]');
+      });
+
+      testWidgets(
+          'should respond with a FirebaseException, the query requires an index',
+          (_) async {
+        try {
+          await FirebaseFirestore.instance
+              .collection('flutter-tests')
+              .where('number', isGreaterThan: 1, isLessThan: 3)
+              .where('foo', isEqualTo: 'bar')
+              .get();
+        } catch (error) {
+          expect(
+            (error as FirebaseException).code,
+            equals('failed-precondition'),
+          );
+          expect(
+            error.message,
+            'The query requires an index',
+          );
+        }
       });
     });
 
