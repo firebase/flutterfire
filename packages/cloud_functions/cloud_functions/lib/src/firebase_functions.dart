@@ -60,10 +60,40 @@ class FirebaseFunctions extends FirebasePluginPlatform {
   String? _origin;
 
   /// A reference to the Callable HTTPS trigger with the given name.
-  HttpsCallable httpsCallable(String name, {HttpsCallableOptions? options}) {
+  ///
+  /// Should be the name of the Callable function in Firebase
+  HttpsCallable httpsCallable(
+    String name, {
+    HttpsCallableOptions? options,
+  }) {
     assert(name.isNotEmpty);
     options ??= HttpsCallableOptions();
     return HttpsCallable._(delegate.httpsCallable(_origin, name, options));
+  }
+
+  /// A reference to the Callable HTTPS trigger with the given URL.
+  ///
+  /// Should be URL of the 2nd gen Callable function in Firebase.
+  HttpsCallable httpsCallableFromUrl(
+    String url, {
+    HttpsCallableOptions? options,
+  }) {
+    final uri = Uri.parse(url);
+    options ??= HttpsCallableOptions();
+    return HttpsCallable._(
+        delegate.httpsCallableWithUri(_origin, uri, options));
+  }
+
+  /// A reference to the Callable HTTPS trigger with the given Uri.
+  ///
+  /// Should be Uri of the 2nd gen Callable function in Firebase.
+  HttpsCallable httpsCallableFromUri(
+    Uri uri, {
+    HttpsCallableOptions? options,
+  }) {
+    options ??= HttpsCallableOptions();
+    return HttpsCallable._(
+        delegate.httpsCallableWithUri(_origin, uri, options));
   }
 
   /// Changes this instance to point to a Cloud Functions emulator running locally.
