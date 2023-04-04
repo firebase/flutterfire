@@ -33,13 +33,13 @@ class SMSCodeInputView extends StatefulWidget {
 
   /// {@macro ui.auth.views.sms_code_input_view}
   const SMSCodeInputView({
-    Key? key,
+    super.key,
     required this.flowKey,
     this.onCodeVerified,
     this.auth,
     this.action,
     this.onSubmit,
-  }) : super(key: key);
+  });
 
   @override
   State<SMSCodeInputView> createState() => _SMSCodeInputViewState();

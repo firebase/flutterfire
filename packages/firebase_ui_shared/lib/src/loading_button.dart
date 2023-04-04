@@ -11,11 +11,10 @@ class _LoadingButtonContent extends StatelessWidget {
   final bool isLoading;
   final Color? color;
   const _LoadingButtonContent({
-    Key? key,
     required this.label,
     required this.isLoading,
     required this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +76,7 @@ class LoadingButton extends StatelessWidget {
   final ButtonVariant variant;
 
   const LoadingButton({
-    Key? key,
+    super.key,
     required this.label,
     required this.onTap,
     this.isLoading = false,
@@ -87,7 +86,7 @@ class LoadingButton extends StatelessWidget {
     this.cupertinoColor,
     this.labelColor,
     this.variant = ButtonVariant.outlined,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

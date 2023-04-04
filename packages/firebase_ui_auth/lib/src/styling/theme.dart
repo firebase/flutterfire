@@ -26,10 +26,10 @@ class FirebaseUITheme extends InheritedModel {
   final Set<FirebaseUIStyle> styles;
 
   const FirebaseUITheme({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.styles,
-  }) : super(key: key, child: child);
+  });
 
   @override
   bool updateShouldNotify(FirebaseUITheme oldWidget) {
@@ -58,7 +58,7 @@ class FirebaseUITheme extends InheritedModel {
 }
 
 class FirebaseUIThemeElement extends InheritedModelElement {
-  FirebaseUIThemeElement(InheritedModel widget) : super(widget);
+  FirebaseUIThemeElement(super.widget);
 
   @override
   FirebaseUITheme get widget => super.widget as FirebaseUITheme;

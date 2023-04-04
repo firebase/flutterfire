@@ -59,7 +59,7 @@ class UniversalButton extends PlatformWidget {
   final Color? contentColor;
 
   const UniversalButton({
-    Key? key,
+    super.key,
     this.text,
     this.child,
     this.onPressed,
@@ -70,8 +70,7 @@ class UniversalButton extends PlatformWidget {
     this.materialColor,
     this.cupertinoColor,
     this.contentColor,
-  })  : assert(text != null || child != null),
-        super(key: key);
+  }) : assert(text != null || child != null);
 
   @override
   Widget buildCupertino(BuildContext context) {

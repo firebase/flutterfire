@@ -160,7 +160,7 @@ class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
 
   /// {@macro ui.auth.widgets.auth_flow_builder}
   const AuthFlowBuilder({
-    Key? key,
+    super.key,
     this.flowKey,
     this.action,
     this.builder,
@@ -170,11 +170,10 @@ class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
     this.provider,
     this.auth,
     this.flow,
-  })  : assert(
+  }) : assert(
           builder != null || child != null,
           'Either child or builder should be provided',
-        ),
-        super(key: key);
+        );
 
   @override
   // ignore: library_private_types_in_public_api

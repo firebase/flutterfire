@@ -25,11 +25,11 @@ class EmailSignUpDialog extends StatelessWidget {
 
   /// {@macro ui.auth.widget.email_sign_up_dialog}
   const EmailSignUpDialog({
-    Key? key,
+    super.key,
     this.auth,
     required this.provider,
     required this.action,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

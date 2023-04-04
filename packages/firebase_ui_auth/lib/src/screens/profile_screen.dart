@@ -33,11 +33,10 @@ class _AvailableProvidersRow extends StatefulWidget {
   final VoidCallback onProviderLinked;
 
   const _AvailableProvidersRow({
-    Key? key,
     this.auth,
     required this.providers,
     required this.onProviderLinked,
-  }) : super(key: key);
+  });
 
   @override
   State<_AvailableProvidersRow> createState() => _AvailableProvidersRowState();
@@ -154,10 +153,9 @@ class _EditButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   const _EditButton({
-    Key? key,
     required this.isEditing,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -181,11 +179,10 @@ class _LinkedProvidersRow extends StatefulWidget {
   final VoidCallback onProviderUnlinked;
 
   const _LinkedProvidersRow({
-    Key? key,
     this.auth,
     required this.providers,
     required this.onProviderUnlinked,
-  }) : super(key: key);
+  });
 
   @override
   State<_LinkedProvidersRow> createState() => _LinkedProvidersRowState();
@@ -326,10 +323,9 @@ class _EmailVerificationBadge extends StatefulWidget {
   final FirebaseAuth auth;
   final ActionCodeSettings? actionCodeSettings;
   const _EmailVerificationBadge({
-    Key? key,
     required this.auth,
     this.actionCodeSettings,
-  }) : super(key: key);
+  });
 
   @override
   State<_EmailVerificationBadge> createState() =>
@@ -452,12 +448,11 @@ class _MFABadge extends StatelessWidget {
   final List<AuthProvider> providers;
 
   const _MFABadge({
-    Key? key,
     required this.enrolled,
     required this.auth,
     required this.onToggled,
     required this.providers,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -490,12 +485,11 @@ class _MFAToggle extends StatefulWidget {
   final List<AuthProvider> providers;
 
   const _MFAToggle({
-    Key? key,
     required this.enrolled,
     required this.auth,
     required this.onToggled,
     required this.providers,
-  }) : super(key: key);
+  });
 
   @override
   State<_MFAToggle> createState() => _MFAToggleState();
@@ -713,9 +707,9 @@ class ProfileScreen extends MultiProviderScreen {
   final bool showMFATile;
 
   const ProfileScreen({
-    Key? key,
-    FirebaseAuth? auth,
-    List<AuthProvider>? providers,
+    super.key,
+    super.auth,
+    super.providers,
     this.avatarPlaceholderColor,
     this.avatarShape,
     this.avatarSize,
@@ -725,7 +719,7 @@ class ProfileScreen extends MultiProviderScreen {
     this.cupertinoNavigationBar,
     this.actionCodeSettings,
     this.showMFATile = false,
-  }) : super(key: key, providers: providers, auth: auth);
+  });
 
   Future<bool> _reauthenticate(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);

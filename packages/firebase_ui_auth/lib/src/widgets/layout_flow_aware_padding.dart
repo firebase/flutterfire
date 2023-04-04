@@ -12,10 +12,10 @@ class LayoutFlowAwarePadding extends StatelessWidget {
   final Widget child;
   final EdgeInsets padding;
   const LayoutFlowAwarePadding({
-    Key? key,
+    super.key,
     required this.child,
     required this.padding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

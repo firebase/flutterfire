@@ -26,7 +26,7 @@ class UniversalTextFormField extends PlatformWidget {
   final Iterable<String>? autofillHints;
 
   const UniversalTextFormField({
-    Key? key,
+    super.key,
     this.controller,
     this.prefix,
     this.placeholder,
@@ -40,7 +40,7 @@ class UniversalTextFormField extends PlatformWidget {
     this.enableSuggestions,
     this.autocorrect = false,
     this.autofillHints,
-  }) : super(key: key);
+  });
 
   @override
   Widget buildCupertino(BuildContext context) {

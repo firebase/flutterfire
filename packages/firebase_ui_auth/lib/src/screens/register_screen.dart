@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
 import 'internal/login_screen.dart';
@@ -89,9 +88,9 @@ class RegisterScreen extends MultiProviderScreen {
   final Set<FirebaseUIStyle>? styles;
 
   const RegisterScreen({
-    Key? key,
-    FirebaseAuth? auth,
-    List<AuthProvider>? providers,
+    super.key,
+    super.auth,
+    super.providers,
     this.actions,
     this.headerMaxExtent,
     this.headerBuilder,
@@ -105,7 +104,7 @@ class RegisterScreen extends MultiProviderScreen {
     this.footerBuilder,
     this.breakpoint = 800,
     this.styles,
-  }) : super(key: key, auth: auth, providers: providers);
+  });
 
   @override
   Widget build(BuildContext context) {

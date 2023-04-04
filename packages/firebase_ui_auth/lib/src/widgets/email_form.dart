@@ -102,14 +102,14 @@ class EmailForm extends StatelessWidget {
 
   /// {@macro ui.auth.widgets.email_form}
   const EmailForm({
-    Key? key,
+    super.key,
     this.action,
     this.auth,
     this.provider,
     this.onSubmit,
     this.email,
     this.actionButtonLabelOverride,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -144,14 +144,13 @@ class _SignInFormContent extends StatefulWidget {
   final String? actionButtonLabelOverride;
 
   const _SignInFormContent({
-    Key? key,
     this.auth,
     this.onSubmit,
     this.action,
     this.email,
     this.provider,
     this.actionButtonLabelOverride,
-  }) : super(key: key);
+  });
 
   @override
   _SignInFormContentState createState() => _SignInFormContentState();
