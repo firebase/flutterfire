@@ -168,4 +168,9 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) {
     throw UnimplementedError('setDefaults() is not implemented');
   }
+
+  /// Get a [Stream] of [RemoteConfigUpdate]s.
+  Stream<RemoteConfigUpdate> get onConfigUpdated {
+    throw UnimplementedError('onConfigUpdated getter not implemented');
+  }
 }

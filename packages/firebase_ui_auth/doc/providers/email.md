@@ -31,7 +31,7 @@ void main() {
 
 ## Using screen
 
-After adding `EmailAuthProvider` to the `FirebaseUIAuth.configureProviders` email form would be displayed on the `SignInScreen` or `RegisterScren`.
+After adding `EmailAuthProvider` to the `FirebaseUIAuth.configureProviders` email form would be displayed on the `SignInScreen` or `RegisterScreen`.
 
 ```dart
 SignInScreen(

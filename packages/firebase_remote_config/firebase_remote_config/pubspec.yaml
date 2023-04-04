@@ -4,7 +4,7 @@ description:
   re-releasing.
 homepage: https://firebase.google.com/docs/remote-config
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config
-version: 3.0.15
+version: 4.0.0
 
 false_secrets:
   - example/**
@@ -14,10 +14,10 @@ environment:
   flutter: '>=1.12.13+hotfix.5'
 
 dependencies:
-  firebase_core: ^2.8.0
-  firebase_core_platform_interface: ^4.5.3
-  firebase_remote_config_platform_interface: ^1.1.35
-  firebase_remote_config_web: ^1.1.24
+  firebase_core: ^2.9.0
+  firebase_core_platform_interface: ^4.6.0
+  firebase_remote_config_platform_interface: ^1.2.0
+  firebase_remote_config_web: ^1.2.0
   flutter:
     sdk: flutter
 

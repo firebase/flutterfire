@@ -6,9 +6,10 @@
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_firebase_functions.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_https_callable.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import '../mock.dart';
 
 void main() {
@@ -22,6 +23,7 @@ void main() {
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
   String kName = 'test_name';
+  Uri kUri = Uri.parse('https://test.com');
   String kOrigin = 'test_origin';
   dynamic kParameters = {'foo': 'bar'};
   HttpsCallableOptions kOptions = HttpsCallableOptions();
@@ -55,6 +57,7 @@ void main() {
         kOrigin,
         kName,
         kOptions,
+        null,
       );
     });
 
@@ -111,6 +114,37 @@ void main() {
             arguments: <String, dynamic>{
               'appName': functions!.app!.name,
               'functionName': httpsCallable!.name,
+              'functionUri': null,
+              'origin': httpsCallable!.origin,
+              'region': functions!.region,
+              'timeout': httpsCallable!.options.timeout.inMilliseconds,
+              'parameters': kParameters,
+            },
+          ),
+        ]);
+      });
+
+      test('invokes native method with correct args with Uri', () async {
+        final httpsCallableWithUri = MethodChannelHttpsCallable(
+          functions!,
+          kOrigin,
+          null,
+          kOptions,
+          kUri,
+        );
+        final result = await httpsCallableWithUri.call(kParameters);
+
+        expect(result, isA<dynamic>());
+        expect(result['foo'], 'bar');
+
+        // check native method was called
+        expect(logger, <Matcher>[
+          isMethodCall(
+            'FirebaseFunctions#call',
+            arguments: <String, dynamic>{
+              'appName': functions!.app!.name,
+              'functionName': null,
+              'functionUri': 'https://test.com',
               'origin': httpsCallable!.origin,
               'region': functions!.region,
               'timeout': httpsCallable!.options.timeout.inMilliseconds,
@@ -130,6 +164,7 @@ void main() {
             arguments: <String, dynamic>{
               'appName': functions!.app!.name,
               'functionName': httpsCallable!.name,
+              'functionUri': null,
               'origin': httpsCallable!.origin,
               'region': functions!.region,
               'timeout': httpsCallable!.options.timeout.inMilliseconds,
@@ -149,6 +184,7 @@ void main() {
             arguments: <String, dynamic>{
               'appName': functions!.app!.name,
               'functionName': httpsCallable!.name,
+              'functionUri': null,
               'origin': httpsCallable!.origin,
               'region': functions!.region,
               'timeout': httpsCallable!.options.timeout.inMilliseconds,

@@ -9,7 +9,6 @@
 library firebase_interop.functions;
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-
 import 'package:js/js.dart';
 
 @JS()
@@ -23,7 +22,6 @@ external void connectFunctionsEmulator(
 external CustomFunction httpsCallable(FunctionsJsImpl functions, String name,
     [HttpsCallableOptions? options]);
 
-//TODO - implement once web v9 SDK lands
 @JS()
 external CustomFunction httpsCallableFromURL(
     FunctionsJsImpl functions, String url,

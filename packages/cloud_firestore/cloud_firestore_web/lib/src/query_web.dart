@@ -99,6 +99,11 @@ class QueryWeb extends QueryPlatform {
       query = query.limitToLast(parameters['limitToLast']);
     }
 
+    if (parameters['filters'] != null) {
+      final Map<String, Object?> filter = parameters['filters']!;
+      return query.filterWith(filter);
+    }
+
     for (final List<dynamic> condition in parameters['where']) {
       dynamic fieldPath = EncodeUtility.valueEncode(condition[0]);
       String opStr = condition[1];
@@ -240,6 +245,13 @@ class QueryWeb extends QueryPlatform {
   QueryPlatform where(Iterable<List<dynamic>> conditions) {
     return _copyWithParameters(<String, dynamic>{
       'where': conditions,
+    });
+  }
+
+  @override
+  QueryPlatform whereFilter(Filter filter) {
+    return _copyWithParameters(<String, dynamic>{
+      'filters': filter.toJson(),
     });
   }
 
