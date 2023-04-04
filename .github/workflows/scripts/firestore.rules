@@ -9,6 +9,10 @@ service cloud.firestore {
     	allow read, write: if true;
     }
 
+    match /{path=**}/collection-group/{subId} {
+      allow read, write: if true;
+    }
+
     match /firestore-bundle-tests/{document=**} {
     	allow read, write: if true;
     }
