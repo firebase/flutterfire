@@ -161,17 +161,17 @@ Once that process is running successfully, please run the web tests running as a
 
 For the `cloud_firestore` plugin:
 ```bash
-test:e2e:web:cloud_firestore
+melos run test:e2e:web:cloud_firestore
 ```
 
 For the `firebase_performance` plugin:
 ```bash
-test:e2e:web:firebase_performance
+melos run test:e2e:web:firebase_performance
 ```
 
 For the rest of the plugins:
 ```bash
-test:e2e:web
+melos run test:e2e:web
 ```
 
 A full list of all commands can be found within the [`melos.yaml`](https://github.com/firebase/flutterfire/blob/master/melos.yaml)
