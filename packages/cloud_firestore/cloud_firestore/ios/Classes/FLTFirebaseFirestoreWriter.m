@@ -149,14 +149,24 @@
 }
 
 - (NSDictionary *)FIRDocumentSnapshot:(FIRDocumentSnapshot *)documentSnapshot {
+  if (documentSnapshot == nil) {
+    NSLog(@"Error: documentSnapshot is nil");
+    return nil;
+  }
+
+  if (FLTFirebaseFirestorePlugin.serverTimestampMap == nil) {
+    FLTFirebaseFirestorePlugin.serverTimestampMap = [NSMutableDictionary dictionary];
+  }
+
+  NSNumber *documentSnapshotHash = @([documentSnapshot hash]);
   NSString *timestampBehaviorString =
-      FLTFirebaseFirestorePlugin.serverTimestampMap[@([documentSnapshot hash])];
+      FLTFirebaseFirestorePlugin.serverTimestampMap[documentSnapshotHash];
 
   FIRServerTimestampBehavior serverTimestampBehavior =
       [self toServerTimestampBehavior:timestampBehaviorString];
 
-  if (timestampBehaviorString != nil) {
-    [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:@([documentSnapshot hash])];
+  if (FLTFirebaseFirestorePlugin.serverTimestampMap[documentSnapshotHash] != nil) {
+    [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:documentSnapshotHash];
   }
 
   return @{
@@ -167,7 +177,6 @@
     @"metadata" : documentSnapshot.metadata,
   };
 }
-
 - (NSDictionary *)FIRLoadBundleTaskProgress:(FIRLoadBundleTaskProgress *)progress {
   NSString *state;
 
