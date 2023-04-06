@@ -78,10 +78,6 @@ FlutterStandardMethodCodec *_codec;
   return _serverTimestampMap;
 }
 
-+ (void)setServerTimestampMap:(NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap {
-  _serverTimestampMap = serverTimestampMap;
-}
-
 + (void)initialize {
   _codec =
       [FlutterStandardMethodCodec codecWithReaderWriter:[FLTFirebaseFirestoreReaderWriter new]];
