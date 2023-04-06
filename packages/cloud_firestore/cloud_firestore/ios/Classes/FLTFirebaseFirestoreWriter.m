@@ -155,7 +155,8 @@
   }
 
   if (FLTFirebaseFirestorePlugin.serverTimestampMap == nil) {
-    FLTFirebaseFirestorePlugin.serverTimestampMap = [NSMutableDictionary dictionary];
+    [FLTFirebaseFirestorePlugin
+        setServerTimestampMap:[NSMutableDictionary<NSNumber *, NSString *> dictionary]];
   }
 
   NSNumber *documentSnapshotHash = @([documentSnapshot hash]);
@@ -201,13 +202,14 @@
 }
 
 - (NSDictionary *)FIRQuerySnapshot:(FIRQuerySnapshot *)querySnapshot {
-  if (documentSnapshot == nil) {
-    NSLog(@"Error: documentSnapshot is nil");
+  if (querySnapshot == nil) {
+    NSLog(@"Error: querySnapshot is nil");
     return nil;
   }
 
   if (FLTFirebaseFirestorePlugin.serverTimestampMap == nil) {
-    FLTFirebaseFirestorePlugin.serverTimestampMap = [NSMutableDictionary dictionary];
+    [FLTFirebaseFirestorePlugin
+        setServerTimestampMap:[NSMutableDictionary<NSNumber *, NSString *> dictionary]];
   }
 
   NSNumber *querySnapshotHash = @([querySnapshot hash]);

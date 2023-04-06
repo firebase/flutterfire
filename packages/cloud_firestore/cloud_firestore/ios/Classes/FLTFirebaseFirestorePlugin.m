@@ -72,7 +72,14 @@ static NSMutableDictionary<NSNumber *, NSString *> *_serverTimestampMap;
 FlutterStandardMethodCodec *_codec;
 
 + (NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap {
+  if (_serverTimestampMap == nil) {
+    _serverTimestampMap = [NSMutableDictionary<NSNumber *, NSString *> dictionary];
+  }
   return _serverTimestampMap;
+}
+
++ (void)setServerTimestampMap:(NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap {
+  _serverTimestampMap = serverTimestampMap;
 }
 
 + (void)initialize {
