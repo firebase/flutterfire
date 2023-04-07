@@ -1,0 +1,427 @@
+{
+  "@@locale": "nb",
+  "@@last_modified": "2023-04-07T19:22:40.329",
+  "accessDisabledErrorText": "Tilgang til denne kontoen er midlertidig deaktivert",
+  "@accessDisabledErrorText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "arrayLabel": "array",
+  "@arrayLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "booleanLabel": "Boolean",
+  "@booleanLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "cancelLabel": "avbryt",
+  "@cancelLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "chooseACountry": "Velg et land",
+  "@chooseACountry": {
+    "description": "",
+    "placeholders": {}
+  },
+  "confirmPasswordDoesNotMatchErrorText": "Passordene stemmer ikke overens",
+  "@confirmPasswordDoesNotMatchErrorText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "confirmPasswordInputLabel": "Bekreft passord",
+  "@confirmPasswordInputLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "confirmPasswordIsRequiredErrorText": "Bekreft passordet ditt",
+  "@confirmPasswordIsRequiredErrorText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "continueText": "Fortsett",
+  "@continueText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "countryCode": "Kode",
+  "@countryCode": {
+    "description": "",
+    "placeholders": {}
+  },
+  "credentialAlreadyInUseErrorText": "Denne leverandøren er knyttet til en annen brukerkonto.",
+  "@credentialAlreadyInUseErrorText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "deleteAccount": "Slett brukerkonto",
+  "@deleteAccount": {
+    "description": "",
+    "placeholders": {}
+  },
+  "differentMethodsSignInTitleText": "Bruk en av følgende metoder for å logge inn",
+  "@differentMethodsSignInTitleText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "disable": "Deaktiver",
+  "@disable": {
+    "description": "",
+    "placeholders": {}
+  },
+  "eastInitialLabel": "Ø",
+  "@eastInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "emailInputLabel": "E-post",
+  "@emailInputLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "emailIsRequiredErrorText": "E-post er påkrevd",
+  "@emailIsRequiredErrorText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "emailLinkSignInButtonLabel": "Logg inn med magic link",
+  "@emailLinkSignInButtonLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "emailTakenErrorText": "En konto med denne e-postadressen finnes allerede",
+  "@emailTakenErrorText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "enable": "Aktiver",
+  "@enable": {
+    "description": "",
+    "placeholders": {}
+  },
+  "enableMoreSignInMethods": "Aktiver flere innloggingsmetoder",
+  "@enableMoreSignInMethods": {
+    "description": "",
+    "placeholders": {}
+  },
+  "enterSMSCodeText": "Skriv inn SMS-kode",
+  "@enterSMSCodeText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "findProviderForEmailTitleText": "Skriv inn e-postadressen din for å fortsette",
+  "@findProviderForEmailTitleText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "forgotPasswordButtonLabel": "Glemt passord?",
+  "@forgotPasswordButtonLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "forgotPasswordHintText": "Oppgi e-postadressen din, så sender vi deg en lenke for å tilbakestille passordet",
+  "@forgotPasswordHintText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "forgotPasswordViewTitle": "Glemt passord",
+  "@forgotPasswordViewTitle": {
+    "description": "",
+    "placeholders": {}
+  },
+  "geopointLabel": "geopunkt",
+  "@geopointLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "goBackButtonLabel": "Gå tilbake",
+  "@goBackButtonLabel": {
+    "description": "Used as a label of the back button.",
+    "placeholders": {}
+  },
+  "@hashCode": {
+    "description": "Hash-koden for dette objektet.",
+    "placeholders": {}
+  },
+  "invalidCountryCode": "Ugyldig kode",
+  "@invalidCountryCode": {
+    "description": "",
+    "placeholders": {}
+  },
+  "isNotAValidEmailErrorText": "Oppgi en gyldig e-postadresse",
+  "@isNotAValidEmailErrorText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "latitudeLabel": "latitude",
+  "@latitudeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "linkEmailButtonText": "Neste",
+  "@linkEmailButtonText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "longitudeLabel": "longitude",
+  "@longitudeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "mapLabel": "map",
+  "@mapLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "mfaTitle": "2-Trinns Bekreftelse",
+  "@mfaTitle": {
+    "description": "",
+    "placeholders": {}
+  },
+  "name": "Navn",
+  "@name": {
+    "description": "",
+    "placeholders": {}
+  },
+  "northInitialLabel": "N",
+  "@northInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "nullLabel": "null",
+  "@nullLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "numberLabel": "nummer",
+  "@numberLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "off": "Av",
+  "@off": {
+    "description": "",
+    "placeholders": {}
+  },
+  "on": "På",
+  "@on": {
+    "description": "",
+    "placeholders": {}
+  },
+  "passwordInputLabel": "Passord",
+  "@passwordInputLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "passwordIsRequiredErrorText": "Passord er påkrevd",
+  "@passwordIsRequiredErrorText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "passwordResetEmailSentText": "Vi har sendt deg en e-post med en lenke for å tilbakestille passordet ditt. Vennligst sjekk e-postene dine.",
+  "@passwordResetEmailSentText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "phoneInputLabel": "Telefonnummer",
+  "@phoneInputLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "phoneNumberInvalidErrorText": "Telefonnummeret er ugyldig",
+  "@phoneNumberInvalidErrorText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "phoneNumberIsRequiredErrorText": "Telefonnummer er påkrevd",
+  "@phoneNumberIsRequiredErrorText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "phoneVerificationViewTitleText": "Skriv inn telefonnummeret ditt",
+  "@phoneVerificationViewTitleText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "profile": "Profil",
+  "@profile": {
+    "description": "",
+    "placeholders": {}
+  },
+  "provideEmail": "Oppgi e-postadressen og passordet ditt.",
+  "@provideEmail": {
+    "description": "",
+    "placeholders": {}
+  },
+  "referenceLabel": "referanse",
+  "@referenceLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "registerActionText": "Registrer",
+  "@registerActionText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "registerHintText": "Har du ikke en konto?",
+  "@registerHintText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "registerText": "Registrer",
+  "@registerText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "resetPasswordButtonLabel": "Tilbakestill passord",
+  "@resetPasswordButtonLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "@runtimeType": {
+    "description": "",
+    "placeholders": {}
+  },
+  "sendLinkButtonLabel": "Send magisk lenke",
+  "@sendLinkButtonLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "signInActionText": "Logg inn",
+  "@signInActionText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "signInHintText": "Har du allerede en konto?",
+  "@signInHintText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "signInMethods": "Innloggingsmetoder",
+  "@signInMethods": {
+    "description": "",
+    "placeholders": {}
+  },
+  "signInText": "Logg inn",
+  "@signInText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "signInWithAppleButtonText": "Logg inn med Apple",
+  "@signInWithAppleButtonText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "signInWithEmailLinkSentText": "Vi har sendt deg en e-post med en magisk lenke.",
+  "@signInWithEmailLinkSentText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "signInWithEmailLinkViewTitleText": "Logg inn med magisk lenke",
+  "@signInWithEmailLinkViewTitleText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "signInWithFacebookButtonText": "Logg inn med Facebook",
+  "@signInWithFacebookButtonText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "signInWithGoogleButtonText": "Logg inn med Google",
+  "@signInWithGoogleButtonText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "signInWithPhoneButtonText": "Logg inn med telefon",
+  "@signInWithPhoneButtonText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "signInWithTwitterButtonText": "Logg inn med Twitter",
+  "@signInWithTwitterButtonText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "signOutButtonText": "Logg ut",
+  "@signOutButtonText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "smsAutoresolutionFailedError": "Klarte ikke å løse SMS-koden automatisk. Vennligst skriv inn koden",
+  "@smsAutoresolutionFailedError": {
+    "description": "",
+    "placeholders": {}
+  },
+  "southInitialLabel": "S",
+  "@southInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "stringLabel": "string",
+  "@stringLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "timestampLabel": "timestamp",
+  "@timestampLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "typeLabel": "type",
+  "@typeLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "unknownError": "Det oppstod en ukjent feil",
+  "@unknownError": {
+    "description": "",
+    "placeholders": {}
+  },
+  "updateLabel": "update",
+  "@updateLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "userNotFoundErrorText": "Kontoen eksisterer ikke",
+  "@userNotFoundErrorText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "valueLabel": "value",
+  "@valueLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "verifyCodeButtonText": "Bekreft",
+  "@verifyCodeButtonText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "verifyingSMSCodeText": "Bekrefter SMS-kode...",
+  "@verifyingSMSCodeText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "verifyItsYouText": "Bekreft at det er deg",
+  "@verifyItsYouText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "verifyPhoneNumberButtonText": "Neste",
+  "@verifyPhoneNumberButtonText": {
+    "description": "",
+    "placeholders": {}
+  },
+  "westInitialLabel": "V",
+  "@westInitialLabel": {
+    "description": "",
+    "placeholders": {}
+  },
+  "wrongOrNoPasswordErrorText": "Passordet er ugyldig, eller brukeren har ikke noe passord",
+  "@wrongOrNoPasswordErrorText": {
+    "description": "",
+    "placeholders": {}
+  }
+}

@@ -15,6 +15,7 @@ import 'lang/it.dart';
 import 'lang/zh.dart';
 import 'lang/zh_tw.dart';
 import 'lang/uk.dart';
+import 'lang/nb.dart';
 import 'lang/th.dart';
 import 'lang/ar.dart';
 import 'lang/tr.dart';
@@ -39,6 +40,7 @@ final localizations = <String, FirebaseUILocalizationLabels>{
   'zh': const ZhLocalizations(),
   'zh_tw': const ZhTWLocalizations(),
   'uk': const UkLocalizations(),
+  'nb': const NbLocalizations(),
   'th': const ThLocalizations(),
   'ar': const ArLocalizations(),
   'tr': const TrLocalizations(),
