@@ -6,7 +6,7 @@
 
     If you’ve added an error handler that calls
     `FirebaseCrashlytics.instance.recordError(error, stack, fatal: true)` to the
-    top-level `Zone`, you can use the following code to add a button to your app
+    `PlatformDispatcher.instance.onError`, you can use the following code to add a button to your app
     that, when pressed, throws a test exception:
 
     ```dart
