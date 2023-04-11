@@ -99,11 +99,23 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
             window.sessionStorage[getOriginName(firebaseApp.name)];
 
         if (emulatorOrigin != null) {
-          authDelegate.useAuthEmulator(emulatorOrigin);
-          // ignore: avoid_print
-          print(
-            'Using previously configured Auth emulator at $emulatorOrigin for ${firebaseApp.name} \nTo switch back to production, restart your app with the emulator turned off.',
-          );
+          try {
+            authDelegate.useAuthEmulator(emulatorOrigin);
+            // ignore: avoid_print
+            print(
+              'Using previously configured Auth emulator at $emulatorOrigin for ${firebaseApp.name} \nTo switch back to production, restart your app with the emulator turned off.',
+            );
+          } catch (e) {
+            if (e.toString().contains("sooner")) {
+              // Happens during hot reload when the emulator is already configured
+              // ignore: avoid_print
+              print(
+                'Auth emulator is already configured at $emulatorOrigin for ${firebaseApp.name} and kept across hot reload.\nTo switch back to production, restart your app with the emulator turned off.',
+              );
+            } else {
+              rethrow;
+            }
+          }
         }
       }
       await authDelegate.onWaitInitState();
