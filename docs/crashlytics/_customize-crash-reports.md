@@ -23,20 +23,16 @@ to disk to be sent along with the next fatal report or when the app restarts.
 You can automatically catch all "fatal" errors that are thrown within the Flutter
 framework by overriding `FlutterError.onError` with
 `FirebaseCrashlytics.instance.recordFlutterFatalError`. Alternatively,
-to also catch "non-fatal" exceptions, override `FlutterError.onError` with `FirebaseCrashlytics.instance.recordFlutterError`:
+to catch exceptions as "non-fatal" instead, override `FlutterError.onError` with `FirebaseCrashlytics.instance.recordFlutterError`:
 
 ```dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-  bool weWantFatalErrorRecording = true;
   FlutterError.onError = (errorDetails) {
-    if(weWantFatalErrorRecording){
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-    } else {
-      FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-    }
+    // If you wish to record a "non-fatal" exception, please use `FirebaseCrashlytics.instance.recordFlutterError` instead
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
 
   runApp(MyApp());
