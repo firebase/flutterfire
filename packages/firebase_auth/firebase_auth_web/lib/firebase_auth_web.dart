@@ -106,7 +106,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
               'Using previously configured Auth emulator at $emulatorOrigin for ${firebaseApp.name} \nTo switch back to production, restart your app with the emulator turned off.',
             );
           } catch (e) {
-            if (e.toString().contains("sooner")) {
+            if (e.toString().contains('sooner')) {
               // Happens during hot reload when the emulator is already configured
               // ignore: avoid_print
               print(
