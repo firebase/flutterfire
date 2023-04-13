@@ -96,14 +96,26 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       // if localhost, and emulator was previously set in localStorage, use it
       if (window.location.hostname == 'localhost' && kDebugMode) {
         final String? emulatorOrigin =
-            window.sessionStorage['firebaseEmulatorOrigin'];
+            window.sessionStorage[getOriginName(firebaseApp.name)];
 
         if (emulatorOrigin != null) {
-          authDelegate.useAuthEmulator(emulatorOrigin);
-          // ignore: avoid_print
-          print(
-            'Using previously configured Auth emulator at $emulatorOrigin \nTo switch back to production, restart your app with the emulator turned off.',
-          );
+          try {
+            authDelegate.useAuthEmulator(emulatorOrigin);
+            // ignore: avoid_print
+            print(
+              'Using previously configured Auth emulator at $emulatorOrigin for ${firebaseApp.name} \nTo switch back to production, restart your app with the emulator turned off.',
+            );
+          } catch (e) {
+            if (e.toString().contains('sooner')) {
+              // Happens during hot reload when the emulator is already configured
+              // ignore: avoid_print
+              print(
+                'Auth emulator is already configured at $emulatorOrigin for ${firebaseApp.name} and kept across hot reload.\nTo switch back to production, restart your app with the emulator turned off.',
+              );
+            } else {
+              rethrow;
+            }
+          }
         }
       }
       await authDelegate.onWaitInitState();
@@ -452,7 +464,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       // Get current session storage value
       final String? emulatorOrigin =
-          window.sessionStorage['firebaseEmulatorOrigin'];
+          window.sessionStorage[getOriginName(delegate.app.name)];
 
       // The generic platform interface is with host and port split to
       // centralize logic between android/ios native, but web takes the
@@ -469,7 +481,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       // Save to session storage so that the emulator is used on refresh
       // only in debug mode
       if (kDebugMode) {
-        window.sessionStorage['firebaseEmulatorOrigin'] = origin;
+        window.sessionStorage[getOriginName(delegate.app.name)] = origin;
       }
     } catch (e) {
       final String code = (e as auth_interop.AuthError).code;
@@ -536,4 +548,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       verificationFailed(getFirebaseAuthException(e));
     }
   }
+}
+
+String getOriginName(String appName) {
+  return '$appName-firebaseEmulatorOrigin';
 }
