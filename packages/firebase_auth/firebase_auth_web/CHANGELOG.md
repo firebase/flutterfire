@@ -1,3 +1,7 @@
+## 5.3.1
+
+ - **FIX**(auth,web): fix support for hot reload with multiple named instances when using an emulator on Web ([#10766](https://github.com/firebase/flutterfire/issues/10766)). ([b5de275d](https://github.com/firebase/flutterfire/commit/b5de275d9278e4be04d25c6f5f512fbcd53a103b))
+
 ## 5.3.0
 
  - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))

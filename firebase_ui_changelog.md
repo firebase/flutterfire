@@ -2,6 +2,53 @@
 
 All notable changes for firebase_ui packages
 
+## 2023-04-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.2.1`](#firebase_ui_auth---v121)
+ - [`firebase_ui_database` - `v1.1.1`](#firebase_ui_database---v111)
+ - [`firebase_ui_firestore` - `v1.3.1`](#firebase_ui_firestore---v131)
+ - [`firebase_ui_oauth_facebook` - `v1.1.1`](#firebase_ui_oauth_facebook---v111)
+ - [`firebase_ui_oauth_twitter` - `v1.1.1`](#firebase_ui_oauth_twitter---v111)
+ - [`firebase_ui_oauth` - `v1.2.1`](#firebase_ui_oauth---v121)
+ - [`firebase_ui_oauth_google` - `v1.1.1`](#firebase_ui_oauth_google---v111)
+ - [`firebase_ui_oauth_apple` - `v1.1.1`](#firebase_ui_oauth_apple---v111)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth_facebook` - `v1.1.1`
+ - `firebase_ui_oauth_twitter` - `v1.1.1`
+ - `firebase_ui_oauth` - `v1.2.1`
+ - `firebase_ui_oauth_google` - `v1.1.1`
+ - `firebase_ui_oauth_apple` - `v1.1.1`
+
+---
+
+#### `firebase_ui_auth` - `v1.2.1`
+
+ - **FIX**: allow to unlink providers only in edit mode ([#10649](https://github.com/firebase/flutterfire/issues/10649)). ([c2da6c7e](https://github.com/firebase/flutterfire/commit/c2da6c7e80bbf817ddbaf6475b7b5ea53c4ac666))
+ - **DOCS**(ui_auth): fix typo RegisterScren -> RegisterScreen ([#10488](https://github.com/firebase/flutterfire/issues/10488)). ([47c132c8](https://github.com/firebase/flutterfire/commit/47c132c85e83415fc4335ad7be5ef63958c0c3b0))
+
+#### `firebase_ui_database` - `v1.1.1`
+
+ - **FIX**: allow to unlink providers only in edit mode ([#10649](https://github.com/firebase/flutterfire/issues/10649)). ([c2da6c7e](https://github.com/firebase/flutterfire/commit/c2da6c7e80bbf817ddbaf6475b7b5ea53c4ac666))
+
+#### `firebase_ui_firestore` - `v1.3.1`
+
+ - **FIX**: allow to unlink providers only in edit mode ([#10649](https://github.com/firebase/flutterfire/issues/10649)). ([c2da6c7e](https://github.com/firebase/flutterfire/commit/c2da6c7e80bbf817ddbaf6475b7b5ea53c4ac666))
+
+
 ## 2023-03-30
 
 ### Changes

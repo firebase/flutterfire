@@ -19,7 +19,7 @@ dependencies:
   js: ^0.6.3
 
 dev_dependencies:
-  firebase_app_check: ^0.1.2
+  firebase_app_check: ^0.1.2+1
   firebase_core_platform_interface: ^4.6.0
   flutter_test:
     sdk: flutter

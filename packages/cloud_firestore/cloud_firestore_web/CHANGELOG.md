@@ -1,3 +1,7 @@
+## 3.4.1
+
+ - **REFACTOR**(firestore): Dart 3 compatibility: change _Updatable to be an actual `mixin` ([#10667](https://github.com/firebase/flutterfire/issues/10667)). ([cf7dd460](https://github.com/firebase/flutterfire/commit/cf7dd460d80c8d8c00e53e70ae93cb4695277f0c))
+
 ## 3.4.0
 
  - **FEAT**(firestore): add the `Filter` class and support for the OR query ([#10678](https://github.com/firebase/flutterfire/issues/10678)). ([ac434044](https://github.com/firebase/flutterfire/commit/ac434044bbfa91d0d8b33ff39736d8eb4062e824))

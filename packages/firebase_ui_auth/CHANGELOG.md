@@ -1,3 +1,8 @@
+## 1.2.1
+
+ - **FIX**: allow to unlink providers only in edit mode ([#10649](https://github.com/firebase/flutterfire/issues/10649)). ([c2da6c7e](https://github.com/firebase/flutterfire/commit/c2da6c7e80bbf817ddbaf6475b7b5ea53c4ac666))
+ - **DOCS**(ui_auth): fix typo RegisterScren -> RegisterScreen ([#10488](https://github.com/firebase/flutterfire/issues/10488)). ([47c132c8](https://github.com/firebase/flutterfire/commit/47c132c85e83415fc4335ad7be5ef63958c0c3b0))
+
 ## 1.2.0
 
  - **FIX**(ui_auth): pass breakpoint to LoginScreen ([#10607](https://github.com/firebase/flutterfire/issues/10607)). ([39d77c4d](https://github.com/firebase/flutterfire/commit/39d77c4dcc9e77b9f78db918dc444c0e09fd3228))
