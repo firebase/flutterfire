@@ -324,8 +324,5 @@ jobs:
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "E2E Tests"
         working-directory: tests
-        # Web devices are not supported for the `flutter test` command yet. As a
-        # workaround we can use the `flutter drive` command. Tracking issue:
-        # https://github.com/flutter/flutter/issues/66264
         run: |
           flutter test .\integration_test\e2e_test.dart -d windows
