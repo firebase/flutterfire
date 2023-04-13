@@ -73,9 +73,7 @@ PigeonFirebaseOptions optionsFromFIROptions(
   if (options.database_url() != nullptr) {
     pigeon_options.set_database_u_r_l(options.database_url());
   }
-  if (options.ga_tracking_id() != nullptr) {
-    pigeon_options.set_tracking_id(options.ga_tracking_id());
-  }
+  pigeon_options.set_tracking_id(nullptr);
   pigeon_options.set_messaging_sender_id(options.messaging_sender_id());
   pigeon_options.set_project_id(options.project_id());
   if (options.storage_bucket() != nullptr) {
