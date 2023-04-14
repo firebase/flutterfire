@@ -1,0 +1,25 @@
+name: firebase_ui_storage
+description: A new Flutter package project.
+version: 0.1.0-dev.0
+homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_storage/
+
+environment:
+  sdk: '>=2.19.5 <3.0.0'
+  flutter: '>=1.17.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_storage: ^11.0.16
+  firebase_ui_shared: ^1.0.0
+  path: ^1.8.2
+  uuid: ^3.0.7
+  file_selector: ^0.9.2+4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  mockito: ^5.3.2
+
+flutter:

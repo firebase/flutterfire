@@ -31,18 +31,19 @@ class LoadingIndicator extends PlatformWidget {
 
   @override
   Widget? buildWrapper(BuildContext context, Widget child) {
-    return Center(
-      child: SizedBox(
-        width: size,
-        height: size,
-        child: child,
-      ),
+    return SizedBox(
+      width: size,
+      height: size,
+      child: child,
     );
   }
 
   @override
   Widget buildCupertino(BuildContext context) {
-    return const CupertinoActivityIndicator();
+    return CupertinoActivityIndicator(
+      radius: size / 2,
+      color: color,
+    );
   }
 
   @override

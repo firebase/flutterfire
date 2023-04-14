@@ -31,16 +31,5 @@ void main() {
         expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
       },
     );
-
-    testWidgets(
-      'centered under both MaterialApp and CupertinoApp',
-      (tester) async {
-        await tester.pumpWidget(const MaterialApp(home: home));
-        expect(find.byType(Center), findsOneWidget);
-
-        await tester.pumpWidget(const CupertinoApp(home: home));
-        expect(find.byType(Center), findsOneWidget);
-      },
-    );
   });
 }
