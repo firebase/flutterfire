@@ -38,11 +38,10 @@ and open source.
 
 - [Add Firebase to your Flutter app](https://firebase.google.com/docs/flutter/setup)
 - [Available plugins](https://firebase.google.com/docs/flutter/setup#available-plugins)
-- FlutterFire UIs (beta)
-  - [Auth UI](./packages/firebase_ui_auth/README.md)
-  - [Database UI](./packages/firebase_ui_database/README.md)
-  - [Firestore UI](./packages/firebase_ui_firestore/README.md)
-  - [OAuth UI](./packages/firebase_ui_oauth/README.md)
+- Firebase UI
+  - [Firebase UI for Authentication](./packages/firebase_ui_auth/README.md)
+  - [Firebase UI for Realtime Database](./packages/firebase_ui_database/README.md)
+  - [Firebase UI for Cloud Firestore](./packages/firebase_ui_firestore/README.md)
 - [Firestore ODM](./packages/cloud_firestore_odm/README.md) (alpha)
 
 ---
