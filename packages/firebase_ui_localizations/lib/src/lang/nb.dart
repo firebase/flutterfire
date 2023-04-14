@@ -7,7 +7,8 @@ class NbLocalizations extends FirebaseUILocalizationLabels {
   const NbLocalizations();
 
   @override
-  String get accessDisabledErrorText => "Tilgang til denne kontoen er midlertidig deaktivert";
+  String get accessDisabledErrorText =>
+      "Tilgang til denne kontoen er midlertidig deaktivert";
 
   @override
   String get arrayLabel => "array";
@@ -22,7 +23,8 @@ class NbLocalizations extends FirebaseUILocalizationLabels {
   String get chooseACountry => "Velg et land";
 
   @override
-  String get confirmPasswordDoesNotMatchErrorText => "Passordene stemmer ikke overens";
+  String get confirmPasswordDoesNotMatchErrorText =>
+      "Passordene stemmer ikke overens";
 
   @override
   String get confirmPasswordInputLabel => "Bekreft passord";
@@ -37,13 +39,15 @@ class NbLocalizations extends FirebaseUILocalizationLabels {
   String get countryCode => "Kode";
 
   @override
-  String get credentialAlreadyInUseErrorText => "Denne leverandøren er knyttet til en annen brukerkonto.";
+  String get credentialAlreadyInUseErrorText =>
+      "Denne leverandøren er knyttet til en annen brukerkonto.";
 
   @override
   String get deleteAccount => "Slett brukerkonto";
 
   @override
-  String get differentMethodsSignInTitleText => "Bruk en av følgende metoder for å logge inn";
+  String get differentMethodsSignInTitleText =>
+      "Bruk en av følgende metoder for å logge inn";
 
   @override
   String get disable => "Deaktiver";
@@ -61,7 +65,8 @@ class NbLocalizations extends FirebaseUILocalizationLabels {
   String get emailLinkSignInButtonLabel => "Logg inn med magic link";
 
   @override
-  String get emailTakenErrorText => "En konto med denne e-postadressen finnes allerede";
+  String get emailTakenErrorText =>
+      "En konto med denne e-postadressen finnes allerede";
 
   @override
   String get enable => "Aktiver";
@@ -73,13 +78,15 @@ class NbLocalizations extends FirebaseUILocalizationLabels {
   String get enterSMSCodeText => "Skriv inn SMS-kode";
 
   @override
-  String get findProviderForEmailTitleText => "Skriv inn e-postadressen din for å fortsette";
+  String get findProviderForEmailTitleText =>
+      "Skriv inn e-postadressen din for å fortsette";
 
   @override
   String get forgotPasswordButtonLabel => "Glemt passord?";
 
   @override
-  String get forgotPasswordHintText => "Oppgi e-postadressen din, så sender vi deg en lenke for å tilbakestille passordet";
+  String get forgotPasswordHintText =>
+      "Oppgi e-postadressen din, så sender vi deg en lenke for å tilbakestille passordet";
 
   @override
   String get forgotPasswordViewTitle => "Glemt passord";
@@ -191,7 +198,8 @@ class NbLocalizations extends FirebaseUILocalizationLabels {
   String get signInWithAppleButtonText => "Logg inn med Apple";
 
   @override
-  String get signInWithEmailLinkSentText => "Vi har sendt deg en e-post med en magisk lenke.";
+  String get signInWithEmailLinkSentText =>
+      "Vi har sendt deg en e-post med en magisk lenke.";
 
   @override
   String get signInWithEmailLinkViewTitleText => "Logg inn med magisk lenke";
@@ -212,7 +220,8 @@ class NbLocalizations extends FirebaseUILocalizationLabels {
   String get signOutButtonText => "Logg ut";
 
   @override
-  String get smsAutoresolutionFailedError => "Klarte ikke å løse SMS-koden automatisk. Vennligst skriv inn koden";
+  String get smsAutoresolutionFailedError =>
+      "Klarte ikke å løse SMS-koden automatisk. Vennligst skriv inn koden";
 
   @override
   String get southInitialLabel => "S";
@@ -254,5 +263,6 @@ class NbLocalizations extends FirebaseUILocalizationLabels {
   String get westInitialLabel => "V";
 
   @override
-  String get wrongOrNoPasswordErrorText => "Passordet er ugyldig, eller brukeren har ikke noe passord";
+  String get wrongOrNoPasswordErrorText =>
+      "Passordet er ugyldig, eller brukeren har ikke noe passord";
 }
