@@ -7,6 +7,9 @@ environment:
   sdk: '>=2.19.5 <3.0.0'
   flutter: '>=1.17.0'
 
+false_secrets:
+  - example/**
+
 dependencies:
   flutter:
     sdk: flutter
