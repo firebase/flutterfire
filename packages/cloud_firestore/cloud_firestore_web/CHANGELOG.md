@@ -1,3 +1,7 @@
+## 3.4.2
+
+ - Update a dependency to the latest release.
+
 ## 3.4.1
 
  - **REFACTOR**(firestore): Dart 3 compatibility: change _Updatable to be an actual `mixin` ([#10667](https://github.com/firebase/flutterfire/issues/10667)). ([cf7dd460](https://github.com/firebase/flutterfire/commit/cf7dd460d80c8d8c00e53e70ae93cb4695277f0c))
