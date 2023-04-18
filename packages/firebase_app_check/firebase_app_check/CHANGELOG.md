@@ -1,3 +1,7 @@
+## 0.1.2+2
+
+ - Update a dependency to the latest release.
+
 ## 0.1.2+1
 
  - **FIX**(app-check): fix 'Semantic Issue (Xcode): `new` is unavailable' on XCode 14.3 ([#10734](https://github.com/firebase/flutterfire/issues/10734)). ([cc6d1c28](https://github.com/firebase/flutterfire/commit/cc6d1c28193d5cdaaa564729340c380b5f632982))

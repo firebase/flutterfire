@@ -1,3 +1,7 @@
+## 4.5.2
+
+ - Update a dependency to the latest release.
+
 ## 4.5.1
 
  - **FIX**(firestore): ensure all index URLs are captured and passed to the user ([#10674](https://github.com/firebase/flutterfire/issues/10674)). ([9800435a](https://github.com/firebase/flutterfire/commit/9800435abc562fadc67a945e771591186576c34d))

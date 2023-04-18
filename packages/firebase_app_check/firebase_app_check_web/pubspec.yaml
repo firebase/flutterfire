@@ -1,16 +1,16 @@
 name: firebase_app_check_web
 description: The web implementation of firebase_auth
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_app_check/firebase_app_check_web
-version: 0.0.8
+version: 0.0.8+1
 
 environment:
   sdk: '>=2.18.0 <3.0.0'
   flutter: '>=1.20.0'
 
 dependencies:
-  _flutterfire_internals: ^1.1.0
-  firebase_app_check_platform_interface: ^0.0.6
-  firebase_core: ^2.9.0
+  _flutterfire_internals: ^1.1.1
+  firebase_app_check_platform_interface: ^0.0.6+1
+  firebase_core: ^2.10.0
   firebase_core_web: ^2.3.0
   flutter:
     sdk: flutter
@@ -19,7 +19,7 @@ dependencies:
   js: ^0.6.3
 
 dev_dependencies:
-  firebase_app_check: ^0.1.2+1
+  firebase_app_check: ^0.1.2+2
   firebase_core_platform_interface: ^4.6.0
   flutter_test:
     sdk: flutter
