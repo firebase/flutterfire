@@ -2,6 +2,53 @@
 
 All notable changes for firebase_ui packages
 
+## 2023-04-18
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_shared` - `v1.2.0`](#firebase_ui_shared---v120)
+ - [`firebase_ui_storage` - `v0.1.0-dev.1`](#firebase_ui_storage---v010-dev1)
+ - [`firebase_ui_auth` - `v1.2.2`](#firebase_ui_auth---v122)
+ - [`firebase_ui_oauth` - `v1.2.2`](#firebase_ui_oauth---v122)
+ - [`firebase_ui_oauth_twitter` - `v1.1.2`](#firebase_ui_oauth_twitter---v112)
+ - [`firebase_ui_oauth_facebook` - `v1.1.2`](#firebase_ui_oauth_facebook---v112)
+ - [`firebase_ui_oauth_apple` - `v1.1.2`](#firebase_ui_oauth_apple---v112)
+ - [`firebase_ui_oauth_google` - `v1.1.2`](#firebase_ui_oauth_google---v112)
+ - [`firebase_ui_database` - `v1.1.2`](#firebase_ui_database---v112)
+ - [`firebase_ui_firestore` - `v1.3.2`](#firebase_ui_firestore---v132)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_auth` - `v1.2.2`
+ - `firebase_ui_oauth` - `v1.2.2`
+ - `firebase_ui_oauth_twitter` - `v1.1.2`
+ - `firebase_ui_oauth_facebook` - `v1.1.2`
+ - `firebase_ui_oauth_apple` - `v1.1.2`
+ - `firebase_ui_oauth_google` - `v1.1.2`
+ - `firebase_ui_database` - `v1.1.2`
+ - `firebase_ui_firestore` - `v1.3.2`
+
+---
+
+#### `firebase_ui_shared` - `v1.2.0`
+
+ - **FEAT**(ui_storage): configuration API and UploadButton widget ([#10699](https://github.com/firebase/flutterfire/issues/10699)). ([e802b3dd](https://github.com/firebase/flutterfire/commit/e802b3dd4454fe797abe18bb584b4287b5be74da))
+
+#### `firebase_ui_storage` - `v0.1.0-dev.1`
+
+ - **FEAT**(ui_storage): configuration API and UploadButton widget ([#10699](https://github.com/firebase/flutterfire/issues/10699)). ([e802b3dd](https://github.com/firebase/flutterfire/commit/e802b3dd4454fe797abe18bb584b4287b5be74da))
+
+
 ## 2023-04-13
 
 ### Changes

@@ -1,3 +1,7 @@
+## 5.3.2
+
+ - Update a dependency to the latest release.
+
 ## 5.3.1
 
  - **FIX**(auth,web): fix support for hot reload with multiple named instances when using an emulator on Web ([#10766](https://github.com/firebase/flutterfire/issues/10766)). ([b5de275d](https://github.com/firebase/flutterfire/commit/b5de275d9278e4be04d25c6f5f512fbcd53a103b))
