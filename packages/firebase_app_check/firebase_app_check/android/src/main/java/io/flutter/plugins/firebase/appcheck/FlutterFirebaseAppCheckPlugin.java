@@ -13,7 +13,6 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.AppCheckToken;
-import com.google.firebase.appcheck.AppCheckTokenResult;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory;
@@ -121,7 +120,8 @@ public class FlutterFirebaseAppCheckPlugin
           try {
             FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
             Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
-            AppCheckToken tokenResult = Tasks.await(firebaseAppCheck.getAppCheckToken(forceRefresh));
+            AppCheckToken tokenResult =
+                Tasks.await(firebaseAppCheck.getAppCheckToken(forceRefresh));
 
             taskCompletionSource.setResult(tokenResult.getToken());
           } catch (Exception e) {
