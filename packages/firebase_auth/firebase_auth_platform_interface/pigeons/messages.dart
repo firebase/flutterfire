@@ -55,6 +55,19 @@ class PigeonMultiFactorInfo {
   final String? phoneNumber;
 }
 
+@HostApi(dartHostTestHandler: 'TesFirebaseAuthHostApi')
+abstract class FirebaseAuthHostApi {
+  @async
+  String registerIdTokenListener(
+    String appName,
+  );
+
+  @async
+  String registerAuthStateListener(
+    String appName,
+  );
+}
+
 @HostApi(dartHostTestHandler: 'TestMultiFactorUserHostApi')
 abstract class MultiFactorUserHostApi {
   @async
