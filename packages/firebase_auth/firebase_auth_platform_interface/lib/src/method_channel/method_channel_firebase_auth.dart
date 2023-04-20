@@ -232,11 +232,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<void> applyActionCode(String code) async {
     try {
-      await channel.invokeMethod<void>(
-          'Auth#applyActionCode',
-          _withChannelDefaults({
-            'code': code,
-          }));
+      await _api.applyActionCode(pigeonDefault, code);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

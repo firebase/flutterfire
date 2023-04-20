@@ -284,6 +284,30 @@ void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAuthHostApi.applyActionCode"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(applyActionCodeApp:code:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(applyActionCodeApp:code:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_code = GetNullableObjectAtIndex(args, 1);
+        [api applyActionCodeApp:arg_app
+                           code:arg_code
+                     completion:^(FlutterError *_Nullable error) {
+                       callback(wrapResult(nil, error));
+                     }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }
 @interface MultiFactorUserHostApiCodecReader : FlutterStandardReader
 @end

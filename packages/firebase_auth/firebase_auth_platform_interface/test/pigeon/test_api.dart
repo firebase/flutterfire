@@ -44,6 +44,8 @@ abstract class TesFirebaseAuthHostApi {
 
   Future<void> useEmulator(PigeonFirebaseApp app, String host, int port);
 
+  Future<void> applyActionCode(PigeonFirebaseApp app, String code);
+
   static void setup(TesFirebaseAuthHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
     {
@@ -116,6 +118,31 @@ abstract class TesFirebaseAuthHostApi {
           assert(arg_port != null,
               'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.useEmulator was null, expected non-null int.');
           await api.useEmulator(arg_app!, arg_host!, arg_port!);
+          return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthHostApi.applyActionCode', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.applyActionCode was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.applyActionCode was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_code = (args[1] as String?);
+          assert(arg_code != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.applyActionCode was null, expected non-null String.');
+          await api.applyActionCode(arg_app!, arg_code!);
           return <Object?>[];
         });
       }

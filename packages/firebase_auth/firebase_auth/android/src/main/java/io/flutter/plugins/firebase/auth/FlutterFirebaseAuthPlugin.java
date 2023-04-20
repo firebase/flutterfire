@@ -519,7 +519,11 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @Override
-  public void useEmulator(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String host, @NonNull Long port, @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+  public void useEmulator(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull String host,
+      @NonNull Long port,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
       firebaseAuth.useEmulator(host, port.intValue());
@@ -529,23 +533,16 @@ public class FlutterFirebaseAuthPlugin
     }
   }
 
-  private Task<Void> applyActionCode(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+  @Override
+  public void applyActionCode(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String code, @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+      Tasks.await(firebaseAuth.applyActionCode(code));
+      result.success(null);
+    } catch (Exception e) {
+      result.error(e);
+    }
 
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            String code = (String) Objects.requireNonNull(arguments.get(Constants.CODE));
-
-            Tasks.await(firebaseAuth.applyActionCode(code));
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> checkActionCode(Map<String, Object> arguments) {
@@ -962,7 +959,6 @@ public class FlutterFirebaseAuthPlugin
 
     return taskCompletionSource.getTask();
   }
-
 
   private Task<Map<String, Object>> verifyPasswordResetCode(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
@@ -1441,9 +1437,6 @@ public class FlutterFirebaseAuthPlugin
     final Task<?> methodCallTask;
 
     switch (call.method) {
-      case "Auth#applyActionCode":
-        methodCallTask = applyActionCode(call.arguments());
-        break;
       case "Auth#checkActionCode":
         methodCallTask = checkActionCode(call.arguments());
         break;
