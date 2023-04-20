@@ -10,14 +10,37 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 
+class _TesFirebaseAuthHostApiCodec extends StandardMessageCodec {
+  const _TesFirebaseAuthHostApiCodec();
+  @override
+  void writeValue(WriteBuffer buffer, Object? value) {
+    if (value is PigeonFirebaseApp) {
+      buffer.putUint8(128);
+      writeValue(buffer, value.encode());
+    } else {
+      super.writeValue(buffer, value);
+    }
+  }
+
+  @override
+  Object? readValueOfType(int type, ReadBuffer buffer) {
+    switch (type) {
+      case 128:
+        return PigeonFirebaseApp.decode(readValue(buffer)!);
+      default:
+        return super.readValueOfType(type, buffer);
+    }
+  }
+}
+
 abstract class TesFirebaseAuthHostApi {
   static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
       TestDefaultBinaryMessengerBinding.instance;
-  static const MessageCodec<Object?> codec = StandardMessageCodec();
+  static const MessageCodec<Object?> codec = _TesFirebaseAuthHostApiCodec();
 
-  Future<String> registerIdTokenListener(String appName);
+  Future<String> registerIdTokenListener(PigeonFirebaseApp app);
 
-  Future<String> registerAuthStateListener(String appName);
+  Future<String> registerAuthStateListener(PigeonFirebaseApp app);
 
   static void setup(TesFirebaseAuthHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -36,10 +59,10 @@ abstract class TesFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.registerIdTokenListener was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_appName = (args[0] as String?);
-          assert(arg_appName != null,
-              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.registerIdTokenListener was null, expected non-null String.');
-          final String output = await api.registerIdTokenListener(arg_appName!);
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.registerIdTokenListener was null, expected non-null PigeonFirebaseApp.');
+          final String output = await api.registerIdTokenListener(arg_app!);
           return <Object?>[output];
         });
       }
@@ -59,11 +82,10 @@ abstract class TesFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.registerAuthStateListener was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_appName = (args[0] as String?);
-          assert(arg_appName != null,
-              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.registerAuthStateListener was null, expected non-null String.');
-          final String output =
-              await api.registerAuthStateListener(arg_appName!);
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.registerAuthStateListener was null, expected non-null PigeonFirebaseApp.');
+          final String output = await api.registerAuthStateListener(arg_app!);
           return <Object?>[output];
         });
       }
@@ -223,14 +245,17 @@ class _TestMultiFactoResolverHostApiCodec extends StandardMessageCodec {
   const _TestMultiFactoResolverHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonMultiFactorInfo) {
+    if (value is PigeonFirebaseApp) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorSession) {
+    } else if (value is PigeonMultiFactorInfo) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonPhoneMultiFactorAssertion) {
+    } else if (value is PigeonMultiFactorSession) {
       buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonPhoneMultiFactorAssertion) {
+      buffer.putUint8(131);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -241,10 +266,12 @@ class _TestMultiFactoResolverHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
-        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
+        return PigeonFirebaseApp.decode(readValue(buffer)!);
       case 129:
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
       case 130:
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+      case 131:
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);

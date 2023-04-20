@@ -76,6 +76,7 @@ public class FlutterFirebaseAuthPlugin
         MethodCallHandler,
         FlutterPlugin,
         ActivityAware,
+        GeneratedAndroidFirebaseAuth.FirebaseAuthHostApi,
         GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi,
         GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi {
 
@@ -171,6 +172,15 @@ public class FlutterFirebaseAuthPlugin
     String tenantId = (String) arguments.get(Constants.TENANT_ID);
     if (tenantId != null) {
       auth.setTenantId(tenantId);
+    }
+    return auth;
+  }
+
+  static FirebaseAuth getAuthFromPigeon(GeneratedAndroidFirebaseAuth.PigeonFirebaseApp pigeonApp) {
+    FirebaseApp app = FirebaseApp.getInstance(pigeonApp.getAppName());
+    FirebaseAuth auth = FirebaseAuth.getInstance(app);
+    if (pigeonApp.getTenantId() != null) {
+      auth.setTenantId(pigeonApp.getTenantId());
     }
     return auth;
   }
@@ -474,46 +484,36 @@ public class FlutterFirebaseAuthPlugin
     return output;
   }
 
-  private Task<String> registerIdTokenListener(Map<String, Object> arguments) {
-    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
 
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            final FirebaseAuth auth = getAuth(arguments);
-            final IdTokenChannelStreamHandler handler = new IdTokenChannelStreamHandler(auth);
-            final String name = METHOD_CHANNEL_NAME + "/id-token/" + auth.getApp().getName();
-            final EventChannel channel = new EventChannel(messenger, name);
-            channel.setStreamHandler(handler);
-            streamHandlers.put(channel, handler);
-            taskCompletionSource.setResult(name);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
+  @Override
+  public void registerIdTokenListener(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
+    try {
+      final FirebaseAuth auth = getAuthFromPigeon(app);
+      final IdTokenChannelStreamHandler handler = new IdTokenChannelStreamHandler(auth);
+      final String name = METHOD_CHANNEL_NAME + "/id-token/" + auth.getApp().getName();
+      final EventChannel channel = new EventChannel(messenger, name);
+      channel.setStreamHandler(handler);
+      streamHandlers.put(channel, handler);
+      result.success(name);
+    } catch (Exception e) {
+      result.error(e);
+    }
   }
 
-  private Task<String> registerAuthStateListener(Map<String, Object> arguments) {
-    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
+  @Override
+  public void registerAuthStateListener(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
+    try {
+      final FirebaseAuth auth = getAuthFromPigeon(app);
+      final AuthStateChannelStreamHandler handler = new AuthStateChannelStreamHandler(auth);
+      final String name = METHOD_CHANNEL_NAME + "/auth-state/" + auth.getApp().getName();
+      final EventChannel channel = new EventChannel(messenger, name);
+      channel.setStreamHandler(handler);
+      streamHandlers.put(channel, handler);
+      result.success(name);
+    } catch (Exception e) {
+      result.error(e);
+    }
 
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            final FirebaseAuth auth = getAuth(arguments);
-            final AuthStateChannelStreamHandler handler = new AuthStateChannelStreamHandler(auth);
-            final String name = METHOD_CHANNEL_NAME + "/auth-state/" + auth.getApp().getName();
-            final EventChannel channel = new EventChannel(messenger, name);
-            channel.setStreamHandler(handler);
-            streamHandlers.put(channel, handler);
-            taskCompletionSource.setResult(name);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
   }
 
   private Task<Void> applyActionCode(Map<String, Object> arguments) {
@@ -858,7 +858,7 @@ public class FlutterFirebaseAuthPlugin
     final String resolverId = UUID.randomUUID().toString();
     multiFactorResolverMap.put(resolverId, multiFactorResolver);
 
-    final List<Map<String, Object>> pigeonHints = multiFactorInfoToMap(hints);
+    final List<List<Object>> pigeonHints = multiFactorInfoToMap(hints);
 
     output.put(Constants.APP_NAME, getAuth(arguments).getApp().getName());
 
@@ -901,10 +901,10 @@ public class FlutterFirebaseAuthPlugin
     return pigeonHints;
   }
 
-  private List<Map<String, Object>> multiFactorInfoToMap(List<MultiFactorInfo> hints) {
-    List<Map<String, Object>> pigeonHints = new ArrayList<>();
+  private List<List<Object>> multiFactorInfoToMap(List<MultiFactorInfo> hints) {
+    List<List<Object>> pigeonHints = new ArrayList<>();
     for (GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo info : multiFactorInfoToPigeon(hints)) {
-      pigeonHints.add(info.toMap());
+      pigeonHints.add(info.toList());
     }
     return pigeonHints;
   }
@@ -1446,12 +1446,6 @@ public class FlutterFirebaseAuthPlugin
     final Task<?> methodCallTask;
 
     switch (call.method) {
-      case "Auth#registerIdTokenListener":
-        methodCallTask = registerIdTokenListener(call.arguments());
-        break;
-      case "Auth#registerAuthStateListener":
-        methodCallTask = registerAuthStateListener(call.arguments());
-        break;
       case "Auth#applyActionCode":
         methodCallTask = applyActionCode(call.arguments());
         break;
@@ -1994,4 +1988,6 @@ public class FlutterFirebaseAuthPlugin
               }
             });
   }
+
+
 }

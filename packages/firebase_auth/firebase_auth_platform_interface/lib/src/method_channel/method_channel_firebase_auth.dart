@@ -9,6 +9,7 @@ import 'dart:io' show Platform;
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
+import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +25,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/firebase_auth',
   );
+
+  final _api = FirebaseAuthHostApi();
 
   /// Map of [MethodChannelFirebaseAuth] that can be get with Firebase App Name.
   static Map<String, MethodChannelFirebaseAuth>
@@ -64,10 +67,11 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// Creates a new instance with a given [FirebaseApp].
   MethodChannelFirebaseAuth({required FirebaseApp app})
       : super(appInstance: app) {
-    channel.invokeMethod<String>('Auth#registerIdTokenListener', {
-      'appName': app.name,
-    }).then((channelName) {
-      final events = EventChannel(channelName!, channel.codec);
+    _api
+        .registerIdTokenListener(
+            PigeonFirebaseApp(appName: app.name, tenantId: tenantId))
+        .then((channelName) {
+      final events = EventChannel(channelName, channel.codec);
       events
           .receiveGuardedBroadcastStream(onError: convertPlatformException)
           .listen(
@@ -77,10 +81,11 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       );
     });
 
-    channel.invokeMethod<String>('Auth#registerAuthStateListener', {
-      'appName': app.name,
-    }).then((channelName) {
-      final events = EventChannel(channelName!, channel.codec);
+    _api
+        .registerAuthStateListener(
+            PigeonFirebaseApp(appName: app.name, tenantId: tenantId))
+        .then((channelName) {
+      final events = EventChannel(channelName, channel.codec);
       events
           .receiveGuardedBroadcastStream(onError: convertPlatformException)
           .listen(

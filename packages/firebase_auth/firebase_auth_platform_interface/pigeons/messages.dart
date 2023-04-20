@@ -55,16 +55,26 @@ class PigeonMultiFactorInfo {
   final String? phoneNumber;
 }
 
+class PigeonFirebaseApp {
+  const PigeonFirebaseApp({
+    required this.appName,
+    required this.tenantId,
+  });
+
+  final String appName;
+  final String? tenantId;
+}
+
 @HostApi(dartHostTestHandler: 'TesFirebaseAuthHostApi')
 abstract class FirebaseAuthHostApi {
   @async
   String registerIdTokenListener(
-    String appName,
+    PigeonFirebaseApp app,
   );
 
   @async
   String registerAuthStateListener(
-    String appName,
+    PigeonFirebaseApp app,
   );
 }
 

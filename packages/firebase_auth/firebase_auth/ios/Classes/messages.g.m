@@ -43,6 +43,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList;
 @end
 
+@interface PigeonFirebaseApp ()
++ (PigeonFirebaseApp *)fromList:(NSArray *)list;
++ (nullable PigeonFirebaseApp *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
 @implementation PigeonMultiFactorSession
 + (instancetype)makeWithId:(NSString *)id {
   PigeonMultiFactorSession *pigeonResult = [[PigeonMultiFactorSession alloc] init];
@@ -131,9 +137,76 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
+@implementation PigeonFirebaseApp
++ (instancetype)makeWithAppName:(NSString *)appName tenantId:(nullable NSString *)tenantId {
+  PigeonFirebaseApp *pigeonResult = [[PigeonFirebaseApp alloc] init];
+  pigeonResult.appName = appName;
+  pigeonResult.tenantId = tenantId;
+  return pigeonResult;
+}
++ (PigeonFirebaseApp *)fromList:(NSArray *)list {
+  PigeonFirebaseApp *pigeonResult = [[PigeonFirebaseApp alloc] init];
+  pigeonResult.appName = GetNullableObjectAtIndex(list, 0);
+  NSAssert(pigeonResult.appName != nil, @"");
+  pigeonResult.tenantId = GetNullableObjectAtIndex(list, 1);
+  return pigeonResult;
+}
++ (nullable PigeonFirebaseApp *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonFirebaseApp fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    (self.appName ?: [NSNull null]),
+    (self.tenantId ?: [NSNull null]),
+  ];
+}
+@end
+
+@interface FirebaseAuthHostApiCodecReader : FlutterStandardReader
+@end
+@implementation FirebaseAuthHostApiCodecReader
+- (nullable id)readValueOfType:(UInt8)type {
+  switch (type) {
+    case 128:
+      return [PigeonFirebaseApp fromList:[self readValue]];
+    default:
+      return [super readValueOfType:type];
+  }
+}
+@end
+
+@interface FirebaseAuthHostApiCodecWriter : FlutterStandardWriter
+@end
+@implementation FirebaseAuthHostApiCodecWriter
+- (void)writeValue:(id)value {
+  if ([value isKindOfClass:[PigeonFirebaseApp class]]) {
+    [self writeByte:128];
+    [self writeValue:[value toList]];
+  } else {
+    [super writeValue:value];
+  }
+}
+@end
+
+@interface FirebaseAuthHostApiCodecReaderWriter : FlutterStandardReaderWriter
+@end
+@implementation FirebaseAuthHostApiCodecReaderWriter
+- (FlutterStandardWriter *)writerWithData:(NSMutableData *)data {
+  return [[FirebaseAuthHostApiCodecWriter alloc] initWithData:data];
+}
+- (FlutterStandardReader *)readerWithData:(NSData *)data {
+  return [[FirebaseAuthHostApiCodecReader alloc] initWithData:data];
+}
+@end
+
 NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void) {
   static FlutterStandardMessageCodec *sSharedObject = nil;
-  sSharedObject = [FlutterStandardMessageCodec sharedInstance];
+  static dispatch_once_t sPred = 0;
+  dispatch_once(&sPred, ^{
+    FirebaseAuthHostApiCodecReaderWriter *readerWriter =
+        [[FirebaseAuthHostApiCodecReaderWriter alloc] init];
+    sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
+  });
   return sSharedObject;
 }
 
@@ -145,18 +218,18 @@ void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
         binaryMessenger:binaryMessenger
                   codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(registerIdTokenListenerAppName:completion:)],
+      NSCAssert([api respondsToSelector:@selector(registerIdTokenListenerApp:completion:)],
                 @"FirebaseAuthHostApi api (%@) doesn't respond to "
-                @"@selector(registerIdTokenListenerAppName:completion:)",
+                @"@selector(registerIdTokenListenerApp:completion:)",
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        NSString *arg_appName = GetNullableObjectAtIndex(args, 0);
-        [api registerIdTokenListenerAppName:arg_appName
-                                 completion:^(NSString *_Nullable output,
-                                              FlutterError *_Nullable error) {
-                                   callback(wrapResult(output, error));
-                                 }];
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        [api registerIdTokenListenerApp:arg_app
+                             completion:^(NSString *_Nullable output,
+                                          FlutterError *_Nullable error) {
+                               callback(wrapResult(output, error));
+                             }];
       }];
     } else {
       [channel setMessageHandler:nil];
@@ -168,18 +241,18 @@ void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
         binaryMessenger:binaryMessenger
                   codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(registerAuthStateListenerAppName:completion:)],
+      NSCAssert([api respondsToSelector:@selector(registerAuthStateListenerApp:completion:)],
                 @"FirebaseAuthHostApi api (%@) doesn't respond to "
-                @"@selector(registerAuthStateListenerAppName:completion:)",
+                @"@selector(registerAuthStateListenerApp:completion:)",
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        NSString *arg_appName = GetNullableObjectAtIndex(args, 0);
-        [api registerAuthStateListenerAppName:arg_appName
-                                   completion:^(NSString *_Nullable output,
-                                                FlutterError *_Nullable error) {
-                                     callback(wrapResult(output, error));
-                                   }];
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        [api registerAuthStateListenerApp:arg_app
+                               completion:^(NSString *_Nullable output,
+                                            FlutterError *_Nullable error) {
+                                 callback(wrapResult(output, error));
+                               }];
       }];
     } else {
       [channel setMessageHandler:nil];
@@ -350,10 +423,12 @@ void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
 - (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
     case 128:
-      return [PigeonMultiFactorInfo fromList:[self readValue]];
+      return [PigeonFirebaseApp fromList:[self readValue]];
     case 129:
-      return [PigeonMultiFactorSession fromList:[self readValue]];
+      return [PigeonMultiFactorInfo fromList:[self readValue]];
     case 130:
+      return [PigeonMultiFactorSession fromList:[self readValue]];
+    case 131:
       return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -365,14 +440,17 @@ void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
 @end
 @implementation MultiFactoResolverHostApiCodecWriter
 - (void)writeValue:(id)value {
-  if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
+  if ([value isKindOfClass:[PigeonFirebaseApp class]]) {
     [self writeByte:128];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
+  } else if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
     [self writeByte:129];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
+  } else if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
     [self writeByte:130];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
+    [self writeByte:131];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];

@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class PigeonMultiFactorSession;
 @class PigeonPhoneMultiFactorAssertion;
 @class PigeonMultiFactorInfo;
+@class PigeonFirebaseApp;
 
 @interface PigeonMultiFactorSession : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
@@ -45,16 +46,24 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *phoneNumber;
 @end
 
+@interface PigeonFirebaseApp : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithAppName:(NSString *)appName tenantId:(nullable NSString *)tenantId;
+@property(nonatomic, copy) NSString *appName;
+@property(nonatomic, copy, nullable) NSString *tenantId;
+@end
+
 /// The codec used by FirebaseAuthHostApi.
 NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
 
 @protocol FirebaseAuthHostApi
-- (void)registerIdTokenListenerAppName:(NSString *)appName
-                            completion:
-                                (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)registerAuthStateListenerAppName:(NSString *)appName
-                              completion:(void (^)(NSString *_Nullable,
-                                                   FlutterError *_Nullable))completion;
+- (void)registerIdTokenListenerApp:(PigeonFirebaseApp *)app
+                        completion:
+                            (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)registerAuthStateListenerApp:(PigeonFirebaseApp *)app
+                          completion:
+                              (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
