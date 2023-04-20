@@ -110,6 +110,86 @@ class PigeonActionCodeInfoData {
   final String? previousEmail;
 }
 
+class PigeonUserCredential {
+  const PigeonUserCredential({
+    required this.user,
+    required this.additionalUserInfo,
+    required this.credential,
+  });
+
+  final PigeonUserDetails? user;
+  final PigeonAdditionalUserInfo? additionalUserInfo;
+  final PigeonAuthCredential? credential;
+}
+
+class PigeonAdditionalUserInfo {
+  const PigeonAdditionalUserInfo({
+    required this.isNewUser,
+    required this.providerId,
+    required this.username,
+    this.profile,
+  });
+
+  final bool isNewUser;
+  final String? providerId;
+  final String? username;
+  final Map<String?, Object?>? profile;
+}
+
+class PigeonAuthCredential {
+  const PigeonAuthCredential({
+    required this.providerId,
+    required this.signInMethod,
+    required this.nativeId,
+    required this.accessToken,
+  });
+
+  final String providerId;
+  final String signInMethod;
+  final int nativeId;
+  final String? accessToken;
+}
+
+class PigeonUserInfo {
+  const PigeonUserInfo({
+    required this.uid,
+    required this.email,
+    required this.displayName,
+    required this.photoUrl,
+    required this.phoneNumber,
+    required this.isAnonymous,
+    required this.isEmailVerified,
+    required this.tenantId,
+    required this.providerId,
+    required this.creationTimestamp,
+    required this.lastSignInTimestamp,
+    required this.refreshToken,
+  });
+
+  final String uid;
+  final String? email;
+  final String? displayName;
+  final String? photoUrl;
+  final String? phoneNumber;
+  final bool isAnonymous;
+  final bool isEmailVerified;
+  final String? providerId;
+  final String? tenantId;
+  final String? refreshToken;
+  final int? creationTimestamp;
+  final int? lastSignInTimestamp;
+}
+
+class PigeonUserDetails {
+  const PigeonUserDetails({
+    required this.userInfo,
+    required this.providerData,
+  });
+
+  final PigeonUserInfo userInfo;
+  final List<PigeonUserInfo?> providerData;
+}
+
 @HostApi(dartHostTestHandler: 'TesFirebaseAuthHostApi')
 abstract class FirebaseAuthHostApi {
   @async
@@ -146,6 +226,13 @@ abstract class FirebaseAuthHostApi {
     PigeonFirebaseApp app,
     String code,
     String newPassword,
+  );
+
+  @async
+  PigeonUserCredential createUserWithEmailAndPassword(
+    PigeonFirebaseApp app,
+    String email,
+    String password,
   );
 }
 

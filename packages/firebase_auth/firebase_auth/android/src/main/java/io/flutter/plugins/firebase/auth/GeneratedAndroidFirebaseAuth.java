@@ -13,6 +13,9 @@ import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +32,8 @@ public class GeneratedAndroidFirebaseAuth {
     /** The error details. Must be a datatype supported by the api codec. */
     public final Object details;
 
-    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) {
+    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) 
+    {
       super(message);
       this.code = code;
       this.details = details;
@@ -48,12 +52,15 @@ public class GeneratedAndroidFirebaseAuth {
       errorList.add(exception.toString());
       errorList.add(exception.getClass().getSimpleName());
       errorList.add(
-          "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
+        "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
     }
     return errorList;
   }
 
-  /** The type of operation that generated the action code from calling [checkActionCode]. */
+  /**
+   * The type of operation that generated the action code from calling
+   * [checkActionCode].
+   */
   public enum ActionCodeInfoOperation {
     /** Unknown operation. */
     UNKNOWN(0),
@@ -471,11 +478,9 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull PigeonActionCodeInfo fromList(@NonNull ArrayList<Object> list) {
       PigeonActionCodeInfo pigeonResult = new PigeonActionCodeInfo();
       Object operation = list.get(0);
-      pigeonResult.setOperation(
-          operation == null ? null : ActionCodeInfoOperation.values()[(int) operation]);
+      pigeonResult.setOperation(operation == null ? null : ActionCodeInfoOperation.values()[(int) operation]);
       Object data = list.get(1);
-      pigeonResult.setData(
-          (data == null) ? null : PigeonActionCodeInfoData.fromList((ArrayList<Object>) data));
+      pigeonResult.setData((data == null) ? null : PigeonActionCodeInfoData.fromList((ArrayList<Object>) data));
       return pigeonResult;
     }
   }
@@ -544,6 +549,680 @@ public class GeneratedAndroidFirebaseAuth {
     }
   }
 
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonUserCredential {
+    private @Nullable PigeonUserDetails user;
+
+    public @Nullable PigeonUserDetails getUser() {
+      return user;
+    }
+
+    public void setUser(@Nullable PigeonUserDetails setterArg) {
+      this.user = setterArg;
+    }
+
+    private @Nullable PigeonAdditionalUserInfo additionalUserInfo;
+
+    public @Nullable PigeonAdditionalUserInfo getAdditionalUserInfo() {
+      return additionalUserInfo;
+    }
+
+    public void setAdditionalUserInfo(@Nullable PigeonAdditionalUserInfo setterArg) {
+      this.additionalUserInfo = setterArg;
+    }
+
+    private @Nullable PigeonAuthCredential credential;
+
+    public @Nullable PigeonAuthCredential getCredential() {
+      return credential;
+    }
+
+    public void setCredential(@Nullable PigeonAuthCredential setterArg) {
+      this.credential = setterArg;
+    }
+
+    public static final class Builder {
+
+      private @Nullable PigeonUserDetails user;
+
+      public @NonNull Builder setUser(@Nullable PigeonUserDetails setterArg) {
+        this.user = setterArg;
+        return this;
+      }
+
+      private @Nullable PigeonAdditionalUserInfo additionalUserInfo;
+
+      public @NonNull Builder setAdditionalUserInfo(@Nullable PigeonAdditionalUserInfo setterArg) {
+        this.additionalUserInfo = setterArg;
+        return this;
+      }
+
+      private @Nullable PigeonAuthCredential credential;
+
+      public @NonNull Builder setCredential(@Nullable PigeonAuthCredential setterArg) {
+        this.credential = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonUserCredential build() {
+        PigeonUserCredential pigeonReturn = new PigeonUserCredential();
+        pigeonReturn.setUser(user);
+        pigeonReturn.setAdditionalUserInfo(additionalUserInfo);
+        pigeonReturn.setCredential(credential);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(3);
+      toListResult.add((user == null) ? null : user.toList());
+      toListResult.add((additionalUserInfo == null) ? null : additionalUserInfo.toList());
+      toListResult.add((credential == null) ? null : credential.toList());
+      return toListResult;
+    }
+
+    static @NonNull PigeonUserCredential fromList(@NonNull ArrayList<Object> list) {
+      PigeonUserCredential pigeonResult = new PigeonUserCredential();
+      Object user = list.get(0);
+      pigeonResult.setUser((user == null) ? null : PigeonUserDetails.fromList((ArrayList<Object>) user));
+      Object additionalUserInfo = list.get(1);
+      pigeonResult.setAdditionalUserInfo((additionalUserInfo == null) ? null : PigeonAdditionalUserInfo.fromList((ArrayList<Object>) additionalUserInfo));
+      Object credential = list.get(2);
+      pigeonResult.setCredential((credential == null) ? null : PigeonAuthCredential.fromList((ArrayList<Object>) credential));
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonAdditionalUserInfo {
+    private @NonNull Boolean isNewUser;
+
+    public @NonNull Boolean getIsNewUser() {
+      return isNewUser;
+    }
+
+    public void setIsNewUser(@NonNull Boolean setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"isNewUser\" is null.");
+      }
+      this.isNewUser = setterArg;
+    }
+
+    private @Nullable String providerId;
+
+    public @Nullable String getProviderId() {
+      return providerId;
+    }
+
+    public void setProviderId(@Nullable String setterArg) {
+      this.providerId = setterArg;
+    }
+
+    private @Nullable String username;
+
+    public @Nullable String getUsername() {
+      return username;
+    }
+
+    public void setUsername(@Nullable String setterArg) {
+      this.username = setterArg;
+    }
+
+    private @Nullable Map<String, Object> profile;
+
+    public @Nullable Map<String, Object> getProfile() {
+      return profile;
+    }
+
+    public void setProfile(@Nullable Map<String, Object> setterArg) {
+      this.profile = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonAdditionalUserInfo() {}
+
+    public static final class Builder {
+
+      private @Nullable Boolean isNewUser;
+
+      public @NonNull Builder setIsNewUser(@NonNull Boolean setterArg) {
+        this.isNewUser = setterArg;
+        return this;
+      }
+
+      private @Nullable String providerId;
+
+      public @NonNull Builder setProviderId(@Nullable String setterArg) {
+        this.providerId = setterArg;
+        return this;
+      }
+
+      private @Nullable String username;
+
+      public @NonNull Builder setUsername(@Nullable String setterArg) {
+        this.username = setterArg;
+        return this;
+      }
+
+      private @Nullable Map<String, Object> profile;
+
+      public @NonNull Builder setProfile(@Nullable Map<String, Object> setterArg) {
+        this.profile = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonAdditionalUserInfo build() {
+        PigeonAdditionalUserInfo pigeonReturn = new PigeonAdditionalUserInfo();
+        pigeonReturn.setIsNewUser(isNewUser);
+        pigeonReturn.setProviderId(providerId);
+        pigeonReturn.setUsername(username);
+        pigeonReturn.setProfile(profile);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(4);
+      toListResult.add(isNewUser);
+      toListResult.add(providerId);
+      toListResult.add(username);
+      toListResult.add(profile);
+      return toListResult;
+    }
+
+    static @NonNull PigeonAdditionalUserInfo fromList(@NonNull ArrayList<Object> list) {
+      PigeonAdditionalUserInfo pigeonResult = new PigeonAdditionalUserInfo();
+      Object isNewUser = list.get(0);
+      pigeonResult.setIsNewUser((Boolean) isNewUser);
+      Object providerId = list.get(1);
+      pigeonResult.setProviderId((String) providerId);
+      Object username = list.get(2);
+      pigeonResult.setUsername((String) username);
+      Object profile = list.get(3);
+      pigeonResult.setProfile((Map<String, Object>) profile);
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonAuthCredential {
+    private @NonNull String providerId;
+
+    public @NonNull String getProviderId() {
+      return providerId;
+    }
+
+    public void setProviderId(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"providerId\" is null.");
+      }
+      this.providerId = setterArg;
+    }
+
+    private @NonNull String signInMethod;
+
+    public @NonNull String getSignInMethod() {
+      return signInMethod;
+    }
+
+    public void setSignInMethod(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"signInMethod\" is null.");
+      }
+      this.signInMethod = setterArg;
+    }
+
+    private @NonNull Long nativeId;
+
+    public @NonNull Long getNativeId() {
+      return nativeId;
+    }
+
+    public void setNativeId(@NonNull Long setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"nativeId\" is null.");
+      }
+      this.nativeId = setterArg;
+    }
+
+    private @Nullable String accessToken;
+
+    public @Nullable String getAccessToken() {
+      return accessToken;
+    }
+
+    public void setAccessToken(@Nullable String setterArg) {
+      this.accessToken = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonAuthCredential() {}
+
+    public static final class Builder {
+
+      private @Nullable String providerId;
+
+      public @NonNull Builder setProviderId(@NonNull String setterArg) {
+        this.providerId = setterArg;
+        return this;
+      }
+
+      private @Nullable String signInMethod;
+
+      public @NonNull Builder setSignInMethod(@NonNull String setterArg) {
+        this.signInMethod = setterArg;
+        return this;
+      }
+
+      private @Nullable Long nativeId;
+
+      public @NonNull Builder setNativeId(@NonNull Long setterArg) {
+        this.nativeId = setterArg;
+        return this;
+      }
+
+      private @Nullable String accessToken;
+
+      public @NonNull Builder setAccessToken(@Nullable String setterArg) {
+        this.accessToken = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonAuthCredential build() {
+        PigeonAuthCredential pigeonReturn = new PigeonAuthCredential();
+        pigeonReturn.setProviderId(providerId);
+        pigeonReturn.setSignInMethod(signInMethod);
+        pigeonReturn.setNativeId(nativeId);
+        pigeonReturn.setAccessToken(accessToken);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(4);
+      toListResult.add(providerId);
+      toListResult.add(signInMethod);
+      toListResult.add(nativeId);
+      toListResult.add(accessToken);
+      return toListResult;
+    }
+
+    static @NonNull PigeonAuthCredential fromList(@NonNull ArrayList<Object> list) {
+      PigeonAuthCredential pigeonResult = new PigeonAuthCredential();
+      Object providerId = list.get(0);
+      pigeonResult.setProviderId((String) providerId);
+      Object signInMethod = list.get(1);
+      pigeonResult.setSignInMethod((String) signInMethod);
+      Object nativeId = list.get(2);
+      pigeonResult.setNativeId((nativeId == null) ? null : ((nativeId instanceof Integer) ? (Integer) nativeId : (Long) nativeId));
+      Object accessToken = list.get(3);
+      pigeonResult.setAccessToken((String) accessToken);
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonUserInfo {
+    private @NonNull String uid;
+
+    public @NonNull String getUid() {
+      return uid;
+    }
+
+    public void setUid(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"uid\" is null.");
+      }
+      this.uid = setterArg;
+    }
+
+    private @Nullable String email;
+
+    public @Nullable String getEmail() {
+      return email;
+    }
+
+    public void setEmail(@Nullable String setterArg) {
+      this.email = setterArg;
+    }
+
+    private @Nullable String displayName;
+
+    public @Nullable String getDisplayName() {
+      return displayName;
+    }
+
+    public void setDisplayName(@Nullable String setterArg) {
+      this.displayName = setterArg;
+    }
+
+    private @Nullable String photoUrl;
+
+    public @Nullable String getPhotoUrl() {
+      return photoUrl;
+    }
+
+    public void setPhotoUrl(@Nullable String setterArg) {
+      this.photoUrl = setterArg;
+    }
+
+    private @Nullable String phoneNumber;
+
+    public @Nullable String getPhoneNumber() {
+      return phoneNumber;
+    }
+
+    public void setPhoneNumber(@Nullable String setterArg) {
+      this.phoneNumber = setterArg;
+    }
+
+    private @NonNull Boolean isAnonymous;
+
+    public @NonNull Boolean getIsAnonymous() {
+      return isAnonymous;
+    }
+
+    public void setIsAnonymous(@NonNull Boolean setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"isAnonymous\" is null.");
+      }
+      this.isAnonymous = setterArg;
+    }
+
+    private @NonNull Boolean isEmailVerified;
+
+    public @NonNull Boolean getIsEmailVerified() {
+      return isEmailVerified;
+    }
+
+    public void setIsEmailVerified(@NonNull Boolean setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"isEmailVerified\" is null.");
+      }
+      this.isEmailVerified = setterArg;
+    }
+
+    private @Nullable String providerId;
+
+    public @Nullable String getProviderId() {
+      return providerId;
+    }
+
+    public void setProviderId(@Nullable String setterArg) {
+      this.providerId = setterArg;
+    }
+
+    private @Nullable String tenantId;
+
+    public @Nullable String getTenantId() {
+      return tenantId;
+    }
+
+    public void setTenantId(@Nullable String setterArg) {
+      this.tenantId = setterArg;
+    }
+
+    private @Nullable String refreshToken;
+
+    public @Nullable String getRefreshToken() {
+      return refreshToken;
+    }
+
+    public void setRefreshToken(@Nullable String setterArg) {
+      this.refreshToken = setterArg;
+    }
+
+    private @Nullable Long creationTimestamp;
+
+    public @Nullable Long getCreationTimestamp() {
+      return creationTimestamp;
+    }
+
+    public void setCreationTimestamp(@Nullable Long setterArg) {
+      this.creationTimestamp = setterArg;
+    }
+
+    private @Nullable Long lastSignInTimestamp;
+
+    public @Nullable Long getLastSignInTimestamp() {
+      return lastSignInTimestamp;
+    }
+
+    public void setLastSignInTimestamp(@Nullable Long setterArg) {
+      this.lastSignInTimestamp = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonUserInfo() {}
+
+    public static final class Builder {
+
+      private @Nullable String uid;
+
+      public @NonNull Builder setUid(@NonNull String setterArg) {
+        this.uid = setterArg;
+        return this;
+      }
+
+      private @Nullable String email;
+
+      public @NonNull Builder setEmail(@Nullable String setterArg) {
+        this.email = setterArg;
+        return this;
+      }
+
+      private @Nullable String displayName;
+
+      public @NonNull Builder setDisplayName(@Nullable String setterArg) {
+        this.displayName = setterArg;
+        return this;
+      }
+
+      private @Nullable String photoUrl;
+
+      public @NonNull Builder setPhotoUrl(@Nullable String setterArg) {
+        this.photoUrl = setterArg;
+        return this;
+      }
+
+      private @Nullable String phoneNumber;
+
+      public @NonNull Builder setPhoneNumber(@Nullable String setterArg) {
+        this.phoneNumber = setterArg;
+        return this;
+      }
+
+      private @Nullable Boolean isAnonymous;
+
+      public @NonNull Builder setIsAnonymous(@NonNull Boolean setterArg) {
+        this.isAnonymous = setterArg;
+        return this;
+      }
+
+      private @Nullable Boolean isEmailVerified;
+
+      public @NonNull Builder setIsEmailVerified(@NonNull Boolean setterArg) {
+        this.isEmailVerified = setterArg;
+        return this;
+      }
+
+      private @Nullable String providerId;
+
+      public @NonNull Builder setProviderId(@Nullable String setterArg) {
+        this.providerId = setterArg;
+        return this;
+      }
+
+      private @Nullable String tenantId;
+
+      public @NonNull Builder setTenantId(@Nullable String setterArg) {
+        this.tenantId = setterArg;
+        return this;
+      }
+
+      private @Nullable String refreshToken;
+
+      public @NonNull Builder setRefreshToken(@Nullable String setterArg) {
+        this.refreshToken = setterArg;
+        return this;
+      }
+
+      private @Nullable Long creationTimestamp;
+
+      public @NonNull Builder setCreationTimestamp(@Nullable Long setterArg) {
+        this.creationTimestamp = setterArg;
+        return this;
+      }
+
+      private @Nullable Long lastSignInTimestamp;
+
+      public @NonNull Builder setLastSignInTimestamp(@Nullable Long setterArg) {
+        this.lastSignInTimestamp = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonUserInfo build() {
+        PigeonUserInfo pigeonReturn = new PigeonUserInfo();
+        pigeonReturn.setUid(uid);
+        pigeonReturn.setEmail(email);
+        pigeonReturn.setDisplayName(displayName);
+        pigeonReturn.setPhotoUrl(photoUrl);
+        pigeonReturn.setPhoneNumber(phoneNumber);
+        pigeonReturn.setIsAnonymous(isAnonymous);
+        pigeonReturn.setIsEmailVerified(isEmailVerified);
+        pigeonReturn.setProviderId(providerId);
+        pigeonReturn.setTenantId(tenantId);
+        pigeonReturn.setRefreshToken(refreshToken);
+        pigeonReturn.setCreationTimestamp(creationTimestamp);
+        pigeonReturn.setLastSignInTimestamp(lastSignInTimestamp);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(12);
+      toListResult.add(uid);
+      toListResult.add(email);
+      toListResult.add(displayName);
+      toListResult.add(photoUrl);
+      toListResult.add(phoneNumber);
+      toListResult.add(isAnonymous);
+      toListResult.add(isEmailVerified);
+      toListResult.add(providerId);
+      toListResult.add(tenantId);
+      toListResult.add(refreshToken);
+      toListResult.add(creationTimestamp);
+      toListResult.add(lastSignInTimestamp);
+      return toListResult;
+    }
+
+    static @NonNull PigeonUserInfo fromList(@NonNull ArrayList<Object> list) {
+      PigeonUserInfo pigeonResult = new PigeonUserInfo();
+      Object uid = list.get(0);
+      pigeonResult.setUid((String) uid);
+      Object email = list.get(1);
+      pigeonResult.setEmail((String) email);
+      Object displayName = list.get(2);
+      pigeonResult.setDisplayName((String) displayName);
+      Object photoUrl = list.get(3);
+      pigeonResult.setPhotoUrl((String) photoUrl);
+      Object phoneNumber = list.get(4);
+      pigeonResult.setPhoneNumber((String) phoneNumber);
+      Object isAnonymous = list.get(5);
+      pigeonResult.setIsAnonymous((Boolean) isAnonymous);
+      Object isEmailVerified = list.get(6);
+      pigeonResult.setIsEmailVerified((Boolean) isEmailVerified);
+      Object providerId = list.get(7);
+      pigeonResult.setProviderId((String) providerId);
+      Object tenantId = list.get(8);
+      pigeonResult.setTenantId((String) tenantId);
+      Object refreshToken = list.get(9);
+      pigeonResult.setRefreshToken((String) refreshToken);
+      Object creationTimestamp = list.get(10);
+      pigeonResult.setCreationTimestamp((creationTimestamp == null) ? null : ((creationTimestamp instanceof Integer) ? (Integer) creationTimestamp : (Long) creationTimestamp));
+      Object lastSignInTimestamp = list.get(11);
+      pigeonResult.setLastSignInTimestamp((lastSignInTimestamp == null) ? null : ((lastSignInTimestamp instanceof Integer) ? (Integer) lastSignInTimestamp : (Long) lastSignInTimestamp));
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonUserDetails {
+    private @NonNull PigeonUserInfo userInfo;
+
+    public @NonNull PigeonUserInfo getUserInfo() {
+      return userInfo;
+    }
+
+    public void setUserInfo(@NonNull PigeonUserInfo setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"userInfo\" is null.");
+      }
+      this.userInfo = setterArg;
+    }
+
+    private @NonNull List<PigeonUserInfo> providerData;
+
+    public @NonNull List<PigeonUserInfo> getProviderData() {
+      return providerData;
+    }
+
+    public void setProviderData(@NonNull List<PigeonUserInfo> setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"providerData\" is null.");
+      }
+      this.providerData = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonUserDetails() {}
+
+    public static final class Builder {
+
+      private @Nullable PigeonUserInfo userInfo;
+
+      public @NonNull Builder setUserInfo(@NonNull PigeonUserInfo setterArg) {
+        this.userInfo = setterArg;
+        return this;
+      }
+
+      private @Nullable List<PigeonUserInfo> providerData;
+
+      public @NonNull Builder setProviderData(@NonNull List<PigeonUserInfo> setterArg) {
+        this.providerData = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonUserDetails build() {
+        PigeonUserDetails pigeonReturn = new PigeonUserDetails();
+        pigeonReturn.setUserInfo(userInfo);
+        pigeonReturn.setProviderData(providerData);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+      toListResult.add((userInfo == null) ? null : userInfo.toList());
+      toListResult.add(providerData);
+      return toListResult;
+    }
+
+    static @NonNull PigeonUserDetails fromList(@NonNull ArrayList<Object> list) {
+      PigeonUserDetails pigeonResult = new PigeonUserDetails();
+      Object userInfo = list.get(0);
+      pigeonResult.setUserInfo((userInfo == null) ? null : PigeonUserInfo.fromList((ArrayList<Object>) userInfo));
+      Object providerData = list.get(1);
+      pigeonResult.setProviderData((List<PigeonUserInfo>) providerData);
+      return pigeonResult;
+    }
+  }
+
   public interface Result<T> {
     @SuppressWarnings("UnknownNullness")
     void success(T result);
@@ -564,7 +1243,19 @@ public class GeneratedAndroidFirebaseAuth {
         case (byte) 129:
           return PigeonActionCodeInfoData.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
+          return PigeonAdditionalUserInfo.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 131:
+          return PigeonAuthCredential.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 132:
           return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 133:
+          return PigeonUserCredential.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 134:
+          return PigeonUserDetails.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 135:
+          return PigeonUserInfo.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 136:
+          return PigeonUserInfo.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
       }
@@ -578,9 +1269,27 @@ public class GeneratedAndroidFirebaseAuth {
       } else if (value instanceof PigeonActionCodeInfoData) {
         stream.write(129);
         writeValue(stream, ((PigeonActionCodeInfoData) value).toList());
-      } else if (value instanceof PigeonFirebaseApp) {
+      } else if (value instanceof PigeonAdditionalUserInfo) {
         stream.write(130);
+        writeValue(stream, ((PigeonAdditionalUserInfo) value).toList());
+      } else if (value instanceof PigeonAuthCredential) {
+        stream.write(131);
+        writeValue(stream, ((PigeonAuthCredential) value).toList());
+      } else if (value instanceof PigeonFirebaseApp) {
+        stream.write(132);
         writeValue(stream, ((PigeonFirebaseApp) value).toList());
+      } else if (value instanceof PigeonUserCredential) {
+        stream.write(133);
+        writeValue(stream, ((PigeonUserCredential) value).toList());
+      } else if (value instanceof PigeonUserDetails) {
+        stream.write(134);
+        writeValue(stream, ((PigeonUserDetails) value).toList());
+      } else if (value instanceof PigeonUserInfo) {
+        stream.write(135);
+        writeValue(stream, ((PigeonUserInfo) value).toList());
+      } else if (value instanceof PigeonUserInfo) {
+        stream.write(136);
+        writeValue(stream, ((PigeonUserInfo) value).toList());
       } else {
         super.writeValue(stream, value);
       }
@@ -594,41 +1303,26 @@ public class GeneratedAndroidFirebaseAuth {
 
     void registerAuthStateListener(@NonNull PigeonFirebaseApp app, @NonNull Result<String> result);
 
-    void useEmulator(
-        @NonNull PigeonFirebaseApp app,
-        @NonNull String host,
-        @NonNull Long port,
-        @NonNull Result<Void> result);
+    void useEmulator(@NonNull PigeonFirebaseApp app, @NonNull String host, @NonNull Long port, @NonNull Result<Void> result);
 
-    void applyActionCode(
-        @NonNull PigeonFirebaseApp app, @NonNull String code, @NonNull Result<Void> result);
+    void applyActionCode(@NonNull PigeonFirebaseApp app, @NonNull String code, @NonNull Result<Void> result);
 
-    void checkActionCode(
-        @NonNull PigeonFirebaseApp app,
-        @NonNull String code,
-        @NonNull Result<PigeonActionCodeInfo> result);
+    void checkActionCode(@NonNull PigeonFirebaseApp app, @NonNull String code, @NonNull Result<PigeonActionCodeInfo> result);
 
-    void confirmPasswordReset(
-        @NonNull PigeonFirebaseApp app,
-        @NonNull String code,
-        @NonNull String newPassword,
-        @NonNull Result<Void> result);
+    void confirmPasswordReset(@NonNull PigeonFirebaseApp app, @NonNull String code, @NonNull String newPassword, @NonNull Result<Void> result);
+
+    void createUserWithEmailAndPassword(@NonNull PigeonFirebaseApp app, @NonNull String email, @NonNull String password, @NonNull Result<PigeonUserCredential> result);
 
     /** The codec used by FirebaseAuthHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return FirebaseAuthHostApiCodec.INSTANCE;
     }
-    /**
-     * Sets up an instance of `FirebaseAuthHostApi` to handle messages through the
-     * `binaryMessenger`.
-     */
+    /**Sets up an instance of `FirebaseAuthHostApi` to handle messages through the `binaryMessenger`. */
     static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseAuthHostApi api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.FirebaseAuthHostApi.registerIdTokenListener",
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.FirebaseAuthHostApi.registerIdTokenListener", getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -657,9 +1351,7 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.FirebaseAuthHostApi.registerAuthStateListener",
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.FirebaseAuthHostApi.registerAuthStateListener", getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -710,11 +1402,7 @@ public class GeneratedAndroidFirebaseAuth {
                       }
                     };
 
-                api.useEmulator(
-                    appArg,
-                    hostArg,
-                    (portArg == null) ? null : portArg.longValue(),
-                    resultCallback);
+                api.useEmulator(appArg, hostArg, (portArg == null) ? null : portArg.longValue(), resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -723,9 +1411,7 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.FirebaseAuthHostApi.applyActionCode",
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.FirebaseAuthHostApi.applyActionCode", getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -755,9 +1441,7 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.FirebaseAuthHostApi.checkActionCode",
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.FirebaseAuthHostApi.checkActionCode", getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -787,9 +1471,7 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.FirebaseAuthHostApi.confirmPasswordReset",
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.FirebaseAuthHostApi.confirmPasswordReset", getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -812,6 +1494,37 @@ public class GeneratedAndroidFirebaseAuth {
                     };
 
                 api.confirmPasswordReset(appArg, codeArg, newPasswordArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger, "dev.flutter.pigeon.FirebaseAuthHostApi.createUserWithEmailAndPassword", getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                String emailArg = (String) args.get(1);
+                String passwordArg = (String) args.get(2);
+                Result<PigeonUserCredential> resultCallback =
+                    new Result<PigeonUserCredential>() {
+                      public void success(PigeonUserCredential result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.createUserWithEmailAndPassword(appArg, emailArg, passwordArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -859,44 +1572,31 @@ public class GeneratedAndroidFirebaseAuth {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface MultiFactorUserHostApi {
 
-    void enrollPhone(
-        @NonNull String appName,
-        @NonNull PigeonPhoneMultiFactorAssertion assertion,
-        @Nullable String displayName,
-        @NonNull Result<Void> result);
+    void enrollPhone(@NonNull String appName, @NonNull PigeonPhoneMultiFactorAssertion assertion, @Nullable String displayName, @NonNull Result<Void> result);
 
     void getSession(@NonNull String appName, @NonNull Result<PigeonMultiFactorSession> result);
 
-    void unenroll(
-        @NonNull String appName, @Nullable String factorUid, @NonNull Result<Void> result);
+    void unenroll(@NonNull String appName, @Nullable String factorUid, @NonNull Result<Void> result);
 
-    void getEnrolledFactors(
-        @NonNull String appName, @NonNull Result<List<PigeonMultiFactorInfo>> result);
+    void getEnrolledFactors(@NonNull String appName, @NonNull Result<List<PigeonMultiFactorInfo>> result);
 
     /** The codec used by MultiFactorUserHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return MultiFactorUserHostApiCodec.INSTANCE;
     }
-    /**
-     * Sets up an instance of `MultiFactorUserHostApi` to handle messages through the
-     * `binaryMessenger`.
-     */
-    static void setup(
-        @NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactorUserHostApi api) {
+    /**Sets up an instance of `MultiFactorUserHostApi` to handle messages through the `binaryMessenger`. */
+    static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactorUserHostApi api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone",
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone", getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 String appNameArg = (String) args.get(0);
-                PigeonPhoneMultiFactorAssertion assertionArg =
-                    (PigeonPhoneMultiFactorAssertion) args.get(1);
+                PigeonPhoneMultiFactorAssertion assertionArg = (PigeonPhoneMultiFactorAssertion) args.get(1);
                 String displayNameArg = (String) args.get(2);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -920,9 +1620,7 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.MultiFactorUserHostApi.getSession",
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.MultiFactorUserHostApi.getSession", getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -981,9 +1679,7 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors",
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors", getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1013,8 +1709,7 @@ public class GeneratedAndroidFirebaseAuth {
   }
 
   private static class MultiFactoResolverHostApiCodec extends StandardMessageCodec {
-    public static final MultiFactoResolverHostApiCodec INSTANCE =
-        new MultiFactoResolverHostApiCodec();
+    public static final MultiFactoResolverHostApiCodec INSTANCE = new MultiFactoResolverHostApiCodec();
 
     private MultiFactoResolverHostApiCodec() {}
 
@@ -1026,13 +1721,23 @@ public class GeneratedAndroidFirebaseAuth {
         case (byte) 129:
           return PigeonActionCodeInfoData.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
-          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonAdditionalUserInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 131:
-          return PigeonMultiFactorInfo.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonAuthCredential.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 132:
-          return PigeonMultiFactorSession.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 133:
+          return PigeonMultiFactorInfo.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 134:
+          return PigeonMultiFactorSession.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 135:
           return PigeonPhoneMultiFactorAssertion.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 136:
+          return PigeonUserCredential.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 137:
+          return PigeonUserDetails.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 138:
+          return PigeonUserInfo.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
       }
@@ -1046,18 +1751,33 @@ public class GeneratedAndroidFirebaseAuth {
       } else if (value instanceof PigeonActionCodeInfoData) {
         stream.write(129);
         writeValue(stream, ((PigeonActionCodeInfoData) value).toList());
-      } else if (value instanceof PigeonFirebaseApp) {
+      } else if (value instanceof PigeonAdditionalUserInfo) {
         stream.write(130);
+        writeValue(stream, ((PigeonAdditionalUserInfo) value).toList());
+      } else if (value instanceof PigeonAuthCredential) {
+        stream.write(131);
+        writeValue(stream, ((PigeonAuthCredential) value).toList());
+      } else if (value instanceof PigeonFirebaseApp) {
+        stream.write(132);
         writeValue(stream, ((PigeonFirebaseApp) value).toList());
       } else if (value instanceof PigeonMultiFactorInfo) {
-        stream.write(131);
+        stream.write(133);
         writeValue(stream, ((PigeonMultiFactorInfo) value).toList());
       } else if (value instanceof PigeonMultiFactorSession) {
-        stream.write(132);
+        stream.write(134);
         writeValue(stream, ((PigeonMultiFactorSession) value).toList());
       } else if (value instanceof PigeonPhoneMultiFactorAssertion) {
-        stream.write(133);
+        stream.write(135);
         writeValue(stream, ((PigeonPhoneMultiFactorAssertion) value).toList());
+      } else if (value instanceof PigeonUserCredential) {
+        stream.write(136);
+        writeValue(stream, ((PigeonUserCredential) value).toList());
+      } else if (value instanceof PigeonUserDetails) {
+        stream.write(137);
+        writeValue(stream, ((PigeonUserDetails) value).toList());
+      } else if (value instanceof PigeonUserInfo) {
+        stream.write(138);
+        writeValue(stream, ((PigeonUserInfo) value).toList());
       } else {
         super.writeValue(stream, value);
       }
@@ -1067,35 +1787,25 @@ public class GeneratedAndroidFirebaseAuth {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface MultiFactoResolverHostApi {
 
-    void resolveSignIn(
-        @NonNull String resolverId,
-        @NonNull PigeonPhoneMultiFactorAssertion assertion,
-        @NonNull Result<Map<String, Object>> result);
+    void resolveSignIn(@NonNull String resolverId, @NonNull PigeonPhoneMultiFactorAssertion assertion, @NonNull Result<Map<String, Object>> result);
 
     /** The codec used by MultiFactoResolverHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return MultiFactoResolverHostApiCodec.INSTANCE;
     }
-    /**
-     * Sets up an instance of `MultiFactoResolverHostApi` to handle messages through the
-     * `binaryMessenger`.
-     */
-    static void setup(
-        @NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactoResolverHostApi api) {
+    /**Sets up an instance of `MultiFactoResolverHostApi` to handle messages through the `binaryMessenger`. */
+    static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactoResolverHostApi api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn",
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn", getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 String resolverIdArg = (String) args.get(0);
-                PigeonPhoneMultiFactorAssertion assertionArg =
-                    (PigeonPhoneMultiFactorAssertion) args.get(1);
+                PigeonPhoneMultiFactorAssertion assertionArg = (PigeonPhoneMultiFactorAssertion) args.get(1);
                 Result<Map<String, Object>> resultCallback =
                     new Result<Map<String, Object>>() {
                       public void success(Map<String, Object> result) {
@@ -1147,7 +1857,7 @@ public class GeneratedAndroidFirebaseAuth {
   /**
    * Only used to generate the object interface that are use outside of the Pigeon interface
    *
-   * <p>Generated interface from Pigeon that represents a handler of messages from Flutter.
+   * Generated interface from Pigeon that represents a handler of messages from Flutter.
    */
   public interface GenerateInterfaces {
 
@@ -1157,16 +1867,12 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull MessageCodec<Object> getCodec() {
       return GenerateInterfacesCodec.INSTANCE;
     }
-    /**
-     * Sets up an instance of `GenerateInterfaces` to handle messages through the `binaryMessenger`.
-     */
+    /**Sets up an instance of `GenerateInterfaces` to handle messages through the `binaryMessenger`. */
     static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable GenerateInterfaces api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger,
-                "dev.flutter.pigeon.GenerateInterfaces.generateInterfaces",
-                getCodec());
+                binaryMessenger, "dev.flutter.pigeon.GenerateInterfaces.generateInterfaces", getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1176,7 +1882,8 @@ public class GeneratedAndroidFirebaseAuth {
                 try {
                   api.generateInterfaces(infoArg);
                   wrapped.add(0, null);
-                } catch (Throwable exception) {
+                }
+ catch (Throwable exception) {
                   ArrayList<Object> wrappedError = wrapError(exception);
                   wrapped = wrappedError;
                 }

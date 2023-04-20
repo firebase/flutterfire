@@ -9,6 +9,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user_credential.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
+import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 
 import 'utils/exception.dart';
 
@@ -16,7 +17,7 @@ import 'utils/exception.dart';
 class MethodChannelUser extends UserPlatform {
   /// Constructs a new [MethodChannelUser] instance.
   MethodChannelUser(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      Map<String, dynamic> data)
+      PigeonUserDetails data)
       : super(auth, multiFactor, data);
 
   /// Attaches generic default values to method channel arguments.

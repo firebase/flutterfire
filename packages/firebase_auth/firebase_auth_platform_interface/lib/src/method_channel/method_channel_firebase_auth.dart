@@ -268,14 +268,11 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<UserCredentialPlatform> createUserWithEmailAndPassword(
       String email, String password) async {
     try {
-      Map<String, dynamic> data =
-          (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#createUserWithEmailAndPassword',
-              _withChannelDefaults({
-                'email': email,
-                'password': password,
-              })))!;
-
+      final result = await _api.createUserWithEmailAndPassword(
+        pigeonDefault,
+        email,
+        password,
+      );
       MethodChannelUserCredential userCredential =
           MethodChannelUserCredential(this, data);
 

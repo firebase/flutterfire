@@ -199,6 +199,217 @@ class PigeonActionCodeInfoData {
   }
 }
 
+class PigeonUserCredential {
+  PigeonUserCredential({
+    this.user,
+    this.additionalUserInfo,
+    this.credential,
+  });
+
+  PigeonUserDetails? user;
+
+  PigeonAdditionalUserInfo? additionalUserInfo;
+
+  PigeonAuthCredential? credential;
+
+  Object encode() {
+    return <Object?>[
+      user?.encode(),
+      additionalUserInfo?.encode(),
+      credential?.encode(),
+    ];
+  }
+
+  static PigeonUserCredential decode(Object result) {
+    result as List<Object?>;
+    return PigeonUserCredential(
+      user: result[0] != null
+          ? PigeonUserDetails.decode(result[0]! as List<Object?>)
+          : null,
+      additionalUserInfo: result[1] != null
+          ? PigeonAdditionalUserInfo.decode(result[1]! as List<Object?>)
+          : null,
+      credential: result[2] != null
+          ? PigeonAuthCredential.decode(result[2]! as List<Object?>)
+          : null,
+    );
+  }
+}
+
+class PigeonAdditionalUserInfo {
+  PigeonAdditionalUserInfo({
+    required this.isNewUser,
+    this.providerId,
+    this.username,
+    this.profile,
+  });
+
+  bool isNewUser;
+
+  String? providerId;
+
+  String? username;
+
+  Map<String?, Object?>? profile;
+
+  Object encode() {
+    return <Object?>[
+      isNewUser,
+      providerId,
+      username,
+      profile,
+    ];
+  }
+
+  static PigeonAdditionalUserInfo decode(Object result) {
+    result as List<Object?>;
+    return PigeonAdditionalUserInfo(
+      isNewUser: result[0]! as bool,
+      providerId: result[1] as String?,
+      username: result[2] as String?,
+      profile: (result[3] as Map<Object?, Object?>?)?.cast<String?, Object?>(),
+    );
+  }
+}
+
+class PigeonAuthCredential {
+  PigeonAuthCredential({
+    required this.providerId,
+    required this.signInMethod,
+    required this.nativeId,
+    this.accessToken,
+  });
+
+  String providerId;
+
+  String signInMethod;
+
+  int nativeId;
+
+  String? accessToken;
+
+  Object encode() {
+    return <Object?>[
+      providerId,
+      signInMethod,
+      nativeId,
+      accessToken,
+    ];
+  }
+
+  static PigeonAuthCredential decode(Object result) {
+    result as List<Object?>;
+    return PigeonAuthCredential(
+      providerId: result[0]! as String,
+      signInMethod: result[1]! as String,
+      nativeId: result[2]! as int,
+      accessToken: result[3] as String?,
+    );
+  }
+}
+
+class PigeonUserInfo {
+  PigeonUserInfo({
+    required this.uid,
+    this.email,
+    this.displayName,
+    this.photoUrl,
+    this.phoneNumber,
+    required this.isAnonymous,
+    required this.isEmailVerified,
+    this.providerId,
+    this.tenantId,
+    this.refreshToken,
+    this.creationTimestamp,
+    this.lastSignInTimestamp,
+  });
+
+  String uid;
+
+  String? email;
+
+  String? displayName;
+
+  String? photoUrl;
+
+  String? phoneNumber;
+
+  bool isAnonymous;
+
+  bool isEmailVerified;
+
+  String? providerId;
+
+  String? tenantId;
+
+  String? refreshToken;
+
+  int? creationTimestamp;
+
+  int? lastSignInTimestamp;
+
+  Object encode() {
+    return <Object?>[
+      uid,
+      email,
+      displayName,
+      photoUrl,
+      phoneNumber,
+      isAnonymous,
+      isEmailVerified,
+      providerId,
+      tenantId,
+      refreshToken,
+      creationTimestamp,
+      lastSignInTimestamp,
+    ];
+  }
+
+  static PigeonUserInfo decode(Object result) {
+    result as List<Object?>;
+    return PigeonUserInfo(
+      uid: result[0]! as String,
+      email: result[1] as String?,
+      displayName: result[2] as String?,
+      photoUrl: result[3] as String?,
+      phoneNumber: result[4] as String?,
+      isAnonymous: result[5]! as bool,
+      isEmailVerified: result[6]! as bool,
+      providerId: result[7] as String?,
+      tenantId: result[8] as String?,
+      refreshToken: result[9] as String?,
+      creationTimestamp: result[10] as int?,
+      lastSignInTimestamp: result[11] as int?,
+    );
+  }
+}
+
+class PigeonUserDetails {
+  PigeonUserDetails({
+    required this.userInfo,
+    required this.providerData,
+  });
+
+  PigeonUserInfo userInfo;
+
+  List<PigeonUserInfo?> providerData;
+
+  Object encode() {
+    return <Object?>[
+      userInfo.encode(),
+      providerData,
+    ];
+  }
+
+  static PigeonUserDetails decode(Object result) {
+    result as List<Object?>;
+    return PigeonUserDetails(
+      userInfo: PigeonUserInfo.decode(result[0]! as List<Object?>),
+      providerData: (result[1] as List<Object?>?)!.cast<PigeonUserInfo?>(),
+    );
+  }
+}
+
 class _FirebaseAuthHostApiCodec extends StandardMessageCodec {
   const _FirebaseAuthHostApiCodec();
   @override
@@ -209,8 +420,26 @@ class _FirebaseAuthHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonActionCodeInfoData) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseApp) {
+    } else if (value is PigeonAdditionalUserInfo) {
       buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonAuthCredential) {
+      buffer.putUint8(131);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonFirebaseApp) {
+      buffer.putUint8(132);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserCredential) {
+      buffer.putUint8(133);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserDetails) {
+      buffer.putUint8(134);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserInfo) {
+      buffer.putUint8(135);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserInfo) {
+      buffer.putUint8(136);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -225,7 +454,19 @@ class _FirebaseAuthHostApiCodec extends StandardMessageCodec {
       case 129:
         return PigeonActionCodeInfoData.decode(readValue(buffer)!);
       case 130:
+        return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
+      case 131:
+        return PigeonAuthCredential.decode(readValue(buffer)!);
+      case 132:
         return PigeonFirebaseApp.decode(readValue(buffer)!);
+      case 133:
+        return PigeonUserCredential.decode(readValue(buffer)!);
+      case 134:
+        return PigeonUserDetails.decode(readValue(buffer)!);
+      case 135:
+        return PigeonUserInfo.decode(readValue(buffer)!);
+      case 136:
+        return PigeonUserInfo.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -393,6 +634,35 @@ class FirebaseAuthHostApi {
       return;
     }
   }
+
+  Future<PigeonUserCredential> createUserWithEmailAndPassword(
+      PigeonFirebaseApp arg_app, String arg_email, String arg_password) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseAuthHostApi.createUserWithEmailAndPassword',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_app, arg_email, arg_password]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as PigeonUserCredential?)!;
+    }
+  }
 }
 
 class _MultiFactorUserHostApiCodec extends StandardMessageCodec {
@@ -552,17 +822,32 @@ class _MultiFactoResolverHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonActionCodeInfoData) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseApp) {
+    } else if (value is PigeonAdditionalUserInfo) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorInfo) {
+    } else if (value is PigeonAuthCredential) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorSession) {
+    } else if (value is PigeonFirebaseApp) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonPhoneMultiFactorAssertion) {
+    } else if (value is PigeonMultiFactorInfo) {
       buffer.putUint8(133);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonMultiFactorSession) {
+      buffer.putUint8(134);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonPhoneMultiFactorAssertion) {
+      buffer.putUint8(135);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserCredential) {
+      buffer.putUint8(136);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserDetails) {
+      buffer.putUint8(137);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserInfo) {
+      buffer.putUint8(138);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -577,13 +862,23 @@ class _MultiFactoResolverHostApiCodec extends StandardMessageCodec {
       case 129:
         return PigeonActionCodeInfoData.decode(readValue(buffer)!);
       case 130:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
+        return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
       case 131:
-        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
+        return PigeonAuthCredential.decode(readValue(buffer)!);
       case 132:
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+        return PigeonFirebaseApp.decode(readValue(buffer)!);
       case 133:
+        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
+      case 134:
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+      case 135:
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
+      case 136:
+        return PigeonUserCredential.decode(readValue(buffer)!);
+      case 137:
+        return PigeonUserDetails.decode(readValue(buffer)!);
+      case 138:
+        return PigeonUserInfo.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }

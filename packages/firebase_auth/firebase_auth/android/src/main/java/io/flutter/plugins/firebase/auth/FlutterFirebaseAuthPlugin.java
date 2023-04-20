@@ -21,7 +21,6 @@ import com.google.firebase.auth.ActionCodeEmailInfo;
 import com.google.firebase.auth.ActionCodeInfo;
 import com.google.firebase.auth.ActionCodeResult;
 import com.google.firebase.auth.ActionCodeSettings;
-import com.google.firebase.auth.AdditionalUserInfo;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -29,9 +28,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuthMultiFactorException;
-import com.google.firebase.auth.FirebaseAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -40,7 +37,6 @@ import com.google.firebase.auth.MultiFactorAssertion;
 import com.google.firebase.auth.MultiFactorInfo;
 import com.google.firebase.auth.MultiFactorResolver;
 import com.google.firebase.auth.MultiFactorSession;
-import com.google.firebase.auth.OAuthCredential;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -48,7 +44,6 @@ import com.google.firebase.auth.PhoneMultiFactorGenerator;
 import com.google.firebase.auth.PhoneMultiFactorInfo;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.TwitterAuthProvider;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -91,26 +86,6 @@ public class FlutterFirebaseAuthPlugin
   private Activity activity;
 
   private final Map<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
-
-  static Map<String, Object> parseAuthCredential(AuthCredential authCredential) {
-    if (authCredential == null) {
-      return null;
-    }
-
-    int authCredentialHashCode = authCredential.hashCode();
-    authCredentials.put(authCredentialHashCode, authCredential);
-
-    Map<String, Object> output = new HashMap<>();
-
-    output.put(Constants.PROVIDER_ID, authCredential.getProvider());
-    output.put(Constants.SIGN_IN_METHOD, authCredential.getSignInMethod());
-    output.put(Constants.TOKEN, authCredentialHashCode);
-    if (authCredential instanceof OAuthCredential) {
-      output.put(Constants.ACCESS_TOKEN, ((OAuthCredential) authCredential).getAccessToken());
-    }
-
-    return output;
-  }
 
   private void initInstance(BinaryMessenger messenger) {
     registerPlugin(METHOD_CHANNEL_NAME, this);
@@ -263,109 +238,6 @@ public class FlutterFirebaseAuthPlugin
       default:
         return null;
     }
-  }
-
-  private Map<String, Object> parseAuthResult(@NonNull AuthResult authResult) {
-    Map<String, Object> output = new HashMap<>();
-
-    output.put(
-        Constants.ADDITIONAL_USER_INFO,
-        parseAdditionalUserInfo(authResult.getAdditionalUserInfo()));
-    output.put(Constants.AUTH_CREDENTIAL, parseAuthCredential(authResult.getCredential()));
-    output.put(Constants.USER, parseFirebaseUser(authResult.getUser()));
-
-    return output;
-  }
-
-  private Map<String, Object> parseAdditionalUserInfo(AdditionalUserInfo additionalUserInfo) {
-    if (additionalUserInfo == null) {
-      return null;
-    }
-
-    Map<String, Object> output = new HashMap<>();
-
-    output.put(Constants.IS_NEW_USER, additionalUserInfo.isNewUser());
-    output.put(Constants.PROFILE, additionalUserInfo.getProfile());
-    output.put(Constants.PROVIDER_ID, additionalUserInfo.getProviderId());
-    output.put(Constants.USERNAME, additionalUserInfo.getUsername());
-
-    return output;
-  }
-
-  static Map<String, Object> parseFirebaseUser(FirebaseUser firebaseUser) {
-    if (firebaseUser == null) {
-      return null;
-    }
-
-    Map<String, Object> output = new HashMap<>();
-    Map<String, Object> metadata = new HashMap<>();
-
-    output.put(Constants.DISPLAY_NAME, firebaseUser.getDisplayName());
-    output.put(Constants.EMAIL, firebaseUser.getEmail());
-    output.put(Constants.EMAIL_VERIFIED, firebaseUser.isEmailVerified());
-    output.put(Constants.IS_ANONYMOUS, firebaseUser.isAnonymous());
-
-    // TODO(Salakar): add an integration test to check for null, if possible
-    // See https://github.com/firebase/flutterfire/issues/3643
-    final FirebaseUserMetadata userMetadata = firebaseUser.getMetadata();
-    if (userMetadata != null) {
-      metadata.put(Constants.CREATION_TIME, firebaseUser.getMetadata().getCreationTimestamp());
-      metadata.put(
-          Constants.LAST_SIGN_IN_TIME, firebaseUser.getMetadata().getLastSignInTimestamp());
-    }
-    output.put(Constants.METADATA, metadata);
-    output.put(Constants.PHONE_NUMBER, firebaseUser.getPhoneNumber());
-    output.put(Constants.PHOTO_URL, parsePhotoUrl(firebaseUser.getPhotoUrl()));
-    output.put(Constants.PROVIDER_DATA, parseUserInfoList(firebaseUser.getProviderData()));
-    output.put(Constants.REFRESH_TOKEN, ""); // native does not provide refresh tokens
-    output.put(Constants.UID, firebaseUser.getUid());
-    output.put(Constants.TENANT_ID, firebaseUser.getTenantId());
-
-    return output;
-  }
-
-  private static List<Map<String, Object>> parseUserInfoList(
-      List<? extends UserInfo> userInfoList) {
-    List<Map<String, Object>> output = new ArrayList<>();
-
-    if (userInfoList == null) {
-      return output;
-    }
-
-    for (UserInfo userInfo : new ArrayList<UserInfo>(userInfoList)) {
-      if (userInfo == null) {
-        continue;
-      }
-      if (!FirebaseAuthProvider.PROVIDER_ID.equals(userInfo.getProviderId())) {
-        output.add(parseUserInfo(userInfo));
-      }
-    }
-
-    return output;
-  }
-
-  private static Map<String, Object> parseUserInfo(@NonNull UserInfo userInfo) {
-    Map<String, Object> output = new HashMap<>();
-
-    output.put(Constants.DISPLAY_NAME, userInfo.getDisplayName());
-    output.put(Constants.EMAIL, userInfo.getEmail());
-    output.put(Constants.PHONE_NUMBER, userInfo.getPhoneNumber());
-    output.put(Constants.PHOTO_URL, parsePhotoUrl(userInfo.getPhotoUrl()));
-    output.put(Constants.PROVIDER_ID, userInfo.getProviderId());
-    output.put(Constants.UID, userInfo.getUid());
-
-    return output;
-  }
-
-  private static String parsePhotoUrl(Uri photoUri) {
-    if (photoUri == null) {
-      return null;
-    }
-
-    String photoUrl = photoUri.toString();
-
-    // Return null if the URL is an empty string
-    return "".equals(photoUrl) ? null : photoUrl;
   }
 
   private ActionCodeSettings getActionCodeSettings(
@@ -562,7 +434,11 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @Override
-  public void confirmPasswordReset(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String code, @NonNull String newPassword, @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+  public void confirmPasswordReset(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull String code,
+      @NonNull String newPassword,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
@@ -573,27 +449,24 @@ public class FlutterFirebaseAuthPlugin
     }
   }
 
+  @Override
+  public void createUserWithEmailAndPassword(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull String email,
+      @NonNull String password,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+              result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-  private Task<Map<String, Object>> createUserWithEmailAndPassword(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+      AuthResult authResult =
+          Tasks.await(firebaseAuth.createUserWithEmailAndPassword(email, password));
 
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            String email = (String) Objects.requireNonNull(arguments.get(Constants.EMAIL));
-            String password = (String) Objects.requireNonNull(arguments.get(Constants.PASSWORD));
-
-            AuthResult authResult =
-                Tasks.await(firebaseAuth.createUserWithEmailAndPassword(email, password));
-
-            taskCompletionSource.setResult(parseAuthResult(authResult));
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
+      result.success(PigeonParser.parseAuthResult(authResult));
+    } catch (Exception e) {
+      result.error(e);
+    }
   }
 
   private Task<Map<String, Object>> fetchSignInMethodsForEmail(Map<String, Object> arguments) {
@@ -1426,9 +1299,6 @@ public class FlutterFirebaseAuthPlugin
     final Task<?> methodCallTask;
 
     switch (call.method) {
-      case "Auth#createUserWithEmailAndPassword":
-        methodCallTask = createUserWithEmailAndPassword(call.arguments());
-        break;
       case "Auth#fetchSignInMethodsForEmail":
         methodCallTask = fetchSignInMethodsForEmail(call.arguments());
         break;

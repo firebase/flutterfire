@@ -5,13 +5,15 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// A user account.
 abstract class UserPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
-  UserPlatform(this.auth, this.multiFactor, Map<String, dynamic> user)
+  UserPlatform(this.auth, this.multiFactor, PigeonUserDetails user)
       : _user = user,
         super(token: _token);
 
@@ -27,20 +29,20 @@ abstract class UserPlatform extends PlatformInterface {
 
   final MultiFactorPlatform multiFactor;
 
-  final Map<String, dynamic> _user;
+  final PigeonUserDetails _user;
 
   /// The users display name.
   ///
   /// Will be `null` if signing in anonymously or via password authentication.
   String? get displayName {
-    return _user['displayName'];
+    return _user.userInfo.displayName;
   }
 
   /// The users email address.
   ///
   /// Will be `null` if signing in anonymously.
   String? get email {
-    return _user['email'];
+    return _user.userInfo.email;
   }
 
   /// Returns whether the users email address has been verified.
@@ -49,19 +51,21 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// Once verified, call [reload] to ensure the latest user information is
   /// retrieved from Firebase.
-  bool get emailVerified {
-    return _user['emailVerified'];
+  bool get isEmailVerified {
+    return _user.userInfo.isEmailVerified;
   }
 
   /// Returns whether the user is a anonymous.
   bool get isAnonymous {
-    return _user['isAnonymous'];
+    return _user.userInfo.isAnonymous;
   }
 
   /// Returns additional metadata about the user, such as their creation time.
   UserMetadata get metadata {
     return UserMetadata(
-        _user['metadata']['creationTime'], _user['metadata']['lastSignInTime']);
+      _user.userInfo.creationTimestamp,
+      _user.userInfo.lastSignInTimestamp,
+    );
   }
 
   /// Returns the users phone number.
@@ -69,7 +73,7 @@ abstract class UserPlatform extends PlatformInterface {
   /// This property will be `null` if the user has not signed in or been has
   /// their phone number linked.
   String? get phoneNumber {
-    return _user['phoneNumber'];
+    return _user.userInfo.phoneNumber;
   }
 
   /// Returns a photo URL for the user.
@@ -77,14 +81,12 @@ abstract class UserPlatform extends PlatformInterface {
   /// This property will be populated if the user has signed in or been linked
   /// with a 3rd party OAuth provider (such as Google).
   String? get photoURL {
-    return _user['photoURL'];
+    return _user.userInfo.photoUrl;
   }
 
   /// Returns a list of user information for each linked provider.
   List<UserInfo> get providerData {
-    return List.from(_user['providerData'])
-        .map((data) => UserInfo(Map<String, String?>.from(data)))
-        .toList();
+    return _user.providerData.whereNotNull().map(UserInfo.fromPigeon).toList();
   }
 
   /// Returns a JWT refresh token for the user.
@@ -92,7 +94,7 @@ abstract class UserPlatform extends PlatformInterface {
   /// This property will be an empty string for native platforms (android, iOS & macOS) as they do not
   /// support refresh tokens.
   String? get refreshToken {
-    return _user['refreshToken'];
+    return _user.userInfo.refreshToken;
   }
 
   /// The current user's tenant ID.
@@ -101,12 +103,12 @@ abstract class UserPlatform extends PlatformInterface {
   /// in the current user. This is `null` if the user is signed in from the
   /// parent project.
   String? get tenantId {
-    return _user['tenantId'];
+    return _user.userInfo.tenantId;
   }
 
   /// The user's unique ID.
   String get uid {
-    return _user['uid'];
+    return _user.userInfo.uid;
   }
 
   /// Deletes and signs out the user.
