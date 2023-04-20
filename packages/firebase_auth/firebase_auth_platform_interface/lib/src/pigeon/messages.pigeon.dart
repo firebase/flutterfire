@@ -8,6 +8,31 @@ import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 
+/// The type of operation that generated the action code from calling
+/// [checkActionCode].
+enum ActionCodeInfoOperation {
+  /// Unknown operation.
+  unknown,
+
+  /// Password reset code generated via [sendPasswordResetEmail].
+  passwordReset,
+
+  /// Email verification code generated via [User.sendEmailVerification].
+  verifyEmail,
+
+  /// Email change revocation code generated via [User.updateEmail].
+  recoverEmail,
+
+  /// Email sign in code generated via [sendSignInLinkToEmail].
+  emailSignIn,
+
+  /// Verify and change email code generated via [User.verifyBeforeUpdateEmail].
+  verifyAndChangeEmail,
+
+  /// Action code for reverting second factor addition.
+  revertSecondFactorAddition,
+}
+
 class PigeonMultiFactorSession {
   PigeonMultiFactorSession({
     required this.id,
@@ -122,12 +147,70 @@ class PigeonFirebaseApp {
   }
 }
 
+class PigeonActionCodeInfo {
+  PigeonActionCodeInfo({
+    required this.operation,
+    required this.data,
+  });
+
+  ActionCodeInfoOperation operation;
+
+  PigeonActionCodeInfoData data;
+
+  Object encode() {
+    return <Object?>[
+      operation.index,
+      data.encode(),
+    ];
+  }
+
+  static PigeonActionCodeInfo decode(Object result) {
+    result as List<Object?>;
+    return PigeonActionCodeInfo(
+      operation: ActionCodeInfoOperation.values[result[0]! as int],
+      data: PigeonActionCodeInfoData.decode(result[1]! as List<Object?>),
+    );
+  }
+}
+
+class PigeonActionCodeInfoData {
+  PigeonActionCodeInfoData({
+    this.email,
+    this.previousEmail,
+  });
+
+  String? email;
+
+  String? previousEmail;
+
+  Object encode() {
+    return <Object?>[
+      email,
+      previousEmail,
+    ];
+  }
+
+  static PigeonActionCodeInfoData decode(Object result) {
+    result as List<Object?>;
+    return PigeonActionCodeInfoData(
+      email: result[0] as String?,
+      previousEmail: result[1] as String?,
+    );
+  }
+}
+
 class _FirebaseAuthHostApiCodec extends StandardMessageCodec {
   const _FirebaseAuthHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonFirebaseApp) {
+    if (value is PigeonActionCodeInfo) {
       buffer.putUint8(128);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonActionCodeInfoData) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonFirebaseApp) {
+      buffer.putUint8(130);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -138,6 +221,10 @@ class _FirebaseAuthHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
+        return PigeonActionCodeInfo.decode(readValue(buffer)!);
+      case 129:
+        return PigeonActionCodeInfoData.decode(readValue(buffer)!);
+      case 130:
         return PigeonFirebaseApp.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -253,6 +340,34 @@ class FirebaseAuthHostApi {
       );
     } else {
       return;
+    }
+  }
+
+  Future<PigeonActionCodeInfo> checkActionCode(
+      PigeonFirebaseApp arg_app, String arg_code) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseAuthHostApi.checkActionCode', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_code]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as PigeonActionCodeInfo?)!;
     }
   }
 }
@@ -408,17 +523,23 @@ class _MultiFactoResolverHostApiCodec extends StandardMessageCodec {
   const _MultiFactoResolverHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonFirebaseApp) {
+    if (value is PigeonActionCodeInfo) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorInfo) {
+    } else if (value is PigeonActionCodeInfoData) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorSession) {
+    } else if (value is PigeonFirebaseApp) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonPhoneMultiFactorAssertion) {
+    } else if (value is PigeonMultiFactorInfo) {
       buffer.putUint8(131);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonMultiFactorSession) {
+      buffer.putUint8(132);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonPhoneMultiFactorAssertion) {
+      buffer.putUint8(133);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -429,12 +550,16 @@ class _MultiFactoResolverHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
+        return PigeonActionCodeInfo.decode(readValue(buffer)!);
       case 129:
-        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
+        return PigeonActionCodeInfoData.decode(readValue(buffer)!);
       case 130:
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+        return PigeonFirebaseApp.decode(readValue(buffer)!);
       case 131:
+        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
+      case 132:
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+      case 133:
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);

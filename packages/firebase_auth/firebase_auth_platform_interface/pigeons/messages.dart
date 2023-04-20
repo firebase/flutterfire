@@ -65,6 +65,51 @@ class PigeonFirebaseApp {
   final String? tenantId;
 }
 
+/// The type of operation that generated the action code from calling
+/// [checkActionCode].
+enum ActionCodeInfoOperation {
+  /// Unknown operation.
+  unknown,
+
+  /// Password reset code generated via [sendPasswordResetEmail].
+  passwordReset,
+
+  /// Email verification code generated via [User.sendEmailVerification].
+  verifyEmail,
+
+  /// Email change revocation code generated via [User.updateEmail].
+  recoverEmail,
+
+  /// Email sign in code generated via [sendSignInLinkToEmail].
+  emailSignIn,
+
+  /// Verify and change email code generated via [User.verifyBeforeUpdateEmail].
+  verifyAndChangeEmail,
+
+  /// Action code for reverting second factor addition.
+  revertSecondFactorAddition,
+}
+
+class PigeonActionCodeInfo {
+  const PigeonActionCodeInfo({
+    required this.operation,
+    required this.data,
+  });
+
+  final ActionCodeInfoOperation operation;
+  final PigeonActionCodeInfoData data;
+}
+
+class PigeonActionCodeInfoData {
+  const PigeonActionCodeInfoData({
+    this.email,
+    this.previousEmail,
+  });
+
+  final String? email;
+  final String? previousEmail;
+}
+
 @HostApi(dartHostTestHandler: 'TesFirebaseAuthHostApi')
 abstract class FirebaseAuthHostApi {
   @async
@@ -91,7 +136,7 @@ abstract class FirebaseAuthHostApi {
   );
 
   @async
-  void checkActionCode(
+  PigeonActionCodeInfo checkActionCode(
     PigeonFirebaseApp app,
     String code,
   );

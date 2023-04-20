@@ -241,16 +241,14 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<ActionCodeInfo> checkActionCode(String code) async {
     try {
-      Map<String, dynamic> result =
-          (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#checkActionCode',
-              _withChannelDefaults({
-                'code': code,
-              })))!;
+      final result = await _api.checkActionCode(pigeonDefault, code);
 
       return ActionCodeInfo(
-        operation: result['operation'],
-        data: Map<String, dynamic>.from(result['data']),
+        operation: result.operation,
+        data: ActionCodeInfoData(
+          email: result.data.email,
+          previousEmail: result.data.previousEmail,
+        ),
       );
     } catch (e, stack) {
       convertPlatformException(e, stack);

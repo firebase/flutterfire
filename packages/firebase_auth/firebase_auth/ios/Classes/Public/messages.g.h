@@ -10,10 +10,31 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// The type of operation that generated the action code from calling
+/// [checkActionCode].
+typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
+  /// Unknown operation.
+  ActionCodeInfoOperationUnknown = 0,
+  /// Password reset code generated via [sendPasswordResetEmail].
+  ActionCodeInfoOperationPasswordReset = 1,
+  /// Email verification code generated via [User.sendEmailVerification].
+  ActionCodeInfoOperationVerifyEmail = 2,
+  /// Email change revocation code generated via [User.updateEmail].
+  ActionCodeInfoOperationRecoverEmail = 3,
+  /// Email sign in code generated via [sendSignInLinkToEmail].
+  ActionCodeInfoOperationEmailSignIn = 4,
+  /// Verify and change email code generated via [User.verifyBeforeUpdateEmail].
+  ActionCodeInfoOperationVerifyAndChangeEmail = 5,
+  /// Action code for reverting second factor addition.
+  ActionCodeInfoOperationRevertSecondFactorAddition = 6,
+};
+
 @class PigeonMultiFactorSession;
 @class PigeonPhoneMultiFactorAssertion;
 @class PigeonMultiFactorInfo;
 @class PigeonFirebaseApp;
+@class PigeonActionCodeInfo;
+@class PigeonActionCodeInfoData;
 
 @interface PigeonMultiFactorSession : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
@@ -54,6 +75,22 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *tenantId;
 @end
 
+@interface PigeonActionCodeInfo : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithOperation:(ActionCodeInfoOperation)operation
+                             data:(PigeonActionCodeInfoData *)data;
+@property(nonatomic, assign) ActionCodeInfoOperation operation;
+@property(nonatomic, strong) PigeonActionCodeInfoData *data;
+@end
+
+@interface PigeonActionCodeInfoData : NSObject
++ (instancetype)makeWithEmail:(nullable NSString *)email
+                previousEmail:(nullable NSString *)previousEmail;
+@property(nonatomic, copy, nullable) NSString *email;
+@property(nonatomic, copy, nullable) NSString *previousEmail;
+@end
+
 /// The codec used by FirebaseAuthHostApi.
 NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
 
@@ -71,6 +108,10 @@ NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
 - (void)applyActionCodeApp:(PigeonFirebaseApp *)app
                       code:(NSString *)code
                 completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)checkActionCodeApp:(PigeonFirebaseApp *)app
+                      code:(NSString *)code
+                completion:
+                    (void (^)(PigeonActionCodeInfo *_Nullable, FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

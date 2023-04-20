@@ -53,6 +53,30 @@ public class GeneratedAndroidFirebaseAuth {
     return errorList;
   }
 
+  /** The type of operation that generated the action code from calling [checkActionCode]. */
+  public enum ActionCodeInfoOperation {
+    /** Unknown operation. */
+    UNKNOWN(0),
+    /** Password reset code generated via [sendPasswordResetEmail]. */
+    PASSWORD_RESET(1),
+    /** Email verification code generated via [User.sendEmailVerification]. */
+    VERIFY_EMAIL(2),
+    /** Email change revocation code generated via [User.updateEmail]. */
+    RECOVER_EMAIL(3),
+    /** Email sign in code generated via [sendSignInLinkToEmail]. */
+    EMAIL_SIGN_IN(4),
+    /** Verify and change email code generated via [User.verifyBeforeUpdateEmail]. */
+    VERIFY_AND_CHANGE_EMAIL(5),
+    /** Action code for reverting second factor addition. */
+    REVERT_SECOND_FACTOR_ADDITION(6);
+
+    final int index;
+
+    private ActionCodeInfoOperation(final int index) {
+      this.index = index;
+    }
+  }
+
   /** Generated class from Pigeon that represents data sent in messages. */
   public static final class PigeonMultiFactorSession {
     private @NonNull String id;
@@ -381,6 +405,145 @@ public class GeneratedAndroidFirebaseAuth {
     }
   }
 
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonActionCodeInfo {
+    private @NonNull ActionCodeInfoOperation operation;
+
+    public @NonNull ActionCodeInfoOperation getOperation() {
+      return operation;
+    }
+
+    public void setOperation(@NonNull ActionCodeInfoOperation setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"operation\" is null.");
+      }
+      this.operation = setterArg;
+    }
+
+    private @NonNull PigeonActionCodeInfoData data;
+
+    public @NonNull PigeonActionCodeInfoData getData() {
+      return data;
+    }
+
+    public void setData(@NonNull PigeonActionCodeInfoData setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"data\" is null.");
+      }
+      this.data = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonActionCodeInfo() {}
+
+    public static final class Builder {
+
+      private @Nullable ActionCodeInfoOperation operation;
+
+      public @NonNull Builder setOperation(@NonNull ActionCodeInfoOperation setterArg) {
+        this.operation = setterArg;
+        return this;
+      }
+
+      private @Nullable PigeonActionCodeInfoData data;
+
+      public @NonNull Builder setData(@NonNull PigeonActionCodeInfoData setterArg) {
+        this.data = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonActionCodeInfo build() {
+        PigeonActionCodeInfo pigeonReturn = new PigeonActionCodeInfo();
+        pigeonReturn.setOperation(operation);
+        pigeonReturn.setData(data);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+      toListResult.add(operation == null ? null : operation.index);
+      toListResult.add((data == null) ? null : data.toList());
+      return toListResult;
+    }
+
+    static @NonNull PigeonActionCodeInfo fromList(@NonNull ArrayList<Object> list) {
+      PigeonActionCodeInfo pigeonResult = new PigeonActionCodeInfo();
+      Object operation = list.get(0);
+      pigeonResult.setOperation(
+          operation == null ? null : ActionCodeInfoOperation.values()[(int) operation]);
+      Object data = list.get(1);
+      pigeonResult.setData(
+          (data == null) ? null : PigeonActionCodeInfoData.fromList((ArrayList<Object>) data));
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonActionCodeInfoData {
+    private @Nullable String email;
+
+    public @Nullable String getEmail() {
+      return email;
+    }
+
+    public void setEmail(@Nullable String setterArg) {
+      this.email = setterArg;
+    }
+
+    private @Nullable String previousEmail;
+
+    public @Nullable String getPreviousEmail() {
+      return previousEmail;
+    }
+
+    public void setPreviousEmail(@Nullable String setterArg) {
+      this.previousEmail = setterArg;
+    }
+
+    public static final class Builder {
+
+      private @Nullable String email;
+
+      public @NonNull Builder setEmail(@Nullable String setterArg) {
+        this.email = setterArg;
+        return this;
+      }
+
+      private @Nullable String previousEmail;
+
+      public @NonNull Builder setPreviousEmail(@Nullable String setterArg) {
+        this.previousEmail = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonActionCodeInfoData build() {
+        PigeonActionCodeInfoData pigeonReturn = new PigeonActionCodeInfoData();
+        pigeonReturn.setEmail(email);
+        pigeonReturn.setPreviousEmail(previousEmail);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+      toListResult.add(email);
+      toListResult.add(previousEmail);
+      return toListResult;
+    }
+
+    static @NonNull PigeonActionCodeInfoData fromList(@NonNull ArrayList<Object> list) {
+      PigeonActionCodeInfoData pigeonResult = new PigeonActionCodeInfoData();
+      Object email = list.get(0);
+      pigeonResult.setEmail((String) email);
+      Object previousEmail = list.get(1);
+      pigeonResult.setPreviousEmail((String) previousEmail);
+      return pigeonResult;
+    }
+  }
+
   public interface Result<T> {
     @SuppressWarnings("UnknownNullness")
     void success(T result);
@@ -397,6 +560,10 @@ public class GeneratedAndroidFirebaseAuth {
     protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
       switch (type) {
         case (byte) 128:
+          return PigeonActionCodeInfo.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 129:
+          return PigeonActionCodeInfoData.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 130:
           return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
@@ -405,8 +572,14 @@ public class GeneratedAndroidFirebaseAuth {
 
     @Override
     protected void writeValue(@NonNull ByteArrayOutputStream stream, Object value) {
-      if (value instanceof PigeonFirebaseApp) {
+      if (value instanceof PigeonActionCodeInfo) {
         stream.write(128);
+        writeValue(stream, ((PigeonActionCodeInfo) value).toList());
+      } else if (value instanceof PigeonActionCodeInfoData) {
+        stream.write(129);
+        writeValue(stream, ((PigeonActionCodeInfoData) value).toList());
+      } else if (value instanceof PigeonFirebaseApp) {
+        stream.write(130);
         writeValue(stream, ((PigeonFirebaseApp) value).toList());
       } else {
         super.writeValue(stream, value);
@@ -429,6 +602,11 @@ public class GeneratedAndroidFirebaseAuth {
 
     void applyActionCode(
         @NonNull PigeonFirebaseApp app, @NonNull String code, @NonNull Result<Void> result);
+
+    void checkActionCode(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String code,
+        @NonNull Result<PigeonActionCodeInfo> result);
 
     /** The codec used by FirebaseAuthHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -563,6 +741,38 @@ public class GeneratedAndroidFirebaseAuth {
                     };
 
                 api.applyActionCode(appArg, codeArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseAuthHostApi.checkActionCode",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                String codeArg = (String) args.get(1);
+                Result<PigeonActionCodeInfo> resultCallback =
+                    new Result<PigeonActionCodeInfo>() {
+                      public void success(PigeonActionCodeInfo result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.checkActionCode(appArg, codeArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -773,12 +983,16 @@ public class GeneratedAndroidFirebaseAuth {
     protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
       switch (type) {
         case (byte) 128:
-          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonActionCodeInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 129:
-          return PigeonMultiFactorInfo.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonActionCodeInfoData.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
-          return PigeonMultiFactorSession.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 131:
+          return PigeonMultiFactorInfo.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 132:
+          return PigeonMultiFactorSession.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 133:
           return PigeonPhoneMultiFactorAssertion.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
@@ -787,17 +1001,23 @@ public class GeneratedAndroidFirebaseAuth {
 
     @Override
     protected void writeValue(@NonNull ByteArrayOutputStream stream, Object value) {
-      if (value instanceof PigeonFirebaseApp) {
+      if (value instanceof PigeonActionCodeInfo) {
         stream.write(128);
+        writeValue(stream, ((PigeonActionCodeInfo) value).toList());
+      } else if (value instanceof PigeonActionCodeInfoData) {
+        stream.write(129);
+        writeValue(stream, ((PigeonActionCodeInfoData) value).toList());
+      } else if (value instanceof PigeonFirebaseApp) {
+        stream.write(130);
         writeValue(stream, ((PigeonFirebaseApp) value).toList());
       } else if (value instanceof PigeonMultiFactorInfo) {
-        stream.write(129);
+        stream.write(131);
         writeValue(stream, ((PigeonMultiFactorInfo) value).toList());
       } else if (value instanceof PigeonMultiFactorSession) {
-        stream.write(130);
+        stream.write(132);
         writeValue(stream, ((PigeonMultiFactorSession) value).toList());
       } else if (value instanceof PigeonPhoneMultiFactorAssertion) {
-        stream.write(131);
+        stream.write(133);
         writeValue(stream, ((PigeonPhoneMultiFactorAssertion) value).toList());
       } else {
         super.writeValue(stream, value);
