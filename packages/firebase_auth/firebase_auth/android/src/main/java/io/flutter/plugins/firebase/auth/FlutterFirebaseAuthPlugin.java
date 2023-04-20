@@ -484,9 +484,10 @@ public class FlutterFirebaseAuthPlugin
     return output;
   }
 
-
   @Override
-  public void registerIdTokenListener(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
+  public void registerIdTokenListener(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
     try {
       final FirebaseAuth auth = getAuthFromPigeon(app);
       final IdTokenChannelStreamHandler handler = new IdTokenChannelStreamHandler(auth);
@@ -501,7 +502,9 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @Override
-  public void registerAuthStateListener(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
+  public void registerAuthStateListener(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
     try {
       final FirebaseAuth auth = getAuthFromPigeon(app);
       final AuthStateChannelStreamHandler handler = new AuthStateChannelStreamHandler(auth);
@@ -513,7 +516,17 @@ public class FlutterFirebaseAuthPlugin
     } catch (Exception e) {
       result.error(e);
     }
+  }
 
+  @Override
+  public void useEmulator(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String host, @NonNull Long port, @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+      firebaseAuth.useEmulator(host, port.intValue());
+      result.success(null);
+    } catch (Exception e) {
+      result.error(e);
+    }
   }
 
   private Task<Void> applyActionCode(Map<String, Object> arguments) {
@@ -950,24 +963,6 @@ public class FlutterFirebaseAuthPlugin
     return taskCompletionSource.getTask();
   }
 
-  private Task<Void> useEmulator(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            String host = (String) arguments.get(Constants.HOST);
-            int port = (int) arguments.get(Constants.PORT);
-            firebaseAuth.useEmulator(host, port);
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
 
   private Task<Map<String, Object>> verifyPasswordResetCode(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
@@ -1491,9 +1486,6 @@ public class FlutterFirebaseAuthPlugin
       case "Auth#signOut":
         methodCallTask = signOut(call.arguments());
         break;
-      case "Auth#useEmulator":
-        methodCallTask = useEmulator(call.arguments());
-        break;
       case "Auth#verifyPasswordResetCode":
         methodCallTask = verifyPasswordResetCode(call.arguments());
         break;
@@ -1988,6 +1980,4 @@ public class FlutterFirebaseAuthPlugin
               }
             });
   }
-
-
 }

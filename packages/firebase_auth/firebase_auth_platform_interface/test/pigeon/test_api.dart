@@ -42,6 +42,8 @@ abstract class TesFirebaseAuthHostApi {
 
   Future<String> registerAuthStateListener(PigeonFirebaseApp app);
 
+  Future<void> useEmulator(PigeonFirebaseApp app, String host, int port);
+
   static void setup(TesFirebaseAuthHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
     {
@@ -87,6 +89,34 @@ abstract class TesFirebaseAuthHostApi {
               'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.registerAuthStateListener was null, expected non-null PigeonFirebaseApp.');
           final String output = await api.registerAuthStateListener(arg_app!);
           return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthHostApi.useEmulator', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.useEmulator was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.useEmulator was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_host = (args[1] as String?);
+          assert(arg_host != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.useEmulator was null, expected non-null String.');
+          final int? arg_port = (args[2] as int?);
+          assert(arg_port != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.useEmulator was null, expected non-null int.');
+          await api.useEmulator(arg_app!, arg_host!, arg_port!);
+          return <Object?>[];
         });
       }
     }

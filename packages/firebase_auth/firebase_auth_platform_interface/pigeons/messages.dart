@@ -76,6 +76,13 @@ abstract class FirebaseAuthHostApi {
   String registerAuthStateListener(
     PigeonFirebaseApp app,
   );
+
+  @async
+  void useEmulator(
+    PigeonFirebaseApp app,
+    String host,
+    int port,
+  );
 }
 
 @HostApi(dartHostTestHandler: 'TestMultiFactorUserHostApi')

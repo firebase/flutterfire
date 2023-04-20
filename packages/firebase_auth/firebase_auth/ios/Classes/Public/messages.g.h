@@ -64,6 +64,10 @@ NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
 - (void)registerAuthStateListenerApp:(PigeonFirebaseApp *)app
                           completion:
                               (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)useEmulatorApp:(PigeonFirebaseApp *)app
+                  host:(NSString *)host
+                  port:(NSNumber *)port
+            completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

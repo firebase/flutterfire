@@ -58,6 +58,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     return MethodChannelFirebaseAuth._();
   }
 
+  PigeonFirebaseApp get pigeonDefault {
+    return PigeonFirebaseApp(
+      appName: app.name,
+      tenantId: tenantId,
+    );
+  }
+
   /// Internal stub class initializer.
   ///
   /// When the user code calls an auth method, the real instance is
@@ -67,10 +74,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// Creates a new instance with a given [FirebaseApp].
   MethodChannelFirebaseAuth({required FirebaseApp app})
       : super(appInstance: app) {
-    _api
-        .registerIdTokenListener(
-            PigeonFirebaseApp(appName: app.name, tenantId: tenantId))
-        .then((channelName) {
+    _api.registerIdTokenListener(pigeonDefault).then((channelName) {
       final events = EventChannel(channelName, channel.codec);
       events
           .receiveGuardedBroadcastStream(onError: convertPlatformException)
@@ -81,10 +85,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       );
     });
 
-    _api
-        .registerAuthStateListener(
-            PigeonFirebaseApp(appName: app.name, tenantId: tenantId))
-        .then((channelName) {
+    _api.registerAuthStateListener(pigeonDefault).then((channelName) {
       final events = EventChannel(channelName, channel.codec);
       events
           .receiveGuardedBroadcastStream(onError: convertPlatformException)
@@ -222,12 +223,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<void> useAuthEmulator(String host, int port) async {
     try {
-      await channel.invokeMethod<void>(
-          'Auth#useEmulator',
-          _withChannelDefaults({
-            'host': host,
-            'port': port,
-          }));
+      await _api.useEmulator(pigeonDefault, host, port);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

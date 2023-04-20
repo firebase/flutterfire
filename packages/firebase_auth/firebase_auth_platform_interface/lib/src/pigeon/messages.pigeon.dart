@@ -209,6 +209,29 @@ class FirebaseAuthHostApi {
       return (replyList[0] as String?)!;
     }
   }
+
+  Future<void> useEmulator(
+      PigeonFirebaseApp arg_app, String arg_host, int arg_port) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseAuthHostApi.useEmulator', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_app, arg_host, arg_port]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
 }
 
 class _MultiFactorUserHostApiCodec extends StandardMessageCodec {
