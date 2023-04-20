@@ -265,8 +265,6 @@ public class FlutterFirebaseAuthPlugin
     }
   }
 
-
-
   private Map<String, Object> parseAuthResult(@NonNull AuthResult authResult) {
     Map<String, Object> output = new HashMap<>();
 
@@ -497,11 +495,12 @@ public class FlutterFirebaseAuthPlugin
     }
   }
 
-
-  private GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo parseActionCodeResult(@NonNull ActionCodeResult actionCodeResult) {
-    GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo.Builder builder = new GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo.Builder();
-    GeneratedAndroidFirebaseAuth.PigeonActionCodeInfoData.Builder builderData = new GeneratedAndroidFirebaseAuth.PigeonActionCodeInfoData.Builder();
-
+  private GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo parseActionCodeResult(
+      @NonNull ActionCodeResult actionCodeResult) {
+    GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo.Builder builder =
+        new GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo.Builder();
+    GeneratedAndroidFirebaseAuth.PigeonActionCodeInfoData.Builder builderData =
+        new GeneratedAndroidFirebaseAuth.PigeonActionCodeInfoData.Builder();
 
     int operation = actionCodeResult.getOperation();
 
@@ -519,22 +518,24 @@ public class FlutterFirebaseAuthPlugin
         builder.setOperation(GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.EMAIL_SIGN_IN);
         break;
       case ActionCodeResult.VERIFY_BEFORE_CHANGE_EMAIL:
-        builder.setOperation(GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.VERIFY_AND_CHANGE_EMAIL);
+        builder.setOperation(
+            GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.VERIFY_AND_CHANGE_EMAIL);
         break;
       case ActionCodeResult.REVERT_SECOND_FACTOR_ADDITION:
-        builder.setOperation(GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.REVERT_SECOND_FACTOR_ADDITION);
+        builder.setOperation(
+            GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.REVERT_SECOND_FACTOR_ADDITION);
         break;
     }
 
     ActionCodeInfo actionCodeInfo = actionCodeResult.getInfo();
 
     if (actionCodeInfo != null && operation == ActionCodeResult.VERIFY_EMAIL
-      || operation == ActionCodeResult.PASSWORD_RESET) {
-      builderData.setEmail( actionCodeInfo.getEmail());
-    }  else if (operation == ActionCodeResult.RECOVER_EMAIL
-      || operation == ActionCodeResult.VERIFY_BEFORE_CHANGE_EMAIL) {
+        || operation == ActionCodeResult.PASSWORD_RESET) {
+      builderData.setEmail(actionCodeInfo.getEmail());
+    } else if (operation == ActionCodeResult.RECOVER_EMAIL
+        || operation == ActionCodeResult.VERIFY_BEFORE_CHANGE_EMAIL) {
       ActionCodeEmailInfo actionCodeEmailInfo =
-        (ActionCodeEmailInfo) Objects.requireNonNull(actionCodeInfo);
+          (ActionCodeEmailInfo) Objects.requireNonNull(actionCodeInfo);
       builderData.setEmail(actionCodeEmailInfo.getEmail());
       builderData.setPreviousEmail(actionCodeEmailInfo.getPreviousEmail());
     }
@@ -545,7 +546,12 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @Override
-  public void checkActionCode(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String code, @NonNull GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo> result) {
+  public void checkActionCode(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull String code,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo>
+              result) {
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
       ActionCodeResult actionCodeResult = Tasks.await(firebaseAuth.checkActionCode(code));
@@ -555,27 +561,18 @@ public class FlutterFirebaseAuthPlugin
     }
   }
 
+  @Override
+  public void confirmPasswordReset(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String code, @NonNull String newPassword, @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-  private Task<Void> confirmPasswordReset(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            String code = (String) Objects.requireNonNull(arguments.get(Constants.CODE));
-            String newPassword =
-                (String) Objects.requireNonNull(arguments.get(Constants.NEW_PASSWORD));
-
-            Tasks.await(firebaseAuth.confirmPasswordReset(code, newPassword));
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
+      Tasks.await(firebaseAuth.confirmPasswordReset(code, newPassword));
+      result.success(null);
+    } catch (Exception e) {
+      result.error(e);
+    }
   }
+
 
   private Task<Map<String, Object>> createUserWithEmailAndPassword(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
@@ -1429,9 +1426,6 @@ public class FlutterFirebaseAuthPlugin
     final Task<?> methodCallTask;
 
     switch (call.method) {
-      case "Auth#confirmPasswordReset":
-        methodCallTask = confirmPasswordReset(call.arguments());
-        break;
       case "Auth#createUserWithEmailAndPassword":
         methodCallTask = createUserWithEmailAndPassword(call.arguments());
         break;

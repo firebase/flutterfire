@@ -407,6 +407,33 @@ void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAuthHostApi.confirmPasswordReset"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(confirmPasswordResetApp:
+                                                                     code:newPassword:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(confirmPasswordResetApp:code:newPassword:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_code = GetNullableObjectAtIndex(args, 1);
+        NSString *arg_newPassword = GetNullableObjectAtIndex(args, 2);
+        [api confirmPasswordResetApp:arg_app
+                                code:arg_code
+                         newPassword:arg_newPassword
+                          completion:^(FlutterError *_Nullable error) {
+                            callback(wrapResult(nil, error));
+                          }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }
 @interface MultiFactorUserHostApiCodecReader : FlutterStandardReader
 @end

@@ -140,6 +140,13 @@ abstract class FirebaseAuthHostApi {
     PigeonFirebaseApp app,
     String code,
   );
+
+  @async
+  void confirmPasswordReset(
+    PigeonFirebaseApp app,
+    String code,
+    String newPassword,
+  );
 }
 
 @HostApi(dartHostTestHandler: 'TestMultiFactorUserHostApi')

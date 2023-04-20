@@ -112,6 +112,10 @@ NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
                       code:(NSString *)code
                 completion:
                     (void (^)(PigeonActionCodeInfo *_Nullable, FlutterError *_Nullable))completion;
+- (void)confirmPasswordResetApp:(PigeonFirebaseApp *)app
+                           code:(NSString *)code
+                    newPassword:(NSString *)newPassword
+                     completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

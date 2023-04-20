@@ -59,6 +59,9 @@ abstract class TesFirebaseAuthHostApi {
   Future<PigeonActionCodeInfo> checkActionCode(
       PigeonFirebaseApp app, String code);
 
+  Future<void> confirmPasswordReset(
+      PigeonFirebaseApp app, String code, String newPassword);
+
   static void setup(TesFirebaseAuthHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
     {
@@ -183,6 +186,34 @@ abstract class TesFirebaseAuthHostApi {
           final PigeonActionCodeInfo output =
               await api.checkActionCode(arg_app!, arg_code!);
           return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthHostApi.confirmPasswordReset', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.confirmPasswordReset was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.confirmPasswordReset was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_code = (args[1] as String?);
+          assert(arg_code != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.confirmPasswordReset was null, expected non-null String.');
+          final String? arg_newPassword = (args[2] as String?);
+          assert(arg_newPassword != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.confirmPasswordReset was null, expected non-null String.');
+          await api.confirmPasswordReset(arg_app!, arg_code!, arg_newPassword!);
+          return <Object?>[];
         });
       }
     }

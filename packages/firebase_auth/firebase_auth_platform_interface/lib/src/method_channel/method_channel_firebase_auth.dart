@@ -258,12 +258,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<void> confirmPasswordReset(String code, String newPassword) async {
     try {
-      await channel.invokeMethod<void>(
-          'Auth#confirmPasswordReset',
-          _withChannelDefaults({
-            'code': code,
-            'newPassword': newPassword,
-          }));
+      await _api.confirmPasswordReset(pigeonDefault, code, newPassword);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
