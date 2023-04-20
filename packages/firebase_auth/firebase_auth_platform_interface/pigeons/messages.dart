@@ -190,6 +190,20 @@ class PigeonUserDetails {
   final List<PigeonUserInfo?> providerData;
 }
 
+class PigeonAuthCredentialInput {
+  const PigeonAuthCredentialInput({
+    required this.providerId,
+    required this.signInMethod,
+    required this.token,
+    required this.accessToken,
+  });
+
+  final String providerId;
+  final String signInMethod;
+  final String? token;
+  final String? accessToken;
+}
+
 @HostApi(dartHostTestHandler: 'TesFirebaseAuthHostApi')
 abstract class FirebaseAuthHostApi {
   @async
@@ -233,6 +247,17 @@ abstract class FirebaseAuthHostApi {
     PigeonFirebaseApp app,
     String email,
     String password,
+  );
+
+  @async
+  PigeonUserCredential signInAnonymously(
+    PigeonFirebaseApp app,
+  );
+
+  @async
+  PigeonUserCredential signInWithCredential(
+    PigeonFirebaseApp app,
+    Map<String, Object> input,
   );
 }
 

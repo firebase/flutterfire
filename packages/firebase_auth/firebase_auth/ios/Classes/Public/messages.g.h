@@ -45,175 +45,217 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithId:(NSString *)id;
-@property(nonatomic, copy) NSString * id;
+@property(nonatomic, copy) NSString *id;
 @end
 
 @interface PigeonPhoneMultiFactorAssertion : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithVerificationId:(NSString *)verificationId
-    verificationCode:(NSString *)verificationCode;
-@property(nonatomic, copy) NSString * verificationId;
-@property(nonatomic, copy) NSString * verificationCode;
+                      verificationCode:(NSString *)verificationCode;
+@property(nonatomic, copy) NSString *verificationId;
+@property(nonatomic, copy) NSString *verificationCode;
 @end
 
 @interface PigeonMultiFactorInfo : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithDisplayName:(nullable NSString *)displayName
-    enrollmentTimestamp:(NSNumber *)enrollmentTimestamp
-    factorId:(nullable NSString *)factorId
-    uid:(NSString *)uid
-    phoneNumber:(nullable NSString *)phoneNumber;
-@property(nonatomic, copy, nullable) NSString * displayName;
-@property(nonatomic, strong) NSNumber * enrollmentTimestamp;
-@property(nonatomic, copy, nullable) NSString * factorId;
-@property(nonatomic, copy) NSString * uid;
-@property(nonatomic, copy, nullable) NSString * phoneNumber;
+                enrollmentTimestamp:(NSNumber *)enrollmentTimestamp
+                           factorId:(nullable NSString *)factorId
+                                uid:(NSString *)uid
+                        phoneNumber:(nullable NSString *)phoneNumber;
+@property(nonatomic, copy, nullable) NSString *displayName;
+@property(nonatomic, strong) NSNumber *enrollmentTimestamp;
+@property(nonatomic, copy, nullable) NSString *factorId;
+@property(nonatomic, copy) NSString *uid;
+@property(nonatomic, copy, nullable) NSString *phoneNumber;
 @end
 
 @interface PigeonFirebaseApp : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithAppName:(NSString *)appName
-    tenantId:(nullable NSString *)tenantId;
-@property(nonatomic, copy) NSString * appName;
-@property(nonatomic, copy, nullable) NSString * tenantId;
++ (instancetype)makeWithAppName:(NSString *)appName tenantId:(nullable NSString *)tenantId;
+@property(nonatomic, copy) NSString *appName;
+@property(nonatomic, copy, nullable) NSString *tenantId;
 @end
 
 @interface PigeonActionCodeInfo : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithOperation:(ActionCodeInfoOperation)operation
-    data:(PigeonActionCodeInfoData *)data;
+                             data:(PigeonActionCodeInfoData *)data;
 @property(nonatomic, assign) ActionCodeInfoOperation operation;
-@property(nonatomic, strong) PigeonActionCodeInfoData * data;
+@property(nonatomic, strong) PigeonActionCodeInfoData *data;
 @end
 
 @interface PigeonActionCodeInfoData : NSObject
 + (instancetype)makeWithEmail:(nullable NSString *)email
-    previousEmail:(nullable NSString *)previousEmail;
-@property(nonatomic, copy, nullable) NSString * email;
-@property(nonatomic, copy, nullable) NSString * previousEmail;
+                previousEmail:(nullable NSString *)previousEmail;
+@property(nonatomic, copy, nullable) NSString *email;
+@property(nonatomic, copy, nullable) NSString *previousEmail;
 @end
 
 @interface PigeonUserCredential : NSObject
 + (instancetype)makeWithUser:(nullable PigeonUserDetails *)user
-    additionalUserInfo:(nullable PigeonAdditionalUserInfo *)additionalUserInfo
-    credential:(nullable PigeonAuthCredential *)credential;
-@property(nonatomic, strong, nullable) PigeonUserDetails * user;
-@property(nonatomic, strong, nullable) PigeonAdditionalUserInfo * additionalUserInfo;
-@property(nonatomic, strong, nullable) PigeonAuthCredential * credential;
+          additionalUserInfo:(nullable PigeonAdditionalUserInfo *)additionalUserInfo
+                  credential:(nullable PigeonAuthCredential *)credential;
+@property(nonatomic, strong, nullable) PigeonUserDetails *user;
+@property(nonatomic, strong, nullable) PigeonAdditionalUserInfo *additionalUserInfo;
+@property(nonatomic, strong, nullable) PigeonAuthCredential *credential;
 @end
 
 @interface PigeonAdditionalUserInfo : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithIsNewUser:(NSNumber *)isNewUser
-    providerId:(nullable NSString *)providerId
-    username:(nullable NSString *)username
-    profile:(nullable NSDictionary<NSString *, id> *)profile;
-@property(nonatomic, strong) NSNumber * isNewUser;
-@property(nonatomic, copy, nullable) NSString * providerId;
-@property(nonatomic, copy, nullable) NSString * username;
-@property(nonatomic, strong, nullable) NSDictionary<NSString *, id> * profile;
+                       providerId:(nullable NSString *)providerId
+                         username:(nullable NSString *)username
+                          profile:(nullable NSDictionary<NSString *, id> *)profile;
+@property(nonatomic, strong) NSNumber *isNewUser;
+@property(nonatomic, copy, nullable) NSString *providerId;
+@property(nonatomic, copy, nullable) NSString *username;
+@property(nonatomic, strong, nullable) NSDictionary<NSString *, id> *profile;
 @end
 
 @interface PigeonAuthCredential : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithProviderId:(NSString *)providerId
-    signInMethod:(NSString *)signInMethod
-    nativeId:(NSNumber *)nativeId
-    accessToken:(nullable NSString *)accessToken;
-@property(nonatomic, copy) NSString * providerId;
-@property(nonatomic, copy) NSString * signInMethod;
-@property(nonatomic, strong) NSNumber * nativeId;
-@property(nonatomic, copy, nullable) NSString * accessToken;
+                      signInMethod:(NSString *)signInMethod
+                          nativeId:(NSNumber *)nativeId
+                       accessToken:(nullable NSString *)accessToken;
+@property(nonatomic, copy) NSString *providerId;
+@property(nonatomic, copy) NSString *signInMethod;
+@property(nonatomic, strong) NSNumber *nativeId;
+@property(nonatomic, copy, nullable) NSString *accessToken;
 @end
 
 @interface PigeonUserInfo : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithUid:(NSString *)uid
-    email:(nullable NSString *)email
-    displayName:(nullable NSString *)displayName
-    photoUrl:(nullable NSString *)photoUrl
-    phoneNumber:(nullable NSString *)phoneNumber
-    isAnonymous:(NSNumber *)isAnonymous
-    isEmailVerified:(NSNumber *)isEmailVerified
-    providerId:(nullable NSString *)providerId
-    tenantId:(nullable NSString *)tenantId
-    refreshToken:(nullable NSString *)refreshToken
-    creationTimestamp:(nullable NSNumber *)creationTimestamp
-    lastSignInTimestamp:(nullable NSNumber *)lastSignInTimestamp;
-@property(nonatomic, copy) NSString * uid;
-@property(nonatomic, copy, nullable) NSString * email;
-@property(nonatomic, copy, nullable) NSString * displayName;
-@property(nonatomic, copy, nullable) NSString * photoUrl;
-@property(nonatomic, copy, nullable) NSString * phoneNumber;
-@property(nonatomic, strong) NSNumber * isAnonymous;
-@property(nonatomic, strong) NSNumber * isEmailVerified;
-@property(nonatomic, copy, nullable) NSString * providerId;
-@property(nonatomic, copy, nullable) NSString * tenantId;
-@property(nonatomic, copy, nullable) NSString * refreshToken;
-@property(nonatomic, strong, nullable) NSNumber * creationTimestamp;
-@property(nonatomic, strong, nullable) NSNumber * lastSignInTimestamp;
+                      email:(nullable NSString *)email
+                displayName:(nullable NSString *)displayName
+                   photoUrl:(nullable NSString *)photoUrl
+                phoneNumber:(nullable NSString *)phoneNumber
+                isAnonymous:(NSNumber *)isAnonymous
+            isEmailVerified:(NSNumber *)isEmailVerified
+                 providerId:(nullable NSString *)providerId
+                   tenantId:(nullable NSString *)tenantId
+               refreshToken:(nullable NSString *)refreshToken
+          creationTimestamp:(nullable NSNumber *)creationTimestamp
+        lastSignInTimestamp:(nullable NSNumber *)lastSignInTimestamp;
+@property(nonatomic, copy) NSString *uid;
+@property(nonatomic, copy, nullable) NSString *email;
+@property(nonatomic, copy, nullable) NSString *displayName;
+@property(nonatomic, copy, nullable) NSString *photoUrl;
+@property(nonatomic, copy, nullable) NSString *phoneNumber;
+@property(nonatomic, strong) NSNumber *isAnonymous;
+@property(nonatomic, strong) NSNumber *isEmailVerified;
+@property(nonatomic, copy, nullable) NSString *providerId;
+@property(nonatomic, copy, nullable) NSString *tenantId;
+@property(nonatomic, copy, nullable) NSString *refreshToken;
+@property(nonatomic, strong, nullable) NSNumber *creationTimestamp;
+@property(nonatomic, strong, nullable) NSNumber *lastSignInTimestamp;
 @end
 
 @interface PigeonUserDetails : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithUserInfo:(PigeonUserInfo *)userInfo
-    providerData:(NSArray<PigeonUserInfo *> *)providerData;
-@property(nonatomic, strong) PigeonUserInfo * userInfo;
-@property(nonatomic, strong) NSArray<PigeonUserInfo *> * providerData;
+                    providerData:(NSArray<PigeonUserInfo *> *)providerData;
+@property(nonatomic, strong) PigeonUserInfo *userInfo;
+@property(nonatomic, strong) NSArray<PigeonUserInfo *> *providerData;
 @end
 
 /// The codec used by FirebaseAuthHostApi.
 NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
 
 @protocol FirebaseAuthHostApi
-- (void)registerIdTokenListenerApp:(PigeonFirebaseApp *)app completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)registerAuthStateListenerApp:(PigeonFirebaseApp *)app completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)useEmulatorApp:(PigeonFirebaseApp *)app host:(NSString *)host port:(NSNumber *)port completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)applyActionCodeApp:(PigeonFirebaseApp *)app code:(NSString *)code completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)checkActionCodeApp:(PigeonFirebaseApp *)app code:(NSString *)code completion:(void (^)(PigeonActionCodeInfo *_Nullable, FlutterError *_Nullable))completion;
-- (void)confirmPasswordResetApp:(PigeonFirebaseApp *)app code:(NSString *)code newPassword:(NSString *)newPassword completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)createUserWithEmailAndPasswordApp:(PigeonFirebaseApp *)app email:(NSString *)email password:(NSString *)password completion:(void (^)(PigeonUserCredential *_Nullable, FlutterError *_Nullable))completion;
+- (void)registerIdTokenListenerApp:(PigeonFirebaseApp *)app
+                        completion:
+                            (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)registerAuthStateListenerApp:(PigeonFirebaseApp *)app
+                          completion:
+                              (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)useEmulatorApp:(PigeonFirebaseApp *)app
+                  host:(NSString *)host
+                  port:(NSNumber *)port
+            completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)applyActionCodeApp:(PigeonFirebaseApp *)app
+                      code:(NSString *)code
+                completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)checkActionCodeApp:(PigeonFirebaseApp *)app
+                      code:(NSString *)code
+                completion:
+                    (void (^)(PigeonActionCodeInfo *_Nullable, FlutterError *_Nullable))completion;
+- (void)confirmPasswordResetApp:(PigeonFirebaseApp *)app
+                           code:(NSString *)code
+                    newPassword:(NSString *)newPassword
+                     completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)createUserWithEmailAndPasswordApp:(PigeonFirebaseApp *)app
+                                    email:(NSString *)email
+                                 password:(NSString *)password
+                               completion:(void (^)(PigeonUserCredential *_Nullable,
+                                                    FlutterError *_Nullable))completion;
+- (void)signInAnonymouslyApp:(PigeonFirebaseApp *)app
+                  completion:(void (^)(PigeonUserCredential *_Nullable,
+                                       FlutterError *_Nullable))completion;
+- (void)signInWithCredentialApp:(PigeonFirebaseApp *)app
+                          input:(NSDictionary<NSString *, id> *)input
+                     completion:(void (^)(PigeonUserCredential *_Nullable,
+                                          FlutterError *_Nullable))completion;
 @end
 
-extern void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseAuthHostApi> *_Nullable api);
+extern void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                     NSObject<FirebaseAuthHostApi> *_Nullable api);
 
 /// The codec used by MultiFactorUserHostApi.
 NSObject<FlutterMessageCodec> *MultiFactorUserHostApiGetCodec(void);
 
 @protocol MultiFactorUserHostApi
-- (void)enrollPhoneAppName:(NSString *)appName assertion:(PigeonPhoneMultiFactorAssertion *)assertion displayName:(nullable NSString *)displayName completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)getSessionAppName:(NSString *)appName completion:(void (^)(PigeonMultiFactorSession *_Nullable, FlutterError *_Nullable))completion;
-- (void)unenrollAppName:(NSString *)appName factorUid:(nullable NSString *)factorUid completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)getEnrolledFactorsAppName:(NSString *)appName completion:(void (^)(NSArray<PigeonMultiFactorInfo *> *_Nullable, FlutterError *_Nullable))completion;
+- (void)enrollPhoneAppName:(NSString *)appName
+                 assertion:(PigeonPhoneMultiFactorAssertion *)assertion
+               displayName:(nullable NSString *)displayName
+                completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)getSessionAppName:(NSString *)appName
+               completion:(void (^)(PigeonMultiFactorSession *_Nullable,
+                                    FlutterError *_Nullable))completion;
+- (void)unenrollAppName:(NSString *)appName
+              factorUid:(nullable NSString *)factorUid
+             completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)getEnrolledFactorsAppName:(NSString *)appName
+                       completion:(void (^)(NSArray<PigeonMultiFactorInfo *> *_Nullable,
+                                            FlutterError *_Nullable))completion;
 @end
 
-extern void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactorUserHostApi> *_Nullable api);
+extern void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                        NSObject<MultiFactorUserHostApi> *_Nullable api);
 
 /// The codec used by MultiFactoResolverHostApi.
 NSObject<FlutterMessageCodec> *MultiFactoResolverHostApiGetCodec(void);
 
 @protocol MultiFactoResolverHostApi
-- (void)resolveSignInResolverId:(NSString *)resolverId assertion:(PigeonPhoneMultiFactorAssertion *)assertion completion:(void (^)(NSDictionary<NSString *, id> *_Nullable, FlutterError *_Nullable))completion;
+- (void)resolveSignInResolverId:(NSString *)resolverId
+                      assertion:(PigeonPhoneMultiFactorAssertion *)assertion
+                     completion:(void (^)(NSDictionary<NSString *, id> *_Nullable,
+                                          FlutterError *_Nullable))completion;
 @end
 
-extern void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactoResolverHostApi> *_Nullable api);
+extern void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                           NSObject<MultiFactoResolverHostApi> *_Nullable api);
 
 /// The codec used by GenerateInterfaces.
 NSObject<FlutterMessageCodec> *GenerateInterfacesGetCodec(void);
 
 /// Only used to generate the object interface that are use outside of the Pigeon interface
 @protocol GenerateInterfaces
-- (void)generateInterfacesInfo:(PigeonMultiFactorInfo *)info error:(FlutterError *_Nullable *_Nonnull)error;
+- (void)generateInterfacesInfo:(PigeonMultiFactorInfo *)info
+                         error:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
-extern void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<GenerateInterfaces> *_Nullable api);
+extern void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                    NSObject<GenerateInterfaces> *_Nullable api);
 
 NS_ASSUME_NONNULL_END

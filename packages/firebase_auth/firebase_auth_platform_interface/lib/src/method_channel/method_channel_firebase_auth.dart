@@ -423,12 +423,10 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<UserCredentialPlatform> signInAnonymously() async {
     try {
-      Map<String, dynamic> data =
-          (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#signInAnonymously', _withChannelDefaults({})))!;
+      final result = await _api.signInAnonymously(pigeonDefault);
 
       MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(this, data);
+          MethodChannelUserCredential(this, result);
 
       currentUser = userCredential.user;
       return userCredential;
@@ -442,15 +440,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     AuthCredential credential,
   ) async {
     try {
-      Map<String, dynamic> data =
-          (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#signInWithCredential',
-              _withChannelDefaults({
-                'credential': credential.asMap(),
-              })))!;
+      final result = await _api.signInWithCredential(
+        pigeonDefault,
+        credential.asMap(),
+      );
 
       MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(this, data);
+          MethodChannelUserCredential(this, result);
 
       currentUser = userCredential.user;
       return userCredential;

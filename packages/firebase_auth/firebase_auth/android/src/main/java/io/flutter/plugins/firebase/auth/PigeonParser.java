@@ -5,13 +5,22 @@ import androidx.annotation.NonNull;
 import com.google.firebase.auth.AdditionalUserInfo;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
+import com.google.firebase.auth.GithubAuthProvider;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthCredential;
+import com.google.firebase.auth.OAuthProvider;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class PigeonParser {
   static GeneratedAndroidFirebaseAuth.PigeonUserCredential parseAuthResult(
@@ -144,4 +153,75 @@ public class PigeonParser {
     // Return null if the URL is an empty string
     return "".equals(photoUrl) ? null : photoUrl;
   }
+
+  @SuppressWarnings("ConstantConditions")
+  static AuthCredential getCredential(Map<String, Object> arguments)
+    throws FlutterFirebaseAuthPluginException {
+    @SuppressWarnings("unchecked")
+    Map<String, Object> credentialMap =
+      (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.CREDENTIAL));
+
+    // If the credential map contains a token, it means a native one has been stored
+    if (credentialMap.get(Constants.TOKEN) != null) {
+      int token = (int) credentialMap.get(Constants.TOKEN);
+      AuthCredential credential = FlutterFirebaseAuthPlugin.authCredentials.get(token);
+
+      if (credential == null) {
+        throw FlutterFirebaseAuthPluginException.invalidCredential();
+      }
+
+      return credential;
+    }
+
+    String signInMethod =
+      (String) Objects.requireNonNull(credentialMap.get(Constants.SIGN_IN_METHOD));
+    String secret = (String) credentialMap.get(Constants.SECRET);
+    String idToken = (String) credentialMap.get(Constants.ID_TOKEN);
+    String accessToken = (String) credentialMap.get(Constants.ACCESS_TOKEN);
+    String rawNonce = (String) credentialMap.get(Constants.RAW_NONCE);
+
+    switch (signInMethod) {
+      case Constants.SIGN_IN_METHOD_PASSWORD:
+        return EmailAuthProvider.getCredential(
+          (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL)),
+          Objects.requireNonNull(secret));
+      case Constants.SIGN_IN_METHOD_EMAIL_LINK:
+        return EmailAuthProvider.getCredentialWithLink(
+          (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL)),
+          (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL_LINK)));
+      case Constants.SIGN_IN_METHOD_FACEBOOK:
+        return FacebookAuthProvider.getCredential(Objects.requireNonNull(accessToken));
+      case Constants.SIGN_IN_METHOD_GOOGLE:
+        return GoogleAuthProvider.getCredential(idToken, accessToken);
+      case Constants.SIGN_IN_METHOD_TWITTER:
+        return TwitterAuthProvider.getCredential(
+          Objects.requireNonNull(accessToken), Objects.requireNonNull(secret));
+      case Constants.SIGN_IN_METHOD_GITHUB:
+        return GithubAuthProvider.getCredential(Objects.requireNonNull(accessToken));
+      case Constants.SIGN_IN_METHOD_PHONE:
+      {
+        String verificationId =
+          (String) Objects.requireNonNull(credentialMap.get(Constants.VERIFICATION_ID));
+        String smsCode = (String) Objects.requireNonNull(credentialMap.get(Constants.SMS_CODE));
+        return PhoneAuthProvider.getCredential(verificationId, smsCode);
+      }
+      case Constants.SIGN_IN_METHOD_OAUTH:
+      {
+        String providerId =
+          (String) Objects.requireNonNull(credentialMap.get(Constants.PROVIDER_ID));
+        OAuthProvider.CredentialBuilder builder = OAuthProvider.newCredentialBuilder(providerId);
+        builder.setAccessToken(Objects.requireNonNull(accessToken));
+        if (rawNonce == null) {
+          builder.setIdToken(Objects.requireNonNull(idToken));
+        } else {
+          builder.setIdTokenWithRawNonce(Objects.requireNonNull(idToken), rawNonce);
+        }
+
+        return builder.build();
+      }
+      default:
+        return null;
+    }
+  }
+
 }

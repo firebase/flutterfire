@@ -171,74 +171,6 @@ public class FlutterFirebaseAuthPlugin
     return FirebaseAuth.getInstance(app).getCurrentUser();
   }
 
-  private AuthCredential getCredential(Map<String, Object> arguments)
-      throws FlutterFirebaseAuthPluginException {
-    @SuppressWarnings("unchecked")
-    Map<String, Object> credentialMap =
-        (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.CREDENTIAL));
-
-    // If the credential map contains a token, it means a native one has been stored
-    if (credentialMap.get(Constants.TOKEN) != null) {
-      int token = (int) credentialMap.get(Constants.TOKEN);
-      AuthCredential credential = authCredentials.get(token);
-
-      if (credential == null) {
-        throw FlutterFirebaseAuthPluginException.invalidCredential();
-      }
-
-      return credential;
-    }
-
-    String signInMethod =
-        (String) Objects.requireNonNull(credentialMap.get(Constants.SIGN_IN_METHOD));
-    String secret = (String) credentialMap.get(Constants.SECRET);
-    String idToken = (String) credentialMap.get(Constants.ID_TOKEN);
-    String accessToken = (String) credentialMap.get(Constants.ACCESS_TOKEN);
-    String rawNonce = (String) credentialMap.get(Constants.RAW_NONCE);
-
-    switch (signInMethod) {
-      case Constants.SIGN_IN_METHOD_PASSWORD:
-        return EmailAuthProvider.getCredential(
-            (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL)),
-            Objects.requireNonNull(secret));
-      case Constants.SIGN_IN_METHOD_EMAIL_LINK:
-        return EmailAuthProvider.getCredentialWithLink(
-            (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL)),
-            (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL_LINK)));
-      case Constants.SIGN_IN_METHOD_FACEBOOK:
-        return FacebookAuthProvider.getCredential(Objects.requireNonNull(accessToken));
-      case Constants.SIGN_IN_METHOD_GOOGLE:
-        return GoogleAuthProvider.getCredential(idToken, accessToken);
-      case Constants.SIGN_IN_METHOD_TWITTER:
-        return TwitterAuthProvider.getCredential(
-            Objects.requireNonNull(accessToken), Objects.requireNonNull(secret));
-      case Constants.SIGN_IN_METHOD_GITHUB:
-        return GithubAuthProvider.getCredential(Objects.requireNonNull(accessToken));
-      case Constants.SIGN_IN_METHOD_PHONE:
-        {
-          String verificationId =
-              (String) Objects.requireNonNull(credentialMap.get(Constants.VERIFICATION_ID));
-          String smsCode = (String) Objects.requireNonNull(credentialMap.get(Constants.SMS_CODE));
-          return PhoneAuthProvider.getCredential(verificationId, smsCode);
-        }
-      case Constants.SIGN_IN_METHOD_OAUTH:
-        {
-          String providerId =
-              (String) Objects.requireNonNull(credentialMap.get(Constants.PROVIDER_ID));
-          OAuthProvider.CredentialBuilder builder = OAuthProvider.newCredentialBuilder(providerId);
-          builder.setAccessToken(Objects.requireNonNull(accessToken));
-          if (rawNonce == null) {
-            builder.setIdToken(Objects.requireNonNull(idToken));
-          } else {
-            builder.setIdTokenWithRawNonce(Objects.requireNonNull(idToken), rawNonce);
-          }
-
-          return builder.build();
-        }
-      default:
-        return null;
-    }
-  }
 
   private ActionCodeSettings getActionCodeSettings(
       @NonNull Map<String, Object> actionCodeSettingsMap) {
@@ -469,6 +401,43 @@ public class FlutterFirebaseAuthPlugin
     }
   }
 
+  @Override
+  public void signInAnonymously(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+              result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+      AuthResult authResult = Tasks.await(firebaseAuth.signInAnonymously());
+      result.success(PigeonParser.parseAuthResult(authResult));
+    } catch (Exception e) {
+      result.error(e);
+    }
+  }
+
+  @Override
+  public void signInWithCredential(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull Map<String, Object> input, @NonNull GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+      AuthCredential credential = PigeonParser.getCredential(input);
+
+      if (credential == null) {
+        throw FlutterFirebaseAuthPluginException.invalidCredential();
+      }
+      AuthResult authResult = Tasks.await(firebaseAuth.signInWithCredential(credential));
+      result.success(PigeonParser.parseAuthResult(authResult));
+    } catch (Exception e) {
+      if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+        handleMultiFactorException(app, result, e);
+      } else {
+        result.error(e);
+      }
+    }
+
+  }
+
+
   private Task<Map<String, Object>> fetchSignInMethodsForEmail(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -619,48 +588,7 @@ public class FlutterFirebaseAuthPlugin
     return taskCompletionSource.getTask();
   }
 
-  private Task<Map<String, Object>> signInAnonymously(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            AuthResult authResult = Tasks.await(firebaseAuth.signInAnonymously());
-            taskCompletionSource.setResult(parseAuthResult(authResult));
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  private Task<Map<String, Object>> signInWithCredential(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            AuthCredential credential = getCredential(arguments);
-
-            if (credential == null) {
-              throw FlutterFirebaseAuthPluginException.invalidCredential();
-            }
-            AuthResult authResult = Tasks.await(firebaseAuth.signInWithCredential(credential));
-            taskCompletionSource.setResult(parseAuthResult(authResult));
-          } catch (Exception e) {
-            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
-              handleMultiFactorException(arguments, taskCompletionSource, e);
-            } else {
-              taskCompletionSource.setException(e);
-            }
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
 
   private Task<Map<String, Object>> signInWithCustomToken(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
@@ -713,13 +641,14 @@ public class FlutterFirebaseAuthPlugin
   }
 
   private void handleMultiFactorException(
-      Map<String, Object> arguments,
-      TaskCompletionSource<Map<String, Object>> taskCompletionSource,
+    GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+    GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential> result,
       Exception e) {
     final FirebaseAuthMultiFactorException multiFactorException =
         (FirebaseAuthMultiFactorException) e.getCause();
     Map<String, Object> output = new HashMap<>();
 
+    assert multiFactorException != null;
     MultiFactorResolver multiFactorResolver = multiFactorException.getResolver();
     final List<MultiFactorInfo> hints = multiFactorResolver.getHints();
 
@@ -732,14 +661,14 @@ public class FlutterFirebaseAuthPlugin
 
     final List<List<Object>> pigeonHints = multiFactorInfoToMap(hints);
 
-    output.put(Constants.APP_NAME, getAuth(arguments).getApp().getName());
+    output.put(Constants.APP_NAME, getAuthFromPigeon(app).getApp().getName());
 
     output.put(Constants.MULTI_FACTOR_HINTS, pigeonHints);
 
     output.put(Constants.MULTI_FACTOR_SESSION_ID, sessionId);
     output.put(Constants.MULTI_FACTOR_RESOLVER_ID, resolverId);
 
-    taskCompletionSource.setException(
+    result.error(
         new FlutterFirebaseAuthPluginException(
             multiFactorException.getErrorCode(),
             multiFactorException.getLocalizedMessage(),
@@ -1308,17 +1237,11 @@ public class FlutterFirebaseAuthPlugin
       case "Auth#sendSignInLinkToEmail":
         methodCallTask = sendSignInLinkToEmail(call.arguments());
         break;
-      case "Auth#signInWithCredential":
-        methodCallTask = signInWithCredential(call.arguments());
-        break;
       case "Auth#setLanguageCode":
         methodCallTask = setLanguageCode(call.arguments());
         break;
       case "Auth#setSettings":
         methodCallTask = setSettings(call.arguments());
-        break;
-      case "Auth#signInAnonymously":
-        methodCallTask = signInAnonymously(call.arguments());
         break;
       case "Auth#signInWithCustomToken":
         methodCallTask = signInWithCustomToken(call.arguments());

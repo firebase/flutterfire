@@ -29,17 +29,23 @@ class _TesFirebaseAuthHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonFirebaseApp) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserCredential) {
+    } else if (value is PigeonMultiFactorInfo) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserDetails) {
+    } else if (value is PigeonMultiFactorSession) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserInfo) {
+    } else if (value is PigeonPhoneMultiFactorAssertion) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserInfo) {
+    } else if (value is PigeonUserCredential) {
       buffer.putUint8(136);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserDetails) {
+      buffer.putUint8(137);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserInfo) {
+      buffer.putUint8(138);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -60,12 +66,16 @@ class _TesFirebaseAuthHostApiCodec extends StandardMessageCodec {
       case 132:
         return PigeonFirebaseApp.decode(readValue(buffer)!);
       case 133:
-        return PigeonUserCredential.decode(readValue(buffer)!);
+        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
       case 134:
-        return PigeonUserDetails.decode(readValue(buffer)!);
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
       case 135:
-        return PigeonUserInfo.decode(readValue(buffer)!);
+        return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
       case 136:
+        return PigeonUserCredential.decode(readValue(buffer)!);
+      case 137:
+        return PigeonUserDetails.decode(readValue(buffer)!);
+      case 138:
         return PigeonUserInfo.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -94,6 +104,11 @@ abstract class TesFirebaseAuthHostApi {
 
   Future<PigeonUserCredential> createUserWithEmailAndPassword(
       PigeonFirebaseApp app, String email, String password);
+
+  Future<PigeonUserCredential> signInAnonymously(PigeonFirebaseApp app);
+
+  Future<PigeonUserCredential> signInWithCredential(
+      PigeonFirebaseApp app, Map<String?, Object?> input);
 
   static void setup(TesFirebaseAuthHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -277,6 +292,56 @@ abstract class TesFirebaseAuthHostApi {
           final PigeonUserCredential output =
               await api.createUserWithEmailAndPassword(
                   arg_app!, arg_email!, arg_password!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthHostApi.signInAnonymously', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.signInAnonymously was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.signInAnonymously was null, expected non-null PigeonFirebaseApp.');
+          final PigeonUserCredential output =
+              await api.signInAnonymously(arg_app!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthHostApi.signInWithCredential', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.signInWithCredential was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.signInWithCredential was null, expected non-null PigeonFirebaseApp.');
+          final Map<String?, Object?>? arg_input =
+              (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          assert(arg_input != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.signInWithCredential was null, expected non-null Map<String?, Object?>.');
+          final PigeonUserCredential output =
+              await api.signInWithCredential(arg_app!, arg_input!);
           return <Object?>[output];
         });
       }

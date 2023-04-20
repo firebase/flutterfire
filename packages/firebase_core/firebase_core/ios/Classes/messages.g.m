@@ -15,25 +15,24 @@ static NSDictionary<NSString *, id> *wrapResult(id result, FlutterError *error) 
   NSDictionary *errorDict = (NSDictionary *)[NSNull null];
   if (error) {
     errorDict = @{
-        @"code": (error.code ?: [NSNull null]),
-        @"message": (error.message ?: [NSNull null]),
-        @"details": (error.details ?: [NSNull null]),
-        };
+      @"code" : (error.code ?: [NSNull null]),
+      @"message" : (error.message ?: [NSNull null]),
+      @"details" : (error.details ?: [NSNull null]),
+    };
   }
   return @{
-      @"result": (result ?: [NSNull null]),
-      @"error": errorDict,
-      };
+    @"result" : (result ?: [NSNull null]),
+    @"error" : errorDict,
+  };
 }
-static id GetNullableObject(NSDictionary* dict, id key) {
+static id GetNullableObject(NSDictionary *dict, id key) {
   id result = dict[key];
   return (result == [NSNull null]) ? nil : result;
 }
-static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
+static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   id result = array[key];
   return (result == [NSNull null]) ? nil : result;
 }
-
 
 @interface PigeonFirebaseOptions ()
 + (PigeonFirebaseOptions *)fromMap:(NSDictionary *)dict;
@@ -48,20 +47,20 @@ static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
 
 @implementation PigeonFirebaseOptions
 + (instancetype)makeWithApiKey:(NSString *)apiKey
-    appId:(NSString *)appId
-    messagingSenderId:(NSString *)messagingSenderId
-    projectId:(NSString *)projectId
-    authDomain:(nullable NSString *)authDomain
-    databaseURL:(nullable NSString *)databaseURL
-    storageBucket:(nullable NSString *)storageBucket
-    measurementId:(nullable NSString *)measurementId
-    trackingId:(nullable NSString *)trackingId
-    deepLinkURLScheme:(nullable NSString *)deepLinkURLScheme
-    androidClientId:(nullable NSString *)androidClientId
-    iosClientId:(nullable NSString *)iosClientId
-    iosBundleId:(nullable NSString *)iosBundleId
-    appGroupId:(nullable NSString *)appGroupId {
-  PigeonFirebaseOptions* pigeonResult = [[PigeonFirebaseOptions alloc] init];
+                         appId:(NSString *)appId
+             messagingSenderId:(NSString *)messagingSenderId
+                     projectId:(NSString *)projectId
+                    authDomain:(nullable NSString *)authDomain
+                   databaseURL:(nullable NSString *)databaseURL
+                 storageBucket:(nullable NSString *)storageBucket
+                 measurementId:(nullable NSString *)measurementId
+                    trackingId:(nullable NSString *)trackingId
+             deepLinkURLScheme:(nullable NSString *)deepLinkURLScheme
+               androidClientId:(nullable NSString *)androidClientId
+                   iosClientId:(nullable NSString *)iosClientId
+                   iosBundleId:(nullable NSString *)iosBundleId
+                    appGroupId:(nullable NSString *)appGroupId {
+  PigeonFirebaseOptions *pigeonResult = [[PigeonFirebaseOptions alloc] init];
   pigeonResult.apiKey = apiKey;
   pigeonResult.appId = appId;
   pigeonResult.messagingSenderId = messagingSenderId;
@@ -100,7 +99,9 @@ static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
   pigeonResult.appGroupId = GetNullableObject(dict, @"appGroupId");
   return pigeonResult;
 }
-+ (nullable PigeonFirebaseOptions *)nullableFromMap:(NSDictionary *)dict { return (dict) ? [PigeonFirebaseOptions fromMap:dict] : nil; }
++ (nullable PigeonFirebaseOptions *)nullableFromMap:(NSDictionary *)dict {
+  return (dict) ? [PigeonFirebaseOptions fromMap:dict] : nil;
+}
 - (NSDictionary *)toMap {
   return @{
     @"apiKey" : (self.apiKey ?: [NSNull null]),
@@ -123,10 +124,10 @@ static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
 
 @implementation PigeonInitializeResponse
 + (instancetype)makeWithName:(NSString *)name
-    options:(PigeonFirebaseOptions *)options
+                             options:(PigeonFirebaseOptions *)options
     isAutomaticDataCollectionEnabled:(nullable NSNumber *)isAutomaticDataCollectionEnabled
-    pluginConstants:(NSDictionary<NSString *, id> *)pluginConstants {
-  PigeonInitializeResponse* pigeonResult = [[PigeonInitializeResponse alloc] init];
+                     pluginConstants:(NSDictionary<NSString *, id> *)pluginConstants {
+  PigeonInitializeResponse *pigeonResult = [[PigeonInitializeResponse alloc] init];
   pigeonResult.name = name;
   pigeonResult.options = options;
   pigeonResult.isAutomaticDataCollectionEnabled = isAutomaticDataCollectionEnabled;
@@ -137,14 +138,18 @@ static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
   PigeonInitializeResponse *pigeonResult = [[PigeonInitializeResponse alloc] init];
   pigeonResult.name = GetNullableObject(dict, @"name");
   NSAssert(pigeonResult.name != nil, @"");
-  pigeonResult.options = [PigeonFirebaseOptions nullableFromMap:GetNullableObject(dict, @"options")];
+  pigeonResult.options =
+      [PigeonFirebaseOptions nullableFromMap:GetNullableObject(dict, @"options")];
   NSAssert(pigeonResult.options != nil, @"");
-  pigeonResult.isAutomaticDataCollectionEnabled = GetNullableObject(dict, @"isAutomaticDataCollectionEnabled");
+  pigeonResult.isAutomaticDataCollectionEnabled =
+      GetNullableObject(dict, @"isAutomaticDataCollectionEnabled");
   pigeonResult.pluginConstants = GetNullableObject(dict, @"pluginConstants");
   NSAssert(pigeonResult.pluginConstants != nil, @"");
   return pigeonResult;
 }
-+ (nullable PigeonInitializeResponse *)nullableFromMap:(NSDictionary *)dict { return (dict) ? [PigeonInitializeResponse fromMap:dict] : nil; }
++ (nullable PigeonInitializeResponse *)nullableFromMap:(NSDictionary *)dict {
+  return (dict) ? [PigeonInitializeResponse fromMap:dict] : nil;
+}
 - (NSDictionary *)toMap {
   return @{
     @"name" : (self.name ?: [NSNull null]),
@@ -158,18 +163,16 @@ static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
 @interface FirebaseCoreHostApiCodecReader : FlutterStandardReader
 @end
 @implementation FirebaseCoreHostApiCodecReader
-- (nullable id)readValueOfType:(UInt8)type 
-{
+- (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
-    case 128:     
+    case 128:
       return [PigeonFirebaseOptions fromMap:[self readValue]];
-    
-    case 129:     
+
+    case 129:
       return [PigeonInitializeResponse fromMap:[self readValue]];
-    
-    default:    
+
+    default:
       return [super readValueOfType:type];
-    
   }
 }
 @end
@@ -177,17 +180,14 @@ static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
 @interface FirebaseCoreHostApiCodecWriter : FlutterStandardWriter
 @end
 @implementation FirebaseCoreHostApiCodecWriter
-- (void)writeValue:(id)value 
-{
+- (void)writeValue:(id)value {
   if ([value isKindOfClass:[PigeonFirebaseOptions class]]) {
     [self writeByte:128];
     [self writeValue:[value toMap]];
-  } else 
-  if ([value isKindOfClass:[PigeonInitializeResponse class]]) {
+  } else if ([value isKindOfClass:[PigeonInitializeResponse class]]) {
     [self writeByte:129];
     [self writeValue:[value toMap]];
-  } else 
-{
+  } else {
     [super writeValue:value];
   }
 }
@@ -208,68 +208,78 @@ NSObject<FlutterMessageCodec> *FirebaseCoreHostApiGetCodec() {
   static dispatch_once_t sPred = 0;
   static FlutterStandardMessageCodec *sSharedObject = nil;
   dispatch_once(&sPred, ^{
-    FirebaseCoreHostApiCodecReaderWriter *readerWriter = [[FirebaseCoreHostApiCodecReaderWriter alloc] init];
+    FirebaseCoreHostApiCodecReaderWriter *readerWriter =
+        [[FirebaseCoreHostApiCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
 }
 
-
-void FirebaseCoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseCoreHostApi> *api) {
+void FirebaseCoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                              NSObject<FirebaseCoreHostApi> *api) {
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp"
         binaryMessenger:binaryMessenger
-        codec:FirebaseCoreHostApiGetCodec()        ];
+                  codec:FirebaseCoreHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(initializeAppAppName:initializeAppRequest:completion:)], @"FirebaseCoreHostApi api (%@) doesn't respond to @selector(initializeAppAppName:initializeAppRequest:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(initializeAppAppName:
+                                                  initializeAppRequest:completion:)],
+                @"FirebaseCoreHostApi api (%@) doesn't respond to "
+                @"@selector(initializeAppAppName:initializeAppRequest:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_appName = GetNullableObjectAtIndex(args, 0);
         PigeonFirebaseOptions *arg_initializeAppRequest = GetNullableObjectAtIndex(args, 1);
-        [api initializeAppAppName:arg_appName initializeAppRequest:arg_initializeAppRequest completion:^(PigeonInitializeResponse *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api initializeAppAppName:arg_appName
+             initializeAppRequest:arg_initializeAppRequest
+                       completion:^(PigeonInitializeResponse *_Nullable output,
+                                    FlutterError *_Nullable error) {
+                         callback(wrapResult(output, error));
+                       }];
       }];
-    }
-    else {
+    } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.FirebaseCoreHostApi.initializeCore"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseCoreHostApi.initializeCore"
         binaryMessenger:binaryMessenger
-        codec:FirebaseCoreHostApiGetCodec()        ];
+                  codec:FirebaseCoreHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(initializeCoreWithCompletion:)], @"FirebaseCoreHostApi api (%@) doesn't respond to @selector(initializeCoreWithCompletion:)", api);
+      NSCAssert([api respondsToSelector:@selector(initializeCoreWithCompletion:)],
+                @"FirebaseCoreHostApi api (%@) doesn't respond to "
+                @"@selector(initializeCoreWithCompletion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        [api initializeCoreWithCompletion:^(NSArray<PigeonInitializeResponse *> *_Nullable output, FlutterError *_Nullable error) {
+        [api initializeCoreWithCompletion:^(NSArray<PigeonInitializeResponse *> *_Nullable output,
+                                            FlutterError *_Nullable error) {
           callback(wrapResult(output, error));
         }];
       }];
-    }
-    else {
+    } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.FirebaseCoreHostApi.optionsFromResource"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseCoreHostApi.optionsFromResource"
         binaryMessenger:binaryMessenger
-        codec:FirebaseCoreHostApiGetCodec()        ];
+                  codec:FirebaseCoreHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(optionsFromResourceWithCompletion:)], @"FirebaseCoreHostApi api (%@) doesn't respond to @selector(optionsFromResourceWithCompletion:)", api);
+      NSCAssert([api respondsToSelector:@selector(optionsFromResourceWithCompletion:)],
+                @"FirebaseCoreHostApi api (%@) doesn't respond to "
+                @"@selector(optionsFromResourceWithCompletion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        [api optionsFromResourceWithCompletion:^(PigeonFirebaseOptions *_Nullable output, FlutterError *_Nullable error) {
+        [api optionsFromResourceWithCompletion:^(PigeonFirebaseOptions *_Nullable output,
+                                                 FlutterError *_Nullable error) {
           callback(wrapResult(output, error));
         }];
       }];
-    }
-    else {
+    } else {
       [channel setMessageHandler:nil];
     }
   }
@@ -299,73 +309,85 @@ NSObject<FlutterMessageCodec> *FirebaseAppHostApiGetCodec() {
   static dispatch_once_t sPred = 0;
   static FlutterStandardMessageCodec *sSharedObject = nil;
   dispatch_once(&sPred, ^{
-    FirebaseAppHostApiCodecReaderWriter *readerWriter = [[FirebaseAppHostApiCodecReaderWriter alloc] init];
+    FirebaseAppHostApiCodecReaderWriter *readerWriter =
+        [[FirebaseAppHostApiCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
 }
 
-
-void FirebaseAppHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseAppHostApi> *api) {
+void FirebaseAppHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                             NSObject<FirebaseAppHostApi> *api) {
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAppHostApiGetCodec()        ];
+                  codec:FirebaseAppHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(setAutomaticDataCollectionEnabledAppName:enabled:completion:)], @"FirebaseAppHostApi api (%@) doesn't respond to @selector(setAutomaticDataCollectionEnabledAppName:enabled:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector
+                     (setAutomaticDataCollectionEnabledAppName:enabled:completion:)],
+                @"FirebaseAppHostApi api (%@) doesn't respond to "
+                @"@selector(setAutomaticDataCollectionEnabledAppName:enabled:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_appName = GetNullableObjectAtIndex(args, 0);
         NSNumber *arg_enabled = GetNullableObjectAtIndex(args, 1);
-        [api setAutomaticDataCollectionEnabledAppName:arg_appName enabled:arg_enabled completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api setAutomaticDataCollectionEnabledAppName:arg_appName
+                                              enabled:arg_enabled
+                                           completion:^(FlutterError *_Nullable error) {
+                                             callback(wrapResult(nil, error));
+                                           }];
       }];
-    }
-    else {
+    } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:
+               @"dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAppHostApiGetCodec()        ];
+                  codec:FirebaseAppHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(setAutomaticResourceManagementEnabledAppName:enabled:completion:)], @"FirebaseAppHostApi api (%@) doesn't respond to @selector(setAutomaticResourceManagementEnabledAppName:enabled:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector
+                     (setAutomaticResourceManagementEnabledAppName:enabled:completion:)],
+                @"FirebaseAppHostApi api (%@) doesn't respond to "
+                @"@selector(setAutomaticResourceManagementEnabledAppName:enabled:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_appName = GetNullableObjectAtIndex(args, 0);
         NSNumber *arg_enabled = GetNullableObjectAtIndex(args, 1);
-        [api setAutomaticResourceManagementEnabledAppName:arg_appName enabled:arg_enabled completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api setAutomaticResourceManagementEnabledAppName:arg_appName
+                                                  enabled:arg_enabled
+                                               completion:^(FlutterError *_Nullable error) {
+                                                 callback(wrapResult(nil, error));
+                                               }];
       }];
-    }
-    else {
+    } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.FirebaseAppHostApi.delete"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAppHostApi.delete"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAppHostApiGetCodec()        ];
+                  codec:FirebaseAppHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(deleteAppName:completion:)], @"FirebaseAppHostApi api (%@) doesn't respond to @selector(deleteAppName:completion:)", api);
+      NSCAssert(
+          [api respondsToSelector:@selector(deleteAppName:completion:)],
+          @"FirebaseAppHostApi api (%@) doesn't respond to @selector(deleteAppName:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_appName = GetNullableObjectAtIndex(args, 0);
-        [api deleteAppName:arg_appName completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api deleteAppName:arg_appName
+                completion:^(FlutterError *_Nullable error) {
+                  callback(wrapResult(nil, error));
+                }];
       }];
-    }
-    else {
+    } else {
       [channel setMessageHandler:nil];
     }
   }
