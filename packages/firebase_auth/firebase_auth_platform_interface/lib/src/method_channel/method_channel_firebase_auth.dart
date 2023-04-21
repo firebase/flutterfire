@@ -358,16 +358,14 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<UserCredentialPlatform> signInWithEmailLink(
       String email, String emailLink) async {
     try {
-      Map<String, dynamic> data =
-          (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#signInWithEmailLink',
-              _withChannelDefaults({
-                'email': email,
-                'emailLink': emailLink,
-              })))!;
+      final result = await _api.signInWithEmailLink(
+        pigeonDefault,
+        email,
+        emailLink,
+      );
 
       MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(this, data);
+          MethodChannelUserCredential(this, result);
 
       currentUser = userCredential.user;
       return userCredential;

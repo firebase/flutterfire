@@ -829,6 +829,34 @@ void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAuthHostApi.signInWithEmailLink"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(signInWithEmailLinkApp:
+                                                                   email:emailLink:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(signInWithEmailLinkApp:email:emailLink:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_email = GetNullableObjectAtIndex(args, 1);
+        NSString *arg_emailLink = GetNullableObjectAtIndex(args, 2);
+        [api signInWithEmailLinkApp:arg_app
+                              email:arg_email
+                          emailLink:arg_emailLink
+                         completion:^(PigeonUserCredential *_Nullable output,
+                                      FlutterError *_Nullable error) {
+                           callback(wrapResult(output, error));
+                         }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }
 @interface MultiFactorUserHostApiCodecReader : FlutterStandardReader
 @end

@@ -1374,6 +1374,12 @@ public class GeneratedAndroidFirebaseAuth {
         @NonNull String password,
         @NonNull Result<PigeonUserCredential> result);
 
+    void signInWithEmailLink(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String email,
+        @NonNull String emailLink,
+        @NonNull Result<PigeonUserCredential> result);
+
     /** The codec used by FirebaseAuthHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return FirebaseAuthHostApiCodec.INSTANCE;
@@ -1733,6 +1739,39 @@ public class GeneratedAndroidFirebaseAuth {
                     };
 
                 api.signInWithEmailAndPassword(appArg, emailArg, passwordArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseAuthHostApi.signInWithEmailLink",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                String emailArg = (String) args.get(1);
+                String emailLinkArg = (String) args.get(2);
+                Result<PigeonUserCredential> resultCallback =
+                    new Result<PigeonUserCredential>() {
+                      public void success(PigeonUserCredential result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.signInWithEmailLink(appArg, emailArg, emailLinkArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

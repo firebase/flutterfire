@@ -456,6 +456,40 @@ public class FlutterFirebaseAuthPlugin
     }
   }
 
+  @Override
+  public void signInWithEmailAndPassword(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String email, @NonNull String password, @NonNull GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+      AuthResult authResult =
+        Tasks.await(firebaseAuth.signInWithEmailAndPassword(email, password));
+
+      result.success(PigeonParser.parseAuthResult(authResult));
+    } catch (Exception e) {
+      if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+        handleMultiFactorException(app, result, e);
+      } else {
+        result.error(e);
+      }
+    }
+
+  }
+
+  @Override
+  public void signInWithEmailLink(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String email, @NonNull String emailLink, @NonNull GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+      AuthResult authResult = Tasks.await(firebaseAuth.signInWithEmailLink(email, emailLink));
+
+      result.success(PigeonParser.parseAuthResult(authResult));
+    } catch (Exception e) {
+      if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+        handleMultiFactorException(app, result, e);
+      } else {
+        result.error(e);
+      }
+    }
+  }
+
   private Task<Map<String, Object>> fetchSignInMethodsForEmail(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -606,31 +640,6 @@ public class FlutterFirebaseAuthPlugin
     return taskCompletionSource.getTask();
   }
 
-  private Task<Map<String, Object>> signInWithEmailAndPassword(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            String email = (String) Objects.requireNonNull(arguments.get(Constants.EMAIL));
-            String password = (String) Objects.requireNonNull(arguments.get(Constants.PASSWORD));
-
-            AuthResult authResult =
-                Tasks.await(firebaseAuth.signInWithEmailAndPassword(email, password));
-
-            taskCompletionSource.setResult(parseAuthResult(authResult));
-          } catch (Exception e) {
-            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
-              handleMultiFactorException(arguments, taskCompletionSource, e);
-            } else {
-              taskCompletionSource.setException(e);
-            }
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
 
   private void handleMultiFactorException(
       GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
@@ -702,29 +711,6 @@ public class FlutterFirebaseAuthPlugin
     return pigeonHints;
   }
 
-  private Task<Map<String, Object>> signInWithEmailLink(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            String email = (String) Objects.requireNonNull(arguments.get(Constants.EMAIL));
-            String emailLink = (String) Objects.requireNonNull(arguments.get(Constants.EMAIL_LINK));
-
-            AuthResult authResult = Tasks.await(firebaseAuth.signInWithEmailLink(email, emailLink));
-            taskCompletionSource.setResult(parseAuthResult(authResult));
-          } catch (Exception e) {
-            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
-              handleMultiFactorException(arguments, taskCompletionSource, e);
-            } else {
-              taskCompletionSource.setException(e);
-            }
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
 
   private Task<Void> signOut(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
@@ -1234,12 +1220,6 @@ public class FlutterFirebaseAuthPlugin
         break;
       case "Auth#setSettings":
         methodCallTask = setSettings(call.arguments());
-        break;
-      case "Auth#signInWithEmailAndPassword":
-        methodCallTask = signInWithEmailAndPassword(call.arguments());
-        break;
-      case "Auth#signInWithEmailLink":
-        methodCallTask = signInWithEmailLink(call.arguments());
         break;
       case "Auth#signOut":
         methodCallTask = signOut(call.arguments());

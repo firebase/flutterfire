@@ -116,6 +116,9 @@ abstract class TesFirebaseAuthHostApi {
   Future<PigeonUserCredential> signInWithEmailAndPassword(
       PigeonFirebaseApp app, String email, String password);
 
+  Future<PigeonUserCredential> signInWithEmailLink(
+      PigeonFirebaseApp app, String email, String emailLink);
+
   static void setup(TesFirebaseAuthHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
     {
@@ -404,6 +407,35 @@ abstract class TesFirebaseAuthHostApi {
               'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.signInWithEmailAndPassword was null, expected non-null String.');
           final PigeonUserCredential output = await api
               .signInWithEmailAndPassword(arg_app!, arg_email!, arg_password!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthHostApi.signInWithEmailLink', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.signInWithEmailLink was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.signInWithEmailLink was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_email = (args[1] as String?);
+          assert(arg_email != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.signInWithEmailLink was null, expected non-null String.');
+          final String? arg_emailLink = (args[2] as String?);
+          assert(arg_emailLink != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.signInWithEmailLink was null, expected non-null String.');
+          final PigeonUserCredential output = await api.signInWithEmailLink(
+              arg_app!, arg_email!, arg_emailLink!);
           return <Object?>[output];
         });
       }
