@@ -859,6 +859,14 @@ abstract class TestFirebaseAuthUserHostApi {
 
   Future<PigeonUserCredential> unlink(PigeonFirebaseApp app, String providerId);
 
+  Future<PigeonUserDetails> updateEmail(PigeonFirebaseApp app, String newEmail);
+
+  Future<PigeonUserDetails> updatePassword(
+      PigeonFirebaseApp app, String newPassword);
+
+  Future<PigeonUserDetails> updatePhoneNumber(
+      PigeonFirebaseApp app, Map<String?, Object?> input);
+
   static void setup(TestFirebaseAuthUserHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
     {
@@ -1089,6 +1097,85 @@ abstract class TestFirebaseAuthUserHostApi {
               'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.unlink was null, expected non-null String.');
           final PigeonUserCredential output =
               await api.unlink(arg_app!, arg_providerId!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthUserHostApi.updateEmail', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.updateEmail was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.updateEmail was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_newEmail = (args[1] as String?);
+          assert(arg_newEmail != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.updateEmail was null, expected non-null String.');
+          final PigeonUserDetails output =
+              await api.updateEmail(arg_app!, arg_newEmail!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthUserHostApi.updatePassword', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.updatePassword was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.updatePassword was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_newPassword = (args[1] as String?);
+          assert(arg_newPassword != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.updatePassword was null, expected non-null String.');
+          final PigeonUserDetails output =
+              await api.updatePassword(arg_app!, arg_newPassword!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthUserHostApi.updatePhoneNumber', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.updatePhoneNumber was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.updatePhoneNumber was null, expected non-null PigeonFirebaseApp.');
+          final Map<String?, Object?>? arg_input =
+              (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+          assert(arg_input != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.updatePhoneNumber was null, expected non-null Map<String?, Object?>.');
+          final PigeonUserDetails output =
+              await api.updatePhoneNumber(arg_app!, arg_input!);
           return <Object?>[output];
         });
       }

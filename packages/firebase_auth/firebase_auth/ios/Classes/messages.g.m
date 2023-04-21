@@ -1686,6 +1686,80 @@ void FirebaseAuthUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAuthUserHostApi.updateEmail"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthUserHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(updateEmailApp:newEmail:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(updateEmailApp:newEmail:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_newEmail = GetNullableObjectAtIndex(args, 1);
+        [api updateEmailApp:arg_app
+                   newEmail:arg_newEmail
+                 completion:^(PigeonUserDetails *_Nullable output, FlutterError *_Nullable error) {
+                   callback(wrapResult(output, error));
+                 }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAuthUserHostApi.updatePassword"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthUserHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(updatePasswordApp:newPassword:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(updatePasswordApp:newPassword:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_newPassword = GetNullableObjectAtIndex(args, 1);
+        [api updatePasswordApp:arg_app
+                   newPassword:arg_newPassword
+                    completion:^(PigeonUserDetails *_Nullable output,
+                                 FlutterError *_Nullable error) {
+                      callback(wrapResult(output, error));
+                    }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAuthUserHostApi.updatePhoneNumber"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthUserHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(updatePhoneNumberApp:input:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(updatePhoneNumberApp:input:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSDictionary<NSString *, id> *arg_input = GetNullableObjectAtIndex(args, 1);
+        [api updatePhoneNumberApp:arg_app
+                            input:arg_input
+                       completion:^(PigeonUserDetails *_Nullable output,
+                                    FlutterError *_Nullable error) {
+                         callback(wrapResult(output, error));
+                       }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }
 @interface MultiFactorUserHostApiCodecReader : FlutterStandardReader
 @end

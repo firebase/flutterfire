@@ -235,16 +235,10 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> updateEmail(String newEmail) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
-              'User#updateEmail',
-              _withChannelDefaults(
-                {
-                  'newEmail': newEmail,
-                },
-              )))!;
+      final result = await _api.updateEmail(pigeonDefault, newEmail);
 
-      MethodChannelUser user = MethodChannelUser(auth, super.multiFactor, data);
+      MethodChannelUser user =
+          MethodChannelUser(auth, super.multiFactor, result);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {
@@ -255,16 +249,10 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> updatePassword(String newPassword) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
-              'User#updatePassword',
-              _withChannelDefaults(
-                {
-                  'newPassword': newPassword,
-                },
-              )))!;
+      final result = await _api.updateEmail(pigeonDefault, newPassword);
 
-      MethodChannelUser user = MethodChannelUser(auth, super.multiFactor, data);
+      MethodChannelUser user =
+          MethodChannelUser(auth, super.multiFactor, result);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {
@@ -275,16 +263,13 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> updatePhoneNumber(PhoneAuthCredential phoneCredential) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
-              'User#updatePhoneNumber',
-              _withChannelDefaults(
-                {
-                  'credential': phoneCredential.asMap(),
-                },
-              )))!;
+      final result = await _api.updatePhoneNumber(
+        pigeonDefault,
+        phoneCredential.asMap(),
+      );
 
-      MethodChannelUser user = MethodChannelUser(auth, super.multiFactor, data);
+      MethodChannelUser user =
+          MethodChannelUser(auth, super.multiFactor, result);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {

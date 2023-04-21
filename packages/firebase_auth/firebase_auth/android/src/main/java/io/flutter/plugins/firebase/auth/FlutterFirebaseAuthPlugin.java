@@ -27,7 +27,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.MultiFactorInfo;
 import com.google.firebase.auth.MultiFactorSession;
 import com.google.firebase.auth.OAuthProvider;
-import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneMultiFactorInfo;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -47,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 /** Flutter plugin for Firebase Auth. */
 public class FlutterFirebaseAuthPlugin
@@ -584,91 +582,6 @@ public class FlutterFirebaseAuthPlugin
     }
   }
 
-
-  private Task<Map<String, Object>> updateEmail(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseUser firebaseUser = getCurrentUser(arguments);
-
-            if (firebaseUser == null) {
-              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
-              return;
-            }
-
-            String newEmail = (String) Objects.requireNonNull(arguments.get(Constants.NEW_EMAIL));
-            Tasks.await(firebaseUser.updateEmail(newEmail));
-            Tasks.await(firebaseUser.reload());
-            taskCompletionSource.setResult(parseFirebaseUser(firebaseUser));
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  private Task<Map<String, Object>> updatePassword(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseUser firebaseUser = getCurrentUser(arguments);
-
-            if (firebaseUser == null) {
-              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
-              return;
-            }
-
-            String newPassword =
-                (String) Objects.requireNonNull(arguments.get(Constants.NEW_PASSWORD));
-            Tasks.await(firebaseUser.updatePassword(newPassword));
-            Tasks.await(firebaseUser.reload());
-            taskCompletionSource.setResult(parseFirebaseUser(firebaseUser));
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  private Task<Map<String, Object>> updatePhoneNumber(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseUser firebaseUser = getCurrentUser(arguments);
-
-            if (firebaseUser == null) {
-              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
-              return;
-            }
-
-            PhoneAuthCredential phoneAuthCredential =
-                (PhoneAuthCredential) getCredential(arguments);
-
-            if (phoneAuthCredential == null) {
-              taskCompletionSource.setException(
-                  FlutterFirebaseAuthPluginException.invalidCredential());
-              return;
-            }
-
-            Tasks.await(firebaseUser.updatePhoneNumber(phoneAuthCredential));
-            Tasks.await(firebaseUser.reload());
-            taskCompletionSource.setResult(parseFirebaseUser(firebaseUser));
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
   private Task<Map<String, Object>> updateProfile(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -753,15 +666,6 @@ public class FlutterFirebaseAuthPlugin
     final Task<?> methodCallTask;
 
     switch (call.method) {
-      case "User#updateEmail":
-        methodCallTask = updateEmail(call.arguments());
-        break;
-      case "User#updatePassword":
-        methodCallTask = updatePassword(call.arguments());
-        break;
-      case "User#updatePhoneNumber":
-        methodCallTask = updatePhoneNumber(call.arguments());
-        break;
       case "User#updateProfile":
         methodCallTask = updateProfile(call.arguments());
         break;
