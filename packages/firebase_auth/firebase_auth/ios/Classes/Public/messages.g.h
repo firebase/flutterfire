@@ -44,6 +44,7 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @class PigeonFirebaseAuthSettings;
 @class PigeonSignInProvider;
 @class PigeonVerifyPhoneNumberRequest;
+@class PigeonIdTokenResult;
 
 @interface PigeonMultiFactorSession : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
@@ -237,6 +238,23 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @property(nonatomic, copy, nullable) NSString *multiFactorSessionId;
 @end
 
+@interface PigeonIdTokenResult : NSObject
++ (instancetype)makeWithToken:(nullable NSString *)token
+          expirationTimestamp:(nullable NSNumber *)expirationTimestamp
+                authTimestamp:(nullable NSNumber *)authTimestamp
+            issuedAtTimestamp:(nullable NSNumber *)issuedAtTimestamp
+               signInProvider:(nullable NSString *)signInProvider
+                       claims:(nullable NSDictionary<NSString *, id> *)claims
+           signInSecondFactor:(nullable NSString *)signInSecondFactor;
+@property(nonatomic, copy, nullable) NSString *token;
+@property(nonatomic, strong, nullable) NSNumber *expirationTimestamp;
+@property(nonatomic, strong, nullable) NSNumber *authTimestamp;
+@property(nonatomic, strong, nullable) NSNumber *issuedAtTimestamp;
+@property(nonatomic, copy, nullable) NSString *signInProvider;
+@property(nonatomic, strong, nullable) NSDictionary<NSString *, id> *claims;
+@property(nonatomic, copy, nullable) NSString *signInSecondFactor;
+@end
+
 /// The codec used by FirebaseAuthHostApi.
 NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
 
@@ -323,6 +341,19 @@ NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
 
 extern void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                                      NSObject<FirebaseAuthHostApi> *_Nullable api);
+
+/// The codec used by FirebaseAuthUserHostApi.
+NSObject<FlutterMessageCodec> *FirebaseAuthUserHostApiGetCodec(void);
+
+@protocol FirebaseAuthUserHostApi
+- (void)deleteApp:(PigeonFirebaseApp *)app completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)getIdTokenApp:(PigeonFirebaseApp *)app
+         forceRefresh:(NSNumber *)forceRefresh
+           completion:(void (^)(PigeonIdTokenResult *_Nullable, FlutterError *_Nullable))completion;
+@end
+
+extern void FirebaseAuthUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                         NSObject<FirebaseAuthUserHostApi> *_Nullable api);
 
 /// The codec used by MultiFactorUserHostApi.
 NSObject<FlutterMessageCodec> *MultiFactorUserHostApiGetCodec(void);

@@ -184,14 +184,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
   }
 
-  /// Attaches generic default values to method channel arguments.
-  Map<String, dynamic> _withChannelDefaults(Map<String, dynamic> other) {
-    return {
-      'appName': app.name,
-      'tenantId': tenantId,
-    }..addAll(other);
-  }
-
   /// Gets a [FirebaseAuthPlatform] with specific arguments such as a different
   /// [FirebaseApp].
   ///
@@ -206,7 +198,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   @override
   MethodChannelFirebaseAuth setInitialValues({
-    Map<String, dynamic>? currentUser,
+    PigeonUserDetails? currentUser,
     String? languageCode,
   }) {
     if (currentUser != null) {

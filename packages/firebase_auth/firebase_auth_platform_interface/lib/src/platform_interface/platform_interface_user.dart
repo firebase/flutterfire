@@ -134,7 +134,7 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// If [forceRefresh] is `true`, the token returned will be refresh regardless
   /// of token expiration.
-  Future<String> getIdToken(bool forceRefresh) {
+  Future<String?> getIdToken(bool forceRefresh) {
     throw UnimplementedError('getIdToken() is not implemented');
   }
 

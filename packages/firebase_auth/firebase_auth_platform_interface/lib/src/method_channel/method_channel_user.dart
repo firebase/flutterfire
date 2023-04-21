@@ -20,6 +20,15 @@ class MethodChannelUser extends UserPlatform {
       PigeonUserDetails data)
       : super(auth, multiFactor, data);
 
+  final _api = FirebaseAuthUserHostApi();
+
+  PigeonFirebaseApp get pigeonDefault {
+    return PigeonFirebaseApp(
+      appName: auth.app.name,
+      tenantId: auth.tenantId,
+    );
+  }
+
   /// Attaches generic default values to method channel arguments.
   Map<String, dynamic> _withChannelDefaults(Map<String, dynamic> other) {
     return {
@@ -31,29 +40,21 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> delete() async {
     try {
-      await MethodChannelFirebaseAuth.channel.invokeMethod<void>(
-        'User#delete',
-        _withChannelDefaults({}),
-      );
+      await _api.delete(pigeonDefault);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
   }
 
   @override
-  Future<String> getIdToken(bool forceRefresh) async {
+  Future<String?> getIdToken(bool forceRefresh) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
-              'User#getIdToken',
-              _withChannelDefaults(
-                {
-                  'forceRefresh': forceRefresh,
-                  'tokenOnly': true,
-                },
-              )))!;
+      final data = await _api.getIdToken(
+        pigeonDefault,
+        forceRefresh,
+      );
 
-      return data['token'];
+      return data.token;
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -62,14 +63,10 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<IdTokenResult> getIdTokenResult(bool forceRefresh) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
-        'User#getIdToken',
-        _withChannelDefaults({
-          'forceRefresh': forceRefresh,
-          'tokenOnly': false,
-        }),
-      ))!;
+      final data = await _api.getIdToken(
+        pigeonDefault,
+        forceRefresh,
+      );
 
       return IdTokenResult(data);
     } catch (e, stack) {

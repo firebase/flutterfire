@@ -6,6 +6,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -56,10 +57,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
         .delegateFor(app: app, persistence: persistence)
         .setInitialValues(
             languageCode: pluginConstants['APP_LANGUAGE_CODE'],
-            currentUser: pluginConstants['APP_CURRENT_USER'] == null
-                ? null
-                : Map<String, dynamic>.from(
-                    pluginConstants['APP_CURRENT_USER']));
+            currentUser: pluginConstants['APP_CURRENT_USER']);
   }
 
   /// The current default [FirebaseAuthPlatform] instance.
@@ -96,7 +94,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// calls.
   @protected
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic>? currentUser,
+    PigeonUserDetails? currentUser,
     String? languageCode,
   }) {
     throw UnimplementedError('setInitialValues() is not implemented');

@@ -115,6 +115,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList;
 @end
 
+@interface PigeonIdTokenResult ()
++ (PigeonIdTokenResult *)fromList:(NSArray *)list;
++ (nullable PigeonIdTokenResult *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
 @implementation PigeonMultiFactorSession
 + (instancetype)makeWithId:(NSString *)id {
   PigeonMultiFactorSession *pigeonResult = [[PigeonMultiFactorSession alloc] init];
@@ -636,6 +642,51 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
+@implementation PigeonIdTokenResult
++ (instancetype)makeWithToken:(nullable NSString *)token
+          expirationTimestamp:(nullable NSNumber *)expirationTimestamp
+                authTimestamp:(nullable NSNumber *)authTimestamp
+            issuedAtTimestamp:(nullable NSNumber *)issuedAtTimestamp
+               signInProvider:(nullable NSString *)signInProvider
+                       claims:(nullable NSDictionary<NSString *, id> *)claims
+           signInSecondFactor:(nullable NSString *)signInSecondFactor {
+  PigeonIdTokenResult *pigeonResult = [[PigeonIdTokenResult alloc] init];
+  pigeonResult.token = token;
+  pigeonResult.expirationTimestamp = expirationTimestamp;
+  pigeonResult.authTimestamp = authTimestamp;
+  pigeonResult.issuedAtTimestamp = issuedAtTimestamp;
+  pigeonResult.signInProvider = signInProvider;
+  pigeonResult.claims = claims;
+  pigeonResult.signInSecondFactor = signInSecondFactor;
+  return pigeonResult;
+}
++ (PigeonIdTokenResult *)fromList:(NSArray *)list {
+  PigeonIdTokenResult *pigeonResult = [[PigeonIdTokenResult alloc] init];
+  pigeonResult.token = GetNullableObjectAtIndex(list, 0);
+  pigeonResult.expirationTimestamp = GetNullableObjectAtIndex(list, 1);
+  pigeonResult.authTimestamp = GetNullableObjectAtIndex(list, 2);
+  pigeonResult.issuedAtTimestamp = GetNullableObjectAtIndex(list, 3);
+  pigeonResult.signInProvider = GetNullableObjectAtIndex(list, 4);
+  pigeonResult.claims = GetNullableObjectAtIndex(list, 5);
+  pigeonResult.signInSecondFactor = GetNullableObjectAtIndex(list, 6);
+  return pigeonResult;
+}
++ (nullable PigeonIdTokenResult *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonIdTokenResult fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    (self.token ?: [NSNull null]),
+    (self.expirationTimestamp ?: [NSNull null]),
+    (self.authTimestamp ?: [NSNull null]),
+    (self.issuedAtTimestamp ?: [NSNull null]),
+    (self.signInProvider ?: [NSNull null]),
+    (self.claims ?: [NSNull null]),
+    (self.signInSecondFactor ?: [NSNull null]),
+  ];
+}
+@end
+
 @interface FirebaseAuthHostApiCodecReader : FlutterStandardReader
 @end
 @implementation FirebaseAuthHostApiCodecReader
@@ -656,20 +707,22 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     case 134:
       return [PigeonFirebaseAuthSettings fromList:[self readValue]];
     case 135:
-      return [PigeonMultiFactorInfo fromList:[self readValue]];
+      return [PigeonIdTokenResult fromList:[self readValue]];
     case 136:
-      return [PigeonMultiFactorSession fromList:[self readValue]];
+      return [PigeonMultiFactorInfo fromList:[self readValue]];
     case 137:
-      return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
+      return [PigeonMultiFactorSession fromList:[self readValue]];
     case 138:
-      return [PigeonSignInProvider fromList:[self readValue]];
+      return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
     case 139:
-      return [PigeonUserCredential fromList:[self readValue]];
+      return [PigeonSignInProvider fromList:[self readValue]];
     case 140:
-      return [PigeonUserDetails fromList:[self readValue]];
+      return [PigeonUserCredential fromList:[self readValue]];
     case 141:
-      return [PigeonUserInfo fromList:[self readValue]];
+      return [PigeonUserDetails fromList:[self readValue]];
     case 142:
+      return [PigeonUserInfo fromList:[self readValue]];
+    case 143:
       return [PigeonVerifyPhoneNumberRequest fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -702,29 +755,32 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   } else if ([value isKindOfClass:[PigeonFirebaseAuthSettings class]]) {
     [self writeByte:134];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
+  } else if ([value isKindOfClass:[PigeonIdTokenResult class]]) {
     [self writeByte:135];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
+  } else if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
     [self writeByte:136];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
+  } else if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
     [self writeByte:137];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonSignInProvider class]]) {
+  } else if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
     [self writeByte:138];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonUserCredential class]]) {
+  } else if ([value isKindOfClass:[PigeonSignInProvider class]]) {
     [self writeByte:139];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonUserDetails class]]) {
+  } else if ([value isKindOfClass:[PigeonUserCredential class]]) {
     [self writeByte:140];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonUserInfo class]]) {
+  } else if ([value isKindOfClass:[PigeonUserDetails class]]) {
     [self writeByte:141];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonVerifyPhoneNumberRequest class]]) {
+  } else if ([value isKindOfClass:[PigeonUserInfo class]]) {
     [self writeByte:142];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonVerifyPhoneNumberRequest class]]) {
+    [self writeByte:143];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];
@@ -1286,6 +1342,108 @@ void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
     }
   }
 }
+@interface FirebaseAuthUserHostApiCodecReader : FlutterStandardReader
+@end
+@implementation FirebaseAuthUserHostApiCodecReader
+- (nullable id)readValueOfType:(UInt8)type {
+  switch (type) {
+    case 128:
+      return [PigeonFirebaseApp fromList:[self readValue]];
+    case 129:
+      return [PigeonIdTokenResult fromList:[self readValue]];
+    default:
+      return [super readValueOfType:type];
+  }
+}
+@end
+
+@interface FirebaseAuthUserHostApiCodecWriter : FlutterStandardWriter
+@end
+@implementation FirebaseAuthUserHostApiCodecWriter
+- (void)writeValue:(id)value {
+  if ([value isKindOfClass:[PigeonFirebaseApp class]]) {
+    [self writeByte:128];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonIdTokenResult class]]) {
+    [self writeByte:129];
+    [self writeValue:[value toList]];
+  } else {
+    [super writeValue:value];
+  }
+}
+@end
+
+@interface FirebaseAuthUserHostApiCodecReaderWriter : FlutterStandardReaderWriter
+@end
+@implementation FirebaseAuthUserHostApiCodecReaderWriter
+- (FlutterStandardWriter *)writerWithData:(NSMutableData *)data {
+  return [[FirebaseAuthUserHostApiCodecWriter alloc] initWithData:data];
+}
+- (FlutterStandardReader *)readerWithData:(NSData *)data {
+  return [[FirebaseAuthUserHostApiCodecReader alloc] initWithData:data];
+}
+@end
+
+NSObject<FlutterMessageCodec> *FirebaseAuthUserHostApiGetCodec(void) {
+  static FlutterStandardMessageCodec *sSharedObject = nil;
+  static dispatch_once_t sPred = 0;
+  dispatch_once(&sPred, ^{
+    FirebaseAuthUserHostApiCodecReaderWriter *readerWriter =
+        [[FirebaseAuthUserHostApiCodecReaderWriter alloc] init];
+    sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
+  });
+  return sSharedObject;
+}
+
+void FirebaseAuthUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                  NSObject<FirebaseAuthUserHostApi> *api) {
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAuthUserHostApi.delete"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthUserHostApiGetCodec()];
+    if (api) {
+      NSCAssert(
+          [api respondsToSelector:@selector(deleteApp:completion:)],
+          @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(deleteApp:completion:)",
+          api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        [api deleteApp:arg_app
+            completion:^(FlutterError *_Nullable error) {
+              callback(wrapResult(nil, error));
+            }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAuthUserHostApi.getIdToken"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthUserHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(getIdTokenApp:forceRefresh:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(getIdTokenApp:forceRefresh:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSNumber *arg_forceRefresh = GetNullableObjectAtIndex(args, 1);
+        [api getIdTokenApp:arg_app
+              forceRefresh:arg_forceRefresh
+                completion:^(PigeonIdTokenResult *_Nullable output, FlutterError *_Nullable error) {
+                  callback(wrapResult(output, error));
+                }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+}
 @interface MultiFactorUserHostApiCodecReader : FlutterStandardReader
 @end
 @implementation MultiFactorUserHostApiCodecReader
@@ -1464,20 +1622,22 @@ void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
     case 134:
       return [PigeonFirebaseAuthSettings fromList:[self readValue]];
     case 135:
-      return [PigeonMultiFactorInfo fromList:[self readValue]];
+      return [PigeonIdTokenResult fromList:[self readValue]];
     case 136:
-      return [PigeonMultiFactorSession fromList:[self readValue]];
+      return [PigeonMultiFactorInfo fromList:[self readValue]];
     case 137:
-      return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
+      return [PigeonMultiFactorSession fromList:[self readValue]];
     case 138:
-      return [PigeonSignInProvider fromList:[self readValue]];
+      return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
     case 139:
-      return [PigeonUserCredential fromList:[self readValue]];
+      return [PigeonSignInProvider fromList:[self readValue]];
     case 140:
-      return [PigeonUserDetails fromList:[self readValue]];
+      return [PigeonUserCredential fromList:[self readValue]];
     case 141:
-      return [PigeonUserInfo fromList:[self readValue]];
+      return [PigeonUserDetails fromList:[self readValue]];
     case 142:
+      return [PigeonUserInfo fromList:[self readValue]];
+    case 143:
       return [PigeonVerifyPhoneNumberRequest fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -1510,29 +1670,32 @@ void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
   } else if ([value isKindOfClass:[PigeonFirebaseAuthSettings class]]) {
     [self writeByte:134];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
+  } else if ([value isKindOfClass:[PigeonIdTokenResult class]]) {
     [self writeByte:135];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
+  } else if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
     [self writeByte:136];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
+  } else if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
     [self writeByte:137];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonSignInProvider class]]) {
+  } else if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
     [self writeByte:138];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonUserCredential class]]) {
+  } else if ([value isKindOfClass:[PigeonSignInProvider class]]) {
     [self writeByte:139];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonUserDetails class]]) {
+  } else if ([value isKindOfClass:[PigeonUserCredential class]]) {
     [self writeByte:140];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonUserInfo class]]) {
+  } else if ([value isKindOfClass:[PigeonUserDetails class]]) {
     [self writeByte:141];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonVerifyPhoneNumberRequest class]]) {
+  } else if ([value isKindOfClass:[PigeonUserInfo class]]) {
     [self writeByte:142];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonVerifyPhoneNumberRequest class]]) {
+    [self writeByte:143];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];

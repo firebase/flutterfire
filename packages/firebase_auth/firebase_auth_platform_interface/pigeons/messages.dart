@@ -270,7 +270,7 @@ class PigeonVerifyPhoneNumberRequest {
   final String? multiFactorSessionId;
 }
 
-@HostApi(dartHostTestHandler: 'TesFirebaseAuthHostApi')
+@HostApi(dartHostTestHandler: 'TestFirebaseAuthHostApi')
 abstract class FirebaseAuthHostApi {
   @async
   String registerIdTokenListener(
@@ -399,6 +399,40 @@ abstract class FirebaseAuthHostApi {
   String verifyPhoneNumber(
     PigeonFirebaseApp app,
     PigeonVerifyPhoneNumberRequest request,
+  );
+}
+
+class PigeonIdTokenResult {
+  const PigeonIdTokenResult({
+    required this.token,
+    required this.expirationTimestamp,
+    required this.authTimestamp,
+    required this.issuedAtTimestamp,
+    required this.signInProvider,
+    required this.claims,
+    required this.signInSecondFactor,
+  });
+
+  final String? token;
+  final int? expirationTimestamp;
+  final int? authTimestamp;
+  final int? issuedAtTimestamp;
+  final String? signInProvider;
+  final Map<String?, Object?>? claims;
+  final String? signInSecondFactor;
+}
+
+@HostApi(dartHostTestHandler: 'TestFirebaseAuthUserHostApi')
+abstract class FirebaseAuthUserHostApi {
+  @async
+  void delete(
+    PigeonFirebaseApp app,
+  );
+
+  @async
+  PigeonIdTokenResult getIdToken(
+    PigeonFirebaseApp app,
+    bool forceRefresh,
   );
 }
 

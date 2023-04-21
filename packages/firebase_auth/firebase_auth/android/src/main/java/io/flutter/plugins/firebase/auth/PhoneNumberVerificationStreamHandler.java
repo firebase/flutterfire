@@ -21,7 +21,6 @@ import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -48,10 +47,12 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
   @Nullable private EventSink eventSink;
 
   public PhoneNumberVerificationStreamHandler(
-    Activity activity,
-    @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseAuth.PigeonVerifyPhoneNumberRequest request,    @Nullable MultiFactorSession multiFactorSession,
-    @Nullable PhoneMultiFactorInfo multiFactorInfo,
-    OnCredentialsListener onCredentialsListener) {
+      Activity activity,
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonVerifyPhoneNumberRequest request,
+      @Nullable MultiFactorSession multiFactorSession,
+      @Nullable PhoneMultiFactorInfo multiFactorInfo,
+      OnCredentialsListener onCredentialsListener) {
     this.activityRef.set(activity);
 
     this.multiFactorSession = multiFactorSession;
@@ -61,8 +62,7 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
     timeout = Math.toIntExact(request.getTimeout());
 
     if (request.getAutoRetrievedSmsCodeForTesting() != null) {
-      autoRetrievedSmsCodeForTesting =
-        request.getAutoRetrievedSmsCodeForTesting();
+      autoRetrievedSmsCodeForTesting = request.getAutoRetrievedSmsCodeForTesting();
     }
 
     if (request.getForceResendingToken() != null) {

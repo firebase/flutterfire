@@ -14,6 +14,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.MultiFactorInfo;
@@ -337,6 +338,22 @@ public class PigeonParser {
     }
 
     builder.setData(builderData.build());
+
+    return builder.build();
+  }
+
+  static GeneratedAndroidFirebaseAuth.PigeonIdTokenResult parseTokenResult(
+      @NonNull GetTokenResult tokenResult) {
+    final GeneratedAndroidFirebaseAuth.PigeonIdTokenResult.Builder builder =
+        new GeneratedAndroidFirebaseAuth.PigeonIdTokenResult.Builder();
+
+    builder.setToken(tokenResult.getToken());
+    builder.setSignInProvider(tokenResult.getSignInProvider());
+    builder.setAuthTimestamp(tokenResult.getAuthTimestamp() * 1000);
+    builder.setExpirationTimestamp(tokenResult.getExpirationTimestamp() * 1000);
+    builder.setIssuedAtTimestamp(tokenResult.getIssuedAtTimestamp() * 1000);
+    builder.setClaims(tokenResult.getClaims());
+    builder.setSignInSecondFactor(tokenResult.getSignInSecondFactor());
 
     return builder.build();
   }
