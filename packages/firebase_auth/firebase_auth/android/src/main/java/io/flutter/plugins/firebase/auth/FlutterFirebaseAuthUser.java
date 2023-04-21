@@ -1,6 +1,8 @@
 package io.flutter.plugins.firebase.auth;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
@@ -10,10 +12,7 @@ import com.google.firebase.auth.FirebaseAuthMultiFactorException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.OAuthProvider;
-
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class FlutterFirebaseAuthUser
     implements GeneratedAndroidFirebaseAuth.FirebaseAuthUserHostApi {
@@ -114,10 +113,14 @@ public class FlutterFirebaseAuthUser
   }
 
   @Override
-  public void linkWithProvider(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseAuth.PigeonSignInProvider signInProvider, @NonNull GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential> result) {
+  public void linkWithProvider(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonSignInProvider signInProvider,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+              result) {
     try {
       FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
-
 
       OAuthProvider.Builder provider = OAuthProvider.newBuilder(signInProvider.getProviderId());
       if (signInProvider.getScopes() != null) {
@@ -128,17 +131,126 @@ public class FlutterFirebaseAuthUser
       }
 
       AuthResult authResult =
-        Tasks.await(
-          firebaseUser.startActivityForLinkWithProvider(
-            /* activity= */ FlutterFirebaseAuthPlugin.activity, provider.build()));
+          Tasks.await(
+              firebaseUser.startActivityForLinkWithProvider(
+                  /* activity= */ FlutterFirebaseAuthPlugin.activity, provider.build()));
       result.success(PigeonParser.parseAuthResult(authResult));
     } catch (Exception e) {
       if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
-        FlutterFirebaseMultiFactor.handleMultiFactorException(
-          app, result, e);
+        FlutterFirebaseMultiFactor.handleMultiFactorException(app, result, e);
       } else {
         result.error(e);
       }
+    }
+  }
+
+  @Override
+  public void reauthenticateWithCredential(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull Map<String, Object> input,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+              result) {
+    try {
+      FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
+      AuthCredential credential = PigeonParser.getCredential(input);
+
+      if (firebaseUser == null) {
+        result.error(FlutterFirebaseAuthPluginException.noUser());
+        return;
+      }
+
+      if (credential == null) {
+        result.error(FlutterFirebaseAuthPluginException.invalidCredential());
+        return;
+      }
+
+      AuthResult authResult = Tasks.await(firebaseUser.reauthenticateAndRetrieveData(credential));
+      result.success(PigeonParser.parseAuthResult(authResult));
+    } catch (Exception e) {
+      if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+        FlutterFirebaseMultiFactor.handleMultiFactorException(app, result, e);
+      } else {
+        result.error(e);
+      }
+    }
+  }
+
+  @Override
+  public void reauthenticateWithProvider(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonSignInProvider signInProvider,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+              result) {
+    try {
+      FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
+
+      OAuthProvider.Builder provider = OAuthProvider.newBuilder(signInProvider.getProviderId());
+      if (signInProvider.getScopes() != null) {
+        provider.setScopes(signInProvider.getScopes());
+      }
+      if (signInProvider.getCustomParameters() != null) {
+        provider.addCustomParameters(signInProvider.getCustomParameters());
+      }
+
+      AuthResult authResult =
+          Tasks.await(
+              firebaseUser.startActivityForReauthenticateWithProvider(
+                  /* activity= */ FlutterFirebaseAuthPlugin.activity, provider.build()));
+      result.success(PigeonParser.parseAuthResult(authResult));
+    } catch (Exception e) {
+      if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+        FlutterFirebaseMultiFactor.handleMultiFactorException(app, result, e);
+      } else {
+        result.error(e);
+      }
+    }
+  }
+
+  @Override
+  public void reload(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails>
+              result) {
+    try {
+      FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
+
+      if (firebaseUser == null) {
+        result.error(FlutterFirebaseAuthPluginException.noUser());
+        return;
+      }
+
+      Tasks.await(firebaseUser.reload());
+
+      result.success(PigeonParser.parseFirebaseUser(getCurrentUserFromPigeon(app)));
+    } catch (Exception e) {
+      result.error(e);
+    }
+  }
+
+  @Override
+  public void sendEmailVerification(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @Nullable GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings, @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+    try {
+      FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
+
+      if (firebaseUser == null) {
+        result.error(FlutterFirebaseAuthPluginException.noUser());
+        return;
+      }
+
+      if (actionCodeSettings == null) {
+        Tasks.await(firebaseUser.sendEmailVerification());
+        result.success(null);
+        return;
+      }
+
+      Tasks.await(
+        firebaseUser.sendEmailVerification(PigeonParser.getActionCodeSettings(actionCodeSettings)));
+      result.success(null);
+    } catch (Exception e) {
+      result.error(e);
     }
 
   }

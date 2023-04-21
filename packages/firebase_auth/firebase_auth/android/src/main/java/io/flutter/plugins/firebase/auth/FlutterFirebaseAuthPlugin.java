@@ -65,7 +65,7 @@ public class FlutterFirebaseAuthPlugin
   @Nullable private BinaryMessenger messenger;
 
   private MethodChannel channel;
-  static public Activity activity;
+  public static Activity activity;
 
   private final Map<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
 
@@ -584,101 +584,6 @@ public class FlutterFirebaseAuthPlugin
     }
   }
 
-  private Task<Map<String, Object>> reauthenticateUserWithCredential(
-      Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseUser firebaseUser = getCurrentUser(arguments);
-            AuthCredential credential = getCredential(arguments);
-
-            if (firebaseUser == null) {
-              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
-              return;
-            }
-
-            if (credential == null) {
-              taskCompletionSource.setException(
-                  FlutterFirebaseAuthPluginException.invalidCredential());
-              return;
-            }
-
-            AuthResult authResult =
-                Tasks.await(firebaseUser.reauthenticateAndRetrieveData(credential));
-            taskCompletionSource.setResult(parseAuthResult(authResult));
-          } catch (Exception e) {
-            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
-              FlutterFirebaseMultiFactor.handleMultiFactorException(
-                  arguments, taskCompletionSource, e);
-            } else {
-              taskCompletionSource.setException(e);
-            }
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  private Task<Map<String, Object>> reloadUser(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseUser firebaseUser = getCurrentUser(arguments);
-
-            if (firebaseUser == null) {
-              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
-              return;
-            }
-
-            // Wait for the user to reload, and send back the updated user
-            Tasks.await(firebaseUser.reload());
-
-            taskCompletionSource.setResult(parseFirebaseUser(getCurrentUser(arguments)));
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  private Task<Void> sendEmailVerification(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseUser firebaseUser = getCurrentUser(arguments);
-
-            if (firebaseUser == null) {
-              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
-              return;
-            }
-
-            Object rawActionCodeSettings = arguments.get(Constants.ACTION_CODE_SETTINGS);
-            if (rawActionCodeSettings == null) {
-              Tasks.await(firebaseUser.sendEmailVerification());
-              taskCompletionSource.setResult(null);
-              return;
-            }
-
-            @SuppressWarnings("unchecked")
-            Map<String, Object> actionCodeSettings = (Map<String, Object>) rawActionCodeSettings;
-
-            Tasks.await(
-                firebaseUser.sendEmailVerification(getActionCodeSettings(actionCodeSettings)));
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
 
   private Task<Map<String, Object>> unlinkUserProvider(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
@@ -880,21 +785,6 @@ public class FlutterFirebaseAuthPlugin
     final Task<?> methodCallTask;
 
     switch (call.method) {
-      case "User#reauthenticateWithProvider":
-        methodCallTask = reauthenticateWithProvider(call.arguments());
-        break;
-      case "User#linkWithCredential":
-        methodCallTask = linkUserWithCredential(call.arguments());
-        break;
-      case "User#reauthenticateUserWithCredential":
-        methodCallTask = reauthenticateUserWithCredential(call.arguments());
-        break;
-      case "User#reload":
-        methodCallTask = reloadUser(call.arguments());
-        break;
-      case "User#sendEmailVerification":
-        methodCallTask = sendEmailVerification(call.arguments());
-        break;
       case "User#unlink":
         methodCallTask = unlinkUserProvider(call.arguments());
         break;
@@ -930,48 +820,6 @@ public class FlutterFirebaseAuthPlugin
                 getExceptionDetails(exception));
           }
         });
-  }
-
-  private Task<Map<String, Object>> reauthenticateWithProvider(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseUser firebaseUser = getCurrentUser(arguments);
-
-            String providerId =
-                (String) Objects.requireNonNull(arguments.get(Constants.SIGN_IN_PROVIDER));
-            @SuppressWarnings("unchecked")
-            List<String> scopes = (List<String>) arguments.get(Constants.SIGN_IN_PROVIDER_SCOPE);
-            @SuppressWarnings("unchecked")
-            Map<String, String> customParameters =
-                (Map<String, String>) arguments.get(Constants.SIGN_IN_PROVIDER_CUSTOM_PARAMETERS);
-
-            OAuthProvider.Builder provider = OAuthProvider.newBuilder(providerId);
-            if (scopes != null) {
-              provider.setScopes(scopes);
-            }
-            if (customParameters != null) {
-              provider.addCustomParameters(customParameters);
-            }
-
-            AuthResult authResult =
-                Tasks.await(
-                    firebaseUser.startActivityForReauthenticateWithProvider(
-                        /* activity= */ activity, provider.build()));
-            taskCompletionSource.setResult(parseAuthResult(authResult));
-          } catch (Exception e) {
-            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
-              FlutterFirebaseMultiFactor.handleMultiFactorException(
-                  arguments, taskCompletionSource, e);
-            } else {
-              taskCompletionSource.setException(e);
-            }
-          }
-        });
-
-    return taskCompletionSource.getTask();
   }
 
   @Override

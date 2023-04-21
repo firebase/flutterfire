@@ -126,26 +126,17 @@ class MethodChannelUser extends UserPlatform {
   }
 
   @override
-  Future<UserCredentialPlatform> reauthenticateWithProvider(
-    AuthProvider provider,
+  Future<UserCredentialPlatform> reauthenticateWithCredential(
+    AuthCredential credential,
   ) async {
     try {
-      // To extract scopes and custom parameters from the provider
-      final convertedProvider = convertToOAuthProvider(provider);
-
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
-              'User#reauthenticateWithProvider',
-              _withChannelDefaults({
-                'signInProvider': convertedProvider.providerId,
-                if (convertedProvider is OAuthProvider) ...{
-                  'scopes': convertedProvider.scopes,
-                  'customParameters': convertedProvider.parameters
-                },
-              })))!;
+      final result = await _api.reauthenticateWithCredential(
+        pigeonDefault,
+        credential.asMap(),
+      );
 
       MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(auth, data);
+          MethodChannelUserCredential(auth, result);
 
       auth.currentUser = userCredential.user;
       return userCredential;
@@ -155,21 +146,28 @@ class MethodChannelUser extends UserPlatform {
   }
 
   @override
-  Future<UserCredentialPlatform> reauthenticateWithCredential(
-    AuthCredential credential,
+  Future<UserCredentialPlatform> reauthenticateWithProvider(
+    AuthProvider provider,
   ) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
-              'User#reauthenticateUserWithCredential',
-              _withChannelDefaults(
-                {
-                  'credential': credential.asMap(),
-                },
-              )))!;
+      // To extract scopes and custom parameters from the provider
+      final convertedProvider = convertToOAuthProvider(provider);
+
+      final result = await _api.reauthenticateWithProvider(
+        pigeonDefault,
+        PigeonSignInProvider(
+          providerId: convertedProvider.providerId,
+          scopes: convertedProvider is OAuthProvider
+              ? convertedProvider.scopes
+              : null,
+          customParameters: convertedProvider is OAuthProvider
+              ? convertedProvider.parameters
+              : null,
+        ),
+      );
 
       MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(auth, data);
+          MethodChannelUserCredential(auth, result);
 
       auth.currentUser = userCredential.user;
       return userCredential;
@@ -181,11 +179,10 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> reload() async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
-              'User#reload', _withChannelDefaults({})))!;
+      final result = await _api.reload(pigeonDefault);
 
-      MethodChannelUser user = MethodChannelUser(auth, super.multiFactor, data);
+      MethodChannelUser user =
+          MethodChannelUser(auth, super.multiFactor, result);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {
@@ -198,10 +195,20 @@ class MethodChannelUser extends UserPlatform {
     ActionCodeSettings? actionCodeSettings,
   ) async {
     try {
-      await MethodChannelFirebaseAuth.channel.invokeMethod<void>(
-          'User#sendEmailVerification',
-          _withChannelDefaults(
-              {'actionCodeSettings': actionCodeSettings?.asMap()}));
+      await _api.sendEmailVerification(
+        pigeonDefault,
+        actionCodeSettings == null
+            ? null
+            : PigeonActionCodeSettings(
+                url: actionCodeSettings.url,
+                handleCodeInApp: actionCodeSettings.handleCodeInApp,
+                iOSBundleId: actionCodeSettings.iOSBundleId,
+                androidPackageName: actionCodeSettings.androidPackageName,
+                androidInstallApp: actionCodeSettings.androidInstallApp,
+                androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
+                dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+              ),
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

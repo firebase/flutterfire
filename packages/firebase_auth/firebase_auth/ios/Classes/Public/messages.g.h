@@ -358,6 +358,19 @@ NSObject<FlutterMessageCodec> *FirebaseAuthUserHostApiGetCodec(void);
              signInProvider:(PigeonSignInProvider *)signInProvider
                  completion:
                      (void (^)(PigeonUserCredential *_Nullable, FlutterError *_Nullable))completion;
+- (void)reauthenticateWithCredentialApp:(PigeonFirebaseApp *)app
+                                  input:(NSDictionary<NSString *, id> *)input
+                             completion:(void (^)(PigeonUserCredential *_Nullable,
+                                                  FlutterError *_Nullable))completion;
+- (void)reauthenticateWithProviderApp:(PigeonFirebaseApp *)app
+                       signInProvider:(PigeonSignInProvider *)signInProvider
+                           completion:(void (^)(PigeonUserCredential *_Nullable,
+                                                FlutterError *_Nullable))completion;
+- (void)reloadApp:(PigeonFirebaseApp *)app
+       completion:(void (^)(PigeonUserDetails *_Nullable, FlutterError *_Nullable))completion;
+- (void)sendEmailVerificationApp:(PigeonFirebaseApp *)app
+              actionCodeSettings:(nullable PigeonActionCodeSettings *)actionCodeSettings
+                      completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseAuthUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

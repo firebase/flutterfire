@@ -446,6 +446,29 @@ abstract class FirebaseAuthUserHostApi {
     PigeonFirebaseApp app,
     PigeonSignInProvider signInProvider,
   );
+
+  @async
+  PigeonUserCredential reauthenticateWithCredential(
+    PigeonFirebaseApp app,
+    Map<String, Object> input,
+  );
+
+  @async
+  PigeonUserCredential reauthenticateWithProvider(
+    PigeonFirebaseApp app,
+    PigeonSignInProvider signInProvider,
+  );
+
+  @async
+  PigeonUserDetails reload(
+    PigeonFirebaseApp app,
+  );
+
+  @async
+  void sendEmailVerification(
+    PigeonFirebaseApp app,
+    PigeonActionCodeSettings? actionCodeSettings,
+  );
 }
 
 @HostApi(dartHostTestHandler: 'TestMultiFactorUserHostApi')
