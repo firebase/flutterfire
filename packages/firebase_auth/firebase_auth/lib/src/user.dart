@@ -36,8 +36,8 @@ class User {
   ///
   /// Once verified, call [reload] to ensure the latest user information is
   /// retrieved from Firebase.
-  bool get emailVerified {
-    return _delegate.emailVerified;
+  bool get isEmailVerified {
+    return _delegate.isEmailVerified;
   }
 
   /// Returns whether the user is a anonymous.
@@ -116,7 +116,7 @@ class User {
   ///
   /// If [forceRefresh] is `true`, the token returned will be refreshed regardless
   /// of token expiration.
-  Future<String> getIdToken([bool forceRefresh = false]) {
+  Future<String?> getIdToken([bool forceRefresh = false]) {
     return _delegate.getIdToken(forceRefresh);
   }
 
@@ -638,18 +638,6 @@ class User {
     return _delegate.updateProfile(<String, String?>{'photoURL': photoURL});
   }
 
-  /// Updates a user's profile data.
-  @Deprecated(
-    'Will be removed in version 2.0.0. '
-    'Use updatePhotoURL and updateDisplayName instead.',
-  )
-  Future<void> updateProfile({String? displayName, String? photoURL}) {
-    return _delegate.updateProfile(<String, String?>{
-      'displayName': displayName,
-      'photoURL': photoURL,
-    });
-  }
-
   /// Sends a verification email to a new email address. The user's email will
   /// be updated to the new one after being verified.
   ///
@@ -671,7 +659,7 @@ class User {
     return '$User('
         'displayName: $displayName, '
         'email: $email, '
-        'emailVerified: $emailVerified, '
+        'isEmailVerified: $isEmailVerified, '
         'isAnonymous: $isAnonymous, '
         'metadata: $metadata, '
         'phoneNumber: $phoneNumber, '

@@ -6,7 +6,6 @@
 import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user_credential.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
@@ -280,16 +279,17 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> updateProfile(Map<String, String?> profile) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
-              'User#updateProfile',
-              _withChannelDefaults(
-                {
-                  'profile': profile,
-                },
-              )))!;
-
-      MethodChannelUser user = MethodChannelUser(auth, super.multiFactor, data);
+      final result = await _api.updateProfile(
+        pigeonDefault,
+        PigeonUserProfile(
+          displayName: profile['displayName'],
+          photoUrl: profile['photoURL'],
+          displayNameChanged: profile.containsKey('displayName'),
+          photoUrlChanged: profile.containsKey('photoURL'),
+        ),
+      );
+      MethodChannelUser user =
+          MethodChannelUser(auth, super.multiFactor, result);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {
@@ -303,14 +303,21 @@ class MethodChannelUser extends UserPlatform {
     ActionCodeSettings? actionCodeSettings,
   ]) async {
     try {
-      await MethodChannelFirebaseAuth.channel.invokeMethod<void>(
-          'User#verifyBeforeUpdateEmail',
-          _withChannelDefaults(
-            {
-              'newEmail': newEmail,
-              'actionCodeSettings': actionCodeSettings?.asMap(),
-            },
-          ));
+      await _api.verifyBeforeUpdateEmail(
+        pigeonDefault,
+        newEmail,
+        actionCodeSettings == null
+            ? null
+            : PigeonActionCodeSettings(
+                url: actionCodeSettings.url,
+                handleCodeInApp: actionCodeSettings.handleCodeInApp,
+                iOSBundleId: actionCodeSettings.iOSBundleId,
+                androidPackageName: actionCodeSettings.androidPackageName,
+                androidInstallApp: actionCodeSettings.androidInstallApp,
+                androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
+                dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+              ),
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

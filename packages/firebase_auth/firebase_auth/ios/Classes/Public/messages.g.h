@@ -45,6 +45,7 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @class PigeonSignInProvider;
 @class PigeonVerifyPhoneNumberRequest;
 @class PigeonIdTokenResult;
+@class PigeonUserProfile;
 
 @interface PigeonMultiFactorSession : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
@@ -255,6 +256,19 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @property(nonatomic, copy, nullable) NSString *signInSecondFactor;
 @end
 
+@interface PigeonUserProfile : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithDisplayName:(nullable NSString *)displayName
+                           photoUrl:(nullable NSString *)photoUrl
+                 displayNameChanged:(NSNumber *)displayNameChanged
+                    photoUrlChanged:(NSNumber *)photoUrlChanged;
+@property(nonatomic, copy, nullable) NSString *displayName;
+@property(nonatomic, copy, nullable) NSString *photoUrl;
+@property(nonatomic, strong) NSNumber *displayNameChanged;
+@property(nonatomic, strong) NSNumber *photoUrlChanged;
+@end
+
 /// The codec used by FirebaseAuthHostApi.
 NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
 
@@ -385,6 +399,14 @@ NSObject<FlutterMessageCodec> *FirebaseAuthUserHostApiGetCodec(void);
                        input:(NSDictionary<NSString *, id> *)input
                   completion:
                       (void (^)(PigeonUserDetails *_Nullable, FlutterError *_Nullable))completion;
+- (void)updateProfileApp:(PigeonFirebaseApp *)app
+                 profile:(PigeonUserProfile *)profile
+              completion:
+                  (void (^)(PigeonUserDetails *_Nullable, FlutterError *_Nullable))completion;
+- (void)verifyBeforeUpdateEmailApp:(PigeonFirebaseApp *)app
+                          newEmail:(NSString *)newEmail
+                actionCodeSettings:(nullable PigeonActionCodeSettings *)actionCodeSettings
+                        completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseAuthUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
@@ -394,19 +416,19 @@ extern void FirebaseAuthUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessen
 NSObject<FlutterMessageCodec> *MultiFactorUserHostApiGetCodec(void);
 
 @protocol MultiFactorUserHostApi
-- (void)enrollPhoneAppName:(NSString *)appName
-                 assertion:(PigeonPhoneMultiFactorAssertion *)assertion
-               displayName:(nullable NSString *)displayName
-                completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)getSessionAppName:(NSString *)appName
-               completion:(void (^)(PigeonMultiFactorSession *_Nullable,
-                                    FlutterError *_Nullable))completion;
-- (void)unenrollAppName:(NSString *)appName
-              factorUid:(nullable NSString *)factorUid
-             completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)getEnrolledFactorsAppName:(NSString *)appName
-                       completion:(void (^)(NSArray<PigeonMultiFactorInfo *> *_Nullable,
-                                            FlutterError *_Nullable))completion;
+- (void)enrollPhoneApp:(PigeonFirebaseApp *)app
+             assertion:(PigeonPhoneMultiFactorAssertion *)assertion
+           displayName:(nullable NSString *)displayName
+            completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)getSessionApp:(PigeonFirebaseApp *)app
+           completion:
+               (void (^)(PigeonMultiFactorSession *_Nullable, FlutterError *_Nullable))completion;
+- (void)unenrollApp:(PigeonFirebaseApp *)app
+          factorUid:(NSString *)factorUid
+         completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)getEnrolledFactorsApp:(PigeonFirebaseApp *)app
+                   completion:(void (^)(NSArray<PigeonMultiFactorInfo *> *_Nullable,
+                                        FlutterError *_Nullable))completion;
 @end
 
 extern void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
@@ -418,7 +440,7 @@ NSObject<FlutterMessageCodec> *MultiFactoResolverHostApiGetCodec(void);
 @protocol MultiFactoResolverHostApi
 - (void)resolveSignInResolverId:(NSString *)resolverId
                       assertion:(PigeonPhoneMultiFactorAssertion *)assertion
-                     completion:(void (^)(NSDictionary<NSString *, id> *_Nullable,
+                     completion:(void (^)(PigeonUserCredential *_Nullable,
                                           FlutterError *_Nullable))completion;
 @end
 

@@ -422,6 +422,20 @@ class PigeonIdTokenResult {
   final String? signInSecondFactor;
 }
 
+class PigeonUserProfile {
+  const PigeonUserProfile({
+    required this.displayName,
+    required this.photoUrl,
+    required this.displayNameChanged,
+    required this.photoUrlChanged,
+  });
+
+  final String? displayName;
+  final String? photoUrl;
+  final bool displayNameChanged;
+  final bool photoUrlChanged;
+}
+
 @HostApi(dartHostTestHandler: 'TestFirebaseAuthUserHostApi')
 abstract class FirebaseAuthUserHostApi {
   @async
@@ -493,34 +507,51 @@ abstract class FirebaseAuthUserHostApi {
     PigeonFirebaseApp app,
     Map<String, Object> input,
   );
+
+  @async
+  PigeonUserDetails updateProfile(
+    PigeonFirebaseApp app,
+    PigeonUserProfile profile,
+  );
+
+  @async
+  void verifyBeforeUpdateEmail(
+    PigeonFirebaseApp app,
+    String newEmail,
+    PigeonActionCodeSettings? actionCodeSettings,
+  );
 }
 
 @HostApi(dartHostTestHandler: 'TestMultiFactorUserHostApi')
 abstract class MultiFactorUserHostApi {
   @async
   void enrollPhone(
-    String appName,
+    PigeonFirebaseApp app,
     PigeonPhoneMultiFactorAssertion assertion,
     String? displayName,
   );
 
   @async
-  PigeonMultiFactorSession getSession(String appName);
-
-  @async
-  void unenroll(
-    String appName,
-    String? factorUid,
+  PigeonMultiFactorSession getSession(
+    PigeonFirebaseApp app,
   );
 
   @async
-  List<PigeonMultiFactorInfo> getEnrolledFactors(String appName);
+  void unenroll(
+    PigeonFirebaseApp app,
+    String factorUid,
+  );
+
+  @async
+  List<PigeonMultiFactorInfo> getEnrolledFactors(
+    PigeonFirebaseApp app,
+  );
 }
 
 @HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')
 abstract class MultiFactoResolverHostApi {
   @async
-  Map<String, Object> resolveSignIn(
+  PigeonUserCredential resolveSignIn(
     String resolverId,
     PigeonPhoneMultiFactorAssertion assertion,
   );

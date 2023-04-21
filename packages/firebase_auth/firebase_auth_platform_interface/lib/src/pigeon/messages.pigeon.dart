@@ -631,6 +631,42 @@ class PigeonIdTokenResult {
   }
 }
 
+class PigeonUserProfile {
+  PigeonUserProfile({
+    this.displayName,
+    this.photoUrl,
+    required this.displayNameChanged,
+    required this.photoUrlChanged,
+  });
+
+  String? displayName;
+
+  String? photoUrl;
+
+  bool displayNameChanged;
+
+  bool photoUrlChanged;
+
+  Object encode() {
+    return <Object?>[
+      displayName,
+      photoUrl,
+      displayNameChanged,
+      photoUrlChanged,
+    ];
+  }
+
+  static PigeonUserProfile decode(Object result) {
+    result as List<Object?>;
+    return PigeonUserProfile(
+      displayName: result[0] as String?,
+      photoUrl: result[1] as String?,
+      displayNameChanged: result[2]! as bool,
+      photoUrlChanged: result[3]! as bool,
+    );
+  }
+}
+
 class _FirebaseAuthHostApiCodec extends StandardMessageCodec {
   const _FirebaseAuthHostApiCodec();
   @override
@@ -680,8 +716,11 @@ class _FirebaseAuthHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonUserInfo) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonVerifyPhoneNumberRequest) {
+    } else if (value is PigeonUserProfile) {
       buffer.putUint8(143);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonVerifyPhoneNumberRequest) {
+      buffer.putUint8(144);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -722,6 +761,8 @@ class _FirebaseAuthHostApiCodec extends StandardMessageCodec {
       case 142:
         return PigeonUserInfo.decode(readValue(buffer)!);
       case 143:
+        return PigeonUserProfile.decode(readValue(buffer)!);
+      case 144:
         return PigeonVerifyPhoneNumberRequest.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1347,8 +1388,11 @@ class _FirebaseAuthUserHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonUserInfo) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonVerifyPhoneNumberRequest) {
+    } else if (value is PigeonUserProfile) {
       buffer.putUint8(143);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonVerifyPhoneNumberRequest) {
+      buffer.putUint8(144);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -1389,6 +1433,8 @@ class _FirebaseAuthUserHostApiCodec extends StandardMessageCodec {
       case 142:
         return PigeonUserInfo.decode(readValue(buffer)!);
       case 143:
+        return PigeonUserProfile.decode(readValue(buffer)!);
+      case 144:
         return PigeonVerifyPhoneNumberRequest.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1733,20 +1779,78 @@ class FirebaseAuthUserHostApi {
       return (replyList[0] as PigeonUserDetails?)!;
     }
   }
+
+  Future<PigeonUserDetails> updateProfile(
+      PigeonFirebaseApp arg_app, PigeonUserProfile arg_profile) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseAuthUserHostApi.updateProfile', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_profile]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as PigeonUserDetails?)!;
+    }
+  }
+
+  Future<void> verifyBeforeUpdateEmail(
+      PigeonFirebaseApp arg_app,
+      String arg_newEmail,
+      PigeonActionCodeSettings? arg_actionCodeSettings) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+            .send(<Object?>[arg_app, arg_newEmail, arg_actionCodeSettings])
+        as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
 }
 
 class _MultiFactorUserHostApiCodec extends StandardMessageCodec {
   const _MultiFactorUserHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonMultiFactorInfo) {
+    if (value is PigeonFirebaseApp) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorSession) {
+    } else if (value is PigeonMultiFactorInfo) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonPhoneMultiFactorAssertion) {
+    } else if (value is PigeonMultiFactorSession) {
       buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonPhoneMultiFactorAssertion) {
+      buffer.putUint8(131);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -1757,10 +1861,12 @@ class _MultiFactorUserHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
-        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
+        return PigeonFirebaseApp.decode(readValue(buffer)!);
       case 129:
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
       case 130:
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+      case 131:
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1779,15 +1885,15 @@ class MultiFactorUserHostApi {
   static const MessageCodec<Object?> codec = _MultiFactorUserHostApiCodec();
 
   Future<void> enrollPhone(
-      String arg_appName,
+      PigeonFirebaseApp arg_app,
       PigeonPhoneMultiFactorAssertion arg_assertion,
       String? arg_displayName) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone', codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList = await channel
-            .send(<Object?>[arg_appName, arg_assertion, arg_displayName])
-        as List<Object?>?;
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_assertion, arg_displayName])
+            as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1804,12 +1910,12 @@ class MultiFactorUserHostApi {
     }
   }
 
-  Future<PigeonMultiFactorSession> getSession(String arg_appName) async {
+  Future<PigeonMultiFactorSession> getSession(PigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.MultiFactorUserHostApi.getSession', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_appName]) as List<Object?>?;
+        await channel.send(<Object?>[arg_app]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1831,12 +1937,12 @@ class MultiFactorUserHostApi {
     }
   }
 
-  Future<void> unenroll(String arg_appName, String? arg_factorUid) async {
+  Future<void> unenroll(PigeonFirebaseApp arg_app, String arg_factorUid) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.MultiFactorUserHostApi.unenroll', codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList = await channel
-        .send(<Object?>[arg_appName, arg_factorUid]) as List<Object?>?;
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_factorUid]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1854,12 +1960,12 @@ class MultiFactorUserHostApi {
   }
 
   Future<List<PigeonMultiFactorInfo?>> getEnrolledFactors(
-      String arg_appName) async {
+      PigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_appName]) as List<Object?>?;
+        await channel.send(<Object?>[arg_app]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1886,53 +1992,26 @@ class _MultiFactoResolverHostApiCodec extends StandardMessageCodec {
   const _MultiFactoResolverHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonActionCodeInfo) {
+    if (value is PigeonAdditionalUserInfo) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonActionCodeInfoData) {
+    } else if (value is PigeonAuthCredential) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonActionCodeSettings) {
+    } else if (value is PigeonPhoneMultiFactorAssertion) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonAdditionalUserInfo) {
+    } else if (value is PigeonUserCredential) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonAuthCredential) {
+    } else if (value is PigeonUserDetails) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseApp) {
+    } else if (value is PigeonUserInfo) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseAuthSettings) {
-      buffer.putUint8(134);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonIdTokenResult) {
-      buffer.putUint8(135);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorInfo) {
-      buffer.putUint8(136);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorSession) {
-      buffer.putUint8(137);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonPhoneMultiFactorAssertion) {
-      buffer.putUint8(138);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonSignInProvider) {
-      buffer.putUint8(139);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonUserCredential) {
-      buffer.putUint8(140);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonUserDetails) {
-      buffer.putUint8(141);
-      writeValue(buffer, value.encode());
     } else if (value is PigeonUserInfo) {
-      buffer.putUint8(142);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonVerifyPhoneNumberRequest) {
-      buffer.putUint8(143);
+      buffer.putUint8(134);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -1943,37 +2022,19 @@ class _MultiFactoResolverHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
-        return PigeonActionCodeInfo.decode(readValue(buffer)!);
-      case 129:
-        return PigeonActionCodeInfoData.decode(readValue(buffer)!);
-      case 130:
-        return PigeonActionCodeSettings.decode(readValue(buffer)!);
-      case 131:
         return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
-      case 132:
+      case 129:
         return PigeonAuthCredential.decode(readValue(buffer)!);
-      case 133:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
-      case 134:
-        return PigeonFirebaseAuthSettings.decode(readValue(buffer)!);
-      case 135:
-        return PigeonIdTokenResult.decode(readValue(buffer)!);
-      case 136:
-        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
-      case 137:
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
-      case 138:
+      case 130:
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
-      case 139:
-        return PigeonSignInProvider.decode(readValue(buffer)!);
-      case 140:
+      case 131:
         return PigeonUserCredential.decode(readValue(buffer)!);
-      case 141:
+      case 132:
         return PigeonUserDetails.decode(readValue(buffer)!);
-      case 142:
+      case 133:
         return PigeonUserInfo.decode(readValue(buffer)!);
-      case 143:
-        return PigeonVerifyPhoneNumberRequest.decode(readValue(buffer)!);
+      case 134:
+        return PigeonUserInfo.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -1990,7 +2051,7 @@ class MultiFactoResolverHostApi {
 
   static const MessageCodec<Object?> codec = _MultiFactoResolverHostApiCodec();
 
-  Future<Map<String?, Object?>> resolveSignIn(String arg_resolverId,
+  Future<PigeonUserCredential> resolveSignIn(String arg_resolverId,
       PigeonPhoneMultiFactorAssertion arg_assertion) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn', codec,
@@ -2014,7 +2075,7 @@ class MultiFactoResolverHostApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (replyList[0] as Map<Object?, Object?>?)!.cast<String?, Object?>();
+      return (replyList[0] as PigeonUserCredential?)!;
     }
   }
 }

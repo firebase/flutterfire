@@ -15,10 +15,17 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
 
   final _api = MultiFactorUserHostApi();
 
+  PigeonFirebaseApp get pigeonDefault {
+    return PigeonFirebaseApp(
+      appName: auth.app.name,
+      tenantId: auth.tenantId,
+    );
+  }
+
   @override
   Future<MultiFactorSession> getSession() async {
     try {
-      final pigeonObject = await _api.getSession(auth.app.name);
+      final pigeonObject = await _api.getSession(pigeonDefault);
       return MultiFactorSession(pigeonObject.id);
     } catch (e, stack) {
       convertPlatformException(e, stack, fromPigeon: true);
@@ -46,7 +53,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
 
       try {
         await _api.enrollPhone(
-          auth.app.name,
+          pigeonDefault,
           PigeonPhoneMultiFactorAssertion(
             verificationId: verificationId,
             verificationCode: verificationCode,
@@ -77,7 +84,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
 
     try {
       await _api.unenroll(
-        auth.app.name,
+        pigeonDefault,
         uidToUnenroll,
       );
     } catch (e, stack) {
@@ -88,7 +95,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
   @override
   Future<List<MultiFactorInfo>> getEnrolledFactors() async {
     try {
-      final data = await _api.getEnrolledFactors(auth.app.name);
+      final data = await _api.getEnrolledFactors(pigeonDefault);
       return multiFactorInfoPigeonToObject(data);
     } catch (e, stack) {
       convertPlatformException(e, stack, fromPigeon: true);
@@ -130,7 +137,7 @@ class MethodChannelMultiFactorResolver extends MultiFactorResolverPlatform {
       }
 
       try {
-        final data = await _api.resolveSignIn(
+        final result = await _api.resolveSignIn(
           _resolverId,
           PigeonPhoneMultiFactorAssertion(
             verificationId: verificationId,
@@ -139,7 +146,7 @@ class MethodChannelMultiFactorResolver extends MultiFactorResolverPlatform {
         );
 
         MethodChannelUserCredential userCredential =
-            MethodChannelUserCredential(_auth, data.cast<String, dynamic>());
+            MethodChannelUserCredential(_auth, result);
 
         return userCredential;
       } catch (e, stack) {

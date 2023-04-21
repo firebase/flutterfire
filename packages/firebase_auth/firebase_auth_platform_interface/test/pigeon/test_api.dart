@@ -59,8 +59,11 @@ class _TestFirebaseAuthHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonUserInfo) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonVerifyPhoneNumberRequest) {
+    } else if (value is PigeonUserProfile) {
       buffer.putUint8(143);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonVerifyPhoneNumberRequest) {
+      buffer.putUint8(144);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -101,6 +104,8 @@ class _TestFirebaseAuthHostApiCodec extends StandardMessageCodec {
       case 142:
         return PigeonUserInfo.decode(readValue(buffer)!);
       case 143:
+        return PigeonUserProfile.decode(readValue(buffer)!);
+      case 144:
         return PigeonVerifyPhoneNumberRequest.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -780,8 +785,11 @@ class _TestFirebaseAuthUserHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonUserInfo) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonVerifyPhoneNumberRequest) {
+    } else if (value is PigeonUserProfile) {
       buffer.putUint8(143);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonVerifyPhoneNumberRequest) {
+      buffer.putUint8(144);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -822,6 +830,8 @@ class _TestFirebaseAuthUserHostApiCodec extends StandardMessageCodec {
       case 142:
         return PigeonUserInfo.decode(readValue(buffer)!);
       case 143:
+        return PigeonUserProfile.decode(readValue(buffer)!);
+      case 144:
         return PigeonVerifyPhoneNumberRequest.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -866,6 +876,12 @@ abstract class TestFirebaseAuthUserHostApi {
 
   Future<PigeonUserDetails> updatePhoneNumber(
       PigeonFirebaseApp app, Map<String?, Object?> input);
+
+  Future<PigeonUserDetails> updateProfile(
+      PigeonFirebaseApp app, PigeonUserProfile profile);
+
+  Future<void> verifyBeforeUpdateEmail(PigeonFirebaseApp app, String newEmail,
+      PigeonActionCodeSettings? actionCodeSettings);
 
   static void setup(TestFirebaseAuthUserHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -1180,6 +1196,62 @@ abstract class TestFirebaseAuthUserHostApi {
         });
       }
     }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthUserHostApi.updateProfile', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.updateProfile was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.updateProfile was null, expected non-null PigeonFirebaseApp.');
+          final PigeonUserProfile? arg_profile =
+              (args[1] as PigeonUserProfile?);
+          assert(arg_profile != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.updateProfile was null, expected non-null PigeonUserProfile.');
+          final PigeonUserDetails output =
+              await api.updateProfile(arg_app!, arg_profile!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_newEmail = (args[1] as String?);
+          assert(arg_newEmail != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail was null, expected non-null String.');
+          final PigeonActionCodeSettings? arg_actionCodeSettings =
+              (args[2] as PigeonActionCodeSettings?);
+          await api.verifyBeforeUpdateEmail(
+              arg_app!, arg_newEmail!, arg_actionCodeSettings);
+          return <Object?>[];
+        });
+      }
+    }
   }
 }
 
@@ -1187,14 +1259,17 @@ class _TestMultiFactorUserHostApiCodec extends StandardMessageCodec {
   const _TestMultiFactorUserHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonMultiFactorInfo) {
+    if (value is PigeonFirebaseApp) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorSession) {
+    } else if (value is PigeonMultiFactorInfo) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonPhoneMultiFactorAssertion) {
+    } else if (value is PigeonMultiFactorSession) {
       buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonPhoneMultiFactorAssertion) {
+      buffer.putUint8(131);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -1205,10 +1280,12 @@ class _TestMultiFactorUserHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
-        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
+        return PigeonFirebaseApp.decode(readValue(buffer)!);
       case 129:
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
       case 130:
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+      case 131:
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1221,14 +1298,15 @@ abstract class TestMultiFactorUserHostApi {
       TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> codec = _TestMultiFactorUserHostApiCodec();
 
-  Future<void> enrollPhone(String appName,
+  Future<void> enrollPhone(PigeonFirebaseApp app,
       PigeonPhoneMultiFactorAssertion assertion, String? displayName);
 
-  Future<PigeonMultiFactorSession> getSession(String appName);
+  Future<PigeonMultiFactorSession> getSession(PigeonFirebaseApp app);
 
-  Future<void> unenroll(String appName, String? factorUid);
+  Future<void> unenroll(PigeonFirebaseApp app, String factorUid);
 
-  Future<List<PigeonMultiFactorInfo?>> getEnrolledFactors(String appName);
+  Future<List<PigeonMultiFactorInfo?>> getEnrolledFactors(
+      PigeonFirebaseApp app);
 
   static void setup(TestMultiFactorUserHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -1246,15 +1324,15 @@ abstract class TestMultiFactorUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_appName = (args[0] as String?);
-          assert(arg_appName != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone was null, expected non-null String.');
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone was null, expected non-null PigeonFirebaseApp.');
           final PigeonPhoneMultiFactorAssertion? arg_assertion =
               (args[1] as PigeonPhoneMultiFactorAssertion?);
           assert(arg_assertion != null,
               'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone was null, expected non-null PigeonPhoneMultiFactorAssertion.');
           final String? arg_displayName = (args[2] as String?);
-          await api.enrollPhone(arg_appName!, arg_assertion!, arg_displayName);
+          await api.enrollPhone(arg_app!, arg_assertion!, arg_displayName);
           return <Object?>[];
         });
       }
@@ -1273,11 +1351,11 @@ abstract class TestMultiFactorUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getSession was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_appName = (args[0] as String?);
-          assert(arg_appName != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getSession was null, expected non-null String.');
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getSession was null, expected non-null PigeonFirebaseApp.');
           final PigeonMultiFactorSession output =
-              await api.getSession(arg_appName!);
+              await api.getSession(arg_app!);
           return <Object?>[output];
         });
       }
@@ -1296,11 +1374,13 @@ abstract class TestMultiFactorUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.unenroll was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_appName = (args[0] as String?);
-          assert(arg_appName != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.unenroll was null, expected non-null String.');
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.unenroll was null, expected non-null PigeonFirebaseApp.');
           final String? arg_factorUid = (args[1] as String?);
-          await api.unenroll(arg_appName!, arg_factorUid);
+          assert(arg_factorUid != null,
+              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.unenroll was null, expected non-null String.');
+          await api.unenroll(arg_app!, arg_factorUid!);
           return <Object?>[];
         });
       }
@@ -1319,11 +1399,11 @@ abstract class TestMultiFactorUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final String? arg_appName = (args[0] as String?);
-          assert(arg_appName != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors was null, expected non-null String.');
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors was null, expected non-null PigeonFirebaseApp.');
           final List<PigeonMultiFactorInfo?> output =
-              await api.getEnrolledFactors(arg_appName!);
+              await api.getEnrolledFactors(arg_app!);
           return <Object?>[output];
         });
       }
@@ -1335,53 +1415,26 @@ class _TestMultiFactoResolverHostApiCodec extends StandardMessageCodec {
   const _TestMultiFactoResolverHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonActionCodeInfo) {
+    if (value is PigeonAdditionalUserInfo) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonActionCodeInfoData) {
+    } else if (value is PigeonAuthCredential) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonActionCodeSettings) {
+    } else if (value is PigeonPhoneMultiFactorAssertion) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonAdditionalUserInfo) {
+    } else if (value is PigeonUserCredential) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonAuthCredential) {
+    } else if (value is PigeonUserDetails) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseApp) {
+    } else if (value is PigeonUserInfo) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseAuthSettings) {
-      buffer.putUint8(134);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonIdTokenResult) {
-      buffer.putUint8(135);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorInfo) {
-      buffer.putUint8(136);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorSession) {
-      buffer.putUint8(137);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonPhoneMultiFactorAssertion) {
-      buffer.putUint8(138);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonSignInProvider) {
-      buffer.putUint8(139);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonUserCredential) {
-      buffer.putUint8(140);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonUserDetails) {
-      buffer.putUint8(141);
-      writeValue(buffer, value.encode());
     } else if (value is PigeonUserInfo) {
-      buffer.putUint8(142);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonVerifyPhoneNumberRequest) {
-      buffer.putUint8(143);
+      buffer.putUint8(134);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -1392,37 +1445,19 @@ class _TestMultiFactoResolverHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
-        return PigeonActionCodeInfo.decode(readValue(buffer)!);
-      case 129:
-        return PigeonActionCodeInfoData.decode(readValue(buffer)!);
-      case 130:
-        return PigeonActionCodeSettings.decode(readValue(buffer)!);
-      case 131:
         return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
-      case 132:
+      case 129:
         return PigeonAuthCredential.decode(readValue(buffer)!);
-      case 133:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
-      case 134:
-        return PigeonFirebaseAuthSettings.decode(readValue(buffer)!);
-      case 135:
-        return PigeonIdTokenResult.decode(readValue(buffer)!);
-      case 136:
-        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
-      case 137:
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
-      case 138:
+      case 130:
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
-      case 139:
-        return PigeonSignInProvider.decode(readValue(buffer)!);
-      case 140:
+      case 131:
         return PigeonUserCredential.decode(readValue(buffer)!);
-      case 141:
+      case 132:
         return PigeonUserDetails.decode(readValue(buffer)!);
-      case 142:
+      case 133:
         return PigeonUserInfo.decode(readValue(buffer)!);
-      case 143:
-        return PigeonVerifyPhoneNumberRequest.decode(readValue(buffer)!);
+      case 134:
+        return PigeonUserInfo.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -1435,7 +1470,7 @@ abstract class TestMultiFactoResolverHostApi {
   static const MessageCodec<Object?> codec =
       _TestMultiFactoResolverHostApiCodec();
 
-  Future<Map<String?, Object?>> resolveSignIn(
+  Future<PigeonUserCredential> resolveSignIn(
       String resolverId, PigeonPhoneMultiFactorAssertion assertion);
 
   static void setup(TestMultiFactoResolverHostApi? api,
@@ -1461,7 +1496,7 @@ abstract class TestMultiFactoResolverHostApi {
               (args[1] as PigeonPhoneMultiFactorAssertion?);
           assert(arg_assertion != null,
               'Argument for dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn was null, expected non-null PigeonPhoneMultiFactorAssertion.');
-          final Map<String?, Object?> output =
+          final PigeonUserCredential output =
               await api.resolveSignIn(arg_resolverId!, arg_assertion!);
           return <Object?>[output];
         });

@@ -1,5 +1,7 @@
 package io.flutter.plugins.firebase.auth;
 
+import android.app.Activity;
+import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Tasks;
@@ -12,13 +14,20 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class FlutterFirebaseAuthUser
     implements GeneratedAndroidFirebaseAuth.FirebaseAuthUserHostApi {
 
-  private FirebaseUser getCurrentUserFromPigeon(
+  private Activity activity;
+
+  public void setActivity(Activity activity) {
+    this.activity = activity;
+  }
+
+  public static FirebaseUser getCurrentUserFromPigeon(
       @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp pigeonApp) {
     FirebaseApp app = FirebaseApp.getInstance(pigeonApp.getAppName());
     FirebaseAuth auth = FirebaseAuth.getInstance(app);
@@ -132,9 +141,7 @@ public class FlutterFirebaseAuthUser
       }
 
       AuthResult authResult =
-          Tasks.await(
-              firebaseUser.startActivityForLinkWithProvider(
-                  /* activity= */ FlutterFirebaseAuthPlugin.activity, provider.build()));
+          Tasks.await(firebaseUser.startActivityForLinkWithProvider(activity, provider.build()));
       result.success(PigeonParser.parseAuthResult(authResult));
     } catch (Exception e) {
       if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
@@ -197,8 +204,7 @@ public class FlutterFirebaseAuthUser
 
       AuthResult authResult =
           Tasks.await(
-              firebaseUser.startActivityForReauthenticateWithProvider(
-                  /* activity= */ FlutterFirebaseAuthPlugin.activity, provider.build()));
+              firebaseUser.startActivityForReauthenticateWithProvider(activity, provider.build()));
       result.success(PigeonParser.parseAuthResult(authResult));
     } catch (Exception e) {
       if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
@@ -334,7 +340,12 @@ public class FlutterFirebaseAuthUser
   }
 
   @Override
-  public void updatePhoneNumber(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull Map<String, Object> input, @NonNull GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails> result) {
+  public void updatePhoneNumber(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull Map<String, Object> input,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails>
+              result) {
     try {
       FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
@@ -344,7 +355,7 @@ public class FlutterFirebaseAuthUser
       }
 
       PhoneAuthCredential phoneAuthCredential =
-        (PhoneAuthCredential) PigeonParser.getCredential(input);
+          (PhoneAuthCredential) PigeonParser.getCredential(input);
 
       if (phoneAuthCredential == null) {
         result.error(FlutterFirebaseAuthPluginException.invalidCredential());
@@ -357,7 +368,71 @@ public class FlutterFirebaseAuthUser
     } catch (Exception e) {
       result.error(e);
     }
-
   }
 
+  @Override
+  public void updateProfile(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonUserProfile profile,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails>
+              result) {
+    try {
+      FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
+
+      if (firebaseUser == null) {
+        result.error(FlutterFirebaseAuthPluginException.noUser());
+        return;
+      }
+
+      UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
+
+      if (profile.getDisplayNameChanged()) {
+        builder.setDisplayName(profile.getDisplayName());
+      }
+
+      if (profile.getPhotoUrlChanged()) {
+        if (profile.getPhotoUrl() != null) {
+          builder.setPhotoUri(Uri.parse(profile.getPhotoUrl()));
+        } else {
+          builder.setPhotoUri(null);
+        }
+      }
+
+      Tasks.await(firebaseUser.updateProfile(builder.build()));
+      Tasks.await(firebaseUser.reload());
+      result.success(PigeonParser.parseFirebaseUser(firebaseUser));
+    } catch (Exception e) {
+      result.error(e);
+    }
+  }
+
+  @Override
+  public void verifyBeforeUpdateEmail(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull String newEmail,
+      @Nullable GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+    try {
+      FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
+
+      if (firebaseUser == null) {
+        result.error(FlutterFirebaseAuthPluginException.noUser());
+        return;
+      }
+
+      if (actionCodeSettings == null) {
+        Tasks.await(firebaseUser.verifyBeforeUpdateEmail(newEmail));
+        result.success(null);
+        return;
+      }
+
+      Tasks.await(
+          firebaseUser.verifyBeforeUpdateEmail(
+              newEmail, PigeonParser.getActionCodeSettings(actionCodeSettings)));
+      result.success(null);
+    } catch (Exception e) {
+      result.error(e);
+    }
+  }
 }

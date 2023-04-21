@@ -7,7 +7,6 @@ package io.flutter.plugins.firebase.auth;
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
 import android.app.Activity;
-import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
@@ -29,17 +28,13 @@ import com.google.firebase.auth.MultiFactorSession;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneMultiFactorInfo;
 import com.google.firebase.auth.SignInMethodQueryResult;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
-import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +45,6 @@ import java.util.UUID;
 /** Flutter plugin for Firebase Auth. */
 public class FlutterFirebaseAuthPlugin
     implements FlutterFirebasePlugin,
-        MethodCallHandler,
         FlutterPlugin,
         ActivityAware,
         GeneratedAndroidFirebaseAuth.FirebaseAuthHostApi {
@@ -63,7 +57,7 @@ public class FlutterFirebaseAuthPlugin
   @Nullable private BinaryMessenger messenger;
 
   private MethodChannel channel;
-  public static Activity activity;
+  private Activity activity;
 
   private final Map<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
 
@@ -73,7 +67,6 @@ public class FlutterFirebaseAuthPlugin
   private void initInstance(BinaryMessenger messenger) {
     registerPlugin(METHOD_CHANNEL_NAME, this);
     channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
-    channel.setMethodCallHandler(this);
     GeneratedAndroidFirebaseAuth.FirebaseAuthHostApi.setup(messenger, this);
     GeneratedAndroidFirebaseAuth.FirebaseAuthUserHostApi.setup(messenger, firebaseAuthUser);
     GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(messenger, firebaseMultiFactor);
@@ -103,11 +96,13 @@ public class FlutterFirebaseAuthPlugin
   @Override
   public void onAttachedToActivity(ActivityPluginBinding activityPluginBinding) {
     activity = activityPluginBinding.getActivity();
+    firebaseAuthUser.setActivity(activity);
   }
 
   @Override
   public void onDetachedFromActivityForConfigChanges() {
     activity = null;
+    firebaseAuthUser.setActivity(null);
   }
 
   @Override
@@ -582,115 +577,6 @@ public class FlutterFirebaseAuthPlugin
     }
   }
 
-  private Task<Map<String, Object>> updateProfile(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseUser firebaseUser = getCurrentUser(arguments);
-
-            if (firebaseUser == null) {
-              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
-              return;
-            }
-
-            @SuppressWarnings("unchecked")
-            Map<String, String> profile =
-                (Map<String, String>) Objects.requireNonNull(arguments.get(Constants.PROFILE));
-            UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
-
-            if (profile.containsKey(Constants.DISPLAY_NAME)) {
-              String displayName = profile.get(Constants.DISPLAY_NAME);
-              builder.setDisplayName(displayName);
-            }
-
-            if (profile.containsKey(Constants.PHOTO_URL)) {
-              String photoURL = profile.get(Constants.PHOTO_URL);
-              if (photoURL != null) {
-                builder.setPhotoUri(Uri.parse(photoURL));
-              } else {
-                builder.setPhotoUri(null);
-              }
-            }
-
-            Tasks.await(firebaseUser.updateProfile(builder.build()));
-            Tasks.await(firebaseUser.reload());
-            taskCompletionSource.setResult(parseFirebaseUser(firebaseUser));
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  private Task<Void> verifyBeforeUpdateEmail(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseUser firebaseUser = getCurrentUser(arguments);
-
-            if (firebaseUser == null) {
-              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
-            }
-
-            String newEmail = (String) Objects.requireNonNull(arguments.get(Constants.NEW_EMAIL));
-            Object rawActionCodeSettings = arguments.get(Constants.ACTION_CODE_SETTINGS);
-
-            if (rawActionCodeSettings == null) {
-              Tasks.await(firebaseUser.verifyBeforeUpdateEmail(newEmail));
-              taskCompletionSource.setResult(null);
-              return;
-            }
-
-            @SuppressWarnings("unchecked")
-            Map<String, Object> actionCodeSettings = (Map<String, Object>) rawActionCodeSettings;
-
-            Tasks.await(
-                firebaseUser.verifyBeforeUpdateEmail(
-                    newEmail, getActionCodeSettings(actionCodeSettings)));
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  @Override
-  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    final Task<?> methodCallTask;
-
-    switch (call.method) {
-      case "User#updateProfile":
-        methodCallTask = updateProfile(call.arguments());
-        break;
-      case "User#verifyBeforeUpdateEmail":
-        methodCallTask = verifyBeforeUpdateEmail(call.arguments());
-        break;
-      default:
-        result.notImplemented();
-        return;
-    }
-
-    methodCallTask.addOnCompleteListener(
-        task -> {
-          if (task.isSuccessful()) {
-            result.success(task.getResult());
-          } else {
-            Exception exception = task.getException();
-            result.error(
-                "firebase_auth",
-                exception != null ? exception.getMessage() : null,
-                getExceptionDetails(exception));
-          }
-        });
-  }
-
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
@@ -703,15 +589,15 @@ public class FlutterFirebaseAuthPlugin
             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
             String languageCode = firebaseAuth.getLanguageCode();
 
-            Map<String, Object> user =
-                firebaseUser == null ? null : parseFirebaseUser(firebaseUser);
+            GeneratedAndroidFirebaseAuth.PigeonUserDetails user =
+                firebaseUser == null ? null : PigeonParser.parseFirebaseUser(firebaseUser);
 
             if (languageCode != null) {
               constants.put("APP_LANGUAGE_CODE", languageCode);
             }
 
             if (user != null) {
-              constants.put("APP_CURRENT_USER", user);
+              constants.put("APP_CURRENT_USER", user.toList());
             }
 
             taskCompletionSource.setResult(constants);

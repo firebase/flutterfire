@@ -56,8 +56,11 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     return FirebaseAuthPlatform.instance
         .delegateFor(app: app, persistence: persistence)
         .setInitialValues(
-            languageCode: pluginConstants['APP_LANGUAGE_CODE'],
-            currentUser: pluginConstants['APP_CURRENT_USER']);
+          languageCode: pluginConstants['APP_LANGUAGE_CODE'],
+          currentUser: PigeonUserDetails.decode(
+            pluginConstants['APP_CURRENT_USER'],
+          ),
+        );
   }
 
   /// The current default [FirebaseAuthPlatform] instance.
