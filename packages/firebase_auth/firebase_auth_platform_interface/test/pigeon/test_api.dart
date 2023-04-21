@@ -857,6 +857,8 @@ abstract class TestFirebaseAuthUserHostApi {
   Future<void> sendEmailVerification(
       PigeonFirebaseApp app, PigeonActionCodeSettings? actionCodeSettings);
 
+  Future<PigeonUserCredential> unlink(PigeonFirebaseApp app, String providerId);
+
   static void setup(TestFirebaseAuthUserHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
     {
@@ -1062,6 +1064,32 @@ abstract class TestFirebaseAuthUserHostApi {
               (args[1] as PigeonActionCodeSettings?);
           await api.sendEmailVerification(arg_app!, arg_actionCodeSettings);
           return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthUserHostApi.unlink', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.unlink was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.unlink was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_providerId = (args[1] as String?);
+          assert(arg_providerId != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthUserHostApi.unlink was null, expected non-null String.');
+          final PigeonUserCredential output =
+              await api.unlink(arg_app!, arg_providerId!);
+          return <Object?>[output];
         });
       }
     }

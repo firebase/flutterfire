@@ -2,7 +2,6 @@ package io.flutter.plugins.firebase.auth;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
@@ -13,6 +12,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.OAuthProvider;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class FlutterFirebaseAuthUser
     implements GeneratedAndroidFirebaseAuth.FirebaseAuthUserHostApi {
@@ -231,7 +232,10 @@ public class FlutterFirebaseAuthUser
   }
 
   @Override
-  public void sendEmailVerification(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @Nullable GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings, @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+  public void sendEmailVerification(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @Nullable GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
     try {
       FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
@@ -247,8 +251,33 @@ public class FlutterFirebaseAuthUser
       }
 
       Tasks.await(
-        firebaseUser.sendEmailVerification(PigeonParser.getActionCodeSettings(actionCodeSettings)));
+          firebaseUser.sendEmailVerification(
+              PigeonParser.getActionCodeSettings(actionCodeSettings)));
       result.success(null);
+    } catch (Exception e) {
+      result.error(e);
+    }
+  }
+
+  @Override
+  public void unlink(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String providerId, @NonNull GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential> result) {
+    try {
+      FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
+
+      if (firebaseUser == null) {
+        result.error(FlutterFirebaseAuthPluginException.noUser());
+        return;
+      }
+
+
+      AuthResult authResult = Tasks.await(firebaseUser.unlink(providerId));
+      result.success(PigeonParser.parseAuthResult(authResult));
+
+    } catch (ExecutionException e) {
+      // If the provider ID was not found an ExecutionException is thrown.
+      // On web, this is automatically handled, so we catch the specific exception here
+      // to ensure consistency.
+      result.error(FlutterFirebaseAuthPluginException.noSuchProvider());
     } catch (Exception e) {
       result.error(e);
     }

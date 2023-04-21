@@ -217,18 +217,11 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<UserPlatform> unlink(String providerId) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
-              'User#unlink',
-              _withChannelDefaults(
-                {
-                  'providerId': providerId,
-                },
-              )))!;
+      final result = await _api.unlink(pigeonDefault, providerId);
 
       // Native returns a UserCredential, whereas Dart should expect a User
       MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(auth, data);
+          MethodChannelUserCredential(auth, result);
       MethodChannelUser? user = userCredential.user as MethodChannelUser?;
 
       auth.currentUser = user;

@@ -585,38 +585,6 @@ public class FlutterFirebaseAuthPlugin
   }
 
 
-  private Task<Map<String, Object>> unlinkUserProvider(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseUser firebaseUser = getCurrentUser(arguments);
-
-            if (firebaseUser == null) {
-              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
-              return;
-            }
-
-            String providerId =
-                (String) Objects.requireNonNull(arguments.get(Constants.PROVIDER_ID));
-
-            AuthResult result = Tasks.await(firebaseUser.unlink(providerId));
-            taskCompletionSource.setResult(parseAuthResult(result));
-
-          } catch (ExecutionException e) {
-            // If the provider ID was not found an ExecutionException is thrown.
-            // On web, this is automatically handled, so we catch the specific exception here
-            // to ensure consistency.
-            taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noSuchProvider());
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
   private Task<Map<String, Object>> updateEmail(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -785,9 +753,6 @@ public class FlutterFirebaseAuthPlugin
     final Task<?> methodCallTask;
 
     switch (call.method) {
-      case "User#unlink":
-        methodCallTask = unlinkUserProvider(call.arguments());
-        break;
       case "User#updateEmail":
         methodCallTask = updateEmail(call.arguments());
         break;

@@ -3026,6 +3026,11 @@ public class GeneratedAndroidFirebaseAuth {
         @Nullable PigeonActionCodeSettings actionCodeSettings,
         @NonNull Result<Void> result);
 
+    void unlink(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String providerId,
+        @NonNull Result<PigeonUserCredential> result);
+
     /** The codec used by FirebaseAuthUserHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return FirebaseAuthUserHostApiCodec.INSTANCE;
@@ -3282,6 +3287,36 @@ public class GeneratedAndroidFirebaseAuth {
                     };
 
                 api.sendEmailVerification(appArg, actionCodeSettingsArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger, "dev.flutter.pigeon.FirebaseAuthUserHostApi.unlink", getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                String providerIdArg = (String) args.get(1);
+                Result<PigeonUserCredential> resultCallback =
+                    new Result<PigeonUserCredential>() {
+                      public void success(PigeonUserCredential result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.unlink(appArg, providerIdArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

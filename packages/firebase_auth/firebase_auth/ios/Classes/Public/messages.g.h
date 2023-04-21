@@ -371,6 +371,9 @@ NSObject<FlutterMessageCodec> *FirebaseAuthUserHostApiGetCodec(void);
 - (void)sendEmailVerificationApp:(PigeonFirebaseApp *)app
               actionCodeSettings:(nullable PigeonActionCodeSettings *)actionCodeSettings
                       completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)unlinkApp:(PigeonFirebaseApp *)app
+       providerId:(NSString *)providerId
+       completion:(void (^)(PigeonUserCredential *_Nullable, FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseAuthUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
