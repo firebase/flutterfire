@@ -156,10 +156,10 @@ public class PigeonParser {
 
   @SuppressWarnings("ConstantConditions")
   static AuthCredential getCredential(Map<String, Object> arguments)
-    throws FlutterFirebaseAuthPluginException {
+      throws FlutterFirebaseAuthPluginException {
     @SuppressWarnings("unchecked")
     Map<String, Object> credentialMap =
-      (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.CREDENTIAL));
+        (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.CREDENTIAL));
 
     // If the credential map contains a token, it means a native one has been stored
     if (credentialMap.get(Constants.TOKEN) != null) {
@@ -174,7 +174,7 @@ public class PigeonParser {
     }
 
     String signInMethod =
-      (String) Objects.requireNonNull(credentialMap.get(Constants.SIGN_IN_METHOD));
+        (String) Objects.requireNonNull(credentialMap.get(Constants.SIGN_IN_METHOD));
     String secret = (String) credentialMap.get(Constants.SECRET);
     String idToken = (String) credentialMap.get(Constants.ID_TOKEN);
     String accessToken = (String) credentialMap.get(Constants.ACCESS_TOKEN);
@@ -183,45 +183,44 @@ public class PigeonParser {
     switch (signInMethod) {
       case Constants.SIGN_IN_METHOD_PASSWORD:
         return EmailAuthProvider.getCredential(
-          (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL)),
-          Objects.requireNonNull(secret));
+            (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL)),
+            Objects.requireNonNull(secret));
       case Constants.SIGN_IN_METHOD_EMAIL_LINK:
         return EmailAuthProvider.getCredentialWithLink(
-          (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL)),
-          (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL_LINK)));
+            (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL)),
+            (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL_LINK)));
       case Constants.SIGN_IN_METHOD_FACEBOOK:
         return FacebookAuthProvider.getCredential(Objects.requireNonNull(accessToken));
       case Constants.SIGN_IN_METHOD_GOOGLE:
         return GoogleAuthProvider.getCredential(idToken, accessToken);
       case Constants.SIGN_IN_METHOD_TWITTER:
         return TwitterAuthProvider.getCredential(
-          Objects.requireNonNull(accessToken), Objects.requireNonNull(secret));
+            Objects.requireNonNull(accessToken), Objects.requireNonNull(secret));
       case Constants.SIGN_IN_METHOD_GITHUB:
         return GithubAuthProvider.getCredential(Objects.requireNonNull(accessToken));
       case Constants.SIGN_IN_METHOD_PHONE:
-      {
-        String verificationId =
-          (String) Objects.requireNonNull(credentialMap.get(Constants.VERIFICATION_ID));
-        String smsCode = (String) Objects.requireNonNull(credentialMap.get(Constants.SMS_CODE));
-        return PhoneAuthProvider.getCredential(verificationId, smsCode);
-      }
-      case Constants.SIGN_IN_METHOD_OAUTH:
-      {
-        String providerId =
-          (String) Objects.requireNonNull(credentialMap.get(Constants.PROVIDER_ID));
-        OAuthProvider.CredentialBuilder builder = OAuthProvider.newCredentialBuilder(providerId);
-        builder.setAccessToken(Objects.requireNonNull(accessToken));
-        if (rawNonce == null) {
-          builder.setIdToken(Objects.requireNonNull(idToken));
-        } else {
-          builder.setIdTokenWithRawNonce(Objects.requireNonNull(idToken), rawNonce);
+        {
+          String verificationId =
+              (String) Objects.requireNonNull(credentialMap.get(Constants.VERIFICATION_ID));
+          String smsCode = (String) Objects.requireNonNull(credentialMap.get(Constants.SMS_CODE));
+          return PhoneAuthProvider.getCredential(verificationId, smsCode);
         }
+      case Constants.SIGN_IN_METHOD_OAUTH:
+        {
+          String providerId =
+              (String) Objects.requireNonNull(credentialMap.get(Constants.PROVIDER_ID));
+          OAuthProvider.CredentialBuilder builder = OAuthProvider.newCredentialBuilder(providerId);
+          builder.setAccessToken(Objects.requireNonNull(accessToken));
+          if (rawNonce == null) {
+            builder.setIdToken(Objects.requireNonNull(idToken));
+          } else {
+            builder.setIdTokenWithRawNonce(Objects.requireNonNull(idToken), rawNonce);
+          }
 
-        return builder.build();
-      }
+          return builder.build();
+        }
       default:
         return null;
     }
   }
-
 }

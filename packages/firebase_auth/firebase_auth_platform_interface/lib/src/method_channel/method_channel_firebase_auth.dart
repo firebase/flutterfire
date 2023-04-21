@@ -143,7 +143,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       final MethodChannelUser user = MethodChannelUser(
           instance, multiFactorInstance, userMap.cast<String, dynamic>());
 
-      // TODO(rousselGit): should this logic be moved to the setter instead?
       instance.currentUser = user;
       streamController.add(_ValueWrapper(instance.currentUser));
     }
@@ -179,7 +178,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       final MethodChannelUser user = MethodChannelUser(
           instance, multiFactorInstance, userMap.cast<String, dynamic>());
 
-      // TODO(rousselGit): should this logic be moved to the setter instead?
       instance.currentUser = user;
       idTokenStreamController.add(_ValueWrapper(user));
       userChangesStreamController.add(_ValueWrapper(user));
@@ -278,6 +276,127 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
       currentUser = userCredential.user;
       return userCredential;
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<UserCredentialPlatform> signInAnonymously() async {
+    try {
+      final result = await _api.signInAnonymously(pigeonDefault);
+
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, result);
+
+      currentUser = userCredential.user;
+      return userCredential;
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<UserCredentialPlatform> signInWithCredential(
+    AuthCredential credential,
+  ) async {
+    try {
+      final result = await _api.signInWithCredential(
+        pigeonDefault,
+        credential.asMap(),
+      );
+
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, result);
+
+      currentUser = userCredential.user;
+      return userCredential;
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<UserCredentialPlatform> signInWithCustomToken(String token) async {
+    try {
+      final result = await _api.signInWithCustomToken(
+        pigeonDefault,
+        token,
+      );
+
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, result);
+
+      currentUser = userCredential.user;
+      return userCredential;
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<UserCredentialPlatform> signInWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      final result = await _api.signInWithEmailAndPassword(
+        pigeonDefault,
+        email,
+        password,
+      );
+
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, result);
+
+      currentUser = userCredential.user;
+      return userCredential;
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<UserCredentialPlatform> signInWithEmailLink(
+      String email, String emailLink) async {
+    try {
+      Map<String, dynamic> data =
+          (await channel.invokeMapMethod<String, dynamic>(
+              'Auth#signInWithEmailLink',
+              _withChannelDefaults({
+                'email': email,
+                'emailLink': emailLink,
+              })))!;
+
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, data);
+
+      currentUser = userCredential.user;
+      return userCredential;
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<UserCredentialPlatform> signInWithPopup(AuthProvider provider) {
+    throw UnimplementedError(
+      'signInWithPopup() is only supported on web based platforms',
+    );
+  }
+
+  @override
+  Future<void> signInWithRedirect(AuthProvider provider) {
+    throw UnimplementedError(
+      'signInWithRedirect() is only supported on web based platforms',
+    );
+  }
+
+  @override
+  Future<void> signOut() async {
+    try {
+      await channel.invokeMethod<void>(
+          'Auth#signOut', _withChannelDefaults({}));
+
+      currentUser = null;
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -418,131 +537,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<void> setPersistence(Persistence persistence) {
     throw UnimplementedError(
         'setPersistence() is only supported on web based platforms');
-  }
-
-  @override
-  Future<UserCredentialPlatform> signInAnonymously() async {
-    try {
-      final result = await _api.signInAnonymously(pigeonDefault);
-
-      MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(this, result);
-
-      currentUser = userCredential.user;
-      return userCredential;
-    } catch (e, stack) {
-      convertPlatformException(e, stack);
-    }
-  }
-
-  @override
-  Future<UserCredentialPlatform> signInWithCredential(
-    AuthCredential credential,
-  ) async {
-    try {
-      final result = await _api.signInWithCredential(
-        pigeonDefault,
-        credential.asMap(),
-      );
-
-      MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(this, result);
-
-      currentUser = userCredential.user;
-      return userCredential;
-    } catch (e, stack) {
-      convertPlatformException(e, stack);
-    }
-  }
-
-  @override
-  Future<UserCredentialPlatform> signInWithCustomToken(String token) async {
-    try {
-      Map<String, dynamic> data =
-          (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#signInWithCustomToken',
-              _withChannelDefaults({
-                'token': token,
-              })))!;
-
-      MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(this, data);
-
-      currentUser = userCredential.user;
-      return userCredential;
-    } catch (e, stack) {
-      convertPlatformException(e, stack);
-    }
-  }
-
-  @override
-  Future<UserCredentialPlatform> signInWithEmailAndPassword(
-      String email, String password) async {
-    try {
-      Map<String, dynamic> data =
-          (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#signInWithEmailAndPassword',
-              _withChannelDefaults({
-                'email': email,
-                'password': password,
-              })))!;
-
-      MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(this, data);
-
-      currentUser = userCredential.user;
-      return userCredential;
-    } catch (e, stack) {
-      convertPlatformException(e, stack);
-    }
-  }
-
-  @override
-  Future<UserCredentialPlatform> signInWithEmailLink(
-      String email, String emailLink) async {
-    try {
-      Map<String, dynamic> data =
-          (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#signInWithEmailLink',
-              _withChannelDefaults({
-                'email': email,
-                'emailLink': emailLink,
-              })))!;
-
-      MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(this, data);
-
-      currentUser = userCredential.user;
-      return userCredential;
-    } catch (e, stack) {
-      convertPlatformException(e, stack);
-    }
-  }
-
-  @override
-  Future<UserCredentialPlatform> signInWithPopup(AuthProvider provider) {
-    throw UnimplementedError(
-      'signInWithPopup() is only supported on web based platforms',
-    );
-  }
-
-  @override
-  Future<void> signInWithRedirect(AuthProvider provider) {
-    throw UnimplementedError(
-      'signInWithRedirect() is only supported on web based platforms',
-    );
-  }
-
-  @override
-  Future<void> signOut() async {
-    try {
-      await channel.invokeMethod<void>(
-          'Auth#signOut', _withChannelDefaults({}));
-
-      currentUser = null;
-    } catch (e, stack) {
-      convertPlatformException(e, stack);
-    }
   }
 
   @override
