@@ -220,6 +220,12 @@ NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
                      emailLink:(NSString *)emailLink
                     completion:(void (^)(PigeonUserCredential *_Nullable,
                                          FlutterError *_Nullable))completion;
+- (void)signOutApp:(PigeonFirebaseApp *)app
+        completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)fetchSignInMethodsForEmailApp:(PigeonFirebaseApp *)app
+                                email:(NSString *)email
+                           completion:(void (^)(NSArray<NSString *> *_Nullable,
+                                                FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

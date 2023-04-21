@@ -119,6 +119,11 @@ abstract class TesFirebaseAuthHostApi {
   Future<PigeonUserCredential> signInWithEmailLink(
       PigeonFirebaseApp app, String email, String emailLink);
 
+  Future<void> signOut(PigeonFirebaseApp app);
+
+  Future<List<String?>> fetchSignInMethodsForEmail(
+      PigeonFirebaseApp app, String email);
+
   static void setup(TesFirebaseAuthHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
     {
@@ -436,6 +441,55 @@ abstract class TesFirebaseAuthHostApi {
               'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.signInWithEmailLink was null, expected non-null String.');
           final PigeonUserCredential output = await api.signInWithEmailLink(
               arg_app!, arg_email!, arg_emailLink!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthHostApi.signOut', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.signOut was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.signOut was null, expected non-null PigeonFirebaseApp.');
+          await api.signOut(arg_app!);
+          return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseAuthHostApi.fetchSignInMethodsForEmail',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.fetchSignInMethodsForEmail was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.fetchSignInMethodsForEmail was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_email = (args[1] as String?);
+          assert(arg_email != null,
+              'Argument for dev.flutter.pigeon.FirebaseAuthHostApi.fetchSignInMethodsForEmail was null, expected non-null String.');
+          final List<String?> output =
+              await api.fetchSignInMethodsForEmail(arg_app!, arg_email!);
           return <Object?>[output];
         });
       }

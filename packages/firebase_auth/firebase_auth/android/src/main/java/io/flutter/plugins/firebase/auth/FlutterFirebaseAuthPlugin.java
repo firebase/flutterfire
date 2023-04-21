@@ -457,11 +457,16 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @Override
-  public void signInWithEmailAndPassword(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String email, @NonNull String password, @NonNull GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential> result) {
+  public void signInWithEmailAndPassword(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull String email,
+      @NonNull String password,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+              result) {
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
-      AuthResult authResult =
-        Tasks.await(firebaseAuth.signInWithEmailAndPassword(email, password));
+      AuthResult authResult = Tasks.await(firebaseAuth.signInWithEmailAndPassword(email, password));
 
       result.success(PigeonParser.parseAuthResult(authResult));
     } catch (Exception e) {
@@ -471,11 +476,16 @@ public class FlutterFirebaseAuthPlugin
         result.error(e);
       }
     }
-
   }
 
   @Override
-  public void signInWithEmailLink(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String email, @NonNull String emailLink, @NonNull GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential> result) {
+  public void signInWithEmailLink(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull String email,
+      @NonNull String emailLink,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+              result) {
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
       AuthResult authResult = Tasks.await(firebaseAuth.signInWithEmailLink(email, emailLink));
@@ -490,29 +500,33 @@ public class FlutterFirebaseAuthPlugin
     }
   }
 
-  private Task<Map<String, Object>> fetchSignInMethodsForEmail(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            String email = (String) Objects.requireNonNull(arguments.get(Constants.EMAIL));
-
-            SignInMethodQueryResult result =
-                Tasks.await(firebaseAuth.fetchSignInMethodsForEmail(email));
-
-            Map<String, Object> output = new HashMap<>();
-            output.put(Constants.PROVIDERS, result.getSignInMethods());
-
-            taskCompletionSource.setResult(output);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
+  @Override
+  public void signOut(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+      firebaseAuth.signOut();
+      result.success(null);
+    } catch (Exception e) {
+      result.error(e);
+    }
   }
+
+  @Override
+  public void fetchSignInMethodsForEmail(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String email, @NonNull GeneratedAndroidFirebaseAuth.Result<List<String>> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+
+      SignInMethodQueryResult signInMethods =
+        Tasks.await(firebaseAuth.fetchSignInMethodsForEmail(email));
+
+      result.success(signInMethods.getSignInMethods());
+    } catch (Exception e) {
+      result.error(e);
+    }
+  }
+
 
   private Task<Void> sendPasswordResetEmail(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
@@ -640,7 +654,6 @@ public class FlutterFirebaseAuthPlugin
     return taskCompletionSource.getTask();
   }
 
-
   private void handleMultiFactorException(
       GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
       GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential> result,
@@ -709,24 +722,6 @@ public class FlutterFirebaseAuthPlugin
       pigeonHints.add(info.toList());
     }
     return pigeonHints;
-  }
-
-
-  private Task<Void> signOut(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            firebaseAuth.signOut();
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> verifyPasswordResetCode(Map<String, Object> arguments) {
@@ -1220,9 +1215,6 @@ public class FlutterFirebaseAuthPlugin
         break;
       case "Auth#setSettings":
         methodCallTask = setSettings(call.arguments());
-        break;
-      case "Auth#signOut":
-        methodCallTask = signOut(call.arguments());
         break;
       case "Auth#verifyPasswordResetCode":
         methodCallTask = verifyPasswordResetCode(call.arguments());

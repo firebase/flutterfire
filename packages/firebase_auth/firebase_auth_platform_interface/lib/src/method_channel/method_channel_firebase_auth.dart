@@ -7,6 +7,7 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
+import 'package:collection/collection.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
@@ -391,8 +392,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<void> signOut() async {
     try {
-      await channel.invokeMethod<void>(
-          'Auth#signOut', _withChannelDefaults({}));
+      await _api.signOut(pigeonDefault);
 
       currentUser = null;
     } catch (e, stack) {
@@ -403,14 +403,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<List<String>> fetchSignInMethodsForEmail(String email) async {
     try {
-      Map<String, dynamic> data =
-          (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#fetchSignInMethodsForEmail',
-              _withChannelDefaults({
-                'email': email,
-              })))!;
+      final data = await _api.fetchSignInMethodsForEmail(pigeonDefault, email);
 
-      return List<String>.from(data['providers']);
+      return data.whereNotNull().toList();
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

@@ -284,6 +284,12 @@ abstract class FirebaseAuthHostApi {
   void signOut(
     PigeonFirebaseApp app,
   );
+
+  @async
+  List<String> fetchSignInMethodsForEmail(
+    PigeonFirebaseApp app,
+    String email,
+  );
 }
 
 @HostApi(dartHostTestHandler: 'TestMultiFactorUserHostApi')

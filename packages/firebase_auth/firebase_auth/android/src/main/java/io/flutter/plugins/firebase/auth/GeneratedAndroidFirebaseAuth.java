@@ -1380,6 +1380,13 @@ public class GeneratedAndroidFirebaseAuth {
         @NonNull String emailLink,
         @NonNull Result<PigeonUserCredential> result);
 
+    void signOut(@NonNull PigeonFirebaseApp app, @NonNull Result<Void> result);
+
+    void fetchSignInMethodsForEmail(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String email,
+        @NonNull Result<List<String>> result);
+
     /** The codec used by FirebaseAuthHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return FirebaseAuthHostApiCodec.INSTANCE;
@@ -1772,6 +1779,67 @@ public class GeneratedAndroidFirebaseAuth {
                     };
 
                 api.signInWithEmailLink(appArg, emailArg, emailLinkArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger, "dev.flutter.pigeon.FirebaseAuthHostApi.signOut", getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.signOut(appArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseAuthHostApi.fetchSignInMethodsForEmail",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                String emailArg = (String) args.get(1);
+                Result<List<String>> resultCallback =
+                    new Result<List<String>>() {
+                      public void success(List<String> result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.fetchSignInMethodsForEmail(appArg, emailArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
