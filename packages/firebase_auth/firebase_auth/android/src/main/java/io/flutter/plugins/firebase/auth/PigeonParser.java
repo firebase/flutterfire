@@ -2,6 +2,9 @@ package io.flutter.plugins.firebase.auth;
 
 import android.net.Uri;
 import androidx.annotation.NonNull;
+import com.google.firebase.auth.ActionCodeEmailInfo;
+import com.google.firebase.auth.ActionCodeInfo;
+import com.google.firebase.auth.ActionCodeResult;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AdditionalUserInfo;
 import com.google.firebase.auth.AuthCredential;
@@ -13,9 +16,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.MultiFactorInfo;
 import com.google.firebase.auth.OAuthCredential;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.PhoneMultiFactorInfo;
 import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import java.util.ArrayList;
@@ -247,6 +252,91 @@ public class PigeonParser {
     if (pigeonActionCodeSettings.getIOSBundleId() != null) {
       builder.setIOSBundleId(pigeonActionCodeSettings.getIOSBundleId());
     }
+
+    return builder.build();
+  }
+
+  static List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> multiFactorInfoToPigeon(
+      List<MultiFactorInfo> hints) {
+    List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> pigeonHints = new ArrayList<>();
+    for (MultiFactorInfo info : hints) {
+      if (info instanceof PhoneMultiFactorInfo) {
+        pigeonHints.add(
+            new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
+                .setPhoneNumber(((PhoneMultiFactorInfo) info).getPhoneNumber())
+                .setDisplayName(info.getDisplayName())
+                .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
+                .setUid(info.getUid())
+                .setFactorId(info.getFactorId())
+                .build());
+
+      } else {
+        pigeonHints.add(
+            new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
+                .setDisplayName(info.getDisplayName())
+                .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
+                .setUid(info.getUid())
+                .setFactorId(info.getFactorId())
+                .build());
+      }
+    }
+    return pigeonHints;
+  }
+
+  static List<List<Object>> multiFactorInfoToMap(List<MultiFactorInfo> hints) {
+    List<List<Object>> pigeonHints = new ArrayList<>();
+    for (GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo info : multiFactorInfoToPigeon(hints)) {
+      pigeonHints.add(info.toList());
+    }
+    return pigeonHints;
+  }
+
+  static GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo parseActionCodeResult(
+      @NonNull ActionCodeResult actionCodeResult) {
+    GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo.Builder builder =
+        new GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo.Builder();
+    GeneratedAndroidFirebaseAuth.PigeonActionCodeInfoData.Builder builderData =
+        new GeneratedAndroidFirebaseAuth.PigeonActionCodeInfoData.Builder();
+
+    int operation = actionCodeResult.getOperation();
+
+    switch (operation) {
+      case ActionCodeResult.PASSWORD_RESET:
+        builder.setOperation(GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.PASSWORD_RESET);
+        break;
+      case ActionCodeResult.VERIFY_EMAIL:
+        builder.setOperation(GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.VERIFY_EMAIL);
+        break;
+      case ActionCodeResult.RECOVER_EMAIL:
+        builder.setOperation(GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.RECOVER_EMAIL);
+        break;
+      case ActionCodeResult.SIGN_IN_WITH_EMAIL_LINK:
+        builder.setOperation(GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.EMAIL_SIGN_IN);
+        break;
+      case ActionCodeResult.VERIFY_BEFORE_CHANGE_EMAIL:
+        builder.setOperation(
+            GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.VERIFY_AND_CHANGE_EMAIL);
+        break;
+      case ActionCodeResult.REVERT_SECOND_FACTOR_ADDITION:
+        builder.setOperation(
+            GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.REVERT_SECOND_FACTOR_ADDITION);
+        break;
+    }
+
+    ActionCodeInfo actionCodeInfo = actionCodeResult.getInfo();
+
+    if (actionCodeInfo != null && operation == ActionCodeResult.VERIFY_EMAIL
+        || operation == ActionCodeResult.PASSWORD_RESET) {
+      builderData.setEmail(actionCodeInfo.getEmail());
+    } else if (operation == ActionCodeResult.RECOVER_EMAIL
+        || operation == ActionCodeResult.VERIFY_BEFORE_CHANGE_EMAIL) {
+      ActionCodeEmailInfo actionCodeEmailInfo =
+          (ActionCodeEmailInfo) Objects.requireNonNull(actionCodeInfo);
+      builderData.setEmail(actionCodeEmailInfo.getEmail());
+      builderData.setPreviousEmail(actionCodeEmailInfo.getPreviousEmail());
+    }
+
+    builder.setData(builderData.build());
 
     return builder.build();
   }

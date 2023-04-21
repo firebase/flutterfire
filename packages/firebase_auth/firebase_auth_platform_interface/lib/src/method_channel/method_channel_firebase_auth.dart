@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io' show Platform;
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:collection/collection.dart';
@@ -376,6 +375,36 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
+  Future<UserCredentialPlatform> signInWithProvider(
+    AuthProvider provider,
+  ) async {
+    try {
+      // To extract scopes and custom parameters from the provider
+      final convertedProvider = convertToOAuthProvider(provider);
+
+      final result = await _api.signInWithProvider(
+          pigeonDefault,
+          PigeonSignInProvider(
+            providerId: convertedProvider.providerId,
+            scopes: convertedProvider is OAuthProvider
+                ? convertedProvider.scopes
+                : null,
+            customParameters: convertedProvider is OAuthProvider
+                ? convertedProvider.parameters
+                : null,
+          ));
+
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, result);
+
+      currentUser = userCredential.user;
+      return userCredential;
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
   Future<UserCredentialPlatform> signInWithPopup(AuthProvider provider) {
     throw UnimplementedError(
       'signInWithPopup() is only supported on web based platforms',
@@ -486,15 +515,10 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<void> setLanguageCode(String? languageCode) async {
     try {
-      Map<String, dynamic> data =
-          (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#setLanguageCode',
-              _withChannelDefaults({
-                'appName': app.name,
-                'languageCode': languageCode,
-              })))!;
+      final newLanguageCode =
+          await _api.setLanguageCode(pigeonDefault, languageCode);
 
-      this.languageCode = data['languageCode'];
+      this.languageCode = newLanguageCode;
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -502,41 +526,29 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   @override
   Future<void> setSettings({
-    bool? appVerificationDisabledForTesting,
+    bool appVerificationDisabledForTesting = false,
     String? userAccessGroup,
     String? phoneNumber,
     String? smsCode,
     bool? forceRecaptchaFlow,
   }) async {
-    if (phoneNumber != null && smsCode == null ||
-        phoneNumber == null && smsCode != null) {
-      throw ArgumentError(
-        "The [smsCode] and the [phoneNumber] must both be either 'null' or a 'String''.",
-      );
-    }
-    // argument for every platform
-    var arguments = <String, dynamic>{
-      'appVerificationDisabledForTesting': appVerificationDisabledForTesting,
-    };
-
-    if (Platform.isIOS || Platform.isMacOS) {
-      arguments['userAccessGroup'] = userAccessGroup;
-    }
-
-    if (Platform.isAndroid) {
-      if (phoneNumber != null && smsCode != null) {
-        arguments['phoneNumber'] = phoneNumber;
-        arguments['smsCode'] = smsCode;
-      }
-
-      if (forceRecaptchaFlow != null) {
-        arguments['forceRecaptchaFlow'] = forceRecaptchaFlow;
-      }
-    }
+    assert(
+      phoneNumber == null && smsCode == null ||
+          phoneNumber != null && smsCode != null,
+      "The [smsCode] and the [phoneNumber] must both be either 'null' or a 'String''.",
+    );
 
     try {
-      await channel.invokeMethod(
-          'Auth#setSettings', _withChannelDefaults(arguments));
+      await _api.setSettings(
+          pigeonDefault,
+          PigeonFirebaseAuthSettings(
+            appVerificationDisabledForTesting:
+                appVerificationDisabledForTesting,
+            userAccessGroup: userAccessGroup,
+            phoneNumber: phoneNumber,
+            smsCode: smsCode,
+            forceRecaptchaFlow: forceRecaptchaFlow,
+          ));
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -545,49 +557,16 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<void> setPersistence(Persistence persistence) {
     throw UnimplementedError(
-        'setPersistence() is only supported on web based platforms');
+      'setPersistence() is only supported on web based platforms',
+    );
   }
 
   @override
   Future<String> verifyPasswordResetCode(String code) async {
     try {
-      Map<String, dynamic> data =
-          (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#verifyPasswordResetCode',
-              _withChannelDefaults({
-                'code': code,
-              })))!;
+      final userEmail = await _api.verifyPasswordResetCode(pigeonDefault, code);
 
-      return data['email'];
-    } catch (e, stack) {
-      convertPlatformException(e, stack);
-    }
-  }
-
-  @override
-  Future<UserCredentialPlatform> signInWithProvider(
-    AuthProvider provider,
-  ) async {
-    try {
-      // To extract scopes and custom parameters from the provider
-      final convertedProvider = convertToOAuthProvider(provider);
-
-      Map<String, dynamic> data =
-          (await channel.invokeMapMethod<String, dynamic>(
-              'Auth#signInWithProvider',
-              _withChannelDefaults({
-                'signInProvider': convertedProvider.providerId,
-                if (convertedProvider is OAuthProvider) ...{
-                  'scopes': convertedProvider.scopes,
-                  'customParameters': convertedProvider.parameters
-                },
-              })))!;
-
-      MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(this, data);
-
-      currentUser = userCredential.user;
-      return userCredential;
+      return userEmail;
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -613,20 +592,19 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
 
     try {
-      final eventChannelName = await channel.invokeMethod<String>(
-          'Auth#verifyPhoneNumber',
-          _withChannelDefaults({
-            if (phoneNumber != null) 'phoneNumber': phoneNumber,
-            if (multiFactorInfo?.uid != null)
-              'multiFactorInfo': multiFactorInfo?.uid,
-            'timeout': timeout.inMilliseconds,
-            'forceResendingToken': forceResendingToken,
-            'autoRetrievedSmsCodeForTesting': autoRetrievedSmsCodeForTesting,
-            if (multiFactorSession?.id != null)
-              'multiFactorSessionId': multiFactorSession!.id,
-          }));
+      final eventChannelName = await _api.verifyPhoneNumber(
+        pigeonDefault,
+        PigeonVerifyPhoneNumberRequest(
+          phoneNumber: phoneNumber,
+          multiFactorInfoId: multiFactorInfo?.uid,
+          timeout: timeout.inMilliseconds,
+          forceResendingToken: forceResendingToken,
+          autoRetrievedSmsCodeForTesting: autoRetrievedSmsCodeForTesting,
+          multiFactorSessionId: multiFactorSession?.id,
+        ),
+      );
 
-      EventChannel(eventChannelName!)
+      EventChannel(eventChannelName)
           .receiveGuardedBroadcastStream(onError: convertPlatformException)
           .listen((arguments) {
         final name = arguments['name'];

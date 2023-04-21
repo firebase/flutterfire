@@ -48,26 +48,25 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
   @Nullable private EventSink eventSink;
 
   public PhoneNumberVerificationStreamHandler(
-      Activity activity,
-      Map<String, Object> arguments,
-      @Nullable MultiFactorSession multiFactorSession,
-      @Nullable PhoneMultiFactorInfo multiFactorInfo,
-      OnCredentialsListener onCredentialsListener) {
+    Activity activity,
+    @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseAuth.PigeonVerifyPhoneNumberRequest request,    @Nullable MultiFactorSession multiFactorSession,
+    @Nullable PhoneMultiFactorInfo multiFactorInfo,
+    OnCredentialsListener onCredentialsListener) {
     this.activityRef.set(activity);
 
     this.multiFactorSession = multiFactorSession;
     this.multiFactorInfo = multiFactorInfo;
-    firebaseAuth = FlutterFirebaseAuthPlugin.getAuth(arguments);
-    phoneNumber = (String) arguments.get(Constants.PHONE_NUMBER);
-    timeout = (int) Objects.requireNonNull(arguments.get(Constants.TIMEOUT));
+    firebaseAuth = FlutterFirebaseAuthPlugin.getAuthFromPigeon(app);
+    phoneNumber = request.getPhoneNumber();
+    timeout = Math.toIntExact(request.getTimeout());
 
-    if (arguments.containsKey(Constants.AUTO_RETRIEVED_SMS_CODE_FOR_TESTING)) {
+    if (request.getAutoRetrievedSmsCodeForTesting() != null) {
       autoRetrievedSmsCodeForTesting =
-          (String) arguments.get(Constants.AUTO_RETRIEVED_SMS_CODE_FOR_TESTING);
+        request.getAutoRetrievedSmsCodeForTesting();
     }
 
-    if (arguments.containsKey(Constants.FORCE_RESENDING_TOKEN)) {
-      forceResendingToken = (Integer) arguments.get(Constants.FORCE_RESENDING_TOKEN);
+    if (request.getForceResendingToken() != null) {
+      forceResendingToken = Math.toIntExact(request.getForceResendingToken());
     }
 
     this.onCredentialsListener = onCredentialsListener;

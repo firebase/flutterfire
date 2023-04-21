@@ -41,6 +41,9 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @class PigeonUserInfo;
 @class PigeonUserDetails;
 @class PigeonActionCodeSettings;
+@class PigeonFirebaseAuthSettings;
+@class PigeonSignInProvider;
+@class PigeonVerifyPhoneNumberRequest;
 
 @interface PigeonMultiFactorSession : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
@@ -189,6 +192,51 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @property(nonatomic, copy, nullable) NSString *androidMinimumVersion;
 @end
 
+@interface PigeonFirebaseAuthSettings : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithAppVerificationDisabledForTesting:
+                    (NSNumber *)appVerificationDisabledForTesting
+                                          userAccessGroup:(nullable NSString *)userAccessGroup
+                                              phoneNumber:(nullable NSString *)phoneNumber
+                                                  smsCode:(nullable NSString *)smsCode
+                                       forceRecaptchaFlow:(nullable NSNumber *)forceRecaptchaFlow;
+@property(nonatomic, strong) NSNumber *appVerificationDisabledForTesting;
+@property(nonatomic, copy, nullable) NSString *userAccessGroup;
+@property(nonatomic, copy, nullable) NSString *phoneNumber;
+@property(nonatomic, copy, nullable) NSString *smsCode;
+@property(nonatomic, strong, nullable) NSNumber *forceRecaptchaFlow;
+@end
+
+@interface PigeonSignInProvider : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithProviderId:(NSString *)providerId
+                            scopes:(nullable NSArray<NSString *> *)scopes
+                  customParameters:
+                      (nullable NSDictionary<NSString *, NSString *> *)customParameters;
+@property(nonatomic, copy) NSString *providerId;
+@property(nonatomic, strong, nullable) NSArray<NSString *> *scopes;
+@property(nonatomic, strong, nullable) NSDictionary<NSString *, NSString *> *customParameters;
+@end
+
+@interface PigeonVerifyPhoneNumberRequest : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithPhoneNumber:(nullable NSString *)phoneNumber
+                            timeout:(NSNumber *)timeout
+                forceResendingToken:(nullable NSNumber *)forceResendingToken
+     autoRetrievedSmsCodeForTesting:(nullable NSString *)autoRetrievedSmsCodeForTesting
+                  multiFactorInfoId:(nullable NSString *)multiFactorInfoId
+               multiFactorSessionId:(nullable NSString *)multiFactorSessionId;
+@property(nonatomic, copy, nullable) NSString *phoneNumber;
+@property(nonatomic, strong) NSNumber *timeout;
+@property(nonatomic, strong, nullable) NSNumber *forceResendingToken;
+@property(nonatomic, copy, nullable) NSString *autoRetrievedSmsCodeForTesting;
+@property(nonatomic, copy, nullable) NSString *multiFactorInfoId;
+@property(nonatomic, copy, nullable) NSString *multiFactorSessionId;
+@end
+
 /// The codec used by FirebaseAuthHostApi.
 NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
 
@@ -240,6 +288,10 @@ NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
                      emailLink:(NSString *)emailLink
                     completion:(void (^)(PigeonUserCredential *_Nullable,
                                          FlutterError *_Nullable))completion;
+- (void)signInWithProviderApp:(PigeonFirebaseApp *)app
+               signInProvider:(PigeonSignInProvider *)signInProvider
+                   completion:(void (^)(PigeonUserCredential *_Nullable,
+                                        FlutterError *_Nullable))completion;
 - (void)signOutApp:(PigeonFirebaseApp *)app
         completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)fetchSignInMethodsForEmailApp:(PigeonFirebaseApp *)app
@@ -254,6 +306,19 @@ NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
                            email:(NSString *)email
               actionCodeSettings:(PigeonActionCodeSettings *)actionCodeSettings
                       completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)setLanguageCodeApp:(PigeonFirebaseApp *)app
+              languageCode:(nullable NSString *)languageCode
+                completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)setSettingsApp:(PigeonFirebaseApp *)app
+              settings:(PigeonFirebaseAuthSettings *)settings
+            completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)verifyPasswordResetCodeApp:(PigeonFirebaseApp *)app
+                              code:(NSString *)code
+                        completion:
+                            (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)verifyPhoneNumberApp:(PigeonFirebaseApp *)app
+                     request:(PigeonVerifyPhoneNumberRequest *)request
+                  completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

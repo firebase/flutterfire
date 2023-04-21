@@ -224,6 +224,52 @@ class PigeonActionCodeSettings {
   final String? androidMinimumVersion;
 }
 
+class PigeonFirebaseAuthSettings {
+  const PigeonFirebaseAuthSettings({
+    required this.appVerificationDisabledForTesting,
+    required this.userAccessGroup,
+    required this.phoneNumber,
+    required this.smsCode,
+    required this.forceRecaptchaFlow,
+  });
+
+  final bool appVerificationDisabledForTesting;
+  final String? userAccessGroup;
+  final String? phoneNumber;
+  final String? smsCode;
+  final bool? forceRecaptchaFlow;
+}
+
+class PigeonSignInProvider {
+  const PigeonSignInProvider({
+    required this.providerId,
+    required this.scopes,
+    required this.customParameters,
+  });
+
+  final String providerId;
+  final List<String?>? scopes;
+  final Map<String?, String?>? customParameters;
+}
+
+class PigeonVerifyPhoneNumberRequest {
+  const PigeonVerifyPhoneNumberRequest({
+    required this.phoneNumber,
+    required this.timeout,
+    required this.forceResendingToken,
+    required this.autoRetrievedSmsCodeForTesting,
+    required this.multiFactorInfoId,
+    required this.multiFactorSessionId,
+  });
+
+  final String? phoneNumber;
+  final int timeout;
+  final int? forceResendingToken;
+  final String? autoRetrievedSmsCodeForTesting;
+  final String? multiFactorInfoId;
+  final String? multiFactorSessionId;
+}
+
 @HostApi(dartHostTestHandler: 'TesFirebaseAuthHostApi')
 abstract class FirebaseAuthHostApi {
   @async
@@ -301,6 +347,12 @@ abstract class FirebaseAuthHostApi {
   );
 
   @async
+  PigeonUserCredential signInWithProvider(
+    PigeonFirebaseApp app,
+    PigeonSignInProvider signInProvider,
+  );
+
+  @async
   void signOut(
     PigeonFirebaseApp app,
   );
@@ -323,6 +375,30 @@ abstract class FirebaseAuthHostApi {
     PigeonFirebaseApp app,
     String email,
     PigeonActionCodeSettings actionCodeSettings,
+  );
+
+  @async
+  String setLanguageCode(
+    PigeonFirebaseApp app,
+    String? languageCode,
+  );
+
+  @async
+  void setSettings(
+    PigeonFirebaseApp app,
+    PigeonFirebaseAuthSettings settings,
+  );
+
+  @async
+  String verifyPasswordResetCode(
+    PigeonFirebaseApp app,
+    String code,
+  );
+
+  @async
+  String verifyPhoneNumber(
+    PigeonFirebaseApp app,
+    PigeonVerifyPhoneNumberRequest request,
   );
 }
 

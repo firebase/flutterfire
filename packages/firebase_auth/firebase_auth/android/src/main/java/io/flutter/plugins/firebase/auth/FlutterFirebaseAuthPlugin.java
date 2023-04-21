@@ -17,8 +17,6 @@ import com.google.firebase.FirebaseApiNotAvailableException;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.FirebaseTooManyRequestsException;
-import com.google.firebase.auth.ActionCodeEmailInfo;
-import com.google.firebase.auth.ActionCodeInfo;
 import com.google.firebase.auth.ActionCodeResult;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -51,7 +49,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -242,56 +239,6 @@ public class FlutterFirebaseAuthPlugin
     }
   }
 
-  private GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo parseActionCodeResult(
-      @NonNull ActionCodeResult actionCodeResult) {
-    GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo.Builder builder =
-        new GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo.Builder();
-    GeneratedAndroidFirebaseAuth.PigeonActionCodeInfoData.Builder builderData =
-        new GeneratedAndroidFirebaseAuth.PigeonActionCodeInfoData.Builder();
-
-    int operation = actionCodeResult.getOperation();
-
-    switch (operation) {
-      case ActionCodeResult.PASSWORD_RESET:
-        builder.setOperation(GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.PASSWORD_RESET);
-        break;
-      case ActionCodeResult.VERIFY_EMAIL:
-        builder.setOperation(GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.VERIFY_EMAIL);
-        break;
-      case ActionCodeResult.RECOVER_EMAIL:
-        builder.setOperation(GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.RECOVER_EMAIL);
-        break;
-      case ActionCodeResult.SIGN_IN_WITH_EMAIL_LINK:
-        builder.setOperation(GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.EMAIL_SIGN_IN);
-        break;
-      case ActionCodeResult.VERIFY_BEFORE_CHANGE_EMAIL:
-        builder.setOperation(
-            GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.VERIFY_AND_CHANGE_EMAIL);
-        break;
-      case ActionCodeResult.REVERT_SECOND_FACTOR_ADDITION:
-        builder.setOperation(
-            GeneratedAndroidFirebaseAuth.ActionCodeInfoOperation.REVERT_SECOND_FACTOR_ADDITION);
-        break;
-    }
-
-    ActionCodeInfo actionCodeInfo = actionCodeResult.getInfo();
-
-    if (actionCodeInfo != null && operation == ActionCodeResult.VERIFY_EMAIL
-        || operation == ActionCodeResult.PASSWORD_RESET) {
-      builderData.setEmail(actionCodeInfo.getEmail());
-    } else if (operation == ActionCodeResult.RECOVER_EMAIL
-        || operation == ActionCodeResult.VERIFY_BEFORE_CHANGE_EMAIL) {
-      ActionCodeEmailInfo actionCodeEmailInfo =
-          (ActionCodeEmailInfo) Objects.requireNonNull(actionCodeInfo);
-      builderData.setEmail(actionCodeEmailInfo.getEmail());
-      builderData.setPreviousEmail(actionCodeEmailInfo.getPreviousEmail());
-    }
-
-    builder.setData(builderData.build());
-
-    return builder.build();
-  }
-
   @Override
   public void checkActionCode(
       @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
@@ -302,7 +249,7 @@ public class FlutterFirebaseAuthPlugin
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
       ActionCodeResult actionCodeResult = Tasks.await(firebaseAuth.checkActionCode(code));
-      result.success(parseActionCodeResult(actionCodeResult));
+      result.success(PigeonParser.parseActionCodeResult(actionCodeResult));
     } catch (Exception e) {
       result.error(e);
     }
@@ -450,6 +397,34 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @Override
+  public void signInWithProvider(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseAuth.PigeonSignInProvider signInProvider, @NonNull GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+
+      OAuthProvider.Builder provider = OAuthProvider.newBuilder(signInProvider.getProviderId());
+      if (signInProvider.getScopes() != null) {
+        provider.setScopes(signInProvider.getScopes());
+      }
+      if (signInProvider.getCustomParameters() != null) {
+        provider.addCustomParameters(signInProvider.getCustomParameters());
+      }
+
+      AuthResult authResult =
+        Tasks.await(
+          firebaseAuth.startActivityForSignInWithProvider(
+            /* activity= */ activity, provider.build()));
+      result.success(PigeonParser.parseAuthResult(authResult));
+    } catch (Exception e) {
+      if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+        handleMultiFactorException(app, result, e);
+      } else {
+        result.error(e);
+      }
+    }
+
+  }
+
+  @Override
   public void signOut(
       @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
@@ -504,88 +479,136 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @Override
-  public void sendSignInLinkToEmail(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String email, @NonNull GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings, @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+  public void sendSignInLinkToEmail(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull String email,
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
       Tasks.await(
-        firebaseAuth.sendSignInLinkToEmail(
-          email, PigeonParser.getActionCodeSettings(actionCodeSettings)));
+          firebaseAuth.sendSignInLinkToEmail(
+              email, PigeonParser.getActionCodeSettings(actionCodeSettings)));
       result.success(null);
     } catch (Exception e) {
       result.error(e);
     }
-
   }
 
+  @Override
+  public void setLanguageCode(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @Nullable String languageCode,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-  private Task<Map<String, Object>> setLanguageCode(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+      if (languageCode == null) {
+        firebaseAuth.useAppLanguage();
+      } else {
+        firebaseAuth.setLanguageCode(languageCode);
+      }
 
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            String languageCode = (String) arguments.get(Constants.LANGUAGE_CODE);
-
-            if (languageCode == null) {
-              firebaseAuth.useAppLanguage();
-            } else {
-              firebaseAuth.setLanguageCode(languageCode);
-            }
-
-            taskCompletionSource.setResult(
-                new HashMap<String, Object>() {
-                  {
-                    put(Constants.LANGUAGE_CODE, firebaseAuth.getLanguageCode());
-                  }
-                });
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
+      result.success(firebaseAuth.getLanguageCode());
+    } catch (Exception e) {
+      result.error(e);
+    }
   }
 
-  private Task<Void> setSettings(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+  @Override
+  public void setSettings(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseAuthSettings settings,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            Boolean appVerificationDisabledForTesting =
-                (Boolean) arguments.get(Constants.APP_VERIFICATION_DISABLED_FOR_TESTING);
-            Boolean forceRecaptchaFlow = (Boolean) arguments.get(Constants.FORCE_RECAPTCHA_FLOW);
-            String phoneNumber = (String) arguments.get(Constants.PHONE_NUMBER);
-            String smsCode = (String) arguments.get(Constants.SMS_CODE);
+      firebaseAuth
+          .getFirebaseAuthSettings()
+          .setAppVerificationDisabledForTesting(settings.getAppVerificationDisabledForTesting());
 
-            if (appVerificationDisabledForTesting != null) {
-              firebaseAuth
-                  .getFirebaseAuthSettings()
-                  .setAppVerificationDisabledForTesting(appVerificationDisabledForTesting);
+      if (settings.getForceRecaptchaFlow() != null) {
+        firebaseAuth
+            .getFirebaseAuthSettings()
+            .forceRecaptchaFlowForTesting(settings.getForceRecaptchaFlow());
+      }
+
+      if (settings.getPhoneNumber() != null && settings.getSmsCode() != null) {
+        firebaseAuth
+            .getFirebaseAuthSettings()
+            .setAutoRetrievedSmsCodeForPhoneNumber(
+                settings.getPhoneNumber(), settings.getSmsCode());
+      }
+
+      result.success(null);
+    } catch (Exception e) {
+      result.error(e);
+    }
+  }
+
+  @Override
+  public void verifyPasswordResetCode(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull String code,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+
+      result.success(Tasks.await(firebaseAuth.verifyPasswordResetCode(code)));
+    } catch (Exception e) {
+      result.error(e);
+    }
+  }
+
+  @Override
+  public void verifyPhoneNumber(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseAuth.PigeonVerifyPhoneNumberRequest request, @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
+    try {
+      String eventChannelName =
+        METHOD_CHANNEL_NAME + "/phone/" + UUID.randomUUID().toString();
+      EventChannel channel = new EventChannel(messenger, eventChannelName);
+
+      MultiFactorSession multiFactorSession = null;
+
+      if (request.getMultiFactorSessionId() != null) {
+        multiFactorSession = multiFactorSessionMap.get(request.getMultiFactorSessionId());
+      }
+
+      final String multiFactorInfoId = request.getMultiFactorInfoId();
+      PhoneMultiFactorInfo multiFactorInfo = null;
+
+      if (multiFactorInfoId != null) {
+        for (String resolverId : multiFactorResolverMap.keySet()) {
+          for (MultiFactorInfo info : multiFactorResolverMap.get(resolverId).getHints()) {
+            if (info.getUid().equals(multiFactorInfoId)
+              && info instanceof PhoneMultiFactorInfo) {
+              multiFactorInfo = (PhoneMultiFactorInfo) info;
+              break;
             }
-
-            if (forceRecaptchaFlow != null) {
-              firebaseAuth
-                  .getFirebaseAuthSettings()
-                  .forceRecaptchaFlowForTesting(forceRecaptchaFlow);
-            }
-
-            if (phoneNumber != null && smsCode != null) {
-              firebaseAuth
-                  .getFirebaseAuthSettings()
-                  .setAutoRetrievedSmsCodeForPhoneNumber(phoneNumber, smsCode);
-            }
-
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
           }
-        });
+        }
+      }
 
-    return taskCompletionSource.getTask();
+      PhoneNumberVerificationStreamHandler handler =
+        new PhoneNumberVerificationStreamHandler(
+          getActivity(),
+          app,
+          request,
+          multiFactorSession,
+          multiFactorInfo,
+          credential -> {
+            int hashCode = credential.hashCode();
+            authCredentials.put(hashCode, credential);
+          });
+
+      channel.setStreamHandler(handler);
+      streamHandlers.put(channel, handler);
+
+      result.success(eventChannelName);
+    } catch (Exception e) {
+      result.error(e);
+    }
+
   }
 
   private void handleMultiFactorException(
@@ -607,7 +630,7 @@ public class FlutterFirebaseAuthPlugin
     final String resolverId = UUID.randomUUID().toString();
     multiFactorResolverMap.put(resolverId, multiFactorResolver);
 
-    final List<List<Object>> pigeonHints = multiFactorInfoToMap(hints);
+    final List<List<Object>> pigeonHints = PigeonParser.multiFactorInfoToMap(hints);
 
     output.put(Constants.APP_NAME, getAuthFromPigeon(app).getApp().getName());
 
@@ -623,117 +646,6 @@ public class FlutterFirebaseAuthPlugin
             output));
   }
 
-  private List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> multiFactorInfoToPigeon(
-      List<MultiFactorInfo> hints) {
-    List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> pigeonHints = new ArrayList<>();
-    for (MultiFactorInfo info : hints) {
-      if (info instanceof PhoneMultiFactorInfo) {
-        pigeonHints.add(
-            new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
-                .setPhoneNumber(((PhoneMultiFactorInfo) info).getPhoneNumber())
-                .setDisplayName(info.getDisplayName())
-                .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
-                .setUid(info.getUid())
-                .setFactorId(info.getFactorId())
-                .build());
-
-      } else {
-        pigeonHints.add(
-            new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
-                .setDisplayName(info.getDisplayName())
-                .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
-                .setUid(info.getUid())
-                .setFactorId(info.getFactorId())
-                .build());
-      }
-    }
-    return pigeonHints;
-  }
-
-  private List<List<Object>> multiFactorInfoToMap(List<MultiFactorInfo> hints) {
-    List<List<Object>> pigeonHints = new ArrayList<>();
-    for (GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo info : multiFactorInfoToPigeon(hints)) {
-      pigeonHints.add(info.toList());
-    }
-    return pigeonHints;
-  }
-
-  private Task<Map<String, Object>> verifyPasswordResetCode(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            String code = (String) Objects.requireNonNull(arguments.get(Constants.CODE));
-
-            Map<String, Object> output = new HashMap<>();
-            output.put(Constants.EMAIL, Tasks.await(firebaseAuth.verifyPasswordResetCode(code)));
-
-            taskCompletionSource.setResult(output);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  private Task<String> verifyPhoneNumber(Map<String, Object> arguments) {
-    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            String eventChannelName =
-                METHOD_CHANNEL_NAME + "/phone/" + UUID.randomUUID().toString();
-            EventChannel channel = new EventChannel(messenger, eventChannelName);
-
-            final String multiFactorSessionId =
-                (String) arguments.get(Constants.MULTI_FACTOR_SESSION_ID);
-            MultiFactorSession multiFactorSession = null;
-
-            if (multiFactorSessionId != null) {
-              multiFactorSession = multiFactorSessionMap.get(multiFactorSessionId);
-            }
-
-            final String multiFactorInfoId = (String) arguments.get(Constants.MULTI_FACTOR_INFO);
-            PhoneMultiFactorInfo multiFactorInfo = null;
-
-            if (multiFactorInfoId != null) {
-              for (String resolverId : multiFactorResolverMap.keySet()) {
-                for (MultiFactorInfo info : multiFactorResolverMap.get(resolverId).getHints()) {
-                  if (info.getUid().equals(multiFactorInfoId)
-                      && info instanceof PhoneMultiFactorInfo) {
-                    multiFactorInfo = (PhoneMultiFactorInfo) info;
-                    break;
-                  }
-                }
-              }
-            }
-
-            PhoneNumberVerificationStreamHandler handler =
-                new PhoneNumberVerificationStreamHandler(
-                    getActivity(),
-                    arguments,
-                    multiFactorSession,
-                    multiFactorInfo,
-                    credential -> {
-                      int hashCode = credential.hashCode();
-                      authCredentials.put(hashCode, credential);
-                    });
-
-            channel.setStreamHandler(handler);
-            streamHandlers.put(channel, handler);
-
-            taskCompletionSource.setResult(eventChannelName);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
 
   private Task<Void> deleteUser(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
@@ -1135,24 +1047,6 @@ public class FlutterFirebaseAuthPlugin
     final Task<?> methodCallTask;
 
     switch (call.method) {
-      case "Auth#sendSignInLinkToEmail":
-        methodCallTask = sendSignInLinkToEmail(call.arguments());
-        break;
-      case "Auth#setLanguageCode":
-        methodCallTask = setLanguageCode(call.arguments());
-        break;
-      case "Auth#setSettings":
-        methodCallTask = setSettings(call.arguments());
-        break;
-      case "Auth#verifyPasswordResetCode":
-        methodCallTask = verifyPasswordResetCode(call.arguments());
-        break;
-      case "Auth#verifyPhoneNumber":
-        methodCallTask = verifyPhoneNumber(call.arguments());
-        break;
-      case "Auth#signInWithProvider":
-        methodCallTask = signInWithProvider(call.arguments());
-        break;
       case "User#linkWithProvider":
         methodCallTask = startActivityForLinkWithProvider(call.arguments());
         break;
@@ -1297,45 +1191,7 @@ public class FlutterFirebaseAuthPlugin
     return taskCompletionSource.getTask();
   }
 
-  private Task<Map<String, Object>> signInWithProvider(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            String providerId =
-                (String) Objects.requireNonNull(arguments.get(Constants.SIGN_IN_PROVIDER));
-            @SuppressWarnings("unchecked")
-            List<String> scopes = (List<String>) arguments.get(Constants.SIGN_IN_PROVIDER_SCOPE);
-            @SuppressWarnings("unchecked")
-            Map<String, String> customParameters =
-                (Map<String, String>) arguments.get(Constants.SIGN_IN_PROVIDER_CUSTOM_PARAMETERS);
-
-            OAuthProvider.Builder provider = OAuthProvider.newBuilder(providerId);
-            if (scopes != null) {
-              provider.setScopes(scopes);
-            }
-            if (customParameters != null) {
-              provider.addCustomParameters(customParameters);
-            }
-
-            AuthResult authResult =
-                Tasks.await(
-                    firebaseAuth.startActivityForSignInWithProvider(
-                        /* activity= */ activity, provider.build()));
-            taskCompletionSource.setResult(parseAuthResult(authResult));
-          } catch (Exception e) {
-            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
-              handleMultiFactorException(arguments, taskCompletionSource, e);
-            } else {
-              taskCompletionSource.setException(e);
-            }
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
