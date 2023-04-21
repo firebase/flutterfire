@@ -91,6 +91,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList;
 @end
 
+@interface PigeonActionCodeSettings ()
++ (PigeonActionCodeSettings *)fromList:(NSArray *)list;
++ (nullable PigeonActionCodeSettings *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
 @implementation PigeonMultiFactorSession
 + (instancetype)makeWithId:(NSString *)id {
   PigeonMultiFactorSession *pigeonResult = [[PigeonMultiFactorSession alloc] init];
@@ -452,6 +458,54 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
+@implementation PigeonActionCodeSettings
++ (instancetype)makeWithUrl:(NSString *)url
+          dynamicLinkDomain:(nullable NSString *)dynamicLinkDomain
+            handleCodeInApp:(NSNumber *)handleCodeInApp
+                iOSBundleId:(nullable NSString *)iOSBundleId
+         androidPackageName:(nullable NSString *)androidPackageName
+          androidInstallApp:(NSNumber *)androidInstallApp
+      androidMinimumVersion:(nullable NSString *)androidMinimumVersion {
+  PigeonActionCodeSettings *pigeonResult = [[PigeonActionCodeSettings alloc] init];
+  pigeonResult.url = url;
+  pigeonResult.dynamicLinkDomain = dynamicLinkDomain;
+  pigeonResult.handleCodeInApp = handleCodeInApp;
+  pigeonResult.iOSBundleId = iOSBundleId;
+  pigeonResult.androidPackageName = androidPackageName;
+  pigeonResult.androidInstallApp = androidInstallApp;
+  pigeonResult.androidMinimumVersion = androidMinimumVersion;
+  return pigeonResult;
+}
++ (PigeonActionCodeSettings *)fromList:(NSArray *)list {
+  PigeonActionCodeSettings *pigeonResult = [[PigeonActionCodeSettings alloc] init];
+  pigeonResult.url = GetNullableObjectAtIndex(list, 0);
+  NSAssert(pigeonResult.url != nil, @"");
+  pigeonResult.dynamicLinkDomain = GetNullableObjectAtIndex(list, 1);
+  pigeonResult.handleCodeInApp = GetNullableObjectAtIndex(list, 2);
+  NSAssert(pigeonResult.handleCodeInApp != nil, @"");
+  pigeonResult.iOSBundleId = GetNullableObjectAtIndex(list, 3);
+  pigeonResult.androidPackageName = GetNullableObjectAtIndex(list, 4);
+  pigeonResult.androidInstallApp = GetNullableObjectAtIndex(list, 5);
+  NSAssert(pigeonResult.androidInstallApp != nil, @"");
+  pigeonResult.androidMinimumVersion = GetNullableObjectAtIndex(list, 6);
+  return pigeonResult;
+}
++ (nullable PigeonActionCodeSettings *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonActionCodeSettings fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    (self.url ?: [NSNull null]),
+    (self.dynamicLinkDomain ?: [NSNull null]),
+    (self.handleCodeInApp ?: [NSNull null]),
+    (self.iOSBundleId ?: [NSNull null]),
+    (self.androidPackageName ?: [NSNull null]),
+    (self.androidInstallApp ?: [NSNull null]),
+    (self.androidMinimumVersion ?: [NSNull null]),
+  ];
+}
+@end
+
 @interface FirebaseAuthHostApiCodecReader : FlutterStandardReader
 @end
 @implementation FirebaseAuthHostApiCodecReader
@@ -462,22 +516,24 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     case 129:
       return [PigeonActionCodeInfoData fromList:[self readValue]];
     case 130:
-      return [PigeonAdditionalUserInfo fromList:[self readValue]];
+      return [PigeonActionCodeSettings fromList:[self readValue]];
     case 131:
-      return [PigeonAuthCredential fromList:[self readValue]];
+      return [PigeonAdditionalUserInfo fromList:[self readValue]];
     case 132:
-      return [PigeonFirebaseApp fromList:[self readValue]];
+      return [PigeonAuthCredential fromList:[self readValue]];
     case 133:
-      return [PigeonMultiFactorInfo fromList:[self readValue]];
+      return [PigeonFirebaseApp fromList:[self readValue]];
     case 134:
-      return [PigeonMultiFactorSession fromList:[self readValue]];
+      return [PigeonMultiFactorInfo fromList:[self readValue]];
     case 135:
-      return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
+      return [PigeonMultiFactorSession fromList:[self readValue]];
     case 136:
-      return [PigeonUserCredential fromList:[self readValue]];
+      return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
     case 137:
-      return [PigeonUserDetails fromList:[self readValue]];
+      return [PigeonUserCredential fromList:[self readValue]];
     case 138:
+      return [PigeonUserDetails fromList:[self readValue]];
+    case 139:
       return [PigeonUserInfo fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -495,32 +551,35 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   } else if ([value isKindOfClass:[PigeonActionCodeInfoData class]]) {
     [self writeByte:129];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonAdditionalUserInfo class]]) {
+  } else if ([value isKindOfClass:[PigeonActionCodeSettings class]]) {
     [self writeByte:130];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonAuthCredential class]]) {
+  } else if ([value isKindOfClass:[PigeonAdditionalUserInfo class]]) {
     [self writeByte:131];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonFirebaseApp class]]) {
+  } else if ([value isKindOfClass:[PigeonAuthCredential class]]) {
     [self writeByte:132];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
+  } else if ([value isKindOfClass:[PigeonFirebaseApp class]]) {
     [self writeByte:133];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
+  } else if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
     [self writeByte:134];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
+  } else if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
     [self writeByte:135];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonUserCredential class]]) {
+  } else if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
     [self writeByte:136];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonUserDetails class]]) {
+  } else if ([value isKindOfClass:[PigeonUserCredential class]]) {
     [self writeByte:137];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonUserInfo class]]) {
+  } else if ([value isKindOfClass:[PigeonUserDetails class]]) {
     [self writeByte:138];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonUserInfo class]]) {
+    [self writeByte:139];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];
@@ -904,6 +963,60 @@ void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAuthHostApi.sendPasswordResetEmail"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector
+                     (sendPasswordResetEmailApp:email:actionCodeSettings:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(sendPasswordResetEmailApp:email:actionCodeSettings:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_email = GetNullableObjectAtIndex(args, 1);
+        PigeonActionCodeSettings *arg_actionCodeSettings = GetNullableObjectAtIndex(args, 2);
+        [api sendPasswordResetEmailApp:arg_app
+                                 email:arg_email
+                    actionCodeSettings:arg_actionCodeSettings
+                            completion:^(FlutterError *_Nullable error) {
+                              callback(wrapResult(nil, error));
+                            }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAuthHostApi.sendSignInLinkToEmail"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector
+                     (sendSignInLinkToEmailApp:email:actionCodeSettings:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(sendSignInLinkToEmailApp:email:actionCodeSettings:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_email = GetNullableObjectAtIndex(args, 1);
+        PigeonActionCodeSettings *arg_actionCodeSettings = GetNullableObjectAtIndex(args, 2);
+        [api sendSignInLinkToEmailApp:arg_app
+                                email:arg_email
+                   actionCodeSettings:arg_actionCodeSettings
+                           completion:^(FlutterError *_Nullable error) {
+                             callback(wrapResult(nil, error));
+                           }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }
 @interface MultiFactorUserHostApiCodecReader : FlutterStandardReader
 @end
@@ -1073,22 +1186,24 @@ void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
     case 129:
       return [PigeonActionCodeInfoData fromList:[self readValue]];
     case 130:
-      return [PigeonAdditionalUserInfo fromList:[self readValue]];
+      return [PigeonActionCodeSettings fromList:[self readValue]];
     case 131:
-      return [PigeonAuthCredential fromList:[self readValue]];
+      return [PigeonAdditionalUserInfo fromList:[self readValue]];
     case 132:
-      return [PigeonFirebaseApp fromList:[self readValue]];
+      return [PigeonAuthCredential fromList:[self readValue]];
     case 133:
-      return [PigeonMultiFactorInfo fromList:[self readValue]];
+      return [PigeonFirebaseApp fromList:[self readValue]];
     case 134:
-      return [PigeonMultiFactorSession fromList:[self readValue]];
+      return [PigeonMultiFactorInfo fromList:[self readValue]];
     case 135:
-      return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
+      return [PigeonMultiFactorSession fromList:[self readValue]];
     case 136:
-      return [PigeonUserCredential fromList:[self readValue]];
+      return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
     case 137:
-      return [PigeonUserDetails fromList:[self readValue]];
+      return [PigeonUserCredential fromList:[self readValue]];
     case 138:
+      return [PigeonUserDetails fromList:[self readValue]];
+    case 139:
       return [PigeonUserInfo fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -1106,32 +1221,35 @@ void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
   } else if ([value isKindOfClass:[PigeonActionCodeInfoData class]]) {
     [self writeByte:129];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonAdditionalUserInfo class]]) {
+  } else if ([value isKindOfClass:[PigeonActionCodeSettings class]]) {
     [self writeByte:130];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonAuthCredential class]]) {
+  } else if ([value isKindOfClass:[PigeonAdditionalUserInfo class]]) {
     [self writeByte:131];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonFirebaseApp class]]) {
+  } else if ([value isKindOfClass:[PigeonAuthCredential class]]) {
     [self writeByte:132];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
+  } else if ([value isKindOfClass:[PigeonFirebaseApp class]]) {
     [self writeByte:133];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
+  } else if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
     [self writeByte:134];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
+  } else if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
     [self writeByte:135];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonUserCredential class]]) {
+  } else if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
     [self writeByte:136];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonUserDetails class]]) {
+  } else if ([value isKindOfClass:[PigeonUserCredential class]]) {
     [self writeByte:137];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonUserInfo class]]) {
+  } else if ([value isKindOfClass:[PigeonUserDetails class]]) {
     [self writeByte:138];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonUserInfo class]]) {
+    [self writeByte:139];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];

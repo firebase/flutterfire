@@ -410,6 +410,57 @@ class PigeonUserDetails {
   }
 }
 
+class PigeonActionCodeSettings {
+  PigeonActionCodeSettings({
+    required this.url,
+    this.dynamicLinkDomain,
+    required this.handleCodeInApp,
+    this.iOSBundleId,
+    this.androidPackageName,
+    required this.androidInstallApp,
+    this.androidMinimumVersion,
+  });
+
+  String url;
+
+  String? dynamicLinkDomain;
+
+  bool handleCodeInApp;
+
+  String? iOSBundleId;
+
+  String? androidPackageName;
+
+  bool androidInstallApp;
+
+  String? androidMinimumVersion;
+
+  Object encode() {
+    return <Object?>[
+      url,
+      dynamicLinkDomain,
+      handleCodeInApp,
+      iOSBundleId,
+      androidPackageName,
+      androidInstallApp,
+      androidMinimumVersion,
+    ];
+  }
+
+  static PigeonActionCodeSettings decode(Object result) {
+    result as List<Object?>;
+    return PigeonActionCodeSettings(
+      url: result[0]! as String,
+      dynamicLinkDomain: result[1] as String?,
+      handleCodeInApp: result[2]! as bool,
+      iOSBundleId: result[3] as String?,
+      androidPackageName: result[4] as String?,
+      androidInstallApp: result[5]! as bool,
+      androidMinimumVersion: result[6] as String?,
+    );
+  }
+}
+
 class _FirebaseAuthHostApiCodec extends StandardMessageCodec {
   const _FirebaseAuthHostApiCodec();
   @override
@@ -420,32 +471,35 @@ class _FirebaseAuthHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonActionCodeInfoData) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonAdditionalUserInfo) {
+    } else if (value is PigeonActionCodeSettings) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonAuthCredential) {
+    } else if (value is PigeonAdditionalUserInfo) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseApp) {
+    } else if (value is PigeonAuthCredential) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorInfo) {
+    } else if (value is PigeonFirebaseApp) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorSession) {
+    } else if (value is PigeonMultiFactorInfo) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonPhoneMultiFactorAssertion) {
+    } else if (value is PigeonMultiFactorSession) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserCredential) {
+    } else if (value is PigeonPhoneMultiFactorAssertion) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserDetails) {
+    } else if (value is PigeonUserCredential) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserInfo) {
+    } else if (value is PigeonUserDetails) {
       buffer.putUint8(138);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserInfo) {
+      buffer.putUint8(139);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -460,22 +514,24 @@ class _FirebaseAuthHostApiCodec extends StandardMessageCodec {
       case 129:
         return PigeonActionCodeInfoData.decode(readValue(buffer)!);
       case 130:
-        return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
+        return PigeonActionCodeSettings.decode(readValue(buffer)!);
       case 131:
-        return PigeonAuthCredential.decode(readValue(buffer)!);
+        return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
       case 132:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
+        return PigeonAuthCredential.decode(readValue(buffer)!);
       case 133:
-        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
+        return PigeonFirebaseApp.decode(readValue(buffer)!);
       case 134:
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
       case 135:
-        return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
       case 136:
-        return PigeonUserCredential.decode(readValue(buffer)!);
+        return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
       case 137:
-        return PigeonUserDetails.decode(readValue(buffer)!);
+        return PigeonUserCredential.decode(readValue(buffer)!);
       case 138:
+        return PigeonUserDetails.decode(readValue(buffer)!);
+      case 139:
         return PigeonUserInfo.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -865,6 +921,56 @@ class FirebaseAuthHostApi {
       return (replyList[0] as List<Object?>?)!.cast<String?>();
     }
   }
+
+  Future<void> sendPasswordResetEmail(
+      PigeonFirebaseApp arg_app,
+      String arg_email,
+      PigeonActionCodeSettings? arg_actionCodeSettings) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseAuthHostApi.sendPasswordResetEmail', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+            .send(<Object?>[arg_app, arg_email, arg_actionCodeSettings])
+        as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> sendSignInLinkToEmail(PigeonFirebaseApp arg_app,
+      String arg_email, PigeonActionCodeSettings arg_actionCodeSettings) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseAuthHostApi.sendSignInLinkToEmail', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+            .send(<Object?>[arg_app, arg_email, arg_actionCodeSettings])
+        as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
 }
 
 class _MultiFactorUserHostApiCodec extends StandardMessageCodec {
@@ -1024,32 +1130,35 @@ class _MultiFactoResolverHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonActionCodeInfoData) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonAdditionalUserInfo) {
+    } else if (value is PigeonActionCodeSettings) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonAuthCredential) {
+    } else if (value is PigeonAdditionalUserInfo) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseApp) {
+    } else if (value is PigeonAuthCredential) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorInfo) {
+    } else if (value is PigeonFirebaseApp) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonMultiFactorSession) {
+    } else if (value is PigeonMultiFactorInfo) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonPhoneMultiFactorAssertion) {
+    } else if (value is PigeonMultiFactorSession) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserCredential) {
+    } else if (value is PigeonPhoneMultiFactorAssertion) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserDetails) {
+    } else if (value is PigeonUserCredential) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserInfo) {
+    } else if (value is PigeonUserDetails) {
       buffer.putUint8(138);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserInfo) {
+      buffer.putUint8(139);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -1064,22 +1173,24 @@ class _MultiFactoResolverHostApiCodec extends StandardMessageCodec {
       case 129:
         return PigeonActionCodeInfoData.decode(readValue(buffer)!);
       case 130:
-        return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
+        return PigeonActionCodeSettings.decode(readValue(buffer)!);
       case 131:
-        return PigeonAuthCredential.decode(readValue(buffer)!);
+        return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
       case 132:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
+        return PigeonAuthCredential.decode(readValue(buffer)!);
       case 133:
-        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
+        return PigeonFirebaseApp.decode(readValue(buffer)!);
       case 134:
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
       case 135:
-        return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
       case 136:
-        return PigeonUserCredential.decode(readValue(buffer)!);
+        return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
       case 137:
-        return PigeonUserDetails.decode(readValue(buffer)!);
+        return PigeonUserCredential.decode(readValue(buffer)!);
       case 138:
+        return PigeonUserDetails.decode(readValue(buffer)!);
+      case 139:
         return PigeonUserInfo.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);

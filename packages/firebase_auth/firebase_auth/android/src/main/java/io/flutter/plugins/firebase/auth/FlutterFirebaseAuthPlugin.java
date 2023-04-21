@@ -20,7 +20,6 @@ import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.ActionCodeEmailInfo;
 import com.google.firebase.auth.ActionCodeInfo;
 import com.google.firebase.auth.ActionCodeResult;
-import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -164,56 +163,6 @@ public class FlutterFirebaseAuthPlugin
   private FirebaseUser getCurrentUser(String appName) {
     FirebaseApp app = FirebaseApp.getInstance(appName);
     return FirebaseAuth.getInstance(app).getCurrentUser();
-  }
-
-  private ActionCodeSettings getActionCodeSettings(
-      @NonNull Map<String, Object> actionCodeSettingsMap) {
-    ActionCodeSettings.Builder builder = ActionCodeSettings.newBuilder();
-
-    builder.setUrl((String) Objects.requireNonNull(actionCodeSettingsMap.get(Constants.URL)));
-
-    if (actionCodeSettingsMap.get(Constants.DYNAMIC_LINK_DOMAIN) != null) {
-      builder.setDynamicLinkDomain(
-          (String)
-              Objects.requireNonNull(actionCodeSettingsMap.get(Constants.DYNAMIC_LINK_DOMAIN)));
-    }
-
-    if (actionCodeSettingsMap.get(Constants.HANDLE_CODE_IN_APP) != null) {
-      builder.setHandleCodeInApp(
-          (Boolean)
-              Objects.requireNonNull(actionCodeSettingsMap.get(Constants.HANDLE_CODE_IN_APP)));
-    }
-
-    if (actionCodeSettingsMap.get(Constants.ANDROID) != null) {
-      @SuppressWarnings("unchecked")
-      Map<String, Object> android =
-          (Map<String, Object>)
-              Objects.requireNonNull(actionCodeSettingsMap.get(Constants.ANDROID));
-
-      boolean installIfNotAvailable = false;
-      if (android.get(Constants.INSTALL_APP) != null) {
-        installIfNotAvailable =
-            (Boolean) Objects.requireNonNull(android.get(Constants.INSTALL_APP));
-      }
-      String minimumVersion = null;
-      if (android.get(Constants.MINIMUM_VERSION) != null) {
-        minimumVersion = (String) android.get(Constants.MINIMUM_VERSION);
-      }
-
-      builder.setAndroidPackageName(
-          (String) Objects.requireNonNull(android.get(Constants.PACKAGE_NAME)),
-          installIfNotAvailable,
-          minimumVersion);
-    }
-
-    if (actionCodeSettingsMap.get(Constants.IOS) != null) {
-      @SuppressWarnings("unchecked")
-      Map<String, Object> iOS =
-          (Map<String, Object>) Objects.requireNonNull(actionCodeSettingsMap.get(Constants.IOS));
-      builder.setIOSBundleId((String) Objects.requireNonNull(iOS.get(Constants.BUNDLE_ID)));
-    }
-
-    return builder.build();
   }
 
   private Map<String, Object> parseTokenResult(@NonNull GetTokenResult tokenResult) {
@@ -514,12 +463,15 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @Override
-  public void fetchSignInMethodsForEmail(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String email, @NonNull GeneratedAndroidFirebaseAuth.Result<List<String>> result) {
+  public void fetchSignInMethodsForEmail(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull String email,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<List<String>> result) {
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
       SignInMethodQueryResult signInMethods =
-        Tasks.await(firebaseAuth.fetchSignInMethodsForEmail(email));
+          Tasks.await(firebaseAuth.fetchSignInMethodsForEmail(email));
 
       result.success(signInMethods.getSignInMethods());
     } catch (Exception e) {
@@ -527,63 +479,45 @@ public class FlutterFirebaseAuthPlugin
     }
   }
 
+  @Override
+  public void sendPasswordResetEmail(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull String email,
+      @Nullable GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-  private Task<Void> sendPasswordResetEmail(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+      if (actionCodeSettings == null) {
+        Tasks.await(firebaseAuth.sendPasswordResetEmail(email));
+        result.success(null);
+        return;
+      }
 
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            String email = (String) Objects.requireNonNull(arguments.get(Constants.EMAIL));
-            Object rawActionCodeSettings = arguments.get(Constants.ACTION_CODE_SETTINGS);
-
-            if (rawActionCodeSettings == null) {
-              Tasks.await(firebaseAuth.sendPasswordResetEmail(email));
-              taskCompletionSource.setResult(null);
-              return;
-            }
-
-            @SuppressWarnings("unchecked")
-            Map<String, Object> actionCodeSettings = (Map<String, Object>) rawActionCodeSettings;
-
-            Tasks.await(
-                firebaseAuth.sendPasswordResetEmail(
-                    email, getActionCodeSettings(actionCodeSettings)));
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
+      Tasks.await(
+          firebaseAuth.sendPasswordResetEmail(
+              email, PigeonParser.getActionCodeSettings(actionCodeSettings)));
+      result.success(null);
+    } catch (Exception e) {
+      result.error(e);
+    }
   }
 
-  private Task<Void> sendSignInLinkToEmail(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+  @Override
+  public void sendSignInLinkToEmail(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull String email, @NonNull GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings, @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+    try {
+      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseAuth firebaseAuth = getAuth(arguments);
-            String email = (String) Objects.requireNonNull(arguments.get(Constants.EMAIL));
+      Tasks.await(
+        firebaseAuth.sendSignInLinkToEmail(
+          email, PigeonParser.getActionCodeSettings(actionCodeSettings)));
+      result.success(null);
+    } catch (Exception e) {
+      result.error(e);
+    }
 
-            @SuppressWarnings("unchecked")
-            Map<String, Object> actionCodeSettings =
-                (Map<String, Object>)
-                    Objects.requireNonNull(arguments.get(Constants.ACTION_CODE_SETTINGS));
-
-            Tasks.await(
-                firebaseAuth.sendSignInLinkToEmail(
-                    email, getActionCodeSettings(actionCodeSettings)));
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
   }
+
 
   private Task<Map<String, Object>> setLanguageCode(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
@@ -1201,12 +1135,6 @@ public class FlutterFirebaseAuthPlugin
     final Task<?> methodCallTask;
 
     switch (call.method) {
-      case "Auth#fetchSignInMethodsForEmail":
-        methodCallTask = fetchSignInMethodsForEmail(call.arguments());
-        break;
-      case "Auth#sendPasswordResetEmail":
-        methodCallTask = sendPasswordResetEmail(call.arguments());
-        break;
       case "Auth#sendSignInLinkToEmail":
         methodCallTask = sendSignInLinkToEmail(call.arguments());
         break;

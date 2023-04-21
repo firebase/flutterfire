@@ -2,6 +2,7 @@ package io.flutter.plugins.firebase.auth;
 
 import android.net.Uri;
 import androidx.annotation.NonNull;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AdditionalUserInfo;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -222,5 +223,31 @@ public class PigeonParser {
       default:
         return null;
     }
+  }
+
+  static ActionCodeSettings getActionCodeSettings(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings pigeonActionCodeSettings) {
+    ActionCodeSettings.Builder builder = ActionCodeSettings.newBuilder();
+
+    builder.setUrl(pigeonActionCodeSettings.getUrl());
+
+    if (pigeonActionCodeSettings.getDynamicLinkDomain() != null) {
+      builder.setDynamicLinkDomain(pigeonActionCodeSettings.getDynamicLinkDomain());
+    }
+
+    builder.setHandleCodeInApp(pigeonActionCodeSettings.getHandleCodeInApp());
+
+    if (pigeonActionCodeSettings.getAndroidPackageName() != null) {
+      builder.setAndroidPackageName(
+          pigeonActionCodeSettings.getAndroidPackageName(),
+          pigeonActionCodeSettings.getAndroidInstallApp(),
+          pigeonActionCodeSettings.getAndroidMinimumVersion());
+    }
+
+    if (pigeonActionCodeSettings.getIOSBundleId() != null) {
+      builder.setIOSBundleId(pigeonActionCodeSettings.getIOSBundleId());
+    }
+
+    return builder.build();
   }
 }

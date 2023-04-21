@@ -439,12 +439,21 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     ActionCodeSettings? actionCodeSettings,
   ]) async {
     try {
-      await channel.invokeMethod<void>(
-          'Auth#sendPasswordResetEmail',
-          _withChannelDefaults({
-            'email': email,
-            'actionCodeSettings': actionCodeSettings?.asMap(),
-          }));
+      await _api.sendPasswordResetEmail(
+        pigeonDefault,
+        email,
+        actionCodeSettings == null
+            ? null
+            : PigeonActionCodeSettings(
+                url: actionCodeSettings.url,
+                handleCodeInApp: actionCodeSettings.handleCodeInApp,
+                iOSBundleId: actionCodeSettings.iOSBundleId,
+                androidPackageName: actionCodeSettings.androidPackageName,
+                androidInstallApp: actionCodeSettings.androidInstallApp,
+                androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
+                dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+              ),
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -456,12 +465,19 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     ActionCodeSettings actionCodeSettings,
   ) async {
     try {
-      await channel.invokeMethod<void>(
-          'Auth#sendSignInLinkToEmail',
-          _withChannelDefaults({
-            'email': email,
-            'actionCodeSettings': actionCodeSettings.asMap(),
-          }));
+      await _api.sendPasswordResetEmail(
+        pigeonDefault,
+        email,
+        PigeonActionCodeSettings(
+          url: actionCodeSettings.url,
+          handleCodeInApp: actionCodeSettings.handleCodeInApp,
+          iOSBundleId: actionCodeSettings.iOSBundleId,
+          androidPackageName: actionCodeSettings.androidPackageName,
+          androidInstallApp: actionCodeSettings.androidInstallApp,
+          androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
+          dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+        ),
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

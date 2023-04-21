@@ -1239,6 +1239,187 @@ public class GeneratedAndroidFirebaseAuth {
     }
   }
 
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonActionCodeSettings {
+    private @NonNull String url;
+
+    public @NonNull String getUrl() {
+      return url;
+    }
+
+    public void setUrl(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"url\" is null.");
+      }
+      this.url = setterArg;
+    }
+
+    private @Nullable String dynamicLinkDomain;
+
+    public @Nullable String getDynamicLinkDomain() {
+      return dynamicLinkDomain;
+    }
+
+    public void setDynamicLinkDomain(@Nullable String setterArg) {
+      this.dynamicLinkDomain = setterArg;
+    }
+
+    private @NonNull Boolean handleCodeInApp;
+
+    public @NonNull Boolean getHandleCodeInApp() {
+      return handleCodeInApp;
+    }
+
+    public void setHandleCodeInApp(@NonNull Boolean setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"handleCodeInApp\" is null.");
+      }
+      this.handleCodeInApp = setterArg;
+    }
+
+    private @Nullable String iOSBundleId;
+
+    public @Nullable String getIOSBundleId() {
+      return iOSBundleId;
+    }
+
+    public void setIOSBundleId(@Nullable String setterArg) {
+      this.iOSBundleId = setterArg;
+    }
+
+    private @Nullable String androidPackageName;
+
+    public @Nullable String getAndroidPackageName() {
+      return androidPackageName;
+    }
+
+    public void setAndroidPackageName(@Nullable String setterArg) {
+      this.androidPackageName = setterArg;
+    }
+
+    private @NonNull Boolean androidInstallApp;
+
+    public @NonNull Boolean getAndroidInstallApp() {
+      return androidInstallApp;
+    }
+
+    public void setAndroidInstallApp(@NonNull Boolean setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"androidInstallApp\" is null.");
+      }
+      this.androidInstallApp = setterArg;
+    }
+
+    private @Nullable String androidMinimumVersion;
+
+    public @Nullable String getAndroidMinimumVersion() {
+      return androidMinimumVersion;
+    }
+
+    public void setAndroidMinimumVersion(@Nullable String setterArg) {
+      this.androidMinimumVersion = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonActionCodeSettings() {}
+
+    public static final class Builder {
+
+      private @Nullable String url;
+
+      public @NonNull Builder setUrl(@NonNull String setterArg) {
+        this.url = setterArg;
+        return this;
+      }
+
+      private @Nullable String dynamicLinkDomain;
+
+      public @NonNull Builder setDynamicLinkDomain(@Nullable String setterArg) {
+        this.dynamicLinkDomain = setterArg;
+        return this;
+      }
+
+      private @Nullable Boolean handleCodeInApp;
+
+      public @NonNull Builder setHandleCodeInApp(@NonNull Boolean setterArg) {
+        this.handleCodeInApp = setterArg;
+        return this;
+      }
+
+      private @Nullable String iOSBundleId;
+
+      public @NonNull Builder setIOSBundleId(@Nullable String setterArg) {
+        this.iOSBundleId = setterArg;
+        return this;
+      }
+
+      private @Nullable String androidPackageName;
+
+      public @NonNull Builder setAndroidPackageName(@Nullable String setterArg) {
+        this.androidPackageName = setterArg;
+        return this;
+      }
+
+      private @Nullable Boolean androidInstallApp;
+
+      public @NonNull Builder setAndroidInstallApp(@NonNull Boolean setterArg) {
+        this.androidInstallApp = setterArg;
+        return this;
+      }
+
+      private @Nullable String androidMinimumVersion;
+
+      public @NonNull Builder setAndroidMinimumVersion(@Nullable String setterArg) {
+        this.androidMinimumVersion = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonActionCodeSettings build() {
+        PigeonActionCodeSettings pigeonReturn = new PigeonActionCodeSettings();
+        pigeonReturn.setUrl(url);
+        pigeonReturn.setDynamicLinkDomain(dynamicLinkDomain);
+        pigeonReturn.setHandleCodeInApp(handleCodeInApp);
+        pigeonReturn.setIOSBundleId(iOSBundleId);
+        pigeonReturn.setAndroidPackageName(androidPackageName);
+        pigeonReturn.setAndroidInstallApp(androidInstallApp);
+        pigeonReturn.setAndroidMinimumVersion(androidMinimumVersion);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(7);
+      toListResult.add(url);
+      toListResult.add(dynamicLinkDomain);
+      toListResult.add(handleCodeInApp);
+      toListResult.add(iOSBundleId);
+      toListResult.add(androidPackageName);
+      toListResult.add(androidInstallApp);
+      toListResult.add(androidMinimumVersion);
+      return toListResult;
+    }
+
+    static @NonNull PigeonActionCodeSettings fromList(@NonNull ArrayList<Object> list) {
+      PigeonActionCodeSettings pigeonResult = new PigeonActionCodeSettings();
+      Object url = list.get(0);
+      pigeonResult.setUrl((String) url);
+      Object dynamicLinkDomain = list.get(1);
+      pigeonResult.setDynamicLinkDomain((String) dynamicLinkDomain);
+      Object handleCodeInApp = list.get(2);
+      pigeonResult.setHandleCodeInApp((Boolean) handleCodeInApp);
+      Object iOSBundleId = list.get(3);
+      pigeonResult.setIOSBundleId((String) iOSBundleId);
+      Object androidPackageName = list.get(4);
+      pigeonResult.setAndroidPackageName((String) androidPackageName);
+      Object androidInstallApp = list.get(5);
+      pigeonResult.setAndroidInstallApp((Boolean) androidInstallApp);
+      Object androidMinimumVersion = list.get(6);
+      pigeonResult.setAndroidMinimumVersion((String) androidMinimumVersion);
+      return pigeonResult;
+    }
+  }
+
   public interface Result<T> {
     @SuppressWarnings("UnknownNullness")
     void success(T result);
@@ -1259,22 +1440,24 @@ public class GeneratedAndroidFirebaseAuth {
         case (byte) 129:
           return PigeonActionCodeInfoData.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
-          return PigeonAdditionalUserInfo.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonActionCodeSettings.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 131:
-          return PigeonAuthCredential.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonAdditionalUserInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 132:
-          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonAuthCredential.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 133:
-          return PigeonMultiFactorInfo.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 134:
-          return PigeonMultiFactorSession.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonMultiFactorInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 135:
-          return PigeonPhoneMultiFactorAssertion.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonMultiFactorSession.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 136:
-          return PigeonUserCredential.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonPhoneMultiFactorAssertion.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 137:
-          return PigeonUserDetails.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonUserCredential.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 138:
+          return PigeonUserDetails.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 139:
           return PigeonUserInfo.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
@@ -1289,32 +1472,35 @@ public class GeneratedAndroidFirebaseAuth {
       } else if (value instanceof PigeonActionCodeInfoData) {
         stream.write(129);
         writeValue(stream, ((PigeonActionCodeInfoData) value).toList());
-      } else if (value instanceof PigeonAdditionalUserInfo) {
+      } else if (value instanceof PigeonActionCodeSettings) {
         stream.write(130);
+        writeValue(stream, ((PigeonActionCodeSettings) value).toList());
+      } else if (value instanceof PigeonAdditionalUserInfo) {
+        stream.write(131);
         writeValue(stream, ((PigeonAdditionalUserInfo) value).toList());
       } else if (value instanceof PigeonAuthCredential) {
-        stream.write(131);
+        stream.write(132);
         writeValue(stream, ((PigeonAuthCredential) value).toList());
       } else if (value instanceof PigeonFirebaseApp) {
-        stream.write(132);
+        stream.write(133);
         writeValue(stream, ((PigeonFirebaseApp) value).toList());
       } else if (value instanceof PigeonMultiFactorInfo) {
-        stream.write(133);
+        stream.write(134);
         writeValue(stream, ((PigeonMultiFactorInfo) value).toList());
       } else if (value instanceof PigeonMultiFactorSession) {
-        stream.write(134);
+        stream.write(135);
         writeValue(stream, ((PigeonMultiFactorSession) value).toList());
       } else if (value instanceof PigeonPhoneMultiFactorAssertion) {
-        stream.write(135);
+        stream.write(136);
         writeValue(stream, ((PigeonPhoneMultiFactorAssertion) value).toList());
       } else if (value instanceof PigeonUserCredential) {
-        stream.write(136);
+        stream.write(137);
         writeValue(stream, ((PigeonUserCredential) value).toList());
       } else if (value instanceof PigeonUserDetails) {
-        stream.write(137);
+        stream.write(138);
         writeValue(stream, ((PigeonUserDetails) value).toList());
       } else if (value instanceof PigeonUserInfo) {
-        stream.write(138);
+        stream.write(139);
         writeValue(stream, ((PigeonUserInfo) value).toList());
       } else {
         super.writeValue(stream, value);
@@ -1386,6 +1572,18 @@ public class GeneratedAndroidFirebaseAuth {
         @NonNull PigeonFirebaseApp app,
         @NonNull String email,
         @NonNull Result<List<String>> result);
+
+    void sendPasswordResetEmail(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String email,
+        @Nullable PigeonActionCodeSettings actionCodeSettings,
+        @NonNull Result<Void> result);
+
+    void sendSignInLinkToEmail(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String email,
+        @NonNull PigeonActionCodeSettings actionCodeSettings,
+        @NonNull Result<Void> result);
 
     /** The codec used by FirebaseAuthHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -1845,6 +2043,74 @@ public class GeneratedAndroidFirebaseAuth {
           channel.setMessageHandler(null);
         }
       }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseAuthHostApi.sendPasswordResetEmail",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                String emailArg = (String) args.get(1);
+                PigeonActionCodeSettings actionCodeSettingsArg =
+                    (PigeonActionCodeSettings) args.get(2);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.sendPasswordResetEmail(appArg, emailArg, actionCodeSettingsArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseAuthHostApi.sendSignInLinkToEmail",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                String emailArg = (String) args.get(1);
+                PigeonActionCodeSettings actionCodeSettingsArg =
+                    (PigeonActionCodeSettings) args.get(2);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.sendSignInLinkToEmail(appArg, emailArg, actionCodeSettingsArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
     }
   }
 
@@ -2054,22 +2320,24 @@ public class GeneratedAndroidFirebaseAuth {
         case (byte) 129:
           return PigeonActionCodeInfoData.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
-          return PigeonAdditionalUserInfo.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonActionCodeSettings.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 131:
-          return PigeonAuthCredential.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonAdditionalUserInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 132:
-          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonAuthCredential.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 133:
-          return PigeonMultiFactorInfo.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 134:
-          return PigeonMultiFactorSession.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonMultiFactorInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 135:
-          return PigeonPhoneMultiFactorAssertion.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonMultiFactorSession.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 136:
-          return PigeonUserCredential.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonPhoneMultiFactorAssertion.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 137:
-          return PigeonUserDetails.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonUserCredential.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 138:
+          return PigeonUserDetails.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 139:
           return PigeonUserInfo.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
@@ -2084,32 +2352,35 @@ public class GeneratedAndroidFirebaseAuth {
       } else if (value instanceof PigeonActionCodeInfoData) {
         stream.write(129);
         writeValue(stream, ((PigeonActionCodeInfoData) value).toList());
-      } else if (value instanceof PigeonAdditionalUserInfo) {
+      } else if (value instanceof PigeonActionCodeSettings) {
         stream.write(130);
+        writeValue(stream, ((PigeonActionCodeSettings) value).toList());
+      } else if (value instanceof PigeonAdditionalUserInfo) {
+        stream.write(131);
         writeValue(stream, ((PigeonAdditionalUserInfo) value).toList());
       } else if (value instanceof PigeonAuthCredential) {
-        stream.write(131);
+        stream.write(132);
         writeValue(stream, ((PigeonAuthCredential) value).toList());
       } else if (value instanceof PigeonFirebaseApp) {
-        stream.write(132);
+        stream.write(133);
         writeValue(stream, ((PigeonFirebaseApp) value).toList());
       } else if (value instanceof PigeonMultiFactorInfo) {
-        stream.write(133);
+        stream.write(134);
         writeValue(stream, ((PigeonMultiFactorInfo) value).toList());
       } else if (value instanceof PigeonMultiFactorSession) {
-        stream.write(134);
+        stream.write(135);
         writeValue(stream, ((PigeonMultiFactorSession) value).toList());
       } else if (value instanceof PigeonPhoneMultiFactorAssertion) {
-        stream.write(135);
+        stream.write(136);
         writeValue(stream, ((PigeonPhoneMultiFactorAssertion) value).toList());
       } else if (value instanceof PigeonUserCredential) {
-        stream.write(136);
+        stream.write(137);
         writeValue(stream, ((PigeonUserCredential) value).toList());
       } else if (value instanceof PigeonUserDetails) {
-        stream.write(137);
+        stream.write(138);
         writeValue(stream, ((PigeonUserDetails) value).toList());
       } else if (value instanceof PigeonUserInfo) {
-        stream.write(138);
+        stream.write(139);
         writeValue(stream, ((PigeonUserInfo) value).toList());
       } else {
         super.writeValue(stream, value);

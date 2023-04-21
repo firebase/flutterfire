@@ -40,6 +40,7 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @class PigeonAuthCredential;
 @class PigeonUserInfo;
 @class PigeonUserDetails;
+@class PigeonActionCodeSettings;
 
 @interface PigeonMultiFactorSession : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
@@ -169,6 +170,25 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @property(nonatomic, strong) NSArray<PigeonUserInfo *> *providerData;
 @end
 
+@interface PigeonActionCodeSettings : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithUrl:(NSString *)url
+          dynamicLinkDomain:(nullable NSString *)dynamicLinkDomain
+            handleCodeInApp:(NSNumber *)handleCodeInApp
+                iOSBundleId:(nullable NSString *)iOSBundleId
+         androidPackageName:(nullable NSString *)androidPackageName
+          androidInstallApp:(NSNumber *)androidInstallApp
+      androidMinimumVersion:(nullable NSString *)androidMinimumVersion;
+@property(nonatomic, copy) NSString *url;
+@property(nonatomic, copy, nullable) NSString *dynamicLinkDomain;
+@property(nonatomic, strong) NSNumber *handleCodeInApp;
+@property(nonatomic, copy, nullable) NSString *iOSBundleId;
+@property(nonatomic, copy, nullable) NSString *androidPackageName;
+@property(nonatomic, strong) NSNumber *androidInstallApp;
+@property(nonatomic, copy, nullable) NSString *androidMinimumVersion;
+@end
+
 /// The codec used by FirebaseAuthHostApi.
 NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
 
@@ -226,6 +246,14 @@ NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
                                 email:(NSString *)email
                            completion:(void (^)(NSArray<NSString *> *_Nullable,
                                                 FlutterError *_Nullable))completion;
+- (void)sendPasswordResetEmailApp:(PigeonFirebaseApp *)app
+                            email:(NSString *)email
+               actionCodeSettings:(nullable PigeonActionCodeSettings *)actionCodeSettings
+                       completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)sendSignInLinkToEmailApp:(PigeonFirebaseApp *)app
+                           email:(NSString *)email
+              actionCodeSettings:(PigeonActionCodeSettings *)actionCodeSettings
+                      completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

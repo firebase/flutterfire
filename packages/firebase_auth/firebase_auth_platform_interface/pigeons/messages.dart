@@ -204,6 +204,26 @@ class PigeonAuthCredentialInput {
   final String? accessToken;
 }
 
+class PigeonActionCodeSettings {
+  const PigeonActionCodeSettings({
+    required this.url,
+    required this.dynamicLinkDomain,
+    required this.handleCodeInApp,
+    required this.iOSBundleId,
+    required this.androidPackageName,
+    required this.androidInstallApp,
+    required this.androidMinimumVersion,
+  });
+
+  final String url;
+  final String? dynamicLinkDomain;
+  final bool handleCodeInApp;
+  final String? iOSBundleId;
+  final String? androidPackageName;
+  final bool androidInstallApp;
+  final String? androidMinimumVersion;
+}
+
 @HostApi(dartHostTestHandler: 'TesFirebaseAuthHostApi')
 abstract class FirebaseAuthHostApi {
   @async
@@ -289,6 +309,20 @@ abstract class FirebaseAuthHostApi {
   List<String> fetchSignInMethodsForEmail(
     PigeonFirebaseApp app,
     String email,
+  );
+
+  @async
+  void sendPasswordResetEmail(
+    PigeonFirebaseApp app,
+    String email,
+    PigeonActionCodeSettings? actionCodeSettings,
+  );
+
+  @async
+  void sendSignInLinkToEmail(
+    PigeonFirebaseApp app,
+    String email,
+    PigeonActionCodeSettings actionCodeSettings,
   );
 }
 
