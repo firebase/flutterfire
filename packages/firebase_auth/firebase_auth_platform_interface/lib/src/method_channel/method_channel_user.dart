@@ -79,17 +79,13 @@ class MethodChannelUser extends UserPlatform {
     AuthCredential credential,
   ) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
-              'User#linkWithCredential',
-              _withChannelDefaults(
-                {
-                  'credential': credential.asMap(),
-                },
-              )))!;
+      final result = await _api.linkWithCredential(
+        pigeonDefault,
+        credential.asMap(),
+      );
 
       MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(auth, data);
+          MethodChannelUserCredential(auth, result);
 
       auth.currentUser = userCredential.user;
       return userCredential;
@@ -106,19 +102,21 @@ class MethodChannelUser extends UserPlatform {
       // To extract scopes and custom parameters from the provider
       final convertedProvider = convertToOAuthProvider(provider);
 
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
-              'User#linkWithProvider',
-              _withChannelDefaults({
-                'signInProvider': convertedProvider.providerId,
-                if (convertedProvider is OAuthProvider) ...{
-                  'scopes': convertedProvider.scopes,
-                  'customParameters': convertedProvider.parameters
-                },
-              })))!;
+      final result = await _api.linkWithProvider(
+        pigeonDefault,
+        PigeonSignInProvider(
+          providerId: convertedProvider.providerId,
+          scopes: convertedProvider is OAuthProvider
+              ? convertedProvider.scopes
+              : null,
+          customParameters: convertedProvider is OAuthProvider
+              ? convertedProvider.parameters
+              : null,
+        ),
+      );
 
       MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(auth, data);
+          MethodChannelUserCredential(auth, result);
 
       auth.currentUser = userCredential.user;
       return userCredential;

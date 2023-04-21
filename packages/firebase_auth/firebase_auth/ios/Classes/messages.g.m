@@ -1348,9 +1348,37 @@ void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
 - (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
     case 128:
-      return [PigeonFirebaseApp fromList:[self readValue]];
+      return [PigeonActionCodeInfo fromList:[self readValue]];
     case 129:
+      return [PigeonActionCodeInfoData fromList:[self readValue]];
+    case 130:
+      return [PigeonActionCodeSettings fromList:[self readValue]];
+    case 131:
+      return [PigeonAdditionalUserInfo fromList:[self readValue]];
+    case 132:
+      return [PigeonAuthCredential fromList:[self readValue]];
+    case 133:
+      return [PigeonFirebaseApp fromList:[self readValue]];
+    case 134:
+      return [PigeonFirebaseAuthSettings fromList:[self readValue]];
+    case 135:
       return [PigeonIdTokenResult fromList:[self readValue]];
+    case 136:
+      return [PigeonMultiFactorInfo fromList:[self readValue]];
+    case 137:
+      return [PigeonMultiFactorSession fromList:[self readValue]];
+    case 138:
+      return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
+    case 139:
+      return [PigeonSignInProvider fromList:[self readValue]];
+    case 140:
+      return [PigeonUserCredential fromList:[self readValue]];
+    case 141:
+      return [PigeonUserDetails fromList:[self readValue]];
+    case 142:
+      return [PigeonUserInfo fromList:[self readValue]];
+    case 143:
+      return [PigeonVerifyPhoneNumberRequest fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
   }
@@ -1361,11 +1389,53 @@ void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
 @end
 @implementation FirebaseAuthUserHostApiCodecWriter
 - (void)writeValue:(id)value {
-  if ([value isKindOfClass:[PigeonFirebaseApp class]]) {
+  if ([value isKindOfClass:[PigeonActionCodeInfo class]]) {
     [self writeByte:128];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonIdTokenResult class]]) {
+  } else if ([value isKindOfClass:[PigeonActionCodeInfoData class]]) {
     [self writeByte:129];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonActionCodeSettings class]]) {
+    [self writeByte:130];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonAdditionalUserInfo class]]) {
+    [self writeByte:131];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonAuthCredential class]]) {
+    [self writeByte:132];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonFirebaseApp class]]) {
+    [self writeByte:133];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonFirebaseAuthSettings class]]) {
+    [self writeByte:134];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonIdTokenResult class]]) {
+    [self writeByte:135];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
+    [self writeByte:136];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
+    [self writeByte:137];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
+    [self writeByte:138];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonSignInProvider class]]) {
+    [self writeByte:139];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonUserCredential class]]) {
+    [self writeByte:140];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonUserDetails class]]) {
+    [self writeByte:141];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonUserInfo class]]) {
+    [self writeByte:142];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonVerifyPhoneNumberRequest class]]) {
+    [self writeByte:143];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];
@@ -1438,6 +1508,56 @@ void FirebaseAuthUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 completion:^(PigeonIdTokenResult *_Nullable output, FlutterError *_Nullable error) {
                   callback(wrapResult(output, error));
                 }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAuthUserHostApi.linkWithCredential"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthUserHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(linkWithCredentialApp:input:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(linkWithCredentialApp:input:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSDictionary<NSString *, id> *arg_input = GetNullableObjectAtIndex(args, 1);
+        [api linkWithCredentialApp:arg_app
+                             input:arg_input
+                        completion:^(PigeonUserCredential *_Nullable output,
+                                     FlutterError *_Nullable error) {
+                          callback(wrapResult(output, error));
+                        }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseAuthUserHostApi.linkWithProvider"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthUserHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(linkWithProviderApp:signInProvider:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(linkWithProviderApp:signInProvider:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        PigeonSignInProvider *arg_signInProvider = GetNullableObjectAtIndex(args, 1);
+        [api linkWithProviderApp:arg_app
+                  signInProvider:arg_signInProvider
+                      completion:^(PigeonUserCredential *_Nullable output,
+                                   FlutterError *_Nullable error) {
+                        callback(wrapResult(output, error));
+                      }];
       }];
     } else {
       [channel setMessageHandler:nil];

@@ -375,16 +375,17 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       final convertedProvider = convertToOAuthProvider(provider);
 
       final result = await _api.signInWithProvider(
-          pigeonDefault,
-          PigeonSignInProvider(
-            providerId: convertedProvider.providerId,
-            scopes: convertedProvider is OAuthProvider
-                ? convertedProvider.scopes
-                : null,
-            customParameters: convertedProvider is OAuthProvider
-                ? convertedProvider.parameters
-                : null,
-          ));
+        pigeonDefault,
+        PigeonSignInProvider(
+          providerId: convertedProvider.providerId,
+          scopes: convertedProvider is OAuthProvider
+              ? convertedProvider.scopes
+              : null,
+          customParameters: convertedProvider is OAuthProvider
+              ? convertedProvider.parameters
+              : null,
+        ),
+      );
 
       MethodChannelUserCredential userCredential =
           MethodChannelUserCredential(this, result);

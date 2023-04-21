@@ -3,9 +3,17 @@ package io.flutter.plugins.firebase.auth;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthMultiFactorException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.auth.OAuthProvider;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class FlutterFirebaseAuthUser
     implements GeneratedAndroidFirebaseAuth.FirebaseAuthUserHostApi {
@@ -60,5 +68,78 @@ public class FlutterFirebaseAuthUser
     } catch (Exception e) {
       result.error(e);
     }
+  }
+
+  @Override
+  public void linkWithCredential(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull Map<String, Object> input,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+              result) {
+    try {
+      FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
+      AuthCredential credential = PigeonParser.getCredential(input);
+
+      if (firebaseUser == null) {
+        result.error(FlutterFirebaseAuthPluginException.noUser());
+        return;
+      }
+
+      if (credential == null) {
+        result.error(FlutterFirebaseAuthPluginException.invalidCredential());
+        return;
+      }
+
+      AuthResult authResult;
+
+      authResult = Tasks.await(firebaseUser.linkWithCredential(credential));
+
+      result.success(PigeonParser.parseAuthResult(authResult));
+    } catch (Exception e) {
+      if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+        FlutterFirebaseMultiFactor.handleMultiFactorException(app, result, e);
+        return;
+      }
+      String message = e.getMessage();
+
+      if (message != null
+          && message.contains("User has already been linked to the given provider.")) {
+        result.error(FlutterFirebaseAuthPluginException.alreadyLinkedProvider());
+        return;
+      }
+
+      result.error(e);
+    }
+  }
+
+  @Override
+  public void linkWithProvider(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseAuth.PigeonSignInProvider signInProvider, @NonNull GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential> result) {
+    try {
+      FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
+
+
+      OAuthProvider.Builder provider = OAuthProvider.newBuilder(signInProvider.getProviderId());
+      if (signInProvider.getScopes() != null) {
+        provider.setScopes(signInProvider.getScopes());
+      }
+      if (signInProvider.getCustomParameters() != null) {
+        provider.addCustomParameters(signInProvider.getCustomParameters());
+      }
+
+      AuthResult authResult =
+        Tasks.await(
+          firebaseUser.startActivityForLinkWithProvider(
+            /* activity= */ FlutterFirebaseAuthPlugin.activity, provider.build()));
+      result.success(PigeonParser.parseAuthResult(authResult));
+    } catch (Exception e) {
+      if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+        FlutterFirebaseMultiFactor.handleMultiFactorException(
+          app, result, e);
+      } else {
+        result.error(e);
+      }
+    }
+
   }
 }

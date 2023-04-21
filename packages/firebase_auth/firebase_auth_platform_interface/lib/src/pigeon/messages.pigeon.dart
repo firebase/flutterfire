@@ -1302,11 +1302,53 @@ class _FirebaseAuthUserHostApiCodec extends StandardMessageCodec {
   const _FirebaseAuthUserHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonFirebaseApp) {
+    if (value is PigeonActionCodeInfo) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonIdTokenResult) {
+    } else if (value is PigeonActionCodeInfoData) {
       buffer.putUint8(129);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonActionCodeSettings) {
+      buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonAdditionalUserInfo) {
+      buffer.putUint8(131);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonAuthCredential) {
+      buffer.putUint8(132);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonFirebaseApp) {
+      buffer.putUint8(133);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonFirebaseAuthSettings) {
+      buffer.putUint8(134);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonIdTokenResult) {
+      buffer.putUint8(135);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonMultiFactorInfo) {
+      buffer.putUint8(136);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonMultiFactorSession) {
+      buffer.putUint8(137);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonPhoneMultiFactorAssertion) {
+      buffer.putUint8(138);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonSignInProvider) {
+      buffer.putUint8(139);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserCredential) {
+      buffer.putUint8(140);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserDetails) {
+      buffer.putUint8(141);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonUserInfo) {
+      buffer.putUint8(142);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonVerifyPhoneNumberRequest) {
+      buffer.putUint8(143);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -1317,9 +1359,37 @@ class _FirebaseAuthUserHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
+        return PigeonActionCodeInfo.decode(readValue(buffer)!);
       case 129:
+        return PigeonActionCodeInfoData.decode(readValue(buffer)!);
+      case 130:
+        return PigeonActionCodeSettings.decode(readValue(buffer)!);
+      case 131:
+        return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
+      case 132:
+        return PigeonAuthCredential.decode(readValue(buffer)!);
+      case 133:
+        return PigeonFirebaseApp.decode(readValue(buffer)!);
+      case 134:
+        return PigeonFirebaseAuthSettings.decode(readValue(buffer)!);
+      case 135:
         return PigeonIdTokenResult.decode(readValue(buffer)!);
+      case 136:
+        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
+      case 137:
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+      case 138:
+        return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
+      case 139:
+        return PigeonSignInProvider.decode(readValue(buffer)!);
+      case 140:
+        return PigeonUserCredential.decode(readValue(buffer)!);
+      case 141:
+        return PigeonUserDetails.decode(readValue(buffer)!);
+      case 142:
+        return PigeonUserInfo.decode(readValue(buffer)!);
+      case 143:
+        return PigeonVerifyPhoneNumberRequest.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -1383,6 +1453,62 @@ class FirebaseAuthUserHostApi {
       );
     } else {
       return (replyList[0] as PigeonIdTokenResult?)!;
+    }
+  }
+
+  Future<PigeonUserCredential> linkWithCredential(
+      PigeonFirebaseApp arg_app, Map<String?, Object?> arg_input) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseAuthUserHostApi.linkWithCredential', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_input]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as PigeonUserCredential?)!;
+    }
+  }
+
+  Future<PigeonUserCredential> linkWithProvider(PigeonFirebaseApp arg_app,
+      PigeonSignInProvider arg_signInProvider) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseAuthUserHostApi.linkWithProvider', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_app, arg_signInProvider]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as PigeonUserCredential?)!;
     }
   }
 }
