@@ -177,11 +177,7 @@ public class PigeonParser {
   }
 
   @SuppressWarnings("ConstantConditions")
-  static AuthCredential getCredential(Map<String, Object> arguments) {
-    @SuppressWarnings("unchecked")
-    Map<String, Object> credentialMap =
-        (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.CREDENTIAL));
-
+  static AuthCredential getCredential(Map<String, Object> credentialMap) {
     // If the credential map contains a token, it means a native one has been stored
     if (credentialMap.get(Constants.TOKEN) != null) {
       int token = (int) credentialMap.get(Constants.TOKEN);

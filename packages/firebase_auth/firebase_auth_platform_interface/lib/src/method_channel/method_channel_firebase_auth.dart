@@ -487,7 +487,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     ActionCodeSettings actionCodeSettings,
   ) async {
     try {
-      await _api.sendPasswordResetEmail(
+      await _api.sendSignInLinkToEmail(
         pigeonDefault,
         email,
         PigeonActionCodeSettings(

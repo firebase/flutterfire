@@ -453,6 +453,13 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   Future<void> _emailAndPassword() async {
+    final credential = EmailAuthProvider.credential(
+      email: 'test@mail.com',
+      password: 'sowrong',
+    );
+
+    await auth.signInWithCredential(credential);
+
     if (formKey.currentState?.validate() ?? false) {
       if (mode == AuthMode.login) {
         await auth.signInWithEmailAndPassword(
