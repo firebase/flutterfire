@@ -147,6 +147,8 @@ public class PigeonParser {
     builderInfo.setUid(userInfo.getUid());
     builderInfo.setProviderId(userInfo.getProviderId());
 
+    builderInfo.setIsAnonymous(false);
+
     return builderInfo.build();
   }
 

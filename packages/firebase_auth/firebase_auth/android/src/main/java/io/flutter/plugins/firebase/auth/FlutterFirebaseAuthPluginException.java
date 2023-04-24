@@ -6,7 +6,6 @@
 
 package io.flutter.plugins.firebase.auth;
 
-import static io.flutter.plugins.firebase.auth.FlutterFirebaseAuthPlugin.parseAuthCredential;
 
 import androidx.annotation.NonNull;
 import com.google.firebase.auth.AuthCredential;
@@ -65,7 +64,7 @@ public class FlutterFirebaseAuthPluginException extends Exception {
           ((FirebaseAuthUserCollisionException) nativeException).getUpdatedCredential();
 
       if (authCredential != null) {
-        additionalData.put("authCredential", parseAuthCredential(authCredential));
+        additionalData.put("authCredential", PigeonParser.parseAuthCredential(authCredential));
       }
     }
 

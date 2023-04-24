@@ -36,6 +36,8 @@ import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,11 +110,13 @@ public class FlutterFirebaseAuthPlugin
   @Override
   public void onReattachedToActivityForConfigChanges(ActivityPluginBinding activityPluginBinding) {
     activity = activityPluginBinding.getActivity();
+    firebaseAuthUser.setActivity(activity);
   }
 
   @Override
   public void onDetachedFromActivity() {
     activity = null;
+    firebaseAuthUser.setActivity(null);
   }
 
   // Only access activity with this method.
@@ -128,12 +132,6 @@ public class FlutterFirebaseAuthPlugin
       auth.setTenantId(pigeonApp.getTenantId());
     }
     return auth;
-  }
-
-  private FirebaseUser getCurrentUser(Map<String, Object> arguments) {
-    String appName = (String) Objects.requireNonNull(arguments.get(Constants.APP_NAME));
-    FirebaseApp app = FirebaseApp.getInstance(appName);
-    return FirebaseAuth.getInstance(app).getCurrentUser();
   }
 
   @Override
@@ -377,7 +375,7 @@ public class FlutterFirebaseAuthPlugin
       AuthResult authResult =
           Tasks.await(
               firebaseAuth.startActivityForSignInWithProvider(
-                  /* activity= */ activity, provider.build()));
+                  getActivity(), provider.build()));
       result.success(PigeonParser.parseAuthResult(authResult));
     } catch (Exception e) {
       if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
@@ -597,7 +595,8 @@ public class FlutterFirebaseAuthPlugin
             }
 
             if (user != null) {
-              constants.put("APP_CURRENT_USER", user.toList());
+              final Object parsedUser = CustomPigeonParser.preparePigeonUserDetails(user);
+              constants.put("APP_CURRENT_USER", parsedUser);
             }
 
             taskCompletionSource.setResult(constants);
