@@ -170,9 +170,9 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithUserInfo:(PigeonUserInfo *)userInfo
-                    providerData:(NSArray<PigeonUserInfo *> *)providerData;
+                    providerData:(NSArray<NSDictionary<id, id> *> *)providerData;
 @property(nonatomic, strong) PigeonUserInfo *userInfo;
-@property(nonatomic, strong) NSArray<PigeonUserInfo *> *providerData;
+@property(nonatomic, strong) NSArray<NSDictionary<id, id> *> *providerData;
 @end
 
 @interface PigeonActionCodeSettings : NSObject

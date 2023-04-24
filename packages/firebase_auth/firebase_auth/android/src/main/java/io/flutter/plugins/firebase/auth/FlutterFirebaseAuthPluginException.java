@@ -6,7 +6,6 @@
 
 package io.flutter.plugins.firebase.auth;
 
-
 import androidx.annotation.NonNull;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuthException;

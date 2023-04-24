@@ -5,7 +5,6 @@
 
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -59,15 +58,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
     if (currentUser != null) {
       currentUser as List<Object?>;
-      currentUser = PigeonUserDetails(
-        userInfo: PigeonUserInfo.decode(currentUser[0]! as List<Object?>),
-        providerData: (currentUser[1] as List<Object?>?)
-                ?.whereNotNull()
-                .map(PigeonUserInfo.decode)
-                .cast<PigeonUserInfo?>()
-                .toList() ??
-            [],
-      );
+      currentUser = PigeonUserDetails.decode(currentUser);
     }
     return FirebaseAuthPlatform.instance
         .delegateFor(app: app, persistence: persistence)

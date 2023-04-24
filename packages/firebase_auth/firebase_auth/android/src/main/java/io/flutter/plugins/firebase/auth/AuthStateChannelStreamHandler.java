@@ -43,7 +43,7 @@ public class AuthStateChannelStreamHandler implements StreamHandler {
           if (user == null) {
             event.put(Constants.USER, null);
           } else {
-            event.put(Constants.USER, CustomPigeonParser.preparePigeonUserDetails(PigeonParser.parseFirebaseUser(user)));
+            event.put(Constants.USER, PigeonParser.parseFirebaseUser(user).toList());
           }
 
           events.success(event);

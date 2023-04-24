@@ -463,7 +463,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonUserDetails
 + (instancetype)makeWithUserInfo:(PigeonUserInfo *)userInfo
-                    providerData:(NSArray<PigeonUserInfo *> *)providerData {
+                    providerData:(NSArray<NSDictionary<id, id> *> *)providerData {
   PigeonUserDetails *pigeonResult = [[PigeonUserDetails alloc] init];
   pigeonResult.userInfo = userInfo;
   pigeonResult.providerData = providerData;
@@ -2044,8 +2044,6 @@ void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
       return [PigeonUserDetails fromList:[self readValue]];
     case 133:
       return [PigeonUserInfo fromList:[self readValue]];
-    case 134:
-      return [PigeonUserInfo fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
   }
@@ -2073,9 +2071,6 @@ void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[PigeonUserInfo class]]) {
     [self writeByte:133];
-    [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonUserInfo class]]) {
-    [self writeByte:134];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];

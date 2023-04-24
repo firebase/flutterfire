@@ -1433,9 +1433,6 @@ class _TestMultiFactoResolverHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonUserInfo) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserInfo) {
-      buffer.putUint8(134);
-      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -1455,8 +1452,6 @@ class _TestMultiFactoResolverHostApiCodec extends StandardMessageCodec {
       case 132:
         return PigeonUserDetails.decode(readValue(buffer)!);
       case 133:
-        return PigeonUserInfo.decode(readValue(buffer)!);
-      case 134:
         return PigeonUserInfo.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);

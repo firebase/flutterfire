@@ -392,7 +392,7 @@ class PigeonUserDetails {
 
   PigeonUserInfo userInfo;
 
-  List<PigeonUserInfo?> providerData;
+  List<Map<Object?, Object?>?> providerData;
 
   Object encode() {
     return <Object?>[
@@ -405,7 +405,8 @@ class PigeonUserDetails {
     result as List<Object?>;
     return PigeonUserDetails(
       userInfo: PigeonUserInfo.decode(result[0]! as List<Object?>),
-      providerData: (result[1] as List<Object?>?)!.cast<PigeonUserInfo?>(),
+      providerData:
+          (result[1] as List<Object?>?)!.cast<Map<Object?, Object?>?>(),
     );
   }
 }
@@ -2010,9 +2011,6 @@ class _MultiFactoResolverHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonUserInfo) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserInfo) {
-      buffer.putUint8(134);
-      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -2032,8 +2030,6 @@ class _MultiFactoResolverHostApiCodec extends StandardMessageCodec {
       case 132:
         return PigeonUserDetails.decode(readValue(buffer)!);
       case 133:
-        return PigeonUserInfo.decode(readValue(buffer)!);
-      case 134:
         return PigeonUserInfo.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);

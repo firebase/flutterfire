@@ -187,7 +187,7 @@ class PigeonUserDetails {
   });
 
   final PigeonUserInfo userInfo;
-  final List<PigeonUserInfo?> providerData;
+  final List<Map<Object?, Object?>?> providerData;
 }
 
 class PigeonAuthCredentialInput {

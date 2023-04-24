@@ -141,7 +141,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       streamController.add(const _ValueWrapper.absent());
     } else {
       final MethodChannelUser user = MethodChannelUser(
-          instance, multiFactorInstance, userMap.cast<String, dynamic>());
+          instance, multiFactorInstance, PigeonUserDetails.decode(userMap));
 
       instance.currentUser = user;
       streamController.add(_ValueWrapper(instance.currentUser));
@@ -176,7 +176,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       userChangesStreamController.add(const _ValueWrapper.absent());
     } else {
       final MethodChannelUser user = MethodChannelUser(
-          instance, multiFactorInstance, userMap.cast<String, dynamic>());
+          instance, multiFactorInstance, PigeonUserDetails.decode(userMap));
 
       instance.currentUser = user;
       idTokenStreamController.add(_ValueWrapper(user));

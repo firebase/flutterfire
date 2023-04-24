@@ -36,12 +36,9 @@ import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /** Flutter plugin for Firebase Auth. */
@@ -374,8 +371,7 @@ public class FlutterFirebaseAuthPlugin
 
       AuthResult authResult =
           Tasks.await(
-              firebaseAuth.startActivityForSignInWithProvider(
-                  getActivity(), provider.build()));
+              firebaseAuth.startActivityForSignInWithProvider(getActivity(), provider.build()));
       result.success(PigeonParser.parseAuthResult(authResult));
     } catch (Exception e) {
       if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
@@ -595,7 +591,7 @@ public class FlutterFirebaseAuthPlugin
             }
 
             if (user != null) {
-              final Object parsedUser = CustomPigeonParser.preparePigeonUserDetails(user);
+              final Object parsedUser = user.toList();
               constants.put("APP_CURRENT_USER", parsedUser);
             }
 

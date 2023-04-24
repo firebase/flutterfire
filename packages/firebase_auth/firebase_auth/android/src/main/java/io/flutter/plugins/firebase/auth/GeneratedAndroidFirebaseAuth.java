@@ -1180,13 +1180,13 @@ public class GeneratedAndroidFirebaseAuth {
       this.userInfo = setterArg;
     }
 
-    private @NonNull List<PigeonUserInfo> providerData;
+    private @NonNull List<Map<Object, Object>> providerData;
 
-    public @NonNull List<PigeonUserInfo> getProviderData() {
+    public @NonNull List<Map<Object, Object>> getProviderData() {
       return providerData;
     }
 
-    public void setProviderData(@NonNull List<PigeonUserInfo> setterArg) {
+    public void setProviderData(@NonNull List<Map<Object, Object>> setterArg) {
       if (setterArg == null) {
         throw new IllegalStateException("Nonnull field \"providerData\" is null.");
       }
@@ -1205,9 +1205,9 @@ public class GeneratedAndroidFirebaseAuth {
         return this;
       }
 
-      private @Nullable List<PigeonUserInfo> providerData;
+      private @Nullable List<Map<Object, Object>> providerData;
 
-      public @NonNull Builder setProviderData(@NonNull List<PigeonUserInfo> setterArg) {
+      public @NonNull Builder setProviderData(@NonNull List<Map<Object, Object>> setterArg) {
         this.providerData = setterArg;
         return this;
       }
@@ -1234,7 +1234,7 @@ public class GeneratedAndroidFirebaseAuth {
       pigeonResult.setUserInfo(
           (userInfo == null) ? null : PigeonUserInfo.fromList((ArrayList<Object>) userInfo));
       Object providerData = list.get(1);
-      pigeonResult.setProviderData((List<PigeonUserInfo>) providerData);
+      pigeonResult.setProviderData((List<Map<Object, Object>>) providerData);
       return pigeonResult;
     }
   }
@@ -3858,8 +3858,6 @@ public class GeneratedAndroidFirebaseAuth {
           return PigeonUserDetails.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 133:
           return PigeonUserInfo.fromList((ArrayList<Object>) readValue(buffer));
-        case (byte) 134:
-          return PigeonUserInfo.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
       }
@@ -3884,9 +3882,6 @@ public class GeneratedAndroidFirebaseAuth {
         writeValue(stream, ((PigeonUserDetails) value).toList());
       } else if (value instanceof PigeonUserInfo) {
         stream.write(133);
-        writeValue(stream, ((PigeonUserInfo) value).toList());
-      } else if (value instanceof PigeonUserInfo) {
-        stream.write(134);
         writeValue(stream, ((PigeonUserInfo) value).toList());
       } else {
         super.writeValue(stream, value);

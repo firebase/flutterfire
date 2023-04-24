@@ -86,7 +86,12 @@ abstract class UserPlatform extends PlatformInterface {
 
   /// Returns a list of user information for each linked provider.
   List<UserInfo> get providerData {
-    return _user.providerData.whereNotNull().map(UserInfo.fromPigeon).toList();
+    final inputData = _user.providerData.whereNotNull();
+    final List<UserInfo> providerData = [];
+    for (final Map<Object?, Object?> info in inputData) {
+      providerData.add(UserInfo.fromJson(info));
+    }
+    return providerData;
   }
 
   /// Returns a JWT refresh token for the user.

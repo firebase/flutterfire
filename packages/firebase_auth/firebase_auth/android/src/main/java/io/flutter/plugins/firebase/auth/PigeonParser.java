@@ -25,6 +25,7 @@ import com.google.firebase.auth.PhoneMultiFactorInfo;
 import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -114,9 +115,9 @@ public class PigeonParser {
     return builder.build();
   }
 
-  private static List<GeneratedAndroidFirebaseAuth.PigeonUserInfo> parseUserInfoList(
+  private static List<Map<Object, Object>> parseUserInfoList(
       List<? extends UserInfo> userInfoList) {
-    List<GeneratedAndroidFirebaseAuth.PigeonUserInfo> output = new ArrayList<>();
+    List<Map<Object, Object>> output = new ArrayList<>();
 
     if (userInfoList == null) {
       return null;
@@ -127,15 +128,27 @@ public class PigeonParser {
         continue;
       }
       if (!FirebaseAuthProvider.PROVIDER_ID.equals(userInfo.getProviderId())) {
-        output.add(parseUserInfo(userInfo));
+        output.add(parseUserInfoToMap(userInfo));
       }
     }
 
     return output;
   }
 
-  private static GeneratedAndroidFirebaseAuth.PigeonUserInfo parseUserInfo(
-      @NonNull UserInfo userInfo) {
+  private static Map<Object, Object> parseUserInfoToMap(UserInfo userInfo) {
+    Map<Object, Object> output = new HashMap<>();
+    output.put("displayName", userInfo.getDisplayName());
+    output.put("email", userInfo.getEmail());
+    output.put("isEmailVerified", userInfo.isEmailVerified());
+    output.put("phoneNumber", userInfo.getPhoneNumber());
+    output.put("photoUrl", parsePhotoUrl(userInfo.getPhotoUrl()));
+    output.put("uid", userInfo.getUid());
+    output.put("providerId", userInfo.getProviderId());
+    output.put("isAnonymous", false);
+    return output;
+  }
+
+  static GeneratedAndroidFirebaseAuth.PigeonUserInfo parseUserInfo(@NonNull UserInfo userInfo) {
     GeneratedAndroidFirebaseAuth.PigeonUserInfo.Builder builderInfo =
         new GeneratedAndroidFirebaseAuth.PigeonUserInfo.Builder();
 
