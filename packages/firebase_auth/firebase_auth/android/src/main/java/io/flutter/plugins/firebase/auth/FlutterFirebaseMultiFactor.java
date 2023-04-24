@@ -176,6 +176,13 @@ public class FlutterFirebaseMultiFactor
               result) {
     final MultiFactorResolver resolver = multiFactorResolverMap.get(resolverId);
 
+    if (resolver == null) {
+      result.error(
+          FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+              new Exception("Resolver not found")));
+      return;
+    }
+
     PhoneAuthCredential credential =
         PhoneAuthProvider.getCredential(
             assertion.getVerificationId(), assertion.getVerificationCode());

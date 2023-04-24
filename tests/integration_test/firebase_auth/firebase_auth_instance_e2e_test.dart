@@ -241,7 +241,8 @@ void main() {
         test('throws on invalid code', () async {
           try {
             await FirebaseAuth.instance.confirmPasswordReset(
-                code: '!!!!!!', newPassword: 'thingamajig',
+              code: '!!!!!!',
+              newPassword: 'thingamajig',
             );
             fail('Should have thrown');
           } on FirebaseException catch (e) {
@@ -262,7 +263,7 @@ void main() {
 
             expect(newUser.uid, isA<String>());
             expect(newUser.email, equals(email));
-            expect(newUser.emailVerified, isFalse);
+            expect(newUser.isEmailVerified, isFalse);
             expect(newUser.isAnonymous, isFalse);
             expect(newUser.uid, equals(FirebaseAuth.instance.currentUser!.uid));
 
@@ -417,6 +418,10 @@ void main() {
 
       group('sendSignInLinkToEmail()', () {
         test('should send email successfully', () async {
+          await Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform,
+          );
+
           const email = 'email-signin-test@example.com';
           const continueUrl = 'http://action-code-test.com';
 
@@ -447,7 +452,8 @@ void main() {
           // Confirm the continue url was passed through to backend correctly.
           final url = Uri.parse(oobCode.oobLink!);
           expect(
-              url.queryParameters['continueUrl'], Uri.encodeFull(continueUrl),
+            url.queryParameters['continueUrl'],
+            Uri.encodeFull(continueUrl),
           );
         });
       });
@@ -570,7 +576,8 @@ void main() {
 
         test('throws if login password is incorrect', () async {
           var credential = EmailAuthProvider.credential(
-              email: testEmail, password: 'sowrong',
+            email: testEmail,
+            password: 'sowrong',
           );
           try {
             await FirebaseAuth.instance.signInWithCredential(credential);
@@ -748,7 +755,7 @@ void main() {
                   phoneNumber: 'foo',
                   verificationCompleted: (PhoneAuthCredential credential) {
                     return completer.completeError(
-                        Exception('Should not have been called'),
+                      Exception('Should not have been called'),
                     );
                   },
                   verificationFailed: (FirebaseAuthException e) {
@@ -756,12 +763,12 @@ void main() {
                   },
                   codeSent: (String verificationId, int? resetToken) {
                     return completer.completeError(
-                        Exception('Should not have been called'),
+                      Exception('Should not have been called'),
                     );
                   },
                   codeAutoRetrievalTimeout: (String foo) {
                     return completer.completeError(
-                        Exception('Should not have been called'),
+                      Exception('Should not have been called'),
                     );
                   },
                 ),

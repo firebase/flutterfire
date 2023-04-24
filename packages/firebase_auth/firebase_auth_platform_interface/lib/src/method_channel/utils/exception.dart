@@ -41,7 +41,10 @@ FirebaseException platformExceptionToFirebaseAuthException(
 }) {
   if (fromPigeon) {
     return FirebaseAuthException(
-      code: platformException.code,
+      code: platformException.code
+          .replaceAll('ERROR_', '')
+          .toLowerCase()
+          .replaceAll('_', '-'),
       // Remove leading classname from message
       message: platformException.message?.split(': ').last,
     );
