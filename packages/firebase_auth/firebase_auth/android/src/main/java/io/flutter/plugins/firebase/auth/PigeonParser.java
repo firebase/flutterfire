@@ -177,8 +177,7 @@ public class PigeonParser {
   }
 
   @SuppressWarnings("ConstantConditions")
-  static AuthCredential getCredential(Map<String, Object> arguments)
-      throws FlutterFirebaseAuthPluginException {
+  static AuthCredential getCredential(Map<String, Object> arguments) {
     @SuppressWarnings("unchecked")
     Map<String, Object> credentialMap =
         (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.CREDENTIAL));

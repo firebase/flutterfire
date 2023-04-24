@@ -1,7 +1,5 @@
 package io.flutter.plugins.firebase.auth;
 
-
-
 // Parser class to convert Pigeon manually when using StreamChannels
 public class CustomPigeonParser {
 

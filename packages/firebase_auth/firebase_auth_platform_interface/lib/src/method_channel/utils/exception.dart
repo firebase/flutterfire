@@ -17,7 +17,7 @@ import 'package:flutter/services.dart';
 Never convertPlatformException(
   Object exception,
   StackTrace stackTrace, {
-  bool fromPigeon = false,
+  bool fromPigeon = true,
 }) {
   if (exception is! PlatformException) {
     Error.throwWithStackTrace(exception, stackTrace);
@@ -37,7 +37,7 @@ Never convertPlatformException(
 // TODO(rousselGit): Should this return a FirebaseAuthException to avoid having to cast?
 FirebaseException platformExceptionToFirebaseAuthException(
   PlatformException platformException, {
-  bool fromPigeon = false,
+  bool fromPigeon = true,
 }) {
   if (fromPigeon) {
     return FirebaseAuthException(

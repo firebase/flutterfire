@@ -11,17 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.FirebaseApiNotAvailableException;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseNetworkException;
-import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.ActionCodeResult;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseAuthMultiFactorException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.MultiFactorInfo;
 import com.google.firebase.auth.MultiFactorSession;
@@ -185,13 +179,19 @@ public class FlutterFirebaseAuthPlugin
       @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
       @NonNull String code,
       @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
-      Tasks.await(firebaseAuth.applyActionCode(code));
-      result.success(null);
-    } catch (Exception e) {
-      result.error(e);
-    }
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    firebaseAuth
+        .applyActionCode(code)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success(null);
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -201,13 +201,20 @@ public class FlutterFirebaseAuthPlugin
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo>
               result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
-      ActionCodeResult actionCodeResult = Tasks.await(firebaseAuth.checkActionCode(code));
-      result.success(PigeonParser.parseActionCodeResult(actionCodeResult));
-    } catch (Exception e) {
-      result.error(e);
-    }
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    firebaseAuth
+        .checkActionCode(code)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                ActionCodeResult actionCodeInfo = task.getResult();
+                result.success(PigeonParser.parseActionCodeResult(actionCodeInfo));
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -216,14 +223,20 @@ public class FlutterFirebaseAuthPlugin
       @NonNull String code,
       @NonNull String newPassword,
       @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-      Tasks.await(firebaseAuth.confirmPasswordReset(code, newPassword));
-      result.success(null);
-    } catch (Exception e) {
-      result.error(e);
-    }
+    firebaseAuth
+        .confirmPasswordReset(code, newPassword)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success(null);
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -234,16 +247,21 @@ public class FlutterFirebaseAuthPlugin
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
               result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-      AuthResult authResult =
-          Tasks.await(firebaseAuth.createUserWithEmailAndPassword(email, password));
-
-      result.success(PigeonParser.parseAuthResult(authResult));
-    } catch (Exception e) {
-      result.error(e);
-    }
+    firebaseAuth
+        .createUserWithEmailAndPassword(email, password)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                AuthResult authResult = task.getResult();
+                result.success(PigeonParser.parseAuthResult(authResult));
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -252,13 +270,20 @@ public class FlutterFirebaseAuthPlugin
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
               result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
-      AuthResult authResult = Tasks.await(firebaseAuth.signInAnonymously());
-      result.success(PigeonParser.parseAuthResult(authResult));
-    } catch (Exception e) {
-      result.error(e);
-    }
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    firebaseAuth
+        .signInAnonymously()
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                AuthResult authResult = task.getResult();
+                result.success(PigeonParser.parseAuthResult(authResult));
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -268,22 +293,25 @@ public class FlutterFirebaseAuthPlugin
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
               result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
-      AuthCredential credential = PigeonParser.getCredential(input);
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    AuthCredential credential = PigeonParser.getCredential(input);
 
-      if (credential == null) {
-        throw FlutterFirebaseAuthPluginException.invalidCredential();
-      }
-      AuthResult authResult = Tasks.await(firebaseAuth.signInWithCredential(credential));
-      result.success(PigeonParser.parseAuthResult(authResult));
-    } catch (Exception e) {
-      if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
-        FlutterFirebaseMultiFactor.handleMultiFactorException(app, result, e);
-      } else {
-        result.error(e);
-      }
+    if (credential == null) {
+      throw FlutterFirebaseAuthPluginException.invalidCredential();
     }
+    firebaseAuth
+        .signInWithCredential(credential)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                AuthResult authResult = task.getResult();
+                result.success(PigeonParser.parseAuthResult(authResult));
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -293,18 +321,21 @@ public class FlutterFirebaseAuthPlugin
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
               result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
-      AuthResult authResult = Tasks.await(firebaseAuth.signInWithCustomToken(token));
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-      result.success(PigeonParser.parseAuthResult(authResult));
-    } catch (Exception e) {
-      if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
-        FlutterFirebaseMultiFactor.handleMultiFactorException(app, result, e);
-      } else {
-        result.error(e);
-      }
-    }
+    firebaseAuth
+        .signInWithCustomToken(token)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                AuthResult authResult = task.getResult();
+                result.success(PigeonParser.parseAuthResult(authResult));
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -315,18 +346,19 @@ public class FlutterFirebaseAuthPlugin
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
               result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
-      AuthResult authResult = Tasks.await(firebaseAuth.signInWithEmailAndPassword(email, password));
-
-      result.success(PigeonParser.parseAuthResult(authResult));
-    } catch (Exception e) {
-      if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
-        FlutterFirebaseMultiFactor.handleMultiFactorException(app, result, e);
-      } else {
-        result.error(e);
-      }
-    }
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    firebaseAuth
+        .signInWithEmailAndPassword(email, password)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success(PigeonParser.parseAuthResult(task.getResult()));
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -337,18 +369,20 @@ public class FlutterFirebaseAuthPlugin
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
               result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
-      AuthResult authResult = Tasks.await(firebaseAuth.signInWithEmailLink(email, emailLink));
-
-      result.success(PigeonParser.parseAuthResult(authResult));
-    } catch (Exception e) {
-      if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
-        FlutterFirebaseMultiFactor.handleMultiFactorException(app, result, e);
-      } else {
-        result.error(e);
-      }
-    }
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    firebaseAuth
+        .signInWithEmailLink(email, emailLink)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                AuthResult authResult = task.getResult();
+                result.success(PigeonParser.parseAuthResult(authResult));
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -358,28 +392,29 @@ public class FlutterFirebaseAuthPlugin
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
               result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-      OAuthProvider.Builder provider = OAuthProvider.newBuilder(signInProvider.getProviderId());
-      if (signInProvider.getScopes() != null) {
-        provider.setScopes(signInProvider.getScopes());
-      }
-      if (signInProvider.getCustomParameters() != null) {
-        provider.addCustomParameters(signInProvider.getCustomParameters());
-      }
-
-      AuthResult authResult =
-          Tasks.await(
-              firebaseAuth.startActivityForSignInWithProvider(getActivity(), provider.build()));
-      result.success(PigeonParser.parseAuthResult(authResult));
-    } catch (Exception e) {
-      if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
-        FlutterFirebaseMultiFactor.handleMultiFactorException(app, result, e);
-      } else {
-        result.error(e);
-      }
+    OAuthProvider.Builder provider = OAuthProvider.newBuilder(signInProvider.getProviderId());
+    if (signInProvider.getScopes() != null) {
+      provider.setScopes(signInProvider.getScopes());
     }
+    if (signInProvider.getCustomParameters() != null) {
+      provider.addCustomParameters(signInProvider.getCustomParameters());
+    }
+
+    firebaseAuth
+        .startActivityForSignInWithProvider(getActivity(), provider.build())
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                AuthResult authResult = task.getResult();
+                result.success(PigeonParser.parseAuthResult(authResult));
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -400,16 +435,21 @@ public class FlutterFirebaseAuthPlugin
       @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
       @NonNull String email,
       @NonNull GeneratedAndroidFirebaseAuth.Result<List<String>> result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-      SignInMethodQueryResult signInMethods =
-          Tasks.await(firebaseAuth.fetchSignInMethodsForEmail(email));
-
-      result.success(signInMethods.getSignInMethods());
-    } catch (Exception e) {
-      result.error(e);
-    }
+    firebaseAuth
+        .fetchSignInMethodsForEmail(email)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                SignInMethodQueryResult signInMethodQueryResult = task.getResult();
+                result.success(signInMethodQueryResult.getSignInMethods());
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -418,22 +458,36 @@ public class FlutterFirebaseAuthPlugin
       @NonNull String email,
       @Nullable GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
       @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-      if (actionCodeSettings == null) {
-        Tasks.await(firebaseAuth.sendPasswordResetEmail(email));
-        result.success(null);
-        return;
-      }
-
-      Tasks.await(
-          firebaseAuth.sendPasswordResetEmail(
-              email, PigeonParser.getActionCodeSettings(actionCodeSettings)));
-      result.success(null);
-    } catch (Exception e) {
-      result.error(e);
+    if (actionCodeSettings == null) {
+      firebaseAuth
+          .sendPasswordResetEmail(email)
+          .addOnCompleteListener(
+              task -> {
+                if (task.isSuccessful()) {
+                  result.success(null);
+                } else {
+                  result.error(
+                      FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                          task.getException()));
+                }
+              });
+      return;
     }
+
+    firebaseAuth
+        .sendPasswordResetEmail(email, PigeonParser.getActionCodeSettings(actionCodeSettings))
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success(null);
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -442,16 +496,20 @@ public class FlutterFirebaseAuthPlugin
       @NonNull String email,
       @NonNull GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
       @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-      Tasks.await(
-          firebaseAuth.sendSignInLinkToEmail(
-              email, PigeonParser.getActionCodeSettings(actionCodeSettings)));
-      result.success(null);
-    } catch (Exception e) {
-      result.error(e);
-    }
+    firebaseAuth
+        .sendSignInLinkToEmail(email, PigeonParser.getActionCodeSettings(actionCodeSettings))
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success(null);
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -510,13 +568,20 @@ public class FlutterFirebaseAuthPlugin
       @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
       @NonNull String code,
       @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
-    try {
-      FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
-      result.success(Tasks.await(firebaseAuth.verifyPasswordResetCode(code)));
-    } catch (Exception e) {
-      result.error(e);
-    }
+    firebaseAuth
+        .verifyPasswordResetCode(code)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success(task.getResult());
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -602,82 +667,6 @@ public class FlutterFirebaseAuthPlugin
         });
 
     return taskCompletionSource.getTask();
-  }
-
-  static Map<String, Object> getExceptionDetails(Exception exception) {
-    Map<String, Object> details = new HashMap<>();
-
-    if (exception == null) {
-      return details;
-    }
-
-    FlutterFirebaseAuthPluginException authException = null;
-
-    if (exception instanceof FirebaseAuthException) {
-      authException = new FlutterFirebaseAuthPluginException(exception, exception.getCause());
-    } else if (exception.getCause() != null
-        && exception.getCause() instanceof FirebaseAuthException) {
-      authException =
-          new FlutterFirebaseAuthPluginException(
-              (FirebaseAuthException) exception.getCause(),
-              exception.getCause().getCause() != null
-                  ? exception.getCause().getCause()
-                  : exception.getCause());
-    } else if (exception instanceof FlutterFirebaseAuthPluginException) {
-      authException = (FlutterFirebaseAuthPluginException) exception;
-    }
-
-    if (authException != null) {
-      details.put("code", authException.getCode());
-      details.put("message", authException.getMessage());
-      details.put("additionalData", authException.getAdditionalData());
-      return details;
-    }
-
-    if (exception instanceof FirebaseNetworkException
-        || (exception.getCause() != null
-            && exception.getCause() instanceof FirebaseNetworkException)) {
-      details.put("code", "network-request-failed");
-      details.put(
-          "message",
-          "A network error (such as timeout, interrupted connection or unreachable host) has occurred.");
-      details.put("additionalData", new HashMap<>());
-      return details;
-    }
-
-    if (exception instanceof FirebaseApiNotAvailableException
-        || (exception.getCause() != null
-            && exception.getCause() instanceof FirebaseApiNotAvailableException)) {
-      details.put("code", "api-not-available");
-      details.put("message", "The requested API is not available.");
-      details.put("additionalData", new HashMap<>());
-      return details;
-    }
-
-    if (exception instanceof FirebaseTooManyRequestsException
-        || (exception.getCause() != null
-            && exception.getCause() instanceof FirebaseTooManyRequestsException)) {
-      details.put("code", "too-many-requests");
-      details.put(
-          "message",
-          "We have blocked all requests from this device due to unusual activity. Try again later.");
-      details.put("additionalData", new HashMap<>());
-      return details;
-    }
-
-    // Manual message overrides to match other platforms.
-    if (exception.getMessage() != null
-        && exception
-            .getMessage()
-            .startsWith("Cannot create PhoneAuthCredential without either verificationProof")) {
-      details.put("code", "invalid-verification-id");
-      details.put(
-          "message", "The verification ID used to create the phone auth credential is invalid.");
-      details.put("additionalData", new HashMap<>());
-      return details;
-    }
-
-    return details;
   }
 
   @Override

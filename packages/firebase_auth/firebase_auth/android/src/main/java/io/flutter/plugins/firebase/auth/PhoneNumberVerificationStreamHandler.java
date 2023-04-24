@@ -99,12 +99,8 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
 
           @Override
           public void onVerificationFailed(@NonNull FirebaseException e) {
-            Map<String, Object> error = new HashMap<>();
-            error.put("message", e.getLocalizedMessage());
-            error.put("details", FlutterFirebaseAuthPlugin.getExceptionDetails(e));
-
             Map<String, Object> event = new HashMap<>();
-            event.put("error", error);
+            event.put("error", FlutterFirebaseAuthPluginException.parserExceptionToFlutter(e));
 
             event.put(Constants.NAME, "Auth#phoneVerificationFailed");
 

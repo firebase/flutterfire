@@ -2,9 +2,7 @@ package io.flutter.plugins.firebase.auth;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuthMultiFactorException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.MultiFactor;
 import com.google.firebase.auth.MultiFactorAssertion;
@@ -25,54 +23,13 @@ public class FlutterFirebaseMultiFactor
         GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi {
 
   // Map an app id to a map of user id to a MultiFactorUser object.
-  static final Map<String, Map<String, MultiFactor>> multiFactorUserMap =
-      new HashMap<String, Map<String, MultiFactor>>();
+  static final Map<String, Map<String, MultiFactor>> multiFactorUserMap = new HashMap<>();
 
   // Map an id to a MultiFactorSession object.
-  static final Map<String, MultiFactorSession> multiFactorSessionMap =
-      new HashMap<String, MultiFactorSession>();
+  static final Map<String, MultiFactorSession> multiFactorSessionMap = new HashMap<>();
 
   // Map an id to a MultiFactorSession object.
-  static final Map<String, MultiFactorResolver> multiFactorResolverMap =
-      new HashMap<String, MultiFactorResolver>();
-
-  public FlutterFirebaseMultiFactor() {}
-
-  static void handleMultiFactorException(
-      GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
-      GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential> result,
-      Exception e) {
-    final FirebaseAuthMultiFactorException multiFactorException =
-        (FirebaseAuthMultiFactorException) e.getCause();
-    Map<String, Object> output = new HashMap<String, Object>();
-
-    assert multiFactorException != null;
-    MultiFactorResolver multiFactorResolver = multiFactorException.getResolver();
-    final List<MultiFactorInfo> hints = multiFactorResolver.getHints();
-
-    final MultiFactorSession session = multiFactorResolver.getSession();
-    final String sessionId = UUID.randomUUID().toString();
-    multiFactorSessionMap.put(sessionId, session);
-
-    final String resolverId = UUID.randomUUID().toString();
-    multiFactorResolverMap.put(resolverId, multiFactorResolver);
-
-    final List<List<Object>> pigeonHints = PigeonParser.multiFactorInfoToMap(hints);
-
-    output.put(
-        Constants.APP_NAME, FlutterFirebaseAuthPlugin.getAuthFromPigeon(app).getApp().getName());
-
-    output.put(Constants.MULTI_FACTOR_HINTS, pigeonHints);
-
-    output.put(Constants.MULTI_FACTOR_SESSION_ID, sessionId);
-    output.put(Constants.MULTI_FACTOR_RESOLVER_ID, resolverId);
-
-    result.error(
-        new FlutterFirebaseAuthPluginException(
-            multiFactorException.getErrorCode(),
-            multiFactorException.getLocalizedMessage(),
-            output));
-  }
+  static final Map<String, MultiFactorResolver> multiFactorResolverMap = new HashMap<>();
 
   MultiFactor getAppMultiFactor(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app)
       throws FirebaseNoSignedInUserException {
@@ -89,8 +46,7 @@ public class FlutterFirebaseMultiFactor
       appMultiFactorUser.put(currentUser.getUid(), currentUser.getMultiFactor());
     }
 
-    final MultiFactor multiFactor = appMultiFactorUser.get(currentUser.getUid());
-    return multiFactor;
+    return appMultiFactorUser.get(currentUser.getUid());
   }
 
   @Override
@@ -113,12 +69,18 @@ public class FlutterFirebaseMultiFactor
 
     MultiFactorAssertion multiFactorAssertion = PhoneMultiFactorGenerator.getAssertion(credential);
 
-    try {
-      Tasks.await(multiFactor.enroll(multiFactorAssertion, displayName));
-      result.success(null);
-    } catch (Exception e) {
-      result.error(e);
-    }
+    multiFactor
+        .enroll(multiFactorAssertion, displayName)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success(null);
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -135,15 +97,24 @@ public class FlutterFirebaseMultiFactor
       return;
     }
 
-    try {
-      final MultiFactorSession sessionResult = Tasks.await(multiFactor.getSession());
-      final String id = UUID.randomUUID().toString();
-      multiFactorSessionMap.put(id, sessionResult);
-      result.success(
-          new GeneratedAndroidFirebaseAuth.PigeonMultiFactorSession.Builder().setId(id).build());
-    } catch (Exception e) {
-      result.error(e);
-    }
+    multiFactor
+        .getSession()
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                final MultiFactorSession sessionResult = task.getResult();
+                final String id = UUID.randomUUID().toString();
+                multiFactorSessionMap.put(id, sessionResult);
+                result.success(
+                    new GeneratedAndroidFirebaseAuth.PigeonMultiFactorSession.Builder()
+                        .setId(id)
+                        .build());
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -155,16 +126,22 @@ public class FlutterFirebaseMultiFactor
     try {
       multiFactor = getAppMultiFactor(app);
     } catch (FirebaseNoSignedInUserException e) {
-      result.error(e);
+      result.error(FlutterFirebaseAuthPluginException.parserExceptionToFlutter(e));
       return;
     }
 
-    try {
-      Tasks.await(multiFactor.unenroll(factorUid));
-      result.success(null);
-    } catch (Exception e) {
-      result.error(e);
-    }
+    multiFactor
+        .unenroll(factorUid)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success(null);
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 
   @Override
@@ -205,11 +182,18 @@ public class FlutterFirebaseMultiFactor
 
     MultiFactorAssertion multiFactorAssertion = PhoneMultiFactorGenerator.getAssertion(credential);
 
-    try {
-      final AuthResult authResult = Tasks.await(resolver.resolveSignIn(multiFactorAssertion));
-      result.success(PigeonParser.parseAuthResult(authResult));
-    } catch (Exception e) {
-      result.error(e);
-    }
+    resolver
+        .resolveSignIn(multiFactorAssertion)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                final AuthResult authResult = task.getResult();
+                result.success(PigeonParser.parseAuthResult(authResult));
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
   }
 }
