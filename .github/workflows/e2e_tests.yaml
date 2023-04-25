@@ -26,7 +26,7 @@ on:
 
 jobs:
   android:
-    runs-on: ubuntu-latest
+    runs-on: macos-13-xl
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
@@ -80,6 +80,7 @@ jobs:
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "E2E Tests"
+        working-directory: tests
         run: |
           sleep 15
           $ANDROID_HOME/platform-tools/adb logcat '*:D' > adb-log.txt &
