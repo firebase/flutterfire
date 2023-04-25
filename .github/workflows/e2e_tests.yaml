@@ -33,7 +33,6 @@ jobs:
       - name: Create and start emulator
         run: |
           echo "Installing system image"
-          ANDROID_SDK_ROOT=${{ env.ANDROID_SDK_ROOT }}
           echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/8.0/bin/sdkmanager "system-images;android-31;google_apis;x86_64"
           
           echo "Creating AVD"
