@@ -42,7 +42,6 @@ jobs:
           echo "Starting emulator"
           $ANDROID_SDK_ROOT/emulator/emulator -avd test_emulator -no-audio -no-boot-anim -no-window &
           adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
-This will ensure that the sdkmanager command is accessed using the 
       - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
         name: Install Node.js 16
         with:
