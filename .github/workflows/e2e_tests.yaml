@@ -80,18 +80,10 @@ jobs:
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "E2E Tests"
-        uses: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
-        timeout-minutes: 30
-        with:
-          api-level: 30
-          arch: x86_64
-          target: google_apis
-          profile: Nexus 5X
-          working-directory: tests
-          script: |
-            sleep 15
-            $ANDROID_HOME/platform-tools/adb logcat '*:D' > adb-log.txt &
-            flutter test integration_test/e2e_test.dart --dart-define=CI=true
+        run: |
+          sleep 15
+          $ANDROID_HOME/platform-tools/adb logcat '*:D' > adb-log.txt &
+          flutter test integration_test/e2e_test.dart --dart-define=CI=true
       - name: Compress Emulator Log
         if: always()
         run: cd tests/ && gzip -9 adb-log.txt
