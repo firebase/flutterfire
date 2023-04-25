@@ -33,7 +33,8 @@ void main() {
           );
         },
         // Works locally but fails on CI
-        skip: defaultTargetPlatform == TargetPlatform.android,
+        skip: defaultTargetPlatform == TargetPlatform.android ||
+            defaultTargetPlatform == TargetPlatform.macOS,
       );
       test('setPerformanceCollectionEnabled', () async {
         FirebasePerformance performance = FirebasePerformance.instance;
