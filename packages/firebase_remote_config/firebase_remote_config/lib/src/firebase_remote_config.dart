@@ -96,21 +96,29 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform {
   }
 
   /// Gets the value for a given key as a bool.
+  ///
+  /// Returns `false` if the key does not exist.
   bool getBool(String key) {
     return _delegate.getBool(key);
   }
 
   /// Gets the value for a given key as an int.
+  ///
+  /// Returns `0` if the key does not exist.
   int getInt(String key) {
     return _delegate.getInt(key);
   }
 
   /// Gets the value for a given key as a double.
+  ///
+  /// Returns `0.0` if the key does not exist.
   double getDouble(String key) {
     return _delegate.getDouble(key);
   }
 
   /// Gets the value for a given key as a String.
+  ///
+  /// Returns an empty String if the key does not exist.
   String getString(String key) {
     return _delegate.getString(key);
   }
