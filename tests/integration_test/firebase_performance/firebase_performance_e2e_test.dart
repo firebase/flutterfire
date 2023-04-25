@@ -19,118 +19,126 @@ void main() {
     );
   });
 
-  group('$FirebasePerformance.instance', () {
-    test('isPerformanceCollectionEnabled', () async {
-      FirebasePerformance performance = FirebasePerformance.instance;
+  group(
+    '$FirebasePerformance.instance',
+    () {
+      test('isPerformanceCollectionEnabled', () async {
+        FirebasePerformance performance = FirebasePerformance.instance;
 
-      expect(
-        performance.isPerformanceCollectionEnabled(),
-        completion(isTrue),
-      );
-    });
-    test('setPerformanceCollectionEnabled', () async {
-      FirebasePerformance performance = FirebasePerformance.instance;
+        expect(
+          performance.isPerformanceCollectionEnabled(),
+          completion(isTrue),
+        );
+      });
+      test('setPerformanceCollectionEnabled', () async {
+        FirebasePerformance performance = FirebasePerformance.instance;
 
-      await performance.setPerformanceCollectionEnabled(false);
-      expect(
-        performance.isPerformanceCollectionEnabled(),
-        completion(isFalse),
-      );
-    });
-  });
+        await performance.setPerformanceCollectionEnabled(false);
+        expect(
+          performance.isPerformanceCollectionEnabled(),
+          completion(isFalse),
+        );
+      });
+    },
+    skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+  );
 
-  group('$Trace', () {
-    late FirebasePerformance performance;
-    late Trace testTrace;
-    const String metricName = 'test-metric';
+  group(
+    '$Trace',
+    () {
+      late FirebasePerformance performance;
+      late Trace testTrace;
+      const String metricName = 'test-metric';
 
-    setUpAll(() async {
-      performance = FirebasePerformance.instance;
-    });
+      setUpAll(() async {
+        performance = FirebasePerformance.instance;
+      });
 
-    setUp(() async {
-      await performance.setPerformanceCollectionEnabled(true);
-      testTrace = performance.newTrace('test-trace');
-    });
+      setUp(() async {
+        await performance.setPerformanceCollectionEnabled(true);
+        testTrace = performance.newTrace('test-trace');
+      });
 
-    test('start & stop trace', () async {
-      await testTrace.start();
-      await testTrace.stop();
-    });
+      test('start & stop trace', () async {
+        await testTrace.start();
+        await testTrace.stop();
+      });
 
-    test('starting trace with performance collection disabled', () async {
-      await performance.setPerformanceCollectionEnabled(false);
-      await testTrace.start();
-      await testTrace.stop();
-    });
+      test('starting trace with performance collection disabled', () async {
+        await performance.setPerformanceCollectionEnabled(false);
+        await testTrace.start();
+        await testTrace.stop();
+      });
 
-    test("starting Trace twice shouldn't throw an error", () async {
-      await testTrace.start();
-      await testTrace.start();
-    });
+      test("starting Trace twice shouldn't throw an error", () async {
+        await testTrace.start();
+        await testTrace.start();
+      });
 
-    test("stopping Trace twice shouldn't throw an error", () async {
-      await testTrace.start();
-      await testTrace.stop();
-      await testTrace.stop();
-    });
+      test("stopping Trace twice shouldn't throw an error", () async {
+        await testTrace.start();
+        await testTrace.stop();
+        await testTrace.stop();
+      });
 
-    test('incrementMetric works correctly', () {
-      testTrace.incrementMetric(metricName, 14);
-      expect(testTrace.getMetric(metricName), 14);
+      test('incrementMetric works correctly', () {
+        testTrace.incrementMetric(metricName, 14);
+        expect(testTrace.getMetric(metricName), 14);
 
-      testTrace.incrementMetric(metricName, 45);
-      expect(testTrace.getMetric(metricName), 59);
-    });
+        testTrace.incrementMetric(metricName, 45);
+        expect(testTrace.getMetric(metricName), 59);
+      });
 
-    test('setMetric works correctly', () async {
-      testTrace.setMetric(metricName, 37);
-      expect(testTrace.getMetric(metricName), 37);
-      testTrace.setMetric(metricName, 3);
-      expect(testTrace.getMetric(metricName), 3);
-    });
+      test('setMetric works correctly', () async {
+        testTrace.setMetric(metricName, 37);
+        expect(testTrace.getMetric(metricName), 37);
+        testTrace.setMetric(metricName, 3);
+        expect(testTrace.getMetric(metricName), 3);
+      });
 
-    test('putAttribute works correctly', () {
-      testTrace.putAttribute('apple', 'sauce');
-      testTrace.putAttribute('banana', 'pie');
+      test('putAttribute works correctly', () {
+        testTrace.putAttribute('apple', 'sauce');
+        testTrace.putAttribute('banana', 'pie');
 
-      expect(
-        testTrace.getAttributes(),
-        <String, String>{'apple': 'sauce', 'banana': 'pie'},
-      );
+        expect(
+          testTrace.getAttributes(),
+          <String, String>{'apple': 'sauce', 'banana': 'pie'},
+        );
 
-      testTrace.putAttribute('apple', 'sauce2');
-      expect(
-        testTrace.getAttributes(),
-        <String, String>{'apple': 'sauce2', 'banana': 'pie'},
-      );
-    });
+        testTrace.putAttribute('apple', 'sauce2');
+        expect(
+          testTrace.getAttributes(),
+          <String, String>{'apple': 'sauce2', 'banana': 'pie'},
+        );
+      });
 
-    test('removeAttribute works correctly', () {
-      testTrace.putAttribute('sponge', 'bob');
-      testTrace.putAttribute('patrick', 'star');
-      testTrace.removeAttribute('sponge');
+      test('removeAttribute works correctly', () {
+        testTrace.putAttribute('sponge', 'bob');
+        testTrace.putAttribute('patrick', 'star');
+        testTrace.removeAttribute('sponge');
 
-      expect(
-        testTrace.getAttributes(),
-        <String, String>{'patrick': 'star'},
-      );
+        expect(
+          testTrace.getAttributes(),
+          <String, String>{'patrick': 'star'},
+        );
 
-      testTrace.removeAttribute('sponge');
+        testTrace.removeAttribute('sponge');
 
-      expect(
-        testTrace.getAttributes(),
-        <String, String>{'patrick': 'star'},
-      );
-    });
+        expect(
+          testTrace.getAttributes(),
+          <String, String>{'patrick': 'star'},
+        );
+      });
 
-    test('getAttribute', () async {
-      testTrace.putAttribute('yugi', 'oh');
+      test('getAttribute', () async {
+        testTrace.putAttribute('yugi', 'oh');
 
-      expect(testTrace.getAttribute('yugi'), equals('oh'));
-      expect(testTrace.getAttribute('yugi'), equals('oh'));
-    });
-  });
+        expect(testTrace.getAttribute('yugi'), equals('oh'));
+        expect(testTrace.getAttribute('yugi'), equals('oh'));
+      });
+    },
+    skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+  );
 
   group(
     '$HttpMetric',
