@@ -135,21 +135,29 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   }
 
   /// Gets the value for a given key as a bool.
+  ///
+  /// Returns `false` if the key does not exist.
   bool getBool(String key) {
     throw UnimplementedError('getBool() is not implemented');
   }
 
   /// Gets the value for a given key as an int.
+  ///
+  /// Returns `0` if the key does not exist.
   int getInt(String key) {
     throw UnimplementedError('getInt() is not implemented');
   }
 
   /// Gets the value for a given key as a double.
+  ///
+  /// Returns `0.0` if the key does not exist.
   double getDouble(String key) {
     throw UnimplementedError('getDouble() is not implemented');
   }
 
   /// Gets the value for a given key as a String.
+  ///
+  /// Returns an empty String if the key does not exist.
   String getString(String key) {
     throw UnimplementedError('getString() is not implemented');
   }
