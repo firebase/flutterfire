@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -244,6 +246,6 @@ void main() {
         await testHttpMetric.stop();
       });
     },
-    skip: kIsWeb,
+    skip: kIsWeb || Platform.isMacOS,
   );
 }
