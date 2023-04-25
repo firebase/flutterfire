@@ -40,7 +40,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const providers = [EmailAuthProvider()];
+    final providers = [EmailAuthProvider()];
 
     return MaterialApp(
       initialRoute: FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/profile',
