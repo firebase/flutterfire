@@ -32,7 +32,10 @@ jobs:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
       - name: Create and start emulator
         run: |
-          ls -la $ANDROID_SDK_ROOT
+          ls -la $ANDROID_SDK_ROOT/cmdline-tools
+          ls -la $ANDROID_SDK_ROOT/cmdline-tools/8.0
+          ls -la $ANDROID_SDK_ROOT/cmdline-tools/8.0/bin
+          
           echo "Installing system image"
           echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/8.0/bin/sdkmanager "system-images;android-31;google_apis;x86_64"
           
