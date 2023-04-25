@@ -30,6 +30,18 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
+      - name: Create and start emulator
+        run: |
+          echo "Installing system image"
+          echo "y" | sdkmanager "system-images;android-31;google_apis;x86_64"
+          
+          echo "Creating AVD"
+          ANDROID_SDK_ROOT=${{ env.ANDROID_SDK_ROOT }}
+          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd -n test_emulator -k "system-images;android-31;google_apis;x86_64" --force
+
+          echo "Starting emulator"
+          $ANDROID_SDK_ROOT/emulator/emulator -avd test_emulator -no-audio -no-boot-anim -no-window &
+          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
       - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
         name: Install Node.js 16
         with:
@@ -54,13 +66,6 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-      - name: Create and start emulator
-        run: |
-          echo "Creating AVD"
-          echo "y" | avdmanager create avd -n test_emulator -k "system-images;android-31;google_apis;x86_64" --force
-          echo "Starting emulator"
-          emulator -avd test_emulator -no-audio -no-boot-anim -no-window &
-          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
