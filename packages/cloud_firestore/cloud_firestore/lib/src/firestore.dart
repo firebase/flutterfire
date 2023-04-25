@@ -207,7 +207,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   /// Returns a [Stream] which is called each time all of the active listeners
-  /// have been synchronised.
+  /// have been synchronized.
   Stream<void> snapshotsInSync() {
     return _delegate.snapshotsInSync();
   }
