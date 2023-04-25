@@ -33,15 +33,16 @@ jobs:
       - name: Create and start emulator
         run: |
           echo "Installing system image"
-          echo "y" | sdkmanager "system-images;android-31;google_apis;x86_64"
+          ANDROID_SDK_ROOT=${{ env.ANDROID_SDK_ROOT }}
+          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/8.0/bin/sdkmanager "system-images;android-31;google_apis;x86_64"
           
           echo "Creating AVD"
-          ANDROID_SDK_ROOT=${{ env.ANDROID_SDK_ROOT }}
-          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd -n test_emulator -k "system-images;android-31;google_apis;x86_64" --force
+          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/8.0/bin/avdmanager create avd -n test_emulator -k "system-images;android-31;google_apis;x86_64" --force
 
           echo "Starting emulator"
           $ANDROID_SDK_ROOT/emulator/emulator -avd test_emulator -no-audio -no-boot-anim -no-window &
           adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
+This will ensure that the sdkmanager command is accessed using the 
       - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
         name: Install Node.js 16
         with:
