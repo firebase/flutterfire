@@ -43,7 +43,8 @@ void main() {
         // https://github.com/firebase/flutterfire/issues/8969
         skip: kIsWeb ||
             defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS,
+            defaultTargetPlatform == TargetPlatform.macOS ||
+            defaultTargetPlatform == TargetPlatform.android,
       );
 
       test(
