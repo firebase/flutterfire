@@ -17,6 +17,11 @@ void main() {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+
+    // There is cold start overhead for the first trace on Android.
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      await Future.delayed(const Duration(seconds: 5));
+    }
   });
 
   group(
@@ -33,8 +38,7 @@ void main() {
           );
         },
         // Works locally but fails on CI
-        skip: defaultTargetPlatform == TargetPlatform.android ||
-            defaultTargetPlatform == TargetPlatform.macOS,
+        skip: defaultTargetPlatform == TargetPlatform.android,
       );
       test('setPerformanceCollectionEnabled', () async {
         FirebasePerformance performance = FirebasePerformance.instance;
