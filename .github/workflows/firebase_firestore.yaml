@@ -23,7 +23,7 @@ env:
 
 jobs:
   android:
-    runs-on: macos-12
+    runs-on: macos-13-xl
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
@@ -60,7 +60,7 @@ jobs:
           script: ./.github/workflows/scripts/drive-example.sh android
 
   apple:
-    runs-on: macos-12
+    runs-on: macos-13-xl
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
