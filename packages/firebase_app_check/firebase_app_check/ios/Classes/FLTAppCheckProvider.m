@@ -16,7 +16,9 @@
 
 - (void)configure:(FIRApp *)app providerName:(NSString *)providerName {
   if ([providerName isEqualToString:@"debug"]) {
-    self.delegateProvider = [[FIRAppCheckDebugProvider alloc] initWithApp:app];
+    FIRAppCheckDebugProvider *provider = [[FIRAppCheckDebugProvider alloc] initWithApp:app];
+    NSLog(@"Firebase App Check Debug Token: %@", [provider localDebugToken]);
+    self.delegateProvider = provider;
   }
 
   if ([providerName isEqualToString:@"deviceCheck"]) {

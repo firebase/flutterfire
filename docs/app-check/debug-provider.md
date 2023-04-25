@@ -54,7 +54,7 @@ Future<void> main() async {
     Your app will print a local debug token to the debug output when Firebase
     tries to send a request to the backend. For example:
 
-    <pre>[Firebase/AppCheck][I-FAA001001] Firebase App Check Debug Token:
+    <pre>Firebase App Check Debug Token:
     123a4567-b89c-12d3-e456-789012345678</pre>
 
 {# Google-internal common file: #}

@@ -97,12 +97,12 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   @override
   Future<String?> getToken(bool forceRefresh) async {
     try {
-      final result = await channel.invokeMapMethod(
+      final result = await channel.invokeMethod(
         'FirebaseAppCheck#getToken',
         {'appName': app.name, 'forceRefresh': forceRefresh},
       );
 
-      return result!['token'];
+      return result;
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }

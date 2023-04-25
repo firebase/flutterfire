@@ -147,12 +147,9 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
                      completion:^(FIRAppCheckToken *_Nullable token, NSError *_Nullable error) {
                        if (error != nil) {
                          result.error(nil, nil, nil, error);
+                       } else {
+                         result.success(token.token);
                        }
-
-                       NSMutableDictionary *response = [NSMutableDictionary dictionary];
-
-                       response[@"token"] = token.token;
-                       result.success(response);
                      }];
 }
 
