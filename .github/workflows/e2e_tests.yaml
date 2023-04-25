@@ -44,22 +44,6 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-v2-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle-v2
-      - uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd
-      - name: Generate AVD snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
-        with:
-          api-level: 30
-          arch: x86_64
-          target: google_apis
-          profile: Nexus 5X
-          script: echo "Generated AVD snapshot for caching"
       - name: Firebase Emulator Cache
         uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
         with:
@@ -70,6 +54,13 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+      - name: Create and start emulator
+        run: |
+          echo "Creating AVD"
+          echo "y" | avdmanager create avd -n test_emulator -k "system-images;android-31;google_apis;x86_64" --force
+          echo "Starting emulator"
+          emulator -avd test_emulator -no-audio -no-boot-anim -no-window &
+          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
           run-bootstrap: false
@@ -79,10 +70,6 @@ jobs:
       - name: "Install Tools"
         run: |
           sudo npm i -g firebase-tools
-      - name: "Build Application"
-        working-directory: tests
-        run: |
-          flutter build apk --debug --target=./integration_test/e2e_test.dart --dart-define=CI=true --no-android-gradle-daemon
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "E2E Tests"
