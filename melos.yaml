@@ -163,6 +163,20 @@ scripts:
         - integration_test
       scope: '*tests*'
 
+  test:e2e:cloud_firestore:
+    run: |
+      cd packages/cloud_firestore/cloud_firestore/example
+      flutter test integration_test/cloud_firestore_e2e_test.dart
+    description: |
+      Run all e2e tests for cloud_firestore.
+
+  test:e2e:firebase_performance:
+    run: |
+      cd packages/firebase_performance/firebase_performance/example
+      flutter test integration_test/firebase_performance_e2e_test.dart
+    description: |
+      Run all e2e tests for firebase_performance.
+
   test:e2e:web:
     run: |
       melos exec -c 1 --fail-fast -- \
@@ -173,6 +187,20 @@ scripts:
       dirExists:
         - test_driver
       scope: '*tests*'
+
+  test:e2e:web:cloud_firestore:
+    run: |
+      cd packages/cloud_firestore/cloud_firestore/example
+      flutter drive --target=./integration_test/cloud_firestore_e2e_test.dart --driver=./test_driver/integration_test.dart --release -d chrome
+    description: |
+      Run all e2e tests for cloud_firestore on web platform. Please ensure you have "chromedriver" installed and running.
+
+  test:e2e:web:firebase_performance:
+    run: |
+      cd packages/firebase_performance/firebase_performance/example
+      flutter drive --target=./integration_test/firebase_performance_e2e_test.dart --driver=./test_driver/integration_test.dart --release -d chrome
+    description: |
+      Run all e2e tests for firebase_performance on web platform. Please ensure you have "chromedriver" installed and running.
 
   clean:deep:
     run: git clean -x -d -f -q
