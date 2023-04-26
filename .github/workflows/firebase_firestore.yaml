@@ -85,7 +85,7 @@ jobs:
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "iOS E2E Tests"
-        working-directory: tests
+        working-directory: packages/cloud_firestore/cloud_firestore/example
         run: |
           # Boot simulator and wait for System app to be ready.
           # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md#installed-simulators
@@ -103,7 +103,7 @@ jobs:
       - name: "Reset Firestore Emulator"
         run: cd ./.github/workflows/scripts && ./reset-firestore-emulator.sh
       - name: "macOS E2E Tests"
-        working-directory: tests
+        working-directory: packages/cloud_firestore/cloud_firestore/example
         run: |
           sleep 15
           # Uncomment following line to have simulator logs printed out for debugging purposes.
