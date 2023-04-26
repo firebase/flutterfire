@@ -43,21 +43,22 @@ jobs:
           melos-version: '3.0.1'
       - name: "Install Tools"
         run: |
-          sudo npm i -g firebase-tools@11.24.1
-      - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android
+          sudo npm i -g firebase-tools@11.28.0
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - name: "Drive Example"
+      - name: "E2E Tests"
         uses: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
+        timeout-minutes: 30
         with:
-          api-level: 28
+          api-level: 30
           arch: x86_64
-          # Firebase Firestore works without Google Play Services, so we don't use the `googleapis`
-          # emulator target as it's considerably slower on CI.
-          target: default
+          target: google_apis
           profile: Nexus 5X
-          script: ./.github/workflows/scripts/drive-example.sh android
+          working-directory: packages/cloud_firestore/cloud_firestore/example
+          script: |
+            sleep 15
+            $ANDROID_HOME/platform-tools/adb logcat '*:D' > adb-log.txt &
+            flutter test integration_test/cloud_firestore_e2e_test.dart --dart-define=CI=true
 
   apple:
     runs-on: macos-13-xl
@@ -80,19 +81,37 @@ jobs:
           melos-version: '3.0.1'
       - name: "Install Tools"
         run: |
-          sudo npm i -g firebase-tools@11.24.1
-      - name: "Build iOS Example"
-        run: ./.github/workflows/scripts/build-example.sh ios
+          sudo npm i -g firebase-tools@11.28.0
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - name: "Drive iOS Example"
-        run: ./.github/workflows/scripts/drive-example.sh ios
-      - name: "Build MacOS Example"
-        run: ./.github/workflows/scripts/build-example.sh macos
+      - name: "iOS E2E Tests"
+        working-directory: tests
+        run: |
+          # Boot simulator and wait for System app to be ready.
+          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md#installed-simulators
+          SIMULATOR="iPhone 14"
+          xcrun simctl bootstatus "$SIMULATOR" -b
+          xcrun simctl logverbose "$SIMULATOR" enable
+          # Sleep to allow simulator to settle.
+          sleep 15
+          # Uncomment following line to have simulator logs printed out for debugging purposes.
+          # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
+          flutter test integration_test/cloud_firestore_e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true
+          FLUTTER_DRIVE_EXIT_CODE=$?
+          xcrun simctl shutdown "$SIMULATOR"
+          exit $FLUTTER_DRIVE_EXIT_CODE
       - name: "Reset Firestore Emulator"
         run: cd ./.github/workflows/scripts && ./reset-firestore-emulator.sh
-      - name: "Drive MacOS Example"
-        run: ./.github/workflows/scripts/drive-example.sh macos
+      - name: "macOS E2E Tests"
+        working-directory: tests
+        run: |
+          sleep 15
+          # Uncomment following line to have simulator logs printed out for debugging purposes.
+          # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
+          flutter test integration_test/cloud_firestore_e2e_test.dart -d "macos" --dart-define=CI=true
+          FLUTTER_DRIVE_EXIT_CODE=$?
+          xcrun simctl shutdown "$SIMULATOR"
+          exit $FLUTTER_DRIVE_EXIT_CODE
 
   web:
     runs-on: ubuntu-latest
@@ -119,7 +138,7 @@ jobs:
           melos-version: '3.0.1'
       - name: "Install Tools"
         run: |
-          sudo npm i -g firebase-tools@11.24.1
+          sudo npm i -g firebase-tools@11.28.0
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "E2E Tests"
