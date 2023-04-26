@@ -16,11 +16,13 @@
 
 - (void)configure:(FIRApp *)app providerName:(NSString *)providerName {
   if ([providerName isEqualToString:@"debug"]) {
-    self.delegateProvider = [[FIRAppCheckDebugProvider new] initWithApp:app];
+    FIRAppCheckDebugProvider *provider = [[FIRAppCheckDebugProvider alloc] initWithApp:app];
+    NSLog(@"Firebase App Check Debug Token: %@", [provider localDebugToken]);
+    self.delegateProvider = provider;
   }
 
   if ([providerName isEqualToString:@"deviceCheck"]) {
-    self.delegateProvider = [[FIRDeviceCheckProvider new] initWithApp:app];
+    self.delegateProvider = [[FIRDeviceCheckProvider alloc] initWithApp:app];
   }
 
   if ([providerName isEqualToString:@"appAttest"]) {
@@ -28,7 +30,7 @@
       self.delegateProvider = [[FIRAppAttestProvider alloc] initWithApp:app];
     } else {
       // This is not a valid environment, setup debug provider.
-      self.delegateProvider = [[FIRAppCheckDebugProvider new] initWithApp:app];
+      self.delegateProvider = [[FIRAppCheckDebugProvider alloc] initWithApp:app];
     }
   }
 
