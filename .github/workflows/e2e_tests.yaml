@@ -25,12 +25,12 @@ on:
       - "**.md"
 
 jobs:
-  strategy:
-    matrix:
-      working_directory: ['tests', 'packages/cloud_firestore/cloud_firestore/example']
   android:
     runs-on: macos-13-xl
     timeout-minutes: 45
+    strategy:
+      matrix:
+        working_directory: ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
       - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
@@ -113,6 +113,9 @@ jobs:
   ios:
     runs-on: macos-13-xl
     timeout-minutes: 45
+    strategy:
+      matrix:
+        working_directory: ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
       - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
@@ -187,6 +190,9 @@ jobs:
   macos:
     runs-on: macos-13-xl
     timeout-minutes: 45
+    strategy:
+      matrix:
+        working_directory: ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
       - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
@@ -252,6 +258,9 @@ jobs:
   web:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      matrix:
+        working_directory: ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
       - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
