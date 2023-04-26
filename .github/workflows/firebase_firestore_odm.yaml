@@ -72,7 +72,7 @@ jobs:
           melos-version: '3.0.1'
       - name: "Install Tools"
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@11.24.1
       - name: "Bootstrap Workspace"
         run: |
           melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"

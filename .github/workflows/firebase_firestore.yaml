@@ -43,7 +43,7 @@ jobs:
           melos-version: '3.0.1'
       - name: "Install Tools"
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@11.24.1
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android
       - name: Start Firebase Emulator
@@ -80,7 +80,7 @@ jobs:
           melos-version: '3.0.1'
       - name: "Install Tools"
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@11.24.1
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios
       - name: Start Firebase Emulator
@@ -119,7 +119,7 @@ jobs:
           melos-version: '3.0.1'
       - name: "Install Tools"
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@11.24.1
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "E2E Tests"

@@ -78,7 +78,7 @@ jobs:
         run: melos bootstrap --scope tests
       - name: "Install Tools"
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@11.24.1
       - name: "Build Application"
         working-directory: tests
         run: |
@@ -154,7 +154,7 @@ jobs:
         run: melos bootstrap --scope tests
       - name: "Install Tools"
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@11.24.1
       - name: "Build Application"
         working-directory: tests
         run: |
@@ -228,7 +228,7 @@ jobs:
         run: melos bootstrap --scope tests
       - name: "Install Tools"
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@11.24.1
       - name: "Build Application"
         working-directory: tests
         run: |
@@ -275,7 +275,7 @@ jobs:
         run: melos bootstrap --scope tests
       - name: "Install Tools"
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@11.24.1
       - name: Cache Firebase Emulator
         uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
         with:
