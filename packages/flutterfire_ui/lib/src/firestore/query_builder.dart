@@ -91,12 +91,10 @@ class FirestoreQueryBuilder<Document> extends StatefulWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  _FirestoreQueryBuilderState<Document> createState() =>
-      _FirestoreQueryBuilderState<Document>();
+  _FirestoreQueryBuilderState<Document> createState() => _FirestoreQueryBuilderState<Document>();
 }
 
-class _FirestoreQueryBuilderState<Document>
-    extends State<FirestoreQueryBuilder<Document>> {
+class _FirestoreQueryBuilderState<Document> extends State<FirestoreQueryBuilder<Document>> {
   StreamSubscription? _querySubscription;
 
   var _pageCount = 0;
@@ -107,6 +105,7 @@ class _FirestoreQueryBuilderState<Document>
     hasData: false,
     hasError: false,
     hasMore: false,
+    size: 0,
     isFetching: false,
     isFetchingMore: false,
     stackTrace: null,
@@ -114,9 +113,7 @@ class _FirestoreQueryBuilderState<Document>
   );
 
   void _fetchNextPage() {
-    if (_snapshot.isFetching ||
-        !_snapshot.hasMore ||
-        _snapshot.isFetchingMore) {
+    if (_snapshot.isFetching || !_snapshot.hasMore || _snapshot.isFetchingMore) {
       return;
     }
 
@@ -179,9 +176,9 @@ class _FirestoreQueryBuilderState<Document>
 
           _snapshot = _snapshot.copyWith(
             hasData: true,
-            docs: event.size < expectedDocsCount
-                ? event.docs
-                : event.docs.take(expectedDocsCount - 1).toList(),
+            docs:
+                event.size < expectedDocsCount ? event.docs : event.docs.take(expectedDocsCount - 1).toList(),
+            size: event.size,
             error: null,
             hasMore: event.size == expectedDocsCount,
             stackTrace: null,
@@ -252,6 +249,9 @@ abstract class FirestoreQueryBuilderSnapshot<Document> {
   /// See also [fetchMore].
   bool get hasMore;
 
+  /// Returns the size (number of documents) of this snapshot.
+  int get size;
+
   /// The error emitted, if any.
   Object? get error;
 
@@ -268,13 +268,13 @@ abstract class FirestoreQueryBuilderSnapshot<Document> {
   void fetchMore();
 }
 
-class _QueryBuilderSnapshot<Document>
-    implements FirestoreQueryBuilderSnapshot<Document> {
+class _QueryBuilderSnapshot<Document> implements FirestoreQueryBuilderSnapshot<Document> {
   _QueryBuilderSnapshot._({
     required this.docs,
     required this.error,
     required this.hasData,
     required this.hasError,
+    required this.size,
     required this.isFetching,
     required this.isFetchingMore,
     required this.stackTrace,
@@ -298,6 +298,9 @@ class _QueryBuilderSnapshot<Document>
   final bool hasMore;
 
   @override
+  final int size;
+
+  @override
   final bool isFetching;
 
   @override
@@ -317,6 +320,7 @@ class _QueryBuilderSnapshot<Document>
     Object? hasData = const _Sentinel(),
     Object? hasError = const _Sentinel(),
     Object? hasMore = const _Sentinel(),
+    Object? size = const _Sentinel(),
     Object? isFetching = const _Sentinel(),
     Object? isFetchingMore = const _Sentinel(),
     Object? stackTrace = const _Sentinel(),
@@ -334,6 +338,7 @@ class _QueryBuilderSnapshot<Document>
       hasData: valueAs(hasData, this.hasData),
       hasMore: valueAs(hasMore, this.hasMore),
       hasError: valueAs(hasError, this.hasError),
+      size: valueAs(size, this.size),
       isFetching: valueAs(isFetching, this.isFetching),
       isFetchingMore: valueAs(isFetchingMore, this.isFetchingMore),
       stackTrace: valueAs(stackTrace, this.stackTrace),
@@ -437,8 +442,7 @@ class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
     double? cacheExtent,
     int? semanticChildCount,
     DragStartBehavior dragStartBehavior = DragStartBehavior.start,
-    ScrollViewKeyboardDismissBehavior keyboardDismissBehavior =
-        ScrollViewKeyboardDismissBehavior.manual,
+    ScrollViewKeyboardDismissBehavior keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     Clip clipBehavior = Clip.hardEdge,
   }) : super(
@@ -447,8 +451,7 @@ class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
           pageSize: pageSize,
           builder: (context, snapshot, _) {
             if (snapshot.isFetching) {
-              return loadingBuilder?.call(context) ??
-                  const Center(child: CircularProgressIndicator());
+              return loadingBuilder?.call(context) ?? const Center(child: CircularProgressIndicator());
             }
 
             if (snapshot.hasError && errorBuilder != null) {
