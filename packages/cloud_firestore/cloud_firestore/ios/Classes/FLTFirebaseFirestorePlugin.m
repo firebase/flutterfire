@@ -126,7 +126,7 @@ FlutterStandardMethodCodec *_codec;
 #endif
 }
 
-- (void)cleanupWithCompletion:(void (^)(void))completion {
+- (void)cleanupEventListeners {
   for (FlutterEventChannel *channel in self->_eventChannels) {
     [channel setStreamHandler:nil];
   }
@@ -139,7 +139,9 @@ FlutterStandardMethodCodec *_codec;
   @synchronized(self->_transactions) {
     [self->_transactions removeAllObjects];
   }
+}
 
+- (void)cleanupFirestoreInstances:(void (^)(void))completion {
   __block int instancesTerminated = 0;
   NSUInteger numberOfApps = [[FIRApp allApps] count];
   void (^firestoreTerminateInstanceCompletion)(NSError *) = ^void(NSError *error) {
@@ -165,7 +167,7 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  [self cleanupWithCompletion:nil];
+  [self cleanupEventListeners];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
@@ -244,7 +246,8 @@ FlutterStandardMethodCodec *_codec;
 #pragma mark - FLTFirebasePlugin
 
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
-  [self cleanupWithCompletion:completion];
+  [self cleanupEventListeners];
+  [self cleanupFirestoreInstances:completion];
 }
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
