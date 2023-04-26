@@ -110,7 +110,6 @@ jobs:
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
           flutter test integration_test/cloud_firestore_e2e_test.dart -d "macos" --dart-define=CI=true
           FLUTTER_DRIVE_EXIT_CODE=$?
-          xcrun simctl shutdown "$SIMULATOR"
           exit $FLUTTER_DRIVE_EXIT_CODE
 
   web:
