@@ -25,6 +25,9 @@ on:
       - "**.md"
 
 jobs:
+  strategy:
+    matrix:
+      working_directory: ['tests', 'packages/cloud_firestore/cloud_firestore/example']
   android:
     runs-on: macos-13-xl
     timeout-minutes: 45
@@ -89,7 +92,7 @@ jobs:
           arch: x86_64
           target: google_apis
           profile: Nexus 5X
-          working-directory: tests
+          working-directory: ${{ matrix.working_directory }}
           script: |
             sleep 15
             $ANDROID_HOME/platform-tools/adb logcat '*:D' > adb-log.txt &
@@ -152,7 +155,7 @@ jobs:
         run: |
           sudo npm i -g firebase-tools@11.28.0
       - name: "Build Application"
-        working-directory: tests
+        working-directory: ${{ matrix.working_directory }}
         run: |
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
           export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
@@ -165,7 +168,7 @@ jobs:
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "E2E Tests"
-        working-directory: tests
+        working-directory: ${{ matrix.working_directory }}
         run: |
           # Boot simulator and wait for System app to be ready.
           # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md#installed-simulators
@@ -226,7 +229,7 @@ jobs:
         run: |
           sudo npm i -g firebase-tools@11.28.0
       - name: "Build Application"
-        working-directory: tests
+        working-directory: ${{ matrix.working_directory }}
         run: |
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
           export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
@@ -239,7 +242,7 @@ jobs:
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "E2E Tests"
-        working-directory: tests
+        working-directory: ${{ matrix.working_directory }}
         run: |
           flutter test \
             integration_test/e2e_test.dart \
@@ -281,7 +284,7 @@ jobs:
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "E2E Tests"
-        working-directory: tests
+        working-directory: ${{ matrix.working_directory }}
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
