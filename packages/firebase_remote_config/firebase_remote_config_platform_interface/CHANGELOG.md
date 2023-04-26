@@ -1,3 +1,104 @@
+## 1.2.1
+
+ - Update a dependency to the latest release.
+
+## 1.2.0
+
+ - **FEAT**: add support for `onConfigUpdated`to listen to config updates ([#10647)](https://github.com/firebase/flutterfire/commit/f702869e6120f10a368c1b32e9f27d615df99641))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 1.1.35
+
+ - Update a dependency to the latest release.
+
+## 1.1.34
+
+ - Update a dependency to the latest release.
+
+## 1.1.33
+
+ - Update a dependency to the latest release.
+
+## 1.1.32
+
+ - Update a dependency to the latest release.
+
+## 1.1.31
+
+ - Update a dependency to the latest release.
+
+## 1.1.30
+
+ - **FIX**: update exception handling to show actual exception ([#9629](https://github.com/firebase/flutterfire/issues/9629)). ([3bb4d1b1](https://github.com/firebase/flutterfire/commit/3bb4d1b19480afff6f94c27a214925380850304b))
+
+## 1.1.29
+
+ - Update a dependency to the latest release.
+
+## 1.1.28
+
+ - Update a dependency to the latest release.
+
+## 1.1.27
+
+ - Update a dependency to the latest release.
+
+## 1.1.26
+
+ - Update a dependency to the latest release.
+
+## 1.1.25
+
+ - Update a dependency to the latest release.
+
+## 1.1.24
+
+ - Update a dependency to the latest release.
+
+## 1.1.23
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 1.1.22
+
+ - Update a dependency to the latest release.
+
+## 1.1.21
+
+ - Update a dependency to the latest release.
+
+## 1.1.20
+
+ - Update a dependency to the latest release.
+
+## 1.1.19
+
+ - Update a dependency to the latest release.
+
+## 1.1.18
+
+ - Update a dependency to the latest release.
+
+## 1.1.17
+
+ - Update a dependency to the latest release.
+
+## 1.1.16
+
+ - Update a dependency to the latest release.
+
+## 1.1.15
+
+ - Update a dependency to the latest release.
+
+## 1.1.14
+
+ - Update a dependency to the latest release.
+
+## 1.1.13
+
+ - Update a dependency to the latest release.
+
 ## 1.1.12
 
  - Update a dependency to the latest release.

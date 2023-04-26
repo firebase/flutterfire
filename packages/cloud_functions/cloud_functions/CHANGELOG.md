@@ -1,3 +1,95 @@
+## 4.1.1
+
+ - Update a dependency to the latest release.
+
+## 4.1.0
+
+ - **FEAT**(functions): add support for 2nd gen functions ([#10545](https://github.com/firebase/flutterfire/issues/10545)). ([204ba39e](https://github.com/firebase/flutterfire/commit/204ba39e34864c7b8be5122fc0a7fcc98d6c8b26))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **DOCS**(functions): fix an error in the documentation of Cloud Functions ([#10642](https://github.com/firebase/flutterfire/issues/10642)). ([74ee8d47](https://github.com/firebase/flutterfire/commit/74ee8d47d53d6f4a52ec9bb6818cc6598c15e71b))
+
+## 4.0.13
+
+ - Update a dependency to the latest release.
+
+## 4.0.12
+
+ - Update a dependency to the latest release.
+
+## 4.0.11
+
+ - Update a dependency to the latest release.
+
+## 4.0.10
+
+ - Update a dependency to the latest release.
+
+## 4.0.9
+
+ - Update a dependency to the latest release.
+
+## 4.0.8
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+
+## 4.0.7
+
+ - Update a dependency to the latest release.
+
+## 4.0.6
+
+ - **REFACTOR**: remove deprecated Task APIs ([#10076](https://github.com/firebase/flutterfire/issues/10076)). ([951bc77b](https://github.com/firebase/flutterfire/commit/951bc77be8e2177435c0c94cc3667b24064dbdc5))
+
+## 4.0.5
+
+ - Update a dependency to the latest release.
+
+## 4.0.4
+
+ - Update a dependency to the latest release.
+
+## 4.0.3
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 4.0.2
+
+ - Update a dependency to the latest release.
+
+## 4.0.1
+
+- Update a dependency to the latest release.
+
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 3.3.9
+
+ - Update a dependency to the latest release.
+
+## 3.3.8
+
+ - Update a dependency to the latest release.
+
+## 3.3.7
+
+ - Update a dependency to the latest release.
+
+## 3.3.6
+
+ - Update a dependency to the latest release.
+
+## 3.3.5
+
+ - Update a dependency to the latest release.
+
+## 3.3.4
+
+ - Update a dependency to the latest release.
+
 ## 3.3.3
 
  - Update a dependency to the latest release.

@@ -16,6 +16,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+@FunctionalInterface
+interface ErrorCallback {
+  void onError(String errorDescription);
+}
+
 class FlutterFirebaseMessagingUtils {
   static final String IS_AUTO_INIT_ENABLED = "isAutoInitEnabled";
   static final String SHARED_PREFERENCES_KEY = "io.flutter.firebase.messaging.callback";
@@ -242,5 +247,27 @@ class FlutterFirebaseMessagingUtils {
     }
 
     return builder.build();
+  }
+
+  /**
+   * Returns the notification associated to a RemoteMessage map.
+   *
+   * @param arguments Method channel call arguments.
+   * @return RemoteMessage
+   */
+  static Map<String, Object> getRemoteMessageNotificationForArguments(
+      Map<String, Object> arguments) {
+    @SuppressWarnings("unchecked")
+    Map<String, Object> messageMap =
+        (Map<String, Object>) Objects.requireNonNull(arguments.get("message"));
+
+    if (messageMap.get("notification") == null) {
+      return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    Map<String, Object> notification = (Map<String, Object>) messageMap.get("notification");
+
+    return notification;
   }
 }

@@ -1,3 +1,111 @@
+## 3.4.1
+
+ - Update a dependency to the latest release.
+
+## 3.4.0
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 3.3.17
+
+ - Update a dependency to the latest release.
+
+## 3.3.16
+
+ - Update a dependency to the latest release.
+
+## 3.3.15
+
+ - Update a dependency to the latest release.
+
+## 3.3.14
+
+ - Update a dependency to the latest release.
+
+## 3.3.13
+
+ - Update a dependency to the latest release.
+
+## 3.3.12
+
+ - Update a dependency to the latest release.
+
+## 3.3.11
+
+ - **FIX**: improve reason field handling in recordError ([#10264](https://github.com/firebase/flutterfire/issues/10264)). ([8f670e4f](https://github.com/firebase/flutterfire/commit/8f670e4fe67869aaff83362a7df1afdf9bb41315))
+
+## 3.3.10
+
+ - Update a dependency to the latest release.
+
+## 3.3.9
+
+ - Update a dependency to the latest release.
+
+## 3.3.8
+
+ - Update a dependency to the latest release.
+
+## 3.3.7
+
+ - Update a dependency to the latest release.
+
+## 3.3.6
+
+ - Update a dependency to the latest release.
+
+## 3.3.5
+
+ - Update a dependency to the latest release.
+
+## 3.3.4
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 3.3.3
+
+ - Update a dependency to the latest release.
+
+## 3.3.2
+
+ - Update a dependency to the latest release.
+
+## 3.3.1
+
+ - Update a dependency to the latest release.
+
+## 3.3.0
+
+ - **FEAT**: Send Flutter Build Id to Crashlytics to get --split-debug-info working ([#9409](https://github.com/firebase/flutterfire/issues/9409)). ([17931f30](https://github.com/firebase/flutterfire/commit/17931f307434c88e87318c97e2d81c7eb3219ed9))
+
+## 3.2.19
+
+ - **DOCS**: add note for `crash()` that the app needs to be restarted to send a crash report ([#9586](https://github.com/firebase/flutterfire/issues/9586)). ([3a3e5212](https://github.com/firebase/flutterfire/commit/3a3e52123f04eac6d73c21474155e6e67cb357c1))
+
+## 3.2.18
+
+ - Update a dependency to the latest release.
+
+## 3.2.17
+
+ - Update a dependency to the latest release.
+
+## 3.2.16
+
+ - Update a dependency to the latest release.
+
+## 3.2.15
+
+ - Update a dependency to the latest release.
+
+## 3.2.14
+
+ - Update a dependency to the latest release.
+
+## 3.2.13
+
+ - Update a dependency to the latest release.
+
 ## 3.2.12
 
  - Update a dependency to the latest release.

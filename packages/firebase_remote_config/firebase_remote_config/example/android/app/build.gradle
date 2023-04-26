@@ -25,16 +25,16 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-  compileSdkVersion 29
+  compileSdkVersion 33
 
   lintOptions {
     disable 'InvalidPackage'
   }
 
   defaultConfig {
-    applicationId "io.flutter.plugins.firebase.firebaseremoteconfigexample"
+    applicationId "io.flutter.plugins.firebase.remoteconfig.example"
     minSdkVersion 16
-    targetSdkVersion 29
+    targetSdkVersion 33
     versionCode flutterVersionCode.toInteger()
     versionName flutterVersionName
   }

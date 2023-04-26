@@ -14,7 +14,7 @@ class ConfirmationResult {
   final FirebaseAuth _auth;
 
   ConfirmationResult._(this._auth, this._delegate) {
-    ConfirmationResultPlatform.verifyExtends(_delegate);
+    ConfirmationResultPlatform.verify(_delegate);
   }
 
   /// The phone number authentication operation's verification ID.

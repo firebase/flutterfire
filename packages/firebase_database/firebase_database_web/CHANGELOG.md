@@ -1,3 +1,107 @@
+## 0.2.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.2
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 0.2.1+25
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+24
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+23
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+22
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+21
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+20
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+19
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+18
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+17
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+16
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+15
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+14
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+13
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+12
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+11
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+10
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+9
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+8
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+7
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+6
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+5
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+4
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+2
+
+ - **FIX**: change the interop to fix an issue with startAt/endAt/limitTo when compilating with dart2js in release mode ([#9251](https://github.com/firebase/flutterfire/issues/9251)). ([c2771a42](https://github.com/firebase/flutterfire/commit/c2771a425bd7260b11970e9e9e77ef40a39f9f16))
+
 ## 0.2.1+1
 
  - Update a dependency to the latest release.

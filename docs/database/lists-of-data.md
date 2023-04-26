@@ -1,5 +1,6 @@
-Project: /docs/_project.yaml
+Project: /docs/database/_project.yaml
 Book: /docs/_book.yaml
+page_type: guide
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
@@ -240,6 +241,9 @@ see [How query data is ordered](#data-order).
 
 To filter data, you can combine any of the limit or range methods with an
 order-by method when constructing a query.
+
+Note: You shouldn't use special Unicode characters in your keys, such as `\u{0000}`.
+See the [Flutter issue](https://github.com/flutter/flutter/issues/116652) for more details.
 
 <table>
   <tr>

@@ -34,7 +34,11 @@ class TransactionWeb extends TransactionPlatform {
       () async {
         final webDocumentSnapshot = await _webTransactionDelegate
             .get(_webFirestoreDelegate.doc(documentPath));
-        return convertWebDocumentSnapshot(_firestore, webDocumentSnapshot);
+        return convertWebDocumentSnapshot(
+          _firestore,
+          webDocumentSnapshot,
+          ServerTimestampBehavior.none.name,
+        );
       },
     );
   }

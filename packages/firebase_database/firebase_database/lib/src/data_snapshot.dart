@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 part of firebase_database;
 
 /// A DataSnapshot contains data from a Firebase Database location.
@@ -6,7 +10,7 @@ class DataSnapshot {
   final DataSnapshotPlatform _delegate;
 
   DataSnapshot._(this._delegate) {
-    DataSnapshotPlatform.verifyExtends(_delegate);
+    DataSnapshotPlatform.verify(_delegate);
   }
 
   /// The key of the location that generated this DataSnapshot or null if at

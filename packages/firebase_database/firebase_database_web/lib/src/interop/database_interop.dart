@@ -10,13 +10,10 @@ library firebase.database_interop;
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     show PromiseJsImpl, Func1, AppJsImpl;
-
 import 'package:js/js.dart';
 
 part 'data_snapshot_interop.dart';
-
 part 'query_interop.dart';
-
 part 'reference_interop.dart';
 
 @JS()
@@ -29,34 +26,6 @@ external void connectDatabaseEmulator(
 @JS()
 external void enableLogging(
     [/* Func message || bool enabled */ loggerOrEnabled, bool persistent]);
-
-@JS()
-external QueryConstraintJsImpl endAt(
-    dynamic /* number | string | boolean | null */ value,
-    [String key]);
-
-@JS()
-external QueryConstraintJsImpl endBefore(
-    dynamic /* number | string | boolean | null */ value,
-    [String key]);
-
-@JS()
-external QueryConstraintJsImpl equalTo(
-  dynamic /* number | string | boolean | null */ value,
-  String key,
-);
-
-@JS()
-external QueryConstraintJsImpl startAfter(
-  dynamic /* number | string | boolean | null */ value,
-  String key,
-);
-
-@JS()
-external QueryConstraintJsImpl startAt(
-  dynamic /* number | string | boolean | null */ value,
-  String key,
-);
 
 @JS()
 external PromiseJsImpl<void> update(
@@ -85,12 +54,6 @@ external void goOnline(DatabaseJsImpl database);
 
 @JS()
 external dynamic increment(int delta);
-
-@JS()
-external QueryConstraintJsImpl limitToFirst(int limit);
-
-@JS()
-external QueryConstraintJsImpl limitToLast(int limit);
 
 @JS()
 external void off([
@@ -286,3 +249,27 @@ abstract class FirebaseError {
   /// Not part of the core JS API, but occasionally exposed in error objects.
   external Object get serverResponse;
 }
+
+// We type those 7 functions as Object to avoid an issue with dart2js compilation
+// in release mode
+// Discussed internally with dart2js team
+@JS()
+external Object get endAt;
+
+@JS()
+external Object get endBefore;
+
+@JS()
+external Object get equalTo;
+
+@JS()
+external Object get startAfter;
+
+@JS()
+external Object get startAt;
+
+@JS()
+external Object get limitToFirst;
+
+@JS()
+external Object get limitToLast;

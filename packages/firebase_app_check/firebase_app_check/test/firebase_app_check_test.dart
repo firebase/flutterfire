@@ -55,7 +55,9 @@ void main() {
 
     group('activate', () {
       test('successful call', () async {
-        await appCheck.activate(webRecaptchaSiteKey: 'key');
+        await appCheck.activate(
+          webRecaptchaSiteKey: 'key',
+        );
 
         expect(
           methodCallLog,
@@ -64,6 +66,8 @@ void main() {
               'FirebaseAppCheck#activate',
               arguments: <String, dynamic>{
                 'appName': defaultFirebaseAppName,
+                'androidProvider': 'playIntegrity',
+                'appleProvider': 'deviceCheck'
               },
             )
           ],

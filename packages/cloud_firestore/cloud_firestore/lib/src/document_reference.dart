@@ -38,8 +38,10 @@ abstract class DocumentReference<T extends Object?> {
   /// Updates data on the document. Data will be merged with any existing
   /// document data.
   ///
+  /// Objects key can be a String or a FieldPath.
+  ///
   /// If no document exists yet, the update will fail.
-  Future<void> update(Map<String, Object?> data);
+  Future<void> update(Map<Object, Object?> data);
 
   /// Reads the document referenced by this [DocumentReference].
   ///
@@ -94,7 +96,7 @@ abstract class DocumentReference<T extends Object?> {
 class _JsonDocumentReference
     implements DocumentReference<Map<String, dynamic>> {
   _JsonDocumentReference(this.firestore, this._delegate) {
-    DocumentReferencePlatform.verifyExtends(_delegate);
+    DocumentReferencePlatform.verify(_delegate);
   }
 
   @override
@@ -170,9 +172,9 @@ class _JsonDocumentReference
   }
 
   @override
-  Future<void> update(Map<String, Object?> data) {
+  Future<void> update(Map<Object, Object?> data) {
     return _delegate
-        .update(_CodecUtility.replaceValueWithDelegatesInMap(data)!);
+        .update(_CodecUtility.replaceValueWithDelegatesInMapFieldPath(data)!);
   }
 
   @override
@@ -282,7 +284,7 @@ class _WithConverterDocumentReference<T extends Object?>
   }
 
   @override
-  Future<void> update(Map<String, Object?> data) {
+  Future<void> update(Map<Object, Object?> data) {
     return _originalDocumentReference.update(data);
   }
 

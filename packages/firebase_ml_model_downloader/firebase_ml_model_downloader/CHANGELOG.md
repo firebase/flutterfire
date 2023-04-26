@@ -1,3 +1,93 @@
+## 0.2.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.1
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 0.2.0+13
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+12
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+11
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+10
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+9
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+8
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+
+## 0.2.0+7
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+6
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+5
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+4
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+3
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 0.2.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 0.1.1+9
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+8
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+7
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+6
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+5
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+4
+
+ - Update a dependency to the latest release.
+
 ## 0.1.1+3
 
  - Update a dependency to the latest release.

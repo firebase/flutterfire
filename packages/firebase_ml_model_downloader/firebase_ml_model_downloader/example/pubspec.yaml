@@ -3,10 +3,10 @@ description: Demonstrates how to use the firebase_ml_model_downloader plugin.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
+  sdk: '>=2.18.0 <3.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -18,29 +18,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  firebase_ml_model_downloader:
-    # When depending on this package from a real application you should use:
-    #   firebase_ml_model_downloader: ^x.y.z
-    # See https://dart.dev/tools/pub/dependencies#version-constraints
-    # The example app is bundled with the plugin so we use a path dependency on
-    # the parent directory to use the current plugin's version.
-    path: ../
-
+  firebase_ml_model_downloader: ^0.2.1+1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-
-dependency_overrides:
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../../firebase_core/firebase_core_platform_interface
-  firebase_core_web:
-    path: ../../../firebase_core/firebase_core_web
-  firebase_ml_model_downloader:
-    path: ../
-  firebase_ml_model_downloader_platform_interface:
-    path: ../../firebase_ml_model_downloader_platform_interface
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to

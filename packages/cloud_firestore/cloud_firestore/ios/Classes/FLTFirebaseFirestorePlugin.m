@@ -60,6 +60,8 @@ NSString *const kFLTFirebaseFirestoreLoadBundleChannelName =
                                streamHandler:(NSObject<FlutterStreamHandler> *)handler;
 @end
 
+static NSMutableDictionary<NSNumber *, NSString *> *_serverTimestampMap;
+
 @implementation FLTFirebaseFirestorePlugin {
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
   NSMutableDictionary<NSString *, NSObject<FlutterStreamHandler> *> *_streamHandlers;
@@ -68,6 +70,10 @@ NSString *const kFLTFirebaseFirestoreLoadBundleChannelName =
 }
 
 FlutterStandardMethodCodec *_codec;
+
++ (NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap {
+  return _serverTimestampMap;
+}
 
 + (void)initialize {
   _codec =
@@ -98,6 +104,7 @@ FlutterStandardMethodCodec *_codec;
     _eventChannels = [NSMutableDictionary dictionary];
     _streamHandlers = [NSMutableDictionary dictionary];
     _transactionHandlers = [NSMutableDictionary dictionary];
+    _serverTimestampMap = [NSMutableDictionary dictionary];
   }
   return self;
 }
@@ -119,7 +126,7 @@ FlutterStandardMethodCodec *_codec;
 #endif
 }
 
-- (void)cleanupWithCompletion:(void (^)(void))completion {
+- (void)cleanupEventListeners {
   for (FlutterEventChannel *channel in self->_eventChannels) {
     [channel setStreamHandler:nil];
   }
@@ -132,7 +139,9 @@ FlutterStandardMethodCodec *_codec;
   @synchronized(self->_transactions) {
     [self->_transactions removeAllObjects];
   }
+}
 
+- (void)cleanupFirestoreInstances:(void (^)(void))completion {
   __block int instancesTerminated = 0;
   NSUInteger numberOfApps = [[FIRApp allApps] count];
   void (^firestoreTerminateInstanceCompletion)(NSError *) = ^void(NSError *error) {
@@ -158,7 +167,7 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  [self cleanupWithCompletion:nil];
+  [self cleanupEventListeners];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
@@ -225,6 +234,10 @@ FlutterStandardMethodCodec *_codec;
                              withMethodCallResult:methodCallResult];
   } else if ([@"LoadBundle#snapshots" isEqualToString:call.method]) {
     [self setupLoadBundleListener:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"AggregateQuery#count" isEqualToString:call.method]) {
+    [self aggregateQuery:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Firestore#setIndexConfiguration" isEqualToString:call.method]) {
+    [self setIndexConfiguration:call.arguments withMethodCallResult:methodCallResult];
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
   }
@@ -233,7 +246,8 @@ FlutterStandardMethodCodec *_codec;
 #pragma mark - FLTFirebasePlugin
 
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
-  [self cleanupWithCompletion:completion];
+  [self cleanupEventListeners];
+  [self cleanupFirestoreInstances:completion];
 }
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
@@ -253,6 +267,21 @@ FlutterStandardMethodCodec *_codec;
 }
 
 #pragma mark - Firestore API
+
+- (void)setIndexConfiguration:(id)arguments
+         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRFirestore *firestore = arguments[@"firestore"];
+  NSString *indexConfiguration = arguments[@"indexConfiguration"];
+
+  [firestore setIndexConfigurationFromJSON:indexConfiguration
+                                completion:^(NSError *_Nullable error) {
+                                  if (error != nil) {
+                                    result.error(nil, nil, nil, error);
+                                  } else {
+                                    result.success(nil);
+                                  }
+                                }];
+}
 
 - (void)setupSnapshotsInSyncListener:(id)arguments
                 withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -344,6 +373,13 @@ FlutterStandardMethodCodec *_codec;
     FIRDocumentReference *document = arguments[@"reference"];
 
     FIRTransaction *transaction = self->_transactions[transactionId];
+
+    if (transaction == nil) {
+      result.error(@"missing-transaction",
+                   @"An error occurred while getting the native transaction. "
+                   @"It could be caused by a timeout in a preceding transaction operation.",
+                   nil, nil);
+    }
 
     NSError *error = [[NSError alloc] init];
     FIRDocumentSnapshot *snapshot = [transaction getDocument:document error:&error];
@@ -438,10 +474,12 @@ FlutterStandardMethodCodec *_codec;
 - (void)documentGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRDocumentReference *document = arguments[@"reference"];
   FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
+  NSString *serverTimestampBehaviorString = arguments[@"serverTimestampBehavior"];
   id completion = ^(FIRDocumentSnapshot *_Nullable snapshot, NSError *_Nullable error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
+      [_serverTimestampMap setObject:serverTimestampBehaviorString forKey:@([snapshot hash])];
       result.success(snapshot);
     }
   };
@@ -451,8 +489,8 @@ FlutterStandardMethodCodec *_codec;
 
 - (void)queryGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRQuery *query = arguments[@"query"];
-
-  if (query == nil) {
+  // Why we check [NSNull null]:  https://github.com/firebase/flutterfire/issues/9328
+  if (query == nil || query == [NSNull null]) {
     result.error(@"sdk-error",
                  @"An error occurred while parsing query arguments, see native logs for more "
                  @"information. Please report this issue.",
@@ -460,12 +498,16 @@ FlutterStandardMethodCodec *_codec;
     return;
   }
 
+  NSString *serverTimestampBehaviorString = arguments[@"serverTimestampBehavior"];
+
   FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
   [query getDocumentsWithSource:source
                      completion:^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
                        if (error != nil) {
                          result.error(nil, nil, nil, error);
                        } else {
+                         [_serverTimestampMap setObject:serverTimestampBehaviorString
+                                                 forKey:@([snapshot hash])];
                          result.success(snapshot);
                        }
                      }];
@@ -476,6 +518,7 @@ FlutterStandardMethodCodec *_codec;
   NSString *name = arguments[@"name"];
 
   FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
+  NSString *serverTimestampBehaviorString = arguments[@"serverTimestampBehavior"];
 
   [firestore getQueryNamed:name
                 completion:^(FIRQuery *_Nullable query) {
@@ -492,6 +535,9 @@ FlutterStandardMethodCodec *_codec;
                                        if (error != nil) {
                                          result.error(nil, nil, nil, error);
                                        } else {
+                                         [_serverTimestampMap
+                                             setObject:serverTimestampBehaviorString
+                                                forKey:@([snapshot hash])];
                                          result.success(snapshot);
                                        }
                                      }];
@@ -533,6 +579,29 @@ FlutterStandardMethodCodec *_codec;
       result.success(nil);
     }
   }];
+}
+
+- (void)aggregateQuery:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRQuery *query = arguments[@"query"];
+
+  // NOTE: There is only "server" as the source at the moment. So this
+  // is unused for the time being. Using "FIRAggregateSourceServer".
+  // NSString *source = arguments[@"source"];
+
+  FIRAggregateQuery *aggregateQuery = [query count];
+
+  [aggregateQuery aggregationWithSource:FIRAggregateSourceServer
+                             completion:^(FIRAggregateQuerySnapshot *_Nullable snapshot,
+                                          NSError *_Nullable error) {
+                               if (error != nil) {
+                                 result.error(nil, nil, nil, error);
+                               } else {
+                                 NSMutableDictionary *response = [NSMutableDictionary dictionary];
+                                 response[@"count"] = snapshot.count;
+
+                                 result.success(response);
+                               }
+                             }];
 }
 
 - (NSString *)registerEventChannelWithPrefix:(NSString *)prefix

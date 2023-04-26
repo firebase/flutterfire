@@ -12,7 +12,7 @@ part of cloud_firestore;
 /// nor can it be committed again.
 class WriteBatch {
   WriteBatch._(this._firestore, this._delegate) {
-    WriteBatchPlatform.verifyExtends(_delegate);
+    WriteBatchPlatform.verify(_delegate);
   }
 
   final FirebaseFirestore _firestore;

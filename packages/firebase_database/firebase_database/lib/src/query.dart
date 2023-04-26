@@ -7,7 +7,9 @@ part of firebase_database;
 /// Represents a query over the data at a particular location.
 class Query {
   Query._(this._queryDelegate, [QueryModifiers? modifiers])
-      : _modifiers = modifiers ?? QueryModifiers([]);
+      : _modifiers = modifiers ?? QueryModifiers([]) {
+    QueryPlatform.verify(_queryDelegate);
+  }
 
   final QueryPlatform _queryDelegate;
 
@@ -92,7 +94,7 @@ class Query {
   /// If only a value is provided, children with a value greater than
   /// the specified value will be included in the query.
   /// If a key is specified, then children must have a value greater than
-  /// or equal to the specified value and a a key name greater than
+  /// or equal to the specified value and a key name greater than
   /// the specified key.
   Query startAfter(Object? value, {String? key}) {
     return Query._(
@@ -116,7 +118,7 @@ class Query {
   /// The ending point is exclusive. If only a value is provided,
   /// children with a value less than the specified value will be included in
   /// the query. If a key is specified, then children must have a value lesss
-  /// than or equal to the specified value and a a key name less than the
+  /// than or equal to the specified value and a key name less than the
   /// specified key.
   Query endBefore(Object? value, {String? key}) {
     return Query._(

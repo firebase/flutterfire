@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
@@ -16,7 +20,10 @@ abstract class ParserGenerator<GlobalData, Data, Annotation>
       await buildStep.resolver.assetIdForElement(oldLibrary.element),
     );
 
-    final values = StringBuffer();
+    final generationBuffer = StringBuffer();
+    // A set used to remove duplicate generations. This is for scenarios where
+    // two annotations within the library want to generate the same code
+    final generatedCache = <String>{};
 
     final globalData = parseGlobalData(library);
 
@@ -26,23 +33,29 @@ abstract class ParserGenerator<GlobalData, Data, Annotation>
         in library.topLevelElements.where(typeChecker.hasAnnotationOf)) {
       if (!hasGeneratedGlobalCode) {
         hasGeneratedGlobalCode = true;
-        for (final value
+        for (final generated
             in generateForAll(globalData).map((e) => e.toString())) {
-          assert(value.length == value.trim().length);
-          values.writeln(value);
+          assert(generated.length == generated.trim().length);
+          if (generatedCache.add(generated)) {
+            generationBuffer.writeln(generated);
+          }
         }
       }
 
       final data = await parseElement(buildStep, globalData, element);
       if (data == null) continue;
-      for (final value
+
+      for (final generated
           in generateForData(globalData, data).map((e) => e.toString())) {
-        assert(value.length == value.trim().length);
-        values.writeln(value);
+        assert(generated.length == generated.trim().length);
+
+        if (generatedCache.add(generated)) {
+          generationBuffer.writeln(generated);
+        }
       }
     }
 
-    return values.toString();
+    return generationBuffer.toString();
   }
 
   Iterable<Object> generateForAll(GlobalData globalData) sync* {}

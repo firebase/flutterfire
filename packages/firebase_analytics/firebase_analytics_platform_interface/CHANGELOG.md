@@ -1,3 +1,103 @@
+## 3.4.1
+
+ - Update a dependency to the latest release.
+
+## 3.4.0
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 3.3.23
+
+ - Update a dependency to the latest release.
+
+## 3.3.22
+
+ - Update a dependency to the latest release.
+
+## 3.3.21
+
+ - Update a dependency to the latest release.
+
+## 3.3.20
+
+ - Update a dependency to the latest release.
+
+## 3.3.19
+
+ - Update a dependency to the latest release.
+
+## 3.3.18
+
+ - **DOCS**: add more documentation for `logEvent` ([#10389](https://github.com/firebase/flutterfire/issues/10389)). ([8755d776](https://github.com/firebase/flutterfire/commit/8755d776b30ce2db71e00279438c8d3617cf3187))
+
+## 3.3.17
+
+ - Update a dependency to the latest release.
+
+## 3.3.16
+
+ - Update a dependency to the latest release.
+
+## 3.3.15
+
+ - Update a dependency to the latest release.
+
+## 3.3.14
+
+ - Update a dependency to the latest release.
+
+## 3.3.13
+
+ - Update a dependency to the latest release.
+
+## 3.3.12
+
+ - Update a dependency to the latest release.
+
+## 3.3.11
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 3.3.10
+
+ - Update a dependency to the latest release.
+
+## 3.3.9
+
+ - Update a dependency to the latest release.
+
+## 3.3.8
+
+ - Update a dependency to the latest release.
+
+## 3.3.7
+
+ - Update a dependency to the latest release.
+
+## 3.3.6
+
+ - Update a dependency to the latest release.
+
+## 3.3.5
+
+ - Update a dependency to the latest release.
+
+## 3.3.4
+
+ - Update a dependency to the latest release.
+
+## 3.3.3
+
+ - Update a dependency to the latest release.
+
+## 3.3.2
+
+ - Update a dependency to the latest release.
+
+## 3.3.1
+
+ - Update a dependency to the latest release.
+
 ## 3.3.0
 
  - **FEAT**: retrieves `appInstanceId` property on native platforms if available ([#8689](https://github.com/firebase/flutterfire/issues/8689)). ([7132d771](https://github.com/firebase/flutterfire/commit/7132d771ed5ada7a0433232b9f0d996ef0d61481))

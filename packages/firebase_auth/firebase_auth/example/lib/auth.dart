@@ -1,17 +1,23 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_example/config.dart';
+import 'package:firebase_auth_example/main.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:twitter_login/twitter_login.dart';
 
 typedef OAuthSignIn = void Function();
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
+// If set to true, the app will request notification permissions to use
+// silent verification for SMS MFA instead of Recaptcha.
+const withSilentVerificationSMSMFA = true;
 
 /// Helper class to show a snackbar using the passed context.
 class ScaffoldSnackbar {
@@ -83,17 +89,38 @@ class _AuthGateState extends State<AuthGate> {
   @override
   void initState() {
     super.initState();
-    if (kIsWeb) {
+
+    if (withSilentVerificationSMSMFA && !kIsWeb) {
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      messaging.requestPermission();
+    }
+
+    if (!kIsWeb && Platform.isMacOS) {
       authButtons = {
-        Buttons.Google: _signInWithGoogle,
-        Buttons.GitHub: _signInWithGitHub,
-        Buttons.Twitter: _signInWithTwitter,
+        Buttons.Apple: () => _handleMultiFactorException(
+              _signInWithApple,
+            ),
       };
     } else {
       authButtons = {
-        if (!Platform.isMacOS) Buttons.Google: _signInWithGoogle,
-        if (!Platform.isMacOS) Buttons.GitHub: _signInWithGitHub,
-        if (!Platform.isMacOS) Buttons.Twitter: _signInWithTwitter,
+        Buttons.Apple: () => _handleMultiFactorException(
+              _signInWithApple,
+            ),
+        Buttons.Google: () => _handleMultiFactorException(
+              _signInWithGoogle,
+            ),
+        Buttons.GitHub: () => _handleMultiFactorException(
+              _signInWithGitHub,
+            ),
+        Buttons.Microsoft: () => _handleMultiFactorException(
+              _signInWithMicrosoft,
+            ),
+        Buttons.Twitter: () => _handleMultiFactorException(
+              _signInWithTwitter,
+            ),
+        Buttons.Yahoo: () => _handleMultiFactorException(
+              _signInWithYahoo,
+            ),
       };
     }
   }
@@ -120,8 +147,9 @@ class _AuthGateState extends State<AuthGate> {
                           Visibility(
                             visible: error.isNotEmpty,
                             child: MaterialBanner(
-                              backgroundColor: Theme.of(context).errorColor,
-                              content: Text(error),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.error,
+                              content: SelectableText(error),
                               actions: [
                                 TextButton(
                                   onPressed: () {
@@ -150,6 +178,8 @@ class _AuthGateState extends State<AuthGate> {
                                     hintText: 'Email',
                                     border: OutlineInputBorder(),
                                   ),
+                                  keyboardType: TextInputType.emailAddress,
+                                  autofillHints: const [AutofillHints.email],
                                   validator: (value) =>
                                       value != null && value.isNotEmpty
                                           ? null
@@ -188,7 +218,11 @@ class _AuthGateState extends State<AuthGate> {
                             width: double.infinity,
                             height: 50,
                             child: ElevatedButton(
-                              onPressed: isLoading ? null : _emailAndPassword,
+                              onPressed: isLoading
+                                  ? null
+                                  : () => _handleMultiFactorException(
+                                        _emailAndPassword,
+                                      ),
                               child: isLoading
                                   ? const CircularProgressIndicator.adaptive()
                                   : Text(mode.label),
@@ -253,7 +287,7 @@ class _AuthGateState extends State<AuthGate> {
                           if (mode != AuthMode.phone)
                             RichText(
                               text: TextSpan(
-                                style: Theme.of(context).textTheme.bodyText1,
+                                style: Theme.of(context).textTheme.bodyLarge,
                                 children: [
                                   TextSpan(
                                     text: mode == AuthMode.login
@@ -280,7 +314,7 @@ class _AuthGateState extends State<AuthGate> {
                           const SizedBox(height: 10),
                           RichText(
                             text: TextSpan(
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context).textTheme.bodyLarge,
                               children: [
                                 const TextSpan(text: 'Or '),
                                 TextSpan(
@@ -338,7 +372,7 @@ class _AuthGateState extends State<AuthGate> {
 
     if (email != null) {
       try {
-        await _auth.sendPasswordResetEmail(email: email!);
+        await auth.sendPasswordResetEmail(email: email!);
         ScaffoldSnackbar.of(context).show('Password reset email is sent');
       } catch (e) {
         ScaffoldSnackbar.of(context).show('Error resetting');
@@ -350,7 +384,7 @@ class _AuthGateState extends State<AuthGate> {
     setIsLoading();
 
     try {
-      await _auth.signInAnonymously();
+      await auth.signInAnonymously();
     } on FirebaseAuthException catch (e) {
       setState(() {
         error = '${e.message}';
@@ -364,38 +398,101 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
+  Future<void> _handleMultiFactorException(
+    Future<void> Function() authFunction,
+  ) async {
+    setIsLoading();
+    try {
+      await authFunction();
+    } on FirebaseAuthMultiFactorException catch (e) {
+      setState(() {
+        error = '${e.message}';
+      });
+      final firstHint = e.resolver.hints.first;
+      if (firstHint is! PhoneMultiFactorInfo) {
+        return;
+      }
+      await auth.verifyPhoneNumber(
+        multiFactorSession: e.resolver.session,
+        multiFactorInfo: firstHint,
+        verificationCompleted: (_) {},
+        verificationFailed: print,
+        codeSent: (String verificationId, int? resendToken) async {
+          final smsCode = await getSmsCodeFromUser(context);
+
+          if (smsCode != null) {
+            // Create a PhoneAuthCredential with the code
+            final credential = PhoneAuthProvider.credential(
+              verificationId: verificationId,
+              smsCode: smsCode,
+            );
+
+            try {
+              await e.resolver.resolveSignIn(
+                PhoneMultiFactorGenerator.getAssertion(
+                  credential,
+                ),
+              );
+            } on FirebaseAuthException catch (e) {
+              print(e.message);
+            }
+          }
+        },
+        codeAutoRetrievalTimeout: print,
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        error = '${e.message}';
+      });
+    } catch (e) {
+      setState(() {
+        error = '$e';
+      });
+    }
+    setIsLoading();
+  }
+
   Future<void> _emailAndPassword() async {
     if (formKey.currentState?.validate() ?? false) {
-      setIsLoading();
+      if (mode == AuthMode.login) {
+        await auth.signInWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+      } else if (mode == AuthMode.register) {
+        await auth.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+      } else {
+        await _phoneAuth();
+      }
+    }
+  }
 
-      try {
-        if (mode == AuthMode.login) {
-          await _auth.signInWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text,
-          );
-        } else if (mode == AuthMode.register) {
-          await _auth.createUserWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text,
-          );
-        } else {
-          await _phoneAuth();
+  Future<void> _phoneAuth() async {
+    if (mode != AuthMode.phone) {
+      setState(() {
+        mode = AuthMode.phone;
+      });
+    } else {
+      if (kIsWeb) {
+        final confirmationResult =
+            await auth.signInWithPhoneNumber(phoneController.text);
+        final smsCode = await getSmsCodeFromUser(context);
+
+        if (smsCode != null) {
+          await confirmationResult.confirm(smsCode);
         }
-      } on FirebaseAuthMultiFactorException catch (e) {
-        setState(() {
-          error = '${e.message}';
-        });
-        final firstHint = e.resolver.hints.first;
-        if (firstHint is! PhoneMultiFactorInfo) {
-          return;
-        }
-        final auth = FirebaseAuth.instance;
+      } else {
         await auth.verifyPhoneNumber(
-          multiFactorSession: e.resolver.session,
-          multiFactorInfo: firstHint,
+          phoneNumber: phoneController.text,
           verificationCompleted: (_) {},
-          verificationFailed: print,
+          verificationFailed: (e) {
+            setState(() {
+              error = '${e.message}';
+            });
+          },
           codeSent: (String verificationId, int? resendToken) async {
             final smsCode = await getSmsCodeFromUser(context);
 
@@ -407,183 +504,94 @@ class _AuthGateState extends State<AuthGate> {
               );
 
               try {
-                await e.resolver.resolveSignIn(
-                  PhoneMultiFactorGenerator.getAssertion(
-                    credential,
-                  ),
-                );
+                // Sign the user in (or link) with the credential
+                await auth.signInWithCredential(credential);
               } on FirebaseAuthException catch (e) {
-                print(e.message);
+                setState(() {
+                  error = e.message ?? '';
+                });
               }
             }
           },
-          codeAutoRetrievalTimeout: print,
+          codeAutoRetrievalTimeout: (e) {
+            setState(() {
+              error = e;
+            });
+          },
         );
-      } on FirebaseAuthException catch (e) {
-        setState(() {
-          error = '${e.message}';
-        });
-      } catch (e) {
-        setState(() {
-          error = '$e';
-        });
-      } finally {
-        setIsLoading();
-      }
-    }
-  }
-
-  Future<void> _phoneAuth() async {
-    if (mode != AuthMode.phone) {
-      setState(() {
-        mode = AuthMode.phone;
-      });
-    } else {
-      try {
-        if (kIsWeb) {
-          final confirmationResult =
-              await _auth.signInWithPhoneNumber(phoneController.text);
-          final smsCode = await getSmsCodeFromUser(context);
-
-          if (smsCode != null) {
-            await confirmationResult.confirm(smsCode);
-          }
-        } else {
-          await _auth.verifyPhoneNumber(
-            phoneNumber: phoneController.text,
-            verificationCompleted: (_) {},
-            verificationFailed: (e) {
-              setState(() {
-                error = '${e.message}';
-              });
-            },
-            codeSent: (String verificationId, int? resendToken) async {
-              final smsCode = await getSmsCodeFromUser(context);
-
-              if (smsCode != null) {
-                // Create a PhoneAuthCredential with the code
-                final credential = PhoneAuthProvider.credential(
-                  verificationId: verificationId,
-                  smsCode: smsCode,
-                );
-
-                try {
-                  // Sign the user in (or link) with the credential
-                  await _auth.signInWithCredential(credential);
-                } on FirebaseAuthException catch (e) {
-                  setState(() {
-                    error = e.message ?? '';
-                  });
-                }
-              }
-            },
-            codeAutoRetrievalTimeout: (e) {
-              setState(() {
-                error = e;
-              });
-            },
-          );
-        }
-      } catch (e) {
-        setState(() {
-          error = '$e';
-        });
-      } finally {
-        setIsLoading();
       }
     }
   }
 
   Future<void> _signInWithGoogle() async {
-    setIsLoading();
-    try {
-      // Trigger the authentication flow
-      final googleUser = await GoogleSignIn().signIn();
+    // Trigger the authentication flow
+    final googleUser = await GoogleSignIn().signIn();
 
-      // Obtain the auth details from the request
-      final googleAuth = await googleUser?.authentication;
+    // Obtain the auth details from the request
+    final googleAuth = await googleUser?.authentication;
 
-      if (googleAuth != null) {
-        // Create a new credential
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
+    if (googleAuth != null) {
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-        // Once signed in, return the UserCredential
-        await _auth.signInWithCredential(credential);
-      }
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        error = '${e.message}';
-      });
-    } finally {
-      setIsLoading();
+      // Once signed in, return the UserCredential
+      await auth.signInWithCredential(credential);
     }
   }
 
   Future<void> _signInWithTwitter() async {
-    setIsLoading();
-    try {
-      if (kIsWeb) {
-        // Create a new provider
-        TwitterAuthProvider twitterProvider = TwitterAuthProvider();
+    TwitterAuthProvider twitterProvider = TwitterAuthProvider();
 
-        // Once signed in, return the UserCredential
-        await FirebaseAuth.instance.signInWithPopup(twitterProvider);
-      } else {
-        // Create a TwitterLogin instance
-        final twitterLogin = TwitterLogin(
-          apiKey: TwitterConfig['API_KEY']!,
-          apiSecretKey: TwitterConfig['API_SECRET_KEY']!,
-          redirectURI: TwitterConfig['REDIRECT_URL']!,
-        );
+    if (kIsWeb) {
+      await auth.signInWithPopup(twitterProvider);
+    } else {
+      await auth.signInWithProvider(twitterProvider);
+    }
+  }
 
-        // Trigger the sign-in flow
-        final authResult = await twitterLogin.login();
+  Future<void> _signInWithApple() async {
+    final appleProvider = AppleAuthProvider();
+    appleProvider.addScope('email');
 
-        if (authResult.status == TwitterLoginStatus.loggedIn) {
-          // Create a credential from the access token
-          final twitterAuthCredential = TwitterAuthProvider.credential(
-            accessToken: authResult.authToken!,
-            secret: authResult.authTokenSecret!,
-          );
+    if (kIsWeb) {
+      // Once signed in, return the UserCredential
+      await auth.signInWithPopup(appleProvider);
+    } else {
+      await auth.signInWithProvider(appleProvider);
+    }
+  }
 
-          // Once signed in, return the UserCredential
-          await _auth.signInWithCredential(twitterAuthCredential);
-        }
-      }
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        error = '${e.message}';
-      });
-    } finally {
-      setIsLoading();
+  Future<void> _signInWithYahoo() async {
+    final yahooProvider = YahooAuthProvider();
+
+    if (kIsWeb) {
+      // Once signed in, return the UserCredential
+      await auth.signInWithPopup(yahooProvider);
+    } else {
+      await auth.signInWithProvider(yahooProvider);
     }
   }
 
   Future<void> _signInWithGitHub() async {
-    setIsLoading();
+    final githubProvider = GithubAuthProvider();
 
-    try {
-      if (kIsWeb) {
-        // Create a new provider
-        GithubAuthProvider githubProvider = GithubAuthProvider();
+    if (kIsWeb) {
+      await auth.signInWithPopup(githubProvider);
+    } else {
+      await auth.signInWithProvider(githubProvider);
+    }
+  }
 
-        // Once signed in, return the UserCredential
-        await _auth.signInWithPopup(githubProvider);
-      } else {
-        // Create a new provider
-        GithubAuthProvider githubProvider = GithubAuthProvider();
+  Future<void> _signInWithMicrosoft() async {
+    final microsoftProvider = MicrosoftAuthProvider();
 
-        await _auth.signInWithAuthProvider(githubProvider);
-      }
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        error = '${e.message}';
-      });
-    } finally {
-      setIsLoading();
+    if (kIsWeb) {
+      await auth.signInWithPopup(microsoftProvider);
+    } else {
+      await auth.signInWithProvider(microsoftProvider);
     }
   }
 }

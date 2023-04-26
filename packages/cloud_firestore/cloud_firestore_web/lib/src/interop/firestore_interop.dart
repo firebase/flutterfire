@@ -29,15 +29,13 @@ external PromiseJsImpl<DocumentReferenceJsImpl> addDoc(
 );
 
 @JS()
-external FieldValue arrayRemove(dynamic elements);
-
-@JS()
-external FieldValue arrayUnion(dynamic elements);
-
-@JS()
 external PromiseJsImpl<void> clearIndexedDbPersistence(
   FirestoreJsImpl firestore,
 );
+
+@JS()
+external PromiseJsImpl<void> setIndexConfiguration(
+    FirestoreJsImpl firestore, String indexConfiguration);
 
 @JS()
 external CollectionReferenceJsImpl collection(
@@ -87,20 +85,12 @@ external PromiseJsImpl<void> enableIndexedDbPersistence(
 
 @JS()
 external PromiseJsImpl<void> enableMultiTabIndexedDbPersistence(
-    FirestoreJsImpl firestore);
+  FirestoreJsImpl firestore,
+);
 
 @JS()
 external PromiseJsImpl<void> enableNetwork(FirestoreJsImpl firestore);
 
-@JS()
-external QueryConstraintJsImpl endBefore(
-  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
-);
-
-@JS()
-external QueryConstraintJsImpl endAt(
-  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
-);
 @JS()
 external PromiseJsImpl<DocumentSnapshotJsImpl> getDoc(
   DocumentReferenceJsImpl reference,
@@ -221,23 +211,11 @@ external bool snapshotEqual(
 );
 
 @JS()
-external QueryConstraintJsImpl startAfter(
-  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
-);
-
-@JS()
-external QueryConstraintJsImpl startAt(
-  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
-);
-
-@JS()
 external PromiseJsImpl<void> terminate(FirestoreJsImpl firestore);
 
+// Object type is forced to prevent JS interop from ignoring the value
 @JS()
-external PromiseJsImpl<void> updateDoc(
-  DocumentReferenceJsImpl reference,
-  dynamic data,
-);
+external Object get updateDoc;
 
 @JS()
 external PromiseJsImpl<void> waitForPendingWrites(FirestoreJsImpl firestore);
@@ -249,6 +227,16 @@ external QueryConstraintJsImpl where(
   dynamic value,
 );
 
+// Object type is forced to prevent JS interop from ignoring the value
+// when using it with an arbitrary number of arguments
+@JS()
+external Object get or;
+
+// Object type is forced to prevent JS interop from ignoring the value
+// when using it with an arbitrary number of arguments
+@JS()
+external Object get and;
+
 @JS()
 external WriteBatchJsImpl writeBatch(FirestoreJsImpl firestore);
 
@@ -259,7 +247,6 @@ abstract class FirestoreJsImpl {
 
 // TODO how?
 //   external void settings(Settings settings);
-
 }
 
 @JS('WriteBatch')
@@ -410,7 +397,7 @@ abstract class DocumentSnapshotJsImpl {
   external SnapshotMetadata get metadata;
   external DocumentReferenceJsImpl get ref;
 
-  external dynamic data();
+  external dynamic data([SnapshotOptions? options]);
   external bool exists();
   external dynamic get(/*String|FieldPath*/ dynamic fieldPath);
 }
@@ -500,7 +487,8 @@ abstract class TimestampJsImpl {
 @anonymous
 @JS()
 abstract class FirestoreError {
-  external String /*|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/ get code;
+  external String /*|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/
+      get code;
 
   external set code(
       /*|'cancelled'|'unknown'|'invalid-argument'|'deadline-exceeded'|'not-found'|'already-exists'|'permission-denied'|'resource-exhausted'|'failed-precondition'|'aborted'|'out-of-range'|'unimplemented'|'internal'|'unavailable'|'data-loss'|'unauthenticated'*/
@@ -654,4 +642,35 @@ abstract class SnapshotOptions {
   external String get serverTimestamps;
 
   external factory SnapshotOptions({String? serverTimestamps});
+}
+
+// We type these 6 functions as Object to avoid an issue with dart2js compilation
+// in release mode
+// Discussed internally with dart2js team
+@JS()
+external Object get startAfter;
+
+@JS()
+external Object get startAt;
+
+@JS()
+external Object get endBefore;
+
+@JS()
+external Object get endAt;
+
+@JS()
+external Object get arrayRemove;
+
+@JS()
+external Object get arrayUnion;
+
+@JS()
+external PromiseJsImpl<AggregateQuerySnapshotJsImpl> getCountFromServer(
+  QueryJsImpl query,
+);
+
+@JS('AggregateQuerySnapshot')
+abstract class AggregateQuerySnapshotJsImpl {
+  external Map<String, Object> data();
 }

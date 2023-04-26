@@ -1,3 +1,92 @@
+## 4.4.1
+
+ - Update a dependency to the latest release.
+
+## 4.4.0
+
+ - **FEAT**(functions): add support for 2nd gen functions ([#10545](https://github.com/firebase/flutterfire/issues/10545)). ([204ba39e](https://github.com/firebase/flutterfire/commit/204ba39e34864c7b8be5122fc0a7fcc98d6c8b26))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 4.3.21
+
+ - Update a dependency to the latest release.
+
+## 4.3.20
+
+ - Update a dependency to the latest release.
+
+## 4.3.19
+
+ - Update a dependency to the latest release.
+
+## 4.3.18
+
+ - Update a dependency to the latest release.
+
+## 4.3.17
+
+ - Update a dependency to the latest release.
+
+## 4.3.16
+
+ - Update a dependency to the latest release.
+
+## 4.3.15
+
+ - Update a dependency to the latest release.
+
+## 4.3.14
+
+ - Update a dependency to the latest release.
+
+## 4.3.13
+
+ - Update a dependency to the latest release.
+
+## 4.3.12
+
+ - Update a dependency to the latest release.
+
+## 4.3.11
+
+ - Update a dependency to the latest release.
+
+## 4.3.10
+
+ - Update a dependency to the latest release.
+
+## 4.3.9
+
+ - Update a dependency to the latest release.
+
+## 4.3.8
+
+ - Update a dependency to the latest release.
+
+## 4.3.7
+
+ - Update a dependency to the latest release.
+
+## 4.3.6
+
+ - Update a dependency to the latest release.
+
+## 4.3.5
+
+ - Update a dependency to the latest release.
+
+## 4.3.4
+
+ - Update a dependency to the latest release.
+
+## 4.3.3
+
+ - Update a dependency to the latest release.
+
+## 4.3.2
+
+ - Update a dependency to the latest release.
+
 ## 4.3.1
 
  - Update a dependency to the latest release.

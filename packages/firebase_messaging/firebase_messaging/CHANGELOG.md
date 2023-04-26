@@ -1,3 +1,122 @@
+## 14.4.1
+
+ - Update a dependency to the latest release.
+
+## 14.4.0
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 14.3.0
+
+ - **FEAT**: bump Firebase iOS SDK `10.5.0` ([#10532](https://github.com/firebase/flutterfire/issues/10532)). ([c77fc4d4](https://github.com/firebase/flutterfire/commit/c77fc4d497532ffff352a3486abf01a98bc44869))
+
+## 14.2.6
+
+ - Update a dependency to the latest release.
+
+## 14.2.5
+
+ - **FIX**: badge is in the `message`, not the `notification` ([#10470](https://github.com/firebase/flutterfire/issues/10470)). ([cf282675](https://github.com/firebase/flutterfire/commit/cf282675a498629887680b37a81014bb939552b4))
+
+## 14.2.4
+
+ - Update a dependency to the latest release.
+
+## 14.2.3
+
+ - Update a dependency to the latest release.
+
+## 14.2.2
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+
+## 14.2.1
+
+ - Update a dependency to the latest release.
+
+## 14.2.0
+
+ - **FEAT**: add ServerTimestampBehavior to the GetOptions class.  ([#9590](https://github.com/firebase/flutterfire/issues/9590)). ([c25bd2fe](https://github.com/firebase/flutterfire/commit/c25bd2fe4c13bc9f13d93410842c00e25aaac2b2))
+
+## 14.1.4
+
+ - Update a dependency to the latest release.
+
+## 14.1.3
+
+ - **FIX**: fix an issue where the notification wasn't restored when going into terminated state ([#9997](https://github.com/firebase/flutterfire/issues/9997)). ([d468dcb7](https://github.com/firebase/flutterfire/commit/d468dcb7519e1cb97359316f4f8f86b42b2ea9c9))
+
+## 14.1.2
+
+ - **FIX**: prevent getInitialMessage from being null at the start of the app ([#9969](https://github.com/firebase/flutterfire/issues/9969)). ([0b0fea8b](https://github.com/firebase/flutterfire/commit/0b0fea8b42ff61aabc0d2cdcd4d5ab1ea8192c61))
+
+## 14.1.1
+
+ - **FIX**: Revert "feat(messaging): use FlutterEngineGroup to improve performance of background handlers". ([8cd90b1a](https://github.com/firebase/flutterfire/commit/8cd90b1aeffc8b44383dc6a60eb8a39d0c08e3b7))
+
+## 14.1.0
+
+ - **FEAT**: use FlutterEngineGroup to improve performance of background handlers ([#9867](https://github.com/firebase/flutterfire/issues/9867)). ([2e9deac0](https://github.com/firebase/flutterfire/commit/2e9deac08e3c1a9a2b35f850f8519e7c5ae43b37))
+
+## 14.0.4
+
+ - Update a dependency to the latest release.
+
+## 14.0.3
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 14.0.2
+
+ - Update a dependency to the latest release.
+
+## 14.0.1
+
+ - Update a dependency to the latest release.
+
+## 14.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: improve pub score ([#9722](https://github.com/firebase/flutterfire/issues/9722)). ([f27d89a1](https://github.com/firebase/flutterfire/commit/f27d89a12cbb5830eb5518854dcfbca72efedb5b))
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+ - **BREAKING** **FEAT**: Firebase android SDK BOM `31.0.0` ([#9724](https://github.com/firebase/flutterfire/issues/9724)). ([29ba1a08](https://github.com/firebase/flutterfire/commit/29ba1a082e026c4f0f0913c10183a72eadb23343))
+
+## 13.1.0
+
+ - **FEAT**: add support for exporting delivery metrics to BigQuery ([#9636](https://github.com/firebase/flutterfire/issues/9636)). ([170b99b9](https://github.com/firebase/flutterfire/commit/170b99b91573f28316172e43188d57ca14600446))
+
+## 13.0.4
+
+ - Update a dependency to the latest release.
+
+## 13.0.3
+
+ - Update a dependency to the latest release.
+
+## 13.0.2
+
+ - **DOCS**: update docs to use `@pragma('vm:entry-point')` annotation for messaging background handler ([#9494](https://github.com/firebase/flutterfire/issues/9494)). ([27a7f44e](https://github.com/firebase/flutterfire/commit/27a7f44e02f2ed533e0249622afdd0a421261385))
+
+## 13.0.1
+
+ - **FIX**: ensure only messaging permission request is processed ([#9486](https://github.com/firebase/flutterfire/issues/9486)). ([5b31e71b](https://github.com/firebase/flutterfire/commit/5b31e71b6cbca0e6a149482436e00598f4eaa2de))
+
+## 13.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: android 13 notifications permission request ([#9348](https://github.com/firebase/flutterfire/issues/9348)). ([43b3b06b](https://github.com/firebase/flutterfire/commit/43b3b06b64739658f79c994110654f5a56abca05))
+   `firebase_messaging` now includes this permission: `Manifest.permission.POST_NOTIFICATIONS` in its `AndroidManifest.xml` file which requires updating your `android/app/build.gradle` to target API level 33.
+
+## 12.0.3
+
+ - Update a dependency to the latest release.
+
+## 12.0.2
+
+ - **FIX**: ensure initial notification was tapped to open app. fixes `getInitialMessage()` & `onMessageOpenedApp()` . ([#9315](https://github.com/firebase/flutterfire/issues/9315)). ([e66c59ca](https://github.com/firebase/flutterfire/commit/e66c59ca4b8a13fc4ce597cb63612eaaaefaf673))
+
 ## 12.0.1
 
  - Update a dependency to the latest release.

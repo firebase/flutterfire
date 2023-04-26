@@ -8,8 +8,8 @@
 @JS('firebase_messaging')
 library firebase_interop.messaging;
 
-import 'package:js/js.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:js/js.dart';
 
 @JS()
 external MessagingJsImpl getMessaging([AppJsImpl? app]);
@@ -64,6 +64,7 @@ abstract class NotificationPayloadJsImpl {
 @JS()
 @anonymous
 abstract class MessagePayloadJsImpl {
+  external String get messageId;
   external String? get collapseKey;
   external FcmOptionsJsImpl? get fcmOptions;
   external NotificationPayloadJsImpl? get notification;

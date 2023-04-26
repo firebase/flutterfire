@@ -5,9 +5,9 @@
 
 import 'dart:async';
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 Map<String, dynamic> _initialParameters = Map<String, dynamic>.unmodifiable({
   'where': List<List<dynamic>>.unmodifiable([]),
@@ -36,10 +36,8 @@ abstract class QueryPlatform extends PlatformInterface {
   /// This is used by the app-facing [Query] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(QueryPlatform instance) {
-    if (instance is! CollectionReferencePlatform) {
-      PlatformInterface.verifyToken(instance, _token);
-    }
+  static void verify(QueryPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The [FirebaseFirestorePlatform] interface for this current query.
@@ -79,7 +77,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// Cannot be used in combination with [endBefore], [endBeforeDocument], or
   /// [endAtDocument], but can be used in combination with [startAt],
   /// [startAfter], [startAtDocument] and [startAfterDocument].
-  QueryPlatform endAt(List<dynamic> fields) {
+  QueryPlatform endAt(Iterable<dynamic> fields) {
     throw UnimplementedError('endAt() is not implemented');
   }
 
@@ -97,7 +95,8 @@ abstract class QueryPlatform extends PlatformInterface {
   ///  * [startAfterDocument] for a query that starts after document.
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endAtDocument] for a query that ends at a document.
-  QueryPlatform endBeforeDocument(List<dynamic> orders, List<dynamic> values) {
+  QueryPlatform endBeforeDocument(
+      Iterable<dynamic> orders, Iterable<dynamic> values) {
     throw UnimplementedError('endBeforeDocument() is not implemented');
   }
 
@@ -109,7 +108,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// Cannot be used in combination with [endAt], [endBeforeDocument], or
   /// [endBeforeDocument], but can be used in combination with [startAt],
   /// [startAfter], [startAtDocument] and [startAfterDocument].
-  QueryPlatform endBefore(List<dynamic> fields) {
+  QueryPlatform endBefore(Iterable<dynamic> fields) {
     throw UnimplementedError('endBefore() is not implemented');
   }
 
@@ -150,7 +149,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// using [startAfterDocument], [startAtDocument], [endBeforeDocument],
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
-  QueryPlatform orderBy(List<List<dynamic>> orders) {
+  QueryPlatform orderBy(Iterable<List<dynamic>> orders) {
     throw UnimplementedError('orderBy() is not implemented');
   }
 
@@ -180,7 +179,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// Cannot be used in combination with [startAt], [startAfterDocument], or
   /// [startAtDocument], but can be used in combination with [endAt],
   /// [endBefore], [endAtDocument] and [endBeforeDocument].
-  QueryPlatform startAfter(List<dynamic> fields) {
+  QueryPlatform startAfter(Iterable<dynamic> fields) {
     throw UnimplementedError('startAfter() is not implemented');
   }
 
@@ -198,7 +197,8 @@ abstract class QueryPlatform extends PlatformInterface {
   ///  * [startAfterDocument] for a query that starts after a document.
   ///  * [endAtDocument] for a query that ends at a document.
   ///  * [endBeforeDocument] for a query that ends before a document.
-  QueryPlatform startAtDocument(List<dynamic> orders, List<dynamic> values) {
+  QueryPlatform startAtDocument(
+      Iterable<dynamic> orders, Iterable<dynamic> values) {
     throw UnimplementedError('startAtDocument() is not implemented');
   }
 
@@ -210,7 +210,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// Cannot be used in combination with [startAfter], [startAfterDocument],
   /// or [startAtDocument], but can be used in combination with [endAt],
   /// [endBefore], [endAtDocument] and [endBeforeDocument].
-  QueryPlatform startAt(List<dynamic> fields) {
+  QueryPlatform startAt(Iterable<dynamic> fields) {
     throw UnimplementedError('startAt() is not implemented');
   }
 
@@ -227,5 +227,15 @@ abstract class QueryPlatform extends PlatformInterface {
   /// set.
   QueryPlatform where(List<List<dynamic>> conditions) {
     throw UnimplementedError('where() is not implemented');
+  }
+
+  QueryPlatform whereFilter(Filter filter) {
+    throw UnimplementedError('whereFilter() is not implemented');
+  }
+
+  /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
+  /// metadata
+  AggregateQueryPlatform count() {
+    throw UnimplementedError('count() is not implemented');
   }
 }

@@ -229,6 +229,15 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.setAutoInitEnabled(enabled);
   }
 
+  /// Enables or disables Firebase Cloud Messaging message delivery metrics export to BigQuery for Android.
+  ///
+  /// On iOS, you need to follow [this guide](https://firebase.google.com/docs/cloud-messaging/understand-delivery?platform=ios#enable_delivery_data_export_for_background_notifications)
+  /// in order to export metrics to BigQuery.
+  /// On Web, you need to setup a [service worker](https://firebase.google.com/docs/cloud-messaging/js/client) and call `experimentalSetDeliveryMetricsExportedToBigQueryEnabled(messaging, true)`
+  Future<void> setDeliveryMetricsExportToBigQuery(bool enabled) async {
+    return _delegate.setDeliveryMetricsExportToBigQuery(enabled);
+  }
+
   /// Sets the presentation options for Apple notifications when received in
   /// the foreground.
   ///

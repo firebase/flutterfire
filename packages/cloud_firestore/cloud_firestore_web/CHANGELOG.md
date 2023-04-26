@@ -1,3 +1,125 @@
+## 3.4.2
+
+ - Update a dependency to the latest release.
+
+## 3.4.1
+
+ - **REFACTOR**(firestore): Dart 3 compatibility: change _Updatable to be an actual `mixin` ([#10667](https://github.com/firebase/flutterfire/issues/10667)). ([cf7dd460](https://github.com/firebase/flutterfire/commit/cf7dd460d80c8d8c00e53e70ae93cb4695277f0c))
+
+## 3.4.0
+
+ - **FEAT**(firestore): add the `Filter` class and support for the OR query ([#10678](https://github.com/firebase/flutterfire/issues/10678)). ([ac434044](https://github.com/firebase/flutterfire/commit/ac434044bbfa91d0d8b33ff39736d8eb4062e824))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 3.3.5
+
+ - Update a dependency to the latest release.
+
+## 3.3.4
+
+ - Update a dependency to the latest release.
+
+## 3.3.3
+
+ - **FIX**: change interop type of updateDoc to force the JS interop to keep the value ([#10491](https://github.com/firebase/flutterfire/issues/10491)). ([c46c9769](https://github.com/firebase/flutterfire/commit/c46c9769eae9e780f3c03622f468bf18f1717d79))
+
+## 3.3.2
+
+ - **FIX**: fix an issue in the update method using `FieldValue.arrayUnion` or `Map` ([#10481](https://github.com/firebase/flutterfire/issues/10481)). ([d1998aa9](https://github.com/firebase/flutterfire/commit/d1998aa97a9183d3ec2f868c565ec18051126253))
+
+## 3.3.1
+
+ - **FIX**: fix a codec issue with Iterable ([#10466](https://github.com/firebase/flutterfire/issues/10466)). ([d409a7bd](https://github.com/firebase/flutterfire/commit/d409a7bd8de52188969355d3cdfe4e4087a1cc33))
+ - **FIX**: fix a casting error with the update method ([#10458](https://github.com/firebase/flutterfire/issues/10458)). ([696a6ba3](https://github.com/firebase/flutterfire/commit/696a6ba3699c36b69ef290de1fcecefccb81299d))
+
+## 3.3.0
+
+ - **FIX**: supports Iterable in queries instead of List ([#10411](https://github.com/firebase/flutterfire/issues/10411)). ([9d91d513](https://github.com/firebase/flutterfire/commit/9d91d513fad326f9c928d7d96d03e2c031875903))
+ - **FEAT**: add support to `update` using FieldPath ([#10388](https://github.com/firebase/flutterfire/issues/10388)). ([538090fc](https://github.com/firebase/flutterfire/commit/538090fc49078b8d6c484d8db9049f06d05157dd))
+
+## 3.2.2
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+
+## 3.2.1
+
+ - Update a dependency to the latest release.
+
+## 3.2.0
+
+ - **FEAT**: add ServerTimestampBehavior to the GetOptions class.  ([#9590](https://github.com/firebase/flutterfire/issues/9590)). ([c25bd2fe](https://github.com/firebase/flutterfire/commit/c25bd2fe4c13bc9f13d93410842c00e25aaac2b2))
+
+## 3.1.1
+
+ - **FIX**: use `enableMultiTabIndexedDbPersistence()` API when the user inputs `synchronizeTabs` as `true` ([#10024](https://github.com/firebase/flutterfire/issues/10024)). ([d75786f3](https://github.com/firebase/flutterfire/commit/d75786f3112fac02f3db48b372c73a121f035141))
+
+## 3.1.0
+
+ - **FEAT**: experimental `setIndexConfiguration()` API ([#9928](https://github.com/firebase/flutterfire/issues/9928)). ([bf6eda18](https://github.com/firebase/flutterfire/commit/bf6eda1893a4f29c4b501c4aa31026548ad2b286))
+
+## 3.0.5
+
+ - Update a dependency to the latest release.
+
+## 3.0.4
+
+ - **FIX**: fix aggregated count to use the current query and not only the collection on Web ([#9824](https://github.com/firebase/flutterfire/issues/9824)). ([ada39355](https://github.com/firebase/flutterfire/commit/ada39355722e316217934ad8cf1dfa789e47f058))
+
+## 3.0.3
+
+ - Update a dependency to the latest release.
+
+## 3.0.2
+
+ - Update a dependency to the latest release.
+
+## 3.0.1
+
+- Update a dependency to the latest release.
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: `count()` feature for counting documents without retrieving documents. ([#9699](https://github.com/firebase/flutterfire/issues/9699)). ([ac0bf733](https://github.com/firebase/flutterfire/commit/ac0bf7330d7de73d0ea36c740b79a426187291d2))
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 2.8.10
+
+ - **FIX**: fix a query error in Flutter Web that was affecting the parsing of ancient dates ([#9633](https://github.com/firebase/flutterfire/issues/9633)). ([9250d45f](https://github.com/firebase/flutterfire/commit/9250d45f1d7ece9335b2c4c4795fecc728df3de5))
+
+## 2.8.9
+
+ - Update a dependency to the latest release.
+
+## 2.8.8
+
+ - Update a dependency to the latest release.
+
+## 2.8.7
+
+ - Update a dependency to the latest release.
+
+## 2.8.6
+
+ - Update a dependency to the latest release.
+
+## 2.8.5
+
+ - Update a dependency to the latest release.
+
+## 2.8.4
+
+ - Update a dependency to the latest release.
+
+## 2.8.3
+
+ - **FIX**: fix apply method for arrayRemove & arrayUnion ([#9281](https://github.com/firebase/flutterfire/issues/9281)). ([29ef7c2a](https://github.com/firebase/flutterfire/commit/29ef7c2aa4f6f9f87802806508c1b9f142a3890e))
+
+## 2.8.2
+
+ - **FIX**: change the interop to fix an issue with startAt/endAt when compilating with dart2js in release mode ([#9246](https://github.com/firebase/flutterfire/issues/9246)). ([b4e92ed8](https://github.com/firebase/flutterfire/commit/b4e92ed854dc1e93cee42dc5ef748be7aeae7650))
+
 ## 2.8.1
 
  - **FIX**: fix interop on TransactionOptions ([#9188](https://github.com/firebase/flutterfire/issues/9188)). ([f0201674](https://github.com/firebase/flutterfire/commit/f0201674a3dfe1a6ce103f2aa6ad2b994dcc1da8))

@@ -18,8 +18,8 @@ abstract class DataSnapshotPlatform extends PlatformInterface {
   /// This is used by the app-facing [DocumentSnapshot] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(DataSnapshotPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(DataSnapshotPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The Reference for the location that generated this DataSnapshot.

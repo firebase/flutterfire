@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:expect_error/expect_error.dart';
 import 'package:test/test.dart';
 
@@ -7,6 +11,37 @@ Future<void> main() async {
     packageRoot: 'cloud_firestore_odm_generator_integration_test',
     path: 'lib/__test__.dart',
   );
+
+  group('where(arrayContains)', () {
+    test(' is typed', () {
+      expect(
+        library.withCode(
+          '''
+import 'simple.dart';
+
+void main() {
+  // Does not arrayContains for non-list
+  // expect-error: UNDEFINED_METHOD
+  nestedRef.whereValue();
+  nestedRef.whereSimple(
+    // expect-error: UNDEFINED_NAMED_PARAMETER
+    arrayContains: null,
+  );
+  // expect-error: UNDEFINED_METHOD
+  nestedRef.whereValueList();
+
+  nestedRef.whereNumList(arrayContains: 42);
+  nestedRef.whereNumList(
+    // expect-error: ARGUMENT_TYPE_NOT_ASSIGNABLE
+    arrayContains: 'string',
+  );
+}
+''',
+        ),
+        compiles,
+      );
+    });
+  });
 
   group('update', () {
     test('rejects complex object list but allows primitive lists', () {

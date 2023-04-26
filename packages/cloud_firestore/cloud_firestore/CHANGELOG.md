@@ -1,3 +1,134 @@
+## 4.5.2
+
+ - Update a dependency to the latest release.
+
+## 4.5.1
+
+ - **FIX**(firestore): ensure all index URLs are captured and passed to the user ([#10674](https://github.com/firebase/flutterfire/issues/10674)). ([9800435a](https://github.com/firebase/flutterfire/commit/9800435abc562fadc67a945e771591186576c34d))
+
+## 4.5.0
+
+ - **FEAT**(firestore): add the `Filter` class and support for the OR query ([#10678](https://github.com/firebase/flutterfire/issues/10678)). ([ac434044](https://github.com/firebase/flutterfire/commit/ac434044bbfa91d0d8b33ff39736d8eb4062e824))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 4.4.5
+
+ - Update a dependency to the latest release.
+
+## 4.4.4
+
+ - Update a dependency to the latest release.
+
+## 4.4.3
+
+ - Update a dependency to the latest release.
+
+## 4.4.2
+
+ - Update a dependency to the latest release.
+
+## 4.4.1
+
+ - Update a dependency to the latest release.
+
+## 4.4.0
+
+ - **FIX**: supports Iterable in queries instead of List ([#10411](https://github.com/firebase/flutterfire/issues/10411)). ([9d91d513](https://github.com/firebase/flutterfire/commit/9d91d513fad326f9c928d7d96d03e2c031875903))
+ - **FEAT**: add support to `update` using FieldPath ([#10388](https://github.com/firebase/flutterfire/issues/10388)). ([538090fc](https://github.com/firebase/flutterfire/commit/538090fc49078b8d6c484d8db9049f06d05157dd))
+
+## 4.3.2
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+ - **FIX**: fix an issue when removing a value that didn't exist in ServerTimestampBehavior map ([#10391](https://github.com/firebase/flutterfire/issues/10391)). ([2929ac9d](https://github.com/firebase/flutterfire/commit/2929ac9da037bc231d156425166422da380d5a2e))
+ - **FIX**: fix an issue when removing a value that didn't exist in ServerTimestampBehavior map ([#10370](https://github.com/firebase/flutterfire/issues/10370)). ([6da87036](https://github.com/firebase/flutterfire/commit/6da870363a947110ebf80696a7ed3887c4f2c557))
+ - **FIX**: startAfterDocument could throw when used with a DocumentReference ([#10339](https://github.com/firebase/flutterfire/issues/10339)). ([8224acbe](https://github.com/firebase/flutterfire/commit/8224acbee991e508b949c4dac11910df4d6fe323))
+
+## 4.3.1
+
+ - **FIX**: fix crash that could occur when using transactions ([#10184](https://github.com/firebase/flutterfire/issues/10184)). ([d14b545a](https://github.com/firebase/flutterfire/commit/d14b545adb6052f1e5acd7a0e679d790a4741122))
+
+## 4.3.0
+
+ - **FIX**: propagate COLLECTION_GROUP_ASC index error message ([#10130](https://github.com/firebase/flutterfire/issues/10130)). ([6b321cbe](https://github.com/firebase/flutterfire/commit/6b321cbec3a22e5899e61342b5163efa511bdd9b))
+ - **FEAT**: add ServerTimestampBehavior to the GetOptions class.  ([#9590](https://github.com/firebase/flutterfire/issues/9590)). ([c25bd2fe](https://github.com/firebase/flutterfire/commit/c25bd2fe4c13bc9f13d93410842c00e25aaac2b2))
+
+## 4.2.0
+
+ - **FEAT**: `setIndexConfigurationFromJSON()` API. Allow users to pass JSON string ([#10029](https://github.com/firebase/flutterfire/issues/10029)). ([be4b42b1](https://github.com/firebase/flutterfire/commit/be4b42b11b6ceddf83d4fbc77a95a41879ec3c8d))
+
+## 4.1.0
+
+ - **FEAT**: experimental `setIndexConfiguration()` API ([#9928](https://github.com/firebase/flutterfire/issues/9928)). ([bf6eda18](https://github.com/firebase/flutterfire/commit/bf6eda1893a4f29c4b501c4aa31026548ad2b286))
+
+## 4.0.5
+
+ - Update a dependency to the latest release.
+
+## 4.0.4
+
+ - **FIX**: fix aggregated count to use the current query and not only the collection on Web ([#9824](https://github.com/firebase/flutterfire/issues/9824)). ([ada39355](https://github.com/firebase/flutterfire/commit/ada39355722e316217934ad8cf1dfa789e47f058))
+
+## 4.0.3
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 4.0.2
+
+ - Update a dependency to the latest release.
+
+## 4.0.1
+
+ - Update a dependency to the latest release.
+
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: `count()` feature for counting documents without retrieving documents. ([#9699](https://github.com/firebase/flutterfire/issues/9699)). ([ac0bf733](https://github.com/firebase/flutterfire/commit/ac0bf7330d7de73d0ea36c740b79a426187291d2))
+ - **FEAT**: Add namedQueryWithConverterGet ([#9715](https://github.com/firebase/flutterfire/issues/9715)). ([6d025fd4](https://github.com/firebase/flutterfire/commit/6d025fd4c89830d5975f4ed981aa0aa0777c13d8))
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 3.5.1
+
+ - **FIX**: fix a query error in Flutter Web that was affecting the parsing of ancient dates ([#9633](https://github.com/firebase/flutterfire/issues/9633)). ([9250d45f](https://github.com/firebase/flutterfire/commit/9250d45f1d7ece9335b2c4c4795fecc728df3de5))
+
+## 3.5.0
+
+ - **FEAT**: add OAuth Access Token support to sign in with providers ([#9593](https://github.com/firebase/flutterfire/issues/9593)). ([cb6661bb](https://github.com/firebase/flutterfire/commit/cb6661bbc701031d6f920ace3a6efc8e8d56aa4c))
+ - **FEAT**: Bump Firebase iOS SDK to `9.6.0` ([#9531](https://github.com/firebase/flutterfire/issues/9531)). ([2138f4aa](https://github.com/firebase/flutterfire/commit/2138f4aaaace51d5dce4809fb42e1e4ff20ed251))
+
+## 3.4.9
+
+ - Update a dependency to the latest release.
+
+## 3.4.8
+
+ - **FIX**: fix `queryGet()` & `namedQueryGet()`. Check if `query` is `[NSNull null]` value ([#9410](https://github.com/firebase/flutterfire/issues/9410)). ([ae035fe2](https://github.com/firebase/flutterfire/commit/ae035fe2b060264153386ae5c2a1eb90c22e90f3))
+
+## 3.4.7
+
+ - Update a dependency to the latest release.
+
+## 3.4.6
+
+ - Update a dependency to the latest release.
+
+## 3.4.5
+
+ - Update a dependency to the latest release.
+
+## 3.4.4
+
+ - **FIX**: stop `FirebaseError` appearing in console on hot restart & hot refresh ([#9321](https://github.com/firebase/flutterfire/issues/9321)). ([4ba0ff9d](https://github.com/firebase/flutterfire/commit/4ba0ff9d9c7d13f7e040d80375d6db3edb8d37d5))
+
+## 3.4.3
+
+ - Update a dependency to the latest release.
+
+## 3.4.2
+
+ - Update a dependency to the latest release.
+
 ## 3.4.1
 
  - Update a dependency to the latest release.

@@ -13,6 +13,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.GeoPoint;
@@ -139,9 +140,16 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     List<Map<String, Object>> documents = new ArrayList<>();
     List<SnapshotMetadata> metadatas = new ArrayList<>();
 
+    DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
+        FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.get(value.hashCode());
+
     for (DocumentSnapshot document : value.getDocuments()) {
       paths.add(document.getReference().getPath());
-      documents.add(document.getData());
+      if (serverTimestampBehavior != null) {
+        documents.add(document.getData(serverTimestampBehavior));
+      } else {
+        documents.add(document.getData());
+      }
       metadatas.add(document.getMetadata());
     }
 
@@ -151,6 +159,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     querySnapshotMap.put("documentChanges", value.getDocumentChanges());
     querySnapshotMap.put("metadata", value.getMetadata());
 
+    FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
     writeValue(stream, querySnapshotMap);
   }
 
@@ -190,13 +199,20 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     snapshotMap.put("path", value.getReference().getPath());
 
     if (value.exists()) {
-      snapshotMap.put("data", value.getData());
+      DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
+          FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.get(value.hashCode());
+      if (serverTimestampBehavior != null) {
+        snapshotMap.put("data", value.getData(serverTimestampBehavior));
+      } else {
+        snapshotMap.put("data", value.getData());
+      }
     } else {
       snapshotMap.put("data", null);
     }
 
     snapshotMap.put("metadata", value.getMetadata());
 
+    FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
     writeValue(stream, snapshotMap);
   }
 
@@ -317,6 +333,58 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     return settingsBuilder.build();
   }
 
+  private Filter filterFromJson(Map<String, Object> map) {
+    if (map.containsKey("fieldPath")) {
+      // Deserialize a FilterQuery
+      String op = (String) map.get("op");
+      FieldPath fieldPath = (FieldPath) map.get("fieldPath");
+      Object value = map.get("value");
+
+      // All the operators from Firebase
+      switch (op) {
+        case "==":
+          return Filter.equalTo(fieldPath, value);
+        case "!=":
+          return Filter.notEqualTo(fieldPath, value);
+        case "<":
+          return Filter.lessThan(fieldPath, value);
+        case "<=":
+          return Filter.lessThanOrEqualTo(fieldPath, value);
+        case ">":
+          return Filter.greaterThan(fieldPath, value);
+        case ">=":
+          return Filter.greaterThanOrEqualTo(fieldPath, value);
+        case "array-contains":
+          return Filter.arrayContains(fieldPath, value);
+        case "array-contains-any":
+          return Filter.arrayContainsAny(fieldPath, (List<? extends Object>) value);
+        case "in":
+          return Filter.inArray(fieldPath, (List<? extends Object>) value);
+        case "not-in":
+          return Filter.notInArray(fieldPath, (List<? extends Object>) value);
+        default:
+          throw new Error("Invalid operator");
+      }
+    }
+    // Deserialize a FilterOperator
+    String op = (String) map.get("op");
+    List<Map<String, Object>> queries = (List<Map<String, Object>>) map.get("queries");
+
+    // Map queries recursively
+    ArrayList<Filter> parsedFilters = new ArrayList<>();
+    for (Map<String, Object> query : queries) {
+      parsedFilters.add(filterFromJson(query));
+    }
+
+    if (op.equals("OR")) {
+      return Filter.or(parsedFilters.toArray(new Filter[0]));
+    } else if (op.equals("AND")) {
+      return Filter.and(parsedFilters.toArray(new Filter[0]));
+    }
+
+    throw new Error("Invalid operator");
+  }
+
   private Query readFirestoreQuery(ByteBuffer buffer) {
     try {
       @SuppressWarnings("unchecked")
@@ -337,6 +405,12 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       }
 
       if (parameters == null) return query;
+
+      boolean isFilterQuery = parameters.containsKey("filters");
+      if (isFilterQuery) {
+        Filter filter = filterFromJson((Map<String, Object>) parameters.get("filters"));
+        query = query.where(filter);
+      }
 
       // "where" filters
       @SuppressWarnings("unchecked")

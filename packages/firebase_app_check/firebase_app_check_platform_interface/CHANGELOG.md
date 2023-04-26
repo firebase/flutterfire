@@ -1,3 +1,103 @@
+## 0.0.6+1
+
+ - Update a dependency to the latest release.
+
+## 0.0.6
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 0.0.5+17
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+16
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+15
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+14
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+13
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+12
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+11
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+10
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+9
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+8
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+7
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+6
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+5
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 0.0.5+4
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+3
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+2
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+1
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+
+## 0.0.5
+
+ - **FEAT**: provide `androidDebugProvider` boolean for android debug provider & update app check example app ([#9412](https://github.com/firebase/flutterfire/issues/9412)). ([f1f26748](https://github.com/firebase/flutterfire/commit/f1f26748615c7c9d406e1d3d605e2987e1134ee7))
+
+## 0.0.4+17
+
+ - Update a dependency to the latest release.
+
+## 0.0.4+16
+
+ - Update a dependency to the latest release.
+
+## 0.0.4+15
+
+ - Update a dependency to the latest release.
+
+## 0.0.4+14
+
+ - Update a dependency to the latest release.
+
+## 0.0.4+13
+
+ - Update a dependency to the latest release.
+
 ## 0.0.4+12
 
  - Update a dependency to the latest release.

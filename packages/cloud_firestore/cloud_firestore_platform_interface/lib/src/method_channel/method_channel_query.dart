@@ -5,15 +5,17 @@
 
 import 'dart:async';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 
+import 'method_channel_aggregate_query.dart';
 import 'method_channel_firestore.dart';
 import 'method_channel_query_snapshot.dart';
-import 'utils/source.dart';
 import 'utils/exception.dart';
+import 'utils/source.dart';
 
 /// An implementation of [QueryPlatform] that uses [MethodChannel] to
 /// communicate with Firebase plugins.
@@ -64,7 +66,7 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  QueryPlatform endAt(List<dynamic> fields) {
+  QueryPlatform endAt(Iterable<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
       'endAt': fields,
       'endBefore': null,
@@ -72,7 +74,8 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  QueryPlatform endBeforeDocument(List<dynamic> orders, List<dynamic> values) {
+  QueryPlatform endBeforeDocument(
+      Iterable<dynamic> orders, Iterable<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
       'orderBy': orders,
       'endAt': null,
@@ -81,7 +84,7 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  QueryPlatform endBefore(List<dynamic> fields) {
+  QueryPlatform endBefore(Iterable<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
       'endAt': null,
       'endBefore': fields,
@@ -101,6 +104,9 @@ class MethodChannelQuery extends QueryPlatform {
           'query': this,
           'firestore': firestore,
           'source': getSourceString(options.source),
+          'serverTimestampBehavior': getServerTimestampBehaviorString(
+            options.serverTimestampBehavior,
+          ),
         },
       );
 
@@ -129,37 +135,41 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   Stream<QuerySnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
+    ServerTimestampBehavior serverTimestampBehavior =
+        ServerTimestampBehavior.none,
   }) {
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     late StreamController<QuerySnapshotPlatform>
         controller; // ignore: close_sinks
 
-    StreamSubscription<dynamic>? snapshotStream;
+    StreamSubscription<dynamic>? snapshotStreamSubscription;
+
     controller = StreamController<QuerySnapshotPlatform>.broadcast(
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.channel
             .invokeMethod<String>('Query#snapshots');
 
-        snapshotStream =
+        snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.querySnapshotChannel(observerId!)
-                .receiveBroadcastStream(
-                  <String, dynamic>{
-                    'query': this,
-                    'includeMetadataChanges': includeMetadataChanges,
-                  },
-                )
-                .handleError(convertPlatformException)
-                .listen(
-                  (snapshot) {
-                    controller
-                        .add(MethodChannelQuerySnapshot(firestore, snapshot));
-                  },
-                  onError: controller.addError,
-                );
+                .receiveGuardedBroadcastStream(
+          arguments: <String, dynamic>{
+            'query': this,
+            'includeMetadataChanges': includeMetadataChanges,
+            'serverTimestampBehavior': getServerTimestampBehaviorString(
+              serverTimestampBehavior,
+            ),
+          },
+          onError: convertPlatformException,
+        ).listen(
+          (snapshot) {
+            controller.add(MethodChannelQuerySnapshot(firestore, snapshot));
+          },
+          onError: controller.addError,
+        );
       },
       onCancel: () {
-        snapshotStream?.cancel();
+        snapshotStreamSubscription?.cancel();
       },
     );
 
@@ -167,7 +177,7 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  QueryPlatform orderBy(List<List<dynamic>> orders) {
+  QueryPlatform orderBy(Iterable<List<dynamic>> orders) {
     return _copyWithParameters(<String, dynamic>{'orderBy': orders});
   }
 
@@ -181,7 +191,7 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  QueryPlatform startAfter(List<dynamic> fields) {
+  QueryPlatform startAfter(Iterable<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
       'startAt': null,
       'startAfter': fields,
@@ -189,7 +199,8 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  QueryPlatform startAtDocument(List<dynamic> orders, List<dynamic> values) {
+  QueryPlatform startAtDocument(
+      Iterable<dynamic> orders, Iterable<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
       'orderBy': orders,
       'startAt': values,
@@ -198,7 +209,7 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  QueryPlatform startAt(List<dynamic> fields) {
+  QueryPlatform startAt(Iterable<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
       'startAt': fields,
       'startAfter': null,
@@ -206,10 +217,24 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  QueryPlatform where(List<List<dynamic>> conditions) {
+  QueryPlatform where(Iterable<List<dynamic>> conditions) {
     return _copyWithParameters(<String, dynamic>{
       'where': conditions,
     });
+  }
+
+  @override
+  QueryPlatform whereFilter(Filter filter) {
+    return _copyWithParameters(<String, dynamic>{
+      'filters': filter.toJson(),
+    });
+  }
+
+  @override
+  AggregateQueryPlatform count() {
+    return MethodChannelAggregateQuery(
+      this,
+    );
   }
 
   @override

@@ -1,5 +1,11 @@
-Project: /docs/_project.yaml
-Book: /docs/_book.yaml
+Project: /docs/cloud-messaging/\_project.yaml
+Book: /docs/\_book.yaml
+page_type: guide
+
+{% include "_shared/apis/console/_local_variables.html" %}
+{% include "_local_variables.html" %}
+{% include "docs/cloud-messaging/_local_variables.html" %}
+{% include "docs/android/_local_variables.html" %}
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
@@ -9,13 +15,14 @@ Depending on a device's state, incoming messages are handled differently. To
 understand these scenarios and how to integrate FCM into your own application, it
 is first important to establish the various states a device can be in:
 
-| State          | Description
-| -------------- | -----------
-| **Foreground** | When the application is open, in view and in use.
-| **Background** | When the application is open, but in the background (minimized).
-:                : This typically occurs when the user has pressed the "home" button
-:                : on the device, has switched to another app using the app switcher,
-:                : or has the application open in a different tab (web).
+| State          | Description                                                      |
+| -------------- | ---------------------------------------------------------------- |
+| **Foreground** | When the application is open, in view and in use.                |
+| **Background** | When the application is open, but in the background (minimized). |
+
+: : This typically occurs when the user has pressed the "home" button
+: : on the device, has switched to another app using the app switcher,
+: : or has the application open in a different tab (web).
 | **Terminated** | When the device is locked or the application is not running.
 
 There are a few preconditions which must be met before the application can
@@ -104,7 +111,6 @@ Android and iOS. It is, however, possible to override this behavior:
 - On Android, you must create a "High Priority" notification channel.
 - On iOS, you can update the presentation options for the application.
 
-
 ### Background messages
 
 The process of handling background messages is different on native (Android and
@@ -119,8 +125,12 @@ There are a few things to keep in mind about your background message handler:
 
 1. It must not be an anonymous function.
 2. It must be a top-level function (e.g. not a class method which requires initialization).
+3. It must be annotated with `@pragma('vm:entry-point')` right above the function declaration (otherwise it may be removed during tree shaking for release mode).
+
+Note: The `@pragma('vm:entry-point')` annotation is a requirement when using Flutter version `3.3.0` or higher.
 
 ```dart
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
@@ -150,24 +160,26 @@ Use the service worker to handle background messages.
 To get started, create a new file in the your `web` directory, and call it `firebase-messaging-sw.js`:
 
 ```js title=web/firebase-messaging-sw.js
-importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js");
+importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js');
+importScripts(
+  'https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js'
+);
 
 firebase.initializeApp({
-  apiKey: "...",
-  authDomain: "...",
-  databaseURL: "...",
-  projectId: "...",
-  storageBucket: "...",
-  messagingSenderId: "...",
-  appId: "...",
+  apiKey: '...',
+  authDomain: '...',
+  databaseURL: '...',
+  projectId: '...',
+  storageBucket: '...',
+  messagingSenderId: '...',
+  appId: '...',
 });
 
 const messaging = firebase.messaging();
 
 // Optional:
 messaging.onBackgroundMessage((message) => {
-  console.log("onBackgroundMessage", message);
+  console.log('onBackgroundMessage', message);
 });
 ```
 
@@ -200,3 +212,294 @@ Next, the worker must be registered. Within the entry file, **after** the `main.
 
 Next restart your Flutter application. The worker will be registered and any background messages will be handled via this file.
 
+### Handling Interaction
+
+Since notifications are a visible cue, it is common for users to interact with them (by pressing). The default behavior on both Android and iOS is to open the
+application. If the application is terminated it will be started; if it is in the background it will be brought to the foreground.
+
+Depending on the content of a notification, you may wish to handle the user's interaction when the application opens. For example, if a new chat message is sent via
+a notification and the user presses it, you may want to open the specific conversation when the application opens.
+
+The `firebase-messaging` package provides two ways to handle this interaction:
+
+- `getInitialMessage()`: If the application is opened from a terminated state a `Future` containing a `RemoteMessage` will be returned. Once consumed, the `RemoteMessage` will be removed.
+- `onMessageOpenedApp`: A `Stream` which posts a `RemoteMessage` when the application is opened from a background state.
+
+It is recommended that both scenarios are handled to ensure a smooth UX for your users. The code example below outlines how this can be achieved:
+
+```dart
+class Application extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _Application();
+}
+
+class _Application extends State<Application> {
+  // It is assumed that all messages contain a data field with the key 'type'
+  Future<void> setupInteractedMessage() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    if (message.data['type'] == 'chat') {
+      Navigator.pushNamed(context, '/chat',
+        arguments: ChatArguments(message),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Run code required to handle interacted messages in an async function
+    // as initState() must not be async
+    setupInteractedMessage();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text("...");
+  }
+}
+```
+
+How you handle interaction depends on your application setup. The above example shows a basic illustration using a StatefulWidget.
+
+## Localize Messages
+
+You can send localized strings in two different ways:
+
+- Store the preferred language of each of your users in your server and send customized notifications for each language
+- Embed localized strings in your app and make use of the operating system's native locale settings
+
+Here's how to use the second method:
+
+### Android
+
+1. Specify your default-language messages in `resources/values/strings.xml`:
+
+   ```xml
+   <string name="notification_title">Hello world</string>
+   <string name="notification_message">This is a message</string>
+   ```
+
+2. Specify the translated messages in the <code>values-<var>language</var></code> directory. For example, specify French messages in `resources/values-fr/strings.xml`:
+
+   ```xml
+   <string name="notification_title">Bonjour le monde</string>
+   <string name="notification_message">C'est un message</string>
+   ```
+
+3. In the server payload, instead of using `title`, `message`, and `body` keys, use `title_loc_key` and `body_loc_key` for your localized message, and set them to the `name` attribute of the message you want to display.
+
+   The message payload would look like this:
+
+   ```json
+   {
+     "data": {
+       "title_loc_key": "notification_title",
+       "body_loc_key": "notification_message"
+     }
+   }
+   ```
+
+### iOS
+
+1. Specify your default-language messages in `Base.lproj/Localizable.strings`:
+
+   ```
+   "NOTIFICATION_TITLE" = "Hello World";
+   "NOTIFICATION_MESSAGE" = "This is a message";
+   ```
+
+2. Specify the translated messages in the <code><var>language</var>.lproj</code> directory. For example, specify French messages in `fr.lproj/Localizable.strings`:
+
+   ```
+   "NOTIFICATION_TITLE" = "Bonjour le monde";
+   "NOTIFICATION_MESSAGE" = "C'est un message";
+   ```
+
+   The message payload would look like this:
+
+   ```json
+   {
+     "data": {
+       "title_loc_key": "NOTIFICATION_TITLE",
+       "body_loc_key": "NOTIFICATION_MESSAGE"
+     }
+   }
+   ```
+
+## Enable message delivery data export
+
+You can export your message data into BigQuery for further analysis. BigQuery allows you to analyze the data using BigQuery SQL,
+export it to another cloud provider, or use the data for your custom ML models. An export to BigQuery
+includes all available data for messages, regardless of message type or whether the message is sent via
+the API or the Notifications composer.
+
+To enable the export, first follow the steps [described here](https://firebase.google.com/docs/cloud-messaging/understand-delivery?platform=ios#bigquery-data-export),
+then follow these instructions:
+
+### Android
+
+You can use the following code:
+
+```dart
+await FirebaseMessaging.instance.setDeliveryMetricsExportToBigQuery(true);
+```
+
+### iOS
+
+For iOS, you need to change the `AppDelegate.m` with the following content.
+
+```objective-c
+#import "AppDelegate.h"
+#import "GeneratedPluginRegistrant.h"
+#import <Firebase/Firebase.h>
+
+@implementation AppDelegate
+
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [GeneratedPluginRegistrant registerWithRegistry:self];
+  // Override point for customization after application launch.
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+
+- (void)application:(UIApplication *)application
+    didReceiveRemoteNotification:(NSDictionary *)userInfo
+          fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+  [[FIRMessaging extensionHelper] exportDeliveryMetricsToBigQueryWithMessageInfo:userInfo];
+}
+
+@end
+```
+
+### Web
+
+For Web, you need to change your service worker in order to use the v9 version of the SDK.
+The v9 version needs to be bundled, so you need to use a bundler like `esbuild` for instance
+to get the service worker to work.
+See [the example app](https://github.com/firebase/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/bundled-service-worker) to see how to achieve this.
+
+Once you've migrated to the v9 SDK, you can use the following code:
+
+```typescript
+import {
+  experimentalSetDeliveryMetricsExportedToBigQueryEnabled,
+  getMessaging,
+} from 'firebase/messaging/sw';
+
+...
+
+const messaging = getMessaging(app);
+experimentalSetDeliveryMetricsExportedToBigQueryEnabled(messaging, true);
+```
+
+Don't forget to run `yarn build` in order to export the new version of your service worker to the `web` folder.
+
+## Display images in notifications on iOS
+
+On Apple devices, in order for incoming FCM Notifications to display images from the FCM payload, you must add an additional notification service extension and configure your app to use it.
+
+If you are using Firebase phone authentication, you must add the Firebase Auth pod to your Podfile.
+
+### Step 1 - Add a notification service extension
+
+- From XCode top menu go to: **File > New > Target...**
+- A modal will present a list of possible targets, scroll down or use the filter to select **Notification Service Extension**. Click **Next**.
+- Add a product name (use "ImageNotification" to follow along with with this tutorial), set Language to Objective-C and click **Finish**.
+- Enable the scheme by clicking **Activate**.
+
+### Step 2 - Add target to the Podfile
+
+Ensure that your new extension has access to the Firebase/Messaging pod by adding it in the Podfile:
+
+- From the Navigator open the Podfile: **Pods > Podfile**
+- Scroll down to the bottom of the file and add:
+
+```ruby
+target 'ImageNotification' do
+  use_frameworks!
+  pod 'Firebase/Auth' # Add this line if you are using FirebaseAuth phone authentication
+  pod 'Firebase/Messaging'
+end
+```
+
+- Install or update your pods using `pod install` from the ios and/or macos directory.
+
+### Step 3 - Use the extension helper
+
+At this point everything should still be running normally. The final step is invoking the extension helper.
+
+- From the navigator select your ImageNotification extension
+- Open the `NotificationService.m` file
+- At the top of the file import `FirebaseMessaging.h` right after the `NotificationService.h` as shown below:
+
+Replace the content of `NotificationService.m` with
+
+```Objective-C
+#import "NotificationService.h"
+#import "FirebaseMessaging.h"
+#import "FirebaseAuth.h" // Add this line if you are using FirebaseAuth phone authentication
+#import <UIKit/UIKit.h> // Add this line if you are using FirebaseAuth phone authentication
+
+@interface NotificationService ()
+
+@property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
+@property (nonatomic, strong) UNMutableNotificationContent *bestAttemptContent;
+
+@end
+
+@implementation NotificationService
+
+/* Uncomment this if you are using Firebase Auth
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+  if ([[FIRAuth auth] canHandleURL:url]) {
+    return YES;
+  }
+  return NO;
+}
+
+- (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {
+  for (UIOpenURLContext *urlContext in URLContexts) {
+    [FIRAuth.auth canHandleURL:urlContext.URL];
+  }
+}
+*/
+
+- (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
+    self.contentHandler = contentHandler;
+    self.bestAttemptContent = [request.content mutableCopy];
+
+    // Modify the notification content here...
+    [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
+}
+
+- (void)serviceExtensionTimeWillExpire {
+    // Called just before the extension will be terminated by the system.
+    // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
+    self.contentHandler(self.bestAttemptContent);
+}
+
+@end
+```
+
+### Step 4 - Add the image to the payload
+
+In your notification payload, you can now add an image. See the iOS documentation on [how to build a send request](https://firebase.google.com/docs/cloud-messaging/ios/send-image#build_the_send_request). Keep in mind that a 300KB max image size is enforced by the device.

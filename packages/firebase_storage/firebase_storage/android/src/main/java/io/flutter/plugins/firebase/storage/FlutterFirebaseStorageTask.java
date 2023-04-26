@@ -1,3 +1,9 @@
+/*
+ * Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+ * for details. All rights reserved. Use of this source code is governed by a
+ * BSD-style license that can be found in the LICENSE file.
+ */
+
 package io.flutter.plugins.firebase.storage;
 
 import static io.flutter.plugins.firebase.storage.FlutterFirebaseStoragePlugin.getExceptionDetails;
@@ -52,7 +58,9 @@ class FlutterFirebaseStorageTask {
     this.bytes = bytes;
     this.fileUri = fileUri;
     this.metadata = metadata;
-    inProgressTasks.put(handle, this);
+    synchronized (inProgressTasks) {
+      inProgressTasks.put(handle, this);
+    }
   }
 
   @Nullable
@@ -66,12 +74,7 @@ class FlutterFirebaseStorageTask {
     synchronized (inProgressTasks) {
       for (int i = 0; i < inProgressTasks.size(); i++) {
         FlutterFirebaseStorageTask task = null;
-        try {
-          task = inProgressTasks.valueAt(i);
-        } catch (ArrayIndexOutOfBoundsException e) {
-          // TODO(Salakar): Why does this happen? Race condition / multiple destroy calls?
-          // Can safely ignore exception for now, see https://github.com/firebase/flutterfire/issues/4334
-        }
+        task = inProgressTasks.valueAt(i);
         if (task != null) {
           task.destroy();
         }
@@ -144,12 +147,7 @@ class FlutterFirebaseStorageTask {
       if (storageTask.isInProgress() || storageTask.isPaused()) {
         storageTask.cancel();
       }
-      try {
-        inProgressTasks.remove(handle);
-      } catch (ArrayIndexOutOfBoundsException e) {
-        // TODO(Salakar): Why does this happen? Race condition / multiple destroy calls?
-        // Can safely ignore exception for now, see https://github.com/firebase/flutterfire/issues/4334
-      }
+      inProgressTasks.remove(handle);
     }
 
     synchronized (cancelSyncObject) {

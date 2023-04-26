@@ -7,6 +7,7 @@
 
 #import "Private/FLTFirebaseFirestoreUtils.h"
 #import "Private/FLTFirebaseFirestoreWriter.h"
+#import "Public/FLTFirebaseFirestorePlugin.h"
 
 @implementation FLTFirebaseFirestoreWriter : FlutterStandardWriter
 - (void)writeValue:(id)value {
@@ -133,10 +134,36 @@
   };
 }
 
+- (FIRServerTimestampBehavior)toServerTimestampBehavior:(NSString *)serverTimestampBehavior {
+  if (serverTimestampBehavior == nil) {
+    return FIRServerTimestampBehaviorNone;
+  }
+
+  if ([serverTimestampBehavior isEqualToString:@"estimate"]) {
+    return FIRServerTimestampBehaviorEstimate;
+  } else if ([serverTimestampBehavior isEqualToString:@"previous"]) {
+    return FIRServerTimestampBehaviorPrevious;
+  } else {
+    return FIRServerTimestampBehaviorNone;
+  }
+}
+
 - (NSDictionary *)FIRDocumentSnapshot:(FIRDocumentSnapshot *)documentSnapshot {
+  NSString *timestampBehaviorString =
+      FLTFirebaseFirestorePlugin.serverTimestampMap[@([documentSnapshot hash])];
+
+  FIRServerTimestampBehavior serverTimestampBehavior =
+      [self toServerTimestampBehavior:timestampBehaviorString];
+
+  if (timestampBehaviorString != nil) {
+    [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:@([documentSnapshot hash])];
+  }
+
   return @{
     @"path" : documentSnapshot.reference.path,
-    @"data" : documentSnapshot.exists ? (id)documentSnapshot.data : [NSNull null],
+    @"data" : documentSnapshot.exists
+        ? (id)[documentSnapshot dataWithServerTimestampBehavior:serverTimestampBehavior]
+        : [NSNull null],
     @"metadata" : documentSnapshot.metadata,
   };
 }
@@ -168,10 +195,19 @@
   NSMutableArray *paths = [NSMutableArray array];
   NSMutableArray *documents = [NSMutableArray array];
   NSMutableArray *metadatas = [NSMutableArray array];
+  NSString *timestampBehaviorString =
+      FLTFirebaseFirestorePlugin.serverTimestampMap[@([querySnapshot hash])];
+
+  FIRServerTimestampBehavior serverTimestampBehavior =
+      [self toServerTimestampBehavior:timestampBehaviorString];
+
+  if (timestampBehaviorString != nil) {
+    [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:@([querySnapshot hash])];
+  }
 
   for (FIRDocumentSnapshot *document in querySnapshot.documents) {
     [paths addObject:document.reference.path];
-    [documents addObject:document.data];
+    [documents addObject:[document dataWithServerTimestampBehavior:serverTimestampBehavior]];
     [metadatas addObject:document.metadata];
   }
 

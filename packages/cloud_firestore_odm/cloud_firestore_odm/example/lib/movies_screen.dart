@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -68,7 +72,7 @@ class _FilmListState extends State<FilmList> {
               builder: (context, _) {
                 return Text(
                   'Latest Snapshot: ${DateTime.now()}',
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                 );
               },
             )

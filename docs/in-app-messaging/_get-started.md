@@ -68,8 +68,11 @@ Once you've launched your app on the testing device and you have its
 Firebase installation ID (FID), you can try out your Firebase In-App Messaging
 setup by sending a test message:
 
-1.  In the Firebase console, open [In-App Messaging](https://console.firebase.google.com/project/_/inappmessaging/).
-1.  Click **New Campaign**.
+1.  In the {{name_appmanager}}, open [Messaging](https://console.firebase.google.com/project/_/messaging/).
+1.  If this is your first campaign, click **Create your first campaign**.
+    1. Select **Firebase In-App messages** and click **Create**.
+1.  Otherwise, on the **Campaigns** tab, click **New campaign**.
+    1. Select **In-App Messaging**.
 1.  Enter a **Title** for your first message.
 1.  Click **Test on your Device**
 1.  Enter your app's Firebase installation ID in the

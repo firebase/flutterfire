@@ -20,11 +20,42 @@ import 'utils/utils.dart';
 export 'auth_interop.dart';
 
 /// Given an AppJSImp, return the Auth instance.
-Auth getAuthInstance(App app) {
+Auth getAuthInstance(App app, {Persistence? persistence}) {
+  if (persistence != null) {
+    auth_interop.Persistence setPersistence;
+    switch (persistence) {
+      case Persistence.LOCAL:
+        setPersistence = auth_interop.browserLocalPersistence;
+        break;
+      case Persistence.INDEXED_DB:
+        setPersistence = auth_interop.indexedDBLocalPersistence;
+        break;
+      case Persistence.SESSION:
+        setPersistence = auth_interop.browserSessionPersistence;
+        break;
+      case Persistence.NONE:
+        setPersistence = auth_interop.inMemoryPersistence;
+        break;
+    }
+    return Auth.getInstance(auth_interop.initializeAuth(
+        app.jsObject,
+        jsify({
+          'errorMap': auth_interop.debugErrorMap,
+          'persistence': setPersistence,
+          'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
+        })));
+  }
   return Auth.getInstance(auth_interop.initializeAuth(
       app.jsObject,
       jsify({
         'errorMap': auth_interop.debugErrorMap,
+        // Default persistence can be seen here
+        // https://github.com/firebase/firebase-js-sdk/blob/master/packages/auth/src/platform_browser/index.ts#L47
+        'persistence': [
+          auth_interop.indexedDBLocalPersistence,
+          auth_interop.browserLocalPersistence,
+          auth_interop.browserSessionPersistence
+        ],
         'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
       })));
 }
@@ -146,8 +177,6 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   Future<void> linkWithRedirect(AuthProvider provider) => handleThenable(
       auth_interop.linkWithRedirect(jsObject, provider.jsObject));
 
-  // FYI: as of 2017-07-03 – the return type of this guy is documented as
-  // Promise (Future)<nothing> - Filed a bug internally.
   /// Re-authenticates a user using a fresh credential, and returns any
   /// available additional user information, such as user name.
   Future<UserCredential> reauthenticateWithCredential(
@@ -333,6 +362,28 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
   auth_interop.AuthSettings get settings => jsObject.settings;
 
+  User? _initUser;
+
+  /// On web we need to wait for the first onAuthStateChanged event to fire
+  /// in order to be sure that the currentUser is set.
+  /// To preserve behavior on web and mobile we store the initial user
+  /// in `_initUser` and add it manually to the `_changeController`.
+  Future<void> onWaitInitState() async {
+    final completer = Completer();
+    final nextWrapper = allowInterop((auth_interop.UserJsImpl? user) {
+      _initUser = User.getInstance(user);
+      completer.complete();
+    });
+
+    final errorWrapper = allowInterop((e) => _changeController!.addError(e));
+
+    final unsubscribe = jsObject.onAuthStateChanged(nextWrapper, errorWrapper);
+
+    await completer.future;
+
+    unsubscribe();
+  }
+
   Func0? _onAuthUnsubscribe;
   // TODO(rrousselGit): fix memory leak – the controller isn't closed even in onCancel
   // ignore: close_sinks
@@ -368,6 +419,8 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         onCancel: stopListen,
         sync: true,
       );
+
+      _changeController!.add(_initUser);
     }
     return _changeController!.stream;
   }
@@ -497,30 +550,6 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       handleThenable(auth_interop.sendSignInLinkToEmail(
           jsObject, email, actionCodeSettings));
 
-  /// Sends a password reset e-mail to the given [email].
-  /// To confirm password reset, use the [Auth.confirmPasswordReset].
-  ///
-  /// The optional parameter [actionCodeSettings] is the action code settings.
-  /// If specified, the state/continue URL will be set as the 'continueUrl'
-  /// parameter in the password reset link.
-  /// The default password reset landing page will use this to display
-  /// a link to go back to the app if it is installed.
-  ///
-  /// If the [actionCodeSettings] is not specified, no URL is appended to the
-  /// action URL. The state URL provided must belong to a domain that is
-  /// whitelisted by the developer in the console. Otherwise an error will be
-  /// thrown.
-  ///
-  /// Mobile app redirects will only be applicable if the developer configures
-  /// and accepts the Firebase Dynamic Links terms of condition.
-  ///
-  /// The Android package name and iOS bundle ID will be respected only if
-  /// they are configured in the same Firebase Auth project used.
-  Future sendPasswordResetEmail(String email,
-          [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
-      handleThenable(auth_interop.sendPasswordResetEmail(
-          jsObject, email, actionCodeSettings));
-
   /// Changes the current type of persistence on the current Auth instance for
   /// the currently saved Auth session and applies this type of persistence
   /// for future sign-in requests, including sign-in with redirect requests.
@@ -544,6 +573,9 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       case Persistence.LOCAL:
         instance = auth_interop.browserLocalPersistence;
         break;
+      case Persistence.INDEXED_DB:
+        instance = auth_interop.indexedDBLocalPersistence;
+        break;
       case Persistence.SESSION:
         instance = auth_interop.browserSessionPersistence;
         break;
@@ -553,6 +585,30 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
     }
     return handleThenable(auth_interop.setPersistence(jsObject, instance));
   }
+
+  /// Sends a password reset e-mail to the given [email].
+  /// To confirm password reset, use the [Auth.confirmPasswordReset].
+  ///
+  /// The optional parameter [actionCodeSettings] is the action code settings.
+  /// If specified, the state/continue URL will be set as the 'continueUrl'
+  /// parameter in the password reset link.
+  /// The default password reset landing page will use this to display
+  /// a link to go back to the app if it is installed.
+  ///
+  /// If the [actionCodeSettings] is not specified, no URL is appended to the
+  /// action URL. The state URL provided must belong to a domain that is
+  /// whitelisted by the developer in the console. Otherwise an error will be
+  /// thrown.
+  ///
+  /// Mobile app redirects will only be applicable if the developer configures
+  /// and accepts the Firebase Dynamic Links terms of condition.
+  ///
+  /// The Android package name and iOS bundle ID will be respected only if
+  /// they are configured in the same Firebase Auth project used.
+  Future sendPasswordResetEmail(String email,
+          [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
+      handleThenable(auth_interop.sendPasswordResetEmail(
+          jsObject, email, actionCodeSettings));
 
   /// Asynchronously signs in with the given credentials, and returns any
   /// available additional user information, such as user name.
@@ -865,6 +921,11 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
   auth_interop.OAuthCredential credential(
           auth_interop.OAuthCredentialOptions credentialOptions) =>
       jsObject.credential(credentialOptions);
+
+  /// Used to extract the underlying OAuthCredential from a UserCredential.
+  static auth_interop.OAuthCredential? credentialFromResult(
+          auth_interop.UserCredentialJsImpl userCredential) =>
+      auth_interop.OAuthProviderJsImpl.credentialFromResult(userCredential);
 }
 
 /// Twitter auth provider.
@@ -900,6 +961,26 @@ class TwitterAuthProvider
   /// Creates a credential for Twitter.
   static auth_interop.OAuthCredential credential(String token, String secret) =>
       auth_interop.TwitterAuthProviderJsImpl.credential(token, secret);
+}
+
+/// SAML auth provider.
+///
+/// See: <https://firebase.google.com/docs/reference/js/auth.samlauthprovider>.
+class SAMLAuthProvider
+    extends AuthProvider<auth_interop.SAMLAuthProviderJsImpl> {
+  /// Creates a new SAMLAuthProvider with the providerId.
+  /// The providerId must start with "saml."
+  factory SAMLAuthProvider(String providerId) => SAMLAuthProvider.fromJsObject(
+      auth_interop.SAMLAuthProviderJsImpl(providerId));
+
+  /// Creates a new SAMLAuthProvider from a [jsObject].
+  SAMLAuthProvider.fromJsObject(auth_interop.SAMLAuthProviderJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
+  /// Used to extract the underlying OAuthCredential from a UserCredential.
+  static auth_interop.OAuthCredential? credentialFromResult(
+          auth_interop.UserCredentialJsImpl userCredential) =>
+      auth_interop.SAMLAuthProviderJsImpl.credentialFromResult(userCredential);
 }
 
 /// Phone number auth provider.
@@ -1046,9 +1127,6 @@ class UserCredential
     extends JsObjectWrapper<auth_interop.UserCredentialJsImpl> {
   /// Returns the user.
   User? get user => User.getInstance(jsObject.user);
-
-  /// Returns the auth credential.
-  auth_interop.OAuthCredential get credential => jsObject.credential;
 
   /// Returns the operation type.
   String get operationType => jsObject.operationType;

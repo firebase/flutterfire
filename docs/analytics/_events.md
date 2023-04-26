@@ -84,6 +84,10 @@ to any event:
 * `value` parameter: a general purpose parameter
   that is useful for accumulating a key metric that pertains to an
   event. Examples include revenue, distance, time, and points.
+* Parameter names can be up to 40 characters long and must start with an alphabetic
+  character and contain only alphanumeric characters and underscores. String and num
+  types are supported. String parameter values can be up to 100 characters long.
+  The "firebase_", "google_" and "ga_" prefixes are reserved and should not be used for parameter names.
 
 ### Custom events
 
@@ -107,6 +111,9 @@ Default parameters are associated with all future events that are logged.
 
 As with custom parameters, register the default event parameters to ensure they
 appear in Analytics reports.
+
+Valid parameter values are String and num. Setting a key's value to null will
+clear that parameter. Passing in a null value will clear all parameters.
 
 ```dart
 // Not supported on web

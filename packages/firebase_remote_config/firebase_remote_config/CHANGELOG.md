@@ -1,3 +1,110 @@
+## 4.0.1
+
+ - Update a dependency to the latest release.
+
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: This PR is a breaking change for Remote Config since we're removing the ChangeNotifier mixin that came with FirebaseRemoteConfig. You should handle the state of the RemoteConfig using your own state provider.
+ - **FEAT**: add support for `onConfigUpdated`to listen to config updates ([#10647](https://github.com/firebase/flutterfire/commit/f702869e6120f10a368c1b32e9f27d615df99641))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 3.0.15
+
+ - Update a dependency to the latest release.
+
+## 3.0.14
+
+ - Update a dependency to the latest release.
+
+## 3.0.13
+
+ - Update a dependency to the latest release.
+
+## 3.0.12
+
+ - Update a dependency to the latest release.
+
+## 3.0.11
+
+ - Update a dependency to the latest release.
+
+## 3.0.10
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+ - **FIX**: update exception handling to show actual exception ([#9629](https://github.com/firebase/flutterfire/issues/9629)). ([3bb4d1b1](https://github.com/firebase/flutterfire/commit/3bb4d1b19480afff6f94c27a214925380850304b))
+
+## 3.0.9
+
+ - Update a dependency to the latest release.
+
+## 3.0.8
+
+ - Update a dependency to the latest release.
+
+## 3.0.7
+
+ - Update a dependency to the latest release.
+
+## 3.0.6
+
+ - Update a dependency to the latest release.
+
+## 3.0.5
+
+ - Update a dependency to the latest release.
+
+## 3.0.4
+
+ - Update a dependency to the latest release.
+
+## 3.0.3
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 3.0.2
+
+ - Update a dependency to the latest release.
+
+## 3.0.1
+
+ - Update a dependency to the latest release.
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 2.0.20
+
+ - Update a dependency to the latest release.
+
+## 2.0.19
+
+ - Update a dependency to the latest release.
+
+## 2.0.18
+
+ - Update a dependency to the latest release.
+
+## 2.0.17
+
+ - Update a dependency to the latest release.
+
+## 2.0.16
+
+ - **REFACTOR**: update deprecated `Tasks.call()` to `TaskCompletionSource` API ([#9405](https://github.com/firebase/flutterfire/issues/9405)). ([837d68ea](https://github.com/firebase/flutterfire/commit/837d68ea60649fa1fb1c7f8254e4ae67874e9bf2))
+
+## 2.0.15
+
+ - Update a dependency to the latest release.
+
+## 2.0.14
+
+ - Update a dependency to the latest release.
+
 ## 2.0.13
 
  - Update a dependency to the latest release.

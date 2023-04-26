@@ -9,10 +9,13 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.appcheck.AppCheckTokenResult;
+import com.google.firebase.appcheck.AppCheckToken;
 import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory;
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -31,6 +34,11 @@ public class FlutterFirebaseAppCheckPlugin
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_app_check";
   private final Map<EventChannel, TokenChannelStreamHandler> streamHandlers = new HashMap<>();
+  private final String TAG = "FLTAppCheckPlugin";
+
+  private final String debugProvider = "debug";
+  private final String safetyNetProvider = "safetyNet";
+  private final String playIntegrity = "playIntegrity";
 
   @Nullable private BinaryMessenger messenger;
 
@@ -64,60 +72,109 @@ public class FlutterFirebaseAppCheckPlugin
     return FirebaseAppCheck.getInstance(app);
   }
 
-  private Map<String, Object> tokenResultToMap(AppCheckTokenResult result) {
-    Map<String, Object> output = new HashMap<>();
-    output.put("token", result.getToken());
-    return output;
-  }
-
   private Task<Void> activate(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-          firebaseAppCheck.installAppCheckProviderFactory(
-              SafetyNetAppCheckProviderFactory.getInstance());
-          return null;
+          try {
+            String provider = (String) Objects.requireNonNull(arguments.get("androidProvider"));
+
+            switch (provider) {
+              case debugProvider:
+                {
+                  FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+                  firebaseAppCheck.installAppCheckProviderFactory(
+                      DebugAppCheckProviderFactory.getInstance());
+                  break;
+                }
+              case safetyNetProvider:
+                {
+                  FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+                  firebaseAppCheck.installAppCheckProviderFactory(
+                      SafetyNetAppCheckProviderFactory.getInstance());
+                  break;
+                }
+              case playIntegrity:
+                {
+                  FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+                  firebaseAppCheck.installAppCheckProviderFactory(
+                      PlayIntegrityAppCheckProviderFactory.getInstance());
+                  break;
+                }
+            }
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
-  private Task<Map<String, Object>> getToken(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+  private Task<String> getToken(Map<String, Object> arguments) {
+    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-          Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
-          AppCheckTokenResult tokenResult = Tasks.await(firebaseAppCheck.getToken(forceRefresh));
-          return tokenResultToMap(tokenResult);
+          try {
+            FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+            Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
+            AppCheckToken tokenResult =
+                Tasks.await(firebaseAppCheck.getAppCheckToken(forceRefresh));
+
+            taskCompletionSource.setResult(tokenResult.getToken());
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> setTokenAutoRefreshEnabled(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-          Boolean isTokenAutoRefreshEnabled =
-              (Boolean) Objects.requireNonNull(arguments.get("isTokenAutoRefreshEnabled"));
-          firebaseAppCheck.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled);
-          return null;
+          try {
+            FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+            Boolean isTokenAutoRefreshEnabled =
+                (Boolean) Objects.requireNonNull(arguments.get("isTokenAutoRefreshEnabled"));
+            firebaseAppCheck.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled);
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<String> registerTokenListener(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          String appName = (String) Objects.requireNonNull(arguments.get("appName"));
-          FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
 
-          final TokenChannelStreamHandler handler = new TokenChannelStreamHandler(firebaseAppCheck);
-          final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
-          final EventChannel channel = new EventChannel(messenger, name);
-          channel.setStreamHandler(handler);
-          streamHandlers.put(channel, handler);
-          return name;
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            String appName = (String) Objects.requireNonNull(arguments.get("appName"));
+            FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+
+            final TokenChannelStreamHandler handler =
+                new TokenChannelStreamHandler(firebaseAppCheck);
+            final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
+            final EventChannel channel = new EventChannel(messenger, name);
+            channel.setStreamHandler(handler);
+            streamHandlers.put(channel, handler);
+
+            taskCompletionSource.setResult(name);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
@@ -169,12 +226,34 @@ public class FlutterFirebaseAppCheckPlugin
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return Tasks.call(() -> null);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
-    return Tasks.call(() -> null);
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   private void removeEventListeners() {

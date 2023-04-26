@@ -9,6 +9,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
@@ -63,9 +64,14 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
       firestore_interop.doc(jsObject, documentPath));
 
   Future<void> enablePersistence(
-          [firestore_interop.PersistenceSettings? settings]) =>
-      handleThenable(
-          firestore_interop.enableIndexedDbPersistence(jsObject, settings));
+      [firestore_interop.PersistenceSettings? settings]) {
+    if (settings != null && settings.synchronizeTabs == true) {
+      return handleThenable(
+          firestore_interop.enableMultiTabIndexedDbPersistence(jsObject));
+    }
+    return handleThenable(
+        firestore_interop.enableIndexedDbPersistence(jsObject));
+  }
 
   Stream<void> snapshotsInSync() {
     late StreamController<void> controller;
@@ -128,6 +134,10 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     return LoadBundleTask.getInstance(
         firestore_interop.loadBundle(jsObject, bundle));
   }
+
+  Future<void> setIndexConfiguration(String indexConfiguration) =>
+      handleThenable(firestore_interop.setIndexConfiguration(
+          jsObject, indexConfiguration));
 
   Future<Query> namedQuery(String name) async {
     firestore_interop.QueryJsImpl? query =
@@ -357,8 +367,17 @@ class DocumentReference
     return handleThenable(jsObjectSet);
   }
 
-  Future<void> update(Map<String, dynamic> data) =>
-      handleThenable(firestore_interop.updateDoc(jsObject, jsify(data)));
+  Future<void> update(Map<firestore_interop.FieldPath, dynamic> data) {
+    final alternatingFieldValues = data.keys
+        .map((e) => [jsify(e), jsify(data[e])])
+        .expand((e) => e)
+        .toList();
+
+    return handleThenable(callMethod(firestore_interop.updateDoc, 'apply', [
+      null,
+      [jsObject, ...alternatingFieldValues]
+    ]));
+  }
 }
 
 class Query<T extends firestore_interop.QueryJsImpl>
@@ -467,7 +486,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// We need to call this method in all paginating methods to fix that Dart
   /// doesn't support varargs - we need to use [List] to call js function.
   S? _createQueryConstraint<S>(
-      Function method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
+      Object method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
     if (snapshot == null && fieldValues == null) {
       throw ArgumentError(
           'Please provide either snapshot or fieldValues parameter.');
@@ -477,7 +496,38 @@ class Query<T extends firestore_interop.QueryJsImpl>
         ? [snapshot.jsObject]
         : fieldValues!.map(jsify).toList();
 
-    return callMethod(method, 'apply', jsify([null, args]));
+    return callMethod(method, 'apply', [null, jsify(args)]);
+  }
+
+  Object _parseFilterWith(Map<String, Object?> map) {
+    if (map['fieldPath'] != null) {
+      dynamic fieldPath = EncodeUtility.valueEncode(map['fieldPath']);
+      String opStr = map['op']! as String;
+      dynamic value = EncodeUtility.valueEncode(map['value']);
+
+      return firestore_interop.where(fieldPath, opStr, jsify(value));
+    }
+
+    String opStr = map['op']! as String;
+    List<dynamic> filters = map['queries']! as List<dynamic>;
+    List<dynamic> jsFilters = [];
+
+    for (final Map<String, Object?> filter in filters) {
+      jsFilters.add(_parseFilterWith(filter));
+    }
+
+    if (opStr == 'OR') {
+      return callMethod(firestore_interop.or, 'apply', [null, jsFilters]);
+    } else if (opStr == 'AND') {
+      return callMethod(firestore_interop.and, 'apply', [null, jsFilters]);
+    }
+
+    throw Exception('InvalidOperator');
+  }
+
+  Query filterWith(Map<String, Object?> map) {
+    return Query.fromJsObject(firestore_interop.query(jsObject,
+        _parseFilterWith(map) as firestore_interop.QueryConstraintJsImpl));
   }
 }
 
@@ -566,7 +616,8 @@ class DocumentSnapshot
       firestore_interop.DocumentSnapshotJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  Map<String, dynamic>? data() => dartify(jsObject.data());
+  Map<String, dynamic>? data([firestore_interop.SnapshotOptions? options]) =>
+      dartify(jsObject.data(options));
 
   dynamic get(/*String|FieldPath*/ dynamic fieldPath) =>
       dartify(jsObject.get(fieldPath));
@@ -664,7 +715,7 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
 /// Mixin class for all classes with the [update()] method. We need to call
 /// [_wrapUpdateFunctionCall()] in all [update()] methods to fix that Dart
 /// doesn't support varargs - we need to use [List] to call js function.
-abstract class _Updatable {
+mixin _Updatable {
   /// Calls js [:update():] method on [jsObject] with [data] or list of
   /// [fieldsAndValues] and optionally [documentRef].
   T? _wrapUpdateFunctionCall<T>(jsObject, Map<String, dynamic> data,
@@ -707,7 +758,7 @@ class _FieldValueArrayUnion extends _FieldValueArray {
   firestore_interop.FieldValue? _jsify() {
     // This uses var arg so cannot use js package
     return callMethod(
-        firestore_interop.arrayUnion, 'apply', jsify([null, elements]));
+        firestore_interop.arrayUnion, 'apply', [null, jsify(elements)]);
   }
 
   @override
@@ -721,7 +772,7 @@ class _FieldValueArrayRemove extends _FieldValueArray {
   firestore_interop.FieldValue? _jsify() {
     // This uses var arg so cannot use js package
     return callMethod(
-        firestore_interop.arrayRemove, 'apply', jsify([null, elements]));
+        firestore_interop.arrayRemove, 'apply', [null, jsify(elements)]);
   }
 
   @override
@@ -771,4 +822,34 @@ abstract class FieldValue {
 
   static final FieldValue _serverTimestamp = _FieldValueServerTimestamp();
   static final FieldValue _delete = _FieldValueDelete();
+}
+
+class AggregateQuery {
+  AggregateQuery(Query query) : _jsQuery = query.jsObject;
+  final firestore_interop.QueryJsImpl _jsQuery;
+  Future<AggregateQuerySnapshot> get() async {
+    return handleThenable<firestore_interop.AggregateQuerySnapshotJsImpl>(
+            firestore_interop.getCountFromServer(_jsQuery))
+        .then(AggregateQuerySnapshot.getInstance);
+  }
+}
+
+class AggregateQuerySnapshot
+    extends JsObjectWrapper<firestore_interop.AggregateQuerySnapshotJsImpl> {
+  static final _expando = Expando<AggregateQuerySnapshot>();
+  late final Map<String, Object> _data;
+
+  /// Creates a new [AggregateQuerySnapshot] from a [jsObject].
+  static AggregateQuerySnapshot getInstance(
+      firestore_interop.AggregateQuerySnapshotJsImpl jsObject) {
+    return _expando[jsObject] ??=
+        AggregateQuerySnapshot._fromJsObject(jsObject);
+  }
+
+  AggregateQuerySnapshot._fromJsObject(
+      firestore_interop.AggregateQuerySnapshotJsImpl jsObject)
+      : _data = Map.from(dartify(jsObject.data())),
+        super.fromJsObject(jsObject);
+
+  int get count => _data['count']! as int;
 }

@@ -62,14 +62,14 @@
     {
       "label": "firestore -> test:e2e",
       "type": "shell",
-      "command": "melos exec -c 1 --scope=\"*cloud_firestore_example*\" --fail-fast --dir-exists=test_driver -- flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart",
+      "command": "melos exec -c 1 --scope=\"*cloud_firestore_example*\" --fail-fast --dir-exists=integration_test -- flutter drive --target=./integration_test/MELOS_PARENT_PACKAGE_NAME_e2e_test.dart",
       "detail": "Run end-to-end testing for Android & iOS via `flutter drive` on the Firestore example application",
       "problemMatcher": []
     },
     {
       "label": "firestore -> test:e2e:web",
       "type": "shell",
-      "command": "melos exec -c 1 --scope=\"*cloud_firestore_example*\" --dir-exists=web --fail-fast --dir-exists=test_driver -- flutter drive --release -d chrome --no-pub --verbose-system-logs --browser-name=chrome --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart",
+      "command": "melos exec -c 1 --scope=\"*cloud_firestore_example*\" --dir-exists=web --fail-fast --dir-exists=test_driver -- flutter drive --release -d chrome --verbose-system-logs --browser-name=chrome --target=./integration_test/MELOS_PARENT_PACKAGE_NAME_e2e_test.dart --driver=./test_driver/integration_test.dart",
       "detail": "Run end-to-end testing for Web via `flutter drive` on the Firestore example application",
       "problemMatcher": []
     },
@@ -120,20 +120,6 @@
       "type": "shell",
       "command": "melos exec -c 1 --scope=\"*auth*\" --fail-fast --ignore=\"*web*\" --ignore=\"*example*\" -- flutter test",
       "detail": "Run `flutter test` on all Auth packages (excluding web & example)",
-      "problemMatcher": []
-    },
-    {
-      "label": "auth -> test:e2e",
-      "type": "shell",
-      "command": "melos exec -c 1 --scope=\"*firebase_auth_example*\" --fail-fast --dir-exists=test_driver -- flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart",
-      "detail": "Run end-to-end testing for Android & iOS via `flutter drive` on the Auth example application",
-      "problemMatcher": []
-    },
-    {
-      "label": "auth -> test:e2e:web",
-      "type": "shell",
-      "command": "melos exec -c 1 --scope=\"*firebase_auth_example*\" --dir-exists=web --fail-fast --dir-exists=test_driver -- flutter drive --release -d chrome --no-pub --verbose-system-logs --browser-name=chrome --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart",
-      "detail": "Run end-to-end testing for Web via `flutter drive` on the Auth example application",
       "problemMatcher": []
     },
     {

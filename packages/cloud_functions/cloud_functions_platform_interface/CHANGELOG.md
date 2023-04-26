@@ -1,3 +1,92 @@
+## 5.2.1
+
+ - Update a dependency to the latest release.
+
+## 5.2.0
+
+ - **FEAT**(functions): add support for 2nd gen functions ([#10545](https://github.com/firebase/flutterfire/issues/10545)). ([204ba39e](https://github.com/firebase/flutterfire/commit/204ba39e34864c7b8be5122fc0a7fcc98d6c8b26))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 5.1.32
+
+ - Update a dependency to the latest release.
+
+## 5.1.31
+
+ - Update a dependency to the latest release.
+
+## 5.1.30
+
+ - Update a dependency to the latest release.
+
+## 5.1.29
+
+ - Update a dependency to the latest release.
+
+## 5.1.28
+
+ - Update a dependency to the latest release.
+
+## 5.1.27
+
+ - Update a dependency to the latest release.
+
+## 5.1.26
+
+ - Update a dependency to the latest release.
+
+## 5.1.25
+
+ - Update a dependency to the latest release.
+
+## 5.1.24
+
+ - Update a dependency to the latest release.
+
+## 5.1.23
+
+ - Update a dependency to the latest release.
+
+## 5.1.22
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 5.1.21
+
+ - Update a dependency to the latest release.
+
+## 5.1.20
+
+ - Update a dependency to the latest release.
+
+## 5.1.19
+
+ - Update a dependency to the latest release.
+
+## 5.1.18
+
+ - Update a dependency to the latest release.
+
+## 5.1.17
+
+ - Update a dependency to the latest release.
+
+## 5.1.16
+
+ - Update a dependency to the latest release.
+
+## 5.1.15
+
+ - Update a dependency to the latest release.
+
+## 5.1.14
+
+ - Update a dependency to the latest release.
+
+## 5.1.13
+
+ - Update a dependency to the latest release.
+
 ## 5.1.12
 
  - Update a dependency to the latest release.

@@ -26,20 +26,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
         with:
           fetch-depth: 0
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
-      - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
+      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+        with:
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          run-bootstrap: false
+          melos-version: '3.0.0-dev.0'
       - name: "Bootstrap Workspace"
         run: |
           melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
           melos run odm:example_build_runner:build
           melos run odm:generator_test_build_runner:build
-          # Needed because generating breaks the local linking of melos
-          melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
       - name: "Flutter Test"
         run: melos run odm:test:flutter --no-select
       - name: "Dart Test"
@@ -49,18 +51,23 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
         with:
           fetch-depth: 0
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@3f07048e3d294f56e9b90ac5ea2c6f74e9ad0f98
         with:
           distribution: 'temurin'
           java-version: '11'
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+        with:
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          run-bootstrap: false
+          melos-version: '3.0.0-dev.0'
       - name: "Install Tools"
         run: |
-          ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
       - name: "Bootstrap Workspace"
         run: |

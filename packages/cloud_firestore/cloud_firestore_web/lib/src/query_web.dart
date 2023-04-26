@@ -4,9 +4,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:collection/collection.dart';
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
+import 'package:collection/collection.dart';
 
+import 'aggregate_query_web.dart';
 import 'internals.dart';
 import 'interop/firestore.dart' as firestore_interop;
 import 'utils/web_utils.dart';
@@ -98,6 +99,11 @@ class QueryWeb extends QueryPlatform {
       query = query.limitToLast(parameters['limitToLast']);
     }
 
+    if (parameters['filters'] != null) {
+      final Map<String, Object?> filter = parameters['filters']!;
+      return query.filterWith(filter);
+    }
+
     for (final List<dynamic> condition in parameters['where']) {
       dynamic fieldPath = EncodeUtility.valueEncode(condition[0]);
       String opStr = condition[1];
@@ -119,7 +125,7 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  QueryPlatform endAt(List<dynamic> fields) {
+  QueryPlatform endAt(Iterable<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
       'endAt': fields,
       'endBefore': null,
@@ -127,7 +133,8 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  QueryPlatform endBeforeDocument(List<dynamic> orders, List<dynamic> values) {
+  QueryPlatform endBeforeDocument(
+      Iterable<dynamic> orders, Iterable<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
       'orderBy': orders,
       'endAt': null,
@@ -136,7 +143,7 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  QueryPlatform endBefore(List<dynamic> fields) {
+  QueryPlatform endBefore(Iterable<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
       'endAt': null,
       'endBefore': fields,
@@ -149,6 +156,9 @@ class QueryWeb extends QueryPlatform {
       return convertWebQuerySnapshot(
         firestore,
         await _buildWebQueryWithParameters().get(convertGetOptions(options)),
+        getServerTimestampBehaviorString(
+          options.serverTimestampBehavior,
+        ),
       );
     });
   }
@@ -182,13 +192,17 @@ class QueryWeb extends QueryPlatform {
 
     return convertWebExceptions(
       () => querySnapshots.map((webQuerySnapshot) {
-        return convertWebQuerySnapshot(firestore, webQuerySnapshot);
+        return convertWebQuerySnapshot(
+          firestore,
+          webQuerySnapshot,
+          ServerTimestampBehavior.none.name,
+        );
       }),
     );
   }
 
   @override
-  QueryPlatform orderBy(List<List<dynamic>> orders) {
+  QueryPlatform orderBy(Iterable<List<dynamic>> orders) {
     return _copyWithParameters(<String, dynamic>{'orderBy': orders});
   }
 
@@ -202,7 +216,7 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  QueryPlatform startAfter(List<dynamic> fields) {
+  QueryPlatform startAfter(Iterable<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
       'startAt': null,
       'startAfter': fields,
@@ -210,7 +224,8 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  QueryPlatform startAtDocument(List<dynamic> orders, List<dynamic> values) {
+  QueryPlatform startAtDocument(
+      Iterable<dynamic> orders, Iterable<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
       'orderBy': orders,
       'startAt': values,
@@ -219,7 +234,7 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  QueryPlatform startAt(List<dynamic> fields) {
+  QueryPlatform startAt(Iterable<dynamic> fields) {
     return _copyWithParameters(<String, dynamic>{
       'startAt': fields,
       'startAfter': null,
@@ -227,9 +242,21 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  QueryPlatform where(List<List<dynamic>> conditions) {
+  QueryPlatform where(Iterable<List<dynamic>> conditions) {
     return _copyWithParameters(<String, dynamic>{
       'where': conditions,
     });
+  }
+
+  @override
+  QueryPlatform whereFilter(Filter filter) {
+    return _copyWithParameters(<String, dynamic>{
+      'filters': filter.toJson(),
+    });
+  }
+
+  @override
+  AggregateQueryPlatform count() {
+    return AggregateQueryWeb(this, _buildWebQueryWithParameters());
   }
 }

@@ -1,5 +1,6 @@
-Project: /docs/_project.yaml
+Project: /docs/storage/_project.yaml
 Book: /docs/_book.yaml
+page_type: guide
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 

@@ -1,3 +1,107 @@
+## 3.4.1
+
+ - Update a dependency to the latest release.
+
+## 3.4.0
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 3.3.25
+
+ - **FIX**(firebase_storage_web): fix `Error: Unexpected null value.` when `metadata.timeCreated` or `metadata.updated` ([#10577](https://github.com/firebase/flutterfire/issues/10577)). ([6eb235ba](https://github.com/firebase/flutterfire/commit/6eb235ba1d6805eb142469d6566b665e0e531e77))
+
+## 3.3.24
+
+ - Update a dependency to the latest release.
+
+## 3.3.23
+
+ - Update a dependency to the latest release.
+
+## 3.3.22
+
+ - Update a dependency to the latest release.
+
+## 3.3.21
+
+ - Update a dependency to the latest release.
+
+## 3.3.20
+
+ - Update a dependency to the latest release.
+
+## 3.3.19
+
+ - Update a dependency to the latest release.
+
+## 3.3.18
+
+ - Update a dependency to the latest release.
+
+## 3.3.17
+
+ - Update a dependency to the latest release.
+
+## 3.3.16
+
+ - Update a dependency to the latest release.
+
+## 3.3.15
+
+ - Update a dependency to the latest release.
+
+## 3.3.14
+
+ - Update a dependency to the latest release.
+
+## 3.3.13
+
+ - Update a dependency to the latest release.
+
+## 3.3.12
+
+ - Update a dependency to the latest release.
+
+## 3.3.11
+
+ - Update a dependency to the latest release.
+
+## 3.3.10
+
+ - Update a dependency to the latest release.
+
+## 3.3.9
+
+ - Update a dependency to the latest release.
+
+## 3.3.8
+
+ - Update a dependency to the latest release.
+
+## 3.3.7
+
+ - Update a dependency to the latest release.
+
+## 3.3.6
+
+ - Update a dependency to the latest release.
+
+## 3.3.5
+
+ - Update a dependency to the latest release.
+
+## 3.3.4
+
+ - Update a dependency to the latest release.
+
+## 3.3.3
+
+ - Update a dependency to the latest release.
+
+## 3.3.2
+
+ - **FIX**: fix UploadTask by fixing TaskEvent Web Interop ([#9212](https://github.com/firebase/flutterfire/issues/9212)). ([6df75ca0](https://github.com/firebase/flutterfire/commit/6df75ca09b0ae1334d2f80804c1386f8baac13fa))
+
 ## 3.3.1
 
  - Update a dependency to the latest release.

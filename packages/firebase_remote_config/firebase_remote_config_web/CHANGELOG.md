@@ -1,3 +1,104 @@
+## 1.2.1
+
+ - Update a dependency to the latest release.
+
+## 1.2.0
+
+ - **FEAT**: add support for `onConfigUpdated`to listen to config updates ([#10647)](https://github.com/firebase/flutterfire/commit/f702869e6120f10a368c1b32e9f27d615df99641))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 1.1.24
+
+ - Update a dependency to the latest release.
+
+## 1.1.23
+
+ - Update a dependency to the latest release.
+
+## 1.1.22
+
+ - Update a dependency to the latest release.
+
+## 1.1.21
+
+ - Update a dependency to the latest release.
+
+## 1.1.20
+
+ - Update a dependency to the latest release.
+
+## 1.1.19
+
+ - Update a dependency to the latest release.
+
+## 1.1.18
+
+ - Update a dependency to the latest release.
+
+## 1.1.17
+
+ - Update a dependency to the latest release.
+
+## 1.1.16
+
+ - Update a dependency to the latest release.
+
+## 1.1.15
+
+ - Update a dependency to the latest release.
+
+## 1.1.14
+
+ - Update a dependency to the latest release.
+
+## 1.1.13
+
+ - Update a dependency to the latest release.
+
+## 1.1.12
+
+ - Update a dependency to the latest release.
+
+## 1.1.11
+
+ - Update a dependency to the latest release.
+
+## 1.1.10
+
+ - Update a dependency to the latest release.
+
+## 1.1.9
+
+ - Update a dependency to the latest release.
+
+## 1.1.8
+
+ - Update a dependency to the latest release.
+
+## 1.1.7
+
+ - Update a dependency to the latest release.
+
+## 1.1.6
+
+ - Update a dependency to the latest release.
+
+## 1.1.5
+
+ - Update a dependency to the latest release.
+
+## 1.1.4
+
+ - Update a dependency to the latest release.
+
+## 1.1.3
+
+ - Update a dependency to the latest release.
+
+## 1.1.2
+
+ - Update a dependency to the latest release.
+
 ## 1.1.1
 
  - Update a dependency to the latest release.

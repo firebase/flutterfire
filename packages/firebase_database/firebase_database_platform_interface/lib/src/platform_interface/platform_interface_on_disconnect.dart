@@ -14,8 +14,8 @@ abstract class OnDisconnectPlatform extends PlatformInterface {
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [OnDisconnectPlatform].
-  static void verifyExtends(OnDisconnectPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(OnDisconnectPlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   static final Object _token = Object();

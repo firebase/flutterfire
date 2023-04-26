@@ -49,7 +49,7 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseFunctionsPlatform.instance]
   static set instance(FirebaseFunctionsPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 
@@ -64,6 +64,12 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
   /// Creates a [HttpsCallablePlatform] instance
   HttpsCallablePlatform httpsCallable(
       String? origin, String name, HttpsCallableOptions options) {
+    throw UnimplementedError('httpsCallable() is not implemented');
+  }
+
+  /// Creates a [HttpsCallablePlatform] instance from a [Uri]
+  HttpsCallablePlatform httpsCallableWithUri(
+      String? origin, Uri uri, HttpsCallableOptions options) {
     throw UnimplementedError('httpsCallable() is not implemented');
   }
 }

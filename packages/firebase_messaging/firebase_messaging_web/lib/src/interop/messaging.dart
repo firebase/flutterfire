@@ -7,9 +7,9 @@
 
 import 'dart:async';
 
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:js/js.dart';
 
-import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'messaging_interop.dart' as messaging_interop;
 
 export 'messaging_interop.dart';
@@ -91,6 +91,7 @@ class MessagePayload
   MessagePayload._fromJsObject(messaging_interop.MessagePayloadJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
+  String get messageId => jsObject.messageId;
   String? get collapseKey => jsObject.collapseKey;
   FcmOptions? get fcmOptions => jsObject.fcmOptions == null
       ? null

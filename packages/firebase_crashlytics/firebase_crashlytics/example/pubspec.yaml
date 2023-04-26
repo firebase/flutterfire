@@ -2,30 +2,15 @@ name: firebase_crashlytics_example
 description: Demonstrates how to use the firebase_crashlytics plugin.
 
 environment:
-  sdk: '>=2.16.0 <3.0.0'
+  sdk: '>=2.18.0 <3.0.0'
   flutter: '>=1.12.13+hotfix.5'
 
 dependencies:
-  firebase_analytics:
-    path: ../../../firebase_analytics/firebase_analytics
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_crashlytics:
-    path: ../
+  firebase_analytics: ^10.2.1
+  firebase_core: ^2.10.0
+  firebase_crashlytics: ^3.1.1
   flutter:
     sdk: flutter
-
-dependency_overrides:
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../../firebase_core/firebase_core_platform_interface
-  firebase_core_web:
-    path: ../../../firebase_core/firebase_core_web
-  firebase_crashlytics:
-    path: ../
-  firebase_crashlytics_platform_interface:
-    path: ../../firebase_crashlytics_platform_interface
 
 flutter:
   uses-material-design: true

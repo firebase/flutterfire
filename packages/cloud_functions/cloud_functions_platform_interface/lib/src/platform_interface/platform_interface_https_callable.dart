@@ -6,6 +6,7 @@
 import 'dart:async';
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
 import '../../cloud_functions_platform_interface.dart';
 
 /// Interface for [HttpsCallable] implementations.
@@ -13,8 +14,14 @@ import '../../cloud_functions_platform_interface.dart';
 /// A reference to a particular Callable HTTPS trigger in Cloud Functions.
 abstract class HttpsCallablePlatform extends PlatformInterface {
   /// Creates a new [HttpsCallablePlatform] instance.
-  HttpsCallablePlatform(this.functions, this.origin, this.name, this.options)
-      : super(token: _token);
+  HttpsCallablePlatform(
+    this.functions,
+    this.origin,
+    this.name,
+    this.options,
+    this.uri,
+  )   : assert(name != null || uri != null),
+        super(token: _token);
 
   static final Object _token = Object();
 
@@ -24,8 +31,8 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
   /// This is used by the app-facing [HttpsCallable] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static void verifyExtends(HttpsCallablePlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+  static void verify(HttpsCallablePlatform instance) {
+    PlatformInterface.verify(instance, _token);
   }
 
   /// The [FirebaseFunctionsPlatform] instance.
@@ -35,7 +42,10 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
   final String? origin;
 
   /// The name of the function
-  final String name;
+  final String? name;
+
+  /// The URI of the function for 2nd gen functions
+  final Uri? uri;
 
   /// Used to set the options for this instance.
   HttpsCallableOptions options;

@@ -108,7 +108,15 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   void useFirestoreEmulator(String host, int port, {bool sslEnabled = false}) {
     if (kIsWeb) {
       // use useEmulator() API for web as settings are set immediately unlike native platforms
-      _delegate.useEmulator(host, port);
+      try {
+        _delegate.useEmulator(host, port);
+      } catch (e) {
+        final String code = (e as dynamic).code;
+        // this catches FirebaseError from web that occurs after hot reloading & hot restarting
+        if (code != 'failed-precondition') {
+          rethrow;
+        }
+      }
     } else {
       String mappedHost = host;
       // Android considers localhost as 10.0.2.2 - automatically handle this for users.
@@ -126,6 +134,18 @@ class FirebaseFirestore extends FirebasePluginPlatform {
         host: '$mappedHost:$port',
       );
     }
+  }
+
+  /// Performs a [namedQueryGet] and decode the result using [Query.withConverter].
+  Future<QuerySnapshot<T>> namedQueryWithConverterGet<T>(
+    String name, {
+    GetOptions options = const GetOptions(),
+    required FromFirestore<T> fromFirestore,
+    required ToFirestore<T> toFirestore,
+  }) async {
+    final snapshot = await namedQueryGet(name, options: options);
+
+    return _WithConverterQuerySnapshot<T>(snapshot, fromFirestore, toFirestore);
   }
 
   /// Reads a [QuerySnapshot] if a namedQuery has been retrieved and passed as a [Buffer] to [loadBundle()]. To read from cache, pass [GetOptions.source] value as [Source.cache].
@@ -187,7 +207,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   /// Returns a [Stream] which is called each time all of the active listeners
-  /// have been synchronised.
+  /// have been synchronized.
   Stream<void> snapshotsInSync() {
     return _delegate.snapshotsInSync();
   }
@@ -280,6 +300,41 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// Any outstanding [waitForPendingWrites] calls are rejected during user changes.
   Future<void> waitForPendingWrites() {
     return _delegate.waitForPendingWrites();
+  }
+
+  /// Configures indexing for local query execution. Any previous index configuration is overridden.
+  ///
+  /// The index entries themselves are created asynchronously. You can continue to use queries that
+  /// require indexing even if the indices are not yet available. Query execution will automatically
+  /// start using the index once the index entries have been written.
+  ///
+  /// This API is in preview mode and is subject to change.
+  @experimental
+  Future<void> setIndexConfiguration({
+    required List<Index> indexes,
+    List<FieldOverrides>? fieldOverrides,
+  }) async {
+    String json = jsonEncode({
+      'indexes': indexes.map((index) => index.toMap()).toList(),
+      'fieldOverrides':
+          fieldOverrides?.map((index) => index.toMap()).toList() ?? []
+    });
+
+    return _delegate.setIndexConfiguration(json);
+  }
+
+  /// Configures indexing for local query execution. Any previous index configuration is overridden.
+  ///
+  /// The index entries themselves are created asynchronously. You can continue to use queries that
+  /// require indexing even if the indices are not yet available. Query execution will automatically
+  /// start using the index once the index entries have been written.
+  /// See Firebase documentation to learn how to configure your index configuration JSON file:
+  /// https://firebase.google.com/docs/reference/firestore/indexes
+  ///
+  /// This API is in preview mode and is subject to change.
+  @experimental
+  Future<void> setIndexConfigurationFromJSON(String json) async {
+    return _delegate.setIndexConfiguration(json);
   }
 
   @override

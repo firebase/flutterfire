@@ -62,7 +62,7 @@ class ActionCodeInfo {
       case 6:
         return ActionCodeInfoOperation.revertSecondFactorAddition;
       default:
-        throw FallThroughError();
+        throw UnsupportedError('Unknown ActionCodeInfoOperation: $_operation.');
     }
   }
 

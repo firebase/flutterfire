@@ -9,7 +9,7 @@ class ServerValue {
 
   /// Returns a placeholder value that can be used to atomically increment the
   /// current database value by the provided delta.
-  static Map<dynamic, dynamic> increment(int delta) {
+  static Map<dynamic, dynamic> increment(num delta) {
     return <dynamic, dynamic>{
       '.sv': {'increment': delta}
     };

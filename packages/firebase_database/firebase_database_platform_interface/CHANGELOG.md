@@ -1,3 +1,107 @@
+## 0.2.3+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.3
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 0.2.2+23
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+22
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+21
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+20
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+19
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+18
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+17
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+16
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+15
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+14
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+13
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+12
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+11
+
+ - **REFACTOR**: add `verify` to `QueryPlatform` and change internal `verifyToken` API to `verify` ([#9711](https://github.com/firebase/flutterfire/issues/9711)). ([c99a842f](https://github.com/firebase/flutterfire/commit/c99a842f3e3f5f10246e73f51530cc58c42b49a3))
+
+## 0.2.2+10
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+9
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+8
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+7
+
+ - **FIX**: Exceptions inside Query.snapshots() and more now have a stack trace that correctly points to the invocation of the throwing method ([#9639](https://github.com/firebase/flutterfire/issues/9639)). ([2f7adcb7](https://github.com/firebase/flutterfire/commit/2f7adcb777cd6bc4e3b5b3dd03c975c725bacef7))
+
+## 0.2.2+6
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+5
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+4
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.2
+
+ - **FEAT**: `ServerValue.increment()` now correctly accepts a `num`  to support both integers and doubles. ([#9101](https://github.com/firebase/flutterfire/issues/9101)). ([35cce5b0](https://github.com/firebase/flutterfire/commit/35cce5b03fae00b1753fc9b6ed688c7f020a5007))
+
 ## 0.2.1+12
 
  - Update a dependency to the latest release.

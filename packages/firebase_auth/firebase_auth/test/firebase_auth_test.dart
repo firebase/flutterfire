@@ -728,7 +728,8 @@ class MockFirebaseAuth extends Mock
   }
 
   @override
-  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
+  FirebaseAuthPlatform delegateFor(
+      {FirebaseApp? app, Persistence? persistence}) {
     return super.noSuchMethod(
       Invocation.method(#delegateFor, [], {#app: app}),
       returnValue: TestFirebaseAuthPlatform(),
@@ -1024,7 +1025,8 @@ class FakeFirebaseAuthPlatform extends Fake
   String? tenantId;
 
   @override
-  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
+  FirebaseAuthPlatform delegateFor(
+      {required FirebaseApp app, Persistence? persistence}) {
     return this;
   }
 
@@ -1085,7 +1087,8 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   }) {}
 
   @override
-  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
+  FirebaseAuthPlatform delegateFor(
+      {FirebaseApp? app, Persistence? persistence}) {
     return this;
   }
 

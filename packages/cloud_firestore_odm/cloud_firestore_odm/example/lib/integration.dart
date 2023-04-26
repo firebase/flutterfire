@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -40,7 +44,7 @@ class AdvancedJson {
   @JsonKey(name: 'LAST_NAME')
   final String? lastName;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final String? ignored;
 
   Map<String, Object?> toJson() => _$AdvancedJsonToJson(this);
@@ -73,7 +77,7 @@ class _PrivateAdvancedJson {
   @JsonKey(name: 'LAST_NAME')
   final String? lastName;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final String? ignored;
 
   Map<String, Object?> toJson() => _$PrivateAdvancedJsonToJson(this);

@@ -1,14 +1,35 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:flutter/foundation.dart';
 
+// ignore: subtype_of_sealed_class
+class _FakeQueryRef<Value> implements Query<Value> {
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError();
+  }
+}
+
 class FakeCollectionReference<Value>
-    extends QueryReference<FakeQuerySnapshot<Value>>
-    implements FirestoreCollectionReference<FakeQuerySnapshot<Value>> {
-  FakeCollectionReference(this.valueListenable);
+    extends FirestoreCollectionReference<Value, FakeQuerySnapshot<Value>> {
+  FakeCollectionReference(this.valueListenable)
+      : super($referenceWithoutCursor: _FakeQueryRef());
+
+  @override
+  CollectionReference<Value> get reference => throw UnimplementedError();
+
   final ValueListenable<List<Value>> valueListenable;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError();
+  }
 
   @override
   Future<FakeQuerySnapshot<Value>> get([GetOptions? options]) async {
@@ -18,9 +39,6 @@ class FakeCollectionReference<Value>
           .toList(),
     );
   }
-
-  @override
-  CollectionReference<Object?> get reference => throw UnimplementedError();
 
   @override
   Stream<FakeQuerySnapshot<Value>> snapshots([GetOptions? options]) {
@@ -50,93 +68,36 @@ class FakeCollectionReference<Value>
 
     return controller.stream;
   }
-
-  @override
-  String get path => throw UnimplementedError();
-
-  @override
-  FirestoreDocumentReference<FirestoreDocumentSnapshot> doc([String? id]) {
-    throw UnimplementedError();
-  }
-
-  @override
-  QueryReference<FakeQuerySnapshot<Value>> limit(int limit) {
-    throw UnimplementedError();
-  }
-
-  @override
-  QueryReference<FakeQuerySnapshot<Value>> limitToLast(int limit) {
-    throw UnimplementedError();
-  }
-
-  @override
-  QueryReference<FakeQuerySnapshot<Value>> orderByDocumentId({
-    bool? descending,
-    String? startAt,
-    String? startAfter,
-    String? endAt,
-    String? endBefore,
-    QuerySnapshot<FakeQuerySnapshot<Value>>? startAtDocument,
-    QuerySnapshot<FakeQuerySnapshot<Value>>? endAtDocument,
-    QuerySnapshot<FakeQuerySnapshot<Value>>? endBeforeDocument,
-    QuerySnapshot<FakeQuerySnapshot<Value>>? startAfterDocument,
-  }) {
-    throw UnimplementedError();
-  }
-
-  @override
-  QueryReference<FakeQuerySnapshot<Value>> whereDocumentId({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  }) {
-    throw UnimplementedError();
-  }
 }
 
-class FakeQuerySnapshot<Value> extends FirestoreQuerySnapshot {
+class FakeQuerySnapshot<Value> extends FirestoreQuerySnapshot<Value,
+    FakeFirestoreQueryDocumentSnapshot<Value>> {
   FakeQuerySnapshot(this.docs);
-
-  @override
-  List<FirestoreDocumentChange<FirestoreQueryDocumentSnapshot>>
-      get docChanges => throw UnimplementedError();
 
   @override
   final List<FakeFirestoreQueryDocumentSnapshot<Value>> docs;
 
   @override
-  SnapshotMetadata get metadata => throw UnimplementedError();
-
-  @override
-  QuerySnapshot<Object?> get snapshot => throw UnimplementedError();
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError();
+  }
 }
 
 class FakeFirestoreQueryDocumentSnapshot<Value>
-    extends FirestoreQueryDocumentSnapshot {
+    extends FirestoreQueryDocumentSnapshot<Value> {
   FakeFirestoreQueryDocumentSnapshot(this.data);
 
   @override
   final Value data;
 
   @override
-  FirestoreDocumentReference<FirestoreDocumentSnapshot> get reference =>
-      throw UnimplementedError();
-
-  @override
-  QueryDocumentSnapshot<Object?> get snapshot => throw UnimplementedError();
-
-  @override
-  SnapshotMetadata get metadata => throw UnimplementedError();
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError();
+  }
 }
 
 class FakeDocumentReference<Value>
-    extends FirestoreDocumentReference<FakeDocumentSnapshot<Value>> {
+    extends FirestoreDocumentReference<Value, FakeDocumentSnapshot<Value>> {
   FakeDocumentReference(
     this.valueListenable, {
     this.errorListenable,
@@ -148,12 +109,14 @@ class FakeDocumentReference<Value>
   final bool emitCurrentValue;
 
   @override
-  Future<FakeDocumentSnapshot<Value>> get([GetOptions? options]) async {
-    return FakeDocumentSnapshot<Value>(valueListenable.value);
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError();
   }
 
   @override
-  DocumentReference<Object?> get reference => throw UnimplementedError();
+  Future<FakeDocumentSnapshot<Value>> get([GetOptions? options]) async {
+    return FakeDocumentSnapshot<Value>(valueListenable.value);
+  }
 
   @override
   Stream<FakeDocumentSnapshot<Value>> snapshots([GetOptions? options]) {
@@ -183,30 +146,16 @@ class FakeDocumentReference<Value>
 
     return controller.stream;
   }
-
-  @override
-  Future<void> delete() => throw UnimplementedError();
-
-  @override
-  String get id => throw UnimplementedError();
-
-  @override
-  String get path => throw UnimplementedError();
 }
 
-class FakeDocumentSnapshot<Value> extends FirestoreDocumentSnapshot {
+class FakeDocumentSnapshot<Value> extends FirestoreDocumentSnapshot<Value> {
   FakeDocumentSnapshot(this.data);
 
   @override
   final Value data;
 
   @override
-  FirestoreDocumentReference<FirestoreDocumentSnapshot> get reference =>
-      throw UnimplementedError();
-
-  @override
-  DocumentSnapshot<Object?> get snapshot => throw UnimplementedError();
-
-  @override
-  SnapshotMetadata get metadata => throw UnimplementedError();
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError();
+  }
 }

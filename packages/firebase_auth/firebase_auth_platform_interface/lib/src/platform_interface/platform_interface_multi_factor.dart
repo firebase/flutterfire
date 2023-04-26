@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -56,20 +60,39 @@ class MultiFactorSession {
   final String id;
 }
 
+/// {@template .multiFactorAssertion}
 /// Represents an assertion that the Firebase Authentication server
 /// can use to authenticate a user as part of a multi-factor flow.
-class MultiFactorAssertionPlatform {}
+/// {@endtemplate}
+class MultiFactorAssertionPlatform extends PlatformInterface {
+  /// {@macro .multiFactorAssertion}
+  MultiFactorAssertionPlatform() : super(token: _token);
 
-/// {@macro .platformInterfaceMultiFactorResolverPlatform}
+  static final Object _token = Object();
+
+  /// Ensures that any delegate class has extended a [MultiFactorResolverPlatform].
+  static void verify(MultiFactorAssertionPlatform instance) {
+    PlatformInterface.verify(instance, _token);
+  }
+}
+
+/// {@template .platformInterfaceMultiFactorResolverPlatform}
 /// Utility class that contains methods to resolve second factor
 /// requirements on users that have opted into two-factor authentication.
 /// {@endtemplate}
-class MultiFactorResolverPlatform {
+class MultiFactorResolverPlatform extends PlatformInterface {
   /// {@macro .platformInterfaceMultiFactorResolverPlatform}
-  const MultiFactorResolverPlatform(
+  MultiFactorResolverPlatform(
     this.hints,
     this.session,
-  );
+  ) : super(token: _token);
+
+  static final Object _token = Object();
+
+  /// Ensures that any delegate class has extended a [MultiFactorResolverPlatform].
+  static void verify(MultiFactorResolverPlatform instance) {
+    PlatformInterface.verify(instance, _token);
+  }
 
   /// List of [MultiFactorInfo] which represents the available
   /// second factors that can be used to complete the sign-in for the current session.
@@ -109,6 +132,11 @@ class MultiFactorInfo {
 
   /// The unique identifier for this second factor.
   final String uid;
+
+  @override
+  String toString() {
+    return 'MultiFactorInfo{enrollmentTimestamp: $enrollmentTimestamp, displayName: $displayName, uid: $uid}';
+  }
 }
 
 /// Represents the information for a phone second factor.
@@ -149,7 +177,7 @@ class PhoneMultiFactorGeneratorPlatform extends PlatformInterface {
 
   /// Sets the [PhoneMultiFactorGeneratorPlatform.instance]
   static set instance(PhoneMultiFactorGeneratorPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
 

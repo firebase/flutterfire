@@ -3,12 +3,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_crashlytics/src/utils.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
 import './mock.dart';
 
 void main() {
@@ -76,7 +77,8 @@ void main() {
             'reason': exceptionReason,
             'information': '',
             'fatal': false,
-            'stackTraceElements': getStackTraceElements(stack)
+            'stackTraceElements': getStackTraceElements(stack),
+            'buildId': '',
           })
         ]);
         // Confirm that the stack trace contains current stack.
@@ -137,7 +139,8 @@ void main() {
             'reason': exceptionReason,
             'fatal': false,
             'information': '$exceptionFirstMessage\n$exceptionSecondMessage',
-            'stackTraceElements': getStackTraceElements(stack)
+            'stackTraceElements': getStackTraceElements(stack),
+            'buildId': '',
           })
         ]);
       } finally {
@@ -263,7 +266,7 @@ void main() {
         expect(elements.length, 1);
         expect(elements.first, <String, String>{
           'method':
-              '    #00 abs 0 virt 00000000001af27b _kDartIsolateSnapshotInstructions+0x1a127b',
+              '    #00 abs 000075f17833027b virt 00000000001af27b _kDartIsolateSnapshotInstructions+0x1a127b',
           'file': '',
           'line': '0',
         });
@@ -283,7 +286,8 @@ void main() {
         final List<Map<String, String>> elements = getStackTraceElements(trace);
         expect(elements.length, 1);
         expect(elements.first, <String, String>{
-          'method': '    #00 abs 0 _kDartIsolateSnapshotInstructions+0x1a127b',
+          'method':
+              '    #00 abs 000075f17833027b _kDartIsolateSnapshotInstructions+0x1a127b',
           'file': '',
           'line': '0',
         });

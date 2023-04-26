@@ -1,3 +1,105 @@
+## 0.5.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.5.2
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 0.5.1+14
+
+ - Update a dependency to the latest release.
+
+## 0.5.1+13
+
+ - Update a dependency to the latest release.
+
+## 0.5.1+12
+
+ - Update a dependency to the latest release.
+
+## 0.5.1+11
+
+ - Update a dependency to the latest release.
+
+## 0.5.1+10
+
+ - Update a dependency to the latest release.
+
+## 0.5.1+9
+
+ - Update a dependency to the latest release.
+
+## 0.5.1+8
+
+ - Update a dependency to the latest release.
+
+## 0.5.1+7
+
+ - Update a dependency to the latest release.
+
+## 0.5.1+6
+
+ - Update a dependency to the latest release.
+
+## 0.5.1+5
+
+ - Update a dependency to the latest release.
+
+## 0.5.1+4
+
+ - Update a dependency to the latest release.
+
+## 0.5.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.5.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.5.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.5.1
+
+- Update a dependency to the latest release.
+
+## 0.5.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 0.4.2+7
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+6
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+5
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+4
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+3
+
+ - **FIX**: `setCurrentScreen()` API is now obsolete, using `logEvent()` instead ([#9397](https://github.com/firebase/flutterfire/issues/9397)). ([490ef204](https://github.com/firebase/flutterfire/commit/490ef204b9873fca994f1a69ddf7962e6d735c4b))
+
+## 0.4.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+1
+
+ - Update a dependency to the latest release.
+
 ## 0.4.2
 
  - **FEAT**: retrieves `appInstanceId` property on native platforms if available ([#8689](https://github.com/firebase/flutterfire/issues/8689)). ([7132d771](https://github.com/firebase/flutterfire/commit/7132d771ed5ada7a0433232b9f0d996ef0d61481))

@@ -1,3 +1,110 @@
+## 10.2.1
+
+ - Update a dependency to the latest release.
+
+## 10.2.0
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 10.1.6
+
+ - Update a dependency to the latest release.
+
+## 10.1.5
+
+ - Update a dependency to the latest release.
+
+## 10.1.4
+
+ - Update a dependency to the latest release.
+
+## 10.1.3
+
+ - Update a dependency to the latest release.
+
+## 10.1.2
+
+ - Update a dependency to the latest release.
+
+## 10.1.1
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+ - **DOCS**: add more documentation for `logEvent` ([#10389](https://github.com/firebase/flutterfire/issues/10389)). ([8755d776](https://github.com/firebase/flutterfire/commit/8755d776b30ce2db71e00279438c8d3617cf3187))
+
+## 10.1.0
+
+ - **FEAT**: update `logEvent()` & `setDefaultParameters()` to assert input types. ([#9520](https://github.com/firebase/flutterfire/issues/9520)). ([bac87e96](https://github.com/firebase/flutterfire/commit/bac87e96ba4d7fd68525207b5be1db425bf446d2))
+
+## 10.0.8
+
+ - Update a dependency to the latest release.
+
+## 10.0.7
+
+ - Update a dependency to the latest release.
+
+## 10.0.6
+
+ - Update a dependency to the latest release.
+
+## 10.0.5
+
+ - Update a dependency to the latest release.
+
+## 10.0.4
+
+ - Update a dependency to the latest release.
+
+## 10.0.3
+
+ - Update a dependency to the latest release.
+
+## 10.0.2
+
+ - Update a dependency to the latest release.
+
+## 10.0.1
+
+- Update a dependency to the latest release.
+
+## 10.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Firebase iOS SDK version: `10.0.0` ([#9708](https://github.com/firebase/flutterfire/issues/9708)). ([9627c56a](https://github.com/firebase/flutterfire/commit/9627c56a37d657d0250b6f6b87d0fec1c31d4ba3))
+
+## 9.3.8
+
+ - Update a dependency to the latest release.
+
+## 9.3.7
+
+ - Update a dependency to the latest release.
+
+## 9.3.6
+
+ - **FIX**: suppress unchecked warnings that aren't necessary ([#9532](https://github.com/firebase/flutterfire/issues/9532)). ([3ebd4593](https://github.com/firebase/flutterfire/commit/3ebd4593d11fbbd359b8d514a9c0577654859992))
+
+## 9.3.5
+
+ - **REFACTOR**: deprecate `signInWithAuthProvider` in favor of `signInWithProvider` ([#9542](https://github.com/firebase/flutterfire/issues/9542)). ([ca340ea1](https://github.com/firebase/flutterfire/commit/ca340ea19c8dbb340f083e48cf1b0de36f7d64c4))
+
+## 9.3.4
+
+ - Update a dependency to the latest release.
+
+## 9.3.3
+
+ - Update a dependency to the latest release.
+
+## 9.3.2
+
+ - Update a dependency to the latest release.
+
+## 9.3.1
+
+ - Update a dependency to the latest release.
+
 ## 9.3.0
 
  - **FEAT**: retrieves `appInstanceId` property on native platforms if available ([#8689](https://github.com/firebase/flutterfire/issues/8689)). ([7132d771](https://github.com/firebase/flutterfire/commit/7132d771ed5ada7a0433232b9f0d996ef0d61481))

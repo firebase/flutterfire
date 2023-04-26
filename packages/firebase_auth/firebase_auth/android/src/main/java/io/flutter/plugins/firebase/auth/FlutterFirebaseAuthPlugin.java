@@ -40,6 +40,7 @@ import com.google.firebase.auth.MultiFactorAssertion;
 import com.google.firebase.auth.MultiFactorInfo;
 import com.google.firebase.auth.MultiFactorResolver;
 import com.google.firebase.auth.MultiFactorSession;
+import com.google.firebase.auth.OAuthCredential;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -63,7 +64,6 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -104,6 +104,9 @@ public class FlutterFirebaseAuthPlugin
     output.put(Constants.PROVIDER_ID, authCredential.getProvider());
     output.put(Constants.SIGN_IN_METHOD, authCredential.getSignInMethod());
     output.put(Constants.TOKEN, authCredentialHashCode);
+    if (authCredential instanceof OAuthCredential) {
+      output.put(Constants.ACCESS_TOKEN, ((OAuthCredential) authCredential).getAccessToken());
+    }
 
     return output;
   }
@@ -128,8 +131,9 @@ public class FlutterFirebaseAuthPlugin
     channel.setMethodCallHandler(null);
     channel = null;
     messenger = null;
-    GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(null, this);
-    GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setup(null, this);
+    GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(binding.getBinaryMessenger(), null);
+    GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setup(
+        binding.getBinaryMessenger(), null);
 
     removeEventListeners();
   }
@@ -366,10 +370,14 @@ public class FlutterFirebaseAuthPlugin
       List<? extends UserInfo> userInfoList) {
     List<Map<String, Object>> output = new ArrayList<>();
 
-    Iterator<? extends UserInfo> iterator = new ArrayList<UserInfo>(userInfoList).iterator();
+    if (userInfoList == null) {
+      return output;
+    }
 
-    while (iterator.hasNext()) {
-      UserInfo userInfo = iterator.next();
+    for (UserInfo userInfo : new ArrayList<UserInfo>(userInfoList)) {
+      if (userInfo == null) {
+        continue;
+      }
       if (!FirebaseAuthProvider.PROVIDER_ID.equals(userInfo.getProviderId())) {
         output.add(parseUserInfo(userInfo));
       }
@@ -1123,6 +1131,10 @@ public class FlutterFirebaseAuthPlugin
 
             taskCompletionSource.setResult(parseAuthResult(authResult));
           } catch (Exception e) {
+            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+              handleMultiFactorException(arguments, taskCompletionSource, e);
+              return;
+            }
             String message = e.getMessage();
 
             if (message != null
@@ -1164,7 +1176,11 @@ public class FlutterFirebaseAuthPlugin
                 Tasks.await(firebaseUser.reauthenticateAndRetrieveData(credential));
             taskCompletionSource.setResult(parseAuthResult(authResult));
           } catch (Exception e) {
-            taskCompletionSource.setException(e);
+            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+              handleMultiFactorException(arguments, taskCompletionSource, e);
+            } else {
+              taskCompletionSource.setException(e);
+            }
           }
         });
 
@@ -1490,8 +1506,14 @@ public class FlutterFirebaseAuthPlugin
       case "Auth#verifyPhoneNumber":
         methodCallTask = verifyPhoneNumber(call.arguments());
         break;
-      case "Auth#signInWithAuthProvider":
-        methodCallTask = signInWithAuthProvider(call.arguments());
+      case "Auth#signInWithProvider":
+        methodCallTask = signInWithProvider(call.arguments());
+        break;
+      case "User#linkWithProvider":
+        methodCallTask = startActivityForLinkWithProvider(call.arguments());
+        break;
+      case "User#reauthenticateWithProvider":
+        methodCallTask = reauthenticateWithProvider(call.arguments());
         break;
       case "User#delete":
         methodCallTask = deleteUser(call.arguments());
@@ -1548,7 +1570,90 @@ public class FlutterFirebaseAuthPlugin
         });
   }
 
-  private Task<Map<String, Object>> signInWithAuthProvider(Map<String, Object> arguments) {
+  private Task<Map<String, Object>> startActivityForLinkWithProvider(
+      Map<String, Object> arguments) {
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseUser firebaseUser = getCurrentUser(arguments);
+
+            String providerId =
+                (String) Objects.requireNonNull(arguments.get(Constants.SIGN_IN_PROVIDER));
+            @SuppressWarnings("unchecked")
+            List<String> scopes = (List<String>) arguments.get(Constants.SIGN_IN_PROVIDER_SCOPE);
+            @SuppressWarnings("unchecked")
+            Map<String, String> customParameters =
+                (Map<String, String>) arguments.get(Constants.SIGN_IN_PROVIDER_CUSTOM_PARAMETERS);
+
+            OAuthProvider.Builder provider = OAuthProvider.newBuilder(providerId);
+            if (scopes != null) {
+              provider.setScopes(scopes);
+            }
+            if (customParameters != null) {
+              provider.addCustomParameters(customParameters);
+            }
+
+            AuthResult authResult =
+                Tasks.await(
+                    firebaseUser.startActivityForLinkWithProvider(
+                        /* activity= */ activity, provider.build()));
+            taskCompletionSource.setResult(parseAuthResult(authResult));
+          } catch (Exception e) {
+            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+              handleMultiFactorException(arguments, taskCompletionSource, e);
+            } else {
+              taskCompletionSource.setException(e);
+            }
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
+  private Task<Map<String, Object>> reauthenticateWithProvider(Map<String, Object> arguments) {
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseUser firebaseUser = getCurrentUser(arguments);
+
+            String providerId =
+                (String) Objects.requireNonNull(arguments.get(Constants.SIGN_IN_PROVIDER));
+            @SuppressWarnings("unchecked")
+            List<String> scopes = (List<String>) arguments.get(Constants.SIGN_IN_PROVIDER_SCOPE);
+            @SuppressWarnings("unchecked")
+            Map<String, String> customParameters =
+                (Map<String, String>) arguments.get(Constants.SIGN_IN_PROVIDER_CUSTOM_PARAMETERS);
+
+            OAuthProvider.Builder provider = OAuthProvider.newBuilder(providerId);
+            if (scopes != null) {
+              provider.setScopes(scopes);
+            }
+            if (customParameters != null) {
+              provider.addCustomParameters(customParameters);
+            }
+
+            AuthResult authResult =
+                Tasks.await(
+                    firebaseUser.startActivityForReauthenticateWithProvider(
+                        /* activity= */ activity, provider.build()));
+            taskCompletionSource.setResult(parseAuthResult(authResult));
+          } catch (Exception e) {
+            if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+              handleMultiFactorException(arguments, taskCompletionSource, e);
+            } else {
+              taskCompletionSource.setException(e);
+            }
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
+  private Task<Map<String, Object>> signInWithProvider(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
@@ -1557,8 +1662,19 @@ public class FlutterFirebaseAuthPlugin
             FirebaseAuth firebaseAuth = getAuth(arguments);
             String providerId =
                 (String) Objects.requireNonNull(arguments.get(Constants.SIGN_IN_PROVIDER));
+            @SuppressWarnings("unchecked")
+            List<String> scopes = (List<String>) arguments.get(Constants.SIGN_IN_PROVIDER_SCOPE);
+            @SuppressWarnings("unchecked")
+            Map<String, String> customParameters =
+                (Map<String, String>) arguments.get(Constants.SIGN_IN_PROVIDER_CUSTOM_PARAMETERS);
 
             OAuthProvider.Builder provider = OAuthProvider.newBuilder(providerId);
+            if (scopes != null) {
+              provider.setScopes(scopes);
+            }
+            if (customParameters != null) {
+              provider.addCustomParameters(customParameters);
+            }
 
             AuthResult authResult =
                 Tasks.await(
@@ -1706,7 +1822,9 @@ public class FlutterFirebaseAuthPlugin
   private void removeEventListeners() {
     for (EventChannel eventChannel : streamHandlers.keySet()) {
       StreamHandler streamHandler = streamHandlers.get(eventChannel);
-      streamHandler.onCancel(null);
+      if (streamHandler != null) {
+        streamHandler.onCancel(null);
+      }
       eventChannel.setStreamHandler(null);
     }
     streamHandlers.clear();
