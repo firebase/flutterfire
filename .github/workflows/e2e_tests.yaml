@@ -91,9 +91,6 @@ jobs:
           echo "Starting emulator"
           $ANDROID_SDK_ROOT/emulator/emulator -avd test_emulator -no-audio -no-boot-anim -no-window &
           adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
-
-          echo "Granting permissions"
-          adb shell pm grant io.flutter.plugins.firebase.tests android.permission.POST_NOTIFICATIONS
       - name: "E2E Tests"
         working-directory: ${{ matrix.working_directory }}
         run: |
