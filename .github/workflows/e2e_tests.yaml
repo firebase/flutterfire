@@ -95,7 +95,7 @@ jobs:
         working-directory: ${{ matrix.working_directory }}
         run: |
           sleep 15
-          $ANDROID_HOME/platform-tools/adb logcat '*:D' > adb-log.txt &
+          $ANDROID_SDK_ROOT/platform-tools/adb logcat '*:D' > adb-log.txt &
           flutter test integration_test/e2e_test.dart --dart-define=CI=true      
       - name: Compress Emulator Log
         if: always()
