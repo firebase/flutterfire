@@ -48,6 +48,7 @@ jobs:
           key: ${{ runner.os }}-gradle-v2-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle-v2
       - uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
+        name: AVD Cache
         id: avd-cache
         with:
           path: |
@@ -86,9 +87,13 @@ jobs:
           
           echo "Creating AVD"
           echo "no" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd -n test_emulator -k "system-images;android-33;google_apis;x86_64" --force
+
           echo "Starting emulator"
           $ANDROID_SDK_ROOT/emulator/emulator -avd test_emulator -no-audio -no-boot-anim -no-window &
           adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
+
+          echo "Granting permissions"
+          adb shell pm grant com.example.yourapp android.permission.POST_NOTIFICATIONS
       - name: "E2E Tests"
         working-directory: ${{ matrix.working_directory }}
         run: |
