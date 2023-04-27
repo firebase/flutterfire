@@ -1,3 +1,7 @@
+## 4.5.3
+
+ - **FIX**(firestore,ios): clean up event listeners on engine detach only ([#10579](https://github.com/firebase/flutterfire/issues/10579)). ([0ac13b6f](https://github.com/firebase/flutterfire/commit/0ac13b6fc06f6839686437dc2d5b6feab179aa83))
+
 ## 4.5.2
 
  - Update a dependency to the latest release.

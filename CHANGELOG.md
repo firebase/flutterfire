@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-04-27
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.5.3`](#cloud_firestore---v453)
+ - [`firebase_app_check` - `v0.1.2+3`](#firebase_app_check---v0123)
+ - [`firebase_app_check_platform_interface` - `v0.0.6+2`](#firebase_app_check_platform_interface---v0062)
+ - [`firebase_crashlytics` - `v3.1.2`](#firebase_crashlytics---v312)
+ - [`firebase_remote_config` - `v4.0.2`](#firebase_remote_config---v402)
+ - [`firebase_remote_config_platform_interface` - `v1.2.2`](#firebase_remote_config_platform_interface---v122)
+ - [`firebase_remote_config_web` - `v1.2.2`](#firebase_remote_config_web---v122)
+ - [`firebase_ui_auth` - `v1.2.3`](#firebase_ui_auth---v123)
+ - [`firebase_ui_firestore` - `v1.3.3`](#firebase_ui_firestore---v133)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.56`](#cloud_firestore_odm---v100-dev56)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.56`](#cloud_firestore_odm_generator---v100-dev56)
+ - [`firebase_app_check_web` - `v0.0.8+2`](#firebase_app_check_web---v0082)
+ - [`firebase_ui_oauth` - `v1.2.3`](#firebase_ui_oauth---v123)
+ - [`firebase_ui_oauth_twitter` - `v1.1.3`](#firebase_ui_oauth_twitter---v113)
+ - [`firebase_ui_oauth_facebook` - `v1.1.3`](#firebase_ui_oauth_facebook---v113)
+ - [`firebase_ui_oauth_apple` - `v1.1.3`](#firebase_ui_oauth_apple---v113)
+ - [`firebase_ui_oauth_google` - `v1.1.3`](#firebase_ui_oauth_google---v113)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_firestore` - `v1.3.3`
+ - `cloud_firestore_odm` - `v1.0.0-dev.56`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.56`
+ - `firebase_app_check_web` - `v0.0.8+2`
+ - `firebase_ui_oauth` - `v1.2.3`
+ - `firebase_ui_oauth_twitter` - `v1.1.3`
+ - `firebase_ui_oauth_facebook` - `v1.1.3`
+ - `firebase_ui_oauth_apple` - `v1.1.3`
+ - `firebase_ui_oauth_google` - `v1.1.3`
+
+---
+
+#### `cloud_firestore` - `v4.5.3`
+
+ - **FIX**(firestore,ios): clean up event listeners on engine detach only ([#10579](https://github.com/firebase/flutterfire/issues/10579)). ([0ac13b6f](https://github.com/firebase/flutterfire/commit/0ac13b6fc06f6839686437dc2d5b6feab179aa83))
+
+#### `firebase_app_check` - `v0.1.2+3`
+
+ - **FIX**(app-check): use correct `getAppCheckToken()` method. Print out debug token for iOS. ([#10819](https://github.com/firebase/flutterfire/issues/10819)). ([66909a9c](https://github.com/firebase/flutterfire/commit/66909a9c5b10e85f93565cbc308fdbee4ec6f607))
+
+#### `firebase_app_check_platform_interface` - `v0.0.6+2`
+
+ - **FIX**(app-check): use correct `getAppCheckToken()` method. Print out debug token for iOS. ([#10819](https://github.com/firebase/flutterfire/issues/10819)). ([66909a9c](https://github.com/firebase/flutterfire/commit/66909a9c5b10e85f93565cbc308fdbee4ec6f607))
+
+#### `firebase_crashlytics` - `v3.1.2`
+
+ - **FIX**(readme): Update getting started link to reflect latest version ([#10700](https://github.com/firebase/flutterfire/issues/10700)). ([4e0daa4d](https://github.com/firebase/flutterfire/commit/4e0daa4dadab217b488f53414ff82775741f9606))
+
+#### `firebase_remote_config` - `v4.0.2`
+
+ - **DOCS**(firebase_remote_config): add documentation what is returned when the key does not exist for `getBool`, `getInt`, `getDouble` and `getString` ([#10573](https://github.com/firebase/flutterfire/issues/10573)). ([37c5f27d](https://github.com/firebase/flutterfire/commit/37c5f27d56c63bc9b800e588503d649f0ea807e4))
+
+#### `firebase_remote_config_platform_interface` - `v1.2.2`
+
+ - **DOCS**(firebase_remote_config): add documentation what is returned when the key does not exist for `getBool`, `getInt`, `getDouble` and `getString` ([#10573](https://github.com/firebase/flutterfire/issues/10573)). ([37c5f27d](https://github.com/firebase/flutterfire/commit/37c5f27d56c63bc9b800e588503d649f0ea807e4))
+
+#### `firebase_remote_config_web` - `v1.2.2`
+
+ - **DOCS**(firebase_remote_config): add documentation what is returned when the key does not exist for `getBool`, `getInt`, `getDouble` and `getString` ([#10573](https://github.com/firebase/flutterfire/issues/10573)). ([37c5f27d](https://github.com/firebase/flutterfire/commit/37c5f27d56c63bc9b800e588503d649f0ea807e4))
+
+#### `firebase_ui_auth` - `v1.2.3`
+
+ - **DOCS**(firebase_ui_auth): fix an error in the documentation ([#10797](https://github.com/firebase/flutterfire/issues/10797)). ([b71e0dde](https://github.com/firebase/flutterfire/commit/b71e0dde5ad0c2c04876afde5da8c8b1b8cb321d))
+
+
 ## 2023-04-18
 
 ### Changes

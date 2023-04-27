@@ -10,7 +10,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.0
   firebase_core: ^2.10.0
-  firebase_remote_config: ^4.0.1
+  firebase_remote_config: ^4.0.2
   flutter:
     sdk: flutter
 
