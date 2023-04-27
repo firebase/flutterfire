@@ -1,3 +1,7 @@
+## 0.1.2+3
+
+ - **FIX**(app-check): use correct `getAppCheckToken()` method. Print out debug token for iOS. ([#10819](https://github.com/firebase/flutterfire/issues/10819)). ([66909a9c](https://github.com/firebase/flutterfire/commit/66909a9c5b10e85f93565cbc308fdbee4ec6f607))
+
 ## 0.1.2+2
 
  - Update a dependency to the latest release.
