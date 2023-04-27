@@ -18,6 +18,8 @@
 
 @interface FLTFirebaseAuthPlugin
     : FLTFirebasePlugin <FlutterPlugin,
+                        FirebaseAuthHostApi,
+FirebaseAuthUserHostApi,
                          MultiFactorUserHostApi,
                          MultiFactoResolverHostApi,
                          ASAuthorizationControllerDelegate,
@@ -27,4 +29,9 @@
 + (NSDictionary *)getNSDictionaryFromUserInfo:(id<FIRUserInfo>)userInfo;
 + (NSMutableDictionary *)getNSDictionaryFromUser:(FIRUser *)user;
 + (NSDictionary *)getNSDictionaryFromNSError:(NSError *)error;
++ (PigeonUserInfo *_Nonnull)getPigeonUserInfo:(nonnull FIRUser *)user;
++ (PigeonUserDetails *_Nonnull)getPigeonDetails:(nonnull FIRUser *)user;
++ (PigeonUserCredential *_Nonnull)getPigeonUserCredentialFromAuthResult:(nonnull FIRAuthDataResult *)authResult;
++ (NSArray<NSDictionary<id, id> *> *_Nonnull)getProviderData:(nonnull NSArray<id<FIRUserInfo>> *)providerData;
++ (PigeonAuthCredential *_Nullable)getPigeonAuthCredential:(FIRAuthCredential *_Nullable)credential;
 @end

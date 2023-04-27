@@ -148,23 +148,6 @@ public class PigeonParser {
     return output;
   }
 
-  static GeneratedAndroidFirebaseAuth.PigeonUserInfo parseUserInfo(@NonNull UserInfo userInfo) {
-    GeneratedAndroidFirebaseAuth.PigeonUserInfo.Builder builderInfo =
-        new GeneratedAndroidFirebaseAuth.PigeonUserInfo.Builder();
-
-    builderInfo.setDisplayName(userInfo.getDisplayName());
-    builderInfo.setEmail(userInfo.getEmail());
-    builderInfo.setIsEmailVerified(userInfo.isEmailVerified());
-    builderInfo.setPhoneNumber(userInfo.getPhoneNumber());
-    builderInfo.setPhotoUrl(parsePhotoUrl(userInfo.getPhotoUrl()));
-    builderInfo.setUid(userInfo.getUid());
-    builderInfo.setProviderId(userInfo.getProviderId());
-
-    builderInfo.setIsAnonymous(false);
-
-    return builderInfo.build();
-  }
-
   private static String parsePhotoUrl(Uri photoUri) {
     if (photoUri == null) {
       return null;
