@@ -119,7 +119,7 @@ and in the app-level `build.gradle`:
   dependencies {
     // ... other dependencies
 
-    classpath 'com.google.gms:google-services:4.3.5'
+    classpath 'com.google.gms:google-services:4.3.15'
     <strong>classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'</strong>
   }
   </pre>

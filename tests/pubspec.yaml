@@ -34,17 +34,12 @@ dependencies:
   firebase_database_web: ^0.2.2+1
   firebase_dynamic_links: ^5.1.1
   firebase_dynamic_links_platform_interface: ^0.2.4+1
-  #firebase_in_app_messaging: any
-  #firebase_in_app_messaging_platform_interface: any
   firebase_messaging: ^14.4.1
   firebase_messaging_platform_interface: ^4.3.1
   firebase_messaging_web: ^3.3.1
   firebase_ml_model_downloader: ^0.2.1+1
   firebase_ml_model_downloader_platform_interface: ^0.1.2+1
-  # TODO does not run on android without google services json due to com.google.firebase.perf.FirebasePerformanceInitializer.onAppColdStart
-  # firebase_performance: any
-  # firebase_performance_platform_interface: any
-  # firebase_performance_web: any
+  firebase_performance: ^0.9.1+1
   firebase_remote_config: ^4.0.1
   firebase_remote_config_platform_interface: ^1.2.1
   firebase_remote_config_web: ^1.2.1

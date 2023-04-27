@@ -23,6 +23,8 @@ import 'firebase_messaging/firebase_messaging_e2e_test.dart'
     as firebase_messaging;
 import 'firebase_ml_model_downloader/firebase_ml_model_downloader_e2e_test.dart'
     as firebase_ml_model_downloader;
+import 'firebase_performance/firebase_performance_e2e_test.dart'
+    as firebase_performance;
 import 'firebase_remote_config/firebase_remote_config_e2e_test.dart'
     as firebase_remote_config;
 import 'firebase_storage/firebase_storage_e2e_test.dart' as firebase_storage;
@@ -42,6 +44,7 @@ void main() {
     firebase_dynamic_links.main();
     firebase_messaging.main();
     firebase_ml_model_downloader.main();
+    firebase_performance.main();
     firebase_remote_config.main();
     firebase_storage.main();
   });

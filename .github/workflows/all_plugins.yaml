@@ -30,7 +30,7 @@ jobs:
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
-          melos-version: '3.0.0-dev.0'
+          melos-version: '3.0.1'
       - name: 'Run Analyze'
         run: melos run analyze
 
@@ -48,7 +48,7 @@ jobs:
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
-          melos-version: '3.0.0-dev.0'
+          melos-version: '3.0.1'
       - name: 'Pub Check'
         run: |
           melos exec -c 1 --no-private --ignore="*example*" -- \
@@ -65,7 +65,7 @@ jobs:
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
-          melos-version: '3.0.0-dev.0'
+          melos-version: '3.0.1'
       - name: 'Flutter Pub Get'
         run: |
           melos exec -c 1 --scope="*example*" -- \
@@ -82,7 +82,7 @@ jobs:
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
-          melos-version: '3.0.0-dev.0'
+          melos-version: '3.0.1'
       - uses: Homebrew/actions/setup-homebrew@master
       - name: 'Install Tools'
         run: |
@@ -115,7 +115,7 @@ jobs:
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
-          melos-version: '3.0.0-dev.0'
+          melos-version: '3.0.1'
       - name: 'Build Examples'
         run: |
           melos exec -c 1 --scope="*example*" --dir-exists="web" -- \
@@ -132,7 +132,7 @@ jobs:
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
-          melos-version: '3.0.0-dev.0'
+          melos-version: '3.0.1'
       - name: 'Flutter Test'
         run: melos run test --no-select
       - name: 'Flutter Test - Web'
@@ -157,6 +157,6 @@ jobs:
           # Running `melos bootstrap` is not needed because we use Melos just
           # for the `check-license-header` script.
           run-bootstrap: false
-          melos-version: '3.0.0-dev.0'
+          melos-version: '3.0.1'
       - name: Check license header
         run: melos run check-license-header
