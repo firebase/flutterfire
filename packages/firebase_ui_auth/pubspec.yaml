@@ -20,13 +20,13 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  flutter_svg: ^1.1.1
+  flutter_svg: ^2.0.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  mockito: ^5.2.0
+  mockito: ^5.4.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

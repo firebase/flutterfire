@@ -12,7 +12,6 @@ dependencies:
   firebase_auth: ^4.4.2
   firebase_ui_auth: ^1.2.2
   firebase_ui_shared: ^1.2.0
-  flutter_svg: ^1.1.2
   flutter:
     sdk: flutter
 
