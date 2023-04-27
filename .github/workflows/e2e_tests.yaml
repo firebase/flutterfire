@@ -93,7 +93,7 @@ jobs:
           adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
 
           echo "Granting permissions"
-          adb shell pm grant com.example.yourapp android.permission.POST_NOTIFICATIONS
+          adb shell pm grant io.flutter.plugins.firebase.tests android.permission.POST_NOTIFICATIONS
       - name: "E2E Tests"
         working-directory: ${{ matrix.working_directory }}
         run: |
