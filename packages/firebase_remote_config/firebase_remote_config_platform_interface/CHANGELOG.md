@@ -1,3 +1,7 @@
+## 1.2.2
+
+ - **DOCS**(firebase_remote_config): add documentation what is returned when the key does not exist for `getBool`, `getInt`, `getDouble` and `getString` ([#10573](https://github.com/firebase/flutterfire/issues/10573)). ([37c5f27d](https://github.com/firebase/flutterfire/commit/37c5f27d56c63bc9b800e588503d649f0ea807e4))
+
 ## 1.2.1
 
  - Update a dependency to the latest release.

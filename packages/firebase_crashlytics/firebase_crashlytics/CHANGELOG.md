@@ -1,3 +1,7 @@
+## 3.1.2
+
+ - **FIX**(readme): Update getting started link to reflect latest version ([#10700](https://github.com/firebase/flutterfire/issues/10700)). ([4e0daa4d](https://github.com/firebase/flutterfire/commit/4e0daa4dadab217b488f53414ff82775741f9606))
+
 ## 3.1.1
 
  - Update a dependency to the latest release.
