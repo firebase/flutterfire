@@ -94,21 +94,7 @@ jobs:
       - name: "E2E Tests"
         working-directory: ${{ matrix.working_directory }}
         run: |
-          sleep 15
-          $ANDROID_SDK_ROOT/platform-tools/adb logcat '*:D' > adb-log.txt &
           flutter test integration_test/e2e_test.dart --dart-define=CI=true      
-      - name: Compress Emulator Log
-        if: always()
-        run: cd tests/ && gzip -9 adb-log.txt
-        shell: bash
-
-      - name: Upload Emulator Log
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
-        if: always()
-        with:
-          name: ${{ matrix.api-level }}-${{ matrix.arch }}-${{matrix.target}}-${{matrix.first-boot-delay}}-${{matrix.iteration}}-adb_logs
-          path: tests/adb-log.txt.gz
-
 
   ios:
     runs-on: macos-13
