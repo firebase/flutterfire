@@ -15,30 +15,40 @@ typedef ErrorBuilder = Widget Function(
   Object? error,
 );
 
-Widget _bindTask({
-  required Task task,
-  ErrorBuilder? errorBuilder,
-  required TaskProgressBuilder builder,
-}) {
-  return StreamBuilder<TaskSnapshot>(
-    stream: task.snapshotEvents,
-    builder: (context, snapshot) {
-      if (snapshot.hasError) {
-        return errorBuilder?.call(context, snapshot.error) ?? const SizedBox();
-      }
+class _BindTaskWidget extends StatelessWidget {
+  final Task task;
+  final TaskProgressBuilder builder;
+  final ErrorBuilder? errorBuilder;
 
-      double progress;
+  const _BindTaskWidget({
+    required this.task,
+    required this.builder,
+    this.errorBuilder,
+  });
 
-      if (!snapshot.hasData) {
-        progress = 0;
-      } else {
-        final taskSnapshot = snapshot.requireData;
-        progress = taskSnapshot.bytesTransferred / taskSnapshot.totalBytes;
-      }
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<TaskSnapshot>(
+      stream: task.snapshotEvents,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return errorBuilder?.call(context, snapshot.error) ??
+              const SizedBox();
+        }
 
-      return builder(context, progress);
-    },
-  );
+        double progress;
+
+        if (!snapshot.hasData) {
+          progress = 0;
+        } else {
+          final taskSnapshot = snapshot.requireData;
+          progress = taskSnapshot.bytesTransferred / taskSnapshot.totalBytes;
+        }
+
+        return builder(context, progress);
+      },
+    );
+  }
 }
 
 /// An abstract widget that simplifies building custom progress indicators for
@@ -72,7 +82,7 @@ abstract class TaskProgressWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _bindTask(
+    return _BindTaskWidget(
       task: task,
       errorBuilder: errorBuilder,
       builder: (context, progress) {
@@ -101,7 +111,7 @@ class TaskProgressIndicator extends PlatformWidget {
 
   @override
   Widget buildCupertino(BuildContext context) {
-    return _bindTask(
+    return _BindTaskWidget(
       task: task,
       errorBuilder: errorBuilder,
       builder: (context, progress) {
@@ -112,7 +122,7 @@ class TaskProgressIndicator extends PlatformWidget {
 
   @override
   Widget buildMaterial(BuildContext context) {
-    return _bindTask(
+    return _BindTaskWidget(
       task: task,
       errorBuilder: errorBuilder,
       builder: (context, progress) {
