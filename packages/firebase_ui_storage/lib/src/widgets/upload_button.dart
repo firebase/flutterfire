@@ -25,7 +25,7 @@ class UploadButton extends StatefulWidget {
   final ButtonVariant variant;
 
   /// A callback that is called when an error occurs.
-  final Function(Object? error, StackTrace? stackTrace) onError;
+  final void Function(Object? error, StackTrace? stackTrace) onError;
 
   /// A list of file extensions that can be selected.
   /// If not specified, all files are allowed.
@@ -36,7 +36,7 @@ class UploadButton extends StatefulWidget {
   final List<String> mimeTypes;
 
   /// A callback that is called when the upload is started.
-  final Function(Task task)? onUploadStarted;
+  final Function(UploadTask task)? onUploadStarted;
 
   /// A callback that is called when the upload is complete.
   final Function(Reference ref) onUploadComplete;
