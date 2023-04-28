@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-04-28
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_localizations` - `v1.3.1`](#firebase_ui_localizations---v131)
+ - [`firebase_ui_firestore` - `v1.3.4`](#firebase_ui_firestore---v134)
+ - [`firebase_ui_auth` - `v1.2.4`](#firebase_ui_auth---v124)
+ - [`firebase_ui_database` - `v1.1.3`](#firebase_ui_database---v113)
+ - [`firebase_ui_oauth` - `v1.2.4`](#firebase_ui_oauth---v124)
+ - [`firebase_ui_oauth_facebook` - `v1.1.4`](#firebase_ui_oauth_facebook---v114)
+ - [`firebase_ui_oauth_twitter` - `v1.1.4`](#firebase_ui_oauth_twitter---v114)
+ - [`firebase_ui_oauth_apple` - `v1.1.4`](#firebase_ui_oauth_apple---v114)
+ - [`firebase_ui_oauth_google` - `v1.1.4`](#firebase_ui_oauth_google---v114)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_firestore` - `v1.3.4`
+ - `firebase_ui_auth` - `v1.2.4`
+ - `firebase_ui_database` - `v1.1.3`
+ - `firebase_ui_oauth` - `v1.2.4`
+ - `firebase_ui_oauth_facebook` - `v1.1.4`
+ - `firebase_ui_oauth_twitter` - `v1.1.4`
+ - `firebase_ui_oauth_apple` - `v1.1.4`
+ - `firebase_ui_oauth_google` - `v1.1.4`
+
+---
+
+#### `firebase_ui_localizations` - `v1.3.1`
+
+ - **FIX**(ui_localizations): drop intl dependency as it is not used ([#10856](https://github.com/firebase/flutterfire/issues/10856)). ([f208ae9b](https://github.com/firebase/flutterfire/commit/f208ae9b0b2f784710bb6c7e894e3aeb5513d30d))
+
+
 ## 2023-04-27
 
 ### Changes

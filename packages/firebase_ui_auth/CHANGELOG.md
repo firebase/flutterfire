@@ -1,3 +1,7 @@
+## 1.2.4
+
+ - Update a dependency to the latest release.
+
 ## 1.2.3
 
  - **DOCS**(firebase_ui_auth): fix an error in the documentation ([#10797](https://github.com/firebase/flutterfire/issues/10797)). ([b71e0dde](https://github.com/firebase/flutterfire/commit/b71e0dde5ad0c2c04876afde5da8c8b1b8cb321d))
