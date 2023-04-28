@@ -32,7 +32,16 @@ void main() async {
   await Firebase.initializeApp();
   FlutterError.onError = (errorDetails) {
     // If you wish to record a "non-fatal" exception, please use `FirebaseCrashlytics.instance.recordFlutterError` instead
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    const fatalError = true;
+    FlutterError.onError = (errorDetails) {
+      if (fatalError) {
+        // If you wish to record a "fatal" exception
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      } else {
+        // If you wish to record a "non-fatal" exception
+        FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+      }
+    };
   };
 
   runApp(MyApp());
@@ -63,8 +72,15 @@ Future<void> main() async {
       FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
     };
     // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+    const fatalError = true;
     PlatformDispatcher.instance.onError = (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      if (fatalError) {
+        // If you wish to record a "fatal" exception
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      } else {
+        // If you wish to record a "non-fatal" exception
+        FirebaseCrashlytics.instance.recordError(error, stack);
+      }
       return true;
     };
     runApp(MyApp());
