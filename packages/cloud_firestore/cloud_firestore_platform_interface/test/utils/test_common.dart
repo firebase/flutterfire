@@ -52,7 +52,7 @@ void handleDocumentSnapshotsEventChannel(
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+      .setMockMethodCallHandler(MethodChannel(name, codec),
           (MethodCall methodCall) async {
     log.add(methodCall);
     switch (methodCall.method) {
@@ -85,7 +85,7 @@ void handleQuerySnapshotsEventChannel(final String id, List<MethodCall> log) {
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+      .setMockMethodCallHandler(MethodChannel(name, codec),
           (MethodCall methodCall) async {
     log.add(methodCall);
     switch (methodCall.method) {
@@ -118,7 +118,7 @@ void handleSnapshotsInSyncEventChannel(final String id) {
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+      .setMockMethodCallHandler(MethodChannel(name, codec),
           (MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
@@ -143,7 +143,7 @@ void handleTransactionEventChannel(
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+      .setMockMethodCallHandler(MethodChannel(name, codec),
           (MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
