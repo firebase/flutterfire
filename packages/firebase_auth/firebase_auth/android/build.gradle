@@ -35,6 +35,7 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
 apply plugin: 'com.android.library'
 
 android {
+    namespace 'com.google.firebase_auth'
     compileSdkVersion 31
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
