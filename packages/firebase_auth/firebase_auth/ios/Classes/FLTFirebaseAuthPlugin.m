@@ -9,6 +9,7 @@
 #import "Private/FLTAuthStateChannelStreamHandler.h"
 #import "Private/FLTIdTokenChannelStreamHandler.h"
 #import "Private/FLTPhoneNumberVerificationStreamHandler.h"
+#import "Private/PigeonParser.h"
 
 #import "Public/CustomPigeonHeader.h"
 #import "Public/FLTFirebaseAuthPlugin.h"
@@ -209,8 +210,6 @@ NSString *const kErrMsgInvalidCredential =
     [self registerIdTokenListener:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#registerAuthStateListener" isEqualToString:call.method]) {
     [self registerAuthStateListener:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Auth#applyActionCode" isEqualToString:call.method]) {
-    [self applyActionCode:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#checkActionCode" isEqualToString:call.method]) {
     [self checkActionCode:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#confirmPasswordReset" isEqualToString:call.method]) {
@@ -335,18 +334,6 @@ NSString *const kErrMsgInvalidCredential =
 }
 
 #pragma mark - Firebase Auth API
-
-- (void)applyActionCode:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-  [auth applyActionCode:arguments[kArgumentCode]
-             completion:^(NSError *_Nullable error) {
-               if (error != nil) {
-                 result.error(nil, nil, nil, error);
-               } else {
-                 result.success(nil);
-               }
-             }];
-}
 
 - (void)checkActionCode:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
@@ -1726,62 +1713,6 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
 }
 
 
-+ (PigeonUserCredential *)getPigeonUserCredentialFromAuthResult:(nonnull FIRAuthDataResult *)authResult {
-    return [PigeonUserCredential makeWithUser:[self getPigeonDetails:authResult.user] additionalUserInfo:[self getPigeonAdditionalUserInfo:authResult.additionalUserInfo] credential:[self getPigeonAuthCredential:authResult.credential]];
-}
-
-+ (PigeonUserDetails *)getPigeonDetails:(nonnull FIRUser *)user {
-    return [PigeonUserDetails makeWithUserInfo:[self getPigeonUserInfo:user] providerData:[self getProviderData:user.providerData]];
-}
-
-+ (PigeonUserInfo *)getPigeonUserInfo:(nonnull FIRUser *)user {
-    return [PigeonUserInfo makeWithUid:user.uid email:user.email displayName:user.displayName photoUrl:user.photoURL.absoluteString phoneNumber:user.phoneNumber isAnonymous:[NSNumber numberWithBool:user.isAnonymous] isEmailVerified:[NSNumber numberWithBool:user.emailVerified] providerId:user.providerID tenantId:user.tenantID refreshToken:user.refreshToken creationTimestamp:[NSNumber numberWithDouble:user.metadata.creationDate.timeIntervalSince1970 * 1000] lastSignInTimestamp:[NSNumber numberWithDouble:user.metadata.lastSignInDate.timeIntervalSince1970 * 1000]];
-}
-
-
-+ (NSArray<NSDictionary<id, id> *> *)getProviderData:(nonnull NSArray<id<FIRUserInfo>> *)providerData {
-    NSMutableArray<NSDictionary<id, id> *> *dataArray = [NSMutableArray arrayWithCapacity:providerData.count];
-    for (id<FIRUserInfo> userInfo in providerData) {
-        NSDictionary *dataDict = @{
-                                   @"providerId": userInfo.providerID,
-                                   @"uid": userInfo.uid,
-                                   @"displayName": userInfo.displayName ?: [NSNull null],
-                                   @"email": userInfo.email ?: [NSNull null],
-                                   @"phoneNumber": userInfo.phoneNumber ?: [NSNull null],
-                                   @"photoURL": userInfo.photoURL ?: [NSNull null]
-                                   };
-        [dataArray addObject:dataDict];
-    }
-    return [dataArray copy];
-}
-
-+ (PigeonAdditionalUserInfo *)getPigeonAdditionalUserInfo:(nonnull FIRAdditionalUserInfo *)userInfo {
-    return [PigeonAdditionalUserInfo makeWithIsNewUser:[NSNumber numberWithBool:userInfo.isNewUser] providerId:userInfo.providerID username:userInfo.username profile:userInfo.profile];
-}
-
-+ (PigeonAuthCredential *)getPigeonAuthCredential:(FIRAuthCredential *)authCredential {
-    if (authCredential == nil) {
-      return nil;
-    }
-
-    NSString *accessToken = nil;
-    if ([authCredential isKindOfClass:[FIROAuthCredential class]]) {
-      if (((FIROAuthCredential *)authCredential).accessToken != nil) {
-        accessToken = ((FIROAuthCredential *)authCredential).accessToken;
-      } else if (((FIROAuthCredential *)authCredential).IDToken != nil) {
-        // For Sign In With Apple, the token is stored in IDToken
-        accessToken = ((FIROAuthCredential *)authCredential).IDToken;
-      }
-    }
-
-    return [PigeonAuthCredential makeWithProviderId:authCredential.provider signInMethod:authCredential.provider nativeId:@([authCredential hash]) accessToken:accessToken ?: nil];
-}
-
-
-
-
-
-
 
 
 - (id)getNSDictionaryFromAdditionalUserInfo:(FIRAdditionalUserInfo *)additionalUserInfo {
@@ -2005,7 +1936,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
                       completion:^(FIRAuthDataResult *_Nullable authResult,
                                    NSError *_Nullable error) {
                         if (error == nil) {
-                            completion([self getPigeonUserCredentialFromAuthResult:authResult], nil);
+                            completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
                         } else {
                           completion(nil, [FlutterError errorWithCode:@"resolve-signin-failed"
                                                               message:error.localizedDescription
@@ -2018,7 +1949,16 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
 
 
 - (void)applyActionCodeApp:(nonnull PigeonFirebaseApp *)app code:(nonnull NSString *)code completion:(nonnull void (^)(FlutterError * _Nullable))completion {
-    <#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+    [auth applyActionCode:code
+               completion:^(NSError *_Nullable error) {
+                 if (error != nil) {
+                     completion([FlutterError errorWithCode:@"apply-action-code-failed" message:error.localizedDescription details:error.userInfo]);
+                 } else {
+                   completion(nil);
+                 }
+               }];
+
 }
 
 - (void)checkActionCodeApp:(nonnull PigeonFirebaseApp *)app code:(nonnull NSString *)code completion:(nonnull void (^)(PigeonActionCodeInfo * _Nullable, FlutterError * _Nullable))completion {
