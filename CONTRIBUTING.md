@@ -111,7 +111,7 @@ flutter test
 ### End-to-end (e2e) tests
 
 E2e tests are those which directly communicate with Firebase, whose results cannot be mocked. These tests run directly from
-an example application. To run e2e tests, run the `flutter test` (for Android, iOS & macOS) or the `flutter drive` (for web) 
+an example application. To run e2e tests, run the `flutter test` (for Android, iOS & macOS) or the `flutter drive` (for web)
 command from the plugins main `example` directory, targeting the entry e2e test file.
 
 > Some packages use Firebase Emulator Suite to run tests. To learn more, [visit the official documentation](https://firebase.google.com/docs/emulator-suite).
@@ -123,28 +123,55 @@ cd .github/workflows/scripts
 melos run firebase:emulator
 ```
 
-To run tests against Android, iOS or macOS environments, run these commands:
+To run tests, you need to install Melos which is the tool we use to manage this repository.
+Melos provides a number of commands to quickly run tests against plugins. Install Melos by running
+the following command from the terminal:
 
 ```bash
-cd packages/firebase_auth/firebase_auth/example
-flutter test integration_test/firebase_auth_e2e_test.dart
+dart pub global activate melos
 ```
 
-To run tests against web environments, run the command as a release build:
+To run e2e tests, run the following Melos commands from the terminal within the FlutterFire repository:
 
+For the `cloud_firestore` plugin:
 ```bash
-cd packages/firebase_auth/firebase_auth/example
-flutter drive --target=./integration_test/firebase_auth_e2e_test.dart --driver=./test_driver/integration_test.dart --release -d chrome
+melos run test:e2e:cloud_firestore
 ```
 
-### Using Melos
+For the `firebase_performance` plugin:
+```bash
+melos run test:e2e:firebase_performance
+```
 
-To help aid developer workflow, Melos provides a number of commands to quickly run
-tests against plugins. For example, to run all e2e tests across all plugins at once,
-run the following command from the root of your cloned repository:
-
+For the rest of the plugins:
 ```bash
 melos run test:e2e
+```
+
+To run tests against web environments, please do the following:
+
+1. Install `chromedriver` (if you're using a macOS machine for development, you might install via homebrew using the command `brew install chromedriver`).
+2. Run the following command from the terminal:
+
+```bash
+chromedriver --port=4444
+```
+
+Once that process is running successfully, please run the web tests running as a release build:
+
+For the `cloud_firestore` plugin:
+```bash
+melos run test:e2e:web:cloud_firestore
+```
+
+For the `firebase_performance` plugin:
+```bash
+melos run test:e2e:web:firebase_performance
+```
+
+For the rest of the plugins:
+```bash
+melos run test:e2e:web
 ```
 
 A full list of all commands can be found within the [`melos.yaml`](https://github.com/firebase/flutterfire/blob/master/melos.yaml)

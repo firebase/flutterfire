@@ -2,10 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'platform_widget.dart';
 
 /// {@template ui.auth.widgets.internal.universal_text_form_field}
 /// Uses [TextFormField] under mateiral library and [CupertinoTextFormFieldRow]
@@ -26,7 +26,7 @@ class UniversalTextFormField extends PlatformWidget {
   final Iterable<String>? autofillHints;
 
   const UniversalTextFormField({
-    Key? key,
+    super.key,
     this.controller,
     this.prefix,
     this.placeholder,
@@ -40,7 +40,7 @@ class UniversalTextFormField extends PlatformWidget {
     this.enableSuggestions,
     this.autocorrect = false,
     this.autofillHints,
-  }) : super(key: key);
+  });
 
   @override
   Widget buildCupertino(BuildContext context) {

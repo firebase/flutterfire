@@ -3,15 +3,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutter/scheduler.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 
-import '../widgets/internal/loading_button.dart';
 import '../widgets/internal/title.dart';
-import '../widgets/internal/universal_button.dart';
-import '../widgets/internal/universal_scaffold.dart';
 
 import 'internal/responsive_page.dart';
 
@@ -69,7 +67,7 @@ class EmailVerificationScreen extends StatelessWidget {
 
   /// {@macro ui.auth.screens.email_verification_screen}
   const EmailVerificationScreen({
-    Key? key,
+    super.key,
     this.auth,
     this.actions = const [],
     this.headerBuilder,
@@ -78,7 +76,7 @@ class EmailVerificationScreen extends StatelessWidget {
     this.desktopLayoutDirection,
     this.breakpoint = 500,
     this.actionCodeSettings,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -120,10 +118,9 @@ class _EmailVerificationScreenContent extends StatefulWidget {
   final ActionCodeSettings? actionCodeSettings;
 
   const _EmailVerificationScreenContent({
-    Key? key,
     required this.auth,
     required this.actionCodeSettings,
-  }) : super(key: key);
+  });
 
   @override
   State<_EmailVerificationScreenContent> createState() =>

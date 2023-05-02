@@ -3,11 +3,11 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/widgets.dart' hide Title;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 
-import '../widgets/internal/loading_button.dart';
 import '../widgets/internal/title.dart';
 
 /// {@template ui.auth.views.email_link_sign_in_view}
@@ -27,11 +27,11 @@ class EmailLinkSignInView extends StatefulWidget {
 
   /// {@macro ui.auth.views.email_link_sign_in_view}
   const EmailLinkSignInView({
-    Key? key,
+    super.key,
     this.auth,
     required this.provider,
     this.emailInputFocusNode,
-  }) : super(key: key);
+  });
 
   @override
   State<EmailLinkSignInView> createState() => _EmailLinkSignInViewState();

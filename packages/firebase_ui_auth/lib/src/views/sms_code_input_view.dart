@@ -3,12 +3,11 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-
-import '../widgets/internal/universal_button.dart';
 
 typedef SMSCodeSubmitCallback = void Function(String smsCode);
 
@@ -34,13 +33,13 @@ class SMSCodeInputView extends StatefulWidget {
 
   /// {@macro ui.auth.views.sms_code_input_view}
   const SMSCodeInputView({
-    Key? key,
+    super.key,
     required this.flowKey,
     this.onCodeVerified,
     this.auth,
     this.action,
     this.onSubmit,
-  }) : super(key: key);
+  });
 
   @override
   State<SMSCodeInputView> createState() => _SMSCodeInputViewState();

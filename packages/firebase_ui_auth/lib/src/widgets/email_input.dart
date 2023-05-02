@@ -37,13 +37,13 @@ class EmailInput extends StatelessWidget {
 
   /// {@macro ui.auth.widget.email_input}
   const EmailInput({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onSubmitted,
     this.focusNode,
     this.autofocus,
     this.initialValue,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

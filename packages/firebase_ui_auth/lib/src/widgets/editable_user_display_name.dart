@@ -3,8 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -22,9 +22,9 @@ class EditableUserDisplayName extends StatefulWidget {
 
   /// {@macro ui.auth.widgets.editable_user_display_name}
   const EditableUserDisplayName({
-    Key? key,
+    super.key,
     this.auth,
-  }) : super(key: key);
+  });
 
   @override
   // ignore: library_private_types_in_public_api

@@ -12,6 +12,9 @@
   <a href="https://github.com/invertase/melos">
     <img src="https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square" alt="Maintained with Melos" />
   </a>
+  <a href="https://api.securityscorecards.dev/projects/github.com/firebase/flutterfire">
+    <img src="https://api.securityscorecards.dev/projects/github.com/firebase/flutterfire/badge" alt="OSSF scorecard" />
+  </a>
 </p>
 
 ---
@@ -35,7 +38,10 @@ and open source.
 
 - [Add Firebase to your Flutter app](https://firebase.google.com/docs/flutter/setup)
 - [Available plugins](https://firebase.google.com/docs/flutter/setup#available-plugins)
-- [FlutterFire UI](./packages/flutterfire_ui/README.md) (beta)
+- Firebase UI
+  - [Firebase UI for Authentication](./packages/firebase_ui_auth/README.md)
+  - [Firebase UI for Realtime Database](./packages/firebase_ui_database/README.md)
+  - [Firebase UI for Cloud Firestore](./packages/firebase_ui_firestore/README.md)
 - [Firestore ODM](./packages/cloud_firestore_odm/README.md) (alpha)
 
 ---

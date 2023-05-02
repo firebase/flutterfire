@@ -20,11 +20,11 @@ class SettingsChip extends StatelessWidget {
   final bool isActive;
 
   const SettingsChip({
-    Key? key,
+    super.key,
     required this.onTap,
     required this.label,
     required this.isActive,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +62,12 @@ class Settings extends StatefulWidget {
   ) builder;
 
   const Settings({
-    Key? key,
+    super.key,
     required this.builder,
     this.brightness = Brightness.light,
     this.library = DesignLibrary.material,
     this.buttonVariant = ButtonVariant.full,
-  }) : super(key: key);
+  });
 
   @override
   State<Settings> createState() => _SettingsState();
