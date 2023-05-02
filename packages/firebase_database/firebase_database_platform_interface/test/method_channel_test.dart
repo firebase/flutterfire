@@ -453,7 +453,9 @@ void main() {
         final QueryPlatform query = database.ref('some/path');
 
         Future<void> simulateError(String errorMessage) async {
-          await eventChannel.binaryMessenger.handlePlatformMessage(
+          await TestDefaultBinaryMessengerBinding
+              .instance.defaultBinaryMessenger
+              .handlePlatformMessage(
             eventChannel.name,
             eventChannel.codec.encodeErrorEnvelope(
               code: errorCode,
@@ -499,7 +501,9 @@ void main() {
         final QueryPlatform query = database.ref(path);
 
         Future<void> simulateEvent(Map<String, dynamic> event) async {
-          await eventChannel.binaryMessenger.handlePlatformMessage(
+          await TestDefaultBinaryMessengerBinding
+              .instance.defaultBinaryMessenger
+              .handlePlatformMessage(
             eventChannel.name,
             eventChannel.codec.encodeSuccessEnvelope(event),
             (_) {},
