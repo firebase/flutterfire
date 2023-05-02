@@ -16,7 +16,7 @@ import 'test_common.dart';
 void main() {
   initializeMethodChannel();
   late FirebaseApp app;
-  late BinaryMessenger messenger;
+  late TestDefaultBinaryMessenger messenger;
 
   setUpAll(() async {
     app = await Firebase.initializeApp(
