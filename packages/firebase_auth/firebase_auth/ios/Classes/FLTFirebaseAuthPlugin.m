@@ -335,48 +335,6 @@ NSString *const kErrMsgInvalidCredential =
 
 #pragma mark - Firebase Auth API
 
-- (void)checkActionCode:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-  [auth checkActionCode:arguments[kArgumentCode]
-             completion:^(FIRActionCodeInfo *_Nullable info, NSError *_Nullable error) {
-               if (error != nil) {
-                 result.error(nil, nil, nil, error);
-               } else {
-                 NSMutableDictionary *actionCodeResultDict = [NSMutableDictionary dictionary];
-                 NSMutableDictionary *dataDict = [NSMutableDictionary dictionary];
-
-                 if (info.email != nil) {
-                   dataDict[@"email"] = info.email;
-                 }
-
-                 if (info.previousEmail != nil) {
-                   dataDict[@"previousEmail"] = info.previousEmail;
-                 }
-
-                 if (info.operation == FIRActionCodeOperationPasswordReset) {
-                   actionCodeResultDict[@"operation"] = @1;
-                 } else if (info.operation == FIRActionCodeOperationVerifyEmail) {
-                   actionCodeResultDict[@"operation"] = @2;
-                 } else if (info.operation == FIRActionCodeOperationRecoverEmail) {
-                   actionCodeResultDict[@"operation"] = @3;
-                 } else if (info.operation == FIRActionCodeOperationEmailLink) {
-                   actionCodeResultDict[@"operation"] = @4;
-                 } else if (info.operation == FIRActionCodeOperationVerifyAndChangeEmail) {
-                   actionCodeResultDict[@"operation"] = @5;
-                 } else if (info.operation == FIRActionCodeOperationRevertSecondFactorAddition) {
-                   actionCodeResultDict[@"operation"] = @6;
-                 } else {
-                   // Unknown / Error.
-                   actionCodeResultDict[@"operation"] = @0;
-                 }
-
-                 actionCodeResultDict[@"data"] = dataDict;
-
-                 result.success(actionCodeResultDict);
-               }
-             }];
-}
-
 - (void)confirmPasswordReset:(id)arguments
         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
@@ -1962,7 +1920,16 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
 }
 
 - (void)checkActionCodeApp:(nonnull PigeonFirebaseApp *)app code:(nonnull NSString *)code completion:(nonnull void (^)(PigeonActionCodeInfo * _Nullable, FlutterError * _Nullable))completion {
-    <#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+    [auth checkActionCode:code
+               completion:^(FIRActionCodeInfo *_Nullable info, NSError *_Nullable error) {
+                 if (error != nil) {
+                     completion(nil, [FlutterError errorWithCode:@"check-action-code-failed" message:error.localizedDescription details:error.userInfo]);
+                 } else {
+                   completion([PigeonParser parseActionCode:info], nil);
+                 }
+               }];
+
 }
 
 - (void)confirmPasswordResetApp:(nonnull PigeonFirebaseApp *)app code:(nonnull NSString *)code newPassword:(nonnull NSString *)newPassword completion:(nonnull void (^)(FlutterError * _Nullable))completion {
