@@ -29,7 +29,8 @@ void main() {
       ),
     );
 
-    messenger = ServicesBinding.instance.defaultBinaryMessenger;
+    messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
   });
 
   group('MethodChannelDatabase', () {

@@ -46,7 +46,8 @@ Future<void> injectEventChannelResponse(
   String channelName,
   Map<String, dynamic> event,
 ) async {
-  await ServicesBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
+  await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .handlePlatformMessage(
     channelName,
     MethodChannelFirebaseAuth.channel.codec.encodeSuccessEnvelope(event),
     (_) {},
@@ -61,7 +62,8 @@ void handleMethodCall(MethodCallCallback methodCallCallback) =>
     });
 
 Future<void> simulateEvent(String name, Map<String, dynamic>? user) async {
-  await ServicesBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
+  await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .handlePlatformMessage(
     MethodChannelFirebaseAuth.channel.name,
     MethodChannelFirebaseAuth.channel.codec.encodeMethodCall(
       MethodCall(

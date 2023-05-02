@@ -50,7 +50,8 @@ Future<void> injectEventChannelResponse(
   String channelName,
   Map<String, dynamic> event,
 ) async {
-  await ServicesBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
+  await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .handlePlatformMessage(
     channelName,
     MethodChannelFirebaseDynamicLinks.channel.codec
         .encodeSuccessEnvelope(event),
