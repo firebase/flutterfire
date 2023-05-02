@@ -171,7 +171,9 @@ void main() {
       when(mockAuthPlatform.userChanges()).thenAnswer((_) =>
           Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
 
-      MethodChannelFirebaseAuth.channel.setMockMethodCallHandler((call) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(MethodChannelFirebaseAuth.channel,
+              (call) async {
         return <String, dynamic>{'user': user};
       });
     });

@@ -27,7 +27,9 @@ void handleEventChannel(
   final String name, [
   List<MethodCall>? log,
 ]) {
-  MethodChannel(name).setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannel(name),
+          (MethodCall methodCall) async {
     log?.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
@@ -36,6 +38,7 @@ void handleEventChannel(
       default:
         return null;
     }
+    return null;
   });
 }
 
@@ -51,7 +54,9 @@ Future<void> injectEventChannelResponse(
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    MethodChannelFirebaseAuth.channel.setMockMethodCallHandler((call) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(MethodChannelFirebaseAuth.channel,
+            (call) async {
       return await methodCallCallback(call);
     });
 

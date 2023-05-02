@@ -122,8 +122,9 @@ void main() {
     });
     group('get()', () {
       setUp(() async {
-        MethodChannelFirebaseFirestore.channel
-            .setMockMethodCallHandler((MethodCall methodCall) async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+                (MethodCall methodCall) async {
           switch (methodCall.method) {
             case 'Query#get':
               MethodChannelQuery query = methodCall.arguments['query'];

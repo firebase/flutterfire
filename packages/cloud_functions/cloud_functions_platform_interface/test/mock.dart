@@ -22,8 +22,9 @@ void setupFirebaseFunctionsMocks([Callback? customHandlers]) {
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    MethodChannelFirebaseFunctions.channel
-        .setMockMethodCallHandler((call) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(MethodChannelFirebaseFunctions.channel,
+            (call) async {
       return await methodCallCallback(call);
     });
 

@@ -130,7 +130,9 @@ void main() {
         languageCode: anyNamed('languageCode'),
       )).thenAnswer((_) => mockAuthPlatform);
 
-      MethodChannelFirebaseAuth.channel.setMockMethodCallHandler((call) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(MethodChannelFirebaseAuth.channel,
+              (call) async {
         switch (call.method) {
           default:
             return <String, dynamic>{'user': user};

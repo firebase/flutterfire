@@ -44,7 +44,8 @@ void main() {
     setUp(() async {
       database = MethodChannelDatabase(app: app, databaseURL: databaseURL);
 
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
         log.add(methodCall);
 
         switch (methodCall.method) {

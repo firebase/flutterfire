@@ -40,8 +40,9 @@ void initializeMethodChannel() {
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    MethodChannelFirebaseFirestore.channel
-        .setMockMethodCallHandler((call) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+            (call) async {
       return await methodCallCallback(call);
     });
 
@@ -50,8 +51,9 @@ void handleDocumentSnapshotsEventChannel(
   final name = 'plugins.flutter.io/firebase_firestore/document/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
-  MethodChannel(name, codec)
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+          (MethodCall methodCall) async {
     log.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
@@ -74,6 +76,7 @@ void handleDocumentSnapshotsEventChannel(
       default:
         return null;
     }
+    return null;
   });
 }
 
@@ -81,8 +84,9 @@ void handleQuerySnapshotsEventChannel(final String id, List<MethodCall> log) {
   final name = 'plugins.flutter.io/firebase_firestore/query/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
-  MethodChannel(name, codec)
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+          (MethodCall methodCall) async {
     log.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
@@ -105,6 +109,7 @@ void handleQuerySnapshotsEventChannel(final String id, List<MethodCall> log) {
       default:
         return null;
     }
+    return null;
   });
 }
 
@@ -112,8 +117,9 @@ void handleSnapshotsInSyncEventChannel(final String id) {
   final name = 'plugins.flutter.io/firebase_firestore/snapshotsInSync/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
-  MethodChannel(name, codec)
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+          (MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
         await ServicesBinding.instance.defaultBinaryMessenger
@@ -124,6 +130,7 @@ void handleSnapshotsInSyncEventChannel(final String id) {
       default:
         return null;
     }
+    return null;
   });
 }
 
@@ -135,8 +142,9 @@ void handleTransactionEventChannel(
   final name = 'plugins.flutter.io/firebase_firestore/transaction/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
-  MethodChannel(name, codec)
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+          (MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
         await ServicesBinding.instance.defaultBinaryMessenger
@@ -175,5 +183,6 @@ void handleTransactionEventChannel(
       default:
         return null;
     }
+    return null;
   });
 }
