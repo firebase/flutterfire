@@ -80,4 +80,31 @@
     return [PigeonActionCodeInfo makeWithOperation:operation data:data];
 }
 
++ (FIRActionCodeSettings *_Nullable)parseActionCodeSettings:(nullable PigeonActionCodeSettings*) settings {
+    if (settings == nil) {
+        return nil;
+    }
+    
+    FIRActionCodeSettings *codeSettings = [[FIRActionCodeSettings alloc] init];
+    
+    if (settings.url != nil) {
+        codeSettings.URL = [NSURL URLWithString:settings.url];
+    }
+    
+    if (settings.dynamicLinkDomain != nil) {
+        codeSettings.dynamicLinkDomain = settings.dynamicLinkDomain;
+    }
+    
+    if (settings.handleCodeInApp != nil) {
+        codeSettings.handleCodeInApp = settings.handleCodeInApp;
+    }
+    
+    if (settings.iOSBundleId != nil) {
+        codeSettings.iOSBundleID = settings.iOSBundleId;
+    }
+    
+    
+    return codeSettings;
+}
+
 @end

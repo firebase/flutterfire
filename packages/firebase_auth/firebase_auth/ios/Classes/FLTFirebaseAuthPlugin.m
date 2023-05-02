@@ -210,12 +210,6 @@ NSString *const kErrMsgInvalidCredential =
     [self registerIdTokenListener:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#registerAuthStateListener" isEqualToString:call.method]) {
     [self registerAuthStateListener:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Auth#checkActionCode" isEqualToString:call.method]) {
-    [self checkActionCode:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Auth#confirmPasswordReset" isEqualToString:call.method]) {
-    [self confirmPasswordReset:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Auth#createUserWithEmailAndPassword" isEqualToString:call.method]) {
-    [self createUserWithEmailAndPassword:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#fetchSignInMethodsForEmail" isEqualToString:call.method]) {
     [self fetchSignInMethodsForEmail:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#sendPasswordResetEmail" isEqualToString:call.method]) {
@@ -335,34 +329,6 @@ NSString *const kErrMsgInvalidCredential =
 
 #pragma mark - Firebase Auth API
 
-- (void)confirmPasswordReset:(id)arguments
-        withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-  [auth confirmPasswordResetWithCode:arguments[kArgumentCode]
-                         newPassword:arguments[@"newPassword"]
-                          completion:^(NSError *_Nullable error) {
-                            if (error != nil) {
-                              result.error(nil, nil, nil, error);
-                            } else {
-                              result.success(nil);
-                            }
-                          }];
-}
-
-- (void)createUserWithEmailAndPassword:(id)arguments
-                  withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-  [auth createUserWithEmail:arguments[kArgumentEmail]
-                   password:arguments[@"password"]
-                 completion:^(FIRAuthDataResult *authResult, NSError *error) {
-                   if (error != nil) {
-                     result.error(nil, nil, nil, error);
-                   } else {
-                     result.success(authResult);
-                   }
-                 }];
-}
-
 - (void)fetchSignInMethodsForEmail:(id)arguments
               withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
@@ -375,23 +341,6 @@ NSString *const kErrMsgInvalidCredential =
                             result.success(@{
                               @"providers" : (id)providers ?: @[],
                             });
-                          }
-                        }];
-}
-
-- (void)sendPasswordResetEmail:(id)arguments
-          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-  NSString *email = arguments[kArgumentEmail];
-  FIRActionCodeSettings *actionCodeSettings =
-      [self getFIRActionCodeSettingsFromArguments:arguments];
-  [auth sendPasswordResetWithEmail:email
-                actionCodeSettings:actionCodeSettings
-                        completion:^(NSError *_Nullable error) {
-                          if (error != nil) {
-                            result.error(nil, nil, nil, error);
-                          } else {
-                            result.success(nil);
                           }
                         }];
 }
@@ -633,46 +582,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
 #endif
 }
 
-- (void)setLanguageCode:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-  NSString *languageCode = arguments[@"languageCode"];
 
-  if (languageCode != nil && ![languageCode isEqual:[NSNull null]]) {
-    auth.languageCode = languageCode;
-  } else {
-    [auth useAppLanguage];
-  }
-
-  result.success(@{@"languageCode" : auth.languageCode});
-}
-
-- (void)setSettings:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-
-  if ([[arguments allKeys] containsObject:@"userAccessGroup"] &&
-      ![arguments[@"userAccessGroup"] isEqual:[NSNull null]]) {
-    BOOL useUserAccessGroupSuccessful;
-    NSError *useUserAccessGroupErrorPtr;
-    useUserAccessGroupSuccessful = [auth useUserAccessGroup:arguments[@"userAccessGroup"]
-                                                      error:&useUserAccessGroupErrorPtr];
-    if (!useUserAccessGroupSuccessful) {
-      return result.error(nil, nil, nil, useUserAccessGroupErrorPtr);
-    }
-  }
-
-#if TARGET_OS_IPHONE
-  if ([[arguments allKeys] containsObject:@"appVerificationDisabledForTesting"] &&
-      ![arguments[@"appVerificationDisabledForTesting"] isEqual:[NSNull null]]) {
-    auth.settings.appVerificationDisabledForTesting =
-        [arguments[@"appVerificationDisabledForTesting"] boolValue];
-  }
-#else
-  NSLog(@"FIRAuthSettings.appVerificationDisabledForTesting is not supported "
-        @"on MacOS.");
-#endif
-
-  result.success(nil);
-}
 
 - (void)signInWithCustomToken:(id)arguments
          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -1379,16 +1289,6 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
   result.success(name);
 }
 
-- (void)signInAnonymously:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-  [auth signInAnonymouslyWithCompletion:^(FIRAuthDataResult *authResult, NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(authResult);
-    }
-  }];
-}
 
 - (void)verifyPhoneNumber:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
 #if TARGET_OS_OSX
@@ -1933,15 +1833,45 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
 }
 
 - (void)confirmPasswordResetApp:(nonnull PigeonFirebaseApp *)app code:(nonnull NSString *)code newPassword:(nonnull NSString *)newPassword completion:(nonnull void (^)(FlutterError * _Nullable))completion {
-    <#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+    [auth confirmPasswordResetWithCode:code
+                           newPassword:newPassword
+                            completion:^(NSError *_Nullable error) {
+                              if (error != nil) {
+                                  completion([FlutterError errorWithCode:@"confirm-password-reset-failed" message:error.localizedDescription details:error.userInfo]);
+                              } else {
+                                completion(nil);
+                              }
+                            }];
+
 }
 
 - (void)createUserWithEmailAndPasswordApp:(nonnull PigeonFirebaseApp *)app email:(nonnull NSString *)email password:(nonnull NSString *)password completion:(nonnull void (^)(PigeonUserCredential * _Nullable, FlutterError * _Nullable))completion {
-    <#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+    [auth createUserWithEmail:email
+                     password:password
+                   completion:^(FIRAuthDataResult *_Nullable authResult, NSError *_Nullable error) {
+                     if (error != nil) {
+                         completion(nil, [FlutterError errorWithCode:@"create-user-with-email-and-password-failed" message:error.localizedDescription details:error.userInfo]);
+                     } else {
+                       completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
+                     }
+                   }];
+
 }
 
 - (void)fetchSignInMethodsForEmailApp:(nonnull PigeonFirebaseApp *)app email:(nonnull NSString *)email completion:(nonnull void (^)(NSArray<NSString *> * _Nullable, FlutterError * _Nullable))completion {
-    <#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+    [auth fetchSignInMethodsForEmail:email
+                          completion:^(NSArray<NSString *> *_Nullable providers,
+                                       NSError *_Nullable error) {
+                            if (error != nil) {
+                                completion(nil, [FlutterError errorWithCode:@"fetch-sign-in-methods-for-email-failed" message:error.localizedDescription details:error.userInfo]);
+                            } else {
+                              completion(providers, nil);
+                            }
+                          }];
+
 }
 
 - (void)registerAuthStateListenerApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion {
@@ -1953,23 +1883,97 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
 }
 
 - (void)sendPasswordResetEmailApp:(nonnull PigeonFirebaseApp *)app email:(nonnull NSString *)email actionCodeSettings:(nullable PigeonActionCodeSettings *)actionCodeSettings completion:(nonnull void (^)(FlutterError * _Nullable))completion {
-    <#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+    if (actionCodeSettings != nil) {
+      FIRActionCodeSettings *settings = [PigeonParser parseActionCodeSettings:actionCodeSettings];
+      [auth sendPasswordResetWithEmail:email
+                               actionCodeSettings:settings
+                                    completion:^(NSError *_Nullable error) {
+                                      if (error != nil) {
+                                          completion([FlutterError errorWithCode:@"send-password-reset-email-failed" message:error.localizedDescription details:error.userInfo]);
+                                      } else {
+                                        completion(nil);
+                                      }
+                                    }];
+    } else {
+      [auth sendPasswordResetWithEmail:email
+                                    completion:^(NSError *_Nullable error) {
+                                      if (error != nil) {
+                                          completion([FlutterError errorWithCode:@"send-password-reset-email-failed" message:error.localizedDescription details:error.userInfo]);
+                                      } else {
+                                        completion(nil);
+                                      }
+                                    }];
+    }
 }
 
 - (void)sendSignInLinkToEmailApp:(nonnull PigeonFirebaseApp *)app email:(nonnull NSString *)email actionCodeSettings:(nonnull PigeonActionCodeSettings *)actionCodeSettings completion:(nonnull void (^)(FlutterError * _Nullable))completion {
-    <#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+    [auth sendSignInLinkToEmail:email
+             actionCodeSettings:[PigeonParser parseActionCodeSettings:actionCodeSettings]
+                     completion:^(NSError *_Nullable error) {
+                          if (error != nil) {
+                            completion([FlutterError errorWithCode:@"send-sign-in-link-to-email-failed" message:error.localizedDescription details:error.userInfo]);
+                          } else {
+                             completion(nil);
+                          }
+                        }];
+
 }
 
 - (void)setLanguageCodeApp:(nonnull PigeonFirebaseApp *)app languageCode:(nullable NSString *)languageCode completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion {
-    <#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+
+    if (languageCode != nil && ![languageCode isEqual:[NSNull null]]) {
+      auth.languageCode = languageCode;
+    } else {
+      [auth useAppLanguage];
+    }
+
+    completion(auth.languageCode, nil);
 }
 
 - (void)setSettingsApp:(nonnull PigeonFirebaseApp *)app settings:(nonnull PigeonFirebaseAuthSettings *)settings completion:(nonnull void (^)(FlutterError * _Nullable))completion {
-    <#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+
+    if (settings.userAccessGroup != nil) {
+      BOOL useUserAccessGroupSuccessful;
+      NSError *useUserAccessGroupErrorPtr;
+      useUserAccessGroupSuccessful = [auth useUserAccessGroup:settings.userAccessGroup
+                                                        error:&useUserAccessGroupErrorPtr];
+      if (!useUserAccessGroupSuccessful) {
+        completion([FlutterError errorWithCode:@"use-user-access-group-failed"
+                                       message:useUserAccessGroupErrorPtr.localizedDescription
+                                       details:useUserAccessGroupErrorPtr.userInfo]);
+        return;
+      }
+    }
+
+  #if TARGET_OS_IPHONE
+    if (settings.appVerificationDisabledForTesting) {
+      auth.settings.appVerificationDisabledForTesting =
+        settings.appVerificationDisabledForTesting;
+    }
+  #else
+    NSLog(@"FIRAuthSettings.appVerificationDisabledForTesting is not supported "
+          @"on MacOS.");
+  #endif
+
+    completion(nil);
+
 }
 
 - (void)signInAnonymouslyApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(PigeonUserCredential * _Nullable, FlutterError * _Nullable))completion {
-    <#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+    [auth signInAnonymouslyWithCompletion:^(FIRAuthDataResult *authResult, NSError *error) {
+        if (error != nil) {
+            completion(nil, [FlutterError errorWithCode:@"sign-in-anonymously-failed" message:error.localizedDescription details:error.userInfo]);
+        } else {
+            completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
+        }
+        }];
+    
+
 }
 
 - (void)signInWithCredentialApp:(nonnull PigeonFirebaseApp *)app input:(nonnull NSDictionary<NSString *,id> *)input completion:(nonnull void (^)(PigeonUserCredential * _Nullable, FlutterError * _Nullable))completion {
