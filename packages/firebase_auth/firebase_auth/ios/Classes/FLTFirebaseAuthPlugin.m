@@ -591,23 +591,6 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
 
 
 
-- (void)signOut:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-
-  if (auth.currentUser == nil) {
-    result.success(nil);
-    return;
-  }
-
-  NSError *signOutErrorPtr;
-  BOOL signOutSuccessful = [auth signOut:&signOutErrorPtr];
-
-  if (!signOutSuccessful) {
-    result.error(nil, nil, nil, signOutErrorPtr);
-  } else {
-    result.success(nil);
-  }
-}
 
 - (void)useEmulator:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
@@ -1691,12 +1674,19 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 #endif
 
 
+- (FlutterError *) convertToFlutterError:(NSError*) error {
+    return [FlutterError errorWithCode:[[NSNumber numberWithInteger:error.code] description]
+                               message:error.localizedDescription
+                               details:error.userInfo];
+}
+
+
 - (void)applyActionCodeApp:(nonnull PigeonFirebaseApp *)app code:(nonnull NSString *)code completion:(nonnull void (^)(FlutterError * _Nullable))completion {
     FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
     [auth applyActionCode:code
                completion:^(NSError *_Nullable error) {
                  if (error != nil) {
-                     completion([FlutterError errorWithCode:@"apply-action-code-failed" message:error.localizedDescription details:error.userInfo]);
+                     completion([self convertToFlutterError:error]);
                  } else {
                    completion(nil);
                  }
@@ -1709,7 +1699,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
     [auth checkActionCode:code
                completion:^(FIRActionCodeInfo *_Nullable info, NSError *_Nullable error) {
                  if (error != nil) {
-                     completion(nil, [FlutterError errorWithCode:@"check-action-code-failed" message:error.localizedDescription details:error.userInfo]);
+                     completion(nil, [self convertToFlutterError:error]);
                  } else {
                    completion([PigeonParser parseActionCode:info], nil);
                  }
@@ -1723,7 +1713,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                            newPassword:newPassword
                             completion:^(NSError *_Nullable error) {
                               if (error != nil) {
-                                  completion([FlutterError errorWithCode:@"confirm-password-reset-failed" message:error.localizedDescription details:error.userInfo]);
+                                  completion([self convertToFlutterError:error]);
                               } else {
                                 completion(nil);
                               }
@@ -1737,7 +1727,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                      password:password
                    completion:^(FIRAuthDataResult *_Nullable authResult, NSError *_Nullable error) {
                      if (error != nil) {
-                         completion(nil, [FlutterError errorWithCode:@"create-user-with-email-and-password-failed" message:error.localizedDescription details:error.userInfo]);
+                         completion(nil, [self convertToFlutterError:error]);
                      } else {
                        completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
                      }
@@ -1751,7 +1741,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                           completion:^(NSArray<NSString *> *_Nullable providers,
                                        NSError *_Nullable error) {
                             if (error != nil) {
-                                completion(nil, [FlutterError errorWithCode:@"fetch-sign-in-methods-for-email-failed" message:error.localizedDescription details:error.userInfo]);
+                                completion(nil, [self convertToFlutterError:error]);
                             } else {
                               completion(providers, nil);
                             }
@@ -1775,7 +1765,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                                actionCodeSettings:settings
                                     completion:^(NSError *_Nullable error) {
                                       if (error != nil) {
-                                          completion([FlutterError errorWithCode:@"send-password-reset-email-failed" message:error.localizedDescription details:error.userInfo]);
+                                          completion([self convertToFlutterError:error]);
                                       } else {
                                         completion(nil);
                                       }
@@ -1784,7 +1774,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
       [auth sendPasswordResetWithEmail:email
                                     completion:^(NSError *_Nullable error) {
                                       if (error != nil) {
-                                          completion([FlutterError errorWithCode:@"send-password-reset-email-failed" message:error.localizedDescription details:error.userInfo]);
+                                          completion([self convertToFlutterError:error]);
                                       } else {
                                         completion(nil);
                                       }
@@ -1798,7 +1788,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
              actionCodeSettings:[PigeonParser parseActionCodeSettings:actionCodeSettings]
                      completion:^(NSError *_Nullable error) {
                           if (error != nil) {
-                            completion([FlutterError errorWithCode:@"send-sign-in-link-to-email-failed" message:error.localizedDescription details:error.userInfo]);
+                            completion([self convertToFlutterError:error]);
                           } else {
                              completion(nil);
                           }
@@ -1827,9 +1817,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
       useUserAccessGroupSuccessful = [auth useUserAccessGroup:settings.userAccessGroup
                                                         error:&useUserAccessGroupErrorPtr];
       if (!useUserAccessGroupSuccessful) {
-        completion([FlutterError errorWithCode:@"use-user-access-group-failed"
-                                       message:useUserAccessGroupErrorPtr.localizedDescription
-                                       details:useUserAccessGroupErrorPtr.userInfo]);
+        completion([self convertToFlutterError:useUserAccessGroupErrorPtr]);
         return;
       }
     }
@@ -1852,7 +1840,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
     FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
     [auth signInAnonymouslyWithCompletion:^(FIRAuthDataResult *authResult, NSError *error) {
         if (error != nil) {
-            completion(nil, [FlutterError errorWithCode:@"sign-in-anonymously-failed" message:error.localizedDescription details:error.userInfo]);
+            completion(nil, [self convertToFlutterError:error]);
         } else {
             completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
         }
@@ -1866,7 +1854,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
     FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:input];
 
     if (credential == nil) {
-      completion(nil, [FlutterError errorWithCode:kErrCodeInvalidCredential message:kErrMsgInvalidCredential details:nil]);
+      completion(nil, [self convertToFlutterError:error]);
       return;
     }
 
@@ -1891,7 +1879,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                           } else if (error.code == FIRAuthErrorCodeInternalError) {
                             [self handleInternalError:completion withError:error];
                           } else {
-                            completion(nil, [FlutterError errorWithCode:[[NSNumber numberWithInteger:error.code] description] message:error.localizedDescription details:nil]);
+                            completion(nil, [self convertToFlutterError:error]);
                           }
                         }
                       } else {
@@ -1912,7 +1900,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                            } else if (error.code == FIRAuthErrorCodeInternalError) {
                              [self handleInternalError:completion withError:error];
                            } else {
-                             completion(nil, [FlutterError errorWithCode:[[NSNumber numberWithInteger:error.code] description] message:error.localizedDescription details:nil]);
+                             completion(nil, [self convertToFlutterError:error]);
                            }
                        } else {
                            completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
@@ -1932,7 +1920,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
             } else if (error.code == FIRAuthErrorCodeInternalError) {
               [self handleInternalError:completion withError:error];
             } else {
-              completion(nil, [FlutterError errorWithCode:[[NSNumber numberWithInteger:error.code] description] message:error.localizedDescription details:nil]);
+              completion(nil, [self convertToFlutterError:error]);
             }
         } else {
             completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
@@ -1951,7 +1939,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
             } else if (error.code == FIRAuthErrorCodeInternalError) {
               [self handleInternalError:completion withError:error];
             } else {
-              completion(nil, [FlutterError errorWithCode:[[NSNumber numberWithInteger:error.code] description] message:error.localizedDescription details:nil]);
+              completion(nil, [self convertToFlutterError:error]);
             }
         } else {
             completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
@@ -1994,7 +1982,22 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 }
 
 - (void)signOutApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion {
-    <#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+
+    if (auth.currentUser == nil) {
+      completion(nil);
+      return;
+    }
+
+    NSError *signOutErrorPtr;
+    BOOL signOutSuccessful = [auth signOut:&signOutErrorPtr];
+
+    if (!signOutSuccessful) {
+        completion([self convertToFlutterError:signOutErrorPtr]);
+    } else {
+      completion(nil);
+    }
+
 }
 
 - (void)useEmulatorApp:(nonnull PigeonFirebaseApp *)app host:(nonnull NSString *)host port:(nonnull NSNumber *)port completion:(nonnull void (^)(FlutterError * _Nullable))completion {
