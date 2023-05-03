@@ -61,6 +61,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    namespace 'io.flutter.plugins.firebase.firestore.example'
 }
 
 flutter {
