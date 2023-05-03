@@ -16,7 +16,7 @@ import 'test_common.dart';
 void main() {
   initializeMethodChannel();
   late FirebaseApp app;
-  late TestDefaultBinaryMessenger messenger;
+  late TestDefaultBinaryMessenger? messenger;
 
   setUpAll(() async {
     app = await Firebase.initializeApp(
@@ -60,7 +60,7 @@ void main() {
               String key,
               dynamic data,
             ) async {
-              await messenger.handlePlatformMessage(
+              await messenger?.handlePlatformMessage(
                 channel.name,
                 channel.codec.encodeMethodCall(
                   MethodCall(

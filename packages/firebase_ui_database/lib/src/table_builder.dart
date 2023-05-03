@@ -213,7 +213,7 @@ class _FirestoreTableState extends State<FirebaseDatabaseDataTable> {
               arrowHeadColor: widget.arrowHeadColor,
               checkboxHorizontalMargin: widget.checkboxHorizontalMargin,
               columnSpacing: widget.columnSpacing,
-              dataRowMinHeight: widget.dataRowHeight,
+              dataRowHeight: widget.dataRowHeight,
               dragStartBehavior: widget.dragStartBehavior,
               headingRowHeight: widget.headingRowHeight,
               horizontalMargin: widget.horizontalMargin,
