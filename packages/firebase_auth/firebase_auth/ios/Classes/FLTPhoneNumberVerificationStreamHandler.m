@@ -27,13 +27,13 @@
 
 #else
 - (instancetype)initWithAuth:(id)auth
-                   arguments:(NSDictionary *)arguments
+                     request:(PigeonVerifyPhoneNumberRequest *)request
                      session:(FIRMultiFactorSession *)session
                   factorInfo:(FIRPhoneMultiFactorInfo *)factorInfo {
   self = [super init];
   if (self) {
     _auth = auth;
-    _phoneNumber = arguments[@"phoneNumber"];
+    _phoneNumber = request.phoneNumber;
     _session = session;
     _factorInfo = factorInfo;
   }

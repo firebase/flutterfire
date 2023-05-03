@@ -107,4 +107,15 @@
     return codeSettings;
 }
 
++ (PigeonIdTokenResult *)parseIdTokenResult:(FIRAuthTokenResult*) tokenResult {    
+    long expirationTimestamp =
+        (long)[tokenResult.expirationDate timeIntervalSince1970] * 1000;
+    long authTimestamp =
+        (long)[tokenResult.authDate timeIntervalSince1970] * 1000;
+    long issuedAtTimestamp =
+        (long)[tokenResult.issuedAtDate timeIntervalSince1970] * 1000;
+
+    return [PigeonIdTokenResult makeWithToken:tokenResult.token expirationTimestamp:@(expirationTimestamp) authTimestamp:@(authTimestamp) issuedAtTimestamp:@(issuedAtTimestamp) signInProvider:tokenResult.signInProvider claims:tokenResult.claims signInSecondFactor:tokenResult.signInSecondFactor];
+}
+
 @end
