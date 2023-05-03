@@ -73,8 +73,10 @@ NSString *const kErrMsgInvalidCredential =
 @property(strong, nonatomic) FIRAuth *signInWithAppleAuth;
 @property BOOL isReauthenticatingWithApple;
 @property(strong, nonatomic) NSString *currentNonce;
-@property(strong, nonatomic) FLTFirebaseMethodCallResult *appleResult;
-@property(strong, nonatomic) id appleArguments;
+@property(strong, nonatomic, nonnull) void (^appleCompletion)(PigeonUserCredential * _Nullable, FlutterError * _Nullable);
+@property(strong, nonatomic) PigeonFirebaseApp *appleArguments;
+
+                                    
 
 @end
 
@@ -416,7 +418,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
   if (error != nil) {
     if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
       [object handleMultiFactorError:object.appleArguments
-                          withResult:object.appleResult
+                          completion:completion
                            withError:error];
     } else {
       object.appleResult.error(nil, nil, nil, error);
@@ -513,38 +515,6 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
   self.appleResult = nil;
 }
 
-- (void)signInWithProvider:(id)arguments
-      withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-
-  if ([arguments[@"signInProvider"] isEqualToString:kSignInMethodApple]) {
-    self.signInWithAppleAuth = auth;
-    launchAppleSignInRequest(self, arguments, result);
-    return;
-  }
-#if TARGET_OS_OSX
-  NSLog(@"signInWithProvider is not supported on the "
-        @"MacOS platform.");
-  result.success(nil);
-#else
-  self.authProvider = [FIROAuthProvider providerWithProviderID:arguments[@"signInProvider"]];
-  NSArray *scopes = arguments[kArgumentProviderScope];
-  if (scopes != nil) {
-    [self.authProvider setScopes:scopes];
-  }
-  NSDictionary *customParameters = arguments[kArgumentProviderCustomParameters];
-  if (customParameters != nil) {
-    [self.authProvider setCustomParameters:customParameters];
-  }
-
-  [self.authProvider
-      getCredentialWithUIDelegate:nil
-                       completion:^(FIRAuthCredential *_Nullable credential,
-                                    NSError *_Nullable error) {
-                         handleAppleAuthResult(self, arguments, auth, credential, error, result);
-                       }];
-#endif
-}
 
 
 
@@ -724,22 +694,22 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                           }];
 }
 
-static void launchAppleSignInRequest(FLTFirebaseAuthPlugin *object, id arguments,
-                                     FLTFirebaseMethodCallResult *result) {
+static void launchAppleSignInRequest(FLTFirebaseAuthPlugin *object, PigeonFirebaseApp *app, PigeonSignInProvider *signInProvider,
+                                     void (^_Nonnull completion)(PigeonUserCredential * _Nullable, FlutterError * _Nullable)) {
   if (@available(iOS 13.0, macOS 10.15, *)) {
     NSString *nonce = [object randomNonce:32];
     object.currentNonce = nonce;
-    object.appleResult = result;
-    object.appleArguments = arguments;
+    object.appleCompletion = completion;
+    object.appleArguments = app;
 
     ASAuthorizationAppleIDProvider *appleIDProvider = [[ASAuthorizationAppleIDProvider alloc] init];
 
     ASAuthorizationAppleIDRequest *request = [appleIDProvider createRequest];
     NSMutableArray *requestedScopes = [NSMutableArray arrayWithCapacity:2];
-    if ([arguments[kArgumentProviderScope] containsObject:@"name"]) {
+    if ([signInProvider.scopes containsObject:@"name"]) {
       [requestedScopes addObject:ASAuthorizationScopeFullName];
     }
-    if ([arguments[kArgumentProviderScope] containsObject:@"email"]) {
+    if ([signInProvider.scopes containsObject:@"email"]) {
       [requestedScopes addObject:ASAuthorizationScopeEmail];
     }
     request.requestedScopes = [requestedScopes copy];
@@ -756,14 +726,14 @@ static void launchAppleSignInRequest(FLTFirebaseAuthPlugin *object, id arguments
   }
 }
 
-static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, FIRAuth *auth,
+static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseApp *app, FIRAuth *auth,
                                   FIRAuthCredential *credentials, NSError *error,
-                                  FLTFirebaseMethodCallResult *result) {
+                                  void (^_Nonnull completion)(PigeonUserCredential * _Nullable, FlutterError * _Nullable)) {
   if (error) {
     if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
-      [object handleMultiFactorError:arguments withResult:result withError:error];
+      [object handleMultiFactorError:app completion:completion withError:error];
     } else {
-      result.error(nil, nil, nil, error);
+      completion(nil, [FlutterError errorWithCode:@"sign-in-failed" message:error.localizedDescription details:error.userInfo]);
     }
     return;
   }
@@ -781,12 +751,12 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
                         if (firebaseDictionary != nil && firebaseDictionary[@"message"] != nil) {
                           // error from firebase-ios-sdk is
                           // buried in underlying error.
-                          result.error(nil, firebaseDictionary[@"message"], nil, nil);
+                          completion(nil, [FlutterError errorWithCode:@"sign-in-failed" message:error.localizedDescription details:firebaseDictionary[@"message"]]);
                         } else {
-                          result.error(nil, nil, nil, error);
+                            completion(nil, [FlutterError errorWithCode:@"sign-in-failed" message:error.localizedDescription details:error.userInfo);
                         }
                       } else {
-                        result.success(authResult);
+                          completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
                       }
                     }];
   }
@@ -1991,7 +1961,36 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
 }
 
 - (void)signInWithProviderApp:(nonnull PigeonFirebaseApp *)app signInProvider:(nonnull PigeonSignInProvider *)signInProvider completion:(nonnull void (^)(PigeonUserCredential * _Nullable, FlutterError * _Nullable))completion {
-    <#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+
+    if ([signInProvider.providerId isEqualToString:kSignInMethodApple]) {
+      self.signInWithAppleAuth = auth;
+      launchAppleSignInRequest(self, signInProvider, completion);
+      return;
+    }
+  #if TARGET_OS_OSX
+    NSLog(@"signInWithProvider is not supported on the "
+          @"MacOS platform.");
+    completion(nil, nil);
+  #else
+    self.authProvider = [FIROAuthProvider providerWithProviderID:signInProvider.providerId];
+    NSArray *scopes = signInProvider.scopes;
+    if (scopes != nil) {
+      [self.authProvider setScopes:scopes];
+    }
+    NSDictionary *customParameters = signInProvider.customParameters;
+    if (customParameters != nil) {
+      [self.authProvider setCustomParameters:customParameters];
+    }
+
+    [self.authProvider
+        getCredentialWithUIDelegate:nil
+                         completion:^(FIRAuthCredential *_Nullable credential,
+                                      NSError *_Nullable error) {
+                           handleAppleAuthResult(self, app, auth, credential, error, completion);
+                         }];
+  #endif
+
 }
 
 - (void)signOutApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion {
