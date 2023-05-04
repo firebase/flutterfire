@@ -1,3 +1,7 @@
+## 0.2.4
+
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
 ## 0.2.3+1
 
  - Update a dependency to the latest release.
