@@ -25,7 +25,8 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 31
+    namespace 'io.flutter.plugins.firebasestorageexample'
+    compileSdkVersion 33
 
     lintOptions {
         disable 'InvalidPackage'
@@ -33,8 +34,8 @@ android {
 
     defaultConfig {
         applicationId 'io.flutter.plugins.firebasestorageexample'
-        minSdkVersion 16
-        targetSdkVersion 28
+        minSdkVersion 21
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

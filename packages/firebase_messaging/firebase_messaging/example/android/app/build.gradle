@@ -25,6 +25,7 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace 'io.flutter.plugins.firebase.messaging.example'
     compileSdkVersion 33
 
     lintOptions {
@@ -32,9 +33,8 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "io.flutter.plugins.firebase.messaging.example"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

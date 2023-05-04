@@ -10,7 +10,7 @@ dependencies:
   firebase_messaging: ^14.4.1
   flutter:
     sdk: flutter
-  flutter_local_notifications: ^12.0.4
+  flutter_local_notifications: ^14.0.0+1
   http: ^0.13.0
 
 dependency_overrides:

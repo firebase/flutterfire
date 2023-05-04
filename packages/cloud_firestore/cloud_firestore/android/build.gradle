@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.2'
+        classpath 'com.android.tools.build:gradle:8.0.1'
     }
 }
 
@@ -35,6 +35,10 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
 }
 
 android {
+    // Conditional for compatibility with AGP <4.2.
+    if (project.android.hasProperty("namespace")) {
+      namespace 'io.flutter.plugins.firebase.firestore'
+    }
     compileSdkVersion 31
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -51,7 +55,6 @@ android {
         api firebaseCoreProject
         implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
         implementation 'com.google.firebase:firebase-firestore'
-        implementation 'androidx.annotation:annotation:1.2.0'
     }
 }
 

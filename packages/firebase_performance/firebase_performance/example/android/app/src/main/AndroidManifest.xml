@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.flutter.plugins.firebaseperformanceexample">
-
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
