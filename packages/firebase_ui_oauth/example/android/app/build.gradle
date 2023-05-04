@@ -29,6 +29,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace 'io.flutter.plugins.firebase_ui_oauth_example'
     compileSdkVersion flutter.compileSdkVersion
 
     compileOptions {

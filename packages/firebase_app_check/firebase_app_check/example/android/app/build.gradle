@@ -28,6 +28,7 @@ apply plugin: 'com.google.gms.google-services'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    classname "io.flutter.plugins.firebase.appcheck.example"
     compileSdkVersion 33
 
     defaultConfig {
