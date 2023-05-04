@@ -9,9 +9,9 @@ environment:
 dependencies:
   cupertino_icons: ^1.0.3
   file_picker: ^5.2.11
-  firebase_core: ^2.10.0
-  firebase_storage: ^11.1.1
-  firebase_ui_storage: ^0.1.0-dev.1
+  firebase_core: ^2.11.0
+  firebase_storage: ^11.1.2
+  firebase_ui_storage: ^0.1.0-dev.2
   firebase_ui_shared: ^1.2.0
 
   flutter:
