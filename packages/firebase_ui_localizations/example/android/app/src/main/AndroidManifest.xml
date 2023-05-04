@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.flutter.plugins.firebase_ui_localizations_example">
    <application
         android:label="firebase_ui_localizations_example"
         android:name="${applicationName}"
