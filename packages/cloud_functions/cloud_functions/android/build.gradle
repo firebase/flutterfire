@@ -35,6 +35,7 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
 }
 
 android {
+  namespace 'com.google.cloud_functions'
   compileSdkVersion 31
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
