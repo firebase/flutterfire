@@ -1,3 +1,7 @@
+## 10.1.2
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+
 ## 10.1.1
 
  - Update a dependency to the latest release.
