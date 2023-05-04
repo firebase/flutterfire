@@ -9,11 +9,11 @@ import 'package:firebase_performance_web/firebase_performance_web.dart';
 import 'package:firebase_performance_web/src/interop/performance.dart';
 import 'package:firebase_performance_web/src/trace.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-class MockPerformance extends Mock implements Performance {}
-
-class MockTrace extends Mock implements Trace {}
+@GenerateNiceMocks([MockSpec<Performance>(), MockSpec<Trace>()])
+import 'firebase_performance_web_test.mocks.dart';
 
 void main() {
   group('FirebasePerformanceWeb', () {

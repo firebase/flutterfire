@@ -457,8 +457,13 @@ extension on Element {
     final jsonKeys = checker.annotationsOf(this);
 
     for (final jsonKey in jsonKeys) {
-      final ignore = jsonKey.getField('ignore')?.toBoolValue();
-      if (ignore ?? false) {
+      final ignore = jsonKey.getField('ignore')?.toBoolValue() ?? false;
+
+      // ignore is deprecated in favor of includeFromJson and includeToJson
+      final jsonIncluded =
+          (jsonKey.getField('includeFromJson')?.toBoolValue() ?? true) &&
+              (jsonKey.getField('includeToJson')?.toBoolValue() ?? true);
+      if (ignore || !jsonIncluded) {
         return true;
       }
     }

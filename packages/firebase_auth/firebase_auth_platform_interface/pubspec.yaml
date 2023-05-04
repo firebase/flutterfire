@@ -16,12 +16,12 @@ dependencies:
   firebase_core: ^2.10.0
   flutter:
     sdk: flutter
-  meta: ^1.3.0
+  meta: ^1.8.0
   plugin_platform_interface: ^2.1.3
 
 dev_dependencies:
   firebase_core_platform_interface: ^4.6.0
   flutter_test:
     sdk: flutter
-  mockito: ^5.0.0
-  pigeon: ^3.2.0
+  mockito: ^5.4.0
+  pigeon: ^9.2.5

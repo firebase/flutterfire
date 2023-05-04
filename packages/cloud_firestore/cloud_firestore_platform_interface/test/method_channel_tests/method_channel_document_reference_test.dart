@@ -94,7 +94,7 @@ void main() {
           log.add(call);
           if (call.method == 'DocumentReference#snapshots') {
             handleDocumentSnapshotsEventChannel(mockObserverId, log);
-            return Future.value(mockObserverId);
+            return mockObserverId;
           }
         });
       });
