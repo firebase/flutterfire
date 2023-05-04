@@ -2,6 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -33,19 +36,24 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('FlutterFire', () {
+    if (kIsWeb || !Platform.isWindows) {
+      firebase_core.main();
+      firebase_database.main();
+      firebase_crashlytics.main();
+      firebase_auth.main();
+      firebase_analytics.main();
+      cloud_functions.main();
+      firebase_app_check.main();
+      firebase_app_installations.main();
+      firebase_dynamic_links.main();
+      firebase_messaging.main();
+      firebase_ml_model_downloader.main();
+      firebase_performance.main();
+      firebase_remote_config.main();
+      firebase_storage.main();
+    } else {
+      // Only tests available on Windows
     firebase_core.main();
-    firebase_database.main();
-    firebase_crashlytics.main();
-    firebase_auth.main();
-    firebase_analytics.main();
-    cloud_functions.main();
-    firebase_app_check.main();
-    firebase_app_installations.main();
-    firebase_dynamic_links.main();
-    firebase_messaging.main();
-    firebase_ml_model_downloader.main();
-    firebase_performance.main();
-    firebase_remote_config.main();
-    firebase_storage.main();
+    }
   });
 }
