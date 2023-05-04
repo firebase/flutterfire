@@ -15,7 +15,7 @@ dependencies:
   collection: ^1.15.0
   freezed_annotation: '>=1.0.0 <3.0.0'
   json_annotation: ^4.6.0
-  meta: ^1.3.0
+  meta: ^1.8.0
   recase: ^4.0.0
   source_gen: ^1.0.0
 

@@ -16,9 +16,7 @@
 
 include: all_lint_rules.yaml
 analyzer:
-  strong-mode:
-    implicit-casts: false
-    implicit-dynamic: false
+  strict-casts: true
   errors:
     # So we can run ODM dart tests in the melos workspace - otherwise dart test will
     # source the ODM package from pub - which won't have the local changes
@@ -30,8 +28,8 @@ analyzer:
     # in this file
     included_file_warning: ignore
   exclude:
-    - "**.freezed.dart"
-    - "**.g.dart"
+    - '**.freezed.dart'
+    - '**.g.dart'
 
 linter:
   rules:

@@ -5,17 +5,19 @@
 
 import 'package:firebase_app_check_web/firebase_app_check_web.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-class MockFirebaseAppCheck extends Mock implements FirebaseAppCheckWeb {}
+@GenerateNiceMocks([MockSpec<FirebaseAppCheckWeb>()])
+import 'firebase_app_check_web_test.mocks.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   group('$FirebaseAppCheckWeb', () {
-    late MockFirebaseAppCheck appCheck;
+    late MockFirebaseAppCheckWeb appCheck;
 
     setUp(() {
-      appCheck = MockFirebaseAppCheck();
+      appCheck = MockFirebaseAppCheckWeb();
     });
 
     test('instance', () {

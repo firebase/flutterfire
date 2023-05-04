@@ -6,17 +6,19 @@
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 import 'package:firebase_remote_config_web/firebase_remote_config_web.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-class MockRemoteConfig extends Mock implements FirebaseRemoteConfigWeb {}
+@GenerateNiceMocks([MockSpec<FirebaseRemoteConfigWeb>()])
+import 'firebase_remote_config_web_test.mocks.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   group('$FirebaseRemoteConfigWeb', () {
-    late MockRemoteConfig remoteConfig;
+    late MockFirebaseRemoteConfigWeb remoteConfig;
 
     setUp(() {
-      remoteConfig = MockRemoteConfig();
+      remoteConfig = MockFirebaseRemoteConfigWeb();
     });
 
     test('setInitialValues', () {

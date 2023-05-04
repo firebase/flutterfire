@@ -6,7 +6,6 @@ environment:
   sdk: '>=2.18.0 <3.0.0'
 
 dependencies:
-  cupertino_icons: ^1.0.2
   firebase_analytics: ^10.2.1
   firebase_core: ^2.10.0
   firebase_in_app_messaging: ^0.7.1+1

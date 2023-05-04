@@ -15,7 +15,7 @@ dependencies:
   flutter:
     sdk: flutter
   json_annotation: ^4.5.0
-  meta: ^1.3.0
+  meta: ^1.8.0
 
 dev_dependencies:
   flutter_test:

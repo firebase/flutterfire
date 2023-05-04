@@ -5,17 +5,19 @@
 
 import 'package:firebase_analytics_web/firebase_analytics_web.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-class MockAnalytics extends Mock implements FirebaseAnalyticsWeb {}
+@GenerateNiceMocks([MockSpec<FirebaseAnalyticsWeb>()])
+import 'firebase_analytics_web_test.mocks.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   group('$FirebaseAnalyticsWeb', () {
-    late MockAnalytics analytics;
+    late MockFirebaseAnalyticsWeb analytics;
 
     setUp(() {
-      analytics = MockAnalytics();
+      analytics = MockFirebaseAnalyticsWeb();
     });
 
     test('logEvent', () {
