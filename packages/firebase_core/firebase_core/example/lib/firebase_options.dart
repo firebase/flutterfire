@@ -30,6 +30,9 @@ class DefaultFirebaseOptions {
         return ios;
       case TargetPlatform.macOS:
         return macos;
+      // TODO(Lyokone): Remove when FlutterFire CLI updated
+      case TargetPlatform.windows:
+        return android;
       default:
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',

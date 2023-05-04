@@ -295,3 +295,32 @@ jobs:
             --driver=test_driver/integration_test.dart \
             --target=integration_test/e2e_test.dart \
             --dart-define=CI=true
+
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+        name: Install Node.js 16
+        with:
+          node-version: "16"
+      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+        with:
+          channel: 'stable'
+          cache: true
+      - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
+        with:
+          run-bootstrap: false
+          melos-version: '3.0.0'
+      - name: "Bootstrap package"
+        run: melos bootstrap --scope tests
+      - name: "Install Tools"
+        run: |
+          npm install -g firebase-tools
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+      - name: "E2E Tests"
+        working-directory: tests
+        run: |
+          flutter test .\integration_test\e2e_test.dart -d windows

@@ -37,6 +37,9 @@ flutter:
         pluginClass: FLTFirebaseCorePlugin
       web:
         default_package: firebase_core_web
+      windows:
+        pluginClass: FirebaseCorePluginCApi
+
 
 firebase:
   google_services_gradle_plugin_version: '4.3.10'
