@@ -6,7 +6,6 @@
 @TestOn('browser')
 import 'dart:js' as js;
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,7 +23,7 @@ void main() {
         'should throw exception if no default app is available & no options are provided',
         () async {
       await expectLater(
-        Firebase.initializeApp,
+        FirebasePlatform.instance.initializeApp,
         throwsAssertionError,
       );
     });
@@ -39,7 +38,7 @@ void main() {
       test('should throw exception if no options are provided with a named app',
           () async {
         await expectLater(
-          () => Firebase.initializeApp(name: 'foo'),
+          () => FirebasePlatform.instance.initializeApp(name: 'foo'),
           throwsAssertionError,
         );
       });
@@ -67,7 +66,7 @@ void main() {
       });
 
       await expectLater(
-        () => Firebase.app('foo'),
+        () => FirebasePlatform.instance.app('foo'),
         throwsA(noAppExists('foo')),
       );
     });
