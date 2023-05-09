@@ -71,6 +71,7 @@ class FirebaseUIStorageGallery extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         brightness: brightness,
+        useMaterial3: true,
       ),
       home: const Gallery(),
     );
