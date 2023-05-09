@@ -1,3 +1,15 @@
+## 1.3.0
+
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 1.2.2
+
+ - **DOCS**(firebase_remote_config): add documentation what is returned when the key does not exist for `getBool`, `getInt`, `getDouble` and `getString` ([#10573](https://github.com/firebase/flutterfire/issues/10573)). ([37c5f27d](https://github.com/firebase/flutterfire/commit/37c5f27d56c63bc9b800e588503d649f0ea807e4))
+
+## 1.2.1
+
+ - Update a dependency to the latest release.
+
 ## 1.2.0
 
  - **FEAT**: add support for `onConfigUpdated`to listen to config updates ([#10647)](https://github.com/firebase/flutterfire/commit/f702869e6120f10a368c1b32e9f27d615df99641))

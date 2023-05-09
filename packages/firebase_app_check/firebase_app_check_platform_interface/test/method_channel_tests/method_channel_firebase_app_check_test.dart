@@ -36,7 +36,7 @@ void main() {
           case 'FirebaseAppCheck#registerTokenListener':
             return 'channelName';
           case 'FirebaseAppCheck#getToken':
-            return {'token': 'test-token'};
+            return 'test-token';
           default:
             return true;
         }

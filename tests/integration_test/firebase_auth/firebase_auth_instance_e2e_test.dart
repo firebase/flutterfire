@@ -37,16 +37,10 @@ void main() {
 
       group('authStateChanges()', () {
         StreamSubscription? subscription;
-        StreamSubscription? subscription2;
 
         tearDown(() async {
           await subscription?.cancel();
           await ensureSignedOut();
-
-          if (subscription2 != null) {
-            await Future.delayed(const Duration(seconds: 5));
-            await subscription2.cancel();
-          }
         });
 
         test('calls callback with the current user and when auth state changes',
@@ -86,16 +80,10 @@ void main() {
 
       group('idTokenChanges()', () {
         StreamSubscription? subscription;
-        StreamSubscription? subscription2;
 
         tearDown(() async {
           await subscription?.cancel();
           await ensureSignedOut();
-
-          if (subscription2 != null) {
-            await Future.delayed(const Duration(seconds: 5));
-            await subscription2.cancel();
-          }
         });
 
         test('calls callback with the current user and when auth state changes',
@@ -571,7 +559,7 @@ void main() {
         });
 
         test('throws if login password is incorrect', () async {
-          final credential = EmailAuthProvider.credential(
+          var credential = EmailAuthProvider.credential(
             email: testEmail,
             password: 'sowrong',
           );
