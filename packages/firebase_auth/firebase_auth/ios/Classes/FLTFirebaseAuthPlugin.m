@@ -616,96 +616,6 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 }
 
 
-
-- (void)userUpdateEmail:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-  FIRUser *currentUser = auth.currentUser;
-  if (currentUser == nil) {
-    result.error(kErrCodeNoCurrentUser, kErrMsgNoCurrentUser, nil, nil);
-    return;
-  }
-
-  [currentUser updateEmail:arguments[kArgumentNewEmail]
-                completion:^(NSError *_Nullable error) {
-                  if (error != nil) {
-                    result.error(nil, nil, nil, error);
-                  } else {
-                    [currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
-                      if (reloadError != nil) {
-                        result.error(nil, nil, nil, reloadError);
-                      } else {
-                        result.success(auth.currentUser);
-                      }
-                    }];
-                  }
-                }];
-}
-
-- (void)userUpdatePassword:(id)arguments
-      withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-  FIRUser *currentUser = auth.currentUser;
-  if (currentUser == nil) {
-    result.error(kErrCodeNoCurrentUser, kErrMsgNoCurrentUser, nil, nil);
-    return;
-  }
-
-  [currentUser updatePassword:arguments[@"newPassword"]
-                   completion:^(NSError *_Nullable error) {
-                     if (error != nil) {
-                       result.error(nil, nil, nil, error);
-                     } else {
-                       [currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
-                         if (reloadError != nil) {
-                           result.error(nil, nil, nil, reloadError);
-                         } else {
-                           result.success(auth.currentUser);
-                         }
-                       }];
-                     }
-                   }];
-}
-
-- (void)userUpdatePhoneNumber:(id)arguments
-         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-#if TARGET_OS_IPHONE
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-
-  FIRUser *currentUser = auth.currentUser;
-  if (currentUser == nil) {
-    result.error(kErrCodeNoCurrentUser, kErrMsgNoCurrentUser, nil, nil);
-    return;
-  }
-
-  FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:arguments];
-  if (credential == nil) {
-    result.error(kErrCodeInvalidCredential, kErrMsgInvalidCredential, nil, nil);
-    return;
-  }
-
-  [currentUser
-      updatePhoneNumberCredential:(FIRPhoneAuthCredential *)credential
-                       completion:^(NSError *_Nullable error) {
-                         if (error != nil) {
-                           result.error(nil, nil, nil, error);
-                         } else {
-                           [currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
-                             if (reloadError != nil) {
-                               result.error(nil, nil, nil, reloadError);
-                             } else {
-                               result.success(auth.currentUser);
-                             }
-                           }];
-                         }
-                       }];
-#else
-  NSLog(@"Updating a users phone number via Firebase Authentication is only "
-        @"supported on the iOS "
-        @"platform.");
-  result.success(nil);
-#endif
-}
-
 - (void)userUpdateProfile:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
   FIRUser *currentUser = auth.currentUser;
@@ -1779,7 +1689,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                                           details:nil]) return;
     }
 
-    FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:arguments];
+    FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:input];
     if (credential == nil) {
       completion(nil, [FlutterError errorWithCode:kErrCodeInvalidCredential
                                           message:kErrMsgInvalidCredential
@@ -1856,11 +1766,11 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
       return;
     }
 
-    FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:arguments];
+    FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:input];
     if (credential == nil) {
         completion(nil, [FlutterError errorWithCode:kErrCodeInvalidCredential
                                             message:kErrMsgInvalidCredential
-                                            details:nil]) return;
+                                            details:nil]);
       return;
     }
 
@@ -1986,26 +1896,11 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
         unlinkFromProvider:providerId
                 completion:^(FIRUser *_Nullable user, NSError *_Nullable error) {
                   if (error != nil) {
-                    result.error(nil, nil, nil, error);
+                    completion( [self convertToFlutterError:error]);
                   } else {
-                    [auth.currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
-                      if (reloadError != nil) {
-                        result.error(nil, nil, nil, reloadError);
-                      } else {
-                        // Note: On other SDKs `unlinkFromProvider` returns an
-                        // AuthResult instance, whereas the iOS SDK currently
-                        // does not, so we manualy construct a Dart
-                        // representation of one here.
-                          
-                        result.success(@{
-                          @"additionalUserInfo" : [NSNull null],
-                          @"authCredential" : [NSNull null],
-                          @"user" : auth.currentUser
-                              ? [FLTFirebaseAuthPlugin getNSDictionaryFromUser:auth.currentUser]
-                              : [NSNull null],
-                        });
-                      }
-                    }];
+                      completion([PigeonParser getPigeonUserCredentialFromFIRUser:user],
+                                 nil);
+
                   }
                 }];
 
@@ -2015,21 +1910,109 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
               newEmail:(nonnull NSString *)newEmail
             completion:(nonnull void (^)(PigeonUserDetails *_Nullable,
                                          FlutterError *_Nullable))completion {
-<#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+    FIRUser *currentUser = auth.currentUser;
+    if (currentUser == nil) {
+        completion(nil, [FlutterError errorWithCode:kErrCodeNoCurrentUser
+                                            message:kErrMsgNoCurrentUser
+                                            details:nil]);
+        return;
+    }
+
+    [currentUser updateEmail:newEmail
+                  completion:^(NSError *_Nullable error) {
+                    if (error != nil) {
+                        completion( [self convertToFlutterError:error]);
+                    } else {
+                      [currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
+                        if (reloadError != nil) {
+                            completion( [self convertToFlutterError:reloadError]);
+                        } else {
+                            completion([PigeonParser getPigeonDetails:auth.currentUser],
+                                       nil);
+                        }
+                      }];
+                    }
+                  }];
+
 }
 
 - (void)updatePasswordApp:(nonnull PigeonFirebaseApp *)app
               newPassword:(nonnull NSString *)newPassword
                completion:(nonnull void (^)(PigeonUserDetails *_Nullable,
                                             FlutterError *_Nullable))completion {
-<#code#>
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+    FIRUser *currentUser = auth.currentUser;
+    if (currentUser == nil) {
+        completion(nil, [FlutterError errorWithCode:kErrCodeNoCurrentUser
+                                            message:kErrMsgNoCurrentUser
+                                            details:nil]);
+      return;
+    }
+
+    [currentUser updatePassword:newPassword
+                     completion:^(NSError *_Nullable error) {
+                       if (error != nil) {
+                           completion( [self convertToFlutterError:error]);
+                       } else {
+                         [currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
+                           if (reloadError != nil) {
+                               completion( [self convertToFlutterError:reloadError]);
+                           } else {
+                               completion([PigeonParser getPigeonDetails:auth.currentUser],
+                                          nil);
+                           }
+                         }];
+                       }
+                     }];
+
 }
 
 - (void)updatePhoneNumberApp:(nonnull PigeonFirebaseApp *)app
                        input:(nonnull NSDictionary<NSString *, id> *)input
                   completion:(nonnull void (^)(PigeonUserDetails *_Nullable,
                                                FlutterError *_Nullable))completion {
-<#code#>
+#if TARGET_OS_IPHONE
+    FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+  FIRUser *currentUser = auth.currentUser;
+  if (currentUser == nil) {
+      completion(nil, [FlutterError errorWithCode:kErrCodeNoCurrentUser
+                                          message:kErrMsgNoCurrentUser
+                                          details:nil]);
+    return;
+  }
+
+  FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:input];
+  if (credential == nil) {
+      completion(nil, [FlutterError errorWithCode:kErrCodeInvalidCredential
+                                          message:kErrMsgInvalidCredential
+                                          details:nil]);
+    return;
+  }
+
+  [currentUser
+      updatePhoneNumberCredential:(FIRPhoneAuthCredential *)credential
+                       completion:^(NSError *_Nullable error) {
+                         if (error != nil) {
+                             completion( [self convertToFlutterError:error]);
+                         } else {
+                           [currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
+                             if (reloadError != nil) {
+                                 completion( [self convertToFlutterError:reloadError]);
+                             } else {
+                                 completion([PigeonParser getPigeonDetails:auth.currentUser],
+                                            nil);
+                             }
+                           }];
+                         }
+                       }];
+#else
+  NSLog(@"Updating a users phone number via Firebase Authentication is only "
+        @"supported on the iOS "
+        @"platform.");
+  completion(nil, nil);
+#endif
+
 }
 
 - (void)updateProfileApp:(nonnull PigeonFirebaseApp *)app

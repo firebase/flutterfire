@@ -11,5 +11,7 @@
 + (PigeonActionCodeInfo *_Nullable)parseActionCode:(nonnull FIRActionCodeInfo *)info;
 + (FIRActionCodeSettings *_Nullable)parseActionCodeSettings:
     (nullable PigeonActionCodeSettings *)settings;
++ (PigeonUserCredential *_Nullable)getPigeonUserCredentialFromFIRUser:
+(nonnull FIRUser *)user;
 
 @end

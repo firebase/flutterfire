@@ -11,6 +11,15 @@
               credential:[self getPigeonAuthCredential:authResult.credential]];
 }
 
++ (PigeonUserCredential *)getPigeonUserCredentialFromFIRUser:
+    (nonnull FIRUser *)user {
+  return [PigeonUserCredential
+            makeWithUser:[self getPigeonDetails:user]
+      additionalUserInfo:nil
+              credential:nil];
+}
+
+
 + (PigeonUserDetails *)getPigeonDetails:(nonnull FIRUser *)user {
   return [PigeonUserDetails makeWithUserInfo:[self getPigeonUserInfo:user]
                                 providerData:[self getProviderData:user.providerData]];
