@@ -11,6 +11,7 @@
 #endif
 
 #import <Firebase/Firebase.h>
+#import "messages.g.h"
 
 #import <Foundation/Foundation.h>
 

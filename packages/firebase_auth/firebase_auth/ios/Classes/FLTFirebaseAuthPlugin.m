@@ -159,67 +159,6 @@ NSString *const kErrMsgInvalidCredential =
   [self cleanupWithCompletion:nil];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  FLTFirebaseMethodCallErrorBlock errorBlock =
-      ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-        NSError *_Nullable error) {
-        NSMutableDictionary *generatedDetails = [NSMutableDictionary new];
-        if (code == nil) {
-          NSDictionary *errorDetails = [FLTFirebaseAuthPlugin getNSDictionaryFromNSError:error];
-          [self storeAuthCredentialIfPresent:error];
-          code = errorDetails[kArgumentCode];
-          message = errorDetails[@"message"];
-          generatedDetails = [NSMutableDictionary dictionaryWithDictionary:errorDetails];
-        } else {
-          generatedDetails = [NSMutableDictionary dictionaryWithDictionary:@{
-            kArgumentCode : code,
-            @"message" : message,
-            @"additionalData" : @{},
-          }];
-        }
-
-        if (details != nil) {
-          generatedDetails[@"additionalData"] = details;
-        }
-
-        if ([@"unknown" isEqualToString:code]) {
-          NSLog(@"FLTFirebaseAuth: An error occurred while calling method %@, "
-                @"errorOrNil => %@",
-                call.method, [error userInfo]);
-        }
-
-        flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
-                                                            message:message
-                                                    optionalDetails:generatedDetails
-                                                 andOptionalNSError:error]);
-      };
-
-  FLTFirebaseMethodCallSuccessBlock successBlock = ^(id _Nullable result) {
-    if ([result isKindOfClass:[FIRAuthDataResult class]]) {
-      flutterResult([self getNSDictionaryFromAuthResult:result]);
-    } else if ([result isKindOfClass:[FIRUser class]]) {
-      flutterResult([FLTFirebaseAuthPlugin getNSDictionaryFromUser:result]);
-    } else {
-      flutterResult(result);
-    }
-  };
-
-  FLTFirebaseMethodCallResult *methodCallResult =
-      [FLTFirebaseMethodCallResult createWithSuccess:successBlock andErrorBlock:errorBlock];
-
-  [self ensureAPNSTokenSetting];
-
-  if ([@"Auth#registerIdTokenListener" isEqualToString:call.method]) {
-    [self registerIdTokenListener:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Auth#registerAuthStateListener" isEqualToString:call.method]) {
-    [self registerAuthStateListener:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Auth#fetchSignInMethodsForEmail" isEqualToString:call.method]) {
-    [self fetchSignInMethodsForEmail:call.arguments withMethodCallResult:methodCallResult];
-  } else {
-    methodCallResult.success(FlutterMethodNotImplemented);
-  }
-}
-
 #pragma mark - AppDelegate
 
 #if TARGET_OS_IPHONE
@@ -268,45 +207,12 @@ NSString *const kErrMsgInvalidCredential =
   return @{
     @"APP_LANGUAGE_CODE" : (id)[auth languageCode] ?: [NSNull null],
     @"APP_CURRENT_USER" : [auth currentUser]
-        ? (id)[FLTFirebaseAuthPlugin getNSDictionaryFromUser:[auth currentUser]]
+        ? [[PigeonParser getPigeonDetails:[auth currentUser]] toList]
         : [NSNull null],
   };
 }
 
 #pragma mark - Firebase Auth API
-
-- (void)fetchSignInMethodsForEmail:(id)arguments
-              withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-  [auth fetchSignInMethodsForEmail:arguments[kArgumentEmail]
-                        completion:^(NSArray<NSString *> *_Nullable providers,
-                                     NSError *_Nullable error) {
-                          if (error != nil) {
-                            result.error(nil, nil, nil, error);
-                          } else {
-                            result.success(@{
-                              @"providers" : (id)providers ?: @[],
-                            });
-                          }
-                        }];
-}
-
-- (void)sendSignInLinkToEmail:(id)arguments
-         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-  NSString *email = arguments[kArgumentEmail];
-  FIRActionCodeSettings *actionCodeSettings =
-      [self getFIRActionCodeSettingsFromArguments:arguments];
-  [auth sendSignInLinkToEmail:email
-           actionCodeSettings:actionCodeSettings
-                   completion:^(NSError *_Nullable error) {
-                     if (error != nil) {
-                       result.error(nil, nil, nil, error);
-                     } else {
-                       result.success(nil);
-                     }
-                   }];
-}
 
 // Adapted from
 // https://auth0.com/docs/api-auth/tutorials/nonce#generate-a-cryptographically-random-nonce Used
@@ -521,7 +427,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                         uid:multiFactorInfo.UID
                 phoneNumber:phoneNumber];
 
-    [pigeonHints addObject:object.toMap];
+    [pigeonHints addObject:object.toList];
   }
 
   NSDictionary *output = @{
@@ -613,45 +519,6 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                       }
                     }];
   }
-}
-
-- (void)registerIdTokenListener:(id)arguments
-           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-
-  NSString *name =
-      [NSString stringWithFormat:@"%@/id-token/%@", kFLTFirebaseAuthChannelName, auth.app.name];
-
-  FlutterEventChannel *channel = [FlutterEventChannel eventChannelWithName:name
-                                                           binaryMessenger:_binaryMessenger];
-
-  FLTIdTokenChannelStreamHandler *handler =
-      [[FLTIdTokenChannelStreamHandler alloc] initWithAuth:auth];
-  [channel setStreamHandler:handler];
-
-  [_eventChannels setObject:channel forKey:name];
-  [_streamHandlers setObject:handler forKey:name];
-
-  result.success(name);
-}
-
-- (void)registerAuthStateListener:(id)arguments
-             withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
-
-  NSString *name =
-      [NSString stringWithFormat:@"%@/auth-state/%@", kFLTFirebaseAuthChannelName, auth.app.name];
-  FlutterEventChannel *channel = [FlutterEventChannel eventChannelWithName:name
-                                                           binaryMessenger:_binaryMessenger];
-
-  FLTAuthStateChannelStreamHandler *handler =
-      [[FLTAuthStateChannelStreamHandler alloc] initWithAuth:auth];
-  [channel setStreamHandler:handler];
-
-  [_eventChannels setObject:channel forKey:name];
-  [_streamHandlers setObject:handler forKey:name];
-
-  result.success(name);
 }
 
 #pragma mark - Utilities
@@ -1211,13 +1078,42 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 - (void)registerAuthStateListenerApp:(nonnull PigeonFirebaseApp *)app
                           completion:(nonnull void (^)(NSString *_Nullable,
                                                        FlutterError *_Nullable))completion {
-<#code#>
+  FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+
+  NSString *name =
+      [NSString stringWithFormat:@"%@/auth-state/%@", kFLTFirebaseAuthChannelName, auth.app.name];
+  FlutterEventChannel *channel = [FlutterEventChannel eventChannelWithName:name
+                                                           binaryMessenger:_binaryMessenger];
+
+  FLTAuthStateChannelStreamHandler *handler =
+      [[FLTAuthStateChannelStreamHandler alloc] initWithAuth:auth];
+  [channel setStreamHandler:handler];
+
+  [_eventChannels setObject:channel forKey:name];
+  [_streamHandlers setObject:handler forKey:name];
+
+  completion(name, nil);
 }
 
 - (void)registerIdTokenListenerApp:(nonnull PigeonFirebaseApp *)app
                         completion:(nonnull void (^)(NSString *_Nullable,
                                                      FlutterError *_Nullable))completion {
-<#code#>
+  FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+
+  NSString *name =
+      [NSString stringWithFormat:@"%@/id-token/%@", kFLTFirebaseAuthChannelName, auth.app.name];
+
+  FlutterEventChannel *channel = [FlutterEventChannel eventChannelWithName:name
+                                                           binaryMessenger:_binaryMessenger];
+
+  FLTIdTokenChannelStreamHandler *handler =
+      [[FLTIdTokenChannelStreamHandler alloc] initWithAuth:auth];
+  [channel setStreamHandler:handler];
+
+  [_eventChannels setObject:channel forKey:name];
+  [_streamHandlers setObject:handler forKey:name];
+
+  completion(name, nil);
 }
 
 - (void)sendPasswordResetEmailApp:(nonnull PigeonFirebaseApp *)app

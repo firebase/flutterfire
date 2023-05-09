@@ -35,11 +35,10 @@
                  tenantId:user.tenantID
              refreshToken:user.refreshToken
         creationTimestamp:[NSNumber
-                              numberWithDouble:user.metadata.creationDate.timeIntervalSince1970 *
-                                               1000]
+                              numberWithInt:user.metadata.creationDate.timeIntervalSince1970 * 1000]
       lastSignInTimestamp:[NSNumber
-                              numberWithDouble:user.metadata.lastSignInDate.timeIntervalSince1970 *
-                                               1000]];
+                              numberWithInt:user.metadata.lastSignInDate.timeIntervalSince1970 *
+                                            1000]];
 }
 
 + (NSArray<NSDictionary<id, id> *> *)getProviderData:
@@ -53,7 +52,9 @@
       @"displayName" : userInfo.displayName ?: [NSNull null],
       @"email" : userInfo.email ?: [NSNull null],
       @"phoneNumber" : userInfo.phoneNumber ?: [NSNull null],
-      @"photoURL" : userInfo.photoURL ?: [NSNull null]
+      @"photoURL" : userInfo.photoURL.absoluteString ?: [NSNull null],
+      @"isAnonymous" : @NO,
+      @"isEmailVerified" : @YES,
     };
     [dataArray addObject:dataDict];
   }
