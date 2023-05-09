@@ -3,8 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_ui_storage_example/main.dart';
-import 'package:firebase_ui_storage_example/src/upload_button_app.dart';
 import 'package:flutter/material.dart';
+
+import 'progress_bar_app.dart';
+import 'upload_button_app.dart';
 
 abstract class App implements Widget {
   String get name;
@@ -12,6 +14,7 @@ abstract class App implements Widget {
 
 const apps = <App>[
   UploadButtonApp(),
+  ProgressBarApp(),
 ];
 
 class AppList extends StatelessWidget {

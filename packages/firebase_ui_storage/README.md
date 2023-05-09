@@ -6,7 +6,7 @@ Firebase UI Storage is a set of Flutter widgets and utilities designed to help y
 
 ## Installation
 
-Intall dependencies
+Install dependencies
 
 ```sh
 flutter pub add firebase_core firebase_storage firebase_ui_storage
@@ -98,6 +98,8 @@ class MyWidget extends StatelessWidget {
 
 ```dart
 class MyUploadPage extends StatelessWidget {
+  const MyUploadPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,10 +110,31 @@ class MyUploadPage extends StatelessWidget {
             print(err.toString());
           },
           onUploadComplete: (ref) {
-            print('File uploaded to ${ref.path}');
-          }
+            print('File uploaded to ${ref.fullPath}');
+          },
         ),
       ),
+    );
+  }
+}
+
+```
+
+### TaskProgressIndicator
+
+```dart
+class MyUploadProgress extends StatelessWidget {
+  final UploadTask task;
+
+  const MyUploadProgress({super.key, required this.task});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(children: [
+        Text('Uploading ${task.snapshot.ref.name}...'),
+        TaskProgressIndicator(task: task),
+      ]),
     );
   }
 }
