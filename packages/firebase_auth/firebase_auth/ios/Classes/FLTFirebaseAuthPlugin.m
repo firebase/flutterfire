@@ -591,40 +591,32 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 
 - (FIRAuthCredential *_Nullable)getFIRAuthCredentialFromArguments:(NSDictionary *)arguments
                                                               app:(PigeonFirebaseApp *)app {
-  NSDictionary *credentialDictionary = arguments[kArgumentCredential];
-
   // If the credential dictionary contains a token, it means a native one has
   // been stored for later usage, so we'll attempt to retrieve it here.
-  if (credentialDictionary[kArgumentToken] != nil &&
-      ![credentialDictionary[kArgumentToken] isEqual:[NSNull null]]) {
-    NSNumber *credentialHashCode = credentialDictionary[kArgumentToken];
+  if (arguments[kArgumentToken] != nil && ![arguments[kArgumentToken] isEqual:[NSNull null]]) {
+    NSNumber *credentialHashCode = arguments[kArgumentToken];
     return _credentials[credentialHashCode];
   }
 
-  NSString *signInMethod = credentialDictionary[kArgumentSignInMethod];
-  NSString *secret = credentialDictionary[kArgumentSecret] == [NSNull null]
-                         ? nil
-                         : credentialDictionary[kArgumentSecret];
-  NSString *idToken = credentialDictionary[kArgumentIdToken] == [NSNull null]
-                          ? nil
-                          : credentialDictionary[kArgumentIdToken];
-  NSString *accessToken = credentialDictionary[kArgumentAccessToken] == [NSNull null]
-                              ? nil
-                              : credentialDictionary[kArgumentAccessToken];
-  NSString *rawNonce = credentialDictionary[kArgumentRawNonce] == [NSNull null]
-                           ? nil
-                           : credentialDictionary[kArgumentRawNonce];
+  NSString *signInMethod = arguments[kArgumentSignInMethod];
+  NSString *secret = arguments[kArgumentSecret] == [NSNull null] ? nil : arguments[kArgumentSecret];
+  NSString *idToken =
+      arguments[kArgumentIdToken] == [NSNull null] ? nil : arguments[kArgumentIdToken];
+  NSString *accessToken =
+      arguments[kArgumentAccessToken] == [NSNull null] ? nil : arguments[kArgumentAccessToken];
+  NSString *rawNonce =
+      arguments[kArgumentRawNonce] == [NSNull null] ? nil : arguments[kArgumentRawNonce];
 
   // Password Auth
   if ([signInMethod isEqualToString:kSignInMethodPassword]) {
-    NSString *email = credentialDictionary[kArgumentEmail];
+    NSString *email = arguments[kArgumentEmail];
     return [FIREmailAuthProvider credentialWithEmail:email password:secret];
   }
 
   // Email Link Auth
   if ([signInMethod isEqualToString:kSignInMethodEmailLink]) {
-    NSString *email = credentialDictionary[kArgumentEmail];
-    NSString *emailLink = credentialDictionary[kArgumentEmailLink];
+    NSString *email = arguments[kArgumentEmail];
+    NSString *emailLink = arguments[kArgumentEmailLink];
     return [FIREmailAuthProvider credentialWithEmail:email link:emailLink];
   }
 
@@ -651,8 +643,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
   // Phone Auth - Only supported on iOS
   if ([signInMethod isEqualToString:kSignInMethodPhone]) {
 #if TARGET_OS_IPHONE
-    NSString *verificationId = credentialDictionary[kArgumentVerificationId];
-    NSString *smsCode = credentialDictionary[kArgumentSmsCode];
+    NSString *verificationId = arguments[kArgumentVerificationId];
+    NSString *smsCode = arguments[kArgumentSmsCode];
     return [[FIRPhoneAuthProvider providerWithAuth:[self getFIRAuthFromAppNameFromPigeon:app]]
         credentialWithVerificationID:verificationId
                     verificationCode:smsCode];
@@ -665,7 +657,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 
   // OAuth
   if ([signInMethod isEqualToString:kSignInMethodOAuth]) {
-    NSString *providerId = credentialDictionary[kArgumentProviderId];
+    NSString *providerId = arguments[kArgumentProviderId];
     return [FIROAuthProvider credentialWithProviderID:providerId
                                               IDToken:idToken
                                              rawNonce:rawNonce
