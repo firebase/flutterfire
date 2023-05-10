@@ -533,73 +533,6 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
   }
 }
 
-+ (NSDictionary *)getNSDictionaryFromNSError:(NSError *)error {
-  NSString *code = @"unknown";
-  NSString *message = @"An unknown error has occurred.";
-
-  if (error == nil) {
-    return @{
-      kArgumentCode : code,
-      @"message" : message,
-      @"additionalData" : @{},
-    };
-  }
-
-  // code
-  if ([error userInfo][FIRAuthErrorUserInfoNameKey] != nil) {
-    // See [FIRAuthErrorCodeString] for list of codes.
-    // Codes are in the format "ERROR_SOME_NAME", converting below to the format
-    // required in Dart. ERROR_SOME_NAME -> SOME_NAME
-    NSString *firebaseErrorCode = [error userInfo][FIRAuthErrorUserInfoNameKey];
-    code = [firebaseErrorCode stringByReplacingOccurrencesOfString:@"ERROR_" withString:@""];
-    // SOME_NAME -> SOME-NAME
-    code = [code stringByReplacingOccurrencesOfString:@"_" withString:@"-"];
-    // SOME-NAME -> some-name
-    code = [code lowercaseString];
-  }
-
-  // message
-  if ([error userInfo][NSLocalizedDescriptionKey] != nil) {
-    message = [error userInfo][NSLocalizedDescriptionKey];
-  }
-
-  NSMutableDictionary *additionalData = [NSMutableDictionary dictionary];
-  // additionalData.email
-  if ([error userInfo][FIRAuthErrorUserInfoEmailKey] != nil) {
-    additionalData[kArgumentEmail] = [error userInfo][FIRAuthErrorUserInfoEmailKey];
-  }
-  // additionalData.authCredential
-  if ([error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey] != nil) {
-    FIRAuthCredential *authCredential = [error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey];
-    additionalData[@"authCredential"] =
-        [FLTFirebaseAuthPlugin getNSDictionaryFromAuthCredential:authCredential];
-  }
-
-  // Manual message overrides to ensure messages/codes matche other platforms.
-  if ([message isEqual:@"The password must be 6 characters long or more."]) {
-    message = @"Password should be at least 6 characters";
-  }
-
-  return @{
-    kArgumentCode : code,
-    @"message" : message,
-    @"additionalData" : additionalData,
-  };
-}
-
-- (FIRAuth *_Nullable)getFIRAuthFromArguments:(NSDictionary *)arguments {
-  NSString *appNameDart = arguments[kAppName];
-  NSString *tenantId = arguments[@"tenantId"];
-  FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
-  FIRAuth *auth = [FIRAuth authWithApp:app];
-
-  if (tenantId != nil && ![tenantId isEqual:[NSNull null]]) {
-    auth.tenantID = tenantId;
-  }
-
-  return auth;
-}
-
 - (FIRAuth *_Nullable)getFIRAuthFromAppNameFromPigeon:(PigeonFirebaseApp *)pigeonApp {
   FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:pigeonApp.appName];
   FIRAuth *auth = [FIRAuth authWithApp:app];
@@ -656,7 +589,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
   return actionCodeSettings;
 }
 
-- (FIRAuthCredential *_Nullable)getFIRAuthCredentialFromArguments:(NSDictionary *)arguments {
+- (FIRAuthCredential *_Nullable)getFIRAuthCredentialFromArguments:(NSDictionary *)arguments
+                                                              app:(PigeonFirebaseApp *)app {
   NSDictionary *credentialDictionary = arguments[kArgumentCredential];
 
   // If the credential dictionary contains a token, it means a native one has
@@ -719,7 +653,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 #if TARGET_OS_IPHONE
     NSString *verificationId = credentialDictionary[kArgumentVerificationId];
     NSString *smsCode = credentialDictionary[kArgumentSmsCode];
-    return [[FIRPhoneAuthProvider providerWithAuth:[self getFIRAuthFromArguments:arguments]]
+    return [[FIRPhoneAuthProvider providerWithAuth:[self getFIRAuthFromAppNameFromPigeon:app]]
         credentialWithVerificationID:verificationId
                     verificationCode:smsCode];
 #else
@@ -991,9 +925,49 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 #endif
 
 - (FlutterError *)convertToFlutterError:(NSError *)error {
-  return [FlutterError errorWithCode:[[NSNumber numberWithInteger:error.code] description]
-                             message:error.localizedDescription
-                             details:error.userInfo];
+  NSString *code = @"unknown";
+  NSString *message = @"An unknown error has occurred.";
+
+  if (error == nil) {
+    return [FlutterError errorWithCode:code message:message details:@{}];
+  }
+
+  // code
+  if ([error userInfo][FIRAuthErrorUserInfoNameKey] != nil) {
+    // See [FIRAuthErrorCodeString] for list of codes.
+    // Codes are in the format "ERROR_SOME_NAME", converting below to the format
+    // required in Dart. ERROR_SOME_NAME -> SOME_NAME
+    NSString *firebaseErrorCode = [error userInfo][FIRAuthErrorUserInfoNameKey];
+    code = [firebaseErrorCode stringByReplacingOccurrencesOfString:@"ERROR_" withString:@""];
+    // SOME_NAME -> SOME-NAME
+    code = [code stringByReplacingOccurrencesOfString:@"_" withString:@"-"];
+    // SOME-NAME -> some-name
+    code = [code lowercaseString];
+  }
+
+  // message
+  if ([error userInfo][NSLocalizedDescriptionKey] != nil) {
+    message = [error userInfo][NSLocalizedDescriptionKey];
+  }
+
+  NSMutableDictionary *additionalData = [NSMutableDictionary dictionary];
+  // additionalData.email
+  if ([error userInfo][FIRAuthErrorUserInfoEmailKey] != nil) {
+    additionalData[kArgumentEmail] = [error userInfo][FIRAuthErrorUserInfoEmailKey];
+  }
+  // additionalData.authCredential
+  if ([error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey] != nil) {
+    FIRAuthCredential *authCredential = [error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey];
+    additionalData[@"authCredential"] =
+        [FLTFirebaseAuthPlugin getNSDictionaryFromAuthCredential:authCredential];
+  }
+
+  // Manual message overrides to ensure messages/codes matche other platforms.
+  if ([message isEqual:@"The password must be 6 characters long or more."]) {
+    message = @"Password should be at least 6 characters";
+  }
+
+  return [FlutterError errorWithCode:code message:message details:additionalData];
 }
 
 - (void)applyActionCodeApp:(nonnull PigeonFirebaseApp *)app
@@ -1221,7 +1195,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                      completion:(nonnull void (^)(PigeonUserCredential *_Nullable,
                                                   FlutterError *_Nullable))completion {
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
-  FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:input];
+  FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:input app:app];
 
   if (credential == nil) {
     completion(nil, [FlutterError errorWithCode:kErrCodeInvalidCredential
@@ -1518,7 +1492,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
     return;
   }
 
-  FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:input];
+  FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:input app:app];
   if (credential == nil) {
     completion(nil, [FlutterError errorWithCode:kErrCodeInvalidCredential
                                         message:kErrMsgInvalidCredential
@@ -1596,7 +1570,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
     return;
   }
 
-  FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:input];
+  FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:input app:app];
   if (credential == nil) {
     completion(nil, [FlutterError errorWithCode:kErrCodeInvalidCredential
                                         message:kErrMsgInvalidCredential
@@ -1806,7 +1780,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
     return;
   }
 
-  FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:input];
+  FIRAuthCredential *credential = [self getFIRAuthCredentialFromArguments:input app:app];
   if (credential == nil) {
     completion(nil, [FlutterError errorWithCode:kErrCodeInvalidCredential
                                         message:kErrMsgInvalidCredential

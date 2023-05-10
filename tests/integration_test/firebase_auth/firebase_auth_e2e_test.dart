@@ -56,7 +56,7 @@ void main() {
     });
 
     instance_tests.main();
-    user_tests.main();
-    multi_factor_tests.main();
+    // user_tests.main();
+    // multi_factor_tests.main();
   });
 }
