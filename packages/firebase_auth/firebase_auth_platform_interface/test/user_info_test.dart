@@ -16,6 +16,7 @@ void main() {
   const String kMockEmail = 'test@example.com';
 
   const String kMockPhoneNumber = TEST_PHONE_NUMBER;
+
   const Map<String, String?> kMockData = <String, String?>{
     'providerId': kMockProviderId,
     'uid': kMockUid,
@@ -26,7 +27,7 @@ void main() {
   };
 
   group('$UserInfo', () {
-    final userInfo = UserInfo(kMockData);
+    final userInfo = UserInfo.fromJson(kMockData);
     group('Constructor', () {
       test('returns an instance of [UserInfo]', () {
         expect(userInfo, isA<UserInfo>());

@@ -36,6 +36,17 @@ class User {
   ///
   /// Once verified, call [reload] to ensure the latest user information is
   /// retrieved from Firebase.
+  @Deprecated('Use isEmailVerified instead')
+  bool get emailVerified {
+    return _delegate.isEmailVerified;
+  }
+
+  /// Returns whether the users email address has been verified.
+  ///
+  /// To send a verification email, see [sendEmailVerification].
+  ///
+  /// Once verified, call [reload] to ensure the latest user information is
+  /// retrieved from Firebase.
   bool get isEmailVerified {
     return _delegate.isEmailVerified;
   }
@@ -636,6 +647,18 @@ class User {
   /// Update the user's profile picture.
   Future<void> updatePhotoURL(String? photoURL) {
     return _delegate.updateProfile(<String, String?>{'photoURL': photoURL});
+  }
+
+  /// Updates a user's profile data.
+  @Deprecated(
+    'Will be removed in version 2.0.0. '
+    'Use updatePhotoURL and updateDisplayName instead.',
+  )
+  Future<void> updateProfile({String? displayName, String? photoURL}) {
+    return _delegate.updateProfile(<String, String?>{
+      'displayName': displayName,
+      'photoURL': photoURL,
+    });
   }
 
   /// Sends a verification email to a new email address. The user's email will

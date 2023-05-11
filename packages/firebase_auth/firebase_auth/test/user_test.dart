@@ -31,42 +31,41 @@ void main() {
 
   FirebaseAuth? auth;
 
-  const Map<String, dynamic> kMockIdTokenResult = <String, dynamic>{
-    'token': '12345',
-    'expirationTimestamp': 123456,
-    'authTimestamp': 1234567,
-    'issuedAtTimestamp': 12345678,
-    'signInProvider': 'password',
-    'claims': <dynamic, dynamic>{
+  final kMockIdTokenResult = PigeonIdTokenResult(
+    token: '12345',
+    expirationTimestamp: 123456,
+    authTimestamp: 1234567,
+    issuedAtTimestamp: 12345678,
+    signInProvider: 'password',
+    claims: {
       'claim1': 'value1',
     },
-  };
+  );
 
   final int kMockCreationTimestamp =
       DateTime.now().subtract(const Duration(days: 2)).millisecondsSinceEpoch;
   final int kMockLastSignInTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
 
-  Map<String, dynamic> kMockUser = <String, dynamic>{
-    'isAnonymous': true,
-    'emailVerified': false,
-    'uid': '42',
-    'displayName': 'displayName',
-    'metadata': <String, int>{
-      'creationTime': kMockCreationTimestamp,
-      'lastSignInTime': kMockLastSignInTimestamp,
-    },
-    'providerData': <Map<String, String>>[
-      <String, String>{
+  final kMockUser = PigeonUserDetails(
+    userInfo: PigeonUserInfo(
+      uid: '12345',
+      displayName: 'displayName',
+      creationTimestamp: kMockCreationTimestamp,
+      lastSignInTimestamp: kMockLastSignInTimestamp,
+      isAnonymous: true,
+      isEmailVerified: false,
+    ),
+    providerData: [
+      {
         'providerId': 'firebase',
         'uid': '12345',
         'displayName': 'Flutter Test User',
         'photoURL': 'http://www.example.com/',
         'email': 'test@example.com',
-      },
+      }
     ],
-  };
-
+  );
   MockUserPlatform? mockUserPlatform;
   MockUserCredentialPlatform? mockUserCredPlatform;
 
@@ -84,7 +83,7 @@ void main() {
   var mockAuthPlatform = MockFirebaseAuth();
 
   group('$User', () {
-    Map<String, dynamic>? user;
+    PigeonUserDetails? user;
 
     // used to generate a unique application name for each test
     var testCount = 0;
@@ -130,7 +129,7 @@ void main() {
         languageCode: anyNamed('languageCode'),
       )).thenAnswer((_) => mockAuthPlatform);
 
-      TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(MethodChannelFirebaseAuth.channel,
               (call) async {
         switch (call.method) {
@@ -387,7 +386,7 @@ class MockFirebaseAuth extends Mock
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic>? currentUser,
+    PigeonUserDetails? currentUser,
     String? languageCode,
   }) {
     return super.noSuchMethod(
@@ -404,7 +403,7 @@ class MockFirebaseAuth extends Mock
 class MockUserPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserPlatform {
-  MockUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> _user) {
+  MockUserPlatform(FirebaseAuthPlatform auth, PigeonUserDetails _user) {
     TestUserPlatform(auth, TestMultiFactorPlatform(auth), _user);
   }
 
@@ -564,7 +563,7 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic>? currentUser,
+    PigeonUserDetails? currentUser,
     String? languageCode,
   }) {
     return this;
@@ -573,7 +572,7 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 
 class TestUserPlatform extends UserPlatform {
   TestUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      Map<String, dynamic> data)
+      PigeonUserDetails data)
       : super(auth, multiFactor, data);
 }
 

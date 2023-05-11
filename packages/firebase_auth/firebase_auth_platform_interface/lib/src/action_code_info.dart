@@ -12,12 +12,14 @@ class ActionCodeInfo {
   @protected
   ActionCodeInfo({
     required this.operation,
-    required this.data,
-  });
+    required ActionCodeInfoData data,
+  }) : _data = data;
 
   ActionCodeInfoOperation operation;
 
-  ActionCodeInfoData data;
+  ActionCodeInfoData _data;
+
+  Map<String, dynamic> get data => _data.toMap();
 }
 
 /// The data associated with the action code.
@@ -37,4 +39,12 @@ class ActionCodeInfoData {
 
   /// The previous email associated with the action code.
   final String? previousEmail;
+
+  /// Converts the [ActionCodeInfoData] instance to a [Map].
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'email': email,
+      'previousEmail': previousEmail,
+    };
+  }
 }
