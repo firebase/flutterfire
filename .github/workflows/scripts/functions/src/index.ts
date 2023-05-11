@@ -1,9 +1,14 @@
 import * as assert from 'assert';
 import * as functions from 'firebase-functions';
+import * as functionsv2 from 'firebase-functions/v2';
 
 // For example app.
 // noinspection JSUnusedGlobalSymbols
 export const listFruit = functions.https.onCall(() => {
+  return ['Apple', 'Banana', 'Cherry', 'Date', 'Fig', 'Grapes'];
+});
+
+export const listfruits2ndgen = functionsv2.https.onCall(() => {
   return ['Apple', 'Banana', 'Cherry', 'Date', 'Fig', 'Grapes'];
 });
 

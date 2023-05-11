@@ -17,6 +17,10 @@ import 'package:pigeon/pigeon.dart';
     ),
     objcHeaderOut: '../firebase_core/ios/Classes/messages.g.h',
     objcSourceOut: '../firebase_core/ios/Classes/messages.g.m',
+    cppHeaderOut: '../firebase_core/windows/messages.g.h',
+    cppSourceOut: '../firebase_core/windows/messages.g.cpp',
+    cppOptions: CppOptions(namespace: 'firebase_core_windows'),
+    copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
 class PigeonFirebaseOptions {

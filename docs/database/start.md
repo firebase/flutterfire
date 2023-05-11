@@ -90,11 +90,19 @@ getter on `FirebaseDatabase`:
 FirebaseDatabase database = FirebaseDatabase.instance;
 ```
 
-If you'd like to use it with a secondary Firebase App, use the `instanceFor` method:
+If you'd like to use it with a secondary Firebase App, use the static `instanceFor` method:
 
 ```dart
 FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
 FirebaseDatabase database = FirebaseDatabase.instanceFor(app: secondaryApp);
+```
+
+If you'd like to use a different RTDB instance on the same project, you can pass in a `databaseUrl` using
+the static `instanceFor` method:
+
+```dart
+final firebaseApp = Firebase.app();
+final rtdb = FirebaseDatabase.instanceFor(app: firebaseApp, databaseURL: 'https://your-realtime-database-url.firebaseio.com/');
 ```
 
 ## Next Steps

@@ -1,3 +1,24 @@
+## 3.4.3
+
+ - Update a dependency to the latest release.
+
+## 3.4.2
+
+ - Update a dependency to the latest release.
+
+## 3.4.1
+
+ - **REFACTOR**(firestore): Dart 3 compatibility: change _Updatable to be an actual `mixin` ([#10667](https://github.com/firebase/flutterfire/issues/10667)). ([cf7dd460](https://github.com/firebase/flutterfire/commit/cf7dd460d80c8d8c00e53e70ae93cb4695277f0c))
+
+## 3.4.0
+
+ - **FEAT**(firestore): add the `Filter` class and support for the OR query ([#10678](https://github.com/firebase/flutterfire/issues/10678)). ([ac434044](https://github.com/firebase/flutterfire/commit/ac434044bbfa91d0d8b33ff39736d8eb4062e824))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 3.3.5
+
+ - Update a dependency to the latest release.
+
 ## 3.3.4
 
  - Update a dependency to the latest release.

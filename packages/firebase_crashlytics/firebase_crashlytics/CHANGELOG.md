@@ -1,3 +1,24 @@
+## 3.2.0
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 3.1.2
+
+ - **FIX**(readme): Update getting started link to reflect latest version ([#10700](https://github.com/firebase/flutterfire/issues/10700)). ([4e0daa4d](https://github.com/firebase/flutterfire/commit/4e0daa4dadab217b488f53414ff82775741f9606))
+
+## 3.1.1
+
+ - Update a dependency to the latest release.
+
+## 3.1.0
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 3.0.17
+
+ - **FIX**(crashlytics,ios): fix Crashlytics obfuscation for iOS on the Flutter side ([#10566](https://github.com/firebase/flutterfire/issues/10566)). ([a4fa7eff](https://github.com/firebase/flutterfire/commit/a4fa7effbb1374d6241989fbbbb96d02b712a1c0))
+
 ## 3.0.16
 
  - Update a dependency to the latest release.

@@ -1,3 +1,28 @@
+## 0.1.3
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 0.1.2+3
+
+ - **FIX**(app-check): use correct `getAppCheckToken()` method. Print out debug token for iOS. ([#10819](https://github.com/firebase/flutterfire/issues/10819)). ([66909a9c](https://github.com/firebase/flutterfire/commit/66909a9c5b10e85f93565cbc308fdbee4ec6f607))
+
+## 0.1.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.1.2+1
+
+ - **FIX**(app-check): fix 'Semantic Issue (Xcode): `new` is unavailable' on XCode 14.3 ([#10734](https://github.com/firebase/flutterfire/issues/10734)). ([cc6d1c28](https://github.com/firebase/flutterfire/commit/cc6d1c28193d5cdaaa564729340c380b5f632982))
+
+## 0.1.2
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 0.1.1+14
+
+ - Update a dependency to the latest release.
+
 ## 0.1.1+13
 
  - Update a dependency to the latest release.

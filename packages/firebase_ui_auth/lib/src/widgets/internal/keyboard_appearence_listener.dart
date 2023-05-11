@@ -10,10 +10,10 @@ class KeyboardAppearenceListener extends StatefulWidget {
   final Widget child;
   final KeyboardPositionListener listener;
   const KeyboardAppearenceListener({
-    Key? key,
+    super.key,
     required this.child,
     required this.listener,
-  }) : super(key: key);
+  });
 
   @override
   State<KeyboardAppearenceListener> createState() =>

@@ -2,12 +2,12 @@ name: firebase_database_example
 description: Demonstrates how to use the firebase_database plugin.
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
-  flutter: ">=1.9.1+hotfix.2"
+  sdk: '>=2.18.0 <3.0.0'
+  flutter: '>=1.9.1+hotfix.2'
 
 dependencies:
-  firebase_core: ^2.7.1
-  firebase_database: ^10.0.15
+  firebase_core: ^2.11.0
+  firebase_database: ^10.1.2
   flutter:
     sdk: flutter
 

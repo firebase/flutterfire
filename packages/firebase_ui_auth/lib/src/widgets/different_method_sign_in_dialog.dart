@@ -3,12 +3,12 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/material.dart' hide Title;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 
 import '../widgets/internal/title.dart';
-import 'internal/universal_button.dart';
 
 /// {@template ui.auth.widgets.different_method_sign_in_dialog}
 /// A dialog that is shown when the user tries to sign in with a provider that
@@ -30,12 +30,12 @@ class DifferentMethodSignInDialog extends StatelessWidget {
 
   /// {@macro ui.auth.widgets.different_method_sign_in_dialog}
   const DifferentMethodSignInDialog({
-    Key? key,
+    super.key,
     required this.availableProviders,
     required this.providers,
     this.auth,
     this.onSignedIn,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

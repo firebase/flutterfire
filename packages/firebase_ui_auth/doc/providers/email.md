@@ -31,7 +31,7 @@ void main() {
 
 ## Using screen
 
-After adding `EmailAuthProvider` to the `FirebaseUIAuth.configureProviders` email form would be displayed on the `SignInScreen` or `RegisterScren`.
+After adding `EmailAuthProvider` to the `FirebaseUIAuth.configureProviders` email form would be displayed on the `SignInScreen` or `RegisterScreen`.
 
 ```dart
 SignInScreen(
@@ -141,7 +141,7 @@ For full control over every phase of the authentication lifecycle, you could bui
 
 ```dart
 class CustomEmailSignIn extends StatefulWidget {
-  const CustomEmailSignIn({Key? key}) : super(key: key);
+  const CustomEmailSignIn({super.key});
 
   @override
   State<CustomEmailSignIn> createState() => _CustomEmailSignInState();

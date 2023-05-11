@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="io.flutter.plugins.firebase.database.example">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
   <application
     android:label="firebase_database_example"
@@ -7,6 +6,7 @@
     <activity
       android:name="io.flutter.embedding.android.FlutterActivity"
       android:launchMode="singleTop"
+      android:exported="true"
       android:theme="@style/LaunchTheme"
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
       android:hardwareAccelerated="true"

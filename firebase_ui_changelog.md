@@ -2,6 +2,362 @@
 
 All notable changes for firebase_ui packages
 
+## 2023-05-04
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.3.0`](#firebase_ui_auth---v130)
+ - [`firebase_ui_database` - `v1.2.0`](#firebase_ui_database---v120)
+ - [`firebase_ui_firestore` - `v1.4.0`](#firebase_ui_firestore---v140)
+ - [`firebase_ui_localizations` - `v1.4.0`](#firebase_ui_localizations---v140)
+ - [`firebase_ui_oauth` - `v1.3.0`](#firebase_ui_oauth---v130)
+ - [`firebase_ui_storage` - `v0.1.0-dev.2`](#firebase_ui_storage---v010-dev2)
+ - [`firebase_ui_oauth_facebook` - `v1.1.5`](#firebase_ui_oauth_facebook---v115)
+ - [`firebase_ui_oauth_twitter` - `v1.1.5`](#firebase_ui_oauth_twitter---v115)
+ - [`firebase_ui_oauth_apple` - `v1.1.5`](#firebase_ui_oauth_apple---v115)
+ - [`firebase_ui_oauth_google` - `v1.1.5`](#firebase_ui_oauth_google---v115)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth_facebook` - `v1.1.5`
+ - `firebase_ui_oauth_twitter` - `v1.1.5`
+ - `firebase_ui_oauth_apple` - `v1.1.5`
+ - `firebase_ui_oauth_google` - `v1.1.5`
+
+---
+
+#### `firebase_ui_auth` - `v1.3.0`
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+ - **FEAT**(core): add support for Windows via Firebase C++ desktop SDK ([#10496](https://github.com/firebase/flutterfire/issues/10496)). ([c0b8ad56](https://github.com/firebase/flutterfire/commit/c0b8ad5605d1fda6d897ea625224b5e61c5826ad))
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+#### `firebase_ui_database` - `v1.2.0`
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+ - **FEAT**(core): add support for Windows via Firebase C++ desktop SDK ([#10496](https://github.com/firebase/flutterfire/issues/10496)). ([c0b8ad56](https://github.com/firebase/flutterfire/commit/c0b8ad5605d1fda6d897ea625224b5e61c5826ad))
+
+#### `firebase_ui_firestore` - `v1.4.0`
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+ - **FEAT**(core): add support for Windows via Firebase C++ desktop SDK ([#10496](https://github.com/firebase/flutterfire/issues/10496)). ([c0b8ad56](https://github.com/firebase/flutterfire/commit/c0b8ad5605d1fda6d897ea625224b5e61c5826ad))
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+#### `firebase_ui_localizations` - `v1.4.0`
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+ - **FIX**(ui_localizations): drop intl dependency as it is not used ([#10856](https://github.com/firebase/flutterfire/issues/10856)). ([f208ae9b](https://github.com/firebase/flutterfire/commit/f208ae9b0b2f784710bb6c7e894e3aeb5513d30d))
+ - **FEAT**(core): add support for Windows via Firebase C++ desktop SDK ([#10496](https://github.com/firebase/flutterfire/issues/10496)). ([c0b8ad56](https://github.com/firebase/flutterfire/commit/c0b8ad5605d1fda6d897ea625224b5e61c5826ad))
+
+#### `firebase_ui_oauth` - `v1.3.0`
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+ - **FEAT**(core): add support for Windows via Firebase C++ desktop SDK ([#10496](https://github.com/firebase/flutterfire/issues/10496)). ([c0b8ad56](https://github.com/firebase/flutterfire/commit/c0b8ad5605d1fda6d897ea625224b5e61c5826ad))
+
+#### `firebase_ui_storage` - `v0.1.0-dev.2`
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+ - **FEAT**(core): add support for Windows via Firebase C++ desktop SDK ([#10496](https://github.com/firebase/flutterfire/issues/10496)). ([c0b8ad56](https://github.com/firebase/flutterfire/commit/c0b8ad5605d1fda6d897ea625224b5e61c5826ad))
+
+
+## 2023-04-28
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_localizations` - `v1.3.1`](#firebase_ui_localizations---v131)
+ - [`firebase_ui_firestore` - `v1.3.4`](#firebase_ui_firestore---v134)
+ - [`firebase_ui_auth` - `v1.2.4`](#firebase_ui_auth---v124)
+ - [`firebase_ui_database` - `v1.1.3`](#firebase_ui_database---v113)
+ - [`firebase_ui_oauth` - `v1.2.4`](#firebase_ui_oauth---v124)
+ - [`firebase_ui_oauth_facebook` - `v1.1.4`](#firebase_ui_oauth_facebook---v114)
+ - [`firebase_ui_oauth_twitter` - `v1.1.4`](#firebase_ui_oauth_twitter---v114)
+ - [`firebase_ui_oauth_apple` - `v1.1.4`](#firebase_ui_oauth_apple---v114)
+ - [`firebase_ui_oauth_google` - `v1.1.4`](#firebase_ui_oauth_google---v114)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_firestore` - `v1.3.4`
+ - `firebase_ui_auth` - `v1.2.4`
+ - `firebase_ui_database` - `v1.1.3`
+ - `firebase_ui_oauth` - `v1.2.4`
+ - `firebase_ui_oauth_facebook` - `v1.1.4`
+ - `firebase_ui_oauth_twitter` - `v1.1.4`
+ - `firebase_ui_oauth_apple` - `v1.1.4`
+ - `firebase_ui_oauth_google` - `v1.1.4`
+
+---
+
+#### `firebase_ui_localizations` - `v1.3.1`
+
+ - **FIX**(ui_localizations): drop intl dependency as it is not used ([#10856](https://github.com/firebase/flutterfire/issues/10856)). ([f208ae9b](https://github.com/firebase/flutterfire/commit/f208ae9b0b2f784710bb6c7e894e3aeb5513d30d))
+
+
+## 2023-04-27
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.2.3`](#firebase_ui_auth---v123)
+ - [`firebase_ui_firestore` - `v1.3.3`](#firebase_ui_firestore---v133)
+ - [`firebase_ui_oauth` - `v1.2.3`](#firebase_ui_oauth---v123)
+ - [`firebase_ui_oauth_twitter` - `v1.1.3`](#firebase_ui_oauth_twitter---v113)
+ - [`firebase_ui_oauth_facebook` - `v1.1.3`](#firebase_ui_oauth_facebook---v113)
+ - [`firebase_ui_oauth_apple` - `v1.1.3`](#firebase_ui_oauth_apple---v113)
+ - [`firebase_ui_oauth_google` - `v1.1.3`](#firebase_ui_oauth_google---v113)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_firestore` - `v1.3.3`
+ - `firebase_ui_oauth` - `v1.2.3`
+ - `firebase_ui_oauth_twitter` - `v1.1.3`
+ - `firebase_ui_oauth_facebook` - `v1.1.3`
+ - `firebase_ui_oauth_apple` - `v1.1.3`
+ - `firebase_ui_oauth_google` - `v1.1.3`
+
+---
+
+#### `firebase_ui_auth` - `v1.2.3`
+
+ - **DOCS**(firebase_ui_auth): fix an error in the documentation ([#10797](https://github.com/firebase/flutterfire/issues/10797)). ([b71e0dde](https://github.com/firebase/flutterfire/commit/b71e0dde5ad0c2c04876afde5da8c8b1b8cb321d))
+
+
+## 2023-04-18
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_shared` - `v1.2.0`](#firebase_ui_shared---v120)
+ - [`firebase_ui_storage` - `v0.1.0-dev.1`](#firebase_ui_storage---v010-dev1)
+ - [`firebase_ui_auth` - `v1.2.2`](#firebase_ui_auth---v122)
+ - [`firebase_ui_oauth` - `v1.2.2`](#firebase_ui_oauth---v122)
+ - [`firebase_ui_oauth_twitter` - `v1.1.2`](#firebase_ui_oauth_twitter---v112)
+ - [`firebase_ui_oauth_facebook` - `v1.1.2`](#firebase_ui_oauth_facebook---v112)
+ - [`firebase_ui_oauth_apple` - `v1.1.2`](#firebase_ui_oauth_apple---v112)
+ - [`firebase_ui_oauth_google` - `v1.1.2`](#firebase_ui_oauth_google---v112)
+ - [`firebase_ui_database` - `v1.1.2`](#firebase_ui_database---v112)
+ - [`firebase_ui_firestore` - `v1.3.2`](#firebase_ui_firestore---v132)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_auth` - `v1.2.2`
+ - `firebase_ui_oauth` - `v1.2.2`
+ - `firebase_ui_oauth_twitter` - `v1.1.2`
+ - `firebase_ui_oauth_facebook` - `v1.1.2`
+ - `firebase_ui_oauth_apple` - `v1.1.2`
+ - `firebase_ui_oauth_google` - `v1.1.2`
+ - `firebase_ui_database` - `v1.1.2`
+ - `firebase_ui_firestore` - `v1.3.2`
+
+---
+
+#### `firebase_ui_shared` - `v1.2.0`
+
+ - **FEAT**(ui_storage): configuration API and UploadButton widget ([#10699](https://github.com/firebase/flutterfire/issues/10699)). ([e802b3dd](https://github.com/firebase/flutterfire/commit/e802b3dd4454fe797abe18bb584b4287b5be74da))
+
+#### `firebase_ui_storage` - `v0.1.0-dev.1`
+
+ - **FEAT**(ui_storage): configuration API and UploadButton widget ([#10699](https://github.com/firebase/flutterfire/issues/10699)). ([e802b3dd](https://github.com/firebase/flutterfire/commit/e802b3dd4454fe797abe18bb584b4287b5be74da))
+
+
+## 2023-04-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.2.1`](#firebase_ui_auth---v121)
+ - [`firebase_ui_database` - `v1.1.1`](#firebase_ui_database---v111)
+ - [`firebase_ui_firestore` - `v1.3.1`](#firebase_ui_firestore---v131)
+ - [`firebase_ui_oauth_facebook` - `v1.1.1`](#firebase_ui_oauth_facebook---v111)
+ - [`firebase_ui_oauth_twitter` - `v1.1.1`](#firebase_ui_oauth_twitter---v111)
+ - [`firebase_ui_oauth` - `v1.2.1`](#firebase_ui_oauth---v121)
+ - [`firebase_ui_oauth_google` - `v1.1.1`](#firebase_ui_oauth_google---v111)
+ - [`firebase_ui_oauth_apple` - `v1.1.1`](#firebase_ui_oauth_apple---v111)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth_facebook` - `v1.1.1`
+ - `firebase_ui_oauth_twitter` - `v1.1.1`
+ - `firebase_ui_oauth` - `v1.2.1`
+ - `firebase_ui_oauth_google` - `v1.1.1`
+ - `firebase_ui_oauth_apple` - `v1.1.1`
+
+---
+
+#### `firebase_ui_auth` - `v1.2.1`
+
+ - **FIX**: allow to unlink providers only in edit mode ([#10649](https://github.com/firebase/flutterfire/issues/10649)). ([c2da6c7e](https://github.com/firebase/flutterfire/commit/c2da6c7e80bbf817ddbaf6475b7b5ea53c4ac666))
+ - **DOCS**(ui_auth): fix typo RegisterScren -> RegisterScreen ([#10488](https://github.com/firebase/flutterfire/issues/10488)). ([47c132c8](https://github.com/firebase/flutterfire/commit/47c132c85e83415fc4335ad7be5ef63958c0c3b0))
+
+#### `firebase_ui_database` - `v1.1.1`
+
+ - **FIX**: allow to unlink providers only in edit mode ([#10649](https://github.com/firebase/flutterfire/issues/10649)). ([c2da6c7e](https://github.com/firebase/flutterfire/commit/c2da6c7e80bbf817ddbaf6475b7b5ea53c4ac666))
+
+#### `firebase_ui_firestore` - `v1.3.1`
+
+ - **FIX**: allow to unlink providers only in edit mode ([#10649](https://github.com/firebase/flutterfire/issues/10649)). ([c2da6c7e](https://github.com/firebase/flutterfire/commit/c2da6c7e80bbf817ddbaf6475b7b5ea53c4ac666))
+
+
+## 2023-03-30
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.2.0`](#firebase_ui_auth---v120)
+ - [`firebase_ui_database` - `v1.1.0`](#firebase_ui_database---v110)
+ - [`firebase_ui_firestore` - `v1.3.0`](#firebase_ui_firestore---v130)
+ - [`firebase_ui_localizations` - `v1.3.0`](#firebase_ui_localizations---v130)
+ - [`firebase_ui_oauth` - `v1.2.0`](#firebase_ui_oauth---v120)
+ - [`firebase_ui_oauth_apple` - `v1.1.0`](#firebase_ui_oauth_apple---v110)
+ - [`firebase_ui_oauth_facebook` - `v1.1.0`](#firebase_ui_oauth_facebook---v110)
+ - [`firebase_ui_oauth_google` - `v1.1.0`](#firebase_ui_oauth_google---v110)
+ - [`firebase_ui_oauth_twitter` - `v1.1.0`](#firebase_ui_oauth_twitter---v110)
+ - [`firebase_ui_shared` - `v1.1.0`](#firebase_ui_shared---v110)
+
+---
+
+#### `firebase_ui_auth` - `v1.2.0`
+
+ - **FIX**(ui_auth): pass breakpoint to LoginScreen ([#10607](https://github.com/firebase/flutterfire/issues/10607)). ([39d77c4d](https://github.com/firebase/flutterfire/commit/39d77c4dcc9e77b9f78db918dc444c0e09fd3228))
+ - **FEAT**(ui_shared): pass platform-specific icons and colors explicitly ([#10655](https://github.com/firebase/flutterfire/issues/10655)). ([60ff1dfe](https://github.com/firebase/flutterfire/commit/60ff1dfe32abe6780fc5aafad63606b00af3f3e2))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+ - **DOCS**(ui_auth): Fixed typo 'EmaiAuthProvider' to 'EmailAuthProvider' ([#10654](https://github.com/firebase/flutterfire/issues/10654)). ([59932020](https://github.com/firebase/flutterfire/commit/599320203ff7c8ea07d9a697c52c995a306f00ea))
+
+#### `firebase_ui_database` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_ui_firestore` - `v1.3.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+#### `firebase_ui_localizations` - `v1.3.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth` - `v1.2.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth_apple` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth_facebook` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth_google` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_oauth_twitter` - `v1.1.0`
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+#### `firebase_ui_shared` - `v1.1.0`
+
+ - **FEAT**(ui_shared): pass platform-specific icons and colors explicitly ([#10655](https://github.com/firebase/flutterfire/issues/10655)). ([60ff1dfe](https://github.com/firebase/flutterfire/commit/60ff1dfe32abe6780fc5aafad63606b00af3f3e2))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+
+## 2023-03-16
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_oauth_facebook` - `v1.0.24`](#firebase_ui_oauth_facebook---v1024)
+ - [`firebase_ui_oauth_twitter` - `v1.0.24`](#firebase_ui_oauth_twitter---v1024)
+ - [`firebase_ui_auth` - `v1.1.17`](#firebase_ui_auth---v1117)
+ - [`firebase_ui_oauth` - `v1.1.17`](#firebase_ui_oauth---v1117)
+ - [`firebase_ui_oauth_google` - `v1.0.24`](#firebase_ui_oauth_google---v1024)
+ - [`firebase_ui_oauth_apple` - `v1.0.24`](#firebase_ui_oauth_apple---v1024)
+ - [`firebase_ui_database` - `v1.0.18`](#firebase_ui_database---v1018)
+ - [`firebase_ui_firestore` - `v1.2.10`](#firebase_ui_firestore---v1210)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth_facebook` - `v1.0.24`
+ - `firebase_ui_oauth_twitter` - `v1.0.24`
+ - `firebase_ui_auth` - `v1.1.17`
+ - `firebase_ui_oauth` - `v1.1.17`
+ - `firebase_ui_oauth_google` - `v1.0.24`
+ - `firebase_ui_oauth_apple` - `v1.0.24`
+ - `firebase_ui_database` - `v1.0.18`
+ - `firebase_ui_firestore` - `v1.2.10`
+
+---
+
+
 ## 2023-03-07
 
 ### Changes

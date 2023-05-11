@@ -41,12 +41,15 @@ void main() async {
     };
   });
 
+  final licenseHeader = await getLicenseHeader();
+
   final genOps = labelsByLocale.entries.map((entry) {
     if (entry.value.length == 1) {
       return [
         generateLocalizationsClass(
           locale: entry.key,
           arb: entry.value['default'],
+          licenseHeader: licenseHeader,
         )
       ];
     }
@@ -55,6 +58,7 @@ void main() async {
       generateLocalizationsClass(
         locale: entry.key,
         arb: entry.value['default'],
+        licenseHeader: licenseHeader,
       ),
       ...entry.value.entries
           .where((element) => element.key != 'default')
@@ -63,13 +67,14 @@ void main() async {
           locale: entry.key,
           countryCode: e.key,
           arb: e.value,
+          licenseHeader: licenseHeader,
         );
       }).toList(),
     ];
   }).expand((element) => element);
 
   await Future.wait([...genOps.cast<Future>()]);
-  await generateLanguagesList(labelsByLocale);
+  await generateLanguagesList(labelsByLocale, licenseHeader);
   Process.runSync('dart', ['format', outDir.path]);
 }
 
@@ -91,6 +96,7 @@ String dartClassName(String locale, [String? countryCode]) {
 Future<void> generateLocalizationsClass({
   required String locale,
   required Map<String, dynamic> arb,
+  required String licenseHeader,
   String? countryCode,
 }) async {
   final filename = dartFilename(locale, countryCode);
@@ -102,6 +108,7 @@ Future<void> generateLocalizationsClass({
 
   final out = outFile.openWrite();
 
+  out.writeln(licenseHeader);
   out.writeln("import '../default_localizations.dart';");
 
   final labels = arb.entries.where(isLabelEntry).map((e) {
@@ -122,7 +129,9 @@ Future<void> generateLocalizationsClass({
   out.writeln('  const $className();');
 
   for (var label in labels) {
-    final escapedTranslation = jsonEncode(label.translation);
+    final escapedTranslation = label.translation.contains('"')
+        ? '"""${label.translation}"""'
+        : '"${label.translation}"';
 
     out.writeln();
     out.writeln('  @override');
@@ -135,14 +144,21 @@ Future<void> generateLocalizationsClass({
   await out.close();
 }
 
-Future<void> generateLanguagesList(Map<String, dynamic> arb) async {
-  final outFile = File(path.join(outDir.path, 'all_languages.dart'));
+Future<void> generateLanguagesList(
+  Map<String, dynamic> arb,
+  String licenseHeader,
+) async {
+  final outFile = File(
+    path.join(outDir.path, 'all_languages.dart'),
+  );
 
   if (!outFile.existsSync()) {
     outFile.createSync(recursive: true);
   }
 
   final out = outFile.openWrite();
+
+  out.writeln(licenseHeader);
   out.writeln('import "./default_localizations.dart";');
   out.writeln();
 
@@ -195,4 +211,18 @@ class Label {
     required this.translation,
     this.description,
   });
+}
+
+Future<String> getLicenseHeader() async {
+  final now = DateTime.now();
+
+  final licenseFile = File(path.join(cwd, '../..', 'header_template.txt'));
+  final template = await licenseFile.readAsString();
+
+  return template
+      .replaceAll('{{.Year}}', now.year.toString())
+      .split('\n')
+      .map((e) {
+    return '// $e';
+  }).join('\n');
 }

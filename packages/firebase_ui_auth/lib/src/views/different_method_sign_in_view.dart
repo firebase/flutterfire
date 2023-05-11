@@ -26,12 +26,12 @@ class DifferentMethodSignInView extends StatelessWidget {
 
   /// {@macro ui.auth.views.different_method_sign_in_view}
   const DifferentMethodSignInView({
-    Key? key,
+    super.key,
     required this.availableProviders,
     required this.providers,
     this.auth,
     this.onSignedIn,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

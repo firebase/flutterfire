@@ -21,10 +21,10 @@ class RebuildScope extends Widget {
   final RebuildScopeKey scopeKey;
 
   const RebuildScope({
-    Key? key,
+    super.key,
     required this.builder,
     required this.scopeKey,
-  }) : super(key: key);
+  });
 
   @override
   RebuildScopeElement createElement() {
@@ -33,7 +33,7 @@ class RebuildScope extends Widget {
 }
 
 class RebuildScopeElement extends ComponentElement {
-  RebuildScopeElement(RebuildScope widget) : super(widget);
+  RebuildScopeElement(super.widget);
 
   @override
   RebuildScope get widget => super.widget as RebuildScope;

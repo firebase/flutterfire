@@ -27,7 +27,7 @@ void main() {
   bool mockPlatformExceptionThrown = false;
 
   const kMockData = 'Hello World';
-  late MethodChannelPutStringTask kMockTask;
+  late TaskPlatform kMockTask;
 
   const kMockExceptionMessage = 'a mock exception message';
 
@@ -64,8 +64,7 @@ void main() {
         }
       });
 
-      kMockTask = ref!.putString(kMockData, PutStringFormat.raw)
-          as MethodChannelPutStringTask;
+      kMockTask = ref!.putString(kMockData, PutStringFormat.raw);
     });
 
     setUp(() {

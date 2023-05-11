@@ -6,10 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../widgets/internal/loading_button.dart';
 
 typedef DeleteFailedCallback = void Function(Exception exception);
 typedef SignInRequiredCallback = Future<bool> Function();
@@ -29,17 +28,17 @@ class DeleteAccountButton extends StatefulWidget {
   /// A callback that is called if the account deletion fails.
   final DeleteFailedCallback? onDeleteFailed;
 
-  /// {@macro ui.auth.widgets.button_variant}
-  final ButtonVariant? variant;
+  /// {@macro ui.shared.widgets.button_variant}
+  final ButtonVariant variant;
 
   /// {@macro ui.auth.widgets.delete_account_button}
   const DeleteAccountButton({
-    Key? key,
+    super.key,
     this.auth,
     this.onSignInRequired,
     this.onDeleteFailed,
-    this.variant,
-  }) : super(key: key);
+    this.variant = ButtonVariant.filled,
+  });
 
   @override
   // ignore: library_private_types_in_public_api
@@ -79,15 +78,16 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
   @override
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
-    bool isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
     final themeData = Theme.of(context);
     final colorScheme = themeData.colorScheme;
 
     return LoadingButton(
       isLoading: _isLoading,
-      color: isCupertino ? CupertinoColors.destructiveRed : colorScheme.error,
-      icon: isCupertino ? CupertinoIcons.delete : Icons.delete,
+      cupertinoColor: CupertinoColors.destructiveRed,
+      materialColor: colorScheme.error,
+      cupertinoIcon: CupertinoIcons.delete,
+      materialIcon: Icons.delete,
       label: l.deleteAccount,
       labelColor: colorScheme.onError,
       onTap: _deleteAccount,

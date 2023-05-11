@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.flutter.plugins.firebasestorageexample">
-
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -11,6 +10,7 @@
           android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale"
           android:hardwareAccelerated="true"
           android:launchMode="singleTop"
+            android:exported="true"
           android:windowSoftInputMode="adjustResize">
           <meta-data
             android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"

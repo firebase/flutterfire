@@ -1,3 +1,27 @@
+## 1.0.0-dev.57
+
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 1.0.0-dev.56
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.55
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.54
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.53
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 1.0.0-dev.52
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.51
 
  - Update a dependency to the latest release.

@@ -1,3 +1,33 @@
+## 1.3.0
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+ - **FEAT**(core): add support for Windows via Firebase C++ desktop SDK ([#10496](https://github.com/firebase/flutterfire/issues/10496)). ([c0b8ad56](https://github.com/firebase/flutterfire/commit/c0b8ad5605d1fda6d897ea625224b5e61c5826ad))
+
+## 1.2.4
+
+ - Update a dependency to the latest release.
+
+## 1.2.3
+
+ - Update a dependency to the latest release.
+
+## 1.2.2
+
+ - Update a dependency to the latest release.
+
+## 1.2.1
+
+ - Update a dependency to the latest release.
+
+## 1.2.0
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
+## 1.1.17
+
+ - Update a dependency to the latest release.
+
 ## 1.1.16
 
  - Update a dependency to the latest release.

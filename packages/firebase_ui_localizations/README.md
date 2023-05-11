@@ -59,3 +59,13 @@ If you need to support multiple languages – follow the [official Flutter local
 and make sure that your custom delegate extends `LocalizationsDelegate<FirebaseUILocalizations>`.
 
 > Note: check out [API reference](https://pub.dev/documentation/firebase_ui_localizations/latest/FlutterFireUILocalizationLabels-class.html) to learn what labels are used by specific widgets
+
+## Contributing
+
+If you want to add a new language, make sure to add a relevant `.arb` file into `lib/i10n`.
+
+- copy `lib/i10n/firebase_ui_en.arb` to `lib/i10n/firebase_ui_<your-language-code>.arb`
+- translate labels
+- run `dart run firebase_ui_localizations:gen_l10n`
+- commit the `.arb` and generated `.dart` file
+- submit a PR

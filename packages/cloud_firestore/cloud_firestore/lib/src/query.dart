@@ -312,8 +312,11 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   /// Asserts that the query [field] is either a String or a [FieldPath].
   void _assertValidFieldType(Object field) {
     assert(
-      field is String || field is FieldPath || field == FieldPath.documentId,
-      'Supported [field] types are [String] and [FieldPath].',
+      field is String ||
+          field is FieldPath ||
+          field == FieldPath.documentId ||
+          field is Filter,
+      'Supported [field] types are [String], [FieldPath], and [Filter].',
     );
   }
 
@@ -578,19 +581,20 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   }
 
   /// Creates and returns a new [Query] with additional filter on specified
-  /// [field]. [field] refers to a field in a document.
+  /// [fieldOrFilter]. [fieldOrFilter] refers to a field in a document or a [Filter] object.
   ///
-  /// The [field] may be a [String] consisting of a single field name
+  /// The [fieldOrFilter] may be a [String] consisting of a single field name
   /// (referring to a top level field in the document),
-  /// or a series of field names separated by dots '.'
-  /// (referring to a nested field in the document).
+  /// a series of field names separated by dots '.'
+  /// (referring to a nested field in the document),
+  /// or a [Filter] that can be used to combine multiple conditions.
   /// Alternatively, the [field] can also be a [FieldPath].
   ///
   /// Only documents satisfying provided condition are included in the result
   /// set.
   @override
   Query<Map<String, dynamic>> where(
-    Object field, {
+    Object fieldOrFilter, {
     Object? isEqualTo,
     Object? isNotEqualTo,
     Object? isLessThan,
@@ -603,7 +607,27 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     Iterable<Object?>? whereNotIn,
     bool? isNull,
   }) {
-    _assertValidFieldType(field);
+    _assertValidFieldType(fieldOrFilter);
+
+    if (fieldOrFilter is Filter) {
+      assert(
+        isEqualTo == null &&
+            isNotEqualTo == null &&
+            isLessThan == null &&
+            isLessThanOrEqualTo == null &&
+            isGreaterThan == null &&
+            isGreaterThanOrEqualTo == null &&
+            arrayContains == null &&
+            arrayContainsAny == null &&
+            whereIn == null &&
+            whereNotIn == null &&
+            isNull == null,
+        'Conditions cannot be used with a Filter. Use a single Filter instead, or use a String or a FieldPath as the first parameter.',
+      );
+      return _JsonQuery(firestore, _delegate.whereFilter(fieldOrFilter));
+    }
+
+    final field = fieldOrFilter;
 
     const ListEquality<dynamic> equality = ListEquality<dynamic>();
     final List<List<dynamic>> conditions =

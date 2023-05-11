@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
@@ -20,7 +21,7 @@ enum OAuthButtonVariant {
 }
 
 class _ErrorListener extends StatelessWidget {
-  const _ErrorListener({Key? key}) : super(key: key);
+  const _ErrorListener();
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +77,7 @@ class OAuthProviderButton extends StatelessWidget {
 
   /// {@macro ui.auth.widgets.oauth_provider_button}
   const OAuthProviderButton({
-    Key? key,
+    super.key,
 
     /// {@macro ui.auth.widgets.oauth_provider_button.provider}
     required this.provider,
@@ -89,7 +90,7 @@ class OAuthProviderButton extends StatelessWidget {
 
     /// {@macro ui.auth.auth_controller.auth}
     this.auth,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

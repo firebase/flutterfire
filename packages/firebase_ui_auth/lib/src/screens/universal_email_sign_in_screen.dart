@@ -2,11 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import '../widgets/internal/universal_page_route.dart';
-import '../widgets/internal/universal_scaffold.dart';
 import 'internal/multi_provider_screen.dart';
 
 /// A screen that allows to resolve previously used providers for a given email.
@@ -15,16 +14,15 @@ class UniversalEmailSignInScreen extends MultiProviderScreen {
   final ProvidersFoundCallback? onProvidersFound;
 
   const UniversalEmailSignInScreen({
-    Key? key,
+    super.key,
 
     /// {@macro ui.auth.auth_controller.auth}
-    FirebaseAuth? auth,
+    super.auth,
 
     /// A list of all supported auth providers
-    List<AuthProvider>? providers,
+    super.providers,
     this.onProvidersFound,
-  })  : assert(onProvidersFound != null || providers != null),
-        super(key: key, auth: auth, providers: providers);
+  }) : assert(onProvidersFound != null || providers != null);
 
   Widget _wrap(BuildContext context, Widget child) {
     return AuthStateListener(
