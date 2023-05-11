@@ -21,7 +21,7 @@ void setupFirebaseStorageMocks([Callback? customHandlers]) {
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(MethodChannelFirebaseStorage.channel,
             (call) async {
       return await methodCallCallback(call);

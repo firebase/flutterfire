@@ -117,7 +117,7 @@ Future<void> main() async {
       expect(firstNameFinder, findsOneWidget);
 
       //For some reason, we have a renderflex issue when tapping
-      tester.binding.window.physicalSizeTestValue = const Size(1000, 2000);
+      tester.view.physicalSize = const Size(1000, 2000);
       await tester.tap(firstNameFinder);
       await tester.pumpAndSettle();
 
@@ -155,7 +155,7 @@ Future<void> main() async {
       expect(firstNameFinder, findsOneWidget);
 
       //For some reason, we have a renderflex issue when tapping
-      tester.binding.window.physicalSizeTestValue = const Size(1000, 2000);
+      tester.view.physicalSize = const Size(1000, 2000);
       await tester.tap(firstNameFinder);
       await tester.pumpAndSettle();
 
@@ -171,7 +171,7 @@ Future<void> main() async {
     'FirestoreDataTable row selection is capture',
     (WidgetTester tester) async {
       //For some reason, we have a renderflex issue when tapping
-      tester.binding.window.physicalSizeTestValue = const Size(1000, 2000);
+      tester.view.physicalSize = const Size(1000, 2000);
 
       var nbItemSelected = 0;
 

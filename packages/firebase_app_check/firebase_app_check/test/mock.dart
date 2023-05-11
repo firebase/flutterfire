@@ -16,7 +16,7 @@ void setupFirebaseAppCheckMocks([Callback? customHandlers]) {
 
   setupFirebaseCoreMocks();
 
-  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(MethodChannelFirebaseAppCheck.channel,
           (MethodCall methodCall) async {
     if (methodCall.method != 'FirebaseAppCheck#registerTokenListener') {

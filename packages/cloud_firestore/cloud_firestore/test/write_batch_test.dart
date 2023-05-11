@@ -14,7 +14,7 @@ void main() {
   FirebaseFirestore? firestore;
   FirebaseFirestore? firestoreSecondary;
 
-  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
           (call) async {
     String path = call.arguments['path'];

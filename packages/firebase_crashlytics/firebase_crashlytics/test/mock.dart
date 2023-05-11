@@ -70,7 +70,7 @@ void setupFirebaseCrashlyticsMocks([Callback? customHandlers]) {
 
   TestFirebaseCoreHostApi.setup(MockFirebaseAppWithCollectionEnabled());
 
-  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(MethodChannelFirebaseCrashlytics.channel,
           (MethodCall methodCall) async {
     methodCallLog.add(methodCall);

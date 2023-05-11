@@ -21,7 +21,7 @@ void main() {
     StandardMethodCodec(AggregateQueryMessageCodec()),
   );
 
-  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
           (call) async {
     if (call.method == 'AggregateQuery#count') {

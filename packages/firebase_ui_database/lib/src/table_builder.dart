@@ -51,7 +51,10 @@ class FirebaseDatabaseDataTable extends StatefulWidget {
     this.actions,
     this.sortColumnIndex,
     this.sortAscending = true,
-    this.dataRowHeight = kMinInteractiveDimension,
+    @Deprecated('Migrate to use dataRowMinHeight and dataRowMaxHeight instead.')
+        double? dataRowHeight,
+    double? dataRowMinHeight,
+    double? dataRowMaxHeight,
     this.headingRowHeight = 56.0,
     this.horizontalMargin = 24.0,
     this.columnSpacing = 56.0,
@@ -62,10 +65,14 @@ class FirebaseDatabaseDataTable extends StatefulWidget {
     this.dragStartBehavior = DragStartBehavior.start,
     this.arrowHeadColor,
     this.checkboxHorizontalMargin,
-  }) : assert(
+  })  : assert(
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
-        ); // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
+        ), // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
+        dataRowMinHeight =
+            dataRowHeight ?? dataRowMinHeight ?? kMinInteractiveDimension,
+        dataRowMaxHeight =
+            dataRowHeight ?? dataRowMaxHeight ?? kMinInteractiveDimension;
 
   /// The firestore query that will be displayed
   final Query query;
@@ -105,11 +112,17 @@ class FirebaseDatabaseDataTable extends StatefulWidget {
   /// The value is the index of the first row on the currently displayed page.
   final void Function(int page)? onPageChanged;
 
-  /// The height of each row (excluding the row that contains column headings).
+  /// The minimum height of each row (excluding the row that contains column headings).
   ///
   /// This value is optional and defaults to kMinInteractiveDimension if not
   /// specified.
-  final double dataRowHeight;
+  final double dataRowMinHeight;
+
+  /// The maximum height of each row (excluding the row that contains column headings).
+  ///
+  /// This value is optional and defaults to kMinInteractiveDimension if not
+  /// specified.
+  final double dataRowMaxHeight;
 
   /// The current primary sort key's column.
   ///
@@ -213,7 +226,8 @@ class _FirestoreTableState extends State<FirebaseDatabaseDataTable> {
               arrowHeadColor: widget.arrowHeadColor,
               checkboxHorizontalMargin: widget.checkboxHorizontalMargin,
               columnSpacing: widget.columnSpacing,
-              dataRowHeight: widget.dataRowHeight,
+              dataRowMaxHeight: widget.dataRowMaxHeight,
+              dataRowMinHeight: widget.dataRowMinHeight,
               dragStartBehavior: widget.dragStartBehavior,
               headingRowHeight: widget.headingRowHeight,
               horizontalMargin: widget.horizontalMargin,

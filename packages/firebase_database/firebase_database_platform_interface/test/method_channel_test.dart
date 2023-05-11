@@ -30,7 +30,7 @@ void main() {
     );
 
     messenger =
-        TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger;
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
   });
 
   group('MethodChannelDatabase', () {
@@ -45,7 +45,7 @@ void main() {
     setUp(() async {
       database = MethodChannelDatabase(app: app, databaseURL: databaseURL);
 
-      TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
         log.add(methodCall);
 
@@ -454,7 +454,7 @@ void main() {
 
         Future<void> simulateError(String errorMessage) async {
           await TestDefaultBinaryMessengerBinding
-              .instance?.defaultBinaryMessenger
+              .instance.defaultBinaryMessenger
               .handlePlatformMessage(
             eventChannel.name,
             eventChannel.codec.encodeErrorEnvelope(
@@ -502,7 +502,7 @@ void main() {
 
         Future<void> simulateEvent(Map<String, dynamic> event) async {
           await TestDefaultBinaryMessengerBinding
-              .instance?.defaultBinaryMessenger
+              .instance.defaultBinaryMessenger
               .handlePlatformMessage(
             eventChannel.name,
             eventChannel.codec.encodeSuccessEnvelope(event),

@@ -18,7 +18,7 @@ void setupFirebaseAppCheckMocks([Callback? customHandlers]) {
 
   setupFirebaseCoreMocks();
 
-  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(MethodChannelFirebaseAppCheck.channel,
           (MethodCall methodCall) async {
     methodCallLog.add(methodCall);
@@ -30,7 +30,7 @@ void setupFirebaseAppCheckMocks([Callback? customHandlers]) {
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(MethodChannelFirebaseAppCheck.channel,
             (call) async {
       return await methodCallCallback(call);

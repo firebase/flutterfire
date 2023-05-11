@@ -18,7 +18,7 @@ void setupFirebaseCrashlyticsMocks([Callback? customHandlers]) {
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(MethodChannelFirebaseCrashlytics.channel,
             (call) async {
       return await methodCallCallback(call);
