@@ -11,8 +11,8 @@ false_secrets:
   - dartpad/**
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
-  flutter: '>=1.12.13+hotfix.5'
+  sdk: '>=2.18.0 <4.0.0'
+  flutter: '>=3.3.0'
 
 dependencies:
   cloud_firestore_platform_interface: ^5.13.0

@@ -2,7 +2,7 @@ name: firebase_storage_example
 description: Demonstrates how to use the firebase_storage plugin.
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
   firebase_core: ^2.11.0

@@ -4,8 +4,8 @@ version: 1.2.0
 homepage: https://github.com/firebase/flutterfire/packages/firebase_ui_shared
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
-  flutter: '>=1.17.0'
+  sdk: '>=2.18.0 <4.0.0'
+  flutter: '>=3.3.0'
 
 dependencies:
   flutter:

@@ -2,7 +2,7 @@ name: cloud_firestore_example
 description: Demonstrates how to use the firestore plugin.
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
   cloud_firestore: ^4.6.0

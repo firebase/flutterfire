@@ -4,8 +4,8 @@ version: 0.2.2+2
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_database/firebase_database_web
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
-  flutter: '>=1.20.0'
+  sdk: '>=2.18.0 <4.0.0'
+  flutter: '>=3.3.0'
 
 dependencies:
   firebase_core: ^2.11.0

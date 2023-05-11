@@ -2,8 +2,8 @@ name: firebase_crashlytics_example
 description: Demonstrates how to use the firebase_crashlytics plugin.
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
-  flutter: '>=1.12.13+hotfix.5'
+  sdk: '>=2.18.0 <4.0.0'
+  flutter: '>=3.3.0'
 
 dependencies:
   firebase_analytics: ^10.3.0
