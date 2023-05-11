@@ -390,7 +390,7 @@ class _EmailVerificationBadgeState extends State<_EmailVerificationBadge> {
           ),
           const SizedBox(height: 16),
           if (state == EmailVerificationState.pending)
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 LoadingIndicator(size: 16, borderWidth: 0.5),
