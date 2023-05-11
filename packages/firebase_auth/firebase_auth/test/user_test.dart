@@ -130,7 +130,7 @@ void main() {
         languageCode: anyNamed('languageCode'),
       )).thenAnswer((_) => mockAuthPlatform);
 
-      TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(MethodChannelFirebaseAuth.channel,
               (call) async {
         switch (call.method) {

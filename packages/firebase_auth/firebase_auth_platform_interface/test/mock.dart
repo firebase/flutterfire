@@ -27,7 +27,7 @@ void handleEventChannel(
   final String name, [
   List<MethodCall>? log,
 ]) {
-  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(MethodChannel(name),
           (MethodCall methodCall) async {
     log?.add(methodCall);
@@ -46,7 +46,7 @@ Future<void> injectEventChannelResponse(
   String channelName,
   Map<String, dynamic> event,
 ) async {
-  await TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+  await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .handlePlatformMessage(
     channelName,
     MethodChannelFirebaseAuth.channel.codec.encodeSuccessEnvelope(event),
@@ -55,14 +55,14 @@ Future<void> injectEventChannelResponse(
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(MethodChannelFirebaseAuth.channel,
             (call) async {
       return await methodCallCallback(call);
     });
 
 Future<void> simulateEvent(String name, Map<String, dynamic>? user) async {
-  await TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+  await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .handlePlatformMessage(
     MethodChannelFirebaseAuth.channel.name,
     MethodChannelFirebaseAuth.channel.codec.encodeMethodCall(
