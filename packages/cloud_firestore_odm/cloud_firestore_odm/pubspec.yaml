@@ -8,13 +8,13 @@ false_secrets:
   - example/**
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=2.19.0 <3.0.0'
 
 dependencies:
   cloud_firestore: ^4.6.0
   flutter:
     sdk: flutter
-  json_annotation: ^4.5.0
+  json_annotation: ^4.8.1
   meta: ^1.8.0
 
 dev_dependencies:
