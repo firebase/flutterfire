@@ -162,7 +162,7 @@ void handleTransactionEventChannel(
               .handlePlatformMessage(
             name,
             codec.encodeSuccessEnvelope({
-              'appName': app?.name,
+              'appName': app.name,
               'error': {
                 'code': 'unknown',
               },

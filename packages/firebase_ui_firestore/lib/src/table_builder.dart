@@ -68,7 +68,13 @@ class FirestoreDataTable extends StatefulWidget {
     this.actions,
     this.sortColumnIndex,
     this.sortAscending = true,
-    this.dataRowHeight = kMinInteractiveDimension,
+    @Deprecated(
+      'Migrate to use dataRowMinHeight and dataRowMaxHeight instead. '
+      'This feature was deprecated after v3.7.0-5.0.pre.',
+    )
+        double? dataRowHeight,
+    double? dataRowMinHeight,
+    double? dataRowMaxHeight,
     this.headingRowHeight = 56.0,
     this.horizontalMargin = 24.0,
     this.columnSpacing = 56.0,
@@ -83,10 +89,14 @@ class FirestoreDataTable extends StatefulWidget {
     this.enableDefaultCellEditor = true,
     this.onTapCell,
     this.onSelectedRows,
-  }) : assert(
+  })  : assert(
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
-        );
+        ),
+        dataRowMinHeight =
+            dataRowHeight ?? dataRowMinHeight ?? kMinInteractiveDimension,
+        dataRowMaxHeight =
+            dataRowHeight ?? dataRowMaxHeight ?? kMinInteractiveDimension;
 
   /// When specified, the builder will be used to display your own widget for the cell
   final CellBuilder? cellBuilder;
@@ -137,11 +147,17 @@ class FirestoreDataTable extends StatefulWidget {
   /// The value is the index of the first row on the currently displayed page.
   final void Function(int page)? onPageChanged;
 
-  /// The height of each row (excluding the row that contains column headings).
+  /// The minimum height of each row (excluding the row that contains column headings).
   ///
   /// This value is optional and defaults to kMinInteractiveDimension if not
   /// specified.
-  final double dataRowHeight;
+  final double dataRowMinHeight;
+
+  /// The maximum height of each row (excluding the row that contains column headings).
+  ///
+  /// This value is optional and defaults to kMinInteractiveDimension if not
+  /// specified.
+  final double dataRowMaxHeight;
 
   /// The current primary sort key's column.
   ///
@@ -282,7 +298,8 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
                       arrowHeadColor: widget.arrowHeadColor,
                       checkboxHorizontalMargin: widget.checkboxHorizontalMargin,
                       columnSpacing: widget.columnSpacing,
-                      dataRowHeight: widget.dataRowHeight,
+                      dataRowMaxHeight: widget.dataRowMaxHeight,
+                      dataRowMinHeight: widget.dataRowMinHeight,
                       dragStartBehavior: widget.dragStartBehavior,
                       headingRowHeight: widget.headingRowHeight,
                       horizontalMargin: widget.horizontalMargin,
