@@ -11668,11 +11668,13 @@ IgnoredGetter _$IgnoredGetterFromJson(Map<String, dynamic> json) =>
 
 const _$IgnoredGetterFieldMap = <String, String>{
   'value': 'value',
+  'count3': 'count3',
 };
 
 Map<String, dynamic> _$IgnoredGetterToJson(IgnoredGetter instance) =>
     <String, dynamic>{
       'value': instance.value,
+      'count3': instance.count3,
     };
 
 Model _$ModelFromJson(Map<String, dynamic> json) => Model(
