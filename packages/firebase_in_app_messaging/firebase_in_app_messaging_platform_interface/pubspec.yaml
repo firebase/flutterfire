@@ -6,8 +6,8 @@ repository: https://github.com/firebase/flutterfire/tree/master/packages/firebas
 version: 0.2.3
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
-  flutter: '>=1.9.1+hotfix.5'
+  sdk: '>=2.18.0 <4.0.0'
+  flutter: '>=3.3.0'
 
 dependencies:
   _flutterfire_internals: ^1.2.0

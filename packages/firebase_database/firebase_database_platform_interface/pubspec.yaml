@@ -3,6 +3,10 @@ description: A common platform interface for the firebase_database plugin.
 version: 0.2.4
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_database/firebase_database_platform_interface
 
+environment:
+  sdk: '>=2.18.0 <4.0.0'
+  flutter: '>=3.3.0'
+
 dependencies:
   _flutterfire_internals: ^1.2.0
   collection: ^1.14.3
@@ -17,7 +21,3 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.0.2
-
-environment:
-  sdk: '>=2.18.0 <3.0.0'
-  flutter: '>=1.12.13+hotfix.5'
