@@ -2,8 +2,8 @@ name: firebase_messaging_example
 description: Demonstrates how to use the firebase_messaging plugin.
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
-  flutter: '>=1.12.13+hotfix.5'
+  sdk: '>=2.18.0 <4.0.0'
+  flutter: '>=3.3.0'
 
 dependencies:
   firebase_core: ^2.11.0

@@ -9,8 +9,8 @@ false_secrets:
   - example/**
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
-  flutter: '>=1.12.13+hotfix.5'
+  sdk: '>=2.18.0 <4.0.0'
+  flutter: '>=3.3.0'
 
 dependencies:
   firebase_core_platform_interface: ^4.7.0
@@ -39,7 +39,6 @@ flutter:
         default_package: firebase_core_web
       windows:
         pluginClass: FirebaseCorePluginCApi
-
 
 firebase:
   google_services_gradle_plugin_version: '4.3.10'
