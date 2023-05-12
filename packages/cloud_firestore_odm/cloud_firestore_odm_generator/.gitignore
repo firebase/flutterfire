@@ -5,3 +5,6 @@
 .packages
 .pub-cache/
 .pub/
+
+# Needed because of https://github.com/dart-lang/graphs/issues/86
+!pubspec_override.yaml
