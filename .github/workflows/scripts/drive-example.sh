@@ -13,7 +13,7 @@ fi
 
 if [ "$ACTION" == "ios" ]
 then
-  SIMULATOR="iPhone 11"
+  SIMULATOR="iPhone 14"
   # Boot simulator and wait for System app to be ready.
   xcrun simctl bootstatus "$SIMULATOR" -b
   xcrun simctl logverbose "$SIMULATOR" enable

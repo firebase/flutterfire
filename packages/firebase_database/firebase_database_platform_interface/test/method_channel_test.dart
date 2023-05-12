@@ -16,7 +16,7 @@ import 'test_common.dart';
 void main() {
   initializeMethodChannel();
   late FirebaseApp app;
-  late BinaryMessenger messenger;
+  late TestDefaultBinaryMessenger? messenger;
 
   setUpAll(() async {
     app = await Firebase.initializeApp(
@@ -29,7 +29,8 @@ void main() {
       ),
     );
 
-    messenger = ServicesBinding.instance.defaultBinaryMessenger;
+    messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
   });
 
   group('MethodChannelDatabase', () {
@@ -44,7 +45,8 @@ void main() {
     setUp(() async {
       database = MethodChannelDatabase(app: app, databaseURL: databaseURL);
 
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
         log.add(methodCall);
 
         switch (methodCall.method) {
@@ -58,7 +60,7 @@ void main() {
               String key,
               dynamic data,
             ) async {
-              await messenger.handlePlatformMessage(
+              await messenger?.handlePlatformMessage(
                 channel.name,
                 channel.codec.encodeMethodCall(
                   MethodCall(
@@ -451,7 +453,9 @@ void main() {
         final QueryPlatform query = database.ref('some/path');
 
         Future<void> simulateError(String errorMessage) async {
-          await eventChannel.binaryMessenger.handlePlatformMessage(
+          await TestDefaultBinaryMessengerBinding
+              .instance.defaultBinaryMessenger
+              .handlePlatformMessage(
             eventChannel.name,
             eventChannel.codec.encodeErrorEnvelope(
               code: errorCode,
@@ -497,7 +501,9 @@ void main() {
         final QueryPlatform query = database.ref(path);
 
         Future<void> simulateEvent(Map<String, dynamic> event) async {
-          await eventChannel.binaryMessenger.handlePlatformMessage(
+          await TestDefaultBinaryMessengerBinding
+              .instance.defaultBinaryMessenger
+              .handlePlatformMessage(
             eventChannel.name,
             eventChannel.codec.encodeSuccessEnvelope(event),
             (_) {},

@@ -7,8 +7,8 @@ import 'package:cloud_firestore_platform_interface/src/method_channel/method_cha
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import './mock.dart';
 
@@ -21,7 +21,9 @@ void main() {
     StandardMethodCodec(AggregateQueryMessageCodec()),
   );
 
-  MethodChannelFirebaseFirestore.channel.setMockMethodCallHandler((call) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+          (call) async {
     if (call.method == 'AggregateQuery#count') {
       return {
         'count': kCount,

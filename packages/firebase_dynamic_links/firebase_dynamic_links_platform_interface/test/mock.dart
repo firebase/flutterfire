@@ -21,8 +21,9 @@ void setupFirebaseDynamicLinksMocks([Callback? customHandlers]) {
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    MethodChannelFirebaseDynamicLinks.channel
-        .setMockMethodCallHandler((call) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(MethodChannelFirebaseDynamicLinks.channel,
+            (call) async {
       return await methodCallCallback(call);
     });
 
@@ -30,7 +31,9 @@ void handleEventChannel(
   final String name, [
   List<MethodCall>? log,
 ]) {
-  MethodChannel(name).setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannel(name),
+          (MethodCall methodCall) async {
     log?.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
@@ -39,6 +42,7 @@ void handleEventChannel(
       default:
         return null;
     }
+    return null;
   });
 }
 
@@ -46,7 +50,8 @@ Future<void> injectEventChannelResponse(
   String channelName,
   Map<String, dynamic> event,
 ) async {
-  await ServicesBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
+  await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .handlePlatformMessage(
     channelName,
     MethodChannelFirebaseDynamicLinks.channel.codec
         .encodeSuccessEnvelope(event),

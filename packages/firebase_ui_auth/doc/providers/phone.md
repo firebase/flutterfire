@@ -163,7 +163,7 @@ class MyCustomWidget extends StatelessWidget {
         }
       },
       builder: (context, state, ctrl, child) {
-        if (state is AwaitingPhoneNumber) {
+        if (state is AwaitingPhoneNumber || state is SMSCodeRequested) {
           return PhoneInput(
             initialCountryCode: 'US',
             onSubmit: (phoneNumber) {

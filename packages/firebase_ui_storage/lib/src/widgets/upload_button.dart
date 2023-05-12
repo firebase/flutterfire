@@ -25,7 +25,7 @@ class UploadButton extends StatefulWidget {
   final ButtonVariant variant;
 
   /// A callback that is called when an error occurs.
-  final Function(Object? error, StackTrace? stackTrace) onError;
+  final void Function(Object? error, StackTrace? stackTrace) onError;
 
   /// A list of file extensions that can be selected.
   /// If not specified, all files are allowed.
@@ -34,6 +34,9 @@ class UploadButton extends StatefulWidget {
   /// A list of mime types that can be selected.
   /// If not specified, all files are allowed.
   final List<String> mimeTypes;
+
+  /// A callback that is called when the upload is started.
+  final Function(UploadTask task)? onUploadStarted;
 
   /// A callback that is called when the upload is complete.
   final Function(Reference ref) onUploadComplete;
@@ -45,6 +48,7 @@ class UploadButton extends StatefulWidget {
     super.key,
     required this.onError,
     required this.onUploadComplete,
+    this.onUploadStarted,
     this.storage,
     this.variant = ButtonVariant.filled,
     this.extensions = const [],
@@ -77,13 +81,16 @@ class _UploadButtonState extends State<UploadButton> {
       final childRef = config.namingPolicy.getUploadFileName(file.name);
       final ref = config.uploadRoot.child(childRef);
 
+      UploadTask task;
+
       if (!kIsWeb) {
-        await ref.putFile(File(file.path));
+        task = ref.putFile(File(file.path));
       } else {
-        final task = ref.putData(await file.readAsBytes(), widget.metadata);
-        await task;
+        task = ref.putData(await file.readAsBytes(), widget.metadata);
       }
 
+      widget.onUploadStarted?.call(task);
+      await task;
       widget.onUploadComplete(ref);
     } catch (e, stackTrace) {
       widget.onError(e, stackTrace);
