@@ -19,7 +19,7 @@ void main() {
     StandardMethodCodec(TestFirestoreMessageCodec()),
   );
 
-  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
           (call) async {
     DocumentReferencePlatform ref = call.arguments['reference'];
