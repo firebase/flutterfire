@@ -28,7 +28,6 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  flutter_svg: ^1.0.0
   firebase_ui_auth: ^1.4.0
   firebase_ui_localizations: ^1.5.0
   firebase_ui_oauth: ^1.4.0
