@@ -111,6 +111,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       try {
         _delegate.useEmulator(host, port);
       } catch (e) {
+        print(e);
         final String code = (e as dynamic).code;
         // this catches FirebaseError from web that occurs after hot reloading & hot restarting
         if (code != 'failed-precondition') {
