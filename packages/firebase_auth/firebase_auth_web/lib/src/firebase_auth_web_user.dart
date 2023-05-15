@@ -4,17 +4,14 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:js';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_user_credential.dart';
-import 'package:intl/intl.dart';
 
 import 'firebase_auth_web_confirmation_result.dart';
 import 'interop/auth.dart' as auth_interop;
 import 'utils/web_utils.dart';
-
-/// The format of an incoming metadata string timestamp from the firebase-dart library
-final DateFormat _dateFormat = DateFormat('EEE, d MMM yyyy HH:mm:ss', 'en_US');
 
 /// Web delegate implementation of [UserPlatform].
 class UserWeb extends UserPlatform {
@@ -34,14 +31,12 @@ class UserWeb extends UserPlatform {
                 isEmailVerified: _webUser.emailVerified,
                 isAnonymous: _webUser.isAnonymous,
                 creationTimestamp: _webUser.metadata.creationTime != null
-                    ? _dateFormat
-                        .parse(_webUser.metadata.creationTime!, true)
-                        .millisecondsSinceEpoch
+                    ? context['Date']
+                        .callMethod('parse', [_webUser.metadata.creationTime])
                     : null,
                 lastSignInTimestamp: _webUser.metadata.lastSignInTime != null
-                    ? _dateFormat
-                        .parse(_webUser.metadata.lastSignInTime!, true)
-                        .millisecondsSinceEpoch
+                    ? context['Date']
+                        .callMethod('parse', [_webUser.metadata.lastSignInTime])
                     : null,
                 phoneNumber: _webUser.phoneNumber,
                 photoUrl: _webUser.photoURL,

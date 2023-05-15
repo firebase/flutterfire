@@ -40,7 +40,7 @@ void initializeMethodChannel() {
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
             (call) async {
       return await methodCallCallback(call);
@@ -51,13 +51,13 @@ void handleDocumentSnapshotsEventChannel(
   final name = 'plugins.flutter.io/firebase_firestore/document/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
-  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(MethodChannel(name, codec),
           (MethodCall methodCall) async {
     log.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
-        await TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope(
@@ -84,13 +84,13 @@ void handleQuerySnapshotsEventChannel(final String id, List<MethodCall> log) {
   final name = 'plugins.flutter.io/firebase_firestore/query/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
-  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(MethodChannel(name, codec),
           (MethodCall methodCall) async {
     log.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
-        await TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope(
@@ -117,12 +117,12 @@ void handleSnapshotsInSyncEventChannel(final String id) {
   final name = 'plugins.flutter.io/firebase_firestore/snapshotsInSync/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
-  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(MethodChannel(name, codec),
           (MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
-        await TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .handlePlatformMessage(
                 name, codec.encodeSuccessEnvelope({}), (_) {});
         break;
@@ -142,12 +142,12 @@ void handleTransactionEventChannel(
   final name = 'plugins.flutter.io/firebase_firestore/transaction/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
-  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(MethodChannel(name, codec),
           (MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
-        await TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope({
@@ -158,11 +158,11 @@ void handleTransactionEventChannel(
 
         if (throwException!) {
           await TestDefaultBinaryMessengerBinding
-              .instance?.defaultBinaryMessenger
+              .instance.defaultBinaryMessenger
               .handlePlatformMessage(
             name,
             codec.encodeSuccessEnvelope({
-              'appName': app?.name,
+              'appName': app.name,
               'error': {
                 'code': 'unknown',
               },
@@ -170,7 +170,7 @@ void handleTransactionEventChannel(
             (_) {},
           );
         }
-        await TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope({
