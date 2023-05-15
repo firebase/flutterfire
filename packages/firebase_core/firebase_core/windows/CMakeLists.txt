@@ -72,6 +72,15 @@ add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${FIREBASE_CPP_SDK_DIR}/include")
 set(firebase_libs firebase_auth firebase_database firebase_app)
+foreach(firebase_lib IN ITEMS ${firebase_libs})
+    get_target_property(firebase_lib_path ${firebase_lib} IMPORTED_LOCATION)
+    string(REPLACE "Debug" "Release" firebase_lib_release_path ${firebase_lib_path})
+    set_target_properties(${firebase_lib} PROPERTIES
+      IMPORTED_LOCATION_DEBUG "${firebase_lib_path}"
+      IMPORTED_LOCATION_RELEASE "${firebase_lib_release_path}"
+    )
+endforeach()
+
 target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}")
 
 target_include_directories(${PLUGIN_NAME} INTERFACE
