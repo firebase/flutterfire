@@ -6,27 +6,35 @@ cmake_minimum_required(VERSION 3.14)
 
 set(FIREBASE_SDK_VERSION "10.5.0")
 set(FIREBASE_SDK_URL "https://dl.google.com/firebase/sdk/cpp/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
-set(FIREBASE_SDK_FILENAME "${CMAKE_BINARY_DIR}/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
-set(EXTRACTED_PATH "${CMAKE_BINARY_DIR}/extracted")
 
-if(NOT EXISTS ${FIREBASE_SDK_FILENAME})
-    file(DOWNLOAD ${FIREBASE_SDK_URL} ${FIREBASE_SDK_FILENAME}
-         SHOW_PROGRESS
-         STATUS download_status
-         LOG download_log)
-    list(GET download_status 0 status_code)
-    if(NOT status_code EQUAL 0)
-        message(FATAL_ERROR "Download failed: ${download_log}")
+if (EXISTS $ENV{FIREBASE_CPP_SDK_DIR}/file_hashes.txt)
+    file(SHA256 $ENV{FIREBASE_CPP_SDK_DIR}/file_hashes.txt FIREBASE_SDK_FILE_HASH)
+endif()
+
+if(FIREBASE_SDK_FILE_HASH STREQUAL "3163806e86ca534d417c0306fcf1068acb35dd7545f3ffdaa109f989b2fd411b")
+    message(STATUS "Found Firebase SDK version ${FIREBASE_SDK_VERSION}")
+    set(FIREBASE_CPP_SDK_DIR $ENV{FIREBASE_CPP_SDK_DIR})
+else()
+    set(FIREBASE_SDK_FILENAME "${CMAKE_BINARY_DIR}/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
+    set(EXTRACTED_PATH "${CMAKE_BINARY_DIR}/extracted")
+    if(NOT EXISTS ${FIREBASE_SDK_FILENAME})
+        file(DOWNLOAD ${FIREBASE_SDK_URL} ${FIREBASE_SDK_FILENAME}
+             SHOW_PROGRESS
+             STATUS download_status
+             LOG download_log)
+        list(GET download_status 0 status_code)
+        if(NOT status_code EQUAL 0)
+            message(FATAL_ERROR "Download failed: ${download_log}")
+        endif()
     endif()
-endif()
 
-if(NOT EXISTS ${EXTRACTED_PATH})
-    file(MAKE_DIRECTORY ${EXTRACTED_PATH})
-    file(ARCHIVE_EXTRACT INPUT ${FIREBASE_SDK_FILENAME}
-         DESTINATION ${EXTRACTED_PATH})
+    if(NOT EXISTS ${EXTRACTED_PATH})
+        file(MAKE_DIRECTORY ${EXTRACTED_PATH})
+        file(ARCHIVE_EXTRACT INPUT ${FIREBASE_SDK_FILENAME}
+             DESTINATION ${EXTRACTED_PATH})
+    endif()
+    set(FIREBASE_CPP_SDK_DIR "${EXTRACTED_PATH}/firebase_cpp_sdk")
 endif()
-set(FIREBASE_CPP_SDK_DIR "${EXTRACTED_PATH}/firebase_cpp_sdk")
-
 
 # Project-level configuration.
 set(PROJECT_NAME "firebase_core")
