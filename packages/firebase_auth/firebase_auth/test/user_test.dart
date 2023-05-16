@@ -61,8 +61,10 @@ void main() {
         'providerId': 'firebase',
         'uid': '12345',
         'displayName': 'Flutter Test User',
-        'photoURL': 'http://www.example.com/',
+        'photoUrl': null,
         'email': 'test@example.com',
+        'isAnonymous': true,
+        'isEmailVerified': false,
       }
     ],
   );
@@ -329,7 +331,7 @@ void main() {
           'displayName: Flutter Test User, '
           'email: test@example.com, '
           'phoneNumber: null, '
-          'photoURL: http://www.example.com/, '
+          'photoURL: null, '
           'providerId: firebase, '
           'uid: 12345)';
 
@@ -342,7 +344,7 @@ void main() {
         'User('
         'displayName: displayName, '
         'email: null, '
-        'emailVerified: false, '
+        'isEmailVerified: false, '
         'isAnonymous: true, '
         'metadata: $userMetadata, '
         'phoneNumber: null, '
@@ -351,7 +353,7 @@ void main() {
         '[$userInfo], '
         'refreshToken: null, '
         'tenantId: null, '
-        'uid: 42)',
+        'uid: 12345)',
       );
     });
   });

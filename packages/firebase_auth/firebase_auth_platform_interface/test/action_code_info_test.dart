@@ -7,7 +7,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const kMockOperation = ActionCodeInfoOperation.passwordReset;
+  const kMockOperation = ActionCodeInfoOperation.verifyEmail;
   const String kMockEmail = 'test@test.com';
   const String kMockPreviousEmail = 'previous@test.com';
   final kMockData =

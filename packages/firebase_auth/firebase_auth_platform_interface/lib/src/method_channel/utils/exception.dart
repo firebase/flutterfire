@@ -38,65 +38,78 @@ FirebaseException platformExceptionToFirebaseAuthException(
   PlatformException platformException, {
   bool fromPigeon = true,
 }) {
-  // Parsing code to match the format of the other platforms
-  var code = platformException.code
-      .replaceAll('ERROR_', '')
-      .toLowerCase()
-      .replaceAll('_', '-');
+  if (fromPigeon) {
+    var code = platformException.code
+        .replaceAll('ERROR_', '')
+        .toLowerCase()
+        .replaceAll('_', '-');
 
-  final customCode = _getCustomCode(
-    platformException.details,
-    platformException.message,
-  );
-  if (customCode != null) {
-    code = customCode;
+    final customCode = _getCustomCode(
+      platformException.details,
+      platformException.message,
+    );
+    if (customCode != null) {
+      code = customCode;
+    }
+
+    if (code.isNotEmpty) {
+      if (code == kMultiFactorError) {
+        return parseMultiFactorError(platformException);
+      }
+    }
+
+    return FirebaseAuthException(
+      code: code,
+      message: platformException.message?.split(': ').last,
+    );
   }
 
-  if (code.isNotEmpty) {
-    if (code == kMultiFactorError) {
+  // Parsing code to match the format of the other platforms
+
+  Map<String, dynamic>? details = platformException.details != null
+      ? Map<String, dynamic>.from(platformException.details)
+      : null;
+
+  String code = 'unknown';
+  String? message = platformException.message;
+  String? email;
+  AuthCredential? credential;
+
+  if (details != null) {
+    code = details['code'] ?? code;
+    if (code == 'second-factor-required') {
       return parseMultiFactorError(platformException);
     }
-  }
 
+    message = details['message'] ?? message;
+
+    final additionalData = details['additionalData'];
+
+    if (additionalData != null) {
+      if (additionalData['authCredential'] != null) {
+        credential = AuthCredential(
+          providerId: additionalData['authCredential']['providerId'],
+          signInMethod: additionalData['authCredential']['signInMethod'],
+          token: additionalData['authCredential']['token'],
+        );
+      }
+
+      if (additionalData['email'] != null) {
+        email = additionalData['email'];
+      }
+    }
+
+    final customCode = _getCustomCode(additionalData, message);
+    if (customCode != null) {
+      code = customCode;
+    }
+  }
   return FirebaseAuthException(
     code: code,
-    message: platformException.message?.split(': ').last,
+    message: message,
+    email: email,
+    credential: credential,
   );
-
-  // String code = 'unknown';
-  // String? message = platformException.message;
-  // String? email;
-  // AuthCredential? credential;
-
-  // message = details['message'] ?? message;
-
-  // final additionalData = details['additionalData'];
-
-  // if (additionalData != null) {
-  //   if (additionalData['authCredential'] != null) {
-  //     credential = AuthCredential(
-  //       providerId: additionalData['authCredential']['providerId'],
-  //       signInMethod: additionalData['authCredential']['signInMethod'],
-  //       token: additionalData['authCredential']['token'],
-  //     );
-  //   }
-
-  //   if (additionalData['email'] != null) {
-  //     email = additionalData['email'];
-  //   }
-  // }
-
-  // final customCode = _getCustomCode(additionalData, message);
-  // if (customCode != null) {
-  //   code = customCode;
-  // }
-
-  // return FirebaseAuthException(
-  //   code = code,
-  //   message = message,
-  //   email = email,
-  //   credential = credential,
-  // );
 }
 
 // Check for custom error codes that are not returned in the normal errors by Firebase SDKs

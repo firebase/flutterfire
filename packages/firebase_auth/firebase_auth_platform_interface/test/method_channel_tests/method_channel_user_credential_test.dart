@@ -22,32 +22,30 @@ void main() {
   const String kMockProviderId = 'provider-id';
   const String kMockSignInMethod = 'password';
 
-  final kMockInitialUserData = PigeonUserCredential(
-    user: PigeonUserDetails(
-      userInfo: PigeonUserInfo(
-        uid: kMockUid,
-        email: kMockEmail,
-        isAnonymous: false,
-        isEmailVerified: false,
-      ),
-      providerData: [],
-    ),
-    additionalUserInfo: PigeonAdditionalUserInfo(
-      isNewUser: true,
-      profile: {'foo': 'bar'},
-      providerId: 'info$kMockProviderId',
-      username: 'info$kMockUsername',
-    ),
-    credential: PigeonAuthCredential(
-      providerId: 'auth$kMockProviderId',
-      signInMethod: kMockSignInMethod,
-      nativeId: 0,
-    ),
-  );
-
   group('$MethodChannelUserCredential()', () {
     late MethodChannelUserCredential userCredential;
-    late PigeonUserCredential userData = kMockInitialUserData;
+    PigeonUserCredential userData = PigeonUserCredential(
+      user: PigeonUserDetails(
+        userInfo: PigeonUserInfo(
+          uid: kMockUid,
+          email: kMockEmail,
+          isAnonymous: false,
+          isEmailVerified: false,
+        ),
+        providerData: [],
+      ),
+      additionalUserInfo: PigeonAdditionalUserInfo(
+        isNewUser: true,
+        profile: {'foo': 'bar'},
+        providerId: 'info$kMockProviderId',
+        username: 'info$kMockUsername',
+      ),
+      credential: PigeonAuthCredential(
+        providerId: 'auth$kMockProviderId',
+        signInMethod: kMockSignInMethod,
+        nativeId: 0,
+      ),
+    );
 
     setUpAll(() async {
       await Firebase.initializeApp();
@@ -57,6 +55,29 @@ void main() {
     });
 
     setUp(() {
+      final kMockInitialUserData = PigeonUserCredential(
+        user: PigeonUserDetails(
+          userInfo: PigeonUserInfo(
+            uid: kMockUid,
+            email: kMockEmail,
+            isAnonymous: false,
+            isEmailVerified: false,
+          ),
+          providerData: [],
+        ),
+        additionalUserInfo: PigeonAdditionalUserInfo(
+          isNewUser: true,
+          profile: {'foo': 'bar'},
+          providerId: 'info$kMockProviderId',
+          username: 'info$kMockUsername',
+        ),
+        credential: PigeonAuthCredential(
+          providerId: 'auth$kMockProviderId',
+          signInMethod: kMockSignInMethod,
+          nativeId: 0,
+        ),
+      );
+
       userData = kMockInitialUserData;
     });
 

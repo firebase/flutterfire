@@ -27,14 +27,16 @@ void main() {
       DateTime.now().subtract(const Duration(days: 2)).millisecondsSinceEpoch;
   final int kMockLastSignInTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
-  final List<Map<String, String>> kMockInitialProviderData = [
-    <String, String>{
+  final List<Map<String, Object>> kMockInitialProviderData = [
+    <String, Object>{
       'providerId': kMockProviderId,
       'uid': kMockUid,
       'displayName': kMockDisplayName,
-      'photoURL': kMockPhotoURL,
+      'photoUrl': kMockPhotoURL,
       'email': kMockEmail,
       'phoneNumber': kMockPhoneNumber,
+      'isEmailVerified': false,
+      'isAnonymous': true
     },
   ];
   group('$UserPlatform()', () {

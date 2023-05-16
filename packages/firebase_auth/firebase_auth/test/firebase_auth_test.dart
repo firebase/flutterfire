@@ -57,7 +57,7 @@ void main() {
         'providerId': 'firebase',
         'uid': '12345',
         'displayName': 'Flutter Test User',
-        'photoURL': 'http://www.example.com/',
+        'photoUrl': 'http://www.example.com/',
         'email': 'test@example.com',
       }
     ],
