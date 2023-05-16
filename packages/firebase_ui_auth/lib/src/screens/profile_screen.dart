@@ -393,10 +393,10 @@ class _EmailVerificationBadgeState extends State<_EmailVerificationBadge> {
             // ignore: prefer_const_constructors
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: const [
                 LoadingIndicator(size: 16, borderWidth: 0.5),
-                const SizedBox(width: 16),
-                const Text('Waiting for email verification'),
+                SizedBox(width: 16),
+                Text('Waiting for email verification'),
               ],
             )
           else
