@@ -122,7 +122,7 @@ void main() {
     });
     group('get()', () {
       setUp(() async {
-        TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
                 (MethodCall methodCall) async {
           switch (methodCall.method) {

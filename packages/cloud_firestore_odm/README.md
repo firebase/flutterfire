@@ -34,7 +34,7 @@ That is done by adding the following to your `pubspec.yaml`:
 
 ```yaml
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: '>=2.18.0 <4.0.0'
 ```
 
 ### 2. FlutterFire Initialization
