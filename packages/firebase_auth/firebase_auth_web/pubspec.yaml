@@ -21,8 +21,6 @@ dependencies:
   meta: ^1.8.0
 
 dev_dependencies:
-  firebase_auth: ^4.6.0
-  firebase_core_platform_interface: ^4.8.0
   flutter_test:
     sdk: flutter
 
