@@ -5,20 +5,31 @@
 cmake_minimum_required(VERSION 3.14)
 
 set(FIREBASE_SDK_VERSION "10.5.0")
-set(FIREBASE_SDK_URL "https://dl.google.com/firebase/sdk/cpp/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
 
-if (EXISTS $ENV{FIREBASE_CPP_SDK_DIR}/file_hashes.txt)
-    file(SHA256 $ENV{FIREBASE_CPP_SDK_DIR}/file_hashes.txt FIREBASE_SDK_FILE_HASH)
+if (EXISTS $ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h)
+    file(READ "$ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h" existing_version)
+
+    string(REGEX MATCH "FIREBASE_VERSION_MAJOR ([0-9]*)" _ ${existing_version})
+    set(existing_version_major ${CMAKE_MATCH_1})
+
+    string(REGEX MATCH "FIREBASE_VERSION_MINOR ([0-9]*)" _ ${existing_version})
+    set(existing_version_minor ${CMAKE_MATCH_1})
+
+    string(REGEX MATCH "FIREBASE_VERSION_REVISION ([0-9]*)" _ ${existing_version})
+    set(existing_version_revision ${CMAKE_MATCH_1})
+
+    set(existing_version "${existing_version_major}.${existing_version_minor}.${existing_version_revision}")
 endif()
 
-if(FIREBASE_SDK_FILE_HASH STREQUAL "3163806e86ca534d417c0306fcf1068acb35dd7545f3ffdaa109f989b2fd411b")
-    message(STATUS "Found Firebase SDK version ${FIREBASE_SDK_VERSION}")
+if(existing_version VERSION_EQUAL FIREBASE_SDK_VERSION)
+    message(STATUS "Found Firebase SDK version ${existing_version}")
     set(FIREBASE_CPP_SDK_DIR $ENV{FIREBASE_CPP_SDK_DIR})
 else()
-    set(FIREBASE_SDK_FILENAME "${CMAKE_BINARY_DIR}/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
-    set(EXTRACTED_PATH "${CMAKE_BINARY_DIR}/extracted")
-    if(NOT EXISTS ${FIREBASE_SDK_FILENAME})
-        file(DOWNLOAD ${FIREBASE_SDK_URL} ${FIREBASE_SDK_FILENAME}
+    set(firebase_sdk_url "https://dl.google.com/firebase/sdk/cpp/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
+    set(firebase_sdk_filename "${CMAKE_BINARY_DIR}/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
+    set(extracted_path "${CMAKE_BINARY_DIR}/extracted")
+    if(NOT EXISTS ${firebase_sdk_filename})
+        file(DOWNLOAD ${firebase_sdk_url} ${firebase_sdk_filename}
              SHOW_PROGRESS
              STATUS download_status
              LOG download_log)
@@ -28,12 +39,12 @@ else()
         endif()
     endif()
 
-    if(NOT EXISTS ${EXTRACTED_PATH})
-        file(MAKE_DIRECTORY ${EXTRACTED_PATH})
-        file(ARCHIVE_EXTRACT INPUT ${FIREBASE_SDK_FILENAME}
-             DESTINATION ${EXTRACTED_PATH})
+    if(NOT EXISTS ${extracted_path})
+        file(MAKE_DIRECTORY ${extracted_path})
+        file(ARCHIVE_EXTRACT INPUT ${firebase_sdk_filename}
+             DESTINATION ${extracted_path})
     endif()
-    set(FIREBASE_CPP_SDK_DIR "${EXTRACTED_PATH}/firebase_cpp_sdk")
+    set(FIREBASE_CPP_SDK_DIR "${extracted_path}/firebase_cpp_sdk")
 endif()
 
 # Project-level configuration.
