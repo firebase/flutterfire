@@ -5,7 +5,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'freezed.dart';
 
@@ -27,7 +27,7 @@ mixin _$Person {
   String get firstName => throw _privateConstructorUsedError;
   @JsonKey(name: 'LAST_NAME')
   String get lastName => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   int? get ignored => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -43,7 +43,7 @@ abstract class $PersonCopyWith<$Res> {
   $Res call(
       {String firstName,
       @JsonKey(name: 'LAST_NAME') String lastName,
-      @JsonKey(ignore: true) int? ignored});
+      @JsonKey(includeFromJson: false, includeToJson: false) int? ignored});
 }
 
 /// @nodoc
@@ -89,7 +89,7 @@ abstract class _$$_PersonCopyWith<$Res> implements $PersonCopyWith<$Res> {
   $Res call(
       {String firstName,
       @JsonKey(name: 'LAST_NAME') String lastName,
-      @JsonKey(ignore: true) int? ignored});
+      @JsonKey(includeFromJson: false, includeToJson: false) int? ignored});
 }
 
 /// @nodoc
@@ -130,7 +130,7 @@ class _$_Person implements _Person {
   _$_Person(
       {required this.firstName,
       @JsonKey(name: 'LAST_NAME') required this.lastName,
-      @JsonKey(ignore: true) this.ignored});
+      @JsonKey(includeFromJson: false, includeToJson: false) this.ignored});
 
   factory _$_Person.fromJson(Map<String, dynamic> json) =>
       _$$_PersonFromJson(json);
@@ -141,7 +141,7 @@ class _$_Person implements _Person {
   @JsonKey(name: 'LAST_NAME')
   final String lastName;
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final int? ignored;
 
   @override
@@ -182,8 +182,10 @@ class _$_Person implements _Person {
 abstract class _Person implements Person {
   factory _Person(
       {required final String firstName,
-      @JsonKey(name: 'LAST_NAME') required final String lastName,
-      @JsonKey(ignore: true) final int? ignored}) = _$_Person;
+      @JsonKey(name: 'LAST_NAME')
+          required final String lastName,
+      @JsonKey(includeFromJson: false, includeToJson: false)
+          final int? ignored}) = _$_Person;
 
   factory _Person.fromJson(Map<String, dynamic> json) = _$_Person.fromJson;
 
@@ -193,7 +195,7 @@ abstract class _Person implements Person {
   @JsonKey(name: 'LAST_NAME')
   String get lastName;
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   int? get ignored;
   @override
   @JsonKey(ignore: true)
