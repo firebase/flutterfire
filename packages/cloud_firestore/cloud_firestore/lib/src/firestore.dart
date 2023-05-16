@@ -111,9 +111,12 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       try {
         _delegate.useEmulator(host, port);
       } catch (e) {
-        final String code = (e as dynamic).code;
+        // We convert to string to be compatible with Flutter <= 3.7 and Flutter >= 3.10
+        // .code is only available in Flutter <= 3.7
+        String strError = e.toString();
+
         // this catches FirebaseError from web that occurs after hot reloading & hot restarting
-        if (code != 'failed-precondition') {
+        if (!strError.contains('failed-precondition')) {
           rethrow;
         }
       }
