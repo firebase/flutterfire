@@ -2,10 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show AuthCredential, MultiFactorResolver, User, UserCredential;
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:flutter/widgets.dart';
 
 /// An abstract class for all auth states.
 /// [AuthState] transitions could be captured with an [AuthStateChangeAction]:
@@ -15,7 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart'
 ///   actions: [
 ///     AuthStateChangeAction<SignedIn>((context, state) {
 ///       print(state.user!.displayName);
-///       print(state.user!.emailVerified);
+///       print(state.user!.isEmailVerified);
 ///     }),
 ///   ],
 /// );

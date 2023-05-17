@@ -778,10 +778,10 @@ class ProfileScreen extends MultiProviderScreen {
           ),
         ),
         Align(child: EditableUserDisplayName(auth: auth)),
-        if (!user.emailVerified) ...[
+        if (!user.isEmailVerified) ...[
           RebuildScope(
             builder: (context) {
-              if (user.emailVerified) {
+              if (user.isEmailVerified) {
                 return const SizedBox.shrink();
               }
 
