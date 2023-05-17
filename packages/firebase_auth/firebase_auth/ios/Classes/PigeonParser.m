@@ -50,6 +50,9 @@
   NSMutableArray<NSDictionary<id, id> *> *dataArray =
       [NSMutableArray arrayWithCapacity:providerData.count];
   for (id<FIRUserInfo> userInfo in providerData) {
+    if (userInfo == nil || userInfo.providerID == nil || userInfo.uid == nil) {
+      continue;
+    }
     NSDictionary *dataDict = @{
       @"providerId" : userInfo.providerID,
       @"uid" : userInfo.uid,
