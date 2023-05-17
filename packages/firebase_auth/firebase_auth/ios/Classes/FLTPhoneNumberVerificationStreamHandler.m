@@ -15,6 +15,16 @@
 #endif
 }
 
+#if TARGET_OS_OSX
+- (instancetype)initWithAuth:(id)auth request:(PigeonVerifyPhoneNumberRequest *)request {
+  self = [super init];
+  if (self) {
+    _auth = auth;
+    _phoneNumber = request.phoneNumber;
+  }
+  return self;
+}
+#else
 - (instancetype)initWithAuth:(id)auth
                      request:(PigeonVerifyPhoneNumberRequest *)request
                      session:(FIRMultiFactorSession *)session
@@ -28,6 +38,7 @@
   }
   return self;
 }
+#endif
 
 - (FlutterError *)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)events {
 #if TARGET_OS_IPHONE

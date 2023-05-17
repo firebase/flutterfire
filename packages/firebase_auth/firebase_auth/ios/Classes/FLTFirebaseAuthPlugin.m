@@ -139,6 +139,77 @@ NSString *const kErrMsgInvalidCredential =
 #endif
 }
 
+- (FlutterError *)convertToFlutterError:(NSError *)error {
+  NSString *code = @"unknown";
+  NSString *message = @"An unknown error has occurred.";
+
+  if (error == nil) {
+    return [FlutterError errorWithCode:code message:message details:@{}];
+  }
+
+  // code
+  if ([error userInfo][FIRAuthErrorUserInfoNameKey] != nil) {
+    // See [FIRAuthErrorCodeString] for list of codes.
+    // Codes are in the format "ERROR_SOME_NAME", converting below to the format
+    // required in Dart. ERROR_SOME_NAME -> SOME_NAME
+    NSString *firebaseErrorCode = [error userInfo][FIRAuthErrorUserInfoNameKey];
+    code = [firebaseErrorCode stringByReplacingOccurrencesOfString:@"ERROR_" withString:@""];
+    // SOME_NAME -> SOME-NAME
+    code = [code stringByReplacingOccurrencesOfString:@"_" withString:@"-"];
+    // SOME-NAME -> some-name
+    code = [code lowercaseString];
+  }
+
+  // message
+  if ([error userInfo][NSLocalizedDescriptionKey] != nil) {
+    message = [error userInfo][NSLocalizedDescriptionKey];
+  }
+
+  NSMutableDictionary *additionalData = [NSMutableDictionary dictionary];
+  // additionalData.email
+  if ([error userInfo][FIRAuthErrorUserInfoEmailKey] != nil) {
+    additionalData[kArgumentEmail] = [error userInfo][FIRAuthErrorUserInfoEmailKey];
+  }
+  // additionalData.authCredential
+  if ([error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey] != nil) {
+    FIRAuthCredential *authCredential = [error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey];
+    additionalData[@"authCredential"] =
+        [FLTFirebaseAuthPlugin getNSDictionaryFromAuthCredential:authCredential];
+  }
+
+  // Manual message overrides to ensure messages/codes matche other platforms.
+  if ([message isEqual:@"The password must be 6 characters long or more."]) {
+    message = @"Password should be at least 6 characters";
+  }
+
+  return [FlutterError errorWithCode:code message:message details:additionalData];
+}
+
++ (id)getNSDictionaryFromAuthCredential:(FIRAuthCredential *)authCredential {
+  if (authCredential == nil) {
+    return [NSNull null];
+  }
+
+  NSString *accessToken = nil;
+  if ([authCredential isKindOfClass:[FIROAuthCredential class]]) {
+    if (((FIROAuthCredential *)authCredential).accessToken != nil) {
+      accessToken = ((FIROAuthCredential *)authCredential).accessToken;
+    } else if (((FIROAuthCredential *)authCredential).IDToken != nil) {
+      // For Sign In With Apple, the token is stored in IDToken
+      accessToken = ((FIROAuthCredential *)authCredential).IDToken;
+    }
+  }
+
+  return @{
+    kArgumentProviderId : authCredential.provider,
+    // Note: "signInMethod" does not exist on iOS SDK, so using provider
+    // instead.
+    kArgumentSignInMethod : authCredential.provider,
+    kArgumentToken : @([authCredential hash]),
+    kArgumentAccessToken : accessToken ?: [NSNull null],
+  };
+}
+
 - (void)cleanupWithCompletion:(void (^)(void))completion {
   // Cleanup credentials.
   [_credentials removeAllObjects];
@@ -395,9 +466,8 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
 #if TARGET_OS_OSX
   completion(nil, [FlutterError errorWithCode:@"multi-factor-auth-required"
                                       message:error.description
-                                      details:nil]);(
+                                      details:nil]);
 #else
-
   FIRMultiFactorResolver *resolver =
       (FIRMultiFactorResolver *)error.userInfo[FIRAuthErrorUserInfoMultiFactorResolverKey];
 
@@ -691,31 +761,6 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
   };
 }
 
-+ (id)getNSDictionaryFromAuthCredential:(FIRAuthCredential *)authCredential {
-  if (authCredential == nil) {
-    return [NSNull null];
-  }
-
-  NSString *accessToken = nil;
-  if ([authCredential isKindOfClass:[FIROAuthCredential class]]) {
-    if (((FIROAuthCredential *)authCredential).accessToken != nil) {
-      accessToken = ((FIROAuthCredential *)authCredential).accessToken;
-    } else if (((FIROAuthCredential *)authCredential).IDToken != nil) {
-      // For Sign In With Apple, the token is stored in IDToken
-      accessToken = ((FIROAuthCredential *)authCredential).IDToken;
-    }
-  }
-
-  return @{
-    kArgumentProviderId : authCredential.provider,
-    // Note: "signInMethod" does not exist on iOS SDK, so using provider
-    // instead.
-    kArgumentSignInMethod : authCredential.provider,
-    kArgumentToken : @([authCredential hash]),
-    kArgumentAccessToken : accessToken ?: [NSNull null],
-  };
-}
-
 + (NSDictionary *)getNSDictionaryFromUserInfo:(id<FIRUserInfo>)userInfo {
   NSString *photoURL = nil;
   if (userInfo.photoURL != nil) {
@@ -783,11 +828,13 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 #endif
 }
 
+#if !TARGET_OS_OSX
 - (FIRMultiFactor *)getAppMultiFactorFromPigeon:(nonnull PigeonFirebaseApp *)app {
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
   FIRUser *currentUser = auth.currentUser;
   return currentUser.multiFactor;
 }
+#endif
 
 - (nonnull ASPresentationAnchor)presentationAnchorForAuthorizationController:
     (nonnull ASAuthorizationController *)controller API_AVAILABLE(macos(10.15), ios(13.0)) {
@@ -915,52 +962,6 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 }
 
 #endif
-
-- (FlutterError *)convertToFlutterError:(NSError *)error {
-  NSString *code = @"unknown";
-  NSString *message = @"An unknown error has occurred.";
-
-  if (error == nil) {
-    return [FlutterError errorWithCode:code message:message details:@{}];
-  }
-
-  // code
-  if ([error userInfo][FIRAuthErrorUserInfoNameKey] != nil) {
-    // See [FIRAuthErrorCodeString] for list of codes.
-    // Codes are in the format "ERROR_SOME_NAME", converting below to the format
-    // required in Dart. ERROR_SOME_NAME -> SOME_NAME
-    NSString *firebaseErrorCode = [error userInfo][FIRAuthErrorUserInfoNameKey];
-    code = [firebaseErrorCode stringByReplacingOccurrencesOfString:@"ERROR_" withString:@""];
-    // SOME_NAME -> SOME-NAME
-    code = [code stringByReplacingOccurrencesOfString:@"_" withString:@"-"];
-    // SOME-NAME -> some-name
-    code = [code lowercaseString];
-  }
-
-  // message
-  if ([error userInfo][NSLocalizedDescriptionKey] != nil) {
-    message = [error userInfo][NSLocalizedDescriptionKey];
-  }
-
-  NSMutableDictionary *additionalData = [NSMutableDictionary dictionary];
-  // additionalData.email
-  if ([error userInfo][FIRAuthErrorUserInfoEmailKey] != nil) {
-    additionalData[kArgumentEmail] = [error userInfo][FIRAuthErrorUserInfoEmailKey];
-  }
-  // additionalData.authCredential
-  if ([error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey] != nil) {
-    FIRAuthCredential *authCredential = [error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey];
-    additionalData[@"authCredential"] =
-        [FLTFirebaseAuthPlugin getNSDictionaryFromAuthCredential:authCredential];
-  }
-
-  // Manual message overrides to ensure messages/codes matche other platforms.
-  if ([message isEqual:@"The password must be 6 characters long or more."]) {
-    message = @"Password should be at least 6 characters";
-  }
-
-  return [FlutterError errorWithCode:code message:message details:additionalData];
-}
 
 - (void)applyActionCodeApp:(nonnull PigeonFirebaseApp *)app
                       code:(nonnull NSString *)code
