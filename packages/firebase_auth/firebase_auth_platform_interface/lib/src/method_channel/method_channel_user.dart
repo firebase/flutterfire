@@ -28,14 +28,6 @@ class MethodChannelUser extends UserPlatform {
     );
   }
 
-  /// Attaches generic default values to method channel arguments.
-  Map<String, dynamic> _withChannelDefaults(Map<String, dynamic> other) {
-    return {
-      'appName': auth.app.name,
-      'tenantId': auth.tenantId,
-    }..addAll(other);
-  }
-
   @override
   Future<void> delete() async {
     try {

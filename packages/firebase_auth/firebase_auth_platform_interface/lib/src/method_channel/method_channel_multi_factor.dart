@@ -28,7 +28,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
       final pigeonObject = await _api.getSession(pigeonDefault);
       return MultiFactorSession(pigeonObject.id);
     } catch (e, stack) {
-      convertPlatformException(e, stack, fromPigeon: true);
+      convertPlatformException(e, stack);
     }
   }
 
@@ -61,7 +61,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
           displayName,
         );
       } catch (e, stack) {
-        convertPlatformException(e, stack, fromPigeon: true);
+        convertPlatformException(e, stack);
       }
     } else {
       throw UnimplementedError(
@@ -88,7 +88,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
         uidToUnenroll,
       );
     } catch (e, stack) {
-      convertPlatformException(e, stack, fromPigeon: true);
+      convertPlatformException(e, stack);
     }
   }
 
@@ -98,7 +98,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
       final data = await _api.getEnrolledFactors(pigeonDefault);
       return multiFactorInfoPigeonToObject(data);
     } catch (e, stack) {
-      convertPlatformException(e, stack, fromPigeon: true);
+      convertPlatformException(e, stack);
     }
   }
 }
@@ -150,7 +150,7 @@ class MethodChannelMultiFactorResolver extends MultiFactorResolverPlatform {
 
         return userCredential;
       } catch (e, stack) {
-        convertPlatformException(e, stack, fromPigeon: true);
+        convertPlatformException(e, stack);
       }
     } else {
       throw UnimplementedError(
