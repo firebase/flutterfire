@@ -129,6 +129,8 @@ NSString *const kErrMsgInvalidCredential =
   // FlutterPluginRegistrar.
   // TODO(Salakar): addApplicationDelegate does not exist on MacOS version of
   // FlutterPluginRegistrar. (https://github.com/flutter/flutter/issues/41471)
+  FirebaseAuthHostApiSetup(registrar.messenger, instance);
+  FirebaseAuthUserHostApiSetup(registrar.messenger, instance);
 #else
   [registrar publish:instance];
   [registrar addApplicationDelegate:instance];
@@ -1079,7 +1081,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 
   [_eventChannels setObject:channel forKey:name];
   [_streamHandlers setObject:handler forKey:name];
-
+    
   completion(name, nil);
 }
 
