@@ -4,42 +4,19 @@
 # customers of the plugin.
 cmake_minimum_required(VERSION 3.14)
 
-set(FIREBASE_SDK_VERSION "10.5.0")
-set(FIREBASE_SDK_URL "https://dl.google.com/firebase/sdk/cpp/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
-set(FIREBASE_SDK_FILENAME "${CMAKE_BINARY_DIR}/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
-set(EXTRACTED_PATH "${CMAKE_BINARY_DIR}/extracted")
-
-if(NOT EXISTS ${FIREBASE_SDK_FILENAME})
-    file(DOWNLOAD ${FIREBASE_SDK_URL} ${FIREBASE_SDK_FILENAME}
-         SHOW_PROGRESS
-         STATUS download_status
-         LOG download_log)
-    list(GET download_status 0 status_code)
-    if(NOT status_code EQUAL 0)
-        message(FATAL_ERROR "Download failed: ${download_log}")
-    endif()
-endif()
-
-if(NOT EXISTS ${EXTRACTED_PATH})
-    file(MAKE_DIRECTORY ${EXTRACTED_PATH})
-    file(ARCHIVE_EXTRACT INPUT ${FIREBASE_SDK_FILENAME}
-         DESTINATION ${EXTRACTED_PATH})
-endif()
-set(FIREBASE_CPP_SDK_DIR "${EXTRACTED_PATH}/firebase_cpp_sdk")
-
 
 # Project-level configuration.
-set(PROJECT_NAME "firebase_core")
+set(PROJECT_NAME "flutterfire_remote_config")
 project(${PROJECT_NAME} LANGUAGES CXX)
 
 # This value is used when generating builds using this plugin, so it must
 # not be changed
-set(PLUGIN_NAME "firebase_core_plugin")
+set(PLUGIN_NAME "firebase_remote_config_plugin")
 
 # Any new source files that you add to the plugin should be added here.
 list(APPEND PLUGIN_SOURCES
-  "firebase_core_plugin.cpp"
-  "firebase_core_plugin.h"
+  "firebase_remote_config_plugin.cpp"
+  "firebase_remote_config_plugin.h"
   "messages.g.cpp"
   "messages.g.h"
 )
@@ -47,8 +24,8 @@ list(APPEND PLUGIN_SOURCES
 # Define the plugin library target. Its name must not be changed (see comment
 # on PLUGIN_NAME above).
 add_library(${PLUGIN_NAME} SHARED
-  "include/firebase_core/firebase_core_plugin_c_api.h"
-  "firebase_core_plugin_c_api.cpp"
+  "include/firebase_remote_config/firebase_remote_config_plugin_c_api.h"
+  "firebase_remote_config_plugin_c_api.cpp"
   ${PLUGIN_SOURCES}
 )
 
@@ -68,11 +45,16 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.
 set(MSVC_RUNTIME_MODE MD)
-add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
-target_include_directories(${PLUGIN_NAME} INTERFACE
-  "${FIREBASE_CPP_SDK_DIR}/include")
-set(firebase_libs firebase_auth firebase_database firebase_app firebase_remote_config)
-target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}")
+message("CMAKE_CURRENT_SOURCE_DIR is ${CMAKE_CURRENT_SOURCE_DIR}")
+# set(FIREBASE_CORE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../firebase_core")
+# message("FIREBASE_CORE_DIR is ${FIREBASE_CORE_DIR}")
+# add_subdirectory(${FIREBASE_CORE_DIR})
+#add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
+# target_include_directories(${PLUGIN_NAME} INTERFACE
+#   "${FIREBASE_CPP_SDK_DIR}/include")
+set(firebase_libs firebase_core_plugin firebase_remote_config firebase_app)
+set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32)
+target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}" "${ADDITIONAL_LIBS}")
 
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -81,7 +63,7 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
 # List of absolute paths to libraries that should be bundled with the plugin.
 # This list could contain prebuilt libraries, or libraries created by an
 # external build triggered from this build file.
-set(firebase_core_bundled_libraries
+set(firebase_remote_config_bundled_libraries
   ""
   PARENT_SCOPE
 )

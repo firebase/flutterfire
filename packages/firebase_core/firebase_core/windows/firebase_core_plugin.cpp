@@ -8,6 +8,7 @@
 #include <windows.h>
 
 #include "firebase/app.h"
+#include "firebase/log.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -38,7 +39,10 @@ void FirebaseCorePlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
 }
 
-FirebaseCorePlugin::FirebaseCorePlugin() {}
+FirebaseCorePlugin::FirebaseCorePlugin() {
+  firebase::SetLogLevel(firebase::kLogLevelVerbose);
+  std::cout << "[C++] FirebaseCorePlugin::FirebaseCorePlugin" << std::endl;
+}
 
 FirebaseCorePlugin::~FirebaseCorePlugin() = default;
 
@@ -99,22 +103,35 @@ void FirebaseCorePlugin::InitializeApp(
   app = App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
                     app_name.c_str());
 
+  std::cout << "[C++] FirebaseCorePlugin::InitializeApp:" << app_name
+            << std::endl;
   // Send back the result to Flutter
   result(AppToPigeonInitializeResponse(*app));
 }
 
 void FirebaseCorePlugin::InitializeCore(
     std::function<void(ErrorOr<flutter::EncodableList> reply)> result) {
+  std::cout << "[C++] FirebaseCorePlugin::InitializeCore" << std::endl;
   // TODO: Missing function to get the list of currently initialized apps
   std::vector<PigeonInitializeResponse> initializedApps;
 
-  flutter::EncodableList encodableList;
+  flutter::EncodableList encodableList = flutter::EncodableList();
+
+  // Hack, only add default app for now.
+  // App *app = App::GetInstance();
+  // std::cout << "[C++] FirebaseCorePlugin::InitializeCore, after get app:"
+  //           << std::endl;
+  // char *app_name = app->name();
+  // std::cout << "[C++] FirebaseCorePlugin::InitializeCore, app name is:"
+  //           app_name << std::endl;
+  // PigeonInitializeResponse response = AppToPigeonInitializeResponse(*app);
+  // encodableList.push_back(flutter::CustomEncodableValue(response));
 
   // Insert the contents of the vector into the EncodableList
   // for (const auto &item : initializedApps) {
   //  encodableList.push_back(flutter::EncodableValue(item));
   //}
-  result(flutter::EncodableList());
+  result(encodableList);
 }
 
 void FirebaseCorePlugin::OptionsFromResource(
