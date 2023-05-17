@@ -1081,7 +1081,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 
   [_eventChannels setObject:channel forKey:name];
   [_streamHandlers setObject:handler forKey:name];
-    
+
   completion(name, nil);
 }
 
