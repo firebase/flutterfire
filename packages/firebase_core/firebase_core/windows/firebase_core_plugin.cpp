@@ -8,6 +8,7 @@
 #include <windows.h>
 
 #include "firebase/app.h"
+#include "firebase/log.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -38,7 +39,10 @@ void FirebaseCorePlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
 }
 
-FirebaseCorePlugin::FirebaseCorePlugin() {}
+FirebaseCorePlugin::FirebaseCorePlugin() {
+  firebase::SetLogLevel(firebase::kLogLevelVerbose);
+  std::cout << "[C++] FirebaseCorePlugin::FirebaseCorePlugin" << std::endl;
+}
 
 FirebaseCorePlugin::~FirebaseCorePlugin() = default;
 

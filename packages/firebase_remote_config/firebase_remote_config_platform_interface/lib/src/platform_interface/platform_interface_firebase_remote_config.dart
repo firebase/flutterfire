@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:firebase_remote_config_platform_interface/src/pigeon/messages.pigeon.dart';
 
 import '../../firebase_remote_config_platform_interface.dart';
 import '../method_channel/method_channel_firebase_remote_config.dart';
@@ -41,6 +42,11 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   static FirebaseRemoteConfigPlatform? _instance;
+
+  /// The current RemoteConfig instance's tenant ID.
+  ///
+  /// When you set the tenant ID of an RemoteConfig instance.
+  String? tenantId;
 
   /// The current default [FirebaseRemoteConfigPlatform] instance.
   ///
@@ -91,12 +97,12 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   }
 
   /// Returns the status of the last fetch attempt.
-  RemoteConfigFetchStatus get lastFetchStatus {
+  PigeonRemoteConfigFetchStatus get lastFetchStatus {
     throw UnimplementedError('lastFetchStatus getter not implemented');
   }
 
-  /// Returns the [RemoteConfigSettings] of the current instance.
-  RemoteConfigSettings get settings {
+  /// Returns the [PigeonRemoteConfigSettings] of the current instance.
+  PigeonRemoteConfigSettings get settings {
     throw UnimplementedError('settings getter not implemented');
   }
 
@@ -130,7 +136,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   }
 
   /// Returns a Map of all Remote Config parameters.
-  Map<String, RemoteConfigValue> getAll() {
+  Map<String, PigeonRemoteConfigValue> getAll() {
     throw UnimplementedError('getAll() is not implemented');
   }
 
@@ -163,12 +169,13 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   }
 
   /// Gets the [RemoteConfigValue] for a given key.
-  RemoteConfigValue getValue(String key) {
+  PigeonRemoteConfigValue getValue(String key) {
     throw UnimplementedError('getValue() is not implemented');
   }
 
   /// Sets the [RemoteConfigSettings] for the current instance.
-  Future<void> setConfigSettings(RemoteConfigSettings remoteConfigSettings) {
+  Future<void> setConfigSettings(
+      PigeonRemoteConfigSettings remoteConfigSettings) {
     throw UnimplementedError('setConfigSettings() is not implemented');
   }
 
@@ -180,5 +187,26 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// Get a [Stream] of [RemoteConfigUpdate]s.
   Stream<RemoteConfigUpdate> get onConfigUpdated {
     throw UnimplementedError('onConfigUpdated getter not implemented');
+  }
+
+  RemoteConfigSettings getSettings() {
+    throw UnimplementedError('getSettings() is not implemented');
+  }
+
+  RemoteConfigFetchStatus getFetchStatus() {
+    throw UnimplementedError('getFetchStatus() is not implemented');
+  }
+
+  Map<String, RemoteConfigValue> getAllConverted() {
+    throw UnimplementedError('getAllConverted() is not implemented');
+  }
+
+  RemoteConfigValue getValueConverted(String key) {
+    throw UnimplementedError('getValueConverted() is not implemented');
+  }
+
+  Future<void> setConfigSettingsConverted(
+      RemoteConfigSettings remoteConfigSettings) {
+    throw UnimplementedError('setConfigSettingsConverted() is not implemented');
   }
 }

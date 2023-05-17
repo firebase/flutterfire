@@ -90,7 +90,7 @@ set(MSVC_RUNTIME_MODE MD)
 add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${FIREBASE_CPP_SDK_DIR}/include")
-set(firebase_libs firebase_auth firebase_database firebase_app)
+set(firebase_libs firebase_auth firebase_database firebase_app firebase_remote_config)
 foreach(firebase_lib IN ITEMS ${firebase_libs})
     get_target_property(firebase_lib_path ${firebase_lib} IMPORTED_LOCATION)
     string(REPLACE "Debug" "Release" firebase_lib_release_path ${firebase_lib_path})

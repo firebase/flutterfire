@@ -51,12 +51,12 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform {
 
   /// Returns the status of the last fetch attempt.
   RemoteConfigFetchStatus get lastFetchStatus {
-    return _delegate.lastFetchStatus;
+    return _delegate.getFetchStatus();
   }
 
   /// Returns the [RemoteConfigSettings] of the current instance.
   RemoteConfigSettings get settings {
-    return _delegate.settings;
+    return _delegate.getSettings();
   }
 
   /// Makes the last fetched config available to getters.
@@ -92,7 +92,7 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform {
 
   /// Returns a Map of all Remote Config parameters.
   Map<String, RemoteConfigValue> getAll() {
-    return _delegate.getAll();
+    return _delegate.getAllConverted();
   }
 
   /// Gets the value for a given key as a bool.
@@ -125,7 +125,7 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform {
 
   /// Gets the [RemoteConfigValue] for a given key.
   RemoteConfigValue getValue(String key) {
-    return _delegate.getValue(key);
+    return _delegate.getValueConverted(key);
   }
 
   /// Sets the [RemoteConfigSettings] for the current instance.
@@ -137,7 +137,7 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform {
     if (remoteConfigSettings.fetchTimeout.inSeconds == 0) {
       remoteConfigSettings.fetchTimeout = const Duration(seconds: 60);
     }
-    return _delegate.setConfigSettings(remoteConfigSettings);
+    return _delegate.setConfigSettingsConverted(remoteConfigSettings);
   }
 
   /// Sets the default parameter values for the current instance.
