@@ -5,28 +5,47 @@
 cmake_minimum_required(VERSION 3.14)
 
 set(FIREBASE_SDK_VERSION "10.5.0")
-set(FIREBASE_SDK_URL "https://dl.google.com/firebase/sdk/cpp/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
-set(FIREBASE_SDK_FILENAME "${CMAKE_BINARY_DIR}/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
-set(EXTRACTED_PATH "${CMAKE_BINARY_DIR}/extracted")
 
-if(NOT EXISTS ${FIREBASE_SDK_FILENAME})
-    file(DOWNLOAD ${FIREBASE_SDK_URL} ${FIREBASE_SDK_FILENAME}
-         SHOW_PROGRESS
-         STATUS download_status
-         LOG download_log)
-    list(GET download_status 0 status_code)
-    if(NOT status_code EQUAL 0)
-        message(FATAL_ERROR "Download failed: ${download_log}")
+if (EXISTS $ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h)
+    file(READ "$ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h" existing_version)
+
+    string(REGEX MATCH "FIREBASE_VERSION_MAJOR ([0-9]*)" _ ${existing_version})
+    set(existing_version_major ${CMAKE_MATCH_1})
+
+    string(REGEX MATCH "FIREBASE_VERSION_MINOR ([0-9]*)" _ ${existing_version})
+    set(existing_version_minor ${CMAKE_MATCH_1})
+
+    string(REGEX MATCH "FIREBASE_VERSION_REVISION ([0-9]*)" _ ${existing_version})
+    set(existing_version_revision ${CMAKE_MATCH_1})
+
+    set(existing_version "${existing_version_major}.${existing_version_minor}.${existing_version_revision}")
+endif()
+
+if(existing_version VERSION_EQUAL FIREBASE_SDK_VERSION)
+    message(STATUS "Found Firebase SDK version ${existing_version}")
+    set(FIREBASE_CPP_SDK_DIR $ENV{FIREBASE_CPP_SDK_DIR})
+else()
+    set(firebase_sdk_url "https://dl.google.com/firebase/sdk/cpp/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
+    set(firebase_sdk_filename "${CMAKE_BINARY_DIR}/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
+    set(extracted_path "${CMAKE_BINARY_DIR}/extracted")
+    if(NOT EXISTS ${firebase_sdk_filename})
+        file(DOWNLOAD ${firebase_sdk_url} ${firebase_sdk_filename}
+             SHOW_PROGRESS
+             STATUS download_status
+             LOG download_log)
+        list(GET download_status 0 status_code)
+        if(NOT status_code EQUAL 0)
+            message(FATAL_ERROR "Download failed: ${download_log}")
+        endif()
     endif()
-endif()
 
-if(NOT EXISTS ${EXTRACTED_PATH})
-    file(MAKE_DIRECTORY ${EXTRACTED_PATH})
-    file(ARCHIVE_EXTRACT INPUT ${FIREBASE_SDK_FILENAME}
-         DESTINATION ${EXTRACTED_PATH})
+    if(NOT EXISTS ${extracted_path})
+        file(MAKE_DIRECTORY ${extracted_path})
+        file(ARCHIVE_EXTRACT INPUT ${firebase_sdk_filename}
+             DESTINATION ${extracted_path})
+    endif()
+    set(FIREBASE_CPP_SDK_DIR "${extracted_path}/firebase_cpp_sdk")
 endif()
-set(FIREBASE_CPP_SDK_DIR "${EXTRACTED_PATH}/firebase_cpp_sdk")
-
 
 # Project-level configuration.
 set(PROJECT_NAME "firebase_core")
@@ -72,6 +91,15 @@ add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${FIREBASE_CPP_SDK_DIR}/include")
 set(firebase_libs firebase_auth firebase_database firebase_app)
+foreach(firebase_lib IN ITEMS ${firebase_libs})
+    get_target_property(firebase_lib_path ${firebase_lib} IMPORTED_LOCATION)
+    string(REPLACE "Debug" "Release" firebase_lib_release_path ${firebase_lib_path})
+    set_target_properties(${firebase_lib} PROPERTIES
+      IMPORTED_LOCATION_DEBUG "${firebase_lib_path}"
+      IMPORTED_LOCATION_RELEASE "${firebase_lib_release_path}"
+    )
+endforeach()
+
 target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}")
 
 target_include_directories(${PLUGIN_NAME} INTERFACE
