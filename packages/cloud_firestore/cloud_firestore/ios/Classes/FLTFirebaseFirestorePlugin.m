@@ -611,8 +611,6 @@ FlutterStandardMethodCodec *_codec;
                              }];
 }
 
-
-
 - (NSString *)registerEventChannelWithPrefix:(NSString *)prefix
                                streamHandler:(NSObject<FlutterStreamHandler> *)handler {
   return [self registerEventChannelWithPrefix:prefix
