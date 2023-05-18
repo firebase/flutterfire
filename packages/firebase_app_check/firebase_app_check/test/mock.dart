@@ -16,8 +16,9 @@ void setupFirebaseAppCheckMocks([Callback? customHandlers]) {
 
   setupFirebaseCoreMocks();
 
-  MethodChannelFirebaseAppCheck.channel
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannelFirebaseAppCheck.channel,
+          (MethodCall methodCall) async {
     if (methodCall.method != 'FirebaseAppCheck#registerTokenListener') {
       methodCallLog.add(methodCall);
     }
@@ -26,7 +27,7 @@ void setupFirebaseAppCheckMocks([Callback? customHandlers]) {
       case 'FirebaseAppCheck#registerTokenListener':
         return 'channelName';
       case 'FirebaseAppCheck#getToken':
-        return {'token': 'test-token'};
+        return 'test-token';
       default:
         return false;
     }

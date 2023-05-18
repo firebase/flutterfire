@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
@@ -130,7 +134,7 @@ class CollectionData with Names {
     final hasJsonSerializable =
         jsonSerializableChecker.hasAnnotationOf(type.element!);
 
-    if (type.isDynamic) {
+    if (type is DynamicType) {
       throw InvalidGenerationSourceError(
         'The annotation @Collection was used, but no generic type was specified. ',
         todo: 'Instead of @Collection("path") do @Collection<MyClass>("path").',
@@ -267,7 +271,7 @@ represents the content of the collection must be in the same file.
           annotatedElement.library!.typeProvider.stringType,
           field: 'FieldPath.documentId',
           updatable: false,
-          toJsonBuilder: null,
+          toJsonBuilder: null, // we added this peache WTF
         ),
         ...collectionTargetElement
             .allFields(
@@ -295,7 +299,7 @@ represents the content of the collection must be in the same file.
               e.type,
               updatable: true,
               field: key,
-              toJsonBuilder: (variableName) {
+              toJsonBuilder: (variableName) { // we wrote/stole this WTF
                 if (hasJsonSerializable) {
                   return '_\$${collectionTargetElement.name.public}PerFieldToJson.${e.name}($variableName)';
                 }
@@ -469,7 +473,7 @@ extension on DartType {
         generic.isDartCoreObject ||
         generic.element?.kind == ElementKind.ENUM ||
         generic.isDartCoreMap ||
-        generic.isDynamic;
+        generic is DynamicType;
   }
 }
 
@@ -479,8 +483,13 @@ extension on Element {
     final jsonKeys = checker.annotationsOf(this);
 
     for (final jsonKey in jsonKeys) {
-      final ignore = jsonKey.getField('ignore')?.toBoolValue();
-      if (ignore ?? false) {
+      final ignore = jsonKey.getField('ignore')?.toBoolValue() ?? false;
+
+      // ignore is deprecated in favor of includeFromJson and includeToJson
+      final jsonIncluded =
+          (jsonKey.getField('includeFromJson')?.toBoolValue() ?? true) &&
+              (jsonKey.getField('includeToJson')?.toBoolValue() ?? true);
+      if (ignore || !jsonIncluded) {
         return true;
       }
     }

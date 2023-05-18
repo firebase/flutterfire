@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.flutter.plugins.firebasecrashlyticsexample">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
   <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -8,7 +7,8 @@
       android:theme="@android:style/Theme.Black.NoTitleBar"
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale"
       android:hardwareAccelerated="true"
-      android:windowSoftInputMode="adjustResize">
+      android:windowSoftInputMode="adjustResize"
+      android:exported="true">
       <meta-data
         android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
         android:value="true" />

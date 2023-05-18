@@ -1,12 +1,15 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, MultiFactorSession, PhoneMultiFactorInfo;
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 
-import '../widgets/internal/universal_button.dart';
 import '../widgets/internal/universal_page_route.dart';
-import '../widgets/internal/universal_scaffold.dart';
 
 import 'internal/responsive_page.dart';
 
@@ -68,7 +71,7 @@ class PhoneInputScreen extends StatelessWidget {
   final PhoneMultiFactorInfo? mfaHint;
 
   const PhoneInputScreen({
-    Key? key,
+    super.key,
     this.action,
     this.actions,
     this.auth,
@@ -81,7 +84,7 @@ class PhoneInputScreen extends StatelessWidget {
     this.breakpoint = 500,
     this.multiFactorSession,
     this.mfaHint,
-  }) : super(key: key);
+  });
 
   void _next(BuildContext context, AuthAction? action, Object flowKey, _) {
     Navigator.of(context).push(
@@ -115,6 +118,7 @@ class PhoneInputScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 PhoneInputView(
                   auth: auth,
@@ -125,6 +129,7 @@ class PhoneInputScreen extends StatelessWidget {
                   multiFactorSession: multiFactorSession,
                   mfaHint: mfaHint,
                 ),
+                const SizedBox(height: 8),
                 UniversalButton(
                   text: l.goBackButtonLabel,
                   variant: ButtonVariant.text,

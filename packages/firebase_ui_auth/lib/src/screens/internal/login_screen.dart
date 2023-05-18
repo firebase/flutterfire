@@ -1,8 +1,11 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
-
-import '../../widgets/internal/universal_scaffold.dart';
 
 import 'responsive_page.dart';
 
@@ -49,7 +52,7 @@ class LoginScreen extends StatelessWidget {
   final Set<FirebaseUIStyle>? styles;
 
   const LoginScreen({
-    Key? key,
+    super.key,
     required this.action,
     required this.providers,
     this.auth,
@@ -66,7 +69,7 @@ class LoginScreen extends StatelessWidget {
     this.loginViewKey,
     this.breakpoint = 800,
     this.styles,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

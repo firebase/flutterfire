@@ -119,7 +119,7 @@ and in the app-level `build.gradle`:
   dependencies {
     // ... other dependencies
 
-    classpath 'com.google.gms:google-services:4.3.5'
+    classpath 'com.google.gms:google-services:4.3.15'
     <strong>classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'</strong>
   }
   </pre>
@@ -142,6 +142,21 @@ and in the app-level `build.gradle`:
   apply plugin: 'com.google.gms.google-services'
   <strong>apply plugin: 'com.google.firebase.crashlytics'</strong>
   </pre>
+
+*1.  If your Flutter project uses the
+    [`--split-debug-info` flag](https://docs.flutter.dev/perf/app-size#reducing-app-size){: .external}
+    (and the
+    [`--obfuscate` flag](https://docs.flutter.dev/deployment/obfuscate){: .external}),
+    you need to use the [{{firebase_cli}}](/docs/cli) (v.11.9.0+) to upload
+    Android symbols.
+
+    You need to upload the debug symbols before reporting a crash from an obfuscated code build (i.e using the above noted flags
+    `--split-debug-info` & `--obfuscate`). From the root directory of your Flutter project, run the following command:
+
+    <pre class="devsite-terminal" data-terminal-prefix="your-flutter-proj$ ">firebase crashlytics:symbols:upload --app=<var class="readonly">APP_ID</var> <var class="readonly">PATH/TO</var>/symbols</pre>
+
+    The <code><var>PATH/TO</var>/symbols</code> directory is the same directory
+    that you pass to the `--split-debug-info` flag when building the application.
 
 If problems persist, refer to the
 [Android-specific guide for troubleshooting obfuscated reports](/docs/crashlytics/get-deobfuscated-reports?platform=android).

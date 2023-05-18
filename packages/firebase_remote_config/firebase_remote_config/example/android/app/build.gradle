@@ -25,6 +25,7 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+  namespace 'io.flutter.plugins.firebase.remoteconfig.example'
   compileSdkVersion 33
 
   lintOptions {
@@ -32,8 +33,8 @@ android {
   }
 
   defaultConfig {
-    applicationId "io.flutter.plugins.firebase.firebaseremoteconfigexample"
-    minSdkVersion 16
+    applicationId "io.flutter.plugins.firebase.remoteconfig.example"
+    minSdkVersion 21
     targetSdkVersion 33
     versionCode flutterVersionCode.toInteger()
     versionName flutterVersionName

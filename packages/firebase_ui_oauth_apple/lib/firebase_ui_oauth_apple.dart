@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 export 'src/provider.dart' show AppleProvider;
 export 'src/theme.dart' show AppleProviderButtonStyle;
 
@@ -89,7 +93,7 @@ class _AppleSignInButton extends StatelessWidget {
   final VoidCallback? onCanceled;
 
   const _AppleSignInButton({
-    Key? key,
+    super.key,
     required this.loadingIndicator,
     String? label,
     bool? overrideDefaultTapAction,
@@ -104,8 +108,7 @@ class _AppleSignInButton extends StatelessWidget {
     this.onCanceled,
   })  : label = label ?? 'Sign in with Apple',
         overrideDefaultTapAction = overrideDefaultTapAction ?? false,
-        size = size ?? 19,
-        super(key: key);
+        size = size ?? 19;
 
   AppleProvider get provider => AppleProvider();
 

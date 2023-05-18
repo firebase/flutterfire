@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_oauth/firebase_ui_oauth.dart';
@@ -15,7 +19,7 @@ void main() async {
 }
 
 class OAuthProviderButtonExample extends StatelessWidget {
-  const OAuthProviderButtonExample({Key? key}) : super(key: key);
+  const OAuthProviderButtonExample({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +54,10 @@ class Content extends StatefulWidget {
   final ButtonVariant buttonVariant;
 
   const Content({
-    Key? key,
+    super.key,
     required this.designLibrary,
     required this.buttonVariant,
-  }) : super(key: key);
+  });
 
   @override
   State<Content> createState() => _ContentState();

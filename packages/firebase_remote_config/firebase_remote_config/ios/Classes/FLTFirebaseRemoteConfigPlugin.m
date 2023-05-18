@@ -9,16 +9,23 @@
 #import "FLTFirebaseRemoteConfigUtils.h"
 
 NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase_remote_config";
+NSString *const kFirebaseRemoteConfigUpdateChannelName =
+    @"plugins.flutter.io/firebase_remote_config_updated";
 
 @interface FLTFirebaseRemoteConfigPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
+@property(nonatomic, strong)
+    NSMutableDictionary<NSString *, FIRConfigUpdateListenerRegistration *> *listenersMap;
 @end
 
 @implementation FLTFirebaseRemoteConfigPlugin
 
+BOOL _fetchAndActivateRetry;
+
 + (instancetype)sharedInstance {
   static dispatch_once_t onceToken;
   static FLTFirebaseRemoteConfigPlugin *instance;
+  _fetchAndActivateRetry = false;
 
   dispatch_once(&onceToken, ^{
     instance = [[FLTFirebaseRemoteConfigPlugin alloc] init];
@@ -37,9 +44,14 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:kFirebaseRemoteConfigChannelName
                                   binaryMessenger:[registrar messenger]];
+  FlutterEventChannel *eventChannel =
+      [FlutterEventChannel eventChannelWithName:kFirebaseRemoteConfigUpdateChannelName
+                                binaryMessenger:[registrar messenger]];
+
   FLTFirebaseRemoteConfigPlugin *instance = [FLTFirebaseRemoteConfigPlugin sharedInstance];
 
   [registrar addMethodCallDelegate:instance channel:channel];
+  [eventChannel setStreamHandler:instance];
 
   SEL sel = NSSelectorFromString(@"registerLibrary:withVersion:");
   if ([FIRApp respondsToSelector:sel]) {
@@ -161,7 +173,17 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
   [remoteConfig fetchAndActivateWithCompletionHandler:^(
                     FIRRemoteConfigFetchAndActivateStatus status, NSError *error) {
     if (error != nil) {
-      result.error(nil, nil, nil, error);
+      if (error.code == 999 && _fetchAndActivateRetry == false) {
+        // Note: see issue for details: https://github.com/firebase/flutterfire/issues/6196
+        // Only calling once as the issue noted describes how it works on second retry
+        // Issue appears to indicate the error code is: 999
+        _fetchAndActivateRetry = true;
+        NSLog(@"FLTFirebaseRemoteConfigPlugin: Retrying `fetchAndActivate()` due to a cancelled "
+              @"request with the error code: 999.");
+        [self fetchAndActivate:arguments withMethodCallResult:result];
+      } else {
+        result.error(nil, nil, nil, error);
+      }
     } else {
       if (status == FIRRemoteConfigFetchAndActivateStatusSuccessFetchedFromRemote) {
         result.success(@(YES));
@@ -227,6 +249,7 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
 #pragma mark - FLTFirebasePlugin
 
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
+  _fetchAndActivateRetry = false;
   completion();
 }
 
@@ -265,6 +288,34 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
 
 - (NSString *_Nonnull)flutterChannelName {
   return kFirebaseRemoteConfigChannelName;
+}
+
+- (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
+  NSString *appName = (NSString *)arguments;
+  if (!appName) return nil;
+  [self.listenersMap[appName] remove];
+  [self.listenersMap removeObjectForKey:appName];
+  return nil;
+}
+
+- (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
+                                       eventSink:(nonnull FlutterEventSink)events {
+  NSString *appName = (NSString *)arguments[@"appName"];
+  if (!appName) return nil;
+  FIRRemoteConfig *remoteConfig = [self getFIRRemoteConfigFromArguments:arguments];
+  self.listenersMap[appName] =
+      [remoteConfig addOnConfigUpdateListener:^(FIRRemoteConfigUpdate *_Nullable configUpdate,
+                                                NSError *_Nullable error) {
+        if (error) {
+          // Handle the error
+          NSLog(@"Error while receiving remote config update: %@", error.localizedDescription);
+          return;
+        }
+        if (configUpdate) {
+          events([configUpdate.updatedKeys allObjects]);
+        }
+      }];
+  return nil;
 }
 
 @end

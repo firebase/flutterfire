@@ -25,20 +25,20 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 31
+    namespace 'io.flutter.plugins.firebase.tests'
+    compileSdkVersion 33
 
     lintOptions {
         disable 'InvalidPackage'
     }
 
     defaultConfig {
-        applicationId "com.example.firebase_in_app_messaging_example"
-        minSdkVersion 19
-        targetSdkVersion 31
+        applicationId "io.flutter.plugins.firebase.tests"
+        minSdkVersion 21
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
     }
 
     buildTypes {

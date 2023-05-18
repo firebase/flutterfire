@@ -16,9 +16,7 @@
 
 include: all_lint_rules.yaml
 analyzer:
-  strong-mode:
-    implicit-casts: false
-    implicit-dynamic: false
+  strict-casts: true
   errors:
     # So we can run ODM dart tests in the melos workspace - otherwise dart test will
     # source the ODM package from pub - which won't have the local changes
@@ -30,8 +28,8 @@ analyzer:
     # in this file
     included_file_warning: ignore
   exclude:
-    - "**.freezed.dart"
-    - "**.g.dart"
+    - '**.freezed.dart'
+    - '**.g.dart'
 
 linter:
   rules:
@@ -73,10 +71,6 @@ linter:
     # Conflicts with the convention used by flutter, which puts `Key key`
     # and `@required Widget child` last.
     always_put_required_named_parameters_first: false
-
-    # `as` is not that bad (especially with the upcoming non-nullable types).
-    # Explicit exceptions is better than implicit exceptions.
-    avoid_as: false
 
     # This project doesn't use Flutter-style todos
     flutter_style_todos: false

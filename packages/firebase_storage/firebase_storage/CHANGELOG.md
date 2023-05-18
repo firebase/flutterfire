@@ -1,3 +1,64 @@
+## 11.2.1
+
+ - Update a dependency to the latest release.
+
+## 11.2.0
+
+ - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
+
+## 11.1.2
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+
+## 11.1.1
+
+ - Update a dependency to the latest release.
+
+## 11.1.0
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 11.0.16
+
+ - Update a dependency to the latest release.
+
+## 11.0.15
+
+ - Update a dependency to the latest release.
+
+## 11.0.14
+
+ - Update a dependency to the latest release.
+
+## 11.0.13
+
+ - Update a dependency to the latest release.
+
+## 11.0.12
+
+ - Update a dependency to the latest release.
+
+## 11.0.11
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+
+## 11.0.10
+
+ - Update a dependency to the latest release.
+
+## 11.0.9
+
+ - Update a dependency to the latest release.
+
+## 11.0.8
+
+ - **FIX**: fix usage of storage plugin with an isolate ([#10106](https://github.com/firebase/flutterfire/issues/10106)). ([86f24633](https://github.com/firebase/flutterfire/commit/86f2463364cbd3a0de88b1e6217120a95609b5b2))
+ - **FIX**: fix concurrency issue ([#10099](https://github.com/firebase/flutterfire/issues/10099)). ([d0b6fcf1](https://github.com/firebase/flutterfire/commit/d0b6fcf194afe987dec59d24b47ad197bf8e7cf8))
+
+## 11.0.7
+
+ - Update a dependency to the latest release.
+
 ## 11.0.6
 
  - Update a dependency to the latest release.

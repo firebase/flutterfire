@@ -1,3 +1,59 @@
+## 3.6.1
+
+ - Update a dependency to the latest release.
+
+## 3.6.0
+
+ - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
+
+## 3.5.0
+
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 3.4.1
+
+ - Update a dependency to the latest release.
+
+## 3.4.0
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 3.3.25
+
+ - **FIX**(firebase_storage_web): fix `Error: Unexpected null value.` when `metadata.timeCreated` or `metadata.updated` ([#10577](https://github.com/firebase/flutterfire/issues/10577)). ([6eb235ba](https://github.com/firebase/flutterfire/commit/6eb235ba1d6805eb142469d6566b665e0e531e77))
+
+## 3.3.24
+
+ - Update a dependency to the latest release.
+
+## 3.3.23
+
+ - Update a dependency to the latest release.
+
+## 3.3.22
+
+ - Update a dependency to the latest release.
+
+## 3.3.21
+
+ - Update a dependency to the latest release.
+
+## 3.3.20
+
+ - Update a dependency to the latest release.
+
+## 3.3.19
+
+ - Update a dependency to the latest release.
+
+## 3.3.18
+
+ - Update a dependency to the latest release.
+
+## 3.3.17
+
+ - Update a dependency to the latest release.
+
 ## 3.3.16
 
  - Update a dependency to the latest release.

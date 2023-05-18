@@ -1,8 +1,12 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
-import '../widgets/internal/universal_scaffold.dart';
 import 'internal/responsive_page.dart';
 
 /// A password reset screen.
@@ -38,7 +42,7 @@ class ForgotPasswordScreen extends StatelessWidget {
   final double breakpoint;
 
   const ForgotPasswordScreen({
-    Key? key,
+    super.key,
     this.auth,
     this.email,
     this.subtitleBuilder,
@@ -49,7 +53,7 @@ class ForgotPasswordScreen extends StatelessWidget {
     this.desktopLayoutDirection,
     this.resizeToAvoidBottomInset,
     this.breakpoint = 600,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

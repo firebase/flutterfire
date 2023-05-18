@@ -122,6 +122,9 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// Performs a fetch and activate operation, as a convenience.
   ///
   /// Returns [bool] in the same way that is done for [activate].
+  /// A [FirebaseException] maybe thrown with the following error code:
+  /// - **forbidden**:
+  ///  - Thrown if the Google Cloud Platform Firebase Remote Config API is disabled
   Future<bool> fetchAndActivate() {
     throw UnimplementedError('fetchAndActivate() is not implemented');
   }
@@ -132,21 +135,29 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   }
 
   /// Gets the value for a given key as a bool.
+  ///
+  /// Returns `false` if the key does not exist.
   bool getBool(String key) {
     throw UnimplementedError('getBool() is not implemented');
   }
 
   /// Gets the value for a given key as an int.
+  ///
+  /// Returns `0` if the key does not exist.
   int getInt(String key) {
     throw UnimplementedError('getInt() is not implemented');
   }
 
   /// Gets the value for a given key as a double.
+  ///
+  /// Returns `0.0` if the key does not exist.
   double getDouble(String key) {
     throw UnimplementedError('getDouble() is not implemented');
   }
 
   /// Gets the value for a given key as a String.
+  ///
+  /// Returns an empty String if the key does not exist.
   String getString(String key) {
     throw UnimplementedError('getString() is not implemented');
   }
@@ -164,5 +175,10 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// Sets the default parameter values for the current instance.
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) {
     throw UnimplementedError('setDefaults() is not implemented');
+  }
+
+  /// Get a [Stream] of [RemoteConfigUpdate]s.
+  Stream<RemoteConfigUpdate> get onConfigUpdated {
+    throw UnimplementedError('onConfigUpdated getter not implemented');
   }
 }

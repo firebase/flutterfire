@@ -1,9 +1,13 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/internal/loading_button.dart';
 import '../validators.dart';
 
 /// {@template ui.auth.widgets.email_form.forgot_password_action}
@@ -52,7 +56,7 @@ typedef EmailFormSubmitCallback = void Function(String email, String password);
 /// {@endtemplate}
 class EmailFormStyle extends FirebaseUIStyle {
   /// A [ButtonVariant] that should be used for the sign in button.
-  final ButtonVariant? signInButtonVariant;
+  final ButtonVariant signInButtonVariant;
 
   /// An override of the global [ThemeData.inputDecorationTheme].
   final InputDecorationTheme? inputDecorationTheme;
@@ -98,14 +102,14 @@ class EmailForm extends StatelessWidget {
 
   /// {@macro ui.auth.widgets.email_form}
   const EmailForm({
-    Key? key,
+    super.key,
     this.action,
     this.auth,
     this.provider,
     this.onSubmit,
     this.email,
     this.actionButtonLabelOverride,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -140,14 +144,13 @@ class _SignInFormContent extends StatefulWidget {
   final String? actionButtonLabelOverride;
 
   const _SignInFormContent({
-    Key? key,
     this.auth,
     this.onSubmit,
     this.action,
     this.email,
     this.provider,
     this.actionButtonLabelOverride,
-  }) : super(key: key);
+  });
 
   @override
   _SignInFormContentState createState() => _SignInFormContentState();
@@ -180,6 +183,8 @@ class _SignInFormContentState extends State<_SignInFormContent> {
   }
 
   void _submit([String? password]) {
+    FocusManager.instance.primaryFocus?.unfocus();
+
     final ctrl = AuthController.ofType<EmailAuthController>(context);
     final email = (widget.email ?? emailCtrl.text).trim();
 

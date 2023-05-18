@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runWriteBatchTests() {
   group('$WriteBatch', () {
@@ -29,7 +29,7 @@ void runWriteBatchTests() {
       return collection;
     }
 
-    test('works with withConverter', () async {
+    testWidgets('works with withConverter', (_) async {
       CollectionReference<Map<String, dynamic>> collection =
           await initializeTest('with-converter-batch');
       WriteBatch batch = firestore.batch();
@@ -71,7 +71,7 @@ void runWriteBatchTests() {
       expect(snapshot.exists, false);
     });
 
-    test('performs batch operations', () async {
+    testWidgets('performs batch operations', (_) async {
       CollectionReference<Map<String, dynamic>> collection =
           await initializeTest('write-batch-ops');
       WriteBatch batch = firestore.batch();

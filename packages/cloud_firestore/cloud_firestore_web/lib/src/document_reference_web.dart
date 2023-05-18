@@ -6,9 +6,9 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 import 'internals.dart';
-import 'utils/web_utils.dart';
-import 'utils/encode_utility.dart';
 import 'interop/firestore.dart' as firestore_interop;
+import 'utils/encode_utility.dart';
+import 'utils/web_utils.dart';
 
 /// Web implementation for Firestore [DocumentReferencePlatform].
 class DocumentReferenceWeb extends DocumentReferencePlatform {
@@ -38,9 +38,9 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   }
 
   @override
-  Future<void> update(Map<String, dynamic> data) {
+  Future<void> update(Map<Object, dynamic> data) {
     return convertWebExceptions(
-        () => _delegate.update(EncodeUtility.encodeMapData(data)!));
+        () => _delegate.update(EncodeUtility.encodeMapDataFieldPath(data)!));
   }
 
   @override
@@ -51,7 +51,11 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
       () => _delegate.get(convertGetOptions(options)),
     );
 
-    return convertWebDocumentSnapshot(firestore, documentSnapshot);
+    return convertWebDocumentSnapshot(
+      firestore,
+      documentSnapshot,
+      getServerTimestampBehaviorString(options.serverTimestampBehavior),
+    );
   }
 
   @override
@@ -71,7 +75,11 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
 
     return convertWebExceptions(
       () => querySnapshots.map((webSnapshot) {
-        return convertWebDocumentSnapshot(firestore, webSnapshot);
+        return convertWebDocumentSnapshot(
+          firestore,
+          webSnapshot,
+          ServerTimestampBehavior.none.name,
+        );
       }),
     );
   }

@@ -1,10 +1,15 @@
+// Copyright 2023, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 import "./default_localizations.dart";
 
 import 'lang/es.dart';
 import 'lang/es_419.dart';
 import 'lang/ko.dart';
+import 'lang/hu.dart';
 import 'lang/id.dart';
 import 'lang/pt.dart';
+import 'lang/he.dart';
 import 'lang/de.dart';
 import 'lang/it.dart';
 import 'lang/zh.dart';
@@ -25,8 +30,10 @@ final localizations = <String, FirebaseUILocalizationLabels>{
   'es': const EsLocalizations(),
   'es_419': const Es419Localizations(),
   'ko': const KoLocalizations(),
+  'hu': const HuLocalizations(),
   'id': const IdLocalizations(),
   'pt': const PtLocalizations(),
+  'he': const HeLocalizations(),
   'de': const DeLocalizations(),
   'it': const ItLocalizations(),
   'zh': const ZhLocalizations(),

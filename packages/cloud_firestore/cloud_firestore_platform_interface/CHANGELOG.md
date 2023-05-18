@@ -1,3 +1,71 @@
+## 5.14.1
+
+ - Update a dependency to the latest release.
+
+## 5.14.0
+
+ - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
+ - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+
+## 5.13.0
+
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 5.12.1
+
+ - Update a dependency to the latest release.
+
+## 5.12.0
+
+ - **FEAT**(firestore): add the `Filter` class and support for the OR query ([#10678](https://github.com/firebase/flutterfire/issues/10678)). ([ac434044](https://github.com/firebase/flutterfire/commit/ac434044bbfa91d0d8b33ff39736d8eb4062e824))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **DOCS**(firestore): fix a typo in Stream ([#10646](https://github.com/firebase/flutterfire/issues/10646)). ([3eb11ee2](https://github.com/firebase/flutterfire/commit/3eb11ee28f74f2193e6425eb9a76826f35065f60))
+
+## 5.11.5
+
+ - Update a dependency to the latest release.
+
+## 5.11.4
+
+ - Update a dependency to the latest release.
+
+## 5.11.3
+
+ - Update a dependency to the latest release.
+
+## 5.11.2
+
+ - Update a dependency to the latest release.
+
+## 5.11.1
+
+ - Update a dependency to the latest release.
+
+## 5.11.0
+
+ - **FIX**: supports Iterable in queries instead of List ([#10411](https://github.com/firebase/flutterfire/issues/10411)). ([9d91d513](https://github.com/firebase/flutterfire/commit/9d91d513fad326f9c928d7d96d03e2c031875903))
+ - **FEAT**: add support to `update` using FieldPath ([#10388](https://github.com/firebase/flutterfire/issues/10388)). ([538090fc](https://github.com/firebase/flutterfire/commit/538090fc49078b8d6c484d8db9049f06d05157dd))
+
+## 5.10.2
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+
+## 5.10.1
+
+ - Update a dependency to the latest release.
+
+## 5.10.0
+
+ - **FEAT**: add ServerTimestampBehavior to the GetOptions class.  ([#9590](https://github.com/firebase/flutterfire/issues/9590)). ([c25bd2fe](https://github.com/firebase/flutterfire/commit/c25bd2fe4c13bc9f13d93410842c00e25aaac2b2))
+
+## 5.9.2
+
+ - **FIX**: Replace FallThroughError with UnsupportedError ([0592d02b](https://github.com/firebase/flutterfire/commit/0592d02ba036f7abb347e305aff52fdbfd568a56))
+
+## 5.9.1
+
+ - Update a dependency to the latest release.
+
 ## 5.9.0
 
  - **FEAT**: experimental `setIndexConfiguration()` API ([#9928](https://github.com/firebase/flutterfire/issues/9928)). ([bf6eda18](https://github.com/firebase/flutterfire/commit/bf6eda1893a4f29c4b501c4aa31026548ad2b286))

@@ -1,19 +1,23 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_auth/firebase_auth.dart'
     hide PhoneAuthProvider, EmailAuthProvider;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_facebook/firebase_ui_oauth_facebook.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:firebase_ui_oauth_twitter/firebase_ui_oauth_twitter.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-import 'firebase_options.dart';
 
 import 'config.dart';
 import 'decorations.dart';
+import 'firebase_options.dart';
 
 final actionCodeSettings = ActionCodeSettings(
   url: 'https://flutterfire-e2e-tests.firebaseapp.com',
@@ -58,7 +62,7 @@ class LabelOverrides extends DefaultLocalizations {
 }
 
 class FirebaseAuthUIExample extends StatelessWidget {
-  const FirebaseAuthUIExample({Key? key}) : super(key: key);
+  const FirebaseAuthUIExample({super.key});
 
   String get initialRoute {
     final auth = FirebaseAuth.instance;
@@ -100,6 +104,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.light,
         visualDensity: VisualDensity.standard,
+        useMaterial3: true,
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(),
         ),
@@ -131,6 +136,13 @@ class FirebaseAuthUIExample extends StatelessWidget {
               }),
               AuthStateChangeAction<UserCreated>((context, state) {
                 if (!state.credential.user!.emailVerified) {
+                  Navigator.pushNamed(context, '/verify-email');
+                } else {
+                  Navigator.pushReplacementNamed(context, '/profile');
+                }
+              }),
+              AuthStateChangeAction<CredentialLinked>((context, state) {
+                if (!state.user.emailVerified) {
                   Navigator.pushNamed(context, '/verify-email');
                 } else {
                   Navigator.pushReplacementNamed(context, '/profile');
@@ -246,6 +258,8 @@ class FirebaseAuthUIExample extends StatelessWidget {
           );
         },
         '/profile': (context) {
+          final platform = Theme.of(context).platform;
+
           return ProfileScreen(
             actions: [
               SignedOutAction((context) {
@@ -254,7 +268,9 @@ class FirebaseAuthUIExample extends StatelessWidget {
               mfaAction,
             ],
             actionCodeSettings: actionCodeSettings,
-            showMFATile: true,
+            showMFATile: kIsWeb ||
+                platform == TargetPlatform.iOS ||
+                platform == TargetPlatform.android,
           );
         },
       },

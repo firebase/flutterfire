@@ -26,12 +26,12 @@ class App extends StatelessWidget {
         },
         '/profile': (context) => ProfileScreen(),
         '/verify-email': (context) => EmailVerificationScreen(
-          actionCodeSettings: ActionCodeSettngs(...),
+          actionCodeSettings: ActionCodeSettings(...),
           actions: [
-            EmailVerified(() {
+            EmailVerifiedAction(() {
               Navigator.pushReplacementNamed(context, '/profile');
             }),
-            Cancel((context) {
+            AuthCancelledAction((context) {
               FirebaseUIAuth.signOut(context: context);
               Navigator.pushReplacementNamed(context, '/');
             }),
@@ -45,13 +45,13 @@ class App extends StatelessWidget {
 
 Once opened, it triggers a verification email to be sent and will wait for a dynamic link to be received by the app (on supported platforms).
 
-## Using `EmailVerificatioController`
+## Using `EmailVerificationController`
 
 If you want to build a custom email verification screen, you could use `EmailVerificationController`:
 
 ```dart
 class MyEmailVerificationScreen extends StatefulWidget {
-  const MyEmailVerificationScreen({Key? key}) : super(key: key);
+  const MyEmailVerificationScreen({super.key});
 
   @override
   State<MyEmailVerificationScreen> createState() =>
@@ -103,7 +103,7 @@ class _MyEmailVerificationScreenState extends State<MyEmailVerificationScreen> {
 
 ## Other topics
 
-- [EmaiAuthProvider](./email.md) - allows registering and signing using email and password.
+- [EmailAuthProvider](./email.md) - allows registering and signing using email and password.
 - [EmailLinkAuthProvider](./email-link.md) - allows registering and signing using a link sent to email.
 - [PhoneAuthProvider](./phone.md) - allows registering and signing using a phone number
 - [UniversalEmailSignInProvider](./universal-email-sign-in.md) - gets all connected auth providers for a given email.

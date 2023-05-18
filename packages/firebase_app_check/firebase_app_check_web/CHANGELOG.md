@@ -1,3 +1,63 @@
+## 0.0.10+1
+
+ - Update a dependency to the latest release.
+
+## 0.0.10
+
+ - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
+
+## 0.0.9
+
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 0.0.8+2
+
+ - Update a dependency to the latest release.
+
+## 0.0.8+1
+
+ - Update a dependency to the latest release.
+
+## 0.0.8
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 0.0.7+17
+
+ - Update a dependency to the latest release.
+
+## 0.0.7+16
+
+ - Update a dependency to the latest release.
+
+## 0.0.7+15
+
+ - Update a dependency to the latest release.
+
+## 0.0.7+14
+
+ - Update a dependency to the latest release.
+
+## 0.0.7+13
+
+ - Update a dependency to the latest release.
+
+## 0.0.7+12
+
+ - Update a dependency to the latest release.
+
+## 0.0.7+11
+
+ - Update a dependency to the latest release.
+
+## 0.0.7+10
+
+ - Update a dependency to the latest release.
+
+## 0.0.7+9
+
+ - Update a dependency to the latest release.
+
 ## 0.0.7+8
 
  - Update a dependency to the latest release.

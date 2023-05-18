@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.firebase_in_app_messaging_example">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:label="firebase_in_app_messaging_example"
@@ -8,7 +7,9 @@
         android:theme="@android:style/Theme.Black.NoTitleBar"
         android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale"
         android:hardwareAccelerated="true"
-        android:windowSoftInputMode="adjustResize">
+        android:windowSoftInputMode="adjustResize"
+        android:exported="true"
+        >
         <meta-data
           android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
           android:value="true" />

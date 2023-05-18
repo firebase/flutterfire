@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 // ignore_for_file: subtype_of_sealed_class, must_be_immutable, avoid_implementing_value_types
 
 import 'dart:async';
@@ -6,7 +10,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:mockito/mockito.dart';
 
 typedef Snapshot = QuerySnapshot<Map<String, Object?>>;
@@ -114,7 +117,7 @@ Future<void> main() async {
       expect(firstNameFinder, findsOneWidget);
 
       //For some reason, we have a renderflex issue when tapping
-      tester.binding.window.physicalSizeTestValue = const Size(1000, 2000);
+      tester.view.physicalSize = const Size(1000, 2000);
       await tester.tap(firstNameFinder);
       await tester.pumpAndSettle();
 
@@ -152,7 +155,7 @@ Future<void> main() async {
       expect(firstNameFinder, findsOneWidget);
 
       //For some reason, we have a renderflex issue when tapping
-      tester.binding.window.physicalSizeTestValue = const Size(1000, 2000);
+      tester.view.physicalSize = const Size(1000, 2000);
       await tester.tap(firstNameFinder);
       await tester.pumpAndSettle();
 
@@ -168,7 +171,7 @@ Future<void> main() async {
     'FirestoreDataTable row selection is capture',
     (WidgetTester tester) async {
       //For some reason, we have a renderflex issue when tapping
-      tester.binding.window.physicalSizeTestValue = const Size(1000, 2000);
+      tester.view.physicalSize = const Size(1000, 2000);
 
       var nbItemSelected = 0;
 
@@ -321,8 +324,44 @@ class Address {
 
 class MockFirestore extends Mock implements FirebaseFirestore {}
 
+class MockAggregateQuerySnapshot extends Mock
+    implements AggregateQuerySnapshot {
+  @override
+  int get count => 2;
+}
+
+class MockAggregateQuery extends Mock implements AggregateQuery {
+  @override
+  Future<AggregateQuerySnapshot> get({AggregateSource? source}) {
+    return super.noSuchMethod(
+      Invocation.method(#get, null),
+      returnValue: Future.value(MockAggregateQuerySnapshot()),
+      returnValueForMissingStub: Future.value(MockAggregateQuerySnapshot()),
+    );
+  }
+}
+
 class MockCollection extends Mock
     implements CollectionReference<Map<String, Object?>> {
+  @override
+  Stream<QuerySnapshot<Map<String, Object?>>> snapshots({
+    bool includeMetadataChanges = false,
+  }) {
+    return super.noSuchMethod(
+      Invocation.method(#snapshots, null, {
+        #includeMetadataChanges: includeMetadataChanges,
+      }),
+      returnValue: Stream.fromIterable([
+        MockQuerySnapshot(),
+        MockQuerySnapshot(),
+      ]),
+      returnValueForMissingStub: Stream.fromIterable([
+        MockQuerySnapshot(),
+        MockQuerySnapshot(),
+      ]),
+    );
+  }
+
   @override
   CollectionReference<R> withConverter<R extends Object?>({
     FromFirestore<R>? fromFirestore,
@@ -335,6 +374,15 @@ class MockCollection extends Mock
       }),
       returnValue: this,
       returnValueForMissingStub: this,
+    );
+  }
+
+  @override
+  MockAggregateQuery count() {
+    return super.noSuchMethod(
+      Invocation.method(#count, null),
+      returnValue: MockAggregateQuery(),
+      returnValueForMissingStub: MockAggregateQuery(),
     );
   }
 

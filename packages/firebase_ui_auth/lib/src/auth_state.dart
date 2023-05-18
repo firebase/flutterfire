@@ -1,7 +1,11 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart'
-    show AuthCredential, MultiFactorResolver, User;
+    show AuthCredential, MultiFactorResolver, User, UserCredential;
 
 /// An abstract class for all auth states.
 /// [AuthState] transitions could be captured with an [AuthStateChangeAction]:
@@ -103,8 +107,11 @@ class CredentialLinked extends AuthState {
   /// A credential that was linked with the currently signed in user account.
   final AuthCredential credential;
 
+  /// An instance of the [User] the credential was associated with.
+  final User user;
+
   /// {@macro ui.auth.auth_state.credential_linked}
-  CredentialLinked(this.credential);
+  CredentialLinked(this.credential, this.user);
 }
 
 /// {@template ui.auth.auth_state.auth_failed}
@@ -137,6 +144,14 @@ class SignedIn extends AuthState {
 
   /// {@macro ui.auth.auth_state.signed_in}
   SignedIn(this.user);
+}
+
+/// A state that indicates that a new user account was created.
+class UserCreated extends AuthState {
+  /// A [UserCredential] that was obtained during authentication process.
+  final UserCredential credential;
+
+  UserCreated(this.credential);
 }
 
 /// {@template ui.auth.auth_state.different_sign_in_methods_found}
@@ -186,10 +201,10 @@ class AuthStateProvider extends InheritedWidget {
   final AuthState state;
 
   const AuthStateProvider({
-    Key? key,
+    super.key,
+    required super.child,
     required this.state,
-    required Widget child,
-  }) : super(key: key, child: child);
+  });
 
   @override
   bool updateShouldNotify(AuthStateProvider oldWidget) {
@@ -249,10 +264,10 @@ class AuthStateListener<T extends AuthController> extends StatelessWidget {
   final AuthStateListenerCallback<T> listener;
 
   const AuthStateListener({
-    Key? key,
+    super.key,
     required this.child,
     required this.listener,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

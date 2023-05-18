@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 export 'src/provider.dart' show TwitterProvider;
 export 'src/theme.dart' show TwitterProviderButtonStyle;
 
@@ -104,7 +108,7 @@ class _TwitterSignInButton extends StatelessWidget {
   final VoidCallback? onCanceled;
 
   const _TwitterSignInButton({
-    Key? key,
+    super.key,
     required this.apiKey,
     required this.apiSecretKey,
     required this.loadingIndicator,
@@ -122,8 +126,7 @@ class _TwitterSignInButton extends StatelessWidget {
     this.onCanceled,
   })  : label = label ?? 'Sign in with Twitter',
         overrideDefaultTapAction = overrideDefaultTapAction ?? false,
-        size = size ?? 19,
-        super(key: key);
+        size = size ?? 19;
 
   TwitterProvider get provider => TwitterProvider(
         apiKey: apiKey,

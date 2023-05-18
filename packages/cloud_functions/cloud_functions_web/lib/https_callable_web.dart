@@ -15,8 +15,8 @@ import 'utils.dart';
 class HttpsCallableWeb extends HttpsCallablePlatform {
   /// Constructor.
   HttpsCallableWeb(FirebaseFunctionsPlatform functions, this._webFunctions,
-      String? origin, String name, HttpsCallableOptions options)
-      : super(functions, origin, name, options);
+      String? origin, String? name, HttpsCallableOptions options, Uri? uri)
+      : super(functions, origin, name, options, uri);
 
   final functions_interop.Functions _webFunctions;
 
@@ -32,8 +32,15 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
         functions_interop.HttpsCallableOptions(
             timeout: options.timeout.inMilliseconds);
 
-    functions_interop.HttpsCallable callable =
-        _webFunctions.httpsCallable(name, callableOptions);
+    late functions_interop.HttpsCallable callable;
+
+    if (name != null) {
+      callable = _webFunctions.httpsCallable(name!, callableOptions);
+    } else if (uri != null) {
+      callable = _webFunctions.httpsCallableUri(uri!, callableOptions);
+    } else {
+      throw ArgumentError('Either name or uri must be provided');
+    }
 
     functions_interop.HttpsCallableResult response;
     var input = parameters;

@@ -1,19 +1,24 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_auth/firebase_auth.dart' show PhoneAuthCredential;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import '../widgets/internal/universal_text_form_field.dart';
 
 class _NumberDecorationPainter extends BoxPainter {
   final InputBorder inputBorder;
   final Color color;
 
-  _NumberDecorationPainter({
-    VoidCallback? onChanged,
+  _NumberDecorationPainter(
+    super.onChanged, {
     required this.inputBorder,
     required this.color,
-  }) : super(onChanged);
+  });
 
   final rect = const Rect.fromLTWH(0, 0, _numberSlotWidth, _numberSlotHeight);
 
@@ -40,7 +45,7 @@ class _NumberSlotDecoration extends Decoration {
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {
     return _NumberDecorationPainter(
-      onChanged: onChanged,
+      onChanged,
       inputBorder: inputBorder,
       color: color,
     );
@@ -54,7 +59,7 @@ const _numberSlotMargin = 5.5;
 class _NumberSlot extends StatefulWidget {
   final String number;
 
-  const _NumberSlot({Key? key, this.number = ''}) : super(key: key);
+  const _NumberSlot({this.number = ''});
 
   @override
   _NumberSlotState createState() => _NumberSlotState();
@@ -86,7 +91,7 @@ class _NumberSlotState extends State<_NumberSlot>
   Widget build(BuildContext context) {
     final inputBorder = Theme.of(context).inputDecorationTheme.border;
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final errorColor = Theme.of(context).errorColor;
+    final errorColor = Theme.of(context).colorScheme.error;
 
     final color = hasError ? errorColor : primaryColor;
 
@@ -138,11 +143,11 @@ class SMSCodeInput extends StatefulWidget {
 
   /// {@macro ui.auth.widgets.sms_code_input}
   const SMSCodeInput({
-    Key? key,
+    super.key,
     this.autofocus = true,
     this.text,
     this.onSubmit,
-  }) : super(key: key);
+  });
 
   @override
   SMSCodeInputState createState() => SMSCodeInputState();

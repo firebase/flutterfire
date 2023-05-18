@@ -1,10 +1,14 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 
 import 'query_builder.dart';
 
@@ -55,7 +59,7 @@ typedef OnSelectedRows = void Function(
 class FirestoreDataTable extends StatefulWidget {
   /// {@macro firebase_ui.firestore_table}
   const FirestoreDataTable({
-    Key? key,
+    super.key,
     required this.query,
     required this.columnLabels,
     this.header,
@@ -64,7 +68,13 @@ class FirestoreDataTable extends StatefulWidget {
     this.actions,
     this.sortColumnIndex,
     this.sortAscending = true,
-    this.dataRowHeight = kMinInteractiveDimension,
+    @Deprecated(
+      'Migrate to use dataRowMinHeight and dataRowMaxHeight instead. '
+      'This feature was deprecated after v3.7.0-5.0.pre.',
+    )
+        double? dataRowHeight,
+    double? dataRowMinHeight,
+    double? dataRowMaxHeight,
     this.headingRowHeight = 56.0,
     this.horizontalMargin = 24.0,
     this.columnSpacing = 56.0,
@@ -82,8 +92,11 @@ class FirestoreDataTable extends StatefulWidget {
   })  : assert(
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
-        ), // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
-        super(key: key);
+        ),
+        dataRowMinHeight =
+            dataRowHeight ?? dataRowMinHeight ?? kMinInteractiveDimension,
+        dataRowMaxHeight =
+            dataRowHeight ?? dataRowMaxHeight ?? kMinInteractiveDimension;
 
   /// When specified, the builder will be used to display your own widget for the cell
   final CellBuilder? cellBuilder;
@@ -134,11 +147,17 @@ class FirestoreDataTable extends StatefulWidget {
   /// The value is the index of the first row on the currently displayed page.
   final void Function(int page)? onPageChanged;
 
-  /// The height of each row (excluding the row that contains column headings).
+  /// The minimum height of each row (excluding the row that contains column headings).
   ///
   /// This value is optional and defaults to kMinInteractiveDimension if not
   /// specified.
-  final double dataRowHeight;
+  final double dataRowMinHeight;
+
+  /// The maximum height of each row (excluding the row that contains column headings).
+  ///
+  /// This value is optional and defaults to kMinInteractiveDimension if not
+  /// specified.
+  final double dataRowMaxHeight;
 
   /// The current primary sort key's column.
   ///
@@ -197,7 +216,6 @@ class FirestoreDataTable extends StatefulWidget {
   /// If null, then [horizontalMargin] is used as the margin between the edge
   /// of the table and the checkbox, as well as the margin between the checkbox
   /// and the content in the first data column. This value defaults to 24.0.
-
   final double? checkboxHorizontalMargin;
 
   @override
@@ -245,47 +263,62 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
 
   @override
   Widget build(BuildContext context) {
-    return FirestoreQueryBuilder<Map<String, Object?>>(
-      query: _query,
-      builder: (context, snapshot, child) {
-        source.setFromSnapshot(snapshot);
+    return StreamBuilder(
+      stream: _query.snapshots(),
+      builder: (context, snapshot) {
+        return AggregateQueryBuilder(
+          query: _query.count(),
+          builder: (context, aggSsnapshot) {
+            return FirestoreQueryBuilder<Map<String, Object?>>(
+              query: _query,
+              builder: (context, snapshot, child) {
+                if (aggSsnapshot.hasData) {
+                  source.setFromSnapshot(snapshot, aggSsnapshot.requireData);
+                } else {
+                  source.setFromSnapshot(snapshot);
+                }
 
-        return AnimatedBuilder(
-          animation: source,
-          builder: (context, child) {
-            final actions = [
-              ...?widget.actions,
-              if (widget.canDeleteItems && source._selectedRowIds.isNotEmpty)
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: source.onDeleteSelectedItems,
-                ),
-            ];
-            return PaginatedDataTable(
-              source: source,
-              onSelectAll: selectionEnabled ? source.onSelectAll : null,
-              onPageChanged: widget.onPageChanged,
-              showCheckboxColumn: widget.showCheckboxColumn,
-              arrowHeadColor: widget.arrowHeadColor,
-              checkboxHorizontalMargin: widget.checkboxHorizontalMargin,
-              columnSpacing: widget.columnSpacing,
-              dataRowHeight: widget.dataRowHeight,
-              dragStartBehavior: widget.dragStartBehavior,
-              headingRowHeight: widget.headingRowHeight,
-              horizontalMargin: widget.horizontalMargin,
-              rowsPerPage: widget.rowsPerPage,
-              showFirstLastButtons: widget.showFirstLastButtons,
-              sortAscending: widget.sortAscending,
-              sortColumnIndex: widget.sortColumnIndex,
-              header:
-                  actions.isEmpty ? null : (widget.header ?? const SizedBox()),
-              actions: actions.isEmpty ? null : actions,
-              columns: [
-                for (final head in widget.columnLabels.values)
-                  DataColumn(
-                    label: head,
-                  )
-              ],
+                return AnimatedBuilder(
+                  animation: source,
+                  builder: (context, child) {
+                    final actions = [
+                      ...?widget.actions,
+                      if (widget.canDeleteItems &&
+                          source._selectedRowIds.isNotEmpty)
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: source.onDeleteSelectedItems,
+                        ),
+                    ];
+                    return PaginatedDataTable(
+                      source: source,
+                      onSelectAll: selectionEnabled ? source.onSelectAll : null,
+                      onPageChanged: widget.onPageChanged,
+                      showCheckboxColumn: widget.showCheckboxColumn,
+                      arrowHeadColor: widget.arrowHeadColor,
+                      checkboxHorizontalMargin: widget.checkboxHorizontalMargin,
+                      columnSpacing: widget.columnSpacing,
+                      dataRowMaxHeight: widget.dataRowMaxHeight,
+                      dataRowMinHeight: widget.dataRowMinHeight,
+                      dragStartBehavior: widget.dragStartBehavior,
+                      headingRowHeight: widget.headingRowHeight,
+                      horizontalMargin: widget.horizontalMargin,
+                      rowsPerPage: widget.rowsPerPage,
+                      showFirstLastButtons: widget.showFirstLastButtons,
+                      sortAscending: widget.sortAscending,
+                      sortColumnIndex: widget.sortColumnIndex,
+                      header: actions.isEmpty
+                          ? null
+                          : (widget.header ?? const SizedBox()),
+                      actions: actions.isEmpty ? null : actions,
+                      columns: [
+                        for (final head in widget.columnLabels.values)
+                          DataColumn(label: head)
+                      ],
+                    );
+                  },
+                );
+              },
             );
           },
         );
@@ -380,10 +413,9 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
 /// Takes care of the type-specific form
 class _PropertyTypeForm extends StatelessWidget {
   const _PropertyTypeForm({
-    Key? key,
     required this.formState,
     required this.onFormStateChange,
-  }) : super(key: key);
+  });
 
   final _FormState formState;
   final ValueChanged<_FormState> onFormStateChange;
@@ -478,10 +510,9 @@ class _PropertyTypeForm extends StatelessWidget {
 
 class _EditModalButtonBar extends StatelessWidget {
   const _EditModalButtonBar({
-    Key? key,
     required this.formState,
     required this.reference,
-  }) : super(key: key);
+  });
 
   final _FormState formState;
   final DocumentReference reference;
@@ -511,10 +542,9 @@ class _EditModalButtonBar extends StatelessWidget {
 
 class _PropertyTypeDropdown extends StatelessWidget {
   const _PropertyTypeDropdown({
-    Key? key,
     required this.formState,
     required this.onTypeChanged,
-  }) : super(key: key);
+  });
 
   final _FormState? formState;
 
@@ -832,12 +862,16 @@ class _Source extends DataTableSource {
   @override
   int get selectedRowCount => _selectedRowIds.length;
 
+  AggregateQuerySnapshot? _aggregateSnapshot;
+
   @override
   bool get isRowCountApproximate =>
-      _previousSnapshot!.isFetching || _previousSnapshot!.hasMore;
+      _aggregateSnapshot?.count == null ||
+      (_previousSnapshot!.isFetching || _previousSnapshot!.hasMore);
 
   @override
   int get rowCount {
+    if (_aggregateSnapshot?.count != null) return _aggregateSnapshot!.count;
     // Emitting an extra item during load or before reaching the end
     // allows the DataTable to show a spinner during load & let the user
     // navigate to next page
@@ -898,8 +932,16 @@ class _Source extends DataTableSource {
   FirestoreQueryBuilderSnapshot<Map<String, Object?>>? _previousSnapshot;
 
   void setFromSnapshot(
-    FirestoreQueryBuilderSnapshot<Map<String, Object?>> snapshot,
-  ) {
+    FirestoreQueryBuilderSnapshot<Map<String, Object?>> snapshot, [
+    AggregateQuerySnapshot? aggregateSnapshot,
+  ]) {
+    if (aggregateSnapshot != null) {
+      _aggregateSnapshot = aggregateSnapshot;
+      notifyListeners();
+    } else {
+      _aggregateSnapshot = null;
+    }
+
     if (snapshot == _previousSnapshot) return;
 
     // Try to preserve the selection status when the snapshot got updated,
@@ -937,7 +979,7 @@ class _Source extends DataTableSource {
 }
 
 class _ValueView extends StatelessWidget {
-  const _ValueView(this.value, {Key? key}) : super(key: key);
+  const _ValueView(this.value);
 
   final Object? value;
 
@@ -945,7 +987,7 @@ class _ValueView extends StatelessWidget {
   Widget build(BuildContext context) {
     final value = this.value;
     if (value == null) {
-      return Text('null', style: Theme.of(context).textTheme.caption);
+      return Text('null', style: Theme.of(context).textTheme.bodySmall);
     } else if (value is Timestamp) {
       return Text(value.toDate().toString());
     } else if (value is DocumentReference) {

@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -6,7 +5,6 @@
 @TestOn('browser')
 import 'dart:js' as js;
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,10 +21,11 @@ void main() {
           (String name) => FirebaseAppMock(
             name: name,
             options: FirebaseAppOptionsMock(
-                apiKey: 'abc',
-                appId: '123',
-                messagingSenderId: 'msg',
-                projectId: 'test'),
+              apiKey: 'abc',
+              appId: '123',
+              messagingSenderId: 'msg',
+              projectId: 'test',
+            ),
           ),
         ),
       );
@@ -37,7 +36,7 @@ void main() {
     test('.apps', () {
       (js.context['firebase_core'] as js.JsObject)['getApps'] =
           js.allowInterop(js.JsArray<dynamic>.new);
-      final List<FirebaseApp> apps = Firebase.apps;
+      final List<FirebaseAppPlatform> apps = FirebasePlatform.instance.apps;
       expect(apps, hasLength(0));
     });
 
@@ -55,7 +54,7 @@ void main() {
         });
       });
 
-      final FirebaseApp app = Firebase.app('foo');
+      final FirebaseAppPlatform app = FirebasePlatform.instance.app('foo');
 
       expect(app.name, equals('foo'));
 
@@ -98,7 +97,8 @@ void main() {
         });
       });
 
-      final FirebaseApp app = await Firebase.initializeApp(
+      final FirebaseAppPlatform app =
+          await FirebasePlatform.instance.initializeApp(
         name: 'foo',
         options: const FirebaseOptions(
           apiKey: 'abc',

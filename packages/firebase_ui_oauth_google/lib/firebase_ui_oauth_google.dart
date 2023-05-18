@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 export 'src/provider.dart' show GoogleProvider;
 export 'src/theme.dart' show GoogleProviderButtonStyle;
 
@@ -104,7 +108,7 @@ class _GoogleSignInButton extends StatelessWidget {
   final VoidCallback? onCanceled;
 
   const _GoogleSignInButton({
-    Key? key,
+    super.key,
     required this.clientId,
     required this.loadingIndicator,
     this.scopes,
@@ -122,8 +126,7 @@ class _GoogleSignInButton extends StatelessWidget {
     this.onCanceled,
   })  : label = label ?? 'Sign in with Google',
         overrideDefaultTapAction = overrideDefaultTapAction ?? false,
-        size = size ?? 19,
-        super(key: key);
+        size = size ?? 19;
 
   GoogleProvider get provider => GoogleProvider(
         clientId: clientId,

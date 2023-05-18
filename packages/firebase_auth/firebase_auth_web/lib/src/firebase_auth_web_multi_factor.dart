@@ -50,7 +50,7 @@ class MultiFactorWeb extends MultiFactorPlatform {
   Future<void> unenroll({
     String? factorUid,
     MultiFactorInfo? multiFactorInfo,
-  }) {
+  }) async {
     final uidToUnenroll = factorUid ?? multiFactorInfo?.uid;
     if (uidToUnenroll == null) {
       throw ArgumentError(
@@ -58,9 +58,13 @@ class MultiFactorWeb extends MultiFactorPlatform {
       );
     }
 
-    return _webMultiFactorUser.unenroll(
-      uidToUnenroll,
-    );
+    try {
+      await _webMultiFactorUser.unenroll(
+        uidToUnenroll,
+      );
+    } catch (e) {
+      throw getFirebaseAuthException(e);
+    }
   }
 
   @override
@@ -106,11 +110,15 @@ class MultiFactorResolverWeb extends MultiFactorResolverPlatform {
   ) async {
     final webAssertion = assertion as MultiFactorAssertionWeb;
 
-    return UserCredentialWeb(
-      _auth,
-      await _webMultiFactorResolver.resolveSignIn(webAssertion.assertion),
-      _webAuth,
-    );
+    try {
+      return UserCredentialWeb(
+        _auth,
+        await _webMultiFactorResolver.resolveSignIn(webAssertion.assertion),
+        _webAuth,
+      );
+    } catch (e) {
+      throw getFirebaseAuthException(e);
+    }
   }
 }
 

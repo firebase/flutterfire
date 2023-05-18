@@ -3,17 +3,18 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:developer';
-
-import 'package:firebase_app_installations_example/firebase_config.dart';
 import 'package:flutter/material.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_installations/firebase_app_installations.dart';
+
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(const MyApp());
 }

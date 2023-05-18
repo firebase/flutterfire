@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
@@ -119,10 +123,10 @@ class FirebaseUIActions extends InheritedWidget {
 
   /// {@macro ui.auth.actions.flutter_fire_ui_actions}
   const FirebaseUIActions({
-    Key? key,
+    super.key,
+    required super.child,
     required this.actions,
-    required Widget child,
-  }) : super(key: key, child: child);
+  });
 
   @override
   bool updateShouldNotify(FirebaseUIActions oldWidget) {
@@ -136,7 +140,7 @@ class FirebaseUIActions extends InheritedWidget {
 }
 
 class _FlutterfireUIAuthActionsElement extends InheritedElement {
-  _FlutterfireUIAuthActionsElement(InheritedWidget widget) : super(widget);
+  _FlutterfireUIAuthActionsElement(super.widget);
 
   @override
   FirebaseUIActions get widget => super.widget as FirebaseUIActions;

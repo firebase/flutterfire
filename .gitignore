@@ -10,6 +10,7 @@
 .pub/
 .dart_tool/
 pubspec.lock
+pubspec_overrides.yaml
 flutter_export_environment.sh
 
 examples/all_plugins/pubspec.yaml
@@ -47,7 +48,6 @@ build/
 .project
 .classpath
 .settings
-/pubspec.yaml
 .last_build_id
 
 # Docs

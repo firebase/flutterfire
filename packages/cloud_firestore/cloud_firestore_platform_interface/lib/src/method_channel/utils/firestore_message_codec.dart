@@ -109,7 +109,9 @@ class FirestoreMessageCodec extends StandardMessageCodec {
     } else if (value is Settings) {
       buffer.putUint8(_kFirestoreSettings);
       writeValue(buffer, value.asMap);
-    } else if (value == double.nan) {
+    } else if (value is Iterable && value is! List) {
+      super.writeValue(buffer, value.toList());
+    } else if (value is double && value.isNaN) {
       buffer.putUint8(_kNaN);
     } else if (value == double.infinity) {
       buffer.putUint8(_kInfinity);

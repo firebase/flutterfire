@@ -9,6 +9,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
@@ -63,9 +64,14 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
       firestore_interop.doc(jsObject, documentPath));
 
   Future<void> enablePersistence(
-          [firestore_interop.PersistenceSettings? settings]) =>
-      handleThenable(
-          firestore_interop.enableIndexedDbPersistence(jsObject, settings));
+      [firestore_interop.PersistenceSettings? settings]) {
+    if (settings != null && settings.synchronizeTabs == true) {
+      return handleThenable(
+          firestore_interop.enableMultiTabIndexedDbPersistence(jsObject));
+    }
+    return handleThenable(
+        firestore_interop.enableIndexedDbPersistence(jsObject));
+  }
 
   Stream<void> snapshotsInSync() {
     late StreamController<void> controller;
@@ -361,8 +367,17 @@ class DocumentReference
     return handleThenable(jsObjectSet);
   }
 
-  Future<void> update(Map<String, dynamic> data) =>
-      handleThenable(firestore_interop.updateDoc(jsObject, jsify(data)));
+  Future<void> update(Map<firestore_interop.FieldPath, dynamic> data) {
+    final alternatingFieldValues = data.keys
+        .map((e) => [jsify(e), jsify(data[e])])
+        .expand((e) => e)
+        .toList();
+
+    return handleThenable(callMethod(firestore_interop.updateDoc, 'apply', [
+      null,
+      [jsObject, ...alternatingFieldValues]
+    ]));
+  }
 }
 
 class Query<T extends firestore_interop.QueryJsImpl>
@@ -483,6 +498,37 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
     return callMethod(method, 'apply', [null, jsify(args)]);
   }
+
+  Object _parseFilterWith(Map<String, Object?> map) {
+    if (map['fieldPath'] != null) {
+      dynamic fieldPath = EncodeUtility.valueEncode(map['fieldPath']);
+      String opStr = map['op']! as String;
+      dynamic value = EncodeUtility.valueEncode(map['value']);
+
+      return firestore_interop.where(fieldPath, opStr, jsify(value));
+    }
+
+    String opStr = map['op']! as String;
+    List<dynamic> filters = map['queries']! as List<dynamic>;
+    List<dynamic> jsFilters = [];
+
+    for (final Map<String, Object?> filter in filters) {
+      jsFilters.add(_parseFilterWith(filter));
+    }
+
+    if (opStr == 'OR') {
+      return callMethod(firestore_interop.or, 'apply', [null, jsFilters]);
+    } else if (opStr == 'AND') {
+      return callMethod(firestore_interop.and, 'apply', [null, jsFilters]);
+    }
+
+    throw Exception('InvalidOperator');
+  }
+
+  Query filterWith(Map<String, Object?> map) {
+    return Query.fromJsObject(firestore_interop.query(jsObject,
+        _parseFilterWith(map) as firestore_interop.QueryConstraintJsImpl));
+  }
 }
 
 class CollectionReference<T extends firestore_interop.CollectionReferenceJsImpl>
@@ -570,7 +616,8 @@ class DocumentSnapshot
       firestore_interop.DocumentSnapshotJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  Map<String, dynamic>? data() => dartify(jsObject.data());
+  Map<String, dynamic>? data([firestore_interop.SnapshotOptions? options]) =>
+      dartify(jsObject.data(options));
 
   dynamic get(/*String|FieldPath*/ dynamic fieldPath) =>
       dartify(jsObject.get(fieldPath));
@@ -668,7 +715,7 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl>
 /// Mixin class for all classes with the [update()] method. We need to call
 /// [_wrapUpdateFunctionCall()] in all [update()] methods to fix that Dart
 /// doesn't support varargs - we need to use [List] to call js function.
-abstract class _Updatable {
+mixin _Updatable {
   /// Calls js [:update():] method on [jsObject] with [data] or list of
   /// [fieldsAndValues] and optionally [documentRef].
   T? _wrapUpdateFunctionCall<T>(jsObject, Map<String, dynamic> data,

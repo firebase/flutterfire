@@ -2,7 +2,7 @@
 
 ## Configuration
 
-To support email a provider, first ensure that the "Email/Password" provider is
+To support email as a provider, first ensure that the "Email/Password" provider is
 enabled in the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers):
 
 ![Enable Email/Password Provider](../images/ui-email-provider.jpg)
@@ -12,6 +12,9 @@ Configure email provider:
 ```dart
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+
+// If you need to use FirebaseAuth directly, make sure to hide EmailAuthProvider:
+// import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 
 import 'firebase_options.dart';
 
@@ -28,7 +31,7 @@ void main() {
 
 ## Using screen
 
-After adding `EmailAuthProvider` to the `FirebaseUIAuth.configureProviders` email form would be displayed on the `SignInScreen` or `RegisterScren`.
+After adding `EmailAuthProvider` to the `FirebaseUIAuth.configureProviders` email form would be displayed on the `SignInScreen` or `RegisterScreen`.
 
 ```dart
 SignInScreen(
@@ -138,7 +141,7 @@ For full control over every phase of the authentication lifecycle, you could bui
 
 ```dart
 class CustomEmailSignIn extends StatefulWidget {
-  const CustomEmailSignIn({Key? key}) : super(key: key);
+  const CustomEmailSignIn({super.key});
 
   @override
   State<CustomEmailSignIn> createState() => _CustomEmailSignInState();

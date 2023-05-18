@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
@@ -10,12 +14,11 @@ abstract class MultiProviderScreen extends Widget {
   }
 
   const MultiProviderScreen({
-    Key? key,
+    super.key,
     FirebaseAuth? auth,
     List<AuthProvider>? providers,
   })  : _auth = auth,
-        _providers = providers,
-        super(key: key);
+        _providers = providers;
 
   List<AuthProvider> get providers {
     if (_providers != null) {
@@ -34,7 +37,7 @@ abstract class MultiProviderScreen extends Widget {
 }
 
 class ScreenElement extends ComponentElement {
-  ScreenElement(Widget widget) : super(widget);
+  ScreenElement(super.widget);
 
   @override
   MultiProviderScreen get widget => super.widget as MultiProviderScreen;

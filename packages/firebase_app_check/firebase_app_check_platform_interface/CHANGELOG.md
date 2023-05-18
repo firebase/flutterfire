@@ -1,3 +1,64 @@
+## 0.0.8+1
+
+ - Update a dependency to the latest release.
+
+## 0.0.8
+
+ - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
+ - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+
+## 0.0.7
+
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 0.0.6+2
+
+ - **FIX**(app-check): use correct `getAppCheckToken()` method. Print out debug token for iOS. ([#10819](https://github.com/firebase/flutterfire/issues/10819)). ([66909a9c](https://github.com/firebase/flutterfire/commit/66909a9c5b10e85f93565cbc308fdbee4ec6f607))
+
+## 0.0.6+1
+
+ - Update a dependency to the latest release.
+
+## 0.0.6
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 0.0.5+17
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+16
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+15
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+14
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+13
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+12
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+11
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+10
+
+ - Update a dependency to the latest release.
+
+## 0.0.5+9
+
+ - Update a dependency to the latest release.
+
 ## 0.0.5+8
 
  - Update a dependency to the latest release.

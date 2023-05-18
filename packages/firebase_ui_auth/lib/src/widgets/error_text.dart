@@ -1,8 +1,11 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
+import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
-
-import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 
 import '../flows/phone_auth_flow.dart';
 
@@ -21,6 +24,9 @@ String? localizedErrorText(
       return labels.wrongOrNoPasswordErrorText;
     case 'credential-already-in-use':
       return labels.credentialAlreadyInUseErrorText;
+    case 'invalid-verification-code':
+      // TODO(@lesnitsky): localization
+      return 'The code you entered is invalid. Please try again.';
 
     default:
       return null;
@@ -40,10 +46,10 @@ class ErrorText extends StatelessWidget {
 
   /// {@macro ui.auth.widgets.error_text}
   const ErrorText({
-    Key? key,
+    super.key,
     required this.exception,
     this.textAlign,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +59,7 @@ class ErrorText extends StatelessWidget {
     if (isCupertino) {
       color = CupertinoColors.destructiveRed;
     } else {
-      color = Theme.of(context).errorColor;
+      color = Theme.of(context).colorScheme.error;
     }
 
     final l = FirebaseUILocalizations.labelsOf(context);

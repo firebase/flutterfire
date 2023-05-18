@@ -9,7 +9,7 @@ part of firebase_remote_config;
 /// You can get an instance by calling [FirebaseRemoteConfig.instance]. Note
 /// [FirebaseRemoteConfig.instance] is async.
 // ignore: prefer_mixin
-class FirebaseRemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
+class FirebaseRemoteConfig extends FirebasePluginPlatform {
   FirebaseRemoteConfig._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_remote_config');
 
@@ -66,7 +66,6 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   /// config parameters were already activated.
   Future<bool> activate() async {
     bool configChanged = await _delegate.activate();
-    notifyListeners();
     return configChanged;
   }
 
@@ -83,9 +82,11 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   /// Performs a fetch and activate operation, as a convenience.
   ///
   /// Returns [bool] in the same way that is done for [activate].
+  /// A [FirebaseException] maybe thrown with the following error code:
+  /// - **forbidden**:
+  ///  - Thrown if the Google Cloud Platform Firebase Remote Config API is disabled
   Future<bool> fetchAndActivate() async {
     bool configChanged = await _delegate.fetchAndActivate();
-    notifyListeners();
     return configChanged;
   }
 
@@ -95,21 +96,29 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   }
 
   /// Gets the value for a given key as a bool.
+  ///
+  /// Returns `false` if the key does not exist.
   bool getBool(String key) {
     return _delegate.getBool(key);
   }
 
   /// Gets the value for a given key as an int.
+  ///
+  /// Returns `0` if the key does not exist.
   int getInt(String key) {
     return _delegate.getInt(key);
   }
 
   /// Gets the value for a given key as a double.
+  ///
+  /// Returns `0.0` if the key does not exist.
   double getDouble(String key) {
     return _delegate.getDouble(key);
   }
 
   /// Gets the value for a given key as a String.
+  ///
+  /// Returns an empty String if the key does not exist.
   String getString(String key) {
     return _delegate.getString(key);
   }
@@ -147,29 +156,16 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
       );
     }
   }
-}
 
-@Deprecated('Use FirebaseRemoteConfig instead.')
-class RemoteConfig extends FirebaseRemoteConfig {
-  @Deprecated('Use FirebaseRemoteConfig instead.')
-
-  /// The [FirebaseApp] this instance was initialized with.
-  RemoteConfig._({required FirebaseApp app}) : super._(app: app);
-
-  // Cached instances of [RemoteConfig].
-  static final Map<String, RemoteConfig> _firebaseRemoteConfigInstances = {};
-
-  /// Returns an instance using the default [FirebaseApp].
-  @Deprecated('Use FirebaseRemoteConfig.instance instead.')
-  static RemoteConfig get instance {
-    return RemoteConfig.instanceFor(app: Firebase.app());
-  }
-
-  /// Returns an instance using the specified [FirebaseApp].
-  @Deprecated('Use FirebaseRemoteConfig.instanceFor instead.')
-  static RemoteConfig instanceFor({required FirebaseApp app}) {
-    return _firebaseRemoteConfigInstances.putIfAbsent(app.name, () {
-      return RemoteConfig._(app: app);
-    });
+  /// Starts listening for real-time config updates from the Remote Config backend and automatically
+  /// fetches updates from the RC backend when they are available.
+  ///
+  /// This feature is not supported on Web.
+  ///
+  /// If a connection to the Remote Config backend is not already open, calling this method will
+  /// open it. Multiple listeners can be added by calling this method again, but subsequent calls
+  /// re-use the same connection to the backend.
+  Stream<RemoteConfigUpdate> get onConfigUpdated {
+    return _delegate.onConfigUpdated;
   }
 }

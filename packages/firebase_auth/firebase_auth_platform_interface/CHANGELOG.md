@@ -1,3 +1,66 @@
+## 6.15.1
+
+ - Update a dependency to the latest release.
+
+## 6.15.0
+
+ - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
+ - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+
+## 6.14.0
+
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 6.13.1
+
+ - Update a dependency to the latest release.
+
+## 6.13.0
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 6.12.0
+
+ - **FIX**(auth): fix an issue where unenroll would not throw a FirebaseException ([#10572](https://github.com/firebase/flutterfire/issues/10572)). ([8dba33e1](https://github.com/firebase/flutterfire/commit/8dba33e1a95f03d70d527885aa58ce23622e359f))
+ - **FEAT**(auth): improve error handling when using beforeSignIn functions blocks sign in ([#10611](https://github.com/firebase/flutterfire/issues/10611)). ([b48e0952](https://github.com/firebase/flutterfire/commit/b48e0952ff32fe1dd07651727573156db2be5643))
+ - **FEAT**(auth): improve error handling when Email enumeration feature is on ([#10591](https://github.com/firebase/flutterfire/issues/10591)). ([ff083025](https://github.com/firebase/flutterfire/commit/ff083025b724d683cc3a9ed5f4a4987c43663589))
+
+## 6.11.12
+
+ - Update a dependency to the latest release.
+
+## 6.11.11
+
+ - Update a dependency to the latest release.
+
+## 6.11.10
+
+ - Update a dependency to the latest release.
+
+## 6.11.9
+
+ - Update a dependency to the latest release.
+
+## 6.11.8
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+
+## 6.11.7
+
+ - Update a dependency to the latest release.
+
+## 6.11.6
+
+ - Update a dependency to the latest release.
+
+## 6.11.5
+
+ - **FIX**: null check fix that could happen when using verifyPhone ([#10119](https://github.com/firebase/flutterfire/issues/10119)). ([575c0ccb](https://github.com/firebase/flutterfire/commit/575c0ccbb4d9bf3875e8de0b2131c59ede869754))
+
+## 6.11.4
+
+ - **FIX**: properly cast the PlatformException to FirebaseAuthException ([#10058](https://github.com/firebase/flutterfire/issues/10058)). ([6c8f9515](https://github.com/firebase/flutterfire/commit/6c8f951552ba7f767ce1b7b7ea5328454ba28cce))
+
 ## 6.11.3
 
  - Update a dependency to the latest release.

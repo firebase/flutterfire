@@ -62,11 +62,25 @@ void main() {
           parameters: {
             'foo': 'bar',
             'baz': 500,
-            'items': [analyticsEventItem],
           },
         ),
         completes,
       );
+
+      // test custom event assert exception
+      await expectLater(
+        FirebaseAnalytics.instance.logEvent(
+          name: 'testing-parameters',
+          parameters: {
+            'foo': 'bar',
+            'baz': 500,
+            // Lists are not supported
+            'items': [analyticsEventItem],
+          },
+        ),
+        throwsA(isA<AssertionError>()),
+      );
+
       // test 2 reserved events
       await expectLater(
         FirebaseAnalytics.instance.logAdImpression(
@@ -218,6 +232,19 @@ void main() {
           await expectLater(
             FirebaseAnalytics.instance.setDefaultEventParameters(null),
             completes,
+          );
+
+          // test custom event assert exception
+          await expectLater(
+            FirebaseAnalytics.instance.setDefaultEventParameters(
+              {
+                'foo': 'bar',
+                'baz': 500,
+                // Lists are not supported
+                'items': ['some', 'items'],
+              },
+            ),
+            throwsA(isA<AssertionError>()),
           );
         }
       },

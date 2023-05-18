@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:async';
 
 import 'package:flutter/gestures.dart';
@@ -63,13 +67,12 @@ typedef FirestoreQueryBuilderSnapshotBuilder<T> = Widget Function(
 class FirestoreQueryBuilder<Document> extends StatefulWidget {
   /// {@macro firebase_ui.firestore_query_builder}
   const FirestoreQueryBuilder({
-    Key? key,
+    super.key,
     required this.query,
     required this.builder,
     this.pageSize = 10,
     this.child,
-  })  : assert(pageSize > 1, 'Cannot have a pageSize lower than 1'),
-        super(key: key);
+  }) : assert(pageSize > 1, 'Cannot have a pageSize lower than 1');
 
   /// The query that will be paginated.
   ///
@@ -497,4 +500,47 @@ class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
             );
           },
         );
+}
+
+/// Listens to an aggregate query and passes the [AsyncSnapshot] to the builder.
+class AggregateQueryBuilder extends StatefulWidget {
+  /// A query to listen to
+  final AggregateQuery query;
+
+  /// A builder that is called whenever the query is updated.
+  final Widget Function(
+    BuildContext context,
+    AsyncSnapshot<AggregateQuerySnapshot> snapshot,
+  ) builder;
+
+  const AggregateQueryBuilder({
+    super.key,
+    required this.query,
+    required this.builder,
+  });
+
+  @override
+  State<AggregateQueryBuilder> createState() => _AggregateQueryBuilderState();
+}
+
+class _AggregateQueryBuilderState extends State<AggregateQueryBuilder> {
+  late var queryFuture = widget.query.get();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<AggregateQuerySnapshot>(
+      future: queryFuture,
+      builder: (context, snapshot) {
+        return widget.builder(context, snapshot);
+      },
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant AggregateQueryBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.query != oldWidget.query) {
+      queryFuture = widget.query.get();
+    }
+  }
 }

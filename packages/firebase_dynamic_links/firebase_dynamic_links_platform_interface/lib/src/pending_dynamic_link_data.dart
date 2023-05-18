@@ -30,7 +30,7 @@ class PendingDynamicLinkData {
   final Uri link;
 
   /// UTM parameters associated with a dynamic link.
-  final Map<String, String> utmParameters;
+  final Map<String, String?> utmParameters;
 
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() => <String, dynamic>{

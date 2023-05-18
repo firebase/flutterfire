@@ -1,3 +1,74 @@
+## 5.5.1
+
+ - Update a dependency to the latest release.
+
+## 5.5.0
+
+ - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
+ - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+
+## 5.4.0
+
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 5.3.2
+
+ - Update a dependency to the latest release.
+
+## 5.3.1
+
+ - **FIX**(auth,web): fix support for hot reload with multiple named instances when using an emulator on Web ([#10766](https://github.com/firebase/flutterfire/issues/10766)). ([b5de275d](https://github.com/firebase/flutterfire/commit/b5de275d9278e4be04d25c6f5f512fbcd53a103b))
+
+## 5.3.0
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 5.2.10
+
+ - **FIX**(auth): fix an issue where unenroll would not throw a FirebaseException ([#10572](https://github.com/firebase/flutterfire/issues/10572)). ([8dba33e1](https://github.com/firebase/flutterfire/commit/8dba33e1a95f03d70d527885aa58ce23622e359f))
+
+## 5.2.9
+
+ - **FIX**(auth,web): fix currentUser being null when using emulator or named instance ([#10565](https://github.com/firebase/flutterfire/issues/10565)). ([11e8644d](https://github.com/firebase/flutterfire/commit/11e8644df402a5abbb0d0c37714879272dec024c))
+
+## 5.2.8
+
+ - Update a dependency to the latest release.
+
+## 5.2.7
+
+ - Update a dependency to the latest release.
+
+## 5.2.6
+
+ - Update a dependency to the latest release.
+
+## 5.2.5
+
+ - Update a dependency to the latest release.
+
+## 5.2.4
+
+ - Update a dependency to the latest release.
+
+## 5.2.3
+
+ - revert dependency `Intl` to 0.17.0
+
+## 5.2.2
+
+ - Update a dependency to the latest release.
+
+## 5.2.1
+
+ - Update a dependency to the latest release.
+
+## 5.2.0
+
+ - **FIX**: properly cast the PlatformException to FirebaseAuthException ([#10058](https://github.com/firebase/flutterfire/issues/10058)). ([6c8f9515](https://github.com/firebase/flutterfire/commit/6c8f951552ba7f767ce1b7b7ea5328454ba28cce))
+ - **FIX**: `currentUser` is now populated right at the start of the application without needing to wait for `authStateChange` ([#10028](https://github.com/firebase/flutterfire/issues/10028)). ([2bd0dbff](https://github.com/firebase/flutterfire/commit/2bd0dbffb081370da051ec52859b924e1cf06fca))
+ - **FEAT**: add SAMLProvider support to Web ([#10075](https://github.com/firebase/flutterfire/issues/10075)). ([d4c27da1](https://github.com/firebase/flutterfire/commit/d4c27da1589c07f890e67fa11f10e277f19e1570))
+
 ## 5.1.3
 
  - **FIX**: catch hot reload & hot restart exception for web emulator ([#9601](https://github.com/firebase/flutterfire/issues/9601)). ([3467483b](https://github.com/firebase/flutterfire/commit/3467483be993a65f76203400721dc07e0729cac3))

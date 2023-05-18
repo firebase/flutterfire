@@ -75,36 +75,47 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.getAppInstanceId();
   }
 
-  /// Logs a custom Flutter Analytics event with the given [name] and event [parameters].
+  /// Logs a custom Flutter Analytics event with the given [name] and event
+  /// [parameters].
+  ///
+  /// The event can have up to 25 [parameters]. Events with the same [name] must
+  /// have the same [parameters]. Up to 500 event names are supported.
+  ///
+  /// The [name] of the event. Should contain 1 to 40 alphanumeric characters or
+  /// underscores. The name must start with an alphabetic character. Some event
+  /// names are reserved. See [FirebaseAnalytics.Event][1] for the list of
+  /// reserved event names. The "firebase_", "google_" and "ga_" prefixes are
+  /// reserved and should not be used. Note that event names are case-sensitive
+  /// and that logging two events whose names differ only in case will result in
+  /// two distinct events.
+  ///
+  /// The map of event [parameters]. Passing null indicates that the event has
+  /// no parameters. Parameter names can be up to 40 characters long and must
+  /// start with an alphabetic character and contain only alphanumeric
+  /// characters and underscores. String, long and double param types are
+  /// supported. String parameter values can be up to 100 characters long. The
+  /// "firebase_", "google_" and "ga_" prefixes are reserved and should not be
+  /// used for parameter names.
+  ///
+  /// See also:
+  ///
+  ///   * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics#public-void-logevent-string-name,-bundle-params
+  ///   * https://firebase.google.com/docs/reference/swift/firebaseanalytics/api/reference/Classes/Analytics#logevent_:parameters:
+  ///
+  /// [1]: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event
   Future<void> logEvent({
     required String name,
     Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) async {
-    if (_reservedEventNames.contains(name)) {
-      throw ArgumentError.value(
-        name,
-        'name',
-        'Event name is reserved and cannot be used',
+    _logEventNameValidation(name);
+
+    parameters?.forEach((key, value) {
+      assert(
+        value is String || value is num,
+        "'string' OR 'number' must be set as the value of the parameter: $key",
       );
-    }
-
-    const String kReservedPrefix = 'firebase_';
-
-    if (name.startsWith(kReservedPrefix)) {
-      throw ArgumentError.value(
-        name,
-        'name',
-        'Prefix "$kReservedPrefix" is reserved and cannot be used.',
-      );
-    }
-
-    if (parameters?['items'] is List<AnalyticsEventItem>) {
-      // ignore: cast_nullable_to_non_nullable
-      parameters!['items'] = (parameters['items'] as List<AnalyticsEventItem>)
-          .map((item) => item.asMap())
-          .toList();
-    }
+    });
 
     await _delegate.logEvent(
       name: name,
@@ -128,6 +139,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> setDefaultEventParameters(
     Map<String, Object?>? defaultParameters,
   ) async {
+    defaultParameters?.forEach((key, value) {
+      assert(
+        value is String || value is num || value == null,
+        "'string', 'null' or 'number' must be set as the value of the parameter: $key",
+      );
+    });
     await _delegate.setDefaultEventParameters(defaultParameters);
   }
 
@@ -243,15 +260,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     List<AnalyticsEventItem>? items,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'add_payment_info',
-      parameters: {
+      parameters: filterOutNulls({
         _COUPON: coupon,
         _CURRENCY: currency,
         _PAYMENT_TYPE: paymentType,
         _VALUE: value,
-        _ITEMS: items,
-      },
+        _ITEMS: _marshalItems(items),
+      }),
       callOptions: callOptions,
     );
   }
@@ -270,15 +287,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     List<AnalyticsEventItem>? items,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'add_shipping_info',
-      parameters: {
+      parameters: filterOutNulls({
         _COUPON: coupon,
         _CURRENCY: currency,
         _SHIPPING_TIER: shippingTier,
         _VALUE: value,
-        _ITEMS: items,
-      },
+        _ITEMS: _marshalItems(items),
+      }),
       callOptions: callOptions,
     );
   }
@@ -298,10 +315,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
-    return logEvent(
+    return _delegate.logEvent(
       name: 'add_to_cart',
       parameters: filterOutNulls(<String, Object?>{
-        _ITEMS: items,
+        _ITEMS: _marshalItems(items),
         _VALUE: value,
         _CURRENCY: currency,
       }),
@@ -325,10 +342,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
-    return logEvent(
+    return _delegate.logEvent(
       name: 'add_to_wishlist',
       parameters: filterOutNulls(<String, Object?>{
-        _ITEMS: items,
+        _ITEMS: _marshalItems(items),
         _VALUE: value,
         _CURRENCY: currency,
       }),
@@ -367,7 +384,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
-    return logEvent(
+    return _delegate.logEvent(
       name: 'ecommerce_purchase',
       parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
@@ -407,7 +424,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
-    return logEvent(
+    return _delegate.logEvent(
       name: 'ad_impression',
       parameters: filterOutNulls(<String, Object?>{
         _AD_PLATFORM: adPlatform,
@@ -425,7 +442,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#APP_OPEN
   Future<void> logAppOpen({AnalyticsCallOptions? callOptions}) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'app_open',
       callOptions: callOptions,
     );
@@ -447,12 +464,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
-    return logEvent(
+    return _delegate.logEvent(
       name: 'begin_checkout',
       parameters: filterOutNulls(<String, Object?>{
         _VALUE: value,
         _CURRENCY: currency,
-        _ITEMS: items,
+        _ITEMS: _marshalItems(items),
         _COUPON: coupon,
       }),
       callOptions: callOptions,
@@ -474,7 +491,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? cp1,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'campaign_details',
       parameters: filterOutNulls(<String, String?>{
         _SOURCE: source,
@@ -501,7 +518,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required num value,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'earn_virtual_currency',
       parameters: filterOutNulls(<String, Object?>{
         _VIRTUAL_CURRENCY_NAME: virtualCurrencyName,
@@ -535,7 +552,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
-    return logEvent(
+    return _delegate.logEvent(
       name: 'present_offer',
       parameters: filterOutNulls(<String, Object?>{
         _ITEM_ID: itemId,
@@ -565,7 +582,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
-    return logEvent(
+    return _delegate.logEvent(
       name: 'purchase_refund',
       parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
@@ -590,7 +607,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
-    return logEvent(
+    return _delegate.logEvent(
       name: 'generate_lead',
       parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
@@ -611,7 +628,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required String groupId,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'join_group',
       parameters: filterOutNulls(<String, Object?>{
         _GROUP_ID: groupId,
@@ -632,7 +649,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? character,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'level_up',
       parameters: filterOutNulls(<String, Object?>{
         _LEVEL: level,
@@ -649,7 +666,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required String levelName,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'level_start',
       parameters: filterOutNulls(<String, Object?>{
         _LEVEL_NAME: levelName,
@@ -666,7 +683,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     int? success,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'level_end',
       parameters: filterOutNulls(<String, Object?>{
         _LEVEL_NAME: levelName,
@@ -682,7 +699,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required int checkoutStep,
     required String checkoutOption,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'set_checkout_option',
       parameters: filterOutNulls(<String, Object?>{
         _CHECKOUT_STEP: checkoutStep,
@@ -701,7 +718,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? loginMethod,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'login',
       parameters: filterOutNulls(<String, Object?>{
         _METHOD: loginMethod,
@@ -724,7 +741,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? character,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'post_score',
       parameters: filterOutNulls(<String, Object?>{
         _SCORE: score,
@@ -755,13 +772,13 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
-    return logEvent(
+    return _delegate.logEvent(
       name: 'purchase',
       parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
         _COUPON: coupon,
         _VALUE: value,
-        _ITEMS: items,
+        _ITEMS: _marshalItems(items),
         _TAX: tax,
         _SHIPPING: shipping,
         _TRANSACTION_ID: transactionId,
@@ -784,12 +801,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
-    return logEvent(
+    return _delegate.logEvent(
       name: 'remove_from_cart',
       parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
         _VALUE: value,
-        _ITEMS: items,
+        _ITEMS: _marshalItems(items),
       }),
       callOptions: callOptions,
     );
@@ -805,7 +822,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? screenName,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'screen_view',
       parameters: filterOutNulls(<String, Object?>{
         _SCREEN_CLASS: screenClass,
@@ -826,12 +843,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     List<AnalyticsEventItem>? items,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'select_item',
       parameters: filterOutNulls(<String, Object?>{
         _ITEM_LIST_ID: itemListId,
         _ITEM_LIST_NAME: itemListName,
-        _ITEMS: items,
+        _ITEMS: _marshalItems(items),
       }),
       callOptions: callOptions,
     );
@@ -851,12 +868,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? promotionName,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'select_promotion',
       parameters: filterOutNulls(<String, Object?>{
         _CREATIVE_NAME: creativeName,
         _CREATIVE_SLOT: creativeSlot,
-        _ITEMS: items,
+        _ITEMS: _marshalItems(items),
         _LOCATION_ID: locationId,
         _PROMOTION_ID: promotionId,
         _PROMOTION_NAME: promotionName,
@@ -876,12 +893,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     List<AnalyticsEventItem>? items,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'view_cart',
       parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
         _VALUE: value,
-        _ITEMS: items,
+        _ITEMS: _marshalItems(items),
       }),
       callOptions: callOptions,
     );
@@ -906,7 +923,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? travelClass,
     AnalyticsCallOptions? callOptions,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'search',
       parameters: filterOutNulls(
         <String, Object?>{
@@ -937,7 +954,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required String contentType,
     required String itemId,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'select_content',
       parameters: filterOutNulls(<String, Object?>{
         _CONTENT_TYPE: contentType,
@@ -957,7 +974,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required String itemId,
     required String method,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'share',
       parameters: filterOutNulls(<String, Object?>{
         _CONTENT_TYPE: contentType,
@@ -978,7 +995,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logSignUp({
     required String signUpMethod,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'sign_up',
       parameters: filterOutNulls(<String, Object?>{
         _METHOD: signUpMethod,
@@ -997,7 +1014,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required String virtualCurrencyName,
     required num value,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'spend_virtual_currency',
       parameters: filterOutNulls(<String, Object?>{
         _ITEM_NAME: itemName,
@@ -1015,7 +1032,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#TUTORIAL_BEGIN
   Future<void> logTutorialBegin() {
-    return logEvent(name: 'tutorial_begin');
+    return _delegate.logEvent(name: 'tutorial_begin');
   }
 
   /// Logs the standard `tutorial_complete` event.
@@ -1026,7 +1043,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#TUTORIAL_COMPLETE
   Future<void> logTutorialComplete() {
-    return logEvent(name: 'tutorial_complete');
+    return _delegate.logEvent(name: 'tutorial_complete');
   }
 
   /// Logs the standard `unlock_achievement` event with a given achievement
@@ -1041,7 +1058,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logUnlockAchievement({
     required String id,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'unlock_achievement',
       parameters: filterOutNulls(<String, Object?>{
         _ACHIEVEMENT_ID: id,
@@ -1066,12 +1083,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
-    return logEvent(
+    return _delegate.logEvent(
       name: 'view_item',
       parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
         _VALUE: value,
-        _ITEMS: items,
+        _ITEMS: _marshalItems(items),
       }),
     );
   }
@@ -1087,10 +1104,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? itemListId,
     String? itemListName,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'view_item_list',
       parameters: filterOutNulls(<String, Object?>{
-        _ITEMS: items,
+        _ITEMS: _marshalItems(items),
         _ITEM_LIST_ID: itemListId,
         _ITEM_LIST_NAME: itemListName,
       }),
@@ -1110,12 +1127,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? promotionId,
     String? promotionName,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'view_promotion',
       parameters: filterOutNulls(<String, Object?>{
         _CREATIVE_NAME: creativeName,
         _CREATIVE_SLOT: creativeSlot,
-        _ITEMS: items,
+        _ITEMS: _marshalItems(items),
         _LOCATION_ID: locationId,
         _PROMOTION_ID: promotionId,
         _PROMOTION_NAME: promotionName,
@@ -1132,7 +1149,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logViewSearchResults({
     required String searchTerm,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'view_search_results',
       parameters: filterOutNulls(<String, Object?>{
         _SEARCH_TERM: searchTerm,
@@ -1155,7 +1172,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? affiliation,
     List<AnalyticsEventItem>? items,
   }) {
-    return logEvent(
+    return _delegate.logEvent(
       name: 'refund',
       parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
@@ -1165,7 +1182,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _SHIPPING: shipping,
         _TRANSACTION_ID: transactionId,
         _AFFILIATION: affiliation,
-        _ITEMS: items,
+        _ITEMS: _marshalItems(items),
       }),
     );
   }
@@ -1216,6 +1233,32 @@ void _requireValueAndCurrencyTogether(double? value, String? currency) {
   if (value != null && currency == null) {
     throw ArgumentError(valueAndCurrencyMustBeTogetherError);
   }
+}
+
+void _logEventNameValidation(String name) {
+  if (_reservedEventNames.contains(name)) {
+    throw ArgumentError.value(
+      name,
+      'name',
+      'Event name is reserved and cannot be used',
+    );
+  }
+
+  const String kReservedPrefix = 'firebase_';
+
+  if (name.startsWith(kReservedPrefix)) {
+    throw ArgumentError.value(
+      name,
+      'name',
+      'Prefix "$kReservedPrefix" is reserved and cannot be used.',
+    );
+  }
+}
+
+List<Map<String, dynamic>>? _marshalItems(List<AnalyticsEventItem>? items) {
+  if (items == null) return null;
+
+  return items.map((AnalyticsEventItem item) => item.asMap()).toList();
 }
 
 /// Reserved event names that cannot be used.

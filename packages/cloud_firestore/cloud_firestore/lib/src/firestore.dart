@@ -111,9 +111,12 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       try {
         _delegate.useEmulator(host, port);
       } catch (e) {
-        final String code = (e as dynamic).code;
+        // We convert to string to be compatible with Flutter <= 3.7 and Flutter >= 3.10
+        // .code is only available in Flutter <= 3.7
+        String strError = e.toString();
+
         // this catches FirebaseError from web that occurs after hot reloading & hot restarting
-        if (code != 'failed-precondition') {
+        if (!strError.contains('failed-precondition')) {
           rethrow;
         }
       }
@@ -207,7 +210,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   /// Returns a [Stream] which is called each time all of the active listeners
-  /// have been synchronised.
+  /// have been synchronized.
   Stream<void> snapshotsInSync() {
     return _delegate.snapshotsInSync();
   }
@@ -320,6 +323,20 @@ class FirebaseFirestore extends FirebasePluginPlatform {
           fieldOverrides?.map((index) => index.toMap()).toList() ?? []
     });
 
+    return _delegate.setIndexConfiguration(json);
+  }
+
+  /// Configures indexing for local query execution. Any previous index configuration is overridden.
+  ///
+  /// The index entries themselves are created asynchronously. You can continue to use queries that
+  /// require indexing even if the indices are not yet available. Query execution will automatically
+  /// start using the index once the index entries have been written.
+  /// See Firebase documentation to learn how to configure your index configuration JSON file:
+  /// https://firebase.google.com/docs/reference/firestore/indexes
+  ///
+  /// This API is in preview mode and is subject to change.
+  @experimental
+  Future<void> setIndexConfigurationFromJSON(String json) async {
     return _delegate.setIndexConfiguration(json);
   }
 

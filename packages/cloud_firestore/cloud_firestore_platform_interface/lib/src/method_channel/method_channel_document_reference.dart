@@ -11,8 +11,8 @@ import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:flutter/services.dart';
 
 import 'method_channel_firestore.dart';
-import 'utils/source.dart';
 import 'utils/exception.dart';
+import 'utils/source.dart';
 
 /// An implementation of [DocumentReferencePlatform] that uses [MethodChannel] to
 /// communicate with Firebase plugins.
@@ -47,7 +47,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   }
 
   @override
-  Future<void> update(Map<String, dynamic> data) async {
+  Future<void> update(Map<FieldPath, dynamic> data) async {
     try {
       await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
         'DocumentReference#update',
@@ -74,6 +74,9 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
           'firestore': firestore,
           'reference': this,
           'source': getSourceString(options.source),
+          'serverTimestampBehavior': getServerTimestampBehaviorString(
+            options.serverTimestampBehavior,
+          ),
         },
       );
 

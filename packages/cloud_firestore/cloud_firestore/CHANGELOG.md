@@ -1,3 +1,80 @@
+## 4.7.1
+
+ - **FIX**(firestore): fix emulator reload on Flutter 3.10 ([#10965](https://github.com/firebase/flutterfire/issues/10965)). ([f099eb0b](https://github.com/firebase/flutterfire/commit/f099eb0bd010af6ba0fae1fdb5ea5cd6a2cb680f))
+ - **FIX**(firestore,ios): tentative fix for a crash that could occur during Snapshot serialization ([#10728](https://github.com/firebase/flutterfire/issues/10728)). ([2f4ba33a](https://github.com/firebase/flutterfire/commit/2f4ba33ad31d431a9042c7dc179b768cb43e0d17))
+
+## 4.7.0
+
+ - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
+ - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+
+## 4.6.0
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 4.5.3
+
+ - **FIX**(firestore,ios): clean up event listeners on engine detach only ([#10579](https://github.com/firebase/flutterfire/issues/10579)). ([0ac13b6f](https://github.com/firebase/flutterfire/commit/0ac13b6fc06f6839686437dc2d5b6feab179aa83))
+
+## 4.5.2
+
+ - Update a dependency to the latest release.
+
+## 4.5.1
+
+ - **FIX**(firestore): ensure all index URLs are captured and passed to the user ([#10674](https://github.com/firebase/flutterfire/issues/10674)). ([9800435a](https://github.com/firebase/flutterfire/commit/9800435abc562fadc67a945e771591186576c34d))
+
+## 4.5.0
+
+ - **FEAT**(firestore): add the `Filter` class and support for the OR query ([#10678](https://github.com/firebase/flutterfire/issues/10678)). ([ac434044](https://github.com/firebase/flutterfire/commit/ac434044bbfa91d0d8b33ff39736d8eb4062e824))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 4.4.5
+
+ - Update a dependency to the latest release.
+
+## 4.4.4
+
+ - Update a dependency to the latest release.
+
+## 4.4.3
+
+ - Update a dependency to the latest release.
+
+## 4.4.2
+
+ - Update a dependency to the latest release.
+
+## 4.4.1
+
+ - Update a dependency to the latest release.
+
+## 4.4.0
+
+ - **FIX**: supports Iterable in queries instead of List ([#10411](https://github.com/firebase/flutterfire/issues/10411)). ([9d91d513](https://github.com/firebase/flutterfire/commit/9d91d513fad326f9c928d7d96d03e2c031875903))
+ - **FEAT**: add support to `update` using FieldPath ([#10388](https://github.com/firebase/flutterfire/issues/10388)). ([538090fc](https://github.com/firebase/flutterfire/commit/538090fc49078b8d6c484d8db9049f06d05157dd))
+
+## 4.3.2
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+ - **FIX**: fix an issue when removing a value that didn't exist in ServerTimestampBehavior map ([#10391](https://github.com/firebase/flutterfire/issues/10391)). ([2929ac9d](https://github.com/firebase/flutterfire/commit/2929ac9da037bc231d156425166422da380d5a2e))
+ - **FIX**: fix an issue when removing a value that didn't exist in ServerTimestampBehavior map ([#10370](https://github.com/firebase/flutterfire/issues/10370)). ([6da87036](https://github.com/firebase/flutterfire/commit/6da870363a947110ebf80696a7ed3887c4f2c557))
+ - **FIX**: startAfterDocument could throw when used with a DocumentReference ([#10339](https://github.com/firebase/flutterfire/issues/10339)). ([8224acbe](https://github.com/firebase/flutterfire/commit/8224acbee991e508b949c4dac11910df4d6fe323))
+
+## 4.3.1
+
+ - **FIX**: fix crash that could occur when using transactions ([#10184](https://github.com/firebase/flutterfire/issues/10184)). ([d14b545a](https://github.com/firebase/flutterfire/commit/d14b545adb6052f1e5acd7a0e679d790a4741122))
+
+## 4.3.0
+
+ - **FIX**: propagate COLLECTION_GROUP_ASC index error message ([#10130](https://github.com/firebase/flutterfire/issues/10130)). ([6b321cbe](https://github.com/firebase/flutterfire/commit/6b321cbec3a22e5899e61342b5163efa511bdd9b))
+ - **FEAT**: add ServerTimestampBehavior to the GetOptions class.  ([#9590](https://github.com/firebase/flutterfire/issues/9590)). ([c25bd2fe](https://github.com/firebase/flutterfire/commit/c25bd2fe4c13bc9f13d93410842c00e25aaac2b2))
+
+## 4.2.0
+
+ - **FEAT**: `setIndexConfigurationFromJSON()` API. Allow users to pass JSON string ([#10029](https://github.com/firebase/flutterfire/issues/10029)). ([be4b42b1](https://github.com/firebase/flutterfire/commit/be4b42b11b6ceddf83d4fbc77a95a41879ec3c8d))
+
 ## 4.1.0
 
  - **FEAT**: experimental `setIndexConfiguration()` API ([#9928](https://github.com/firebase/flutterfire/issues/9928)). ([bf6eda18](https://github.com/firebase/flutterfire/commit/bf6eda1893a4f29c4b501c4aa31026548ad2b286))

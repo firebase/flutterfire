@@ -4,32 +4,14 @@ version: 0.0.1
 publish_to: none
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
+  sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_performance:
-    path: ../
+  firebase_core: ^2.13.0
+  firebase_performance: ^0.9.2+1
   flutter:
     sdk: flutter
   http: ^0.13.0
-
-dependency_overrides:
-  _flutterfire_internals:
-    path: ../../../_flutterfire_internals
-  firebase_core:
-    path: ../../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../../firebase_core/firebase_core_platform_interface
-  firebase_core_web:
-    path: ../../../firebase_core/firebase_core_web
-  firebase_performance:
-    path: ../
-  firebase_performance_platform_interface:
-    path: ../../firebase_performance_platform_interface
-  firebase_performance_web:
-    path: ../../firebase_performance_web
 
 dev_dependencies:
   flutter_test:

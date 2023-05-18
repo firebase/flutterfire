@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 // ignore_file: unnecessary_this
 
 import 'package:flutter/foundation.dart';
@@ -122,7 +126,7 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
 
   @override
   void onCredentialLinked(AuthCredential credential) {
-    value = CredentialLinked(credential);
+    value = CredentialLinked(credential, auth.currentUser!);
   }
 
   @override
@@ -140,7 +144,11 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
 
   @override
   void onSignedIn(UserCredential credential) {
-    value = SignedIn(credential.user);
+    if (credential.additionalUserInfo?.isNewUser ?? false) {
+      value = UserCreated(credential);
+    } else {
+      value = SignedIn(credential.user);
+    }
   }
 
   @override

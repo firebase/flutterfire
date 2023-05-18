@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
@@ -5,14 +9,6 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 /// password. UI should show an [EmailForm] when [EmailAuthFlow]'s current state is
 /// [AwaitingEmailAndPassword].
 class AwaitingEmailAndPassword extends AuthState {}
-
-/// A state that indicates that a new user account was created.
-class UserCreated extends AuthState {
-  /// A [fba.UserCredential] that was obtained during authentication process.
-  final fba.UserCredential credential;
-
-  UserCreated(this.credential);
-}
 
 /// A state that indicates that user registration is in progress.
 /// UIs often reflect this state with a loading indicator.

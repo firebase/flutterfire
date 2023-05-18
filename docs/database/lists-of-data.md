@@ -242,6 +242,9 @@ see [How query data is ordered](#data-order).
 To filter data, you can combine any of the limit or range methods with an
 order-by method when constructing a query.
 
+Note: You shouldn't use special Unicode characters in your keys, such as `\u{0000}`.
+See the [Flutter issue](https://github.com/flutter/flutter/issues/116652) for more details.
+
 <table>
   <tr>
     <th>Method</th>

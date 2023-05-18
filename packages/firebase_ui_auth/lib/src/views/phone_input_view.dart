@@ -1,8 +1,12 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/widgets.dart' hide Title;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
-import '../widgets/internal/universal_button.dart';
 
 import '../widgets/internal/title.dart';
 
@@ -49,7 +53,7 @@ class PhoneInputView extends StatefulWidget {
 
   /// {@macro ui.auth.views.phone_input_view}
   const PhoneInputView({
-    Key? key,
+    super.key,
     required this.flowKey,
     this.onSMSCodeRequested,
     this.auth,
@@ -59,7 +63,7 @@ class PhoneInputView extends StatefulWidget {
     this.footerBuilder,
     this.multiFactorSession,
     this.mfaHint,
-  }) : super(key: key);
+  });
 
   @override
   State<PhoneInputView> createState() => _PhoneInputViewState();

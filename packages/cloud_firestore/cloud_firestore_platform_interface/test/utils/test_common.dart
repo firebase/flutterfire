@@ -40,8 +40,9 @@ void initializeMethodChannel() {
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    MethodChannelFirebaseFirestore.channel
-        .setMockMethodCallHandler((call) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+            (call) async {
       return await methodCallCallback(call);
     });
 
@@ -50,12 +51,13 @@ void handleDocumentSnapshotsEventChannel(
   final name = 'plugins.flutter.io/firebase_firestore/document/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
-  MethodChannel(name, codec)
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannel(name, codec),
+          (MethodCall methodCall) async {
     log.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope(
@@ -74,6 +76,7 @@ void handleDocumentSnapshotsEventChannel(
       default:
         return null;
     }
+    return null;
   });
 }
 
@@ -81,12 +84,13 @@ void handleQuerySnapshotsEventChannel(final String id, List<MethodCall> log) {
   final name = 'plugins.flutter.io/firebase_firestore/query/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
-  MethodChannel(name, codec)
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannel(name, codec),
+          (MethodCall methodCall) async {
     log.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope(
@@ -105,6 +109,7 @@ void handleQuerySnapshotsEventChannel(final String id, List<MethodCall> log) {
       default:
         return null;
     }
+    return null;
   });
 }
 
@@ -112,11 +117,12 @@ void handleSnapshotsInSyncEventChannel(final String id) {
   final name = 'plugins.flutter.io/firebase_firestore/snapshotsInSync/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
-  MethodChannel(name, codec)
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannel(name, codec),
+          (MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .handlePlatformMessage(
                 name, codec.encodeSuccessEnvelope({}), (_) {});
         break;
@@ -124,6 +130,7 @@ void handleSnapshotsInSyncEventChannel(final String id) {
       default:
         return null;
     }
+    return null;
   });
 }
 
@@ -135,11 +142,12 @@ void handleTransactionEventChannel(
   final name = 'plugins.flutter.io/firebase_firestore/transaction/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 
-  MethodChannel(name, codec)
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannel(name, codec),
+          (MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope({
@@ -149,7 +157,8 @@ void handleTransactionEventChannel(
         );
 
         if (throwException!) {
-          await ServicesBinding.instance.defaultBinaryMessenger
+          await TestDefaultBinaryMessengerBinding
+              .instance.defaultBinaryMessenger
               .handlePlatformMessage(
             name,
             codec.encodeSuccessEnvelope({
@@ -161,7 +170,7 @@ void handleTransactionEventChannel(
             (_) {},
           );
         }
-        await ServicesBinding.instance.defaultBinaryMessenger
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope({
@@ -175,5 +184,6 @@ void handleTransactionEventChannel(
       default:
         return null;
     }
+    return null;
   });
 }

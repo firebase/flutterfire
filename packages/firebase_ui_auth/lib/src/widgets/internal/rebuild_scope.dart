@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:flutter/widgets.dart';
 
 class RebuildScopeKey {
@@ -17,10 +21,10 @@ class RebuildScope extends Widget {
   final RebuildScopeKey scopeKey;
 
   const RebuildScope({
-    Key? key,
+    super.key,
     required this.builder,
     required this.scopeKey,
-  }) : super(key: key);
+  });
 
   @override
   RebuildScopeElement createElement() {
@@ -29,7 +33,7 @@ class RebuildScope extends Widget {
 }
 
 class RebuildScopeElement extends ComponentElement {
-  RebuildScopeElement(RebuildScope widget) : super(widget);
+  RebuildScopeElement(super.widget);
 
   @override
   RebuildScope get widget => super.widget as RebuildScope;

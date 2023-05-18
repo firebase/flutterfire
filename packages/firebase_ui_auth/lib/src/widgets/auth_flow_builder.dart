@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart'
@@ -156,7 +160,7 @@ class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
 
   /// {@macro ui.auth.widgets.auth_flow_builder}
   const AuthFlowBuilder({
-    Key? key,
+    super.key,
     this.flowKey,
     this.action,
     this.builder,
@@ -166,11 +170,10 @@ class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
     this.provider,
     this.auth,
     this.flow,
-  })  : assert(
+  }) : assert(
           builder != null || child != null,
           'Either child or builder should be provided',
-        ),
-        super(key: key);
+        );
 
   @override
   // ignore: library_private_types_in_public_api

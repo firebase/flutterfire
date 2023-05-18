@@ -104,6 +104,11 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                                   binaryMessenger:[registrar messenger]];
 
   FLTFirebaseStoragePlugin *instance = [FLTFirebaseStoragePlugin sharedInstance];
+  if (instance.channel != nil) {
+    NSLog(@"FLTFirebaseStorage was already registered. If using isolates, you can safely ignore "
+          @"this message.");
+    return;
+  }
   instance.channel = channel;
 #if TARGET_OS_OSX
   // TODO(Salakar): Publish does not exist on MacOS version of FlutterPluginRegistrar.

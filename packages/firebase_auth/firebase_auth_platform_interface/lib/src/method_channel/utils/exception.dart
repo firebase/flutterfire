@@ -14,13 +14,17 @@ import 'package:flutter/services.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseAuthException]
 /// if it was intentionally caught on the native platform.
-Never convertPlatformException(Object exception, StackTrace stackTrace) {
+Never convertPlatformException(
+  Object exception,
+  StackTrace stackTrace, {
+  bool fromPigeon = false,
+}) {
   if (exception is! PlatformException) {
     Error.throwWithStackTrace(exception, stackTrace);
   }
 
   Error.throwWithStackTrace(
-    platformExceptionToFirebaseAuthException(exception),
+    platformExceptionToFirebaseAuthException(exception, fromPigeon: fromPigeon),
     stackTrace,
   );
 }
@@ -32,8 +36,17 @@ Never convertPlatformException(Object exception, StackTrace stackTrace) {
 /// messages which can be converted into user friendly exceptions.
 // TODO(rousselGit): Should this return a FirebaseAuthException to avoid having to cast?
 FirebaseException platformExceptionToFirebaseAuthException(
-  PlatformException platformException,
-) {
+  PlatformException platformException, {
+  bool fromPigeon = false,
+}) {
+  if (fromPigeon) {
+    return FirebaseAuthException(
+      code: platformException.code,
+      // Remove leading classname from message
+      message: platformException.message?.split(': ').last,
+    );
+  }
+
   Map<String, dynamic>? details = platformException.details != null
       ? Map<String, dynamic>.from(platformException.details)
       : null;
@@ -51,19 +64,25 @@ FirebaseException platformExceptionToFirebaseAuthException(
 
     message = details['message'] ?? message;
 
-    if (details['additionalData'] != null) {
-      if (details['additionalData']['authCredential'] != null) {
+    final additionalData = details['additionalData'];
+
+    if (additionalData != null) {
+      if (additionalData['authCredential'] != null) {
         credential = AuthCredential(
-          providerId: details['additionalData']['authCredential']['providerId'],
-          signInMethod: details['additionalData']['authCredential']
-              ['signInMethod'],
-          token: details['additionalData']['authCredential']['token'],
+          providerId: additionalData['authCredential']['providerId'],
+          signInMethod: additionalData['authCredential']['signInMethod'],
+          token: additionalData['authCredential']['token'],
         );
       }
 
-      if (details['additionalData']['email'] != null) {
-        email = details['additionalData']['email'];
+      if (additionalData['email'] != null) {
+        email = additionalData['email'];
       }
+    }
+
+    final customCode = _getCustomCode(additionalData, message);
+    if (customCode != null) {
+      code = customCode;
     }
   }
   return FirebaseAuthException(
@@ -72,6 +91,26 @@ FirebaseException platformExceptionToFirebaseAuthException(
     email: email,
     credential: credential,
   );
+}
+
+// Check for custom error codes that are not returned in the normal errors by Firebase SDKs
+// The error code is only returned in a String on Android
+String? _getCustomCode(Map? additionalData, String? message) {
+  final listOfRecognizedCode = [
+    // This code happens when using Enumerate Email protection
+    'INVALID_LOGIN_CREDENTIALS',
+    // This code happens when using using pre-auth functions
+    'BLOCKING_FUNCTION_ERROR_RESPONSE',
+  ];
+
+  for (final recognizedCode in listOfRecognizedCode) {
+    if (additionalData?['message'] == recognizedCode ||
+        (message?.contains(recognizedCode) ?? false)) {
+      return recognizedCode;
+    }
+  }
+
+  return null;
 }
 
 FirebaseAuthMultiFactorExceptionPlatform parseMultiFactorError(

@@ -1,3 +1,71 @@
+## 1.0.0-dev.59
+
+ - **FIX**(odm_generator): update deprecated check `isDynamic` ([#10937](https://github.com/firebase/flutterfire/issues/10937)). ([bb9c5523](https://github.com/firebase/flutterfire/commit/bb9c5523964d9e11a82f80ceb74d808808cc2a4c))
+
+## 1.0.0-dev.58
+
+ - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
+
+## 1.0.0-dev.57
+
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 1.0.0-dev.56
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.55
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.54
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.53
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 1.0.0-dev.52
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.51
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.50
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.49
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.48
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.47
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.46
+
+ - **REFACTOR**: upgrade project to remove warnings from Flutter 3.7 ([#10344](https://github.com/firebase/flutterfire/issues/10344)). ([e0087c84](https://github.com/firebase/flutterfire/commit/e0087c845c7526c11a4241a26d39d4673b0ad29d))
+
+## 1.0.0-dev.45
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.44
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.43
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.42
 
  - **FIX**: a bug where the ODM does not respect JSON case renaming ([#9988](https://github.com/firebase/flutterfire/issues/9988)). ([02d394b6](https://github.com/firebase/flutterfire/commit/02d394b6b0917f7dc98711b9939630c0b423ed63))

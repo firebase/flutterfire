@@ -1,3 +1,64 @@
+## 0.9.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.9.2
+
+ - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
+
+## 0.9.1+2
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+
+## 0.9.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.9.1
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 0.9.0+16
+
+ - Update a dependency to the latest release.
+
+## 0.9.0+15
+
+ - **FIX**(performance,android): fix NullPointerException errors and remove suppressed warnings ([#10560](https://github.com/firebase/flutterfire/issues/10560)). ([a54d33df](https://github.com/firebase/flutterfire/commit/a54d33df6fdc4ccb3ef0b9e955e502b750aa592b))
+
+## 0.9.0+14
+
+ - Update a dependency to the latest release.
+
+## 0.9.0+13
+
+ - Update a dependency to the latest release.
+
+## 0.9.0+12
+
+ - Update a dependency to the latest release.
+
+## 0.9.0+11
+
+ - **REFACTOR**: replace deprecated API: `Tasks.call()` ([#10361](https://github.com/firebase/flutterfire/issues/10361)). ([22407847](https://github.com/firebase/flutterfire/commit/2240784774d6673319fdb32a90c52beb015d3714))
+ - **FIX**: fix a crash that could occur with httpMetricStart when disabling collection ([#10392](https://github.com/firebase/flutterfire/issues/10392)). ([db67962b](https://github.com/firebase/flutterfire/commit/db67962b50269de7ebacc496e163fb8bb6608a12))
+
+## 0.9.0+10
+
+ - **FIX**: fix a crash that would occur when creating a trace with performance collection disabled ([#10243](https://github.com/firebase/flutterfire/issues/10243)). ([0a15ecbe](https://github.com/firebase/flutterfire/commit/0a15ecbe31a5730a6f8be2218c756a5d167e5bbd))
+
+## 0.9.0+9
+
+ - **REFACTOR**: refactor underlying implementation for the "handler system" so the handlers are generated on native side ([#9334](https://github.com/firebase/flutterfire/issues/9334)). ([08a4be6c](https://github.com/firebase/flutterfire/commit/08a4be6c0e86a3288bb6fcafd301f1519b7915ba))
+
+## 0.9.0+8
+
+ - Update a dependency to the latest release.
+
+## 0.9.0+7
+
+ - Update a dependency to the latest release.
+
 ## 0.9.0+6
 
  - Update a dependency to the latest release.

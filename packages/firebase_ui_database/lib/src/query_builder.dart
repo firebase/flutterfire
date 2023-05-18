@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:async';
 
 import 'package:flutter/gestures.dart';
@@ -63,13 +67,12 @@ typedef FirebaseQueryBuilderSnapshotBuilder = Widget Function(
 class FirebaseDatabaseQueryBuilder extends StatefulWidget {
   /// {@macro firebase_ui.firebase_database_query_builder}
   const FirebaseDatabaseQueryBuilder({
-    Key? key,
+    super.key,
     required this.query,
     required this.builder,
     this.pageSize = 10,
     this.child,
-  })  : assert(pageSize > 1, 'Cannot have a pageSize lower than 1'),
-        super(key: key);
+  }) : assert(pageSize > 1, 'Cannot have a pageSize lower than 1');
 
   /// The query that will be paginated.
   ///

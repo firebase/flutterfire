@@ -1,3 +1,40 @@
+## 2.5.0
+
+ - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
+
+## 2.4.0
+
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 2.3.0
+
+ - **FEAT**: bump Firebase JS SDK to 9.18.0 ([#10645](https://github.com/firebase/flutterfire/issues/10645)). ([b1e8c919](https://github.com/firebase/flutterfire/commit/b1e8c91923f057537db2e5b2e41cec48804aadeb))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
+## 2.2.2
+
+ - **FIX**(auth,web): fix currentUser being null when using emulator or named instance ([#10565](https://github.com/firebase/flutterfire/issues/10565)). ([11e8644d](https://github.com/firebase/flutterfire/commit/11e8644df402a5abbb0d0c37714879272dec024c))
+
+## 2.2.1
+
+ - **FIX**: fix wrong toString js interop in TrustedTypes ([#10476](https://github.com/firebase/flutterfire/issues/10476)). ([6388c622](https://github.com/firebase/flutterfire/commit/6388c62287fb66bd84e52bf634dd132b9db64702))
+
+## 2.2.0
+
+ - **FEAT**: add support for TrustedType ([#10312](https://github.com/firebase/flutterfire/issues/10312)). ([da74aabb](https://github.com/firebase/flutterfire/commit/da74aabb0aa7350319179c1cb586b7bd3591d415))
+
+## 2.1.1
+
+ - Update a dependency to the latest release.
+
+## 2.1.0
+
+ - **FEAT**: bump Firebase JS SDK to 9.15 ([#10186](https://github.com/firebase/flutterfire/issues/10186)). ([c44f4ba6](https://github.com/firebase/flutterfire/commit/c44f4ba64041f80e0201696672d3453c90c41951))
+
+## 2.0.2
+
+ - **FIX**: `currentUser` is now populated right at the start of the application without needing to wait for `authStateChange` ([#10028](https://github.com/firebase/flutterfire/issues/10028)). ([2bd0dbff](https://github.com/firebase/flutterfire/commit/2bd0dbffb081370da051ec52859b924e1cf06fca))
+
 ## 2.0.1
 
  - Update a dependency to the latest release.

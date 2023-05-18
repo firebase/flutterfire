@@ -1,4 +1,4 @@
-# Firebase UI Email provider
+# Firebase UI Phone provider
 
 ## Configuration
 
@@ -14,6 +14,10 @@ Configure phone provider:
 
 ```dart
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+
+// If you need to use FirebaseAuth directly, make sure to hide PhoneAuthProvider:
+// import 'package:firebase_auth/firebase_auth.dart' hide PhoneAuthProvider;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -159,7 +163,7 @@ class MyCustomWidget extends StatelessWidget {
         }
       },
       builder: (context, state, ctrl, child) {
-        if (state is AwaitingPhoneNumber) {
+        if (state is AwaitingPhoneNumber || state is SMSCodeRequested) {
           return PhoneInput(
             initialCountryCode: 'US',
             onSubmit: (phoneNumber) {
@@ -193,7 +197,7 @@ For full control over every phase of the authentication lifecycle you could buil
 
 ```dart
 class CustomPhoneVerification extends StatefulWidget {
-  const CustomPhoneVerification({Key? key}) : super(key: key);
+  const CustomPhoneVerification({super.key});
 
   @override
   State<CustomPhoneVerification> createState() =>

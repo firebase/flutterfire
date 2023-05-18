@@ -1,3 +1,7 @@
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
@@ -21,7 +25,7 @@ Future<void> main() async {
 }
 
 class FirebaseUIFirestoreExample extends StatelessWidget {
-  const FirebaseUIFirestoreExample({Key? key}) : super(key: key);
+  const FirebaseUIFirestoreExample({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +53,9 @@ class FirebaseUIFirestoreExample extends StatelessWidget {
 class UserTile extends StatelessWidget {
   final User user;
   const UserTile({
-    Key? key,
+    super.key,
     required this.user,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -68,11 +72,11 @@ class UserTile extends StatelessWidget {
           children: [
             Text(
               '${user.firstName} ${user.lastName}',
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             Text(
               user.number,
-              style: Theme.of(context).textTheme.caption,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
         ),

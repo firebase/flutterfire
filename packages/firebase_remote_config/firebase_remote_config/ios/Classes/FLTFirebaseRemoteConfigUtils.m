@@ -11,8 +11,18 @@
   NSMutableDictionary *codeAndMessage = [[NSMutableDictionary alloc] init];
   switch (error.code) {
     case FIRRemoteConfigErrorInternalError:
-      [codeAndMessage setValue:@"internal" forKey:@"code"];
-      [codeAndMessage setValue:error.userInfo[NSLocalizedDescriptionKey] forKey:@"message"];
+      if ([error.userInfo[NSLocalizedDescriptionKey] containsString:@"403"]) {
+        // See PR for details: https://github.com/firebase/flutterfire/pull/9629
+        [codeAndMessage setValue:@"forbidden" forKey:@"code"];
+        NSString *updateMessage =
+            [NSString stringWithFormat:@"%@%@", error.userInfo[NSLocalizedDescriptionKey],
+                                       @". You may have to enable the Remote Config API on Google "
+                                       @"Cloud Platform for your Firebase project."];
+        [codeAndMessage setValue:updateMessage forKey:@"message"];
+      } else {
+        [codeAndMessage setValue:@"internal" forKey:@"code"];
+        [codeAndMessage setValue:error.userInfo[NSLocalizedDescriptionKey] forKey:@"message"];
+      }
       break;
     case FIRRemoteConfigErrorThrottled:
       [codeAndMessage setValue:@"throttled" forKey:@"code"];

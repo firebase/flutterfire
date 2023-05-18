@@ -6,34 +6,51 @@ package io.flutter.plugins.firebase.firebaseremoteconfig;
 
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
+import android.os.Handler;
+import android.os.Looper;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.remoteconfig.ConfigUpdate;
+import com.google.firebase.remoteconfig.ConfigUpdateListener;
+import com.google.firebase.remoteconfig.ConfigUpdateListenerRegistration;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigClientException;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigServerException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
 import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 /** FirebaseRemoteConfigPlugin */
 public class FirebaseRemoteConfigPlugin
-    implements FlutterFirebasePlugin, MethodChannel.MethodCallHandler, FlutterPlugin {
+    implements FlutterFirebasePlugin,
+        MethodChannel.MethodCallHandler,
+        FlutterPlugin,
+        EventChannel.StreamHandler {
 
   static final String TAG = "FRCPlugin";
   static final String METHOD_CHANNEL = "plugins.flutter.io/firebase_remote_config";
+  static final String EVENT_CHANNEL = "plugins.flutter.io/firebase_remote_config_updated";
 
   private MethodChannel channel;
+
+  private final Map<String, ConfigUpdateListenerRegistration> listenersMap = new HashMap<>();
+  private EventChannel eventChannel;
+  private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
@@ -100,11 +117,16 @@ public class FirebaseRemoteConfigPlugin
     registerPlugin(METHOD_CHANNEL, this);
     channel = new MethodChannel(messenger, METHOD_CHANNEL);
     channel.setMethodCallHandler(this);
+
+    eventChannel = new EventChannel(messenger, EVENT_CHANNEL);
+    eventChannel.setStreamHandler(this);
   }
 
   private void tearDownChannel() {
     channel.setMethodCallHandler(null);
     channel = null;
+    eventChannel.setStreamHandler(null);
+    eventChannel = null;
   }
 
   private FirebaseRemoteConfig getRemoteConfig(Map<String, Object> arguments) {
@@ -188,6 +210,18 @@ public class FirebaseRemoteConfigPlugin
             } else if (exception instanceof FirebaseRemoteConfigClientException) {
               details.put("code", "internal");
               details.put("message", "internal remote config fetch error");
+            } else if (exception instanceof FirebaseRemoteConfigServerException) {
+              details.put("code", "remote-config-server-error");
+              details.put("message", exception.getMessage());
+
+              Throwable cause = exception.getCause();
+              if (cause != null) {
+                String causeMessage = cause.getMessage();
+                if (causeMessage != null && causeMessage.contains("Forbidden")) {
+                  // Specific error code for 403 status code to indicate the request was forbidden.
+                  details.put("code", "forbidden");
+                }
+              }
             } else {
               details.put("code", "unknown");
               details.put("message", "unknown remote config error");
@@ -203,7 +237,8 @@ public class FirebaseRemoteConfigPlugin
   private Map<String, Object> parseParameters(Map<String, FirebaseRemoteConfigValue> parameters) {
     Map<String, Object> parsedParameters = new HashMap<>();
     for (String key : parameters.keySet()) {
-      parsedParameters.put(key, createRemoteConfigValueMap(parameters.get(key)));
+      parsedParameters.put(
+          key, createRemoteConfigValueMap(Objects.requireNonNull(parameters.get(key))));
     }
     return parsedParameters;
   }
@@ -239,6 +274,43 @@ public class FirebaseRemoteConfigPlugin
       case FirebaseRemoteConfig.VALUE_SOURCE_STATIC:
       default:
         return "static";
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public void onListen(Object arguments, EventChannel.EventSink events) {
+    Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
+    FirebaseRemoteConfig remoteConfig = getRemoteConfig(argumentsMap);
+    String appName = (String) Objects.requireNonNull(argumentsMap.get("appName"));
+
+    listenersMap.put(
+        appName,
+        remoteConfig.addOnConfigUpdateListener(
+            new ConfigUpdateListener() {
+              @Override
+              public void onUpdate(@NonNull ConfigUpdate configUpdate) {
+                ArrayList<String> updatedKeys = new ArrayList<>(configUpdate.getUpdatedKeys());
+                mainThreadHandler.post(() -> events.success(updatedKeys));
+              }
+
+              @Override
+              public void onError(@NonNull FirebaseRemoteConfigException error) {
+                events.error("firebase_remote_config", error.getMessage(), null);
+              }
+            }));
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public void onCancel(Object arguments) {
+    Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
+    String appName = (String) Objects.requireNonNull(argumentsMap.get("appName"));
+
+    ConfigUpdateListenerRegistration listener = listenersMap.get(appName);
+    if (listener != null) {
+      listener.remove();
+      listenersMap.remove(appName);
     }
   }
 }
