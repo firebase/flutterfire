@@ -655,6 +655,11 @@ public class FlutterFirebaseFirestorePlugin
       case "Firestore#setIndexConfiguration":
         methodCallTask = setIndexConfiguration(call.arguments());
         break;
+      case "Firestore#enableLogging":
+        boolean enable = (boolean) Objects.requireNonNull(call.argument("enable"));
+        FirebaseFirestore.setLoggingEnabled(enable);
+        result.success(null);
+        return;
       default:
         result.notImplemented();
         return;

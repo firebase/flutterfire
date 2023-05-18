@@ -85,6 +85,11 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return _delegate.clearPersistence();
   }
 
+  /// Globally enables / disables Cloud Firestore logging for the SDK.
+  Future<void> enableLogging(bool enable) {
+    return _delegate.enableLogging(enable);
+  }
+
   /// Enable persistence of Firestore data.
   ///
   /// This is a web-only method. Use [Settings.persistenceEnabled] for non-web platforms.

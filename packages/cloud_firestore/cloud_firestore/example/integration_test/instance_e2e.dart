@@ -254,6 +254,25 @@ void runInstanceTests() {
 
         await firestore.setIndexConfigurationFromJSON(json);
       });
+
+      testWidgets('enableLogging()', (_) async {
+        if (kIsWeb) {
+          try {
+            await firestore.enableLogging(true);
+          } catch (e) {
+            expect(
+              e,
+              isA<UnimplementedError>().having(
+                (e) => e.message,
+                'message',
+                contains('enableLogging() is not supported on the web client'),
+              ),
+            );
+          }
+        } else {
+          await firestore.enableLogging(true);
+        }
+      });
     },
   );
 }

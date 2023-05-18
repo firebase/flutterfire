@@ -241,6 +241,10 @@ FlutterStandardMethodCodec *_codec;
     [self aggregateQuery:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Firestore#setIndexConfiguration" isEqualToString:call.method]) {
     [self setIndexConfiguration:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Firestore#enableLogging" isEqualToString:call.method]) {
+    BOOL enable = [call.arguments[@"enable"] boolValue];
+    [FIRFirestore enableLogging:enable];
+    methodCallResult.success(nil);
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
   }
@@ -606,6 +610,8 @@ FlutterStandardMethodCodec *_codec;
                                }
                              }];
 }
+
+
 
 - (NSString *)registerEventChannelWithPrefix:(NSString *)prefix
                                streamHandler:(NSObject<FlutterStreamHandler> *)handler {

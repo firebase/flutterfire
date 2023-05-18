@@ -207,4 +207,9 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       indexConfiguration,
     );
   }
+
+  @override
+  Future<void> enableLogging(bool enable){
+    throw UnimplementedError('enableLogging() is not supported on the web client');
+  }
 }

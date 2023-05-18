@@ -218,6 +218,11 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     throw UnimplementedError('setIndexConfiguration() is not implemented');
   }
 
+  /// Globally enables / disables Cloud Firestore logging for the SDK.
+  Future<void> enableLogging(bool enable){
+    throw UnimplementedError('enableLogging() is not implemented');
+  }
+
   @override
   //ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
