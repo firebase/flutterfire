@@ -219,7 +219,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   }
 
   /// Globally enables / disables Cloud Firestore logging for the SDK.
-  Future<void> enableLogging(bool enable){
+  Future<void> enableLogging(bool enable) {
     throw UnimplementedError('enableLogging() is not implemented');
   }
 
