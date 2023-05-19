@@ -118,7 +118,7 @@ class ReferenceWeb extends ReferencePlatform {
   Future<Uint8List?> getData(
     int maxSize, {
     @visibleForTesting
-        Future<Uint8List> Function(Uri url) readBytes = http.readBytes,
+    Future<Uint8List> Function(Uri url) readBytes = http.readBytes,
   }) async {
     if (maxSize > 0) {
       final metadata = await getMetadata();
