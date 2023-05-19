@@ -267,6 +267,12 @@ abstract class FirebaseUILocalizationLabels {
   String get latitudeLabel;
   String get geopointLabel;
   String get referenceLabel;
+
+  /// Labels for `EmailVerificationScreen`
+  String get verifyEmailTitleText;
+  String get emailVerificationInstructionText;
+  String get couldntVerifyEmailText;
+  String get resendVerificationEmailButtonLabel;
 }
 
 class DefaultLocalizations extends EnLocalizations {

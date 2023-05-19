@@ -266,4 +266,20 @@ class ItLocalizations extends FirebaseUILocalizationLabels {
   @override
   String get wrongOrNoPasswordErrorText =>
       "La password non è valida o l'utente non dispone di una password";
+
+  @override
+  String get verifyEmailTitleText => "Verifica della tua email";
+
+  @override
+  String get emailVerificationInstructionText =>
+      'Una mail di verifica è stata inviata al tuo indirizzo email. '
+      'Prego controlla la tua email e clicca sul link per verificare '
+      'il tuo indirizzo email.';
+
+  @override
+  String get couldntVerifyEmailText =>
+      "Non possiamo verificare il tuo indirizzo email. ";
+
+  @override
+  String get resendVerificationEmailButtonLabel => 'Reinvio email di verifica';
 }
