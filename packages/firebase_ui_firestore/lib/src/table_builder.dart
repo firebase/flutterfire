@@ -72,7 +72,7 @@ class FirestoreDataTable extends StatefulWidget {
       'Migrate to use dataRowMinHeight and dataRowMaxHeight instead. '
       'This feature was deprecated after v3.7.0-5.0.pre.',
     )
-        double? dataRowHeight,
+    double? dataRowHeight,
     double? dataRowMinHeight,
     double? dataRowMaxHeight,
     this.headingRowHeight = 56.0,

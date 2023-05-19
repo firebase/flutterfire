@@ -12,7 +12,7 @@ dependencies:
   firebase_ui_oauth: ^1.4.1
   flutter:
     sdk: flutter
-  flutter_facebook_auth: ^4.4.0+1
+  flutter_facebook_auth: ^5.0.8
 
 dev_dependencies:
   flutter_test:

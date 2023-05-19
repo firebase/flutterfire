@@ -25,7 +25,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  mockito: ^5.2.0
+  mockito: ^5.4.0
 
 false_secrets:
   - '/example/**/google-services.json'

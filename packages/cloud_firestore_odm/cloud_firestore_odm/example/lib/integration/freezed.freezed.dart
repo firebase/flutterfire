@@ -182,10 +182,9 @@ class _$_Person implements _Person {
 abstract class _Person implements Person {
   factory _Person(
       {required final String firstName,
-      @JsonKey(name: 'LAST_NAME')
-          required final String lastName,
+      @JsonKey(name: 'LAST_NAME') required final String lastName,
       @JsonKey(includeFromJson: false, includeToJson: false)
-          final int? ignored}) = _$_Person;
+      final int? ignored}) = _$_Person;
 
   factory _Person.fromJson(Map<String, dynamic> json) = _$_Person.fromJson;
 

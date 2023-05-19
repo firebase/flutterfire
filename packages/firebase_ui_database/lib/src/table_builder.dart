@@ -52,7 +52,7 @@ class FirebaseDatabaseDataTable extends StatefulWidget {
     this.sortColumnIndex,
     this.sortAscending = true,
     @Deprecated('Migrate to use dataRowMinHeight and dataRowMaxHeight instead.')
-        double? dataRowHeight,
+    double? dataRowHeight,
     double? dataRowMinHeight,
     double? dataRowMaxHeight,
     this.headingRowHeight = 56.0,
