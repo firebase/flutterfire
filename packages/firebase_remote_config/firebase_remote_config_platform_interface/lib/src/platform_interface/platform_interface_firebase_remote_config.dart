@@ -175,7 +175,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
 
   /// Sets the [RemoteConfigSettings] for the current instance.
   Future<void> setConfigSettings(
-      PigeonRemoteConfigSettings remoteConfigSettings) {
+      PigeonRemoteConfigSettings pigeonRemoteConfigSettings) {
     throw UnimplementedError('setConfigSettings() is not implemented');
   }
 
