@@ -423,5 +423,25 @@
   "@wrongOrNoPasswordErrorText": {
     "description": "Used as an error text of the PasswordInput when provided password is empty or is not correct.",
     "placeholders": {}
+  },
+  "verifyEmailTitleText": "Verify your email",
+  "@verifyEmailTitleText": {
+    "description": "Used as a title of the EmailVerificationScreen",
+    "placeholders": {}
+  },
+  "emailVerificationInstructionText": "A verification email has been sent to your email address. Please check your email and click on the link to verify your email address.",
+  "@emailVerificationInstructionText": {
+    "description": "Indicates that the verification email was sent.",
+    "placeholders": {}
+  },
+  "couldntVerifyEmailText": "We couldn't verify your email address. ",
+  "@couldntVerifyEmailText": {
+    "description": "Used as an error message when the email address was not verified.",
+    "placeholders": {}
+  },
+  "resendVerificationEmailButtonLabel": "Resend verification email",
+  "@resendVerificationEmailButtonLabel": {
+    "description": "Used as a label of the resend button of the EmailVerificationScreen.",
+    "placeholders": {}
   }
 }

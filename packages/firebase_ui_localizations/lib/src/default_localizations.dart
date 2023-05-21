@@ -268,10 +268,16 @@ abstract class FirebaseUILocalizationLabels {
   String get geopointLabel;
   String get referenceLabel;
 
-  /// Labels for `EmailVerificationScreen`
+  /// Used as a title of the `EmailVerificationScreen`.
   String get verifyEmailTitleText;
+
+  /// Indicates that the verification email was sent.
   String get emailVerificationInstructionText;
+
+  /// Used as an error message when the email address was not verified.
   String get couldntVerifyEmailText;
+
+  /// Used as a label of the resend button of the `EmailVerificationScreen`.
   String get resendVerificationEmailButtonLabel;
 }
 

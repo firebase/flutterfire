@@ -272,14 +272,12 @@ class ItLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get emailVerificationInstructionText =>
-      'Una mail di verifica è stata inviata al tuo indirizzo email. '
-      'Prego controlla la tua email e clicca sul link per verificare '
-      'il tuo indirizzo email.';
+      "Una mail di verifica è stata inviata al tuo indirizzo email. Prego controlla la tua email e clicca sul link per verificare il tuo indirizzo email.";
 
   @override
   String get couldntVerifyEmailText =>
       "Non possiamo verificare il tuo indirizzo email. ";
 
   @override
-  String get resendVerificationEmailButtonLabel => 'Reinvio email di verifica';
+  String get resendVerificationEmailButtonLabel => "Reinvio email di verifica";
 }

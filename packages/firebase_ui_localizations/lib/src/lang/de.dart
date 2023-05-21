@@ -272,14 +272,12 @@ class DeLocalizations extends FirebaseUILocalizationLabels {
 
   @override
   String get emailVerificationInstructionText =>
-      'A verification email has been sent to your email address. '
-      'Please check your email and click on the link to verify '
-      'your email address.';
+      "A verification email has been sent to your email address. Please check your email and click on the link to verify your email address.";
 
   @override
   String get couldntVerifyEmailText =>
       "We couldn't verify your email address. ";
 
   @override
-  String get resendVerificationEmailButtonLabel => 'Resend verification email';
+  String get resendVerificationEmailButtonLabel => "Resend verification email";
 }
