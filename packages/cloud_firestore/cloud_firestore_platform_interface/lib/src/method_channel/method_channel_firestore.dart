@@ -352,7 +352,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     try {
       await channel
           .invokeMethod<void>('Firestore#setLoggingEnabled', <String, dynamic>{
-        'firestore': this,
         'enabled': enabled,
       });
     } catch (e, stack) {

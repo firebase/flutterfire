@@ -550,7 +550,6 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)setLoggingEnabled:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRFirestore *firestore = arguments[@"firestore"];
   NSNumber *enabled = arguments[@"enabled"];
 
   [FIRFirestore enableLogging:enabled];
