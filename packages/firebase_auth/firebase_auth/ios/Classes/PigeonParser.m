@@ -136,7 +136,7 @@
   }
 
   if (settings.handleCodeInApp != nil) {
-    codeSettings.handleCodeInApp = settings.handleCodeInApp;
+    codeSettings.handleCodeInApp = [settings.handleCodeInApp boolValue];
   }
 
   if (settings.iOSBundleId != nil) {

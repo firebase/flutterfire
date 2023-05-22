@@ -1035,7 +1035,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
   }
 
 #if TARGET_OS_IPHONE
-  if (settings.appVerificationDisabledForTesting) {
+  if ([settings.appVerificationDisabledForTesting boolValue]) {
     auth.settings.appVerificationDisabledForTesting = settings.appVerificationDisabledForTesting;
   }
 #else
@@ -1701,13 +1701,11 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 
   FIRUserProfileChangeRequest *changeRequest = [currentUser profileChangeRequest];
 
-  if (profile.displayNameChanged) {
+  if ([profile.displayNameChanged boolValue]) {
     changeRequest.displayName = profile.displayName;
   }
-    
-    BOOL a = profile.photoUrlChanged;
-
-  if (profile.photoUrlChanged) {
+        
+  if ([profile.photoUrlChanged boolValue]) {
     if (profile.photoUrl == nil) {
         // We apparently cannot set photoURL to nil/NULL to remove it.
         // Instead, setting it to empty string appears to work.
