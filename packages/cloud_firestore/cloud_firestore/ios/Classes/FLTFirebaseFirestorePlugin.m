@@ -552,7 +552,7 @@ FlutterStandardMethodCodec *_codec;
 - (void)setLoggingEnabled:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSNumber *enabled = arguments[@"enabled"];
 
-  [FIRFirestore enableLogging:enabled];
+  [FIRFirestore enableLogging:[enabled boolValue]];
   result.success(nil);
 }
 
