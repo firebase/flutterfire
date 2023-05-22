@@ -12,7 +12,7 @@ import 'profile.dart';
 
 /// Requires that a Firebase local emulator is running locally.
 /// See https://firebase.flutter.dev/docs/auth/start/#optional-prototype-and-test-with-firebase-local-emulator-suite
-bool shouldUseFirebaseEmulator = false;
+bool shouldUseFirebaseEmulator = true;
 
 late final FirebaseApp app;
 late final FirebaseAuth auth;
@@ -33,6 +33,29 @@ Future<void> main() async {
   if (shouldUseFirebaseEmulator) {
     await auth.useAuthEmulator('localhost', 9099);
   }
+  try {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: 'test@mail.com',
+      password: 'Azeqsd123@',
+    );
+  } catch (e) {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: 'test@mail.com',
+      password: 'Azeqsd123@',
+    );
+  }
+  await FirebaseAuth.instance.currentUser!.updateDisplayName('Mona Lisa');
+  await FirebaseAuth.instance.currentUser!.updatePhotoURL(
+    'http://photo.url/test.jpg',
+  );
+  await FirebaseAuth.instance.currentUser!.reload();
+
+  print(FirebaseAuth.instance.currentUser!.photoURL);
+
+  await FirebaseAuth.instance.currentUser!.updateDisplayName('John Smith');
+  await FirebaseAuth.instance.currentUser!.reload();
+
+  print(FirebaseAuth.instance.currentUser!.photoURL);
 
   runApp(const AuthExampleApp());
 }

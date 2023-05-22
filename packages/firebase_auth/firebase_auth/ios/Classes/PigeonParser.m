@@ -31,18 +31,15 @@
               makeWithUid:user.uid
                     email:user.email
               displayName:user.displayName
-                 photoUrl:user.photoURL.absoluteString
+                 photoUrl: (user.photoURL.absoluteString.length > 0) ? user.photoURL.absoluteString : nil
               phoneNumber:user.phoneNumber
               isAnonymous:[NSNumber numberWithBool:user.isAnonymous]
           isEmailVerified:[NSNumber numberWithBool:user.emailVerified]
                providerId:user.providerID
                  tenantId:user.tenantID
              refreshToken:user.refreshToken
-        creationTimestamp:[NSNumber
-                              numberWithInt:user.metadata.creationDate.timeIntervalSince1970 * 1000]
-      lastSignInTimestamp:[NSNumber
-                              numberWithInt:user.metadata.lastSignInDate.timeIntervalSince1970 *
-                                            1000]];
+        creationTimestamp:@((long)([user.metadata.creationDate timeIntervalSince1970] * 1000))
+      lastSignInTimestamp:@((long)([user.metadata.lastSignInDate timeIntervalSince1970] * 1000))];
 }
 
 + (NSArray<NSDictionary<id, id> *> *)getProviderData:

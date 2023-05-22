@@ -27,5 +27,5 @@
 
 + (NSDictionary *)getNSDictionaryFromUserInfo:(id<FIRUserInfo>)userInfo;
 + (NSMutableDictionary *)getNSDictionaryFromUser:(FIRUser *)user;
-+ (NSDictionary *)getNSDictionaryFromNSError:(NSError *)error;
++ (FlutterError *)convertToFlutterError:(NSError *)error;
 @end

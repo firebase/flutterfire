@@ -240,7 +240,7 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> updatePassword(String newPassword) async {
     try {
-      final result = await _api.updateEmail(pigeonDefault, newPassword);
+      final result = await _api.updatePassword(pigeonDefault, newPassword);
 
       MethodChannelUser user =
           MethodChannelUser(auth, super.multiFactor, result);
@@ -271,6 +271,8 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> updateProfile(Map<String, String?> profile) async {
     try {
+      print('updateProfile');
+      print(profile.containsKey('photoURL'));
       final result = await _api.updateProfile(
         pigeonDefault,
         PigeonUserProfile(

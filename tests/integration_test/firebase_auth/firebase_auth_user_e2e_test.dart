@@ -608,7 +608,10 @@ void main() {
             expect(FirebaseAuth.instance.currentUser!.refreshToken, equals(''));
           },
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+          // iOS supports it
+          skip: kIsWeb ||
+              defaultTargetPlatform == TargetPlatform.macOS ||
+              defaultTargetPlatform == TargetPlatform.iOS,
         );
 
         test(

@@ -613,8 +613,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           final Map<dynamic, dynamic>? details = error?['details'];
 
           FirebaseAuthException exception = FirebaseAuthException(
-            message: details != null ? details['message'] : error?['message'],
-            code: details?['code'] ?? 'unknown',
+            message: details?['message'] ?? error?['message'],
+            code: details?['code'] ?? error?['code'] ?? 'unknown',
           );
 
           verificationFailed(exception);

@@ -44,12 +44,13 @@
 #if TARGET_OS_IPHONE
   id completer = ^(NSString *verificationID, NSError *error) {
     if (error != nil) {
-      NSDictionary *errorDetails = [FLTFirebaseAuthPlugin getNSDictionaryFromNSError:error];
+      FlutterError *errorDetails = [FLTFirebaseAuthPlugin convertToFlutterError:error];
       events(@{
         @"name" : @"Auth#phoneVerificationFailed",
         @"error" : @{
-          @"message" : errorDetails[@"message"],
-          @"details" : errorDetails,
+          @"code": errorDetails.code,
+          @"message" : errorDetails.message,
+          @"details" : errorDetails.details,
         }
       });
     } else {
