@@ -254,6 +254,12 @@ void runInstanceTests() {
 
         await firestore.setIndexConfigurationFromJSON(json);
       });
+
+      testWidgets('setLoggingEnabled should resolve without issue',
+          (widgetTester) async {
+        await FirebaseFirestore.setLoggingEnabled(true);
+        await FirebaseFirestore.setLoggingEnabled(false);
+      });
     },
   );
 }
