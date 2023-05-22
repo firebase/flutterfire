@@ -612,7 +612,6 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
   return auth;
 }
 
-
 - (FIRAuthCredential *_Nullable)getFIRAuthCredentialFromArguments:(NSDictionary *)arguments
                                                               app:(PigeonFirebaseApp *)app {
   // If the credential dictionary contains a token, it means a native one has
@@ -1343,15 +1342,16 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
     return;
   }
 
-  [currentUser getIDTokenResultForcingRefresh:forceRefresh
-                                   completion:^(FIRAuthTokenResult *tokenResult, NSError *error) {
-                                     if (error != nil) {
-                                       completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
-                                       return;
-                                     }
+  [currentUser
+      getIDTokenResultForcingRefresh:forceRefresh
+                          completion:^(FIRAuthTokenResult *tokenResult, NSError *error) {
+                            if (error != nil) {
+                              completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                              return;
+                            }
 
-                                     completion([PigeonParser parseIdTokenResult:tokenResult], nil);
-                                   }];
+                            completion([PigeonParser parseIdTokenResult:tokenResult], nil);
+                          }];
 }
 
 - (void)linkWithCredentialApp:(nonnull PigeonFirebaseApp *)app
@@ -1553,7 +1553,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
 
                                        completion:^(NSError *_Nullable error) {
                                          if (error != nil) {
-                                           completion([FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                                           completion(
+                                               [FLTFirebaseAuthPlugin convertToFlutterError:error]);
                                          } else {
                                            completion(nil);
                                          }
@@ -1625,20 +1626,21 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
     return;
   }
 
-  [currentUser updatePassword:newPassword
-                   completion:^(NSError *_Nullable error) {
-                     if (error != nil) {
-                       completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
-                     } else {
-                       [currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
-                         if (reloadError != nil) {
-                           completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:reloadError]);
-                         } else {
-                           completion([PigeonParser getPigeonDetails:auth.currentUser], nil);
-                         }
-                       }];
-                     }
-                   }];
+  [currentUser
+      updatePassword:newPassword
+          completion:^(NSError *_Nullable error) {
+            if (error != nil) {
+              completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+            } else {
+              [currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
+                if (reloadError != nil) {
+                  completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:reloadError]);
+                } else {
+                  completion([PigeonParser getPigeonDetails:auth.currentUser], nil);
+                }
+              }];
+            }
+          }];
 }
 
 - (void)updatePhoneNumberApp:(nonnull PigeonFirebaseApp *)app
@@ -1671,7 +1673,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                          } else {
                            [currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
                              if (reloadError != nil) {
-                               completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:reloadError]);
+                               completion(
+                                   nil, [FLTFirebaseAuthPlugin convertToFlutterError:reloadError]);
                              } else {
                                completion([PigeonParser getPigeonDetails:auth.currentUser], nil);
                              }
@@ -1704,13 +1707,13 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
   if ([profile.displayNameChanged boolValue]) {
     changeRequest.displayName = profile.displayName;
   }
-        
+
   if ([profile.photoUrlChanged boolValue]) {
     if (profile.photoUrl == nil) {
-        // We apparently cannot set photoURL to nil/NULL to remove it.
-        // Instead, setting it to empty string appears to work.
-        // When doing so, Dart will properly receive `null` anyway.
-        changeRequest.photoURL = [NSURL URLWithString:@""];
+      // We apparently cannot set photoURL to nil/NULL to remove it.
+      // Instead, setting it to empty string appears to work.
+      // When doing so, Dart will properly receive `null` anyway.
+      changeRequest.photoURL = [NSURL URLWithString:@""];
     } else {
       changeRequest.photoURL = [NSURL URLWithString:profile.photoUrl];
     }
@@ -1750,7 +1753,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                                                    parseActionCodeSettings:actionCodeSettings]
                                     completion:^(NSError *error) {
                                       if (error != nil) {
-                                        completion([FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                                        completion(
+                                            [FLTFirebaseAuthPlugin convertToFlutterError:error]);
                                       } else {
                                         completion(nil);
                                       }

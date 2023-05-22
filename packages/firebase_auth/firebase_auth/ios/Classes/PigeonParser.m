@@ -31,7 +31,8 @@
               makeWithUid:user.uid
                     email:user.email
               displayName:user.displayName
-                 photoUrl: (user.photoURL.absoluteString.length > 0) ? user.photoURL.absoluteString : nil
+                 photoUrl:(user.photoURL.absoluteString.length > 0) ? user.photoURL.absoluteString
+                                                                    : nil
               phoneNumber:user.phoneNumber
               isAnonymous:[NSNumber numberWithBool:user.isAnonymous]
           isEmailVerified:[NSNumber numberWithBool:user.emailVerified]
@@ -46,13 +47,12 @@
     (nonnull NSArray<id<FIRUserInfo>> *)providerData {
   NSMutableArray<NSDictionary<id, id> *> *dataArray =
       [NSMutableArray arrayWithCapacity:providerData.count];
+
   for (id<FIRUserInfo> userInfo in providerData) {
-    if (userInfo == nil || userInfo.providerID == nil || userInfo.uid == nil) {
-      continue;
-    }
     NSDictionary *dataDict = @{
       @"providerId" : userInfo.providerID,
-      @"uid" : userInfo.uid,
+      // Can be null on emulator
+      @"uid" : userInfo.uid ?: @"",
       @"displayName" : userInfo.displayName ?: [NSNull null],
       @"email" : userInfo.email ?: [NSNull null],
       @"phoneNumber" : userInfo.phoneNumber ?: [NSNull null],

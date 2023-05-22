@@ -48,7 +48,7 @@
       events(@{
         @"name" : @"Auth#phoneVerificationFailed",
         @"error" : @{
-          @"code": errorDetails.code,
+          @"code" : errorDetails.code,
           @"message" : errorDetails.message,
           @"details" : errorDetails.details,
         }
