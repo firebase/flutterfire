@@ -271,8 +271,6 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> updateProfile(Map<String, String?> profile) async {
     try {
-      print('updateProfile');
-      print(profile.containsKey('photoURL'));
       final result = await _api.updateProfile(
         pigeonDefault,
         PigeonUserProfile(
