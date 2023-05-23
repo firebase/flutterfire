@@ -44,18 +44,14 @@ FlutterFirebasePluginRegistry::getPluginConstantsForFirebaseApp(
     firebase::App firebaseApp) {
     std::map<std::string, std::any> pluginConstants;
 
-    try {
-      for (const auto& entry : registeredPlugins) {
-        std::string channelName = entry.first;
-        FlutterFirebasePlugin* plugin = entry.second;
+    for (const auto& entry : registeredPlugins) {
+      std::string channelName = entry.first;
+      FlutterFirebasePlugin* plugin = entry.second;
 
-        firebase::Future future =
-            plugin->getPluginConstantsForFirebaseApp(firebaseApp);
-        WaitForFuture(future);
-        pluginConstants[channelName] = future.result();
-      }
-    } catch (std::exception& e) {
-      throw;
+      firebase::Future future =
+          plugin->getPluginConstantsForFirebaseApp(firebaseApp);
+      WaitForFuture(future);
+      pluginConstants[channelName] = future.result();
     }
 
     return pluginConstants;
@@ -64,13 +60,9 @@ FlutterFirebasePluginRegistry::getPluginConstantsForFirebaseApp(
 
 firebase::Future<void>
 FlutterFirebasePluginRegistry::didReinitializeFirebaseCore() {
-    try {
-      for (const auto& entry : registeredPlugins) {
-        FlutterFirebasePlugin* plugin = entry.second;
-        WaitForFuture(plugin->didReinitializeFirebaseCore());
-      }
-    } catch (std::exception& e) {
-      throw;
+    for (const auto& entry : registeredPlugins) {
+      FlutterFirebasePlugin* plugin = entry.second;
+      WaitForFuture(plugin->didReinitializeFirebaseCore());
     }
 
     return firebase::Future<void>();

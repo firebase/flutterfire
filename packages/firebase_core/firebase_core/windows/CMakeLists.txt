@@ -61,6 +61,9 @@ list(APPEND PLUGIN_SOURCES
   "firebase_core_plugin.h"
   "messages.g.cpp"
   "messages.g.h"
+  "flutter_firebase_plugin.h"
+  "flutter_firebase_plugin_registry.h"
+  "flutter_firebase_plugin_registry.cpp"
 )
 
 # Define the plugin library target. Its name must not be changed (see comment
