@@ -159,6 +159,10 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
       dynamic /* DocumentReference | CollectionReference */ right) {
     return firestore_interop.refEqual(left, right);
   }
+
+  void setLoggingEnabled(String logLevel) {
+    firestore_interop.setLogLevel(logLevel);
+  }
 }
 
 class LoadBundleTask

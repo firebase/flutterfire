@@ -214,6 +214,8 @@ FlutterStandardMethodCodec *_codec;
     [self documentGet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Firestore#namedQueryGet" isEqualToString:call.method]) {
     [self namedQueryGet:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Firestore#setLoggingEnabled" isEqualToString:call.method]) {
+    [self setLoggingEnabled:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Query#get" isEqualToString:call.method]) {
     [self queryGet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"WriteBatch#commit" isEqualToString:call.method]) {
@@ -545,6 +547,13 @@ FlutterStandardMethodCodec *_codec;
                                        }
                                      }];
                 }];
+}
+
+- (void)setLoggingEnabled:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSNumber *enabled = arguments[@"enabled"];
+
+  [FIRFirestore enableLogging:[enabled boolValue]];
+  result.success(nil);
 }
 
 - (void)batchCommit:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
