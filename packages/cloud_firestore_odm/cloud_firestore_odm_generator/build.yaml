@@ -11,7 +11,7 @@ builders:
   cloud_firestore_odm_generator:
     import: "package:cloud_firestore_odm_generator/cloud_firestore_odm_generator.dart"
     builder_factories: ["firebase"]
-    build_extensions: { ".dart": [".firebase.g.dart"] }
+    build_extensions: { ".dart": [".firebase.g.part"] }
     auto_apply: dependents
     build_to: cache
     applies_builders: ["source_gen|combining_builder"]
