@@ -340,6 +340,11 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return _delegate.setIndexConfiguration(json);
   }
 
+  /// Globally enables / disables Cloud Firestore logging for the SDK.
+  static Future<void> setLoggingEnabled(bool enabled) {
+    return FirebaseFirestorePlatform.instance.setLoggingEnabled(enabled);
+  }
+
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>

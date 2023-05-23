@@ -4,9 +4,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-// TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
-// ignore: unnecessary_import
-import 'dart:typed_data';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -216,6 +213,11 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// This API is in preview mode and is subject to change.
   Future<void> setIndexConfiguration(String indexConfiguration) {
     throw UnimplementedError('setIndexConfiguration() is not implemented');
+  }
+
+  /// Globally enables / disables Cloud Firestore logging for the SDK.
+  Future<void> setLoggingEnabled(bool enabled) {
+    throw UnimplementedError('setLoggingEnabled() is not implemented');
   }
 
   @override
