@@ -19,7 +19,6 @@ import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 public class FlutterFirebaseAuthUser
     implements GeneratedAndroidFirebaseAuth.FirebaseAuthUserHostApi {
@@ -317,13 +316,14 @@ public class FlutterFirebaseAuthUser
                 result.success(PigeonParser.parseAuthResult(task.getResult()));
               } else {
                 Exception exception = task.getException();
-if (exception.getMessage().contains("User was not linked to an account with the given provider.")) {
+                if (exception
+                    .getMessage()
+                    .contains("User was not linked to an account with the given provider.")) {
                   result.error(FlutterFirebaseAuthPluginException.noSuchProvider());
                 } else {
                   result.error(
                       FlutterFirebaseAuthPluginException.parserExceptionToFlutter(exception));
                 }
-
               }
             });
   }

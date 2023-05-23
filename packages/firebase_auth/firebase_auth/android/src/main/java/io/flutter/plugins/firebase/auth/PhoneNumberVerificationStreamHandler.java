@@ -101,8 +101,11 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
           public void onVerificationFailed(@NonNull FirebaseException e) {
             Map<String, Object> event = new HashMap<>();
             Map<String, Object> error = new HashMap<>();
-            GeneratedAndroidFirebaseAuth.FlutterError flutterError = FlutterFirebaseAuthPluginException.parserExceptionToFlutter(e);
-            error.put("code", flutterError.code.replaceAll("ERROR_", "").toLowerCase().replaceAll("_", "-" ));
+            GeneratedAndroidFirebaseAuth.FlutterError flutterError =
+                FlutterFirebaseAuthPluginException.parserExceptionToFlutter(e);
+            error.put(
+                "code",
+                flutterError.code.replaceAll("ERROR_", "").toLowerCase().replaceAll("_", "-"));
             error.put("message", flutterError.getMessage());
             error.put("details", flutterError.details);
             event.put("error", error);
