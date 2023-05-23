@@ -5,8 +5,8 @@
 #include <future>
 #include <map>
 #include <string>
-#include "firebase/app.h"
 
+#include "firebase/app.h"
 
 class FlutterFirebasePlugin {
  public:

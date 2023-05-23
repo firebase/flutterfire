@@ -1,10 +1,11 @@
 #ifndef FLUTTER_FIREBASE_PLUGIN_REGISTRY_H
 #define FLUTTER_FIREBASE_PLUGIN_REGISTRY_H
 
-#include <future>
 #include <any>
+#include <future>
 #include <string>
 #include <unordered_map>
+
 #include "firebase/app.h"
 #include "firebase/future.h"
 #include "flutter_firebase_plugin.h"
@@ -17,8 +18,8 @@ class FlutterFirebasePluginRegistry {
  public:
   static void registerPlugin(std::string channelName,
                              FlutterFirebasePlugin* flutterFirebasePlugin);
-  static std::map<std::string, std::any>
-  getPluginConstantsForFirebaseApp(firebase::App firebaseApp);
+  static std::map<std::string, std::any> getPluginConstantsForFirebaseApp(
+      firebase::App firebaseApp);
   static firebase::Future<void> didReinitializeFirebaseCore();
 };
 
