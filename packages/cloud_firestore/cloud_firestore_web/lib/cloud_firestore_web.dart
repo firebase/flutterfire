@@ -207,4 +207,15 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       indexConfiguration,
     );
   }
+
+  @override
+  Future<void> setLoggingEnabled(bool enabled) async {
+    late final String value;
+    if (enabled) {
+      value = 'debug';
+    } else {
+      value = 'silent';
+    }
+    _delegate.setLoggingEnabled(value);
+  }
 }

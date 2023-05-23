@@ -366,6 +366,24 @@ public class FlutterFirebaseFirestorePlugin
     return taskCompletionSource.getTask();
   }
 
+  private Task<Void> setLoggingEnabled(Map<String, Object> arguments) {
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            boolean loggingEnabled = (boolean) Objects.requireNonNull(arguments.get("enabled"));
+
+            FirebaseFirestore.setLoggingEnabled(loggingEnabled);
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
   private void saveTimestampBehavior(Map<String, Object> arguments, int hashCode) {
     String serverTimestampBehaviorString = (String) arguments.get("serverTimestampBehavior");
     DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
@@ -627,6 +645,9 @@ public class FlutterFirebaseFirestorePlugin
         return;
       case "Firestore#namedQueryGet":
         methodCallTask = namedQueryGet(call.arguments());
+        break;
+      case "Firestore#setLoggingEnabled":
+        methodCallTask = setLoggingEnabled(call.arguments());
         break;
       case "DocumentReference#get":
         methodCallTask = documentGet(call.arguments());
