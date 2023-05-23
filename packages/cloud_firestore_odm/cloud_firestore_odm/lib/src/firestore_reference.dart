@@ -140,7 +140,9 @@ abstract class FirestoreCollectionReference<
   ///
   /// If no path is specified, an automatically-generated unique ID
   /// will be used for the returned [${data.documentReferenceName}].
-  FirestoreDocumentReference doc([String? id]);
+  FirestoreDocumentReference<Object?, FirestoreDocumentSnapshot<Model>> doc([
+    String? id,
+  ]);
 }
 
 abstract class FirestoreDocumentSnapshot<Model> {

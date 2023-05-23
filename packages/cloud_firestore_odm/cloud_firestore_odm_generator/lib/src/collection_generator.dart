@@ -60,7 +60,7 @@ class GlobalData {
 
 @immutable
 class CollectionGenerator
-    extends ParserGenerator<GlobalData, CollectionGraph, Collection> {
+    extends ParserGenerator<GlobalData, CollectionGraph, Collection<Object?>> {
   @override
   GlobalData parseGlobalData(LibraryElement library) {
     final globalData = GlobalData();
