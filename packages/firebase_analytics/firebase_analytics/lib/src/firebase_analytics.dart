@@ -6,8 +6,7 @@ part of firebase_analytics;
 
 /// Firebase Analytics API.
 class FirebaseAnalytics extends FirebasePluginPlatform {
-  FirebaseAnalytics._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_analytics');
+  FirebaseAnalytics._({required this.app}) : super(app.name, 'plugins.flutter.io/firebase_analytics');
 
   /// Namespace for analytics API available on Android only. This is deprecated in favor of
   /// `FirebaseAnalytics.instance.setSessionTimeoutDuration()`.
@@ -24,9 +23,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     'Android namespace will be removed in a future release. Please use FirebaseAnalytics.instance.setSessionTimeoutDuration()',
   )
   final FirebaseAnalyticsAndroid? android =
-      defaultTargetPlatform == TargetPlatform.android && !kIsWeb
-          ? FirebaseAnalyticsAndroid()
-          : null;
+      defaultTargetPlatform == TargetPlatform.android && !kIsWeb ? FirebaseAnalyticsAndroid() : null;
 
   static Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
 
@@ -36,8 +33,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   FirebaseAnalyticsPlatform? _delegatePackingProperty;
 
   FirebaseAnalyticsPlatform get _delegate {
-    return _delegatePackingProperty ??=
-        FirebaseAnalyticsPlatform.instanceFor(app: app);
+    return _delegatePackingProperty ??= FirebaseAnalyticsPlatform.instanceFor(app: app);
   }
 
   /// Returns an instance using a specified [FirebaseApp].
@@ -110,12 +106,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) async {
     _logEventNameValidation(name);
 
-    parameters?.forEach((key, value) {
-      assert(
-        value is String || value is num,
-        "'string' OR 'number' must be set as the value of the parameter: $key",
-      );
-    });
+    _assertParameterTypesAreCorrect(parameters);
 
     await _delegate.logEvent(
       name: name,
@@ -219,10 +210,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required String? value,
     AnalyticsCallOptions? callOptions,
   }) async {
-    if (name.isEmpty ||
-        name.length > 24 ||
-        name.indexOf(_alpha) != 0 ||
-        name.contains(_nonAlphaNumeric)) {
+    if (name.isEmpty || name.length > 24 || name.indexOf(_alpha) != 0 || name.contains(_nonAlphaNumeric)) {
       throw ArgumentError.value(
         name,
         'name',
@@ -258,11 +246,19 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? paymentType,
     double? value,
     List<AnalyticsEventItem>? items,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
+
     return _delegate.logEvent(
       name: 'add_payment_info',
       parameters: filterOutNulls({
+        if (parameters != null) ...parameters,
         _COUPON: coupon,
         _CURRENCY: currency,
         _PAYMENT_TYPE: paymentType,
@@ -285,11 +281,19 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     double? value,
     String? shippingTier,
     List<AnalyticsEventItem>? items,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
+
     return _delegate.logEvent(
       name: 'add_shipping_info',
       parameters: filterOutNulls({
+        if (parameters != null) ...parameters,
         _COUPON: coupon,
         _CURRENCY: currency,
         _SHIPPING_TIER: shippingTier,
@@ -311,13 +315,21 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     List<AnalyticsEventItem>? items,
     double? value,
     String? currency,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
+
     return _delegate.logEvent(
       name: 'add_to_cart',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _ITEMS: _marshalItems(items),
         _VALUE: value,
         _CURRENCY: currency,
@@ -338,13 +350,21 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     List<AnalyticsEventItem>? items,
     double? value,
     String? currency,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
+
     return _delegate.logEvent(
       name: 'add_to_wishlist',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _ITEMS: _marshalItems(items),
         _VALUE: value,
         _CURRENCY: currency,
@@ -420,13 +440,17 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? adUnitName,
     double? value,
     String? currency,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'ad_impression',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _AD_PLATFORM: adPlatform,
         _AD_SOURCE: adSource,
         _AD_FORMAT: adFormat,
@@ -441,9 +465,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// Logs the standard `app_open` event.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#APP_OPEN
-  Future<void> logAppOpen({AnalyticsCallOptions? callOptions}) {
+  Future<void> logAppOpen({
+    AnalyticsCallOptions? callOptions,
+    Map<String, Object?>? parameters,
+  }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'app_open',
+      parameters: parameters,
       callOptions: callOptions,
     );
   }
@@ -460,13 +490,21 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? currency,
     List<AnalyticsEventItem>? items,
     String? coupon,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
+
     return _delegate.logEvent(
       name: 'begin_checkout',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _VALUE: value,
         _CURRENCY: currency,
         _ITEMS: _marshalItems(items),
@@ -489,11 +527,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? content,
     String? aclid,
     String? cp1,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'campaign_details',
-      parameters: filterOutNulls(<String, String?>{
+      parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _SOURCE: source,
         _MEDIUM: medium,
         _CAMPAIGN: campaign,
@@ -516,11 +558,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logEarnVirtualCurrency({
     required String virtualCurrencyName,
     required num value,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'earn_virtual_currency',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _VIRTUAL_CURRENCY_NAME: virtualCurrencyName,
         _VALUE: value,
       }),
@@ -603,13 +649,17 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logGenerateLead({
     String? currency,
     double? value,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'generate_lead',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _CURRENCY: currency,
         _VALUE: value,
       }),
@@ -626,11 +676,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#JOIN_GROUP
   Future<void> logJoinGroup({
     required String groupId,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'join_group',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _GROUP_ID: groupId,
       }),
       callOptions: callOptions,
@@ -647,11 +701,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logLevelUp({
     required int level,
     String? character,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'level_up',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _LEVEL: level,
         _CHARACTER: character,
       }),
@@ -664,11 +722,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#LEVEL_START
   Future<void> logLevelStart({
     required String levelName,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'level_start',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _LEVEL_NAME: levelName,
       }),
       callOptions: callOptions,
@@ -681,11 +743,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logLevelEnd({
     required String levelName,
     int? success,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'level_end',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _LEVEL_NAME: levelName,
         _SUCCESS: success,
       }),
@@ -698,10 +764,14 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logSetCheckoutOption({
     required int checkoutStep,
     required String checkoutOption,
+    Map<String, Object?>? parameters,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'set_checkout_option',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _CHECKOUT_STEP: checkoutStep,
         _CHECKOUT_OPTION: checkoutOption,
       }),
@@ -716,11 +786,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#LOGIN
   Future<void> logLogin({
     String? loginMethod,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'login',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _METHOD: loginMethod,
       }),
       callOptions: callOptions,
@@ -739,11 +813,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required int score,
     int? level,
     String? character,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'post_score',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _SCORE: score,
         _LEVEL: level,
         _CHARACTER: character,
@@ -768,13 +846,21 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     double? shipping,
     String? transactionId,
     String? affiliation,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
+
     return _delegate.logEvent(
       name: 'purchase',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _CURRENCY: currency,
         _COUPON: coupon,
         _VALUE: value,
@@ -797,13 +883,21 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? currency,
     double? value,
     List<AnalyticsEventItem>? items,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
+
     return _delegate.logEvent(
       name: 'remove_from_cart',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _CURRENCY: currency,
         _VALUE: value,
         _ITEMS: _marshalItems(items),
@@ -820,11 +914,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logScreenView({
     String? screenClass,
     String? screenName,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'screen_view',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _SCREEN_CLASS: screenClass,
         _SCREEN_NAME: screenName,
       }),
@@ -841,11 +939,19 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? itemListId,
     String? itemListName,
     List<AnalyticsEventItem>? items,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
+
     return _delegate.logEvent(
       name: 'select_item',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _ITEM_LIST_ID: itemListId,
         _ITEM_LIST_NAME: itemListName,
         _ITEMS: _marshalItems(items),
@@ -866,11 +972,19 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? locationId,
     String? promotionId,
     String? promotionName,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
+
     return _delegate.logEvent(
       name: 'select_promotion',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _CREATIVE_NAME: creativeName,
         _CREATIVE_SLOT: creativeSlot,
         _ITEMS: _marshalItems(items),
@@ -891,11 +1005,19 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? currency,
     double? value,
     List<AnalyticsEventItem>? items,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
+
     return _delegate.logEvent(
       name: 'view_cart',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _CURRENCY: currency,
         _VALUE: value,
         _ITEMS: _marshalItems(items),
@@ -921,12 +1043,16 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? startDate,
     String? endDate,
     String? travelClass,
+    Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'search',
       parameters: filterOutNulls(
         <String, Object?>{
+          if (parameters != null) ...parameters,
           _SEARCH_TERM: searchTerm,
           _NUMBER_OF_NIGHTS: numberOfNights,
           _NUMBER_OF_ROOMS: numberOfRooms,
@@ -953,10 +1079,14 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logSelectContent({
     required String contentType,
     required String itemId,
+    Map<String, Object?>? parameters,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'select_content',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _CONTENT_TYPE: contentType,
         _ITEM_ID: itemId,
       }),
@@ -973,10 +1103,14 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required String contentType,
     required String itemId,
     required String method,
+    Map<String, Object?>? parameters,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'share',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _CONTENT_TYPE: contentType,
         _ITEM_ID: itemId,
         _METHOD: method,
@@ -994,10 +1128,14 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SIGN_UP
   Future<void> logSignUp({
     required String signUpMethod,
+    Map<String, Object?>? parameters,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'sign_up',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _METHOD: signUpMethod,
       }),
     );
@@ -1013,10 +1151,14 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required String itemName,
     required String virtualCurrencyName,
     required num value,
+    Map<String, Object?>? parameters,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'spend_virtual_currency',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _ITEM_NAME: itemName,
         _VIRTUAL_CURRENCY_NAME: virtualCurrencyName,
         _VALUE: value,
@@ -1031,8 +1173,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// users complete this process and move on to the full app experience.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#TUTORIAL_BEGIN
-  Future<void> logTutorialBegin() {
-    return _delegate.logEvent(name: 'tutorial_begin');
+  Future<void> logTutorialBegin({
+    Map<String, Object?>? parameters,
+  }) {
+    _assertParameterTypesAreCorrect(parameters);
+
+    return _delegate.logEvent(
+      name: 'tutorial_begin',
+      parameters: parameters,
+    );
   }
 
   /// Logs the standard `tutorial_complete` event.
@@ -1042,8 +1191,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// completion rate of your on-boarding process.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#TUTORIAL_COMPLETE
-  Future<void> logTutorialComplete() {
-    return _delegate.logEvent(name: 'tutorial_complete');
+  Future<void> logTutorialComplete({
+    Map<String, Object?>? parameters,
+  }) {
+    _assertParameterTypesAreCorrect(parameters);
+
+    return _delegate.logEvent(
+      name: 'tutorial_complete',
+      parameters: parameters,
+    );
   }
 
   /// Logs the standard `unlock_achievement` event with a given achievement
@@ -1057,10 +1213,14 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#UNLOCK_ACHIEVEMENT
   Future<void> logUnlockAchievement({
     required String id,
+    Map<String, Object?>? parameters,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'unlock_achievement',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _ACHIEVEMENT_ID: id,
       }),
     );
@@ -1080,12 +1240,20 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? currency,
     double? value,
     List<AnalyticsEventItem>? items,
+    Map<String, Object?>? parameters,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
+
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
 
     return _delegate.logEvent(
       name: 'view_item',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _CURRENCY: currency,
         _VALUE: value,
         _ITEMS: _marshalItems(items),
@@ -1103,10 +1271,18 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     List<AnalyticsEventItem>? items,
     String? itemListId,
     String? itemListName,
+    Map<String, Object?>? parameters,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
+
     return _delegate.logEvent(
       name: 'view_item_list',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _ITEMS: _marshalItems(items),
         _ITEM_LIST_ID: itemListId,
         _ITEM_LIST_NAME: itemListName,
@@ -1126,10 +1302,18 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? locationId,
     String? promotionId,
     String? promotionName,
+    Map<String, Object?>? parameters,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
+
     return _delegate.logEvent(
       name: 'view_promotion',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _CREATIVE_NAME: creativeName,
         _CREATIVE_SLOT: creativeSlot,
         _ITEMS: _marshalItems(items),
@@ -1148,10 +1332,14 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#VIEW_SEARCH_RESULTS
   Future<void> logViewSearchResults({
     required String searchTerm,
+    Map<String, Object?>? parameters,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
     return _delegate.logEvent(
       name: 'view_search_results',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _SEARCH_TERM: searchTerm,
       }),
     );
@@ -1171,10 +1359,18 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? transactionId,
     String? affiliation,
     List<AnalyticsEventItem>? items,
+    Map<String, Object?>? parameters,
   }) {
+    _assertParameterTypesAreCorrect(parameters);
+
+    items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
+    });
+
     return _delegate.logEvent(
       name: 'refund',
       parameters: filterOutNulls(<String, Object?>{
+        if (parameters != null) ...parameters,
         _CURRENCY: currency,
         _COUPON: coupon,
         _VALUE: value,
@@ -1260,6 +1456,13 @@ List<Map<String, dynamic>>? _marshalItems(List<AnalyticsEventItem>? items) {
 
   return items.map((AnalyticsEventItem item) => item.asMap()).toList();
 }
+
+void _assertParameterTypesAreCorrect(Map<String, Object?>? parameters) => parameters?.forEach((key, value) {
+      assert(
+        value is String || value is num,
+        "'string' OR 'number' must be set as the value of the parameter: $key. $value found instead",
+      );
+    });
 
 /// Reserved event names that cannot be used.
 ///
