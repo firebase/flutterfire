@@ -148,7 +148,8 @@ public class PigeonParser {
     output.put("isEmailVerified", userInfo.isEmailVerified());
     output.put("phoneNumber", userInfo.getPhoneNumber());
     output.put("photoUrl", parsePhotoUrl(userInfo.getPhotoUrl()));
-    output.put("uid", userInfo.getUid());
+    // Can be null on Emulator
+    output.put("uid", userInfo.getUid() == null ? "" : userInfo.getUid());
     output.put("providerId", userInfo.getProviderId());
     output.put("isAnonymous", false);
     return output;

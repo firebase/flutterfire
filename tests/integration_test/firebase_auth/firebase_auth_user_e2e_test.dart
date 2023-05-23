@@ -603,9 +603,8 @@ void main() {
             // Assertions
             expect(
               FirebaseAuth.instance.currentUser!.refreshToken,
-              isA<String>(),
+              isNull,
             );
-            expect(FirebaseAuth.instance.currentUser!.refreshToken, equals(''));
           },
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
           // iOS supports it

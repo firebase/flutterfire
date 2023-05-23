@@ -31,8 +31,8 @@ public class FlutterFirebaseAuthPluginException {
     if (nativeException == null) {
       return new GeneratedAndroidFirebaseAuth.FlutterError("UNKNOWN", null, null);
     }
-
     String code = "UNKNOWN";
+
     String message = nativeException.getMessage();
     Map<String, Object> additionalData = new HashMap<>();
 

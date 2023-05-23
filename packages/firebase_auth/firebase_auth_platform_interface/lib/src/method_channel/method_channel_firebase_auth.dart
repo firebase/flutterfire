@@ -525,11 +525,12 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     String? smsCode,
     bool? forceRecaptchaFlow,
   }) async {
-    assert(
-      phoneNumber == null && smsCode == null ||
-          phoneNumber != null && smsCode != null,
-      "The [smsCode] and the [phoneNumber] must both be either 'null' or a 'String''.",
-    );
+    if (phoneNumber != null && smsCode == null ||
+        phoneNumber == null && smsCode != null) {
+      throw ArgumentError(
+        "The [smsCode] and the [phoneNumber] must both be either 'null' or a 'String''.",
+      );
+    }
 
     try {
       await _api.setSettings(
