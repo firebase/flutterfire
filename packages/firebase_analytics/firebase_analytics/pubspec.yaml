@@ -25,6 +25,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+dependency_overrides:
+  firebase_analytics_platform_interface:
+    path: ../firebase_analytics_platform_interface
+
 flutter:
   plugin:
     platforms:
