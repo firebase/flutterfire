@@ -27,7 +27,9 @@ dev_dependencies:
 
 dependency_overrides:
   firebase_analytics_platform_interface:
-    path: ../firebase_analytics_platform_interface
+    git:
+      url: https://github.com/marcomagno/flutterfire.git
+      path: packages/firebase_analytics/firebase_analytics_platform_interface
 
 flutter:
   plugin:
