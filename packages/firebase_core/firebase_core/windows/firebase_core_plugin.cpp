@@ -91,6 +91,8 @@ PigeonInitializeResponse AppToPigeonInitializeResponse(const App &app) {
   PigeonInitializeResponse response = PigeonInitializeResponse();
   response.set_name(app.name());
   response.set_options(optionsFromFIROptions(app.options()));
+
+  // response.set_plugin_constants(registrar.);
   return response;
 }
 
@@ -104,21 +106,27 @@ void FirebaseCorePlugin::InitializeApp(
                     app_name.c_str());
 
   // Send back the result to Flutter
+  std::cout << "[C++] FirebaseCorePlugin::InitializeApp():" << app_name
+            << std::endl;
   result(AppToPigeonInitializeResponse(*app));
 }
 
 void FirebaseCorePlugin::InitializeCore(
     std::function<void(ErrorOr<flutter::EncodableList> reply)> result) {
-  // TODO: Missing function to get the list of currently initialized apps
   std::vector<PigeonInitializeResponse> initializedApps;
+
+  std::vector<App *> all_apps = App::GetApps();
+  for (const App *app : all_apps) {
+    initializedApps.push_back(AppToPigeonInitializeResponse(*app));
+  }
 
   flutter::EncodableList encodableList;
 
   // Insert the contents of the vector into the EncodableList
-  // for (const auto &item : initializedApps) {
-  //  encodableList.push_back(flutter::EncodableValue(item));
-  //}
-  result(flutter::EncodableList());
+  for (const auto &item : initializedApps) {
+    encodableList.push_back(flutter::CustomEncodableValue(item));
+  }
+  result(encodableList);
 }
 
 void FirebaseCorePlugin::OptionsFromResource(

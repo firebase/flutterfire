@@ -51,29 +51,25 @@ FirebaseRemoteConfigPlugin::~FirebaseRemoteConfigPlugin() = default;
 void FirebaseRemoteConfigPlugin::Activate(
     const PigeonFirebaseApp& app,
     std::function<void(ErrorOr<bool> reply)> result) {
+  std::cout << "[C++] FirebaseRemoteConfigPlugin::Activate() START"
+            << std::endl;
   App* cpp_app = App::GetInstance(app.app_name().c_str());
   RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
 
-  bool flutter_result;
-
   Future<bool> activated_result = rc->Activate();
-  activated_result.OnCompletion(
-      [](const Future<bool>& bool_result, void* user_data) {
-        bool* casted_result = static_cast<bool*>(user_data);
-        *casted_result = bool_result.result();
-      },
-      &flutter_result);
-
-  while (activated_result.status() == ::firebase::kFutureStatusPending) {
-    Sleep(1000);
-  }
-
-  result(flutter_result);
+  activated_result.OnCompletion([result](const Future<bool>& bool_result) {
+    // TODO error handling
+    result(bool_result.result());
+    std::cout << "[C++] FirebaseRemoteConfigPlugin::Activate() COMPLETE"
+              << std::endl;
+  });
 }
 
 void FirebaseRemoteConfigPlugin::EnsureInitialized(
     const PigeonFirebaseApp& app,
     std::function<void(std::optional<FlutterError> reply)> result) {
+  std::cout << "[C++] FirebaseRemoteConfigPlugin::EnsureInitialized() START"
+            << std::endl;
   App* cpp_app = App::GetInstance(app.app_name().c_str());
   RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
 
@@ -84,42 +80,47 @@ void FirebaseRemoteConfigPlugin::EnsureInitialized(
 void FirebaseRemoteConfigPlugin::Fetch(
     const PigeonFirebaseApp& app,
     std::function<void(std::optional<FlutterError> reply)> result) {
+  std::cout << "[C++] FirebaseRemoteConfigPlugin::Fetch() START" << std::endl;
   App* cpp_app = App::GetInstance(app.app_name().c_str());
   RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
 
   Future<void> fetch_result = rc->Fetch();
-  fetch_result.OnCompletion([](const Future<void>& void_result) {
-    // print message?
+  fetch_result.OnCompletion([result](const Future<void>& void_result) {
+    // TODO error handling
+    std::cout << "[C++] FirebaseRemoteConfigPlugin::Fetch() COMPLETE"
+              << std::endl;
+    result(std::nullopt);
   });
-
-  while (fetch_result.status() == ::firebase::kFutureStatusPending) {
-    Sleep(1000);
-  }
-
-  result(std::nullopt);
 }
 
 void FirebaseRemoteConfigPlugin::FetchAndActivate(
     const PigeonFirebaseApp& app,
     std::function<void(ErrorOr<bool> reply)> result) {
-  App* cpp_app = App::GetInstance(app.app_name().c_str());
+  std::cout << "[C++] FirebaseRemoteConfigPlugin::FetchAndActivate() START"
+            << std::endl;
+  // App* cpp_app = App::GetInstance(app.app_name().c_str());
+  App* cpp_app = App::GetInstance();
+  // std::cout << "[C++] get cpp_app:" << app.app_name() << std::endl;
+  std::vector<App*> all_apps = App::GetApps();
+  std::cout << "[C++] all apps size is: " << all_apps.size() << std::endl;
+  if (cpp_app == nullptr) {
+    std::cout << "[C++] cannot get FirebaseApp:" << app.app_name() << std::endl;
+    result(false);
+    return;
+  }
   RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
 
-  bool flutter_result;
+  std::cout << "[C++] Get rc instance" << std::endl;
 
   Future<bool> fa_result = rc->FetchAndActivate();
-  fa_result.OnCompletion(
-      [](const Future<bool>& bool_result, void* user_data) {
-        bool* casted_result = static_cast<bool*>(user_data);
-        *casted_result = bool_result.result();
-      },
-      &flutter_result);
-
-  while (fa_result.status() == ::firebase::kFutureStatusPending) {
-    Sleep(1000);
-  }
-
-  result(flutter_result);
+  std::cout << "[C++] rc->FetchAndActivate()" << std::endl;
+  fa_result.OnCompletion([result](const Future<bool>& bool_result,
+                                  void* user_data) {
+    // TODO error handling
+    result(bool_result.result());
+    std::cout << "[C++] FirebaseRemoteConfigPlugin::FetchAndActivate() COMPLETE"
+              << std::endl;
+  });
 }
 
 ErrorOr<flutter::EncodableMap> FirebaseRemoteConfigPlugin::GetAll(
@@ -174,11 +175,17 @@ ErrorOr<PigeonRemoteConfigValue> FirebaseRemoteConfigPlugin::GetValue(
 void FirebaseRemoteConfigPlugin::SetConfigSettings(
     const PigeonFirebaseApp& app,
     const PigeonRemoteConfigSettings& remote_config_settings,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  // TODO
+  result(std::nullopt);
+}
 
 void FirebaseRemoteConfigPlugin::SetDefaults(
     const PigeonFirebaseApp& app,
     const flutter::EncodableMap& default_parameters,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  // TODO
+  result(std::nullopt);
+}
 
 }  // namespace firebase_remote_config_windows

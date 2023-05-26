@@ -86,6 +86,7 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform {
   /// - **forbidden**:
   ///  - Thrown if the Google Cloud Platform Firebase Remote Config API is disabled
   Future<bool> fetchAndActivate() async {
+    log('remote_config_dart fetchAndActivate');
     bool configChanged = await _delegate.fetchAndActivate();
     return configChanged;
   }

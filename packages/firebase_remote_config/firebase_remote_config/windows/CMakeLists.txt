@@ -45,13 +45,6 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.
 set(MSVC_RUNTIME_MODE MD)
-message("CMAKE_CURRENT_SOURCE_DIR is ${CMAKE_CURRENT_SOURCE_DIR}")
-# set(FIREBASE_CORE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../firebase_core")
-# message("FIREBASE_CORE_DIR is ${FIREBASE_CORE_DIR}")
-# add_subdirectory(${FIREBASE_CORE_DIR})
-#add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
-# target_include_directories(${PLUGIN_NAME} INTERFACE
-#   "${FIREBASE_CPP_SDK_DIR}/include")
 set(firebase_libs firebase_core_plugin firebase_remote_config firebase_app)
 set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32)
 target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}" "${ADDITIONAL_LIBS}")

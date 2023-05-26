@@ -100,11 +100,17 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   FirebaseRemoteConfigPlatform setInitialValues({
     required Map<dynamic, dynamic> remoteConfigValues,
   }) {
-    final fetchTimeout = Duration(seconds: remoteConfigValues['fetchTimeout']);
-    final minimumFetchInterval =
-        Duration(seconds: remoteConfigValues['minimumFetchInterval']);
-    final lastFetchMillis = remoteConfigValues['lastFetchTime'];
-    final lastFetchStatus = remoteConfigValues['lastFetchStatus'];
+    final fetchTimeout = remoteConfigValues.isEmpty
+        ? const Duration(seconds: 60)
+        : Duration(seconds: remoteConfigValues['fetchTimeout']);
+    final minimumFetchInterval = remoteConfigValues.isEmpty
+        ? const Duration(hours: 12)
+        : Duration(seconds: remoteConfigValues['minimumFetchInterval']);
+    final lastFetchMillis =
+        remoteConfigValues.isEmpty ? 0 : remoteConfigValues['lastFetchTime'];
+    final lastFetchStatus = remoteConfigValues.isEmpty
+        ? 'noFetchYet'
+        : remoteConfigValues['lastFetchStatus'];
 
     _settings = PigeonRemoteConfigSettings(
       fetchTimeout: fetchTimeout.inSeconds,
@@ -112,8 +118,11 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     );
     _lastFetchTime = DateTime.fromMillisecondsSinceEpoch(lastFetchMillis);
     _lastFetchStatus = _parseFetchStatus(lastFetchStatus);
-    _activeParameters =
-        _parsePigeonParameters(remoteConfigValues['parameters']);
+    if (remoteConfigValues.isNotEmpty) {
+      _activeParameters =
+          _parsePigeonParameters(remoteConfigValues['parameters']);
+    }
+
     return this;
   }
 
@@ -165,10 +174,10 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   Future<void> fetch() async {
     try {
       await _api.fetch(pigeonDefault);
-      await _updateConfigProperties();
+      // await _updateConfigProperties();
     } catch (exception, stackTrace) {
       // Ensure that fetch status is updated.
-      await _updateConfigProperties();
+      // await _updateConfigProperties();
       convertPlatformException(exception, stackTrace);
     }
   }
@@ -176,13 +185,14 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   @override
   Future<bool> fetchAndActivate() async {
     try {
+      log('method_remote_config fetchAndActivate');
       bool configChanged = await _api.fetchAndActivate(pigeonDefault);
       await _updateConfigParameters();
-      await _updateConfigProperties();
+      //await _updateConfigProperties();
       return configChanged;
     } catch (exception, stackTrace) {
       // Ensure that fetch status is updated.
-      await _updateConfigProperties();
+      // await _updateConfigProperties();
       convertPlatformException(exception, stackTrace);
     }
   }
@@ -268,7 +278,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   ) async {
     try {
       await _api.setConfigSettings(pigeonDefault, pigeonRemoteConfigSettings);
-      await _updateConfigProperties();
+      //await _updateConfigProperties();
     } catch (exception, stackTrace) {
       convertPlatformException(exception, stackTrace);
     }
