@@ -114,8 +114,7 @@ void FirebaseRemoteConfigPlugin::FetchAndActivate(
 
   Future<bool> fa_result = rc->FetchAndActivate();
   std::cout << "[C++] rc->FetchAndActivate()" << std::endl;
-  fa_result.OnCompletion([result](const Future<bool>& bool_result,
-                                  void* user_data) {
+  fa_result.OnCompletion([result](const Future<bool>& bool_result) {
     // TODO error handling
     result(bool_result.result());
     std::cout << "[C++] FirebaseRemoteConfigPlugin::FetchAndActivate() COMPLETE"
