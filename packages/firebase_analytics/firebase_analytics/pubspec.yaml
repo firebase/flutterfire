@@ -25,12 +25,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-dependency_overrides:
-  firebase_analytics_platform_interface:
-    git:
-      url: https://github.com/marcomagno/flutterfire.git
-      path: packages/firebase_analytics/firebase_analytics_platform_interface
-
 flutter:
   plugin:
     platforms:
