@@ -1,26 +1,69 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 
+/// Describes what kind of placholder should be used while the image is
+/// loading.
 abstract class LoadingStateVariant {
   const LoadingStateVariant({
+    /// {@macro ui.storage.image.loadingStateVariant.curve}
     Curve? curve,
+
+    /// {@macro ui.storage.image.loadingStateVariant.animationDuration}
     Duration? animationDuration,
   })  : animationDuration =
             animationDuration ?? const Duration(milliseconds: 200),
         curve = curve ?? Curves.easeOutExpo;
 
+  /// A solid color placeholder.
   factory LoadingStateVariant.solidColor({
+    /// A color of the container to be used as a placeholder.
     Color? color,
-    Curve? curve,
-    Duration? animationDuration,
-  }) = SolidColor;
 
+    /// {@macro ui.storage.image.loadingStateVariant.curve}
+    Curve? curve,
+
+    /// {@macro ui.storage.image.loadingStateVariant.animationDuration}
+    Duration? animationDuration,
+  }) = _SolidColorLoadingStateVariant;
+
+  /// A placeholder generated from a blur hash.
+  /// See https://pub.dev/packages/flutter_blurhash.
+  ///
+  /// Requires a "blurHash" key to be present on the image's metadata.
+  factory LoadingStateVariant.blurHash({
+    /// {@macro ui.storage.image.loadingStateVariant.curve}
+    Curve? curve,
+
+    /// {@macro ui.storage.image.loadingStateVariant.animationDuration}
+    Duration? animationDuration,
+  }) = _BlurHashLoadingStateVariant;
+
+  /// A default [CircularProgressIndicator] or [CupertinoActivityIndicator]
+  /// will be used as a placeholder.
+  factory LoadingStateVariant.loadingIndicator({
+    double size,
+    double strokeWidth,
+    Color? color,
+  }) = _LoadingIndicatorLoadingStateVariant;
+
+  /// {@template ui.storage.image.loadingStateVariant.animationDuration}
+  /// The duration of the transtion between loading placeholder and the actual
+  /// image.
+  /// {@endtemplate}
   final Duration animationDuration;
+
+  /// {@template ui.storage.image.loadingStateVariant.curve}
+  /// The curve of the transtion between loading placeholder and the actual
+  /// image.
+  /// {@endtemplate}
   final Curve curve;
 }
 
-class SolidColor extends LoadingStateVariant {
-  const SolidColor({
+class _SolidColorLoadingStateVariant extends LoadingStateVariant {
+  const _SolidColorLoadingStateVariant({
     this.color,
     Curve? curve,
     Duration? animationDuration,
@@ -29,6 +72,29 @@ class SolidColor extends LoadingStateVariant {
   final Color? color;
 }
 
+class _BlurHashLoadingStateVariant extends LoadingStateVariant {
+  const _BlurHashLoadingStateVariant({
+    Curve? curve,
+    Duration? animationDuration,
+  }) : super(curve: curve, animationDuration: animationDuration);
+}
+
+class _LoadingIndicatorLoadingStateVariant extends LoadingStateVariant {
+  final double size;
+  final double strokeWidth;
+  final Color? color;
+
+  const _LoadingIndicatorLoadingStateVariant({
+    this.size = 32,
+    this.strokeWidth = 2,
+    this.color,
+  }) : super(
+          curve: Curves.easeOutExpo,
+          animationDuration: const Duration(milliseconds: 200),
+        );
+}
+
+/// A widget that downloads and displays an image from Firebase Storage.
 class StorageImage extends StatefulWidget {
   /// A reference to the image in Firebase Storage.
   final Reference ref;
@@ -44,16 +110,16 @@ class StorageImage extends StatefulWidget {
     StackTrace? stackTrace,
   ])? errorBuilder;
 
-  /// See [Image.scale]
+  /// See [NetworkImage.scale]
   final double scale;
 
   /// See [Image.alignment]
   final AlignmentGeometry alignment;
 
-  /// See [Image.cacheHeight]
+  /// See [Image.network] docs
   final int? cacheHeight;
 
-  /// See [Image.cacheWidth]
+  /// See [Image.network] docs
   final int? cacheWidth;
 
   /// See [Image.centerSlice]
@@ -132,7 +198,7 @@ class StorageImage extends StatefulWidget {
     this.opacity,
     this.semanticLabel,
     this.width,
-    this.loadingStateVariant = const SolidColor(),
+    this.loadingStateVariant = const _SolidColorLoadingStateVariant(),
   });
 
   @override
@@ -147,15 +213,35 @@ class _StorageImageState extends State<StorageImage> {
     Widget child,
     ImageChunkEvent? loadingProgress,
   ) {
-    if (widget.loadingStateVariant is SolidColor) {
-      Widget placeholder = _SolidColorPlaceholder(
+    if (widget.loadingStateVariant is _SolidColorLoadingStateVariant) {
+      Widget placeholder = _SolidColorLoadingStateVariantPlaceholder(
         animationDuration: widget.loadingStateVariant.animationDuration,
         curve: widget.loadingStateVariant.curve,
-        color: (widget.loadingStateVariant as SolidColor).color,
+        color: (widget.loadingStateVariant as _SolidColorLoadingStateVariant)
+            .color,
         loadingProgress: loadingProgress,
         child: child,
       );
       return placeholder;
+    } else if (widget.loadingStateVariant is _BlurHashLoadingStateVariant) {
+      Widget placeholder = _BlurHashLoadingStateVariantPlaceholder(
+        ref: widget.ref,
+        animationDuration: widget.loadingStateVariant.animationDuration,
+        curve: widget.loadingStateVariant.curve,
+        loadingProgress: loadingProgress,
+        child: child,
+      );
+      return placeholder;
+    } else if (widget.loadingStateVariant
+        is _LoadingIndicatorLoadingStateVariant) {
+      final config =
+          widget.loadingStateVariant as _LoadingIndicatorLoadingStateVariant;
+
+      return LoadingIndicator(
+        borderWidth: config.strokeWidth,
+        size: config.size,
+        color: config.color,
+      );
     }
 
     return child;
@@ -208,16 +294,54 @@ class _StorageImageState extends State<StorageImage> {
       },
     );
   }
+
+  @override
+  void didUpdateWidget(StorageImage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.ref.fullPath != widget.ref.fullPath) {
+      downloadUrlFuture = widget.ref.getDownloadURL();
+    }
+  }
 }
 
-class _SolidColorPlaceholder extends StatelessWidget {
+class _PlaceholderTransition extends StatelessWidget {
+  final Widget child;
+  final Duration animationDuration;
+  final Curve curve;
+  final ImageChunkEvent? loadingProgress;
+
+  const _PlaceholderTransition({
+    required this.animationDuration,
+    required this.curve,
+    this.loadingProgress,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var opacity = 0.0;
+
+    if (loadingProgress != null && loadingProgress!.complete()) {
+      opacity = 1.0;
+    }
+
+    return AnimatedOpacity(
+      opacity: opacity,
+      duration: animationDuration,
+      curve: curve,
+    );
+  }
+}
+
+class _SolidColorLoadingStateVariantPlaceholder extends StatelessWidget {
   final Color? color;
   final Widget child;
   final Duration animationDuration;
   final Curve curve;
   final ImageChunkEvent? loadingProgress;
 
-  const _SolidColorPlaceholder({
+  const _SolidColorLoadingStateVariantPlaceholder({
     required this.child,
     this.color,
     this.animationDuration = const Duration(milliseconds: 200),
@@ -235,21 +359,80 @@ class _SolidColorPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var opacity = 0.0;
-
-    if (loadingProgress != null && loadingProgress!.complete()) {
-      opacity = 1.0;
-    }
-
     return Container(
       color: resolveLoadingColor(context),
-      child: AnimatedOpacity(
-        opacity: opacity,
-        duration: animationDuration,
+      child: _PlaceholderTransition(
+        loadingProgress: loadingProgress,
+        animationDuration: animationDuration,
         curve: curve,
         child: child,
       ),
     );
+  }
+}
+
+class _BlurHashLoadingStateVariantPlaceholder extends StatefulWidget {
+  final Reference ref;
+  final Duration animationDuration;
+  final Curve curve;
+  final ImageChunkEvent? loadingProgress;
+  final Widget child;
+
+  const _BlurHashLoadingStateVariantPlaceholder({
+    required this.ref,
+    required this.animationDuration,
+    required this.curve,
+    this.loadingProgress,
+    required this.child,
+  });
+
+  @override
+  State<_BlurHashLoadingStateVariantPlaceholder> createState() =>
+      _BlurHashLoadingStateVariantPlaceholderState();
+}
+
+class _BlurHashLoadingStateVariantPlaceholderState
+    extends State<_BlurHashLoadingStateVariantPlaceholder> {
+  late Future<FullMetadata> metaDataFuture = widget.ref.getMetadata();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: metaDataFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasError || !snapshot.hasData) {
+          return const SizedBox.shrink();
+        }
+
+        final metadata = snapshot.requireData;
+
+        if (metadata.customMetadata == null ||
+            !metadata.customMetadata!.containsKey('blurHash')) {
+          return const SizedBox.shrink();
+        }
+
+        return Stack(
+          children: [
+            BlurHash(hash: metadata.customMetadata!['blurHash']!),
+            _PlaceholderTransition(
+              loadingProgress: widget.loadingProgress,
+              animationDuration: widget.animationDuration,
+              curve: widget.curve,
+              child: widget.child,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void didUpdateWidget(_BlurHashLoadingStateVariantPlaceholder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.ref.fullPath != widget.ref.fullPath) {
+      metaDataFuture = widget.ref.getMetadata();
+    }
   }
 }
 

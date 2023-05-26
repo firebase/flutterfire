@@ -18,6 +18,7 @@ dependencies:
   path: ^1.8.2
   uuid: ^3.0.7
   file_selector: ^0.9.2+4
+  flutter_blurhash: ^0.7.0
 
 dev_dependencies:
   flutter_test:
