@@ -1,3 +1,7 @@
+## 1.0.0-dev.60
+
+ - **FIX**: typo in build.yaml ([#11027](https://github.com/firebase/flutterfire/issues/11027)). ([f9cdcfea](https://github.com/firebase/flutterfire/commit/f9cdcfea96b33a02401c4ea3ed2c69b513e573ea))
+
 ## 1.0.0-dev.59
 
  - **FIX**(odm_generator): update deprecated check `isDynamic` ([#10937](https://github.com/firebase/flutterfire/issues/10937)). ([bb9c5523](https://github.com/firebase/flutterfire/commit/bb9c5523964d9e11a82f80ceb74d808808cc2a4c))

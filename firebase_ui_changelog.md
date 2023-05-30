@@ -2,6 +2,48 @@
 
 All notable changes for firebase_ui packages
 
+## 2023-05-30
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.4.2`](#firebase_ui_auth---v142)
+ - [`firebase_ui_firestore` - `v1.5.2`](#firebase_ui_firestore---v152)
+ - [`firebase_ui_oauth` - `v1.4.2`](#firebase_ui_oauth---v142)
+ - [`firebase_ui_oauth_google` - `v1.2.2`](#firebase_ui_oauth_google---v122)
+ - [`firebase_ui_oauth_twitter` - `v1.2.2`](#firebase_ui_oauth_twitter---v122)
+ - [`firebase_ui_oauth_apple` - `v1.2.2`](#firebase_ui_oauth_apple---v122)
+ - [`firebase_ui_oauth_facebook` - `v1.2.2`](#firebase_ui_oauth_facebook---v122)
+ - [`firebase_ui_database` - `v1.3.2`](#firebase_ui_database---v132)
+ - [`firebase_ui_storage` - `v0.1.0-dev.5`](#firebase_ui_storage---v010-dev5)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_firestore` - `v1.5.2`
+ - `firebase_ui_oauth` - `v1.4.2`
+ - `firebase_ui_oauth_google` - `v1.2.2`
+ - `firebase_ui_oauth_twitter` - `v1.2.2`
+ - `firebase_ui_oauth_apple` - `v1.2.2`
+ - `firebase_ui_oauth_facebook` - `v1.2.2`
+ - `firebase_ui_database` - `v1.3.2`
+ - `firebase_ui_storage` - `v0.1.0-dev.5`
+
+---
+
+#### `firebase_ui_auth` - `v1.4.2`
+
+ - **FIX**(firebase_ui_auth): Error added in ProfileScreen in firebase_ui_auth 1.4.0 ([#10957](https://github.com/firebase/flutterfire/issues/10957)). ([12284b3b](https://github.com/firebase/flutterfire/commit/12284b3b0b9813c4ec8fe8678f48d6b38d642989))
+
+
 ## 2023-05-16
 
 ### Changes

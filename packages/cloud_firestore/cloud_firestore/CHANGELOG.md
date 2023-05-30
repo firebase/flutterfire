@@ -1,3 +1,8 @@
+## 4.8.0
+
+ - **FEAT**(firestore): add the ability to enable debug logging ([#11019](https://github.com/firebase/flutterfire/issues/11019)). ([ec4c4474](https://github.com/firebase/flutterfire/commit/ec4c44742d33c5032075310efc2c567bf0a5fa35))
+ - **DOCS**(firestore): improve wording of what `set()` API does ([#11038](https://github.com/firebase/flutterfire/issues/11038)). ([883cbff9](https://github.com/firebase/flutterfire/commit/883cbff92f1245d7e96b7f845e3f363d8dbb0441))
+
 ## 4.7.1
 
  - **FIX**(firestore): fix emulator reload on Flutter 3.10 ([#10965](https://github.com/firebase/flutterfire/issues/10965)). ([f099eb0b](https://github.com/firebase/flutterfire/commit/f099eb0bd010af6ba0fae1fdb5ea5cd6a2cb680f))

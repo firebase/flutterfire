@@ -1,3 +1,7 @@
+## 2.13.1
+
+ - **FIX**(core,windows): building improvements ([#10972](https://github.com/firebase/flutterfire/issues/10972)). ([4897fa02](https://github.com/firebase/flutterfire/commit/4897fa02e2963961f24f1ff3a5b8d5e890e919ce))
+
 ## 2.13.0
 
  - **FEAT**: bump Firebase Android SDK to 32.0.0 ([#10913](https://github.com/firebase/flutterfire/issues/10913)). ([77459105](https://github.com/firebase/flutterfire/commit/774591050a94e9162eef0aee49bfc7fab97db1c6))
