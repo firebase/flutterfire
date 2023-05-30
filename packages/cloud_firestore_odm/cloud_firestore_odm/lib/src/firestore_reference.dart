@@ -79,7 +79,7 @@ abstract class FirestoreDocumentReference<Model,
   /// Sets data on the document, overwriting any existing data. If the document
   /// does not yet exist, it will be created.
   ///
-  /// If [SetOptions] are provided, the data will be merged into an existing
+  /// If [SetOptions] are provided, the data can be merged into an existing
   /// document instead of overwriting.
   Future<void> set(Model model, [SetOptions? setOptions]) {
     return reference.set(model, setOptions);
