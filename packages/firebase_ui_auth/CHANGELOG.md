@@ -1,3 +1,7 @@
+## 1.4.2
+
+ - **FIX**(firebase_ui_auth): Error added in ProfileScreen in firebase_ui_auth 1.4.0 ([#10957](https://github.com/firebase/flutterfire/issues/10957)). ([12284b3b](https://github.com/firebase/flutterfire/commit/12284b3b0b9813c4ec8fe8678f48d6b38d642989))
+
 ## 1.4.1
 
  - Update a dependency to the latest release.

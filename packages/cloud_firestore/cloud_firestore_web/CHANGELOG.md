@@ -1,3 +1,7 @@
+## 3.6.0
+
+ - **FEAT**(firestore): add the ability to enable debug logging ([#11019](https://github.com/firebase/flutterfire/issues/11019)). ([ec4c4474](https://github.com/firebase/flutterfire/commit/ec4c44742d33c5032075310efc2c567bf0a5fa35))
+
 ## 3.5.1
 
  - Update a dependency to the latest release.
