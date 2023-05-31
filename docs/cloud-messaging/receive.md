@@ -1,5 +1,5 @@
-Project: /docs/cloud-messaging/\_project.yaml
-Book: /docs/\_book.yaml
+Project: /docs/cloud-messaging/_project.yaml
+Book: /docs/_book.yaml
 page_type: guide
 
 {% include "_shared/apis/console/_local_variables.html" %}
@@ -19,7 +19,6 @@ is first important to establish the various states a device can be in:
 | -------------- | ---------------------------------------------------------------- |
 | **Foreground** | When the application is open, in view and in use.                |
 | **Background** | When the application is open, but in the background (minimized). |
-
 : : This typically occurs when the user has pressed the "home" button
 : : on the device, has switched to another app using the app switcher,
 : : or has the application open in a different tab (web).
@@ -125,9 +124,7 @@ There are a few things to keep in mind about your background message handler:
 
 1. It must not be an anonymous function.
 2. It must be a top-level function (e.g. not a class method which requires initialization).
-3. It must be annotated with `@pragma('vm:entry-point')` right above the function declaration (otherwise it may be removed during tree shaking for release mode).
-
-Note: The `@pragma('vm:entry-point')` annotation is a requirement when using Flutter version `3.3.0` or higher.
+3. When using Flutter version 3.3.0 or higher, the message handler must be annotated with `@pragma('vm:entry-point')` right above the function declaration (otherwise it may be removed during tree shaking for release mode).
 
 ```dart
 @pragma('vm:entry-point')
@@ -160,26 +157,24 @@ Use the service worker to handle background messages.
 To get started, create a new file in the your `web` directory, and call it `firebase-messaging-sw.js`:
 
 ```js title=web/firebase-messaging-sw.js
-importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js');
-importScripts(
-  'https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js'
-);
+importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js");
+importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js");
 
 firebase.initializeApp({
-  apiKey: '...',
-  authDomain: '...',
-  databaseURL: '...',
-  projectId: '...',
-  storageBucket: '...',
-  messagingSenderId: '...',
-  appId: '...',
+  apiKey: "...",
+  authDomain: "...",
+  databaseURL: "...",
+  projectId: "...",
+  storageBucket: "...",
+  messagingSenderId: "...",
+  appId: "...",
 });
 
 const messaging = firebase.messaging();
 
 // Optional:
 messaging.onBackgroundMessage((message) => {
-  console.log('onBackgroundMessage', message);
+  console.log("onBackgroundMessage", message);
 });
 ```
 
@@ -402,7 +397,6 @@ import {
   experimentalSetDeliveryMetricsExportedToBigQueryEnabled,
   getMessaging,
 } from 'firebase/messaging/sw';
-
 ...
 
 const messaging = getMessaging(app);
@@ -419,86 +413,89 @@ If you are using Firebase phone authentication, you must add the Firebase Auth p
 
 ### Step 1 - Add a notification service extension
 
-- From XCode top menu go to: **File > New > Target...**
-- A modal will present a list of possible targets, scroll down or use the filter to select **Notification Service Extension**. Click **Next**.
-- Add a product name (use "ImageNotification" to follow along with with this tutorial), set Language to Objective-C and click **Finish**.
-- Enable the scheme by clicking **Activate**.
+1.  In Xcode, click **File > New > Target...**
+1.  A modal will present a list of possible targets; scroll down or use the filter to select **Notification Service Extension**. Click **Next**.
+1.  Add a product name (use "ImageNotification" to follow along with this tutorial), set the language to Objective-C, and click **Finish**.
+1.  Enable the scheme by clicking **Activate**.
 
 ### Step 2 - Add target to the Podfile
 
-Ensure that your new extension has access to the Firebase/Messaging pod by adding it in the Podfile:
+Ensure that your new extension has access to the `Firebase/Messaging` pod by adding it in the Podfile:
 
-- From the Navigator open the Podfile: **Pods > Podfile**
-- Scroll down to the bottom of the file and add:
+1.  From the Navigator, open the Podfile: **Pods > Podfile**
 
-```ruby
-target 'ImageNotification' do
-  use_frameworks!
-  pod 'Firebase/Auth' # Add this line if you are using FirebaseAuth phone authentication
-  pod 'Firebase/Messaging'
-end
-```
+1.  Scroll down to the bottom of the file and add:
 
-- Install or update your pods using `pod install` from the ios and/or macos directory.
+    ```ruby
+    target 'ImageNotification' do
+      use_frameworks!
+      pod 'Firebase/Auth' # Add this line if you are using FirebaseAuth phone authentication
+      pod 'Firebase/Messaging'
+    end
+    ```
+
+1.  Install or update your pods using `pod install` from the `ios` or `macos` directory.
 
 ### Step 3 - Use the extension helper
 
-At this point everything should still be running normally. The final step is invoking the extension helper.
+At this point, everything should still be running normally. The final step is invoking the extension helper.
 
-- From the navigator select your ImageNotification extension
-- Open the `NotificationService.m` file
-- At the top of the file import `FirebaseMessaging.h` right after the `NotificationService.h` as shown below:
+1.  From the navigator, select your ImageNotification extension
 
-Replace the content of `NotificationService.m` with
+1.  Open the `NotificationService.m` file.
 
-```Objective-C
-#import "NotificationService.h"
-#import "FirebaseMessaging.h"
-#import "FirebaseAuth.h" // Add this line if you are using FirebaseAuth phone authentication
-#import <UIKit/UIKit.h> // Add this line if you are using FirebaseAuth phone authentication
+1.  At the top of the file, import `FirebaseMessaging.h` right after the `NotificationService.h` as shown below.
 
-@interface NotificationService ()
+    Replace the content of `NotificationService.m` with:
 
-@property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
-@property (nonatomic, strong) UNMutableNotificationContent *bestAttemptContent;
+    ```objc
+    #import "NotificationService.h"
+    #import "FirebaseMessaging.h"
+    #import "FirebaseAuth.h" // Add this line if you are using FirebaseAuth phone authentication
+    #import <UIKit/UIKit.h> // Add this line if you are using FirebaseAuth phone authentication
 
-@end
+    @interface NotificationService ()
 
-@implementation NotificationService
+    @property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
+    @property (nonatomic, strong) UNMutableNotificationContent *bestAttemptContent;
 
-/* Uncomment this if you are using Firebase Auth
-- (BOOL)application:(UIApplication *)app
-            openURL:(NSURL *)url
-            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
-  if ([[FIRAuth auth] canHandleURL:url]) {
-    return YES;
-  }
-  return NO;
-}
+    @end
 
-- (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {
-  for (UIOpenURLContext *urlContext in URLContexts) {
-    [FIRAuth.auth canHandleURL:urlContext.URL];
-  }
-}
-*/
+    @implementation NotificationService
 
-- (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
-    self.contentHandler = contentHandler;
-    self.bestAttemptContent = [request.content mutableCopy];
+    /* Uncomment this if you are using Firebase Auth
+    - (BOOL)application:(UIApplication *)app
+                openURL:(NSURL *)url
+                options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+      if ([[FIRAuth auth] canHandleURL:url]) {
+        return YES;
+      }
+      return NO;
+    }
 
-    // Modify the notification content here...
-    [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
-}
+    - (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {
+      for (UIOpenURLContext *urlContext in URLContexts) {
+        [FIRAuth.auth canHandleURL:urlContext.URL];
+      }
+    }
+    */
 
-- (void)serviceExtensionTimeWillExpire {
-    // Called just before the extension will be terminated by the system.
-    // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
-    self.contentHandler(self.bestAttemptContent);
-}
+    - (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
+        self.contentHandler = contentHandler;
+        self.bestAttemptContent = [request.content mutableCopy];
 
-@end
-```
+        // Modify the notification content here...
+        [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
+    }
+
+    - (void)serviceExtensionTimeWillExpire {
+        // Called just before the extension will be terminated by the system.
+        // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
+        self.contentHandler(self.bestAttemptContent);
+    }
+
+    @end
+    ```
 
 ### Step 4 - Add the image to the payload
 

@@ -118,7 +118,7 @@ To help make this decision, you can look at App Check metrics for the
 services you use:
 
 - [Monitor App Check request metrics](/docs/app-check/monitor-metrics) for
-  Realtime Database, Cloud Firestore, and Cloud Storage.
+  Realtime Database, Cloud Firestore, Cloud Storage, and Authentication.
 - [Monitor App Check request metrics for Cloud Functions](/docs/app-check/monitor-functions-metrics).
 
 ### Enable App Check enforcement {:#enforce}
@@ -127,7 +127,7 @@ When you understand how App Check will affect your users and you're ready to
 proceed, you can enable App Check enforcement:
 
 - [Enable App Check enforcement](/docs/app-check/enable-enforcement) for
-  Realtime Database, Cloud Firestore, and Cloud Storage.
+  Realtime Database, Cloud Firestore, Cloud Storage, and Authentication.
 - [Enable App Check enforcement for Cloud Functions](/docs/app-check/cloud-functions).
 
 ### Use App Check in debug environments {:#debug}
