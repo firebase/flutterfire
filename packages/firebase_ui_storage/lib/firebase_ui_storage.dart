@@ -18,3 +18,5 @@ export 'src/lib.dart' show FirebaseUIStorage;
 export 'src/widgets/upload_button.dart' show UploadButton;
 export 'src/widgets/progress_indicator.dart'
     show TaskProgressIndicator, TaskProgressWidget, ErrorBuilder;
+
+export 'src/widgets/image.dart' show StorageImage, LoadingStateVariant;

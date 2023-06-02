@@ -1,7 +1,13 @@
+// Copyright 2023, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
+import 'dart:async';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart' show BlurHash;
 import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 
 /// Describes what kind of placholder should be used while the image is
@@ -14,7 +20,7 @@ abstract class LoadingStateVariant {
     /// {@macro ui.storage.image.loadingStateVariant.animationDuration}
     Duration? animationDuration,
   })  : animationDuration =
-            animationDuration ?? const Duration(milliseconds: 200),
+            animationDuration ?? const Duration(milliseconds: 1000),
         curve = curve ?? Curves.easeOutExpo;
 
   /// A solid color placeholder.
@@ -39,6 +45,11 @@ abstract class LoadingStateVariant {
 
     /// {@macro ui.storage.image.loadingStateVariant.animationDuration}
     Duration? animationDuration,
+
+    /// Pre-loaded blur-hash string.
+    /// If not specified – the blur-hash will be fetched from the image's
+    /// metadata.
+    String? value,
   }) = _BlurHashLoadingStateVariant;
 
   /// A default [CircularProgressIndicator] or [CupertinoActivityIndicator]
@@ -73,9 +84,12 @@ class _SolidColorLoadingStateVariant extends LoadingStateVariant {
 }
 
 class _BlurHashLoadingStateVariant extends LoadingStateVariant {
+  final String? value;
+
   const _BlurHashLoadingStateVariant({
     Curve? curve,
     Duration? animationDuration,
+    this.value,
   }) : super(curve: curve, animationDuration: animationDuration);
 }
 
@@ -90,7 +104,7 @@ class _LoadingIndicatorLoadingStateVariant extends LoadingStateVariant {
     this.color,
   }) : super(
           curve: Curves.easeOutExpo,
-          animationDuration: const Duration(milliseconds: 200),
+          animationDuration: const Duration(milliseconds: 1000),
         );
 }
 
@@ -205,42 +219,82 @@ class StorageImage extends StatefulWidget {
   State<StorageImage> createState() => _StorageImageState();
 }
 
-class _StorageImageState extends State<StorageImage> {
+class _StorageImageState extends State<StorageImage>
+    with SingleTickerProviderStateMixin {
   late Future<String> downloadUrlFuture = widget.ref.getDownloadURL();
+
+  LoadingStateVariant get loadingStateVariant => widget.loadingStateVariant;
+  Reference get ref => widget.ref;
+
+  late final ctrl = widget.opacity == null
+      ? AnimationController(
+          vsync: this,
+          duration: loadingStateVariant.animationDuration,
+        )
+      : null;
+
+  late final Animation<double> opacity = widget.opacity ??
+      CurvedAnimation(
+        parent: ctrl!,
+        curve: loadingStateVariant.curve,
+      );
+
+  void maybeAnimate() {
+    if (ctrl == null) return;
+    if (ctrl!.isAnimating) return;
+    if (ctrl!.value == 1.0) return;
+
+    ctrl!.forward();
+  }
+
+  GlobalKey placeholderKey = GlobalKey();
 
   Widget loadingBuilder(
     BuildContext context,
     Widget child,
     ImageChunkEvent? loadingProgress,
   ) {
-    if (widget.loadingStateVariant is _SolidColorLoadingStateVariant) {
-      Widget placeholder = _SolidColorLoadingStateVariantPlaceholder(
-        animationDuration: widget.loadingStateVariant.animationDuration,
-        curve: widget.loadingStateVariant.curve,
-        color: (widget.loadingStateVariant as _SolidColorLoadingStateVariant)
-            .color,
-        loadingProgress: loadingProgress,
-        child: child,
-      );
-      return placeholder;
-    } else if (widget.loadingStateVariant is _BlurHashLoadingStateVariant) {
-      Widget placeholder = _BlurHashLoadingStateVariantPlaceholder(
-        ref: widget.ref,
-        animationDuration: widget.loadingStateVariant.animationDuration,
-        curve: widget.loadingStateVariant.curve,
-        loadingProgress: loadingProgress,
-        child: child,
-      );
-      return placeholder;
-    } else if (widget.loadingStateVariant
-        is _LoadingIndicatorLoadingStateVariant) {
-      final config =
-          widget.loadingStateVariant as _LoadingIndicatorLoadingStateVariant;
+    if (loadingProgress == null || loadingProgress.complete()) {
+      maybeAnimate();
+    }
 
-      return LoadingIndicator(
-        borderWidth: config.strokeWidth,
-        size: config.size,
-        color: config.color,
+    if (loadingStateVariant is _SolidColorLoadingStateVariant) {
+      final Widget placeholder = _SolidColorLoadingStateVariantPlaceholder(
+        key: placeholderKey,
+        color: (loadingStateVariant as _SolidColorLoadingStateVariant).color,
+        child: child,
+      );
+      return placeholder;
+    }
+
+    if (loadingStateVariant is _BlurHashLoadingStateVariant) {
+      Widget placeholder = _BlurHashLoadingStateVariantPlaceholder(
+        key: placeholderKey,
+        ref: ref,
+        value: (loadingStateVariant as _BlurHashLoadingStateVariant).value,
+        curve: loadingStateVariant.curve,
+        duration: loadingStateVariant.animationDuration,
+        child: child,
+      );
+      return placeholder;
+    }
+
+    if (loadingStateVariant is _LoadingIndicatorLoadingStateVariant) {
+      final config =
+          loadingStateVariant as _LoadingIndicatorLoadingStateVariant;
+
+      return Stack(
+        key: placeholderKey,
+        alignment: Alignment.center,
+        children: [
+          Positioned.fill(child: child),
+          if (loadingProgress != null && !loadingProgress.complete())
+            LoadingIndicator(
+              size: config.size,
+              borderWidth: config.strokeWidth,
+              color: config.color,
+            ),
+        ],
       );
     }
 
@@ -280,7 +334,7 @@ class _StorageImageState extends State<StorageImage> {
             loadingBuilder: widget.loadingBuilder ?? loadingBuilder,
             matchTextDirection: widget.matchTextDirection,
             repeat: widget.repeat,
-            opacity: widget.opacity,
+            opacity: opacity,
             semanticLabel: widget.semanticLabel,
             width: widget.width,
           );
@@ -288,8 +342,11 @@ class _StorageImageState extends State<StorageImage> {
 
         return (widget.loadingBuilder ?? loadingBuilder).call(
           context,
-          const SizedBox.shrink(),
-          null,
+          Container(),
+          const ImageChunkEvent(
+            cumulativeBytesLoaded: 0,
+            expectedTotalBytes: 9007199254740992,
+          ),
         );
       },
     );
@@ -303,50 +360,22 @@ class _StorageImageState extends State<StorageImage> {
       downloadUrlFuture = widget.ref.getDownloadURL();
     }
   }
-}
-
-class _PlaceholderTransition extends StatelessWidget {
-  final Widget child;
-  final Duration animationDuration;
-  final Curve curve;
-  final ImageChunkEvent? loadingProgress;
-
-  const _PlaceholderTransition({
-    required this.animationDuration,
-    required this.curve,
-    this.loadingProgress,
-    required this.child,
-  });
 
   @override
-  Widget build(BuildContext context) {
-    var opacity = 0.0;
-
-    if (loadingProgress != null && loadingProgress!.complete()) {
-      opacity = 1.0;
-    }
-
-    return AnimatedOpacity(
-      opacity: opacity,
-      duration: animationDuration,
-      curve: curve,
-    );
+  void dispose() {
+    ctrl?.dispose();
+    super.dispose();
   }
 }
 
 class _SolidColorLoadingStateVariantPlaceholder extends StatelessWidget {
   final Color? color;
   final Widget child;
-  final Duration animationDuration;
-  final Curve curve;
-  final ImageChunkEvent? loadingProgress;
 
   const _SolidColorLoadingStateVariantPlaceholder({
+    super.key,
     required this.child,
     this.color,
-    this.animationDuration = const Duration(milliseconds: 200),
-    this.curve = Curves.easeOutExpo,
-    required this.loadingProgress,
   });
 
   Color resolveLoadingColor(BuildContext context) {
@@ -361,29 +390,25 @@ class _SolidColorLoadingStateVariantPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: resolveLoadingColor(context),
-      child: _PlaceholderTransition(
-        loadingProgress: loadingProgress,
-        animationDuration: animationDuration,
-        curve: curve,
-        child: child,
-      ),
+      child: child,
     );
   }
 }
 
 class _BlurHashLoadingStateVariantPlaceholder extends StatefulWidget {
   final Reference ref;
-  final Duration animationDuration;
-  final Curve curve;
-  final ImageChunkEvent? loadingProgress;
   final Widget child;
+  final String? value;
+  final Duration duration;
+  final Curve curve;
 
   const _BlurHashLoadingStateVariantPlaceholder({
+    super.key,
     required this.ref,
-    required this.animationDuration,
-    required this.curve,
-    this.loadingProgress,
     required this.child,
+    this.value,
+    this.duration = const Duration(milliseconds: 1000),
+    this.curve = Curves.easeOutExpo,
   });
 
   @override
@@ -392,38 +417,62 @@ class _BlurHashLoadingStateVariantPlaceholder extends StatefulWidget {
 }
 
 class _BlurHashLoadingStateVariantPlaceholderState
-    extends State<_BlurHashLoadingStateVariantPlaceholder> {
-  late Future<FullMetadata> metaDataFuture = widget.ref.getMetadata();
+    extends State<_BlurHashLoadingStateVariantPlaceholder>
+    with SingleTickerProviderStateMixin {
+  late FutureOr<String?> blurHash = loadHash();
+
+  double opacity = 0.0;
+
+  FutureOr<String?> loadHash() async {
+    if (widget.value != null) return widget.value;
+
+    return widget.ref
+        .getMetadata()
+        .then((value) => value.customMetadata?['blurHash']);
+  }
+
+  Widget buildContent(String hash) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: AnimatedOpacity(
+            opacity: opacity,
+            duration: widget.duration,
+            curve: widget.curve,
+            child: BlurHash(
+              hash: hash,
+              onDecoded: () {
+                setState(() {
+                  opacity = 1.0;
+                });
+              },
+            ),
+          ),
+        ),
+        Positioned.fill(child: widget.child),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: metaDataFuture,
-      builder: (context, snapshot) {
-        if (snapshot.hasError || !snapshot.hasData) {
-          return const SizedBox.shrink();
-        }
+    if (blurHash is Future<String?>) {
+      return FutureBuilder(
+        future: blurHash as Future<String?>,
+        builder: (context, snapshot) {
+          if (snapshot.hasError || !snapshot.hasData) {
+            return const SizedBox.shrink();
+          }
+          final hash = snapshot.requireData;
+          if (hash == null) return widget.child;
 
-        final metadata = snapshot.requireData;
-
-        if (metadata.customMetadata == null ||
-            !metadata.customMetadata!.containsKey('blurHash')) {
-          return const SizedBox.shrink();
-        }
-
-        return Stack(
-          children: [
-            BlurHash(hash: metadata.customMetadata!['blurHash']!),
-            _PlaceholderTransition(
-              loadingProgress: widget.loadingProgress,
-              animationDuration: widget.animationDuration,
-              curve: widget.curve,
-              child: widget.child,
-            ),
-          ],
-        );
-      },
-    );
+          return buildContent(hash);
+        },
+      );
+    } else {
+      final hash = blurHash as String;
+      return buildContent(hash);
+    }
   }
 
   @override
@@ -431,7 +480,8 @@ class _BlurHashLoadingStateVariantPlaceholderState
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.ref.fullPath != widget.ref.fullPath) {
-      metaDataFuture = widget.ref.getMetadata();
+      blurHash = loadHash();
+      opacity = 0.0;
     }
   }
 }
