@@ -338,23 +338,6 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       }
     }
 
-    if (settingsMap.get("cacheSizeBytes") != null) {
-      Long cacheSizeBytes = 104857600L;
-      Object value = settingsMap.get("cacheSizeBytes");
-
-      if (value instanceof Long) {
-        cacheSizeBytes = (Long) value;
-      } else if (value instanceof Integer) {
-        cacheSizeBytes = Long.valueOf((Integer) value);
-      }
-
-      if (cacheSizeBytes == -1) {
-        settingsBuilder.setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED);
-      } else {
-        settingsBuilder.setCacheSizeBytes(cacheSizeBytes);
-      }
-    }
-
     return settingsBuilder.build();
   }
 
