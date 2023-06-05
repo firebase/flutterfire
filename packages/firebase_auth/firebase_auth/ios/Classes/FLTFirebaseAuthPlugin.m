@@ -179,7 +179,7 @@ NSString *const kErrMsgInvalidCredential =
         [FLTFirebaseAuthPlugin getNSDictionaryFromAuthCredential:authCredential];
   }
 
-  // Manual message overrides to ensure messages/codes matche other platforms.
+  // Manual message overrides to ensure messages/codes matches other platforms.
   if ([message isEqual:@"The password must be 6 characters long or more."]) {
     message = @"Password should be at least 6 characters";
   }
