@@ -34,7 +34,7 @@ public class FlutterFirebaseMultiFactor
   // Map an id to a MultiFactorSession object.
   static final Map<String, MultiFactorSession> multiFactorSessionMap = new HashMap<>();
 
-  // Map an id to a MultiFactorSession object.
+  // Map an id to a MultiFactorResolver object.
   static final Map<String, MultiFactorResolver> multiFactorResolverMap = new HashMap<>();
 
   MultiFactor getAppMultiFactor(@NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app)
