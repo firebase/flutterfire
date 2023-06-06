@@ -36,18 +36,7 @@ class User {
   ///
   /// Once verified, call [reload] to ensure the latest user information is
   /// retrieved from Firebase.
-  @Deprecated('Use isEmailVerified instead')
   bool get emailVerified {
-    return _delegate.isEmailVerified;
-  }
-
-  /// Returns whether the users email address has been verified.
-  ///
-  /// To send a verification email, see [sendEmailVerification].
-  ///
-  /// Once verified, call [reload] to ensure the latest user information is
-  /// retrieved from Firebase.
-  bool get isEmailVerified {
     return _delegate.isEmailVerified;
   }
 

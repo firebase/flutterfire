@@ -57,7 +57,10 @@
       @"email" : userInfo.email ?: [NSNull null],
       @"phoneNumber" : userInfo.phoneNumber ?: [NSNull null],
       @"photoURL" : userInfo.photoURL.absoluteString ?: [NSNull null],
+      // isAnonymous is always false on in a providerData object (the user is not anonymous)
       @"isAnonymous" : @NO,
+      // isEmailVerified is always true on in a providerData object (the email is verified by the
+      // provider)
       @"isEmailVerified" : @YES,
     };
     [dataArray addObject:dataDict];

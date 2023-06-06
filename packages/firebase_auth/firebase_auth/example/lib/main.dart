@@ -34,16 +34,6 @@ Future<void> main() async {
     await auth.useAuthEmulator('localhost', 9099);
   }
 
-  // Setup
-  await FirebaseAuth.instance.signInAnonymously();
-  // Test
-  try {
-    await FirebaseAuth.instance.currentUser!
-        .unlink(EmailAuthProvider.PROVIDER_ID);
-  } catch (e) {
-    print(e);
-  }
-
   runApp(const AuthExampleApp());
 }
 
