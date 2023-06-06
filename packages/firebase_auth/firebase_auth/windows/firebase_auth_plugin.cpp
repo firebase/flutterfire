@@ -24,6 +24,7 @@ void FirebaseAuthPlugin::RegisterWithRegistrar(
 
 
   registrar->AddPlugin(std::move(plugin));
+}
 
 FirebaseAuthPlugin::FirebaseAuthPlugin() {}
 
