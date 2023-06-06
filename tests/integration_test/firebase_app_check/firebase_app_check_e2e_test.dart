@@ -61,6 +61,11 @@ void main() {
         final stream = FirebaseAppCheck.instance.onTokenChange;
         expect(stream, isA<Stream<String?>>());
       });
+
+      test('getLimitedUseAppCheckToken', () async {
+        final token = await FirebaseAppCheck.instance.getLimitedUseAppCheckToken();
+        expect(token, isA<String>());
+      });
     },
   );
 }
