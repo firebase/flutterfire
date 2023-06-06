@@ -47,7 +47,7 @@ class EmailVerificationController extends ValueNotifier<EmailVerificationState>
     final user = auth.currentUser;
 
     if (user != null) {
-      if (user.isEmailVerified) {
+      if (user.emailVerified) {
         value = EmailVerificationState.verified;
       } else {
         value = EmailVerificationState.unverified;
@@ -83,7 +83,7 @@ class EmailVerificationController extends ValueNotifier<EmailVerificationState>
 
     if (user.email == null) {
       value = EmailVerificationState.unresolved;
-    } else if (user.isEmailVerified) {
+    } else if (user.emailVerified) {
       value = EmailVerificationState.verified;
     } else {
       value = EmailVerificationState.unverified;

@@ -671,7 +671,7 @@ class User {
     return '$User('
         'displayName: $displayName, '
         'email: $email, '
-        'isEmailVerified: $isEmailVerified, '
+        'isEmailVerified: $emailVerified, '
         'isAnonymous: $isAnonymous, '
         'metadata: $metadata, '
         'phoneNumber: $phoneNumber, '

@@ -71,7 +71,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
       return '/';
     }
 
-    if (!auth.currentUser!.isEmailVerified && auth.currentUser!.email != null) {
+    if (!auth.currentUser!.emailVerified && auth.currentUser!.email != null) {
       return '/verify-email';
     }
 
@@ -128,21 +128,21 @@ class FirebaseAuthUIExample extends StatelessWidget {
                 Navigator.pushNamed(context, '/phone');
               }),
               AuthStateChangeAction<SignedIn>((context, state) {
-                if (!state.user!.isEmailVerified) {
+                if (!state.user!.emailVerified) {
                   Navigator.pushNamed(context, '/verify-email');
                 } else {
                   Navigator.pushReplacementNamed(context, '/profile');
                 }
               }),
               AuthStateChangeAction<UserCreated>((context, state) {
-                if (!state.credential.user!.isEmailVerified) {
+                if (!state.credential.user!.emailVerified) {
                   Navigator.pushNamed(context, '/verify-email');
                 } else {
                   Navigator.pushReplacementNamed(context, '/profile');
                 }
               }),
               AuthStateChangeAction<CredentialLinked>((context, state) {
-                if (!state.user.isEmailVerified) {
+                if (!state.user.emailVerified) {
                   Navigator.pushNamed(context, '/verify-email');
                 } else {
                   Navigator.pushReplacementNamed(context, '/profile');

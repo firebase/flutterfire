@@ -251,7 +251,7 @@ void main() {
 
             expect(newUser.uid, isA<String>());
             expect(newUser.email, equals(email));
-            expect(newUser.isEmailVerified, isFalse);
+            expect(newUser.emailVerified, isFalse);
             expect(newUser.isAnonymous, isFalse);
             expect(newUser.uid, equals(FirebaseAuth.instance.currentUser!.uid));
 
