@@ -1971,16 +1971,16 @@ void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObjec
   {
     FlutterBasicMessageChannel *channel =
       [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.GenerateInterfaces.generateInterfaces"
+        initWithName:@"dev.flutter.pigeon.GenerateInterfaces.pigeonInterface"
         binaryMessenger:binaryMessenger
         codec:GenerateInterfacesGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(generateInterfacesInfo:error:)], @"GenerateInterfaces api (%@) doesn't respond to @selector(generateInterfacesInfo:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(pigeonInterfaceInfo:error:)], @"GenerateInterfaces api (%@) doesn't respond to @selector(pigeonInterfaceInfo:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonMultiFactorInfo *arg_info = GetNullableObjectAtIndex(args, 0);
         FlutterError *error;
-        [api generateInterfacesInfo:arg_info error:&error];
+        [api pigeonInterfaceInfo:arg_info error:&error];
         callback(wrapResult(nil, error));
       }];
     } else {

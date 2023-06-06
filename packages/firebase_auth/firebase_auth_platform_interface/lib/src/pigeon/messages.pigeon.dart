@@ -2053,9 +2053,9 @@ class GenerateInterfaces {
 
   static const MessageCodec<Object?> codec = _GenerateInterfacesCodec();
 
-  Future<void> generateInterfaces(PigeonMultiFactorInfo arg_info) async {
+  Future<void> pigeonInterface(PigeonMultiFactorInfo arg_info) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.GenerateInterfaces.generateInterfaces', codec,
+        'dev.flutter.pigeon.GenerateInterfaces.pigeonInterface', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_info]) as List<Object?>?;

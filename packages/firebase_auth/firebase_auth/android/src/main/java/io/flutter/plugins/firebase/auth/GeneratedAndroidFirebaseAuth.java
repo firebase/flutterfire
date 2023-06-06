@@ -3742,7 +3742,7 @@ public class GeneratedAndroidFirebaseAuth {
    */
   public interface GenerateInterfaces {
 
-    void generateInterfaces(@NonNull PigeonMultiFactorInfo info);
+    void pigeonInterface(@NonNull PigeonMultiFactorInfo info);
 
     /** The codec used by GenerateInterfaces. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -3753,7 +3753,7 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.GenerateInterfaces.generateInterfaces", getCodec());
+                binaryMessenger, "dev.flutter.pigeon.GenerateInterfaces.pigeonInterface", getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3761,7 +3761,7 @@ public class GeneratedAndroidFirebaseAuth {
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 PigeonMultiFactorInfo infoArg = (PigeonMultiFactorInfo) args.get(0);
                 try {
-                  api.generateInterfaces(infoArg);
+                  api.pigeonInterface(infoArg);
                   wrapped.add(0, null);
                 }
  catch (Throwable exception) {

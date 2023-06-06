@@ -564,5 +564,5 @@ abstract class MultiFactoResolverHostApi {
 /// Only used to generate the object interface that are use outside of the Pigeon interface
 @HostApi()
 abstract class GenerateInterfaces {
-  void generateInterfaces(PigeonMultiFactorInfo info);
+  void pigeonInterface(PigeonMultiFactorInfo info);
 }

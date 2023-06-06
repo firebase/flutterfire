@@ -348,7 +348,7 @@ NSObject<FlutterMessageCodec> *GenerateInterfacesGetCodec(void);
 
 /// Only used to generate the object interface that are use outside of the Pigeon interface
 @protocol GenerateInterfaces
-- (void)generateInterfacesInfo:(PigeonMultiFactorInfo *)info error:(FlutterError *_Nullable *_Nonnull)error;
+- (void)pigeonInterfaceInfo:(PigeonMultiFactorInfo *)info error:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
 extern void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<GenerateInterfaces> *_Nullable api);

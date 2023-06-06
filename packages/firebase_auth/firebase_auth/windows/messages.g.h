@@ -1290,7 +1290,7 @@ class GenerateInterfaces {
   GenerateInterfaces(const GenerateInterfaces&) = delete;
   GenerateInterfaces& operator=(const GenerateInterfaces&) = delete;
   virtual ~GenerateInterfaces() {}
-  virtual std::optional<FlutterError> GenerateInterfaces(const PigeonMultiFactorInfo& info) = 0;
+  virtual std::optional<FlutterError> PigeonInterface(const PigeonMultiFactorInfo& info) = 0;
 
   // The codec used by GenerateInterfaces.
   static const flutter::StandardMessageCodec& GetCodec();

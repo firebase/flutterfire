@@ -3499,7 +3499,7 @@ void GenerateInterfaces::SetUp(
   flutter::BinaryMessenger* binary_messenger,
   GenerateInterfaces* api) {
   {
-    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.GenerateInterfaces.generateInterfaces", &GetCodec());
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.GenerateInterfaces.pigeonInterface", &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
@@ -3510,7 +3510,7 @@ void GenerateInterfaces::SetUp(
             return;
           }
           const auto& info_arg = std::any_cast<const PigeonMultiFactorInfo&>(std::get<CustomEncodableValue>(encodable_info_arg));
-          std::optional<FlutterError> output = api->GenerateInterfaces(info_arg);
+          std::optional<FlutterError> output = api->PigeonInterface(info_arg);
           if (output.has_value()) {
             reply(WrapError(output.value()));
             return;

@@ -16,6 +16,8 @@ set(PLUGIN_NAME "firebase_auth_plugin")
 list(APPEND PLUGIN_SOURCES
   "firebase_auth_plugin.cpp"
   "firebase_auth_plugin.h"
+  "messages.g.cpp"
+  "messages.g.h"
 )
 
 # Define the plugin library target. Its name must not be changed (see comment
