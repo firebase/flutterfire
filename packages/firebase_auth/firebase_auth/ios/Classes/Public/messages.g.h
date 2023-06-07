@@ -38,11 +38,11 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @class PigeonFirebaseApp;
 @class PigeonActionCodeInfoData;
 @class PigeonActionCodeInfo;
+@class PigeonUserInfo;
 @class PigeonUserDetails;
 @class PigeonAuthCredential;
 @class PigeonAdditionalUserInfo;
 @class PigeonUserCredential;
-@class PigeonUserInfo;
 @class PigeonActionCodeSettings;
 @class PigeonFirebaseAuthSettings;
 @class PigeonSignInProvider;
@@ -106,6 +106,35 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @property(nonatomic, strong) PigeonActionCodeInfoData * data;
 @end
 
+@interface PigeonUserInfo : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithUid:(NSString *)uid
+    email:(nullable NSString *)email
+    displayName:(nullable NSString *)displayName
+    photoUrl:(nullable NSString *)photoUrl
+    phoneNumber:(nullable NSString *)phoneNumber
+    isAnonymous:(NSNumber *)isAnonymous
+    isEmailVerified:(NSNumber *)isEmailVerified
+    providerId:(nullable NSString *)providerId
+    tenantId:(nullable NSString *)tenantId
+    refreshToken:(nullable NSString *)refreshToken
+    creationTimestamp:(nullable NSNumber *)creationTimestamp
+    lastSignInTimestamp:(nullable NSNumber *)lastSignInTimestamp;
+@property(nonatomic, copy) NSString * uid;
+@property(nonatomic, copy, nullable) NSString * email;
+@property(nonatomic, copy, nullable) NSString * displayName;
+@property(nonatomic, copy, nullable) NSString * photoUrl;
+@property(nonatomic, copy, nullable) NSString * phoneNumber;
+@property(nonatomic, strong) NSNumber * isAnonymous;
+@property(nonatomic, strong) NSNumber * isEmailVerified;
+@property(nonatomic, copy, nullable) NSString * providerId;
+@property(nonatomic, copy, nullable) NSString * tenantId;
+@property(nonatomic, copy, nullable) NSString * refreshToken;
+@property(nonatomic, strong, nullable) NSNumber * creationTimestamp;
+@property(nonatomic, strong, nullable) NSNumber * lastSignInTimestamp;
+@end
+
 @interface PigeonUserDetails : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
@@ -148,35 +177,6 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @property(nonatomic, strong, nullable) PigeonUserDetails * user;
 @property(nonatomic, strong, nullable) PigeonAdditionalUserInfo * additionalUserInfo;
 @property(nonatomic, strong, nullable) PigeonAuthCredential * credential;
-@end
-
-@interface PigeonUserInfo : NSObject
-/// `init` unavailable to enforce nonnull fields, see the `make` class method.
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithUid:(NSString *)uid
-    email:(nullable NSString *)email
-    displayName:(nullable NSString *)displayName
-    photoUrl:(nullable NSString *)photoUrl
-    phoneNumber:(nullable NSString *)phoneNumber
-    isAnonymous:(NSNumber *)isAnonymous
-    isEmailVerified:(NSNumber *)isEmailVerified
-    providerId:(nullable NSString *)providerId
-    tenantId:(nullable NSString *)tenantId
-    refreshToken:(nullable NSString *)refreshToken
-    creationTimestamp:(nullable NSNumber *)creationTimestamp
-    lastSignInTimestamp:(nullable NSNumber *)lastSignInTimestamp;
-@property(nonatomic, copy) NSString * uid;
-@property(nonatomic, copy, nullable) NSString * email;
-@property(nonatomic, copy, nullable) NSString * displayName;
-@property(nonatomic, copy, nullable) NSString * photoUrl;
-@property(nonatomic, copy, nullable) NSString * phoneNumber;
-@property(nonatomic, strong) NSNumber * isAnonymous;
-@property(nonatomic, strong) NSNumber * isEmailVerified;
-@property(nonatomic, copy, nullable) NSString * providerId;
-@property(nonatomic, copy, nullable) NSString * tenantId;
-@property(nonatomic, copy, nullable) NSString * refreshToken;
-@property(nonatomic, strong, nullable) NSNumber * creationTimestamp;
-@property(nonatomic, strong, nullable) NSNumber * lastSignInTimestamp;
 @end
 
 @interface PigeonActionCodeSettings : NSObject

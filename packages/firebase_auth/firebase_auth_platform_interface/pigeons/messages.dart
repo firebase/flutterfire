@@ -114,6 +114,37 @@ class PigeonActionCodeInfo {
   final PigeonActionCodeInfoData data;
 }
 
+class PigeonUserInfo {
+  const PigeonUserInfo({
+    required this.uid,
+    required this.email,
+    required this.displayName,
+    required this.photoUrl,
+    required this.phoneNumber,
+    required this.isAnonymous,
+    required this.isEmailVerified,
+    required this.tenantId,
+    required this.providerId,
+    required this.creationTimestamp,
+    required this.lastSignInTimestamp,
+    required this.refreshToken,
+  });
+
+  final String uid;
+  final String? email;
+  final String? displayName;
+  final String? photoUrl;
+  final String? phoneNumber;
+  final bool isAnonymous;
+  final bool isEmailVerified;
+  final String? providerId;
+  final String? tenantId;
+  final String? refreshToken;
+  final int? creationTimestamp;
+  final int? lastSignInTimestamp;
+}
+
+
 class PigeonUserDetails {
   const PigeonUserDetails({
     required this.userInfo,
@@ -165,35 +196,6 @@ class PigeonUserCredential {
   final PigeonAuthCredential? credential;
 }
 
-class PigeonUserInfo {
-  const PigeonUserInfo({
-    required this.uid,
-    required this.email,
-    required this.displayName,
-    required this.photoUrl,
-    required this.phoneNumber,
-    required this.isAnonymous,
-    required this.isEmailVerified,
-    required this.tenantId,
-    required this.providerId,
-    required this.creationTimestamp,
-    required this.lastSignInTimestamp,
-    required this.refreshToken,
-  });
-
-  final String uid;
-  final String? email;
-  final String? displayName;
-  final String? photoUrl;
-  final String? phoneNumber;
-  final bool isAnonymous;
-  final bool isEmailVerified;
-  final String? providerId;
-  final String? tenantId;
-  final String? refreshToken;
-  final int? creationTimestamp;
-  final int? lastSignInTimestamp;
-}
 
 
 

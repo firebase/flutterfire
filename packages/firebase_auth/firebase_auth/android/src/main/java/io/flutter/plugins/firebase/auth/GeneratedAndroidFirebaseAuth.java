@@ -553,6 +553,292 @@ public class GeneratedAndroidFirebaseAuth {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonUserInfo {
+    private @NonNull String uid;
+
+    public @NonNull String getUid() {
+      return uid;
+    }
+
+    public void setUid(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"uid\" is null.");
+      }
+      this.uid = setterArg;
+    }
+
+    private @Nullable String email;
+
+    public @Nullable String getEmail() {
+      return email;
+    }
+
+    public void setEmail(@Nullable String setterArg) {
+      this.email = setterArg;
+    }
+
+    private @Nullable String displayName;
+
+    public @Nullable String getDisplayName() {
+      return displayName;
+    }
+
+    public void setDisplayName(@Nullable String setterArg) {
+      this.displayName = setterArg;
+    }
+
+    private @Nullable String photoUrl;
+
+    public @Nullable String getPhotoUrl() {
+      return photoUrl;
+    }
+
+    public void setPhotoUrl(@Nullable String setterArg) {
+      this.photoUrl = setterArg;
+    }
+
+    private @Nullable String phoneNumber;
+
+    public @Nullable String getPhoneNumber() {
+      return phoneNumber;
+    }
+
+    public void setPhoneNumber(@Nullable String setterArg) {
+      this.phoneNumber = setterArg;
+    }
+
+    private @NonNull Boolean isAnonymous;
+
+    public @NonNull Boolean getIsAnonymous() {
+      return isAnonymous;
+    }
+
+    public void setIsAnonymous(@NonNull Boolean setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"isAnonymous\" is null.");
+      }
+      this.isAnonymous = setterArg;
+    }
+
+    private @NonNull Boolean isEmailVerified;
+
+    public @NonNull Boolean getIsEmailVerified() {
+      return isEmailVerified;
+    }
+
+    public void setIsEmailVerified(@NonNull Boolean setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"isEmailVerified\" is null.");
+      }
+      this.isEmailVerified = setterArg;
+    }
+
+    private @Nullable String providerId;
+
+    public @Nullable String getProviderId() {
+      return providerId;
+    }
+
+    public void setProviderId(@Nullable String setterArg) {
+      this.providerId = setterArg;
+    }
+
+    private @Nullable String tenantId;
+
+    public @Nullable String getTenantId() {
+      return tenantId;
+    }
+
+    public void setTenantId(@Nullable String setterArg) {
+      this.tenantId = setterArg;
+    }
+
+    private @Nullable String refreshToken;
+
+    public @Nullable String getRefreshToken() {
+      return refreshToken;
+    }
+
+    public void setRefreshToken(@Nullable String setterArg) {
+      this.refreshToken = setterArg;
+    }
+
+    private @Nullable Long creationTimestamp;
+
+    public @Nullable Long getCreationTimestamp() {
+      return creationTimestamp;
+    }
+
+    public void setCreationTimestamp(@Nullable Long setterArg) {
+      this.creationTimestamp = setterArg;
+    }
+
+    private @Nullable Long lastSignInTimestamp;
+
+    public @Nullable Long getLastSignInTimestamp() {
+      return lastSignInTimestamp;
+    }
+
+    public void setLastSignInTimestamp(@Nullable Long setterArg) {
+      this.lastSignInTimestamp = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonUserInfo() {}
+
+    public static final class Builder {
+
+      private @Nullable String uid;
+
+      public @NonNull Builder setUid(@NonNull String setterArg) {
+        this.uid = setterArg;
+        return this;
+      }
+
+      private @Nullable String email;
+
+      public @NonNull Builder setEmail(@Nullable String setterArg) {
+        this.email = setterArg;
+        return this;
+      }
+
+      private @Nullable String displayName;
+
+      public @NonNull Builder setDisplayName(@Nullable String setterArg) {
+        this.displayName = setterArg;
+        return this;
+      }
+
+      private @Nullable String photoUrl;
+
+      public @NonNull Builder setPhotoUrl(@Nullable String setterArg) {
+        this.photoUrl = setterArg;
+        return this;
+      }
+
+      private @Nullable String phoneNumber;
+
+      public @NonNull Builder setPhoneNumber(@Nullable String setterArg) {
+        this.phoneNumber = setterArg;
+        return this;
+      }
+
+      private @Nullable Boolean isAnonymous;
+
+      public @NonNull Builder setIsAnonymous(@NonNull Boolean setterArg) {
+        this.isAnonymous = setterArg;
+        return this;
+      }
+
+      private @Nullable Boolean isEmailVerified;
+
+      public @NonNull Builder setIsEmailVerified(@NonNull Boolean setterArg) {
+        this.isEmailVerified = setterArg;
+        return this;
+      }
+
+      private @Nullable String providerId;
+
+      public @NonNull Builder setProviderId(@Nullable String setterArg) {
+        this.providerId = setterArg;
+        return this;
+      }
+
+      private @Nullable String tenantId;
+
+      public @NonNull Builder setTenantId(@Nullable String setterArg) {
+        this.tenantId = setterArg;
+        return this;
+      }
+
+      private @Nullable String refreshToken;
+
+      public @NonNull Builder setRefreshToken(@Nullable String setterArg) {
+        this.refreshToken = setterArg;
+        return this;
+      }
+
+      private @Nullable Long creationTimestamp;
+
+      public @NonNull Builder setCreationTimestamp(@Nullable Long setterArg) {
+        this.creationTimestamp = setterArg;
+        return this;
+      }
+
+      private @Nullable Long lastSignInTimestamp;
+
+      public @NonNull Builder setLastSignInTimestamp(@Nullable Long setterArg) {
+        this.lastSignInTimestamp = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonUserInfo build() {
+        PigeonUserInfo pigeonReturn = new PigeonUserInfo();
+        pigeonReturn.setUid(uid);
+        pigeonReturn.setEmail(email);
+        pigeonReturn.setDisplayName(displayName);
+        pigeonReturn.setPhotoUrl(photoUrl);
+        pigeonReturn.setPhoneNumber(phoneNumber);
+        pigeonReturn.setIsAnonymous(isAnonymous);
+        pigeonReturn.setIsEmailVerified(isEmailVerified);
+        pigeonReturn.setProviderId(providerId);
+        pigeonReturn.setTenantId(tenantId);
+        pigeonReturn.setRefreshToken(refreshToken);
+        pigeonReturn.setCreationTimestamp(creationTimestamp);
+        pigeonReturn.setLastSignInTimestamp(lastSignInTimestamp);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(12);
+      toListResult.add(uid);
+      toListResult.add(email);
+      toListResult.add(displayName);
+      toListResult.add(photoUrl);
+      toListResult.add(phoneNumber);
+      toListResult.add(isAnonymous);
+      toListResult.add(isEmailVerified);
+      toListResult.add(providerId);
+      toListResult.add(tenantId);
+      toListResult.add(refreshToken);
+      toListResult.add(creationTimestamp);
+      toListResult.add(lastSignInTimestamp);
+      return toListResult;
+    }
+
+    static @NonNull PigeonUserInfo fromList(@NonNull ArrayList<Object> list) {
+      PigeonUserInfo pigeonResult = new PigeonUserInfo();
+      Object uid = list.get(0);
+      pigeonResult.setUid((String) uid);
+      Object email = list.get(1);
+      pigeonResult.setEmail((String) email);
+      Object displayName = list.get(2);
+      pigeonResult.setDisplayName((String) displayName);
+      Object photoUrl = list.get(3);
+      pigeonResult.setPhotoUrl((String) photoUrl);
+      Object phoneNumber = list.get(4);
+      pigeonResult.setPhoneNumber((String) phoneNumber);
+      Object isAnonymous = list.get(5);
+      pigeonResult.setIsAnonymous((Boolean) isAnonymous);
+      Object isEmailVerified = list.get(6);
+      pigeonResult.setIsEmailVerified((Boolean) isEmailVerified);
+      Object providerId = list.get(7);
+      pigeonResult.setProviderId((String) providerId);
+      Object tenantId = list.get(8);
+      pigeonResult.setTenantId((String) tenantId);
+      Object refreshToken = list.get(9);
+      pigeonResult.setRefreshToken((String) refreshToken);
+      Object creationTimestamp = list.get(10);
+      pigeonResult.setCreationTimestamp((creationTimestamp == null) ? null : ((creationTimestamp instanceof Integer) ? (Integer) creationTimestamp : (Long) creationTimestamp));
+      Object lastSignInTimestamp = list.get(11);
+      pigeonResult.setLastSignInTimestamp((lastSignInTimestamp == null) ? null : ((lastSignInTimestamp instanceof Integer) ? (Integer) lastSignInTimestamp : (Long) lastSignInTimestamp));
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
   public static final class PigeonUserDetails {
     private @NonNull PigeonUserInfo userInfo;
 
@@ -936,292 +1222,6 @@ public class GeneratedAndroidFirebaseAuth {
       pigeonResult.setAdditionalUserInfo((additionalUserInfo == null) ? null : PigeonAdditionalUserInfo.fromList((ArrayList<Object>) additionalUserInfo));
       Object credential = list.get(2);
       pigeonResult.setCredential((credential == null) ? null : PigeonAuthCredential.fromList((ArrayList<Object>) credential));
-      return pigeonResult;
-    }
-  }
-
-  /** Generated class from Pigeon that represents data sent in messages. */
-  public static final class PigeonUserInfo {
-    private @NonNull String uid;
-
-    public @NonNull String getUid() {
-      return uid;
-    }
-
-    public void setUid(@NonNull String setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"uid\" is null.");
-      }
-      this.uid = setterArg;
-    }
-
-    private @Nullable String email;
-
-    public @Nullable String getEmail() {
-      return email;
-    }
-
-    public void setEmail(@Nullable String setterArg) {
-      this.email = setterArg;
-    }
-
-    private @Nullable String displayName;
-
-    public @Nullable String getDisplayName() {
-      return displayName;
-    }
-
-    public void setDisplayName(@Nullable String setterArg) {
-      this.displayName = setterArg;
-    }
-
-    private @Nullable String photoUrl;
-
-    public @Nullable String getPhotoUrl() {
-      return photoUrl;
-    }
-
-    public void setPhotoUrl(@Nullable String setterArg) {
-      this.photoUrl = setterArg;
-    }
-
-    private @Nullable String phoneNumber;
-
-    public @Nullable String getPhoneNumber() {
-      return phoneNumber;
-    }
-
-    public void setPhoneNumber(@Nullable String setterArg) {
-      this.phoneNumber = setterArg;
-    }
-
-    private @NonNull Boolean isAnonymous;
-
-    public @NonNull Boolean getIsAnonymous() {
-      return isAnonymous;
-    }
-
-    public void setIsAnonymous(@NonNull Boolean setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"isAnonymous\" is null.");
-      }
-      this.isAnonymous = setterArg;
-    }
-
-    private @NonNull Boolean isEmailVerified;
-
-    public @NonNull Boolean getIsEmailVerified() {
-      return isEmailVerified;
-    }
-
-    public void setIsEmailVerified(@NonNull Boolean setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"isEmailVerified\" is null.");
-      }
-      this.isEmailVerified = setterArg;
-    }
-
-    private @Nullable String providerId;
-
-    public @Nullable String getProviderId() {
-      return providerId;
-    }
-
-    public void setProviderId(@Nullable String setterArg) {
-      this.providerId = setterArg;
-    }
-
-    private @Nullable String tenantId;
-
-    public @Nullable String getTenantId() {
-      return tenantId;
-    }
-
-    public void setTenantId(@Nullable String setterArg) {
-      this.tenantId = setterArg;
-    }
-
-    private @Nullable String refreshToken;
-
-    public @Nullable String getRefreshToken() {
-      return refreshToken;
-    }
-
-    public void setRefreshToken(@Nullable String setterArg) {
-      this.refreshToken = setterArg;
-    }
-
-    private @Nullable Long creationTimestamp;
-
-    public @Nullable Long getCreationTimestamp() {
-      return creationTimestamp;
-    }
-
-    public void setCreationTimestamp(@Nullable Long setterArg) {
-      this.creationTimestamp = setterArg;
-    }
-
-    private @Nullable Long lastSignInTimestamp;
-
-    public @Nullable Long getLastSignInTimestamp() {
-      return lastSignInTimestamp;
-    }
-
-    public void setLastSignInTimestamp(@Nullable Long setterArg) {
-      this.lastSignInTimestamp = setterArg;
-    }
-
-    /** Constructor is non-public to enforce null safety; use Builder. */
-    PigeonUserInfo() {}
-
-    public static final class Builder {
-
-      private @Nullable String uid;
-
-      public @NonNull Builder setUid(@NonNull String setterArg) {
-        this.uid = setterArg;
-        return this;
-      }
-
-      private @Nullable String email;
-
-      public @NonNull Builder setEmail(@Nullable String setterArg) {
-        this.email = setterArg;
-        return this;
-      }
-
-      private @Nullable String displayName;
-
-      public @NonNull Builder setDisplayName(@Nullable String setterArg) {
-        this.displayName = setterArg;
-        return this;
-      }
-
-      private @Nullable String photoUrl;
-
-      public @NonNull Builder setPhotoUrl(@Nullable String setterArg) {
-        this.photoUrl = setterArg;
-        return this;
-      }
-
-      private @Nullable String phoneNumber;
-
-      public @NonNull Builder setPhoneNumber(@Nullable String setterArg) {
-        this.phoneNumber = setterArg;
-        return this;
-      }
-
-      private @Nullable Boolean isAnonymous;
-
-      public @NonNull Builder setIsAnonymous(@NonNull Boolean setterArg) {
-        this.isAnonymous = setterArg;
-        return this;
-      }
-
-      private @Nullable Boolean isEmailVerified;
-
-      public @NonNull Builder setIsEmailVerified(@NonNull Boolean setterArg) {
-        this.isEmailVerified = setterArg;
-        return this;
-      }
-
-      private @Nullable String providerId;
-
-      public @NonNull Builder setProviderId(@Nullable String setterArg) {
-        this.providerId = setterArg;
-        return this;
-      }
-
-      private @Nullable String tenantId;
-
-      public @NonNull Builder setTenantId(@Nullable String setterArg) {
-        this.tenantId = setterArg;
-        return this;
-      }
-
-      private @Nullable String refreshToken;
-
-      public @NonNull Builder setRefreshToken(@Nullable String setterArg) {
-        this.refreshToken = setterArg;
-        return this;
-      }
-
-      private @Nullable Long creationTimestamp;
-
-      public @NonNull Builder setCreationTimestamp(@Nullable Long setterArg) {
-        this.creationTimestamp = setterArg;
-        return this;
-      }
-
-      private @Nullable Long lastSignInTimestamp;
-
-      public @NonNull Builder setLastSignInTimestamp(@Nullable Long setterArg) {
-        this.lastSignInTimestamp = setterArg;
-        return this;
-      }
-
-      public @NonNull PigeonUserInfo build() {
-        PigeonUserInfo pigeonReturn = new PigeonUserInfo();
-        pigeonReturn.setUid(uid);
-        pigeonReturn.setEmail(email);
-        pigeonReturn.setDisplayName(displayName);
-        pigeonReturn.setPhotoUrl(photoUrl);
-        pigeonReturn.setPhoneNumber(phoneNumber);
-        pigeonReturn.setIsAnonymous(isAnonymous);
-        pigeonReturn.setIsEmailVerified(isEmailVerified);
-        pigeonReturn.setProviderId(providerId);
-        pigeonReturn.setTenantId(tenantId);
-        pigeonReturn.setRefreshToken(refreshToken);
-        pigeonReturn.setCreationTimestamp(creationTimestamp);
-        pigeonReturn.setLastSignInTimestamp(lastSignInTimestamp);
-        return pigeonReturn;
-      }
-    }
-
-    @NonNull
-    ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(12);
-      toListResult.add(uid);
-      toListResult.add(email);
-      toListResult.add(displayName);
-      toListResult.add(photoUrl);
-      toListResult.add(phoneNumber);
-      toListResult.add(isAnonymous);
-      toListResult.add(isEmailVerified);
-      toListResult.add(providerId);
-      toListResult.add(tenantId);
-      toListResult.add(refreshToken);
-      toListResult.add(creationTimestamp);
-      toListResult.add(lastSignInTimestamp);
-      return toListResult;
-    }
-
-    static @NonNull PigeonUserInfo fromList(@NonNull ArrayList<Object> list) {
-      PigeonUserInfo pigeonResult = new PigeonUserInfo();
-      Object uid = list.get(0);
-      pigeonResult.setUid((String) uid);
-      Object email = list.get(1);
-      pigeonResult.setEmail((String) email);
-      Object displayName = list.get(2);
-      pigeonResult.setDisplayName((String) displayName);
-      Object photoUrl = list.get(3);
-      pigeonResult.setPhotoUrl((String) photoUrl);
-      Object phoneNumber = list.get(4);
-      pigeonResult.setPhoneNumber((String) phoneNumber);
-      Object isAnonymous = list.get(5);
-      pigeonResult.setIsAnonymous((Boolean) isAnonymous);
-      Object isEmailVerified = list.get(6);
-      pigeonResult.setIsEmailVerified((Boolean) isEmailVerified);
-      Object providerId = list.get(7);
-      pigeonResult.setProviderId((String) providerId);
-      Object tenantId = list.get(8);
-      pigeonResult.setTenantId((String) tenantId);
-      Object refreshToken = list.get(9);
-      pigeonResult.setRefreshToken((String) refreshToken);
-      Object creationTimestamp = list.get(10);
-      pigeonResult.setCreationTimestamp((creationTimestamp == null) ? null : ((creationTimestamp instanceof Integer) ? (Integer) creationTimestamp : (Long) creationTimestamp));
-      Object lastSignInTimestamp = list.get(11);
-      pigeonResult.setLastSignInTimestamp((lastSignInTimestamp == null) ? null : ((lastSignInTimestamp instanceof Integer) ? (Integer) lastSignInTimestamp : (Long) lastSignInTimestamp));
       return pigeonResult;
     }
   }

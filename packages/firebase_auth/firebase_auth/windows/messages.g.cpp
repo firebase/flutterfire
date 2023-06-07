@@ -348,6 +348,248 @@ PigeonActionCodeInfo PigeonActionCodeInfo::FromEncodableList(const EncodableList
   return decoded;
 }
 
+// PigeonUserInfo
+
+PigeonUserInfo::PigeonUserInfo(
+  const std::string& uid,
+  bool is_anonymous,
+  bool is_email_verified)
+ : uid_(uid),
+    is_anonymous_(is_anonymous),
+    is_email_verified_(is_email_verified) {}
+
+PigeonUserInfo::PigeonUserInfo(
+  const std::string& uid,
+  const std::string* email,
+  const std::string* display_name,
+  const std::string* photo_url,
+  const std::string* phone_number,
+  bool is_anonymous,
+  bool is_email_verified,
+  const std::string* provider_id,
+  const std::string* tenant_id,
+  const std::string* refresh_token,
+  const int64_t* creation_timestamp,
+  const int64_t* last_sign_in_timestamp)
+ : uid_(uid),
+    email_(email ? std::optional<std::string>(*email) : std::nullopt),
+    display_name_(display_name ? std::optional<std::string>(*display_name) : std::nullopt),
+    photo_url_(photo_url ? std::optional<std::string>(*photo_url) : std::nullopt),
+    phone_number_(phone_number ? std::optional<std::string>(*phone_number) : std::nullopt),
+    is_anonymous_(is_anonymous),
+    is_email_verified_(is_email_verified),
+    provider_id_(provider_id ? std::optional<std::string>(*provider_id) : std::nullopt),
+    tenant_id_(tenant_id ? std::optional<std::string>(*tenant_id) : std::nullopt),
+    refresh_token_(refresh_token ? std::optional<std::string>(*refresh_token) : std::nullopt),
+    creation_timestamp_(creation_timestamp ? std::optional<int64_t>(*creation_timestamp) : std::nullopt),
+    last_sign_in_timestamp_(last_sign_in_timestamp ? std::optional<int64_t>(*last_sign_in_timestamp) : std::nullopt) {}
+
+const std::string& PigeonUserInfo::uid() const {
+  return uid_;
+}
+
+void PigeonUserInfo::set_uid(std::string_view value_arg) {
+  uid_ = value_arg;
+}
+
+
+const std::string* PigeonUserInfo::email() const {
+  return email_ ? &(*email_) : nullptr;
+}
+
+void PigeonUserInfo::set_email(const std::string_view* value_arg) {
+  email_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void PigeonUserInfo::set_email(std::string_view value_arg) {
+  email_ = value_arg;
+}
+
+
+const std::string* PigeonUserInfo::display_name() const {
+  return display_name_ ? &(*display_name_) : nullptr;
+}
+
+void PigeonUserInfo::set_display_name(const std::string_view* value_arg) {
+  display_name_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void PigeonUserInfo::set_display_name(std::string_view value_arg) {
+  display_name_ = value_arg;
+}
+
+
+const std::string* PigeonUserInfo::photo_url() const {
+  return photo_url_ ? &(*photo_url_) : nullptr;
+}
+
+void PigeonUserInfo::set_photo_url(const std::string_view* value_arg) {
+  photo_url_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void PigeonUserInfo::set_photo_url(std::string_view value_arg) {
+  photo_url_ = value_arg;
+}
+
+
+const std::string* PigeonUserInfo::phone_number() const {
+  return phone_number_ ? &(*phone_number_) : nullptr;
+}
+
+void PigeonUserInfo::set_phone_number(const std::string_view* value_arg) {
+  phone_number_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void PigeonUserInfo::set_phone_number(std::string_view value_arg) {
+  phone_number_ = value_arg;
+}
+
+
+bool PigeonUserInfo::is_anonymous() const {
+  return is_anonymous_;
+}
+
+void PigeonUserInfo::set_is_anonymous(bool value_arg) {
+  is_anonymous_ = value_arg;
+}
+
+
+bool PigeonUserInfo::is_email_verified() const {
+  return is_email_verified_;
+}
+
+void PigeonUserInfo::set_is_email_verified(bool value_arg) {
+  is_email_verified_ = value_arg;
+}
+
+
+const std::string* PigeonUserInfo::provider_id() const {
+  return provider_id_ ? &(*provider_id_) : nullptr;
+}
+
+void PigeonUserInfo::set_provider_id(const std::string_view* value_arg) {
+  provider_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void PigeonUserInfo::set_provider_id(std::string_view value_arg) {
+  provider_id_ = value_arg;
+}
+
+
+const std::string* PigeonUserInfo::tenant_id() const {
+  return tenant_id_ ? &(*tenant_id_) : nullptr;
+}
+
+void PigeonUserInfo::set_tenant_id(const std::string_view* value_arg) {
+  tenant_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void PigeonUserInfo::set_tenant_id(std::string_view value_arg) {
+  tenant_id_ = value_arg;
+}
+
+
+const std::string* PigeonUserInfo::refresh_token() const {
+  return refresh_token_ ? &(*refresh_token_) : nullptr;
+}
+
+void PigeonUserInfo::set_refresh_token(const std::string_view* value_arg) {
+  refresh_token_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void PigeonUserInfo::set_refresh_token(std::string_view value_arg) {
+  refresh_token_ = value_arg;
+}
+
+
+const int64_t* PigeonUserInfo::creation_timestamp() const {
+  return creation_timestamp_ ? &(*creation_timestamp_) : nullptr;
+}
+
+void PigeonUserInfo::set_creation_timestamp(const int64_t* value_arg) {
+  creation_timestamp_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+}
+
+void PigeonUserInfo::set_creation_timestamp(int64_t value_arg) {
+  creation_timestamp_ = value_arg;
+}
+
+
+const int64_t* PigeonUserInfo::last_sign_in_timestamp() const {
+  return last_sign_in_timestamp_ ? &(*last_sign_in_timestamp_) : nullptr;
+}
+
+void PigeonUserInfo::set_last_sign_in_timestamp(const int64_t* value_arg) {
+  last_sign_in_timestamp_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+}
+
+void PigeonUserInfo::set_last_sign_in_timestamp(int64_t value_arg) {
+  last_sign_in_timestamp_ = value_arg;
+}
+
+
+EncodableList PigeonUserInfo::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(12);
+  list.push_back(EncodableValue(uid_));
+  list.push_back(email_ ? EncodableValue(*email_) : EncodableValue());
+  list.push_back(display_name_ ? EncodableValue(*display_name_) : EncodableValue());
+  list.push_back(photo_url_ ? EncodableValue(*photo_url_) : EncodableValue());
+  list.push_back(phone_number_ ? EncodableValue(*phone_number_) : EncodableValue());
+  list.push_back(EncodableValue(is_anonymous_));
+  list.push_back(EncodableValue(is_email_verified_));
+  list.push_back(provider_id_ ? EncodableValue(*provider_id_) : EncodableValue());
+  list.push_back(tenant_id_ ? EncodableValue(*tenant_id_) : EncodableValue());
+  list.push_back(refresh_token_ ? EncodableValue(*refresh_token_) : EncodableValue());
+  list.push_back(creation_timestamp_ ? EncodableValue(*creation_timestamp_) : EncodableValue());
+  list.push_back(last_sign_in_timestamp_ ? EncodableValue(*last_sign_in_timestamp_) : EncodableValue());
+  return list;
+}
+
+PigeonUserInfo PigeonUserInfo::FromEncodableList(const EncodableList& list) {
+  PigeonUserInfo decoded(
+    std::get<std::string>(list[0]),
+    std::get<bool>(list[5]),
+    std::get<bool>(list[6]));
+  auto& encodable_email = list[1];
+  if (!encodable_email.IsNull()) {
+    decoded.set_email(std::get<std::string>(encodable_email));
+  }
+  auto& encodable_display_name = list[2];
+  if (!encodable_display_name.IsNull()) {
+    decoded.set_display_name(std::get<std::string>(encodable_display_name));
+  }
+  auto& encodable_photo_url = list[3];
+  if (!encodable_photo_url.IsNull()) {
+    decoded.set_photo_url(std::get<std::string>(encodable_photo_url));
+  }
+  auto& encodable_phone_number = list[4];
+  if (!encodable_phone_number.IsNull()) {
+    decoded.set_phone_number(std::get<std::string>(encodable_phone_number));
+  }
+  auto& encodable_provider_id = list[7];
+  if (!encodable_provider_id.IsNull()) {
+    decoded.set_provider_id(std::get<std::string>(encodable_provider_id));
+  }
+  auto& encodable_tenant_id = list[8];
+  if (!encodable_tenant_id.IsNull()) {
+    decoded.set_tenant_id(std::get<std::string>(encodable_tenant_id));
+  }
+  auto& encodable_refresh_token = list[9];
+  if (!encodable_refresh_token.IsNull()) {
+    decoded.set_refresh_token(std::get<std::string>(encodable_refresh_token));
+  }
+  auto& encodable_creation_timestamp = list[10];
+  if (!encodable_creation_timestamp.IsNull()) {
+    decoded.set_creation_timestamp(encodable_creation_timestamp.LongValue());
+  }
+  auto& encodable_last_sign_in_timestamp = list[11];
+  if (!encodable_last_sign_in_timestamp.IsNull()) {
+    decoded.set_last_sign_in_timestamp(encodable_last_sign_in_timestamp.LongValue());
+  }
+  return decoded;
+}
+
 // PigeonUserDetails
 
 PigeonUserDetails::PigeonUserDetails(
@@ -635,248 +877,6 @@ PigeonUserCredential PigeonUserCredential::FromEncodableList(const EncodableList
   auto& encodable_credential = list[2];
   if (!encodable_credential.IsNull()) {
     decoded.set_credential(PigeonAuthCredential::FromEncodableList(std::get<EncodableList>(encodable_credential)));
-  }
-  return decoded;
-}
-
-// PigeonUserInfo
-
-PigeonUserInfo::PigeonUserInfo(
-  const std::string& uid,
-  bool is_anonymous,
-  bool is_email_verified)
- : uid_(uid),
-    is_anonymous_(is_anonymous),
-    is_email_verified_(is_email_verified) {}
-
-PigeonUserInfo::PigeonUserInfo(
-  const std::string& uid,
-  const std::string* email,
-  const std::string* display_name,
-  const std::string* photo_url,
-  const std::string* phone_number,
-  bool is_anonymous,
-  bool is_email_verified,
-  const std::string* provider_id,
-  const std::string* tenant_id,
-  const std::string* refresh_token,
-  const int64_t* creation_timestamp,
-  const int64_t* last_sign_in_timestamp)
- : uid_(uid),
-    email_(email ? std::optional<std::string>(*email) : std::nullopt),
-    display_name_(display_name ? std::optional<std::string>(*display_name) : std::nullopt),
-    photo_url_(photo_url ? std::optional<std::string>(*photo_url) : std::nullopt),
-    phone_number_(phone_number ? std::optional<std::string>(*phone_number) : std::nullopt),
-    is_anonymous_(is_anonymous),
-    is_email_verified_(is_email_verified),
-    provider_id_(provider_id ? std::optional<std::string>(*provider_id) : std::nullopt),
-    tenant_id_(tenant_id ? std::optional<std::string>(*tenant_id) : std::nullopt),
-    refresh_token_(refresh_token ? std::optional<std::string>(*refresh_token) : std::nullopt),
-    creation_timestamp_(creation_timestamp ? std::optional<int64_t>(*creation_timestamp) : std::nullopt),
-    last_sign_in_timestamp_(last_sign_in_timestamp ? std::optional<int64_t>(*last_sign_in_timestamp) : std::nullopt) {}
-
-const std::string& PigeonUserInfo::uid() const {
-  return uid_;
-}
-
-void PigeonUserInfo::set_uid(std::string_view value_arg) {
-  uid_ = value_arg;
-}
-
-
-const std::string* PigeonUserInfo::email() const {
-  return email_ ? &(*email_) : nullptr;
-}
-
-void PigeonUserInfo::set_email(const std::string_view* value_arg) {
-  email_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
-}
-
-void PigeonUserInfo::set_email(std::string_view value_arg) {
-  email_ = value_arg;
-}
-
-
-const std::string* PigeonUserInfo::display_name() const {
-  return display_name_ ? &(*display_name_) : nullptr;
-}
-
-void PigeonUserInfo::set_display_name(const std::string_view* value_arg) {
-  display_name_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
-}
-
-void PigeonUserInfo::set_display_name(std::string_view value_arg) {
-  display_name_ = value_arg;
-}
-
-
-const std::string* PigeonUserInfo::photo_url() const {
-  return photo_url_ ? &(*photo_url_) : nullptr;
-}
-
-void PigeonUserInfo::set_photo_url(const std::string_view* value_arg) {
-  photo_url_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
-}
-
-void PigeonUserInfo::set_photo_url(std::string_view value_arg) {
-  photo_url_ = value_arg;
-}
-
-
-const std::string* PigeonUserInfo::phone_number() const {
-  return phone_number_ ? &(*phone_number_) : nullptr;
-}
-
-void PigeonUserInfo::set_phone_number(const std::string_view* value_arg) {
-  phone_number_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
-}
-
-void PigeonUserInfo::set_phone_number(std::string_view value_arg) {
-  phone_number_ = value_arg;
-}
-
-
-bool PigeonUserInfo::is_anonymous() const {
-  return is_anonymous_;
-}
-
-void PigeonUserInfo::set_is_anonymous(bool value_arg) {
-  is_anonymous_ = value_arg;
-}
-
-
-bool PigeonUserInfo::is_email_verified() const {
-  return is_email_verified_;
-}
-
-void PigeonUserInfo::set_is_email_verified(bool value_arg) {
-  is_email_verified_ = value_arg;
-}
-
-
-const std::string* PigeonUserInfo::provider_id() const {
-  return provider_id_ ? &(*provider_id_) : nullptr;
-}
-
-void PigeonUserInfo::set_provider_id(const std::string_view* value_arg) {
-  provider_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
-}
-
-void PigeonUserInfo::set_provider_id(std::string_view value_arg) {
-  provider_id_ = value_arg;
-}
-
-
-const std::string* PigeonUserInfo::tenant_id() const {
-  return tenant_id_ ? &(*tenant_id_) : nullptr;
-}
-
-void PigeonUserInfo::set_tenant_id(const std::string_view* value_arg) {
-  tenant_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
-}
-
-void PigeonUserInfo::set_tenant_id(std::string_view value_arg) {
-  tenant_id_ = value_arg;
-}
-
-
-const std::string* PigeonUserInfo::refresh_token() const {
-  return refresh_token_ ? &(*refresh_token_) : nullptr;
-}
-
-void PigeonUserInfo::set_refresh_token(const std::string_view* value_arg) {
-  refresh_token_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
-}
-
-void PigeonUserInfo::set_refresh_token(std::string_view value_arg) {
-  refresh_token_ = value_arg;
-}
-
-
-const int64_t* PigeonUserInfo::creation_timestamp() const {
-  return creation_timestamp_ ? &(*creation_timestamp_) : nullptr;
-}
-
-void PigeonUserInfo::set_creation_timestamp(const int64_t* value_arg) {
-  creation_timestamp_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
-}
-
-void PigeonUserInfo::set_creation_timestamp(int64_t value_arg) {
-  creation_timestamp_ = value_arg;
-}
-
-
-const int64_t* PigeonUserInfo::last_sign_in_timestamp() const {
-  return last_sign_in_timestamp_ ? &(*last_sign_in_timestamp_) : nullptr;
-}
-
-void PigeonUserInfo::set_last_sign_in_timestamp(const int64_t* value_arg) {
-  last_sign_in_timestamp_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
-}
-
-void PigeonUserInfo::set_last_sign_in_timestamp(int64_t value_arg) {
-  last_sign_in_timestamp_ = value_arg;
-}
-
-
-EncodableList PigeonUserInfo::ToEncodableList() const {
-  EncodableList list;
-  list.reserve(12);
-  list.push_back(EncodableValue(uid_));
-  list.push_back(email_ ? EncodableValue(*email_) : EncodableValue());
-  list.push_back(display_name_ ? EncodableValue(*display_name_) : EncodableValue());
-  list.push_back(photo_url_ ? EncodableValue(*photo_url_) : EncodableValue());
-  list.push_back(phone_number_ ? EncodableValue(*phone_number_) : EncodableValue());
-  list.push_back(EncodableValue(is_anonymous_));
-  list.push_back(EncodableValue(is_email_verified_));
-  list.push_back(provider_id_ ? EncodableValue(*provider_id_) : EncodableValue());
-  list.push_back(tenant_id_ ? EncodableValue(*tenant_id_) : EncodableValue());
-  list.push_back(refresh_token_ ? EncodableValue(*refresh_token_) : EncodableValue());
-  list.push_back(creation_timestamp_ ? EncodableValue(*creation_timestamp_) : EncodableValue());
-  list.push_back(last_sign_in_timestamp_ ? EncodableValue(*last_sign_in_timestamp_) : EncodableValue());
-  return list;
-}
-
-PigeonUserInfo PigeonUserInfo::FromEncodableList(const EncodableList& list) {
-  PigeonUserInfo decoded(
-    std::get<std::string>(list[0]),
-    std::get<bool>(list[5]),
-    std::get<bool>(list[6]));
-  auto& encodable_email = list[1];
-  if (!encodable_email.IsNull()) {
-    decoded.set_email(std::get<std::string>(encodable_email));
-  }
-  auto& encodable_display_name = list[2];
-  if (!encodable_display_name.IsNull()) {
-    decoded.set_display_name(std::get<std::string>(encodable_display_name));
-  }
-  auto& encodable_photo_url = list[3];
-  if (!encodable_photo_url.IsNull()) {
-    decoded.set_photo_url(std::get<std::string>(encodable_photo_url));
-  }
-  auto& encodable_phone_number = list[4];
-  if (!encodable_phone_number.IsNull()) {
-    decoded.set_phone_number(std::get<std::string>(encodable_phone_number));
-  }
-  auto& encodable_provider_id = list[7];
-  if (!encodable_provider_id.IsNull()) {
-    decoded.set_provider_id(std::get<std::string>(encodable_provider_id));
-  }
-  auto& encodable_tenant_id = list[8];
-  if (!encodable_tenant_id.IsNull()) {
-    decoded.set_tenant_id(std::get<std::string>(encodable_tenant_id));
-  }
-  auto& encodable_refresh_token = list[9];
-  if (!encodable_refresh_token.IsNull()) {
-    decoded.set_refresh_token(std::get<std::string>(encodable_refresh_token));
-  }
-  auto& encodable_creation_timestamp = list[10];
-  if (!encodable_creation_timestamp.IsNull()) {
-    decoded.set_creation_timestamp(encodable_creation_timestamp.LongValue());
-  }
-  auto& encodable_last_sign_in_timestamp = list[11];
-  if (!encodable_last_sign_in_timestamp.IsNull()) {
-    decoded.set_last_sign_in_timestamp(encodable_last_sign_in_timestamp.LongValue());
   }
   return decoded;
 }

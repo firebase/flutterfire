@@ -196,6 +196,82 @@ class PigeonActionCodeInfo {
   }
 }
 
+class PigeonUserInfo {
+  PigeonUserInfo({
+    required this.uid,
+    this.email,
+    this.displayName,
+    this.photoUrl,
+    this.phoneNumber,
+    required this.isAnonymous,
+    required this.isEmailVerified,
+    this.providerId,
+    this.tenantId,
+    this.refreshToken,
+    this.creationTimestamp,
+    this.lastSignInTimestamp,
+  });
+
+  String uid;
+
+  String? email;
+
+  String? displayName;
+
+  String? photoUrl;
+
+  String? phoneNumber;
+
+  bool isAnonymous;
+
+  bool isEmailVerified;
+
+  String? providerId;
+
+  String? tenantId;
+
+  String? refreshToken;
+
+  int? creationTimestamp;
+
+  int? lastSignInTimestamp;
+
+  Object encode() {
+    return <Object?>[
+      uid,
+      email,
+      displayName,
+      photoUrl,
+      phoneNumber,
+      isAnonymous,
+      isEmailVerified,
+      providerId,
+      tenantId,
+      refreshToken,
+      creationTimestamp,
+      lastSignInTimestamp,
+    ];
+  }
+
+  static PigeonUserInfo decode(Object result) {
+    result as List<Object?>;
+    return PigeonUserInfo(
+      uid: result[0]! as String,
+      email: result[1] as String?,
+      displayName: result[2] as String?,
+      photoUrl: result[3] as String?,
+      phoneNumber: result[4] as String?,
+      isAnonymous: result[5]! as bool,
+      isEmailVerified: result[6]! as bool,
+      providerId: result[7] as String?,
+      tenantId: result[8] as String?,
+      refreshToken: result[9] as String?,
+      creationTimestamp: result[10] as int?,
+      lastSignInTimestamp: result[11] as int?,
+    );
+  }
+}
+
 class PigeonUserDetails {
   PigeonUserDetails({
     required this.userInfo,
@@ -327,82 +403,6 @@ class PigeonUserCredential {
       credential: result[2] != null
           ? PigeonAuthCredential.decode(result[2]! as List<Object?>)
           : null,
-    );
-  }
-}
-
-class PigeonUserInfo {
-  PigeonUserInfo({
-    required this.uid,
-    this.email,
-    this.displayName,
-    this.photoUrl,
-    this.phoneNumber,
-    required this.isAnonymous,
-    required this.isEmailVerified,
-    this.providerId,
-    this.tenantId,
-    this.refreshToken,
-    this.creationTimestamp,
-    this.lastSignInTimestamp,
-  });
-
-  String uid;
-
-  String? email;
-
-  String? displayName;
-
-  String? photoUrl;
-
-  String? phoneNumber;
-
-  bool isAnonymous;
-
-  bool isEmailVerified;
-
-  String? providerId;
-
-  String? tenantId;
-
-  String? refreshToken;
-
-  int? creationTimestamp;
-
-  int? lastSignInTimestamp;
-
-  Object encode() {
-    return <Object?>[
-      uid,
-      email,
-      displayName,
-      photoUrl,
-      phoneNumber,
-      isAnonymous,
-      isEmailVerified,
-      providerId,
-      tenantId,
-      refreshToken,
-      creationTimestamp,
-      lastSignInTimestamp,
-    ];
-  }
-
-  static PigeonUserInfo decode(Object result) {
-    result as List<Object?>;
-    return PigeonUserInfo(
-      uid: result[0]! as String,
-      email: result[1] as String?,
-      displayName: result[2] as String?,
-      photoUrl: result[3] as String?,
-      phoneNumber: result[4] as String?,
-      isAnonymous: result[5]! as bool,
-      isEmailVerified: result[6]! as bool,
-      providerId: result[7] as String?,
-      tenantId: result[8] as String?,
-      refreshToken: result[9] as String?,
-      creationTimestamp: result[10] as int?,
-      lastSignInTimestamp: result[11] as int?,
     );
   }
 }

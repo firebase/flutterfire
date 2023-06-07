@@ -314,6 +314,106 @@ class PigeonActionCodeInfo {
 
 
 // Generated class from Pigeon that represents data sent in messages.
+class PigeonUserInfo {
+ public:
+  // Constructs an object setting all non-nullable fields.
+  explicit PigeonUserInfo(
+    const std::string& uid,
+    bool is_anonymous,
+    bool is_email_verified);
+
+  // Constructs an object setting all fields.
+  explicit PigeonUserInfo(
+    const std::string& uid,
+    const std::string* email,
+    const std::string* display_name,
+    const std::string* photo_url,
+    const std::string* phone_number,
+    bool is_anonymous,
+    bool is_email_verified,
+    const std::string* provider_id,
+    const std::string* tenant_id,
+    const std::string* refresh_token,
+    const int64_t* creation_timestamp,
+    const int64_t* last_sign_in_timestamp);
+
+  const std::string& uid() const;
+  void set_uid(std::string_view value_arg);
+
+  const std::string* email() const;
+  void set_email(const std::string_view* value_arg);
+  void set_email(std::string_view value_arg);
+
+  const std::string* display_name() const;
+  void set_display_name(const std::string_view* value_arg);
+  void set_display_name(std::string_view value_arg);
+
+  const std::string* photo_url() const;
+  void set_photo_url(const std::string_view* value_arg);
+  void set_photo_url(std::string_view value_arg);
+
+  const std::string* phone_number() const;
+  void set_phone_number(const std::string_view* value_arg);
+  void set_phone_number(std::string_view value_arg);
+
+  bool is_anonymous() const;
+  void set_is_anonymous(bool value_arg);
+
+  bool is_email_verified() const;
+  void set_is_email_verified(bool value_arg);
+
+  const std::string* provider_id() const;
+  void set_provider_id(const std::string_view* value_arg);
+  void set_provider_id(std::string_view value_arg);
+
+  const std::string* tenant_id() const;
+  void set_tenant_id(const std::string_view* value_arg);
+  void set_tenant_id(std::string_view value_arg);
+
+  const std::string* refresh_token() const;
+  void set_refresh_token(const std::string_view* value_arg);
+  void set_refresh_token(std::string_view value_arg);
+
+  const int64_t* creation_timestamp() const;
+  void set_creation_timestamp(const int64_t* value_arg);
+  void set_creation_timestamp(int64_t value_arg);
+
+  const int64_t* last_sign_in_timestamp() const;
+  void set_last_sign_in_timestamp(const int64_t* value_arg);
+  void set_last_sign_in_timestamp(int64_t value_arg);
+
+
+ private:
+  static PigeonUserInfo FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class PigeonUserDetails;
+  friend class FirebaseAuthHostApi;
+  friend class FirebaseAuthHostApiCodecSerializer;
+  friend class FirebaseAuthUserHostApi;
+  friend class FirebaseAuthUserHostApiCodecSerializer;
+  friend class MultiFactorUserHostApi;
+  friend class MultiFactorUserHostApiCodecSerializer;
+  friend class MultiFactoResolverHostApi;
+  friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class GenerateInterfaces;
+  friend class GenerateInterfacesCodecSerializer;
+  std::string uid_;
+  std::optional<std::string> email_;
+  std::optional<std::string> display_name_;
+  std::optional<std::string> photo_url_;
+  std::optional<std::string> phone_number_;
+  bool is_anonymous_;
+  bool is_email_verified_;
+  std::optional<std::string> provider_id_;
+  std::optional<std::string> tenant_id_;
+  std::optional<std::string> refresh_token_;
+  std::optional<int64_t> creation_timestamp_;
+  std::optional<int64_t> last_sign_in_timestamp_;
+
+};
+
+
+// Generated class from Pigeon that represents data sent in messages.
 class PigeonUserDetails {
  public:
   // Constructs an object setting all fields.
@@ -492,106 +592,6 @@ class PigeonUserCredential {
   std::optional<PigeonUserDetails> user_;
   std::optional<PigeonAdditionalUserInfo> additional_user_info_;
   std::optional<PigeonAuthCredential> credential_;
-
-};
-
-
-// Generated class from Pigeon that represents data sent in messages.
-class PigeonUserInfo {
- public:
-  // Constructs an object setting all non-nullable fields.
-  explicit PigeonUserInfo(
-    const std::string& uid,
-    bool is_anonymous,
-    bool is_email_verified);
-
-  // Constructs an object setting all fields.
-  explicit PigeonUserInfo(
-    const std::string& uid,
-    const std::string* email,
-    const std::string* display_name,
-    const std::string* photo_url,
-    const std::string* phone_number,
-    bool is_anonymous,
-    bool is_email_verified,
-    const std::string* provider_id,
-    const std::string* tenant_id,
-    const std::string* refresh_token,
-    const int64_t* creation_timestamp,
-    const int64_t* last_sign_in_timestamp);
-
-  const std::string& uid() const;
-  void set_uid(std::string_view value_arg);
-
-  const std::string* email() const;
-  void set_email(const std::string_view* value_arg);
-  void set_email(std::string_view value_arg);
-
-  const std::string* display_name() const;
-  void set_display_name(const std::string_view* value_arg);
-  void set_display_name(std::string_view value_arg);
-
-  const std::string* photo_url() const;
-  void set_photo_url(const std::string_view* value_arg);
-  void set_photo_url(std::string_view value_arg);
-
-  const std::string* phone_number() const;
-  void set_phone_number(const std::string_view* value_arg);
-  void set_phone_number(std::string_view value_arg);
-
-  bool is_anonymous() const;
-  void set_is_anonymous(bool value_arg);
-
-  bool is_email_verified() const;
-  void set_is_email_verified(bool value_arg);
-
-  const std::string* provider_id() const;
-  void set_provider_id(const std::string_view* value_arg);
-  void set_provider_id(std::string_view value_arg);
-
-  const std::string* tenant_id() const;
-  void set_tenant_id(const std::string_view* value_arg);
-  void set_tenant_id(std::string_view value_arg);
-
-  const std::string* refresh_token() const;
-  void set_refresh_token(const std::string_view* value_arg);
-  void set_refresh_token(std::string_view value_arg);
-
-  const int64_t* creation_timestamp() const;
-  void set_creation_timestamp(const int64_t* value_arg);
-  void set_creation_timestamp(int64_t value_arg);
-
-  const int64_t* last_sign_in_timestamp() const;
-  void set_last_sign_in_timestamp(const int64_t* value_arg);
-  void set_last_sign_in_timestamp(int64_t value_arg);
-
-
- private:
-  static PigeonUserInfo FromEncodableList(const flutter::EncodableList& list);
-  flutter::EncodableList ToEncodableList() const;
-  friend class PigeonUserDetails;
-  friend class FirebaseAuthHostApi;
-  friend class FirebaseAuthHostApiCodecSerializer;
-  friend class FirebaseAuthUserHostApi;
-  friend class FirebaseAuthUserHostApiCodecSerializer;
-  friend class MultiFactorUserHostApi;
-  friend class MultiFactorUserHostApiCodecSerializer;
-  friend class MultiFactoResolverHostApi;
-  friend class MultiFactoResolverHostApiCodecSerializer;
-  friend class GenerateInterfaces;
-  friend class GenerateInterfacesCodecSerializer;
-  std::string uid_;
-  std::optional<std::string> email_;
-  std::optional<std::string> display_name_;
-  std::optional<std::string> photo_url_;
-  std::optional<std::string> phone_number_;
-  bool is_anonymous_;
-  bool is_email_verified_;
-  std::optional<std::string> provider_id_;
-  std::optional<std::string> tenant_id_;
-  std::optional<std::string> refresh_token_;
-  std::optional<int64_t> creation_timestamp_;
-  std::optional<int64_t> last_sign_in_timestamp_;
 
 };
 

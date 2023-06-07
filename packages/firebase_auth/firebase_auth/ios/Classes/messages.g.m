@@ -60,6 +60,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList;
 @end
 
+@interface PigeonUserInfo ()
++ (PigeonUserInfo *)fromList:(NSArray *)list;
++ (nullable PigeonUserInfo *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
 @interface PigeonUserDetails ()
 + (PigeonUserDetails *)fromList:(NSArray *)list;
 + (nullable PigeonUserDetails *)nullableFromList:(NSArray *)list;
@@ -81,12 +87,6 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @interface PigeonUserCredential ()
 + (PigeonUserCredential *)fromList:(NSArray *)list;
 + (nullable PigeonUserCredential *)nullableFromList:(NSArray *)list;
-- (NSArray *)toList;
-@end
-
-@interface PigeonUserInfo ()
-+ (PigeonUserInfo *)fromList:(NSArray *)list;
-+ (nullable PigeonUserInfo *)nullableFromList:(NSArray *)list;
 - (NSArray *)toList;
 @end
 
@@ -291,6 +291,74 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
+@implementation PigeonUserInfo
++ (instancetype)makeWithUid:(NSString *)uid
+    email:(nullable NSString *)email
+    displayName:(nullable NSString *)displayName
+    photoUrl:(nullable NSString *)photoUrl
+    phoneNumber:(nullable NSString *)phoneNumber
+    isAnonymous:(NSNumber *)isAnonymous
+    isEmailVerified:(NSNumber *)isEmailVerified
+    providerId:(nullable NSString *)providerId
+    tenantId:(nullable NSString *)tenantId
+    refreshToken:(nullable NSString *)refreshToken
+    creationTimestamp:(nullable NSNumber *)creationTimestamp
+    lastSignInTimestamp:(nullable NSNumber *)lastSignInTimestamp {
+  PigeonUserInfo* pigeonResult = [[PigeonUserInfo alloc] init];
+  pigeonResult.uid = uid;
+  pigeonResult.email = email;
+  pigeonResult.displayName = displayName;
+  pigeonResult.photoUrl = photoUrl;
+  pigeonResult.phoneNumber = phoneNumber;
+  pigeonResult.isAnonymous = isAnonymous;
+  pigeonResult.isEmailVerified = isEmailVerified;
+  pigeonResult.providerId = providerId;
+  pigeonResult.tenantId = tenantId;
+  pigeonResult.refreshToken = refreshToken;
+  pigeonResult.creationTimestamp = creationTimestamp;
+  pigeonResult.lastSignInTimestamp = lastSignInTimestamp;
+  return pigeonResult;
+}
++ (PigeonUserInfo *)fromList:(NSArray *)list {
+  PigeonUserInfo *pigeonResult = [[PigeonUserInfo alloc] init];
+  pigeonResult.uid = GetNullableObjectAtIndex(list, 0);
+  NSAssert(pigeonResult.uid != nil, @"");
+  pigeonResult.email = GetNullableObjectAtIndex(list, 1);
+  pigeonResult.displayName = GetNullableObjectAtIndex(list, 2);
+  pigeonResult.photoUrl = GetNullableObjectAtIndex(list, 3);
+  pigeonResult.phoneNumber = GetNullableObjectAtIndex(list, 4);
+  pigeonResult.isAnonymous = GetNullableObjectAtIndex(list, 5);
+  NSAssert(pigeonResult.isAnonymous != nil, @"");
+  pigeonResult.isEmailVerified = GetNullableObjectAtIndex(list, 6);
+  NSAssert(pigeonResult.isEmailVerified != nil, @"");
+  pigeonResult.providerId = GetNullableObjectAtIndex(list, 7);
+  pigeonResult.tenantId = GetNullableObjectAtIndex(list, 8);
+  pigeonResult.refreshToken = GetNullableObjectAtIndex(list, 9);
+  pigeonResult.creationTimestamp = GetNullableObjectAtIndex(list, 10);
+  pigeonResult.lastSignInTimestamp = GetNullableObjectAtIndex(list, 11);
+  return pigeonResult;
+}
++ (nullable PigeonUserInfo *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonUserInfo fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    (self.uid ?: [NSNull null]),
+    (self.email ?: [NSNull null]),
+    (self.displayName ?: [NSNull null]),
+    (self.photoUrl ?: [NSNull null]),
+    (self.phoneNumber ?: [NSNull null]),
+    (self.isAnonymous ?: [NSNull null]),
+    (self.isEmailVerified ?: [NSNull null]),
+    (self.providerId ?: [NSNull null]),
+    (self.tenantId ?: [NSNull null]),
+    (self.refreshToken ?: [NSNull null]),
+    (self.creationTimestamp ?: [NSNull null]),
+    (self.lastSignInTimestamp ?: [NSNull null]),
+  ];
+}
+@end
+
 @implementation PigeonUserDetails
 + (instancetype)makeWithUserInfo:(PigeonUserInfo *)userInfo
     providerData:(NSArray<NSDictionary<id, id> *> *)providerData {
@@ -413,74 +481,6 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     (self.user ? [self.user toList] : [NSNull null]),
     (self.additionalUserInfo ? [self.additionalUserInfo toList] : [NSNull null]),
     (self.credential ? [self.credential toList] : [NSNull null]),
-  ];
-}
-@end
-
-@implementation PigeonUserInfo
-+ (instancetype)makeWithUid:(NSString *)uid
-    email:(nullable NSString *)email
-    displayName:(nullable NSString *)displayName
-    photoUrl:(nullable NSString *)photoUrl
-    phoneNumber:(nullable NSString *)phoneNumber
-    isAnonymous:(NSNumber *)isAnonymous
-    isEmailVerified:(NSNumber *)isEmailVerified
-    providerId:(nullable NSString *)providerId
-    tenantId:(nullable NSString *)tenantId
-    refreshToken:(nullable NSString *)refreshToken
-    creationTimestamp:(nullable NSNumber *)creationTimestamp
-    lastSignInTimestamp:(nullable NSNumber *)lastSignInTimestamp {
-  PigeonUserInfo* pigeonResult = [[PigeonUserInfo alloc] init];
-  pigeonResult.uid = uid;
-  pigeonResult.email = email;
-  pigeonResult.displayName = displayName;
-  pigeonResult.photoUrl = photoUrl;
-  pigeonResult.phoneNumber = phoneNumber;
-  pigeonResult.isAnonymous = isAnonymous;
-  pigeonResult.isEmailVerified = isEmailVerified;
-  pigeonResult.providerId = providerId;
-  pigeonResult.tenantId = tenantId;
-  pigeonResult.refreshToken = refreshToken;
-  pigeonResult.creationTimestamp = creationTimestamp;
-  pigeonResult.lastSignInTimestamp = lastSignInTimestamp;
-  return pigeonResult;
-}
-+ (PigeonUserInfo *)fromList:(NSArray *)list {
-  PigeonUserInfo *pigeonResult = [[PigeonUserInfo alloc] init];
-  pigeonResult.uid = GetNullableObjectAtIndex(list, 0);
-  NSAssert(pigeonResult.uid != nil, @"");
-  pigeonResult.email = GetNullableObjectAtIndex(list, 1);
-  pigeonResult.displayName = GetNullableObjectAtIndex(list, 2);
-  pigeonResult.photoUrl = GetNullableObjectAtIndex(list, 3);
-  pigeonResult.phoneNumber = GetNullableObjectAtIndex(list, 4);
-  pigeonResult.isAnonymous = GetNullableObjectAtIndex(list, 5);
-  NSAssert(pigeonResult.isAnonymous != nil, @"");
-  pigeonResult.isEmailVerified = GetNullableObjectAtIndex(list, 6);
-  NSAssert(pigeonResult.isEmailVerified != nil, @"");
-  pigeonResult.providerId = GetNullableObjectAtIndex(list, 7);
-  pigeonResult.tenantId = GetNullableObjectAtIndex(list, 8);
-  pigeonResult.refreshToken = GetNullableObjectAtIndex(list, 9);
-  pigeonResult.creationTimestamp = GetNullableObjectAtIndex(list, 10);
-  pigeonResult.lastSignInTimestamp = GetNullableObjectAtIndex(list, 11);
-  return pigeonResult;
-}
-+ (nullable PigeonUserInfo *)nullableFromList:(NSArray *)list {
-  return (list) ? [PigeonUserInfo fromList:list] : nil;
-}
-- (NSArray *)toList {
-  return @[
-    (self.uid ?: [NSNull null]),
-    (self.email ?: [NSNull null]),
-    (self.displayName ?: [NSNull null]),
-    (self.photoUrl ?: [NSNull null]),
-    (self.phoneNumber ?: [NSNull null]),
-    (self.isAnonymous ?: [NSNull null]),
-    (self.isEmailVerified ?: [NSNull null]),
-    (self.providerId ?: [NSNull null]),
-    (self.tenantId ?: [NSNull null]),
-    (self.refreshToken ?: [NSNull null]),
-    (self.creationTimestamp ?: [NSNull null]),
-    (self.lastSignInTimestamp ?: [NSNull null]),
   ];
 }
 @end
