@@ -94,16 +94,6 @@ enum ActionCodeInfoOperation {
   revertSecondFactorAddition,
 }
 
-class PigeonActionCodeInfo {
-  const PigeonActionCodeInfo({
-    required this.operation,
-    required this.data,
-  });
-
-  final ActionCodeInfoOperation operation;
-  final PigeonActionCodeInfoData data;
-}
-
 class PigeonActionCodeInfoData {
   const PigeonActionCodeInfoData({
     this.email,
@@ -114,17 +104,40 @@ class PigeonActionCodeInfoData {
   final String? previousEmail;
 }
 
-class PigeonUserCredential {
-  const PigeonUserCredential({
-    required this.user,
-    required this.additionalUserInfo,
-    required this.credential,
+class PigeonActionCodeInfo {
+  const PigeonActionCodeInfo({
+    required this.operation,
+    required this.data,
   });
 
-  final PigeonUserDetails? user;
-  final PigeonAdditionalUserInfo? additionalUserInfo;
-  final PigeonAuthCredential? credential;
+  final ActionCodeInfoOperation operation;
+  final PigeonActionCodeInfoData data;
 }
+
+class PigeonUserDetails {
+  const PigeonUserDetails({
+    required this.userInfo,
+    required this.providerData,
+  });
+
+  final PigeonUserInfo userInfo;
+  final List<Map<Object?, Object?>?> providerData;
+}
+
+class PigeonAuthCredential {
+  const PigeonAuthCredential({
+    required this.providerId,
+    required this.signInMethod,
+    required this.nativeId,
+    required this.accessToken,
+  });
+
+  final String providerId;
+  final String signInMethod;
+  final int nativeId;
+  final String? accessToken;
+}
+
 
 class PigeonAdditionalUserInfo {
   const PigeonAdditionalUserInfo({
@@ -140,18 +153,16 @@ class PigeonAdditionalUserInfo {
   final Map<String?, Object?>? profile;
 }
 
-class PigeonAuthCredential {
-  const PigeonAuthCredential({
-    required this.providerId,
-    required this.signInMethod,
-    required this.nativeId,
-    required this.accessToken,
+class PigeonUserCredential {
+  const PigeonUserCredential({
+    required this.user,
+    required this.additionalUserInfo,
+    required this.credential,
   });
 
-  final String providerId;
-  final String signInMethod;
-  final int nativeId;
-  final String? accessToken;
+  final PigeonUserDetails? user;
+  final PigeonAdditionalUserInfo? additionalUserInfo;
+  final PigeonAuthCredential? credential;
 }
 
 class PigeonUserInfo {
@@ -184,15 +195,7 @@ class PigeonUserInfo {
   final int? lastSignInTimestamp;
 }
 
-class PigeonUserDetails {
-  const PigeonUserDetails({
-    required this.userInfo,
-    required this.providerData,
-  });
 
-  final PigeonUserInfo userInfo;
-  final List<Map<Object?, Object?>?> providerData;
-}
 
 class PigeonAuthCredentialInput {
   const PigeonAuthCredentialInput({

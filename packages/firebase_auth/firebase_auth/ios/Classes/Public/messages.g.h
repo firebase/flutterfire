@@ -36,13 +36,13 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @class PigeonPhoneMultiFactorAssertion;
 @class PigeonMultiFactorInfo;
 @class PigeonFirebaseApp;
-@class PigeonActionCodeInfo;
 @class PigeonActionCodeInfoData;
-@class PigeonUserCredential;
-@class PigeonAdditionalUserInfo;
-@class PigeonAuthCredential;
-@class PigeonUserInfo;
+@class PigeonActionCodeInfo;
 @class PigeonUserDetails;
+@class PigeonAuthCredential;
+@class PigeonAdditionalUserInfo;
+@class PigeonUserCredential;
+@class PigeonUserInfo;
 @class PigeonActionCodeSettings;
 @class PigeonFirebaseAuthSettings;
 @class PigeonSignInProvider;
@@ -90,6 +90,13 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @property(nonatomic, copy, nullable) NSString * tenantId;
 @end
 
+@interface PigeonActionCodeInfoData : NSObject
++ (instancetype)makeWithEmail:(nullable NSString *)email
+    previousEmail:(nullable NSString *)previousEmail;
+@property(nonatomic, copy, nullable) NSString * email;
+@property(nonatomic, copy, nullable) NSString * previousEmail;
+@end
+
 @interface PigeonActionCodeInfo : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
@@ -99,20 +106,26 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @property(nonatomic, strong) PigeonActionCodeInfoData * data;
 @end
 
-@interface PigeonActionCodeInfoData : NSObject
-+ (instancetype)makeWithEmail:(nullable NSString *)email
-    previousEmail:(nullable NSString *)previousEmail;
-@property(nonatomic, copy, nullable) NSString * email;
-@property(nonatomic, copy, nullable) NSString * previousEmail;
+@interface PigeonUserDetails : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithUserInfo:(PigeonUserInfo *)userInfo
+    providerData:(NSArray<NSDictionary<id, id> *> *)providerData;
+@property(nonatomic, strong) PigeonUserInfo * userInfo;
+@property(nonatomic, strong) NSArray<NSDictionary<id, id> *> * providerData;
 @end
 
-@interface PigeonUserCredential : NSObject
-+ (instancetype)makeWithUser:(nullable PigeonUserDetails *)user
-    additionalUserInfo:(nullable PigeonAdditionalUserInfo *)additionalUserInfo
-    credential:(nullable PigeonAuthCredential *)credential;
-@property(nonatomic, strong, nullable) PigeonUserDetails * user;
-@property(nonatomic, strong, nullable) PigeonAdditionalUserInfo * additionalUserInfo;
-@property(nonatomic, strong, nullable) PigeonAuthCredential * credential;
+@interface PigeonAuthCredential : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithProviderId:(NSString *)providerId
+    signInMethod:(NSString *)signInMethod
+    nativeId:(NSNumber *)nativeId
+    accessToken:(nullable NSString *)accessToken;
+@property(nonatomic, copy) NSString * providerId;
+@property(nonatomic, copy) NSString * signInMethod;
+@property(nonatomic, strong) NSNumber * nativeId;
+@property(nonatomic, copy, nullable) NSString * accessToken;
 @end
 
 @interface PigeonAdditionalUserInfo : NSObject
@@ -128,17 +141,13 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @property(nonatomic, strong, nullable) NSDictionary<NSString *, id> * profile;
 @end
 
-@interface PigeonAuthCredential : NSObject
-/// `init` unavailable to enforce nonnull fields, see the `make` class method.
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithProviderId:(NSString *)providerId
-    signInMethod:(NSString *)signInMethod
-    nativeId:(NSNumber *)nativeId
-    accessToken:(nullable NSString *)accessToken;
-@property(nonatomic, copy) NSString * providerId;
-@property(nonatomic, copy) NSString * signInMethod;
-@property(nonatomic, strong) NSNumber * nativeId;
-@property(nonatomic, copy, nullable) NSString * accessToken;
+@interface PigeonUserCredential : NSObject
++ (instancetype)makeWithUser:(nullable PigeonUserDetails *)user
+    additionalUserInfo:(nullable PigeonAdditionalUserInfo *)additionalUserInfo
+    credential:(nullable PigeonAuthCredential *)credential;
+@property(nonatomic, strong, nullable) PigeonUserDetails * user;
+@property(nonatomic, strong, nullable) PigeonAdditionalUserInfo * additionalUserInfo;
+@property(nonatomic, strong, nullable) PigeonAuthCredential * credential;
 @end
 
 @interface PigeonUserInfo : NSObject
@@ -168,15 +177,6 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @property(nonatomic, copy, nullable) NSString * refreshToken;
 @property(nonatomic, strong, nullable) NSNumber * creationTimestamp;
 @property(nonatomic, strong, nullable) NSNumber * lastSignInTimestamp;
-@end
-
-@interface PigeonUserDetails : NSObject
-/// `init` unavailable to enforce nonnull fields, see the `make` class method.
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithUserInfo:(PigeonUserInfo *)userInfo
-    providerData:(NSArray<NSDictionary<id, id> *> *)providerData;
-@property(nonatomic, strong) PigeonUserInfo * userInfo;
-@property(nonatomic, strong) NSArray<NSDictionary<id, id> *> * providerData;
 @end
 
 @interface PigeonActionCodeSettings : NSObject

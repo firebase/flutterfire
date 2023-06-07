@@ -144,32 +144,6 @@ class PigeonFirebaseApp {
   }
 }
 
-class PigeonActionCodeInfo {
-  PigeonActionCodeInfo({
-    required this.operation,
-    required this.data,
-  });
-
-  ActionCodeInfoOperation operation;
-
-  PigeonActionCodeInfoData data;
-
-  Object encode() {
-    return <Object?>[
-      operation.index,
-      data.encode(),
-    ];
-  }
-
-  static PigeonActionCodeInfo decode(Object result) {
-    result as List<Object?>;
-    return PigeonActionCodeInfo(
-      operation: ActionCodeInfoOperation.values[result[0]! as int],
-      data: PigeonActionCodeInfoData.decode(result[1]! as List<Object?>),
-    );
-  }
-}
-
 class PigeonActionCodeInfoData {
   PigeonActionCodeInfoData({
     this.email,
@@ -196,39 +170,90 @@ class PigeonActionCodeInfoData {
   }
 }
 
-class PigeonUserCredential {
-  PigeonUserCredential({
-    this.user,
-    this.additionalUserInfo,
-    this.credential,
+class PigeonActionCodeInfo {
+  PigeonActionCodeInfo({
+    required this.operation,
+    required this.data,
   });
 
-  PigeonUserDetails? user;
+  ActionCodeInfoOperation operation;
 
-  PigeonAdditionalUserInfo? additionalUserInfo;
-
-  PigeonAuthCredential? credential;
+  PigeonActionCodeInfoData data;
 
   Object encode() {
     return <Object?>[
-      user?.encode(),
-      additionalUserInfo?.encode(),
-      credential?.encode(),
+      operation.index,
+      data.encode(),
     ];
   }
 
-  static PigeonUserCredential decode(Object result) {
+  static PigeonActionCodeInfo decode(Object result) {
     result as List<Object?>;
-    return PigeonUserCredential(
-      user: result[0] != null
-          ? PigeonUserDetails.decode(result[0]! as List<Object?>)
-          : null,
-      additionalUserInfo: result[1] != null
-          ? PigeonAdditionalUserInfo.decode(result[1]! as List<Object?>)
-          : null,
-      credential: result[2] != null
-          ? PigeonAuthCredential.decode(result[2]! as List<Object?>)
-          : null,
+    return PigeonActionCodeInfo(
+      operation: ActionCodeInfoOperation.values[result[0]! as int],
+      data: PigeonActionCodeInfoData.decode(result[1]! as List<Object?>),
+    );
+  }
+}
+
+class PigeonUserDetails {
+  PigeonUserDetails({
+    required this.userInfo,
+    required this.providerData,
+  });
+
+  PigeonUserInfo userInfo;
+
+  List<Map<Object?, Object?>?> providerData;
+
+  Object encode() {
+    return <Object?>[
+      userInfo.encode(),
+      providerData,
+    ];
+  }
+
+  static PigeonUserDetails decode(Object result) {
+    result as List<Object?>;
+    return PigeonUserDetails(
+      userInfo: PigeonUserInfo.decode(result[0]! as List<Object?>),
+      providerData: (result[1] as List<Object?>?)!.cast<Map<Object?, Object?>?>(),
+    );
+  }
+}
+
+class PigeonAuthCredential {
+  PigeonAuthCredential({
+    required this.providerId,
+    required this.signInMethod,
+    required this.nativeId,
+    this.accessToken,
+  });
+
+  String providerId;
+
+  String signInMethod;
+
+  int nativeId;
+
+  String? accessToken;
+
+  Object encode() {
+    return <Object?>[
+      providerId,
+      signInMethod,
+      nativeId,
+      accessToken,
+    ];
+  }
+
+  static PigeonAuthCredential decode(Object result) {
+    result as List<Object?>;
+    return PigeonAuthCredential(
+      providerId: result[0]! as String,
+      signInMethod: result[1]! as String,
+      nativeId: result[2]! as int,
+      accessToken: result[3] as String?,
     );
   }
 }
@@ -269,38 +294,39 @@ class PigeonAdditionalUserInfo {
   }
 }
 
-class PigeonAuthCredential {
-  PigeonAuthCredential({
-    required this.providerId,
-    required this.signInMethod,
-    required this.nativeId,
-    this.accessToken,
+class PigeonUserCredential {
+  PigeonUserCredential({
+    this.user,
+    this.additionalUserInfo,
+    this.credential,
   });
 
-  String providerId;
+  PigeonUserDetails? user;
 
-  String signInMethod;
+  PigeonAdditionalUserInfo? additionalUserInfo;
 
-  int nativeId;
-
-  String? accessToken;
+  PigeonAuthCredential? credential;
 
   Object encode() {
     return <Object?>[
-      providerId,
-      signInMethod,
-      nativeId,
-      accessToken,
+      user?.encode(),
+      additionalUserInfo?.encode(),
+      credential?.encode(),
     ];
   }
 
-  static PigeonAuthCredential decode(Object result) {
+  static PigeonUserCredential decode(Object result) {
     result as List<Object?>;
-    return PigeonAuthCredential(
-      providerId: result[0]! as String,
-      signInMethod: result[1]! as String,
-      nativeId: result[2]! as int,
-      accessToken: result[3] as String?,
+    return PigeonUserCredential(
+      user: result[0] != null
+          ? PigeonUserDetails.decode(result[0]! as List<Object?>)
+          : null,
+      additionalUserInfo: result[1] != null
+          ? PigeonAdditionalUserInfo.decode(result[1]! as List<Object?>)
+          : null,
+      credential: result[2] != null
+          ? PigeonAuthCredential.decode(result[2]! as List<Object?>)
+          : null,
     );
   }
 }
@@ -377,32 +403,6 @@ class PigeonUserInfo {
       refreshToken: result[9] as String?,
       creationTimestamp: result[10] as int?,
       lastSignInTimestamp: result[11] as int?,
-    );
-  }
-}
-
-class PigeonUserDetails {
-  PigeonUserDetails({
-    required this.userInfo,
-    required this.providerData,
-  });
-
-  PigeonUserInfo userInfo;
-
-  List<Map<Object?, Object?>?> providerData;
-
-  Object encode() {
-    return <Object?>[
-      userInfo.encode(),
-      providerData,
-    ];
-  }
-
-  static PigeonUserDetails decode(Object result) {
-    result as List<Object?>;
-    return PigeonUserDetails(
-      userInfo: PigeonUserInfo.decode(result[0]! as List<Object?>),
-      providerData: (result[1] as List<Object?>?)!.cast<Map<Object?, Object?>?>(),
     );
   }
 }

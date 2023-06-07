@@ -416,6 +416,70 @@ public class GeneratedAndroidFirebaseAuth {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonActionCodeInfoData {
+    private @Nullable String email;
+
+    public @Nullable String getEmail() {
+      return email;
+    }
+
+    public void setEmail(@Nullable String setterArg) {
+      this.email = setterArg;
+    }
+
+    private @Nullable String previousEmail;
+
+    public @Nullable String getPreviousEmail() {
+      return previousEmail;
+    }
+
+    public void setPreviousEmail(@Nullable String setterArg) {
+      this.previousEmail = setterArg;
+    }
+
+    public static final class Builder {
+
+      private @Nullable String email;
+
+      public @NonNull Builder setEmail(@Nullable String setterArg) {
+        this.email = setterArg;
+        return this;
+      }
+
+      private @Nullable String previousEmail;
+
+      public @NonNull Builder setPreviousEmail(@Nullable String setterArg) {
+        this.previousEmail = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonActionCodeInfoData build() {
+        PigeonActionCodeInfoData pigeonReturn = new PigeonActionCodeInfoData();
+        pigeonReturn.setEmail(email);
+        pigeonReturn.setPreviousEmail(previousEmail);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+      toListResult.add(email);
+      toListResult.add(previousEmail);
+      return toListResult;
+    }
+
+    static @NonNull PigeonActionCodeInfoData fromList(@NonNull ArrayList<Object> list) {
+      PigeonActionCodeInfoData pigeonResult = new PigeonActionCodeInfoData();
+      Object email = list.get(0);
+      pigeonResult.setEmail((String) email);
+      Object previousEmail = list.get(1);
+      pigeonResult.setPreviousEmail((String) previousEmail);
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
   public static final class PigeonActionCodeInfo {
     private @NonNull ActionCodeInfoOperation operation;
 
@@ -489,47 +553,56 @@ public class GeneratedAndroidFirebaseAuth {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
-  public static final class PigeonActionCodeInfoData {
-    private @Nullable String email;
+  public static final class PigeonUserDetails {
+    private @NonNull PigeonUserInfo userInfo;
 
-    public @Nullable String getEmail() {
-      return email;
+    public @NonNull PigeonUserInfo getUserInfo() {
+      return userInfo;
     }
 
-    public void setEmail(@Nullable String setterArg) {
-      this.email = setterArg;
+    public void setUserInfo(@NonNull PigeonUserInfo setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"userInfo\" is null.");
+      }
+      this.userInfo = setterArg;
     }
 
-    private @Nullable String previousEmail;
+    private @NonNull List<Map<Object, Object>> providerData;
 
-    public @Nullable String getPreviousEmail() {
-      return previousEmail;
+    public @NonNull List<Map<Object, Object>> getProviderData() {
+      return providerData;
     }
 
-    public void setPreviousEmail(@Nullable String setterArg) {
-      this.previousEmail = setterArg;
+    public void setProviderData(@NonNull List<Map<Object, Object>> setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"providerData\" is null.");
+      }
+      this.providerData = setterArg;
     }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonUserDetails() {}
 
     public static final class Builder {
 
-      private @Nullable String email;
+      private @Nullable PigeonUserInfo userInfo;
 
-      public @NonNull Builder setEmail(@Nullable String setterArg) {
-        this.email = setterArg;
+      public @NonNull Builder setUserInfo(@NonNull PigeonUserInfo setterArg) {
+        this.userInfo = setterArg;
         return this;
       }
 
-      private @Nullable String previousEmail;
+      private @Nullable List<Map<Object, Object>> providerData;
 
-      public @NonNull Builder setPreviousEmail(@Nullable String setterArg) {
-        this.previousEmail = setterArg;
+      public @NonNull Builder setProviderData(@NonNull List<Map<Object, Object>> setterArg) {
+        this.providerData = setterArg;
         return this;
       }
 
-      public @NonNull PigeonActionCodeInfoData build() {
-        PigeonActionCodeInfoData pigeonReturn = new PigeonActionCodeInfoData();
-        pigeonReturn.setEmail(email);
-        pigeonReturn.setPreviousEmail(previousEmail);
+      public @NonNull PigeonUserDetails build() {
+        PigeonUserDetails pigeonReturn = new PigeonUserDetails();
+        pigeonReturn.setUserInfo(userInfo);
+        pigeonReturn.setProviderData(providerData);
         return pigeonReturn;
       }
     }
@@ -537,214 +610,17 @@ public class GeneratedAndroidFirebaseAuth {
     @NonNull
     ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
-      toListResult.add(email);
-      toListResult.add(previousEmail);
+      toListResult.add((userInfo == null) ? null : userInfo.toList());
+      toListResult.add(providerData);
       return toListResult;
     }
 
-    static @NonNull PigeonActionCodeInfoData fromList(@NonNull ArrayList<Object> list) {
-      PigeonActionCodeInfoData pigeonResult = new PigeonActionCodeInfoData();
-      Object email = list.get(0);
-      pigeonResult.setEmail((String) email);
-      Object previousEmail = list.get(1);
-      pigeonResult.setPreviousEmail((String) previousEmail);
-      return pigeonResult;
-    }
-  }
-
-  /** Generated class from Pigeon that represents data sent in messages. */
-  public static final class PigeonUserCredential {
-    private @Nullable PigeonUserDetails user;
-
-    public @Nullable PigeonUserDetails getUser() {
-      return user;
-    }
-
-    public void setUser(@Nullable PigeonUserDetails setterArg) {
-      this.user = setterArg;
-    }
-
-    private @Nullable PigeonAdditionalUserInfo additionalUserInfo;
-
-    public @Nullable PigeonAdditionalUserInfo getAdditionalUserInfo() {
-      return additionalUserInfo;
-    }
-
-    public void setAdditionalUserInfo(@Nullable PigeonAdditionalUserInfo setterArg) {
-      this.additionalUserInfo = setterArg;
-    }
-
-    private @Nullable PigeonAuthCredential credential;
-
-    public @Nullable PigeonAuthCredential getCredential() {
-      return credential;
-    }
-
-    public void setCredential(@Nullable PigeonAuthCredential setterArg) {
-      this.credential = setterArg;
-    }
-
-    public static final class Builder {
-
-      private @Nullable PigeonUserDetails user;
-
-      public @NonNull Builder setUser(@Nullable PigeonUserDetails setterArg) {
-        this.user = setterArg;
-        return this;
-      }
-
-      private @Nullable PigeonAdditionalUserInfo additionalUserInfo;
-
-      public @NonNull Builder setAdditionalUserInfo(@Nullable PigeonAdditionalUserInfo setterArg) {
-        this.additionalUserInfo = setterArg;
-        return this;
-      }
-
-      private @Nullable PigeonAuthCredential credential;
-
-      public @NonNull Builder setCredential(@Nullable PigeonAuthCredential setterArg) {
-        this.credential = setterArg;
-        return this;
-      }
-
-      public @NonNull PigeonUserCredential build() {
-        PigeonUserCredential pigeonReturn = new PigeonUserCredential();
-        pigeonReturn.setUser(user);
-        pigeonReturn.setAdditionalUserInfo(additionalUserInfo);
-        pigeonReturn.setCredential(credential);
-        return pigeonReturn;
-      }
-    }
-
-    @NonNull
-    ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(3);
-      toListResult.add((user == null) ? null : user.toList());
-      toListResult.add((additionalUserInfo == null) ? null : additionalUserInfo.toList());
-      toListResult.add((credential == null) ? null : credential.toList());
-      return toListResult;
-    }
-
-    static @NonNull PigeonUserCredential fromList(@NonNull ArrayList<Object> list) {
-      PigeonUserCredential pigeonResult = new PigeonUserCredential();
-      Object user = list.get(0);
-      pigeonResult.setUser((user == null) ? null : PigeonUserDetails.fromList((ArrayList<Object>) user));
-      Object additionalUserInfo = list.get(1);
-      pigeonResult.setAdditionalUserInfo((additionalUserInfo == null) ? null : PigeonAdditionalUserInfo.fromList((ArrayList<Object>) additionalUserInfo));
-      Object credential = list.get(2);
-      pigeonResult.setCredential((credential == null) ? null : PigeonAuthCredential.fromList((ArrayList<Object>) credential));
-      return pigeonResult;
-    }
-  }
-
-  /** Generated class from Pigeon that represents data sent in messages. */
-  public static final class PigeonAdditionalUserInfo {
-    private @NonNull Boolean isNewUser;
-
-    public @NonNull Boolean getIsNewUser() {
-      return isNewUser;
-    }
-
-    public void setIsNewUser(@NonNull Boolean setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"isNewUser\" is null.");
-      }
-      this.isNewUser = setterArg;
-    }
-
-    private @Nullable String providerId;
-
-    public @Nullable String getProviderId() {
-      return providerId;
-    }
-
-    public void setProviderId(@Nullable String setterArg) {
-      this.providerId = setterArg;
-    }
-
-    private @Nullable String username;
-
-    public @Nullable String getUsername() {
-      return username;
-    }
-
-    public void setUsername(@Nullable String setterArg) {
-      this.username = setterArg;
-    }
-
-    private @Nullable Map<String, Object> profile;
-
-    public @Nullable Map<String, Object> getProfile() {
-      return profile;
-    }
-
-    public void setProfile(@Nullable Map<String, Object> setterArg) {
-      this.profile = setterArg;
-    }
-
-    /** Constructor is non-public to enforce null safety; use Builder. */
-    PigeonAdditionalUserInfo() {}
-
-    public static final class Builder {
-
-      private @Nullable Boolean isNewUser;
-
-      public @NonNull Builder setIsNewUser(@NonNull Boolean setterArg) {
-        this.isNewUser = setterArg;
-        return this;
-      }
-
-      private @Nullable String providerId;
-
-      public @NonNull Builder setProviderId(@Nullable String setterArg) {
-        this.providerId = setterArg;
-        return this;
-      }
-
-      private @Nullable String username;
-
-      public @NonNull Builder setUsername(@Nullable String setterArg) {
-        this.username = setterArg;
-        return this;
-      }
-
-      private @Nullable Map<String, Object> profile;
-
-      public @NonNull Builder setProfile(@Nullable Map<String, Object> setterArg) {
-        this.profile = setterArg;
-        return this;
-      }
-
-      public @NonNull PigeonAdditionalUserInfo build() {
-        PigeonAdditionalUserInfo pigeonReturn = new PigeonAdditionalUserInfo();
-        pigeonReturn.setIsNewUser(isNewUser);
-        pigeonReturn.setProviderId(providerId);
-        pigeonReturn.setUsername(username);
-        pigeonReturn.setProfile(profile);
-        return pigeonReturn;
-      }
-    }
-
-    @NonNull
-    ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(4);
-      toListResult.add(isNewUser);
-      toListResult.add(providerId);
-      toListResult.add(username);
-      toListResult.add(profile);
-      return toListResult;
-    }
-
-    static @NonNull PigeonAdditionalUserInfo fromList(@NonNull ArrayList<Object> list) {
-      PigeonAdditionalUserInfo pigeonResult = new PigeonAdditionalUserInfo();
-      Object isNewUser = list.get(0);
-      pigeonResult.setIsNewUser((Boolean) isNewUser);
-      Object providerId = list.get(1);
-      pigeonResult.setProviderId((String) providerId);
-      Object username = list.get(2);
-      pigeonResult.setUsername((String) username);
-      Object profile = list.get(3);
-      pigeonResult.setProfile((Map<String, Object>) profile);
+    static @NonNull PigeonUserDetails fromList(@NonNull ArrayList<Object> list) {
+      PigeonUserDetails pigeonResult = new PigeonUserDetails();
+      Object userInfo = list.get(0);
+      pigeonResult.setUserInfo((userInfo == null) ? null : PigeonUserInfo.fromList((ArrayList<Object>) userInfo));
+      Object providerData = list.get(1);
+      pigeonResult.setProviderData((List<Map<Object, Object>>) providerData);
       return pigeonResult;
     }
   }
@@ -863,6 +739,203 @@ public class GeneratedAndroidFirebaseAuth {
       pigeonResult.setNativeId((nativeId == null) ? null : ((nativeId instanceof Integer) ? (Integer) nativeId : (Long) nativeId));
       Object accessToken = list.get(3);
       pigeonResult.setAccessToken((String) accessToken);
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonAdditionalUserInfo {
+    private @NonNull Boolean isNewUser;
+
+    public @NonNull Boolean getIsNewUser() {
+      return isNewUser;
+    }
+
+    public void setIsNewUser(@NonNull Boolean setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"isNewUser\" is null.");
+      }
+      this.isNewUser = setterArg;
+    }
+
+    private @Nullable String providerId;
+
+    public @Nullable String getProviderId() {
+      return providerId;
+    }
+
+    public void setProviderId(@Nullable String setterArg) {
+      this.providerId = setterArg;
+    }
+
+    private @Nullable String username;
+
+    public @Nullable String getUsername() {
+      return username;
+    }
+
+    public void setUsername(@Nullable String setterArg) {
+      this.username = setterArg;
+    }
+
+    private @Nullable Map<String, Object> profile;
+
+    public @Nullable Map<String, Object> getProfile() {
+      return profile;
+    }
+
+    public void setProfile(@Nullable Map<String, Object> setterArg) {
+      this.profile = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonAdditionalUserInfo() {}
+
+    public static final class Builder {
+
+      private @Nullable Boolean isNewUser;
+
+      public @NonNull Builder setIsNewUser(@NonNull Boolean setterArg) {
+        this.isNewUser = setterArg;
+        return this;
+      }
+
+      private @Nullable String providerId;
+
+      public @NonNull Builder setProviderId(@Nullable String setterArg) {
+        this.providerId = setterArg;
+        return this;
+      }
+
+      private @Nullable String username;
+
+      public @NonNull Builder setUsername(@Nullable String setterArg) {
+        this.username = setterArg;
+        return this;
+      }
+
+      private @Nullable Map<String, Object> profile;
+
+      public @NonNull Builder setProfile(@Nullable Map<String, Object> setterArg) {
+        this.profile = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonAdditionalUserInfo build() {
+        PigeonAdditionalUserInfo pigeonReturn = new PigeonAdditionalUserInfo();
+        pigeonReturn.setIsNewUser(isNewUser);
+        pigeonReturn.setProviderId(providerId);
+        pigeonReturn.setUsername(username);
+        pigeonReturn.setProfile(profile);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(4);
+      toListResult.add(isNewUser);
+      toListResult.add(providerId);
+      toListResult.add(username);
+      toListResult.add(profile);
+      return toListResult;
+    }
+
+    static @NonNull PigeonAdditionalUserInfo fromList(@NonNull ArrayList<Object> list) {
+      PigeonAdditionalUserInfo pigeonResult = new PigeonAdditionalUserInfo();
+      Object isNewUser = list.get(0);
+      pigeonResult.setIsNewUser((Boolean) isNewUser);
+      Object providerId = list.get(1);
+      pigeonResult.setProviderId((String) providerId);
+      Object username = list.get(2);
+      pigeonResult.setUsername((String) username);
+      Object profile = list.get(3);
+      pigeonResult.setProfile((Map<String, Object>) profile);
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonUserCredential {
+    private @Nullable PigeonUserDetails user;
+
+    public @Nullable PigeonUserDetails getUser() {
+      return user;
+    }
+
+    public void setUser(@Nullable PigeonUserDetails setterArg) {
+      this.user = setterArg;
+    }
+
+    private @Nullable PigeonAdditionalUserInfo additionalUserInfo;
+
+    public @Nullable PigeonAdditionalUserInfo getAdditionalUserInfo() {
+      return additionalUserInfo;
+    }
+
+    public void setAdditionalUserInfo(@Nullable PigeonAdditionalUserInfo setterArg) {
+      this.additionalUserInfo = setterArg;
+    }
+
+    private @Nullable PigeonAuthCredential credential;
+
+    public @Nullable PigeonAuthCredential getCredential() {
+      return credential;
+    }
+
+    public void setCredential(@Nullable PigeonAuthCredential setterArg) {
+      this.credential = setterArg;
+    }
+
+    public static final class Builder {
+
+      private @Nullable PigeonUserDetails user;
+
+      public @NonNull Builder setUser(@Nullable PigeonUserDetails setterArg) {
+        this.user = setterArg;
+        return this;
+      }
+
+      private @Nullable PigeonAdditionalUserInfo additionalUserInfo;
+
+      public @NonNull Builder setAdditionalUserInfo(@Nullable PigeonAdditionalUserInfo setterArg) {
+        this.additionalUserInfo = setterArg;
+        return this;
+      }
+
+      private @Nullable PigeonAuthCredential credential;
+
+      public @NonNull Builder setCredential(@Nullable PigeonAuthCredential setterArg) {
+        this.credential = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonUserCredential build() {
+        PigeonUserCredential pigeonReturn = new PigeonUserCredential();
+        pigeonReturn.setUser(user);
+        pigeonReturn.setAdditionalUserInfo(additionalUserInfo);
+        pigeonReturn.setCredential(credential);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(3);
+      toListResult.add((user == null) ? null : user.toList());
+      toListResult.add((additionalUserInfo == null) ? null : additionalUserInfo.toList());
+      toListResult.add((credential == null) ? null : credential.toList());
+      return toListResult;
+    }
+
+    static @NonNull PigeonUserCredential fromList(@NonNull ArrayList<Object> list) {
+      PigeonUserCredential pigeonResult = new PigeonUserCredential();
+      Object user = list.get(0);
+      pigeonResult.setUser((user == null) ? null : PigeonUserDetails.fromList((ArrayList<Object>) user));
+      Object additionalUserInfo = list.get(1);
+      pigeonResult.setAdditionalUserInfo((additionalUserInfo == null) ? null : PigeonAdditionalUserInfo.fromList((ArrayList<Object>) additionalUserInfo));
+      Object credential = list.get(2);
+      pigeonResult.setCredential((credential == null) ? null : PigeonAuthCredential.fromList((ArrayList<Object>) credential));
       return pigeonResult;
     }
   }
@@ -1149,79 +1222,6 @@ public class GeneratedAndroidFirebaseAuth {
       pigeonResult.setCreationTimestamp((creationTimestamp == null) ? null : ((creationTimestamp instanceof Integer) ? (Integer) creationTimestamp : (Long) creationTimestamp));
       Object lastSignInTimestamp = list.get(11);
       pigeonResult.setLastSignInTimestamp((lastSignInTimestamp == null) ? null : ((lastSignInTimestamp instanceof Integer) ? (Integer) lastSignInTimestamp : (Long) lastSignInTimestamp));
-      return pigeonResult;
-    }
-  }
-
-  /** Generated class from Pigeon that represents data sent in messages. */
-  public static final class PigeonUserDetails {
-    private @NonNull PigeonUserInfo userInfo;
-
-    public @NonNull PigeonUserInfo getUserInfo() {
-      return userInfo;
-    }
-
-    public void setUserInfo(@NonNull PigeonUserInfo setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"userInfo\" is null.");
-      }
-      this.userInfo = setterArg;
-    }
-
-    private @NonNull List<Map<Object, Object>> providerData;
-
-    public @NonNull List<Map<Object, Object>> getProviderData() {
-      return providerData;
-    }
-
-    public void setProviderData(@NonNull List<Map<Object, Object>> setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"providerData\" is null.");
-      }
-      this.providerData = setterArg;
-    }
-
-    /** Constructor is non-public to enforce null safety; use Builder. */
-    PigeonUserDetails() {}
-
-    public static final class Builder {
-
-      private @Nullable PigeonUserInfo userInfo;
-
-      public @NonNull Builder setUserInfo(@NonNull PigeonUserInfo setterArg) {
-        this.userInfo = setterArg;
-        return this;
-      }
-
-      private @Nullable List<Map<Object, Object>> providerData;
-
-      public @NonNull Builder setProviderData(@NonNull List<Map<Object, Object>> setterArg) {
-        this.providerData = setterArg;
-        return this;
-      }
-
-      public @NonNull PigeonUserDetails build() {
-        PigeonUserDetails pigeonReturn = new PigeonUserDetails();
-        pigeonReturn.setUserInfo(userInfo);
-        pigeonReturn.setProviderData(providerData);
-        return pigeonReturn;
-      }
-    }
-
-    @NonNull
-    ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(2);
-      toListResult.add((userInfo == null) ? null : userInfo.toList());
-      toListResult.add(providerData);
-      return toListResult;
-    }
-
-    static @NonNull PigeonUserDetails fromList(@NonNull ArrayList<Object> list) {
-      PigeonUserDetails pigeonResult = new PigeonUserDetails();
-      Object userInfo = list.get(0);
-      pigeonResult.setUserInfo((userInfo == null) ? null : PigeonUserInfo.fromList((ArrayList<Object>) userInfo));
-      Object providerData = list.get(1);
-      pigeonResult.setProviderData((List<Map<Object, Object>>) providerData);
       return pigeonResult;
     }
   }

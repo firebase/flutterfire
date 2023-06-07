@@ -48,27 +48,21 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList;
 @end
 
-@interface PigeonActionCodeInfo ()
-+ (PigeonActionCodeInfo *)fromList:(NSArray *)list;
-+ (nullable PigeonActionCodeInfo *)nullableFromList:(NSArray *)list;
-- (NSArray *)toList;
-@end
-
 @interface PigeonActionCodeInfoData ()
 + (PigeonActionCodeInfoData *)fromList:(NSArray *)list;
 + (nullable PigeonActionCodeInfoData *)nullableFromList:(NSArray *)list;
 - (NSArray *)toList;
 @end
 
-@interface PigeonUserCredential ()
-+ (PigeonUserCredential *)fromList:(NSArray *)list;
-+ (nullable PigeonUserCredential *)nullableFromList:(NSArray *)list;
+@interface PigeonActionCodeInfo ()
++ (PigeonActionCodeInfo *)fromList:(NSArray *)list;
++ (nullable PigeonActionCodeInfo *)nullableFromList:(NSArray *)list;
 - (NSArray *)toList;
 @end
 
-@interface PigeonAdditionalUserInfo ()
-+ (PigeonAdditionalUserInfo *)fromList:(NSArray *)list;
-+ (nullable PigeonAdditionalUserInfo *)nullableFromList:(NSArray *)list;
+@interface PigeonUserDetails ()
++ (PigeonUserDetails *)fromList:(NSArray *)list;
++ (nullable PigeonUserDetails *)nullableFromList:(NSArray *)list;
 - (NSArray *)toList;
 @end
 
@@ -78,15 +72,21 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList;
 @end
 
-@interface PigeonUserInfo ()
-+ (PigeonUserInfo *)fromList:(NSArray *)list;
-+ (nullable PigeonUserInfo *)nullableFromList:(NSArray *)list;
+@interface PigeonAdditionalUserInfo ()
++ (PigeonAdditionalUserInfo *)fromList:(NSArray *)list;
++ (nullable PigeonAdditionalUserInfo *)nullableFromList:(NSArray *)list;
 - (NSArray *)toList;
 @end
 
-@interface PigeonUserDetails ()
-+ (PigeonUserDetails *)fromList:(NSArray *)list;
-+ (nullable PigeonUserDetails *)nullableFromList:(NSArray *)list;
+@interface PigeonUserCredential ()
++ (PigeonUserCredential *)fromList:(NSArray *)list;
++ (nullable PigeonUserCredential *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
+@interface PigeonUserInfo ()
++ (PigeonUserInfo *)fromList:(NSArray *)list;
++ (nullable PigeonUserInfo *)nullableFromList:(NSArray *)list;
 - (NSArray *)toList;
 @end
 
@@ -240,6 +240,31 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
+@implementation PigeonActionCodeInfoData
++ (instancetype)makeWithEmail:(nullable NSString *)email
+    previousEmail:(nullable NSString *)previousEmail {
+  PigeonActionCodeInfoData* pigeonResult = [[PigeonActionCodeInfoData alloc] init];
+  pigeonResult.email = email;
+  pigeonResult.previousEmail = previousEmail;
+  return pigeonResult;
+}
++ (PigeonActionCodeInfoData *)fromList:(NSArray *)list {
+  PigeonActionCodeInfoData *pigeonResult = [[PigeonActionCodeInfoData alloc] init];
+  pigeonResult.email = GetNullableObjectAtIndex(list, 0);
+  pigeonResult.previousEmail = GetNullableObjectAtIndex(list, 1);
+  return pigeonResult;
+}
++ (nullable PigeonActionCodeInfoData *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonActionCodeInfoData fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    (self.email ?: [NSNull null]),
+    (self.previousEmail ?: [NSNull null]),
+  ];
+}
+@end
+
 @implementation PigeonActionCodeInfo
 + (instancetype)makeWithOperation:(ActionCodeInfoOperation)operation
     data:(PigeonActionCodeInfoData *)data {
@@ -266,56 +291,65 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
-@implementation PigeonActionCodeInfoData
-+ (instancetype)makeWithEmail:(nullable NSString *)email
-    previousEmail:(nullable NSString *)previousEmail {
-  PigeonActionCodeInfoData* pigeonResult = [[PigeonActionCodeInfoData alloc] init];
-  pigeonResult.email = email;
-  pigeonResult.previousEmail = previousEmail;
+@implementation PigeonUserDetails
++ (instancetype)makeWithUserInfo:(PigeonUserInfo *)userInfo
+    providerData:(NSArray<NSDictionary<id, id> *> *)providerData {
+  PigeonUserDetails* pigeonResult = [[PigeonUserDetails alloc] init];
+  pigeonResult.userInfo = userInfo;
+  pigeonResult.providerData = providerData;
   return pigeonResult;
 }
-+ (PigeonActionCodeInfoData *)fromList:(NSArray *)list {
-  PigeonActionCodeInfoData *pigeonResult = [[PigeonActionCodeInfoData alloc] init];
-  pigeonResult.email = GetNullableObjectAtIndex(list, 0);
-  pigeonResult.previousEmail = GetNullableObjectAtIndex(list, 1);
++ (PigeonUserDetails *)fromList:(NSArray *)list {
+  PigeonUserDetails *pigeonResult = [[PigeonUserDetails alloc] init];
+  pigeonResult.userInfo = [PigeonUserInfo nullableFromList:(GetNullableObjectAtIndex(list, 0))];
+  NSAssert(pigeonResult.userInfo != nil, @"");
+  pigeonResult.providerData = GetNullableObjectAtIndex(list, 1);
+  NSAssert(pigeonResult.providerData != nil, @"");
   return pigeonResult;
 }
-+ (nullable PigeonActionCodeInfoData *)nullableFromList:(NSArray *)list {
-  return (list) ? [PigeonActionCodeInfoData fromList:list] : nil;
++ (nullable PigeonUserDetails *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonUserDetails fromList:list] : nil;
 }
 - (NSArray *)toList {
   return @[
-    (self.email ?: [NSNull null]),
-    (self.previousEmail ?: [NSNull null]),
+    (self.userInfo ? [self.userInfo toList] : [NSNull null]),
+    (self.providerData ?: [NSNull null]),
   ];
 }
 @end
 
-@implementation PigeonUserCredential
-+ (instancetype)makeWithUser:(nullable PigeonUserDetails *)user
-    additionalUserInfo:(nullable PigeonAdditionalUserInfo *)additionalUserInfo
-    credential:(nullable PigeonAuthCredential *)credential {
-  PigeonUserCredential* pigeonResult = [[PigeonUserCredential alloc] init];
-  pigeonResult.user = user;
-  pigeonResult.additionalUserInfo = additionalUserInfo;
-  pigeonResult.credential = credential;
+@implementation PigeonAuthCredential
++ (instancetype)makeWithProviderId:(NSString *)providerId
+    signInMethod:(NSString *)signInMethod
+    nativeId:(NSNumber *)nativeId
+    accessToken:(nullable NSString *)accessToken {
+  PigeonAuthCredential* pigeonResult = [[PigeonAuthCredential alloc] init];
+  pigeonResult.providerId = providerId;
+  pigeonResult.signInMethod = signInMethod;
+  pigeonResult.nativeId = nativeId;
+  pigeonResult.accessToken = accessToken;
   return pigeonResult;
 }
-+ (PigeonUserCredential *)fromList:(NSArray *)list {
-  PigeonUserCredential *pigeonResult = [[PigeonUserCredential alloc] init];
-  pigeonResult.user = [PigeonUserDetails nullableFromList:(GetNullableObjectAtIndex(list, 0))];
-  pigeonResult.additionalUserInfo = [PigeonAdditionalUserInfo nullableFromList:(GetNullableObjectAtIndex(list, 1))];
-  pigeonResult.credential = [PigeonAuthCredential nullableFromList:(GetNullableObjectAtIndex(list, 2))];
++ (PigeonAuthCredential *)fromList:(NSArray *)list {
+  PigeonAuthCredential *pigeonResult = [[PigeonAuthCredential alloc] init];
+  pigeonResult.providerId = GetNullableObjectAtIndex(list, 0);
+  NSAssert(pigeonResult.providerId != nil, @"");
+  pigeonResult.signInMethod = GetNullableObjectAtIndex(list, 1);
+  NSAssert(pigeonResult.signInMethod != nil, @"");
+  pigeonResult.nativeId = GetNullableObjectAtIndex(list, 2);
+  NSAssert(pigeonResult.nativeId != nil, @"");
+  pigeonResult.accessToken = GetNullableObjectAtIndex(list, 3);
   return pigeonResult;
 }
-+ (nullable PigeonUserCredential *)nullableFromList:(NSArray *)list {
-  return (list) ? [PigeonUserCredential fromList:list] : nil;
++ (nullable PigeonAuthCredential *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonAuthCredential fromList:list] : nil;
 }
 - (NSArray *)toList {
   return @[
-    (self.user ? [self.user toList] : [NSNull null]),
-    (self.additionalUserInfo ? [self.additionalUserInfo toList] : [NSNull null]),
-    (self.credential ? [self.credential toList] : [NSNull null]),
+    (self.providerId ?: [NSNull null]),
+    (self.signInMethod ?: [NSNull null]),
+    (self.nativeId ?: [NSNull null]),
+    (self.accessToken ?: [NSNull null]),
   ];
 }
 @end
@@ -354,38 +388,31 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
-@implementation PigeonAuthCredential
-+ (instancetype)makeWithProviderId:(NSString *)providerId
-    signInMethod:(NSString *)signInMethod
-    nativeId:(NSNumber *)nativeId
-    accessToken:(nullable NSString *)accessToken {
-  PigeonAuthCredential* pigeonResult = [[PigeonAuthCredential alloc] init];
-  pigeonResult.providerId = providerId;
-  pigeonResult.signInMethod = signInMethod;
-  pigeonResult.nativeId = nativeId;
-  pigeonResult.accessToken = accessToken;
+@implementation PigeonUserCredential
++ (instancetype)makeWithUser:(nullable PigeonUserDetails *)user
+    additionalUserInfo:(nullable PigeonAdditionalUserInfo *)additionalUserInfo
+    credential:(nullable PigeonAuthCredential *)credential {
+  PigeonUserCredential* pigeonResult = [[PigeonUserCredential alloc] init];
+  pigeonResult.user = user;
+  pigeonResult.additionalUserInfo = additionalUserInfo;
+  pigeonResult.credential = credential;
   return pigeonResult;
 }
-+ (PigeonAuthCredential *)fromList:(NSArray *)list {
-  PigeonAuthCredential *pigeonResult = [[PigeonAuthCredential alloc] init];
-  pigeonResult.providerId = GetNullableObjectAtIndex(list, 0);
-  NSAssert(pigeonResult.providerId != nil, @"");
-  pigeonResult.signInMethod = GetNullableObjectAtIndex(list, 1);
-  NSAssert(pigeonResult.signInMethod != nil, @"");
-  pigeonResult.nativeId = GetNullableObjectAtIndex(list, 2);
-  NSAssert(pigeonResult.nativeId != nil, @"");
-  pigeonResult.accessToken = GetNullableObjectAtIndex(list, 3);
++ (PigeonUserCredential *)fromList:(NSArray *)list {
+  PigeonUserCredential *pigeonResult = [[PigeonUserCredential alloc] init];
+  pigeonResult.user = [PigeonUserDetails nullableFromList:(GetNullableObjectAtIndex(list, 0))];
+  pigeonResult.additionalUserInfo = [PigeonAdditionalUserInfo nullableFromList:(GetNullableObjectAtIndex(list, 1))];
+  pigeonResult.credential = [PigeonAuthCredential nullableFromList:(GetNullableObjectAtIndex(list, 2))];
   return pigeonResult;
 }
-+ (nullable PigeonAuthCredential *)nullableFromList:(NSArray *)list {
-  return (list) ? [PigeonAuthCredential fromList:list] : nil;
++ (nullable PigeonUserCredential *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonUserCredential fromList:list] : nil;
 }
 - (NSArray *)toList {
   return @[
-    (self.providerId ?: [NSNull null]),
-    (self.signInMethod ?: [NSNull null]),
-    (self.nativeId ?: [NSNull null]),
-    (self.accessToken ?: [NSNull null]),
+    (self.user ? [self.user toList] : [NSNull null]),
+    (self.additionalUserInfo ? [self.additionalUserInfo toList] : [NSNull null]),
+    (self.credential ? [self.credential toList] : [NSNull null]),
   ];
 }
 @end
@@ -454,33 +481,6 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     (self.refreshToken ?: [NSNull null]),
     (self.creationTimestamp ?: [NSNull null]),
     (self.lastSignInTimestamp ?: [NSNull null]),
-  ];
-}
-@end
-
-@implementation PigeonUserDetails
-+ (instancetype)makeWithUserInfo:(PigeonUserInfo *)userInfo
-    providerData:(NSArray<NSDictionary<id, id> *> *)providerData {
-  PigeonUserDetails* pigeonResult = [[PigeonUserDetails alloc] init];
-  pigeonResult.userInfo = userInfo;
-  pigeonResult.providerData = providerData;
-  return pigeonResult;
-}
-+ (PigeonUserDetails *)fromList:(NSArray *)list {
-  PigeonUserDetails *pigeonResult = [[PigeonUserDetails alloc] init];
-  pigeonResult.userInfo = [PigeonUserInfo nullableFromList:(GetNullableObjectAtIndex(list, 0))];
-  NSAssert(pigeonResult.userInfo != nil, @"");
-  pigeonResult.providerData = GetNullableObjectAtIndex(list, 1);
-  NSAssert(pigeonResult.providerData != nil, @"");
-  return pigeonResult;
-}
-+ (nullable PigeonUserDetails *)nullableFromList:(NSArray *)list {
-  return (list) ? [PigeonUserDetails fromList:list] : nil;
-}
-- (NSArray *)toList {
-  return @[
-    (self.userInfo ? [self.userInfo toList] : [NSNull null]),
-    (self.providerData ?: [NSNull null]),
   ];
 }
 @end
