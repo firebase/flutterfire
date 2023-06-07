@@ -2,7 +2,7 @@
 
 // This must be included before many other Windows headers.
 #include <windows.h>
-
+#include "firebase/app.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
