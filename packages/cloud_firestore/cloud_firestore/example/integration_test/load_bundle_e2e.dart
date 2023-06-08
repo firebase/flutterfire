@@ -2,8 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:typed_data';
-
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -69,26 +68,30 @@ void runLoadBundleTests() {
         );
       });
 
-      testWidgets('loadBundle(): error handling for malformed bundle',
-          (_) async {
-        final url = Uri.https(
-          'api.rnfirebase.io',
-          '/firestore/e2e-tests/malformed-bundle',
-        );
-        final response = await http.get(url);
-        String string = response.body;
-        Uint8List buffer = Uint8List.fromList(string.codeUnits);
+      testWidgets(
+        'loadBundle(): error handling for malformed bundle',
+        (_) async {
+          final url = Uri.https(
+            'api.rnfirebase.io',
+            '/firestore/e2e-tests/malformed-bundle',
+          );
+          final response = await http.get(url);
+          String string = response.body;
+          Uint8List buffer = Uint8List.fromList(string.codeUnits);
 
-        LoadBundleTask task = firestore.loadBundle(buffer);
+          LoadBundleTask task = firestore.loadBundle(buffer);
 
-        await expectLater(
-          task.stream.last,
-          throwsA(
-            isA<FirebaseException>()
-                .having((e) => e.code, 'code', 'load-bundle-error'),
-          ),
-        );
-      });
+          await expectLater(
+            task.stream.last,
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'load-bundle-error'),
+            ),
+          );
+          // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
+        },
+        skip: kIsWeb,
+      );
 
       testWidgets('loadBundle(): pause and resume stream', (_) async {
         Uint8List buffer = await loadBundleSetup(3);
@@ -147,24 +150,31 @@ void runLoadBundleTests() {
         );
       });
 
-      testWidgets('namedQueryGet() error', (_) async {
-        Uint8List buffer = await loadBundleSetup(4);
-        LoadBundleTask task = firestore.loadBundle(buffer);
+      testWidgets(
+        'namedQueryGet() error',
+        (_) async {
+          Uint8List buffer = await loadBundleSetup(4);
+          LoadBundleTask task = firestore.loadBundle(buffer);
 
-        // ensure the bundle has been completely cached
-        await task.stream.last;
+          // ensure the bundle has been completely cached
+          await task.stream.last;
 
-        await expectLater(
-          firestore.namedQueryGet(
-            'wrong-name',
-            options: const GetOptions(source: Source.cache),
-          ),
-          throwsA(
-            isA<FirebaseException>()
-                .having((e) => e.code, 'code', 'non-existent-named-query'),
-          ),
-        );
-      });
+          await expectLater(
+            firestore.namedQueryGet(
+              'wrong-name',
+              options: const GetOptions(source: Source.cache),
+            ),
+            // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
+            // expect(error, isA<FirebaseException>());
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'non-existent-named-query'),
+            ),
+          );
+        },
+        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
+        skip: kIsWeb,
+      );
     });
 
     group('FirebaeFirestore.namedQueryWithConverterGet()', () {
@@ -192,26 +202,31 @@ void runLoadBundleTests() {
         );
       });
 
-      testWidgets('namedQueryWithConverterGet() error', (_) async {
-        Uint8List buffer = await loadBundleSetup(4);
-        LoadBundleTask task = firestore.loadBundle(buffer);
+      testWidgets(
+        'namedQueryWithConverterGet() error',
+        (_) async {
+          Uint8List buffer = await loadBundleSetup(4);
+          LoadBundleTask task = firestore.loadBundle(buffer);
 
-        // ensure the bundle has been completely cached
-        await task.stream.last;
+          // ensure the bundle has been completely cached
+          await task.stream.last;
 
-        await expectLater(
-          firestore.namedQueryWithConverterGet<ConverterPlaceholder>(
-            'wrong-name',
-            options: const GetOptions(source: Source.cache),
-            fromFirestore: ConverterPlaceholder.new,
-            toFirestore: (value, options) => value.toFirestore(),
-          ),
-          throwsA(
-            isA<FirebaseException>()
-                .having((e) => e.code, 'code', 'non-existent-named-query'),
-          ),
-        );
-      });
+          await expectLater(
+            firestore.namedQueryWithConverterGet<ConverterPlaceholder>(
+              'wrong-name',
+              options: const GetOptions(source: Source.cache),
+              fromFirestore: ConverterPlaceholder.new,
+              toFirestore: (value, options) => value.toFirestore(),
+            ),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'non-existent-named-query'),
+            ),
+          );
+        },
+        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
+        skip: kIsWeb,
+      );
     });
   });
 }
