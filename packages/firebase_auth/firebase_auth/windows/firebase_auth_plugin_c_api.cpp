@@ -6,7 +6,7 @@
 
 void FirebaseAuthPluginCApiRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar) {
-  firebase_auth::FirebaseAuthPlugin::RegisterWithRegistrar(
+  firebase_auth_windows::FirebaseAuthPlugin::RegisterWithRegistrar(
       flutter::PluginRegistrarManager::GetInstance()
           ->GetRegistrar<flutter::PluginRegistrarWindows>(registrar));
 }
