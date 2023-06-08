@@ -7,6 +7,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runQueryTests() {
@@ -191,43 +192,51 @@ void runQueryTests() {
         expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
       });
 
-      testWidgets('throws a [FirebaseException]', (_) async {
-        CollectionReference<Map<String, dynamic>> collection =
-            firestore.collection('not-allowed');
+      testWidgets(
+        'throws a [FirebaseException]',
+        (_) async {
+          CollectionReference<Map<String, dynamic>> collection =
+              firestore.collection('not-allowed');
 
-        try {
-          await collection.get();
-        } catch (error) {
-          expect(error, isA<FirebaseException>());
-          expect(
-            (error as FirebaseException).code,
-            equals('permission-denied'),
-          );
-          return;
-        }
-        fail('Should have thrown a [FirebaseException]');
-      });
+          try {
+            await collection.get();
+          } catch (error) {
+            expect(error, isA<FirebaseException>());
+            expect(
+              (error as FirebaseException).code,
+              equals('permission-denied'),
+            );
+            return;
+          }
+          fail('Should have thrown a [FirebaseException]');
+        },
+        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
+        skip: kIsWeb,
+      );
 
       testWidgets(
-          'should respond with a FirebaseException, the query requires an index',
-          (_) async {
-        try {
-          await FirebaseFirestore.instance
-              .collection('flutter-tests')
-              .where('number', isGreaterThan: 1, isLessThan: 3)
-              .where('foo', isEqualTo: 'bar')
-              .get();
-        } catch (error) {
-          expect(
-            (error as FirebaseException).code,
-            equals('failed-precondition'),
-          );
-          expect(
-            error.message,
-            'The query requires an index',
-          );
-        }
-      });
+        'should respond with a FirebaseException, the query requires an index',
+        (_) async {
+          try {
+            await FirebaseFirestore.instance
+                .collection('flutter-tests')
+                .where('number', isGreaterThan: 1, isLessThan: 3)
+                .where('foo', isEqualTo: 'bar')
+                .get();
+          } catch (error) {
+            expect(
+              (error as FirebaseException).code,
+              equals('failed-precondition'),
+            );
+            expect(
+              error.message,
+              'The query requires an index',
+            );
+          }
+        },
+        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
+        skip: kIsWeb,
+      );
     });
 
     /**
@@ -350,27 +359,32 @@ void runQueryTests() {
         await subscription.cancel();
       });
 
-      testWidgets('listeners throws a [FirebaseException]', (_) async {
-        CollectionReference<Map<String, dynamic>> collection =
-            firestore.collection('not-allowed');
-        Stream<QuerySnapshot<Map<String, dynamic>>> stream =
-            collection.snapshots();
+      testWidgets(
+        'listeners throws a [FirebaseException]',
+        (_) async {
+          CollectionReference<Map<String, dynamic>> collection =
+              firestore.collection('not-allowed');
+          Stream<QuerySnapshot<Map<String, dynamic>>> stream =
+              collection.snapshots();
 
-        try {
-          await stream.first;
-        } catch (error) {
-          expect(error, isA<FirebaseException>());
-          expect(
-            (error as FirebaseException).code,
-            equals(
-              'permission-denied',
-            ),
-          );
-          return;
-        }
+          try {
+            await stream.first;
+          } catch (error) {
+            expect(error, isA<FirebaseException>());
+            expect(
+              (error as FirebaseException).code,
+              equals(
+                'permission-denied',
+              ),
+            );
+            return;
+          }
 
-        fail('Should have thrown a [FirebaseException]');
-      });
+          fail('Should have thrown a [FirebaseException]');
+          // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
+        },
+        skip: kIsWeb,
+      );
     });
 
     /**
