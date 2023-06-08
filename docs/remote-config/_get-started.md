@@ -133,23 +133,33 @@ smooth experience for your user, such as the next time that the user opens your
 app. See [Remote Config loading strategies](/docs/remote-config/loading)
 for more information and examples.
 
-## Step 7: Listen for updates in real time
-After you fetch parameter values, you can use real-time Remote Config to listen for updates from the Remote Config backend. 
-Real-time Remote Config signals to connected devices when updates are available and automatically 
-fetches the changes after you publish a new Remote Config version.
+## Step 7: Listen for updates in real time {: #add-real-time-listener }
 
-Please note that real-time Remote Config is not available for Web.
+After you fetch parameter values, you can use real-time Remote Config to listen
+for updates from the Remote Config backend.  Real-time Remote Config signals to
+connected devices when updates are available and automatically fetches the
+changes after you publish a new Remote Config version.
 
-1. In your app, use `onConfigUpdated` to start listening for updates and automatically fetch any new parameter values. Implement the onUpdate() callback to activate the updated config.
+Note that real-time Remote Config is not available for Web.
+
+1. In your app, use `onConfigUpdated` to start listening for updates and
+   automatically fetch any new parameter values.
+
    ```dart
     remoteConfig.onConfigUpdated.listen((event) async {
       await remoteConfig.activate();
 
       // Use the new config values here.
     });
-    ```
+   ```
 
-2. The next time you publish a new version of your Remote Config, devices that are running your app and listening for changes will call the callback.
+2. The next time you publish a new version of your Remote Config, devices that
+   are running your app and listening for changes will activate the new config.
+
+Tip: Check out the
+[Flutterfire Remote Config
+example](https://github.com/firebase/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config/example)
+for an example implementation.
 
 ## Throttling {: #throttling }
 
@@ -161,7 +171,17 @@ The default minimum fetch interval for Remote Config is 12 hours, which
 means that configs won't be fetched from the backend more than once in a 12 hour
 window, regardless of how many fetch calls are actually made.
 
-During app development, you might want to fetch and activate configs very frequently
+<aside class="tip">
+  <b>Tip:</b> Starting with the Firebase SDK for Flutter v4.0.0,
+  you can use real-time {{remote_config}} to automatically fetch updated
+  parameter values from the {{remote_config}} backend as soon as they're
+  published, bypassing any minimum fetch interval setting. For more
+  information, see
+  <a href="/docs/remote-config/get-started?platform=android#add-real-time-listener">Listen for updates in real time</a>.
+</aside>
+
+During app development, if you're not using real-time Remote Config (which we
+recommend), you might want to fetch and activate configs very frequently
 (many times per hour) to let you rapidly iterate as you develop and test your
 app. To accommodate rapid iteration on a project with up to 10 developers, you
 can temporarily set a low minimum fetch interval with `setConfigSettings()`.
