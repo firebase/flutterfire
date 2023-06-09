@@ -3,11 +3,12 @@
 
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
-#include "firebase/auth.h"
-#include <map>
-#include <string>
 
 #include <memory>
+#include "firebase/app.h"
+#include "firebase/future.h"
+#include "firebase/auth.h"
+#include "messages.g.h"
 
 #include "messages.g.h"
 
@@ -29,13 +30,12 @@ class FirebaseAuthPlugin : public flutter::Plugin,
 
 
   // Parser functions
-  static PigeonUserDetails ParseUserDetails(const firebase::auth::User* user);
-  static PigeonUserInfo ParseUserInfo(
-      const firebase::auth::User* user);
-  static flutter::EncodableValue
-  ParseUserInfoToMap(firebase::auth::UserInfoInterface* userInfo);
+  static PigeonUserDetails ParseUserDetails(const firebase::auth::User user);
+  static PigeonUserInfo ParseUserInfo(const firebase::auth::User* user);
   static flutter::EncodableList ParseProviderData(
       const firebase::auth::User* user);
+  static flutter::EncodableValue ParseUserInfoToMap(
+      firebase::auth::UserInfoInterface* userInfo);
 
   // FirebaseAuthHostApi methods.
   virtual void RegisterIdTokenListener(
