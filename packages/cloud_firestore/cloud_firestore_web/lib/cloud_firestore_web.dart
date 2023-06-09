@@ -26,7 +26,7 @@ import 'src/write_batch_web.dart';
 /// Web implementation for [FirebaseFirestorePlatform]
 /// delegates calls to firestore web plugin
 class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
-  /// instance of Analytics from the web plugin
+  /// instance of Firestore from the web plugin
   firestore_interop.Firestore? _webFirestore;
 
   firestore_interop.Settings? _settings;

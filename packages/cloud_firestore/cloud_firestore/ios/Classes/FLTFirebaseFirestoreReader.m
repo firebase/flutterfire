@@ -94,7 +94,19 @@
   FIRFirestoreSettings *settings = [[FIRFirestoreSettings alloc] init];
 
   if (![values[@"persistenceEnabled"] isEqual:[NSNull null]]) {
-    settings.persistenceEnabled = [((NSNumber *)values[@"persistenceEnabled"]) boolValue];
+    bool persistEnabled = [((NSNumber *)values[@"persistenceEnabled"]) boolValue];
+    int size = [((NSNumber *)values[@"cacheSizeBytes"]) intValue];
+
+    if (persistEnabled) {
+      NSNumber *unlimitedPersistence =
+          [NSNumber numberWithLongLong:kFIRFirestoreCacheSizeUnlimited];
+      settings.cacheSettings = [[FIRPersistentCacheSettings alloc]
+          initWithSizeBytes:size == -1 ? unlimitedPersistence
+                                       : ((NSNumber *)values[@"cacheSizeBytes"])];
+    } else {
+      settings.cacheSettings = [[FIRMemoryCacheSettings alloc]
+          initWithGarbageCollectorSettings:[[FIRMemoryLRUGCSettings alloc] init]];
+    }
   }
 
   if (![values[@"host"] isEqual:[NSNull null]]) {
@@ -102,15 +114,6 @@
     // Only allow changing ssl if host is also specified.
     if (![values[@"sslEnabled"] isEqual:[NSNull null]]) {
       settings.sslEnabled = [((NSNumber *)values[@"sslEnabled"]) boolValue];
-    }
-  }
-
-  if (![values[@"cacheSizeBytes"] isEqual:[NSNull null]]) {
-    int size = [((NSNumber *)values[@"cacheSizeBytes"]) intValue];
-    if (size == -1) {
-      settings.cacheSizeBytes = kFIRFirestoreCacheSizeUnlimited;
-    } else {
-      settings.cacheSizeBytes = (int64_t)size;
     }
   }
 

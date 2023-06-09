@@ -85,9 +85,10 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return _delegate.clearPersistence();
   }
 
-  /// Enable persistence of Firestore data.
-  ///
-  /// This is a web-only method. Use [Settings.persistenceEnabled] for non-web platforms.
+  /// Enable persistence of Firestore data for web-only. Use [Settings.persistenceEnabled] for non-web platforms.
+  /// If `enablePersistence()` is not called, it defaults to Memory cache.
+  /// If `enablePersistence(const PersistenceSettings(synchronizeTabs: false))` is called, it persists data for a single browser tab.
+  /// If `enablePersistence(const PersistenceSettings(synchronizeTabs: true))` is called, it persists data across multiple browser tabs.
   Future<void> enablePersistence([
     PersistenceSettings? persistenceSettings,
   ]) async {

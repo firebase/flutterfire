@@ -76,7 +76,10 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     throw UnimplementedError('clearPersistence() is not implemented');
   }
 
-  /// Enable persistence of Firestore data. Web only.
+  /// Enable persistence of Firestore data for web-only. Use [Settings.persistenceEnabled] for non-web platforms.
+  /// If `enablePersistence()` is not called, it defaults to Memory cache.
+  /// If `enablePersistence(const PersistenceSettings(synchronizeTabs: false))` is called, it persists data for a single browser tab.
+  /// If `enablePersistence(const PersistenceSettings(synchronizeTabs: true))` is called, it persists data across multiple browser tabs.
   Future<void> enablePersistence(
       [PersistenceSettings? persistenceSettings]) async {
     throw UnimplementedError('enablePersistence() is not implemented');
