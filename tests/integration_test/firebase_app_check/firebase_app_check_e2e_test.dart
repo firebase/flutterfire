@@ -33,18 +33,15 @@ void main() {
       test(
         'getToken',
         () async {
-          final token = await FirebaseAppCheck.instance.getToken(true);
-          expect(token, isA<String>());
+          try {
+            await FirebaseAppCheck.instance.getToken(true);
+          } catch (exception) {
+            // Needs a debug token pasted in the Firebase console to work so we catch the exception.
+            expect(exception, isA<FirebaseException>());
+          }
+          // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
         },
-        // Getting "Fetch server returned an HTTP error status. HTTP status:
-        // 400" when running tests on web.
-        //
-        // Is not working on iOS and macOS. Tracking issue:
-        // https://github.com/firebase/flutterfire/issues/8969
-        skip: kIsWeb ||
-            defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS ||
-            defaultTargetPlatform == TargetPlatform.android,
+        skip: kIsWeb,
       );
 
       test(
@@ -62,10 +59,19 @@ void main() {
         expect(stream, isA<Stream<String?>>());
       });
 
-      test('getLimitedUseAppCheckToken', () async {
-        final token = await FirebaseAppCheck.instance.getLimitedUseAppCheckToken();
-        expect(token, isA<String>());
-      });
+      test(
+        'getLimitedUseAppCheckToken',
+        () async {
+          try {
+            await FirebaseAppCheck.instance.getLimitedUseAppCheckToken();
+          } catch (exception) {
+            // Needs a debug token pasted in the Firebase console to work so we catch the exception.
+            expect(exception, isA<FirebaseException>());
+          }
+          // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
+        },
+        skip: kIsWeb,
+      );
     },
   );
 }
