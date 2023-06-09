@@ -21,11 +21,15 @@
 #include <memory>
 #include <sstream>
 #include <stdexcept>
+#include <unordered_map>
 #include <string>
 #include <vector>
 using ::firebase::App;
 
 namespace firebase_core_windows {
+
+std::map<std::string, firebase::App *> FirebaseCorePlugin::firebase_apps;
+
 
 // static
 void FirebaseCorePlugin::RegisterWithRegistrar(
@@ -90,14 +94,19 @@ PigeonInitializeResponse AppToPigeonInitializeResponse(const App &app) {
   return response;
 }
 
+firebase::App *FirebaseCorePlugin::GetFirebaseApp(std::string appName) {
+  return firebase_apps[appName];
+}
+
 void FirebaseCorePlugin::InitializeApp(
     const std::string &app_name,
     const PigeonFirebaseOptions &initialize_app_request,
     std::function<void(ErrorOr<PigeonInitializeResponse> reply)> result) {
   // Create an app
-  App *app;
-  app = App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
+  App *app = App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
                     app_name.c_str());
+
+  firebase_apps.insert(std::make_pair(app_name, app));
 
   // Send back the result to Flutter
   result(AppToPigeonInitializeResponse(*app));

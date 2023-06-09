@@ -10,8 +10,10 @@
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 
-#include <memory>
 
+#include <memory>
+#include <string>
+#include "firebase/app.h"
 #include "messages.g.h"
 
 namespace firebase_core_windows {
@@ -29,6 +31,9 @@ class FirebaseCorePlugin : public flutter::Plugin,
   // Disallow copy and assign.
   FirebaseCorePlugin(const FirebaseCorePlugin &) = delete;
   FirebaseCorePlugin &operator=(const FirebaseCorePlugin &) = delete;
+
+  static firebase::App *GetFirebaseApp(std::string appName);
+
 
   // FirebaseCoreHostApi
   virtual void InitializeApp(
@@ -56,6 +61,7 @@ class FirebaseCorePlugin : public flutter::Plugin,
 
  private:
   bool coreInitialized = false;
+  static std::map<std::string, firebase::App *> firebase_apps;
 };
 
 }  // namespace firebase_core_windows

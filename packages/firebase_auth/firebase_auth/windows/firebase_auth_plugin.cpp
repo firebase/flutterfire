@@ -8,6 +8,8 @@
 #include "firebase/auth.h"
 #include "messages.g.h"
 
+#include "firebase_core/firebase_core_plugin_c_api.h"
+
 // For getPlatformVersion; remove unless needed for your plugin implementation.
 #include <VersionHelpers.h>
 
@@ -21,6 +23,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+
+using ::firebase::App;
 
 namespace firebase_auth_windows {
 
@@ -41,8 +45,23 @@ FirebaseAuthPlugin::~FirebaseAuthPlugin() = default;
 
  firebase::auth::Auth* GetAuthFromPigeon(
     const PigeonFirebaseApp& pigeonApp) {
-  firebase::App* app = firebase::App::GetInstance(pigeonApp.app_name().c_str());
+   // print hello world
+   std::cout << "Hello World" << std::endl;
+
+   
+
+  App* app = GetFirebaseApp(pigeonApp.app_name());
+   std::vector<App*> apps =  App::GetApps();
+   if (app == nullptr) {
+    std::cout << "NULL" << std::endl;
+    app = App::Create();
+
+   }
+
+   std::cout << "After" << std::endl;
+
   firebase::auth::Auth* auth = firebase::auth::Auth::GetAuth(app);
+   std::cout << "After GetAuth" << std::endl;
 
   return auth;
 }

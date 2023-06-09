@@ -144,7 +144,6 @@ class PigeonUserInfo {
   final int? lastSignInTimestamp;
 }
 
-
 class PigeonUserDetails {
   const PigeonUserDetails({
     required this.userInfo,
@@ -168,7 +167,6 @@ class PigeonAuthCredential {
   final int nativeId;
   final String? accessToken;
 }
-
 
 class PigeonAdditionalUserInfo {
   const PigeonAdditionalUserInfo({
@@ -195,9 +193,6 @@ class PigeonUserCredential {
   final PigeonAdditionalUserInfo? additionalUserInfo;
   final PigeonAuthCredential? credential;
 }
-
-
-
 
 class PigeonAuthCredentialInput {
   const PigeonAuthCredentialInput({
