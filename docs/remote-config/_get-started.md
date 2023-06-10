@@ -18,7 +18,7 @@ sample code.
     you <a href="https://support.google.com/firebase/answer/9289399#linkga"
            class="external">enable Google Analytics</a> in your project.
 
-1.  When you use Remote Config for macOS, you need to the add [Keychain
+1.  When you use Remote Config for macOS, you need to the add the [Keychain
     Sharing](https://developer.apple.com/documentation/xcode/configuring-keychain-sharing)
     capability in XCode.
 
