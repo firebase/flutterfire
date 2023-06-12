@@ -18,7 +18,7 @@ Steps to reproduce the behavior:
 
 1. Go to '...'
 2. '...'
-4. See error or incorrect behavior
+3. See error or incorrect behavior
 
 ### Expected behavior
 
