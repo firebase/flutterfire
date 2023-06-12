@@ -90,7 +90,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   }
 
   @override
-  Future<String> getLimitedUseAppCheckToken() async {
+  Future<String> getLimitedUseToken() async {
     return convertWebExceptions<Future<String>>(() async {
       app_check_interop.AppCheckTokenResult result =
           await _delegate!.getLimitedUseToken();

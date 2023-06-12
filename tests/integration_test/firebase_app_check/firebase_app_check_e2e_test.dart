@@ -60,10 +60,10 @@ void main() {
       });
 
       test(
-        'getLimitedUseAppCheckToken',
+        'getLimitedUseToken',
         () async {
           try {
-            await FirebaseAppCheck.instance.getLimitedUseAppCheckToken();
+            await FirebaseAppCheck.instance.getLimitedUseToken();
           } catch (exception) {
             // Needs a debug token pasted in the Firebase console to work so we catch the exception.
             expect(exception, isA<FirebaseException>());

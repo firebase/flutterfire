@@ -131,7 +131,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   }
 
   @override
-  Future<String> getLimitedUseAppCheckToken() async {
+  Future<String> getLimitedUseToken() async {
     try {
       final result = await channel.invokeMethod(
         'FirebaseAppCheck#getLimitedUseAppCheckToken',

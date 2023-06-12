@@ -92,8 +92,8 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   // Returns limited-use tokens that are intended for use with your non-Firebase backend
   // endpoints that are protected with Replay Protection. This method does not affect
   // the token generation behavior of the `getToken()` method.
-  Future<String> getLimitedUseAppCheckToken() {
-    return _delegate.getLimitedUseAppCheckToken();
+  Future<String> getLimitedUseToken() {
+    return _delegate.getLimitedUseToken();
   }
 
   /// Registers a listener to changes in the token state.

@@ -96,8 +96,8 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   // Returns limited-use tokens that are intended for use with your non-Firebase backend
   // endpoints that are protected with Replay Protection. This method does not affect
   // the token generation behavior of the `getToken()` method.
-  Future<String> getLimitedUseAppCheckToken() {
-    throw UnimplementedError('getLimitedUseAppCheckToken() is not implemented');
+  Future<String> getLimitedUseToken() {
+    throw UnimplementedError('getLimitedUseToken() is not implemented');
   }
 
   /// Enables delegates to create new instances of themselves if a none default
