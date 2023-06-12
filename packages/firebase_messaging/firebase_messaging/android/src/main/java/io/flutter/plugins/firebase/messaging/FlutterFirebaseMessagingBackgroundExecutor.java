@@ -232,8 +232,8 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
 
     if (android.os.Build.VERSION.SDK_INT >= 33) {
       remoteMessage =
-        intent.getParcelableExtra(
-          FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, RemoteMessage.class);
+          intent.getParcelableExtra(
+              FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, RemoteMessage.class);
     } else {
       remoteMessage = intent.getParcelableExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
     }
