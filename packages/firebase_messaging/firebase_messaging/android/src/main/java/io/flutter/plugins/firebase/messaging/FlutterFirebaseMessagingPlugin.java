@@ -128,8 +128,12 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
       String token = intent.getStringExtra(FlutterFirebaseMessagingUtils.EXTRA_TOKEN);
       channel.invokeMethod("Messaging#onTokenRefresh", token);
     } else if (action.equals(FlutterFirebaseMessagingUtils.ACTION_REMOTE_MESSAGE)) {
-      RemoteMessage message =
-          intent.getParcelableExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
+      RemoteMessage message;
+      if (android.os.Build.VERSION.SDK_INT >= 33) {
+        message = intent.getParcelableExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, RemoteMessage.class);
+      } else {
+        message = intent.getParcelableExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
+      }
       if (message == null) return;
       Map<String, Object> content = FlutterFirebaseMessagingUtils.remoteMessageToMap(message);
       channel.invokeMethod("Messaging#onMessage", content);
