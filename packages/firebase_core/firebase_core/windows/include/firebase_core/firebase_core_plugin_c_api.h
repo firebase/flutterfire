@@ -10,6 +10,7 @@
 #include <flutter_plugin_registrar.h>
 #include "firebase/app.h"
 #include <string>
+#include <memory>
 
 #ifdef FLUTTER_PLUGIN_IMPL
 #define FLUTTER_PLUGIN_EXPORT __declspec(dllexport)
@@ -17,18 +18,13 @@
 #define FLUTTER_PLUGIN_EXPORT __declspec(dllimport)
 #endif
 
-#if defined(__cplusplus)
-extern "C" {
-#endif
 
 FLUTTER_PLUGIN_EXPORT void FirebaseCorePluginCApiRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar);
 
-FLUTTER_PLUGIN_EXPORT firebase::App *GetFirebaseApp(std::string appName);
+FLUTTER_PLUGIN_EXPORT std::shared_ptr<firebase::App> GetFirebaseApp(
+    std::string appName);
 
 
-#if defined(__cplusplus)
-}  // extern "C"
-#endif
-
+ 
 #endif  // FLUTTER_PLUGIN_FIREBASE_CORE_PLUGIN_C_API_H_

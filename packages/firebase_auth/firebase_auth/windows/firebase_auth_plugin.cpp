@@ -44,24 +44,9 @@ FirebaseAuthPlugin::FirebaseAuthPlugin() {}
 FirebaseAuthPlugin::~FirebaseAuthPlugin() = default;
 
  firebase::auth::Auth* GetAuthFromPigeon(
-    const PigeonFirebaseApp& pigeonApp) {
-   // print hello world
-   std::cout << "Hello World" << std::endl;
-
-   
-
-  App* app = GetFirebaseApp(pigeonApp.app_name());
-   std::vector<App*> apps =  App::GetApps();
-   if (app == nullptr) {
-    std::cout << "NULL" << std::endl;
-    app = App::Create();
-
-   }
-
-   std::cout << "After" << std::endl;
-
-  firebase::auth::Auth* auth = firebase::auth::Auth::GetAuth(app);
-   std::cout << "After GetAuth" << std::endl;
+    const PigeonFirebaseApp& pigeonApp) {   
+  std::shared_ptr<App> app = GetFirebaseApp(pigeonApp.app_name());
+  firebase::auth::Auth* auth = firebase::auth::Auth::GetAuth(app.get());
 
   return auth;
 }
@@ -178,6 +163,8 @@ void FirebaseAuthPlugin::SignInAnonymously(
   signInFuture.OnCompletion(
       [result](const firebase::Future<firebase::auth::AuthResult>&
                    completed_future) {
+      std::cout << "Before parsing: " << std::endl;
+      
    // We are probably in a different thread right now.
    if (completed_future.error() == 0) {
      PigeonUserCredential credential =

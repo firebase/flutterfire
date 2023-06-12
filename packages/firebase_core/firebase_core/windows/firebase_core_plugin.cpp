@@ -10,6 +10,7 @@
 #include "firebase/app.h"
 #include "messages.g.h"
 
+
 // For getPlatformVersion; remove unless needed for your plugin implementation.
 #include <VersionHelpers.h>
 #include <flutter/method_channel.h>
@@ -28,7 +29,7 @@ using ::firebase::App;
 
 namespace firebase_core_windows {
 
-std::map<std::string, firebase::App *> FirebaseCorePlugin::firebase_apps;
+std::map<std::string, firebase::App> FirebaseCorePlugin::firebase_apps;
 
 
 // static
@@ -94,8 +95,11 @@ PigeonInitializeResponse AppToPigeonInitializeResponse(const App &app) {
   return response;
 }
 
-firebase::App *FirebaseCorePlugin::GetFirebaseApp(std::string appName) {
-  return firebase_apps[appName];
+std::shared_ptr<App> FirebaseCorePlugin::GetFirebaseApp(std::string appName) {
+  firebase::App* appInstance = firebase::App::GetInstance(appName.c_str());
+  std::shared_ptr<firebase::App> app(appInstance);
+
+  return app;
 }
 
 void FirebaseCorePlugin::InitializeApp(
@@ -105,8 +109,6 @@ void FirebaseCorePlugin::InitializeApp(
   // Create an app
   App *app = App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
                     app_name.c_str());
-
-  firebase_apps.insert(std::make_pair(app_name, app));
 
   // Send back the result to Flutter
   result(AppToPigeonInitializeResponse(*app));
