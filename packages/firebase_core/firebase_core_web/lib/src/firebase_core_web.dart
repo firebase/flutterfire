@@ -14,7 +14,7 @@ class FirebaseWebService {
   /// property allows overriding of web naming to Flutterfire plugin naming.
   String? override;
 
-  /// Function to call to ensure the Firebase Service is initalized.
+  /// Function to call to ensure the Firebase Service is initialized.
   /// Usually used to ensure that the Web SDK match the behavior
   /// of native SDKs.
   EnsurePluginInitialized ensurePluginInitialized;
@@ -37,20 +37,19 @@ typedef EnsurePluginInitialized = Future<void> Function(
 class FirebaseCoreWeb extends FirebasePlatform {
   static Map<String, FirebaseWebService> _services = {
     'core': FirebaseWebService._('app', override: 'core'),
-    'app-check': FirebaseWebService._('app-check', override: 'app_check'),
-    'remote-config':
-        FirebaseWebService._('remote-config', override: 'remote_config'),
   };
 
   /// Internally registers a Firebase Service to be initialized.
   static void registerService(
-    String service, [
+    String service, {
+    String? productNameOverride,
     EnsurePluginInitialized? ensurePluginInitialized,
-  ]) {
+  }) {
     _services.putIfAbsent(
       service,
       () => FirebaseWebService._(
         service,
+        override: productNameOverride,
         ensurePluginInitialized: ensurePluginInitialized,
       ),
     );
@@ -73,7 +72,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
   }
 
   /// Returns a list of services which won't be automatically injected on
-  /// initilization. This is useful incases where you wish to manually include
+  /// initialization. This is useful incases where you wish to manually include
   /// the scripts (e.g. in countries where you must request the users permission
   /// to include Analytics).
   ///
