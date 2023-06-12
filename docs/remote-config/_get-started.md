@@ -18,10 +18,6 @@ sample code.
     you <a href="https://support.google.com/firebase/answer/9289399#linkga"
            class="external">enable Google Analytics</a> in your project.
 
-1.  When you use Remote Config for macOS, you need to the add the [Keychain
-    Sharing](https://developer.apple.com/documentation/xcode/configuring-keychain-sharing)
-    capability in XCode.
-
 1.  From the root directory of your Flutter project, run the following
     command to install the Remote Config plugin:
 
@@ -45,6 +41,10 @@ sample code.
 Note: Because the Remote Config SDK has a dependency on the Remote Config REST
 API, make sure that you do **not** disable that API, which is enabled by default
 in a typical project.
+
+Note: When you use Remote Config for macOS, you need to the add the [Keychain
+Sharing](https://developer.apple.com/documentation/xcode/configuring-keychain-sharing)
+capability in XCode.
 
 ## Step 2: Get the Remote Config singleton object {: #get-remote-config }
 
