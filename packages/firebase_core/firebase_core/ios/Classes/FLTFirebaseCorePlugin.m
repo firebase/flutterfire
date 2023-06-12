@@ -226,7 +226,7 @@
                                           (nonnull void (^)(FlutterError *_Nullable))completion {
   FIRApp *firebaseApp = [FLTFirebasePlugin firebaseAppNamed:appName];
   if (firebaseApp) {
-    [firebaseApp setDataCollectionDefaultEnabled:enabled];
+    [firebaseApp setDataCollectionDefaultEnabled:[enabled boolValue]];
   }
 
   completion(nil);
