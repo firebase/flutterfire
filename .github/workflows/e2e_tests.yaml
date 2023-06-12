@@ -46,8 +46,8 @@ jobs:
         name: Gradle Cache
         with:
           path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-v2-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-gradle-v2
+          key: ${{ runner.os }}-gradle-v3-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-gradle-v3
       - uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
         name: AVD Cache
         id: avd-cache
