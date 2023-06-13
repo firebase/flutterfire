@@ -74,10 +74,11 @@ public class FlutterFirebaseAppCheckPlugin
 
   private Task<String> getLimitedUseAppCheckToken(Map<String, Object> arguments) {
     TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
-    FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+
     cachedThreadPool.execute(
         () -> {
           try {
+            FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
             AppCheckToken tokenResult = Tasks.await(firebaseAppCheck.getLimitedUseAppCheckToken());
             taskCompletionSource.setResult(tokenResult.getToken());
           } catch (Exception e) {
