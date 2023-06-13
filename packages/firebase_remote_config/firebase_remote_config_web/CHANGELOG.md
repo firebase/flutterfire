@@ -1,3 +1,7 @@
+## 1.4.3
+
+ - **FIX**(core): Omit unnecessary libraries for web ([#10068](https://github.com/firebase/flutterfire/issues/10068)). ([8659d4ed](https://github.com/firebase/flutterfire/commit/8659d4ed805ac92964c2c92d55192f6ef40d721a))
+
 ## 1.4.2
 
  - Update a dependency to the latest release.
