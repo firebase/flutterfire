@@ -1,3 +1,8 @@
+## 2.14.0
+
+ - **FIX**(core,apple): pass boolean value instead of int to `setDataCollectionDefaultEnabled()` ([#11039](https://github.com/firebase/flutterfire/issues/11039)). ([67b051fd](https://github.com/firebase/flutterfire/commit/67b051fda24d4e7f50023a24001bdc6b0cc7f7bf))
+ - **FEAT**: bump Firebase iOS SDK to `10.10.0`. Requires Xcode version >= `14.1`. ([#11088](https://github.com/firebase/flutterfire/issues/11088)). ([615b2d48](https://github.com/firebase/flutterfire/commit/615b2d48b7559f8bee4211111d2a0ae00ed84c3e))
+
 ## 2.13.1
 
  - **FIX**(core,windows): building improvements ([#10972](https://github.com/firebase/flutterfire/issues/10972)). ([4897fa02](https://github.com/firebase/flutterfire/commit/4897fa02e2963961f24f1ff3a5b8d5e890e919ce))

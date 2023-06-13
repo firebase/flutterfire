@@ -1,3 +1,7 @@
+## 4.8.1
+
+ - **FIX**(firestore): update deprecated persistence API ([#11069](https://github.com/firebase/flutterfire/issues/11069)). ([076e7af8](https://github.com/firebase/flutterfire/commit/076e7af86ddc74ac63ec85078ea9c4077afd2e31))
+
 ## 4.8.0
 
  - **FEAT**(firestore): add the ability to enable debug logging ([#11019](https://github.com/firebase/flutterfire/issues/11019)). ([ec4c4474](https://github.com/firebase/flutterfire/commit/ec4c44742d33c5032075310efc2c567bf0a5fa35))

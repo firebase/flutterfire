@@ -1,3 +1,7 @@
+## 4.2.3
+
+ - **FIX**(firebase_remote_config): fix build error for macos example ([#11108](https://github.com/firebase/flutterfire/issues/11108)). ([03103a0b](https://github.com/firebase/flutterfire/commit/03103a0b32055267a5290a6f0b1584818b8ac4db))
+
 ## 4.2.2
 
  - Update a dependency to the latest release.
