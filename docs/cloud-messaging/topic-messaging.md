@@ -64,6 +64,7 @@ await FirebaseMessaging.instance.subscribeToTopic("topic");
 
 To unsubscribe, call `unsubscribeFromTopic()` with the topic name.
 
+`subscribeToTopic()` and `unsubscribeFromTopic()` are not supported on the web clients. To learn how to manage subscriptions for web users, visit: [official Firebase documentation](https://firebase.google.com/docs/cloud-messaging/js/topic-messaging)
 
 ## Next steps
 
