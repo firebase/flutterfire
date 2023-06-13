@@ -1,3 +1,7 @@
+## 14.6.3
+
+ - **FIX**(firebase messaging,android): update `getParcelableExtra()` for Android 33. ([#10921](https://github.com/firebase/flutterfire/issues/10921)). ([c8b685b9](https://github.com/firebase/flutterfire/commit/c8b685b9318804596a5513acaf01a46049323267))
+
 ## 14.6.2
 
  - Update a dependency to the latest release.

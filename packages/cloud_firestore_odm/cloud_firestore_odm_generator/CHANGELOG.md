@@ -1,3 +1,7 @@
+## 1.0.0-dev.61
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.60
 
  - **FIX**: typo in build.yaml ([#11027](https://github.com/firebase/flutterfire/issues/11027)). ([f9cdcfea](https://github.com/firebase/flutterfire/commit/f9cdcfea96b33a02401c4ea3ed2c69b513e573ea))
