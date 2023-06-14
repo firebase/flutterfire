@@ -72,6 +72,23 @@ public class FlutterFirebaseAppCheckPlugin
     return FirebaseAppCheck.getInstance(app);
   }
 
+  private Task<String> getLimitedUseAppCheckToken(Map<String, Object> arguments) {
+    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+            AppCheckToken tokenResult = Tasks.await(firebaseAppCheck.getLimitedUseAppCheckToken());
+            taskCompletionSource.setResult(tokenResult.getToken());
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
   private Task<Void> activate(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -193,6 +210,9 @@ public class FlutterFirebaseAppCheckPlugin
         break;
       case "FirebaseAppCheck#registerTokenListener":
         methodCallTask = registerTokenListener(call.arguments());
+        break;
+      case "FirebaseAppCheck#getLimitedUseAppCheckToken":
+        methodCallTask = getLimitedUseAppCheckToken(call.arguments());
         break;
       default:
         result.notImplemented();

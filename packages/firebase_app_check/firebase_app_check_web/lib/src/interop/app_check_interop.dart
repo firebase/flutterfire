@@ -24,6 +24,11 @@ external PromiseJsImpl<AppCheckTokenResult> getToken(
 );
 
 @JS()
+external PromiseJsImpl<AppCheckTokenResult> getLimitedUseToken(
+  AppCheckJsImpl? appCheck,
+);
+
+@JS()
 external void setTokenAutoRefreshEnabled(
   AppCheckJsImpl appCheck,
   bool isTokenAutoRefreshEnabled,

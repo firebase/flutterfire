@@ -106,6 +106,8 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
     [self setTokenAutoRefreshEnabled:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"FirebaseAppCheck#registerTokenListener" isEqualToString:call.method]) {
     [self registerTokenListener:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"FirebaseAppCheck#getLimitedUseAppCheckToken" isEqualToString:call.method]) {
+    [self getLimitedUseAppCheckToken:call.arguments withMethodCallResult:methodCallResult];
   } else {
     flutterResult(FlutterMethodNotImplemented);
   }
@@ -151,6 +153,19 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
                          result.success(token.token);
                        }
                      }];
+}
+
+- (void)getLimitedUseAppCheckToken:(id)arguments
+              withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRAppCheck *appCheck = [self getFIRAppCheckFromArguments:arguments];
+  [appCheck
+      limitedUseTokenWithCompletion:^(FIRAppCheckToken *_Nullable token, NSError *_Nullable error) {
+        if (error != nil) {
+          result.error(nil, nil, nil, error);
+        } else {
+          result.success(token.token);
+        }
+      }];
 }
 
 - (void)setTokenAutoRefreshEnabled:(id)arguments

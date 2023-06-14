@@ -129,4 +129,20 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   Stream<String?> get onTokenChange {
     return _tokenChangesListeners[app.name]!.stream;
   }
+
+  @override
+  Future<String> getLimitedUseToken() async {
+    try {
+      final result = await channel.invokeMethod(
+        'FirebaseAppCheck#getLimitedUseAppCheckToken',
+        {
+          'appName': app.name,
+        },
+      );
+
+      return result;
+    } on PlatformException catch (e, s) {
+      convertPlatformException(e, s);
+    }
+  }
 }

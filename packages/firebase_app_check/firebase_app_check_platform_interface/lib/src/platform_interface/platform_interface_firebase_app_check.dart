@@ -90,6 +90,16 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
     throw UnimplementedError('tokenChanges() is not implemented');
   }
 
+  /// Requests a limited-use Firebase App Check token. This method should be used only
+  /// if you need to authorize requests to a non-Firebase backend.
+  //
+  // Returns limited-use tokens that are intended for use with your non-Firebase backend
+  // endpoints that are protected with Replay Protection. This method does not affect
+  // the token generation behavior of the `getToken()` method.
+  Future<String> getLimitedUseToken() {
+    throw UnimplementedError('getLimitedUseToken() is not implemented');
+  }
+
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
