@@ -26,6 +26,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 
 using ::firebase::App;
 using ::firebase::auth::Auth;
@@ -154,7 +155,7 @@ void FirebaseAuthPlugin::RegisterAuthStateListener(
 void FirebaseAuthPlugin::UseEmulator(
     const PigeonFirebaseApp& app, const std::string& host, int64_t port,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  // TODO: function missing???
+  // TODO: C++ function missing
 }
 
 void FirebaseAuthPlugin::ApplyActionCode(
@@ -163,17 +164,40 @@ void FirebaseAuthPlugin::ApplyActionCode(
 
 void FirebaseAuthPlugin::CheckActionCode(
     const PigeonFirebaseApp& app, const std::string& code,
-    std::function<void(ErrorOr<PigeonActionCodeInfo> reply)> result) {}
+    std::function<void(ErrorOr<PigeonActionCodeInfo> reply)> result) {
+  // TODO: C++ function missing
+}
 
 void FirebaseAuthPlugin::ConfirmPasswordReset(
     const PigeonFirebaseApp& app, const std::string& code,
     const std::string& new_password,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  // TODO: C++ function missing
+}
 
 void FirebaseAuthPlugin::CreateUserWithEmailAndPassword(
     const PigeonFirebaseApp& app, const std::string& email,
     const std::string& password,
-    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {}
+    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {
+  firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+
+  // The SignInAnonymously method returns a Future<User*> in Firebase C++ SDK
+  firebase::Future<firebase::auth::AuthResult> createUserFuture =
+      firebaseAuth->CreateUserWithEmailAndPassword(email.c_str(), password.c_str());
+
+  createUserFuture.OnCompletion(
+      [result](const firebase::Future<firebase::auth::AuthResult>&
+                   completed_future) {
+        // We are probably in a different thread right now.
+        if (completed_future.error() == 0) {
+          PigeonUserCredential credential =
+              ParseAuthResult(completed_future.result());
+          result(credential);
+        } else {
+          result(FlutterError(completed_future.error_message()));
+        }
+      });
+}
 
 void FirebaseAuthPlugin::SignInAnonymously(
     const PigeonFirebaseApp& app,
@@ -200,9 +224,131 @@ void FirebaseAuthPlugin::SignInAnonymously(
  });
 }
 
+// Provider type keys.
+std::string const kSignInMethodPassword = "password";
+std::string const kSignInMethodEmailLink = "emailLink";
+std::string const kSignInMethodFacebook = "facebook.com";
+std::string const kSignInMethodGoogle = "google.com";
+std::string const kSignInMethodTwitter = "twitter.com";
+std::string const kSignInMethodGithub = "github.com";
+std::string const kSignInMethodApple = "apple.com";
+std::string const kSignInMethodPhone = "phone";
+std::string const kSignInMethodOAuth = "oauth";
+
+// Credential argument keys.
+std::string const kArgumentCredential = "credential";
+std::string const kArgumentProviderId = "providerId";
+std::string const kArgumentProviderScope = "scopes";
+std::string const kArgumentProviderCustomParameters = "customParameters";
+std::string const kArgumentSignInMethod = "signInMethod";
+std::string const kArgumentSecret = "secret";
+std::string const kArgumentIdToken = "idToken";
+std::string const kArgumentAccessToken = "accessToken";
+std::string const kArgumentRawNonce = "rawNonce";
+std::string const kArgumentEmail = "email";
+std::string const kArgumentCode = "code";
+std::string const kArgumentNewEmail = "newEmail";
+std::string const kArgumentEmailLink = kSignInMethodEmailLink;
+std::string const kArgumentToken = "token";
+std::string const kArgumentVerificationId = "verificationId";
+std::string const kArgumentSmsCode = "smsCode";
+std::string const kArgumentActionCodeSettings = "actionCodeSettings";
+
+
+// Emulating NSDictionary
+typedef std::unordered_map<std::string, std::string> Dictionary;
+
+
+firebase::auth::Credential getCredentialFromArguments(
+    flutter::EncodableMap arguments, const PigeonFirebaseApp& app) {
+  std::string signInMethod =
+      std::get<std::string>(arguments[kArgumentSignInMethod]);
+  std::string secret = std::get<std::string>(arguments[kArgumentSecret]);
+  std::string idToken = std::get<std::string>(arguments[kArgumentIdToken]);
+  std::string accessToken = std::get<std::string>(arguments[kArgumentAccessToken]);
+  std::string rawNonce = std::get<std::string>(arguments[kArgumentRawNonce]);
+
+
+  // Password Auth
+  if (signInMethod == kSignInMethodPassword) {
+    std::string email = std::get<std::string>(arguments[kArgumentEmail]);
+    return firebase::auth::EmailAuthProvider::GetCredential(email.c_str(),
+                                                            secret.c_str());
+  }
+  // Email Link Auth
+  if (signInMethod == kSignInMethodEmailLink) {
+    // Firebase C++ SDK doesn't have email link authentication as of my
+    // knowledge cutoff in September 2021
+    std::cout << "Email link authentication is not supported in Firebase C++ "
+                 "SDK as of September 2021.\n";
+    return firebase::auth::Credential();
+  }
+
+  // Facebook Auth
+  if (signInMethod == kSignInMethodFacebook) {
+    return firebase::auth::FacebookAuthProvider::GetCredential(
+        accessToken.c_str());
+  }
+
+  // Google Auth
+  if (signInMethod == kSignInMethodGoogle) {
+    return firebase::auth::GoogleAuthProvider::GetCredential(
+        idToken.c_str(), accessToken.c_str());
+  }
+
+  // Twitter Auth
+  if (signInMethod == kSignInMethodTwitter) {
+    return firebase::auth::TwitterAuthProvider::GetCredential(idToken.c_str(),
+                                                              secret.c_str());
+  }
+
+  // GitHub Auth
+  if (signInMethod == kSignInMethodGithub) {
+    return firebase::auth::GitHubAuthProvider::GetCredential(
+        accessToken.c_str());
+  }
+
+  // OAuth
+  if (signInMethod == kSignInMethodOAuth) {
+    std::string providerId = std::get<std::string>(arguments[kArgumentProviderId]);
+    // As of my knowledge cutoff in September 2021, Firebase C++ SDK doesn't
+    // support creating OAuthProvider credentials directly
+    std::cout << "Creating OAuthProvider credentials directly is not supported "
+                 "in Firebase C++ SDK as of September 2021.\n";
+    return firebase::auth::Credential();
+  }
+
+  // If no known auth method matched
+  printf(
+      "Support for an auth provider with identifier '%s' is not implemented.\n",
+      signInMethod.c_str());
+  return firebase::auth::Credential();
+}
+
+
 void FirebaseAuthPlugin::SignInWithCredential(
     const PigeonFirebaseApp& app, const flutter::EncodableMap& input,
-    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {}
+    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {
+  firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+
+  // The SignInAnonymously method returns a Future<User*> in Firebase C++ SDK
+  firebase::Future<firebase::auth::User> signInFuture =
+      firebaseAuth->SignInWithCredential(getCredentialFromArguments(input, app));
+
+  signInFuture.OnCompletion(
+      [result](const firebase::Future<firebase::auth::User>&
+                   completed_future) {
+        // We are probably in a different thread right now.
+        if (completed_future.error() == 0) {
+          // TODO: not the right return type from C++ SDK
+          PigeonUserInfo credential =
+              ParseUserInfo(completed_future.result());
+          //result(credential);
+        } else {
+          result(FlutterError(completed_future.error_message()));
+        }
+      });
+}
 
 void FirebaseAuthPlugin::SignInWithCustomToken(
     const PigeonFirebaseApp& app, const std::string& token,
