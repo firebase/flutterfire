@@ -6,7 +6,10 @@
 #include "firebase/app.h"
 #include "firebase/future.h"
 #include "firebase/auth.h"
+#include "firebase/util.h"
 #include "messages.g.h"
+#include <chrono>
+#include <thread>
 
 #include "firebase_core/firebase_core_plugin_c_api.h"
 
@@ -25,6 +28,7 @@
 #include <string>
 
 using ::firebase::App;
+using ::firebase::auth::Auth;
 
 namespace firebase_auth_windows {
 
@@ -45,8 +49,28 @@ FirebaseAuthPlugin::~FirebaseAuthPlugin() = default;
 
  firebase::auth::Auth* GetAuthFromPigeon(
     const PigeonFirebaseApp& pigeonApp) {   
-  std::shared_ptr<App> app = GetFirebaseApp(pigeonApp.app_name());
-  firebase::auth::Auth* auth = firebase::auth::Auth::GetAuth(app.get());
+  // std::shared_ptr<App> app = GetFirebaseApp(pigeonApp.app_name());
+
+     firebase::AppOptions options;
+  options.set_api_key("AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c");
+     options.set_app_id("1:406099696497:ios:58cbc26aca8e5cf83574d0");
+  options.set_database_url("https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app");
+  
+  options.set_messaging_sender_id("406099696497");
+
+  options.set_project_id("flutterfire-e2e-tests");
+
+    options.set_storage_bucket("flutterfire-e2e-tests.appspot.com");
+  
+
+  App* app =
+      App::Create(options, pigeonApp.app_name().c_str());
+
+
+
+  Auth* auth = Auth::GetAuth(app);
+
+  // firebase::auth::Auth* auth = firebase::auth::Auth::GetAuth(app.get());
 
   return auth;
 }
@@ -163,7 +187,6 @@ void FirebaseAuthPlugin::SignInAnonymously(
   signInFuture.OnCompletion(
       [result](const firebase::Future<firebase::auth::AuthResult>&
                    completed_future) {
-      std::cout << "Before parsing: " << std::endl;
       
    // We are probably in a different thread right now.
    if (completed_future.error() == 0) {

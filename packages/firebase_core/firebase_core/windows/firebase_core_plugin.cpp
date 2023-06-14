@@ -22,14 +22,12 @@
 #include <memory>
 #include <sstream>
 #include <stdexcept>
-#include <unordered_map>
+#include <map>
 #include <string>
 #include <vector>
 using ::firebase::App;
 
 namespace firebase_core_windows {
-
-std::map<std::string, firebase::App> FirebaseCorePlugin::firebase_apps;
 
 
 // static
@@ -95,12 +93,25 @@ PigeonInitializeResponse AppToPigeonInitializeResponse(const App &app) {
   return response;
 }
 
+std::map<std::string, std::shared_ptr<App>> apps;
+
+
 std::shared_ptr<App> FirebaseCorePlugin::GetFirebaseApp(std::string appName) {
-  firebase::App* appInstance = firebase::App::GetInstance(appName.c_str());
+  auto app_it = apps.find(appName);
+
+  // If the app is already in the map, return the stored shared_ptr
+  if (app_it != apps.end()) {
+    return app_it->second;
+  }
+
+  // Else create a new instance and store it in the map
+  firebase::App *appInstance = firebase::App::GetInstance(appName.c_str());
   std::shared_ptr<firebase::App> app(appInstance);
+  apps[appName] = app;
 
   return app;
 }
+
 
 void FirebaseCorePlugin::InitializeApp(
     const std::string &app_name,
@@ -109,6 +120,7 @@ void FirebaseCorePlugin::InitializeApp(
   // Create an app
   App *app = App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
                     app_name.c_str());
+
 
   // Send back the result to Flutter
   result(AppToPigeonInitializeResponse(*app));
