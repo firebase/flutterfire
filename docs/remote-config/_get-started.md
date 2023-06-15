@@ -38,13 +38,13 @@ sample code.
     flutter run
     ```
 
+1.  If you're using Remote Config on macOS, you need to the add the [Keychain
+    Sharing](https://developer.apple.com/documentation/xcode/configuring-keychain-sharing)
+    capability in Xcode.
+
 Note: Because the Remote Config SDK has a dependency on the Remote Config REST
 API, make sure that you do **not** disable that API, which is enabled by default
 in a typical project.
-
-Note: When you use Remote Config for macOS, you need to the add the [Keychain
-Sharing](https://developer.apple.com/documentation/xcode/configuring-keychain-sharing)
-capability in XCode.
 
 ## Step 2: Get the Remote Config singleton object {: #get-remote-config }
 
