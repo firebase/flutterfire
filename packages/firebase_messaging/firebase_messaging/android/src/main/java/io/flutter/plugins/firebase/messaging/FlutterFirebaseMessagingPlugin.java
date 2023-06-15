@@ -130,7 +130,9 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     } else if (action.equals(FlutterFirebaseMessagingUtils.ACTION_REMOTE_MESSAGE)) {
       RemoteMessage message;
       if (android.os.Build.VERSION.SDK_INT >= 33) {
-        message = intent.getParcelableExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, RemoteMessage.class);
+        message =
+            intent.getParcelableExtra(
+                FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, RemoteMessage.class);
       } else {
         message = intent.getParcelableExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
       }
