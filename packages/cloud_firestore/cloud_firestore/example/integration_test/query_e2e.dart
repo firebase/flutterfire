@@ -1976,7 +1976,6 @@ void runQueryTests() {
           collection.doc('doc1').set({
             'genre': ['fantasy', 'action'],
             'rating': 4.5,
-            // add more fields here
             'director': 'Director1',
             'producer': 'Producer1',
             'budget': 10000000,
