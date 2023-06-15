@@ -2020,7 +2020,8 @@ void runQueryTests() {
               Filter('country2', isEqualTo: 'South Korea'),
               Filter('released2', isEqualTo: false),
               Filter('screenplay2', isEqualTo: 'Screenplay3'),
-            ))
+            ),
+        )
             .orderBy('rating1', descending: true)
             .get();
 
@@ -2123,7 +2124,8 @@ void runQueryTests() {
               Filter('totalWorldwideRevenue', isEqualTo: 200000000),
               Filter('estimatedProfit', isEqualTo: 140000000),
               Filter('mainCharacter', isEqualTo: 'MainCharacter2'),
-            ))
+            ),
+        )
             .orderBy('rating', descending: true)
             .get();
 
