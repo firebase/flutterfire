@@ -258,12 +258,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'add_payment_info',
       parameters: filterOutNulls({
-        if (parameters != null) ...parameters,
         _COUPON: coupon,
         _CURRENCY: currency,
         _PAYMENT_TYPE: paymentType,
         _VALUE: value,
         _ITEMS: _marshalItems(items),
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -293,12 +293,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'add_shipping_info',
       parameters: filterOutNulls({
-        if (parameters != null) ...parameters,
         _COUPON: coupon,
         _CURRENCY: currency,
         _SHIPPING_TIER: shippingTier,
         _VALUE: value,
         _ITEMS: _marshalItems(items),
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -329,10 +329,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'add_to_cart',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _ITEMS: _marshalItems(items),
         _VALUE: value,
         _CURRENCY: currency,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -364,10 +364,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'add_to_wishlist',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _ITEMS: _marshalItems(items),
         _VALUE: value,
         _CURRENCY: currency,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -450,13 +450,13 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'ad_impression',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _AD_PLATFORM: adPlatform,
         _AD_SOURCE: adSource,
         _AD_FORMAT: adFormat,
         _AD_UNIT_NAME: adUnitName,
         _VALUE: value,
         _CURRENCY: currency,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -504,11 +504,11 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'begin_checkout',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _VALUE: value,
         _CURRENCY: currency,
         _ITEMS: _marshalItems(items),
         _COUPON: coupon,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -535,7 +535,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'campaign_details',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _SOURCE: source,
         _MEDIUM: medium,
         _CAMPAIGN: campaign,
@@ -543,6 +542,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _CONTENT: content,
         _ACLID: aclid,
         _CP1: cp1,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -566,9 +566,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'earn_virtual_currency',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _VIRTUAL_CURRENCY_NAME: virtualCurrencyName,
         _VALUE: value,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -659,9 +659,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'generate_lead',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _CURRENCY: currency,
         _VALUE: value,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -684,8 +684,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'join_group',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _GROUP_ID: groupId,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -709,9 +709,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'level_up',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _LEVEL: level,
         _CHARACTER: character,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -730,8 +730,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'level_start',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _LEVEL_NAME: levelName,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -751,9 +751,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'level_end',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _LEVEL_NAME: levelName,
         _SUCCESS: success,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -771,9 +771,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'set_checkout_option',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _CHECKOUT_STEP: checkoutStep,
         _CHECKOUT_OPTION: checkoutOption,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -794,8 +794,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'login',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _METHOD: loginMethod,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -821,10 +821,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'post_score',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _SCORE: score,
         _LEVEL: level,
         _CHARACTER: character,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -860,7 +860,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'purchase',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _CURRENCY: currency,
         _COUPON: coupon,
         _VALUE: value,
@@ -869,6 +868,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _SHIPPING: shipping,
         _TRANSACTION_ID: transactionId,
         _AFFILIATION: affiliation,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -897,10 +897,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'remove_from_cart',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _CURRENCY: currency,
         _VALUE: value,
         _ITEMS: _marshalItems(items),
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -922,9 +922,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'screen_view',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _SCREEN_CLASS: screenClass,
         _SCREEN_NAME: screenName,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -951,10 +951,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'select_item',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _ITEM_LIST_ID: itemListId,
         _ITEM_LIST_NAME: itemListName,
         _ITEMS: _marshalItems(items),
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -984,13 +984,13 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'select_promotion',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _CREATIVE_NAME: creativeName,
         _CREATIVE_SLOT: creativeSlot,
         _ITEMS: _marshalItems(items),
         _LOCATION_ID: locationId,
         _PROMOTION_ID: promotionId,
         _PROMOTION_NAME: promotionName,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -1017,10 +1017,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'view_cart',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _CURRENCY: currency,
         _VALUE: value,
         _ITEMS: _marshalItems(items),
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -1052,7 +1052,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       name: 'search',
       parameters: filterOutNulls(
         <String, Object?>{
-          if (parameters != null) ...parameters,
           _SEARCH_TERM: searchTerm,
           _NUMBER_OF_NIGHTS: numberOfNights,
           _NUMBER_OF_ROOMS: numberOfRooms,
@@ -1062,6 +1061,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
           _START_DATE: startDate,
           _END_DATE: endDate,
           _TRAVEL_CLASS: travelClass,
+          if (parameters != null) ...parameters,
         },
       ),
       callOptions: callOptions,
@@ -1086,9 +1086,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'select_content',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _CONTENT_TYPE: contentType,
         _ITEM_ID: itemId,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1110,10 +1110,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'share',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _CONTENT_TYPE: contentType,
         _ITEM_ID: itemId,
         _METHOD: method,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1135,8 +1135,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'sign_up',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _METHOD: signUpMethod,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1158,10 +1158,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'spend_virtual_currency',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _ITEM_NAME: itemName,
         _VIRTUAL_CURRENCY_NAME: virtualCurrencyName,
         _VALUE: value,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1220,8 +1220,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'unlock_achievement',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _ACHIEVEMENT_ID: id,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1253,10 +1253,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'view_item',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _CURRENCY: currency,
         _VALUE: value,
         _ITEMS: _marshalItems(items),
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1282,10 +1282,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'view_item_list',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _ITEMS: _marshalItems(items),
         _ITEM_LIST_ID: itemListId,
         _ITEM_LIST_NAME: itemListName,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1313,13 +1313,13 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'view_promotion',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _CREATIVE_NAME: creativeName,
         _CREATIVE_SLOT: creativeSlot,
         _ITEMS: _marshalItems(items),
         _LOCATION_ID: locationId,
         _PROMOTION_ID: promotionId,
         _PROMOTION_NAME: promotionName,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1339,8 +1339,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'view_search_results',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _SEARCH_TERM: searchTerm,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1370,7 +1370,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.logEvent(
       name: 'refund',
       parameters: filterOutNulls(<String, Object?>{
-        if (parameters != null) ...parameters,
         _CURRENCY: currency,
         _COUPON: coupon,
         _VALUE: value,
@@ -1379,6 +1378,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _TRANSACTION_ID: transactionId,
         _AFFILIATION: affiliation,
         _ITEMS: _marshalItems(items),
+        if (parameters != null) ...parameters,
       }),
     );
   }
