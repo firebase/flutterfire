@@ -434,11 +434,8 @@ std::map<std::string, std::string> TransformEncodableMap(
   return transformed_map;
 }
 
-
-void FirebaseAuthPlugin::SignInWithProvider(
-    const PigeonFirebaseApp& app, const PigeonSignInProvider& sign_in_provider,
-    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {
-  firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+firebase::auth::FederatedOAuthProvider getProviderFromArguments(
+    const PigeonSignInProvider& sign_in_provider) {
   firebase::auth::FederatedOAuthProviderData federatedOAuthProviderData =
       firebase::auth::FederatedOAuthProviderData(
           sign_in_provider.provider_id().c_str(),
@@ -447,9 +444,18 @@ void FirebaseAuthPlugin::SignInWithProvider(
   firebase::auth::FederatedOAuthProvider federatedAuthProvider =
       firebase::auth::FederatedOAuthProvider(federatedOAuthProviderData);
 
+  return federatedAuthProvider;
+}
+
+
+
+void FirebaseAuthPlugin::SignInWithProvider(
+    const PigeonFirebaseApp& app, const PigeonSignInProvider& sign_in_provider,
+    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {
+  firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
 
   firebase::Future<firebase::auth::AuthResult> signInFuture =
-      firebaseAuth->SignInWithProvider(&federatedAuthProvider);
+      firebaseAuth->SignInWithProvider(&getProviderFromArguments(sign_in_provider));
 
   signInFuture.OnCompletion(
       [result](const firebase::Future<firebase::auth::AuthResult>&
@@ -629,49 +635,258 @@ void FirebaseAuthPlugin::LinkWithCredential(
 
 void FirebaseAuthPlugin::LinkWithProvider(
     const PigeonFirebaseApp& app, const PigeonSignInProvider& sign_in_provider,
-    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {}
+    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {
+    firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+    firebase::auth::User user = firebaseAuth->current_user();
+
+    firebase::Future<firebase::auth::AuthResult> future =
+        user.LinkWithProvider(&getProviderFromArguments(sign_in_provider));
+
+    future.OnCompletion(
+        [result](const firebase::Future<firebase::auth::AuthResult>&
+                     completed_future) {
+          // We are probably in a different thread right now.
+          if (completed_future.error() == 0) {
+            PigeonUserCredential credential =
+                ParseAuthResult(completed_future.result());
+            result(credential);
+          } else {
+            result(FlutterError(completed_future.error_message()));
+          }
+        });
+}
 
 void FirebaseAuthPlugin::ReauthenticateWithCredential(
     const PigeonFirebaseApp& app, const flutter::EncodableMap& input,
-    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {}
+    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {
+    firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+    firebase::auth::User user = firebaseAuth->current_user();
+
+    firebase::Future<void> future =
+        user.Reauthenticate(getCredentialFromArguments(input, app));
+
+    future.OnCompletion(
+        [result](const firebase::Future<void>&
+                     completed_future) {
+          // We are probably in a different thread right now.
+          if (completed_future.error() == 0) {
+            // TODO: wrong return type
+          } else {
+            result(FlutterError(completed_future.error_message()));
+          }
+        });
+}
 
 void FirebaseAuthPlugin::ReauthenticateWithProvider(
     const PigeonFirebaseApp& app, const PigeonSignInProvider& sign_in_provider,
-    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {}
+    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {
+    firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+    firebase::auth::User user = firebaseAuth->current_user();
+
+    firebase::Future<firebase::auth::AuthResult> future =
+        user.ReauthenticateWithProvider(&getProviderFromArguments(sign_in_provider));
+
+    future.OnCompletion(
+        [result](const firebase::Future<firebase::auth::AuthResult>&
+                     completed_future) {
+          // We are probably in a different thread right now.
+          if (completed_future.error() == 0) {
+            PigeonUserCredential credential =
+                ParseAuthResult(completed_future.result());
+            result(credential);
+          } else {
+            result(FlutterError(completed_future.error_message()));
+          }
+        });
+}
 
 void FirebaseAuthPlugin::Reload(
     const PigeonFirebaseApp& app,
-    std::function<void(ErrorOr<PigeonUserDetails> reply)> result) {}
+    std::function<void(ErrorOr<PigeonUserDetails> reply)> result) {
+    firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+    firebase::auth::User user = firebaseAuth->current_user();
+
+    firebase::Future<void> future =
+        user.Reload(
+            );
+
+    future.OnCompletion(
+        [result, firebaseAuth](const firebase::Future<void>&
+                     completed_future) {
+          // We are probably in a different thread right now.
+          if (completed_future.error() == 0) {
+            PigeonUserDetails user =
+                ParseUserDetails(firebaseAuth->current_user());
+            result(user);
+          } else {
+            result(FlutterError(completed_future.error_message()));
+          }
+        });
+}
 
 void FirebaseAuthPlugin::SendEmailVerification(
     const PigeonFirebaseApp& app,
     const PigeonActionCodeSettings* action_code_settings,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+    firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+    firebase::auth::User user = firebaseAuth->current_user();
+
+    firebase::Future<void> future = user.SendEmailVerification();
+
+    future.OnCompletion([result](
+                            const firebase::Future<void>& completed_future) {
+      // We are probably in a different thread right now.
+      if (completed_future.error() == 0) {
+        result(std::nullopt);
+      } else {
+        result(FlutterError(completed_future.error_message()));
+      }
+    });
+}
 
 void FirebaseAuthPlugin::Unlink(
     const PigeonFirebaseApp& app, const std::string& provider_id,
-    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {}
+    std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {
+    firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+    firebase::auth::User user = firebaseAuth->current_user();
+
+    firebase::Future<firebase::auth::AuthResult> future = user.Unlink(provider_id.c_str());
+
+    future.OnCompletion(
+        [result](const firebase::Future<firebase::auth::AuthResult>&
+                     completed_future) {
+          // We are probably in a different thread right now.
+          if (completed_future.error() == 0) {
+            PigeonUserCredential credential =
+                ParseAuthResult(completed_future.result());
+            result(credential);
+          } else {
+            result(FlutterError(completed_future.error_message()));
+          }
+        });
+}
 
 void FirebaseAuthPlugin::UpdateEmail(
     const PigeonFirebaseApp& app, const std::string& new_email,
-    std::function<void(ErrorOr<PigeonUserDetails> reply)> result) {}
+    std::function<void(ErrorOr<PigeonUserDetails> reply)> result) {
+    firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+    firebase::auth::User user = firebaseAuth->current_user();
+
+    firebase::Future<void> future = user.UpdateEmail(new_email.c_str());
+
+    future.OnCompletion([result, firebaseAuth](
+                            const firebase::Future<void>& completed_future) {
+      // We are probably in a different thread right now.
+      if (completed_future.error() == 0) {
+        PigeonUserDetails user = ParseUserDetails(firebaseAuth->current_user());
+        result(user);
+      } else {
+        result(FlutterError(completed_future.error_message()));
+      }
+    });
+}
 
 void FirebaseAuthPlugin::UpdatePassword(
     const PigeonFirebaseApp& app, const std::string& new_password,
-    std::function<void(ErrorOr<PigeonUserDetails> reply)> result) {}
+    std::function<void(ErrorOr<PigeonUserDetails> reply)> result) {
+    firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+    firebase::auth::User user = firebaseAuth->current_user();
+
+    firebase::Future<void> future = user.UpdatePassword(new_password.c_str());
+
+    future.OnCompletion([result, firebaseAuth](
+                            const firebase::Future<void>& completed_future) {
+      // We are probably in a different thread right now.
+      if (completed_future.error() == 0) {
+        PigeonUserDetails user = ParseUserDetails(firebaseAuth->current_user());
+        result(user);
+      } else {
+        result(FlutterError(completed_future.error_message()));
+      }
+    });
+}
+
+firebase::auth::PhoneAuthCredential getPhoneCredentialFromArguments(
+    flutter::EncodableMap arguments, const PigeonFirebaseApp& app) {
+    std::string signInMethod =
+        std::get<std::string>(arguments[kArgumentSignInMethod]);
+
+    if (signInMethod == kSignInMethodPhone) {
+    std::string verificationId =
+        std::get<std::string>(arguments[kArgumentVerificationId]);
+    std::string smsCode = std::get<std::string>(arguments[kArgumentSmsCode]);
+
+    // TODO: we cannot construct a PhoneAuthCredential from the verificationId
+    return firebase::auth::PhoneAuthCredential::PhoneAuthCredential();
+    }
+    // If no known auth method matched
+    printf(
+        "Support for an auth provider with identifier '%s' is not "
+        "implemented.\n",
+        signInMethod.c_str());
+    throw;
+}
 
 void FirebaseAuthPlugin::UpdatePhoneNumber(
     const PigeonFirebaseApp& app, const flutter::EncodableMap& input,
-    std::function<void(ErrorOr<PigeonUserDetails> reply)> result) {}
+    std::function<void(ErrorOr<PigeonUserDetails> reply)> result) {
+    firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+    firebase::auth::User user = firebaseAuth->current_user();
+
+    firebase::Future<firebase::auth::User> future =
+        user.UpdatePhoneNumberCredential(
+            getPhoneCredentialFromArguments(input, app));
+
+    future.OnCompletion([result](
+            const firebase::Future<firebase::auth::User>& completed_future) {
+      // We are probably in a different thread right now.
+      if (completed_future.error() == 0) {
+        PigeonUserDetails user = ParseUserDetails(*completed_future.result());
+        result(user);
+      } else {
+        result(FlutterError(completed_future.error_message()));
+      }
+    });
+}
 
 void FirebaseAuthPlugin::UpdateProfile(
     const PigeonFirebaseApp& app, const PigeonUserProfile& profile,
-    std::function<void(ErrorOr<PigeonUserDetails> reply)> result) {}
+    std::function<void(ErrorOr<PigeonUserDetails> reply)> result) {
+    firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+    firebase::auth::User user = firebaseAuth->current_user();
+
+    firebase::auth::User::UserProfile userProfile;
+
+    if (profile.display_name_changed()) {
+        userProfile.display_name = profile.display_name()->c_str();
+    }
+    if (profile.photo_url_changed()) {
+        userProfile.photo_url = profile.photo_url()->c_str();
+    }
+
+    firebase::Future<void> future =
+        user.UpdateUserProfile(userProfile);
+
+    future.OnCompletion(
+        [result, firebaseAuth](
+            const firebase::Future<void>& completed_future) {
+          // We are probably in a different thread right now.
+          if (completed_future.error() == 0) {
+            PigeonUserDetails user =
+                ParseUserDetails(firebaseAuth->current_user());
+            result(user);
+          } else {
+            result(FlutterError(completed_future.error_message()));
+          }
+        });
+}
 
 void FirebaseAuthPlugin::VerifyBeforeUpdateEmail(
     const PigeonFirebaseApp& app, const std::string& new_email,
     const PigeonActionCodeSettings* action_code_settings,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  // TODO: missing function
+}
 
 
 }  // namespace firebase_auth
