@@ -34,6 +34,7 @@ using ::firebase::App;
 using ::firebase::auth::Auth;
 
 namespace firebase_auth_windows {
+flutter::BinaryMessenger* FirebaseAuthPlugin::binaryMessenger = nullptr;
 
 // static
 void FirebaseAuthPlugin::RegisterWithRegistrar(
