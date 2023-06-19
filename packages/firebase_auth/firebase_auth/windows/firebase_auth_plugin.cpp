@@ -213,7 +213,6 @@ class IdTokenStreamHandler
 void FirebaseAuthPlugin::RegisterIdTokenListener(
     const PigeonFirebaseApp &app,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
 
       std::string name =
       kFLTFirebaseAuthChannelName + "/id-token/" + app.app_name();
@@ -291,7 +290,6 @@ class AuthStateStreamHandler
 void FirebaseAuthPlugin::RegisterAuthStateListener(
     const PigeonFirebaseApp& app,
     std::function<void(ErrorOr<std::string> reply)> result) {
-      firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
 
       std::string name =
           kFLTFirebaseAuthChannelName + "/auth-state/" + app.app_name();
