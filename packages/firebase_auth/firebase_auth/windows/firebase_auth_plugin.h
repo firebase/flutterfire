@@ -157,7 +157,12 @@ class FirebaseAuthPlugin : public flutter::Plugin,
       const PigeonFirebaseApp& app, const std::string& new_email,
       const PigeonActionCodeSettings* action_code_settings,
       std::function<void(std::optional<FlutterError> reply)> result) override;
+
+private:
+  static flutter::BinaryMessenger* binaryMessenger;
+
 };
+
 
 }  // namespace firebase_auth_windows
 
