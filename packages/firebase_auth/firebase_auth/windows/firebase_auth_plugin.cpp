@@ -149,7 +149,7 @@ FirebaseAuthPlugin::~FirebaseAuthPlugin() = default;
 
  std::string const kFLTFirebaseAuthChannelName = "firebase_auth_plugin";
 
- class MyIdTokenListener : public firebase::auth::IdTokenListener {
+ class FlutterIdTokenListener : public firebase::auth::IdTokenListener {
  public:
   void SetEventSink(
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> event_sink) {
@@ -184,8 +184,8 @@ FirebaseAuthPlugin::~FirebaseAuthPlugin() = default;
 class IdTokenStreamHandler
      : public flutter::StreamHandler<flutter::EncodableValue> {
  public:
-  explicit IdTokenStreamHandler() {
-
+  IdTokenStreamHandler() {
+    listener_ = nullptr;
   }
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
@@ -193,7 +193,7 @@ class IdTokenStreamHandler
       const flutter::EncodableValue* arguments,
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
-    listener_ = new MyIdTokenListener();
+    listener_ = new FlutterIdTokenListener();
     listener_->SetEventSink(std::move(events));
     return nullptr;
   }
@@ -206,7 +206,7 @@ class IdTokenStreamHandler
   }
 
  private:
-  MyIdTokenListener* listener_;
+  FlutterIdTokenListener* listener_;
  };
 
 
@@ -229,9 +229,82 @@ void FirebaseAuthPlugin::RegisterIdTokenListener(
       result(ErrorOr<std::string>(std::string(name)));
 }
 
+ class FlutterAuthStateListener : public firebase::auth::AuthStateListener {
+     public:
+      void SetEventSink(
+          std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>
+              event_sink) {
+    event_sink_ = std::move(event_sink);
+      }
+
+      void OnAuthStateChanged(Auth* auth) override {
+    // Generate your ID Token
+    firebase::auth::User user = auth->current_user();
+    PigeonUserDetails userDetails = FirebaseAuthPlugin::ParseUserDetails(user);
+
+    using flutter::EncodableMap;
+    using flutter::EncodableValue;
+
+    if (event_sink_) {
+      if (user.is_valid()) {
+        event_sink_->Success(EncodableValue(EncodableMap{
+            {EncodableValue("user"), userDetails.ToEncodableList()}}));
+      } else {
+        event_sink_->Success(
+            EncodableValue(EncodableMap{{EncodableValue("user"), nullptr}}));
+      }
+    }
+      }
+
+     private:
+      std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> event_sink_;
+};
+
+
+class AuthStateStreamHandler
+    : public flutter::StreamHandler<flutter::EncodableValue> {
+     public:
+      AuthStateStreamHandler() { listener_ = nullptr; }
+
+      std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+      OnListenInternal(
+          const flutter::EncodableValue* arguments,
+          std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
+          override {
+    listener_ = new FlutterAuthStateListener();
+    listener_->SetEventSink(std::move(events));
+    return nullptr;
+      }
+
+      std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+      OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    listener_->SetEventSink(nullptr);
+    listener_ = nullptr;
+    return nullptr;
+      }
+
+     private:
+      FlutterAuthStateListener* listener_;
+};
+
+
 void FirebaseAuthPlugin::RegisterAuthStateListener(
     const PigeonFirebaseApp& app,
-    std::function<void(ErrorOr<std::string> reply)> result) {}
+    std::function<void(ErrorOr<std::string> reply)> result) {
+      firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+
+      std::string name =
+          kFLTFirebaseAuthChannelName + "/auth-state/" + app.app_name();
+
+      auto auth_state_handler = std::make_unique<AuthStateStreamHandler>();
+
+      flutter::EventChannel<flutter::EncodableValue> channel(
+          binaryMessenger, name, &flutter::StandardMethodCodec::GetInstance());
+
+      channel.SetStreamHandler(std::move(auth_state_handler));
+
+      result(ErrorOr<std::string>(std::string(name)));
+}
 
 void FirebaseAuthPlugin::UseEmulator(
     const PigeonFirebaseApp& app, const std::string& host, int64_t port,
