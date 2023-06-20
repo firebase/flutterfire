@@ -5,11 +5,10 @@
 #include <flutter/plugin_registrar_windows.h>
 
 #include <memory>
-#include "firebase/app.h"
-#include "firebase/future.h"
-#include "firebase/auth.h"
-#include "messages.g.h"
 
+#include "firebase/app.h"
+#include "firebase/auth.h"
+#include "firebase/future.h"
 #include "messages.g.h"
 
 namespace firebase_auth_windows {
@@ -18,7 +17,7 @@ class FirebaseAuthPlugin : public flutter::Plugin,
                            public FirebaseAuthHostApi,
                            public FirebaseAuthUserHostApi {
  public:
-  static void RegisterWithRegistrar(flutter::PluginRegistrarWindows *registrar);
+  static void RegisterWithRegistrar(flutter::PluginRegistrarWindows* registrar);
 
   FirebaseAuthPlugin();
 
@@ -27,7 +26,6 @@ class FirebaseAuthPlugin : public flutter::Plugin,
   // Disallow copy and assign.
   FirebaseAuthPlugin(const FirebaseAuthPlugin&) = delete;
   FirebaseAuthPlugin& operator=(const FirebaseAuthPlugin&) = delete;
-
 
   // Parser functions
   static PigeonUserDetails ParseUserDetails(const firebase::auth::User user);
@@ -87,7 +85,8 @@ class FirebaseAuthPlugin : public flutter::Plugin,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void FetchSignInMethodsForEmail(
       const PigeonFirebaseApp& app, const std::string& email,
-      std::function<void(ErrorOr<flutter::EncodableList> reply)> result) override;
+      std::function<void(ErrorOr<flutter::EncodableList> reply)> result)
+      override;
   virtual void SendPasswordResetEmail(
       const PigeonFirebaseApp& app, const std::string& email,
       const PigeonActionCodeSettings* action_code_settings,
@@ -158,11 +157,9 @@ class FirebaseAuthPlugin : public flutter::Plugin,
       const PigeonActionCodeSettings* action_code_settings,
       std::function<void(std::optional<FlutterError> reply)> result) override;
 
-private:
+ private:
   static flutter::BinaryMessenger* binaryMessenger;
-
 };
-
 
 }  // namespace firebase_auth_windows
 

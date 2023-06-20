@@ -17,5 +17,5 @@ void FirebaseCorePluginCApiRegisterWithRegistrar(
 
 FLUTTER_PLUGIN_EXPORT std::shared_ptr<firebase::App> GetFirebaseApp(
     std::string appName) {
- return firebase_core_windows::FirebaseCorePlugin::GetFirebaseApp(appName);
+  return firebase_core_windows::FirebaseCorePlugin::GetFirebaseApp(appName);
 }

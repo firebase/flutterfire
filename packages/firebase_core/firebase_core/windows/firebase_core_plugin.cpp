@@ -10,7 +10,6 @@
 #include "firebase/app.h"
 #include "messages.g.h"
 
-
 // For getPlatformVersion; remove unless needed for your plugin implementation.
 #include <VersionHelpers.h>
 #include <flutter/method_channel.h>
@@ -19,16 +18,15 @@
 
 #include <future>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
-#include <map>
 #include <string>
 #include <vector>
 using ::firebase::App;
 
 namespace firebase_core_windows {
-
 
 // static
 void FirebaseCorePlugin::RegisterWithRegistrar(
@@ -95,7 +93,6 @@ PigeonInitializeResponse AppToPigeonInitializeResponse(const App &app) {
 
 std::map<std::string, std::shared_ptr<App>> apps;
 
-
 std::shared_ptr<App> FirebaseCorePlugin::GetFirebaseApp(std::string appName) {
   auto app_it = apps.find(appName);
 
@@ -112,15 +109,14 @@ std::shared_ptr<App> FirebaseCorePlugin::GetFirebaseApp(std::string appName) {
   return app;
 }
 
-
 void FirebaseCorePlugin::InitializeApp(
     const std::string &app_name,
     const PigeonFirebaseOptions &initialize_app_request,
     std::function<void(ErrorOr<PigeonInitializeResponse> reply)> result) {
   // Create an app
-  App *app = App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
-                    app_name.c_str());
-
+  App *app =
+      App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
+                  app_name.c_str());
 
   // Send back the result to Flutter
   result(AppToPigeonInitializeResponse(*app));
