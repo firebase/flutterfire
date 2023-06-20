@@ -235,7 +235,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     //              FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, RemoteMessage.class);
     remoteMessage = intent.getParcelableExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
 
-
     if (remoteMessage != null) {
       Map<String, Object> remoteMessageMap =
           FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
