@@ -171,8 +171,8 @@ FirebaseAuthPlugin::~FirebaseAuthPlugin() = default;
             {EncodableValue("user"), userDetails.ToEncodableList()}}));
       }
       else {
-        event_sink_->Success(EncodableValue(
-            EncodableMap{{EncodableValue("user"), nullptr}}));
+        event_sink_->Success(EncodableValue(EncodableMap{
+            {EncodableValue("user"), EncodableValue(std::monostate{})}}));
       }
     }
   }
@@ -185,8 +185,9 @@ FirebaseAuthPlugin::~FirebaseAuthPlugin() = default;
 class IdTokenStreamHandler
      : public flutter::StreamHandler<flutter::EncodableValue> {
  public:
-  IdTokenStreamHandler() {
+  IdTokenStreamHandler(Auth* auth) {
     listener_ = nullptr;
+    auth_ = auth;
   }
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
@@ -196,11 +197,13 @@ class IdTokenStreamHandler
       override {
     listener_ = new FlutterIdTokenListener();
     listener_->SetEventSink(std::move(events));
+    auth_->AddIdTokenListener(listener_);
     return nullptr;
   }
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    auth_->RemoveIdTokenListener(listener_);
     listener_->SetEventSink(nullptr);
     listener_ = nullptr;
     return nullptr;
@@ -208,18 +211,20 @@ class IdTokenStreamHandler
 
  private:
   FlutterIdTokenListener* listener_;
+  firebase::auth::Auth* auth_;
  };
 
 
 void FirebaseAuthPlugin::RegisterIdTokenListener(
     const PigeonFirebaseApp &app,
     std::function<void(ErrorOr<std::string> reply)> result) {
+  firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
 
       std::string name =
       kFLTFirebaseAuthChannelName + "/id-token/" + app.app_name();
 
       auto id_token_handler =
-          std::make_unique<IdTokenStreamHandler>();
+          std::make_unique<IdTokenStreamHandler>(firebaseAuth);
 
       flutter::EventChannel<flutter::EncodableValue> channel(
           binaryMessenger, name, &flutter::StandardMethodCodec::GetInstance());
@@ -250,8 +255,8 @@ void FirebaseAuthPlugin::RegisterIdTokenListener(
         event_sink_->Success(EncodableValue(EncodableMap{
             {EncodableValue("user"), userDetails.ToEncodableList()}}));
       } else {
-        event_sink_->Success(
-            EncodableValue(EncodableMap{{EncodableValue("user"), nullptr}}));
+        event_sink_->Success(EncodableValue(EncodableMap{
+            {EncodableValue("user"), EncodableValue(std::monostate{})}}));
       }
     }
       }
@@ -264,7 +269,10 @@ void FirebaseAuthPlugin::RegisterIdTokenListener(
 class AuthStateStreamHandler
     : public flutter::StreamHandler<flutter::EncodableValue> {
      public:
-      AuthStateStreamHandler() { listener_ = nullptr; }
+      AuthStateStreamHandler(Auth* auth) {
+        listener_ = nullptr;
+        auth_ = auth;
+      }
 
       std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
       OnListenInternal(
@@ -273,11 +281,16 @@ class AuthStateStreamHandler
           override {
     listener_ = new FlutterAuthStateListener();
     listener_->SetEventSink(std::move(events));
+
+    auth_->AddAuthStateListener(listener_);
+
     return nullptr;
       }
 
       std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
       OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    auth_->RemoveAuthStateListener(listener_);
+
     listener_->SetEventSink(nullptr);
     listener_ = nullptr;
     return nullptr;
@@ -285,17 +298,20 @@ class AuthStateStreamHandler
 
      private:
       FlutterAuthStateListener* listener_;
+      firebase::auth::Auth* auth_;
 };
 
 
 void FirebaseAuthPlugin::RegisterAuthStateListener(
     const PigeonFirebaseApp& app,
     std::function<void(ErrorOr<std::string> reply)> result) {
+      firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
 
       std::string name =
           kFLTFirebaseAuthChannelName + "/auth-state/" + app.app_name();
 
-      auto auth_state_handler = std::make_unique<AuthStateStreamHandler>();
+      auto auth_state_handler =
+          std::make_unique<AuthStateStreamHandler>(firebaseAuth);
 
       flutter::EventChannel<flutter::EncodableValue> channel(
           binaryMessenger, name, &flutter::StandardMethodCodec::GetInstance());
@@ -629,6 +645,8 @@ void FirebaseAuthPlugin::SignOut(
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
 
    firebaseAuth->SignOut();
+
+   result(std::nullopt);
 }
 
 flutter::EncodableList TransformStringList(const std::vector<std::string>& string_list) {
