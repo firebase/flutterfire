@@ -16,7 +16,6 @@ dependencies:
 
   flutter:
     sdk: flutter
-  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:
