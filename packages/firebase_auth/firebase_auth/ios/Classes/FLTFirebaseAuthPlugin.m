@@ -1566,7 +1566,9 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, id arguments, F
   FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
   FIRAuth *auth = [FIRAuth authWithApp:app];
 
-  if (tenantId != nil && ![tenantId isEqual:[NSNull null]]) {
+  if ([tenantId isEqual:[NSNull null]]) {
+    auth.tenantID = nil;
+  } else {
     auth.tenantID = tenantId;
   }
 

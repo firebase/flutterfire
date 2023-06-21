@@ -169,9 +169,7 @@ public class FlutterFirebaseAuthPlugin
     FirebaseApp app = FirebaseApp.getInstance(appName);
     FirebaseAuth auth = FirebaseAuth.getInstance(app);
     String tenantId = (String) arguments.get(Constants.TENANT_ID);
-    if (tenantId != null) {
-      auth.setTenantId(tenantId);
-    }
+    auth.setTenantId(tenantId);
     return auth;
   }
 
