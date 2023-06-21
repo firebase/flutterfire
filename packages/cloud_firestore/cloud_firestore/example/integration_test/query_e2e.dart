@@ -2032,7 +2032,7 @@ void runQueryTests() {
       });
 
       testWidgets(
-          'Exception thrown when combining `arrayContainsAny` & `whereNotIn` in multiple conjunctive queries',
+          'Exception thrown when combining `arrayContainsAny` & `isNotEqualTo` in multiple conjunctive queries',
           (_) async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('multiple-conjunctive-queries');
@@ -2201,7 +2201,7 @@ void runQueryTests() {
       });
 
       testWidgets(
-          'Exception thrown when combining `arrayContainsAny` & `whereNotIn` in multiple disjunctive queries',
+          'Exception thrown when combining `arrayContainsAny` & `isNotEqualTo` in multiple disjunctive queries',
           (_) async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('multiple-disjunctive-queries');
