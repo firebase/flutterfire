@@ -92,8 +92,8 @@ void runQueryTests() {
     });
 
     /**
-     * collectionGroup
-     */
+       * collectionGroup
+       */
     group('collectionGroup()', () {
       testWidgets('returns a data via a sub-collection', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
@@ -140,8 +140,8 @@ void runQueryTests() {
     });
 
     /**
-     * get
-     */
+       * get
+       */
     group('Query.get()', () {
       testWidgets('returns a [QuerySnapshot]', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
@@ -240,8 +240,8 @@ void runQueryTests() {
     });
 
     /**
-     * snapshots
-     */
+       * snapshots
+       */
     group('Query.snapshots()', () {
       testWidgets('returns a [Stream]', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
@@ -388,8 +388,8 @@ void runQueryTests() {
     });
 
     /**
-     * End At
-     */
+       * End At
+       */
 
     group('Query.endAt{Document}()', () {
       testWidgets('ends at string field paths', (_) async {
@@ -552,8 +552,8 @@ void runQueryTests() {
     });
 
     /**
-     * Start At
-     */
+       * Start At
+       */
 
     group('Query.startAt{Document}()', () {
       testWidgets('starts at string field paths', (_) async {
@@ -717,8 +717,8 @@ void runQueryTests() {
     });
 
     /**
-     * End Before
-     */
+       * End Before
+       */
 
     group('Query.endBefore{Document}()', () {
       testWidgets('ends before string field paths', (_) async {
@@ -883,8 +883,8 @@ void runQueryTests() {
     });
 
     /**
-     * Start after
-     */
+       * Start after
+       */
     group('Query.startAfter{Document}()', () {
       testWidgets('starts after string field paths', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
@@ -1014,8 +1014,8 @@ void runQueryTests() {
     });
 
     /**
-     * Start & End
-     */
+       * Start & End
+       */
 
     group('Query.startAt/endAt', () {
       testWidgets('starts at & ends at a document', (_) async {
@@ -1129,8 +1129,8 @@ void runQueryTests() {
     });
 
     /**
-     * Limit
-     */
+       * Limit
+       */
 
     group('Query.limit{toLast}()', () {
       testWidgets('limits documents', (_) async {
@@ -1197,8 +1197,8 @@ void runQueryTests() {
     });
 
     /**
-     * Order
-     */
+       * Order
+       */
     group('Query.orderBy()', () {
       testWidgets('allows ordering by documentId', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
@@ -1279,8 +1279,8 @@ void runQueryTests() {
     });
 
     /**
-     * Where filters
-     */
+       * Where filters
+       */
 
     group('Query.where()', () {
       testWidgets(
@@ -2001,7 +2001,7 @@ void runQueryTests() {
                 Filter('actor1', isEqualTo: 'Actor2'),
                 Filter('language1', isEqualTo: 'English'),
                 Filter('award1', isEqualTo: 'Award2'),
-                Filter('genre1', isEqualTo: ['sci-fi', 'thriller']),
+                Filter('genre1', arrayContainsAny: ['sci-fi']),
                 Filter('country1', isEqualTo: 'USA'),
                 Filter('released1', isEqualTo: true),
                 Filter('screenplay1', isEqualTo: 'Screenplay2'),
@@ -2029,6 +2029,58 @@ void runQueryTests() {
         expect(results.docs.length, equals(2));
         expect(results.docs[0].id, equals('doc3'));
         expect(results.docs[1].id, equals('doc2'));
+      });
+
+      testWidgets(
+          'Exception thrown when combining `arrayContainsAny` & `whereNotIn` in multiple conjunctive queries',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('multiple-conjunctive-queries');
+
+        try {
+          await collection
+              .where(
+                Filter.and(
+                  Filter('rating1', isEqualTo: 3.8),
+                  Filter('year1', isEqualTo: 1970),
+                  Filter('runtime1', isEqualTo: 90),
+                  Filter('director1', isEqualTo: 'Director2'),
+                  Filter('producer1', isEqualTo: 'Producer2'),
+                  Filter('budget1', isEqualTo: 20000000),
+                  Filter('boxOffice1', isEqualTo: 50000000),
+                  Filter('actor1', isEqualTo: 'Actor2'),
+                  Filter('language1', isEqualTo: 'English'),
+                  Filter('award1', isEqualTo: 'Award2'),
+                  Filter('genre1', arrayContainsAny: ['sci-fi']),
+                  Filter('country1', isEqualTo: 'USA'),
+                  Filter('released1', isEqualTo: true),
+                  Filter('screenplay1', isEqualTo: 'Screenplay2'),
+                  Filter('cinematography1', isEqualTo: 'Cinematography2'),
+                  Filter('music1', isEqualTo: 'Music2'),
+                  Filter('rating2', isEqualTo: 4.2),
+                  Filter('year2', isEqualTo: 1982),
+                  Filter('runtime2', isEqualTo: 60),
+                  Filter('director2', isEqualTo: 'Director3'),
+                  Filter('producer2', isEqualTo: 'Producer3'),
+                  Filter('budget2', isEqualTo: 30000000),
+                  Filter('boxOffice2', isEqualTo: 60000000),
+                  Filter('actor2', isEqualTo: 'Actor3'),
+                  Filter('language2', isEqualTo: 'Korean'),
+                  Filter('award2', isEqualTo: 'Award3'),
+                  Filter('genre2', isEqualTo: ['sci-fi', 'action']),
+                  Filter('country2', isEqualTo: 'South Korea'),
+                  Filter('released2', isEqualTo: false),
+                  // Fails because this is not allowed when arrayContainsAny is included in the Query
+                  Filter('screenplay2', isNotEqualTo: 'blah'),
+                ),
+              )
+              .orderBy('rating1', descending: true)
+              .get();
+        } catch (e) {
+          expect((e as FirebaseException)!.message,
+              contains('An error occurred while parsing query arguments'));
+          expect(e, isA<FirebaseException>());
+        }
       });
 
       testWidgets('allow multiple disjunctive queries', (_) async {
@@ -2062,7 +2114,7 @@ void runQueryTests() {
             'award': 'Award2',
           }),
           collection.doc('doc3').set({
-            'genre': ['sci-fi', 'action'],
+            'genre': ['sci-fi', 'thriller'],
             'rating': 4.2,
             'year': 1982,
             'runtime': 60,
@@ -2077,7 +2129,7 @@ void runQueryTests() {
             'award': 'Award3',
           }),
           collection.doc('doc4').set({
-            'genre': ['mystery', 'action'],
+            'genre': ['sci-fi', 'thriller'],
             'rating': 4.7,
             'year': 1990,
             'runtime': 120,
@@ -2103,13 +2155,13 @@ void runQueryTests() {
                 Filter('country', isEqualTo: 'Wales'),
                 Filter('budget', isEqualTo: 20000000),
                 Filter('boxOffice', isEqualTo: 50000000),
+                Filter('genre', arrayContainsAny: ['sci-fi']),
                 Filter('actor', isEqualTo: 'Actor2'),
                 Filter('language', isEqualTo: 'English'),
                 Filter('award', isEqualTo: 'Award2'),
                 Filter('screenWriter', isEqualTo: 'ScreenWriter2'),
                 Filter('editor', isEqualTo: 'Editor2'),
                 Filter('cinematographer', isEqualTo: 'Cinematographer2'),
-                Filter('genre', isEqualTo: 'Genre2'),
                 Filter('releaseCountry', isEqualTo: 'Country2'),
                 Filter('distributor', isEqualTo: 'Distributor2'),
                 Filter('ratingSystem', isEqualTo: 'RatingSystem2'),
@@ -2136,14 +2188,66 @@ void runQueryTests() {
         expect(results.docs[0].data()['rating'], equals(4.7));
         expect(
           results.docs[0].data()['genre'],
-          equals(['mystery', 'action']),
+          equals(['sci-fi', 'thriller']),
         );
         expect(results.docs[1].id, equals('doc3'));
         expect(results.docs[1].data()['rating'], equals(4.2));
-        expect(results.docs[1].data()['genre'], equals(['sci-fi', 'action']));
+        expect(results.docs[1].data()['genre'], equals(['sci-fi', 'thriller']));
         expect(results.docs[2].id, equals('doc2'));
         expect(results.docs[2].data()['rating'], equals(3.8));
         expect(results.docs[2].data()['genre'], equals(['sci-fi', 'thriller']));
+      });
+
+      testWidgets(
+          'Exception thrown when combining `arrayContainsAny` & `whereNotIn` in multiple disjunctive queries',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('multiple-disjunctive-queries');
+
+        try {
+          await collection
+              .where(
+                Filter.or(
+                  Filter('rating', isEqualTo: 3.8),
+                  Filter('year', isEqualTo: 1970),
+                  Filter('runtime', isEqualTo: 90),
+                  Filter('director', isEqualTo: 'Director2'),
+                  Filter('country', isEqualTo: 'Wales'),
+                  Filter('budget', isEqualTo: 20000000),
+                  Filter('boxOffice', isEqualTo: 50000000),
+                  Filter('genre', arrayContainsAny: ['sci-fi']),
+                  Filter('actor', isEqualTo: 'Actor2'),
+                  Filter('language', isEqualTo: 'English'),
+                  Filter('award', isEqualTo: 'Award2'),
+                  Filter('screenWriter', isEqualTo: 'ScreenWriter2'),
+                  Filter('editor', isEqualTo: 'Editor2'),
+                  Filter('cinematographer', isEqualTo: 'Cinematographer2'),
+                  Filter('releaseCountry', isEqualTo: 'Country2'),
+                  Filter('distributor', isEqualTo: 'Distributor2'),
+                  Filter('ratingSystem', isEqualTo: 'RatingSystem2'),
+                  Filter('soundtrackComposer', isEqualTo: 'Composer2'),
+                  Filter('visualEffectsCompany', isEqualTo: 'EffectsCompany2'),
+                  Filter('productionCompany', isEqualTo: 'ProductionCompany2'),
+                  Filter('filmFormat', isEqualTo: 'FilmFormat2'),
+                  Filter('aspectRatio', isEqualTo: 'AspectRatio2'),
+                  Filter('colorProcess', isEqualTo: 'ColorProcess2'),
+                  Filter('soundProcess', isEqualTo: 'SoundProcess2'),
+                  Filter('numberOfTheaters', isEqualTo: 2000),
+                  Filter('openingWeekendRevenue', isEqualTo: 10000000),
+                  Filter('totalDomesticRevenue', isEqualTo: 60000000),
+                  Filter('totalWorldwideRevenue', isEqualTo: 200000000),
+                  Filter('estimatedProfit', isEqualTo: 140000000),
+                  // Fails because this is not allowed when arrayContainsAny is included in the Query
+                  Filter('mainCharacter', isNotEqualTo: 'MainCharacter2'),
+                ),
+              )
+              .orderBy('rating', descending: true)
+              .get();
+        } catch (e) {
+          expect((e as FirebaseException)!.message,
+              contains('An error occurred while parsing query arguments'));
+          expect(e, isA<FirebaseException>());
+        }
       });
 
       // TODO(russellwheatley): Firestore allows up to 30 disjunctive queries but testing on android & iOS reveals it only allows 10 when using where() with "arrayContainsAny", "whereIn" & "whereNotIn"
