@@ -92,8 +92,8 @@ void runQueryTests() {
     });
 
     /**
-       * collectionGroup
-       */
+     * collectionGroup
+     */
     group('collectionGroup()', () {
       testWidgets('returns a data via a sub-collection', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
@@ -140,8 +140,8 @@ void runQueryTests() {
     });
 
     /**
-       * get
-       */
+     * get
+     */
     group('Query.get()', () {
       testWidgets('returns a [QuerySnapshot]', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
@@ -240,8 +240,8 @@ void runQueryTests() {
     });
 
     /**
-       * snapshots
-       */
+     * snapshots
+     */
     group('Query.snapshots()', () {
       testWidgets('returns a [Stream]', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
@@ -388,8 +388,8 @@ void runQueryTests() {
     });
 
     /**
-       * End At
-       */
+     * End At
+     */
 
     group('Query.endAt{Document}()', () {
       testWidgets('ends at string field paths', (_) async {
@@ -552,8 +552,8 @@ void runQueryTests() {
     });
 
     /**
-       * Start At
-       */
+     * Start At
+     */
 
     group('Query.startAt{Document}()', () {
       testWidgets('starts at string field paths', (_) async {
@@ -717,8 +717,8 @@ void runQueryTests() {
     });
 
     /**
-       * End Before
-       */
+     * End Before
+     */
 
     group('Query.endBefore{Document}()', () {
       testWidgets('ends before string field paths', (_) async {
@@ -883,8 +883,8 @@ void runQueryTests() {
     });
 
     /**
-       * Start after
-       */
+     * Start after
+     */
     group('Query.startAfter{Document}()', () {
       testWidgets('starts after string field paths', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
@@ -1014,8 +1014,8 @@ void runQueryTests() {
     });
 
     /**
-       * Start & End
-       */
+     * Start & End
+     */
 
     group('Query.startAt/endAt', () {
       testWidgets('starts at & ends at a document', (_) async {
@@ -1129,8 +1129,8 @@ void runQueryTests() {
     });
 
     /**
-       * Limit
-       */
+     * Limit
+     */
 
     group('Query.limit{toLast}()', () {
       testWidgets('limits documents', (_) async {
@@ -1197,8 +1197,8 @@ void runQueryTests() {
     });
 
     /**
-       * Order
-       */
+     * Order
+     */
     group('Query.orderBy()', () {
       testWidgets('allows ordering by documentId', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
@@ -1279,8 +1279,8 @@ void runQueryTests() {
     });
 
     /**
-       * Where filters
-       */
+     * Where filters
+     */
 
     group('Query.where()', () {
       testWidgets(
@@ -2077,8 +2077,10 @@ void runQueryTests() {
               .orderBy('rating1', descending: true)
               .get();
         } catch (e) {
-          expect((e as FirebaseException)!.message,
-              contains('An error occurred while parsing query arguments'));
+          expect(
+            (e as FirebaseException).message,
+            contains('An error occurred while parsing query arguments'),
+          );
           expect(e, isA<FirebaseException>());
         }
       });
@@ -2244,8 +2246,12 @@ void runQueryTests() {
               .orderBy('rating', descending: true)
               .get();
         } catch (e) {
-          expect((e as FirebaseException)!.message,
-              contains('An error occurred while parsing query arguments'));
+          expect(
+            (e as FirebaseException).message,
+            contains(
+              'An error occurred while parsing query arguments',
+            ),
+          );
           expect(e, isA<FirebaseException>());
         }
       });
