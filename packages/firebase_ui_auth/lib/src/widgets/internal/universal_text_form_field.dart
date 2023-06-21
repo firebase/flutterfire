@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// {@template ui.auth.widgets.internal.universal_text_form_field}
-/// Uses [TextFormField] under mateiral library and [CupertinoTextFormFieldRow]
+/// Uses [TextFormField] under material library and [CupertinoTextFormFieldRow]
 /// under cupertion.
 class UniversalTextFormField extends PlatformWidget {
   final TextEditingController? controller;
