@@ -10,9 +10,9 @@
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 
-
 #include <memory>
 #include <string>
+
 #include "firebase/app.h"
 #include "messages.g.h"
 
@@ -33,7 +33,6 @@ class FirebaseCorePlugin : public flutter::Plugin,
   FirebaseCorePlugin &operator=(const FirebaseCorePlugin &) = delete;
 
   static std::vector<std::string> GetFirebaseApp(std::string appName);
-
 
   // FirebaseCoreHostApi
   virtual void InitializeApp(

@@ -10,7 +10,6 @@
 #include "firebase/app.h"
 #include "messages.g.h"
 
-
 // For getPlatformVersion; remove unless needed for your plugin implementation.
 #include <VersionHelpers.h>
 #include <flutter/method_channel.h>
@@ -19,16 +18,15 @@
 
 #include <future>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
-#include <map>
 #include <string>
 #include <vector>
 using ::firebase::App;
 
 namespace firebase_core_windows {
-
 
 // static
 void FirebaseCorePlugin::RegisterWithRegistrar(
@@ -107,7 +105,6 @@ std::vector<std::string> FirebaseCorePlugin::GetFirebaseApp(std::string appName)
   std::vector<std::string> app_vector;
   return app_vector;
 }
-
 
 void FirebaseCorePlugin::InitializeApp(
     const std::string &app_name,

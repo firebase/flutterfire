@@ -1,3 +1,5 @@
+#include "firebase_auth_plugin.h"
+
 #include <flutter/method_call.h>
 #include <flutter/method_result_functions.h>
 #include <flutter/standard_method_codec.h>
@@ -7,8 +9,6 @@
 #include <memory>
 #include <string>
 #include <variant>
-
-#include "firebase_auth_plugin.h"
 
 namespace firebase_auth {
 namespace test {
