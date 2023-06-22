@@ -55,18 +55,33 @@ FirebaseAuthPlugin::~FirebaseAuthPlugin() = default;
 
  firebase::auth::Auth* GetAuthFromPigeon(
     const PigeonFirebaseApp& pigeonApp) {   
-  // std::shared_ptr<App> app = GetFirebaseApp(pigeonApp.app_name());
+  std::vector<std::string> app_vector = GetFirebaseApp(pigeonApp.app_name());
 
-     firebase::AppOptions options;
-  options.set_api_key("AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c");
-     options.set_app_id("1:406099696497:ios:58cbc26aca8e5cf83574d0");
-  options.set_database_url("https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app");
+  // print coucou
+  std::cout << "coucou" << std::endl;
+
+  // print vector lenghts
+  std::cout << app_vector.size() << std::endl;
+
+  // print the vector
+  for (std::string n : app_vector) {
+    std::cout << n << std::endl;
+  }
+
+  firebase::AppOptions options;
+
+  options.set_api_key(app_vector[1].c_str());
+  options.set_app_id(app_vector[2].c_str());
+   options.set_database_url(app_vector[3].c_str());
   
-  options.set_messaging_sender_id("406099696497");
+  //   options.set_ga_tracking_id(app_vector[4].c_str());
+  
+  options.set_messaging_sender_id(app_vector[5].c_str());
 
-  options.set_project_id("flutterfire-e2e-tests");
+  options.set_project_id(app_vector[6].c_str());
 
-    options.set_storage_bucket("flutterfire-e2e-tests.appspot.com");
+  options.set_storage_bucket(app_vector[7].c_str());
+  
   
 
   App* app =

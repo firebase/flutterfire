@@ -32,7 +32,7 @@ class FirebaseCorePlugin : public flutter::Plugin,
   FirebaseCorePlugin(const FirebaseCorePlugin &) = delete;
   FirebaseCorePlugin &operator=(const FirebaseCorePlugin &) = delete;
 
-  static std::shared_ptr<firebase::App> GetFirebaseApp(std::string appName);
+  static std::vector<std::string> GetFirebaseApp(std::string appName);
 
 
   // FirebaseCoreHostApi
@@ -61,7 +61,7 @@ class FirebaseCorePlugin : public flutter::Plugin,
 
  private:
   bool coreInitialized = false;
-  static std::map<std::string, firebase::App> firebase_apps;
+  static std::map<std::string, std::vector<std::string>> firebase_apps;
 };
 
 }  // namespace firebase_core_windows

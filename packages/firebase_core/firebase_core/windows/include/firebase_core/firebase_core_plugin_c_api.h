@@ -11,6 +11,7 @@
 #include "firebase/app.h"
 #include <string>
 #include <memory>
+#include <vector>
 
 #ifdef FLUTTER_PLUGIN_IMPL
 #define FLUTTER_PLUGIN_EXPORT __declspec(dllexport)
@@ -22,7 +23,7 @@
 FLUTTER_PLUGIN_EXPORT void FirebaseCorePluginCApiRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar);
 
-FLUTTER_PLUGIN_EXPORT std::shared_ptr<firebase::App> GetFirebaseApp(
+FLUTTER_PLUGIN_EXPORT std::vector<std::string> GetFirebaseApp(
     std::string appName);
 
 
