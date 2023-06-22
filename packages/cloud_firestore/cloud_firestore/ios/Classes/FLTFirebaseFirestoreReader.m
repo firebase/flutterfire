@@ -95,14 +95,19 @@
 
   if (![values[@"persistenceEnabled"] isEqual:[NSNull null]]) {
     bool persistEnabled = [((NSNumber *)values[@"persistenceEnabled"]) boolValue];
-    int size = [((NSNumber *)values[@"cacheSizeBytes"]) intValue];
+
+    // This is the maximum amount of cache allowed. We use the same number on android.
+    // This now causes an exception: kFIRFirestoreCacheSizeUnlimited
+    NSNumber *size = @104857600;
+
+    if (![values[@"cacheSizeBytes"] isEqual:[NSNull null]]) {
+      if ([size intValue] != -1) {
+        size = ((NSNumber *)values[@"cacheSizeBytes"]);
+      }
+    }
 
     if (persistEnabled) {
-      NSNumber *unlimitedPersistence =
-          [NSNumber numberWithLongLong:kFIRFirestoreCacheSizeUnlimited];
-      settings.cacheSettings = [[FIRPersistentCacheSettings alloc]
-          initWithSizeBytes:size == -1 ? unlimitedPersistence
-                                       : ((NSNumber *)values[@"cacheSizeBytes"])];
+      settings.cacheSettings = [[FIRPersistentCacheSettings alloc] initWithSizeBytes:size];
     } else {
       settings.cacheSettings = [[FIRMemoryCacheSettings alloc]
           initWithGarbageCollectorSettings:[[FIRMemoryLRUGCSettings alloc] init]];
