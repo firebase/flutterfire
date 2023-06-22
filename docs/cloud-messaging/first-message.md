@@ -78,7 +78,7 @@ Android apps.
 When users tap a notification, the default behavior on both Android & iOS is to open the application. If the application is terminated,
 it will be started, and if it is in the background, it will be brought to the foreground.
 
-Depending on the content of a notification, you may wish to handle the user's interaction when the application
+Depending on the content of a notification, you may want to handle the user's interaction when the application
 opens. For example, if a new chat message is sent using a notification and the user selects it, you may want to
  open the specific conversation when the application opens.
 
@@ -140,8 +140,8 @@ class _Application extends State<Application> {
 }
 ```
 
-How you handle interaction depends on your application setup, however the example above
-shows a basic example of using a StatefulWidget.
+How you handle interaction depends on your application setup. The example above
+shows a basic example of using a `StatefulWidget`.
 
 ## Next steps
 

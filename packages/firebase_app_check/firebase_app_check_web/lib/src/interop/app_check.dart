@@ -43,6 +43,11 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
   Future<app_check_interop.AppCheckTokenResult> getToken(bool? forceRefresh) =>
       handleThenable(app_check_interop.getToken(jsObject, forceRefresh));
 
+  Future<app_check_interop.AppCheckTokenResult> getLimitedUseToken() =>
+      handleThenable(
+        app_check_interop.getLimitedUseToken(jsObject),
+      );
+
   Func0? _idTokenChangedUnsubscribe;
 
   StreamController<app_check_interop.AppCheckTokenResult>?

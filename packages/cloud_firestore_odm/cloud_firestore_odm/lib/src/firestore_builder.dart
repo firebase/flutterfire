@@ -46,7 +46,7 @@ class FirestoreBuilder<Snapshot> extends StatefulWidget {
 
 class _FirestoreBuilderState<Snapshot>
     extends State<FirestoreBuilder<Snapshot>> {
-  FirestoreReference? _streamCacheKey;
+  FirestoreReference<Object?>? _streamCacheKey;
   late Stream<Object?> _streamCache;
   Stream<Object?> get _stream {
     final ref = _getReference(widget.ref);
@@ -58,7 +58,7 @@ class _FirestoreBuilderState<Snapshot>
   }
 
   var _lastSnapshot = const AsyncSnapshot<Object?>.nothing();
-  Stream? _listenableCacheKey;
+  Stream<Object?>? _listenableCacheKey;
   VoidCallback? _removeListener;
   void _listenStream(Stream<Object?> stream) {
     if (stream == _listenableCacheKey) {

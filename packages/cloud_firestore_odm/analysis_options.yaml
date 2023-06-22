@@ -16,7 +16,10 @@
 
 include: all_lint_rules.yaml
 analyzer:
-  strict-casts: true
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
   errors:
     # So we can run ODM dart tests in the melos workspace - otherwise dart test will
     # source the ODM package from pub - which won't have the local changes

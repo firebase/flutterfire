@@ -704,12 +704,19 @@ class ProfileScreen extends MultiProviderScreen {
   /// verification.
   final ActionCodeSettings? actionCodeSettings;
 
+  /// Indicates whether MFA tile should be shown.
   final bool showMFATile;
+
+  /// A custom avatar widget that is used instead of the default one.
+  /// If provided, [avatarPlaceholderColor], [avatarShape] and [avatarSize]
+  /// are ignored.
+  final Widget? avatar;
 
   const ProfileScreen({
     super.key,
     super.auth,
     super.providers,
+    this.avatar,
     this.avatarPlaceholderColor,
     this.avatarShape,
     this.avatarSize,
@@ -767,9 +774,7 @@ class ProfileScreen extends MultiProviderScreen {
 
     final user = auth.currentUser!;
 
-    final content = Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
+    final avatarWidget = avatar ??
         Align(
           child: UserAvatar(
             auth: auth,
@@ -777,7 +782,12 @@ class ProfileScreen extends MultiProviderScreen {
             shape: avatarShape,
             size: avatarSize,
           ),
-        ),
+        );
+
+    final content = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        avatarWidget,
         Align(child: EditableUserDisplayName(auth: auth)),
         if (!user.emailVerified) ...[
           RebuildScope(

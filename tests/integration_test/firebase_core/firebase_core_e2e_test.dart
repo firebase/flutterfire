@@ -64,11 +64,13 @@ void main() {
 
     test('FirebaseApp.setAutomaticDataCollectionEnabled()', () async {
       FirebaseApp app = Firebase.app(testAppName);
-      bool enabled = app.isAutomaticDataCollectionEnabled;
+      await app.setAutomaticDataCollectionEnabled(false);
 
-      await app.setAutomaticDataCollectionEnabled(!enabled);
+      expect(app.isAutomaticDataCollectionEnabled, false);
 
-      expect(app.isAutomaticDataCollectionEnabled, !enabled);
+      await app.setAutomaticDataCollectionEnabled(true);
+
+      expect(app.isAutomaticDataCollectionEnabled, true);
     });
 
     test('FirebaseApp.setAutomaticResourceManagementEnabled()', () async {
