@@ -2231,10 +2231,14 @@ void runQueryTests() {
                     Filter('distributor', isEqualTo: 'Distributor2'),
                     Filter('ratingSystem', isEqualTo: 'RatingSystem2'),
                     Filter('soundtrackComposer', isEqualTo: 'Composer2'),
-                    Filter('visualEffectsCompany',
-                        isEqualTo: 'EffectsCompany2'),
-                    Filter('productionCompany',
-                        isEqualTo: 'ProductionCompany2'),
+                    Filter(
+                      'visualEffectsCompany',
+                      isEqualTo: 'EffectsCompany2',
+                    ),
+                    Filter(
+                      'productionCompany',
+                      isEqualTo: 'ProductionCompany2',
+                    ),
                     Filter('filmFormat', isEqualTo: 'FilmFormat2'),
                     Filter('aspectRatio', isEqualTo: 'AspectRatio2'),
                     Filter('colorProcess', isEqualTo: 'ColorProcess2'),
