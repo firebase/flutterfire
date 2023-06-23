@@ -30,6 +30,8 @@ class FirebaseCorePlugin : public flutter::Plugin,
   FirebaseCorePlugin(const FirebaseCorePlugin &) = delete;
   FirebaseCorePlugin &operator=(const FirebaseCorePlugin &) = delete;
 
+  static std::vector<std::string> GetFirebaseApp(std::string appName);
+
   // FirebaseCoreHostApi
   virtual void InitializeApp(
       const std::string &app_name,

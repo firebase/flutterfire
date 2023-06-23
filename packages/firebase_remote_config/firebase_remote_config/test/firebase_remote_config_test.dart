@@ -19,11 +19,11 @@ void main() {
 
   late FirebaseRemoteConfig remoteConfig;
   late DateTime mockLastFetchTime;
-  late RemoteConfigFetchStatus mockLastFetchStatus;
-  late RemoteConfigSettings mockRemoteConfigSettings;
-  late Map<String, RemoteConfigValue> mockParameters;
+  late PigeonRemoteConfigFetchStatus mockLastFetchStatus;
+  late PigeonRemoteConfigSettings mockRemoteConfigSettings;
+  late Map<String, PigeonRemoteConfigValue> mockParameters;
   late Map<String, dynamic> mockDefaultParameters;
-  late RemoteConfigValue mockRemoteConfigValue;
+  late PigeonRemoteConfigValue mockRemoteConfigValue;
 
   group('FirebaseRemoteConfig', () {
     FirebaseRemoteConfigPlatform.instance = mockRemoteConfigPlatform;
@@ -33,16 +33,16 @@ void main() {
       remoteConfig = FirebaseRemoteConfig.instance;
 
       mockLastFetchTime = DateTime(2020);
-      mockLastFetchStatus = RemoteConfigFetchStatus.noFetchYet;
-      mockRemoteConfigSettings = RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
-        minimumFetchInterval: const Duration(hours: 1),
+      mockLastFetchStatus = PigeonRemoteConfigFetchStatus.noFetchYet;
+      mockRemoteConfigSettings = PigeonRemoteConfigSettings(
+        fetchTimeout: 10,
+        minimumFetchInterval: 3600,
       );
-      mockParameters = <String, RemoteConfigValue>{};
+      mockParameters = <String, PigeonRemoteConfigValue>{};
       mockDefaultParameters = <String, dynamic>{};
-      mockRemoteConfigValue = RemoteConfigValue(
-        <int>[],
-        ValueSource.valueStatic,
+      mockRemoteConfigValue = PigeonRemoteConfigValue(
+        value: <int>[],
+        source: PigeonValueSource.valueStatic,
       );
 
       when(
@@ -137,9 +137,14 @@ void main() {
           fetchTimeout: const Duration(seconds: 8),
           minimumFetchInterval: Duration.zero,
         );
+        final pigeonRemoteConfigSettings = PigeonRemoteConfigSettings(
+          fetchTimeout: 8,
+          minimumFetchInterval: 0,
+        );
         await remoteConfig.setConfigSettings(remoteConfigSettings);
         verify(
-          mockRemoteConfigPlatform.setConfigSettings(remoteConfigSettings),
+          mockRemoteConfigPlatform
+              .setConfigSettings(pigeonRemoteConfigSettings),
         );
       });
     });
@@ -301,7 +306,8 @@ class MockFirebaseRemoteConfig extends Mock
   }
 
   @override
-  Future<void> setConfigSettings(RemoteConfigSettings? remoteConfigSettings) {
+  Future<void> setConfigSettings(
+      PigeonRemoteConfigSettings? remoteConfigSettings) {
     return super.noSuchMethod(
       Invocation.method(#setConfigSettings, [remoteConfigSettings]),
       returnValue: Future<void>.value(),
@@ -319,11 +325,11 @@ class MockFirebaseRemoteConfig extends Mock
   }
 
   @override
-  Map<String, RemoteConfigValue> getAll() {
+  Map<String, PigeonRemoteConfigValue> getAll() {
     return super.noSuchMethod(
       Invocation.method(#getAll, []),
-      returnValue: <String, RemoteConfigValue>{},
-      returnValueForMissingStub: <String, RemoteConfigValue>{},
+      returnValue: <String, PigeonRemoteConfigValue>{},
+      returnValueForMissingStub: <String, PigeonRemoteConfigValue>{},
     );
   }
 
@@ -364,24 +370,33 @@ class MockFirebaseRemoteConfig extends Mock
   }
 
   @override
-  RemoteConfigValue getValue(String key) {
+  PigeonRemoteConfigValue getValue(String key) {
     return super.noSuchMethod(
       Invocation.method(#getValue, [key]),
-      returnValue: RemoteConfigValue(
-        <int>[],
-        ValueSource.valueStatic,
+      returnValue: PigeonRemoteConfigValue(
+        value: <int>[],
+        source: PigeonValueSource.valueStatic,
       ),
-      returnValueForMissingStub: RemoteConfigValue(
-        <int>[],
-        ValueSource.valueStatic,
+      returnValueForMissingStub: PigeonRemoteConfigValue(
+        value: <int>[],
+        source: PigeonValueSource.valueStatic,
       ),
     );
   }
 
   @override
-  RemoteConfigFetchStatus get lastFetchStatus {
+  PigeonRemoteConfigFetchStatus get lastFetchStatus {
     return super.noSuchMethod(
       Invocation.getter(#lastFetchStatus),
+      returnValue: PigeonRemoteConfigFetchStatus.success,
+      returnValueForMissingStub: PigeonRemoteConfigFetchStatus.success,
+    );
+  }
+
+  @override
+  RemoteConfigFetchStatus getFetchStatus() {
+    return super.noSuchMethod(
+      Invocation.getter(#getFetchStatus),
       returnValue: RemoteConfigFetchStatus.success,
       returnValueForMissingStub: RemoteConfigFetchStatus.success,
     );
@@ -397,16 +412,16 @@ class MockFirebaseRemoteConfig extends Mock
   }
 
   @override
-  RemoteConfigSettings get settings {
+  PigeonRemoteConfigSettings get settings {
     return super.noSuchMethod(
       Invocation.getter(#settings),
-      returnValue: RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
-        minimumFetchInterval: const Duration(hours: 1),
+      returnValue: PigeonRemoteConfigSettings(
+        fetchTimeout: 10,
+        minimumFetchInterval: 3600,
       ),
-      returnValueForMissingStub: RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
-        minimumFetchInterval: const Duration(hours: 1),
+      returnValueForMissingStub: PigeonRemoteConfigSettings(
+        fetchTimeout: 10,
+        minimumFetchInterval: 3600,
       ),
     );
   }

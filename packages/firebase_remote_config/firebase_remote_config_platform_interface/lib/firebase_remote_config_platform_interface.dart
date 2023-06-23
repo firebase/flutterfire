@@ -10,3 +10,9 @@ export 'src/remote_config_settings.dart';
 export 'src/remote_config_status.dart';
 export 'src/remote_config_update.dart';
 export 'src/remote_config_value.dart';
+export 'src/pigeon/messages.pigeon.dart'
+    show
+        PigeonRemoteConfigSettings,
+        PigeonRemoteConfigValue,
+        PigeonRemoteConfigFetchStatus,
+        PigeonValueSource;

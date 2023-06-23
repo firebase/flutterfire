@@ -1,7 +1,7 @@
 // Copyright 2023, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
+#define _CRT_SECURE_NO_WARNINGS
 #include "firebase_remote_config_plugin.h"
 
 // This must be included before many other Windows headers.
@@ -10,6 +10,7 @@
 #include "firebase/app.h"
 #include "firebase/future.h"
 #include "firebase/remote_config.h"
+#include "firebase_core/firebase_core_plugin_c_api.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -65,6 +66,36 @@ void FirebaseRemoteConfigPlugin::Activate(
   });
 }
 
+RemoteConfig* GetRCFromPigeon(const PigeonFirebaseApp& pigeonApp) {
+  std::vector<std::string> app_vector = GetFirebaseApp(pigeonApp.app_name());
+
+  // print vector lenghts
+  std::cout << app_vector.size() << std::endl;
+
+  // print the vector
+  for (std::string n : app_vector) {
+    std::cout << n << std::endl;
+  }
+
+  firebase::AppOptions options;
+
+  options.set_api_key(app_vector[1].c_str());
+  options.set_app_id(app_vector[2].c_str());
+  options.set_database_url(app_vector[3].c_str());
+
+  options.set_messaging_sender_id(app_vector[4].c_str());
+
+  options.set_project_id(app_vector[5].c_str());
+
+  options.set_storage_bucket(app_vector[6].c_str());
+
+  App* cpp_app = App::Create(options, pigeonApp.app_name().c_str());
+
+  RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
+
+  return rc;
+}
+
 void FirebaseRemoteConfigPlugin::EnsureInitialized(
     const PigeonFirebaseApp& app,
     std::function<void(std::optional<FlutterError> reply)> result) {
@@ -98,17 +129,17 @@ void FirebaseRemoteConfigPlugin::FetchAndActivate(
     std::function<void(ErrorOr<bool> reply)> result) {
   std::cout << "[C++] FirebaseRemoteConfigPlugin::FetchAndActivate() START"
             << std::endl;
-  // App* cpp_app = App::GetInstance(app.app_name().c_str());
-  App* cpp_app = App::GetInstance();
-  // std::cout << "[C++] get cpp_app:" << app.app_name() << std::endl;
-  std::vector<App*> all_apps = App::GetApps();
-  std::cout << "[C++] all apps size is: " << all_apps.size() << std::endl;
-  if (cpp_app == nullptr) {
-    std::cout << "[C++] cannot get FirebaseApp:" << app.app_name() << std::endl;
-    result(false);
-    return;
-  }
-  RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
+  // // App* cpp_app = App::GetInstance(app.app_name().c_str());
+  // App* cpp_app = App::GetInstance();
+  // // std::cout << "[C++] get cpp_app:" << app.app_name() << std::endl;
+  // std::vector<App*> all_apps = App::GetApps();
+  // std::cout << "[C++] all apps size is: " << all_apps.size() << std::endl;
+  // if (cpp_app == nullptr) {
+  //   std::cout << "[C++] cannot get FirebaseApp:" << app.app_name() <<
+  //   std::endl; result(false); return;
+  // }
+  // RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
+  RemoteConfig* rc = GetRCFromPigeon(app);
 
   std::cout << "[C++] Get rc instance" << std::endl;
 
@@ -176,6 +207,8 @@ void FirebaseRemoteConfigPlugin::SetConfigSettings(
     const PigeonRemoteConfigSettings& remote_config_settings,
     std::function<void(std::optional<FlutterError> reply)> result) {
   // TODO
+  std::cout << "[C++] FirebaseRemoteConfigPlugin::SetConfigSettings()"
+            << std::endl;
   result(std::nullopt);
 }
 
