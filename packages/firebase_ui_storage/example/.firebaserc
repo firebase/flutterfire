@@ -1,0 +1,5 @@
+{
+  "projects": {
+    "default": "flutterfire-e2e-tests"
+  }
+}
