@@ -101,8 +101,9 @@
     NSNumber *size = @104857600;
 
     if (![values[@"cacheSizeBytes"] isEqual:[NSNull null]]) {
-      if ([size intValue] != -1) {
-        size = ((NSNumber *)values[@"cacheSizeBytes"]);
+      NSNumber *cacheSizeBytes = ((NSNumber *)values[@"cacheSizeBytes"]);
+      if ([cacheSizeBytes intValue] != -1) {
+        size = cacheSizeBytes;
       }
     }
 
