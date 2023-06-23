@@ -418,8 +418,9 @@ void main() {
 
         // Happy paths
         expect(() => configureCache(null), returnsNormally);
-        expect(() => configureCache(Settings.CACHE_SIZE_UNLIMITED),
-            returnsNormally,
+        expect(
+          () => configureCache(Settings.CACHE_SIZE_UNLIMITED),
+          returnsNormally,
         );
         expect(() => configureCache(5000000), returnsNormally);
         expect(() => configureCache(1048577), returnsNormally);
