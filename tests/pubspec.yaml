@@ -15,9 +15,9 @@ dependencies:
   firebase_analytics: ^10.4.3
   firebase_analytics_platform_interface: ^3.6.3
   firebase_analytics_web: ^0.5.4+3
-  firebase_app_check: ^0.1.4+3
-  firebase_app_check_platform_interface: ^0.0.8+3
-  firebase_app_check_web: ^0.0.10+3
+  firebase_app_check: ^0.1.5
+  firebase_app_check_platform_interface: ^0.0.9
+  firebase_app_check_web: ^0.0.11
   firebase_app_installations: ^0.2.3+3
   firebase_app_installations_platform_interface: ^0.1.4+3
   firebase_app_installations_web: ^0.1.3+3
@@ -34,7 +34,7 @@ dependencies:
   firebase_database_web: ^0.2.3+3
   firebase_dynamic_links: ^5.3.3
   firebase_dynamic_links_platform_interface: ^0.2.6+3
-  firebase_messaging: ^14.6.3
+  firebase_messaging: ^14.6.4
   firebase_messaging_platform_interface: ^4.5.3
   firebase_messaging_web: ^3.5.3
   firebase_ml_model_downloader: ^0.2.3+3
@@ -43,9 +43,9 @@ dependencies:
   firebase_remote_config: ^4.2.3
   firebase_remote_config_platform_interface: ^1.4.3
   firebase_remote_config_web: ^1.4.3
-  firebase_storage: ^11.2.3
+  firebase_storage: ^11.2.4
   firebase_storage_platform_interface: ^4.4.3
-  firebase_storage_web: ^3.6.3
+  firebase_storage_web: ^3.6.4
   flutter:
     sdk: flutter
   http: ^0.13.4

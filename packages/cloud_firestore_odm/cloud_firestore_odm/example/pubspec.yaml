@@ -6,8 +6,8 @@ environment:
   sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
-  cloud_firestore: ^4.8.1
-  cloud_firestore_odm: ^1.0.0-dev.61
+  cloud_firestore: ^4.8.2
+  cloud_firestore_odm: ^1.0.0-dev.62
   firebase_core: ^2.14.0
   flutter:
     sdk: flutter
@@ -17,7 +17,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.4.2
-  cloud_firestore_odm_generator: ^1.0.0-dev.61
+  cloud_firestore_odm_generator: ^1.0.0-dev.62
   cloud_firestore_odm_generator_integration_test:
     path: ../../cloud_firestore_odm_generator/cloud_firestore_odm_generator_integration_test
   flutter_test:
