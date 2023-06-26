@@ -69,15 +69,23 @@ class Settings {
     bool? sslEnabled,
     int? cacheSizeBytes,
     bool? ignoreUndefinedProperties,
-  }) =>
-      Settings(
-        persistenceEnabled: persistenceEnabled ?? this.persistenceEnabled,
-        host: host ?? this.host,
-        sslEnabled: sslEnabled ?? this.sslEnabled,
-        cacheSizeBytes: cacheSizeBytes ?? this.cacheSizeBytes,
-        ignoreUndefinedProperties:
-            ignoreUndefinedProperties ?? this.ignoreUndefinedProperties,
-      );
+  }) {
+    assert(
+        cacheSizeBytes == null ||
+            cacheSizeBytes == CACHE_SIZE_UNLIMITED ||
+            // 1mb and 100mb. minimum and maximum inclusive range.
+            (cacheSizeBytes >= 1048576 && cacheSizeBytes <= 104857600),
+        'Cache size must be between 1048576 bytes (inclusive) and 104857600 bytes (inclusive)');
+
+    return Settings(
+      persistenceEnabled: persistenceEnabled ?? this.persistenceEnabled,
+      host: host ?? this.host,
+      sslEnabled: sslEnabled ?? this.sslEnabled,
+      cacheSizeBytes: cacheSizeBytes ?? this.cacheSizeBytes,
+      ignoreUndefinedProperties:
+          ignoreUndefinedProperties ?? this.ignoreUndefinedProperties,
+    );
+  }
 
   @override
   bool operator ==(Object other) =>
