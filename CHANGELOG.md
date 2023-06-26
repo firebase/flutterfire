@@ -3,6 +3,94 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-06-26
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.8.2`](#cloud_firestore---v482)
+ - [`cloud_firestore_platform_interface` - `v5.15.2`](#cloud_firestore_platform_interface---v5152)
+ - [`firebase_app_check` - `v0.1.5`](#firebase_app_check---v015)
+ - [`firebase_app_check_platform_interface` - `v0.0.9`](#firebase_app_check_platform_interface---v009)
+ - [`firebase_app_check_web` - `v0.0.11`](#firebase_app_check_web---v0011)
+ - [`firebase_messaging` - `v14.6.4`](#firebase_messaging---v1464)
+ - [`firebase_storage_web` - `v3.6.4`](#firebase_storage_web---v364)
+ - [`firebase_ui_auth` - `v1.5.0`](#firebase_ui_auth---v150)
+ - [`firebase_ui_storage` - `v0.1.0-dev.7`](#firebase_ui_storage---v010-dev7)
+ - [`firebase_ui_firestore` - `v1.5.4`](#firebase_ui_firestore---v154)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.62`](#cloud_firestore_odm---v100-dev62)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.62`](#cloud_firestore_odm_generator---v100-dev62)
+ - [`cloud_firestore_web` - `v3.6.2`](#cloud_firestore_web---v362)
+ - [`firebase_storage` - `v11.2.4`](#firebase_storage---v1124)
+ - [`firebase_ui_oauth` - `v1.4.4`](#firebase_ui_oauth---v144)
+ - [`firebase_ui_oauth_google` - `v1.2.4`](#firebase_ui_oauth_google---v124)
+ - [`firebase_ui_oauth_twitter` - `v1.2.4`](#firebase_ui_oauth_twitter---v124)
+ - [`firebase_ui_oauth_facebook` - `v1.2.4`](#firebase_ui_oauth_facebook---v124)
+ - [`firebase_ui_oauth_apple` - `v1.2.4`](#firebase_ui_oauth_apple---v124)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_firestore` - `v1.5.4`
+ - `cloud_firestore_odm` - `v1.0.0-dev.62`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.62`
+ - `cloud_firestore_web` - `v3.6.2`
+ - `firebase_storage` - `v11.2.4`
+ - `firebase_ui_oauth` - `v1.4.4`
+ - `firebase_ui_oauth_google` - `v1.2.4`
+ - `firebase_ui_oauth_twitter` - `v1.2.4`
+ - `firebase_ui_oauth_facebook` - `v1.2.4`
+ - `firebase_ui_oauth_apple` - `v1.2.4`
+
+---
+
+#### `cloud_firestore` - `v4.8.2`
+
+ - **FIX**(firestore,apple): issue where setting persistence caused a crash. `kFIRFirestoreCacheSizeUnlimited` no longer usable. ([#11174](https://github.com/firebase/flutterfire/issues/11174)). ([536cbf07](https://github.com/firebase/flutterfire/commit/536cbf07f6b07c0539e0f31552ae15dfa56c6352))
+
+#### `cloud_firestore_platform_interface` - `v5.15.2`
+
+ - **FIX**(firestore,apple): issue where setting persistence caused a crash. `kFIRFirestoreCacheSizeUnlimited` no longer usable. ([#11174](https://github.com/firebase/flutterfire/issues/11174)). ([536cbf07](https://github.com/firebase/flutterfire/commit/536cbf07f6b07c0539e0f31552ae15dfa56c6352))
+
+#### `firebase_app_check` - `v0.1.5`
+
+ - **FEAT**(app-check): support for `getLimitedUseToken()` API ([#11091](https://github.com/firebase/flutterfire/issues/11091)). ([9db9326f](https://github.com/firebase/flutterfire/commit/9db9326fe503c31299c9685449150e809543974e))
+
+#### `firebase_app_check_platform_interface` - `v0.0.9`
+
+ - **FEAT**(app-check): support for `getLimitedUseToken()` API ([#11091](https://github.com/firebase/flutterfire/issues/11091)). ([9db9326f](https://github.com/firebase/flutterfire/commit/9db9326fe503c31299c9685449150e809543974e))
+
+#### `firebase_app_check_web` - `v0.0.11`
+
+ - **FEAT**(app-check): support for `getLimitedUseToken()` API ([#11091](https://github.com/firebase/flutterfire/issues/11091)). ([9db9326f](https://github.com/firebase/flutterfire/commit/9db9326fe503c31299c9685449150e809543974e))
+
+#### `firebase_messaging` - `v14.6.4`
+
+ - **FIX**(messaging): revert change to `getParcelableExtra()` that may result in crash ([#11163](https://github.com/firebase/flutterfire/issues/11163)). ([b85e074b](https://github.com/firebase/flutterfire/commit/b85e074bfadbb6a813b13f795973e1efe858116d))
+
+#### `firebase_storage_web` - `v3.6.4`
+
+ - **FIX**(firebase_storage): updated `firebase_storage_web` to allow  `http` package dependency range '>=0.13.0 <2.0.0'. Fixes dependency resolution. ([#11158](https://github.com/firebase/flutterfire/issues/11158)). ([7d0ca257](https://github.com/firebase/flutterfire/commit/7d0ca25737cf261eaff79fc3c29ce47c4526e6b8))
+
+#### `firebase_ui_auth` - `v1.5.0`
+
+ - **FIX**(ui_auth): documentation - fix material misspelling in universal_text_form_field.dart ([#11151](https://github.com/firebase/flutterfire/issues/11151)). ([31358154](https://github.com/firebase/flutterfire/commit/313581548422bc68bd47f3d890a9f4de8da7e2ad))
+ - **FIX**(ui_auth): fix ProfileScreen ignoring parent rebuilds ([#11160](https://github.com/firebase/flutterfire/issues/11160)). ([89df2b58](https://github.com/firebase/flutterfire/commit/89df2b58d25d0980430acfee7b9f70765fe33bce))
+ - **FEAT**(ui_auth): allow passing custom user avatar widget ([#11161](https://github.com/firebase/flutterfire/issues/11161)). ([cfcaa2f0](https://github.com/firebase/flutterfire/commit/cfcaa2f0dd0e3b2d980b675a5567245842a8a6c3))
+
+#### `firebase_ui_storage` - `v0.1.0-dev.7`
+
+ - **FEAT**(ui_storage): add StorageImage widget ([#11080](https://github.com/firebase/flutterfire/issues/11080)). ([b592fb23](https://github.com/firebase/flutterfire/commit/b592fb23596b97e1b5c692c5c0b6fadaf852be28))
+
+
 ## 2023-06-13
 
 ### Changes

@@ -1,3 +1,7 @@
+## 14.6.4
+
+ - **FIX**(messaging): revert change to `getParcelableExtra()` that may result in crash ([#11163](https://github.com/firebase/flutterfire/issues/11163)). ([b85e074b](https://github.com/firebase/flutterfire/commit/b85e074bfadbb6a813b13f795973e1efe858116d))
+
 ## 14.6.3
 
  - **FIX**(firebase messaging,android): update `getParcelableExtra()` for Android 33. ([#10921](https://github.com/firebase/flutterfire/issues/10921)). ([c8b685b9](https://github.com/firebase/flutterfire/commit/c8b685b9318804596a5513acaf01a46049323267))

@@ -1,3 +1,7 @@
+## 3.6.2
+
+ - Update a dependency to the latest release.
+
 ## 3.6.1
 
  - **FIX**(firestore): update deprecated persistence API ([#11069](https://github.com/firebase/flutterfire/issues/11069)). ([076e7af8](https://github.com/firebase/flutterfire/commit/076e7af86ddc74ac63ec85078ea9c4077afd2e31))

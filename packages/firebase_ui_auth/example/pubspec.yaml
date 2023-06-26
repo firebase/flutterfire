@@ -28,13 +28,13 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  firebase_ui_auth: ^1.4.3
+  firebase_ui_auth: ^1.5.0
   firebase_ui_localizations: ^1.5.0
-  firebase_ui_oauth: ^1.4.3
-  firebase_ui_oauth_apple: ^1.2.3
-  firebase_ui_oauth_facebook: ^1.2.3
-  firebase_ui_oauth_google: ^1.2.3
-  firebase_ui_oauth_twitter: ^1.2.3
+  firebase_ui_oauth: ^1.4.4
+  firebase_ui_oauth_apple: ^1.2.4
+  firebase_ui_oauth_facebook: ^1.2.4
+  firebase_ui_oauth_google: ^1.2.4
+  firebase_ui_oauth_twitter: ^1.2.4
 dev_dependencies:
   drive: ^1.0.0-1.0.nullsafety.1
   firebase_ui_shared: ^1.3.0

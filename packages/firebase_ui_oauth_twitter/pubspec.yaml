@@ -1,6 +1,6 @@
 name: firebase_ui_oauth_twitter
 description: Firebase UI widgets for authentication & OAuth.
-version: 1.2.3
+version: 1.2.4
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_oauth_twitter
 
 environment:
@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   firebase_auth: ^4.6.3
-  firebase_ui_oauth: ^1.4.3
+  firebase_ui_oauth: ^1.4.4
   twitter_login: ^4.3.2
 
 dev_dependencies:
