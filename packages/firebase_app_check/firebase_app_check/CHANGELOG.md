@@ -1,3 +1,7 @@
+## 0.1.5
+
+ - **FEAT**(app-check): support for `getLimitedUseToken()` API ([#11091](https://github.com/firebase/flutterfire/issues/11091)). ([9db9326f](https://github.com/firebase/flutterfire/commit/9db9326fe503c31299c9685449150e809543974e))
+
 ## 0.1.4+3
 
  - Update a dependency to the latest release.
