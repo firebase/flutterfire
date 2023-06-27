@@ -99,8 +99,9 @@ foreach(firebase_lib IN ITEMS ${firebase_libs})
       IMPORTED_LOCATION_RELEASE "${firebase_lib_release_path}"
     )
 endforeach()
+set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32)
 
-target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}")
+target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}" "${ADDITIONAL_LIBS}")
 
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")

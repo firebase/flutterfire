@@ -22,7 +22,8 @@
 FLUTTER_PLUGIN_EXPORT void FirebaseCorePluginCApiRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar);
 
-FLUTTER_PLUGIN_EXPORT std::vector<std::string> GetFirebaseApp(
-    std::string appName);
+FLUTTER_PLUGIN_EXPORT void* GetFirebaseApp(std::string appName);
+
+FLUTTER_PLUGIN_EXPORT void* GetFirebaseRemoteConfig(std::string appName);
 
 #endif  // FLUTTER_PLUGIN_FIREBASE_CORE_PLUGIN_C_API_H_

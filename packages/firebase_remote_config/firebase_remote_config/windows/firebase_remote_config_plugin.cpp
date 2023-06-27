@@ -49,13 +49,17 @@ FirebaseRemoteConfigPlugin::FirebaseRemoteConfigPlugin() {}
 
 FirebaseRemoteConfigPlugin::~FirebaseRemoteConfigPlugin() = default;
 
+RemoteConfig* GetRCFromPigeon(const PigeonFirebaseApp& pigeonApp) {
+  void* rc_ptr = GetFirebaseRemoteConfig(pigeonApp.app_name());
+  RemoteConfig* rc = static_cast<RemoteConfig*>(rc_ptr);
+
+  return rc;
+}
+
 void FirebaseRemoteConfigPlugin::Activate(
     const PigeonFirebaseApp& app,
     std::function<void(ErrorOr<bool> reply)> result) {
-  std::cout << "[C++] FirebaseRemoteConfigPlugin::Activate() START"
-            << std::endl;
-  App* cpp_app = App::GetInstance(app.app_name().c_str());
-  RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
+  RemoteConfig* rc = GetRCFromPigeon(app);
 
   Future<bool> activated_result = rc->Activate();
   activated_result.OnCompletion([result](const Future<bool>& bool_result) {
@@ -66,43 +70,10 @@ void FirebaseRemoteConfigPlugin::Activate(
   });
 }
 
-RemoteConfig* GetRCFromPigeon(const PigeonFirebaseApp& pigeonApp) {
-  std::vector<std::string> app_vector = GetFirebaseApp(pigeonApp.app_name());
-
-  // print vector lenghts
-  std::cout << app_vector.size() << std::endl;
-
-  // print the vector
-  for (std::string n : app_vector) {
-    std::cout << n << std::endl;
-  }
-
-  firebase::AppOptions options;
-
-  options.set_api_key(app_vector[1].c_str());
-  options.set_app_id(app_vector[2].c_str());
-  options.set_database_url(app_vector[3].c_str());
-
-  options.set_messaging_sender_id(app_vector[4].c_str());
-
-  options.set_project_id(app_vector[5].c_str());
-
-  options.set_storage_bucket(app_vector[6].c_str());
-
-  App* cpp_app = App::Create(options, pigeonApp.app_name().c_str());
-
-  RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
-
-  return rc;
-}
-
 void FirebaseRemoteConfigPlugin::EnsureInitialized(
     const PigeonFirebaseApp& app,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  std::cout << "[C++] FirebaseRemoteConfigPlugin::EnsureInitialized() START"
-            << std::endl;
-  App* cpp_app = App::GetInstance(app.app_name().c_str());
-  RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
+  RemoteConfig* rc = GetRCFromPigeon(app);
 
   Future<::firebase::remote_config::ConfigInfo> init_result =
       rc->EnsureInitialized();
@@ -111,9 +82,7 @@ void FirebaseRemoteConfigPlugin::EnsureInitialized(
 void FirebaseRemoteConfigPlugin::Fetch(
     const PigeonFirebaseApp& app,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  std::cout << "[C++] FirebaseRemoteConfigPlugin::Fetch() START" << std::endl;
-  App* cpp_app = App::GetInstance(app.app_name().c_str());
-  RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
+  RemoteConfig* rc = GetRCFromPigeon(app);
 
   Future<void> fetch_result = rc->Fetch();
   fetch_result.OnCompletion([result](const Future<void>& void_result) {
@@ -127,21 +96,7 @@ void FirebaseRemoteConfigPlugin::Fetch(
 void FirebaseRemoteConfigPlugin::FetchAndActivate(
     const PigeonFirebaseApp& app,
     std::function<void(ErrorOr<bool> reply)> result) {
-  std::cout << "[C++] FirebaseRemoteConfigPlugin::FetchAndActivate() START"
-            << std::endl;
-  // // App* cpp_app = App::GetInstance(app.app_name().c_str());
-  // App* cpp_app = App::GetInstance();
-  // // std::cout << "[C++] get cpp_app:" << app.app_name() << std::endl;
-  // std::vector<App*> all_apps = App::GetApps();
-  // std::cout << "[C++] all apps size is: " << all_apps.size() << std::endl;
-  // if (cpp_app == nullptr) {
-  //   std::cout << "[C++] cannot get FirebaseApp:" << app.app_name() <<
-  //   std::endl; result(false); return;
-  // }
-  // RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
   RemoteConfig* rc = GetRCFromPigeon(app);
-
-  std::cout << "[C++] Get rc instance" << std::endl;
 
   Future<bool> fa_result = rc->FetchAndActivate();
   std::cout << "[C++] rc->FetchAndActivate()" << std::endl;
@@ -160,40 +115,35 @@ ErrorOr<flutter::EncodableMap> FirebaseRemoteConfigPlugin::GetAll(
 
 ErrorOr<bool> FirebaseRemoteConfigPlugin::GetBool(const PigeonFirebaseApp& app,
                                                   const std::string& key) {
-  App* cpp_app = App::GetInstance(app.app_name().c_str());
-  RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
+  RemoteConfig* rc = GetRCFromPigeon(app);
 
   return rc->GetBoolean(key.c_str());
 }
 
 ErrorOr<int64_t> FirebaseRemoteConfigPlugin::GetInt(
     const PigeonFirebaseApp& app, const std::string& key) {
-  App* cpp_app = App::GetInstance(app.app_name().c_str());
-  RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
+  RemoteConfig* rc = GetRCFromPigeon(app);
 
   return rc->GetLong(key.c_str());
 }
 
 ErrorOr<double> FirebaseRemoteConfigPlugin::GetDouble(
     const PigeonFirebaseApp& app, const std::string& key) {
-  App* cpp_app = App::GetInstance(app.app_name().c_str());
-  RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
+  RemoteConfig* rc = GetRCFromPigeon(app);
 
   return rc->GetDouble(key.c_str());
 }
 
 ErrorOr<std::string> FirebaseRemoteConfigPlugin::GetString(
     const PigeonFirebaseApp& app, const std::string& key) {
-  App* cpp_app = App::GetInstance(app.app_name().c_str());
-  RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
+  RemoteConfig* rc = GetRCFromPigeon(app);
 
   return rc->GetString(key.c_str());
 }
 
 ErrorOr<PigeonRemoteConfigValue> FirebaseRemoteConfigPlugin::GetValue(
     const PigeonFirebaseApp& app, const std::string& key) {
-  // App* cpp_app = App::GetInstance(app.app_name().c_str());
-  // RemoteConfig* rc = RemoteConfig::GetInstance(cpp_app);
+  // RemoteConfig* rc = GetRCFromPigeon(app);
 
   // std::vector<unsigned char> data = rc->GetData(key.c_str());
 
