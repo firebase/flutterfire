@@ -114,7 +114,8 @@ class _WithConverterDocumentSnapshot<T> implements DocumentSnapshot<T> {
 
   @override
   T? data() {
-    if (!_originalDocumentSnapshot.exists) return null;
+    // use data() instead of exists until https://github.com/firebase/flutterfire/issues/10331 is resolved
+    if (_originalDocumentSnapshot.data() == null) return null;
 
     return _fromFirestore(_originalDocumentSnapshot, null);
   }
