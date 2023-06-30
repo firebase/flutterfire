@@ -4,8 +4,8 @@ version: 0.1.0-dev.7
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_storage/
 
 environment:
-  sdk: '>=2.19.5 <4.0.0'
-  flutter: '>=3.3.0'
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.10.0'
 
 false_secrets:
   - example/**

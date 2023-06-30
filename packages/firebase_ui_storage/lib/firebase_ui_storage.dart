@@ -20,3 +20,5 @@ export 'src/widgets/progress_indicator.dart'
     show TaskProgressIndicator, TaskProgressWidget, ErrorBuilder;
 
 export 'src/widgets/image.dart' show StorageImage, LoadingStateVariant;
+export 'src/paginated_loading_controller.dart';
+export 'src/widgets/list_view.dart';

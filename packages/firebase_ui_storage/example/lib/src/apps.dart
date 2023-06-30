@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'progress_bar_app.dart';
 import 'upload_button_app.dart';
+import 'list_view_app.dart';
 
 abstract class App implements Widget {
   String get name;
@@ -17,6 +18,7 @@ const apps = <App>[
   UploadButtonApp(),
   ProgressBarApp(),
   StorageImageApp(),
+  StorageListViewApp(),
 ];
 
 class AppList extends StatelessWidget {
