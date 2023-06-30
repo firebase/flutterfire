@@ -2,7 +2,7 @@ name: firebase_storage_web
 description: The web implementation of firebase_storage
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_storage/firebase_storage_web
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_storage/firebase_storage_web
-version: 3.6.3
+version: 3.6.4
 
 environment:
   sdk: '>=2.18.0 <4.0.0'
@@ -18,7 +18,7 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  http: ^0.13.0
+  http: '>=0.13.0 <2.0.0'
   js: ^0.6.3
   meta: ^1.8.0
 

@@ -2,6 +2,51 @@
 
 All notable changes for firebase_ui packages
 
+## 2023-06-26
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.5.0`](#firebase_ui_auth---v150)
+ - [`firebase_ui_storage` - `v0.1.0-dev.7`](#firebase_ui_storage---v010-dev7)
+ - [`firebase_ui_firestore` - `v1.5.4`](#firebase_ui_firestore---v154)
+ - [`firebase_ui_oauth` - `v1.4.4`](#firebase_ui_oauth---v144)
+ - [`firebase_ui_oauth_google` - `v1.2.4`](#firebase_ui_oauth_google---v124)
+ - [`firebase_ui_oauth_twitter` - `v1.2.4`](#firebase_ui_oauth_twitter---v124)
+ - [`firebase_ui_oauth_facebook` - `v1.2.4`](#firebase_ui_oauth_facebook---v124)
+ - [`firebase_ui_oauth_apple` - `v1.2.4`](#firebase_ui_oauth_apple---v124)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_firestore` - `v1.5.4`
+ - `firebase_ui_oauth` - `v1.4.4`
+ - `firebase_ui_oauth_google` - `v1.2.4`
+ - `firebase_ui_oauth_twitter` - `v1.2.4`
+ - `firebase_ui_oauth_facebook` - `v1.2.4`
+ - `firebase_ui_oauth_apple` - `v1.2.4`
+
+---
+
+#### `firebase_ui_auth` - `v1.5.0`
+
+ - **FIX**(ui_auth): documentation - fix material misspelling in universal_text_form_field.dart ([#11151](https://github.com/firebase/flutterfire/issues/11151)). ([31358154](https://github.com/firebase/flutterfire/commit/313581548422bc68bd47f3d890a9f4de8da7e2ad))
+ - **FIX**(ui_auth): fix ProfileScreen ignoring parent rebuilds ([#11160](https://github.com/firebase/flutterfire/issues/11160)). ([89df2b58](https://github.com/firebase/flutterfire/commit/89df2b58d25d0980430acfee7b9f70765fe33bce))
+ - **FEAT**(ui_auth): allow passing custom user avatar widget ([#11161](https://github.com/firebase/flutterfire/issues/11161)). ([cfcaa2f0](https://github.com/firebase/flutterfire/commit/cfcaa2f0dd0e3b2d980b675a5567245842a8a6c3))
+
+#### `firebase_ui_storage` - `v0.1.0-dev.7`
+
+ - **FEAT**(ui_storage): add StorageImage widget ([#11080](https://github.com/firebase/flutterfire/issues/11080)). ([b592fb23](https://github.com/firebase/flutterfire/commit/b592fb23596b97e1b5c692c5c0b6fadaf852be28))
+
+
 ## 2023-06-13
 
 ### Changes

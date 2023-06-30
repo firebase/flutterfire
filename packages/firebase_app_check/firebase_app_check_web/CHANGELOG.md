@@ -1,3 +1,7 @@
+## 0.0.11
+
+ - **FEAT**(app-check): support for `getLimitedUseToken()` API ([#11091](https://github.com/firebase/flutterfire/issues/11091)). ([9db9326f](https://github.com/firebase/flutterfire/commit/9db9326fe503c31299c9685449150e809543974e))
+
 ## 0.0.10+3
 
  - **FIX**(core): Omit unnecessary libraries for web ([#10068](https://github.com/firebase/flutterfire/issues/10068)). ([8659d4ed](https://github.com/firebase/flutterfire/commit/8659d4ed805ac92964c2c92d55192f6ef40d721a))
