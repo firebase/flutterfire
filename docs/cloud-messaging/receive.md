@@ -15,13 +15,13 @@ Depending on a device's state, incoming messages are handled differently. To
 understand these scenarios and how to integrate FCM into your own application, it
 is first important to establish the various states a device can be in:
 
-| State          | Description
-| -------------- | -----------
-| **Foreground** | When the application is open, in view and in use.
-| **Background** | When the application is open, but in the background (minimized).
-:                : This typically occurs when the user has pressed the "home" button
-:                : on the device, has switched to another app using the app switcher,
-:                : or has the application open in a different tab (web).
+| State          | Description                                                      |
+| -------------- | ---------------------------------------------------------------- |
+| **Foreground** | When the application is open, in view and in use.                |
+| **Background** | When the application is open, but in the background (minimized). |
+: : This typically occurs when the user has pressed the "home" button
+: : on the device, has switched to another app using the app switcher,
+: : or has the application open in a different tab (web).
 | **Terminated** | When the device is locked or the application is not running.
 
 There are a few preconditions which must be met before the application can
@@ -110,7 +110,6 @@ Android and iOS. It is, however, possible to override this behavior:
 - On Android, you must create a "High Priority" notification channel.
 - On iOS, you can update the presentation options for the application.
 
-
 ### Background messages
 
 The process of handling background messages is different on native (Android and
@@ -125,9 +124,7 @@ There are a few things to keep in mind about your background message handler:
 
 1. It must not be an anonymous function.
 2. It must be a top-level function (e.g. not a class method which requires initialization).
-3. It must be annotated with `@pragma('vm:entry-point')` right above the function declaration (otherwise it may be removed during tree shaking for release mode).
-
-Note: The `@pragma('vm:entry-point')` annotation is a requirement when using Flutter version `3.3.0` or higher.
+3. When using Flutter version 3.3.0 or higher, the message handler must be annotated with `@pragma('vm:entry-point')` right above the function declaration (otherwise it may be removed during tree shaking for release mode).
 
 ```dart
 @pragma('vm:entry-point')
@@ -280,8 +277,8 @@ How you handle interaction depends on your application setup. The above example 
 
 You can send localized strings in two different ways:
 
-* Store the preferred language of each of your users in your server and send customized notifications for each language
-* Embed localized strings in your app and make use of the operating system's native locale settings
+- Store the preferred language of each of your users in your server and send customized notifications for each language
+- Embed localized strings in your app and make use of the operating system's native locale settings
 
 Here's how to use the second method:
 
@@ -301,7 +298,7 @@ Here's how to use the second method:
    <string name="notification_message">C'est un message</string>
    ```
 
-3. In the server payload, instead of using `title`, `message`, and `body`  keys, use `title_loc_key` and `body_loc_key` for your localized message, and set them to the `name` attribute of the message you want to display.
+3. In the server payload, instead of using `title`, `message`, and `body` keys, use `title_loc_key` and `body_loc_key` for your localized message, and set them to the `name` attribute of the message you want to display.
 
    The message payload would look like this:
 
@@ -310,10 +307,9 @@ Here's how to use the second method:
      "data": {
        "title_loc_key": "notification_title",
        "body_loc_key": "notification_message"
-     },
+     }
    }
    ```
-
 
 ### iOS
 
@@ -338,10 +334,9 @@ Here's how to use the second method:
      "data": {
        "title_loc_key": "NOTIFICATION_TITLE",
        "body_loc_key": "NOTIFICATION_MESSAGE"
-     },
+     }
    }
    ```
-
 
 ## Enable message delivery data export
 
@@ -356,6 +351,7 @@ then follow these instructions:
 ### Android
 
 You can use the following code:
+
 ```dart
 await FirebaseMessaging.instance.setDeliveryMetricsExportToBigQuery(true);
 ```
@@ -396,12 +392,11 @@ See [the example app](https://github.com/firebase/flutterfire/blob/master/packag
 
 Once you've migrated to the v9 SDK, you can use the following code:
 
-``` typescript
+```typescript
 import {
   experimentalSetDeliveryMetricsExportedToBigQueryEnabled,
   getMessaging,
 } from 'firebase/messaging/sw';
-
 ...
 
 const messaging = getMessaging(app);
@@ -409,3 +404,99 @@ experimentalSetDeliveryMetricsExportedToBigQueryEnabled(messaging, true);
 ```
 
 Don't forget to run `yarn build` in order to export the new version of your service worker to the `web` folder.
+
+## Display images in notifications on iOS
+
+On Apple devices, in order for incoming FCM Notifications to display images from the FCM payload, you must add an additional notification service extension and configure your app to use it.
+
+If you are using Firebase phone authentication, you must add the Firebase Auth pod to your Podfile.
+
+### Step 1 - Add a notification service extension
+
+1.  In Xcode, click **File > New > Target...**
+1.  A modal will present a list of possible targets; scroll down or use the filter to select **Notification Service Extension**. Click **Next**.
+1.  Add a product name (use "ImageNotification" to follow along with this tutorial), set the language to Objective-C, and click **Finish**.
+1.  Enable the scheme by clicking **Activate**.
+
+### Step 2 - Add target to the Podfile
+
+Ensure that your new extension has access to the `Firebase/Messaging` pod by adding it in the Podfile:
+
+1.  From the Navigator, open the Podfile: **Pods > Podfile**
+
+1.  Scroll down to the bottom of the file and add:
+
+    ```ruby
+    target 'ImageNotification' do
+      use_frameworks!
+      pod 'Firebase/Auth' # Add this line if you are using FirebaseAuth phone authentication
+      pod 'Firebase/Messaging'
+    end
+    ```
+
+1.  Install or update your pods using `pod install` from the `ios` or `macos` directory.
+
+### Step 3 - Use the extension helper
+
+At this point, everything should still be running normally. The final step is invoking the extension helper.
+
+1.  From the navigator, select your ImageNotification extension
+
+1.  Open the `NotificationService.m` file.
+
+1.  At the top of the file, import `FirebaseMessaging.h` right after the `NotificationService.h` as shown below.
+
+    Replace the content of `NotificationService.m` with:
+
+    ```objc
+    #import "NotificationService.h"
+    #import "FirebaseMessaging.h"
+    #import "FirebaseAuth.h" // Add this line if you are using FirebaseAuth phone authentication
+    #import <UIKit/UIKit.h> // Add this line if you are using FirebaseAuth phone authentication
+
+    @interface NotificationService ()
+
+    @property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
+    @property (nonatomic, strong) UNMutableNotificationContent *bestAttemptContent;
+
+    @end
+
+    @implementation NotificationService
+
+    /* Uncomment this if you are using Firebase Auth
+    - (BOOL)application:(UIApplication *)app
+                openURL:(NSURL *)url
+                options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+      if ([[FIRAuth auth] canHandleURL:url]) {
+        return YES;
+      }
+      return NO;
+    }
+
+    - (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {
+      for (UIOpenURLContext *urlContext in URLContexts) {
+        [FIRAuth.auth canHandleURL:urlContext.URL];
+      }
+    }
+    */
+
+    - (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
+        self.contentHandler = contentHandler;
+        self.bestAttemptContent = [request.content mutableCopy];
+
+        // Modify the notification content here...
+        [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
+    }
+
+    - (void)serviceExtensionTimeWillExpire {
+        // Called just before the extension will be terminated by the system.
+        // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
+        self.contentHandler(self.bestAttemptContent);
+    }
+
+    @end
+    ```
+
+### Step 4 - Add the image to the payload
+
+In your notification payload, you can now add an image. See the iOS documentation on [how to build a send request](https://firebase.google.com/docs/cloud-messaging/ios/send-image#build_the_send_request). Keep in mind that a 300KB max image size is enforced by the device.

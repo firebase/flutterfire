@@ -2,12 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_core_web/firebase_core_web.dart';
-import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+
 import 'src/interop/firebase_remote_config.dart' as remote_config_interop;
 
 /// Web implementation of [FirebaseRemoteConfigPlatform].
@@ -33,7 +34,10 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
 
   /// Create the default instance of the [FirebaseRemoteConfigPlatform] as a [FirebaseRemoteConfigWeb]
   static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerService('remote-config');
+    FirebaseCoreWeb.registerService(
+      'remote-config',
+      productNameOverride: 'remote_config',
+    );
     FirebaseRemoteConfigPlatform.instance = FirebaseRemoteConfigWeb.instance;
   }
 
@@ -124,24 +128,32 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
   }
 
   /// Gets the value for a given key as a bool.
+  ///
+  /// Returns `false` if the key does not exist.
   @override
   bool getBool(String key) {
     return _delegate.getBoolean(key);
   }
 
   /// Gets the value for a given key as an int.
+  ///
+  /// Returns `0` if the key does not exist.
   @override
   int getInt(String key) {
     return _delegate.getNumber(key).toInt();
   }
 
   /// Gets the value for a given key as a double.
+  ///
+  /// Returns `0.0` if the key does not exist.
   @override
   double getDouble(String key) {
     return _delegate.getNumber(key).toDouble();
   }
 
   /// Gets the value for a given key as a String.
+  ///
+  /// Returns an empty String if the key does not exist.
   @override
   String getString(String key) {
     return _delegate.getString(key);
@@ -167,5 +179,10 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) {
     _delegate.defaultConfig = defaultParameters;
     return Future<void>.value();
+  }
+
+  @override
+  Stream<RemoteConfigUpdate> get onConfigUpdated {
+    throw UnsupportedError('onConfigUpdated is not supported for web');
   }
 }

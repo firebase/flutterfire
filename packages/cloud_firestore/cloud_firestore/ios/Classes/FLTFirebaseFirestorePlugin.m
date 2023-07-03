@@ -72,6 +72,9 @@ static NSMutableDictionary<NSNumber *, NSString *> *_serverTimestampMap;
 FlutterStandardMethodCodec *_codec;
 
 + (NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap {
+  if (_serverTimestampMap == nil) {
+    _serverTimestampMap = [NSMutableDictionary<NSNumber *, NSString *> dictionary];
+  }
   return _serverTimestampMap;
 }
 
@@ -126,7 +129,7 @@ FlutterStandardMethodCodec *_codec;
 #endif
 }
 
-- (void)cleanupWithCompletion:(void (^)(void))completion {
+- (void)cleanupEventListeners {
   for (FlutterEventChannel *channel in self->_eventChannels) {
     [channel setStreamHandler:nil];
   }
@@ -139,7 +142,9 @@ FlutterStandardMethodCodec *_codec;
   @synchronized(self->_transactions) {
     [self->_transactions removeAllObjects];
   }
+}
 
+- (void)cleanupFirestoreInstances:(void (^)(void))completion {
   __block int instancesTerminated = 0;
   NSUInteger numberOfApps = [[FIRApp allApps] count];
   void (^firestoreTerminateInstanceCompletion)(NSError *) = ^void(NSError *error) {
@@ -165,7 +170,7 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  [self cleanupWithCompletion:nil];
+  [self cleanupEventListeners];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
@@ -209,6 +214,8 @@ FlutterStandardMethodCodec *_codec;
     [self documentGet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Firestore#namedQueryGet" isEqualToString:call.method]) {
     [self namedQueryGet:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Firestore#setLoggingEnabled" isEqualToString:call.method]) {
+    [self setLoggingEnabled:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Query#get" isEqualToString:call.method]) {
     [self queryGet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"WriteBatch#commit" isEqualToString:call.method]) {
@@ -244,7 +251,8 @@ FlutterStandardMethodCodec *_codec;
 #pragma mark - FLTFirebasePlugin
 
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
-  [self cleanupWithCompletion:completion];
+  [self cleanupEventListeners];
+  [self cleanupFirestoreInstances:completion];
 }
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
@@ -539,6 +547,13 @@ FlutterStandardMethodCodec *_codec;
                                        }
                                      }];
                 }];
+}
+
+- (void)setLoggingEnabled:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSNumber *enabled = arguments[@"enabled"];
+
+  [FIRFirestore enableLogging:[enabled boolValue]];
+  result.success(nil);
 }
 
 - (void)batchCommit:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {

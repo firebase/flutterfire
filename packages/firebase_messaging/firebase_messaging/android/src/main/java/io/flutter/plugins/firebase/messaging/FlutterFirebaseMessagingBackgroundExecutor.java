@@ -228,8 +228,13 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     }
 
     // Handle the message event in Dart.
-    RemoteMessage remoteMessage =
-        intent.getParcelableExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
+    RemoteMessage remoteMessage;
+    // Using android >= 33 API causes sporadic crashes. See: https://github.com/firebase/flutterfire/issues/11142
+    // remoteMessage =
+    //          intent.getParcelableExtra(
+    //              FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, RemoteMessage.class);
+    remoteMessage = intent.getParcelableExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
+
     if (remoteMessage != null) {
       Map<String, Object> remoteMessageMap =
           FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);

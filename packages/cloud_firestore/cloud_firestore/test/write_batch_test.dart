@@ -14,7 +14,9 @@ void main() {
   FirebaseFirestore? firestore;
   FirebaseFirestore? firestoreSecondary;
 
-  MethodChannelFirebaseFirestore.channel.setMockMethodCallHandler((call) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+          (call) async {
     String path = call.arguments['path'];
 
     if (call.method == 'DocumentReference#get' && path == 'doc/exists') {

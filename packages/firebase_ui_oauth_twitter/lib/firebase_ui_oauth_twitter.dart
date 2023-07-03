@@ -108,7 +108,7 @@ class _TwitterSignInButton extends StatelessWidget {
   final VoidCallback? onCanceled;
 
   const _TwitterSignInButton({
-    Key? key,
+    super.key,
     required this.apiKey,
     required this.apiSecretKey,
     required this.loadingIndicator,
@@ -126,8 +126,7 @@ class _TwitterSignInButton extends StatelessWidget {
     this.onCanceled,
   })  : label = label ?? 'Sign in with Twitter',
         overrideDefaultTapAction = overrideDefaultTapAction ?? false,
-        size = size ?? 19,
-        super(key: key);
+        size = size ?? 19;
 
   TwitterProvider get provider => TwitterProvider(
         apiKey: apiKey,

@@ -85,9 +85,10 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return _delegate.clearPersistence();
   }
 
-  /// Enable persistence of Firestore data.
-  ///
-  /// This is a web-only method. Use [Settings.persistenceEnabled] for non-web platforms.
+  /// Enable persistence of Firestore data for web-only. Use [Settings.persistenceEnabled] for non-web platforms.
+  /// If `enablePersistence()` is not called, it defaults to Memory cache.
+  /// If `enablePersistence(const PersistenceSettings(synchronizeTabs: false))` is called, it persists data for a single browser tab.
+  /// If `enablePersistence(const PersistenceSettings(synchronizeTabs: true))` is called, it persists data across multiple browser tabs.
   Future<void> enablePersistence([
     PersistenceSettings? persistenceSettings,
   ]) async {
@@ -111,9 +112,12 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       try {
         _delegate.useEmulator(host, port);
       } catch (e) {
-        final String code = (e as dynamic).code;
+        // We convert to string to be compatible with Flutter <= 3.7 and Flutter >= 3.10
+        // .code is only available in Flutter <= 3.7
+        String strError = e.toString();
+
         // this catches FirebaseError from web that occurs after hot reloading & hot restarting
-        if (code != 'failed-precondition') {
+        if (!strError.contains('failed-precondition')) {
           rethrow;
         }
       }
@@ -207,7 +211,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   /// Returns a [Stream] which is called each time all of the active listeners
-  /// have been synchronised.
+  /// have been synchronized.
   Stream<void> snapshotsInSync() {
     return _delegate.snapshotsInSync();
   }
@@ -335,6 +339,11 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   @experimental
   Future<void> setIndexConfigurationFromJSON(String json) async {
     return _delegate.setIndexConfiguration(json);
+  }
+
+  /// Globally enables / disables Cloud Firestore logging for the SDK.
+  static Future<void> setLoggingEnabled(bool enabled) {
+    return FirebaseFirestorePlatform.instance.setLoggingEnabled(enabled);
   }
 
   @override

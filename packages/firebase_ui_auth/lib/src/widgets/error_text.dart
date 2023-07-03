@@ -46,10 +46,10 @@ class ErrorText extends StatelessWidget {
 
   /// {@macro ui.auth.widgets.error_text}
   const ErrorText({
-    Key? key,
+    super.key,
     required this.exception,
     this.textAlign,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

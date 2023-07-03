@@ -163,7 +163,7 @@ class MyCustomWidget extends StatelessWidget {
         }
       },
       builder: (context, state, ctrl, child) {
-        if (state is AwaitingPhoneNumber) {
+        if (state is AwaitingPhoneNumber || state is SMSCodeRequested) {
           return PhoneInput(
             initialCountryCode: 'US',
             onSubmit: (phoneNumber) {
@@ -197,7 +197,7 @@ For full control over every phase of the authentication lifecycle you could buil
 
 ```dart
 class CustomPhoneVerification extends StatefulWidget {
-  const CustomPhoneVerification({Key? key}) : super(key: key);
+  const CustomPhoneVerification({super.key});
 
   @override
   State<CustomPhoneVerification> createState() =>

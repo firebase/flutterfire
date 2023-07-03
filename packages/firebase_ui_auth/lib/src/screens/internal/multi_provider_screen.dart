@@ -14,12 +14,11 @@ abstract class MultiProviderScreen extends Widget {
   }
 
   const MultiProviderScreen({
-    Key? key,
+    super.key,
     FirebaseAuth? auth,
     List<AuthProvider>? providers,
   })  : _auth = auth,
-        _providers = providers,
-        super(key: key);
+        _providers = providers;
 
   List<AuthProvider> get providers {
     if (_providers != null) {
@@ -38,7 +37,7 @@ abstract class MultiProviderScreen extends Widget {
 }
 
 class ScreenElement extends ComponentElement {
-  ScreenElement(Widget widget) : super(widget);
+  ScreenElement(super.widget);
 
   @override
   MultiProviderScreen get widget => super.widget as MultiProviderScreen;
@@ -52,6 +51,12 @@ class ScreenElement extends ComponentElement {
     }
 
     super.mount(parent, newSlot);
+  }
+
+  @override
+  void update(MultiProviderScreen newWidget) {
+    super.update(newWidget);
+    rebuild(force: true);
   }
 
   @override

@@ -33,12 +33,12 @@ class UserAvatar extends StatefulWidget {
 
   /// {@macro ui.auth.widgets.user_avatar}
   const UserAvatar({
-    Key? key,
+    super.key,
     this.auth,
     this.size,
     this.shape,
     this.placeholderColor,
-  }) : super(key: key);
+  });
 
   @override
   State<UserAvatar> createState() => _UserAvatarState();

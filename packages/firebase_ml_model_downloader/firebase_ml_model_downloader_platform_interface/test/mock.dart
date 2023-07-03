@@ -16,8 +16,9 @@ void setupFirebaseModelDownloaderMocks([Callback? customHandlers]) {
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    MethodChannelFirebaseModelDownloader.channel
-        .setMockMethodCallHandler((call) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(MethodChannelFirebaseModelDownloader.channel,
+            (call) async {
       return await methodCallCallback(call);
     });
 

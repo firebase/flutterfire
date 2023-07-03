@@ -17,8 +17,9 @@ void setupFirebaseAnalyticsMocks([Callback? customHandlers]) {
 
   setupFirebaseCoreMocks();
 
-  MethodChannelFirebaseAnalytics.channel
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannelFirebaseAnalytics.channel,
+          (MethodCall methodCall) async {
     methodCallLog.add(methodCall);
     switch (methodCall.method) {
       case 'Analytics#getAppInstanceId':
@@ -31,7 +32,8 @@ void setupFirebaseAnalyticsMocks([Callback? customHandlers]) {
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    MethodChannelFirebaseAnalytics.channel
-        .setMockMethodCallHandler((call) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(MethodChannelFirebaseAnalytics.channel,
+            (call) async {
       return await methodCallCallback(call);
     });

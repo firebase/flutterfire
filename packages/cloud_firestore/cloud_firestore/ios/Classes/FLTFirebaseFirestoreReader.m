@@ -94,7 +94,25 @@
   FIRFirestoreSettings *settings = [[FIRFirestoreSettings alloc] init];
 
   if (![values[@"persistenceEnabled"] isEqual:[NSNull null]]) {
-    settings.persistenceEnabled = [((NSNumber *)values[@"persistenceEnabled"]) boolValue];
+    bool persistEnabled = [((NSNumber *)values[@"persistenceEnabled"]) boolValue];
+
+    // This is the maximum amount of cache allowed. We use the same number on android.
+    // This now causes an exception: kFIRFirestoreCacheSizeUnlimited
+    NSNumber *size = @104857600;
+
+    if (![values[@"cacheSizeBytes"] isEqual:[NSNull null]]) {
+      NSNumber *cacheSizeBytes = ((NSNumber *)values[@"cacheSizeBytes"]);
+      if ([cacheSizeBytes intValue] != -1) {
+        size = cacheSizeBytes;
+      }
+    }
+
+    if (persistEnabled) {
+      settings.cacheSettings = [[FIRPersistentCacheSettings alloc] initWithSizeBytes:size];
+    } else {
+      settings.cacheSettings = [[FIRMemoryCacheSettings alloc]
+          initWithGarbageCollectorSettings:[[FIRMemoryLRUGCSettings alloc] init]];
+    }
   }
 
   if (![values[@"host"] isEqual:[NSNull null]]) {
@@ -105,18 +123,62 @@
     }
   }
 
-  if (![values[@"cacheSizeBytes"] isEqual:[NSNull null]]) {
-    int size = [((NSNumber *)values[@"cacheSizeBytes"]) intValue];
-    if (size == -1) {
-      settings.cacheSizeBytes = kFIRFirestoreCacheSizeUnlimited;
-    } else {
-      settings.cacheSizeBytes = (int64_t)size;
-    }
-  }
-
   settings.dispatchQueue = [FLTFirebaseFirestoreReader getFirestoreQueue];
 
   return settings;
+}
+
+- (FIRFilter *)filterFromJson:(NSDictionary<NSString *, id> *)map {
+  if (map[@"fieldPath"]) {
+    // Deserialize a FilterQuery
+    NSString *op = map[@"op"];
+    FIRFieldPath *fieldPath = map[@"fieldPath"];
+    id value = map[@"value"];
+
+    // All the operators from Firebase
+    if ([op isEqualToString:@"=="]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath isEqualTo:value];
+    } else if ([op isEqualToString:@"!="]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath isNotEqualTo:value];
+    } else if ([op isEqualToString:@"<"]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath isLessThan:value];
+    } else if ([op isEqualToString:@"<="]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath isLessThanOrEqualTo:value];
+    } else if ([op isEqualToString:@">"]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath isGreaterThan:value];
+    } else if ([op isEqualToString:@">="]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath isGreaterThanOrEqualTo:value];
+    } else if ([op isEqualToString:@"array-contains"]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath arrayContains:value];
+    } else if ([op isEqualToString:@"array-contains-any"]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath arrayContainsAny:value];
+    } else if ([op isEqualToString:@"in"]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath in:value];
+    } else if ([op isEqualToString:@"not-in"]) {
+      return [FIRFilter filterWhereFieldPath:fieldPath notIn:value];
+    } else {
+      @throw [NSException exceptionWithName:@"InvalidOperator"
+                                     reason:@"Invalid operator"
+                                   userInfo:nil];
+    }
+  }
+  // Deserialize a FilterOperator
+  NSString *op = map[@"op"];
+  NSArray<NSDictionary<NSString *, id> *> *queries = map[@"queries"];
+
+  // Map queries recursively
+  NSMutableArray<FIRFilter *> *parsedFilters = [NSMutableArray array];
+  for (NSDictionary<NSString *, id> *query in queries) {
+    [parsedFilters addObject:[self filterFromJson:query]];
+  }
+
+  if ([op isEqualToString:@"OR"]) {
+    return [FIRFilter orFilterWithFilters:parsedFilters];
+  } else if ([op isEqualToString:@"AND"]) {
+    return [FIRFilter andFilterWithFilters:parsedFilters];
+  }
+
+  @throw [NSException exceptionWithName:@"InvalidOperator" reason:@"Invalid operator" userInfo:nil];
 }
 
 - (FIRQuery *)FIRQuery {
@@ -133,6 +195,13 @@
       query = [firestore collectionGroupWithID:values[@"path"]];
     } else {
       query = (FIRQuery *)[firestore collectionWithPath:values[@"path"]];
+    }
+
+    BOOL isFilterQuery = [parameters objectForKey:@"filters"] != nil;
+    if (isFilterQuery) {
+      FIRFilter *filter =
+          [self filterFromJson:(NSDictionary<NSString *, id> *)parameters[@"filters"]];
+      query = [query queryWhereFilter:filter];
     }
 
     // Filters

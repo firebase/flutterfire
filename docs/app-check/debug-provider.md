@@ -20,29 +20,29 @@ app, and don't share your debug builds with untrusted parties.
 
 ## Apple platforms
 
-To use the debug provider (default is device check provider) while running your app in a simulator interactively
+To use the debug provider while running your app in a simulator interactively
 (during development, for example), do the following:
 
-1.  Activate App Check with the debug provider right after you have initialized your Firebase app:
+1.  Activate App Check with the debug provider right after you have initialized
+    your Firebase app:
 
-```dart
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+    ```dart
+    import 'package:flutter/material.dart';
+    import 'package:firebase_core/firebase_core.dart';
 
-// Import the firebase_app_check plugin
-import 'package:firebase_app_check/firebase_app_check.dart';
+    // Import the firebase_app_check plugin
+    import 'package:firebase_app_check/firebase_app_check.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await FirebaseAppCheck.instance.activate(
-    // Set appleProvider to `AppleProvider.debug`
-    appleProvider: AppleProvider.debug,
-  );
-  runApp(App());
-}
-
-```
+    Future<void> main() async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Firebase.initializeApp();
+      await FirebaseAppCheck.instance.activate(
+        // Set appleProvider to `AppleProvider.debug`
+        appleProvider: AppleProvider.debug,
+      );
+      runApp(App());
+    }
+    ```
 
 1.  Enable debug logging in your Xcode project (v11.0 or newer):
 
@@ -54,7 +54,7 @@ Future<void> main() async {
     Your app will print a local debug token to the debug output when Firebase
     tries to send a request to the backend. For example:
 
-    <pre>[Firebase/AppCheck][I-FAA001001] Firebase App Check Debug Token:
+    <pre>Firebase App Check Debug Token:
     123a4567-b89c-12d3-e456-789012345678</pre>
 
 {# Google-internal common file: #}

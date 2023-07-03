@@ -1,3 +1,48 @@
+## 4.8.2
+
+ - **FIX**(firestore,apple): issue where setting persistence caused a crash. `kFIRFirestoreCacheSizeUnlimited` no longer usable. ([#11174](https://github.com/firebase/flutterfire/issues/11174)). ([536cbf07](https://github.com/firebase/flutterfire/commit/536cbf07f6b07c0539e0f31552ae15dfa56c6352))
+
+## 4.8.1
+
+ - **FIX**(firestore): update deprecated persistence API ([#11069](https://github.com/firebase/flutterfire/issues/11069)). ([076e7af8](https://github.com/firebase/flutterfire/commit/076e7af86ddc74ac63ec85078ea9c4077afd2e31))
+
+## 4.8.0
+
+ - **FEAT**(firestore): add the ability to enable debug logging ([#11019](https://github.com/firebase/flutterfire/issues/11019)). ([ec4c4474](https://github.com/firebase/flutterfire/commit/ec4c44742d33c5032075310efc2c567bf0a5fa35))
+ - **DOCS**(firestore): improve wording of what `set()` API does ([#11038](https://github.com/firebase/flutterfire/issues/11038)). ([883cbff9](https://github.com/firebase/flutterfire/commit/883cbff92f1245d7e96b7f845e3f363d8dbb0441))
+
+## 4.7.1
+
+ - **FIX**(firestore): fix emulator reload on Flutter 3.10 ([#10965](https://github.com/firebase/flutterfire/issues/10965)). ([f099eb0b](https://github.com/firebase/flutterfire/commit/f099eb0bd010af6ba0fae1fdb5ea5cd6a2cb680f))
+ - **FIX**(firestore,ios): tentative fix for a crash that could occur during Snapshot serialization ([#10728](https://github.com/firebase/flutterfire/issues/10728)). ([2f4ba33a](https://github.com/firebase/flutterfire/commit/2f4ba33ad31d431a9042c7dc179b768cb43e0d17))
+
+## 4.7.0
+
+ - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
+ - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+
+## 4.6.0
+
+ - **FIX**: add support for AGP 8.0 ([#10901](https://github.com/firebase/flutterfire/issues/10901)). ([a3b96735](https://github.com/firebase/flutterfire/commit/a3b967354294c295a9be8d699a6adb7f4b1dba7f))
+ - **FEAT**: upgrade to dart 3 compatible dependencies ([#10890](https://github.com/firebase/flutterfire/issues/10890)). ([4bd7e59b](https://github.com/firebase/flutterfire/commit/4bd7e59b1f2b09a2230c49830159342dd4592041))
+
+## 4.5.3
+
+ - **FIX**(firestore,ios): clean up event listeners on engine detach only ([#10579](https://github.com/firebase/flutterfire/issues/10579)). ([0ac13b6f](https://github.com/firebase/flutterfire/commit/0ac13b6fc06f6839686437dc2d5b6feab179aa83))
+
+## 4.5.2
+
+ - Update a dependency to the latest release.
+
+## 4.5.1
+
+ - **FIX**(firestore): ensure all index URLs are captured and passed to the user ([#10674](https://github.com/firebase/flutterfire/issues/10674)). ([9800435a](https://github.com/firebase/flutterfire/commit/9800435abc562fadc67a945e771591186576c34d))
+
+## 4.5.0
+
+ - **FEAT**(firestore): add the `Filter` class and support for the OR query ([#10678](https://github.com/firebase/flutterfire/issues/10678)). ([ac434044](https://github.com/firebase/flutterfire/commit/ac434044bbfa91d0d8b33ff39736d8eb4062e824))
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+
 ## 4.4.5
 
  - Update a dependency to the latest release.

@@ -20,8 +20,9 @@ void setupFirebasePerformanceMocks([Callback? customHandlers]) {
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    MethodChannelFirebasePerformance.channel
-        .setMockMethodCallHandler((call) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(MethodChannelFirebasePerformance.channel,
+            (call) async {
       return await methodCallCallback(call);
     });
 

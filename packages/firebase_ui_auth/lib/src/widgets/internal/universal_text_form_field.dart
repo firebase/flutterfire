@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// {@template ui.auth.widgets.internal.universal_text_form_field}
-/// Uses [TextFormField] under mateiral library and [CupertinoTextFormFieldRow]
+/// Uses [TextFormField] under material library and [CupertinoTextFormFieldRow]
 /// under cupertion.
 class UniversalTextFormField extends PlatformWidget {
   final TextEditingController? controller;
@@ -26,7 +26,7 @@ class UniversalTextFormField extends PlatformWidget {
   final Iterable<String>? autofillHints;
 
   const UniversalTextFormField({
-    Key? key,
+    super.key,
     this.controller,
     this.prefix,
     this.placeholder,
@@ -40,7 +40,7 @@ class UniversalTextFormField extends PlatformWidget {
     this.enableSuggestions,
     this.autocorrect = false,
     this.autofillHints,
-  }) : super(key: key);
+  });
 
   @override
   Widget buildCupertino(BuildContext context) {

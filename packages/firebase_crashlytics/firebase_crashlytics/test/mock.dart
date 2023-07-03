@@ -70,8 +70,9 @@ void setupFirebaseCrashlyticsMocks([Callback? customHandlers]) {
 
   TestFirebaseCoreHostApi.setup(MockFirebaseAppWithCollectionEnabled());
 
-  MethodChannelFirebaseCrashlytics.channel
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannelFirebaseCrashlytics.channel,
+          (MethodCall methodCall) async {
     methodCallLog.add(methodCall);
     switch (methodCall.method) {
       case 'Crashlytics#checkForUnsentReports':

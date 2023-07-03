@@ -12,7 +12,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.appcheck.AppCheckTokenResult;
+import com.google.firebase.appcheck.AppCheckToken;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory;
@@ -72,10 +72,21 @@ public class FlutterFirebaseAppCheckPlugin
     return FirebaseAppCheck.getInstance(app);
   }
 
-  private Map<String, Object> tokenResultToMap(AppCheckTokenResult result) {
-    Map<String, Object> output = new HashMap<>();
-    output.put("token", result.getToken());
-    return output;
+  private Task<String> getLimitedUseAppCheckToken(Map<String, Object> arguments) {
+    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+            AppCheckToken tokenResult = Tasks.await(firebaseAppCheck.getLimitedUseAppCheckToken());
+            taskCompletionSource.setResult(tokenResult.getToken());
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> activate(Map<String, Object> arguments) {
@@ -118,17 +129,18 @@ public class FlutterFirebaseAppCheckPlugin
     return taskCompletionSource.getTask();
   }
 
-  private Task<Map<String, Object>> getToken(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+  private Task<String> getToken(Map<String, Object> arguments) {
+    TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
         () -> {
           try {
             FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
             Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
-            AppCheckTokenResult tokenResult = Tasks.await(firebaseAppCheck.getToken(forceRefresh));
+            AppCheckToken tokenResult =
+                Tasks.await(firebaseAppCheck.getAppCheckToken(forceRefresh));
 
-            taskCompletionSource.setResult(tokenResultToMap(tokenResult));
+            taskCompletionSource.setResult(tokenResult.getToken());
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
@@ -198,6 +210,9 @@ public class FlutterFirebaseAppCheckPlugin
         break;
       case "FirebaseAppCheck#registerTokenListener":
         methodCallTask = registerTokenListener(call.arguments());
+        break;
+      case "FirebaseAppCheck#getLimitedUseAppCheckToken":
+        methodCallTask = getLimitedUseAppCheckToken(call.arguments());
         break;
       default:
         result.notImplemented();

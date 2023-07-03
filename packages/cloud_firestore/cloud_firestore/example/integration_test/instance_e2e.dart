@@ -254,6 +254,56 @@ void runInstanceTests() {
 
         await firestore.setIndexConfigurationFromJSON(json);
       });
+
+      testWidgets('setLoggingEnabled should resolve without issue',
+          (widgetTester) async {
+        await FirebaseFirestore.setLoggingEnabled(true);
+        await FirebaseFirestore.setLoggingEnabled(false);
+      });
+
+      testWidgets(
+          'Settings() - `persistenceEnabled` & `cacheSizeBytes` with acceptable number',
+          (widgetTester) async {
+        FirebaseFirestore.instance.settings =
+            const Settings(persistenceEnabled: true, cacheSizeBytes: 10000000);
+        // Used to trigger settings
+        await FirebaseFirestore.instance
+            .collection('flutter-tests')
+            .doc('new-doc')
+            .set(
+          {'some': 'data'},
+        );
+      });
+
+      testWidgets(
+          'Settings() - `persistenceEnabled` & `cacheSizeBytes` with `Settings.CACHE_SIZE_UNLIMITED`',
+          (widgetTester) async {
+        FirebaseFirestore.instance.settings = const Settings(
+          persistenceEnabled: true,
+          cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+        );
+        // Used to trigger settings
+        await FirebaseFirestore.instance
+            .collection('flutter-tests')
+            .doc('new-doc')
+            .set(
+          {'some': 'data'},
+        );
+      });
+
+      testWidgets(
+          'Settings() - `persistenceEnabled` & without `cacheSizeBytes`',
+          (widgetTester) async {
+        FirebaseFirestore.instance.settings =
+            const Settings(persistenceEnabled: true);
+        // Used to trigger settings
+        await FirebaseFirestore.instance
+            .collection('flutter-tests')
+            .doc('new-doc')
+            .set(
+          {'some': 'data'},
+        );
+      });
     },
   );
 }

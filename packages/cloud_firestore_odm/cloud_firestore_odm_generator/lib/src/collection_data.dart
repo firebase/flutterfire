@@ -118,7 +118,7 @@ class CollectionData with Names {
     final hasJsonSerializable =
         jsonSerializableChecker.hasAnnotationOf(type.element!);
 
-    if (type.isDynamic) {
+    if (type is DynamicType) {
       throw InvalidGenerationSourceError(
         'The annotation @Collection was used, but no generic type was specified. ',
         todo: 'Instead of @Collection("path") do @Collection<MyClass>("path").',
@@ -447,7 +447,7 @@ extension on DartType {
         generic.isDartCoreString ||
         generic.isDartCoreBool ||
         generic.isDartCoreObject ||
-        generic.isDynamic;
+        generic is DynamicType;
   }
 }
 
@@ -457,8 +457,13 @@ extension on Element {
     final jsonKeys = checker.annotationsOf(this);
 
     for (final jsonKey in jsonKeys) {
-      final ignore = jsonKey.getField('ignore')?.toBoolValue();
-      if (ignore ?? false) {
+      final ignore = jsonKey.getField('ignore')?.toBoolValue() ?? false;
+
+      // ignore is deprecated in favor of includeFromJson and includeToJson
+      final jsonIncluded =
+          (jsonKey.getField('includeFromJson')?.toBoolValue() ?? true) &&
+              (jsonKey.getField('includeToJson')?.toBoolValue() ?? true);
+      if (ignore || !jsonIncluded) {
         return true;
       }
     }

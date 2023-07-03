@@ -42,7 +42,7 @@ import 'query_builder.dart';
 class FirebaseDatabaseDataTable extends StatefulWidget {
   /// {@macro firebase_ui.database_table}
   const FirebaseDatabaseDataTable({
-    Key? key,
+    super.key,
     required this.query,
     required this.columnLabels,
     this.header,
@@ -51,7 +51,10 @@ class FirebaseDatabaseDataTable extends StatefulWidget {
     this.actions,
     this.sortColumnIndex,
     this.sortAscending = true,
-    this.dataRowHeight = kMinInteractiveDimension,
+    @Deprecated('Migrate to use dataRowMinHeight and dataRowMaxHeight instead.')
+    double? dataRowHeight,
+    double? dataRowMinHeight,
+    double? dataRowMaxHeight,
     this.headingRowHeight = 56.0,
     this.horizontalMargin = 24.0,
     this.columnSpacing = 56.0,
@@ -66,7 +69,10 @@ class FirebaseDatabaseDataTable extends StatefulWidget {
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
         ), // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
-        super(key: key);
+        dataRowMinHeight =
+            dataRowHeight ?? dataRowMinHeight ?? kMinInteractiveDimension,
+        dataRowMaxHeight =
+            dataRowHeight ?? dataRowMaxHeight ?? kMinInteractiveDimension;
 
   /// The firestore query that will be displayed
   final Query query;
@@ -106,11 +112,17 @@ class FirebaseDatabaseDataTable extends StatefulWidget {
   /// The value is the index of the first row on the currently displayed page.
   final void Function(int page)? onPageChanged;
 
-  /// The height of each row (excluding the row that contains column headings).
+  /// The minimum height of each row (excluding the row that contains column headings).
   ///
   /// This value is optional and defaults to kMinInteractiveDimension if not
   /// specified.
-  final double dataRowHeight;
+  final double dataRowMinHeight;
+
+  /// The maximum height of each row (excluding the row that contains column headings).
+  ///
+  /// This value is optional and defaults to kMinInteractiveDimension if not
+  /// specified.
+  final double dataRowMaxHeight;
 
   /// The current primary sort key's column.
   ///
@@ -214,7 +226,8 @@ class _FirestoreTableState extends State<FirebaseDatabaseDataTable> {
               arrowHeadColor: widget.arrowHeadColor,
               checkboxHorizontalMargin: widget.checkboxHorizontalMargin,
               columnSpacing: widget.columnSpacing,
-              dataRowHeight: widget.dataRowHeight,
+              dataRowMaxHeight: widget.dataRowMaxHeight,
+              dataRowMinHeight: widget.dataRowMinHeight,
               dragStartBehavior: widget.dragStartBehavior,
               headingRowHeight: widget.headingRowHeight,
               horizontalMargin: widget.horizontalMargin,
@@ -325,10 +338,9 @@ class _FirestoreTableState extends State<FirebaseDatabaseDataTable> {
 /// Takes care of the type-specific form
 class _PropertyTypeForm extends StatelessWidget {
   const _PropertyTypeForm({
-    Key? key,
     required this.formState,
     required this.onFormStateChange,
-  }) : super(key: key);
+  });
 
   final _FormState formState;
   final ValueChanged<_FormState> onFormStateChange;
@@ -376,10 +388,9 @@ class _PropertyTypeForm extends StatelessWidget {
 
 class _EditModalButtonBar extends StatelessWidget {
   const _EditModalButtonBar({
-    Key? key,
     required this.formState,
     required this.ref,
-  }) : super(key: key);
+  });
 
   final _FormState formState;
   final DatabaseReference ref;
@@ -409,10 +420,9 @@ class _EditModalButtonBar extends StatelessWidget {
 
 class _PropertyTypeDropdown extends StatelessWidget {
   const _PropertyTypeDropdown({
-    Key? key,
     required this.formState,
     required this.onTypeChanged,
-  }) : super(key: key);
+  });
 
   final _FormState? formState;
 
@@ -686,7 +696,7 @@ class _Source extends DataTableSource {
 }
 
 class _ValueView extends StatelessWidget {
-  const _ValueView(this.value, {Key? key}) : super(key: key);
+  const _ValueView(this.value);
 
   final Object? value;
 

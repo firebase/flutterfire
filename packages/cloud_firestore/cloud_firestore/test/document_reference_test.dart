@@ -3,8 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -16,9 +16,14 @@ void main() {
   MethodChannelFirebaseFirestore.channel = const MethodChannel(
     'plugins.flutter.io/firebase_firestore',
     StandardMethodCodec(TestFirestoreMessageCodec()),
-  )..setMockMethodCallHandler((call) async {
-      return null;
-    });
+  );
+
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(MethodChannelFirebaseFirestore.channel,
+          (call) async {
+    return null;
+  });
+
   late FirebaseFirestore firestore;
   late FirebaseFirestore firestoreSecondary;
 

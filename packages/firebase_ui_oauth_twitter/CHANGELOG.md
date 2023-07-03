@@ -1,3 +1,49 @@
+## 1.2.4
+
+ - Update a dependency to the latest release.
+
+## 1.2.3
+
+ - Update a dependency to the latest release.
+
+## 1.2.2
+
+ - Update a dependency to the latest release.
+
+## 1.2.1
+
+ - Update a dependency to the latest release.
+
+## 1.2.0
+
+ - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
+ - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+
+## 1.1.5
+
+ - Update a dependency to the latest release.
+
+## 1.1.4
+
+ - Update a dependency to the latest release.
+
+## 1.1.3
+
+ - Update a dependency to the latest release.
+
+## 1.1.2
+
+ - Update a dependency to the latest release.
+
+## 1.1.1
+
+ - Update a dependency to the latest release.
+
+## 1.1.0
+
+ - **FEAT**: bump dart sdk constraint to 2.18 ([#10618](https://github.com/firebase/flutterfire/issues/10618)). ([f80948a2](https://github.com/firebase/flutterfire/commit/f80948a28b62eead358bdb900d5a0dfb97cebb33))
+ - **FEAT**(ui_shared): extract common widgets to a shared library ([#10620](https://github.com/firebase/flutterfire/issues/10620)). ([15c1e85c](https://github.com/firebase/flutterfire/commit/15c1e85c5dae8e9884d321fde4a1217bc21cd6c8))
+
 ## 1.0.24
 
  - Update a dependency to the latest release.
