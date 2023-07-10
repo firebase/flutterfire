@@ -16,24 +16,23 @@
 }
 
 #if TARGET_OS_OSX
-- (instancetype)initWithAuth:(id)auth arguments:(NSDictionary *)arguments {
+- (instancetype)initWithAuth:(id)auth request:(PigeonVerifyPhoneNumberRequest *)request {
   self = [super init];
   if (self) {
     _auth = auth;
-    _phoneNumber = arguments[@"phoneNumber"];
+    _phoneNumber = request.phoneNumber;
   }
   return self;
 }
-
 #else
 - (instancetype)initWithAuth:(id)auth
-                   arguments:(NSDictionary *)arguments
+                     request:(PigeonVerifyPhoneNumberRequest *)request
                      session:(FIRMultiFactorSession *)session
                   factorInfo:(FIRPhoneMultiFactorInfo *)factorInfo {
   self = [super init];
   if (self) {
     _auth = auth;
-    _phoneNumber = arguments[@"phoneNumber"];
+    _phoneNumber = request.phoneNumber;
     _session = session;
     _factorInfo = factorInfo;
   }
@@ -45,12 +44,13 @@
 #if TARGET_OS_IPHONE
   id completer = ^(NSString *verificationID, NSError *error) {
     if (error != nil) {
-      NSDictionary *errorDetails = [FLTFirebaseAuthPlugin getNSDictionaryFromNSError:error];
+      FlutterError *errorDetails = [FLTFirebaseAuthPlugin convertToFlutterError:error];
       events(@{
         @"name" : @"Auth#phoneVerificationFailed",
         @"error" : @{
-          @"message" : errorDetails[@"message"],
-          @"details" : errorDetails,
+          @"code" : errorDetails.code,
+          @"message" : errorDetails.message,
+          @"details" : errorDetails.details,
         }
       });
     } else {

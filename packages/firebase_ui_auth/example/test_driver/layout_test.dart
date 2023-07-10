@@ -50,10 +50,10 @@ void main() {
 class MockUser extends Mock implements User {
   @override
   List<UserInfo> get providerData => [
-        UserInfo({'providerId': 'password'}),
-        UserInfo({'providerId': 'google.com'}),
-        UserInfo({'providerId': 'apple.com'}),
-        UserInfo({'providerId': 'phone'})
+        UserInfo.fromJson({'providerId': 'password'}),
+        UserInfo.fromJson({'providerId': 'google.com'}),
+        UserInfo.fromJson({'providerId': 'apple.com'}),
+        UserInfo.fromJson({'providerId': 'phone'})
       ];
 }
 

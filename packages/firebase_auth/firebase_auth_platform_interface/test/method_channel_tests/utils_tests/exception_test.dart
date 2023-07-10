@@ -41,15 +41,16 @@ void main() {
       );
 
       PlatformException platformException = PlatformException(
-          code: 'native',
+          code: 'unknown',
           message: 'PlatformException Message',
           details: {
             'additionalData': {'authCredential': authCredential.asMap()}
           });
 
-      FirebaseAuthException result =
-          platformExceptionToFirebaseAuthException(platformException)
-              as FirebaseAuthException;
+      FirebaseAuthException result = platformExceptionToFirebaseAuthException(
+        platformException,
+        fromPigeon: false,
+      ) as FirebaseAuthException;
       expect(result.code, equals('unknown'));
       expect(result.message, equals('PlatformException Message'));
       expect(result.email, isNull);
@@ -77,9 +78,10 @@ void main() {
         }
       });
 
-      FirebaseAuthException result =
-          platformExceptionToFirebaseAuthException(platformException)
-              as FirebaseAuthException;
+      FirebaseAuthException result = platformExceptionToFirebaseAuthException(
+        platformException,
+        fromPigeon: false,
+      ) as FirebaseAuthException;
       expect(result.code, equals('A Known Code'));
       expect(result.message, equals('A Known Message'));
       expect(result.email, 'test@email.com');
@@ -97,9 +99,10 @@ void main() {
         message: 'a message',
       );
 
-      FirebaseAuthException result =
-          platformExceptionToFirebaseAuthException(platformException)
-              as FirebaseAuthException;
+      FirebaseAuthException result = platformExceptionToFirebaseAuthException(
+        platformException,
+        fromPigeon: false,
+      ) as FirebaseAuthException;
       expect(result.code, equals('unknown'));
       expect(result.message, equals('a message'));
       expect(result.email, null);
@@ -113,9 +116,10 @@ void main() {
           message: 'a message',
           details: {'additionalData': null});
 
-      FirebaseAuthException result =
-          platformExceptionToFirebaseAuthException(platformException)
-              as FirebaseAuthException;
+      FirebaseAuthException result = platformExceptionToFirebaseAuthException(
+        platformException,
+        fromPigeon: false,
+      ) as FirebaseAuthException;
       expect(result.code, equals('unknown'));
       expect(result.message, equals('a message'));
       expect(result.email, isNull);
@@ -134,9 +138,10 @@ void main() {
         },
       );
 
-      FirebaseAuthException result =
-          platformExceptionToFirebaseAuthException(platformException)
-              as FirebaseAuthException;
+      FirebaseAuthException result = platformExceptionToFirebaseAuthException(
+        platformException,
+        fromPigeon: false,
+      ) as FirebaseAuthException;
       expect(result.code, equals('A Known Code'));
       expect(result.message, equals('A Known Message'));
       expect(result.email, 'test@email.com');

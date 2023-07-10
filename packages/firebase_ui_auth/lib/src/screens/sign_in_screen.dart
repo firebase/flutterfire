@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:flutter/material.dart';
 
 import 'internal/login_screen.dart';
 import 'internal/multi_provider_screen.dart';
@@ -72,7 +72,7 @@ class SignInScreen extends MultiProviderScreen {
   ///       Navigator.pushNamed(context, '/phone');
   ///     }),
   ///     AuthStateChangeAction<SignedIn>((context, state) {
-  ///       if (!state.user!.emailVerified) {
+  ///       if (!state.user!.isEmailVerified) {
   ///         Navigator.pushNamed(context, '/verify-email');
   ///       } else {
   ///         Navigator.pushReplacementNamed(context, '/profile');

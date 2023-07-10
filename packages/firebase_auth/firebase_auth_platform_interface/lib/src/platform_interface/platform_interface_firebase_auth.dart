@@ -48,18 +48,23 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseAuthPlatform.instanceFor(
-      {required FirebaseApp app,
-      required Map<dynamic, dynamic> pluginConstants,
-      Persistence? persistence}) {
+  factory FirebaseAuthPlatform.instanceFor({
+    required FirebaseApp app,
+    required Map<dynamic, dynamic> pluginConstants,
+    Persistence? persistence,
+  }) {
+    var currentUser = pluginConstants['APP_CURRENT_USER'];
+
+    if (currentUser != null) {
+      currentUser as List<Object?>;
+      currentUser = PigeonUserDetails.decode(currentUser);
+    }
     return FirebaseAuthPlatform.instance
         .delegateFor(app: app, persistence: persistence)
         .setInitialValues(
-            languageCode: pluginConstants['APP_LANGUAGE_CODE'],
-            currentUser: pluginConstants['APP_CURRENT_USER'] == null
-                ? null
-                : Map<String, dynamic>.from(
-                    pluginConstants['APP_CURRENT_USER']));
+          languageCode: pluginConstants['APP_LANGUAGE_CODE'],
+          currentUser: currentUser,
+        );
   }
 
   /// The current default [FirebaseAuthPlatform] instance.
@@ -96,7 +101,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// calls.
   @protected
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic>? currentUser,
+    PigeonUserDetails? currentUser,
     String? languageCode,
   }) {
     throw UnimplementedError('setInitialValues() is not implemented');
@@ -366,7 +371,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///   settings > Capabilities). To learn more, visit the
   ///   [Apple documentation](https://developer.apple.com/documentation/security/keychain_services/keychain_items/sharing_access_to_keychain_items_among_a_collection_of_apps).
   Future<void> setSettings({
-    bool? appVerificationDisabledForTesting,
+    bool appVerificationDisabledForTesting = false,
     String? userAccessGroup,
     String? phoneNumber,
     String? smsCode,
