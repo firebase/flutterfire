@@ -11,6 +11,8 @@
 #endif
 
 #import <Firebase/Firebase.h>
+#import "CustomPigeonHeader.h"
+#import "PigeonParser.h"
 
 #import <Foundation/Foundation.h>
 

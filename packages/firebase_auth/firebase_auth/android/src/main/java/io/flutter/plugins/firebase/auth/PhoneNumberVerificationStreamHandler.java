@@ -21,7 +21,6 @@ import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -49,7 +48,8 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
 
   public PhoneNumberVerificationStreamHandler(
       Activity activity,
-      Map<String, Object> arguments,
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonVerifyPhoneNumberRequest request,
       @Nullable MultiFactorSession multiFactorSession,
       @Nullable PhoneMultiFactorInfo multiFactorInfo,
       OnCredentialsListener onCredentialsListener) {
@@ -57,17 +57,16 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
 
     this.multiFactorSession = multiFactorSession;
     this.multiFactorInfo = multiFactorInfo;
-    firebaseAuth = FlutterFirebaseAuthPlugin.getAuth(arguments);
-    phoneNumber = (String) arguments.get(Constants.PHONE_NUMBER);
-    timeout = (int) Objects.requireNonNull(arguments.get(Constants.TIMEOUT));
+    firebaseAuth = FlutterFirebaseAuthPlugin.getAuthFromPigeon(app);
+    phoneNumber = request.getPhoneNumber();
+    timeout = Math.toIntExact(request.getTimeout());
 
-    if (arguments.containsKey(Constants.AUTO_RETRIEVED_SMS_CODE_FOR_TESTING)) {
-      autoRetrievedSmsCodeForTesting =
-          (String) arguments.get(Constants.AUTO_RETRIEVED_SMS_CODE_FOR_TESTING);
+    if (request.getAutoRetrievedSmsCodeForTesting() != null) {
+      autoRetrievedSmsCodeForTesting = request.getAutoRetrievedSmsCodeForTesting();
     }
 
-    if (arguments.containsKey(Constants.FORCE_RESENDING_TOKEN)) {
-      forceResendingToken = (Integer) arguments.get(Constants.FORCE_RESENDING_TOKEN);
+    if (request.getForceResendingToken() != null) {
+      forceResendingToken = Math.toIntExact(request.getForceResendingToken());
     }
 
     this.onCredentialsListener = onCredentialsListener;
@@ -100,11 +99,15 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
 
           @Override
           public void onVerificationFailed(@NonNull FirebaseException e) {
-            Map<String, Object> error = new HashMap<>();
-            error.put("message", e.getLocalizedMessage());
-            error.put("details", FlutterFirebaseAuthPlugin.getExceptionDetails(e));
-
             Map<String, Object> event = new HashMap<>();
+            Map<String, Object> error = new HashMap<>();
+            GeneratedAndroidFirebaseAuth.FlutterError flutterError =
+                FlutterFirebaseAuthPluginException.parserExceptionToFlutter(e);
+            error.put(
+                "code",
+                flutterError.code.replaceAll("ERROR_", "").toLowerCase().replaceAll("_", "-"));
+            error.put("message", flutterError.getMessage());
+            error.put("details", flutterError.details);
             event.put("error", error);
 
             event.put(Constants.NAME, "Auth#phoneVerificationFailed");

@@ -13,6 +13,8 @@
 #import <Firebase/Firebase.h>
 
 #import <Foundation/Foundation.h>
+#import "CustomPigeonHeader.h"
+#import "PigeonParser.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

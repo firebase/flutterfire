@@ -7,13 +7,11 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const int kMockOperation = 2;
+  const kMockOperation = ActionCodeInfoOperation.verifyEmail;
   const String kMockEmail = 'test@test.com';
   const String kMockPreviousEmail = 'previous@test.com';
-  final Map<String, dynamic> kMockData = <String, dynamic>{
-    'email': kMockEmail,
-    'previousEmail': kMockPreviousEmail
-  };
+  final kMockData =
+      ActionCodeInfoData(email: kMockEmail, previousEmail: kMockPreviousEmail);
 
   group('$ActionCodeInfo', () {
     ActionCodeInfo actionCodeInfo =
@@ -35,10 +33,10 @@ void main() {
       test('handles email is null', () {
         ActionCodeInfo testActionCodeInfo = ActionCodeInfo(
             operation: kMockOperation,
-            data: <String, dynamic>{
-              'email': null,
-              'previousEmail': kMockPreviousEmail
-            });
+            data: ActionCodeInfoData(
+              email: null,
+              previousEmail: kMockPreviousEmail,
+            ));
         expect(testActionCodeInfo.data, isA<Map<String, dynamic>>());
         expect(testActionCodeInfo.data['email'], isNull);
         expect(testActionCodeInfo.data['previousEmail'],
@@ -48,10 +46,10 @@ void main() {
       test('handles previousEmail is null', () {
         ActionCodeInfo testActionCodeInfo = ActionCodeInfo(
             operation: kMockOperation,
-            data: <String, dynamic>{
-              'email': kMockEmail,
-              'previousEmail': null
-            });
+            data: ActionCodeInfoData(
+              email: kMockEmail,
+              previousEmail: null,
+            ));
         expect(testActionCodeInfo.data, isA<Map<String, dynamic>>());
         expect(testActionCodeInfo.data['email'], equals(kMockEmail));
         expect(testActionCodeInfo.data['previousEmail'], isNull);
@@ -66,8 +64,8 @@ void main() {
       });
 
       test('returns operation type `emailSignIn`', () {
-        ActionCodeInfo testActionCodeInfo =
-            ActionCodeInfo(operation: 4, data: kMockData);
+        ActionCodeInfo testActionCodeInfo = ActionCodeInfo(
+            operation: ActionCodeInfoOperation.emailSignIn, data: kMockData);
 
         expect(testActionCodeInfo.operation, isA<ActionCodeInfoOperation>());
         expect(testActionCodeInfo.operation,
@@ -75,8 +73,8 @@ void main() {
       });
 
       test('returns operation type `passwordReset`', () {
-        ActionCodeInfo testActionCodeInfo =
-            ActionCodeInfo(operation: 1, data: kMockData);
+        ActionCodeInfo testActionCodeInfo = ActionCodeInfo(
+            operation: ActionCodeInfoOperation.passwordReset, data: kMockData);
 
         expect(testActionCodeInfo.operation, isA<ActionCodeInfoOperation>());
         expect(testActionCodeInfo.operation,
@@ -84,8 +82,8 @@ void main() {
       });
 
       test('returns operation type `recoverEmail`', () {
-        ActionCodeInfo testActionCodeInfo =
-            ActionCodeInfo(operation: 3, data: kMockData);
+        ActionCodeInfo testActionCodeInfo = ActionCodeInfo(
+            operation: ActionCodeInfoOperation.recoverEmail, data: kMockData);
 
         expect(testActionCodeInfo.operation, isA<ActionCodeInfoOperation>());
         expect(testActionCodeInfo.operation,
@@ -93,8 +91,9 @@ void main() {
       });
 
       test('returns operation type `verifyAndChangeEmail`', () {
-        ActionCodeInfo testActionCodeInfo =
-            ActionCodeInfo(operation: 5, data: kMockData);
+        ActionCodeInfo testActionCodeInfo = ActionCodeInfo(
+            operation: ActionCodeInfoOperation.verifyAndChangeEmail,
+            data: kMockData);
 
         expect(testActionCodeInfo.operation, isA<ActionCodeInfoOperation>());
         expect(testActionCodeInfo.operation,
@@ -102,22 +101,12 @@ void main() {
       });
 
       test('returns operation type `verifyEmail`', () {
-        ActionCodeInfo testActionCodeInfo =
-            ActionCodeInfo(operation: 2, data: kMockData);
+        ActionCodeInfo testActionCodeInfo = ActionCodeInfo(
+            operation: ActionCodeInfoOperation.verifyEmail, data: kMockData);
 
         expect(testActionCodeInfo.operation, isA<ActionCodeInfoOperation>());
         expect(testActionCodeInfo.operation,
             equals(ActionCodeInfoOperation.verifyEmail));
-      });
-
-      test(
-          'throws a [UnsupportedError] when operation does not match a known type',
-          () {
-        ActionCodeInfo testActionCodeInfo =
-            ActionCodeInfo(operation: -1, data: kMockData);
-
-        expect(() => testActionCodeInfo.operation,
-            throwsA(isA<UnsupportedError>()));
       });
     });
   });

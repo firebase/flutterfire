@@ -101,10 +101,13 @@ ActionCodeInfo? convertWebActionCodeInfo(
     return null;
   }
 
-  return ActionCodeInfo(operation: 0, data: <String, dynamic>{
-    'email': webActionCodeInfo.data.email,
-    'previousEmail': webActionCodeInfo.data.previousEmail,
-  });
+  return ActionCodeInfo(
+    operation: ActionCodeInfoOperation.passwordReset,
+    data: ActionCodeInfoData(
+      email: webActionCodeInfo.data.email,
+      previousEmail: webActionCodeInfo.data.previousEmail,
+    ),
+  );
 }
 
 /// Converts a [auth_interop.AdditionalUserInfo] into a [AdditionalUserInfo].
@@ -127,16 +130,17 @@ AdditionalUserInfo? convertWebAdditionalUserInfo(
 IdTokenResult convertWebIdTokenResult(
   auth_interop.IdTokenResult webIdTokenResult,
 ) {
-  return IdTokenResult(<String, dynamic>{
-    'claims': webIdTokenResult.claims,
-    'expirationTimestamp':
-        webIdTokenResult.expirationTime.millisecondsSinceEpoch,
-    'issuedAtTimestamp': webIdTokenResult.issuedAtTime.millisecondsSinceEpoch,
-    'authTimestamp': webIdTokenResult.authTime.millisecondsSinceEpoch,
-    'signInProvider': webIdTokenResult.signInProvider,
-    'signInSecondFactor': null,
-    'token': webIdTokenResult.token,
-  });
+  return IdTokenResult(
+    PigeonIdTokenResult(
+      claims: webIdTokenResult.claims,
+      token: webIdTokenResult.token,
+      authTimestamp: webIdTokenResult.authTime.millisecondsSinceEpoch,
+      issuedAtTimestamp: webIdTokenResult.issuedAtTime.millisecondsSinceEpoch,
+      expirationTimestamp:
+          webIdTokenResult.expirationTime.millisecondsSinceEpoch,
+      signInProvider: webIdTokenResult.signInProvider,
+    ),
+  );
 }
 
 /// Converts a [ActionCodeSettings] into a [auth_interop.ActionCodeSettings].

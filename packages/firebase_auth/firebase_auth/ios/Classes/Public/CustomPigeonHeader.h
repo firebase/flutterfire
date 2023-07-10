@@ -4,5 +4,9 @@
 #import "messages.g.h"
 
 @interface PigeonMultiFactorInfo (Map)
-- (NSDictionary *)toMap;
+- (NSDictionary *)toList;
+@end
+
+@interface PigeonUserDetails (Map)
+- (NSDictionary *)toList;
 @end

@@ -6,6 +6,7 @@
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user_credential.dart';
+import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -21,26 +22,30 @@ void main() {
   const String kMockProviderId = 'provider-id';
   const String kMockSignInMethod = 'password';
 
-  final Map<String, dynamic> kMockInitialUserData = <String, dynamic>{
-    'user': <String, dynamic>{
-      'uid': kMockUid,
-      'email': kMockEmail,
-    },
-    'additionalUserInfo': <String, dynamic>{
-      'profile': <String, dynamic>{'foo': 'bar'},
-      'isNewUser': true,
-      'providerId': 'info$kMockProviderId',
-      'username': 'info$kMockUsername',
-    },
-    'authCredential': <String, dynamic>{
-      'providerId': 'auth$kMockProviderId',
-      'signInMethod': kMockSignInMethod,
-    },
-  };
-
   group('$MethodChannelUserCredential()', () {
     late MethodChannelUserCredential userCredential;
-    late Map<String, dynamic> userData = kMockInitialUserData;
+    PigeonUserCredential userData = PigeonUserCredential(
+      user: PigeonUserDetails(
+        userInfo: PigeonUserInfo(
+          uid: kMockUid,
+          email: kMockEmail,
+          isAnonymous: false,
+          isEmailVerified: false,
+        ),
+        providerData: [],
+      ),
+      additionalUserInfo: PigeonAdditionalUserInfo(
+        isNewUser: true,
+        profile: {'foo': 'bar'},
+        providerId: 'info$kMockProviderId',
+        username: 'info$kMockUsername',
+      ),
+      credential: PigeonAuthCredential(
+        providerId: 'auth$kMockProviderId',
+        signInMethod: kMockSignInMethod,
+        nativeId: 0,
+      ),
+    );
 
     setUpAll(() async {
       await Firebase.initializeApp();
@@ -50,7 +55,30 @@ void main() {
     });
 
     setUp(() {
-      userData = Map<String, dynamic>.from(kMockInitialUserData);
+      final kMockInitialUserData = PigeonUserCredential(
+        user: PigeonUserDetails(
+          userInfo: PigeonUserInfo(
+            uid: kMockUid,
+            email: kMockEmail,
+            isAnonymous: false,
+            isEmailVerified: false,
+          ),
+          providerData: [],
+        ),
+        additionalUserInfo: PigeonAdditionalUserInfo(
+          isNewUser: true,
+          profile: {'foo': 'bar'},
+          providerId: 'info$kMockProviderId',
+          username: 'info$kMockUsername',
+        ),
+        credential: PigeonAuthCredential(
+          providerId: 'auth$kMockProviderId',
+          signInMethod: kMockSignInMethod,
+          nativeId: 0,
+        ),
+      );
+
+      userData = kMockInitialUserData;
     });
 
     group('Constructor', () {
@@ -84,7 +112,7 @@ void main() {
       });
 
       test('set additionalUserInfo to null', () {
-        userData['additionalUserInfo'] = null;
+        userData.additionalUserInfo = null;
         MethodChannelUserCredential testUser =
             MethodChannelUserCredential(auth, userData);
 
@@ -92,7 +120,7 @@ void main() {
       });
 
       test('set additionalUserInfo.profile to empty map', () {
-        userData['additionalUserInfo']['profile'] = null;
+        userData.additionalUserInfo?.profile = null;
         MethodChannelUserCredential testUser =
             MethodChannelUserCredential(auth, userData);
 
@@ -103,7 +131,7 @@ void main() {
       });
 
       test('set authCredential to null', () {
-        userData['authCredential'] = null;
+        userData.credential = null;
         MethodChannelUserCredential testUser =
             MethodChannelUserCredential(auth, userData);
 
@@ -111,7 +139,7 @@ void main() {
       });
 
       test('set user to null', () {
-        userData['user'] = null;
+        userData.user = null;
         MethodChannelUserCredential testUser =
             MethodChannelUserCredential(auth, userData);
 

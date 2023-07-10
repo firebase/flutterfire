@@ -55,19 +55,6 @@ void main() {
       expect(firebaseAuthPlatform, isA<PlatformInterface>());
     });
 
-    test('FirebaseAuthPlatform.instanceFor', () {
-      final result = FirebaseAuthPlatform.instanceFor(
-          app: app,
-          pluginConstants: <dynamic, dynamic>{
-            'APP_LANGUAGE_CODE': 'en',
-            'APP_CURRENT_USER': <dynamic, dynamic>{'uid': '1234'}
-          });
-      expect(result, isA<FirebaseAuthPlatform>());
-      expect(result.currentUser, isA<UserPlatform>());
-      expect(result.currentUser!.uid, '1234');
-      expect(result.languageCode, equals('en'));
-    });
-
     test('get.instance', () {
       expect(FirebaseAuthPlatform.instance, isA<FirebaseAuthPlatform>());
       expect(FirebaseAuthPlatform.instance.app.name,

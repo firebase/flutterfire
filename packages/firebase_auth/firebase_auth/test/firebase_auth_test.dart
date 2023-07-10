@@ -43,24 +43,25 @@ void main() {
   final int kMockLastSignInTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
 
-  Map<String, dynamic> kMockUser = <String, dynamic>{
-    'isAnonymous': true,
-    'emailVerified': false,
-    'displayName': 'displayName',
-    'metadata': <String, int>{
-      'creationTime': kMockCreationTimestamp,
-      'lastSignInTime': kMockLastSignInTimestamp,
-    },
-    'providerData': <Map<String, String>>[
-      <String, String>{
+  final kMockUser = PigeonUserDetails(
+    userInfo: PigeonUserInfo(
+      uid: '12345',
+      displayName: 'displayName',
+      creationTimestamp: kMockCreationTimestamp,
+      lastSignInTimestamp: kMockLastSignInTimestamp,
+      isAnonymous: true,
+      isEmailVerified: false,
+    ),
+    providerData: [
+      {
         'providerId': 'firebase',
         'uid': '12345',
         'displayName': 'Flutter Test User',
-        'photoURL': 'http://www.example.com/',
+        'photoUrl': 'http://www.example.com/',
         'email': 'test@example.com',
-      },
+      }
     ],
-  };
+  );
 
   MockUserPlatform? mockUserPlatform;
   MockUserCredentialPlatform? mockUserCredPlatform;
@@ -72,7 +73,7 @@ void main() {
   MockFirebaseAuth mockAuthPlatform = MockFirebaseAuth();
 
   group('$FirebaseAuth', () {
-    Map<String, dynamic> user;
+    PigeonUserDetails user;
     // used to generate a unique application name for each test
     var testCount = 0;
 
@@ -247,8 +248,12 @@ void main() {
     group('checkActionCode()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.checkActionCode(any))
-            .thenAnswer((i) async => ActionCodeInfo(data: {}, operation: 0));
+        when(mockAuthPlatform.checkActionCode(any)).thenAnswer(
+          (i) async => ActionCodeInfo(
+            data: ActionCodeInfoData(email: null, previousEmail: null),
+            operation: ActionCodeInfoOperation.unknown,
+          ),
+        );
 
         await auth.checkActionCode(kMockActionCode);
         verify(mockAuthPlatform.checkActionCode(kMockActionCode));
@@ -377,7 +382,7 @@ void main() {
         final ActionCodeSettings kMockActionCodeSettingsNull =
             ActionCodeSettings(url: kMockURL);
         final ActionCodeSettings kMockActionCodeSettingsFalse =
-            ActionCodeSettings(url: kMockURL, handleCodeInApp: false);
+            ActionCodeSettings(url: kMockURL);
 
         // when handleCodeInApp is null
         expect(
@@ -840,7 +845,7 @@ class MockFirebaseAuth extends Mock
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic>? currentUser,
+    PigeonUserDetails? currentUser,
     String? languageCode,
   }) {
     return super.noSuchMethod(
@@ -1034,7 +1039,7 @@ class FakeFirebaseAuthPlatform extends Fake
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic>? currentUser,
+    PigeonUserDetails? currentUser,
     String? languageCode,
   }) {
     return this;
@@ -1045,7 +1050,7 @@ class MockUserPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserPlatform {
   MockUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      Map<String, dynamic> _user) {
+      PigeonUserDetails _user) {
     TestUserPlatform(auth, multiFactor, _user);
   }
 }
@@ -1096,7 +1101,7 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic>? currentUser,
+    PigeonUserDetails? currentUser,
     String? languageCode,
   }) {
     return this;
@@ -1165,7 +1170,7 @@ class TestAuthProvider extends AuthProvider {
 
 class TestUserPlatform extends UserPlatform {
   TestUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      Map<String, dynamic> data)
+      PigeonUserDetails data)
       : super(auth, multiFactor, data);
 }
 

@@ -417,18 +417,19 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///   settings > Capabilities). To learn more, visit the
   ///   [Apple documentation](https://developer.apple.com/documentation/security/keychain_services/keychain_items/sharing_access_to_keychain_items_among_a_collection_of_apps).
   Future<void> setSettings({
-    bool? appVerificationDisabledForTesting,
+    bool appVerificationDisabledForTesting = false,
     String? userAccessGroup,
     String? phoneNumber,
     String? smsCode,
     bool? forceRecaptchaFlow,
   }) {
     return _delegate.setSettings(
-        appVerificationDisabledForTesting: appVerificationDisabledForTesting,
-        userAccessGroup: userAccessGroup,
-        phoneNumber: phoneNumber,
-        smsCode: smsCode,
-        forceRecaptchaFlow: forceRecaptchaFlow);
+      appVerificationDisabledForTesting: appVerificationDisabledForTesting,
+      userAccessGroup: userAccessGroup,
+      phoneNumber: phoneNumber,
+      smsCode: smsCode,
+      forceRecaptchaFlow: forceRecaptchaFlow,
+    );
   }
 
   /// Changes the current type of persistence on the current Auth instance for

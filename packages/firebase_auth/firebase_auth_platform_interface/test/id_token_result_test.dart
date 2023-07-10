@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/src/id_token_result.dart';
+import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -12,18 +13,17 @@ void main() {
   const int kMockExpirationTimestamp = 1234566;
   const int kMockAuthTimestamp = 1234567;
   const int kMockIssuedAtTimestamp = 12345678;
-  final Map<dynamic, dynamic> kMockClaims = <dynamic, dynamic>{
+  final Map<String, String> kMockClaims = {
     'claim1': 'value1',
   };
 
-  final Map<String, dynamic> kMockData = <String, dynamic>{
-    'claims': kMockClaims,
-    'issuedAtTimestamp': kMockIssuedAtTimestamp,
-    'authTimestamp': kMockAuthTimestamp,
-    'expirationTimestamp': kMockExpirationTimestamp,
-    'signInProvider': kMockSignInProvider,
-    'token': kMockToken
-  };
+  final kMockData = PigeonIdTokenResult(
+      claims: kMockClaims,
+      issuedAtTimestamp: kMockIssuedAtTimestamp,
+      authTimestamp: kMockAuthTimestamp,
+      expirationTimestamp: kMockExpirationTimestamp,
+      signInProvider: kMockSignInProvider,
+      token: kMockToken);
 
   group('$IdTokenResult', () {
     final idTokenResult = IdTokenResult(kMockData);
@@ -48,11 +48,14 @@ void main() {
       });
 
       test('returns null when data[claims] is null', () {
-        Map<String, dynamic> testData = <String, dynamic>{
-          'claims': null,
-        };
+        final kMockData = PigeonIdTokenResult(
+            issuedAtTimestamp: kMockIssuedAtTimestamp,
+            authTimestamp: kMockAuthTimestamp,
+            expirationTimestamp: kMockExpirationTimestamp,
+            signInProvider: kMockSignInProvider,
+            token: kMockToken);
 
-        final testIdTokenResult = IdTokenResult(testData);
+        final testIdTokenResult = IdTokenResult(kMockData);
         expect(testIdTokenResult.claims, isNull);
       });
     });

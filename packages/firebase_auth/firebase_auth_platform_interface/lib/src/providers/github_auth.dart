@@ -57,7 +57,7 @@ class GithubAuthProvider extends AuthProvider {
   }
 
   List<String> _scopes = [];
-  Map<dynamic, dynamic> _parameters = {};
+  Map<String, String> _parameters = {};
 
   /// Returns the currently assigned scopes to this provider instance.
   List<String> get scopes {
@@ -65,7 +65,7 @@ class GithubAuthProvider extends AuthProvider {
   }
 
   /// Returns the parameters for this provider instance.
-  Map<dynamic, dynamic> get parameters {
+  Map<String, String> get parameters {
     return _parameters;
   }
 
@@ -78,7 +78,7 @@ class GithubAuthProvider extends AuthProvider {
   /// Sets the OAuth custom parameters to pass in a GitHub OAuth
   /// request for popup and redirect sign-in operations.
   GithubAuthProvider setCustomParameters(
-    Map<dynamic, dynamic> customOAuthParameters,
+    Map<String, String> customOAuthParameters,
   ) {
     _parameters = customOAuthParameters;
     return this;

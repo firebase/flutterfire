@@ -6,8 +6,6 @@
 
 package io.flutter.plugins.firebase.auth;
 
-import static io.flutter.plugins.firebase.auth.FlutterFirebaseAuthPlugin.parseFirebaseUser;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuth.IdTokenListener;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,7 +43,7 @@ public class IdTokenChannelStreamHandler implements StreamHandler {
           if (user == null) {
             event.put(Constants.USER, null);
           } else {
-            event.put(Constants.USER, parseFirebaseUser(user));
+            event.put(Constants.USER, PigeonParser.parseFirebaseUser(user).toList());
           }
 
           events.success(event);

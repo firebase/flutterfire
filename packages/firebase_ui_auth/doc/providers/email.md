@@ -37,7 +37,7 @@ After adding `EmailAuthProvider` to the `FirebaseUIAuth.configureProviders` emai
 SignInScreen(
   actions: [
     AuthStateChangeAction<SignedIn>((context, state) {
-      if (!state.user!.emailVerified) {
+      if (!state.user!.isEmailVerified) {
         Navigator.pushNamed(context, '/verify-email');
       } else {
         Navigator.pushReplacementNamed(context, '/profile');
@@ -69,7 +69,7 @@ class MyLoginScreen extends StatelessWidget {
             child: FirebaseUIActions(
               actions: [
                 AuthStateChangeAction<SignedIn>((context, state) {
-                  if (!state.user!.emailVerified) {
+                  if (!state.user!.isEmailVerified) {
                     Navigator.pushNamed(context, '/verify-email');
                   } else {
                     Navigator.pushReplacementNamed(context, '/profile');

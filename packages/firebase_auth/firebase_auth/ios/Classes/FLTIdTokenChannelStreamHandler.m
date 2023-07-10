@@ -29,7 +29,7 @@
         }
 
         if (user) {
-          events(@{@"user" : [FLTFirebaseAuthPlugin getNSDictionaryFromUser:user]});
+          events(@{@"user" : [[PigeonParser getPigeonDetails:user] toList]});
         } else {
           events(@{@"user" : [NSNull null]});
         }

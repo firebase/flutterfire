@@ -15,7 +15,7 @@ class App extends StatelessWidget {
           return SignInScreen(
             actions: [
               AuthStateChangeAction<SignedIn>((context, state) {
-                if (!state.user!.emailVerified) {
+                if (!state.user!.isEmailVerified) {
                   Navigator.pushNamed(context, '/verify-email');
                 } else {
                   Navigator.pushReplacementNamed(context, '/profile');

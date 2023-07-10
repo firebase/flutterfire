@@ -6,45 +6,110 @@
 
 package io.flutter.plugins.firebase.auth;
 
-import static io.flutter.plugins.firebase.auth.FlutterFirebaseAuthPlugin.parseAuthCredential;
-
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.firebase.FirebaseApiNotAvailableException;
+import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseAuthMultiFactorException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.auth.MultiFactorInfo;
+import com.google.firebase.auth.MultiFactorResolver;
+import com.google.firebase.auth.MultiFactorSession;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
-public class FlutterFirebaseAuthPluginException extends Exception {
+public class FlutterFirebaseAuthPluginException {
 
-  private final String code;
-  private final String message;
-  private Map<String, Object> additionalData = new HashMap<>();
-
-  FlutterFirebaseAuthPluginException(@NonNull String code, @NonNull String message) {
-    super(message, null);
-
-    this.code = code;
-    this.message = message;
-  }
-
-  FlutterFirebaseAuthPluginException(
-      @NonNull String code, @NonNull String message, @NonNull Map<String, Object> additionalData) {
-    super(message, null);
-
-    this.code = code;
-    this.message = message;
-    this.additionalData = additionalData;
-  }
-
-  FlutterFirebaseAuthPluginException(@NonNull Exception nativeException, Throwable cause) {
-    super(nativeException.getMessage(), cause);
-
+  static GeneratedAndroidFirebaseAuth.FlutterError parserExceptionToFlutter(
+      @Nullable Exception nativeException) {
+    if (nativeException == null) {
+      return new GeneratedAndroidFirebaseAuth.FlutterError("UNKNOWN", null, null);
+    }
     String code = "UNKNOWN";
+
     String message = nativeException.getMessage();
     Map<String, Object> additionalData = new HashMap<>();
+
+    if (nativeException instanceof FirebaseAuthMultiFactorException) {
+      final FirebaseAuthMultiFactorException multiFactorException =
+          (FirebaseAuthMultiFactorException) nativeException;
+      Map<String, Object> output = new HashMap<>();
+
+      MultiFactorResolver multiFactorResolver = multiFactorException.getResolver();
+      final List<MultiFactorInfo> hints = multiFactorResolver.getHints();
+
+      final MultiFactorSession session = multiFactorResolver.getSession();
+      final String sessionId = UUID.randomUUID().toString();
+      FlutterFirebaseMultiFactor.multiFactorSessionMap.put(sessionId, session);
+
+      final String resolverId = UUID.randomUUID().toString();
+      FlutterFirebaseMultiFactor.multiFactorResolverMap.put(resolverId, multiFactorResolver);
+
+      final List<List<Object>> pigeonHints = PigeonParser.multiFactorInfoToMap(hints);
+
+      output.put(
+          Constants.APP_NAME,
+          multiFactorException.getResolver().getFirebaseAuth().getApp().getName());
+
+      output.put(Constants.MULTI_FACTOR_HINTS, pigeonHints);
+
+      output.put(Constants.MULTI_FACTOR_SESSION_ID, sessionId);
+      output.put(Constants.MULTI_FACTOR_RESOLVER_ID, resolverId);
+
+      return new GeneratedAndroidFirebaseAuth.FlutterError(
+          multiFactorException.getErrorCode(), multiFactorException.getLocalizedMessage(), output);
+    }
+
+    if (nativeException instanceof ExecutionException) {
+      return FlutterFirebaseAuthPluginException.noSuchProvider();
+    }
+
+    if (nativeException instanceof FirebaseNetworkException
+        || (nativeException.getCause() != null
+            && nativeException.getCause() instanceof FirebaseNetworkException)) {
+      return new GeneratedAndroidFirebaseAuth.FlutterError(
+          "network-request-failed",
+          "A network error (such as timeout, interrupted connection or unreachable host) has occurred.",
+          null);
+    }
+
+    if (nativeException instanceof FirebaseApiNotAvailableException
+        || (nativeException.getCause() != null
+            && nativeException.getCause() instanceof FirebaseApiNotAvailableException)) {
+      return new GeneratedAndroidFirebaseAuth.FlutterError(
+          "api-not-available", "The requested API is not available.", null);
+    }
+
+    if (nativeException instanceof FirebaseTooManyRequestsException
+        || (nativeException.getCause() != null
+            && nativeException.getCause() instanceof FirebaseTooManyRequestsException)) {
+      return new GeneratedAndroidFirebaseAuth.FlutterError(
+          "too-many-requests",
+          "We have blocked all requests from this device due to unusual activity. Try again later.",
+          null);
+    }
+
+    // Manual message overrides to match other platforms.
+    if (nativeException.getMessage() != null
+        && nativeException
+            .getMessage()
+            .startsWith("Cannot create PhoneAuthCredential without either verificationProof")) {
+      return new GeneratedAndroidFirebaseAuth.FlutterError(
+          "invalid-verification-code",
+          "The verification ID used to create the phone auth credential is invalid.",
+          null);
+    }
+
+    if (message != null
+        && message.contains("User has already been linked to the given provider.")) {
+      return FlutterFirebaseAuthPluginException.alreadyLinkedProvider();
+    }
 
     if (nativeException instanceof FirebaseAuthException) {
       code = ((FirebaseAuthException) nativeException).getErrorCode();
@@ -65,46 +130,32 @@ public class FlutterFirebaseAuthPluginException extends Exception {
           ((FirebaseAuthUserCollisionException) nativeException).getUpdatedCredential();
 
       if (authCredential != null) {
-        additionalData.put("authCredential", parseAuthCredential(authCredential));
+        additionalData.put("authCredential", PigeonParser.parseAuthCredential(authCredential));
       }
     }
 
-    this.code = code;
-    this.message = message;
-    this.additionalData = additionalData;
+    return new GeneratedAndroidFirebaseAuth.FlutterError(code, message, additionalData);
   }
 
-  static FlutterFirebaseAuthPluginException noUser() {
-    return new FlutterFirebaseAuthPluginException(
-        "NO_CURRENT_USER", "No user currently signed in.");
+  static GeneratedAndroidFirebaseAuth.FlutterError noUser() {
+    return new GeneratedAndroidFirebaseAuth.FlutterError(
+        "NO_CURRENT_USER", "No user currently signed in.", null);
   }
 
-  static FlutterFirebaseAuthPluginException invalidCredential() {
-    return new FlutterFirebaseAuthPluginException(
+  static GeneratedAndroidFirebaseAuth.FlutterError invalidCredential() {
+    return new GeneratedAndroidFirebaseAuth.FlutterError(
         "INVALID_CREDENTIAL",
-        "The supplied auth credential is malformed, has expired or is not currently supported.");
+        "The supplied auth credential is malformed, has expired or is not currently supported.",
+        null);
   }
 
-  static FlutterFirebaseAuthPluginException noSuchProvider() {
-    return new FlutterFirebaseAuthPluginException(
-        "NO_SUCH_PROVIDER", "User was not linked to an account with the given provider.");
+  static GeneratedAndroidFirebaseAuth.FlutterError noSuchProvider() {
+    return new GeneratedAndroidFirebaseAuth.FlutterError(
+        "NO_SUCH_PROVIDER", "User was not linked to an account with the given provider.", null);
   }
 
-  static FlutterFirebaseAuthPluginException alreadyLinkedProvider() {
-    return new FlutterFirebaseAuthPluginException(
-        "PROVIDER_ALREADY_LINKED", "User has already been linked to the given provider.");
-  }
-
-  public String getCode() {
-    return code.toLowerCase(Locale.ROOT).replace("error_", "").replace("_", "-");
-  }
-
-  @Override
-  public String getMessage() {
-    return message;
-  }
-
-  public Map<String, Object> getAdditionalData() {
-    return additionalData;
+  static GeneratedAndroidFirebaseAuth.FlutterError alreadyLinkedProvider() {
+    return new GeneratedAndroidFirebaseAuth.FlutterError(
+        "PROVIDER_ALREADY_LINKED", "User has already been linked to the given provider.", null);
   }
 }

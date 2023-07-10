@@ -13,9 +13,9 @@ class ActionCodeSettings {
   ActionCodeSettings({
     this.androidPackageName,
     this.androidMinimumVersion,
-    this.androidInstallApp,
+    this.androidInstallApp = false,
     this.dynamicLinkDomain,
-    this.handleCodeInApp,
+    this.handleCodeInApp = false,
     this.iOSBundleId,
     required this.url,
   });
@@ -30,9 +30,9 @@ class ActionCodeSettings {
   /// one specified they will be taken to the Play Store to upgrade the application.
   final String? androidMinimumVersion;
 
-  /// Whether or not the user should be automatically prompted to install the app
+  /// The default is false. Whether or not the user should be automatically prompted to install the app
   /// via the Play Store if it is not already installed.
-  final bool? androidInstallApp;
+  final bool androidInstallApp;
 
   /// The iOS app to open if it is installed on the device.
   final String? iOSBundleId;
@@ -43,7 +43,7 @@ class ActionCodeSettings {
   /// The default is false. When true, the action code link will be sent
   /// as a Universal Link or Android App Link and will be opened by the
   /// app if installed.
-  final bool? handleCodeInApp;
+  final bool handleCodeInApp;
 
   /// Sets the link continue/state URL
   final String url;

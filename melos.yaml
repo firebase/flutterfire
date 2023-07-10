@@ -223,14 +223,14 @@ scripts:
       melos run generate:pigeon:macos --no-select && \
       melos run format --no-select
     packageFilters:
-      file-exists: 'pigeons/messages.dart'
+      fileExists: 'pigeons/messages.dart'
     description: Generate the pigeon messages for all the supported packages.
 
   generate:pigeon:macos:
     run: |
       melos exec -- "sed -i '' 's;#import <Flutter/Flutter.h>;#if TARGET_OS_OSX\n#import <FlutterMacOS/FlutterMacOS.h>\n#else\n#import <Flutter/Flutter.h>\n#endif;g' ios/Classes/messages.g.m"
     packageFilters:
-      file-exists: 'ios/Classes/messages.g.m'
+      fileExists: 'ios/Classes/messages.g.m'
     description: Pigeon does not add the condition to import Flutter or FlutterMacOs. Add the condition
 
   odm:test:
