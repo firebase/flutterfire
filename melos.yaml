@@ -58,9 +58,10 @@ scripts:
       dart pub global run flutter_plugin_tools format && \
       swiftformat .
     description: |
-      Build a specific example app for Android.
-       - Requires `flutter_plugin_tools` (`dart pub global activate flutter_plugin_tools`).
-       - Requires `clang-format` (can be installed via Brew on macOS).
+      Formats the code of all packages (Java, Objective-C, and Dart).
+       - Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
+       - Requires `git`.
+       - Requires `clang-format` (can be installed via Brew on MacOS).
        - Requires `swiftformat` (can be installed via Brew on macOS).
 
   build:all:

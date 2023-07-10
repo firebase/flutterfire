@@ -18,6 +18,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.LoadBundleTaskProgress;
+import com.google.firebase.firestore.MemoryCacheSettings;
+import com.google.firebase.firestore.PersistentCacheSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SnapshotMetadata;
@@ -298,10 +300,33 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     Map<String, Object> settingsMap = (Map<String, Object>) readValue(buffer);
 
     FirebaseFirestoreSettings.Builder settingsBuilder = new FirebaseFirestoreSettings.Builder();
-
     if (settingsMap.get("persistenceEnabled") != null) {
-      settingsBuilder.setPersistenceEnabled(
-          (Boolean) Objects.requireNonNull(settingsMap.get("persistenceEnabled")));
+      Boolean persistenceEnabled = (Boolean) settingsMap.get("persistenceEnabled");
+
+      if (Boolean.TRUE.equals(persistenceEnabled)) {
+        PersistentCacheSettings.Builder persistenceSettings = PersistentCacheSettings.newBuilder();
+
+        if (settingsMap.get("cacheSizeBytes") != null) {
+          Long cacheSizeBytes = 104857600L;
+          Object value = settingsMap.get("cacheSizeBytes");
+
+          if (value instanceof Long) {
+            cacheSizeBytes = (Long) value;
+          } else if (value instanceof Integer) {
+            cacheSizeBytes = Long.valueOf((Integer) value);
+          }
+
+          if (cacheSizeBytes == -1) {
+            persistenceSettings.setSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED);
+          } else {
+            persistenceSettings.setSizeBytes(cacheSizeBytes);
+          }
+        }
+
+        settingsBuilder.setLocalCacheSettings(persistenceSettings.build());
+      } else {
+        settingsBuilder.setLocalCacheSettings(MemoryCacheSettings.newBuilder().build());
+      }
     }
 
     if (settingsMap.get("host") != null) {
@@ -310,23 +335,6 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       if (settingsMap.get("sslEnabled") != null) {
         settingsBuilder.setSslEnabled(
             (Boolean) Objects.requireNonNull(settingsMap.get("sslEnabled")));
-      }
-    }
-
-    if (settingsMap.get("cacheSizeBytes") != null) {
-      Long cacheSizeBytes = 104857600L;
-      Object value = settingsMap.get("cacheSizeBytes");
-
-      if (value instanceof Long) {
-        cacheSizeBytes = (Long) value;
-      } else if (value instanceof Integer) {
-        cacheSizeBytes = Long.valueOf((Integer) value);
-      }
-
-      if (cacheSizeBytes == -1) {
-        settingsBuilder.setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED);
-      } else {
-        settingsBuilder.setCacheSizeBytes(cacheSizeBytes);
       }
     }
 

@@ -403,5 +403,36 @@ void main() {
         );
       });
     });
+
+    group('Settings()', () {
+      test('Test the assert for setting `cacheSizeBytes` minimum and maximum',
+          () {
+        void configureCache(int? cacheSizeBytes) {
+          assert(
+            cacheSizeBytes == null ||
+                cacheSizeBytes == Settings.CACHE_SIZE_UNLIMITED ||
+                (cacheSizeBytes >= 1048576 && cacheSizeBytes <= 104857600),
+            'Cache size, if specified, must be either CACHE_SIZE_UNLIMITED or between 1048576 bytes (inclusive) and 104857600 bytes (inclusive).',
+          );
+        }
+
+        // Happy paths
+        expect(() => configureCache(null), returnsNormally);
+        expect(
+          () => configureCache(Settings.CACHE_SIZE_UNLIMITED),
+          returnsNormally,
+        );
+        expect(() => configureCache(5000000), returnsNormally);
+        expect(() => configureCache(1048577), returnsNormally);
+        expect(() => configureCache(104857600), returnsNormally);
+        expect(() => configureCache(104857500), returnsNormally);
+
+        // Assertion triggers
+        expect(() => configureCache(1), throwsA(isA<AssertionError>()));
+        expect(() => configureCache(1000), throwsA(isA<AssertionError>()));
+        expect(() => configureCache(200000000), throwsA(isA<AssertionError>()));
+        expect(() => configureCache(500000), throwsA(isA<AssertionError>()));
+      });
+    });
   });
 }

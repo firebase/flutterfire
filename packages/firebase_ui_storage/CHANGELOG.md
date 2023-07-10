@@ -1,3 +1,15 @@
+## 0.1.0-dev.7
+
+ - **FEAT**(ui_storage): add StorageImage widget ([#11080](https://github.com/firebase/flutterfire/issues/11080)). ([b592fb23](https://github.com/firebase/flutterfire/commit/b592fb23596b97e1b5c692c5c0b6fadaf852be28))
+
+## 0.1.0-dev.6
+
+ - Update a dependency to the latest release.
+
+## 0.1.0-dev.5
+
+ - Update a dependency to the latest release.
+
 ## 0.1.0-dev.4
 
  - Update a dependency to the latest release.

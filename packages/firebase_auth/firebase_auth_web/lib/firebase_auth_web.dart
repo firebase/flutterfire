@@ -91,35 +91,38 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerService('auth', (firebaseApp) async {
-      final authDelegate = auth_interop.getAuthInstance(firebaseApp);
-      // if localhost, and emulator was previously set in localStorage, use it
-      if (window.location.hostname == 'localhost' && kDebugMode) {
-        final String? emulatorOrigin =
-            window.sessionStorage[getOriginName(firebaseApp.name)];
+    FirebaseCoreWeb.registerService(
+      'auth',
+      ensurePluginInitialized: (firebaseApp) async {
+        final authDelegate = auth_interop.getAuthInstance(firebaseApp);
+        // if localhost, and emulator was previously set in localStorage, use it
+        if (window.location.hostname == 'localhost' && kDebugMode) {
+          final String? emulatorOrigin =
+              window.sessionStorage[getOriginName(firebaseApp.name)];
 
-        if (emulatorOrigin != null) {
-          try {
-            authDelegate.useAuthEmulator(emulatorOrigin);
-            // ignore: avoid_print
-            print(
-              'Using previously configured Auth emulator at $emulatorOrigin for ${firebaseApp.name} \nTo switch back to production, restart your app with the emulator turned off.',
-            );
-          } catch (e) {
-            if (e.toString().contains('sooner')) {
-              // Happens during hot reload when the emulator is already configured
+          if (emulatorOrigin != null) {
+            try {
+              authDelegate.useAuthEmulator(emulatorOrigin);
               // ignore: avoid_print
               print(
-                'Auth emulator is already configured at $emulatorOrigin for ${firebaseApp.name} and kept across hot reload.\nTo switch back to production, restart your app with the emulator turned off.',
+                'Using previously configured Auth emulator at $emulatorOrigin for ${firebaseApp.name} \nTo switch back to production, restart your app with the emulator turned off.',
               );
-            } else {
-              rethrow;
+            } catch (e) {
+              if (e.toString().contains('sooner')) {
+                // Happens during hot reload when the emulator is already configured
+                // ignore: avoid_print
+                print(
+                  'Auth emulator is already configured at $emulatorOrigin for ${firebaseApp.name} and kept across hot reload.\nTo switch back to production, restart your app with the emulator turned off.',
+                );
+              } else {
+                rethrow;
+              }
             }
           }
         }
-      }
-      await authDelegate.onWaitInitState();
-    });
+        await authDelegate.onWaitInitState();
+      },
+    );
     FirebaseAuthPlatform.instance = FirebaseAuthWeb.instance;
     PhoneMultiFactorGeneratorPlatform.instance = PhoneMultiFactorGeneratorWeb();
     RecaptchaVerifierFactoryPlatform.instance =

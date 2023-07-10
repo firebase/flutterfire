@@ -3,10 +3,12 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_ui_storage_example/main.dart';
+import 'package:firebase_ui_storage_example/src/storage_image_app.dart';
 import 'package:flutter/material.dart';
 
 import 'progress_bar_app.dart';
 import 'upload_button_app.dart';
+import 'list_view_app.dart';
 
 abstract class App implements Widget {
   String get name;
@@ -15,6 +17,8 @@ abstract class App implements Widget {
 const apps = <App>[
   UploadButtonApp(),
   ProgressBarApp(),
+  StorageImageApp(),
+  StorageListViewApp(),
 ];
 
 class AppList extends StatelessWidget {
@@ -31,19 +35,24 @@ class AppList extends StatelessWidget {
             child: ValueListenableBuilder(
               valueListenable: brightness,
               builder: (context, brightness, child) {
-                var tileColor = Colors.transparent;
+                return ValueListenableBuilder(
+                  valueListenable: app,
+                  builder: (context, app, _) {
+                    var tileColor = Colors.transparent;
 
-                if (app.value == apps[index]) {
-                  tileColor = brightness == Brightness.light
-                      ? Colors.black.withAlpha(20)
-                      : Colors.white.withAlpha(20);
-                }
-                return Container(
-                  decoration: BoxDecoration(
-                    color: tileColor,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: child,
+                    if (app == apps[index]) {
+                      tileColor = brightness == Brightness.light
+                          ? Colors.black.withAlpha(20)
+                          : Colors.white.withAlpha(20);
+                    }
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: tileColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: child,
+                    );
+                  },
                 );
               },
               child: Padding(

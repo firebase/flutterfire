@@ -28,10 +28,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
   await FirebaseStorage.instance.useStorageEmulator('localhost', 9199);
 
   final storage = FirebaseStorage.instance;
+
   final config = FirebaseUIStorageConfiguration(
     storage: storage,
     uploadRoot: storage.ref('flutter-tests'),

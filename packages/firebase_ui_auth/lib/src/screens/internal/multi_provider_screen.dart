@@ -54,6 +54,12 @@ class ScreenElement extends ComponentElement {
   }
 
   @override
+  void update(MultiProviderScreen newWidget) {
+    super.update(newWidget);
+    rebuild(force: true);
+  }
+
+  @override
   Widget build() {
     return widget.build(this);
   }
