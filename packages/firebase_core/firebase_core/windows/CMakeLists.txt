@@ -100,7 +100,7 @@ foreach(firebase_lib IN ITEMS ${FIREBASE_LIBS})
     )
 endforeach()
 
-set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32)
+set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32 icu)
 
 target_link_libraries(${PLUGIN_NAME} PRIVATE "${FIREBASE_LIBS}" "${ADDITIONAL_LIBS}")
 
