@@ -15,7 +15,7 @@ class OAuthProvider extends AuthProvider {
   OAuthProvider(String providerId) : super(providerId);
 
   List<String> _scopes = [];
-  Map<dynamic, dynamic> _parameters = {};
+  Map<String, String> _parameters = {};
 
   /// Returns the currently assigned scopes to this provider instance.
   List<String> get scopes {
@@ -23,7 +23,7 @@ class OAuthProvider extends AuthProvider {
   }
 
   /// Returns the parameters for this provider instance.
-  Map<dynamic, dynamic> get parameters {
+  Map<String, String> get parameters {
     return _parameters;
   }
 
@@ -42,7 +42,7 @@ class OAuthProvider extends AuthProvider {
   /// Sets the OAuth custom parameters to pass in a OAuth request for popup and
   /// redirect sign-in operations.
   OAuthProvider setCustomParameters(
-    Map<dynamic, dynamic> customOAuthParameters,
+    Map<String, String> customOAuthParameters,
   ) {
     _parameters = customOAuthParameters;
     return this;

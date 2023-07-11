@@ -161,7 +161,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   FirebaseAuthWeb setInitialValues({
-    Map<String, dynamic>? currentUser,
+    PigeonUserDetails? currentUser,
     String? languageCode,
   }) {
     // Values are already set on web
@@ -487,10 +487,14 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         window.sessionStorage[getOriginName(delegate.app.name)] = origin;
       }
     } catch (e) {
-      final String code = (e as auth_interop.AuthError).code;
-      // this catches Firebase Error from web that occurs after hot reloading & hot restarting
-      if (code != 'auth/emulator-config-failed') {
-        throw getFirebaseAuthException(e);
+      if (e is auth_interop.AuthError) {
+        final String code = e.code;
+        // this catches Firebase Error from web that occurs after hot reloading & hot restarting
+        if (code != 'auth/emulator-config-failed') {
+          throw getFirebaseAuthException(e);
+        }
+      } else {
+        rethrow;
       }
     }
   }

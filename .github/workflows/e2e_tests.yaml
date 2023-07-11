@@ -26,7 +26,7 @@ on:
 
 jobs:
   android:
-    runs-on: macos-13
+    runs-on: macos-13-xl
     timeout-minutes: 45
     strategy:
       matrix:
@@ -46,8 +46,8 @@ jobs:
         name: Gradle Cache
         with:
           path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-v3-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-gradle-v3
+          key: ${{ runner.os }}-gradle-v4-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-gradle-v4
       - uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
         name: AVD Cache
         id: avd-cache
@@ -171,9 +171,6 @@ jobs:
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
           flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true
-          FLUTTER_DRIVE_EXIT_CODE=$?
-          xcrun simctl shutdown "$SIMULATOR"
-          exit $FLUTTER_DRIVE_EXIT_CODE
 
   macos:
     runs-on: macos-13
@@ -288,7 +285,7 @@ jobs:
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
         run: |
-          chromedriver --port=4444 &
+          chromedriver --port=4444 --trace-buffer-size=100000 &
           flutter drive \
             --verbose-system-logs \
             -d web-server \

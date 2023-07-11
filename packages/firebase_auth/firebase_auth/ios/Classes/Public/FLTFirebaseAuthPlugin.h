@@ -18,13 +18,14 @@
 
 @interface FLTFirebaseAuthPlugin
     : FLTFirebasePlugin <FlutterPlugin,
+                         FirebaseAuthHostApi,
+                         FirebaseAuthUserHostApi,
                          MultiFactorUserHostApi,
                          MultiFactoResolverHostApi,
                          ASAuthorizationControllerDelegate,
                          ASAuthorizationControllerPresentationContextProviding>
 
-+ (id)getNSDictionaryFromAuthCredential:(FIRAuthCredential *)authCredential;
 + (NSDictionary *)getNSDictionaryFromUserInfo:(id<FIRUserInfo>)userInfo;
 + (NSMutableDictionary *)getNSDictionaryFromUser:(FIRUser *)user;
-+ (NSDictionary *)getNSDictionaryFromNSError:(NSError *)error;
++ (FlutterError *)convertToFlutterError:(NSError *)error;
 @end
