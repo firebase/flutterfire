@@ -171,7 +171,7 @@ void runCollectionReferenceTests() {
       );
 
       testWidgets(
-        '#8082 - returning null from `fromFirestore` should not throw a null check error',
+        'returning null from `fromFirestore` should not throw a null check error',
         (_) async {
           final foo = await initializeTest('foo');
           await foo.add({'value': 42});
