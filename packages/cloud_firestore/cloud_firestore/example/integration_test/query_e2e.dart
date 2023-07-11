@@ -1935,6 +1935,536 @@ void runQueryTests() {
         expect(results.docs[1].data()['genre'], equals(['sci-fi', 'action']));
       });
 
+      testWidgets('allow multiple conjunctive queries', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('multiple-conjunctive-queries');
+
+        final matchMap = {
+          'rating1': 3.8,
+          'year1': 1970,
+          'runtime1': 90,
+          'director1': 'Director2',
+          'producer1': 'Producer2',
+          'budget1': 20000000,
+          'boxOffice1': 50000000,
+          'actor1': 'Actor2',
+          'language1': 'English',
+          'award1': 'Award2',
+          'genre1': ['sci-fi', 'thriller'],
+          'country1': 'USA',
+          'released1': true,
+          'screenplay1': 'Screenplay2',
+          'cinematography1': 'Cinematography2',
+          'music1': 'Music2',
+          'rating2': 4.2,
+          'year2': 1982,
+          'runtime2': 60,
+          'director2': 'Director3',
+          'producer2': 'Producer3',
+          'budget2': 30000000,
+          'boxOffice2': 60000000,
+          'actor2': 'Actor3',
+          'language2': 'Korean',
+          'award2': 'Award3',
+          'genre2': ['sci-fi', 'action'],
+          'country2': 'South Korea',
+          'released2': false,
+          'screenplay2': 'Screenplay3',
+        };
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'genre': ['fantasy', 'action'],
+            'rating': 4.5,
+            'director': 'Director1',
+            'producer': 'Producer1',
+            'budget': 10000000,
+            'boxOffice': 25000000,
+            'actor': 'Actor1',
+            'language': 'English',
+            'award': 'Award1',
+          }),
+          collection.doc('doc2').set(matchMap),
+          collection.doc('doc3').set(matchMap),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter.and(
+                Filter('rating1', isEqualTo: 3.8),
+                Filter('year1', isEqualTo: 1970),
+                Filter('runtime1', isEqualTo: 90),
+                Filter('director1', isEqualTo: 'Director2'),
+                Filter('producer1', isEqualTo: 'Producer2'),
+                Filter('budget1', isEqualTo: 20000000),
+                Filter('boxOffice1', isEqualTo: 50000000),
+                Filter('actor1', isEqualTo: 'Actor2'),
+                Filter('language1', isEqualTo: 'English'),
+                Filter('award1', isEqualTo: 'Award2'),
+                Filter('genre1', arrayContainsAny: ['sci-fi']),
+                Filter('country1', isEqualTo: 'USA'),
+                Filter('released1', isEqualTo: true),
+                Filter('screenplay1', isEqualTo: 'Screenplay2'),
+                Filter('cinematography1', isEqualTo: 'Cinematography2'),
+                Filter('music1', isEqualTo: 'Music2'),
+                Filter('rating2', isEqualTo: 4.2),
+                Filter('year2', isEqualTo: 1982),
+                Filter('runtime2', isEqualTo: 60),
+                Filter('director2', isEqualTo: 'Director3'),
+                Filter('producer2', isEqualTo: 'Producer3'),
+                Filter('budget2', isEqualTo: 30000000),
+                Filter('boxOffice2', isEqualTo: 60000000),
+                Filter('actor2', isEqualTo: 'Actor3'),
+                Filter('language2', isEqualTo: 'Korean'),
+                Filter('award2', isEqualTo: 'Award3'),
+                Filter('genre2', isEqualTo: ['sci-fi', 'action']),
+                Filter('country2', isEqualTo: 'South Korea'),
+                Filter('released2', isEqualTo: false),
+                Filter('screenplay2', isEqualTo: 'Screenplay3'),
+              ),
+            )
+            .orderBy('rating1', descending: true)
+            .get();
+
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].id, equals('doc3'));
+        expect(results.docs[1].id, equals('doc2'));
+      });
+
+      testWidgets(
+        'Exception thrown when combining `arrayContainsAny` & `isNotEqualTo` in multiple conjunctive queries',
+        (_) async {
+          CollectionReference<Map<String, dynamic>> collection =
+              await initializeTest('multiple-conjunctive-queries');
+
+          try {
+            await collection
+                .where(
+                  Filter.and(
+                    Filter('rating1', isEqualTo: 3.8),
+                    Filter('year1', isEqualTo: 1970),
+                    Filter('runtime1', isEqualTo: 90),
+                    Filter('director1', isEqualTo: 'Director2'),
+                    Filter('producer1', isEqualTo: 'Producer2'),
+                    Filter('budget1', isEqualTo: 20000000),
+                    Filter('boxOffice1', isEqualTo: 50000000),
+                    Filter('actor1', isEqualTo: 'Actor2'),
+                    Filter('language1', isEqualTo: 'English'),
+                    Filter('award1', isEqualTo: 'Award2'),
+                    Filter('genre1', arrayContainsAny: ['sci-fi']),
+                    Filter('country1', isEqualTo: 'USA'),
+                    Filter('released1', isEqualTo: true),
+                    Filter('screenplay1', isEqualTo: 'Screenplay2'),
+                    Filter('cinematography1', isEqualTo: 'Cinematography2'),
+                    Filter('music1', isEqualTo: 'Music2'),
+                    Filter('rating2', isEqualTo: 4.2),
+                    Filter('year2', isEqualTo: 1982),
+                    Filter('runtime2', isEqualTo: 60),
+                    Filter('director2', isEqualTo: 'Director3'),
+                    Filter('producer2', isEqualTo: 'Producer3'),
+                    Filter('budget2', isEqualTo: 30000000),
+                    Filter('boxOffice2', isEqualTo: 60000000),
+                    Filter('actor2', isEqualTo: 'Actor3'),
+                    Filter('language2', isEqualTo: 'Korean'),
+                    Filter('award2', isEqualTo: 'Award3'),
+                    Filter('genre2', isEqualTo: ['sci-fi', 'action']),
+                    Filter('country2', isEqualTo: 'South Korea'),
+                    Filter('released2', isEqualTo: false),
+                    // Fails because this is not allowed when arrayContainsAny is included in the Query
+                    Filter('screenplay2', isNotEqualTo: 'blah'),
+                  ),
+                )
+                .orderBy('rating1', descending: true)
+                .get();
+          } catch (e) {
+            expect(
+              (e as FirebaseException).message,
+              contains('An error occurred while parsing query arguments'),
+            );
+            expect(e, isA<FirebaseException>());
+          }
+        },
+        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
+        skip: kIsWeb,
+      );
+
+      testWidgets('allow multiple disjunctive queries', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('multiple-disjunctive-queries');
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'genre': ['fantasy', 'action'],
+            'rating': 4.5,
+            'director': 'Director1',
+            'producer': 'Producer1',
+            'country': 'USA',
+            'budget': 10000000,
+            'boxOffice': 25000000,
+            'actor': 'Actor1',
+          }),
+          collection.doc('doc2').set({
+            'genre': ['sci-fi', 'thriller'],
+            'rating': 3.8,
+            'year': 1970,
+            'runtime': 90,
+            'released': true,
+            'country': 'Wales',
+            'director': 'Director2',
+            'producer': 'Producer2',
+            'budget': 20000000,
+            'boxOffice': 50000000,
+            'actor': 'Actor2',
+            'language': 'English',
+            'award': 'Award2',
+          }),
+          collection.doc('doc3').set({
+            'genre': ['sci-fi', 'thriller'],
+            'rating': 4.2,
+            'year': 1982,
+            'runtime': 60,
+            'released': false,
+            'country': 'Wales',
+            'director': 'Director3',
+            'producer': 'Producer3',
+            'budget': 30000000,
+            'boxOffice': 60000000,
+            'actor': 'Actor3',
+            'language': 'Korean',
+            'award': 'Award3',
+          }),
+          collection.doc('doc4').set({
+            'genre': ['sci-fi', 'thriller'],
+            'rating': 4.7,
+            'year': 1990,
+            'runtime': 120,
+            'released': true,
+            'country': 'Wales',
+            'director': 'Director4',
+            'producer': 'Producer4',
+            'budget': 40000000,
+            'boxOffice': 80000000,
+            'actor': 'Actor4',
+            'language': 'Welsh',
+            'award': 'Award4',
+          }),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter.or(
+                Filter('rating', isEqualTo: 3.8),
+                Filter('year', isEqualTo: 1970),
+                Filter('runtime', isEqualTo: 90),
+                Filter('director', isEqualTo: 'Director2'),
+                Filter('country', isEqualTo: 'Wales'),
+                Filter('budget', isEqualTo: 20000000),
+                Filter('boxOffice', isEqualTo: 50000000),
+                Filter('genre', arrayContainsAny: ['sci-fi']),
+                Filter('actor', isEqualTo: 'Actor2'),
+                Filter('language', isEqualTo: 'English'),
+                Filter('award', isEqualTo: 'Award2'),
+                Filter('screenWriter', isEqualTo: 'ScreenWriter2'),
+                Filter('editor', isEqualTo: 'Editor2'),
+                Filter('cinematographer', isEqualTo: 'Cinematographer2'),
+                Filter('releaseCountry', isEqualTo: 'Country2'),
+                Filter('distributor', isEqualTo: 'Distributor2'),
+                Filter('ratingSystem', isEqualTo: 'RatingSystem2'),
+                Filter('soundtrackComposer', isEqualTo: 'Composer2'),
+                Filter('visualEffectsCompany', isEqualTo: 'EffectsCompany2'),
+                Filter('productionCompany', isEqualTo: 'ProductionCompany2'),
+                Filter('filmFormat', isEqualTo: 'FilmFormat2'),
+                Filter('aspectRatio', isEqualTo: 'AspectRatio2'),
+                Filter('colorProcess', isEqualTo: 'ColorProcess2'),
+                Filter('soundProcess', isEqualTo: 'SoundProcess2'),
+                Filter('numberOfTheaters', isEqualTo: 2000),
+                Filter('openingWeekendRevenue', isEqualTo: 10000000),
+                Filter('totalDomesticRevenue', isEqualTo: 60000000),
+                Filter('totalWorldwideRevenue', isEqualTo: 200000000),
+                Filter('estimatedProfit', isEqualTo: 140000000),
+                Filter('mainCharacter', isEqualTo: 'MainCharacter2'),
+              ),
+            )
+            .orderBy('rating', descending: true)
+            .get();
+
+        expect(results.docs.length, equals(3));
+        expect(results.docs[0].id, equals('doc4'));
+        expect(results.docs[0].data()['rating'], equals(4.7));
+        expect(
+          results.docs[0].data()['genre'],
+          equals(['sci-fi', 'thriller']),
+        );
+        expect(results.docs[1].id, equals('doc3'));
+        expect(results.docs[1].data()['rating'], equals(4.2));
+        expect(results.docs[1].data()['genre'], equals(['sci-fi', 'thriller']));
+        expect(results.docs[2].id, equals('doc2'));
+        expect(results.docs[2].data()['rating'], equals(3.8));
+        expect(results.docs[2].data()['genre'], equals(['sci-fi', 'thriller']));
+      });
+
+      testWidgets(
+        'Exception thrown when combining `arrayContainsAny` & `isNotEqualTo` in multiple disjunctive queries',
+        (_) async {
+          CollectionReference<Map<String, dynamic>> collection =
+              await initializeTest('multiple-disjunctive-queries');
+
+          try {
+            await collection
+                .where(
+                  Filter.or(
+                    Filter('rating', isEqualTo: 3.8),
+                    Filter('year', isEqualTo: 1970),
+                    Filter('runtime', isEqualTo: 90),
+                    Filter('director', isEqualTo: 'Director2'),
+                    Filter('country', isEqualTo: 'Wales'),
+                    Filter('budget', isEqualTo: 20000000),
+                    Filter('boxOffice', isEqualTo: 50000000),
+                    Filter('genre', arrayContainsAny: ['sci-fi']),
+                    Filter('actor', isEqualTo: 'Actor2'),
+                    Filter('language', isEqualTo: 'English'),
+                    Filter('award', isEqualTo: 'Award2'),
+                    Filter('screenWriter', isEqualTo: 'ScreenWriter2'),
+                    Filter('editor', isEqualTo: 'Editor2'),
+                    Filter('cinematographer', isEqualTo: 'Cinematographer2'),
+                    Filter('releaseCountry', isEqualTo: 'Country2'),
+                    Filter('distributor', isEqualTo: 'Distributor2'),
+                    Filter('ratingSystem', isEqualTo: 'RatingSystem2'),
+                    Filter('soundtrackComposer', isEqualTo: 'Composer2'),
+                    Filter(
+                      'visualEffectsCompany',
+                      isEqualTo: 'EffectsCompany2',
+                    ),
+                    Filter(
+                      'productionCompany',
+                      isEqualTo: 'ProductionCompany2',
+                    ),
+                    Filter('filmFormat', isEqualTo: 'FilmFormat2'),
+                    Filter('aspectRatio', isEqualTo: 'AspectRatio2'),
+                    Filter('colorProcess', isEqualTo: 'ColorProcess2'),
+                    Filter('soundProcess', isEqualTo: 'SoundProcess2'),
+                    Filter('numberOfTheaters', isEqualTo: 2000),
+                    Filter('openingWeekendRevenue', isEqualTo: 10000000),
+                    Filter('totalDomesticRevenue', isEqualTo: 60000000),
+                    Filter('totalWorldwideRevenue', isEqualTo: 200000000),
+                    Filter('estimatedProfit', isEqualTo: 140000000),
+                    // Fails because this is not allowed when arrayContainsAny is included in the Query
+                    Filter('mainCharacter', isNotEqualTo: 'MainCharacter2'),
+                  ),
+                )
+                .orderBy('rating', descending: true)
+                .get();
+          } catch (e) {
+            expect(
+              (e as FirebaseException).message,
+              contains(
+                'An error occurred while parsing query arguments',
+              ),
+            );
+            expect(e, isA<FirebaseException>());
+          }
+        },
+        // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
+        skip: kIsWeb,
+      );
+
+      // TODO(russellwheatley): Firestore allows up to 30 disjunctive queries but testing on android & iOS reveals it only allows 10 when using where() with "arrayContainsAny", "whereIn" & "whereNotIn"
+      // testWidgets(
+      //     'allow multiple disjunctive queries for "arrayContainsAny" using ".where() API"',
+      //     (_) async {
+      //   CollectionReference<Map<String, dynamic>> collection =
+      //       await initializeTest('multiple-disjunctive-where');
+      //
+      //   await Future.wait([
+      //     collection.doc('doc1').set({
+      //       'genre': ['Not', 'Here'],
+      //       'number': 1
+      //     }),
+      //     collection.doc('doc2').set({
+      //       'genre': ['Animation', 'Another'],
+      //       'number': 2
+      //     }),
+      //     collection.doc('doc3').set({
+      //       'genre': ['Adventure', 'Another'],
+      //       'number': 3
+      //     }),
+      //   ]);
+      //   final genres = [
+      //     'Action',
+      //     'Adventure',
+      //     'Animation',
+      //     'Biography',
+      //     'Comedy',
+      //     'Crime',
+      //     'Drama',
+      //     'Documentary',
+      //     'Family',
+      //     'Fantasy',
+      //     'Film-Noir',
+      //     // 'History',
+      //     // 'Horror',
+      //     // 'Music',
+      //     // 'Musical',
+      //     // 'Mystery',
+      //     // 'Romance',
+      //     // 'Sci-Fi',
+      //     // 'Sport',
+      //     // 'Thriller',
+      //     // 'War',
+      //     // 'Western',
+      //     // 'Epic',
+      //     // 'Tragedy',
+      //     // 'Satire',
+      //     // 'Romantic Comedy',
+      //     // 'Black Comedy',
+      //     // 'Paranormal',
+      //     // 'Non-fiction',
+      //     // 'Realism',
+      //   ];
+      //
+      //   final results = await collection
+      //       .where(
+      //         'genre',
+      //         arrayContainsAny: genres,
+      //       )
+      //       .orderBy('number')
+      //       .get();
+      //
+      //   expect(results.docs.length, equals(2));
+      //   expect(results.docs[0].id, equals('doc2'));
+      //   expect(results.docs[1].id, equals('doc3'));
+      // });
+      //
+      // testWidgets(
+      //     'allow multiple disjunctive queries for "whereIn" using ".where() API"',
+      //         (_) async {
+      //       CollectionReference<Map<String, dynamic>> collection =
+      //       await initializeTest('multiple-disjunctive-where');
+      //
+      //       await Future.wait([
+      //         collection.doc('doc1').set({
+      //           'genre': 'Not this',
+      //           'number': 1
+      //         }),
+      //         collection.doc('doc2').set({
+      //           'genre': 'Animation',
+      //           'number': 2
+      //         }),
+      //         collection.doc('doc3').set({
+      //           'genre': 'Adventure',
+      //           'number': 3
+      //         }),
+      //       ]);
+      //       final genres = [
+      //         'Action',
+      //         'Adventure',
+      //         'Animation',
+      //         'Biography',
+      //         'Comedy',
+      //         'Crime',
+      //         'Drama',
+      //         'Documentary',
+      //         'Family',
+      //         'Fantasy',
+      //         'Film-Noir',
+      //         'History',
+      //         'Horror',
+      //         'Music',
+      //         'Musical',
+      //         'Mystery',
+      //         'Romance',
+      //         'Sci-Fi',
+      //         'Sport',
+      //         'Thriller',
+      //         'War',
+      //         'Western',
+      //         'Epic',
+      //         'Tragedy',
+      //         'Satire',
+      //         'Romantic Comedy',
+      //         'Black Comedy',
+      //         'Paranormal',
+      //         'Non-fiction',
+      //         'Realism',
+      //       ];
+      //
+      //       final results = await collection
+      //           .where(
+      //         'genre',
+      //         whereIn: genres,
+      //       )
+      //           .orderBy('number')
+      //           .get();
+      //
+      //       expect(results.docs.length, equals(2));
+      //       expect(results.docs[0].id, equals('doc2'));
+      //       expect(results.docs[1].id, equals('doc3'));
+      //     });
+      //
+      // testWidgets(
+      //     'allow multiple disjunctive queries for "whereNotIn" using ".where() API"',
+      //         (_) async {
+      //       CollectionReference<Map<String, dynamic>> collection =
+      //       await initializeTest('multiple-disjunctive-where-not-in');
+      //
+      //       await Future.wait([
+      //         collection.doc('doc1').set({
+      //           'genre': 'Action',
+      //           'number': 1
+      //         }),
+      //         collection.doc('doc2').set({
+      //           'genre': 'Animation',
+      //           'number': 2
+      //         }),
+      //         collection.doc('doc3').set({
+      //           'genre': 'Adventure',
+      //           'number': 3
+      //         }),
+      //       ]);
+      //       final genres = [
+      //         'Action',
+      //         'Biography',
+      //         'Comedy',
+      //         'Crime',
+      //         'Drama',
+      //         'Documentary',
+      //         'Family',
+      //         'Fantasy',
+      //         'Film-Noir',
+      //         'History',
+      //         'Horror',
+      //         'Music',
+      //         'Musical',
+      //         'Mystery',
+      //         'Romance',
+      //         'Sci-Fi',
+      //         'Sport',
+      //         'Thriller',
+      //         'War',
+      //         'Western',
+      //         'Epic',
+      //         'Tragedy',
+      //         'Satire',
+      //         'Romantic Comedy',
+      //         'Black Comedy',
+      //         'Paranormal',
+      //         'Non-fiction',
+      //         'Realism',
+      //       ];
+      //
+      //       final results = await collection
+      //           .where(
+      //         'genre',
+      //         whereNotIn: genres,
+      //       )
+      //           .orderBy('genre')
+      //           .get();
+      //
+      //       expect(results.docs.length, equals(2));
+      //       expect(results.docs[0].id, equals('doc3'));
+      //       expect(results.docs[1].id, equals('doc2'));
+      //     });
+
       testWidgets('isEqualTo filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-isequalto');
