@@ -45,6 +45,9 @@ abstract class FirebaseError {
   external Object get serverResponse;
 }
 
+@JS('FirebaseError')
+external get firebaseErrorJSConstructor;
+
 /// A structure for options provided to Firebase.
 @JS()
 @anonymous
