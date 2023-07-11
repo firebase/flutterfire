@@ -174,7 +174,7 @@ void main() {
             await messaging.subscribeToTopic(topic);
           },
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-          // android skipped due to consistently failing, works locally
+          // android skipped due to consistently failing, works locally: https://github.com/firebase/flutterfire/pull/11260
           skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.android,
         );
       });
@@ -187,7 +187,7 @@ void main() {
             await messaging.unsubscribeFromTopic(topic);
           },
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-          // android skipped due to consistently failing, works locally
+          // android skipped due to consistently failing, works locally: https://github.com/firebase/flutterfire/pull/11260
           skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.android,
         );
       });
