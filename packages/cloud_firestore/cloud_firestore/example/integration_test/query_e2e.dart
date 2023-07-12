@@ -2268,202 +2268,128 @@ void runQueryTests() {
         skip: kIsWeb,
       );
 
-      // TODO(russellwheatley): Firestore allows up to 30 disjunctive queries but testing on android & iOS reveals it only allows 10 when using where() with "arrayContainsAny", "whereIn" & "whereNotIn"
-      // testWidgets(
-      //     'allow multiple disjunctive queries for "arrayContainsAny" using ".where() API"',
-      //     (_) async {
-      //   CollectionReference<Map<String, dynamic>> collection =
-      //       await initializeTest('multiple-disjunctive-where');
-      //
-      //   await Future.wait([
-      //     collection.doc('doc1').set({
-      //       'genre': ['Not', 'Here'],
-      //       'number': 1
-      //     }),
-      //     collection.doc('doc2').set({
-      //       'genre': ['Animation', 'Another'],
-      //       'number': 2
-      //     }),
-      //     collection.doc('doc3').set({
-      //       'genre': ['Adventure', 'Another'],
-      //       'number': 3
-      //     }),
-      //   ]);
-      //   final genres = [
-      //     'Action',
-      //     'Adventure',
-      //     'Animation',
-      //     'Biography',
-      //     'Comedy',
-      //     'Crime',
-      //     'Drama',
-      //     'Documentary',
-      //     'Family',
-      //     'Fantasy',
-      //     'Film-Noir',
-      //     // 'History',
-      //     // 'Horror',
-      //     // 'Music',
-      //     // 'Musical',
-      //     // 'Mystery',
-      //     // 'Romance',
-      //     // 'Sci-Fi',
-      //     // 'Sport',
-      //     // 'Thriller',
-      //     // 'War',
-      //     // 'Western',
-      //     // 'Epic',
-      //     // 'Tragedy',
-      //     // 'Satire',
-      //     // 'Romantic Comedy',
-      //     // 'Black Comedy',
-      //     // 'Paranormal',
-      //     // 'Non-fiction',
-      //     // 'Realism',
-      //   ];
-      //
-      //   final results = await collection
-      //       .where(
-      //         'genre',
-      //         arrayContainsAny: genres,
-      //       )
-      //       .orderBy('number')
-      //       .get();
-      //
-      //   expect(results.docs.length, equals(2));
-      //   expect(results.docs[0].id, equals('doc2'));
-      //   expect(results.docs[1].id, equals('doc3'));
-      // });
-      //
-      // testWidgets(
-      //     'allow multiple disjunctive queries for "whereIn" using ".where() API"',
-      //         (_) async {
-      //       CollectionReference<Map<String, dynamic>> collection =
-      //       await initializeTest('multiple-disjunctive-where');
-      //
-      //       await Future.wait([
-      //         collection.doc('doc1').set({
-      //           'genre': 'Not this',
-      //           'number': 1
-      //         }),
-      //         collection.doc('doc2').set({
-      //           'genre': 'Animation',
-      //           'number': 2
-      //         }),
-      //         collection.doc('doc3').set({
-      //           'genre': 'Adventure',
-      //           'number': 3
-      //         }),
-      //       ]);
-      //       final genres = [
-      //         'Action',
-      //         'Adventure',
-      //         'Animation',
-      //         'Biography',
-      //         'Comedy',
-      //         'Crime',
-      //         'Drama',
-      //         'Documentary',
-      //         'Family',
-      //         'Fantasy',
-      //         'Film-Noir',
-      //         'History',
-      //         'Horror',
-      //         'Music',
-      //         'Musical',
-      //         'Mystery',
-      //         'Romance',
-      //         'Sci-Fi',
-      //         'Sport',
-      //         'Thriller',
-      //         'War',
-      //         'Western',
-      //         'Epic',
-      //         'Tragedy',
-      //         'Satire',
-      //         'Romantic Comedy',
-      //         'Black Comedy',
-      //         'Paranormal',
-      //         'Non-fiction',
-      //         'Realism',
-      //       ];
-      //
-      //       final results = await collection
-      //           .where(
-      //         'genre',
-      //         whereIn: genres,
-      //       )
-      //           .orderBy('number')
-      //           .get();
-      //
-      //       expect(results.docs.length, equals(2));
-      //       expect(results.docs[0].id, equals('doc2'));
-      //       expect(results.docs[1].id, equals('doc3'));
-      //     });
-      //
-      // testWidgets(
-      //     'allow multiple disjunctive queries for "whereNotIn" using ".where() API"',
-      //         (_) async {
-      //       CollectionReference<Map<String, dynamic>> collection =
-      //       await initializeTest('multiple-disjunctive-where-not-in');
-      //
-      //       await Future.wait([
-      //         collection.doc('doc1').set({
-      //           'genre': 'Action',
-      //           'number': 1
-      //         }),
-      //         collection.doc('doc2').set({
-      //           'genre': 'Animation',
-      //           'number': 2
-      //         }),
-      //         collection.doc('doc3').set({
-      //           'genre': 'Adventure',
-      //           'number': 3
-      //         }),
-      //       ]);
-      //       final genres = [
-      //         'Action',
-      //         'Biography',
-      //         'Comedy',
-      //         'Crime',
-      //         'Drama',
-      //         'Documentary',
-      //         'Family',
-      //         'Fantasy',
-      //         'Film-Noir',
-      //         'History',
-      //         'Horror',
-      //         'Music',
-      //         'Musical',
-      //         'Mystery',
-      //         'Romance',
-      //         'Sci-Fi',
-      //         'Sport',
-      //         'Thriller',
-      //         'War',
-      //         'Western',
-      //         'Epic',
-      //         'Tragedy',
-      //         'Satire',
-      //         'Romantic Comedy',
-      //         'Black Comedy',
-      //         'Paranormal',
-      //         'Non-fiction',
-      //         'Realism',
-      //       ];
-      //
-      //       final results = await collection
-      //           .where(
-      //         'genre',
-      //         whereNotIn: genres,
-      //       )
-      //           .orderBy('genre')
-      //           .get();
-      //
-      //       expect(results.docs.length, equals(2));
-      //       expect(results.docs[0].id, equals('doc3'));
-      //       expect(results.docs[1].id, equals('doc2'));
-      //     });
+      testWidgets(
+          'allow multiple disjunctive queries for "arrayContainsAny" using ".where() API"',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('multiple-disjunctive-where');
+
+        await Future.wait([
+          collection.doc('doc1').set({
+            'genre': ['Not', 'Here'],
+            'number': 1
+          }),
+          collection.doc('doc2').set({
+            'genre': ['Animation', 'Another'],
+            'number': 2
+          }),
+          collection.doc('doc3').set({
+            'genre': ['Adventure', 'Another'],
+            'number': 3
+          }),
+        ]);
+        final genres = [
+          'Action',
+          'Adventure',
+          'Animation',
+          'Biography',
+          'Comedy',
+          'Crime',
+          'Drama',
+          'Documentary',
+          'Family',
+          'Fantasy',
+          'Film-Noir',
+          'History',
+          'Horror',
+          'Music',
+          'Musical',
+          'Mystery',
+          'Romance',
+          'Sci-Fi',
+          'Sport',
+          'Thriller',
+          'War',
+          'Western',
+          'Epic',
+          'Tragedy',
+          'Satire',
+          'Romantic Comedy',
+          'Black Comedy',
+          'Paranormal',
+          'Non-fiction',
+          'Realism',
+        ];
+
+        final results = await collection
+            .where(
+              'genre',
+              arrayContainsAny: genres,
+            )
+            .orderBy('number')
+            .get();
+
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].id, equals('doc2'));
+        expect(results.docs[1].id, equals('doc3'));
+      });
+
+      testWidgets(
+          'allow multiple disjunctive queries for "whereIn" using ".where() API"',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('multiple-disjunctive-where');
+
+        await Future.wait([
+          collection.doc('doc1').set({'genre': 'Not this', 'number': 1}),
+          collection.doc('doc2').set({'genre': 'Animation', 'number': 2}),
+          collection.doc('doc3').set({'genre': 'Adventure', 'number': 3}),
+        ]);
+        final genres = [
+          'Action',
+          'Adventure',
+          'Animation',
+          'Biography',
+          'Comedy',
+          'Crime',
+          'Drama',
+          'Documentary',
+          'Family',
+          'Fantasy',
+          'Film-Noir',
+          'History',
+          'Horror',
+          'Music',
+          'Musical',
+          'Mystery',
+          'Romance',
+          'Sci-Fi',
+          'Sport',
+          'Thriller',
+          'War',
+          'Western',
+          'Epic',
+          'Tragedy',
+          'Satire',
+          'Romantic Comedy',
+          'Black Comedy',
+          'Paranormal',
+          'Non-fiction',
+          'Realism',
+        ];
+
+        final results = await collection
+            .where(
+              'genre',
+              whereIn: genres,
+            )
+            .orderBy('number')
+            .get();
+
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].id, equals('doc2'));
+        expect(results.docs[1].id, equals('doc3'));
+      });
 
       testWidgets('isEqualTo filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
