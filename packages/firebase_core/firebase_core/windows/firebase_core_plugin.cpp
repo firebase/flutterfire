@@ -8,6 +8,8 @@
 #include <windows.h>
 
 #include "firebase/app.h"
+#include "firebase/auth.h"
+#include "firebase/remote_config.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -24,6 +26,8 @@
 #include <string>
 #include <vector>
 using ::firebase::App;
+using ::firebase::auth::Auth;
+using ::firebase::remote_config::RemoteConfig;
 
 namespace firebase_core_windows {
 
@@ -36,6 +40,26 @@ void FirebaseCorePlugin::RegisterWithRegistrar(
   FirebaseAppHostApi::SetUp(registrar->messenger(), plugin.get());
 
   registrar->AddPlugin(std::move(plugin));
+}
+
+void *FirebaseCorePlugin::GetFirebaseApp(std::string appName) {
+  return App::GetInstance(appName.c_str());
+}
+
+void *FirebaseCorePlugin::GetFirebaseAuth(std::string appName) {
+  App *app = App::GetInstance(appName.c_str());
+  if (app == nullptr) {
+    return nullptr;
+  }
+  return Auth::GetAuth(app);
+}
+
+void *FirebaseCorePlugin::GetFirebaseRemoteConfig(std::string appName) {
+  App *app = App::GetInstance(appName.c_str());
+  if (app == nullptr) {
+    return nullptr;
+  }
+  return RemoteConfig::GetInstance(app);
 }
 
 FirebaseCorePlugin::FirebaseCorePlugin() {}
@@ -107,14 +131,17 @@ void FirebaseCorePlugin::InitializeCore(
     std::function<void(ErrorOr<flutter::EncodableList> reply)> result) {
   // TODO: Missing function to get the list of currently initialized apps
   std::vector<PigeonInitializeResponse> initializedApps;
+  std::vector<App *> all_apps = App::GetApps();
+  for (const App *app : all_apps) {
+    initializedApps.push_back(AppToPigeonInitializeResponse(*app));
+  }
 
   flutter::EncodableList encodableList;
 
-  // Insert the contents of the vector into the EncodableList
-  // for (const auto &item : initializedApps) {
-  //  encodableList.push_back(flutter::EncodableValue(item));
-  //}
-  result(flutter::EncodableList());
+  for (const auto &item : initializedApps) {
+    encodableList.push_back(flutter::CustomEncodableValue(item));
+  }
+  result(encodableList);
 }
 
 void FirebaseCorePlugin::OptionsFromResource(
