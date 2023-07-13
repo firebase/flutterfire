@@ -23,20 +23,25 @@ to disk to be sent along with the next fatal report or when the app restarts.
 You can automatically catch all "fatal" errors that are thrown within the Flutter
 framework by overriding `FlutterError.onError` with
 `FirebaseCrashlytics.instance.recordFlutterFatalError`. Alternatively,
-to also catch "non-fatal" exceptions, override `FlutterError.onError` with `FirebaseCrashlytics.instance.recordFlutterError`:
+to catch exceptions as "non-fatal" instead, override `FlutterError.onError` with `FirebaseCrashlytics.instance.recordFlutterError`:
 
 ```dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-  bool weWantFatalErrorRecording = true;
   FlutterError.onError = (errorDetails) {
-    if(weWantFatalErrorRecording){
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-    } else {
-      FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-    }
+    // If you want to record a "non-fatal" exception, use `FirebaseCrashlytics.instance.recordFlutterError` instead
+    const fatalError = true;
+    FlutterError.onError = (errorDetails) {
+      if (fatalError) {
+        // If you want to record a "fatal" exception
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      } else {
+        // If you want to record a "non-fatal" exception
+        FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+      }
+    };
   };
 
   runApp(MyApp());
@@ -67,8 +72,15 @@ Future<void> main() async {
       FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
     };
     // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+    const fatalError = true;
     PlatformDispatcher.instance.onError = (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      if (fatalError) {
+        // If you want to record a "fatal" exception
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: fatalError);
+      } else {
+        // If you want to record a "non-fatal" exception
+        FirebaseCrashlytics.instance.recordError(error, stack);
+      }
       return true;
     };
     runApp(MyApp());
@@ -118,7 +130,7 @@ await FirebaseCrashlytics.instance.recordError(
 await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
 ```
 
-You may also wish to log further information about the error which is possible
+You may also want to log further information about the error which is possible
 using the `information` property:
 
 ```dart
