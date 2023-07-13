@@ -56,6 +56,14 @@ class StorageImageApp extends StatelessWidget implements App {
             loadingStateVariant: LoadingStateVariant.blurHash(),
           ),
         ),
+        AspectRatio(
+          aspectRatio: 4 / 3,
+          child: StorageImage(
+            ref: FirebaseStorage.instance.ref().child('dash_and_sparky.png'),
+            fit: BoxFit.cover,
+            loadingStateVariant: LoadingStateVariant.shimmer(),
+          ),
+        ),
       ],
     );
   }

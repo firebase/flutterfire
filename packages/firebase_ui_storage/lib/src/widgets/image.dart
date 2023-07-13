@@ -60,6 +60,12 @@ abstract class LoadingStateVariant {
     Color? color,
   }) = _LoadingIndicatorLoadingStateVariant;
 
+  factory LoadingStateVariant.shimmer({
+    Curve? curve,
+    Duration? animationDuration,
+    double? initialProgress,
+  }) = _ShimmerLoadingStateVariant;
+
   /// {@template ui.storage.image.loadingStateVariant.animationDuration}
   /// The duration of the transtion between loading placeholder and the actual
   /// image.
@@ -106,6 +112,16 @@ class _LoadingIndicatorLoadingStateVariant extends LoadingStateVariant {
           curve: Curves.easeOutExpo,
           animationDuration: const Duration(milliseconds: 1000),
         );
+}
+
+class _ShimmerLoadingStateVariant extends LoadingStateVariant {
+  final double? initialProgress;
+
+  const _ShimmerLoadingStateVariant({
+    super.curve = Curves.linear,
+    super.animationDuration = const Duration(milliseconds: 800),
+    this.initialProgress,
+  });
 }
 
 /// A widget that downloads and displays an image from Firebase Storage.
@@ -247,19 +263,41 @@ class _StorageImageState extends State<StorageImage>
     ctrl!.forward();
   }
 
+  bool animationsCompleted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    opacity.addStatusListener(_onOpacityStatus);
+  }
+
+  void _onOpacityStatus(AnimationStatus status) {
+    if (status != AnimationStatus.completed) return;
+    if (animationsCompleted) return;
+
+    setState(() {
+      animationsCompleted = true;
+    });
+  }
+
   GlobalKey placeholderKey = GlobalKey();
 
-  Widget loadingBuilder(
+  Widget frameBuilder(
     BuildContext context,
     Widget child,
-    ImageChunkEvent? loadingProgress,
+    int? frame,
+    bool wasSynchronouslyLoaded,
   ) {
-    if (loadingProgress == null || loadingProgress.complete()) {
+    if (animationsCompleted) {
+      return child;
+    }
+
+    if (wasSynchronouslyLoaded || frame != null) {
       maybeAnimate();
     }
 
     if (loadingStateVariant is _SolidColorLoadingStateVariant) {
-      final Widget placeholder = _SolidColorLoadingStateVariantPlaceholder(
+      final placeholder = _SolidColorLoadingStateVariantPlaceholder(
         key: placeholderKey,
         color: (loadingStateVariant as _SolidColorLoadingStateVariant).color,
         child: child,
@@ -268,7 +306,7 @@ class _StorageImageState extends State<StorageImage>
     }
 
     if (loadingStateVariant is _BlurHashLoadingStateVariant) {
-      Widget placeholder = _BlurHashLoadingStateVariantPlaceholder(
+      final placeholder = _BlurHashLoadingStateVariantPlaceholder(
         key: placeholderKey,
         ref: ref,
         value: (loadingStateVariant as _BlurHashLoadingStateVariant).value,
@@ -276,6 +314,24 @@ class _StorageImageState extends State<StorageImage>
         duration: loadingStateVariant.animationDuration,
         child: child,
       );
+
+      return placeholder;
+    }
+
+    if (loadingStateVariant is _ShimmerLoadingStateVariant) {
+      final _ShimmerLoadingStateVariant(
+        :initialProgress,
+      ) = loadingStateVariant as _ShimmerLoadingStateVariant;
+
+      final placeholder = _ShimmerLoadingStateVariantPlaceholder(
+        key: placeholderKey,
+        curve: loadingStateVariant.curve,
+        duration: loadingStateVariant.animationDuration,
+        initialProgress: initialProgress ?? 0,
+        showContent: frame != null,
+        child: child,
+      );
+
       return placeholder;
     }
 
@@ -288,7 +344,7 @@ class _StorageImageState extends State<StorageImage>
         alignment: Alignment.center,
         children: [
           Positioned.fill(child: child),
-          if (loadingProgress != null && !loadingProgress.complete())
+          if (frame == null)
             LoadingIndicator(
               size: config.size,
               borderWidth: config.strokeWidth,
@@ -326,12 +382,12 @@ class _StorageImageState extends State<StorageImage>
             excludeFromSemantics: widget.excludeFromSemantics,
             filterQuality: widget.filterQuality,
             fit: widget.fit,
-            frameBuilder: widget.frameBuilder,
+            frameBuilder: widget.frameBuilder ?? frameBuilder,
             gaplessPlayback: widget.gaplessPlayback,
             headers: widget.headers,
             height: widget.height,
             isAntiAlias: widget.isAntiAlias,
-            loadingBuilder: widget.loadingBuilder ?? loadingBuilder,
+            loadingBuilder: widget.loadingBuilder,
             matchTextDirection: widget.matchTextDirection,
             repeat: widget.repeat,
             opacity: opacity,
@@ -340,13 +396,11 @@ class _StorageImageState extends State<StorageImage>
           );
         }
 
-        return (widget.loadingBuilder ?? loadingBuilder).call(
+        return (widget.frameBuilder ?? frameBuilder).call(
           context,
           Container(),
-          const ImageChunkEvent(
-            cumulativeBytesLoaded: 0,
-            expectedTotalBytes: 9007199254740992,
-          ),
+          null,
+          false,
         );
       },
     );
@@ -364,6 +418,7 @@ class _StorageImageState extends State<StorageImage>
   @override
   void dispose() {
     ctrl?.dispose();
+    opacity.removeStatusListener(_onOpacityStatus);
     super.dispose();
   }
 }
@@ -383,7 +438,7 @@ class _SolidColorLoadingStateVariantPlaceholder extends StatelessWidget {
       return color!;
     }
 
-    return Theme.of(context).colorScheme.onSurface.withOpacity(0.12);
+    return Theme.of(context).colorScheme.surfaceTint.withOpacity(0.12);
   }
 
   @override
@@ -486,8 +541,89 @@ class _BlurHashLoadingStateVariantPlaceholderState
   }
 }
 
-extension on ImageChunkEvent {
-  bool complete() {
-    return cumulativeBytesLoaded == expectedTotalBytes;
+class _ShimmerLoadingStateVariantPlaceholder extends StatefulWidget {
+  final Curve curve;
+  final Duration duration;
+  final Widget child;
+  final double initialProgress;
+  final bool showContent;
+
+  const _ShimmerLoadingStateVariantPlaceholder({
+    super.key,
+    required this.curve,
+    required this.duration,
+    required this.child,
+    required this.showContent,
+    this.initialProgress = 0.0,
+  });
+
+  @override
+  State<_ShimmerLoadingStateVariantPlaceholder> createState() =>
+      __ShimmerLoadingStateVariantPlaceholderState();
+}
+
+class __ShimmerLoadingStateVariantPlaceholderState
+    extends State<_ShimmerLoadingStateVariantPlaceholder>
+    with SingleTickerProviderStateMixin {
+  late AnimationController ctrl = AnimationController(
+    vsync: this,
+    duration: widget.duration,
+    value: widget.initialProgress,
+  )..repeat();
+
+  late final animation = Tween(
+    begin: 0.0,
+    end: 1.0,
+  ).animate(CurvedAnimation(
+    parent: ctrl,
+    curve: widget.curve,
+  ));
+
+  Alignment getAlignment(double animationProgress) {
+    return Alignment(
+      -2 + animationProgress * 4,
+      -2 + animationProgress * 4,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final a = Theme.of(context).colorScheme.surfaceTint.withOpacity(0.12);
+    final b = Theme.of(context).colorScheme.surfaceTint.withOpacity(0.24);
+
+    final (lighter, darker) = switch (Theme.of(context).brightness) {
+      Brightness.light => (a, b),
+      Brightness.dark => (b, a),
+    };
+
+    return AnimatedBuilder(
+      animation: ctrl,
+      builder: (context, child) {
+        final alignment = getAlignment(animation.value);
+
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                darker,
+                lighter,
+                darker,
+              ],
+              stops: const [0.0, 0.5, 1.0],
+              begin: getAlignment(animation.value),
+              end: alignment + const Alignment(1, 1),
+            ),
+          ),
+          child: child,
+        );
+      },
+      child: widget.showContent ? widget.child : null,
+    );
+  }
+
+  @override
+  void dispose() {
+    ctrl.dispose();
+    super.dispose();
   }
 }
