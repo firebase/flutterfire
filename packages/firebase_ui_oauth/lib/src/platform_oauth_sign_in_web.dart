@@ -14,18 +14,22 @@ mixin PlatformSignInMixin {
   OAuthListener get authListener;
   dynamic get firebaseAuthProvider;
 
+  void _webOnLinked(UserCredential userCredential) {
+    return authListener.onCredentialLinked(userCredential.credential!);
+  }
+
   /// {@macro ui.oauth.platform_sign_in_mixin.platform_sign_in}
   void platformSignIn(TargetPlatform platform, AuthAction action) {
-    Future<UserCredential> credentialFuture;
-
     if (action == AuthAction.link) {
-      credentialFuture = auth.currentUser!.linkWithPopup(firebaseAuthProvider);
+      auth.currentUser!
+          .linkWithPopup(firebaseAuthProvider)
+          .then(_webOnLinked)
+          .catchError(authListener.onError);
     } else {
-      credentialFuture = auth.signInWithPopup(firebaseAuthProvider);
+      auth
+          .signInWithPopup(firebaseAuthProvider)
+          .then(authListener.onSignedIn)
+          .catchError(authListener.onError);
     }
-
-    credentialFuture
-        .then(authListener.onSignedIn)
-        .catchError(authListener.onError);
   }
 }
