@@ -178,7 +178,7 @@ class __EmailVerificationScreenContentState
         ),
         const SizedBox(height: 32),
         if (state == EmailVerificationState.pending)
-          const LoadingIndicator(size: 32, borderWidth: 2)
+          const Center(child: LoadingIndicator(size: 32, borderWidth: 2))
         else if (state == EmailVerificationState.sent) ...[
           LoadingButton(
             isLoading: isLoading,
@@ -190,7 +190,7 @@ class __EmailVerificationScreenContentState
           ),
         ],
         if (state == EmailVerificationState.sending)
-          const LoadingIndicator(size: 32, borderWidth: 2),
+          const Center(child: LoadingIndicator(size: 32, borderWidth: 2)),
         if (state == EmailVerificationState.unverified) ...[
           Text(
             "We couldn't verify your email address. ",
