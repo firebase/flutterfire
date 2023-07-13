@@ -27,38 +27,41 @@ void main() {
       DateTime.now().subtract(const Duration(days: 2)).millisecondsSinceEpoch;
   final int kMockLastSignInTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
-  final List kMockInitialProviderData = [
-    <String, String>{
+  final List<Map<String, Object>> kMockInitialProviderData = [
+    <String, Object>{
       'providerId': kMockProviderId,
       'uid': kMockUid,
       'displayName': kMockDisplayName,
-      'photoURL': kMockPhotoURL,
+      'photoUrl': kMockPhotoURL,
       'email': kMockEmail,
       'phoneNumber': kMockPhoneNumber,
+      'isEmailVerified': false,
+      'isAnonymous': true
     },
   ];
   group('$UserPlatform()', () {
-    Map<String, dynamic> kMockUser;
+    PigeonUserDetails kMockUser;
     setUpAll(() async {
       await Firebase.initializeApp();
       auth = FirebaseAuthPlatform.instance;
 
-      kMockUser = <String, dynamic>{
-        'uid': kMockUid,
-        'isAnonymous': true,
-        'email': kMockEmail,
-        'displayName': kMockDisplayName,
-        'emailVerified': false,
-        'phoneNumber': kMockPhoneNumber,
-        'metadata': <String, int>{
-          'creationTime': kMockCreationTimestamp,
-          'lastSignInTime': kMockLastSignInTimestamp,
-        },
-        'photoURL': kMockPhotoURL,
-        'providerData': kMockInitialProviderData,
-        'refreshToken': kMockRefreshToken,
-        'tenantId': kMockTenantId,
-      };
+      kMockUser = PigeonUserDetails(
+        userInfo: PigeonUserInfo(
+          uid: kMockUid,
+          isAnonymous: true,
+          email: kMockEmail,
+          displayName: kMockDisplayName,
+          isEmailVerified: false,
+          phoneNumber: kMockPhoneNumber,
+          photoUrl: kMockPhotoURL,
+          refreshToken: kMockRefreshToken,
+          tenantId: kMockTenantId,
+          lastSignInTimestamp: kMockLastSignInTimestamp,
+          creationTimestamp: kMockCreationTimestamp,
+        ),
+        providerData: kMockInitialProviderData,
+      );
+
       userPlatform =
           TestUserPlatform(auth, TestMultiFactorPlatform(auth), kMockUser);
     });
@@ -92,8 +95,8 @@ void main() {
     test('UserPlatform.email', () {
       expect(userPlatform.email, kMockEmail);
     });
-    test('UserPlatform.emailVerified', () {
-      expect(userPlatform.emailVerified, false);
+    test('UserPlatform.isEmailVerified', () {
+      expect(userPlatform.isEmailVerified, false);
     });
     test('UserPlatform.isAnonymous', () {
       expect(userPlatform.isAnonymous, true);
@@ -286,6 +289,6 @@ void main() {
 
 class TestUserPlatform extends UserPlatform {
   TestUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      Map<String, dynamic> data)
+      PigeonUserDetails data)
       : super(auth, multiFactor, data);
 }

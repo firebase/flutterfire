@@ -19,10 +19,16 @@ void main() {
   const String kMockEmail = 'test@example.com';
   const String kMockPassword = 'test-password';
 
-  final kMockUserData = <String, dynamic>{
-    'uid': kMockUid,
-    'email': kMockEmail,
-  };
+  final kMockUserData = PigeonUserDetails(
+    userInfo: PigeonUserInfo(
+      uid: kMockUid,
+      email: kMockEmail,
+      isAnonymous: false,
+      isEmailVerified: false,
+    ),
+    providerData: [],
+  );
+
   group('$UserCredentialPlatform()', () {
     late AdditionalUserInfo kMockAdditionalUserInfo;
     late AuthCredential kMockCredential;
@@ -97,7 +103,7 @@ void main() {
 
 class TestUserPlatform extends UserPlatform {
   TestUserPlatform(FirebaseAuthPlatform auth,
-      MultiFactorPlatform multiFactorPlatform, Map<String, dynamic> data)
+      MultiFactorPlatform multiFactorPlatform, PigeonUserDetails data)
       : super(auth, multiFactorPlatform, data);
 }
 
