@@ -3,19 +3,14 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_ui_shared/firebase_ui_shared.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
 import '../paginated_loading_controller.dart';
+import 'default_loading_indicator.dart';
 
 Widget _defaultLoadingBuilder(BuildContext context) {
-  return const Center(
-    child: LoadingIndicator(
-      size: 32,
-      borderWidth: 2,
-    ),
-  );
+  return const DefaultLoadingIndicator();
 }
 
 /// A [ListView.builder] that automatically handles paginated loading from
