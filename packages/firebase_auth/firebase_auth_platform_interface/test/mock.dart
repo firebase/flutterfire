@@ -88,12 +88,3 @@ Future<void> testExceptionHandling(
     ]),
   );
 }
-
-Map<String, dynamic> generateUser(
-  Map<String, dynamic> user,
-  Map<String, dynamic> updatedInfo,
-) {
-  Map<String, dynamic> kMockUpdatedUser = Map<String, dynamic>.from(user);
-  kMockUpdatedUser.addAll(updatedInfo);
-  return kMockUpdatedUser;
-}
