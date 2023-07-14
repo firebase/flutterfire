@@ -3,6 +3,175 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-07-14
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.8.3`](#cloud_firestore---v483)
+ - [`cloud_firestore_platform_interface` - `v5.15.3`](#cloud_firestore_platform_interface---v5153)
+ - [`firebase_auth` - `v4.7.0`](#firebase_auth---v470)
+ - [`firebase_auth_platform_interface` - `v6.16.0`](#firebase_auth_platform_interface---v6160)
+ - [`firebase_auth_web` - `v5.6.0`](#firebase_auth_web---v560)
+ - [`firebase_core` - `v2.15.0`](#firebase_core---v2150)
+ - [`firebase_crashlytics` - `v3.3.4`](#firebase_crashlytics---v334)
+ - [`firebase_ui_auth` - `v1.6.0`](#firebase_ui_auth---v160)
+ - [`firebase_ui_oauth` - `v1.4.5`](#firebase_ui_oauth---v145)
+ - [`firebase_ui_storage` - `v0.1.0-dev.8`](#firebase_ui_storage---v010-dev8)
+ - [`firebase_ui_firestore` - `v1.5.5`](#firebase_ui_firestore---v155)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.63`](#cloud_firestore_odm---v100-dev63)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.63`](#cloud_firestore_odm_generator---v100-dev63)
+ - [`cloud_firestore_web` - `v3.6.3`](#cloud_firestore_web---v363)
+ - [`firebase_ui_oauth_facebook` - `v1.2.5`](#firebase_ui_oauth_facebook---v125)
+ - [`firebase_ui_oauth_twitter` - `v1.2.5`](#firebase_ui_oauth_twitter---v125)
+ - [`firebase_ui_oauth_apple` - `v1.2.5`](#firebase_ui_oauth_apple---v125)
+ - [`firebase_ui_oauth_google` - `v1.2.5`](#firebase_ui_oauth_google---v125)
+ - [`_flutterfire_internals` - `v1.3.4`](#_flutterfire_internals---v134)
+ - [`firebase_in_app_messaging` - `v0.7.3+4`](#firebase_in_app_messaging---v0734)
+ - [`firebase_database_web` - `v0.2.3+4`](#firebase_database_web---v0234)
+ - [`firebase_remote_config_web` - `v1.4.4`](#firebase_remote_config_web---v144)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.4+4`](#firebase_in_app_messaging_platform_interface---v0244)
+ - [`firebase_remote_config_platform_interface` - `v1.4.4`](#firebase_remote_config_platform_interface---v144)
+ - [`firebase_database` - `v10.2.4`](#firebase_database---v1024)
+ - [`firebase_crashlytics_platform_interface` - `v3.6.4`](#firebase_crashlytics_platform_interface---v364)
+ - [`firebase_remote_config` - `v4.2.4`](#firebase_remote_config---v424)
+ - [`firebase_messaging` - `v14.6.5`](#firebase_messaging---v1465)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.6+4`](#firebase_dynamic_links_platform_interface---v0264)
+ - [`firebase_database_platform_interface` - `v0.2.5+4`](#firebase_database_platform_interface---v0254)
+ - [`firebase_analytics_platform_interface` - `v3.6.4`](#firebase_analytics_platform_interface---v364)
+ - [`firebase_messaging_web` - `v3.5.4`](#firebase_messaging_web---v354)
+ - [`firebase_dynamic_links` - `v5.3.4`](#firebase_dynamic_links---v534)
+ - [`firebase_analytics` - `v10.4.4`](#firebase_analytics---v1044)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+4`](#firebase_app_installations_platform_interface---v0144)
+ - [`firebase_analytics_web` - `v0.5.4+4`](#firebase_analytics_web---v0544)
+ - [`firebase_app_installations_web` - `v0.1.3+4`](#firebase_app_installations_web---v0134)
+ - [`firebase_messaging_platform_interface` - `v4.5.4`](#firebase_messaging_platform_interface---v454)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.4+4`](#firebase_ml_model_downloader_platform_interface---v0144)
+ - [`firebase_ml_model_downloader` - `v0.2.3+4`](#firebase_ml_model_downloader---v0234)
+ - [`firebase_storage_web` - `v3.6.5`](#firebase_storage_web---v365)
+ - [`firebase_app_check_platform_interface` - `v0.0.9+1`](#firebase_app_check_platform_interface---v0091)
+ - [`firebase_storage` - `v11.2.5`](#firebase_storage---v1125)
+ - [`firebase_app_installations` - `v0.2.3+4`](#firebase_app_installations---v0234)
+ - [`firebase_app_check_web` - `v0.0.11+1`](#firebase_app_check_web---v00111)
+ - [`firebase_storage_platform_interface` - `v4.4.4`](#firebase_storage_platform_interface---v444)
+ - [`firebase_app_check` - `v0.1.5+1`](#firebase_app_check---v0151)
+ - [`cloud_functions` - `v4.3.4`](#cloud_functions---v434)
+ - [`firebase_performance_web` - `v0.1.4+4`](#firebase_performance_web---v0144)
+ - [`firebase_performance_platform_interface` - `v0.1.4+4`](#firebase_performance_platform_interface---v0144)
+ - [`cloud_functions_platform_interface` - `v5.4.4`](#cloud_functions_platform_interface---v544)
+ - [`cloud_functions_web` - `v4.5.4`](#cloud_functions_web---v454)
+ - [`firebase_performance` - `v0.9.2+4`](#firebase_performance---v0924)
+ - [`firebase_ui_database` - `v1.3.4`](#firebase_ui_database---v134)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_firestore` - `v1.5.5`
+ - `cloud_firestore_odm` - `v1.0.0-dev.63`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.63`
+ - `cloud_firestore_web` - `v3.6.3`
+ - `firebase_ui_oauth_facebook` - `v1.2.5`
+ - `firebase_ui_oauth_twitter` - `v1.2.5`
+ - `firebase_ui_oauth_apple` - `v1.2.5`
+ - `firebase_ui_oauth_google` - `v1.2.5`
+ - `_flutterfire_internals` - `v1.3.4`
+ - `firebase_in_app_messaging` - `v0.7.3+4`
+ - `firebase_database_web` - `v0.2.3+4`
+ - `firebase_remote_config_web` - `v1.4.4`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.4+4`
+ - `firebase_remote_config_platform_interface` - `v1.4.4`
+ - `firebase_database` - `v10.2.4`
+ - `firebase_crashlytics_platform_interface` - `v3.6.4`
+ - `firebase_remote_config` - `v4.2.4`
+ - `firebase_messaging` - `v14.6.5`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.6+4`
+ - `firebase_database_platform_interface` - `v0.2.5+4`
+ - `firebase_analytics_platform_interface` - `v3.6.4`
+ - `firebase_messaging_web` - `v3.5.4`
+ - `firebase_dynamic_links` - `v5.3.4`
+ - `firebase_analytics` - `v10.4.4`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+4`
+ - `firebase_analytics_web` - `v0.5.4+4`
+ - `firebase_app_installations_web` - `v0.1.3+4`
+ - `firebase_messaging_platform_interface` - `v4.5.4`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.4+4`
+ - `firebase_ml_model_downloader` - `v0.2.3+4`
+ - `firebase_storage_web` - `v3.6.5`
+ - `firebase_app_check_platform_interface` - `v0.0.9+1`
+ - `firebase_storage` - `v11.2.5`
+ - `firebase_app_installations` - `v0.2.3+4`
+ - `firebase_app_check_web` - `v0.0.11+1`
+ - `firebase_storage_platform_interface` - `v4.4.4`
+ - `firebase_app_check` - `v0.1.5+1`
+ - `cloud_functions` - `v4.3.4`
+ - `firebase_performance_web` - `v0.1.4+4`
+ - `firebase_performance_platform_interface` - `v0.1.4+4`
+ - `cloud_functions_platform_interface` - `v5.4.4`
+ - `cloud_functions_web` - `v4.5.4`
+ - `firebase_performance` - `v0.9.2+4`
+ - `firebase_ui_database` - `v1.3.4`
+
+---
+
+#### `cloud_firestore` - `v4.8.3`
+
+ - **FIX**(firestore): allow 30 conjunctive & disjunctive queries for "in" & "array-contains-any" via where() API ([#11265](https://github.com/firebase/flutterfire/issues/11265)). ([f5477b1a](https://github.com/firebase/flutterfire/commit/f5477b1ae83c37d727f12dd6ed5440cac0bc0bcd))
+ - **FIX**: null check error when using `withConverter` and returning null from `fromFirestore` ([#11224](https://github.com/firebase/flutterfire/issues/11224)). ([4dd0f3f0](https://github.com/firebase/flutterfire/commit/4dd0f3f0409d58c263d3af523611d2eb0fd79619))
+ - **FIX**(firestore): allow up to 30 Filter queries within `Filter.or()` & `Filter.and()` ([#11140](https://github.com/firebase/flutterfire/issues/11140)). ([e1f0064d](https://github.com/firebase/flutterfire/commit/e1f0064db7f24b360da131b991e39020f47ffd1c))
+
+#### `cloud_firestore_platform_interface` - `v5.15.3`
+
+ - **FIX**(firestore): allow up to 30 Filter queries within `Filter.or()` & `Filter.and()` ([#11140](https://github.com/firebase/flutterfire/issues/11140)). ([e1f0064d](https://github.com/firebase/flutterfire/commit/e1f0064db7f24b360da131b991e39020f47ffd1c))
+
+#### `firebase_auth` - `v4.7.0`
+
+ - **FEAT**(auth): move to Pigeon for Platform channels ([#10802](https://github.com/firebase/flutterfire/issues/10802)). ([43e5b20b](https://github.com/firebase/flutterfire/commit/43e5b20b14799102a6544a4763476eaba44b9cfb))
+
+#### `firebase_auth_platform_interface` - `v6.16.0`
+
+ - **FEAT**(auth): move to Pigeon for Platform channels ([#10802](https://github.com/firebase/flutterfire/issues/10802)). ([43e5b20b](https://github.com/firebase/flutterfire/commit/43e5b20b14799102a6544a4763476eaba44b9cfb))
+
+#### `firebase_auth_web` - `v5.6.0`
+
+ - **FIX**(auth,web): add guarding to error casting in useEmulator ([#11247](https://github.com/firebase/flutterfire/issues/11247)). ([aca20481](https://github.com/firebase/flutterfire/commit/aca204814bc2463818fe5114bce8ff23876ec7e1))
+ - **FEAT**(auth): move to Pigeon for Platform channels ([#10802](https://github.com/firebase/flutterfire/issues/10802)). ([43e5b20b](https://github.com/firebase/flutterfire/commit/43e5b20b14799102a6544a4763476eaba44b9cfb))
+
+#### `firebase_core` - `v2.15.0`
+
+ - **FEAT**: bump Firebase android SDK to `32.2.0` ([#11282](https://github.com/firebase/flutterfire/issues/11282)). ([7fc1f643](https://github.com/firebase/flutterfire/commit/7fc1f643303ceb8294c9b46390148969e306faeb))
+ - **FEAT**(core,windows): Add api to access firebase cpp objects ([#11254](https://github.com/firebase/flutterfire/issues/11254)). ([c26f9d8e](https://github.com/firebase/flutterfire/commit/c26f9d8ef78336277667b50f67de60bbda4c2622))
+ - **FEAT**: bump Firebase iOS SDK to `10.12.0` ([#11268](https://github.com/firebase/flutterfire/issues/11268)). ([31637246](https://github.com/firebase/flutterfire/commit/316372467888af24698aab20509bdb0832875293))
+ - **FEAT**: bump Firebase Android SDK to 32.1.1 ([#11256](https://github.com/firebase/flutterfire/issues/11256)). ([81156d10](https://github.com/firebase/flutterfire/commit/81156d1062d3eb3c6c83833887ca054cf66cfa13))
+ - **FEAT**: bump Firebase iOS SDK to 10.11.0 ([#11257](https://github.com/firebase/flutterfire/issues/11257)). ([179a91b4](https://github.com/firebase/flutterfire/commit/179a91b44191940e4e63398630b12aa9d178314c))
+
+#### `firebase_crashlytics` - `v3.3.4`
+
+ - **DOCS**(crashlytics): illustrate different methods for recording crashes ([#11275](https://github.com/firebase/flutterfire/issues/11275)). ([d00c3ed2](https://github.com/firebase/flutterfire/commit/d00c3ed2a28656830ffd15f6737a4c8a607053b7))
+
+#### `firebase_ui_auth` - `v1.6.0`
+
+ - **FIX**(ui_auth): fix LoadingIndicator layout on EmailVerificationScreen ([#11169](https://github.com/firebase/flutterfire/issues/11169)). ([fd832fb8](https://github.com/firebase/flutterfire/commit/fd832fb8ef8cf6288ec5d722dcade8eb7c133a9b))
+ - **FEAT**(auth): move to Pigeon for Platform channels ([#10802](https://github.com/firebase/flutterfire/issues/10802)). ([43e5b20b](https://github.com/firebase/flutterfire/commit/43e5b20b14799102a6544a4763476eaba44b9cfb))
+
+#### `firebase_ui_oauth` - `v1.4.5`
+
+ - **FIX**(ui_auth): fix linking OAuthProvider from ProfileScreen ([#11168](https://github.com/firebase/flutterfire/issues/11168)). ([5063af5b](https://github.com/firebase/flutterfire/commit/5063af5b668cc0c15574f9ea3d08a4af2b163377))
+
+#### `firebase_ui_storage` - `v0.1.0-dev.8`
+
+ - **FEAT**(ui_storage): add StorageGridView widget ([#11206](https://github.com/firebase/flutterfire/issues/11206)). ([48a3a396](https://github.com/firebase/flutterfire/commit/48a3a3960aa10e2d0850c9e6e2256a54c9f0cc4f))
+ - **FEAT**(ui_storage): add shimmer for loading images ([#11237](https://github.com/firebase/flutterfire/issues/11237)). ([e2ad9004](https://github.com/firebase/flutterfire/commit/e2ad9004e2f1a31242df6ff12cf6dd46cfc63ff5))
+ - **FEAT**(ui_storage): add StorageListView and PaginatedLoadingController ([#11170](https://github.com/firebase/flutterfire/issues/11170)). ([dcf1b22a](https://github.com/firebase/flutterfire/commit/dcf1b22aefa6b3846cff9604ab15fae36d847cd1))
+
+
 ## 2023-06-26
 
 ### Changes
