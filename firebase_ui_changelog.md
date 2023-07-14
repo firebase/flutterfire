@@ -2,6 +2,57 @@
 
 All notable changes for firebase_ui packages
 
+## 2023-07-14
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_auth` - `v1.6.0`](#firebase_ui_auth---v160)
+ - [`firebase_ui_oauth` - `v1.4.5`](#firebase_ui_oauth---v145)
+ - [`firebase_ui_storage` - `v0.1.0-dev.8`](#firebase_ui_storage---v010-dev8)
+ - [`firebase_ui_firestore` - `v1.5.5`](#firebase_ui_firestore---v155)
+ - [`firebase_ui_oauth_facebook` - `v1.2.5`](#firebase_ui_oauth_facebook---v125)
+ - [`firebase_ui_oauth_twitter` - `v1.2.5`](#firebase_ui_oauth_twitter---v125)
+ - [`firebase_ui_oauth_apple` - `v1.2.5`](#firebase_ui_oauth_apple---v125)
+ - [`firebase_ui_oauth_google` - `v1.2.5`](#firebase_ui_oauth_google---v125)
+ - [`firebase_ui_database` - `v1.3.4`](#firebase_ui_database---v134)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_firestore` - `v1.5.5`
+ - `firebase_ui_oauth_facebook` - `v1.2.5`
+ - `firebase_ui_oauth_twitter` - `v1.2.5`
+ - `firebase_ui_oauth_apple` - `v1.2.5`
+ - `firebase_ui_oauth_google` - `v1.2.5`
+ - `firebase_ui_database` - `v1.3.4`
+
+---
+
+#### `firebase_ui_auth` - `v1.6.0`
+
+ - **FIX**(ui_auth): fix LoadingIndicator layout on EmailVerificationScreen ([#11169](https://github.com/firebase/flutterfire/issues/11169)). ([fd832fb8](https://github.com/firebase/flutterfire/commit/fd832fb8ef8cf6288ec5d722dcade8eb7c133a9b))
+ - **FEAT**(auth): move to Pigeon for Platform channels ([#10802](https://github.com/firebase/flutterfire/issues/10802)). ([43e5b20b](https://github.com/firebase/flutterfire/commit/43e5b20b14799102a6544a4763476eaba44b9cfb))
+
+#### `firebase_ui_oauth` - `v1.4.5`
+
+ - **FIX**(ui_auth): fix linking OAuthProvider from ProfileScreen ([#11168](https://github.com/firebase/flutterfire/issues/11168)). ([5063af5b](https://github.com/firebase/flutterfire/commit/5063af5b668cc0c15574f9ea3d08a4af2b163377))
+
+#### `firebase_ui_storage` - `v0.1.0-dev.8`
+
+ - **FEAT**(ui_storage): add StorageGridView widget ([#11206](https://github.com/firebase/flutterfire/issues/11206)). ([48a3a396](https://github.com/firebase/flutterfire/commit/48a3a3960aa10e2d0850c9e6e2256a54c9f0cc4f))
+ - **FEAT**(ui_storage): add shimmer for loading images ([#11237](https://github.com/firebase/flutterfire/issues/11237)). ([e2ad9004](https://github.com/firebase/flutterfire/commit/e2ad9004e2f1a31242df6ff12cf6dd46cfc63ff5))
+ - **FEAT**(ui_storage): add StorageListView and PaginatedLoadingController ([#11170](https://github.com/firebase/flutterfire/issues/11170)). ([dcf1b22a](https://github.com/firebase/flutterfire/commit/dcf1b22aefa6b3846cff9604ab15fae36d847cd1))
+
+
 ## 2023-06-26
 
 ### Changes

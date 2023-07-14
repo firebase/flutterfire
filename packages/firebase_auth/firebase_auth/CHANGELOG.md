@@ -1,3 +1,7 @@
+## 4.7.0
+
+ - **FEAT**(auth): move to Pigeon for Platform channels ([#10802](https://github.com/firebase/flutterfire/issues/10802)). ([43e5b20b](https://github.com/firebase/flutterfire/commit/43e5b20b14799102a6544a4763476eaba44b9cfb))
+
 ## 4.6.3
 
  - Update a dependency to the latest release.
