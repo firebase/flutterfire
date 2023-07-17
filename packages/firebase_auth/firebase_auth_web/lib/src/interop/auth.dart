@@ -90,7 +90,7 @@ class UserInfo<T extends auth_interop.UserInfoJsImpl>
 
 /// User account.
 ///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.User>.
+/// See: <https://firebase.google.com/docs/reference/js/auth.user>.
 class User extends UserInfo<auth_interop.UserJsImpl> {
   static final _expando = Expando<User>();
 
