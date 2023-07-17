@@ -8,16 +8,61 @@ import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 
+class PigeonFirebaseSettings {
+  PigeonFirebaseSettings({
+    this.persistenceEnabled,
+    this.host,
+    this.sslEnabled,
+    this.cacheSizeBytes,
+    required this.ignoreUndefinedProperties,
+  });
+
+  bool? persistenceEnabled;
+
+  String? host;
+
+  bool? sslEnabled;
+
+  int? cacheSizeBytes;
+
+  bool ignoreUndefinedProperties;
+
+  Object encode() {
+    return <Object?>[
+      persistenceEnabled,
+      host,
+      sslEnabled,
+      cacheSizeBytes,
+      ignoreUndefinedProperties,
+    ];
+  }
+
+  static PigeonFirebaseSettings decode(Object result) {
+    result as List<Object?>;
+    return PigeonFirebaseSettings(
+      persistenceEnabled: result[0] as bool?,
+      host: result[1] as String?,
+      sslEnabled: result[2] as bool?,
+      cacheSizeBytes: result[3] as int?,
+      ignoreUndefinedProperties: result[4]! as bool,
+    );
+  }
+}
+
 class PigeonFirebaseApp {
   PigeonFirebaseApp({
     required this.appName,
+    required this.settings,
   });
 
   String appName;
 
+  PigeonFirebaseSettings settings;
+
   Object encode() {
     return <Object?>[
       appName,
+      settings.encode(),
     ];
   }
 
@@ -25,6 +70,7 @@ class PigeonFirebaseApp {
     result as List<Object?>;
     return PigeonFirebaseApp(
       appName: result[0]! as String,
+      settings: PigeonFirebaseSettings.decode(result[1]! as List<Object?>),
     );
   }
 }
@@ -36,6 +82,9 @@ class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     if (value is PigeonFirebaseApp) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
+    } else if (value is PigeonFirebaseSettings) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -46,6 +95,8 @@ class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     switch (type) {
       case 128:
         return PigeonFirebaseApp.decode(readValue(buffer)!);
+      case 129:
+        return PigeonFirebaseSettings.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -62,13 +113,13 @@ class FirebaseFirestoreHostApi {
 
   static const MessageCodec<Object?> codec = _FirebaseFirestoreHostApiCodec();
 
-  Future<String> registerIdTokenListener(PigeonFirebaseApp arg_app) async {
+  Future<String> loadBundle(
+      PigeonFirebaseApp arg_app, Uint8List arg_bundle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseFirestoreHostApi.registerIdTokenListener',
-        codec,
+        'dev.flutter.pigeon.FirebaseFirestoreHostApi.loadBundle', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_app]) as List<Object?>?;
+        await channel.send(<Object?>[arg_app, arg_bundle]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',

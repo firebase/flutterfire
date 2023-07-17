@@ -21,18 +21,37 @@ import 'package:pigeon/pigeon.dart';
     objcSourceOut: '../cloud_firestore/ios/Classes/messages.g.m',
   ),
 )
+class PigeonFirebaseSettings {
+  const PigeonFirebaseSettings({
+    required this.persistenceEnabled,
+    required this.host,
+    required this.sslEnabled,
+    required this.cacheSizeBytes,
+    required this.ignoreUndefinedProperties,
+  });
+
+  final bool? persistenceEnabled;
+  final String? host;
+  final bool? sslEnabled;
+  final int? cacheSizeBytes;
+  final bool ignoreUndefinedProperties;
+}
+
 class PigeonFirebaseApp {
   const PigeonFirebaseApp({
     required this.appName,
+    required this.settings,
   });
 
   final String appName;
+  final PigeonFirebaseSettings settings;
 }
 
 @HostApi(dartHostTestHandler: 'TestFirebaseFirestoreHostApi')
 abstract class FirebaseFirestoreHostApi {
   @async
-  String registerIdTokenListener(
+  String loadBundle(
     PigeonFirebaseApp app,
+    Uint8List bundle,
   );
 }

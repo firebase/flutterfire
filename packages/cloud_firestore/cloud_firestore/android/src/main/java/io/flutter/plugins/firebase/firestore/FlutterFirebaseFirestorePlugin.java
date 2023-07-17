@@ -17,6 +17,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.LocalCacheSettings;
+import com.google.firebase.firestore.MemoryCacheSettings;
+import com.google.firebase.firestore.PersistentCacheSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
@@ -53,7 +57,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class FlutterFirebaseFirestorePlugin
-    implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware {
+    implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware, GeneratedAndroidFirebaseFirestore.FirebaseFirestoreHostApi {
   protected static final HashMap<String, FirebaseFirestore> firestoreInstanceCache =
       new HashMap<>();
 
@@ -638,11 +642,6 @@ public class FlutterFirebaseFirestorePlugin
             registerEventChannel(
                 METHOD_CHANNEL_NAME + "/snapshotsInSync", new SnapshotsInSyncStreamHandler()));
         return;
-      case "LoadBundle#snapshots":
-        result.success(
-            registerEventChannel(
-                METHOD_CHANNEL_NAME + "/loadBundle", new LoadBundleStreamHandler()));
-        return;
       case "Firestore#namedQueryGet":
         methodCallTask = namedQueryGet(call.arguments());
         break;
@@ -703,6 +702,8 @@ public class FlutterFirebaseFirestorePlugin
     channel.setMethodCallHandler(this);
 
     FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this);
+
+    GeneratedAndroidFirebaseFirestore.FirebaseFirestoreHostApi.setup(binaryMessenger, this);
   }
 
   private Source getSource(Map<String, Object> arguments) {
@@ -815,5 +816,41 @@ public class FlutterFirebaseFirestorePlugin
     streamHandlers.clear();
 
     transactionHandlers.clear();
+  }
+
+  static FirebaseFirestoreSettings getSettingsFromPigeon(GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp pigeonApp) {
+    FirebaseFirestoreSettings.Builder builder = new FirebaseFirestoreSettings.Builder();
+    if (pigeonApp.getSettings().getHost() != null) {
+      builder.setHost(pigeonApp.getSettings().getHost());
+    }
+    if (pigeonApp.getSettings().getSslEnabled() != null) {
+      builder.setSslEnabled(pigeonApp.getSettings().getSslEnabled());
+    }
+    if (pigeonApp.getSettings().getPersistenceEnabled() != null) {
+      if (pigeonApp.getSettings().getPersistenceEnabled()) {
+        builder.setLocalCacheSettings(PersistentCacheSettings.newBuilder()
+            .setSizeBytes(pigeonApp.getSettings().getCacheSizeBytes())
+          .build());
+      } else {
+        builder.setLocalCacheSettings(MemoryCacheSettings.newBuilder()
+          .build());
+      }
+    }
+    return builder.build();
+  }
+
+  static FirebaseFirestore getFirestoreFromPigeon(GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp pigeonApp) {
+    FirebaseApp app = FirebaseApp.getInstance(pigeonApp.getAppName());
+    FirebaseFirestore firestore = FirebaseFirestore.getInstance(app);
+    firestore.setFirestoreSettings(getSettingsFromPigeon(pigeonApp));
+    return firestore;
+  }
+
+  @Override
+  public void loadBundle(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull byte[] bundle, @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
+    result.success(
+      registerEventChannel(
+        METHOD_CHANNEL_NAME + "/loadBundle", new LoadBundleStreamHandler(getFirestoreFromPigeon(app), bundle)));
+
   }
 }

@@ -10,22 +10,39 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class PigeonFirebaseSettings;
 @class PigeonFirebaseApp;
+
+@interface PigeonFirebaseSettings : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithPersistenceEnabled:(nullable NSNumber *)persistenceEnabled
+                                      host:(nullable NSString *)host
+                                sslEnabled:(nullable NSNumber *)sslEnabled
+                            cacheSizeBytes:(nullable NSNumber *)cacheSizeBytes
+                 ignoreUndefinedProperties:(NSNumber *)ignoreUndefinedProperties;
+@property(nonatomic, strong, nullable) NSNumber *persistenceEnabled;
+@property(nonatomic, copy, nullable) NSString *host;
+@property(nonatomic, strong, nullable) NSNumber *sslEnabled;
+@property(nonatomic, strong, nullable) NSNumber *cacheSizeBytes;
+@property(nonatomic, strong) NSNumber *ignoreUndefinedProperties;
+@end
 
 @interface PigeonFirebaseApp : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithAppName:(NSString *)appName;
++ (instancetype)makeWithAppName:(NSString *)appName settings:(PigeonFirebaseSettings *)settings;
 @property(nonatomic, copy) NSString *appName;
+@property(nonatomic, strong) PigeonFirebaseSettings *settings;
 @end
 
 /// The codec used by FirebaseFirestoreHostApi.
 NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
 
 @protocol FirebaseFirestoreHostApi
-- (void)registerIdTokenListenerApp:(PigeonFirebaseApp *)app
-                        completion:
-                            (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)loadBundleApp:(PigeonFirebaseApp *)app
+               bundle:(FlutterStandardTypedData *)bundle
+           completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

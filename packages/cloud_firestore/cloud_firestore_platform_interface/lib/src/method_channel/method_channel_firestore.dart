@@ -4,15 +4,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-// TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
-// ignore: unnecessary_import
-import 'dart:typed_data';
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_load_bundle_task.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query_snapshot.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/utils/source.dart';
+import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
@@ -73,6 +71,19 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     );
   }
 
+  final pigeonChannel = FirebaseFirestoreHostApi();
+
+  late final PigeonFirebaseApp pigeonApp = PigeonFirebaseApp(
+    appName: Firebase.app().name,
+    settings: PigeonFirebaseSettings(
+      persistenceEnabled: settings.persistenceEnabled,
+      host: settings.host,
+      sslEnabled: settings.sslEnabled,
+      cacheSizeBytes: settings.cacheSizeBytes,
+      ignoreUndefinedProperties: settings.ignoreUndefinedProperties,
+    ),
+  );
+
   /// Gets a [FirebaseFirestorePlatform] with specific arguments such as a different
   /// [FirebaseApp].
   @override
@@ -83,9 +94,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   LoadBundleTaskPlatform loadBundle(Uint8List bundle) {
     return MethodChannelLoadBundleTask(
-      task: channel.invokeMethod<String>('LoadBundle#snapshots'),
-      bundle: bundle,
-      firestore: this,
+      task: pigeonChannel.loadBundle(pigeonApp, bundle),
     );
   }
 

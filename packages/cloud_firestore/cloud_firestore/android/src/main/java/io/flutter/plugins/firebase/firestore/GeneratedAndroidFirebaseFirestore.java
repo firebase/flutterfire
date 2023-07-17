@@ -52,6 +52,144 @@ public class GeneratedAndroidFirebaseFirestore {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonFirebaseSettings {
+    private @Nullable Boolean persistenceEnabled;
+
+    public @Nullable Boolean getPersistenceEnabled() {
+      return persistenceEnabled;
+    }
+
+    public void setPersistenceEnabled(@Nullable Boolean setterArg) {
+      this.persistenceEnabled = setterArg;
+    }
+
+    private @Nullable String host;
+
+    public @Nullable String getHost() {
+      return host;
+    }
+
+    public void setHost(@Nullable String setterArg) {
+      this.host = setterArg;
+    }
+
+    private @Nullable Boolean sslEnabled;
+
+    public @Nullable Boolean getSslEnabled() {
+      return sslEnabled;
+    }
+
+    public void setSslEnabled(@Nullable Boolean setterArg) {
+      this.sslEnabled = setterArg;
+    }
+
+    private @Nullable Long cacheSizeBytes;
+
+    public @Nullable Long getCacheSizeBytes() {
+      return cacheSizeBytes;
+    }
+
+    public void setCacheSizeBytes(@Nullable Long setterArg) {
+      this.cacheSizeBytes = setterArg;
+    }
+
+    private @NonNull Boolean ignoreUndefinedProperties;
+
+    public @NonNull Boolean getIgnoreUndefinedProperties() {
+      return ignoreUndefinedProperties;
+    }
+
+    public void setIgnoreUndefinedProperties(@NonNull Boolean setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"ignoreUndefinedProperties\" is null.");
+      }
+      this.ignoreUndefinedProperties = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonFirebaseSettings() {}
+
+    public static final class Builder {
+
+      private @Nullable Boolean persistenceEnabled;
+
+      public @NonNull Builder setPersistenceEnabled(@Nullable Boolean setterArg) {
+        this.persistenceEnabled = setterArg;
+        return this;
+      }
+
+      private @Nullable String host;
+
+      public @NonNull Builder setHost(@Nullable String setterArg) {
+        this.host = setterArg;
+        return this;
+      }
+
+      private @Nullable Boolean sslEnabled;
+
+      public @NonNull Builder setSslEnabled(@Nullable Boolean setterArg) {
+        this.sslEnabled = setterArg;
+        return this;
+      }
+
+      private @Nullable Long cacheSizeBytes;
+
+      public @NonNull Builder setCacheSizeBytes(@Nullable Long setterArg) {
+        this.cacheSizeBytes = setterArg;
+        return this;
+      }
+
+      private @Nullable Boolean ignoreUndefinedProperties;
+
+      public @NonNull Builder setIgnoreUndefinedProperties(@NonNull Boolean setterArg) {
+        this.ignoreUndefinedProperties = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonFirebaseSettings build() {
+        PigeonFirebaseSettings pigeonReturn = new PigeonFirebaseSettings();
+        pigeonReturn.setPersistenceEnabled(persistenceEnabled);
+        pigeonReturn.setHost(host);
+        pigeonReturn.setSslEnabled(sslEnabled);
+        pigeonReturn.setCacheSizeBytes(cacheSizeBytes);
+        pigeonReturn.setIgnoreUndefinedProperties(ignoreUndefinedProperties);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(5);
+      toListResult.add(persistenceEnabled);
+      toListResult.add(host);
+      toListResult.add(sslEnabled);
+      toListResult.add(cacheSizeBytes);
+      toListResult.add(ignoreUndefinedProperties);
+      return toListResult;
+    }
+
+    static @NonNull PigeonFirebaseSettings fromList(@NonNull ArrayList<Object> list) {
+      PigeonFirebaseSettings pigeonResult = new PigeonFirebaseSettings();
+      Object persistenceEnabled = list.get(0);
+      pigeonResult.setPersistenceEnabled((Boolean) persistenceEnabled);
+      Object host = list.get(1);
+      pigeonResult.setHost((String) host);
+      Object sslEnabled = list.get(2);
+      pigeonResult.setSslEnabled((Boolean) sslEnabled);
+      Object cacheSizeBytes = list.get(3);
+      pigeonResult.setCacheSizeBytes(
+          (cacheSizeBytes == null)
+              ? null
+              : ((cacheSizeBytes instanceof Integer)
+                  ? (Integer) cacheSizeBytes
+                  : (Long) cacheSizeBytes));
+      Object ignoreUndefinedProperties = list.get(4);
+      pigeonResult.setIgnoreUndefinedProperties((Boolean) ignoreUndefinedProperties);
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
   public static final class PigeonFirebaseApp {
     private @NonNull String appName;
 
@@ -66,6 +204,19 @@ public class GeneratedAndroidFirebaseFirestore {
       this.appName = setterArg;
     }
 
+    private @NonNull PigeonFirebaseSettings settings;
+
+    public @NonNull PigeonFirebaseSettings getSettings() {
+      return settings;
+    }
+
+    public void setSettings(@NonNull PigeonFirebaseSettings setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"settings\" is null.");
+      }
+      this.settings = setterArg;
+    }
+
     /** Constructor is non-public to enforce null safety; use Builder. */
     PigeonFirebaseApp() {}
 
@@ -78,17 +229,26 @@ public class GeneratedAndroidFirebaseFirestore {
         return this;
       }
 
+      private @Nullable PigeonFirebaseSettings settings;
+
+      public @NonNull Builder setSettings(@NonNull PigeonFirebaseSettings setterArg) {
+        this.settings = setterArg;
+        return this;
+      }
+
       public @NonNull PigeonFirebaseApp build() {
         PigeonFirebaseApp pigeonReturn = new PigeonFirebaseApp();
         pigeonReturn.setAppName(appName);
+        pigeonReturn.setSettings(settings);
         return pigeonReturn;
       }
     }
 
     @NonNull
     ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(1);
+      ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(appName);
+      toListResult.add((settings == null) ? null : settings.toList());
       return toListResult;
     }
 
@@ -96,6 +256,11 @@ public class GeneratedAndroidFirebaseFirestore {
       PigeonFirebaseApp pigeonResult = new PigeonFirebaseApp();
       Object appName = list.get(0);
       pigeonResult.setAppName((String) appName);
+      Object settings = list.get(1);
+      pigeonResult.setSettings(
+          (settings == null)
+              ? null
+              : PigeonFirebaseSettings.fromList((ArrayList<Object>) settings));
       return pigeonResult;
     }
   }
@@ -118,6 +283,8 @@ public class GeneratedAndroidFirebaseFirestore {
       switch (type) {
         case (byte) 128:
           return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 129:
+          return PigeonFirebaseSettings.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
       }
@@ -128,6 +295,9 @@ public class GeneratedAndroidFirebaseFirestore {
       if (value instanceof PigeonFirebaseApp) {
         stream.write(128);
         writeValue(stream, ((PigeonFirebaseApp) value).toList());
+      } else if (value instanceof PigeonFirebaseSettings) {
+        stream.write(129);
+        writeValue(stream, ((PigeonFirebaseSettings) value).toList());
       } else {
         super.writeValue(stream, value);
       }
@@ -137,7 +307,8 @@ public class GeneratedAndroidFirebaseFirestore {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseFirestoreHostApi {
 
-    void registerIdTokenListener(@NonNull PigeonFirebaseApp app, @NonNull Result<String> result);
+    void loadBundle(
+        @NonNull PigeonFirebaseApp app, @NonNull byte[] bundle, @NonNull Result<String> result);
 
     /** The codec used by FirebaseFirestoreHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -153,7 +324,7 @@ public class GeneratedAndroidFirebaseFirestore {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
                 binaryMessenger,
-                "dev.flutter.pigeon.FirebaseFirestoreHostApi.registerIdTokenListener",
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.loadBundle",
                 getCodec());
         if (api != null) {
           channel.setMessageHandler(
@@ -161,6 +332,7 @@ public class GeneratedAndroidFirebaseFirestore {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                byte[] bundleArg = (byte[]) args.get(1);
                 Result<String> resultCallback =
                     new Result<String>() {
                       public void success(String result) {
@@ -174,7 +346,7 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.registerIdTokenListener(appArg, resultCallback);
+                api.loadBundle(appArg, bundleArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

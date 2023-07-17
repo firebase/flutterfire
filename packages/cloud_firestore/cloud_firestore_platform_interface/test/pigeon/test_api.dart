@@ -17,6 +17,9 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     if (value is PigeonFirebaseApp) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
+    } else if (value is PigeonFirebaseSettings) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -27,6 +30,8 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     switch (type) {
       case 128:
         return PigeonFirebaseApp.decode(readValue(buffer)!);
+      case 129:
+        return PigeonFirebaseSettings.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -39,14 +44,13 @@ abstract class TestFirebaseFirestoreHostApi {
   static const MessageCodec<Object?> codec =
       _TestFirebaseFirestoreHostApiCodec();
 
-  Future<String> registerIdTokenListener(PigeonFirebaseApp app);
+  Future<String> loadBundle(PigeonFirebaseApp app, Uint8List bundle);
 
   static void setup(TestFirebaseFirestoreHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.FirebaseFirestoreHostApi.registerIdTokenListener',
-          codec,
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.loadBundle', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
@@ -56,12 +60,15 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.registerIdTokenListener was null.');
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.loadBundle was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.registerIdTokenListener was null, expected non-null PigeonFirebaseApp.');
-          final String output = await api.registerIdTokenListener(arg_app!);
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.loadBundle was null, expected non-null PigeonFirebaseApp.');
+          final Uint8List? arg_bundle = (args[1] as Uint8List?);
+          assert(arg_bundle != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.loadBundle was null, expected non-null Uint8List.');
+          final String output = await api.loadBundle(arg_app!, arg_bundle!);
           return <Object?>[output];
         });
       }
