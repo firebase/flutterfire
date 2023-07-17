@@ -76,13 +76,16 @@ public class FlutterFirebaseAuthPlugin
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
-    channel = null;
-    messenger = null;
+
+    assert messenger != null;
     GeneratedAndroidFirebaseAuth.FirebaseAuthHostApi.setup(messenger, null);
     GeneratedAndroidFirebaseAuth.FirebaseAuthUserHostApi.setup(messenger, null);
-    GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(null, null);
-    GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setup(null, null);
+    GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(messenger, null);
+    GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setup(messenger, null);
 
+    channel = null;
+    messenger = null;
+    
     removeEventListeners();
   }
 
