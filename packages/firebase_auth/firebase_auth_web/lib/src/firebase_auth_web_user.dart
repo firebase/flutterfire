@@ -48,6 +48,10 @@ class UserWeb extends UserPlatform {
                   .map((auth_interop.UserInfo webUserInfo) => <String, dynamic>{
                         'displayName': webUserInfo.displayName,
                         'email': webUserInfo.email,
+                        // isAnonymous is always false for providerData
+                        'isAnonymous': false,
+                        // isEmailVerified is always true for providerData
+                        'isEmailVerified': true,
                         'phoneNumber': webUserInfo.phoneNumber,
                         'providerId': webUserInfo.providerId,
                         'photoUrl': webUserInfo.photoURL,
