@@ -13,6 +13,8 @@ import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /** Generated class from Pigeon. */
 @SuppressWarnings({"unused", "unchecked", "CodeBlock2Expr", "RedundantSuppression", "serial"})
@@ -49,6 +51,75 @@ public class GeneratedAndroidFirebaseFirestore {
           "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
     }
     return errorList;
+  }
+
+  public enum ChangeType {
+    /** Indicates a new document was added to the set of documents matching the query. */
+    ADDED(0),
+    /** Indicates a document within the query was modified. */
+    MODIFIED(1),
+    /**
+     * Indicates a document within the query was removed (either deleted or no longer matches the
+     * query.
+     */
+    REMOVED(2);
+
+    final int index;
+
+    private ChangeType(final int index) {
+      this.index = index;
+    }
+  }
+
+  /** An enumeration of firestore source types. */
+  public enum Source {
+    /**
+     * Causes Firestore to try to retrieve an up-to-date (server-retrieved) snapshot, but fall back
+     * to returning cached data if the server can't be reached.
+     */
+    SERVER_AND_CACHE(0),
+    /**
+     * Causes Firestore to avoid the cache, generating an error if the server cannot be reached.
+     * Note that the cache will still be updated if the server request succeeds. Also note that
+     * latency-compensation still takes effect, so any pending write operations will be visible in
+     * the returned data (merged into the server-provided data).
+     */
+    SERVER(1),
+    /**
+     * Causes Firestore to immediately return a value from the cache, ignoring the server completely
+     * (implying that the returned value may be stale with respect to the value on the server). If
+     * there is no data in the cache to satisfy the `get` call, [DocumentReference.get] will throw a
+     * [FirebaseException] and [Query.get] will return an empty [QuerySnapshotPlatform] with no
+     * documents.
+     */
+    CACHE(2);
+
+    final int index;
+
+    private Source(final int index) {
+      this.index = index;
+    }
+  }
+
+  public enum ServerTimestampBehavior {
+    /** Return null for [FieldValue.serverTimestamp()] values that have not yet */
+    NONE(0),
+    /**
+     * Return local estimates for [FieldValue.serverTimestamp()] values that have not yet been set
+     * to their final value.
+     */
+    ESTIMATE(1),
+    /**
+     * Return the previous value for [FieldValue.serverTimestamp()] values that have not yet been
+     * set to their final value.
+     */
+    PREVIOUS(2);
+
+    final int index;
+
+    private ServerTimestampBehavior(final int index) {
+      this.index = index;
+    }
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
@@ -265,6 +336,483 @@ public class GeneratedAndroidFirebaseFirestore {
     }
   }
 
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonSnapshotMetadata {
+    private @NonNull Boolean hasPendingWrites;
+
+    public @NonNull Boolean getHasPendingWrites() {
+      return hasPendingWrites;
+    }
+
+    public void setHasPendingWrites(@NonNull Boolean setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"hasPendingWrites\" is null.");
+      }
+      this.hasPendingWrites = setterArg;
+    }
+
+    private @NonNull Boolean isFromCache;
+
+    public @NonNull Boolean getIsFromCache() {
+      return isFromCache;
+    }
+
+    public void setIsFromCache(@NonNull Boolean setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"isFromCache\" is null.");
+      }
+      this.isFromCache = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonSnapshotMetadata() {}
+
+    public static final class Builder {
+
+      private @Nullable Boolean hasPendingWrites;
+
+      public @NonNull Builder setHasPendingWrites(@NonNull Boolean setterArg) {
+        this.hasPendingWrites = setterArg;
+        return this;
+      }
+
+      private @Nullable Boolean isFromCache;
+
+      public @NonNull Builder setIsFromCache(@NonNull Boolean setterArg) {
+        this.isFromCache = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonSnapshotMetadata build() {
+        PigeonSnapshotMetadata pigeonReturn = new PigeonSnapshotMetadata();
+        pigeonReturn.setHasPendingWrites(hasPendingWrites);
+        pigeonReturn.setIsFromCache(isFromCache);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+      toListResult.add(hasPendingWrites);
+      toListResult.add(isFromCache);
+      return toListResult;
+    }
+
+    static @NonNull PigeonSnapshotMetadata fromList(@NonNull ArrayList<Object> list) {
+      PigeonSnapshotMetadata pigeonResult = new PigeonSnapshotMetadata();
+      Object hasPendingWrites = list.get(0);
+      pigeonResult.setHasPendingWrites((Boolean) hasPendingWrites);
+      Object isFromCache = list.get(1);
+      pigeonResult.setIsFromCache((Boolean) isFromCache);
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonDocumentSnapshot {
+    private @NonNull String path;
+
+    public @NonNull String getPath() {
+      return path;
+    }
+
+    public void setPath(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"path\" is null.");
+      }
+      this.path = setterArg;
+    }
+
+    private @Nullable Map<String, Object> data;
+
+    public @Nullable Map<String, Object> getData() {
+      return data;
+    }
+
+    public void setData(@Nullable Map<String, Object> setterArg) {
+      this.data = setterArg;
+    }
+
+    private @NonNull PigeonSnapshotMetadata metadata;
+
+    public @NonNull PigeonSnapshotMetadata getMetadata() {
+      return metadata;
+    }
+
+    public void setMetadata(@NonNull PigeonSnapshotMetadata setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"metadata\" is null.");
+      }
+      this.metadata = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonDocumentSnapshot() {}
+
+    public static final class Builder {
+
+      private @Nullable String path;
+
+      public @NonNull Builder setPath(@NonNull String setterArg) {
+        this.path = setterArg;
+        return this;
+      }
+
+      private @Nullable Map<String, Object> data;
+
+      public @NonNull Builder setData(@Nullable Map<String, Object> setterArg) {
+        this.data = setterArg;
+        return this;
+      }
+
+      private @Nullable PigeonSnapshotMetadata metadata;
+
+      public @NonNull Builder setMetadata(@NonNull PigeonSnapshotMetadata setterArg) {
+        this.metadata = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonDocumentSnapshot build() {
+        PigeonDocumentSnapshot pigeonReturn = new PigeonDocumentSnapshot();
+        pigeonReturn.setPath(path);
+        pigeonReturn.setData(data);
+        pigeonReturn.setMetadata(metadata);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(3);
+      toListResult.add(path);
+      toListResult.add(data);
+      toListResult.add((metadata == null) ? null : metadata.toList());
+      return toListResult;
+    }
+
+    static @NonNull PigeonDocumentSnapshot fromList(@NonNull ArrayList<Object> list) {
+      PigeonDocumentSnapshot pigeonResult = new PigeonDocumentSnapshot();
+      Object path = list.get(0);
+      pigeonResult.setPath((String) path);
+      Object data = list.get(1);
+      pigeonResult.setData((Map<String, Object>) data);
+      Object metadata = list.get(2);
+      pigeonResult.setMetadata(
+          (metadata == null)
+              ? null
+              : PigeonSnapshotMetadata.fromList((ArrayList<Object>) metadata));
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonDocumentChange {
+    private @NonNull ChangeType type;
+
+    public @NonNull ChangeType getType() {
+      return type;
+    }
+
+    public void setType(@NonNull ChangeType setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"type\" is null.");
+      }
+      this.type = setterArg;
+    }
+
+    private @NonNull PigeonDocumentSnapshot document;
+
+    public @NonNull PigeonDocumentSnapshot getDocument() {
+      return document;
+    }
+
+    public void setDocument(@NonNull PigeonDocumentSnapshot setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"document\" is null.");
+      }
+      this.document = setterArg;
+    }
+
+    private @NonNull Long oldIndex;
+
+    public @NonNull Long getOldIndex() {
+      return oldIndex;
+    }
+
+    public void setOldIndex(@NonNull Long setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"oldIndex\" is null.");
+      }
+      this.oldIndex = setterArg;
+    }
+
+    private @NonNull Long newIndex;
+
+    public @NonNull Long getNewIndex() {
+      return newIndex;
+    }
+
+    public void setNewIndex(@NonNull Long setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"newIndex\" is null.");
+      }
+      this.newIndex = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonDocumentChange() {}
+
+    public static final class Builder {
+
+      private @Nullable ChangeType type;
+
+      public @NonNull Builder setType(@NonNull ChangeType setterArg) {
+        this.type = setterArg;
+        return this;
+      }
+
+      private @Nullable PigeonDocumentSnapshot document;
+
+      public @NonNull Builder setDocument(@NonNull PigeonDocumentSnapshot setterArg) {
+        this.document = setterArg;
+        return this;
+      }
+
+      private @Nullable Long oldIndex;
+
+      public @NonNull Builder setOldIndex(@NonNull Long setterArg) {
+        this.oldIndex = setterArg;
+        return this;
+      }
+
+      private @Nullable Long newIndex;
+
+      public @NonNull Builder setNewIndex(@NonNull Long setterArg) {
+        this.newIndex = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonDocumentChange build() {
+        PigeonDocumentChange pigeonReturn = new PigeonDocumentChange();
+        pigeonReturn.setType(type);
+        pigeonReturn.setDocument(document);
+        pigeonReturn.setOldIndex(oldIndex);
+        pigeonReturn.setNewIndex(newIndex);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(4);
+      toListResult.add(type == null ? null : type.index);
+      toListResult.add((document == null) ? null : document.toList());
+      toListResult.add(oldIndex);
+      toListResult.add(newIndex);
+      return toListResult;
+    }
+
+    static @NonNull PigeonDocumentChange fromList(@NonNull ArrayList<Object> list) {
+      PigeonDocumentChange pigeonResult = new PigeonDocumentChange();
+      Object type = list.get(0);
+      pigeonResult.setType(type == null ? null : ChangeType.values()[(int) type]);
+      Object document = list.get(1);
+      pigeonResult.setDocument(
+          (document == null)
+              ? null
+              : PigeonDocumentSnapshot.fromList((ArrayList<Object>) document));
+      Object oldIndex = list.get(2);
+      pigeonResult.setOldIndex(
+          (oldIndex == null)
+              ? null
+              : ((oldIndex instanceof Integer) ? (Integer) oldIndex : (Long) oldIndex));
+      Object newIndex = list.get(3);
+      pigeonResult.setNewIndex(
+          (newIndex == null)
+              ? null
+              : ((newIndex instanceof Integer) ? (Integer) newIndex : (Long) newIndex));
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonQuerySnapshot {
+    private @NonNull List<PigeonDocumentSnapshot> documents;
+
+    public @NonNull List<PigeonDocumentSnapshot> getDocuments() {
+      return documents;
+    }
+
+    public void setDocuments(@NonNull List<PigeonDocumentSnapshot> setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"documents\" is null.");
+      }
+      this.documents = setterArg;
+    }
+
+    private @NonNull List<PigeonDocumentChange> documentChanges;
+
+    public @NonNull List<PigeonDocumentChange> getDocumentChanges() {
+      return documentChanges;
+    }
+
+    public void setDocumentChanges(@NonNull List<PigeonDocumentChange> setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"documentChanges\" is null.");
+      }
+      this.documentChanges = setterArg;
+    }
+
+    private @NonNull PigeonSnapshotMetadata metadata;
+
+    public @NonNull PigeonSnapshotMetadata getMetadata() {
+      return metadata;
+    }
+
+    public void setMetadata(@NonNull PigeonSnapshotMetadata setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"metadata\" is null.");
+      }
+      this.metadata = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonQuerySnapshot() {}
+
+    public static final class Builder {
+
+      private @Nullable List<PigeonDocumentSnapshot> documents;
+
+      public @NonNull Builder setDocuments(@NonNull List<PigeonDocumentSnapshot> setterArg) {
+        this.documents = setterArg;
+        return this;
+      }
+
+      private @Nullable List<PigeonDocumentChange> documentChanges;
+
+      public @NonNull Builder setDocumentChanges(@NonNull List<PigeonDocumentChange> setterArg) {
+        this.documentChanges = setterArg;
+        return this;
+      }
+
+      private @Nullable PigeonSnapshotMetadata metadata;
+
+      public @NonNull Builder setMetadata(@NonNull PigeonSnapshotMetadata setterArg) {
+        this.metadata = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonQuerySnapshot build() {
+        PigeonQuerySnapshot pigeonReturn = new PigeonQuerySnapshot();
+        pigeonReturn.setDocuments(documents);
+        pigeonReturn.setDocumentChanges(documentChanges);
+        pigeonReturn.setMetadata(metadata);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(3);
+      toListResult.add(documents);
+      toListResult.add(documentChanges);
+      toListResult.add((metadata == null) ? null : metadata.toList());
+      return toListResult;
+    }
+
+    static @NonNull PigeonQuerySnapshot fromList(@NonNull ArrayList<Object> list) {
+      PigeonQuerySnapshot pigeonResult = new PigeonQuerySnapshot();
+      Object documents = list.get(0);
+      pigeonResult.setDocuments((List<PigeonDocumentSnapshot>) documents);
+      Object documentChanges = list.get(1);
+      pigeonResult.setDocumentChanges((List<PigeonDocumentChange>) documentChanges);
+      Object metadata = list.get(2);
+      pigeonResult.setMetadata(
+          (metadata == null)
+              ? null
+              : PigeonSnapshotMetadata.fromList((ArrayList<Object>) metadata));
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonGetOptions {
+    private @NonNull Source source;
+
+    public @NonNull Source getSource() {
+      return source;
+    }
+
+    public void setSource(@NonNull Source setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"source\" is null.");
+      }
+      this.source = setterArg;
+    }
+
+    private @NonNull ServerTimestampBehavior serverTimestampBehavior;
+
+    public @NonNull ServerTimestampBehavior getServerTimestampBehavior() {
+      return serverTimestampBehavior;
+    }
+
+    public void setServerTimestampBehavior(@NonNull ServerTimestampBehavior setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"serverTimestampBehavior\" is null.");
+      }
+      this.serverTimestampBehavior = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonGetOptions() {}
+
+    public static final class Builder {
+
+      private @Nullable Source source;
+
+      public @NonNull Builder setSource(@NonNull Source setterArg) {
+        this.source = setterArg;
+        return this;
+      }
+
+      private @Nullable ServerTimestampBehavior serverTimestampBehavior;
+
+      public @NonNull Builder setServerTimestampBehavior(
+          @NonNull ServerTimestampBehavior setterArg) {
+        this.serverTimestampBehavior = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonGetOptions build() {
+        PigeonGetOptions pigeonReturn = new PigeonGetOptions();
+        pigeonReturn.setSource(source);
+        pigeonReturn.setServerTimestampBehavior(serverTimestampBehavior);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+      toListResult.add(source == null ? null : source.index);
+      toListResult.add(serverTimestampBehavior == null ? null : serverTimestampBehavior.index);
+      return toListResult;
+    }
+
+    static @NonNull PigeonGetOptions fromList(@NonNull ArrayList<Object> list) {
+      PigeonGetOptions pigeonResult = new PigeonGetOptions();
+      Object source = list.get(0);
+      pigeonResult.setSource(source == null ? null : Source.values()[(int) source]);
+      Object serverTimestampBehavior = list.get(1);
+      pigeonResult.setServerTimestampBehavior(
+          serverTimestampBehavior == null
+              ? null
+              : ServerTimestampBehavior.values()[(int) serverTimestampBehavior]);
+      return pigeonResult;
+    }
+  }
+
   public interface Result<T> {
     @SuppressWarnings("UnknownNullness")
     void success(T result);
@@ -282,9 +830,21 @@ public class GeneratedAndroidFirebaseFirestore {
     protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
       switch (type) {
         case (byte) 128:
-          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonDocumentChange.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 129:
+          return PigeonDocumentSnapshot.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 130:
+          return PigeonDocumentSnapshot.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 131:
+          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 132:
           return PigeonFirebaseSettings.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 133:
+          return PigeonGetOptions.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 134:
+          return PigeonQuerySnapshot.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 135:
+          return PigeonSnapshotMetadata.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
       }
@@ -292,12 +852,30 @@ public class GeneratedAndroidFirebaseFirestore {
 
     @Override
     protected void writeValue(@NonNull ByteArrayOutputStream stream, Object value) {
-      if (value instanceof PigeonFirebaseApp) {
+      if (value instanceof PigeonDocumentChange) {
         stream.write(128);
+        writeValue(stream, ((PigeonDocumentChange) value).toList());
+      } else if (value instanceof PigeonDocumentSnapshot) {
+        stream.write(129);
+        writeValue(stream, ((PigeonDocumentSnapshot) value).toList());
+      } else if (value instanceof PigeonDocumentSnapshot) {
+        stream.write(130);
+        writeValue(stream, ((PigeonDocumentSnapshot) value).toList());
+      } else if (value instanceof PigeonFirebaseApp) {
+        stream.write(131);
         writeValue(stream, ((PigeonFirebaseApp) value).toList());
       } else if (value instanceof PigeonFirebaseSettings) {
-        stream.write(129);
+        stream.write(132);
         writeValue(stream, ((PigeonFirebaseSettings) value).toList());
+      } else if (value instanceof PigeonGetOptions) {
+        stream.write(133);
+        writeValue(stream, ((PigeonGetOptions) value).toList());
+      } else if (value instanceof PigeonQuerySnapshot) {
+        stream.write(134);
+        writeValue(stream, ((PigeonQuerySnapshot) value).toList());
+      } else if (value instanceof PigeonSnapshotMetadata) {
+        stream.write(135);
+        writeValue(stream, ((PigeonSnapshotMetadata) value).toList());
       } else {
         super.writeValue(stream, value);
       }
@@ -309,6 +887,12 @@ public class GeneratedAndroidFirebaseFirestore {
 
     void loadBundle(
         @NonNull PigeonFirebaseApp app, @NonNull byte[] bundle, @NonNull Result<String> result);
+
+    void namedQueryGet(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String name,
+        @NonNull PigeonGetOptions options,
+        @NonNull Result<PigeonQuerySnapshot> result);
 
     /** The codec used by FirebaseFirestoreHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -347,6 +931,39 @@ public class GeneratedAndroidFirebaseFirestore {
                     };
 
                 api.loadBundle(appArg, bundleArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.namedQueryGet",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                String nameArg = (String) args.get(1);
+                PigeonGetOptions optionsArg = (PigeonGetOptions) args.get(2);
+                Result<PigeonQuerySnapshot> resultCallback =
+                    new Result<PigeonQuerySnapshot>() {
+                      public void success(PigeonQuerySnapshot result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.namedQueryGet(appArg, nameArg, optionsArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

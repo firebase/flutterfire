@@ -9,13 +9,11 @@ package io.flutter.plugins.firebase.firestore.streamhandler;
 import static io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.DEFAULT_ERROR_CODE;
 
 import androidx.annotation.NonNull;
-
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.LoadBundleTask;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import java.util.Map;
-import java.util.Objects;
 
 public class LoadBundleStreamHandler implements EventChannel.StreamHandler {
 
@@ -23,10 +21,11 @@ public class LoadBundleStreamHandler implements EventChannel.StreamHandler {
     this.firestore = firestore;
     this.bundle = bundle;
   }
+
   private EventChannel.EventSink eventSink;
 
-  final private FirebaseFirestore firestore;
-  final private @NonNull byte[] bundle;
+  private final FirebaseFirestore firestore;
+  private final @NonNull byte[] bundle;
 
   @Override
   public void onListen(Object arguments, EventChannel.EventSink events) {

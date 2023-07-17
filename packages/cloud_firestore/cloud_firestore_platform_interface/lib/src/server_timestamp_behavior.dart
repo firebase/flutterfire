@@ -3,8 +3,13 @@
 // found in the LICENSE file.
 
 enum ServerTimestampBehavior {
+  /// Return null for [FieldValue.serverTimestamp()] values that have not yet
   none,
+
+  /// Return local estimates for [FieldValue.serverTimestamp()] values that have not yet been set to their final value.
   estimate,
+
+  /// Return the previous value for [FieldValue.serverTimestamp()] values that have not yet been set to their final value.
   previous,
 }
 

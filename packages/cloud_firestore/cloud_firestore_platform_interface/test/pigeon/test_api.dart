@@ -14,11 +14,29 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   const _TestFirebaseFirestoreHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonFirebaseApp) {
+    if (value is PigeonDocumentChange) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseSettings) {
+    } else if (value is PigeonDocumentSnapshot) {
       buffer.putUint8(129);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonDocumentSnapshot) {
+      buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonFirebaseApp) {
+      buffer.putUint8(131);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonFirebaseSettings) {
+      buffer.putUint8(132);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonGetOptions) {
+      buffer.putUint8(133);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonQuerySnapshot) {
+      buffer.putUint8(134);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonSnapshotMetadata) {
+      buffer.putUint8(135);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -29,9 +47,21 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
+        return PigeonDocumentChange.decode(readValue(buffer)!);
       case 129:
+        return PigeonDocumentSnapshot.decode(readValue(buffer)!);
+      case 130:
+        return PigeonDocumentSnapshot.decode(readValue(buffer)!);
+      case 131:
+        return PigeonFirebaseApp.decode(readValue(buffer)!);
+      case 132:
         return PigeonFirebaseSettings.decode(readValue(buffer)!);
+      case 133:
+        return PigeonGetOptions.decode(readValue(buffer)!);
+      case 134:
+        return PigeonQuerySnapshot.decode(readValue(buffer)!);
+      case 135:
+        return PigeonSnapshotMetadata.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -45,6 +75,9 @@ abstract class TestFirebaseFirestoreHostApi {
       _TestFirebaseFirestoreHostApiCodec();
 
   Future<String> loadBundle(PigeonFirebaseApp app, Uint8List bundle);
+
+  Future<PigeonQuerySnapshot> namedQueryGet(
+      PigeonFirebaseApp app, String name, PigeonGetOptions options);
 
   static void setup(TestFirebaseFirestoreHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -69,6 +102,35 @@ abstract class TestFirebaseFirestoreHostApi {
           assert(arg_bundle != null,
               'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.loadBundle was null, expected non-null Uint8List.');
           final String output = await api.loadBundle(arg_app!, arg_bundle!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.namedQueryGet', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.namedQueryGet was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.namedQueryGet was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_name = (args[1] as String?);
+          assert(arg_name != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.namedQueryGet was null, expected non-null String.');
+          final PigeonGetOptions? arg_options = (args[2] as PigeonGetOptions?);
+          assert(arg_options != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.namedQueryGet was null, expected non-null PigeonGetOptions.');
+          final PigeonQuerySnapshot output =
+              await api.namedQueryGet(arg_app!, arg_name!, arg_options!);
           return <Object?>[output];
         });
       }

@@ -8,6 +8,49 @@ import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 
+enum ChangeType {
+  /// Indicates a new document was added to the set of documents matching the query.
+  added,
+
+  /// Indicates a document within the query was modified.
+  modified,
+
+  /// Indicates a document within the query was removed (either deleted or no longer matches the
+  /// query.
+  removed,
+}
+
+/// An enumeration of firestore source types.
+enum Source {
+  /// Causes Firestore to try to retrieve an up-to-date (server-retrieved) snapshot, but fall back to
+  /// returning cached data if the server can't be reached.
+  serverAndCache,
+
+  /// Causes Firestore to avoid the cache, generating an error if the server cannot be reached. Note
+  /// that the cache will still be updated if the server request succeeds. Also note that
+  /// latency-compensation still takes effect, so any pending write operations will be visible in the
+  /// returned data (merged into the server-provided data).
+  server,
+
+  /// Causes Firestore to immediately return a value from the cache, ignoring the server completely
+  /// (implying that the returned value may be stale with respect to the value on the server). If
+  /// there is no data in the cache to satisfy the `get` call,
+  /// [DocumentReference.get] will throw a [FirebaseException] and
+  /// [Query.get] will return an empty [QuerySnapshotPlatform] with no documents.
+  cache,
+}
+
+enum ServerTimestampBehavior {
+  /// Return null for [FieldValue.serverTimestamp()] values that have not yet
+  none,
+
+  /// Return local estimates for [FieldValue.serverTimestamp()] values that have not yet been set to their final value.
+  estimate,
+
+  /// Return the previous value for [FieldValue.serverTimestamp()] values that have not yet been set to their final value.
+  previous,
+}
+
 class PigeonFirebaseSettings {
   PigeonFirebaseSettings({
     this.persistenceEnabled,
@@ -75,15 +118,185 @@ class PigeonFirebaseApp {
   }
 }
 
+class PigeonSnapshotMetadata {
+  PigeonSnapshotMetadata({
+    required this.hasPendingWrites,
+    required this.isFromCache,
+  });
+
+  bool hasPendingWrites;
+
+  bool isFromCache;
+
+  Object encode() {
+    return <Object?>[
+      hasPendingWrites,
+      isFromCache,
+    ];
+  }
+
+  static PigeonSnapshotMetadata decode(Object result) {
+    result as List<Object?>;
+    return PigeonSnapshotMetadata(
+      hasPendingWrites: result[0]! as bool,
+      isFromCache: result[1]! as bool,
+    );
+  }
+}
+
+class PigeonDocumentSnapshot {
+  PigeonDocumentSnapshot({
+    required this.path,
+    this.data,
+    required this.metadata,
+  });
+
+  String path;
+
+  Map<String?, Object?>? data;
+
+  PigeonSnapshotMetadata metadata;
+
+  Object encode() {
+    return <Object?>[
+      path,
+      data,
+      metadata.encode(),
+    ];
+  }
+
+  static PigeonDocumentSnapshot decode(Object result) {
+    result as List<Object?>;
+    return PigeonDocumentSnapshot(
+      path: result[0]! as String,
+      data: (result[1] as Map<Object?, Object?>?)?.cast<String?, Object?>(),
+      metadata: PigeonSnapshotMetadata.decode(result[2]! as List<Object?>),
+    );
+  }
+}
+
+class PigeonDocumentChange {
+  PigeonDocumentChange({
+    required this.type,
+    required this.document,
+    required this.oldIndex,
+    required this.newIndex,
+  });
+
+  ChangeType type;
+
+  PigeonDocumentSnapshot document;
+
+  int oldIndex;
+
+  int newIndex;
+
+  Object encode() {
+    return <Object?>[
+      type.index,
+      document.encode(),
+      oldIndex,
+      newIndex,
+    ];
+  }
+
+  static PigeonDocumentChange decode(Object result) {
+    result as List<Object?>;
+    return PigeonDocumentChange(
+      type: ChangeType.values[result[0]! as int],
+      document: PigeonDocumentSnapshot.decode(result[1]! as List<Object?>),
+      oldIndex: result[2]! as int,
+      newIndex: result[3]! as int,
+    );
+  }
+}
+
+class PigeonQuerySnapshot {
+  PigeonQuerySnapshot({
+    required this.documents,
+    required this.documentChanges,
+    required this.metadata,
+  });
+
+  List<PigeonDocumentSnapshot?> documents;
+
+  List<PigeonDocumentChange?> documentChanges;
+
+  PigeonSnapshotMetadata metadata;
+
+  Object encode() {
+    return <Object?>[
+      documents,
+      documentChanges,
+      metadata.encode(),
+    ];
+  }
+
+  static PigeonQuerySnapshot decode(Object result) {
+    result as List<Object?>;
+    return PigeonQuerySnapshot(
+      documents: (result[0] as List<Object?>?)!.cast<PigeonDocumentSnapshot?>(),
+      documentChanges:
+          (result[1] as List<Object?>?)!.cast<PigeonDocumentChange?>(),
+      metadata: PigeonSnapshotMetadata.decode(result[2]! as List<Object?>),
+    );
+  }
+}
+
+class PigeonGetOptions {
+  PigeonGetOptions({
+    required this.source,
+    required this.serverTimestampBehavior,
+  });
+
+  Source source;
+
+  ServerTimestampBehavior serverTimestampBehavior;
+
+  Object encode() {
+    return <Object?>[
+      source.index,
+      serverTimestampBehavior.index,
+    ];
+  }
+
+  static PigeonGetOptions decode(Object result) {
+    result as List<Object?>;
+    return PigeonGetOptions(
+      source: Source.values[result[0]! as int],
+      serverTimestampBehavior:
+          ServerTimestampBehavior.values[result[1]! as int],
+    );
+  }
+}
+
 class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   const _FirebaseFirestoreHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonFirebaseApp) {
+    if (value is PigeonDocumentChange) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseSettings) {
+    } else if (value is PigeonDocumentSnapshot) {
       buffer.putUint8(129);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonDocumentSnapshot) {
+      buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonFirebaseApp) {
+      buffer.putUint8(131);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonFirebaseSettings) {
+      buffer.putUint8(132);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonGetOptions) {
+      buffer.putUint8(133);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonQuerySnapshot) {
+      buffer.putUint8(134);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonSnapshotMetadata) {
+      buffer.putUint8(135);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -94,9 +307,21 @@ class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
+        return PigeonDocumentChange.decode(readValue(buffer)!);
       case 129:
+        return PigeonDocumentSnapshot.decode(readValue(buffer)!);
+      case 130:
+        return PigeonDocumentSnapshot.decode(readValue(buffer)!);
+      case 131:
+        return PigeonFirebaseApp.decode(readValue(buffer)!);
+      case 132:
         return PigeonFirebaseSettings.decode(readValue(buffer)!);
+      case 133:
+        return PigeonGetOptions.decode(readValue(buffer)!);
+      case 134:
+        return PigeonQuerySnapshot.decode(readValue(buffer)!);
+      case 135:
+        return PigeonSnapshotMetadata.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -138,6 +363,34 @@ class FirebaseFirestoreHostApi {
       );
     } else {
       return (replyList[0] as String?)!;
+    }
+  }
+
+  Future<PigeonQuerySnapshot> namedQueryGet(PigeonFirebaseApp arg_app,
+      String arg_name, PigeonGetOptions arg_options) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseFirestoreHostApi.namedQueryGet', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_app, arg_name, arg_options]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as PigeonQuerySnapshot?)!;
     }
   }
 }
