@@ -4,6 +4,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
+import 'package:collection/collection.dart';
 
 import 'method_channel_document_change.dart';
 
@@ -12,23 +14,26 @@ import 'method_channel_document_change.dart';
 class MethodChannelQuerySnapshot extends QuerySnapshotPlatform {
   /// Creates a [MethodChannelQuerySnapshot] from the given [data]
   MethodChannelQuerySnapshot(
-      FirebaseFirestorePlatform firestore, Map<dynamic, dynamic> data)
+      FirebaseFirestorePlatform firestore, PigeonQuerySnapshot data)
       : super(
-            List<DocumentSnapshotPlatform>.generate(data['documents'].length,
+            List<DocumentSnapshotPlatform?>.generate(data.documents.length,
                 (int index) {
+              final document = data.documents[index];
+              if (document == null) {
+                return null;
+              }
               return DocumentSnapshotPlatform(
                 firestore,
-                data['paths'][index],
+                document.path,
                 <String, dynamic>{
-                  'data': Map<String, dynamic>.from(data['documents'][index]),
+                  'data': Map<String, dynamic>.from(document.data),
                   'metadata': <String, dynamic>{
-                    'isFromCache': data['metadatas'][index]['isFromCache'],
-                    'hasPendingWrites': data['metadatas'][index]
-                        ['hasPendingWrites'],
+                    'isFromCache': document.metadata.isFromCache,
+                    'hasPendingWrites': document.metadata.hasPendingWrites,
                   },
                 },
               );
-            }),
+            }).whereNotNull().toList(),
             List<DocumentChangePlatform>.generate(
                 data['documentChanges'].length, (int index) {
               return MethodChannelDocumentChange(
