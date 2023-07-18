@@ -246,7 +246,7 @@ external MultiFactorUserJsImpl multiFactor(
 @JS()
 external MultiFactorResolverJsImpl getMultiFactorResolver(
   AuthJsImpl auth,
-  MultiFactorError error,
+  dynamic error,
 );
 
 @JS('Auth')
@@ -536,11 +536,15 @@ class UserProfile {
   external factory UserProfile({String? displayName, String? photoURL});
 }
 
+@JS()
+@staticInterop
+abstract class AuthError {}
+
 /// An authentication error.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.Error>.
 @JS('Error')
-abstract class AuthError {
+extension AuthErrorExtension on AuthError {
   external String get code;
   external set code(String s);
   external String get message;
@@ -553,6 +557,7 @@ abstract class AuthError {
   external set tenantId(String s);
   external String get phoneNumber;
   external set phoneNumber(String s);
+  external dynamic get customData;
 }
 
 @JS()
@@ -705,13 +710,6 @@ class MultiFactorInfoJsImpl {
 @anonymous
 class MultiFactorAssertionJsImpl {
   external String get factorId;
-}
-
-/// https://firebase.google.com/docs/reference/js/auth.multifactorerror
-@JS('Error')
-@anonymous
-class MultiFactorError extends AuthError {
-  external dynamic get customData;
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorresolver

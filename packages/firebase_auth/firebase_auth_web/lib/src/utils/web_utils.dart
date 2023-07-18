@@ -15,6 +15,20 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
 import '../interop/auth.dart' as auth_interop;
 import '../interop/multi_factor.dart' as multi_factor_interop;
 
+/// Workaround test to check whether `e` is practically a FirebaseError.
+///
+/// Ideally we'd check whether `e instanceof FirebaseError` however
+/// there are two definitions of `FirebaseError` in deployed apps, one from
+/// `firebase-auth.js` (which is usually minified) and one from
+/// `firebase-app.js`.
+///
+/// Because they are not the same, the instanceof check fails. Instead, we test
+/// that it is a window.Error (since that's the base class of FirebaseError) and
+/// we check that it defines "customData" property which is on the AuthError but not the FirebaseError it extends
+bool _isFirebaseAuthError(Object e) =>
+    instanceof(e, getProperty(globalThis, 'Error')) &&
+    hasProperty(e, 'customData');
+
 /// Given a web error, an [Exception] is returned.
 ///
 /// The firebase-dart wrapper exposes a [core_interop.FirebaseError], allowing us to
@@ -23,19 +37,35 @@ FirebaseAuthException getFirebaseAuthException(
   Object exception, [
   auth_interop.Auth? auth,
 ]) {
-  if (instanceof(exception, core_interop.firebaseErrorJSConstructor)) {
+  if (!_isFirebaseAuthError(exception)) {
     return FirebaseAuthException(
       code: 'unknown',
       message: 'An unknown error occurred: $exception',
     );
   }
 
-  auth_interop.AuthError firebaseError = exception as auth_interop.AuthError;
-
-  String code = firebaseError.code.replaceFirst('auth/', '');
-  String message = firebaseError.message
-      .replaceFirst(' (${firebaseError.code}).', '')
+  String code = getProperty(exception, 'code').replaceFirst('auth/', '');
+  String message = getProperty(exception, 'message')
+      .replaceFirst(' ($code).', '')
       .replaceFirst('Firebase: ', '');
+
+  // customData is a Map<String, String>, see Firebase docs: https://firebase.google.com/docs/reference/js/auth.autherror
+  dynamic customData = dartify(getProperty(exception, 'customData'));
+  String? email;
+  String? phoneNumber;
+  String? tenantId;
+
+  if (customData != null && customData['email'] != null) {
+    email = customData['email'];
+  }
+
+  if (customData != null && customData['phoneNumber'] != null) {
+    email = customData['phoneNumber'];
+  }
+
+  if (customData != null && customData['tenantId'] != null) {
+    email = customData['tenantId'];
+  }
 
   if (code == 'multi-factor-auth-required') {
     final _auth = auth;
@@ -48,17 +78,18 @@ FirebaseAuthException getFirebaseAuthException(
     }
     final resolverWeb = multi_factor_interop.getMultiFactorResolver(
       _auth,
-      firebaseError as auth_interop.MultiFactorError,
+      exception,
     );
 
     return FirebaseAuthMultiFactorExceptionPlatform(
       code: code,
       message: message,
-      email: firebaseError.email,
-      phoneNumber: firebaseError.phoneNumber,
-      tenantId: firebaseError.tenantId,
+      email: email,
+      phoneNumber: phoneNumber,
+      tenantId: tenantId,
       resolver: MultiFactorResolverWeb(
         resolverWeb.hints.map((e) {
+          print('MultiFactorResolverWeb: $e');
           if (e is multi_factor_interop.PhoneMultiFactorInfo) {
             return PhoneMultiFactorInfo(
               displayName: e.displayName,
@@ -89,9 +120,9 @@ FirebaseAuthException getFirebaseAuthException(
   return FirebaseAuthException(
     code: code,
     message: message,
-    email: firebaseError.email,
-    phoneNumber: firebaseError.phoneNumber,
-    tenantId: firebaseError.tenantId,
+    email: email,
+    phoneNumber: phoneNumber,
+    tenantId: tenantId,
   );
 }
 
