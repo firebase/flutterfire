@@ -1,3 +1,7 @@
+## 1.6.1
+
+ - Update a dependency to the latest release.
+
 ## 1.6.0
 
  - **FIX**(ui_auth): fix LoadingIndicator layout on EmailVerificationScreen ([#11169](https://github.com/firebase/flutterfire/issues/11169)). ([fd832fb8](https://github.com/firebase/flutterfire/commit/fd832fb8ef8cf6288ec5d722dcade8eb7c133a9b))
