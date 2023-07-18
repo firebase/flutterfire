@@ -72,8 +72,16 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       writeDouble(stream, ((GeoPoint) value).getLongitude());
     } else if (value instanceof DocumentReference) {
       stream.write(DATA_TYPE_DOCUMENT_REFERENCE);
-      writeValue(stream, ((DocumentReference) value).getFirestore().getApp().getName());
+      String appName = ((DocumentReference) value).getFirestore().getApp().getName();
+      writeValue(stream, appName);
       writeValue(stream, ((DocumentReference) value).getPath());
+
+      String databaseURL;
+      // There is no way of getting database URL from Firebase android SDK API so we cache it ourselves
+      synchronized (io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
+        databaseURL = io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName).getDatabaseURL();
+      }
+      writeValue(stream, databaseURL);
     } else if (value instanceof DocumentSnapshot) {
       writeDocumentSnapshot(stream, (DocumentSnapshot) value);
     } else if (value instanceof QuerySnapshot) {
@@ -143,7 +151,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     List<SnapshotMetadata> metadatas = new ArrayList<>();
 
     DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
-        FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.get(value.hashCode());
+        io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.get(value.hashCode());
 
     for (DocumentSnapshot document : value.getDocuments()) {
       paths.add(document.getReference().getPath());
@@ -161,7 +169,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     querySnapshotMap.put("documentChanges", value.getDocumentChanges());
     querySnapshotMap.put("metadata", value.getMetadata());
 
-    FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
+    io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
     writeValue(stream, querySnapshotMap);
   }
 
@@ -202,7 +210,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
     if (value.exists()) {
       DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
-          FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.get(value.hashCode());
+          io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.get(value.hashCode());
       if (serverTimestampBehavior != null) {
         snapshotMap.put("data", value.getData(serverTimestampBehavior));
       } else {
@@ -214,7 +222,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
     snapshotMap.put("metadata", value.getMetadata());
 
-    FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
+    io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
     writeValue(stream, snapshotMap);
   }
 
@@ -277,20 +285,19 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
   private FirebaseFirestore readFirestoreInstance(ByteBuffer buffer) {
     String appName = (String) readValue(buffer);
+    String databaseURL = (String) readValue(buffer);
     FirebaseFirestoreSettings settings = (FirebaseFirestoreSettings) readValue(buffer);
-
-    synchronized (FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
-      if (FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName)
+    synchronized (io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
+      if (io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName)
           != null) {
-        return FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName);
+        return io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName).getInstance();
       }
 
       FirebaseApp app = FirebaseApp.getInstance(appName);
-      FirebaseFirestore firestore = FirebaseFirestore.getInstance(app);
-
+      FirebaseFirestore firestore = FirebaseFirestore.getInstance(app, databaseURL);
       firestore.setFirestoreSettings(settings);
 
-      FlutterFirebaseFirestorePlugin.setCachedFirebaseFirestoreInstanceForKey(firestore, appName);
+      io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.setCachedFirebaseFirestoreInstanceForKey(firestore, appName, databaseURL);
       return firestore;
     }
   }
@@ -397,8 +404,9 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     try {
       @SuppressWarnings("unchecked")
       Map<String, Object> values = (Map<String, Object>) readValue(buffer);
+      // TODO - double check this goes through the readType of firestore instance
       FirebaseFirestore firestore =
-          (FirebaseFirestore) Objects.requireNonNull(values.get("firestore"));
+        (FirebaseFirestore) Objects.requireNonNull(values.get("firestore"));
 
       String path = (String) Objects.requireNonNull(values.get("path"));
       boolean isCollectionGroup = (boolean) values.get("isCollectionGroup");

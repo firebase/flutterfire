@@ -54,7 +54,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class FlutterFirebaseFirestorePlugin
     implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware {
-  protected static final HashMap<String, FirebaseFirestore> firestoreInstanceCache =
+  protected static final HashMap<String, FlutterFirebaseFirestoreExtension> firestoreInstanceCache =
       new HashMap<>();
 
   public static final String DEFAULT_ERROR_CODE = "firebase_firestore";
@@ -79,25 +79,25 @@ public class FlutterFirebaseFirestorePlugin
   public static final Map<Integer, DocumentSnapshot.ServerTimestampBehavior>
       serverTimestampBehaviorHashMap = new HashMap<>();
 
-  protected static FirebaseFirestore getCachedFirebaseFirestoreInstanceForKey(String key) {
+  protected static FlutterFirebaseFirestoreExtension getCachedFirebaseFirestoreInstanceForKey(String key) {
     synchronized (firestoreInstanceCache) {
       return firestoreInstanceCache.get(key);
     }
   }
 
   protected static void setCachedFirebaseFirestoreInstanceForKey(
-      FirebaseFirestore firestore, String key) {
+      FirebaseFirestore firestore, String key, String databaseURL) {
     synchronized (firestoreInstanceCache) {
-      FirebaseFirestore existingInstance = firestoreInstanceCache.get(key);
+      FlutterFirebaseFirestoreExtension existingInstance = firestoreInstanceCache.get(key);
       if (existingInstance == null) {
-        firestoreInstanceCache.put(key, firestore);
+        firestoreInstanceCache.put(key, new FlutterFirebaseFirestoreExtension(firestore, databaseURL));
       }
     }
   }
 
   private static void destroyCachedFirebaseFirestoreInstanceForKey(String key) {
     synchronized (firestoreInstanceCache) {
-      FirebaseFirestore existingInstance = firestoreInstanceCache.get(key);
+      FlutterFirebaseFirestoreExtension existingInstance = firestoreInstanceCache.get(key);
       if (existingInstance != null) {
         firestoreInstanceCache.remove(key);
       }
