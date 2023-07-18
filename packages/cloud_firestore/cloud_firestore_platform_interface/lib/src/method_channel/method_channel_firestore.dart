@@ -138,10 +138,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   Future<void> clearPersistence() async {
     try {
-      await channel
-          .invokeMethod<void>('Firestore#clearPersistence', <String, dynamic>{
-        'firestore': this,
-      });
+      await pigeonChannel.clearPersistence(pigeonApp);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

@@ -460,24 +460,6 @@ public class FlutterFirebaseFirestorePlugin
     return taskCompletionSource.getTask();
   }
 
-  private Task<Void> clearPersistence(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseFirestore firestore =
-                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-
-            taskCompletionSource.setResult(Tasks.await(firestore.clearPersistence()));
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
   private Task<Void> terminate(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -628,9 +610,6 @@ public class FlutterFirebaseFirestorePlugin
         break;
       case "DocumentReference#delete":
         methodCallTask = documentDelete(call.arguments());
-        break;
-      case "Firestore#clearPersistence":
-        methodCallTask = clearPersistence(call.arguments());
         break;
       case "Firestore#terminate":
         methodCallTask = terminate(call.arguments());
@@ -859,6 +838,20 @@ public class FlutterFirebaseFirestorePlugin
                     querySnapshot,
                     PigeonParser.parsePigeonServerTimestampBehavior(
                         options.getServerTimestampBehavior())));
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void clearPersistence(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseFirestore.Result<GeneratedAndroidFirebaseFirestore.PigeonQuerySnapshot> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseFirestore firestore = getFirestoreFromPigeon(app);
+            Tasks.await(firestore.clearPersistence());
+            result.success(null);
           } catch (Exception e) {
             result.error(e);
           }

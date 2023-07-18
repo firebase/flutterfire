@@ -895,6 +895,9 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull PigeonGetOptions options,
         @NonNull Result<PigeonQuerySnapshot> result);
 
+    void clearPersistence(
+        @NonNull PigeonFirebaseApp app, @NonNull Result<PigeonQuerySnapshot> result);
+
     /** The codec used by FirebaseFirestoreHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return FirebaseFirestoreHostApiCodec.INSTANCE;
@@ -965,6 +968,37 @@ public class GeneratedAndroidFirebaseFirestore {
                     };
 
                 api.namedQueryGet(appArg, nameArg, optionsArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.clearPersistence",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                Result<PigeonQuerySnapshot> resultCallback =
+                    new Result<PigeonQuerySnapshot>() {
+                      public void success(PigeonQuerySnapshot result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.clearPersistence(appArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

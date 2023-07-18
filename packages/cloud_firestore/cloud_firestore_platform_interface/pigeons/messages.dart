@@ -164,4 +164,9 @@ abstract class FirebaseFirestoreHostApi {
     String name,
     PigeonGetOptions options,
   );
+
+  @async
+  PigeonQuerySnapshot clearPersistence(
+    PigeonFirebaseApp app,
+  );
 }

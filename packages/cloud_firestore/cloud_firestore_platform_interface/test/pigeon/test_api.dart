@@ -79,6 +79,8 @@ abstract class TestFirebaseFirestoreHostApi {
   Future<PigeonQuerySnapshot> namedQueryGet(
       PigeonFirebaseApp app, String name, PigeonGetOptions options);
 
+  Future<PigeonQuerySnapshot> clearPersistence(PigeonFirebaseApp app);
+
   static void setup(TestFirebaseFirestoreHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
     {
@@ -131,6 +133,29 @@ abstract class TestFirebaseFirestoreHostApi {
               'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.namedQueryGet was null, expected non-null PigeonGetOptions.');
           final PigeonQuerySnapshot output =
               await api.namedQueryGet(arg_app!, arg_name!, arg_options!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.clearPersistence', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.clearPersistence was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.clearPersistence was null, expected non-null PigeonFirebaseApp.');
+          final PigeonQuerySnapshot output =
+              await api.clearPersistence(arg_app!);
           return <Object?>[output];
         });
       }
