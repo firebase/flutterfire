@@ -1,3 +1,7 @@
+## 5.6.1
+
+ - **FIX**(auth,web): fix an issue preventing Web to properly parse providerData ([#11301](https://github.com/firebase/flutterfire/issues/11301)). ([08299050](https://github.com/firebase/flutterfire/commit/08299050db0fc3a849e35fb4a1a600d643ce5ffe))
+
 ## 5.6.0
 
  - **FIX**(auth,web): add guarding to error casting in useEmulator ([#11247](https://github.com/firebase/flutterfire/issues/11247)). ([aca20481](https://github.com/firebase/flutterfire/commit/aca204814bc2463818fe5114bce8ff23876ec7e1))

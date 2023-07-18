@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-07-18
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_auth` - `v4.7.1`](#firebase_auth---v471)
+ - [`firebase_auth_web` - `v5.6.1`](#firebase_auth_web---v561)
+ - [`firebase_ui_oauth_facebook` - `v1.2.6`](#firebase_ui_oauth_facebook---v126)
+ - [`firebase_ui_oauth_twitter` - `v1.2.6`](#firebase_ui_oauth_twitter---v126)
+ - [`firebase_ui_auth` - `v1.6.1`](#firebase_ui_auth---v161)
+ - [`firebase_ui_oauth_apple` - `v1.2.6`](#firebase_ui_oauth_apple---v126)
+ - [`firebase_ui_oauth` - `v1.4.6`](#firebase_ui_oauth---v146)
+ - [`firebase_ui_oauth_google` - `v1.2.6`](#firebase_ui_oauth_google---v126)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_oauth_facebook` - `v1.2.6`
+ - `firebase_ui_oauth_twitter` - `v1.2.6`
+ - `firebase_ui_auth` - `v1.6.1`
+ - `firebase_ui_oauth_apple` - `v1.2.6`
+ - `firebase_ui_oauth` - `v1.4.6`
+ - `firebase_ui_oauth_google` - `v1.2.6`
+
+---
+
+#### `firebase_auth` - `v4.7.1`
+
+ - **FIX**(auth,android): Fix crash on Android where detaching from engine ([#11296](https://github.com/firebase/flutterfire/issues/11296)). ([d0a37332](https://github.com/firebase/flutterfire/commit/d0a373323a818d5005a58e95042b7ea3652ead50))
+ - **FIX**(auth,ios): fix scoping of import for message.g.h, could cause incompatibility with other packages ([#11300](https://github.com/firebase/flutterfire/issues/11300)). ([91ccc57d](https://github.com/firebase/flutterfire/commit/91ccc57d4b40b1b7a77dc0d871f9ff7d3f24ba13))
+
+#### `firebase_auth_web` - `v5.6.1`
+
+ - **FIX**(auth,web): fix an issue preventing Web to properly parse providerData ([#11301](https://github.com/firebase/flutterfire/issues/11301)). ([08299050](https://github.com/firebase/flutterfire/commit/08299050db0fc3a849e35fb4a1a600d643ce5ffe))
+
+
 ## 2023-07-14
 
 ### Changes
