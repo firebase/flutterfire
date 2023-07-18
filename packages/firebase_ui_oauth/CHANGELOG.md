@@ -1,3 +1,7 @@
+## 1.4.6
+
+ - Update a dependency to the latest release.
+
 ## 1.4.5
 
  - **FIX**(ui_auth): fix linking OAuthProvider from ProfileScreen ([#11168](https://github.com/firebase/flutterfire/issues/11168)). ([5063af5b](https://github.com/firebase/flutterfire/commit/5063af5b668cc0c15574f9ea3d08a4af2b163377))
