@@ -89,7 +89,6 @@ FirebaseAuthException getFirebaseAuthException(
       tenantId: tenantId,
       resolver: MultiFactorResolverWeb(
         resolverWeb.hints.map((e) {
-          print('MultiFactorResolverWeb: $e');
           if (e is multi_factor_interop.PhoneMultiFactorInfo) {
             return PhoneMultiFactorInfo(
               displayName: e.displayName,
