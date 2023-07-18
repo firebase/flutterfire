@@ -53,7 +53,8 @@ public class GeneratedAndroidFirebaseFirestore {
     return errorList;
   }
 
-  public enum ChangeType {
+  /** An enumeration of document change types. */
+  public enum DocumentChangeType {
     /** Indicates a new document was added to the set of documents matching the query. */
     ADDED(0),
     /** Indicates a document within the query was modified. */
@@ -66,7 +67,7 @@ public class GeneratedAndroidFirebaseFirestore {
 
     final int index;
 
-    private ChangeType(final int index) {
+    private DocumentChangeType(final int index) {
       this.index = index;
     }
   }
@@ -508,13 +509,13 @@ public class GeneratedAndroidFirebaseFirestore {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static final class PigeonDocumentChange {
-    private @NonNull ChangeType type;
+    private @NonNull DocumentChangeType type;
 
-    public @NonNull ChangeType getType() {
+    public @NonNull DocumentChangeType getType() {
       return type;
     }
 
-    public void setType(@NonNull ChangeType setterArg) {
+    public void setType(@NonNull DocumentChangeType setterArg) {
       if (setterArg == null) {
         throw new IllegalStateException("Nonnull field \"type\" is null.");
       }
@@ -565,9 +566,9 @@ public class GeneratedAndroidFirebaseFirestore {
 
     public static final class Builder {
 
-      private @Nullable ChangeType type;
+      private @Nullable DocumentChangeType type;
 
-      public @NonNull Builder setType(@NonNull ChangeType setterArg) {
+      public @NonNull Builder setType(@NonNull DocumentChangeType setterArg) {
         this.type = setterArg;
         return this;
       }
@@ -616,7 +617,7 @@ public class GeneratedAndroidFirebaseFirestore {
     static @NonNull PigeonDocumentChange fromList(@NonNull ArrayList<Object> list) {
       PigeonDocumentChange pigeonResult = new PigeonDocumentChange();
       Object type = list.get(0);
-      pigeonResult.setType(type == null ? null : ChangeType.values()[(int) type]);
+      pigeonResult.setType(type == null ? null : DocumentChangeType.values()[(int) type]);
       Object document = list.get(1);
       pigeonResult.setDocument(
           (document == null)

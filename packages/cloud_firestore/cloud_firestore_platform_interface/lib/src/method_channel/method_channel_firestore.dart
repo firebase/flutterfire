@@ -9,7 +9,6 @@ import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_load_bundle_task.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query_snapshot.dart';
-import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 

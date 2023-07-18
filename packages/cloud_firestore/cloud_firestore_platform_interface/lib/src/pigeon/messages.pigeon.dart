@@ -8,15 +8,17 @@ import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 
-enum ChangeType {
-  /// Indicates a new document was added to the set of documents matching the query.
+/// An enumeration of document change types.
+enum DocumentChangeType {
+  /// Indicates a new document was added to the set of documents matching the
+  /// query.
   added,
 
   /// Indicates a document within the query was modified.
   modified,
 
-  /// Indicates a document within the query was removed (either deleted or no longer matches the
-  /// query.
+  /// Indicates a document within the query was removed (either deleted or no
+  /// longer matches the query.
   removed,
 }
 
@@ -183,7 +185,7 @@ class PigeonDocumentChange {
     required this.newIndex,
   });
 
-  ChangeType type;
+  DocumentChangeType type;
 
   PigeonDocumentSnapshot document;
 
@@ -203,7 +205,7 @@ class PigeonDocumentChange {
   static PigeonDocumentChange decode(Object result) {
     result as List<Object?>;
     return PigeonDocumentChange(
-      type: ChangeType.values[result[0]! as int],
+      type: DocumentChangeType.values[result[0]! as int],
       document: PigeonDocumentSnapshot.decode(result[1]! as List<Object?>),
       oldIndex: result[2]! as int,
       newIndex: result[3]! as int,

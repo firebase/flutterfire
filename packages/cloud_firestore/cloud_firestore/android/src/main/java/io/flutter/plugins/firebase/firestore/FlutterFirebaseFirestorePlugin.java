@@ -854,11 +854,14 @@ public class FlutterFirebaseFirestorePlugin
             final QuerySnapshot querySnapshot =
                 Tasks.await(query.get(PigeonParser.parsePigeonSource(options.getSource())));
 
-            result.success(PigeonParser.toPigeonQuerySnapshot(querySnapshot, PigeonParser.parsePigeonServerTimestampBehavior(options.getServerTimestampBehavior())));
+            result.success(
+                PigeonParser.toPigeonQuerySnapshot(
+                    querySnapshot,
+                    PigeonParser.parsePigeonServerTimestampBehavior(
+                        options.getServerTimestampBehavior())));
           } catch (Exception e) {
             result.error(e);
           }
         });
-
   }
 }

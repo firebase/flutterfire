@@ -69,16 +69,18 @@ class PigeonDocumentSnapshot {
   final PigeonSnapshotMetadata metadata;
 }
 
-enum ChangeType {
-  /// Indicates a new document was added to the set of documents matching the query.
+/// An enumeration of document change types.
+enum DocumentChangeType {
+  /// Indicates a new document was added to the set of documents matching the
+  /// query.
   added,
 
   /// Indicates a document within the query was modified.
   modified,
 
-  /// Indicates a document within the query was removed (either deleted or no longer matches the
-  /// query.
-  removed
+  /// Indicates a document within the query was removed (either deleted or no
+  /// longer matches the query.
+  removed,
 }
 
 class PigeonDocumentChange {
@@ -89,7 +91,7 @@ class PigeonDocumentChange {
     required this.newIndex,
   });
 
-  final ChangeType type;
+  final DocumentChangeType type;
   final PigeonDocumentSnapshot document;
   final int oldIndex;
   final int newIndex;

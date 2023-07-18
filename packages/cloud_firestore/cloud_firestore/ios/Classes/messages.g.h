@@ -10,14 +10,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, ChangeType) {
-  /// Indicates a new document was added to the set of documents matching the query.
-  ChangeTypeAdded = 0,
-  /// Indicates a document within the query was modified.
-  ChangeTypeModified = 1,
-  /// Indicates a document within the query was removed (either deleted or no longer matches the
+/// An enumeration of document change types.
+typedef NS_ENUM(NSUInteger, DocumentChangeType) {
+  /// Indicates a new document was added to the set of documents matching the
   /// query.
-  ChangeTypeRemoved = 2,
+  DocumentChangeTypeAdded = 0,
+  /// Indicates a document within the query was modified.
+  DocumentChangeTypeModified = 1,
+  /// Indicates a document within the query was removed (either deleted or no
+  /// longer matches the query.
+  DocumentChangeTypeRemoved = 2,
 };
 
 /// An enumeration of firestore source types.
@@ -105,11 +107,11 @@ typedef NS_ENUM(NSUInteger, ServerTimestampBehavior) {
 @interface PigeonDocumentChange : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithType:(ChangeType)type
++ (instancetype)makeWithType:(DocumentChangeType)type
                     document:(PigeonDocumentSnapshot *)document
                     oldIndex:(NSNumber *)oldIndex
                     newIndex:(NSNumber *)newIndex;
-@property(nonatomic, assign) ChangeType type;
+@property(nonatomic, assign) DocumentChangeType type;
 @property(nonatomic, strong) PigeonDocumentSnapshot *document;
 @property(nonatomic, strong) NSNumber *oldIndex;
 @property(nonatomic, strong) NSNumber *newIndex;

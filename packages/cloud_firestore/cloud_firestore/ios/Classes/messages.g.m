@@ -197,7 +197,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @end
 
 @implementation PigeonDocumentChange
-+ (instancetype)makeWithType:(ChangeType)type
++ (instancetype)makeWithType:(DocumentChangeType)type
                     document:(PigeonDocumentSnapshot *)document
                     oldIndex:(NSNumber *)oldIndex
                     newIndex:(NSNumber *)newIndex {
