@@ -60,11 +60,11 @@ FirebaseAuthException getFirebaseAuthException(
   }
 
   if (customData != null && customData['phoneNumber'] != null) {
-    email = customData['phoneNumber'];
+    phoneNumber = customData['phoneNumber'];
   }
 
   if (customData != null && customData['tenantId'] != null) {
-    email = customData['tenantId'];
+    tenantId = customData['tenantId'];
   }
 
   if (code == 'multi-factor-auth-required') {
