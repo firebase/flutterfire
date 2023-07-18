@@ -2,8 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 
 /// A base class for loading states.
 sealed class PaginatedLoadingState {
@@ -70,26 +73,33 @@ class PaginatedLoadingController extends ChangeNotifier {
         ? const InitialPageLoading()
         : PageLoading(items: _items!);
 
-    notifyListeners();
+    final completer = Completer();
 
-    return ref.list(_listOptions).then((value) {
-      _cursor = value;
-      (_items ??= []).addAll(value.items);
-
-      _state = PageLoadComplete(
-        pageItems: value.items,
-        items: _items!,
-      );
-
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
       notifyListeners();
-    }).catchError((e) {
-      _state = PageLoadError(
-        error: e,
-        items: _items,
-      );
 
-      notifyListeners();
+      try {
+        final value = await ref.list(_listOptions);
+
+        _cursor = value;
+        (_items ??= []).addAll(value.items);
+
+        _state = PageLoadComplete(
+          pageItems: value.items,
+          items: _items!,
+        );
+      } catch (err) {
+        _state = PageLoadError(
+          error: err,
+          items: _items,
+        );
+      } finally {
+        completer.complete();
+        notifyListeners();
+      }
     });
+
+    return completer.future;
   }
 
   bool shouldLoadNextPage(int itemIndex) {

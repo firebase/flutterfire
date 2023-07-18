@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_ui_storage/firebase_ui_storage.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +29,7 @@ class StorageListViewApp extends StatelessWidget implements App {
                 return Text(snapshot.error.toString());
               }
               if (snapshot.hasData) {
-                return Text(snapshot.data.toString());
+                return Text(utf8.decode(snapshot.data!));
               }
 
               return const Text('Loading...');

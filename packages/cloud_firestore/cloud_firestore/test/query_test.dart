@@ -116,19 +116,30 @@ void main() {
         );
       });
 
-      test('throws if whereIn query length is greater than 10', () {
+      test('throws if whereIn query length is greater than 30', () {
+        List<int> numbers = List.generate(31, (i) => i + 1);
         expect(
-          () => query!
-              .where('foo.bar', whereIn: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+          () => query!.where('foo.bar', whereIn: numbers),
           throwsAssertionError,
         );
       });
 
-      test('throws if arrayContainsAny query length is greater than 10', () {
+      test('throws if arrayContainsAny query length is greater than 30', () {
+        List<int> numbers = List.generate(31, (i) => i + 1);
         expect(
           () => query!.where(
             'foo',
-            arrayContainsAny: [1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9],
+            arrayContainsAny: numbers,
+          ),
+          throwsAssertionError,
+        );
+      });
+
+      test('throws if whereNotIn query length is greater than 10', () {
+        expect(
+          () => query!.where(
+            'foo',
+            whereNotIn: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
           ),
           throwsAssertionError,
         );
