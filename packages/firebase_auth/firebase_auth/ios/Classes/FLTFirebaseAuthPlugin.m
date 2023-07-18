@@ -1188,7 +1188,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
         @"MacOS platform.");
   completion(nil, nil);
 #else
-  self.authProvider = [FIROAuthProvider providerWithProviderID:signInProvider.providerId];
+  self.authProvider = [FIROAuthProvider providerWithProviderID:signInProvider.providerId auth:auth];
   NSArray *scopes = signInProvider.scopes;
   if (scopes != nil) {
     [self.authProvider setScopes:scopes];
