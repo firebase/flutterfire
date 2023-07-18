@@ -493,4 +493,26 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseFirestoreHostApi.terminate"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseFirestoreHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(terminateApp:completion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(terminateApp:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        [api terminateApp:arg_app
+               completion:^(FlutterError *_Nullable error) {
+                 callback(wrapResult(nil, error));
+               }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }

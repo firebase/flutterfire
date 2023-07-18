@@ -155,6 +155,8 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
                completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)enableNetworkApp:(PigeonFirebaseApp *)app
               completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)terminateApp:(PigeonFirebaseApp *)app
+          completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

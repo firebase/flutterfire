@@ -179,4 +179,9 @@ abstract class FirebaseFirestoreHostApi {
   void enableNetwork(
     PigeonFirebaseApp app,
   );
+
+  @async
+  void terminate(
+    PigeonFirebaseApp app,
+  );
 }

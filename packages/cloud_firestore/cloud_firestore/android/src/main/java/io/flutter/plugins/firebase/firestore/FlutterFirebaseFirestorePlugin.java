@@ -155,7 +155,7 @@ public class FlutterFirebaseFirestorePlugin
   private void detachToActivity() {
     activity.set(null);
   }
-  
+
   private Task<DocumentSnapshot> transactionGet(Map<String, Object> arguments) {
     TaskCompletionSource<DocumentSnapshot> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -423,27 +423,7 @@ public class FlutterFirebaseFirestorePlugin
 
     return taskCompletionSource.getTask();
   }
-
-  private Task<Void> terminate(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseFirestore firestore =
-                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-            Tasks.await(firestore.terminate());
-            destroyCachedFirebaseFirestoreInstanceForKey(firestore.getApp().getName());
-
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
+  
   private Task<Void> waitForPendingWrites(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -568,9 +548,6 @@ public class FlutterFirebaseFirestorePlugin
         break;
       case "DocumentReference#delete":
         methodCallTask = documentDelete(call.arguments());
-        break;
-      case "Firestore#terminate":
-        methodCallTask = terminate(call.arguments());
         break;
       case "Firestore#waitForPendingWrites":
         methodCallTask = waitForPendingWrites(call.arguments());
@@ -835,12 +812,28 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   @Override
-  public void enableNetwork(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+  public void enableNetwork(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
         () -> {
           try {
             FirebaseFirestore firestore = getFirestoreFromPigeon(app);
             Tasks.await(firestore.enableNetwork());
+            result.success(null);
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void terminate(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseFirestore firestore = getFirestoreFromPigeon(app);
+            Tasks.await(firestore.terminate());
             result.success(null);
           } catch (Exception e) {
             result.error(e);
