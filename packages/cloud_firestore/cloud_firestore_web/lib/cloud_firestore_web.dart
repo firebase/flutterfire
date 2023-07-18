@@ -45,14 +45,14 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   /// Builds an instance of [FirebaseFirestoreWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseFirestoreWeb({FirebaseApp? app}) : super(appInstance: app) {
+  FirebaseFirestoreWeb({FirebaseApp? app, String? databaseURL}) : super(appInstance: app, databaseURL: databaseURL) {
     FieldValueFactoryPlatform.instance = FieldValueFactoryWeb();
   }
 
   @override
   FirebaseFirestorePlatform delegateFor(
-      {/*required*/ required FirebaseApp app}) {
-    return FirebaseFirestoreWeb(app: app);
+      {required FirebaseApp app, String? databaseURL}) {
+    return FirebaseFirestoreWeb(app: app, databaseURL: databaseURL);
   }
 
   @override
