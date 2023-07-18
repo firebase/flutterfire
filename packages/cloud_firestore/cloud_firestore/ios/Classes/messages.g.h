@@ -159,6 +159,11 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
           completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)waitForPendingWritesApp:(PigeonFirebaseApp *)app
                      completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)setIndexConfigurationApp:(PigeonFirebaseApp *)app
+              indexConfiguration:(NSString *)indexConfiguration
+                      completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)setLoggingEnabledLoggingEnabled:(NSNumber *)loggingEnabled
+                             completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

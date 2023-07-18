@@ -89,6 +89,11 @@ abstract class TestFirebaseFirestoreHostApi {
 
   Future<void> waitForPendingWrites(PigeonFirebaseApp app);
 
+  Future<void> setIndexConfiguration(
+      PigeonFirebaseApp app, String indexConfiguration);
+
+  Future<void> setLoggingEnabled(bool loggingEnabled);
+
   static void setup(TestFirebaseFirestoreHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
     {
@@ -252,6 +257,55 @@ abstract class TestFirebaseFirestoreHostApi {
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.waitForPendingWrites was null, expected non-null PigeonFirebaseApp.');
           await api.waitForPendingWrites(arg_app!);
+          return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.setIndexConfiguration',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.setIndexConfiguration was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.setIndexConfiguration was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_indexConfiguration = (args[1] as String?);
+          assert(arg_indexConfiguration != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.setIndexConfiguration was null, expected non-null String.');
+          await api.setIndexConfiguration(arg_app!, arg_indexConfiguration!);
+          return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.setLoggingEnabled',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.setLoggingEnabled was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final bool? arg_loggingEnabled = (args[0] as bool?);
+          assert(arg_loggingEnabled != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.setLoggingEnabled was null, expected non-null bool.');
+          await api.setLoggingEnabled(arg_loggingEnabled!);
           return <Object?>[];
         });
       }

@@ -316,10 +316,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   Future<void> waitForPendingWrites() async {
     try {
-      await channel.invokeMethod<void>(
-          'Firestore#waitForPendingWrites', <String, dynamic>{
-        'firestore': this,
-      });
+      await pigeonChannel.waitForPendingWrites(pigeonApp);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -328,11 +325,10 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   Future<void> setIndexConfiguration(String indexConfiguration) async {
     try {
-      await channel.invokeMethod<void>(
-          'Firestore#setIndexConfiguration', <String, dynamic>{
-        'firestore': this,
-        'indexConfiguration': indexConfiguration,
-      });
+      await pigeonChannel.setIndexConfiguration(
+        pigeonApp,
+        indexConfiguration,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -341,10 +337,9 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   Future<void> setLoggingEnabled(bool enabled) async {
     try {
-      await channel
-          .invokeMethod<void>('Firestore#setLoggingEnabled', <String, dynamic>{
-        'enabled': enabled,
-      });
+      await pigeonChannel.setLoggingEnabled(
+        enabled,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

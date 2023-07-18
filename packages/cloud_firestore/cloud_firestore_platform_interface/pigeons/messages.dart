@@ -189,4 +189,15 @@ abstract class FirebaseFirestoreHostApi {
   void waitForPendingWrites(
     PigeonFirebaseApp app,
   );
+
+  @async
+  void setIndexConfiguration(
+    PigeonFirebaseApp app,
+    String indexConfiguration,
+  );
+
+  @async
+  void setLoggingEnabled(
+    bool loggingEnabled,
+  );
 }

@@ -537,4 +537,51 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseFirestoreHostApi.setIndexConfiguration"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseFirestoreHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(setIndexConfigurationApp:
+                                                        indexConfiguration:completion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(setIndexConfigurationApp:indexConfiguration:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_indexConfiguration = GetNullableObjectAtIndex(args, 1);
+        [api setIndexConfigurationApp:arg_app
+                   indexConfiguration:arg_indexConfiguration
+                           completion:^(FlutterError *_Nullable error) {
+                             callback(wrapResult(nil, error));
+                           }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseFirestoreHostApi.setLoggingEnabled"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseFirestoreHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(setLoggingEnabledLoggingEnabled:completion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(setLoggingEnabledLoggingEnabled:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        NSNumber *arg_loggingEnabled = GetNullableObjectAtIndex(args, 0);
+        [api setLoggingEnabledLoggingEnabled:arg_loggingEnabled
+                                  completion:^(FlutterError *_Nullable error) {
+                                    callback(wrapResult(nil, error));
+                                  }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }

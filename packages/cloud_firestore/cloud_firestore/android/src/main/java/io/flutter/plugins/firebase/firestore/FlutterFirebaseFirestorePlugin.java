@@ -306,24 +306,6 @@ public class FlutterFirebaseFirestorePlugin
     return taskCompletionSource.getTask();
   }
 
-  private Task<Void> setLoggingEnabled(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            boolean loggingEnabled = (boolean) Objects.requireNonNull(arguments.get("enabled"));
-
-            FirebaseFirestore.setLoggingEnabled(loggingEnabled);
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
   private void saveTimestampBehavior(Map<String, Object> arguments, int hashCode) {
     String serverTimestampBehaviorString = (String) arguments.get("serverTimestampBehavior");
     DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
@@ -450,29 +432,6 @@ public class FlutterFirebaseFirestorePlugin
     return taskCompletionSource.getTask();
   }
 
-  private Task<Void> setIndexConfiguration(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseFirestore firestore =
-                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-
-            Tasks.await(
-                firestore.setIndexConfiguration(
-                    (String) Objects.requireNonNull(arguments.get("indexConfiguration"))));
-
-            taskCompletionSource.setResult(null);
-
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
   @Override
   public void onMethodCall(MethodCall call, @NonNull final MethodChannel.Result result) {
     Task<?> methodCallTask;
@@ -516,9 +475,6 @@ public class FlutterFirebaseFirestorePlugin
             registerEventChannel(
                 METHOD_CHANNEL_NAME + "/snapshotsInSync", new SnapshotsInSyncStreamHandler()));
         return;
-      case "Firestore#setLoggingEnabled":
-        methodCallTask = setLoggingEnabled(call.arguments());
-        break;
       case "DocumentReference#get":
         methodCallTask = documentGet(call.arguments());
         break;
@@ -533,9 +489,6 @@ public class FlutterFirebaseFirestorePlugin
         break;
       case "AggregateQuery#count":
         methodCallTask = aggregateQuery(call.arguments());
-        break;
-      case "Firestore#setIndexConfiguration":
-        methodCallTask = setIndexConfiguration(call.arguments());
         break;
       default:
         result.notImplemented();
@@ -823,12 +776,48 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   @Override
-  public void waitForPendingWrites(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+  public void waitForPendingWrites(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
         () -> {
           try {
             FirebaseFirestore firestore = getFirestoreFromPigeon(app);
             Tasks.await(firestore.waitForPendingWrites());
+            result.success(null);
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void setIndexConfiguration(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull String indexConfiguration,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseFirestore firestore = getFirestoreFromPigeon(app);
+            Tasks.await(firestore.setIndexConfiguration(indexConfiguration));
+
+            result.success(null);
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void setLoggingEnabled(
+      @NonNull Boolean loggingEnabled,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseFirestore.setLoggingEnabled(loggingEnabled);
+
             result.success(null);
           } catch (Exception e) {
             result.error(e);
