@@ -87,6 +87,8 @@ abstract class TestFirebaseFirestoreHostApi {
 
   Future<void> terminate(PigeonFirebaseApp app);
 
+  Future<void> waitForPendingWrites(PigeonFirebaseApp app);
+
   static void setup(TestFirebaseFirestoreHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
     {
@@ -227,6 +229,29 @@ abstract class TestFirebaseFirestoreHostApi {
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.terminate was null, expected non-null PigeonFirebaseApp.');
           await api.terminate(arg_app!);
+          return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.waitForPendingWrites',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.waitForPendingWrites was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.waitForPendingWrites was null, expected non-null PigeonFirebaseApp.');
+          await api.waitForPendingWrites(arg_app!);
           return <Object?>[];
         });
       }

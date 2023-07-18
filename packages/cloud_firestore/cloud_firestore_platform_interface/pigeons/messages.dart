@@ -184,4 +184,9 @@ abstract class FirebaseFirestoreHostApi {
   void terminate(
     PigeonFirebaseApp app,
   );
+
+  @async
+  void waitForPendingWrites(
+    PigeonFirebaseApp app,
+  );
 }

@@ -307,9 +307,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   Future<void> terminate() async {
     try {
-      await channel.invokeMethod<void>('Firestore#terminate', <String, dynamic>{
-        'firestore': this,
-      });
+      await pigeonChannel.terminate(pigeonApp);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

@@ -903,6 +903,8 @@ public class GeneratedAndroidFirebaseFirestore {
 
     void terminate(@NonNull PigeonFirebaseApp app, @NonNull Result<Void> result);
 
+    void waitForPendingWrites(@NonNull PigeonFirebaseApp app, @NonNull Result<Void> result);
+
     /** The codec used by FirebaseFirestoreHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return FirebaseFirestoreHostApiCodec.INSTANCE;
@@ -1097,6 +1099,37 @@ public class GeneratedAndroidFirebaseFirestore {
                     };
 
                 api.terminate(appArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.waitForPendingWrites",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.waitForPendingWrites(appArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
