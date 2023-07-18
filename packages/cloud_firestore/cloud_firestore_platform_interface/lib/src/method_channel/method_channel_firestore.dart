@@ -165,10 +165,16 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   Future<void> disableNetwork() async {
     try {
-      await channel
-          .invokeMethod<void>('Firestore#disableNetwork', <String, dynamic>{
-        'firestore': this,
-      });
+      await pigeonChannel.disableNetwork(pigeonApp);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<void> enableNetwork() async {
+    try {
+      await pigeonChannel.enableNetwork(pigeonApp);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -177,18 +183,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   DocumentReferencePlatform doc(String documentPath) {
     return MethodChannelDocumentReference(this, documentPath);
-  }
-
-  @override
-  Future<void> enableNetwork() async {
-    try {
-      await channel
-          .invokeMethod<void>('Firestore#enableNetwork', <String, dynamic>{
-        'firestore': this,
-      });
-    } catch (e, stack) {
-      convertPlatformException(e, stack);
-    }
   }
 
   @override

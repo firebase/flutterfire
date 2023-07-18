@@ -166,7 +166,17 @@ abstract class FirebaseFirestoreHostApi {
   );
 
   @async
-  PigeonQuerySnapshot clearPersistence(
+  void clearPersistence(
+    PigeonFirebaseApp app,
+  );
+
+  @async
+  void disableNetwork(
+    PigeonFirebaseApp app,
+  );
+
+  @async
+  void enableNetwork(
     PigeonFirebaseApp app,
   );
 }

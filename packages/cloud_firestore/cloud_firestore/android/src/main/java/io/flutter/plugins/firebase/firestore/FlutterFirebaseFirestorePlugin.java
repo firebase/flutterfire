@@ -155,43 +155,7 @@ public class FlutterFirebaseFirestorePlugin
   private void detachToActivity() {
     activity.set(null);
   }
-
-  private Task<Void> disableNetwork(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseFirestore firestore =
-                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-            Tasks.await(firestore.disableNetwork());
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  private Task<Void> enableNetwork(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            FirebaseFirestore firestore =
-                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-            Tasks.await(firestore.enableNetwork());
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
+  
   private Task<DocumentSnapshot> transactionGet(Map<String, Object> arguments) {
     TaskCompletionSource<DocumentSnapshot> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -552,12 +516,6 @@ public class FlutterFirebaseFirestorePlugin
     Task<?> methodCallTask;
 
     switch (call.method) {
-      case "Firestore#disableNetwork":
-        methodCallTask = disableNetwork(call.arguments());
-        break;
-      case "Firestore#enableNetwork":
-        methodCallTask = enableNetwork(call.arguments());
-        break;
       case "Transaction#get":
         methodCallTask = transactionGet(call.arguments());
         break;
@@ -845,12 +803,44 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   @Override
-  public void clearPersistence(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseFirestore.Result<GeneratedAndroidFirebaseFirestore.PigeonQuerySnapshot> result) {
+  public void clearPersistence(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
         () -> {
           try {
             FirebaseFirestore firestore = getFirestoreFromPigeon(app);
             Tasks.await(firestore.clearPersistence());
+            result.success(null);
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void disableNetwork(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseFirestore firestore = getFirestoreFromPigeon(app);
+            Tasks.await(firestore.disableNetwork());
+            result.success(null);
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void enableNetwork(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseFirestore firestore = getFirestoreFromPigeon(app);
+            Tasks.await(firestore.enableNetwork());
             result.success(null);
           } catch (Exception e) {
             result.error(e);

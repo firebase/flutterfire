@@ -79,7 +79,11 @@ abstract class TestFirebaseFirestoreHostApi {
   Future<PigeonQuerySnapshot> namedQueryGet(
       PigeonFirebaseApp app, String name, PigeonGetOptions options);
 
-  Future<PigeonQuerySnapshot> clearPersistence(PigeonFirebaseApp app);
+  Future<void> clearPersistence(PigeonFirebaseApp app);
+
+  Future<void> disableNetwork(PigeonFirebaseApp app);
+
+  Future<void> enableNetwork(PigeonFirebaseApp app);
 
   static void setup(TestFirebaseFirestoreHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -154,9 +158,52 @@ abstract class TestFirebaseFirestoreHostApi {
           final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
           assert(arg_app != null,
               'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.clearPersistence was null, expected non-null PigeonFirebaseApp.');
-          final PigeonQuerySnapshot output =
-              await api.clearPersistence(arg_app!);
-          return <Object?>[output];
+          await api.clearPersistence(arg_app!);
+          return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.disableNetwork', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.disableNetwork was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.disableNetwork was null, expected non-null PigeonFirebaseApp.');
+          await api.disableNetwork(arg_app!);
+          return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.enableNetwork', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.enableNetwork was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.enableNetwork was null, expected non-null PigeonFirebaseApp.');
+          await api.enableNetwork(arg_app!);
+          return <Object?>[];
         });
       }
     }
