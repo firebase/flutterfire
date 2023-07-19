@@ -31,12 +31,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   ///
   /// If null, the default [FirebaseApp] is used.
 
-  /// The [MethodChannel] used to communicate with the native plugin
-  static MethodChannel channel = const MethodChannel(
-    'plugins.flutter.io/firebase_firestore',
-    StandardMethodCodec(FirestoreMessageCodec()),
-  );
-
   /// The [EventChannel] used for query snapshots
   static EventChannel querySnapshotChannel(String id) {
     return EventChannel(
@@ -192,11 +186,10 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
     controller = StreamController<void>.broadcast(
       onListen: () async {
-        final observerId = await MethodChannelFirebaseFirestore.channel
-            .invokeMethod<String>('SnapshotsInSync#setup');
+        final observerId = await pigeonChannel.snapshotsInSyncSetup();
 
         snapshotStreamSubscription =
-            MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId!)
+            MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId)
                 .receiveGuardedBroadcastStream(
           arguments: <String, dynamic>{'firestore': this},
           onError: convertPlatformException,
@@ -222,10 +215,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     assert(timeout.inMilliseconds > 0,
         'Transaction timeout must be more than 0 milliseconds');
 
-    final String? transactionId =
-        await MethodChannelFirebaseFirestore.channel.invokeMethod<String>(
-      'Transaction#create',
-    );
+    final String transactionId = await pigeonChannel.transactionCreate();
 
     Completer<T> completer = Completer();
 
@@ -262,7 +252,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         }
 
         final TransactionPlatform transaction =
-            MethodChannelTransaction(transactionId!, event['appName']);
+            MethodChannelTransaction(transactionId, event['appName']);
 
         // If the transaction fails on Dart side, then forward the error
         // right away and only inform native side of the error.

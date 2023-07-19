@@ -53,6 +53,18 @@ enum ServerTimestampBehavior {
   previous,
 }
 
+enum PigeonTransactionResult {
+  success,
+  failure,
+}
+
+enum PigeonTransactionType {
+  get,
+  update,
+  set,
+  delete,
+}
+
 class PigeonFirebaseSettings {
   PigeonFirebaseSettings({
     this.persistenceEnabled,
@@ -272,6 +284,70 @@ class PigeonGetOptions {
   }
 }
 
+class PigeonTransactionOption {
+  PigeonTransactionOption({
+    this.merge,
+    this.mergeFields,
+  });
+
+  bool? merge;
+
+  List<List<String?>?>? mergeFields;
+
+  Object encode() {
+    return <Object?>[
+      merge,
+      mergeFields,
+    ];
+  }
+
+  static PigeonTransactionOption decode(Object result) {
+    result as List<Object?>;
+    return PigeonTransactionOption(
+      merge: result[0] as bool?,
+      mergeFields: (result[1] as List<Object?>?)?.cast<List<String?>?>(),
+    );
+  }
+}
+
+class PigeonTransactionCommand {
+  PigeonTransactionCommand({
+    required this.type,
+    required this.path,
+    this.data,
+    this.option,
+  });
+
+  PigeonTransactionType type;
+
+  String path;
+
+  Map<String?, Object?>? data;
+
+  PigeonTransactionOption? option;
+
+  Object encode() {
+    return <Object?>[
+      type.index,
+      path,
+      data,
+      option?.encode(),
+    ];
+  }
+
+  static PigeonTransactionCommand decode(Object result) {
+    result as List<Object?>;
+    return PigeonTransactionCommand(
+      type: PigeonTransactionType.values[result[0]! as int],
+      path: result[1]! as String,
+      data: (result[2] as Map<Object?, Object?>?)?.cast<String?, Object?>(),
+      option: result[3] != null
+          ? PigeonTransactionOption.decode(result[3]! as List<Object?>)
+          : null,
+    );
+  }
+}
+
 class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   const _FirebaseFirestoreHostApiCodec();
   @override
@@ -300,6 +376,12 @@ class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonSnapshotMetadata) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
+    } else if (value is PigeonTransactionCommand) {
+      buffer.putUint8(136);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonTransactionOption) {
+      buffer.putUint8(137);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -324,6 +406,10 @@ class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
         return PigeonQuerySnapshot.decode(readValue(buffer)!);
       case 135:
         return PigeonSnapshotMetadata.decode(readValue(buffer)!);
+      case 136:
+        return PigeonTransactionCommand.decode(readValue(buffer)!);
+      case 137:
+        return PigeonTransactionOption.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -537,6 +623,86 @@ class FirebaseFirestoreHostApi {
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_loggingEnabled]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<String> snapshotsInSyncSetup() async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseFirestoreHostApi.snapshotsInSyncSetup',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as String?)!;
+    }
+  }
+
+  Future<String> transactionCreate() async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionCreate', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as String?)!;
+    }
+  }
+
+  Future<void> transactionStoreResult(
+      String arg_transactionId,
+      PigeonTransactionResult arg_resultType,
+      List<PigeonTransactionCommand?>? arg_commands) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionStoreResult',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel.send(
+            <Object?>[arg_transactionId, arg_resultType.index, arg_commands])
+        as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',

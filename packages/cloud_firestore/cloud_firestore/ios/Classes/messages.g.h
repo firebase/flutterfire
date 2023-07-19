@@ -53,6 +53,18 @@ typedef NS_ENUM(NSUInteger, ServerTimestampBehavior) {
   ServerTimestampBehaviorPrevious = 2,
 };
 
+typedef NS_ENUM(NSUInteger, PigeonTransactionResult) {
+  PigeonTransactionResultSuccess = 0,
+  PigeonTransactionResultFailure = 1,
+};
+
+typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
+  PigeonTransactionTypeGet = 0,
+  PigeonTransactionTypeUpdate = 1,
+  PigeonTransactionTypeSet = 2,
+  PigeonTransactionTypeDelete = 3,
+};
+
 @class PigeonFirebaseSettings;
 @class PigeonFirebaseApp;
 @class PigeonSnapshotMetadata;
@@ -60,6 +72,8 @@ typedef NS_ENUM(NSUInteger, ServerTimestampBehavior) {
 @class PigeonDocumentChange;
 @class PigeonQuerySnapshot;
 @class PigeonGetOptions;
+@class PigeonTransactionOption;
+@class PigeonTransactionCommand;
 
 @interface PigeonFirebaseSettings : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
@@ -137,6 +151,26 @@ typedef NS_ENUM(NSUInteger, ServerTimestampBehavior) {
 @property(nonatomic, assign) ServerTimestampBehavior serverTimestampBehavior;
 @end
 
+@interface PigeonTransactionOption : NSObject
++ (instancetype)makeWithMerge:(nullable NSNumber *)merge
+                  mergeFields:(nullable NSArray<NSArray<NSString *> *> *)mergeFields;
+@property(nonatomic, strong, nullable) NSNumber *merge;
+@property(nonatomic, strong, nullable) NSArray<NSArray<NSString *> *> *mergeFields;
+@end
+
+@interface PigeonTransactionCommand : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithType:(PigeonTransactionType)type
+                        path:(NSString *)path
+                        data:(nullable NSDictionary<NSString *, id> *)data
+                      option:(nullable PigeonTransactionOption *)option;
+@property(nonatomic, assign) PigeonTransactionType type;
+@property(nonatomic, copy) NSString *path;
+@property(nonatomic, strong, nullable) NSDictionary<NSString *, id> *data;
+@property(nonatomic, strong, nullable) PigeonTransactionOption *option;
+@end
+
 /// The codec used by FirebaseFirestoreHostApi.
 NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
 
@@ -164,6 +198,14 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
                       completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)setLoggingEnabledLoggingEnabled:(NSNumber *)loggingEnabled
                              completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)snapshotsInSyncSetupWithCompletion:(void (^)(NSString *_Nullable,
+                                                     FlutterError *_Nullable))completion;
+- (void)transactionCreateWithCompletion:(void (^)(NSString *_Nullable,
+                                                  FlutterError *_Nullable))completion;
+- (void)transactionStoreResultTransactionId:(NSString *)transactionId
+                                 resultType:(PigeonTransactionResult)resultType
+                                   commands:(nullable NSArray<PigeonTransactionCommand *> *)commands
+                                 completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

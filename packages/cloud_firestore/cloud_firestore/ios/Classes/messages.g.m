@@ -72,6 +72,18 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList;
 @end
 
+@interface PigeonTransactionOption ()
++ (PigeonTransactionOption *)fromList:(NSArray *)list;
++ (nullable PigeonTransactionOption *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
+@interface PigeonTransactionCommand ()
++ (PigeonTransactionCommand *)fromList:(NSArray *)list;
++ (nullable PigeonTransactionCommand *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
 @implementation PigeonFirebaseSettings
 + (instancetype)makeWithPersistenceEnabled:(nullable NSNumber *)persistenceEnabled
                                       host:(nullable NSString *)host
@@ -291,6 +303,66 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
+@implementation PigeonTransactionOption
++ (instancetype)makeWithMerge:(nullable NSNumber *)merge
+                  mergeFields:(nullable NSArray<NSArray<NSString *> *> *)mergeFields {
+  PigeonTransactionOption *pigeonResult = [[PigeonTransactionOption alloc] init];
+  pigeonResult.merge = merge;
+  pigeonResult.mergeFields = mergeFields;
+  return pigeonResult;
+}
++ (PigeonTransactionOption *)fromList:(NSArray *)list {
+  PigeonTransactionOption *pigeonResult = [[PigeonTransactionOption alloc] init];
+  pigeonResult.merge = GetNullableObjectAtIndex(list, 0);
+  pigeonResult.mergeFields = GetNullableObjectAtIndex(list, 1);
+  return pigeonResult;
+}
++ (nullable PigeonTransactionOption *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonTransactionOption fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    (self.merge ?: [NSNull null]),
+    (self.mergeFields ?: [NSNull null]),
+  ];
+}
+@end
+
+@implementation PigeonTransactionCommand
++ (instancetype)makeWithType:(PigeonTransactionType)type
+                        path:(NSString *)path
+                        data:(nullable NSDictionary<NSString *, id> *)data
+                      option:(nullable PigeonTransactionOption *)option {
+  PigeonTransactionCommand *pigeonResult = [[PigeonTransactionCommand alloc] init];
+  pigeonResult.type = type;
+  pigeonResult.path = path;
+  pigeonResult.data = data;
+  pigeonResult.option = option;
+  return pigeonResult;
+}
++ (PigeonTransactionCommand *)fromList:(NSArray *)list {
+  PigeonTransactionCommand *pigeonResult = [[PigeonTransactionCommand alloc] init];
+  pigeonResult.type = [GetNullableObjectAtIndex(list, 0) integerValue];
+  pigeonResult.path = GetNullableObjectAtIndex(list, 1);
+  NSAssert(pigeonResult.path != nil, @"");
+  pigeonResult.data = GetNullableObjectAtIndex(list, 2);
+  pigeonResult.option =
+      [PigeonTransactionOption nullableFromList:(GetNullableObjectAtIndex(list, 3))];
+  return pigeonResult;
+}
++ (nullable PigeonTransactionCommand *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonTransactionCommand fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    @(self.type),
+    (self.path ?: [NSNull null]),
+    (self.data ?: [NSNull null]),
+    (self.option ? [self.option toList] : [NSNull null]),
+  ];
+}
+@end
+
 @interface FirebaseFirestoreHostApiCodecReader : FlutterStandardReader
 @end
 @implementation FirebaseFirestoreHostApiCodecReader
@@ -312,6 +384,10 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
       return [PigeonQuerySnapshot fromList:[self readValue]];
     case 135:
       return [PigeonSnapshotMetadata fromList:[self readValue]];
+    case 136:
+      return [PigeonTransactionCommand fromList:[self readValue]];
+    case 137:
+      return [PigeonTransactionOption fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
   }
@@ -345,6 +421,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[PigeonSnapshotMetadata class]]) {
     [self writeByte:135];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonTransactionCommand class]]) {
+    [self writeByte:136];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonTransactionOption class]]) {
+    [self writeByte:137];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];
@@ -579,6 +661,73 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                                   completion:^(FlutterError *_Nullable error) {
                                     callback(wrapResult(nil, error));
                                   }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseFirestoreHostApi.snapshotsInSyncSetup"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseFirestoreHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(snapshotsInSyncSetupWithCompletion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(snapshotsInSyncSetupWithCompletion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        [api snapshotsInSyncSetupWithCompletion:^(NSString *_Nullable output,
+                                                  FlutterError *_Nullable error) {
+          callback(wrapResult(output, error));
+        }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionCreate"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseFirestoreHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(transactionCreateWithCompletion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(transactionCreateWithCompletion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        [api transactionCreateWithCompletion:^(NSString *_Nullable output,
+                                               FlutterError *_Nullable error) {
+          callback(wrapResult(output, error));
+        }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionStoreResult"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseFirestoreHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector
+                     (transactionStoreResultTransactionId:resultType:commands:completion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(transactionStoreResultTransactionId:resultType:commands:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        NSString *arg_transactionId = GetNullableObjectAtIndex(args, 0);
+        PigeonTransactionResult arg_resultType = [GetNullableObjectAtIndex(args, 1) integerValue];
+        NSArray<PigeonTransactionCommand *> *arg_commands = GetNullableObjectAtIndex(args, 2);
+        [api transactionStoreResultTransactionId:arg_transactionId
+                                      resultType:arg_resultType
+                                        commands:arg_commands
+                                      completion:^(FlutterError *_Nullable error) {
+                                        callback(wrapResult(nil, error));
+                                      }];
       }];
     } else {
       [channel setMessageHandler:nil];

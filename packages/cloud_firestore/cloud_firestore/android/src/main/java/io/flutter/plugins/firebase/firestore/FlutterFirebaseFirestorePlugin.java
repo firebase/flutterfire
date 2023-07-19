@@ -6,6 +6,7 @@ package io.flutter.plugins.firebase.firestore;
 
 import android.app.Activity;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -183,15 +184,6 @@ public class FlutterFirebaseFirestorePlugin
         });
 
     return taskCompletionSource.getTask();
-  }
-
-  private void transactionStoreResult(Map<String, Object> arguments) {
-    String transactionId = (String) Objects.requireNonNull(arguments.get("transactionId"));
-    @SuppressWarnings("unchecked")
-    Map<String, Object> result =
-        (Map<String, Object>) Objects.requireNonNull(arguments.get("result"));
-
-    transactionHandlers.get(transactionId).receiveTransactionResponse(result);
   }
 
   private Task<Void> batchCommit(Map<String, Object> arguments) {
@@ -440,20 +432,6 @@ public class FlutterFirebaseFirestorePlugin
       case "Transaction#get":
         methodCallTask = transactionGet(call.arguments());
         break;
-      case "Transaction#create":
-        final String transactionId = UUID.randomUUID().toString().toLowerCase(Locale.US);
-        final TransactionStreamHandler handler =
-            new TransactionStreamHandler(
-                transaction -> transactions.put(transactionId, transaction));
-
-        registerEventChannel(METHOD_CHANNEL_NAME + "/transaction", transactionId, handler);
-        transactionHandlers.put(transactionId, handler);
-        result.success(transactionId);
-        return;
-      case "Transaction#storeResult":
-        transactionStoreResult(call.arguments());
-        result.success(null);
-        return;
       case "WriteBatch#commit":
         methodCallTask = batchCommit(call.arguments());
         break;
@@ -469,11 +447,6 @@ public class FlutterFirebaseFirestorePlugin
         result.success(
             registerEventChannel(
                 METHOD_CHANNEL_NAME + "/document", new DocumentSnapshotsStreamHandler()));
-        return;
-      case "SnapshotsInSync#setup":
-        result.success(
-            registerEventChannel(
-                METHOD_CHANNEL_NAME + "/snapshotsInSync", new SnapshotsInSyncStreamHandler()));
         return;
       case "DocumentReference#get":
         methodCallTask = documentGet(call.arguments());
@@ -823,5 +796,35 @@ public class FlutterFirebaseFirestorePlugin
             result.error(e);
           }
         });
+  }
+
+  @Override
+  public void snapshotsInSyncSetup(
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
+    result.success(
+        registerEventChannel(
+            METHOD_CHANNEL_NAME + "/snapshotsInSync", new SnapshotsInSyncStreamHandler()));
+  }
+
+  @Override
+  public void transactionCreate(@NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
+    final String transactionId = UUID.randomUUID().toString().toLowerCase(Locale.US);
+    final TransactionStreamHandler handler =
+        new TransactionStreamHandler(transaction -> transactions.put(transactionId, transaction));
+
+    registerEventChannel(METHOD_CHANNEL_NAME + "/transaction", transactionId, handler);
+    transactionHandlers.put(transactionId, handler);
+    result.success(transactionId);
+  }
+
+  @Override
+  public void transactionStoreResult(
+      @NonNull String transactionId,
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonTransactionResult resultType,
+      @Nullable List<GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand> commands,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+    Objects.requireNonNull(transactionHandlers.get(transactionId))
+        .receiveTransactionResponse(resultType, commands);
+    result.success(null);
   }
 }

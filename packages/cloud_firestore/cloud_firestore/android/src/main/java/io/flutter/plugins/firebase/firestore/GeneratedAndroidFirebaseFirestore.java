@@ -123,6 +123,30 @@ public class GeneratedAndroidFirebaseFirestore {
     }
   }
 
+  public enum PigeonTransactionResult {
+    SUCCESS(0),
+    FAILURE(1);
+
+    final int index;
+
+    private PigeonTransactionResult(final int index) {
+      this.index = index;
+    }
+  }
+
+  public enum PigeonTransactionType {
+    GET(0),
+    UPDATE(1),
+    SET(2),
+    DELETE(3);
+
+    final int index;
+
+    private PigeonTransactionType(final int index) {
+      this.index = index;
+    }
+  }
+
   /** Generated class from Pigeon that represents data sent in messages. */
   public static final class PigeonFirebaseSettings {
     private @Nullable Boolean persistenceEnabled;
@@ -814,6 +838,186 @@ public class GeneratedAndroidFirebaseFirestore {
     }
   }
 
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonTransactionOption {
+    private @Nullable Boolean merge;
+
+    public @Nullable Boolean getMerge() {
+      return merge;
+    }
+
+    public void setMerge(@Nullable Boolean setterArg) {
+      this.merge = setterArg;
+    }
+
+    private @Nullable List<List<String>> mergeFields;
+
+    public @Nullable List<List<String>> getMergeFields() {
+      return mergeFields;
+    }
+
+    public void setMergeFields(@Nullable List<List<String>> setterArg) {
+      this.mergeFields = setterArg;
+    }
+
+    public static final class Builder {
+
+      private @Nullable Boolean merge;
+
+      public @NonNull Builder setMerge(@Nullable Boolean setterArg) {
+        this.merge = setterArg;
+        return this;
+      }
+
+      private @Nullable List<List<String>> mergeFields;
+
+      public @NonNull Builder setMergeFields(@Nullable List<List<String>> setterArg) {
+        this.mergeFields = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonTransactionOption build() {
+        PigeonTransactionOption pigeonReturn = new PigeonTransactionOption();
+        pigeonReturn.setMerge(merge);
+        pigeonReturn.setMergeFields(mergeFields);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+      toListResult.add(merge);
+      toListResult.add(mergeFields);
+      return toListResult;
+    }
+
+    static @NonNull PigeonTransactionOption fromList(@NonNull ArrayList<Object> list) {
+      PigeonTransactionOption pigeonResult = new PigeonTransactionOption();
+      Object merge = list.get(0);
+      pigeonResult.setMerge((Boolean) merge);
+      Object mergeFields = list.get(1);
+      pigeonResult.setMergeFields((List<List<String>>) mergeFields);
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonTransactionCommand {
+    private @NonNull PigeonTransactionType type;
+
+    public @NonNull PigeonTransactionType getType() {
+      return type;
+    }
+
+    public void setType(@NonNull PigeonTransactionType setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"type\" is null.");
+      }
+      this.type = setterArg;
+    }
+
+    private @NonNull String path;
+
+    public @NonNull String getPath() {
+      return path;
+    }
+
+    public void setPath(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"path\" is null.");
+      }
+      this.path = setterArg;
+    }
+
+    private @Nullable Map<String, Object> data;
+
+    public @Nullable Map<String, Object> getData() {
+      return data;
+    }
+
+    public void setData(@Nullable Map<String, Object> setterArg) {
+      this.data = setterArg;
+    }
+
+    private @Nullable PigeonTransactionOption option;
+
+    public @Nullable PigeonTransactionOption getOption() {
+      return option;
+    }
+
+    public void setOption(@Nullable PigeonTransactionOption setterArg) {
+      this.option = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonTransactionCommand() {}
+
+    public static final class Builder {
+
+      private @Nullable PigeonTransactionType type;
+
+      public @NonNull Builder setType(@NonNull PigeonTransactionType setterArg) {
+        this.type = setterArg;
+        return this;
+      }
+
+      private @Nullable String path;
+
+      public @NonNull Builder setPath(@NonNull String setterArg) {
+        this.path = setterArg;
+        return this;
+      }
+
+      private @Nullable Map<String, Object> data;
+
+      public @NonNull Builder setData(@Nullable Map<String, Object> setterArg) {
+        this.data = setterArg;
+        return this;
+      }
+
+      private @Nullable PigeonTransactionOption option;
+
+      public @NonNull Builder setOption(@Nullable PigeonTransactionOption setterArg) {
+        this.option = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonTransactionCommand build() {
+        PigeonTransactionCommand pigeonReturn = new PigeonTransactionCommand();
+        pigeonReturn.setType(type);
+        pigeonReturn.setPath(path);
+        pigeonReturn.setData(data);
+        pigeonReturn.setOption(option);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(4);
+      toListResult.add(type == null ? null : type.index);
+      toListResult.add(path);
+      toListResult.add(data);
+      toListResult.add((option == null) ? null : option.toList());
+      return toListResult;
+    }
+
+    static @NonNull PigeonTransactionCommand fromList(@NonNull ArrayList<Object> list) {
+      PigeonTransactionCommand pigeonResult = new PigeonTransactionCommand();
+      Object type = list.get(0);
+      pigeonResult.setType(type == null ? null : PigeonTransactionType.values()[(int) type]);
+      Object path = list.get(1);
+      pigeonResult.setPath((String) path);
+      Object data = list.get(2);
+      pigeonResult.setData((Map<String, Object>) data);
+      Object option = list.get(3);
+      pigeonResult.setOption(
+          (option == null) ? null : PigeonTransactionOption.fromList((ArrayList<Object>) option));
+      return pigeonResult;
+    }
+  }
+
   public interface Result<T> {
     @SuppressWarnings("UnknownNullness")
     void success(T result);
@@ -846,6 +1050,10 @@ public class GeneratedAndroidFirebaseFirestore {
           return PigeonQuerySnapshot.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 135:
           return PigeonSnapshotMetadata.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 136:
+          return PigeonTransactionCommand.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 137:
+          return PigeonTransactionOption.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
       }
@@ -877,6 +1085,12 @@ public class GeneratedAndroidFirebaseFirestore {
       } else if (value instanceof PigeonSnapshotMetadata) {
         stream.write(135);
         writeValue(stream, ((PigeonSnapshotMetadata) value).toList());
+      } else if (value instanceof PigeonTransactionCommand) {
+        stream.write(136);
+        writeValue(stream, ((PigeonTransactionCommand) value).toList());
+      } else if (value instanceof PigeonTransactionOption) {
+        stream.write(137);
+        writeValue(stream, ((PigeonTransactionOption) value).toList());
       } else {
         super.writeValue(stream, value);
       }
@@ -911,6 +1125,16 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull Result<Void> result);
 
     void setLoggingEnabled(@NonNull Boolean loggingEnabled, @NonNull Result<Void> result);
+
+    void snapshotsInSyncSetup(@NonNull Result<String> result);
+
+    void transactionCreate(@NonNull Result<String> result);
+
+    void transactionStoreResult(
+        @NonNull String transactionId,
+        @NonNull PigeonTransactionResult resultType,
+        @Nullable List<PigeonTransactionCommand> commands,
+        @NonNull Result<Void> result);
 
     /** The codec used by FirebaseFirestoreHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -1200,6 +1424,102 @@ public class GeneratedAndroidFirebaseFirestore {
                     };
 
                 api.setLoggingEnabled(loggingEnabledArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.snapshotsInSyncSetup",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                Result<String> resultCallback =
+                    new Result<String>() {
+                      public void success(String result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.snapshotsInSyncSetup(resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionCreate",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                Result<String> resultCallback =
+                    new Result<String>() {
+                      public void success(String result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.transactionCreate(resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionStoreResult",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                String transactionIdArg = (String) args.get(0);
+                PigeonTransactionResult resultTypeArg =
+                    args.get(1) == null
+                        ? null
+                        : PigeonTransactionResult.values()[(int) args.get(1)];
+                List<PigeonTransactionCommand> commandsArg =
+                    (List<PigeonTransactionCommand>) args.get(2);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.transactionStoreResult(
+                    transactionIdArg, resultTypeArg, commandsArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

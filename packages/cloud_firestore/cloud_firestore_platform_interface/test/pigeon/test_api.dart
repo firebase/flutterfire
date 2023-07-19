@@ -38,6 +38,12 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonSnapshotMetadata) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
+    } else if (value is PigeonTransactionCommand) {
+      buffer.putUint8(136);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonTransactionOption) {
+      buffer.putUint8(137);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -62,6 +68,10 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
         return PigeonQuerySnapshot.decode(readValue(buffer)!);
       case 135:
         return PigeonSnapshotMetadata.decode(readValue(buffer)!);
+      case 136:
+        return PigeonTransactionCommand.decode(readValue(buffer)!);
+      case 137:
+        return PigeonTransactionOption.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -93,6 +103,15 @@ abstract class TestFirebaseFirestoreHostApi {
       PigeonFirebaseApp app, String indexConfiguration);
 
   Future<void> setLoggingEnabled(bool loggingEnabled);
+
+  Future<String> snapshotsInSyncSetup();
+
+  Future<String> transactionCreate();
+
+  Future<void> transactionStoreResult(
+      String transactionId,
+      PigeonTransactionResult resultType,
+      List<PigeonTransactionCommand?>? commands);
 
   static void setup(TestFirebaseFirestoreHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -306,6 +325,73 @@ abstract class TestFirebaseFirestoreHostApi {
           assert(arg_loggingEnabled != null,
               'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.setLoggingEnabled was null, expected non-null bool.');
           await api.setLoggingEnabled(arg_loggingEnabled!);
+          return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.snapshotsInSyncSetup',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          // ignore message
+          final String output = await api.snapshotsInSyncSetup();
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionCreate',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          // ignore message
+          final String output = await api.transactionCreate();
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionStoreResult',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionStoreResult was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_transactionId = (args[0] as String?);
+          assert(arg_transactionId != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionStoreResult was null, expected non-null String.');
+          final PigeonTransactionResult? arg_resultType = args[1] == null
+              ? null
+              : PigeonTransactionResult.values[args[1] as int];
+          assert(arg_resultType != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionStoreResult was null, expected non-null PigeonTransactionResult.');
+          final List<PigeonTransactionCommand?>? arg_commands =
+              (args[2] as List<Object?>?)?.cast<PigeonTransactionCommand?>();
+          await api.transactionStoreResult(
+              arg_transactionId!, arg_resultType!, arg_commands);
           return <Object?>[];
         });
       }

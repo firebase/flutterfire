@@ -150,6 +150,42 @@ class PigeonGetOptions {
   final ServerTimestampBehavior serverTimestampBehavior;
 }
 
+enum PigeonTransactionResult {
+  success,
+  failure,
+}
+
+enum PigeonTransactionType {
+  get,
+  update,
+  set,
+  delete,
+}
+
+class PigeonTransactionOption {
+  const PigeonTransactionOption({
+    required this.merge,
+    required this.mergeFields,
+  });
+
+  final bool? merge;
+  final List<List<String?>?>? mergeFields;
+}
+
+class PigeonTransactionCommand {
+  const PigeonTransactionCommand({
+    required this.type,
+    required this.path,
+    required this.data,
+    this.option,
+  });
+
+  final PigeonTransactionType type;
+  final String path;
+  final Map<String?, Object?>? data;
+  final PigeonTransactionOption? option;
+}
+
 @HostApi(dartHostTestHandler: 'TestFirebaseFirestoreHostApi')
 abstract class FirebaseFirestoreHostApi {
   @async
@@ -199,5 +235,18 @@ abstract class FirebaseFirestoreHostApi {
   @async
   void setLoggingEnabled(
     bool loggingEnabled,
+  );
+
+  @async
+  String snapshotsInSyncSetup();
+
+  @async
+  String transactionCreate();
+
+  @async
+  void transactionStoreResult(
+    String transactionId,
+    PigeonTransactionResult resultType,
+    List<PigeonTransactionCommand?>? commands,
   );
 }
