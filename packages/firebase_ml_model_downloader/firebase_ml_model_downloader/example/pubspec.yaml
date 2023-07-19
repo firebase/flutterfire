@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  firebase_core: ^2.15.0
   firebase_ml_model_downloader: ^0.2.3+4
 
 dev_dependencies:

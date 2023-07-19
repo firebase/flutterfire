@@ -34,13 +34,13 @@ class _MyAppState extends State<MyApp> {
 
   FirebaseCustomModel? model;
 
-  /// Initially get the lcoal model if found, and asynchronously get the latest one in background.
+  /// Initially get the local model if found, and asynchronously get the latest one in background.
   initWithLocalModel() async {
-    final _model = await FirebaseModelDownloader.instance.getModel(
+    final model = await FirebaseModelDownloader.instance.getModel(
         kModelName, FirebaseModelDownloadType.localModelUpdateInBackground);
 
     setState(() {
-      model = _model;
+      this.model = model;
     });
   }
 
@@ -82,12 +82,12 @@ class _MyAppState extends State<MyApp> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          final _model = await FirebaseModelDownloader.instance
+                          final model = await FirebaseModelDownloader.instance
                               .getModel(kModelName,
                                   FirebaseModelDownloadType.latestModel);
 
                           setState(() {
-                            model = _model;
+                            this.model = model;
                           });
                         },
                         child: const Text('Get latest model'),
