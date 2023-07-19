@@ -11,14 +11,14 @@ dependencies:
   firebase_performance: ^0.9.2+4
   flutter:
     sdk: flutter
-  http: ^0.13.0
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   integration_test:
     sdk: flutter
-  pedantic: ^1.8.0
+  pedantic: ^1.11.1
 
 flutter:
   uses-material-design: true

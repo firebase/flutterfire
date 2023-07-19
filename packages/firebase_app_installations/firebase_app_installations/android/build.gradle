@@ -39,8 +39,11 @@ android {
     if (project.android.hasProperty("namespace")) {
       namespace 'io.flutter.plugins.firebase.installations.firebase_app_installations'
     }
+    buildFeatures {
+      buildConfig = true
+    }
 
-    compileSdkVersion 31
+    compileSdkVersion 34
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -59,7 +62,7 @@ android {
 }
 
 dependencies {
-  implementation 'androidx.annotation:annotation:1.1.0'
+  implementation 'androidx.annotation:annotation:1.6.0'
 }
 
 apply from: file("./user-agent.gradle")

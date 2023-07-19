@@ -9,8 +9,8 @@ dependencies:
   firebase_storage: ^11.2.5
   flutter:
     sdk: flutter
-  image_picker: ^0.8.7+4
-  image_picker_for_web: ^2.1.12
+  image_picker: ^1.0.1
+  image_picker_for_web: ^2.2.0
 
 flutter:
   uses-material-design: true

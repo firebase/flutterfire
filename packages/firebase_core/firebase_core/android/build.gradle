@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.0.1'
+        classpath 'com.android.tools.build:gradle:8.0.2'
     }
 }
 
@@ -25,8 +25,11 @@ android {
   if (project.android.hasProperty("namespace")) {
     namespace 'io.flutter.plugins.firebase.core'
   }
+  buildFeatures {
+    buildConfig = true
+  }
 
-  compileSdkVersion 31
+  compileSdkVersion 34
 
     defaultConfig {
         minSdkVersion 16
@@ -43,7 +46,7 @@ android {
         implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrDefaultProperty("FirebaseSDKVersion")}")
         implementation "com.google.firebase:firebase-common"
 
-        implementation 'androidx.annotation:annotation:1.1.0'
+        implementation 'androidx.annotation:annotation:1.6.0'
     }
 }
 

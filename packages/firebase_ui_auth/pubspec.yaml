@@ -9,7 +9,7 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  email_validator: ^2.0.1
+  email_validator: ^2.1.17
   firebase_auth: ^4.7.1
   firebase_core: ^2.15.0
   firebase_dynamic_links: ^5.3.4
@@ -24,8 +24,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
-  mockito: ^5.4.0
+  flutter_lints: ^2.0.2
+  mockito: ^5.4.2
 
 false_secrets:
   - '/example/**/google-services.json'

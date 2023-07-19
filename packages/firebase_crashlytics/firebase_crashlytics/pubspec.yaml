@@ -19,7 +19,7 @@ dependencies:
   firebase_crashlytics_platform_interface: ^3.6.4
   flutter:
     sdk: flutter
-  stack_trace: ^1.10.0
+  stack_trace: ^1.11.1
 
 dev_dependencies:
   flutter_test:

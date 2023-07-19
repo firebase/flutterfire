@@ -8,7 +8,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:8.0.1'
+    classpath 'com.android.tools.build:gradle:8.0.2'
   }
 }
 
@@ -39,8 +39,11 @@ android {
   if (project.android.hasProperty("namespace")) {
     namespace 'io.flutter.plugins.firebase.messaging'
   }
+  buildFeatures {
+    buildConfig = true
+  }
 
-  compileSdkVersion 33
+  compileSdkVersion 34
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
@@ -57,7 +60,7 @@ android {
     implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
-    implementation 'androidx.annotation:annotation:1.4.0'
+    implementation 'androidx.annotation:annotation:1.6.0'
     implementation ('com.google.firebase:firebase-iid:21.1.0') {
       transitive = true
     }

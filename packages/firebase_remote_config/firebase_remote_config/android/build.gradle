@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.4'
+        classpath 'com.android.tools.build:gradle:8.0.2'
     }
 }
 
@@ -39,8 +39,11 @@ android {
     if (project.android.hasProperty("namespace")) {
         namespace 'io.flutter.plugins.firebase.firebaseremoteconfig'
     }
+    buildFeatures {
+      buildConfig = true
+    }
 
-    compileSdkVersion 31
+    compileSdkVersion 34
     compileOptions {
       sourceCompatibility JavaVersion.VERSION_1_8
       targetCompatibility JavaVersion.VERSION_1_8
@@ -56,7 +59,7 @@ android {
        api firebaseCoreProject
         implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
         implementation 'com.google.firebase:firebase-config'
-        implementation 'androidx.annotation:annotation:1.1.0'
+        implementation 'androidx.annotation:annotation:1.6.0'
     }
 }
 

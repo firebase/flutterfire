@@ -29,7 +29,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.5
 
   firebase_core: ^2.15.0
   firebase_ui_auth: ^1.6.1
@@ -40,7 +40,7 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
-  flutter_lints: ^2.0.0
+  flutter_lints: ^2.0.2
   flutter_test:
     sdk: flutter
 

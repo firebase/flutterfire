@@ -30,6 +30,9 @@ android {
   if (project.android.hasProperty("namespace")) {
     namespace 'io.flutter.plugins.firebaseauthexample'
   }
+  buildFeatures {
+    buildConfig = true
+  }
 
   compileSdkVersion flutter.compileSdkVersion
 

@@ -12,12 +12,12 @@ dependencies:
   firebase_ui_oauth: ^1.4.6
   flutter:
     sdk: flutter
-  flutter_facebook_auth: ^5.0.8
+  flutter_facebook_auth: ^5.0.11
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^2.0.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

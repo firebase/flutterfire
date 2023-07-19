@@ -12,12 +12,12 @@ dependencies:
   firebase_ui_oauth: ^1.4.6
   flutter:
     sdk: flutter
-  google_sign_in: ^6.1.0
+  google_sign_in: ^6.1.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^2.0.2
 
 false_secrets:
   - '/example/**/google-services.json'

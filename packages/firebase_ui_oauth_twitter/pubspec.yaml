@@ -12,12 +12,12 @@ dependencies:
     sdk: flutter
   firebase_auth: ^4.7.1
   firebase_ui_oauth: ^1.4.6
-  twitter_login: ^4.3.2
+  twitter_login: ^4.4.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^2.0.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
