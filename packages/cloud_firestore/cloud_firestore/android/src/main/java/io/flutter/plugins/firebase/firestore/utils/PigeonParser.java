@@ -1,6 +1,7 @@
 package io.flutter.plugins.firebase.firestore.utils;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.Source;
 import io.flutter.plugins.firebase.firestore.GeneratedAndroidFirebaseFirestore;
 import java.util.ArrayList;
@@ -119,5 +120,13 @@ public class PigeonParser {
           toPigeonDocumentSnapshot(documentSnapshot, serverTimestampBehavior));
     }
     return pigeonDocumentSnapshots;
+  }
+
+  public static List<FieldPath> parseFieldPath(List<List<String>> fieldPaths) {
+    List<FieldPath> paths = new ArrayList<>(fieldPaths.size());
+    for (List<String> fieldPath : fieldPaths) {
+      paths.add(FieldPath.of(fieldPath.toArray(new String[0])));
+    }
+    return paths;
   }
 }

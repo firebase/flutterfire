@@ -162,8 +162,8 @@ enum PigeonTransactionType {
   delete,
 }
 
-class PigeonTransactionOption {
-  const PigeonTransactionOption({
+class PigeonDocumentOption {
+  const PigeonDocumentOption({
     required this.merge,
     required this.mergeFields,
   });
@@ -183,7 +183,22 @@ class PigeonTransactionCommand {
   final PigeonTransactionType type;
   final String path;
   final Map<String?, Object?>? data;
-  final PigeonTransactionOption? option;
+  final PigeonDocumentOption? option;
+}
+
+class DocumentReferenceRequest {
+  const DocumentReferenceRequest({
+    required this.path,
+    this.data,
+    this.option,
+    this.source,
+    this.serverTimestampBehavior,
+  });
+  final String path;
+  final Map<String?, Object?>? data;
+  final PigeonDocumentOption? option;
+  final Source? source;
+  final ServerTimestampBehavior? serverTimestampBehavior;
 }
 
 @HostApi(dartHostTestHandler: 'TestFirebaseFirestoreHostApi')
@@ -255,5 +270,11 @@ abstract class FirebaseFirestoreHostApi {
     PigeonFirebaseApp app,
     String transactionId,
     String path,
+  );
+
+  @async
+  void documentReferenceSet(
+    PigeonFirebaseApp app,
+    DocumentReferenceRequest request,
   );
 }

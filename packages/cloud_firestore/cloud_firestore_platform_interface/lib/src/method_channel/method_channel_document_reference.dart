@@ -21,25 +21,29 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
 
   /// Creates a [DocumentReferencePlatform] that is implemented using [MethodChannel].
   MethodChannelDocumentReference(
-      FirebaseFirestorePlatform firestore, String path)
-      : super(firestore, path) {
+    FirebaseFirestorePlatform firestore,
+    String path,
+    this.pigeonApp,
+  ) : super(firestore, path) {
     _pointer = Pointer(path);
   }
+
+  final PigeonFirebaseApp pigeonApp;
 
   @override
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) async {
     try {
-      await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-        'DocumentReference#set',
-        <String, dynamic>{
-          'firestore': firestore,
-          'reference': this,
-          'data': data,
-          'options': <String, dynamic>{
-            'merge': options?.merge,
-            'mergeFields': options?.mergeFields,
-          },
-        },
+      await MethodChannelFirebaseFirestore.pigeonChannel.documentReferenceSet(
+        pigeonApp,
+        DocumentReferenceRequest(
+          path: _pointer.path,
+          data: data,
+          option: PigeonDocumentOption(
+            merge: options?.merge,
+            mergeFields:
+                options?.mergeFields?.map((e) => e.components).toList(),
+          ),
+        ),
       );
     } catch (e, stack) {
       convertPlatformException(e, stack);

@@ -22,6 +22,8 @@ import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreTransactionResult;
 import io.flutter.plugins.firebase.firestore.GeneratedAndroidFirebaseFirestore;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
+import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -113,7 +115,7 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
                     break;
                   case SET:
                     {
-                      GeneratedAndroidFirebaseFirestore.PigeonTransactionOption options =
+                      GeneratedAndroidFirebaseFirestore.PigeonDocumentOption options =
                           Objects.requireNonNull(command.getOption());
                       SetOptions setOptions = null;
 
@@ -122,10 +124,7 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
                       } else if (options.getMergeFields() != null) {
                         List<List<String>> fieldList =
                             Objects.requireNonNull(options.getMergeFields());
-                        List<FieldPath> fieldPathList = new ArrayList<>();
-                        for (List<String> field : fieldList) {
-                          fieldPathList.add(FieldPath.of(field.toArray(new String[0])));
-                        }
+                        List<FieldPath> fieldPathList = PigeonParser.parseFieldPath(fieldList);
 
                         setOptions = SetOptions.mergeFieldPaths(fieldPathList);
                       }

@@ -72,8 +72,9 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 @class PigeonDocumentChange;
 @class PigeonQuerySnapshot;
 @class PigeonGetOptions;
-@class PigeonTransactionOption;
+@class PigeonDocumentOption;
 @class PigeonTransactionCommand;
+@class DocumentReferenceRequest;
 
 @interface PigeonFirebaseSettings : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
@@ -151,7 +152,7 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 @property(nonatomic, assign) ServerTimestampBehavior serverTimestampBehavior;
 @end
 
-@interface PigeonTransactionOption : NSObject
+@interface PigeonDocumentOption : NSObject
 + (instancetype)makeWithMerge:(nullable NSNumber *)merge
                   mergeFields:(nullable NSArray<NSArray<NSString *> *> *)mergeFields;
 @property(nonatomic, strong, nullable) NSNumber *merge;
@@ -164,11 +165,26 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 + (instancetype)makeWithType:(PigeonTransactionType)type
                         path:(NSString *)path
                         data:(nullable NSDictionary<NSString *, id> *)data
-                      option:(nullable PigeonTransactionOption *)option;
+                      option:(nullable PigeonDocumentOption *)option;
 @property(nonatomic, assign) PigeonTransactionType type;
 @property(nonatomic, copy) NSString *path;
 @property(nonatomic, strong, nullable) NSDictionary<NSString *, id> *data;
-@property(nonatomic, strong, nullable) PigeonTransactionOption *option;
+@property(nonatomic, strong, nullable) PigeonDocumentOption *option;
+@end
+
+@interface DocumentReferenceRequest : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithPath:(NSString *)path
+                        data:(nullable NSDictionary<NSString *, id> *)data
+                      option:(nullable PigeonDocumentOption *)option
+                      source:(Source)source
+     serverTimestampBehavior:(ServerTimestampBehavior)serverTimestampBehavior;
+@property(nonatomic, copy) NSString *path;
+@property(nonatomic, strong, nullable) NSDictionary<NSString *, id> *data;
+@property(nonatomic, strong, nullable) PigeonDocumentOption *option;
+@property(nonatomic, assign) Source source;
+@property(nonatomic, assign) ServerTimestampBehavior serverTimestampBehavior;
 @end
 
 /// The codec used by FirebaseFirestoreHostApi.
@@ -211,6 +227,9 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
                      path:(NSString *)path
                completion:
                    (void (^)(PigeonDocumentSnapshot *_Nullable, FlutterError *_Nullable))completion;
+- (void)documentReferenceSetApp:(PigeonFirebaseApp *)app
+                        request:(DocumentReferenceRequest *)request
+                     completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

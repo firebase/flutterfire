@@ -3,7 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/src/aggregate_source.dart';
-import 'package:cloud_firestore_platform_interface/src/source.dart';
+
+import '../../pigeon/messages.pigeon.dart';
 
 /// Converts [Source] to [String]
 String getSourceString(Source source) {

@@ -277,43 +277,6 @@ public class FlutterFirebaseFirestorePlugin
     serverTimestampBehaviorHashMap.put(hashCode, serverTimestampBehavior);
   }
 
-  private Task<Void> documentSet(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            DocumentReference documentReference =
-                (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
-
-            @SuppressWarnings("unchecked")
-            Map<String, Object> data =
-                (Map<String, Object>) Objects.requireNonNull(arguments.get("data"));
-            @SuppressWarnings("unchecked")
-            Map<String, Object> options =
-                (Map<String, Object>) Objects.requireNonNull(arguments.get("options"));
-
-            Task<Void> setTask;
-
-            if (options.get("merge") != null && (boolean) options.get("merge")) {
-              setTask = documentReference.set(data, SetOptions.merge());
-            } else if (options.get("mergeFields") != null) {
-              @SuppressWarnings("unchecked")
-              List<FieldPath> fieldPathList =
-                  (List<FieldPath>) Objects.requireNonNull(options.get("mergeFields"));
-              setTask = documentReference.set(data, SetOptions.mergeFieldPaths(fieldPathList));
-            } else {
-              setTask = documentReference.set(data);
-            }
-
-            taskCompletionSource.setResult(Tasks.await(setTask));
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
 
   private Task<Void> documentUpdate(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
@@ -418,9 +381,6 @@ public class FlutterFirebaseFirestorePlugin
         return;
       case "DocumentReference#get":
         methodCallTask = documentGet(call.arguments());
-        break;
-      case "DocumentReference#set":
-        methodCallTask = documentSet(call.arguments());
         break;
       case "DocumentReference#update":
         methodCallTask = documentUpdate(call.arguments());
@@ -797,24 +757,64 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   @Override
-  public void transactionGet(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull String transactionId, @NonNull String path, @NonNull GeneratedAndroidFirebaseFirestore.Result<GeneratedAndroidFirebaseFirestore.PigeonDocumentSnapshot> result) {
+  public void transactionGet(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull String transactionId,
+      @NonNull String path,
+      @NonNull
+          GeneratedAndroidFirebaseFirestore.Result<
+                  GeneratedAndroidFirebaseFirestore.PigeonDocumentSnapshot>
+              result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            DocumentReference documentReference = getFirestoreFromPigeon(app).document(path);
+
+            Transaction transaction = transactions.get(transactionId);
+
+            if (transaction == null) {
+              result.error(
+                  new Exception(
+                      "Transaction.getDocument(): No transaction handler exists for ID: "
+                          + transactionId));
+              return;
+            }
+
+            result.success(
+                PigeonParser.toPigeonDocumentSnapshot(
+                    transaction.get(documentReference),
+                    DocumentSnapshot.ServerTimestampBehavior.NONE));
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void documentReferenceSet(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request, @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
       () -> {
         try {
-          DocumentReference documentReference =
-              getFirestoreFromPigeon(app).document(path);
+          DocumentReference documentReference = getFirestoreFromPigeon(app).document(request.getPath());
 
-          Transaction transaction = transactions.get(transactionId);
 
-          if (transaction == null) {
-            result.error(
-              new Exception(
-                "Transaction.getDocument(): No transaction handler exists for ID: "
-                  + transactionId));
-            return;
+          Map<String, Object> data = Objects.requireNonNull(request.getData());
+
+          Task<Void> setTask;
+
+          assert request.getOption() != null;
+          if (request.getOption().getMerge() != null && request.getOption().getMerge()) {
+            setTask = documentReference.set(data, SetOptions.merge());
+          } else if (request.getOption().getMergeFields() != null) {
+            List<List<String>> fieldList =
+              Objects.requireNonNull(request.getOption().getMergeFields());
+            List<FieldPath> fieldPathList = PigeonParser.parseFieldPath(fieldList);
+            setTask = documentReference.set(data, SetOptions.mergeFieldPaths(fieldPathList));
+          } else {
+            setTask = documentReference.set(data);
           }
 
-          result.success(PigeonParser.toPigeonDocumentSnapshot(transaction.get(documentReference), DocumentSnapshot.ServerTimestampBehavior.NONE));
+          result.success(Tasks.await(setTask));
         } catch (Exception e) {
           result.error(e);
         }

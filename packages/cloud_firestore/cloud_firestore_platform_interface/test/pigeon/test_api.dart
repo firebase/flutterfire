@@ -14,32 +14,35 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   const _TestFirebaseFirestoreHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonDocumentChange) {
+    if (value is DocumentReferenceRequest) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonDocumentSnapshot) {
+    } else if (value is PigeonDocumentChange) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseApp) {
+    } else if (value is PigeonDocumentOption) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseSettings) {
+    } else if (value is PigeonDocumentSnapshot) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonGetOptions) {
+    } else if (value is PigeonFirebaseApp) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonQuerySnapshot) {
+    } else if (value is PigeonFirebaseSettings) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonSnapshotMetadata) {
+    } else if (value is PigeonGetOptions) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonTransactionCommand) {
+    } else if (value is PigeonQuerySnapshot) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonTransactionOption) {
+    } else if (value is PigeonSnapshotMetadata) {
       buffer.putUint8(136);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonTransactionCommand) {
+      buffer.putUint8(137);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -50,23 +53,25 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
-        return PigeonDocumentChange.decode(readValue(buffer)!);
+        return DocumentReferenceRequest.decode(readValue(buffer)!);
       case 129:
-        return PigeonDocumentSnapshot.decode(readValue(buffer)!);
+        return PigeonDocumentChange.decode(readValue(buffer)!);
       case 130:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
+        return PigeonDocumentOption.decode(readValue(buffer)!);
       case 131:
-        return PigeonFirebaseSettings.decode(readValue(buffer)!);
+        return PigeonDocumentSnapshot.decode(readValue(buffer)!);
       case 132:
-        return PigeonGetOptions.decode(readValue(buffer)!);
+        return PigeonFirebaseApp.decode(readValue(buffer)!);
       case 133:
-        return PigeonQuerySnapshot.decode(readValue(buffer)!);
+        return PigeonFirebaseSettings.decode(readValue(buffer)!);
       case 134:
-        return PigeonSnapshotMetadata.decode(readValue(buffer)!);
+        return PigeonGetOptions.decode(readValue(buffer)!);
       case 135:
-        return PigeonTransactionCommand.decode(readValue(buffer)!);
+        return PigeonQuerySnapshot.decode(readValue(buffer)!);
       case 136:
-        return PigeonTransactionOption.decode(readValue(buffer)!);
+        return PigeonSnapshotMetadata.decode(readValue(buffer)!);
+      case 137:
+        return PigeonTransactionCommand.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -110,6 +115,9 @@ abstract class TestFirebaseFirestoreHostApi {
 
   Future<PigeonDocumentSnapshot> transactionGet(
       PigeonFirebaseApp app, String transactionId, String path);
+
+  Future<void> documentReferenceSet(
+      PigeonFirebaseApp app, DocumentReferenceRequest request);
 
   static void setup(TestFirebaseFirestoreHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -420,6 +428,33 @@ abstract class TestFirebaseFirestoreHostApi {
           final PigeonDocumentSnapshot output =
               await api.transactionGet(arg_app!, arg_transactionId!, arg_path!);
           return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceSet',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceSet was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceSet was null, expected non-null PigeonFirebaseApp.');
+          final DocumentReferenceRequest? arg_request =
+              (args[1] as DocumentReferenceRequest?);
+          assert(arg_request != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceSet was null, expected non-null DocumentReferenceRequest.');
+          await api.documentReferenceSet(arg_app!, arg_request!);
+          return <Object?>[];
         });
       }
     }

@@ -839,7 +839,7 @@ public class GeneratedAndroidFirebaseFirestore {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
-  public static final class PigeonTransactionOption {
+  public static final class PigeonDocumentOption {
     private @Nullable Boolean merge;
 
     public @Nullable Boolean getMerge() {
@@ -876,8 +876,8 @@ public class GeneratedAndroidFirebaseFirestore {
         return this;
       }
 
-      public @NonNull PigeonTransactionOption build() {
-        PigeonTransactionOption pigeonReturn = new PigeonTransactionOption();
+      public @NonNull PigeonDocumentOption build() {
+        PigeonDocumentOption pigeonReturn = new PigeonDocumentOption();
         pigeonReturn.setMerge(merge);
         pigeonReturn.setMergeFields(mergeFields);
         return pigeonReturn;
@@ -892,8 +892,8 @@ public class GeneratedAndroidFirebaseFirestore {
       return toListResult;
     }
 
-    static @NonNull PigeonTransactionOption fromList(@NonNull ArrayList<Object> list) {
-      PigeonTransactionOption pigeonResult = new PigeonTransactionOption();
+    static @NonNull PigeonDocumentOption fromList(@NonNull ArrayList<Object> list) {
+      PigeonDocumentOption pigeonResult = new PigeonDocumentOption();
       Object merge = list.get(0);
       pigeonResult.setMerge((Boolean) merge);
       Object mergeFields = list.get(1);
@@ -940,13 +940,13 @@ public class GeneratedAndroidFirebaseFirestore {
       this.data = setterArg;
     }
 
-    private @Nullable PigeonTransactionOption option;
+    private @Nullable PigeonDocumentOption option;
 
-    public @Nullable PigeonTransactionOption getOption() {
+    public @Nullable PigeonDocumentOption getOption() {
       return option;
     }
 
-    public void setOption(@Nullable PigeonTransactionOption setterArg) {
+    public void setOption(@Nullable PigeonDocumentOption setterArg) {
       this.option = setterArg;
     }
 
@@ -976,9 +976,9 @@ public class GeneratedAndroidFirebaseFirestore {
         return this;
       }
 
-      private @Nullable PigeonTransactionOption option;
+      private @Nullable PigeonDocumentOption option;
 
-      public @NonNull Builder setOption(@Nullable PigeonTransactionOption setterArg) {
+      public @NonNull Builder setOption(@Nullable PigeonDocumentOption setterArg) {
         this.option = setterArg;
         return this;
       }
@@ -1013,7 +1013,145 @@ public class GeneratedAndroidFirebaseFirestore {
       pigeonResult.setData((Map<String, Object>) data);
       Object option = list.get(3);
       pigeonResult.setOption(
-          (option == null) ? null : PigeonTransactionOption.fromList((ArrayList<Object>) option));
+          (option == null) ? null : PigeonDocumentOption.fromList((ArrayList<Object>) option));
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class DocumentReferenceRequest {
+    private @NonNull String path;
+
+    public @NonNull String getPath() {
+      return path;
+    }
+
+    public void setPath(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"path\" is null.");
+      }
+      this.path = setterArg;
+    }
+
+    private @Nullable Map<String, Object> data;
+
+    public @Nullable Map<String, Object> getData() {
+      return data;
+    }
+
+    public void setData(@Nullable Map<String, Object> setterArg) {
+      this.data = setterArg;
+    }
+
+    private @Nullable PigeonDocumentOption option;
+
+    public @Nullable PigeonDocumentOption getOption() {
+      return option;
+    }
+
+    public void setOption(@Nullable PigeonDocumentOption setterArg) {
+      this.option = setterArg;
+    }
+
+    private @Nullable Source source;
+
+    public @Nullable Source getSource() {
+      return source;
+    }
+
+    public void setSource(@Nullable Source setterArg) {
+      this.source = setterArg;
+    }
+
+    private @Nullable ServerTimestampBehavior serverTimestampBehavior;
+
+    public @Nullable ServerTimestampBehavior getServerTimestampBehavior() {
+      return serverTimestampBehavior;
+    }
+
+    public void setServerTimestampBehavior(@Nullable ServerTimestampBehavior setterArg) {
+      this.serverTimestampBehavior = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    DocumentReferenceRequest() {}
+
+    public static final class Builder {
+
+      private @Nullable String path;
+
+      public @NonNull Builder setPath(@NonNull String setterArg) {
+        this.path = setterArg;
+        return this;
+      }
+
+      private @Nullable Map<String, Object> data;
+
+      public @NonNull Builder setData(@Nullable Map<String, Object> setterArg) {
+        this.data = setterArg;
+        return this;
+      }
+
+      private @Nullable PigeonDocumentOption option;
+
+      public @NonNull Builder setOption(@Nullable PigeonDocumentOption setterArg) {
+        this.option = setterArg;
+        return this;
+      }
+
+      private @Nullable Source source;
+
+      public @NonNull Builder setSource(@Nullable Source setterArg) {
+        this.source = setterArg;
+        return this;
+      }
+
+      private @Nullable ServerTimestampBehavior serverTimestampBehavior;
+
+      public @NonNull Builder setServerTimestampBehavior(
+          @Nullable ServerTimestampBehavior setterArg) {
+        this.serverTimestampBehavior = setterArg;
+        return this;
+      }
+
+      public @NonNull DocumentReferenceRequest build() {
+        DocumentReferenceRequest pigeonReturn = new DocumentReferenceRequest();
+        pigeonReturn.setPath(path);
+        pigeonReturn.setData(data);
+        pigeonReturn.setOption(option);
+        pigeonReturn.setSource(source);
+        pigeonReturn.setServerTimestampBehavior(serverTimestampBehavior);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(5);
+      toListResult.add(path);
+      toListResult.add(data);
+      toListResult.add((option == null) ? null : option.toList());
+      toListResult.add(source == null ? null : source.index);
+      toListResult.add(serverTimestampBehavior == null ? null : serverTimestampBehavior.index);
+      return toListResult;
+    }
+
+    static @NonNull DocumentReferenceRequest fromList(@NonNull ArrayList<Object> list) {
+      DocumentReferenceRequest pigeonResult = new DocumentReferenceRequest();
+      Object path = list.get(0);
+      pigeonResult.setPath((String) path);
+      Object data = list.get(1);
+      pigeonResult.setData((Map<String, Object>) data);
+      Object option = list.get(2);
+      pigeonResult.setOption(
+          (option == null) ? null : PigeonDocumentOption.fromList((ArrayList<Object>) option));
+      Object source = list.get(3);
+      pigeonResult.setSource(source == null ? null : Source.values()[(int) source]);
+      Object serverTimestampBehavior = list.get(4);
+      pigeonResult.setServerTimestampBehavior(
+          serverTimestampBehavior == null
+              ? null
+              : ServerTimestampBehavior.values()[(int) serverTimestampBehavior]);
       return pigeonResult;
     }
   }
@@ -1035,23 +1173,25 @@ public class GeneratedAndroidFirebaseFirestore {
     protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
       switch (type) {
         case (byte) 128:
-          return PigeonDocumentChange.fromList((ArrayList<Object>) readValue(buffer));
+          return DocumentReferenceRequest.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 129:
-          return PigeonDocumentSnapshot.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonDocumentChange.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
-          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonDocumentOption.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 131:
-          return PigeonFirebaseSettings.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonDocumentSnapshot.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 132:
-          return PigeonGetOptions.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 133:
-          return PigeonQuerySnapshot.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonFirebaseSettings.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 134:
-          return PigeonSnapshotMetadata.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonGetOptions.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 135:
-          return PigeonTransactionCommand.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonQuerySnapshot.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 136:
-          return PigeonTransactionOption.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonSnapshotMetadata.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 137:
+          return PigeonTransactionCommand.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
       }
@@ -1059,33 +1199,36 @@ public class GeneratedAndroidFirebaseFirestore {
 
     @Override
     protected void writeValue(@NonNull ByteArrayOutputStream stream, Object value) {
-      if (value instanceof PigeonDocumentChange) {
+      if (value instanceof DocumentReferenceRequest) {
         stream.write(128);
-        writeValue(stream, ((PigeonDocumentChange) value).toList());
-      } else if (value instanceof PigeonDocumentSnapshot) {
+        writeValue(stream, ((DocumentReferenceRequest) value).toList());
+      } else if (value instanceof PigeonDocumentChange) {
         stream.write(129);
+        writeValue(stream, ((PigeonDocumentChange) value).toList());
+      } else if (value instanceof PigeonDocumentOption) {
+        stream.write(130);
+        writeValue(stream, ((PigeonDocumentOption) value).toList());
+      } else if (value instanceof PigeonDocumentSnapshot) {
+        stream.write(131);
         writeValue(stream, ((PigeonDocumentSnapshot) value).toList());
       } else if (value instanceof PigeonFirebaseApp) {
-        stream.write(130);
+        stream.write(132);
         writeValue(stream, ((PigeonFirebaseApp) value).toList());
       } else if (value instanceof PigeonFirebaseSettings) {
-        stream.write(131);
+        stream.write(133);
         writeValue(stream, ((PigeonFirebaseSettings) value).toList());
       } else if (value instanceof PigeonGetOptions) {
-        stream.write(132);
+        stream.write(134);
         writeValue(stream, ((PigeonGetOptions) value).toList());
       } else if (value instanceof PigeonQuerySnapshot) {
-        stream.write(133);
+        stream.write(135);
         writeValue(stream, ((PigeonQuerySnapshot) value).toList());
       } else if (value instanceof PigeonSnapshotMetadata) {
-        stream.write(134);
+        stream.write(136);
         writeValue(stream, ((PigeonSnapshotMetadata) value).toList());
       } else if (value instanceof PigeonTransactionCommand) {
-        stream.write(135);
+        stream.write(137);
         writeValue(stream, ((PigeonTransactionCommand) value).toList());
-      } else if (value instanceof PigeonTransactionOption) {
-        stream.write(136);
-        writeValue(stream, ((PigeonTransactionOption) value).toList());
       } else {
         super.writeValue(stream, value);
       }
@@ -1136,6 +1279,11 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull String transactionId,
         @NonNull String path,
         @NonNull Result<PigeonDocumentSnapshot> result);
+
+    void documentReferenceSet(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull DocumentReferenceRequest request,
+        @NonNull Result<Void> result);
 
     /** The codec used by FirebaseFirestoreHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -1554,6 +1702,38 @@ public class GeneratedAndroidFirebaseFirestore {
                     };
 
                 api.transactionGet(appArg, transactionIdArg, pathArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceSet",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                DocumentReferenceRequest requestArg = (DocumentReferenceRequest) args.get(1);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.documentReferenceSet(appArg, requestArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
