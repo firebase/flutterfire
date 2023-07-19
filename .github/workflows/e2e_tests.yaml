@@ -41,7 +41,7 @@ jobs:
       - uses: actions/setup-java@5ffc13f4174014e2d4d4572b3d74c3fa61aeb2c2
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
       - uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
         name: Gradle Cache
         with:
@@ -113,7 +113,7 @@ jobs:
       - uses: actions/setup-java@5ffc13f4174014e2d4d4572b3d74c3fa61aeb2c2
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
       - uses: hendrikmuhs/ccache-action@ca3acd2731eef11f1572ccb126356c2f9298d35e
         name: Xcode Compile Cache
         with:
@@ -188,7 +188,7 @@ jobs:
       - uses: actions/setup-java@5ffc13f4174014e2d4d4572b3d74c3fa61aeb2c2
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
       - uses: hendrikmuhs/ccache-action@ca3acd2731eef11f1572ccb126356c2f9298d35e
         name: Xcode Compile Cache
         with:
@@ -257,7 +257,7 @@ jobs:
       - uses: actions/setup-java@5ffc13f4174014e2d4d4572b3d74c3fa61aeb2c2
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
       - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
           channel: 'stable'
