@@ -22,8 +22,6 @@ import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreTransactionResult;
 import io.flutter.plugins.firebase.firestore.GeneratedAndroidFirebaseFirestore;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -122,9 +120,10 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
                       if (options.getMerge() != null && options.getMerge()) {
                         setOptions = SetOptions.merge();
                       } else if (options.getMergeFields() != null) {
-                        List<List<String>> fieldList = Objects.requireNonNull(options.getMergeFields());
+                        List<List<String>> fieldList =
+                            Objects.requireNonNull(options.getMergeFields());
                         List<FieldPath> fieldPathList = new ArrayList<>();
-                        for(List<String> field : fieldList) {
+                        for (List<String> field : fieldList) {
                           fieldPathList.add(FieldPath.of(field.toArray(new String[0])));
                         }
 
@@ -133,12 +132,10 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
 
                       Map<String, Object> data = Objects.requireNonNull(command.getData());
 
-
                       if (setOptions == null) {
                         transaction.set(documentReference, data);
                       } else {
-                        transaction.set(
-                            documentReference, data, setOptions);
+                        transaction.set(documentReference, data, setOptions);
                       }
 
                       break;

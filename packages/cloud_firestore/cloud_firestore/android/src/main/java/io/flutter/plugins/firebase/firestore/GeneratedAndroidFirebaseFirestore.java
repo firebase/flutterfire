@@ -1039,20 +1039,18 @@ public class GeneratedAndroidFirebaseFirestore {
         case (byte) 129:
           return PigeonDocumentSnapshot.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
-          return PigeonDocumentSnapshot.fromList((ArrayList<Object>) readValue(buffer));
-        case (byte) 131:
           return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
-        case (byte) 132:
+        case (byte) 131:
           return PigeonFirebaseSettings.fromList((ArrayList<Object>) readValue(buffer));
-        case (byte) 133:
+        case (byte) 132:
           return PigeonGetOptions.fromList((ArrayList<Object>) readValue(buffer));
-        case (byte) 134:
+        case (byte) 133:
           return PigeonQuerySnapshot.fromList((ArrayList<Object>) readValue(buffer));
-        case (byte) 135:
+        case (byte) 134:
           return PigeonSnapshotMetadata.fromList((ArrayList<Object>) readValue(buffer));
-        case (byte) 136:
+        case (byte) 135:
           return PigeonTransactionCommand.fromList((ArrayList<Object>) readValue(buffer));
-        case (byte) 137:
+        case (byte) 136:
           return PigeonTransactionOption.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
@@ -1067,29 +1065,26 @@ public class GeneratedAndroidFirebaseFirestore {
       } else if (value instanceof PigeonDocumentSnapshot) {
         stream.write(129);
         writeValue(stream, ((PigeonDocumentSnapshot) value).toList());
-      } else if (value instanceof PigeonDocumentSnapshot) {
-        stream.write(130);
-        writeValue(stream, ((PigeonDocumentSnapshot) value).toList());
       } else if (value instanceof PigeonFirebaseApp) {
-        stream.write(131);
+        stream.write(130);
         writeValue(stream, ((PigeonFirebaseApp) value).toList());
       } else if (value instanceof PigeonFirebaseSettings) {
-        stream.write(132);
+        stream.write(131);
         writeValue(stream, ((PigeonFirebaseSettings) value).toList());
       } else if (value instanceof PigeonGetOptions) {
-        stream.write(133);
+        stream.write(132);
         writeValue(stream, ((PigeonGetOptions) value).toList());
       } else if (value instanceof PigeonQuerySnapshot) {
-        stream.write(134);
+        stream.write(133);
         writeValue(stream, ((PigeonQuerySnapshot) value).toList());
       } else if (value instanceof PigeonSnapshotMetadata) {
-        stream.write(135);
+        stream.write(134);
         writeValue(stream, ((PigeonSnapshotMetadata) value).toList());
       } else if (value instanceof PigeonTransactionCommand) {
-        stream.write(136);
+        stream.write(135);
         writeValue(stream, ((PigeonTransactionCommand) value).toList());
       } else if (value instanceof PigeonTransactionOption) {
-        stream.write(137);
+        stream.write(136);
         writeValue(stream, ((PigeonTransactionOption) value).toList());
       } else {
         super.writeValue(stream, value);
@@ -1135,6 +1130,12 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull PigeonTransactionResult resultType,
         @Nullable List<PigeonTransactionCommand> commands,
         @NonNull Result<Void> result);
+
+    void transactionGet(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String transactionId,
+        @NonNull String path,
+        @NonNull Result<PigeonDocumentSnapshot> result);
 
     /** The codec used by FirebaseFirestoreHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -1520,6 +1521,39 @@ public class GeneratedAndroidFirebaseFirestore {
 
                 api.transactionStoreResult(
                     transactionIdArg, resultTypeArg, commandsArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionGet",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                String transactionIdArg = (String) args.get(1);
+                String pathArg = (String) args.get(2);
+                Result<PigeonDocumentSnapshot> resultCallback =
+                    new Result<PigeonDocumentSnapshot>() {
+                      public void success(PigeonDocumentSnapshot result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.transactionGet(appArg, transactionIdArg, pathArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

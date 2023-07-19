@@ -18,20 +18,21 @@ class MethodChannelTransaction extends TransactionPlatform {
   final String appName;
   late String _transactionId;
   late FirebaseFirestorePlatform _firestore;
+  PigeonFirebaseApp pigeonApp;
 
   /// Constructor.
-  MethodChannelTransaction(String transactionId, this.appName)
+  MethodChannelTransaction(String transactionId, this.appName, this.pigeonApp)
       : _transactionId = transactionId,
         super() {
     _firestore =
         FirebaseFirestorePlatform.instanceFor(app: Firebase.app(appName));
   }
 
-  List<Map<String, dynamic>> _commands = [];
+  List<PigeonTransactionCommand> _commands = [];
 
   /// Returns all transaction commands for the current instance.
   @override
-  List<Map<String, dynamic>> get commands {
+  List<PigeonTransactionCommand> get commands {
     return _commands;
   }
 
@@ -43,27 +44,23 @@ class MethodChannelTransaction extends TransactionPlatform {
     assert(_commands.isEmpty,
         'Transactions require all reads to be executed before all writes.');
 
-    final Map<String, dynamic>? result = await MethodChannelFirebaseFirestore
-        .channel
-        .invokeMapMethod<String, dynamic>('Transaction#get', <String, dynamic>{
-      'firestore': _firestore,
-      'transactionId': _transactionId,
-      'reference': _firestore.doc(documentPath),
-    });
+    final result = await MethodChannelFirebaseFirestore.pigeonChannel
+        .transactionGet(pigeonApp, _transactionId, documentPath);
 
     return DocumentSnapshotPlatform(
       _firestore,
       documentPath,
-      Map<String, dynamic>.from(result!),
+      result.data,
+      result.metadata,
     );
   }
 
   @override
   MethodChannelTransaction delete(String documentPath) {
-    _commands.add(<String, String>{
-      'type': 'DELETE',
-      'path': documentPath,
-    });
+    _commands.add(PigeonTransactionCommand(
+      type: PigeonTransactionType.delete,
+      path: documentPath,
+    ));
 
     return this;
   }
@@ -73,11 +70,11 @@ class MethodChannelTransaction extends TransactionPlatform {
     String documentPath,
     Map<String, dynamic> data,
   ) {
-    _commands.add(<String, dynamic>{
-      'type': 'UPDATE',
-      'path': documentPath,
-      'data': data,
-    });
+    _commands.add(PigeonTransactionCommand(
+      type: PigeonTransactionType.update,
+      path: documentPath,
+      data: data,
+    ));
 
     return this;
   }
@@ -85,15 +82,14 @@ class MethodChannelTransaction extends TransactionPlatform {
   @override
   MethodChannelTransaction set(String documentPath, Map<String, dynamic> data,
       [SetOptions? options]) {
-    _commands.add(<String, dynamic>{
-      'type': 'SET',
-      'path': documentPath,
-      'data': data,
-      'options': {
-        'merge': options?.merge,
-        'mergeFields': options?.mergeFields,
-      },
-    });
+    _commands.add(PigeonTransactionCommand(
+        type: PigeonTransactionType.set,
+        path: documentPath,
+        data: data,
+        option: PigeonTransactionOption(
+          merge: options?.merge,
+          mergeFields: options?.mergeFields?.map((e) => e.components).toList(),
+        )));
 
     return this;
   }

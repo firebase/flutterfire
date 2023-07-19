@@ -358,29 +358,26 @@ class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonDocumentSnapshot) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonDocumentSnapshot) {
+    } else if (value is PigeonFirebaseApp) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseApp) {
+    } else if (value is PigeonFirebaseSettings) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseSettings) {
+    } else if (value is PigeonGetOptions) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonGetOptions) {
+    } else if (value is PigeonQuerySnapshot) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonQuerySnapshot) {
+    } else if (value is PigeonSnapshotMetadata) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonSnapshotMetadata) {
+    } else if (value is PigeonTransactionCommand) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonTransactionCommand) {
-      buffer.putUint8(136);
-      writeValue(buffer, value.encode());
     } else if (value is PigeonTransactionOption) {
-      buffer.putUint8(137);
+      buffer.putUint8(136);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -395,20 +392,18 @@ class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
       case 129:
         return PigeonDocumentSnapshot.decode(readValue(buffer)!);
       case 130:
-        return PigeonDocumentSnapshot.decode(readValue(buffer)!);
-      case 131:
         return PigeonFirebaseApp.decode(readValue(buffer)!);
-      case 132:
+      case 131:
         return PigeonFirebaseSettings.decode(readValue(buffer)!);
-      case 133:
+      case 132:
         return PigeonGetOptions.decode(readValue(buffer)!);
-      case 134:
+      case 133:
         return PigeonQuerySnapshot.decode(readValue(buffer)!);
-      case 135:
+      case 134:
         return PigeonSnapshotMetadata.decode(readValue(buffer)!);
-      case 136:
+      case 135:
         return PigeonTransactionCommand.decode(readValue(buffer)!);
-      case 137:
+      case 136:
         return PigeonTransactionOption.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -716,6 +711,35 @@ class FirebaseFirestoreHostApi {
       );
     } else {
       return;
+    }
+  }
+
+  Future<PigeonDocumentSnapshot> transactionGet(PigeonFirebaseApp arg_app,
+      String arg_transactionId, String arg_path) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionGet', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_transactionId, arg_path])
+            as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as PigeonDocumentSnapshot?)!;
     }
   }
 }

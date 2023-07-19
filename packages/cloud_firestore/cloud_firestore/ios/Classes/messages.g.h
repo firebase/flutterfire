@@ -206,6 +206,11 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
                                  resultType:(PigeonTransactionResult)resultType
                                    commands:(nullable NSArray<PigeonTransactionCommand *> *)commands
                                  completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)transactionGetApp:(PigeonFirebaseApp *)app
+            transactionId:(NSString *)transactionId
+                     path:(NSString *)path
+               completion:
+                   (void (^)(PigeonDocumentSnapshot *_Nullable, FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

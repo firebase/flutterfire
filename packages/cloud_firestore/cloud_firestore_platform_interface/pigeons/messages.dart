@@ -249,4 +249,11 @@ abstract class FirebaseFirestoreHostApi {
     PigeonTransactionResult resultType,
     List<PigeonTransactionCommand?>? commands,
   );
+
+  @async
+  PigeonDocumentSnapshot transactionGet(
+    PigeonFirebaseApp app,
+    String transactionId,
+    String path,
+  );
 }

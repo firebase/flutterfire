@@ -373,20 +373,18 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     case 129:
       return [PigeonDocumentSnapshot fromList:[self readValue]];
     case 130:
-      return [PigeonDocumentSnapshot fromList:[self readValue]];
-    case 131:
       return [PigeonFirebaseApp fromList:[self readValue]];
-    case 132:
+    case 131:
       return [PigeonFirebaseSettings fromList:[self readValue]];
-    case 133:
+    case 132:
       return [PigeonGetOptions fromList:[self readValue]];
-    case 134:
+    case 133:
       return [PigeonQuerySnapshot fromList:[self readValue]];
-    case 135:
+    case 134:
       return [PigeonSnapshotMetadata fromList:[self readValue]];
-    case 136:
+    case 135:
       return [PigeonTransactionCommand fromList:[self readValue]];
-    case 137:
+    case 136:
       return [PigeonTransactionOption fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -404,29 +402,26 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   } else if ([value isKindOfClass:[PigeonDocumentSnapshot class]]) {
     [self writeByte:129];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonDocumentSnapshot class]]) {
+  } else if ([value isKindOfClass:[PigeonFirebaseApp class]]) {
     [self writeByte:130];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonFirebaseApp class]]) {
+  } else if ([value isKindOfClass:[PigeonFirebaseSettings class]]) {
     [self writeByte:131];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonFirebaseSettings class]]) {
+  } else if ([value isKindOfClass:[PigeonGetOptions class]]) {
     [self writeByte:132];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonGetOptions class]]) {
+  } else if ([value isKindOfClass:[PigeonQuerySnapshot class]]) {
     [self writeByte:133];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonQuerySnapshot class]]) {
+  } else if ([value isKindOfClass:[PigeonSnapshotMetadata class]]) {
     [self writeByte:134];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonSnapshotMetadata class]]) {
+  } else if ([value isKindOfClass:[PigeonTransactionCommand class]]) {
     [self writeByte:135];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonTransactionCommand class]]) {
-    [self writeByte:136];
-    [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[PigeonTransactionOption class]]) {
-    [self writeByte:137];
+    [self writeByte:136];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];
@@ -728,6 +723,34 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                                       completion:^(FlutterError *_Nullable error) {
                                         callback(wrapResult(nil, error));
                                       }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.FirebaseFirestoreHostApi.transactionGet"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseFirestoreHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(transactionGetApp:
+                                                      transactionId:path:completion:)],
+                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+                @"@selector(transactionGetApp:transactionId:path:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_transactionId = GetNullableObjectAtIndex(args, 1);
+        NSString *arg_path = GetNullableObjectAtIndex(args, 2);
+        [api transactionGetApp:arg_app
+                 transactionId:arg_transactionId
+                          path:arg_path
+                    completion:^(PigeonDocumentSnapshot *_Nullable output,
+                                 FlutterError *_Nullable error) {
+                      callback(wrapResult(output, error));
+                    }];
       }];
     } else {
       [channel setMessageHandler:nil];

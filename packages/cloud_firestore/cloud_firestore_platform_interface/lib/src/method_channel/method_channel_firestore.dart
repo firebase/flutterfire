@@ -63,7 +63,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     );
   }
 
-  final pigeonChannel = FirebaseFirestoreHostApi();
+  static final pigeonChannel = FirebaseFirestoreHostApi();
 
   late final PigeonFirebaseApp pigeonApp = PigeonFirebaseApp(
     appName: Firebase.app().name,
@@ -251,8 +251,11 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           return;
         }
 
-        final TransactionPlatform transaction =
-            MethodChannelTransaction(transactionId, event['appName']);
+        final TransactionPlatform transaction = MethodChannelTransaction(
+          transactionId,
+          event['appName'],
+          pigeonApp,
+        );
 
         // If the transaction fails on Dart side, then forward the error
         // right away and only inform native side of the error.
@@ -261,13 +264,11 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         } catch (error, stack) {
           // Signal native that a user error occurred, and finish the
           // transaction
-          await MethodChannelFirebaseFirestore.channel
-              .invokeMethod('Transaction#storeResult', <String, dynamic>{
-            'transactionId': transactionId,
-            'result': {
-              'type': 'ERROR',
-            }
-          });
+          await pigeonChannel.transactionStoreResult(
+            transactionId,
+            PigeonTransactionResult.failure,
+            null,
+          );
 
           // Allow the [runTransaction] method to listen to an error.
 
@@ -277,14 +278,11 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         }
 
         // Send the transaction commands to Dart.
-        await MethodChannelFirebaseFirestore.channel
-            .invokeMethod('Transaction#storeResult', <String, dynamic>{
-          'transactionId': transactionId,
-          'result': {
-            'type': 'SUCCESS',
-            'commands': transaction.commands,
-          },
-        });
+        await pigeonChannel.transactionStoreResult(
+          transactionId,
+          PigeonTransactionResult.success,
+          transaction.commands,
+        );
       },
     );
 
