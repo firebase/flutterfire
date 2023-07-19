@@ -157,35 +157,6 @@ public class FlutterFirebaseFirestorePlugin
     activity.set(null);
   }
 
-  private Task<DocumentSnapshot> transactionGet(Map<String, Object> arguments) {
-    TaskCompletionSource<DocumentSnapshot> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            DocumentReference documentReference =
-                (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
-            String transactionId = (String) Objects.requireNonNull(arguments.get("transactionId"));
-
-            Transaction transaction = transactions.get(transactionId);
-
-            if (transaction == null) {
-              taskCompletionSource.setException(
-                  new Exception(
-                      "Transaction.getDocument(): No transaction handler exists for ID: "
-                          + transactionId));
-              return;
-            }
-
-            taskCompletionSource.setResult(transaction.get(documentReference));
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
   private Task<Void> batchCommit(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -429,9 +400,6 @@ public class FlutterFirebaseFirestorePlugin
     Task<?> methodCallTask;
 
     switch (call.method) {
-      case "Transaction#get":
-        methodCallTask = transactionGet(call.arguments());
-        break;
       case "WriteBatch#commit":
         methodCallTask = batchCommit(call.arguments());
         break;
@@ -826,5 +794,31 @@ public class FlutterFirebaseFirestorePlugin
     Objects.requireNonNull(transactionHandlers.get(transactionId))
         .receiveTransactionResponse(resultType, commands);
     result.success(null);
+  }
+
+  @Override
+  public void transactionGet(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull String transactionId, @NonNull String path, @NonNull GeneratedAndroidFirebaseFirestore.Result<GeneratedAndroidFirebaseFirestore.PigeonDocumentSnapshot> result) {
+    cachedThreadPool.execute(
+      () -> {
+        try {
+          DocumentReference documentReference =
+              getFirestoreFromPigeon(app).document(path);
+
+          Transaction transaction = transactions.get(transactionId);
+
+          if (transaction == null) {
+            result.error(
+              new Exception(
+                "Transaction.getDocument(): No transaction handler exists for ID: "
+                  + transactionId));
+            return;
+          }
+
+          result.success(PigeonParser.toPigeonDocumentSnapshot(transaction.get(documentReference), DocumentSnapshot.ServerTimestampBehavior.NONE));
+        } catch (Exception e) {
+          result.error(e);
+        }
+      });
+
   }
 }
