@@ -8,7 +8,7 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  collection: ^1.17.2
+  collection: ^1.17.1
   firebase_database: ^10.2.4
   firebase_ui_localizations: ^1.5.0
   flutter:

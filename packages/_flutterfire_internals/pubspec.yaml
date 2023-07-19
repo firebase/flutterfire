@@ -9,15 +9,15 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  collection: ^1.0.0
+  collection: ^1.17.1
   firebase_core: ^2.15.0
   firebase_core_platform_interface: ^4.8.0
   flutter:
     sdk: flutter
-  meta: ^1.8.0
+  meta: ^1.9.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^5.0.0
+  mockito: ^5.4.2
   test: any

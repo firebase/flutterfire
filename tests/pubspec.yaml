@@ -11,7 +11,7 @@ dependencies:
   cloud_functions: ^4.3.4
   cloud_functions_platform_interface: ^5.4.4
   cloud_functions_web: ^4.5.4
-  collection: ^1.15.0
+  collection: ^1.17.1
   firebase_analytics: ^10.4.4
   firebase_analytics_platform_interface: ^3.6.4
   firebase_analytics_web: ^0.5.4+4
@@ -48,7 +48,7 @@ dependencies:
   firebase_storage_web: ^3.6.5
   flutter:
     sdk: flutter
-  http: ^0.13.4
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
