@@ -2,6 +2,7 @@ package io.flutter.plugins.firebase.firestore.utils;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
+import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.Filter;
@@ -297,5 +298,15 @@ public class PigeonParser {
     }
 
     throw new Error("Invalid operator");
+  }
+
+  public static AggregateSource parseAggregateSource(
+      GeneratedAndroidFirebaseFirestore.AggregateSource source) {
+    switch (source) {
+      case SERVER:
+        return AggregateSource.SERVER;
+      default:
+        throw new IllegalArgumentException("Unknown AggregateSource value: " + source);
+    }
   }
 }

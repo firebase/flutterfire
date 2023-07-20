@@ -123,6 +123,18 @@ public class GeneratedAndroidFirebaseFirestore {
     }
   }
 
+  /** [AggregateSource] represents the source of data for an [AggregateQuery]. */
+  public enum AggregateSource {
+    /** Indicates that the data should be retrieved from the server. */
+    SERVER(0);
+
+    final int index;
+
+    private AggregateSource(final int index) {
+      this.index = index;
+    }
+  }
+
   public enum PigeonTransactionResult {
     SUCCESS(0),
     FAILURE(1);
@@ -1528,6 +1540,14 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull PigeonGetOptions options,
         @NonNull Result<PigeonQuerySnapshot> result);
 
+    void aggregateQueryCount(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String path,
+        @NonNull PigeonQueryParameters parameters,
+        @NonNull PigeonGetOptions options,
+        @NonNull AggregateSource source,
+        @NonNull Result<Double> result);
+
     void writeBatchCommit(
         @NonNull PigeonFirebaseApp app,
         @NonNull List<PigeonTransactionCommand> writes,
@@ -2119,6 +2139,43 @@ public class GeneratedAndroidFirebaseFirestore {
                     parametersArg,
                     optionsArg,
                     resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.aggregateQueryCount",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                String pathArg = (String) args.get(1);
+                PigeonQueryParameters parametersArg = (PigeonQueryParameters) args.get(2);
+                PigeonGetOptions optionsArg = (PigeonGetOptions) args.get(3);
+                AggregateSource sourceArg =
+                    args.get(4) == null ? null : AggregateSource.values()[(int) args.get(4)];
+                Result<Double> resultCallback =
+                    new Result<Double>() {
+                      public void success(Double result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.aggregateQueryCount(
+                    appArg, pathArg, parametersArg, optionsArg, sourceArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

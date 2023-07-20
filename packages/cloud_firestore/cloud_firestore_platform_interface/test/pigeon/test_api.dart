@@ -140,6 +140,13 @@ abstract class TestFirebaseFirestoreHostApi {
       PigeonQueryParameters parameters,
       PigeonGetOptions options);
 
+  Future<double> aggregateQueryCount(
+      PigeonFirebaseApp app,
+      String path,
+      PigeonQueryParameters parameters,
+      PigeonGetOptions options,
+      AggregateSource source);
+
   Future<void> writeBatchCommit(
       PigeonFirebaseApp app, List<PigeonTransactionCommand?> writes);
 
@@ -596,6 +603,44 @@ abstract class TestFirebaseFirestoreHostApi {
               'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.queryGet was null, expected non-null PigeonGetOptions.');
           final PigeonQuerySnapshot output = await api.queryGet(arg_app!,
               arg_path!, arg_isCollectionGroup!, arg_parameters!, arg_options!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.aggregateQueryCount',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.aggregateQueryCount was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.aggregateQueryCount was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_path = (args[1] as String?);
+          assert(arg_path != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.aggregateQueryCount was null, expected non-null String.');
+          final PigeonQueryParameters? arg_parameters =
+              (args[2] as PigeonQueryParameters?);
+          assert(arg_parameters != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.aggregateQueryCount was null, expected non-null PigeonQueryParameters.');
+          final PigeonGetOptions? arg_options = (args[3] as PigeonGetOptions?);
+          assert(arg_options != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.aggregateQueryCount was null, expected non-null PigeonGetOptions.');
+          final AggregateSource? arg_source =
+              args[4] == null ? null : AggregateSource.values[args[4] as int];
+          assert(arg_source != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.aggregateQueryCount was null, expected non-null AggregateSource.');
+          final double output = await api.aggregateQueryCount(
+              arg_app!, arg_path!, arg_parameters!, arg_options!, arg_source!);
           return <Object?>[output];
         });
       }

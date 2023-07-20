@@ -140,6 +140,12 @@ enum ServerTimestampBehavior {
   previous,
 }
 
+/// [AggregateSource] represents the source of data for an [AggregateQuery].
+enum AggregateSource {
+  /// Indicates that the data should be retrieved from the server.
+  server,
+}
+
 class PigeonGetOptions {
   const PigeonGetOptions({
     required this.source,
@@ -327,6 +333,15 @@ abstract class FirebaseFirestoreHostApi {
     bool isCollectionGroup,
     PigeonQueryParameters parameters,
     PigeonGetOptions options,
+  );
+
+  @async
+  double aggregateQueryCount(
+    PigeonFirebaseApp app,
+    String path,
+    PigeonQueryParameters parameters,
+    PigeonGetOptions options,
+    AggregateSource source,
   );
 
   @async

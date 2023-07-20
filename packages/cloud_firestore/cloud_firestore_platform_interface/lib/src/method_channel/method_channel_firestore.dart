@@ -147,7 +147,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   CollectionReferencePlatform collection(String collectionPath) {
-    return MethodChannelCollectionReference(this, collectionPath);
+    return MethodChannelCollectionReference(this, collectionPath, pigeonApp);
   }
 
   @override
