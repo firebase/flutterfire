@@ -328,4 +328,10 @@ abstract class FirebaseFirestoreHostApi {
     PigeonQueryParameters parameters,
     PigeonGetOptions options,
   );
+
+  @async
+  void writeBatchCommit(
+    PigeonFirebaseApp app,
+    List<PigeonTransactionCommand?> writes,
+  );
 }

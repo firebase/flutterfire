@@ -157,77 +157,6 @@ public class FlutterFirebaseFirestorePlugin
     activity.set(null);
   }
 
-  private Task<Void> batchCommit(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            @SuppressWarnings("unchecked")
-            List<Map<String, Object>> writes =
-                (List<Map<String, Object>>) Objects.requireNonNull(arguments.get("writes"));
-            FirebaseFirestore firestore =
-                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-            WriteBatch batch = firestore.batch();
-
-            for (Map<String, Object> write : writes) {
-              String type = (String) Objects.requireNonNull(write.get("type"));
-              String path = (String) Objects.requireNonNull(write.get("path"));
-              @SuppressWarnings("unchecked")
-              Map<String, Object> data = (Map<String, Object>) write.get("data");
-
-              DocumentReference documentReference = firestore.document(path);
-
-              switch (type) {
-                case "DELETE":
-                  batch = batch.delete(documentReference);
-                  break;
-                case "UPDATE":
-                  batch = batch.update(documentReference, Objects.requireNonNull(data));
-                  break;
-                case "SET":
-                  @SuppressWarnings("unchecked")
-                  Map<String, Object> options =
-                      (Map<String, Object>) Objects.requireNonNull(write.get("options"));
-
-                  if (options.get("merge") != null && (boolean) options.get("merge")) {
-                    batch =
-                        batch.set(
-                            documentReference, Objects.requireNonNull(data), SetOptions.merge());
-                  } else if (options.get("mergeFields") != null) {
-                    @SuppressWarnings("unchecked")
-                    List<FieldPath> fieldPathList =
-                        (List<FieldPath>) Objects.requireNonNull(options.get("mergeFields"));
-                    batch =
-                        batch.set(
-                            documentReference,
-                            Objects.requireNonNull(data),
-                            SetOptions.mergeFieldPaths(fieldPathList));
-                  } else {
-                    batch = batch.set(documentReference, Objects.requireNonNull(data));
-                  }
-                  break;
-              }
-            }
-
-            Tasks.await(batch.commit());
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  private void saveTimestampBehavior(Map<String, Object> arguments, int hashCode) {
-    String serverTimestampBehaviorString = (String) arguments.get("serverTimestampBehavior");
-    DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
-        ServerTimestampBehaviorConverter.toServerTimestampBehavior(serverTimestampBehaviorString);
-
-    serverTimestampBehaviorHashMap.put(hashCode, serverTimestampBehavior);
-  }
-
   private Task<Map<String, Object>> aggregateQuery(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -259,9 +188,6 @@ public class FlutterFirebaseFirestorePlugin
     Task<?> methodCallTask;
 
     switch (call.method) {
-      case "WriteBatch#commit":
-        methodCallTask = batchCommit(call.arguments());
-        break;
       case "Query#snapshots":
         result.success(
             registerEventChannel(
@@ -802,18 +728,73 @@ public class FlutterFirebaseFirestorePlugin
                     getFirestoreFromPigeon(app), path, isCollectionGroup, parameters);
 
             if (query == null) {
-              taskCompletionSource.setException(
+              result.error(
                   new IllegalArgumentException(
                       "An error occurred while parsing query arguments, see native logs for more information. Please report this issue."));
               return;
             }
             final QuerySnapshot querySnapshot = Tasks.await(query.get(source));
-            saveTimestampBehavior(arguments, querySnapshot.hashCode());
 
-            taskCompletionSource.setResult(querySnapshot);
+            result.success(PigeonParser.toPigeonQuerySnapshot(querySnapshot, PigeonParser.parsePigeonServerTimestampBehavior(options.getServerTimestampBehavior())));
           } catch (Exception e) {
-            taskCompletionSource.setException(e);
+            result.error(e);
           }
         });
+  }
+
+  @Override
+  public void writeBatchCommit(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull List<GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand> writes, @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+    cachedThreadPool.execute(
+      () -> {
+        try {
+          @SuppressWarnings("unchecked")
+          FirebaseFirestore firestore =
+            getFirestoreFromPigeon(app);
+          WriteBatch batch = firestore.batch();
+
+          for (GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand write : writes) {
+            GeneratedAndroidFirebaseFirestore.PigeonTransactionType type = Objects.requireNonNull(write.getType());
+            String path = Objects.requireNonNull(write.getPath());
+            Map<String, Object> data = write.getData();
+
+            DocumentReference documentReference = firestore.document(path);
+
+            switch (type) {
+              case DELETE:
+                batch = batch.delete(documentReference);
+                break;
+              case UPDATE:
+                batch = batch.update(documentReference, Objects.requireNonNull(data));
+                break;
+              case SET:
+                GeneratedAndroidFirebaseFirestore.PigeonDocumentOption options =
+                   Objects.requireNonNull(write.getOption());
+
+                if (options.getMerge() != null && options.getMerge()) {
+                  batch =
+                    batch.set(
+                      documentReference, Objects.requireNonNull(data), SetOptions.merge());
+                } else if (options.getMergeFields() != null) {
+                  List<FieldPath> fieldPathList =
+                    PigeonParser.parseFieldPath(Objects.requireNonNull(options.getMergeFields()));
+                  batch =
+                    batch.set(
+                      documentReference,
+                      Objects.requireNonNull(data),
+                      SetOptions.mergeFieldPaths(fieldPathList));
+                } else {
+                  batch = batch.set(documentReference, Objects.requireNonNull(data));
+                }
+                break;
+            }
+          }
+
+          Tasks.await(batch.commit());
+          result.success(null);
+        } catch (Exception e) {
+          result.error(e);
+        }
+      });
+
   }
 }

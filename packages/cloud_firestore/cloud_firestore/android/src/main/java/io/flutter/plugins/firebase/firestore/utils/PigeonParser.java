@@ -8,7 +8,6 @@ import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Source;
-import io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin;
 import io.flutter.plugins.firebase.firestore.GeneratedAndroidFirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
@@ -139,12 +138,11 @@ public class PigeonParser {
   }
 
   public static Query parseQuery(
-    FirebaseFirestore firestore,
+      FirebaseFirestore firestore,
       @NonNull String path,
       boolean isCollectionGroup,
       GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters) {
     try {
-
 
       Query query;
       if (isCollectionGroup) {
@@ -246,7 +244,7 @@ public class PigeonParser {
     }
   }
 
-  static private Filter filterFromJson(Map<String, Object> map) {
+  private static Filter filterFromJson(Map<String, Object> map) {
     if (map.containsKey("fieldPath")) {
       // Deserialize a FilterQuery
       String op = (String) map.get("op");

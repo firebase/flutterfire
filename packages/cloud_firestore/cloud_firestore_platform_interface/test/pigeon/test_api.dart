@@ -140,6 +140,9 @@ abstract class TestFirebaseFirestoreHostApi {
       PigeonQueryParameters parameters,
       PigeonGetOptions options);
 
+  Future<void> writeBatchCommit(
+      PigeonFirebaseApp app, List<PigeonTransactionCommand?> writes);
+
   static void setup(TestFirebaseFirestoreHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
     {
@@ -594,6 +597,32 @@ abstract class TestFirebaseFirestoreHostApi {
           final PigeonQuerySnapshot output = await api.queryGet(arg_app!,
               arg_path!, arg_isCollectionGroup!, arg_parameters!, arg_options!);
           return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.writeBatchCommit', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.writeBatchCommit was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.writeBatchCommit was null, expected non-null PigeonFirebaseApp.');
+          final List<PigeonTransactionCommand?>? arg_writes =
+              (args[1] as List<Object?>?)?.cast<PigeonTransactionCommand?>();
+          assert(arg_writes != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.writeBatchCommit was null, expected non-null List<PigeonTransactionCommand?>.');
+          await api.writeBatchCommit(arg_app!, arg_writes!);
+          return <Object?>[];
         });
       }
     }

@@ -152,8 +152,12 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   QueryPlatform collectionGroup(String collectionPath) {
-    return MethodChannelQuery(this, collectionPath,
-        isCollectionGroupQuery: true);
+    return MethodChannelQuery(
+      this,
+      collectionPath,
+      pigeonApp,
+      isCollectionGroupQuery: true,
+    );
   }
 
   @override
@@ -176,7 +180,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   DocumentReferencePlatform doc(String documentPath) {
-    return MethodChannelDocumentReference(this, documentPath);
+    return MethodChannelDocumentReference(this, documentPath, pigeonApp);
   }
 
   @override

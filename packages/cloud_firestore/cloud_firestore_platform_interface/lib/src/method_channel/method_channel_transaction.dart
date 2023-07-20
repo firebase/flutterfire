@@ -86,7 +86,7 @@ class MethodChannelTransaction extends TransactionPlatform {
         type: PigeonTransactionType.set,
         path: documentPath,
         data: data,
-        option: PigeonTransactionOption(
+        option: PigeonDocumentOption(
           merge: options?.merge,
           mergeFields: options?.mergeFields?.map((e) => e.components).toList(),
         )));
