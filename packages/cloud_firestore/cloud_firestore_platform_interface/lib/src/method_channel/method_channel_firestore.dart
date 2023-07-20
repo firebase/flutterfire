@@ -127,7 +127,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  WriteBatchPlatform batch() => MethodChannelWriteBatch(this);
+  WriteBatchPlatform batch() => MethodChannelWriteBatch(pigeonApp);
 
   @override
   Future<void> clearPersistence() async {
