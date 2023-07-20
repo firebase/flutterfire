@@ -201,6 +201,30 @@ class DocumentReferenceRequest {
   final ServerTimestampBehavior? serverTimestampBehavior;
 }
 
+class PigeonQueryParameters {
+  const PigeonQueryParameters({
+    this.where,
+    this.orderBy,
+    this.limit,
+    this.startAt,
+    this.startAfter,
+    this.endAt,
+    this.endBefore,
+    this.limitToLast,
+    this.filters,
+  });
+
+  final List<List<Object?>?>? where;
+  final List<List<Object?>?>? orderBy;
+  final int? limit;
+  final int? limitToLast;
+  final List<Object?>? startAt;
+  final List<Object?>? startAfter;
+  final List<Object?>? endAt;
+  final List<Object?>? endBefore;
+  final Map<String?, Object?>? filters;
+}
+
 @HostApi(dartHostTestHandler: 'TestFirebaseFirestoreHostApi')
 abstract class FirebaseFirestoreHostApi {
   @async
@@ -276,5 +300,32 @@ abstract class FirebaseFirestoreHostApi {
   void documentReferenceSet(
     PigeonFirebaseApp app,
     DocumentReferenceRequest request,
+  );
+
+  @async
+  void documentReferenceUpdate(
+    PigeonFirebaseApp app,
+    DocumentReferenceRequest request,
+  );
+
+  @async
+  PigeonDocumentSnapshot documentReferenceGet(
+    PigeonFirebaseApp app,
+    DocumentReferenceRequest request,
+  );
+
+  @async
+  void documentReferenceDelete(
+    PigeonFirebaseApp app,
+    DocumentReferenceRequest request,
+  );
+
+  @async
+  PigeonQuerySnapshot queryGet(
+    PigeonFirebaseApp app,
+    String path,
+    bool isCollectionGroup,
+    PigeonQueryParameters parameters,
+    PigeonGetOptions options,
   );
 }

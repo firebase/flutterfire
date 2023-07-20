@@ -15,7 +15,6 @@ import 'method_channel_aggregate_query.dart';
 import 'method_channel_firestore.dart';
 import 'method_channel_query_snapshot.dart';
 import 'utils/exception.dart';
-import 'utils/source.dart';
 
 /// An implementation of [QueryPlatform] that uses [MethodChannel] to
 /// communicate with Firebase plugins.
@@ -23,7 +22,8 @@ class MethodChannelQuery extends QueryPlatform {
   /// Create a [MethodChannelQuery] from a [path] and optional [parameters]
   MethodChannelQuery(
     FirebaseFirestorePlatform _firestore,
-    String path, {
+    String path,
+    this.pigeonApp, {
     Map<String, dynamic>? parameters,
     this.isCollectionGroupQuery = false,
   })  : _pointer = Pointer(path),
@@ -34,10 +34,25 @@ class MethodChannelQuery extends QueryPlatform {
   final bool isCollectionGroupQuery;
 
   final Pointer _pointer;
+  final PigeonFirebaseApp pigeonApp;
 
   /// Returns the Document path that that this query relates to.
   String get path {
     return _pointer.path;
+  }
+
+  PigeonQueryParameters get _pigeonParameters {
+    return PigeonQueryParameters(
+      where: parameters['where'],
+      orderBy: parameters['orderBy'],
+      limit: parameters['limit'],
+      limitToLast: parameters['limitToLast'],
+      startAt: parameters['startAt'],
+      startAfter: parameters['startAfter'],
+      endAt: parameters['endAt'],
+      endBefore: parameters['endBefore'],
+      filters: parameters['filters'],
+    );
   }
 
   /// Creates a new instance of [MethodChannelQuery], however overrides
@@ -49,6 +64,7 @@ class MethodChannelQuery extends QueryPlatform {
     return MethodChannelQuery(
       firestore,
       _pointer.path,
+      pigeonApp,
       isCollectionGroupQuery: isCollectionGroupQuery,
       parameters: Map<String, dynamic>.unmodifiable(
         Map<String, dynamic>.from(this.parameters)..addAll(parameters),
@@ -96,21 +112,19 @@ class MethodChannelQuery extends QueryPlatform {
   Future<QuerySnapshotPlatform> get(
       [GetOptions options = const GetOptions()]) async {
     try {
-      final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
-          .channel
-          .invokeMapMethod<String, dynamic>(
-        'Query#get',
-        <String, dynamic>{
-          'query': this,
-          'firestore': firestore,
-          'source': getSourceString(options.source),
-          'serverTimestampBehavior': getServerTimestampBehaviorString(
-            options.serverTimestampBehavior,
-          ),
-        },
+      final PigeonQuerySnapshot result =
+          await MethodChannelFirebaseFirestore.pigeonChannel.queryGet(
+        pigeonApp,
+        _pointer.path,
+        isCollectionGroupQuery,
+        _pigeonParameters,
+        PigeonGetOptions(
+          source: options.source,
+          serverTimestampBehavior: options.serverTimestampBehavior,
+        ),
       );
 
-      return MethodChannelQuerySnapshot(firestore, data!);
+      return MethodChannelQuerySnapshot(firestore, result);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

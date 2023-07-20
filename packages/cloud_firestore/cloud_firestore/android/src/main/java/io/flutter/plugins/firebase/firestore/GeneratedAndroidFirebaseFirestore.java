@@ -1156,6 +1156,221 @@ public class GeneratedAndroidFirebaseFirestore {
     }
   }
 
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonQueryParameters {
+    private @Nullable List<List<Object>> where;
+
+    public @Nullable List<List<Object>> getWhere() {
+      return where;
+    }
+
+    public void setWhere(@Nullable List<List<Object>> setterArg) {
+      this.where = setterArg;
+    }
+
+    private @Nullable List<List<Object>> orderBy;
+
+    public @Nullable List<List<Object>> getOrderBy() {
+      return orderBy;
+    }
+
+    public void setOrderBy(@Nullable List<List<Object>> setterArg) {
+      this.orderBy = setterArg;
+    }
+
+    private @Nullable Long limit;
+
+    public @Nullable Long getLimit() {
+      return limit;
+    }
+
+    public void setLimit(@Nullable Long setterArg) {
+      this.limit = setterArg;
+    }
+
+    private @Nullable Long limitToLast;
+
+    public @Nullable Long getLimitToLast() {
+      return limitToLast;
+    }
+
+    public void setLimitToLast(@Nullable Long setterArg) {
+      this.limitToLast = setterArg;
+    }
+
+    private @Nullable List<Object> startAt;
+
+    public @Nullable List<Object> getStartAt() {
+      return startAt;
+    }
+
+    public void setStartAt(@Nullable List<Object> setterArg) {
+      this.startAt = setterArg;
+    }
+
+    private @Nullable List<Object> startAfter;
+
+    public @Nullable List<Object> getStartAfter() {
+      return startAfter;
+    }
+
+    public void setStartAfter(@Nullable List<Object> setterArg) {
+      this.startAfter = setterArg;
+    }
+
+    private @Nullable List<Object> endAt;
+
+    public @Nullable List<Object> getEndAt() {
+      return endAt;
+    }
+
+    public void setEndAt(@Nullable List<Object> setterArg) {
+      this.endAt = setterArg;
+    }
+
+    private @Nullable List<Object> endBefore;
+
+    public @Nullable List<Object> getEndBefore() {
+      return endBefore;
+    }
+
+    public void setEndBefore(@Nullable List<Object> setterArg) {
+      this.endBefore = setterArg;
+    }
+
+    private @Nullable Map<String, Object> filters;
+
+    public @Nullable Map<String, Object> getFilters() {
+      return filters;
+    }
+
+    public void setFilters(@Nullable Map<String, Object> setterArg) {
+      this.filters = setterArg;
+    }
+
+    public static final class Builder {
+
+      private @Nullable List<List<Object>> where;
+
+      public @NonNull Builder setWhere(@Nullable List<List<Object>> setterArg) {
+        this.where = setterArg;
+        return this;
+      }
+
+      private @Nullable List<List<Object>> orderBy;
+
+      public @NonNull Builder setOrderBy(@Nullable List<List<Object>> setterArg) {
+        this.orderBy = setterArg;
+        return this;
+      }
+
+      private @Nullable Long limit;
+
+      public @NonNull Builder setLimit(@Nullable Long setterArg) {
+        this.limit = setterArg;
+        return this;
+      }
+
+      private @Nullable Long limitToLast;
+
+      public @NonNull Builder setLimitToLast(@Nullable Long setterArg) {
+        this.limitToLast = setterArg;
+        return this;
+      }
+
+      private @Nullable List<Object> startAt;
+
+      public @NonNull Builder setStartAt(@Nullable List<Object> setterArg) {
+        this.startAt = setterArg;
+        return this;
+      }
+
+      private @Nullable List<Object> startAfter;
+
+      public @NonNull Builder setStartAfter(@Nullable List<Object> setterArg) {
+        this.startAfter = setterArg;
+        return this;
+      }
+
+      private @Nullable List<Object> endAt;
+
+      public @NonNull Builder setEndAt(@Nullable List<Object> setterArg) {
+        this.endAt = setterArg;
+        return this;
+      }
+
+      private @Nullable List<Object> endBefore;
+
+      public @NonNull Builder setEndBefore(@Nullable List<Object> setterArg) {
+        this.endBefore = setterArg;
+        return this;
+      }
+
+      private @Nullable Map<String, Object> filters;
+
+      public @NonNull Builder setFilters(@Nullable Map<String, Object> setterArg) {
+        this.filters = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonQueryParameters build() {
+        PigeonQueryParameters pigeonReturn = new PigeonQueryParameters();
+        pigeonReturn.setWhere(where);
+        pigeonReturn.setOrderBy(orderBy);
+        pigeonReturn.setLimit(limit);
+        pigeonReturn.setLimitToLast(limitToLast);
+        pigeonReturn.setStartAt(startAt);
+        pigeonReturn.setStartAfter(startAfter);
+        pigeonReturn.setEndAt(endAt);
+        pigeonReturn.setEndBefore(endBefore);
+        pigeonReturn.setFilters(filters);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(9);
+      toListResult.add(where);
+      toListResult.add(orderBy);
+      toListResult.add(limit);
+      toListResult.add(limitToLast);
+      toListResult.add(startAt);
+      toListResult.add(startAfter);
+      toListResult.add(endAt);
+      toListResult.add(endBefore);
+      toListResult.add(filters);
+      return toListResult;
+    }
+
+    static @NonNull PigeonQueryParameters fromList(@NonNull ArrayList<Object> list) {
+      PigeonQueryParameters pigeonResult = new PigeonQueryParameters();
+      Object where = list.get(0);
+      pigeonResult.setWhere((List<List<Object>>) where);
+      Object orderBy = list.get(1);
+      pigeonResult.setOrderBy((List<List<Object>>) orderBy);
+      Object limit = list.get(2);
+      pigeonResult.setLimit(
+          (limit == null) ? null : ((limit instanceof Integer) ? (Integer) limit : (Long) limit));
+      Object limitToLast = list.get(3);
+      pigeonResult.setLimitToLast(
+          (limitToLast == null)
+              ? null
+              : ((limitToLast instanceof Integer) ? (Integer) limitToLast : (Long) limitToLast));
+      Object startAt = list.get(4);
+      pigeonResult.setStartAt((List<Object>) startAt);
+      Object startAfter = list.get(5);
+      pigeonResult.setStartAfter((List<Object>) startAfter);
+      Object endAt = list.get(6);
+      pigeonResult.setEndAt((List<Object>) endAt);
+      Object endBefore = list.get(7);
+      pigeonResult.setEndBefore((List<Object>) endBefore);
+      Object filters = list.get(8);
+      pigeonResult.setFilters((Map<String, Object>) filters);
+      return pigeonResult;
+    }
+  }
+
   public interface Result<T> {
     @SuppressWarnings("UnknownNullness")
     void success(T result);
@@ -1187,10 +1402,12 @@ public class GeneratedAndroidFirebaseFirestore {
         case (byte) 134:
           return PigeonGetOptions.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 135:
-          return PigeonQuerySnapshot.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonQueryParameters.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 136:
-          return PigeonSnapshotMetadata.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonQuerySnapshot.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 137:
+          return PigeonSnapshotMetadata.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 138:
           return PigeonTransactionCommand.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
@@ -1220,14 +1437,17 @@ public class GeneratedAndroidFirebaseFirestore {
       } else if (value instanceof PigeonGetOptions) {
         stream.write(134);
         writeValue(stream, ((PigeonGetOptions) value).toList());
-      } else if (value instanceof PigeonQuerySnapshot) {
+      } else if (value instanceof PigeonQueryParameters) {
         stream.write(135);
+        writeValue(stream, ((PigeonQueryParameters) value).toList());
+      } else if (value instanceof PigeonQuerySnapshot) {
+        stream.write(136);
         writeValue(stream, ((PigeonQuerySnapshot) value).toList());
       } else if (value instanceof PigeonSnapshotMetadata) {
-        stream.write(136);
+        stream.write(137);
         writeValue(stream, ((PigeonSnapshotMetadata) value).toList());
       } else if (value instanceof PigeonTransactionCommand) {
-        stream.write(137);
+        stream.write(138);
         writeValue(stream, ((PigeonTransactionCommand) value).toList());
       } else {
         super.writeValue(stream, value);
@@ -1284,6 +1504,29 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull PigeonFirebaseApp app,
         @NonNull DocumentReferenceRequest request,
         @NonNull Result<Void> result);
+
+    void documentReferenceUpdate(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull DocumentReferenceRequest request,
+        @NonNull Result<Void> result);
+
+    void documentReferenceGet(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull DocumentReferenceRequest request,
+        @NonNull Result<PigeonDocumentSnapshot> result);
+
+    void documentReferenceDelete(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull DocumentReferenceRequest request,
+        @NonNull Result<Void> result);
+
+    void queryGet(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String path,
+        @NonNull Boolean isCollectionGroup,
+        @NonNull PigeonQueryParameters parameters,
+        @NonNull PigeonGetOptions options,
+        @NonNull Result<PigeonQuerySnapshot> result);
 
     /** The codec used by FirebaseFirestoreHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -1734,6 +1977,143 @@ public class GeneratedAndroidFirebaseFirestore {
                     };
 
                 api.documentReferenceSet(appArg, requestArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceUpdate",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                DocumentReferenceRequest requestArg = (DocumentReferenceRequest) args.get(1);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.documentReferenceUpdate(appArg, requestArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceGet",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                DocumentReferenceRequest requestArg = (DocumentReferenceRequest) args.get(1);
+                Result<PigeonDocumentSnapshot> resultCallback =
+                    new Result<PigeonDocumentSnapshot>() {
+                      public void success(PigeonDocumentSnapshot result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.documentReferenceGet(appArg, requestArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceDelete",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                DocumentReferenceRequest requestArg = (DocumentReferenceRequest) args.get(1);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.documentReferenceDelete(appArg, requestArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.queryGet",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                String pathArg = (String) args.get(1);
+                Boolean isCollectionGroupArg = (Boolean) args.get(2);
+                PigeonQueryParameters parametersArg = (PigeonQueryParameters) args.get(3);
+                PigeonGetOptions optionsArg = (PigeonGetOptions) args.get(4);
+                Result<PigeonQuerySnapshot> resultCallback =
+                    new Result<PigeonQuerySnapshot>() {
+                      public void success(PigeonQuerySnapshot result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.queryGet(
+                    appArg,
+                    pathArg,
+                    isCollectionGroupArg,
+                    parametersArg,
+                    optionsArg,
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

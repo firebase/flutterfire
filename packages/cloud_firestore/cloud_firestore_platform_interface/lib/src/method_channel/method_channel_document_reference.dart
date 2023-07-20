@@ -12,7 +12,6 @@ import 'package:flutter/services.dart';
 
 import 'method_channel_firestore.dart';
 import 'utils/exception.dart';
-import 'utils/source.dart';
 
 /// An implementation of [DocumentReferencePlatform] that uses [MethodChannel] to
 /// communicate with Firebase plugins.
@@ -53,13 +52,17 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   @override
   Future<void> update(Map<FieldPath, dynamic> data) async {
     try {
-      await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-        'DocumentReference#update',
-        <String, dynamic>{
-          'firestore': firestore,
-          'reference': this,
-          'data': data,
-        },
+      await MethodChannelFirebaseFirestore.pigeonChannel
+          .documentReferenceUpdate(
+        pigeonApp,
+        DocumentReferenceRequest(
+          path: _pointer.path,
+          data: data.keys.fold<Map<String, dynamic>>(<String, dynamic>{},
+              (previousValue, element) {
+            previousValue[element.components.join('.')] = data[element];
+            return previousValue;
+          }),
+        ),
       );
     } catch (e, stack) {
       convertPlatformException(e, stack);
@@ -70,21 +73,22 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   Future<DocumentSnapshotPlatform> get(
       [GetOptions options = const GetOptions()]) async {
     try {
-      final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
-          .channel
-          .invokeMapMethod<String, dynamic>(
-        'DocumentReference#get',
-        <String, dynamic>{
-          'firestore': firestore,
-          'reference': this,
-          'source': getSourceString(options.source),
-          'serverTimestampBehavior': getServerTimestampBehaviorString(
-            options.serverTimestampBehavior,
-          ),
-        },
+      final result = await MethodChannelFirebaseFirestore.pigeonChannel
+          .documentReferenceGet(
+        pigeonApp,
+        DocumentReferenceRequest(
+          path: _pointer.path,
+          source: options.source,
+          serverTimestampBehavior: options.serverTimestampBehavior,
+        ),
       );
 
-      return DocumentSnapshotPlatform(firestore, _pointer.path, data!);
+      return DocumentSnapshotPlatform(
+        firestore,
+        _pointer.path,
+        result.data,
+        result.metadata,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -93,9 +97,12 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   @override
   Future<void> delete() async {
     try {
-      await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-        'DocumentReference#delete',
-        <String, dynamic>{'firestore': firestore, 'reference': this},
+      await MethodChannelFirebaseFirestore.pigeonChannel
+          .documentReferenceDelete(
+        pigeonApp,
+        DocumentReferenceRequest(
+          path: _pointer.path,
+        ),
       );
     } catch (e, stack) {
       convertPlatformException(e, stack);

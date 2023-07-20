@@ -35,14 +35,17 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonGetOptions) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonQuerySnapshot) {
+    } else if (value is PigeonQueryParameters) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonSnapshotMetadata) {
+    } else if (value is PigeonQuerySnapshot) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonTransactionCommand) {
+    } else if (value is PigeonSnapshotMetadata) {
       buffer.putUint8(137);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonTransactionCommand) {
+      buffer.putUint8(138);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -67,10 +70,12 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
       case 134:
         return PigeonGetOptions.decode(readValue(buffer)!);
       case 135:
-        return PigeonQuerySnapshot.decode(readValue(buffer)!);
+        return PigeonQueryParameters.decode(readValue(buffer)!);
       case 136:
-        return PigeonSnapshotMetadata.decode(readValue(buffer)!);
+        return PigeonQuerySnapshot.decode(readValue(buffer)!);
       case 137:
+        return PigeonSnapshotMetadata.decode(readValue(buffer)!);
+      case 138:
         return PigeonTransactionCommand.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -118,6 +123,22 @@ abstract class TestFirebaseFirestoreHostApi {
 
   Future<void> documentReferenceSet(
       PigeonFirebaseApp app, DocumentReferenceRequest request);
+
+  Future<void> documentReferenceUpdate(
+      PigeonFirebaseApp app, DocumentReferenceRequest request);
+
+  Future<PigeonDocumentSnapshot> documentReferenceGet(
+      PigeonFirebaseApp app, DocumentReferenceRequest request);
+
+  Future<void> documentReferenceDelete(
+      PigeonFirebaseApp app, DocumentReferenceRequest request);
+
+  Future<PigeonQuerySnapshot> queryGet(
+      PigeonFirebaseApp app,
+      String path,
+      bool isCollectionGroup,
+      PigeonQueryParameters parameters,
+      PigeonGetOptions options);
 
   static void setup(TestFirebaseFirestoreHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -455,6 +476,124 @@ abstract class TestFirebaseFirestoreHostApi {
               'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceSet was null, expected non-null DocumentReferenceRequest.');
           await api.documentReferenceSet(arg_app!, arg_request!);
           return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceUpdate',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceUpdate was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceUpdate was null, expected non-null PigeonFirebaseApp.');
+          final DocumentReferenceRequest? arg_request =
+              (args[1] as DocumentReferenceRequest?);
+          assert(arg_request != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceUpdate was null, expected non-null DocumentReferenceRequest.');
+          await api.documentReferenceUpdate(arg_app!, arg_request!);
+          return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceGet',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceGet was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceGet was null, expected non-null PigeonFirebaseApp.');
+          final DocumentReferenceRequest? arg_request =
+              (args[1] as DocumentReferenceRequest?);
+          assert(arg_request != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceGet was null, expected non-null DocumentReferenceRequest.');
+          final PigeonDocumentSnapshot output =
+              await api.documentReferenceGet(arg_app!, arg_request!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceDelete',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceDelete was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceDelete was null, expected non-null PigeonFirebaseApp.');
+          final DocumentReferenceRequest? arg_request =
+              (args[1] as DocumentReferenceRequest?);
+          assert(arg_request != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceDelete was null, expected non-null DocumentReferenceRequest.');
+          await api.documentReferenceDelete(arg_app!, arg_request!);
+          return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.queryGet', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.queryGet was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.queryGet was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_path = (args[1] as String?);
+          assert(arg_path != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.queryGet was null, expected non-null String.');
+          final bool? arg_isCollectionGroup = (args[2] as bool?);
+          assert(arg_isCollectionGroup != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.queryGet was null, expected non-null bool.');
+          final PigeonQueryParameters? arg_parameters =
+              (args[3] as PigeonQueryParameters?);
+          assert(arg_parameters != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.queryGet was null, expected non-null PigeonQueryParameters.');
+          final PigeonGetOptions? arg_options = (args[4] as PigeonGetOptions?);
+          assert(arg_options != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.queryGet was null, expected non-null PigeonGetOptions.');
+          final PigeonQuerySnapshot output = await api.queryGet(arg_app!,
+              arg_path!, arg_isCollectionGroup!, arg_parameters!, arg_options!);
+          return <Object?>[output];
         });
       }
     }

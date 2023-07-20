@@ -1,11 +1,19 @@
 package io.flutter.plugins.firebase.firestore.utils;
 
+import android.util.Log;
+import androidx.annotation.NonNull;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.Filter;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Source;
+import io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin;
 import io.flutter.plugins.firebase.firestore.GeneratedAndroidFirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class PigeonParser {
 
@@ -128,5 +136,168 @@ public class PigeonParser {
       paths.add(FieldPath.of(fieldPath.toArray(new String[0])));
     }
     return paths;
+  }
+
+  public static Query parseQuery(
+    FirebaseFirestore firestore,
+      @NonNull String path,
+      boolean isCollectionGroup,
+      GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters) {
+    try {
+
+
+      Query query;
+      if (isCollectionGroup) {
+        query = firestore.collectionGroup(path);
+      } else {
+        query = firestore.collection(path);
+      }
+
+      if (parameters == null) return query;
+
+      boolean isFilterQuery = parameters.getFilters() != null;
+      if (isFilterQuery) {
+        Filter filter = filterFromJson(parameters.getFilters());
+        query = query.where(filter);
+      }
+
+      List<List<Object>> whereConditions = Objects.requireNonNull(parameters.getWhere());
+
+      for (List<Object> condition : whereConditions) {
+        FieldPath fieldPath = (FieldPath) condition.get(0);
+        String operator = (String) condition.get(1);
+        Object value = condition.get(2);
+
+        if ("==".equals(operator)) {
+          query = query.whereEqualTo(fieldPath, value);
+        } else if ("!=".equals(operator)) {
+          query = query.whereNotEqualTo(fieldPath, value);
+        } else if ("<".equals(operator)) {
+          query = query.whereLessThan(fieldPath, value);
+        } else if ("<=".equals(operator)) {
+          query = query.whereLessThanOrEqualTo(fieldPath, value);
+        } else if (">".equals(operator)) {
+          query = query.whereGreaterThan(fieldPath, value);
+        } else if (">=".equals(operator)) {
+          query = query.whereGreaterThanOrEqualTo(fieldPath, value);
+        } else if ("array-contains".equals(operator)) {
+          query = query.whereArrayContains(fieldPath, value);
+        } else if ("array-contains-any".equals(operator)) {
+          @SuppressWarnings("unchecked")
+          List<Object> listValues = (List<Object>) value;
+          query = query.whereArrayContainsAny(fieldPath, listValues);
+        } else if ("in".equals(operator)) {
+          @SuppressWarnings("unchecked")
+          List<Object> listValues = (List<Object>) value;
+          query = query.whereIn(fieldPath, listValues);
+        } else if ("not-in".equals(operator)) {
+          @SuppressWarnings("unchecked")
+          List<Object> listValues = (List<Object>) value;
+          query = query.whereNotIn(fieldPath, listValues);
+        } else {
+          Log.w(
+              "FLTFirestoreMsgCodec",
+              "An invalid query operator " + operator + " was received but not handled.");
+        }
+      }
+
+      // "limit" filters
+      Number limit = parameters.getLimit();
+      if (limit != null) query = query.limit(limit.longValue());
+
+      Number limitToLast = parameters.getLimitToLast();
+      if (limitToLast != null) query = query.limitToLast(limitToLast.longValue());
+
+      // "orderBy" filters
+      List<List<Object>> orderBy = parameters.getOrderBy();
+      if (orderBy == null) return query;
+
+      for (List<Object> order : orderBy) {
+        FieldPath fieldPath = (FieldPath) order.get(0);
+        boolean descending = (boolean) order.get(1);
+
+        Query.Direction direction =
+            descending ? Query.Direction.DESCENDING : Query.Direction.ASCENDING;
+
+        query = query.orderBy(fieldPath, direction);
+      }
+
+      // cursor queries
+      List<Object> startAt = parameters.getStartAt();
+      if (startAt != null) query = query.startAt(Objects.requireNonNull(startAt.toArray()));
+
+      List<Object> startAfter = parameters.getStartAfter();
+      if (startAfter != null)
+        query = query.startAfter(Objects.requireNonNull(startAfter.toArray()));
+
+      List<Object> endAt = parameters.getEndAt();
+      if (endAt != null) query = query.endAt(Objects.requireNonNull(endAt.toArray()));
+
+      List<Object> endBefore = parameters.getEndBefore();
+      if (endBefore != null) query = query.endBefore(Objects.requireNonNull(endBefore.toArray()));
+
+      return query;
+    } catch (Exception exception) {
+      Log.e(
+          "FLTFirestoreMsgCodec",
+          "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
+          exception);
+      return null;
+    }
+  }
+
+  static private Filter filterFromJson(Map<String, Object> map) {
+    if (map.containsKey("fieldPath")) {
+      // Deserialize a FilterQuery
+      String op = (String) map.get("op");
+      FieldPath fieldPath = (FieldPath) map.get("fieldPath");
+      Object value = map.get("value");
+
+      assert fieldPath != null;
+      assert op != null;
+
+      // All the operators from Firebase
+      switch (op) {
+        case "==":
+          return Filter.equalTo(fieldPath, value);
+        case "!=":
+          return Filter.notEqualTo(fieldPath, value);
+        case "<":
+          return Filter.lessThan(fieldPath, value);
+        case "<=":
+          return Filter.lessThanOrEqualTo(fieldPath, value);
+        case ">":
+          return Filter.greaterThan(fieldPath, value);
+        case ">=":
+          return Filter.greaterThanOrEqualTo(fieldPath, value);
+        case "array-contains":
+          return Filter.arrayContains(fieldPath, value);
+        case "array-contains-any":
+          return Filter.arrayContainsAny(fieldPath, (List<? extends Object>) value);
+        case "in":
+          return Filter.inArray(fieldPath, (List<? extends Object>) value);
+        case "not-in":
+          return Filter.notInArray(fieldPath, (List<? extends Object>) value);
+        default:
+          throw new Error("Invalid operator");
+      }
+    }
+    // Deserialize a FilterOperator
+    String op = (String) map.get("op");
+    List<Map<String, Object>> queries = (List<Map<String, Object>>) map.get("queries");
+
+    // Map queries recursively
+    ArrayList<Filter> parsedFilters = new ArrayList<>();
+    for (Map<String, Object> query : queries) {
+      parsedFilters.add(filterFromJson(query));
+    }
+
+    if (op.equals("OR")) {
+      return Filter.or(parsedFilters.toArray(new Filter[0]));
+    } else if (op.equals("AND")) {
+      return Filter.and(parsedFilters.toArray(new Filter[0]));
+    }
+
+    throw new Error("Invalid operator");
   }
 }

@@ -393,6 +393,67 @@ class DocumentReferenceRequest {
   }
 }
 
+class PigeonQueryParameters {
+  PigeonQueryParameters({
+    this.where,
+    this.orderBy,
+    this.limit,
+    this.limitToLast,
+    this.startAt,
+    this.startAfter,
+    this.endAt,
+    this.endBefore,
+    this.filters,
+  });
+
+  List<List<Object?>?>? where;
+
+  List<List<Object?>?>? orderBy;
+
+  int? limit;
+
+  int? limitToLast;
+
+  List<Object?>? startAt;
+
+  List<Object?>? startAfter;
+
+  List<Object?>? endAt;
+
+  List<Object?>? endBefore;
+
+  Map<String?, Object?>? filters;
+
+  Object encode() {
+    return <Object?>[
+      where,
+      orderBy,
+      limit,
+      limitToLast,
+      startAt,
+      startAfter,
+      endAt,
+      endBefore,
+      filters,
+    ];
+  }
+
+  static PigeonQueryParameters decode(Object result) {
+    result as List<Object?>;
+    return PigeonQueryParameters(
+      where: (result[0] as List<Object?>?)?.cast<List<Object?>?>(),
+      orderBy: (result[1] as List<Object?>?)?.cast<List<Object?>?>(),
+      limit: result[2] as int?,
+      limitToLast: result[3] as int?,
+      startAt: (result[4] as List<Object?>?)?.cast<Object?>(),
+      startAfter: (result[5] as List<Object?>?)?.cast<Object?>(),
+      endAt: (result[6] as List<Object?>?)?.cast<Object?>(),
+      endBefore: (result[7] as List<Object?>?)?.cast<Object?>(),
+      filters: (result[8] as Map<Object?, Object?>?)?.cast<String?, Object?>(),
+    );
+  }
+}
+
 class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   const _FirebaseFirestoreHostApiCodec();
   @override
@@ -418,14 +479,17 @@ class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonGetOptions) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonQuerySnapshot) {
+    } else if (value is PigeonQueryParameters) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonSnapshotMetadata) {
+    } else if (value is PigeonQuerySnapshot) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonTransactionCommand) {
+    } else if (value is PigeonSnapshotMetadata) {
       buffer.putUint8(137);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonTransactionCommand) {
+      buffer.putUint8(138);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -450,10 +514,12 @@ class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
       case 134:
         return PigeonGetOptions.decode(readValue(buffer)!);
       case 135:
-        return PigeonQuerySnapshot.decode(readValue(buffer)!);
+        return PigeonQueryParameters.decode(readValue(buffer)!);
       case 136:
-        return PigeonSnapshotMetadata.decode(readValue(buffer)!);
+        return PigeonQuerySnapshot.decode(readValue(buffer)!);
       case 137:
+        return PigeonSnapshotMetadata.decode(readValue(buffer)!);
+      case 138:
         return PigeonTransactionCommand.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -814,6 +880,120 @@ class FirebaseFirestoreHostApi {
       );
     } else {
       return;
+    }
+  }
+
+  Future<void> documentReferenceUpdate(
+      PigeonFirebaseApp arg_app, DocumentReferenceRequest arg_request) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceUpdate',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_request]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<PigeonDocumentSnapshot> documentReferenceGet(
+      PigeonFirebaseApp arg_app, DocumentReferenceRequest arg_request) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceGet',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_request]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as PigeonDocumentSnapshot?)!;
+    }
+  }
+
+  Future<void> documentReferenceDelete(
+      PigeonFirebaseApp arg_app, DocumentReferenceRequest arg_request) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceDelete',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_request]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<PigeonQuerySnapshot> queryGet(
+      PigeonFirebaseApp arg_app,
+      String arg_path,
+      bool arg_isCollectionGroup,
+      PigeonQueryParameters arg_parameters,
+      PigeonGetOptions arg_options) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseFirestoreHostApi.queryGet', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel.send(<Object?>[
+      arg_app,
+      arg_path,
+      arg_isCollectionGroup,
+      arg_parameters,
+      arg_options
+    ]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as PigeonQuerySnapshot?)!;
     }
   }
 }

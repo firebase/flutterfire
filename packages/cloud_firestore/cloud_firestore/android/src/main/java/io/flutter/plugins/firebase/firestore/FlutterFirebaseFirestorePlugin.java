@@ -220,116 +220,12 @@ public class FlutterFirebaseFirestorePlugin
     return taskCompletionSource.getTask();
   }
 
-  private Task<QuerySnapshot> queryGet(Map<String, Object> arguments) {
-    TaskCompletionSource<QuerySnapshot> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            Source source = getSource(arguments);
-            Query query = (Query) arguments.get("query");
-
-            if (query == null) {
-              taskCompletionSource.setException(
-                  new IllegalArgumentException(
-                      "An error occurred while parsing query arguments, see native logs for more information. Please report this issue."));
-              return;
-            }
-            final QuerySnapshot querySnapshot = Tasks.await(query.get(source));
-            saveTimestampBehavior(arguments, querySnapshot.hashCode());
-
-            taskCompletionSource.setResult(querySnapshot);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  private Task<DocumentSnapshot> documentGet(Map<String, Object> arguments) {
-    TaskCompletionSource<DocumentSnapshot> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            Source source = getSource(arguments);
-            DocumentReference documentReference =
-                (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
-
-            final DocumentSnapshot documentSnapshot = Tasks.await(documentReference.get(source));
-            saveTimestampBehavior(arguments, documentSnapshot.hashCode());
-
-            taskCompletionSource.setResult(documentSnapshot);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
   private void saveTimestampBehavior(Map<String, Object> arguments, int hashCode) {
     String serverTimestampBehaviorString = (String) arguments.get("serverTimestampBehavior");
     DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
         ServerTimestampBehaviorConverter.toServerTimestampBehavior(serverTimestampBehaviorString);
 
     serverTimestampBehaviorHashMap.put(hashCode, serverTimestampBehavior);
-  }
-
-
-  private Task<Void> documentUpdate(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            DocumentReference documentReference =
-                (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
-            @SuppressWarnings("unchecked")
-            Map<FieldPath, Object> data =
-                (Map<FieldPath, Object>) Objects.requireNonNull(arguments.get("data"));
-
-            // Due to the signature of the function, I extract the first element of the map and
-            // pass the rest of the map as an array of alternating keys and values.
-            FieldPath firstFieldPath = data.keySet().iterator().next();
-            Object firstObject = data.get(firstFieldPath);
-
-            ArrayList<Object> flattenData = new ArrayList<>();
-            for (FieldPath fieldPath : data.keySet()) {
-              if (fieldPath.equals(firstFieldPath)) {
-                continue;
-              }
-              flattenData.add(fieldPath);
-              flattenData.add(data.get(fieldPath));
-            }
-            taskCompletionSource.setResult(
-                Tasks.await(
-                    documentReference.update(firstFieldPath, firstObject, flattenData.toArray())));
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  private Task<Void> documentDelete(Map<String, Object> arguments) {
-    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            DocumentReference documentReference =
-                (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
-
-            taskCompletionSource.setResult(Tasks.await(documentReference.delete()));
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> aggregateQuery(Map<String, Object> arguments) {
@@ -366,9 +262,6 @@ public class FlutterFirebaseFirestorePlugin
       case "WriteBatch#commit":
         methodCallTask = batchCommit(call.arguments());
         break;
-      case "Query#get":
-        methodCallTask = queryGet(call.arguments());
-        break;
       case "Query#snapshots":
         result.success(
             registerEventChannel(
@@ -379,15 +272,6 @@ public class FlutterFirebaseFirestorePlugin
             registerEventChannel(
                 METHOD_CHANNEL_NAME + "/document", new DocumentSnapshotsStreamHandler()));
         return;
-      case "DocumentReference#get":
-        methodCallTask = documentGet(call.arguments());
-        break;
-      case "DocumentReference#update":
-        methodCallTask = documentUpdate(call.arguments());
-        break;
-      case "DocumentReference#delete":
-        methodCallTask = documentDelete(call.arguments());
-        break;
       case "AggregateQuery#count":
         methodCallTask = aggregateQuery(call.arguments());
         break;
@@ -420,19 +304,6 @@ public class FlutterFirebaseFirestorePlugin
     FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this);
 
     GeneratedAndroidFirebaseFirestore.FirebaseFirestoreHostApi.setup(binaryMessenger, this);
-  }
-
-  private Source getSource(Map<String, Object> arguments) {
-    String source = (String) Objects.requireNonNull(arguments.get("source"));
-
-    switch (source) {
-      case "server":
-        return Source.SERVER;
-      case "cache":
-        return Source.CACHE;
-      default:
-        return Source.DEFAULT;
-    }
   }
 
   @Override
@@ -556,7 +427,7 @@ public class FlutterFirebaseFirestorePlugin
     return builder.build();
   }
 
-  static FirebaseFirestore getFirestoreFromPigeon(
+  public static FirebaseFirestore getFirestoreFromPigeon(
       GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp pigeonApp) {
     FirebaseApp app = FirebaseApp.getInstance(pigeonApp.getAppName());
     FirebaseFirestore firestore = FirebaseFirestore.getInstance(app);
@@ -791,34 +662,158 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   @Override
-  public void documentReferenceSet(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request, @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+  public void documentReferenceSet(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
-      () -> {
-        try {
-          DocumentReference documentReference = getFirestoreFromPigeon(app).document(request.getPath());
+        () -> {
+          try {
+            DocumentReference documentReference =
+                getFirestoreFromPigeon(app).document(request.getPath());
 
+            Map<String, Object> data = Objects.requireNonNull(request.getData());
 
-          Map<String, Object> data = Objects.requireNonNull(request.getData());
+            Task<Void> setTask;
 
-          Task<Void> setTask;
+            assert request.getOption() != null;
+            if (request.getOption().getMerge() != null && request.getOption().getMerge()) {
+              setTask = documentReference.set(data, SetOptions.merge());
+            } else if (request.getOption().getMergeFields() != null) {
+              List<List<String>> fieldList =
+                  Objects.requireNonNull(request.getOption().getMergeFields());
+              List<FieldPath> fieldPathList = PigeonParser.parseFieldPath(fieldList);
+              setTask = documentReference.set(data, SetOptions.mergeFieldPaths(fieldPathList));
+            } else {
+              setTask = documentReference.set(data);
+            }
 
-          assert request.getOption() != null;
-          if (request.getOption().getMerge() != null && request.getOption().getMerge()) {
-            setTask = documentReference.set(data, SetOptions.merge());
-          } else if (request.getOption().getMergeFields() != null) {
-            List<List<String>> fieldList =
-              Objects.requireNonNull(request.getOption().getMergeFields());
-            List<FieldPath> fieldPathList = PigeonParser.parseFieldPath(fieldList);
-            setTask = documentReference.set(data, SetOptions.mergeFieldPaths(fieldPathList));
-          } else {
-            setTask = documentReference.set(data);
+            result.success(Tasks.await(setTask));
+          } catch (Exception e) {
+            result.error(e);
           }
+        });
+  }
 
-          result.success(Tasks.await(setTask));
-        } catch (Exception e) {
-          result.error(e);
-        }
-      });
+  @Override
+  public void documentReferenceUpdate(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            DocumentReference documentReference =
+                getFirestoreFromPigeon(app).document(request.getPath());
+            Map<String, Object> dataWithString = Objects.requireNonNull(request.getData());
 
+            Map<FieldPath, Object> data = new HashMap<>();
+            for (String key : dataWithString.keySet()) {
+              data.put(FieldPath.of(key), data.get(key));
+            }
+
+            // Due to the signature of the function, I extract the first element of the map and
+            // pass the rest of the map as an array of alternating keys and values.
+            FieldPath firstFieldPath = data.keySet().iterator().next();
+            Object firstObject = data.get(firstFieldPath);
+
+            ArrayList<Object> flattenData = new ArrayList<>();
+            for (FieldPath fieldPath : data.keySet()) {
+              if (fieldPath.equals(firstFieldPath)) {
+                continue;
+              }
+              flattenData.add(fieldPath);
+              flattenData.add(data.get(fieldPath));
+            }
+            result.success(
+                Tasks.await(
+                    documentReference.update(firstFieldPath, firstObject, flattenData.toArray())));
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void documentReferenceGet(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request,
+      @NonNull
+          GeneratedAndroidFirebaseFirestore.Result<
+                  GeneratedAndroidFirebaseFirestore.PigeonDocumentSnapshot>
+              result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            assert request.getSource() != null;
+            Source source = PigeonParser.parsePigeonSource(request.getSource());
+            DocumentReference documentReference =
+                getFirestoreFromPigeon(app).document(request.getPath());
+
+            final DocumentSnapshot documentSnapshot = Tasks.await(documentReference.get(source));
+
+            assert request.getServerTimestampBehavior() != null;
+            result.success(
+                PigeonParser.toPigeonDocumentSnapshot(
+                    documentSnapshot,
+                    PigeonParser.parsePigeonServerTimestampBehavior(
+                        request.getServerTimestampBehavior())));
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void documentReferenceDelete(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            DocumentReference documentReference =
+                getFirestoreFromPigeon(app).document(request.getPath());
+
+            result.success(Tasks.await(documentReference.delete()));
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
+  }
+
+  @Override
+  public void queryGet(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull String path,
+      @NonNull Boolean isCollectionGroup,
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonGetOptions options,
+      @NonNull
+          GeneratedAndroidFirebaseFirestore.Result<
+                  GeneratedAndroidFirebaseFirestore.PigeonQuerySnapshot>
+              result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            Source source = PigeonParser.parsePigeonSource(options.getSource());
+            Query query =
+                PigeonParser.parseQuery(
+                    getFirestoreFromPigeon(app), path, isCollectionGroup, parameters);
+
+            if (query == null) {
+              taskCompletionSource.setException(
+                  new IllegalArgumentException(
+                      "An error occurred while parsing query arguments, see native logs for more information. Please report this issue."));
+              return;
+            }
+            final QuerySnapshot querySnapshot = Tasks.await(query.get(source));
+            saveTimestampBehavior(arguments, querySnapshot.hashCode());
+
+            taskCompletionSource.setResult(querySnapshot);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
   }
 }
