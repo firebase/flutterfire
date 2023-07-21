@@ -85,7 +85,7 @@ public class FlutterFirebaseAuthPlugin
 
     channel = null;
     messenger = null;
-    
+
     removeEventListeners();
   }
 
