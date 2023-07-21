@@ -18,7 +18,7 @@ MultiFactorUser multiFactor(auth.User user) {
 }
 
 /// Given an AppJSImp, return the Auth instance.
-MultiFactorResolver getMultiFactorResolver(auth.Auth auth, Object error) {
+MultiFactorResolver getMultiFactorResolver(auth.Auth auth, auth.AuthError error) {
   return MultiFactorResolver.fromJsObject(
       auth_interop.getMultiFactorResolver(auth.jsObject, error));
 }
