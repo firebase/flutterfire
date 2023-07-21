@@ -792,13 +792,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
         hasArrayContainsAny = true;
       }
 
-      if (operator == 'array-contains-any' || operator == 'in') {
-        assert(
-          !(hasIn && hasArrayContainsAny),
-          "You cannot use 'in' filters with 'array-contains-any' filters.",
-        );
-      }
-
       if (operator == 'array-contains' || operator == 'array-contains-any') {
         assert(
           !(hasArrayContains && hasArrayContainsAny),
