@@ -29,6 +29,18 @@ bool _isFirebaseAuthError(Object e) =>
     instanceof(e, getProperty(globalThis, 'Error')) &&
     hasProperty(e, 'customData');
 
+bool _hasFirebaseAuthErrorCodeAndMessage(Object e) {
+  if (_isFirebaseAuthError(e)) {
+    String? code = getProperty(e, 'code');
+    String? message = getProperty(e, 'message');
+    if (code == null || !code.startsWith('auth/')) return false;
+    if (message == null || !message.contains('Firebase')) return false;
+    return true;
+  } else {
+    return false;
+  }
+}
+
 /// Given a web error, an [Exception] is returned.
 ///
 /// The firebase-dart wrapper exposes a [core_interop.FirebaseError], allowing us to
@@ -37,35 +49,22 @@ FirebaseAuthException getFirebaseAuthException(
   Object exception, [
   auth_interop.Auth? auth,
 ]) {
-  if (!_isFirebaseAuthError(exception)) {
+  if (!_hasFirebaseAuthErrorCodeAndMessage(exception)) {
     return FirebaseAuthException(
       code: 'unknown',
       message: 'An unknown error occurred: $exception',
     );
   }
 
-  String code = getProperty(exception, 'code').replaceFirst('auth/', '');
-  String message = getProperty(exception, 'message')
+  auth_interop.AuthError firebaseError = exception as auth_interop.AuthError;
+  String code = firebaseError.code.replaceFirst('auth/', '');
+  String message = firebaseError.message
       .replaceFirst(' ($code).', '')
       .replaceFirst('Firebase: ', '');
 
   // customData is a Map<String, String>, see Firebase docs: https://firebase.google.com/docs/reference/js/auth.autherror
-  dynamic customData = dartify(getProperty(exception, 'customData'));
-  String? email;
-  String? phoneNumber;
-  String? tenantId;
-
-  if (customData != null && customData['email'] != null) {
-    email = customData['email'];
-  }
-
-  if (customData != null && customData['phoneNumber'] != null) {
-    phoneNumber = customData['phoneNumber'];
-  }
-
-  if (customData != null && customData['tenantId'] != null) {
-    tenantId = customData['tenantId'];
-  }
+  final customData =
+      getProperty(exception, 'customData') as auth_interop.AuthErrorCustomData;
 
   if (code == 'multi-factor-auth-required') {
     final _auth = auth;
@@ -84,9 +83,9 @@ FirebaseAuthException getFirebaseAuthException(
     return FirebaseAuthMultiFactorExceptionPlatform(
       code: code,
       message: message,
-      email: email,
-      phoneNumber: phoneNumber,
-      tenantId: tenantId,
+      email: customData.email,
+      phoneNumber: customData.phoneNumber,
+      tenantId: customData.tenantId,
       resolver: MultiFactorResolverWeb(
         resolverWeb.hints.map((e) {
           if (e is multi_factor_interop.PhoneMultiFactorInfo) {
@@ -119,9 +118,9 @@ FirebaseAuthException getFirebaseAuthException(
   return FirebaseAuthException(
     code: code,
     message: message,
-    email: email,
-    phoneNumber: phoneNumber,
-    tenantId: tenantId,
+    email: customData.email,
+    phoneNumber: customData.phoneNumber,
+    tenantId: customData.tenantId,
   );
 }
 
