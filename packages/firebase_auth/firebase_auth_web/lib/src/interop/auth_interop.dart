@@ -246,7 +246,7 @@ external MultiFactorUserJsImpl multiFactor(
 @JS()
 external MultiFactorResolverJsImpl getMultiFactorResolver(
   AuthJsImpl auth,
-  dynamic error,
+  Object error,
 );
 
 @JS('Auth')
