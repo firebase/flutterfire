@@ -2,27 +2,31 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-
-import 'method_channel_firestore.dart';
 import '../../cloud_firestore_platform_interface.dart';
+import 'method_channel_firestore.dart';
 
 /// An implementation of [AggregateQueryPlatform] for the [MethodChannel]
 class MethodChannelAggregateQuery extends AggregateQueryPlatform {
-  MethodChannelAggregateQuery(QueryPlatform query, this.pigeonApp,) : super(query);
+  MethodChannelAggregateQuery(
+    query,
+    this._pigeonParameters,
+    this._path,
+    this._pigeonApp,
+  ) : super(query);
 
-  final PigeonFirebaseApp pigeonApp;
+  final PigeonFirebaseApp _pigeonApp;
+  final String _path;
+  final PigeonQueryParameters _pigeonParameters;
 
   @override
   Future<AggregateQuerySnapshotPlatform> get({
     required AggregateSource source,
   }) async {
-    await MethodChannelFirebaseFirestore
-        .pigeonChannel
-        .aggregateQueryCount(pigeonApp, query., arg_parameters, arg_options, arg_source);
-    
+    final data = await MethodChannelFirebaseFirestore.pigeonChannel
+        .aggregateQueryCount(_pigeonApp, _path, _pigeonParameters, source);
 
     return AggregateQuerySnapshotPlatform(
-      count: data!['count'] as int,
+      count: data,
     );
   }
 }

@@ -1544,7 +1544,6 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull PigeonFirebaseApp app,
         @NonNull String path,
         @NonNull PigeonQueryParameters parameters,
-        @NonNull PigeonGetOptions options,
         @NonNull AggregateSource source,
         @NonNull Result<Double> result);
 
@@ -1552,6 +1551,10 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull PigeonFirebaseApp app,
         @NonNull List<PigeonTransactionCommand> writes,
         @NonNull Result<Void> result);
+
+    void querySnapshot(@NonNull Result<String> result);
+
+    void documentReferenceSnapshot(@NonNull Result<String> result);
 
     /** The codec used by FirebaseFirestoreHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -2158,9 +2161,8 @@ public class GeneratedAndroidFirebaseFirestore {
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
                 String pathArg = (String) args.get(1);
                 PigeonQueryParameters parametersArg = (PigeonQueryParameters) args.get(2);
-                PigeonGetOptions optionsArg = (PigeonGetOptions) args.get(3);
                 AggregateSource sourceArg =
-                    args.get(4) == null ? null : AggregateSource.values()[(int) args.get(4)];
+                    args.get(3) == null ? null : AggregateSource.values()[(int) args.get(3)];
                 Result<Double> resultCallback =
                     new Result<Double>() {
                       public void success(Double result) {
@@ -2174,8 +2176,7 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.aggregateQueryCount(
-                    appArg, pathArg, parametersArg, optionsArg, sourceArg, resultCallback);
+                api.aggregateQueryCount(appArg, pathArg, parametersArg, sourceArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -2209,6 +2210,64 @@ public class GeneratedAndroidFirebaseFirestore {
                     };
 
                 api.writeBatchCommit(appArg, writesArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.querySnapshot",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                Result<String> resultCallback =
+                    new Result<String>() {
+                      public void success(String result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.querySnapshot(resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceSnapshot",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                Result<String> resultCallback =
+                    new Result<String>() {
+                      public void success(String result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.documentReferenceSnapshot(resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

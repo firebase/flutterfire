@@ -121,10 +121,10 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     StreamSubscription<dynamic>? snapshotStreamSubscription;
     controller = StreamController<DocumentSnapshotPlatform>.broadcast(
       onListen: () async {
-        final observerId = await MethodChannelFirebaseFirestore.channel
-            .invokeMethod<String>('DocumentReference#snapshots');
+        final observerId = await MethodChannelFirebaseFirestore.pigeonChannel
+            .documentReferenceSnapshot();
         snapshotStreamSubscription =
-            MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId!)
+            MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
                 .receiveGuardedBroadcastStream(
           arguments: <String, dynamic>{
             'reference': this,

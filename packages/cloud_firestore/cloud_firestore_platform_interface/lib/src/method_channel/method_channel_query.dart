@@ -161,11 +161,11 @@ class MethodChannelQuery extends QueryPlatform {
 
     controller = StreamController<QuerySnapshotPlatform>.broadcast(
       onListen: () async {
-        final observerId = await MethodChannelFirebaseFirestore.channel
-            .invokeMethod<String>('Query#snapshots');
+        final observerId =
+            await MethodChannelFirebaseFirestore.pigeonChannel.querySnapshot();
 
         snapshotStreamSubscription =
-            MethodChannelFirebaseFirestore.querySnapshotChannel(observerId!)
+            MethodChannelFirebaseFirestore.querySnapshotChannel(observerId)
                 .receiveGuardedBroadcastStream(
           arguments: <String, dynamic>{
             'query': this,
@@ -248,6 +248,9 @@ class MethodChannelQuery extends QueryPlatform {
   AggregateQueryPlatform count() {
     return MethodChannelAggregateQuery(
       this,
+      _pigeonParameters,
+      _pointer.path,
+      pigeonApp,
     );
   }
 

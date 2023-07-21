@@ -13,7 +13,6 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.AggregateQuery;
 import com.google.firebase.firestore.AggregateQuerySnapshot;
-import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
@@ -33,9 +32,7 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
-import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
@@ -45,7 +42,6 @@ import io.flutter.plugins.firebase.firestore.streamhandler.OnTransactionResultLi
 import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
-import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +54,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class FlutterFirebaseFirestorePlugin
     implements FlutterFirebasePlugin,
-        MethodCallHandler,
         FlutterPlugin,
         ActivityAware,
         GeneratedAndroidFirebaseFirestore.FirebaseFirestoreHostApi {
@@ -157,32 +152,8 @@ public class FlutterFirebaseFirestorePlugin
   }
 
 
-  @Override
-  public void onMethodCall(MethodCall call, @NonNull final MethodChannel.Result result) {
-
-    switch (call.method) {
-      case "Query#snapshots":
-        result.success(
-            registerEventChannel(
-                METHOD_CHANNEL_NAME + "/query", new QuerySnapshotsStreamHandler()));
-        return;
-      case "DocumentReference#snapshots":
-        result.success(
-            registerEventChannel(
-                METHOD_CHANNEL_NAME + "/document", new DocumentSnapshotsStreamHandler()));
-        return;
-      default:
-        result.notImplemented();
-        return;
-    }
-
-  }
-
   private void initInstance(BinaryMessenger messenger) {
     binaryMessenger = messenger;
-
-    channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME, MESSAGE_CODEC);
-    channel.setMethodCallHandler(this);
 
     FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this);
 
@@ -704,23 +675,25 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   @Override
-  public void aggregateQueryCount(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull String path, @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters, @NonNull GeneratedAndroidFirebaseFirestore.PigeonGetOptions options, @NonNull GeneratedAndroidFirebaseFirestore.AggregateSource source, @NonNull GeneratedAndroidFirebaseFirestore.Result<Double> result) {
+  public void aggregateQueryCount(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull String path,
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
+      @NonNull GeneratedAndroidFirebaseFirestore.AggregateSource source,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<Double> result) {
     cachedThreadPool.execute(
-      () -> {
-        try {
-          Query query =
-            PigeonParser.parseQuery(
-              getFirestoreFromPigeon(app), path, false, parameters);
-          AggregateQuery aggregateQuery = query.count();
-          AggregateQuerySnapshot aggregateQuerySnapshot =
-            Tasks.await(aggregateQuery.get(PigeonParser.parseAggregateSource(source)));
-          result.success((double) aggregateQuerySnapshot.getCount());
-
-        } catch (Exception e) {
-          result.error(e);
-        }
-      });
-
+        () -> {
+          try {
+            Query query =
+                PigeonParser.parseQuery(getFirestoreFromPigeon(app), path, false, parameters);
+            AggregateQuery aggregateQuery = query.count();
+            AggregateQuerySnapshot aggregateQuerySnapshot =
+                Tasks.await(aggregateQuery.get(PigeonParser.parseAggregateSource(source)));
+            result.success((double) aggregateQuerySnapshot.getCount());
+          } catch (Exception e) {
+            result.error(e);
+          }
+        });
   }
 
   @Override
@@ -780,5 +753,18 @@ public class FlutterFirebaseFirestorePlugin
             result.error(e);
           }
         });
+  }
+
+  @Override
+  public void querySnapshot(@NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
+    result.success(
+        registerEventChannel(METHOD_CHANNEL_NAME + "/query", new QuerySnapshotsStreamHandler()));
+  }
+
+  @Override
+  public void documentReferenceSnapshot(@NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
+    result.success(
+      registerEventChannel(
+        METHOD_CHANNEL_NAME + "/document", new DocumentSnapshotsStreamHandler()));
   }
 }

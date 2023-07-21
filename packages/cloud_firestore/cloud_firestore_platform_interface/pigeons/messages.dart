@@ -340,7 +340,6 @@ abstract class FirebaseFirestoreHostApi {
     PigeonFirebaseApp app,
     String path,
     PigeonQueryParameters parameters,
-    PigeonGetOptions options,
     AggregateSource source,
   );
 
@@ -349,4 +348,10 @@ abstract class FirebaseFirestoreHostApi {
     PigeonFirebaseApp app,
     List<PigeonTransactionCommand?> writes,
   );
+
+  @async
+  String querySnapshot();
+
+  @async
+  String documentReferenceSnapshot();
 }

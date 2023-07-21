@@ -140,15 +140,15 @@ abstract class TestFirebaseFirestoreHostApi {
       PigeonQueryParameters parameters,
       PigeonGetOptions options);
 
-  Future<double> aggregateQueryCount(
-      PigeonFirebaseApp app,
-      String path,
-      PigeonQueryParameters parameters,
-      PigeonGetOptions options,
-      AggregateSource source);
+  Future<double> aggregateQueryCount(PigeonFirebaseApp app, String path,
+      PigeonQueryParameters parameters, AggregateSource source);
 
   Future<void> writeBatchCommit(
       PigeonFirebaseApp app, List<PigeonTransactionCommand?> writes);
+
+  Future<String> querySnapshot();
+
+  Future<String> documentReferenceSnapshot();
 
   static void setup(TestFirebaseFirestoreHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -632,15 +632,12 @@ abstract class TestFirebaseFirestoreHostApi {
               (args[2] as PigeonQueryParameters?);
           assert(arg_parameters != null,
               'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.aggregateQueryCount was null, expected non-null PigeonQueryParameters.');
-          final PigeonGetOptions? arg_options = (args[3] as PigeonGetOptions?);
-          assert(arg_options != null,
-              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.aggregateQueryCount was null, expected non-null PigeonGetOptions.');
           final AggregateSource? arg_source =
-              args[4] == null ? null : AggregateSource.values[args[4] as int];
+              args[3] == null ? null : AggregateSource.values[args[3] as int];
           assert(arg_source != null,
               'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.aggregateQueryCount was null, expected non-null AggregateSource.');
           final double output = await api.aggregateQueryCount(
-              arg_app!, arg_path!, arg_parameters!, arg_options!, arg_source!);
+              arg_app!, arg_path!, arg_parameters!, arg_source!);
           return <Object?>[output];
         });
       }
@@ -668,6 +665,41 @@ abstract class TestFirebaseFirestoreHostApi {
               'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.writeBatchCommit was null, expected non-null List<PigeonTransactionCommand?>.');
           await api.writeBatchCommit(arg_app!, arg_writes!);
           return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.querySnapshot', codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          // ignore message
+          final String output = await api.querySnapshot();
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceSnapshot',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          // ignore message
+          final String output = await api.documentReferenceSnapshot();
+          return <Object?>[output];
         });
       }
     }
