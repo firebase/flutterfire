@@ -543,7 +543,6 @@ abstract class AuthError {}
 /// An authentication error.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.Error>.
-@JS('Error')
 extension AuthErrorExtension on AuthError {
   external String get code;
   external set code(String s);
