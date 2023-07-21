@@ -556,7 +556,18 @@ extension AuthErrorExtension on AuthError {
   external set tenantId(String s);
   external String get phoneNumber;
   external set phoneNumber(String s);
-  external dynamic get customData;
+  external Object get customData;
+}
+
+@JS()
+@staticInterop
+class AuthErrorCustomData {}
+
+extension AuthErrorCustomDataExtension on AuthErrorCustomData {
+  external String get appName;
+  external String? get email;
+  external String? get phoneNumber;
+  external String? get tenantId;
 }
 
 @JS()
