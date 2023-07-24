@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import '../collection_data.dart';
+import '../collection_generator.dart';
 
 class DocumentReferenceTemplate {
   DocumentReferenceTemplate(this.data);
@@ -102,12 +103,16 @@ void transactionUpdate(Transaction transaction, {${parameters.join()}});
       ]
     ];
 
+    String parameterMapping(QueryingField field) =>
+        field.parameterMapping?.call(field.name) ??
+        '${field.name} as ${field.type}';
+
     // TODO support nested objects
     final json = [
       for (final field in data.updatableFields) ...[
         '''
         if (${field.name} != _sentinel)
-          ${field.field}: ${field.name} as ${field.type},
+          ${field.field}: ${parameterMapping(field)},
         ''',
         '''
         if (${field.name}FieldValue != null)

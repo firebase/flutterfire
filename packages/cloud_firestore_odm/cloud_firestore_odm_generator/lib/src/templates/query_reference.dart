@@ -5,9 +5,9 @@
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_provider.dart';
-import 'package:source_helper/source_helper.dart';
 
 import '../collection_data.dart';
+import '../collection_generator.dart';
 
 class QueryTemplate {
   QueryTemplate(this.data);
@@ -381,42 +381,39 @@ class ${data.queryReferenceImplName}
               ? '${field.type}'
               : '${field.type}?';
 
-      String parameterMapping(String type, String parameter) {
-        if (field.type.isEnum && type.contains(field.type.toString())) {
-          if (type.contains('List')) {
-            return '$parameter?.map((e) => _\$${field.type}EnumMap[e]!).toList()';
-          } else {
-            return '_\$${field.type}EnumMap[$parameter]!';
-          }
-        } else {
-          return parameter;
-        }
-      }
-
-      final operators = <String, String>{
-        'isEqualTo': nullableType,
-        'isNotEqualTo': nullableType,
-        'isLessThan': nullableType,
-        'isLessThanOrEqualTo': nullableType,
-        'isGreaterThan': nullableType,
-        'isGreaterThanOrEqualTo': nullableType,
-        'isNull': 'bool?',
+      final operators = <String, (String, ParameterMapping?)>{
+        'isEqualTo': (nullableType, field.parameterMapping),
+        'isNotEqualTo': (nullableType, field.parameterMapping),
+        'isLessThan': (nullableType, field.parameterMapping),
+        'isLessThanOrEqualTo': (nullableType, field.parameterMapping),
+        'isGreaterThan': (nullableType, field.parameterMapping),
+        'isGreaterThanOrEqualTo': (nullableType, field.parameterMapping),
+        'isNull': ('bool?', null),
         if (field.type.isDartCoreList) ...{
-          'arrayContains': data.libraryElement.typeProvider
-              .asNullable((field.type as InterfaceType).typeArguments.first)
-              .toString(),
-          'arrayContainsAny': nullableType,
+          'arrayContains': (
+            data.libraryElement.typeProvider
+                .asNullable((field.type as InterfaceType).typeArguments.first)
+                .toString(),
+            null
+          ),
+          'arrayContainsAny': (nullableType, field.parameterMapping),
         } else ...{
-          'whereIn': 'List<${field.type}>?',
-          'whereNotIn': 'List<${field.type}>?',
+          'whereIn': (
+            'List<${field.type}>?',
+            listParameterMapping(field.parameterMapping, nullable: true),
+          ),
+          'whereNotIn': (
+            'List<${field.type}>?',
+            listParameterMapping(field.parameterMapping, nullable: true),
+          ),
         }
       };
 
       final prototype =
-          operators.entries.map((e) => '${e.value} ${e.key},').join();
+          operators.entries.map((e) => '${e.value.$1} ${e.key},').join();
 
       final parameters = operators.entries
-          .map((e) => '${e.key}: ${parameterMapping(e.value, e.key)},')
+          .map((e) => '${e.key}: ${e.value.$2?.call(e.key) ?? e.key},')
           .join();
 
       // TODO support whereX(isEqual: null);

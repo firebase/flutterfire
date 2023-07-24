@@ -283,6 +283,7 @@ represents the content of the collection must be in the same file.
               e.type,
               updatable: true,
               field: key,
+              parameterMapping: _parameterMappingForType(e.type),
             );
           },
         ).toList(),
@@ -354,6 +355,19 @@ represents the content of the collection must be in the same file.
         timestampChecker.isAssignableFromType(type) ||
         geoPointChecker.isAssignableFromType(type);
     // TODO filter list other than LIst<string|bool|num>
+  }
+
+  static ParameterMapping? _parameterMappingForType(DartType type) {
+    String enumParameterMapping(String name) => '_\$${type}EnumMap[$name]!';
+    if (type.isDartCoreList &&
+        type is InterfaceType &&
+        type.typeArguments.single.isEnum) {
+      return listParameterMapping(enumParameterMapping);
+    } else if (type.isEnum) {
+      return enumParameterMapping;
+    } else {
+      return null;
+    }
   }
 
   @override
@@ -449,6 +463,7 @@ extension on DartType {
         generic.isDartCoreString ||
         generic.isDartCoreBool ||
         generic.isDartCoreObject ||
+        generic.isEnum ||
         generic is DynamicType;
   }
 }
