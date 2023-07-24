@@ -41,22 +41,21 @@ void main() {
 
         test('should return a token after signOut() & signIn()', () async {
           // Demonstrate fix for this issue works: https://github.com/firebase/flutterfire/issues/11297
-          User? user;
-          UserCredential userCredential;
           String email = generateRandomEmail();
-          userCredential =
+
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: email,
             password: testPassword,
           );
-          user = userCredential.user;
+
           await FirebaseAuth.instance.signOut();
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+
+          final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: email,
             password: testPassword,
           );
 
-          String? token = await user!.getIdToken(true);
+          String? token = await userCredential.user!.getIdToken(true);
 
           expect(token?.length, greaterThan(24));
         });
