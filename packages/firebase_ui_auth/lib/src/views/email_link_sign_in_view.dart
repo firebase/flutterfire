@@ -83,6 +83,14 @@ class _EmailLinkSignInViewState extends State<EmailLinkSignInView> {
               ),
             ],
             const SizedBox(height: 8),
+            UniversalButton(
+              text: l.goBackButtonLabel,
+              variant: ButtonVariant.text,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            const SizedBox(height: 8),
             if (state is AuthFailed) ErrorText(exception: state.exception),
           ],
         );
