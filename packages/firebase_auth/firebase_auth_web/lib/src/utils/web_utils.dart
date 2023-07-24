@@ -62,7 +62,7 @@ FirebaseAuthException getFirebaseAuthException(
       .replaceFirst(' (${firebaseError.code}).', '')
       .replaceFirst('Firebase: ', '');
 
-  // customData is a Map<String, String>, see Firebase docs: https://firebase.google.com/docs/reference/js/auth.autherror
+  // "customData" - see Firebase AuthError docs: https://firebase.google.com/docs/reference/js/auth.autherror
   final customData =
       getProperty(exception, 'customData') as auth_interop.AuthErrorCustomData;
 
