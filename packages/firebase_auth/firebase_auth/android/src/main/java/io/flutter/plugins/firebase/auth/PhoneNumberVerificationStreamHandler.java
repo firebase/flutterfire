@@ -105,10 +105,10 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
             GeneratedAndroidFirebaseAuth.FlutterError flutterError =
                 FlutterFirebaseAuthPluginException.parserExceptionToFlutter(e);
             error.put("code", flutterError
-                      .code
-                      .replaceAll("ERROR_", "")
-                      .toLowerCase(Locale.ROOT)
-                      .replaceAll("_", "-"));
+                .code
+                .replaceAll("ERROR_", "")
+                .toLowerCase(Locale.ROOT)
+                .replaceAll("_", "-"));
             error.put("message", flutterError.getMessage());
             error.put("details", flutterError.details);
             event.put("error", error);
