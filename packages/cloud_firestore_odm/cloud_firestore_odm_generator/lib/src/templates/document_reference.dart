@@ -107,11 +107,11 @@ void transactionUpdate(Transaction transaction, {${parameters.join()}});
       // TODO: Update to `isIterable` when the PR for that lands
       final String name;
       if (field.type.isDartCoreList) {
-        name = '(${field.name} as List?)';
+        name = '(${field.name} as List)';
       } else {
         name = field.name;
       }
-      return field.parameterMapping?.call(name, true) ??
+      return field.parameterMapping?.call(name, false) ??
           '${field.name} as ${field.type}';
     }
 
