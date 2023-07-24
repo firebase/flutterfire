@@ -14,6 +14,7 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
 
 import '../interop/auth.dart' as auth_interop;
 import '../interop/multi_factor.dart' as multi_factor_interop;
+import '../interop/window_interop.dart' as window_interop;
 
 /// Workaround test to check whether `e` is practically a FirebaseError.
 ///
@@ -26,7 +27,7 @@ import '../interop/multi_factor.dart' as multi_factor_interop;
 /// that it is a window.Error (since that's the base class of FirebaseError) and
 /// we check that it defines "customData" property which is on the AuthError but not the FirebaseError it extends
 bool _isFirebaseAuthError(Object e) =>
-    instanceof(e, getProperty(globalThis, 'Error')) &&
+    instanceof(e, window_interop.errorConstructor) &&
     hasProperty(e, 'customData');
 
 bool _hasFirebaseAuthErrorCodeAndMessage(Object e) {
