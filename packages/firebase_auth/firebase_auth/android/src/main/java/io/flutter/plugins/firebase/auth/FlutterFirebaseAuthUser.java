@@ -12,7 +12,6 @@ import android.app.Activity;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
@@ -71,27 +70,26 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void getIdToken(
-    @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
-    @NonNull Boolean forceRefresh,
-    @NonNull
-    GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonIdTokenResult>
-      result) {
-    cachedThreadPool.execute(() -> {
-      FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull Boolean forceRefresh,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonIdTokenResult>
+              result) {
+    cachedThreadPool.execute(
+        () -> {
+          FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
-      if (firebaseUser == null) {
-        result.error(FlutterFirebaseAuthPluginException.noUser());
-        return;
-      }
-      try {
-        GetTokenResult response = Tasks.await(firebaseUser.getIdToken(forceRefresh));
-        result.success(PigeonParser.parseTokenResult(response));
-      } catch(Exception exception){
-        result.error(
-          FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
-            exception));
-      }
-    });
+          if (firebaseUser == null) {
+            result.error(FlutterFirebaseAuthPluginException.noUser());
+            return;
+          }
+          try {
+            GetTokenResult response = Tasks.await(firebaseUser.getIdToken(forceRefresh));
+            result.success(PigeonParser.parseTokenResult(response));
+          } catch (Exception exception) {
+            result.error(FlutterFirebaseAuthPluginException.parserExceptionToFlutter(exception));
+          }
+        });
   }
 
   @Override
