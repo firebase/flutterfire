@@ -6,10 +6,14 @@
 
 package io.flutter.plugins.firebase.auth;
 
+import static io.flutter.plugins.firebase.core.FlutterFirebasePlugin.cachedThreadPool;
+
 import android.app.Activity;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
@@ -67,32 +71,27 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void getIdToken(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
-      @NonNull Boolean forceRefresh,
-      @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonIdTokenResult>
-              result) {
-    FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
+    @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+    @NonNull Boolean forceRefresh,
+    @NonNull
+    GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonIdTokenResult>
+      result) {
+    cachedThreadPool.execute(() -> {
+      FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
-    if (firebaseUser == null) {
-      result.error(FlutterFirebaseAuthPluginException.noUser());
-      return;
-    }
-
-    GetTokenResult tokenResult =
-        firebaseUser
-            .getIdToken(forceRefresh)
-            .addOnCompleteListener(
-                task -> {
-                  if (task.isSuccessful()) {
-                    result.success(PigeonParser.parseTokenResult(task.getResult()));
-                  } else {
-                    result.error(
-                        FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
-                            task.getException()));
-                  }
-                })
-            .getResult();
+      if (firebaseUser == null) {
+        result.error(FlutterFirebaseAuthPluginException.noUser());
+        return;
+      }
+      try {
+        GetTokenResult response = Tasks.await(firebaseUser.getIdToken(forceRefresh));
+        result.success(PigeonParser.parseTokenResult(response));
+      } catch(Exception exception){
+        result.error(
+          FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+            exception));
+      }
+    });
   }
 
   @Override
