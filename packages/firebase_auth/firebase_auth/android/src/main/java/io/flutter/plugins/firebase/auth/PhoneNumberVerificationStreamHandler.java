@@ -104,11 +104,13 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
             Map<String, Object> error = new HashMap<>();
             GeneratedAndroidFirebaseAuth.FlutterError flutterError =
                 FlutterFirebaseAuthPluginException.parserExceptionToFlutter(e);
-            error.put("code", flutterError
-                .code
-                .replaceAll("ERROR_", "")
-                .toLowerCase(Locale.ROOT)
-                .replaceAll("_", "-"));
+            error.put(
+                "code",
+                flutterError
+                    .code
+                    .replaceAll("ERROR_", "")
+                    .toLowerCase(Locale.ROOT)
+                    .replaceAll("_", "-"));
             error.put("message", flutterError.getMessage());
             error.put("details", flutterError.details);
             event.put("error", error);
