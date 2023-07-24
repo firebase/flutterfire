@@ -400,11 +400,11 @@ class ${data.queryReferenceImplName}
         } else ...{
           'whereIn': (
             'List<${field.type}>?',
-            listParameterMapping(field.parameterMapping, nullable: true),
+            listParameterMapping(field.parameterMapping),
           ),
           'whereNotIn': (
             'List<${field.type}>?',
-            listParameterMapping(field.parameterMapping, nullable: true),
+            listParameterMapping(field.parameterMapping),
           ),
         }
       };
@@ -413,7 +413,7 @@ class ${data.queryReferenceImplName}
           operators.entries.map((e) => '${e.value.$1} ${e.key},').join();
 
       final parameters = operators.entries
-          .map((e) => '${e.key}: ${e.value.$2?.call(e.key) ?? e.key},')
+          .map((e) => '${e.key}: ${e.value.$2?.call(e.key, true) ?? e.key},')
           .join();
 
       // TODO support whereX(isEqual: null);

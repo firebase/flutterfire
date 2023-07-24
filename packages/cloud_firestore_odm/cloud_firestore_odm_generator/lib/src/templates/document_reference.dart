@@ -103,9 +103,17 @@ void transactionUpdate(Transaction transaction, {${parameters.join()}});
       ]
     ];
 
-    String parameterMapping(QueryingField field) =>
-        field.parameterMapping?.call(field.name) ??
-        '${field.name} as ${field.type}';
+    String parameterMapping(QueryingField field) {
+      // TODO: Update to `isIterable` when the PR for that lands
+      final String name;
+      if (field.type.isDartCoreList) {
+        name = '(${field.name} as List?)';
+      } else {
+        name = field.name;
+      }
+      return field.parameterMapping?.call(name, true) ??
+          '${field.name} as ${field.type}';
+    }
 
     // TODO support nested objects
     final json = [
