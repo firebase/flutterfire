@@ -10,6 +10,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:recase/recase.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:source_helper/source_helper.dart';
 
 import 'collection_generator.dart';
 import 'names.dart';
@@ -348,6 +349,7 @@ represents the content of the collection must be in the same file.
         type.isDartCoreBool ||
         type.isPrimitiveList ||
         type.isJsonDocumentReference ||
+        type.isEnum ||
         dateTimeChecker.isAssignableFromType(type) ||
         timestampChecker.isAssignableFromType(type) ||
         geoPointChecker.isAssignableFromType(type);

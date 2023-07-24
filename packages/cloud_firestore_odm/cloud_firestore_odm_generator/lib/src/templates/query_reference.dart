@@ -5,6 +5,7 @@
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_provider.dart';
+import 'package:source_helper/source_helper.dart';
 
 import '../collection_data.dart';
 
@@ -380,7 +381,19 @@ class ${data.queryReferenceImplName}
               ? '${field.type}'
               : '${field.type}?';
 
-      final operators = {
+      String parameterMapping(String type, String parameter) {
+        if (field.type.isEnum && type.contains(field.type.toString())) {
+          if (type.contains('List')) {
+            return '$parameter?.map((e) => _\$${field.type}EnumMap[e]!).toList()';
+          } else {
+            return '_\$${field.type}EnumMap[$parameter]!';
+          }
+        } else {
+          return parameter;
+        }
+      }
+
+      final operators = <String, String>{
         'isEqualTo': nullableType,
         'isNotEqualTo': nullableType,
         'isLessThan': nullableType,
@@ -390,7 +403,8 @@ class ${data.queryReferenceImplName}
         'isNull': 'bool?',
         if (field.type.isDartCoreList) ...{
           'arrayContains': data.libraryElement.typeProvider
-              .asNullable((field.type as InterfaceType).typeArguments.first),
+              .asNullable((field.type as InterfaceType).typeArguments.first)
+              .toString(),
           'arrayContainsAny': nullableType,
         } else ...{
           'whereIn': 'List<${field.type}>?',
@@ -401,7 +415,9 @@ class ${data.queryReferenceImplName}
       final prototype =
           operators.entries.map((e) => '${e.value} ${e.key},').join();
 
-      final parameters = operators.keys.map((e) => '$e: $e,').join();
+      final parameters = operators.entries
+          .map((e) => '${e.key}: ${parameterMapping(e.value, e.key)},')
+          .join();
 
       // TODO support whereX(isEqual: null);
       // TODO handle JsonSerializable case change and JsonKey(name: ...)
