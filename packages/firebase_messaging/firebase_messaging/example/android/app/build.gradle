@@ -27,6 +27,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     namespace 'io.flutter.plugins.firebase.messaging.example'
     compileSdkVersion 33
+    ndkVersion "21.3.6528147"
 
     lintOptions {
         disable 'InvalidPackage'
@@ -38,6 +39,8 @@ android {
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        testInstrumentationRunner "pl.leancode.patrol.PatrolJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: "true"
     }
 
     buildTypes {
@@ -47,8 +50,15 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    testOptions {
+        execution "ANDROIDX_TEST_ORCHESTRATOR"
+    }
 }
 
 flutter {
     source '../..'
+}
+
+dependencies {
+    androidTestUtil "androidx.test:orchestrator:1.4.2"
 }

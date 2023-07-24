@@ -15,6 +15,15 @@ dependencies:
 
 dev_dependencies:
   http: ^0.13.3
+  patrol: ^2.1.0
 
 flutter:
   uses-material-design: true
+
+patrol:
+  android:
+    app_name: Firebase Auth
+    package_name: io.flutter.plugins.firebase.auth.example
+  ios:
+    app_name: Firebase Auth
+    bundle_id: io.flutter.plugins.firebase.auth.example

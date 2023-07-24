@@ -34,14 +34,20 @@ Future<void> main() async {
     await auth.useAuthEmulator('localhost', 9099);
   }
 
-  runApp(const AuthExampleApp());
+  runApp(
+    AuthExampleApp(
+      auth: auth,
+    ),
+  );
 }
 
 /// The entry point of the application.
 ///
 /// Returns a [MaterialApp].
 class AuthExampleApp extends StatelessWidget {
-  const AuthExampleApp({Key? key}) : super(key: key);
+  const AuthExampleApp({required this.auth, Key? key}) : super(key: key);
+
+  final FirebaseAuth auth;
 
   @override
   Widget build(BuildContext context) {

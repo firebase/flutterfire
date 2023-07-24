@@ -6,6 +6,7 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
+  firebase_admin: ^0.2.0
   firebase_core: ^2.15.0
   firebase_messaging: ^14.6.5
   flutter:
@@ -19,3 +20,17 @@ dependency_overrides:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/scripts/
+
+dev_dependencies:
+  patrol: ^2.1.0
+
+patrol:
+  android:
+    app_name: firebae_messaging_example
+    package_name: io.flutter.plugins.firebase.messaging.example
+  ios:
+    app_name: CloudMessaging
+    bundle_id: io.flutter.plugins.firebase.messaging.example

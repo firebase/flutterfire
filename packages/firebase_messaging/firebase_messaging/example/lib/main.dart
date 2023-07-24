@@ -118,6 +118,11 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(await prepareApp());
+}
+
+Future<Widget> prepareApp() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // Set the background messaging handler early on, as a named top-level function
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -126,7 +131,7 @@ Future<void> main() async {
     await setupFlutterNotifications();
   }
 
-  runApp(MessagingExampleApp());
+  return MessagingExampleApp();
 }
 
 /// Entry point for the example application.

@@ -76,3 +76,8 @@ firebase-debug.log
 firestore-debug.log
 database-debug.log
 ui-debug.log
+
+packages/firebase_messaging/firebase_messaging/example/service-account.json
+packages/firebase_auth/firebase_auth/example/.patrol.env
+packages/firebase_auth/firebase_auth/example/integration_test/test_bundle.dart
+packages/firebase_messaging/firebase_messaging/example/integration_test/test_bundle.dart
