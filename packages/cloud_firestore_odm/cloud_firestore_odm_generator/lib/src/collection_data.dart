@@ -358,13 +358,24 @@ represents the content of the collection must be in the same file.
   }
 
   static ParameterMapping? _parameterMappingForType(DartType type) {
+    ParameterMapping enumMappingForType(DartType type) =>
+        (String name, bool nullable) {
+          final mapped =
+              '_\$${type.getDisplayString(withNullability: false)}EnumMap[$name]!';
+          if (nullable) {
+            return '$name == null ? null : $mapped';
+          } else {
+            return mapped;
+          }
+        };
+
     if (type.isDartCoreList &&
         type is InterfaceType &&
         type.typeArguments.single.isEnum) {
       final generic = type.typeArguments.single;
-      return listParameterMapping((name, _) => '_\$${generic}EnumMap[$name]!');
+      return listParameterMapping(enumMappingForType(generic));
     } else if (type.isEnum) {
-      return (name, _) => '_\$${type}EnumMap[$name]!';
+      return enumMappingForType(type);
     } else {
       return null;
     }
