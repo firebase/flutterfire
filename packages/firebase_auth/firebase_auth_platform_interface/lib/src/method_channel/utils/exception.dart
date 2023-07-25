@@ -53,7 +53,7 @@ FirebaseException platformExceptionToFirebaseAuthException(
     }
 
     if (code.isNotEmpty) {
-      if (code == kMultiFactorError) {
+      if (code == kMultiFactorError || code == kMultiFactorErrorAndroid) {
         return parseMultiFactorError(platformException);
       }
     }
@@ -77,7 +77,7 @@ FirebaseException platformExceptionToFirebaseAuthException(
 
   if (details != null) {
     code = details['code'] ?? code;
-    if (code == 'second-factor-required') {
+    if (code == kMultiFactorError || code == kMultiFactorErrorAndroid) {
       return parseMultiFactorError(platformException);
     }
 
@@ -132,7 +132,8 @@ String? _getCustomCode(Map? additionalData, String? message) {
   return null;
 }
 
-const kMultiFactorError = 'second-factor-required';
+const kMultiFactorError = 'multi-factor-auth-required';
+const kMultiFactorErrorAndroid = 'second-factor-required';
 
 FirebaseAuthMultiFactorExceptionPlatform parseMultiFactorError(
     PlatformException exception) {
