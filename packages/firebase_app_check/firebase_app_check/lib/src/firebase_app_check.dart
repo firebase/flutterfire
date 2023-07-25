@@ -86,6 +86,16 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
     return _delegate.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled);
   }
 
+  /// Requests a limited-use Firebase App Check token. This method should be used only
+  /// if you need to authorize requests to a non-Firebase backend.
+  //
+  // Returns limited-use tokens that are intended for use with your non-Firebase backend
+  // endpoints that are protected with Replay Protection. This method does not affect
+  // the token generation behavior of the `getToken()` method.
+  Future<String> getLimitedUseToken() {
+    return _delegate.getLimitedUseToken();
+  }
+
   /// Registers a listener to changes in the token state.
   Stream<String?> get onTokenChange {
     return _delegate.onTokenChange;

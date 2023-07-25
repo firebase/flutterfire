@@ -37,7 +37,7 @@ class User {
   /// Once verified, call [reload] to ensure the latest user information is
   /// retrieved from Firebase.
   bool get emailVerified {
-    return _delegate.emailVerified;
+    return _delegate.isEmailVerified;
   }
 
   /// Returns whether the user is a anonymous.
@@ -116,7 +116,7 @@ class User {
   ///
   /// If [forceRefresh] is `true`, the token returned will be refreshed regardless
   /// of token expiration.
-  Future<String> getIdToken([bool forceRefresh = false]) {
+  Future<String?> getIdToken([bool forceRefresh = false]) {
     return _delegate.getIdToken(forceRefresh);
   }
 
@@ -671,7 +671,7 @@ class User {
     return '$User('
         'displayName: $displayName, '
         'email: $email, '
-        'emailVerified: $emailVerified, '
+        'isEmailVerified: $emailVerified, '
         'isAnonymous: $isAnonymous, '
         'metadata: $metadata, '
         'phoneNumber: $phoneNumber, '

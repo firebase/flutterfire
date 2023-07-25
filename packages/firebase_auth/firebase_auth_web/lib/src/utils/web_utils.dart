@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:io';
+import 'package:js/js_util.dart';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/firebase_auth_web.dart';
@@ -13,6 +14,33 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
 
 import '../interop/auth.dart' as auth_interop;
 import '../interop/multi_factor.dart' as multi_factor_interop;
+import '../interop/window_interop.dart' as window_interop;
+
+/// Workaround test to check whether `e` is practically a FirebaseError.
+///
+/// Ideally we'd check whether `e instanceof FirebaseError` however
+/// there are two definitions of `FirebaseError` in deployed apps, one from
+/// `firebase-auth.js` (which is usually minified) and one from
+/// `firebase-app.js`.
+///
+/// Because they are not the same, the instanceof check fails. Instead, we test
+/// that it is a window.Error (since that's the base class of FirebaseError) and
+/// we check that it defines "customData" property which is on the AuthError but not the FirebaseError it extends
+bool _isFirebaseAuthError(Object e) =>
+    instanceof(e, window_interop.errorConstructor) &&
+    hasProperty(e, 'customData');
+
+bool _hasFirebaseAuthErrorCodeAndMessage(Object e) {
+  if (_isFirebaseAuthError(e)) {
+    String? code = getProperty(e, 'code');
+    String? message = getProperty(e, 'message');
+    if (code == null || !code.startsWith('auth/')) return false;
+    if (message == null || !message.contains('Firebase')) return false;
+    return true;
+  } else {
+    return false;
+  }
+}
 
 /// Given a web error, an [Exception] is returned.
 ///
@@ -22,7 +50,7 @@ FirebaseAuthException getFirebaseAuthException(
   Object exception, [
   auth_interop.Auth? auth,
 ]) {
-  if (exception is! core_interop.FirebaseError) {
+  if (!_hasFirebaseAuthErrorCodeAndMessage(exception)) {
     return FirebaseAuthException(
       code: 'unknown',
       message: 'An unknown error occurred: $exception',
@@ -30,11 +58,14 @@ FirebaseAuthException getFirebaseAuthException(
   }
 
   auth_interop.AuthError firebaseError = exception as auth_interop.AuthError;
-
   String code = firebaseError.code.replaceFirst('auth/', '');
   String message = firebaseError.message
       .replaceFirst(' (${firebaseError.code}).', '')
       .replaceFirst('Firebase: ', '');
+
+  // "customData" - see Firebase AuthError docs: https://firebase.google.com/docs/reference/js/auth.autherror
+  final customData =
+      getProperty(exception, 'customData') as auth_interop.AuthErrorCustomData;
 
   if (code == 'multi-factor-auth-required') {
     final _auth = auth;
@@ -47,15 +78,15 @@ FirebaseAuthException getFirebaseAuthException(
     }
     final resolverWeb = multi_factor_interop.getMultiFactorResolver(
       _auth,
-      firebaseError as auth_interop.MultiFactorError,
+      exception,
     );
 
     return FirebaseAuthMultiFactorExceptionPlatform(
       code: code,
       message: message,
-      email: firebaseError.email,
-      phoneNumber: firebaseError.phoneNumber,
-      tenantId: firebaseError.tenantId,
+      email: customData.email,
+      phoneNumber: customData.phoneNumber,
+      tenantId: customData.tenantId,
       resolver: MultiFactorResolverWeb(
         resolverWeb.hints.map((e) {
           if (e is multi_factor_interop.PhoneMultiFactorInfo) {
@@ -88,9 +119,9 @@ FirebaseAuthException getFirebaseAuthException(
   return FirebaseAuthException(
     code: code,
     message: message,
-    email: firebaseError.email,
-    phoneNumber: firebaseError.phoneNumber,
-    tenantId: firebaseError.tenantId,
+    email: customData.email,
+    phoneNumber: customData.phoneNumber,
+    tenantId: customData.tenantId,
   );
 }
 
@@ -101,10 +132,13 @@ ActionCodeInfo? convertWebActionCodeInfo(
     return null;
   }
 
-  return ActionCodeInfo(operation: 0, data: <String, dynamic>{
-    'email': webActionCodeInfo.data.email,
-    'previousEmail': webActionCodeInfo.data.previousEmail,
-  });
+  return ActionCodeInfo(
+    operation: ActionCodeInfoOperation.passwordReset,
+    data: ActionCodeInfoData(
+      email: webActionCodeInfo.data.email,
+      previousEmail: webActionCodeInfo.data.previousEmail,
+    ),
+  );
 }
 
 /// Converts a [auth_interop.AdditionalUserInfo] into a [AdditionalUserInfo].
@@ -127,16 +161,17 @@ AdditionalUserInfo? convertWebAdditionalUserInfo(
 IdTokenResult convertWebIdTokenResult(
   auth_interop.IdTokenResult webIdTokenResult,
 ) {
-  return IdTokenResult(<String, dynamic>{
-    'claims': webIdTokenResult.claims,
-    'expirationTimestamp':
-        webIdTokenResult.expirationTime.millisecondsSinceEpoch,
-    'issuedAtTimestamp': webIdTokenResult.issuedAtTime.millisecondsSinceEpoch,
-    'authTimestamp': webIdTokenResult.authTime.millisecondsSinceEpoch,
-    'signInProvider': webIdTokenResult.signInProvider,
-    'signInSecondFactor': null,
-    'token': webIdTokenResult.token,
-  });
+  return IdTokenResult(
+    PigeonIdTokenResult(
+      claims: webIdTokenResult.claims,
+      token: webIdTokenResult.token,
+      authTimestamp: webIdTokenResult.authTime.millisecondsSinceEpoch,
+      issuedAtTimestamp: webIdTokenResult.issuedAtTime.millisecondsSinceEpoch,
+      expirationTimestamp:
+          webIdTokenResult.expirationTime.millisecondsSinceEpoch,
+      signInProvider: webIdTokenResult.signInProvider,
+    ),
+  );
 }
 
 /// Converts a [ActionCodeSettings] into a [auth_interop.ActionCodeSettings].

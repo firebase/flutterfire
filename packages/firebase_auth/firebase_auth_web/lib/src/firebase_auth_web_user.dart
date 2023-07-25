@@ -21,37 +21,44 @@ class UserWeb extends UserPlatform {
     MultiFactorPlatform multiFactor,
     this._webUser,
     this._webAuth,
-  ) : super(auth, multiFactor, {
-          'displayName': _webUser.displayName,
-          'email': _webUser.email,
-          'emailVerified': _webUser.emailVerified,
-          'isAnonymous': _webUser.isAnonymous,
-          'metadata': <String, int?>{
-            'creationTime': _webUser.metadata.creationTime != null
-                ? context['Date']
-                    .callMethod('parse', [_webUser.metadata.creationTime])
-                : null,
-            'lastSignInTime': _webUser.metadata.lastSignInTime != null
-                ? context['Date']
-                    .callMethod('parse', [_webUser.metadata.lastSignInTime])
-                : null,
-          },
-          'phoneNumber': _webUser.phoneNumber,
-          'photoURL': _webUser.photoURL,
-          'providerData': _webUser.providerData
-              .map((auth_interop.UserInfo webUserInfo) => <String, dynamic>{
-                    'displayName': webUserInfo.displayName,
-                    'email': webUserInfo.email,
-                    'phoneNumber': webUserInfo.phoneNumber,
-                    'providerId': webUserInfo.providerId,
-                    'photoURL': webUserInfo.photoURL,
-                    'uid': webUserInfo.uid,
-                  })
-              .toList(),
-          'refreshToken': _webUser.refreshToken,
-          'tenantId': _webUser.tenantId,
-          'uid': _webUser.uid,
-        });
+  ) : super(
+          auth,
+          multiFactor,
+          PigeonUserDetails(
+              userInfo: PigeonUserInfo(
+                displayName: _webUser.displayName,
+                email: _webUser.email,
+                isEmailVerified: _webUser.emailVerified,
+                isAnonymous: _webUser.isAnonymous,
+                creationTimestamp: _webUser.metadata.creationTime != null
+                    ? context['Date']
+                        .callMethod('parse', [_webUser.metadata.creationTime])
+                    : null,
+                lastSignInTimestamp: _webUser.metadata.lastSignInTime != null
+                    ? context['Date']
+                        .callMethod('parse', [_webUser.metadata.lastSignInTime])
+                    : null,
+                phoneNumber: _webUser.phoneNumber,
+                photoUrl: _webUser.photoURL,
+                refreshToken: _webUser.refreshToken,
+                tenantId: _webUser.tenantId,
+                uid: _webUser.uid,
+              ),
+              providerData: _webUser.providerData
+                  .map((auth_interop.UserInfo webUserInfo) => <String, dynamic>{
+                        'displayName': webUserInfo.displayName,
+                        'email': webUserInfo.email,
+                        // isAnonymous is always false for providerData
+                        'isAnonymous': false,
+                        // isEmailVerified is always true for providerData
+                        'isEmailVerified': true,
+                        'phoneNumber': webUserInfo.phoneNumber,
+                        'providerId': webUserInfo.providerId,
+                        'photoUrl': webUserInfo.photoURL,
+                        'uid': webUserInfo.uid,
+                      })
+                  .toList()),
+        );
 
   final auth_interop.User _webUser;
   final auth_interop.Auth? _webAuth;

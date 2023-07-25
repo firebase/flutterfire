@@ -425,16 +425,16 @@ void main() {
           );
 
           // Confirm with the emulator that it triggered an email sending code.
-          final oobCode = (await emulatorOutOfBandCode(
+          final oobCode = await emulatorOutOfBandCode(
             email,
             EmulatorOobCodeType.emailSignIn,
-          ))!;
+          );
           expect(oobCode, isNotNull);
-          expect(oobCode.email, email);
-          expect(oobCode.type, EmulatorOobCodeType.emailSignIn);
+          expect(oobCode?.email, email);
+          expect(oobCode?.type, EmulatorOobCodeType.emailSignIn);
 
           // Confirm the continue url was passed through to backend correctly.
-          final url = Uri.parse(oobCode.oobLink!);
+          final url = Uri.parse(oobCode!.oobLink!);
           expect(
             url.queryParameters['continueUrl'],
             Uri.encodeFull(continueUrl),
@@ -527,7 +527,7 @@ void main() {
 
       group('signInWithCredential()', () {
         test('should login with email and password', () async {
-          var credential = EmailAuthProvider.credential(
+          final credential = EmailAuthProvider.credential(
             email: testEmail,
             password: testPassword,
           );
@@ -537,7 +537,7 @@ void main() {
         });
 
         test('throws if login user is disabled', () async {
-          var credential = EmailAuthProvider.credential(
+          final credential = EmailAuthProvider.credential(
             email: testDisabledEmail,
             password: testPassword,
           );
@@ -580,7 +580,7 @@ void main() {
         });
 
         test('throws if login user is not found', () async {
-          var credential = EmailAuthProvider.credential(
+          final credential = EmailAuthProvider.credential(
             email: generateRandomEmail(),
             password: testPassword,
           );

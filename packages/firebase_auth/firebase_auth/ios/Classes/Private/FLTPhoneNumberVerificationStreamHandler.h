@@ -11,6 +11,7 @@
 #endif
 
 #import <Firebase/Firebase.h>
+#import <firebase_auth/messages.g.h>
 
 #import <Foundation/Foundation.h>
 
@@ -22,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithAuth:(FIRAuth *)auth arguments:(NSDictionary *)arguments;
 #else
 - (instancetype)initWithAuth:(FIRAuth *)auth
-                   arguments:(NSDictionary *)arguments
+                     request:(PigeonVerifyPhoneNumberRequest *)request
                      session:(FIRMultiFactorSession *)session
                   factorInfo:(FIRPhoneMultiFactorInfo *)factorInfo;
 #endif

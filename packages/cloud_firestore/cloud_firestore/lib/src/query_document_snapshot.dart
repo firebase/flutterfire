@@ -52,5 +52,5 @@ class _WithConverterQueryDocumentSnapshot<T extends Object?>
   bool get exists => true;
 
   @override
-  T data() => super.data()!;
+  T data() => super.data() as T;
 }
