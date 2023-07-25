@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   patrolTest(
-    'counter state is the same after going to home and switching apps',
+    'log in with Google account',
     nativeAutomation: true,
     ($) async {
       addTearDown(() async {
