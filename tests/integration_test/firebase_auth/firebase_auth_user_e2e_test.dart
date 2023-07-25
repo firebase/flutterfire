@@ -43,14 +43,7 @@ void main() {
           // Demonstrate fix for this issue works: https://github.com/firebase/flutterfire/issues/11297
           String email = generateRandomEmail();
 
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: email,
-            password: testPassword,
-          );
-
-          await FirebaseAuth.instance.signOut();
-
-          final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: email,
             password: testPassword,
           );
