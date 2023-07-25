@@ -39,7 +39,7 @@ void main() {
           expect(token?.length, greaterThan(24));
         });
 
-        test('should return a token after signOut() & signIn()', () async {
+        test('should return a token using `getIdToken()` after sign in', () async {
           // Demonstrate fix for this issue works: https://github.com/firebase/flutterfire/issues/11297
           String email = generateRandomEmail();
 
@@ -51,6 +51,20 @@ void main() {
           String? token = await userCredential.user!.getIdToken(true);
 
           expect(token?.length, greaterThan(24));
+        });
+
+        test('should return a token using `getIdTokenResult()` after sign in', () async {
+          // Demonstrate fix for this issue works: https://github.com/firebase/flutterfire/issues/11297
+          String email = generateRandomEmail();
+
+          final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: testPassword,
+          );
+
+          IdTokenResult result = await userCredential.user!.getIdTokenResult(true);
+
+          expect(result.token?.length, greaterThan(24));
         });
 
         test('should catch error', () async {
