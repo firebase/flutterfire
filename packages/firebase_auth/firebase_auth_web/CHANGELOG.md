@@ -1,3 +1,7 @@
+## 5.6.2
+
+ - **FIX**(auth,web): convert `NativeError` to `FirebaseAuthError` ([#11258](https://github.com/firebase/flutterfire/issues/11258)). ([b95c3807](https://github.com/firebase/flutterfire/commit/b95c38075cd3b48395d56f3fea38e5be32b21a06))
+
 ## 5.6.1
 
  - **FIX**(auth,web): fix an issue preventing Web to properly parse providerData ([#11301](https://github.com/firebase/flutterfire/issues/11301)). ([08299050](https://github.com/firebase/flutterfire/commit/08299050db0fc3a849e35fb4a1a600d643ce5ffe))
