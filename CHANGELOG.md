@@ -3,6 +3,67 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-07-26
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.8.4`](#cloud_firestore---v484)
+ - [`firebase_auth` - `v4.7.2`](#firebase_auth---v472)
+ - [`firebase_auth_platform_interface` - `v6.16.1`](#firebase_auth_platform_interface---v6161)
+ - [`firebase_auth_web` - `v5.6.2`](#firebase_auth_web---v562)
+ - [`firebase_ui_firestore` - `v1.5.6`](#firebase_ui_firestore---v156)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.64`](#cloud_firestore_odm---v100-dev64)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.64`](#cloud_firestore_odm_generator---v100-dev64)
+ - [`firebase_ui_oauth_google` - `v1.2.7`](#firebase_ui_oauth_google---v127)
+ - [`firebase_ui_oauth_twitter` - `v1.2.7`](#firebase_ui_oauth_twitter---v127)
+ - [`firebase_ui_auth` - `v1.6.2`](#firebase_ui_auth---v162)
+ - [`firebase_ui_oauth_facebook` - `v1.2.7`](#firebase_ui_oauth_facebook---v127)
+ - [`firebase_ui_oauth_apple` - `v1.2.7`](#firebase_ui_oauth_apple---v127)
+ - [`firebase_ui_oauth` - `v1.4.7`](#firebase_ui_oauth---v147)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_firestore` - `v1.5.6`
+ - `cloud_firestore_odm` - `v1.0.0-dev.64`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.64`
+ - `firebase_ui_oauth_google` - `v1.2.7`
+ - `firebase_ui_oauth_twitter` - `v1.2.7`
+ - `firebase_ui_auth` - `v1.6.2`
+ - `firebase_ui_oauth_facebook` - `v1.2.7`
+ - `firebase_ui_oauth_apple` - `v1.2.7`
+ - `firebase_ui_oauth` - `v1.4.7`
+
+---
+
+#### `cloud_firestore` - `v4.8.4`
+
+ - **FIX**(firestore): remove assertion for `arrayContainsAny` & `whereIn` query combined ([#11342](https://github.com/firebase/flutterfire/issues/11342)). ([199e1fc4](https://github.com/firebase/flutterfire/commit/199e1fc43654b913ddb8257c4e3a3ceddcbb97d1))
+
+#### `firebase_auth` - `v4.7.2`
+
+ - **FIX**(auth): fix MFA issue where the error wouldn't be properly catched ([#11370](https://github.com/firebase/flutterfire/issues/11370)). ([72fef03f](https://github.com/firebase/flutterfire/commit/72fef03f775702aaf9a2ce0c6b31aea2a3c200a9))
+ - **FIX**(auth,android): `getIdToken()` `IllegalStateException` crash fix ([#11362](https://github.com/firebase/flutterfire/issues/11362)). ([e925b4c9](https://github.com/firebase/flutterfire/commit/e925b4c9a937d90de0bdfb59ffa005938b3862dd))
+ - **FIX**(auth,apple): pass in Firebase auth instance for correct app when using Provider sign in ([#11284](https://github.com/firebase/flutterfire/issues/11284)). ([1cffae79](https://github.com/firebase/flutterfire/commit/1cffae79ded28808ba55f2f4c9c1b47817987999))
+
+#### `firebase_auth_platform_interface` - `v6.16.1`
+
+ - **FIX**(auth): fix MFA issue where the error wouldn't be properly catched ([#11370](https://github.com/firebase/flutterfire/issues/11370)). ([72fef03f](https://github.com/firebase/flutterfire/commit/72fef03f775702aaf9a2ce0c6b31aea2a3c200a9))
+
+#### `firebase_auth_web` - `v5.6.2`
+
+ - **FIX**(auth,web): convert `NativeError` to `FirebaseAuthError` ([#11258](https://github.com/firebase/flutterfire/issues/11258)). ([b95c3807](https://github.com/firebase/flutterfire/commit/b95c38075cd3b48395d56f3fea38e5be32b21a06))
+
+
 ## 2023-07-18
 
 ### Changes

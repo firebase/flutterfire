@@ -1,3 +1,7 @@
+## 4.8.4
+
+ - **FIX**(firestore): remove assertion for `arrayContainsAny` & `whereIn` query combined ([#11342](https://github.com/firebase/flutterfire/issues/11342)). ([199e1fc4](https://github.com/firebase/flutterfire/commit/199e1fc43654b913ddb8257c4e3a3ceddcbb97d1))
+
 ## 4.8.3
 
  - **FIX**(firestore): allow 30 conjunctive & disjunctive queries for "in" & "array-contains-any" via where() API ([#11265](https://github.com/firebase/flutterfire/issues/11265)). ([f5477b1a](https://github.com/firebase/flutterfire/commit/f5477b1ae83c37d727f12dd6ed5440cac0bc0bcd))
