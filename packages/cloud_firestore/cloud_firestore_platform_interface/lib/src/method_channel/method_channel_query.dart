@@ -1,4 +1,4 @@
-// ignore_for_file: require_trailing_commas
+// ignore_for_file: require_trailing_commas, unnecessary_lambdas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -55,6 +55,24 @@ class MethodChannelQuery extends QueryPlatform {
     );
   }
 
+  List<List<Object>> _convertToFieldPath(Iterable<dynamic> fields) {
+    return fields.map((dynamic field) {
+      final iterable = field as Iterable;
+      return iterable.map((dynamic field) {
+        if (field is String) {
+          return field;
+        } else if (field is FieldPath) {
+          return field.components;
+        } else if (field is bool) {
+          return field;
+        } else {
+          throw ArgumentError(
+              'Unsupported field type. Pass either a String or a FieldPath');
+        }
+      }).toList();
+    }).toList();
+  }
+
   /// Creates a new instance of [MethodChannelQuery], however overrides
   /// any existing [parameters].
   ///
@@ -75,7 +93,7 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   QueryPlatform endAtDocument(List<dynamic> orders, List<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
-      'orderBy': orders,
+      'orderBy': _convertToFieldPath(orders),
       'endAt': values,
       'endBefore': null,
     });
@@ -93,7 +111,7 @@ class MethodChannelQuery extends QueryPlatform {
   QueryPlatform endBeforeDocument(
       Iterable<dynamic> orders, Iterable<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
-      'orderBy': orders,
+      'orderBy': _convertToFieldPath(orders),
       'endAt': null,
       'endBefore': values,
     });
@@ -162,22 +180,41 @@ class MethodChannelQuery extends QueryPlatform {
     controller = StreamController<QuerySnapshotPlatform>.broadcast(
       onListen: () async {
         final observerId =
-            await MethodChannelFirebaseFirestore.pigeonChannel.querySnapshot();
+            await MethodChannelFirebaseFirestore.pigeonChannel.querySnapshot(
+          pigeonApp,
+          _pointer.path,
+          isCollectionGroupQuery,
+          _pigeonParameters,
+          PigeonGetOptions(
+            source: Source.serverAndCache,
+            serverTimestampBehavior: serverTimestampBehavior,
+          ),
+          includeMetadataChanges,
+        );
 
         snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.querySnapshotChannel(observerId)
                 .receiveGuardedBroadcastStream(
-          arguments: <String, dynamic>{
-            'query': this,
-            'includeMetadataChanges': includeMetadataChanges,
-            'serverTimestampBehavior': getServerTimestampBehaviorString(
-              serverTimestampBehavior,
-            ),
-          },
           onError: convertPlatformException,
-        ).listen(
+        )
+                .listen(
           (snapshot) {
-            controller.add(MethodChannelQuerySnapshot(firestore, snapshot));
+            final snapshotList = snapshot as List<Object?>;
+            // We force the types here of list because they are not automatically
+            // decoded by the pigeon generated code.
+            final List<PigeonDocumentSnapshot> documents =
+                (snapshotList[0]! as List)
+                    .map((e) => PigeonDocumentSnapshot.decode(e))
+                    .toList()
+                    .cast<PigeonDocumentSnapshot>();
+            final List<PigeonDocumentChange> changes =
+                (snapshotList[1]! as List)
+                    .map((e) => PigeonDocumentChange.decode(e))
+                    .toList()
+                    .cast<PigeonDocumentChange>();
+            final PigeonQuerySnapshot result = PigeonQuerySnapshot.decode(
+                [documents, changes, snapshotList[2]]);
+            controller.add(MethodChannelQuerySnapshot(firestore, result));
           },
           onError: controller.addError,
         );
@@ -192,13 +229,15 @@ class MethodChannelQuery extends QueryPlatform {
 
   @override
   QueryPlatform orderBy(Iterable<List<dynamic>> orders) {
-    return _copyWithParameters(<String, dynamic>{'orderBy': orders});
+    return _copyWithParameters(<String, dynamic>{
+      'orderBy': _convertToFieldPath(orders),
+    });
   }
 
   @override
   QueryPlatform startAfterDocument(List<dynamic> orders, List<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
-      'orderBy': orders,
+      'orderBy': _convertToFieldPath(orders),
       'startAt': null,
       'startAfter': values,
     });
@@ -216,7 +255,7 @@ class MethodChannelQuery extends QueryPlatform {
   QueryPlatform startAtDocument(
       Iterable<dynamic> orders, Iterable<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
-      'orderBy': orders,
+      'orderBy': _convertToFieldPath(orders),
       'startAt': values,
       'startAfter': null,
     });

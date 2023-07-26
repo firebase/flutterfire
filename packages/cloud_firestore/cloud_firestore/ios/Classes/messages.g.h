@@ -282,10 +282,18 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
 - (void)writeBatchCommitApp:(PigeonFirebaseApp *)app
                      writes:(NSArray<PigeonTransactionCommand *> *)writes
                  completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)querySnapshotWithCompletion:(void (^)(NSString *_Nullable,
-                                              FlutterError *_Nullable))completion;
-- (void)documentReferenceSnapshotWithCompletion:(void (^)(NSString *_Nullable,
-                                                          FlutterError *_Nullable))completion;
+- (void)querySnapshotApp:(PigeonFirebaseApp *)app
+                      path:(NSString *)path
+         isCollectionGroup:(NSNumber *)isCollectionGroup
+                parameters:(PigeonQueryParameters *)parameters
+                   options:(PigeonGetOptions *)options
+    includeMetadataChanges:(NSNumber *)includeMetadataChanges
+                completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)documentReferenceSnapshotApp:(PigeonFirebaseApp *)app
+                          parameters:(DocumentReferenceRequest *)parameters
+              includeMetadataChanges:(NSNumber *)includeMetadataChanges
+                          completion:
+                              (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

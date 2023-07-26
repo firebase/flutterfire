@@ -151,7 +151,6 @@ public class FlutterFirebaseFirestorePlugin
     activity.set(null);
   }
 
-
   private void initInstance(BinaryMessenger messenger) {
     binaryMessenger = messenger;
 
@@ -756,15 +755,52 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   @Override
-  public void querySnapshot(@NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
+  public void querySnapshot(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull String path,
+      @NonNull Boolean isCollectionGroup,
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonGetOptions options,
+      @NonNull Boolean includeMetadataChanges,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
+    Query query =
+        PigeonParser.parseQuery(getFirestoreFromPigeon(app), path, isCollectionGroup, parameters);
+
+    if (query == null) {
+      result.error(
+          new IllegalArgumentException(
+              "An error occurred while parsing query arguments, see native logs for more information. Please report this issue."));
+      return;
+    }
+
     result.success(
-        registerEventChannel(METHOD_CHANNEL_NAME + "/query", new QuerySnapshotsStreamHandler()));
+        registerEventChannel(
+            METHOD_CHANNEL_NAME + "/query",
+            new QuerySnapshotsStreamHandler(
+                query,
+                includeMetadataChanges,
+                PigeonParser.parsePigeonServerTimestampBehavior(
+                    options.getServerTimestampBehavior()))));
   }
 
   @Override
-  public void documentReferenceSnapshot(@NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
+  public void documentReferenceSnapshot(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest parameters,
+      @NonNull Boolean includeMetadataChanges,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
+    FirebaseFirestore firestore = getFirestoreFromPigeon(app);
+    DocumentReference documentReference =
+        getFirestoreFromPigeon(app).document(parameters.getPath());
+
     result.success(
-      registerEventChannel(
-        METHOD_CHANNEL_NAME + "/document", new DocumentSnapshotsStreamHandler()));
+        registerEventChannel(
+            METHOD_CHANNEL_NAME + "/document",
+            new DocumentSnapshotsStreamHandler(
+                firestore,
+                documentReference,
+                includeMetadataChanges,
+                PigeonParser.parsePigeonServerTimestampBehavior(
+                    parameters.getServerTimestampBehavior()))));
   }
 }

@@ -10,7 +10,6 @@ import 'src/internal/pointer.dart';
 export 'package:collection/collection.dart' show ListEquality;
 
 export '/src/pigeon/messages.pigeon.dart';
-export 'src/aggregate_source.dart';
 export 'src/blob.dart';
 export 'src/field_path.dart';
 export 'src/filters.dart';

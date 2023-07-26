@@ -2,6 +2,7 @@ package io.flutter.plugins.firebase.firestore.utils;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
@@ -31,7 +32,10 @@ public class PigeonParser {
   }
 
   public static DocumentSnapshot.ServerTimestampBehavior parsePigeonServerTimestampBehavior(
-      GeneratedAndroidFirebaseFirestore.ServerTimestampBehavior serverTimestampBehavior) {
+      @Nullable GeneratedAndroidFirebaseFirestore.ServerTimestampBehavior serverTimestampBehavior) {
+    if (serverTimestampBehavior == null) {
+      return DocumentSnapshot.ServerTimestampBehavior.NONE;
+    }
     switch (serverTimestampBehavior) {
       case NONE:
         return DocumentSnapshot.ServerTimestampBehavior.NONE;
@@ -144,7 +148,6 @@ public class PigeonParser {
       boolean isCollectionGroup,
       GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters) {
     try {
-
       Query query;
       if (isCollectionGroup) {
         query = firestore.collectionGroup(path);
@@ -212,7 +215,7 @@ public class PigeonParser {
       if (orderBy == null) return query;
 
       for (List<Object> order : orderBy) {
-        FieldPath fieldPath = (FieldPath) order.get(0);
+        FieldPath fieldPath = FieldPath.of(((List<String>) order.get(0)).toArray(new String[0]));
         boolean descending = (boolean) order.get(1);
 
         Query.Direction direction =

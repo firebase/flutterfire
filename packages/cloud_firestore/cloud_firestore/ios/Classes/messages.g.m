@@ -1056,15 +1056,31 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
         binaryMessenger:binaryMessenger
                   codec:FirebaseFirestoreHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(querySnapshotWithCompletion:)],
-                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
-                @"@selector(querySnapshotWithCompletion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector(querySnapshotApp:
+                                                        path:isCollectionGroup:parameters:options
+                                                            :includeMetadataChanges:completion:)],
+          @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+          @"@selector(querySnapshotApp:path:isCollectionGroup:parameters:options:"
+          @"includeMetadataChanges:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        [api querySnapshotWithCompletion:^(NSString *_Nullable output,
-                                           FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_path = GetNullableObjectAtIndex(args, 1);
+        NSNumber *arg_isCollectionGroup = GetNullableObjectAtIndex(args, 2);
+        PigeonQueryParameters *arg_parameters = GetNullableObjectAtIndex(args, 3);
+        PigeonGetOptions *arg_options = GetNullableObjectAtIndex(args, 4);
+        NSNumber *arg_includeMetadataChanges = GetNullableObjectAtIndex(args, 5);
+        [api querySnapshotApp:arg_app
+                              path:arg_path
+                 isCollectionGroup:arg_isCollectionGroup
+                        parameters:arg_parameters
+                           options:arg_options
+            includeMetadataChanges:arg_includeMetadataChanges
+                        completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
+                          callback(wrapResult(output, error));
+                        }];
       }];
     } else {
       [channel setMessageHandler:nil];
@@ -1076,15 +1092,24 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
         binaryMessenger:binaryMessenger
                   codec:FirebaseFirestoreHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(documentReferenceSnapshotWithCompletion:)],
-                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
-                @"@selector(documentReferenceSnapshotWithCompletion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector
+               (documentReferenceSnapshotApp:parameters:includeMetadataChanges:completion:)],
+          @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+          @"@selector(documentReferenceSnapshotApp:parameters:includeMetadataChanges:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        [api documentReferenceSnapshotWithCompletion:^(NSString *_Nullable output,
-                                                       FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        DocumentReferenceRequest *arg_parameters = GetNullableObjectAtIndex(args, 1);
+        NSNumber *arg_includeMetadataChanges = GetNullableObjectAtIndex(args, 2);
+        [api documentReferenceSnapshotApp:arg_app
+                               parameters:arg_parameters
+                   includeMetadataChanges:arg_includeMetadataChanges
+                               completion:^(NSString *_Nullable output,
+                                            FlutterError *_Nullable error) {
+                                 callback(wrapResult(output, error));
+                               }];
       }];
     } else {
       [channel setMessageHandler:nil];

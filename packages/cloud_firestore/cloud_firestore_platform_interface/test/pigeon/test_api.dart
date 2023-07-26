@@ -146,9 +146,16 @@ abstract class TestFirebaseFirestoreHostApi {
   Future<void> writeBatchCommit(
       PigeonFirebaseApp app, List<PigeonTransactionCommand?> writes);
 
-  Future<String> querySnapshot();
+  Future<String> querySnapshot(
+      PigeonFirebaseApp app,
+      String path,
+      bool isCollectionGroup,
+      PigeonQueryParameters parameters,
+      PigeonGetOptions options,
+      bool includeMetadataChanges);
 
-  Future<String> documentReferenceSnapshot();
+  Future<String> documentReferenceSnapshot(PigeonFirebaseApp app,
+      DocumentReferenceRequest parameters, bool includeMetadataChanges);
 
   static void setup(TestFirebaseFirestoreHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -679,8 +686,35 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          // ignore message
-          final String output = await api.querySnapshot();
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.querySnapshot was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_path = (args[1] as String?);
+          assert(arg_path != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null String.');
+          final bool? arg_isCollectionGroup = (args[2] as bool?);
+          assert(arg_isCollectionGroup != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null bool.');
+          final PigeonQueryParameters? arg_parameters =
+              (args[3] as PigeonQueryParameters?);
+          assert(arg_parameters != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null PigeonQueryParameters.');
+          final PigeonGetOptions? arg_options = (args[4] as PigeonGetOptions?);
+          assert(arg_options != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null PigeonGetOptions.');
+          final bool? arg_includeMetadataChanges = (args[5] as bool?);
+          assert(arg_includeMetadataChanges != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null bool.');
+          final String output = await api.querySnapshot(
+              arg_app!,
+              arg_path!,
+              arg_isCollectionGroup!,
+              arg_parameters!,
+              arg_options!,
+              arg_includeMetadataChanges!);
           return <Object?>[output];
         });
       }
@@ -697,8 +731,21 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          // ignore message
-          final String output = await api.documentReferenceSnapshot();
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceSnapshot was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null PigeonFirebaseApp.');
+          final DocumentReferenceRequest? arg_parameters =
+              (args[1] as DocumentReferenceRequest?);
+          assert(arg_parameters != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null DocumentReferenceRequest.');
+          final bool? arg_includeMetadataChanges = (args[2] as bool?);
+          assert(arg_includeMetadataChanges != null,
+              'Argument for dev.flutter.pigeon.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null bool.');
+          final String output = await api.documentReferenceSnapshot(
+              arg_app!, arg_parameters!, arg_includeMetadataChanges!);
           return <Object?>[output];
         });
       }
