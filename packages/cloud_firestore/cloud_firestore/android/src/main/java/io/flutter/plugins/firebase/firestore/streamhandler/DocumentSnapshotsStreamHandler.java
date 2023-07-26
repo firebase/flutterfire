@@ -9,11 +9,14 @@ package io.flutter.plugins.firebase.firestore.streamhandler;
 import static io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.DEFAULT_ERROR_CODE;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.MetadataChanges;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
+import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
+
 import java.util.Map;
 import java.util.Objects;
 
@@ -45,7 +48,7 @@ public class DocumentSnapshotsStreamHandler implements StreamHandler {
 
                 onCancel(null);
               } else {
-                events.success(documentSnapshot);
+                events.success(PigeonParser.toPigeonDocumentSnapshot(documentSnapshot, DocumentSnapshot.ServerTimestampBehavior.NONE).toList());
               }
             });
   }

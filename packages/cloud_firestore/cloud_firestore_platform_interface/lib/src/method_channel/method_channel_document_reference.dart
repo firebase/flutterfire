@@ -133,14 +133,14 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
           onError: convertPlatformException,
         ).listen(
           (snapshot) {
+            final PigeonDocumentSnapshot result =
+                PigeonDocumentSnapshot.decode(snapshot);
             controller.add(
               DocumentSnapshotPlatform(
                 firestore,
-                snapshot['path'],
-                <String, dynamic>{
-                  'data': snapshot['data'],
-                  'metadata': snapshot['metadata'],
-                },
+                result.path,
+                result.data,
+                result.metadata,
               ),
             );
           },
