@@ -351,7 +351,7 @@ represents the content of the collection must be in the same file.
         dateTimeChecker.isAssignableFromType(type) ||
         timestampChecker.isAssignableFromType(type) ||
         geoPointChecker.isAssignableFromType(type);
-    // TODO filter list other than LIst<string|bool|num>
+    // TODO filter list other than List<string|bool|num>
   }
 
   @override

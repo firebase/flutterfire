@@ -33,7 +33,7 @@ abstract class ${data.collectionReferenceInterfaceName}
       implements
         ${data.queryReferenceInterfaceName},
         FirestoreCollectionReference<${data.type}, ${data.querySnapshotName}> {
-  ${data.parent != null ? _subCollectionConstructors(data, asbtract: true) : _rootCollectionConstructors(data, abstract: true)}
+  ${data.parent != null ? _subCollectionConstructors(data, abstract: true) : _rootCollectionConstructors(data, abstract: true)}
 
   static ${data.type} fromFirestore(
     DocumentSnapshot<Map<String, Object?>> snapshot,
@@ -134,7 +134,7 @@ ${_parentProperty(data)}
 
   String _subCollectionConstructors(
     CollectionData data, {
-    bool asbtract = false,
+    bool abstract = false,
   }) {
     final parent = data.parent!;
 
@@ -148,7 +148,7 @@ ${_parentProperty(data)}
       }
     }
 
-    if (asbtract) {
+    if (abstract) {
       return '''
         factory ${data.collectionReferenceInterfaceName}(
           DocumentReference<${parent.type}> parent,

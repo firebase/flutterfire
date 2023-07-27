@@ -12,7 +12,7 @@ Install dependencies
 flutter pub add firebase_core firebase_storage firebase_ui_storage
 ```
 
-Donwload Firebase project config
+Download Firebase project config
 
 ```sh
 flutterfire configure
