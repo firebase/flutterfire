@@ -35,6 +35,12 @@ class Model {
   final String value;
 }
 
+enum TestEnum {
+  one,
+  two,
+  three;
+}
+
 @JsonSerializable()
 class Nested {
   Nested({
@@ -46,6 +52,10 @@ class Nested {
     required this.numList,
     required this.objectList,
     required this.dynamicList,
+    required this.enumValue,
+    required this.nullableEnumValue,
+    required this.enumList,
+    required this.nullableEnumList,
   });
 
   factory Nested.fromJson(Map<String, Object?> json) => _$NestedFromJson(json);
@@ -60,6 +70,10 @@ class Nested {
   final List<num>? numList;
   final List<Object?>? objectList;
   final List<dynamic>? dynamicList;
+  final TestEnum enumValue;
+  final TestEnum? nullableEnumValue;
+  final List<TestEnum> enumList;
+  final List<TestEnum>? nullableEnumList;
 }
 
 @Collection<Nested>('nested')
