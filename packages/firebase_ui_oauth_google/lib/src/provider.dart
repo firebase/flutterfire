@@ -25,7 +25,7 @@ class GoogleProvider extends OAuthProvider {
   /// Required on desktop platforms.
   final String? redirectUri;
 
-  /// The list of requested authroization scopes requested when signing in.
+  /// The list of requested authorization scopes requested when signing in.
   final List<String>? scopes;
 
   late GoogleSignIn provider;
