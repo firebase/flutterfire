@@ -63,6 +63,7 @@ void main() {
       await $.native.enterText(
         Selector(resourceId: 'identifierId'),
         text: const String.fromEnvironment('EMAIL'),
+        keyboardBehavior: KeyboardBehavior.alternative,
       );
 
       await $.native.tap(Selector(resourceId: 'identifierNext'));
@@ -70,6 +71,7 @@ void main() {
       await $.native.enterText(
         Selector(resourceId: 'password'),
         text: const String.fromEnvironment('PASSWORD'),
+        keyboardBehavior: KeyboardBehavior.alternative,
       );
 
       await $.native.tap(Selector(resourceId: 'passwordNext'));

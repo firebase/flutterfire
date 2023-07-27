@@ -24,6 +24,3 @@ patrol:
   android:
     app_name: Firebase Auth
     package_name: io.flutter.plugins.firebase.auth.example
-  ios:
-    app_name: Firebase Auth
-    bundle_id: io.flutter.plugins.firebase.auth.example
