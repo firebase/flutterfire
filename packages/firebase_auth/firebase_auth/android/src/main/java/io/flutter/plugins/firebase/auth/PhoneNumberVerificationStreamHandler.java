@@ -20,6 +20,7 @@ import com.google.firebase.auth.PhoneMultiFactorInfo;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -105,7 +106,11 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
                 FlutterFirebaseAuthPluginException.parserExceptionToFlutter(e);
             error.put(
                 "code",
-                flutterError.code.replaceAll("ERROR_", "").toLowerCase().replaceAll("_", "-"));
+                flutterError
+                    .code
+                    .replaceAll("ERROR_", "")
+                    .toLowerCase(Locale.ROOT)
+                    .replaceAll("_", "-"));
             error.put("message", flutterError.getMessage());
             error.put("details", flutterError.details);
             event.put("error", error);
