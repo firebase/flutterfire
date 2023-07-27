@@ -31,6 +31,3 @@ patrol:
   android:
     app_name: firebae_messaging_example
     package_name: io.flutter.plugins.firebase.messaging.example
-  ios:
-    app_name: CloudMessaging
-    bundle_id: io.flutter.plugins.firebase.messaging.example
