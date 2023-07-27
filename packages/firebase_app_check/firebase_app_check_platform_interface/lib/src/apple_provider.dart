@@ -4,7 +4,7 @@
 
 /// An enum representing the different types of Apple App Attest providers.
 enum AppleProvider {
-  /// The debug provider. No furhter configuration in your iOS code required. You simply need to copy/paste the debug token
+  /// The debug provider. No further configuration in your iOS code required. You simply need to copy/paste the debug token
   /// from the console when you run the app and add the token to your Firebase console. See documentation:
   /// https://firebase.google.com/docs/app-check/ios/debug-provider
   debug,
