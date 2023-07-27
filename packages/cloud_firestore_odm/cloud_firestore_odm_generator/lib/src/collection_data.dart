@@ -429,6 +429,9 @@ extension on String {
   }
 }
 
+const _coreListChecker = TypeChecker.fromUrl('dart:core#List');
+const _coreSetChecker = TypeChecker.fromUrl('dart:core#Set');
+
 extension DartTypeExtension on DartType {
   bool get isJsonDocumentReference {
     return element?.librarySource?.uri.scheme == 'package' &&
@@ -438,11 +441,12 @@ extension DartTypeExtension on DartType {
         (this as InterfaceType).typeArguments.single.isDartCoreMap;
   }
 
-  bool get isIterable =>
-      (this as InterfaceType).allSupertypes.any((e) => e.isDartCoreIterable);
+  bool get isSupportedIterable =>
+      _coreListChecker.isExactlyType(this) ||
+      _coreSetChecker.isExactlyType(this);
 
   bool get isPrimitiveIterable {
-    if (!isIterable) return false;
+    if (!isSupportedIterable) return false;
 
     final generic = (this as InterfaceType).typeArguments.single;
 

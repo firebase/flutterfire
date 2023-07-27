@@ -1678,6 +1678,8 @@ abstract class NestedDocumentReference
     FieldValue objectListFieldValue,
     List<dynamic>? dynamicList,
     FieldValue dynamicListFieldValue,
+    Set<bool>? boolSet,
+    FieldValue boolSetFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -1697,6 +1699,8 @@ abstract class NestedDocumentReference
     FieldValue objectListFieldValue,
     List<dynamic>? dynamicList,
     FieldValue dynamicListFieldValue,
+    Set<bool>? boolSet,
+    FieldValue boolSetFieldValue,
   });
 }
 
@@ -1741,6 +1745,8 @@ class _$NestedDocumentReference
     FieldValue? objectListFieldValue,
     Object? dynamicList = _sentinel,
     FieldValue? dynamicListFieldValue,
+    Object? boolSet = _sentinel,
+    FieldValue? boolSetFieldValue,
   }) async {
     assert(
       simple == _sentinel || simpleFieldValue == null,
@@ -1766,6 +1772,10 @@ class _$NestedDocumentReference
       dynamicList == _sentinel || dynamicListFieldValue == null,
       "Cannot specify both dynamicList and dynamicListFieldValue",
     );
+    assert(
+      boolSet == _sentinel || boolSetFieldValue == null,
+      "Cannot specify both boolSet and boolSetFieldValue",
+    );
     final json = {
       if (simple != _sentinel) _$NestedFieldMap['simple']!: simple as int?,
       if (simpleFieldValue != null)
@@ -1790,6 +1800,10 @@ class _$NestedDocumentReference
         _$NestedFieldMap['dynamicList']!: dynamicList as List<dynamic>?,
       if (dynamicListFieldValue != null)
         _$NestedFieldMap['dynamicList']!: dynamicListFieldValue,
+      if (boolSet != _sentinel)
+        _$NestedFieldMap['boolSet']!: boolSet as Set<bool>?,
+      if (boolSetFieldValue != null)
+        _$NestedFieldMap['boolSet']!: boolSetFieldValue,
     };
 
     return reference.update(json);
@@ -1809,6 +1823,8 @@ class _$NestedDocumentReference
     FieldValue? objectListFieldValue,
     Object? dynamicList = _sentinel,
     FieldValue? dynamicListFieldValue,
+    Object? boolSet = _sentinel,
+    FieldValue? boolSetFieldValue,
   }) {
     assert(
       simple == _sentinel || simpleFieldValue == null,
@@ -1834,6 +1850,10 @@ class _$NestedDocumentReference
       dynamicList == _sentinel || dynamicListFieldValue == null,
       "Cannot specify both dynamicList and dynamicListFieldValue",
     );
+    assert(
+      boolSet == _sentinel || boolSetFieldValue == null,
+      "Cannot specify both boolSet and boolSetFieldValue",
+    );
     final json = {
       if (simple != _sentinel) _$NestedFieldMap['simple']!: simple as int?,
       if (simpleFieldValue != null)
@@ -1858,6 +1878,10 @@ class _$NestedDocumentReference
         _$NestedFieldMap['dynamicList']!: dynamicList as List<dynamic>?,
       if (dynamicListFieldValue != null)
         _$NestedFieldMap['dynamicList']!: dynamicListFieldValue,
+      if (boolSet != _sentinel)
+        _$NestedFieldMap['boolSet']!: boolSet as Set<bool>?,
+      if (boolSetFieldValue != null)
+        _$NestedFieldMap['boolSet']!: boolSetFieldValue,
     };
 
     transaction.update(reference, json);
@@ -2025,6 +2049,17 @@ abstract class NestedQuery
     dynamic arrayContains,
     List<dynamic>? arrayContainsAny,
   });
+  NestedQuery whereBoolSet({
+    Set<bool>? isEqualTo,
+    Set<bool>? isNotEqualTo,
+    Set<bool>? isLessThan,
+    Set<bool>? isLessThanOrEqualTo,
+    Set<bool>? isGreaterThan,
+    Set<bool>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    bool? arrayContains,
+    Set<bool>? arrayContainsAny,
+  });
 
   NestedQuery orderByDocumentId({
     bool descending = false,
@@ -2104,6 +2139,18 @@ abstract class NestedQuery
     List<dynamic>? startAfter,
     List<dynamic>? endAt,
     List<dynamic>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByBoolSet({
+    bool descending = false,
+    Set<bool>? startAt,
+    Set<bool>? startAfter,
+    Set<bool>? endAt,
+    Set<bool>? endBefore,
     NestedDocumentSnapshot? startAtDocument,
     NestedDocumentSnapshot? endAtDocument,
     NestedDocumentSnapshot? endBeforeDocument,
@@ -2447,6 +2494,35 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$NestedFieldMap['dynamicList']!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  NestedQuery whereBoolSet({
+    Set<bool>? isEqualTo,
+    Set<bool>? isNotEqualTo,
+    Set<bool>? isLessThan,
+    Set<bool>? isLessThanOrEqualTo,
+    Set<bool>? isGreaterThan,
+    Set<bool>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    bool? arrayContains,
+    Set<bool>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$NestedFieldMap['boolSet']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2906,6 +2982,78 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   }) {
     final query = $referenceWithoutCursor
         .orderBy(_$NestedFieldMap['dynamicList']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  NestedQuery orderByBoolSet({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['boolSet']!,
+        descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -11706,6 +11854,8 @@ Nested _$NestedFromJson(Map<String, dynamic> json) => Nested(
           (json['numList'] as List<dynamic>?)?.map((e) => e as num).toList(),
       objectList: json['objectList'] as List<dynamic>?,
       dynamicList: json['dynamicList'] as List<dynamic>?,
+      boolSet:
+          (json['boolSet'] as List<dynamic>?)?.map((e) => e as bool).toSet(),
     );
 
 const _$NestedFieldMap = <String, String>{
@@ -11717,6 +11867,7 @@ const _$NestedFieldMap = <String, String>{
   'numList': 'numList',
   'objectList': 'objectList',
   'dynamicList': 'dynamicList',
+  'boolSet': 'boolSet',
 };
 
 Map<String, dynamic> _$NestedToJson(Nested instance) => <String, dynamic>{
@@ -11728,6 +11879,7 @@ Map<String, dynamic> _$NestedToJson(Nested instance) => <String, dynamic>{
       'numList': instance.numList,
       'objectList': instance.objectList,
       'dynamicList': instance.dynamicList,
+      'boolSet': instance.boolSet?.toList(),
     };
 
 EmptyModel _$EmptyModelFromJson(Map<String, dynamic> json) => EmptyModel();
