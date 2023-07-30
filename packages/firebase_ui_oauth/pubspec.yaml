@@ -11,8 +11,6 @@ dependencies:
   desktop_webview_auth: ^0.0.13
   firebase_auth: ^4.7.2
   firebase_ui_auth: ^1.6.2
-  firebase_auth: ^4.7.2
-  firebase_ui_auth: ^1.6.2
   firebase_ui_shared: ^1.3.0
   flutter_svg: ^2.0.5
   flutter:

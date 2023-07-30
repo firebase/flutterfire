@@ -11,7 +11,7 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  collection: ^1.17.1
+  collection: ^1.0.0
   flutter:
     sdk: flutter
   # Needed to export the mocks
