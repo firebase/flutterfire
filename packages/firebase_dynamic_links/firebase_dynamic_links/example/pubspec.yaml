@@ -10,7 +10,7 @@ dependencies:
   firebase_dynamic_links: ^5.3.4
   flutter:
     sdk: flutter
-  url_launcher: ^6.1.12
+  url_launcher: ^6.1.10
 
 flutter:
   uses-material-design: true

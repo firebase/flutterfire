@@ -17,12 +17,12 @@ dependencies:
   firebase_in_app_messaging_platform_interface: ^0.2.4+4
   flutter:
     sdk: flutter
-  meta: ^1.9.1
+  meta: ^1.8.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^5.4.2
+  mockito: ^5.0.16
   plugin_platform_interface: null
 
 flutter:

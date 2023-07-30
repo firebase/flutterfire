@@ -8,7 +8,7 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  collection: ^1.17.1
+  collection: ^1.16.0
   firebase_database: ^10.2.4
   firebase_ui_localizations: ^1.5.0
   flutter:
@@ -17,7 +17,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.2
+  flutter_lints: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
