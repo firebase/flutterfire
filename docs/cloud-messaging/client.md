@@ -144,8 +144,20 @@ To retrieve the current registration token for an app instance, call
 ask the user for notification permissions. Otherwise, it returns a token or
 rejects the future due to an error.
 
+Warning: From iOS SDK 10.4.0 and higher, it is a requirement that the APNS token
+is available before making API requests. The APNS token is not guaranteed to have been received
+before making Firebase Messaging API requests.
+
 ```dart
-final fcmToken = await FirebaseMessaging.instance.getToken();
+// You may set the permission requests to "provisional" which allows the user to choose what type
+// of notifications they would like to receive once the user receives a notification.
+final notificationSettings = await FirebaseMessaging.instance.requestPermission(provisional: true);
+
+// For apple platforms, ensure the APNS token is available before making any Firebase Messaging API calls
+final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+if (apnsToken != null) {
+  final fcmToken = await FirebaseMessaging.instance.getToken();
+}
 ```
 
 On web platforms, pass your VAPID public key to `getToken()`:
