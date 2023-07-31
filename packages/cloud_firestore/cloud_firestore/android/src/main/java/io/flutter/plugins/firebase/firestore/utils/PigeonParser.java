@@ -215,7 +215,7 @@ public class PigeonParser {
       if (orderBy == null) return query;
 
       for (List<Object> order : orderBy) {
-        FieldPath fieldPath = FieldPath.of(((List<String>) order.get(0)).toArray(new String[0]));
+        FieldPath fieldPath = (FieldPath) order.get(0);
         boolean descending = (boolean) order.get(1);
 
         Query.Direction direction =

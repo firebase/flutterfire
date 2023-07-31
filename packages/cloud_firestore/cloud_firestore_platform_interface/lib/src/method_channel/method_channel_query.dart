@@ -55,24 +55,6 @@ class MethodChannelQuery extends QueryPlatform {
     );
   }
 
-  List<List<Object>> _convertToFieldPath(Iterable<dynamic> fields) {
-    return fields.map((dynamic field) {
-      final iterable = field as Iterable;
-      return iterable.map((dynamic field) {
-        if (field is String) {
-          return field;
-        } else if (field is FieldPath) {
-          return field.components;
-        } else if (field is bool) {
-          return field;
-        } else {
-          throw ArgumentError(
-              'Unsupported field type. Pass either a String or a FieldPath');
-        }
-      }).toList();
-    }).toList();
-  }
-
   /// Creates a new instance of [MethodChannelQuery], however overrides
   /// any existing [parameters].
   ///
@@ -93,7 +75,7 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   QueryPlatform endAtDocument(List<dynamic> orders, List<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
-      'orderBy': _convertToFieldPath(orders),
+      'orderBy': orders,
       'endAt': values,
       'endBefore': null,
     });
@@ -111,7 +93,7 @@ class MethodChannelQuery extends QueryPlatform {
   QueryPlatform endBeforeDocument(
       Iterable<dynamic> orders, Iterable<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
-      'orderBy': _convertToFieldPath(orders),
+      'orderBy': orders,
       'endAt': null,
       'endBefore': values,
     });
@@ -230,14 +212,14 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   QueryPlatform orderBy(Iterable<List<dynamic>> orders) {
     return _copyWithParameters(<String, dynamic>{
-      'orderBy': _convertToFieldPath(orders),
+      'orderBy': orders,
     });
   }
 
   @override
   QueryPlatform startAfterDocument(List<dynamic> orders, List<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
-      'orderBy': _convertToFieldPath(orders),
+      'orderBy': orders,
       'startAt': null,
       'startAfter': values,
     });
@@ -255,7 +237,7 @@ class MethodChannelQuery extends QueryPlatform {
   QueryPlatform startAtDocument(
       Iterable<dynamic> orders, Iterable<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
-      'orderBy': _convertToFieldPath(orders),
+      'orderBy': orders,
       'startAt': values,
       'startAfter': null,
     });
