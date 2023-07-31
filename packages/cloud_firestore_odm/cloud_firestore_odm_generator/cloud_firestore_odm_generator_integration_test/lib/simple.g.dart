@@ -1807,47 +1807,54 @@ class _$NestedDocumentReference
       "Cannot specify both nullableEnumList and nullableEnumListFieldValue",
     );
     final json = {
-      if (simple != _sentinel) _$NestedFieldMap['simple']!: simple as int?,
+      if (simple != _sentinel)
+        _$NestedFieldMap['simple']!:
+            _$NestedPerFieldToJson.simple(simple as int?),
       if (simpleFieldValue != null)
         _$NestedFieldMap['simple']!: simpleFieldValue,
       if (boolList != _sentinel)
-        _$NestedFieldMap['boolList']!: boolList as List<bool>?,
+        _$NestedFieldMap['boolList']!:
+            _$NestedPerFieldToJson.boolList(boolList as List<bool>?),
       if (boolListFieldValue != null)
         _$NestedFieldMap['boolList']!: boolListFieldValue,
       if (stringList != _sentinel)
-        _$NestedFieldMap['stringList']!: stringList as List<String>?,
+        _$NestedFieldMap['stringList']!:
+            _$NestedPerFieldToJson.stringList(stringList as List<String>?),
       if (stringListFieldValue != null)
         _$NestedFieldMap['stringList']!: stringListFieldValue,
       if (numList != _sentinel)
-        _$NestedFieldMap['numList']!: numList as List<num>?,
+        _$NestedFieldMap['numList']!:
+            _$NestedPerFieldToJson.numList(numList as List<num>?),
       if (numListFieldValue != null)
         _$NestedFieldMap['numList']!: numListFieldValue,
       if (objectList != _sentinel)
-        _$NestedFieldMap['objectList']!: objectList as List<Object?>?,
+        _$NestedFieldMap['objectList']!:
+            _$NestedPerFieldToJson.objectList(objectList as List<Object?>?),
       if (objectListFieldValue != null)
         _$NestedFieldMap['objectList']!: objectListFieldValue,
       if (dynamicList != _sentinel)
-        _$NestedFieldMap['dynamicList']!: dynamicList as List<dynamic>?,
+        _$NestedFieldMap['dynamicList']!:
+            _$NestedPerFieldToJson.dynamicList(dynamicList as List<dynamic>?),
       if (dynamicListFieldValue != null)
         _$NestedFieldMap['dynamicList']!: dynamicListFieldValue,
       if (enumValue != _sentinel)
-        _$NestedFieldMap['enumValue']!: _$TestEnumEnumMap[enumValue]!,
+        _$NestedFieldMap['enumValue']!:
+            _$NestedPerFieldToJson.enumValue(enumValue as TestEnum),
       if (enumValueFieldValue != null)
         _$NestedFieldMap['enumValue']!: enumValueFieldValue,
       if (nullableEnumValue != _sentinel)
-        _$NestedFieldMap['nullableEnumValue']!:
-            _$TestEnumEnumMap[nullableEnumValue]!,
+        _$NestedFieldMap['nullableEnumValue']!: _$NestedPerFieldToJson
+            .nullableEnumValue(nullableEnumValue as TestEnum?),
       if (nullableEnumValueFieldValue != null)
         _$NestedFieldMap['nullableEnumValue']!: nullableEnumValueFieldValue,
       if (enumList != _sentinel)
         _$NestedFieldMap['enumList']!:
-            (enumList as List).map((e) => _$TestEnumEnumMap[e]!).toList(),
+            _$NestedPerFieldToJson.enumList(enumList as List<TestEnum>),
       if (enumListFieldValue != null)
         _$NestedFieldMap['enumList']!: enumListFieldValue,
       if (nullableEnumList != _sentinel)
-        _$NestedFieldMap['nullableEnumList']!: (nullableEnumList as List)
-            .map((e) => _$TestEnumEnumMap[e]!)
-            .toList(),
+        _$NestedFieldMap['nullableEnumList']!: _$NestedPerFieldToJson
+            .nullableEnumList(nullableEnumList as List<TestEnum>?),
       if (nullableEnumListFieldValue != null)
         _$NestedFieldMap['nullableEnumList']!: nullableEnumListFieldValue,
     };
@@ -1919,47 +1926,54 @@ class _$NestedDocumentReference
       "Cannot specify both nullableEnumList and nullableEnumListFieldValue",
     );
     final json = {
-      if (simple != _sentinel) _$NestedFieldMap['simple']!: simple as int?,
+      if (simple != _sentinel)
+        _$NestedFieldMap['simple']!:
+            _$NestedPerFieldToJson.simple(simple as int?),
       if (simpleFieldValue != null)
         _$NestedFieldMap['simple']!: simpleFieldValue,
       if (boolList != _sentinel)
-        _$NestedFieldMap['boolList']!: boolList as List<bool>?,
+        _$NestedFieldMap['boolList']!:
+            _$NestedPerFieldToJson.boolList(boolList as List<bool>?),
       if (boolListFieldValue != null)
         _$NestedFieldMap['boolList']!: boolListFieldValue,
       if (stringList != _sentinel)
-        _$NestedFieldMap['stringList']!: stringList as List<String>?,
+        _$NestedFieldMap['stringList']!:
+            _$NestedPerFieldToJson.stringList(stringList as List<String>?),
       if (stringListFieldValue != null)
         _$NestedFieldMap['stringList']!: stringListFieldValue,
       if (numList != _sentinel)
-        _$NestedFieldMap['numList']!: numList as List<num>?,
+        _$NestedFieldMap['numList']!:
+            _$NestedPerFieldToJson.numList(numList as List<num>?),
       if (numListFieldValue != null)
         _$NestedFieldMap['numList']!: numListFieldValue,
       if (objectList != _sentinel)
-        _$NestedFieldMap['objectList']!: objectList as List<Object?>?,
+        _$NestedFieldMap['objectList']!:
+            _$NestedPerFieldToJson.objectList(objectList as List<Object?>?),
       if (objectListFieldValue != null)
         _$NestedFieldMap['objectList']!: objectListFieldValue,
       if (dynamicList != _sentinel)
-        _$NestedFieldMap['dynamicList']!: dynamicList as List<dynamic>?,
+        _$NestedFieldMap['dynamicList']!:
+            _$NestedPerFieldToJson.dynamicList(dynamicList as List<dynamic>?),
       if (dynamicListFieldValue != null)
         _$NestedFieldMap['dynamicList']!: dynamicListFieldValue,
       if (enumValue != _sentinel)
-        _$NestedFieldMap['enumValue']!: _$TestEnumEnumMap[enumValue]!,
+        _$NestedFieldMap['enumValue']!:
+            _$NestedPerFieldToJson.enumValue(enumValue as TestEnum),
       if (enumValueFieldValue != null)
         _$NestedFieldMap['enumValue']!: enumValueFieldValue,
       if (nullableEnumValue != _sentinel)
-        _$NestedFieldMap['nullableEnumValue']!:
-            _$TestEnumEnumMap[nullableEnumValue]!,
+        _$NestedFieldMap['nullableEnumValue']!: _$NestedPerFieldToJson
+            .nullableEnumValue(nullableEnumValue as TestEnum?),
       if (nullableEnumValueFieldValue != null)
         _$NestedFieldMap['nullableEnumValue']!: nullableEnumValueFieldValue,
       if (enumList != _sentinel)
         _$NestedFieldMap['enumList']!:
-            (enumList as List).map((e) => _$TestEnumEnumMap[e]!).toList(),
+            _$NestedPerFieldToJson.enumList(enumList as List<TestEnum>),
       if (enumListFieldValue != null)
         _$NestedFieldMap['enumList']!: enumListFieldValue,
       if (nullableEnumList != _sentinel)
-        _$NestedFieldMap['nullableEnumList']!: (nullableEnumList as List)
-            .map((e) => _$TestEnumEnumMap[e]!)
-            .toList(),
+        _$NestedFieldMap['nullableEnumList']!: _$NestedPerFieldToJson
+            .nullableEnumList(nullableEnumList as List<TestEnum>?),
       if (nullableEnumListFieldValue != null)
         _$NestedFieldMap['nullableEnumList']!: nullableEnumListFieldValue,
     };
@@ -2498,15 +2512,26 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$NestedFieldMap['simple']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo:
+            isEqualTo != null ? _$NestedPerFieldToJson.simple(isEqualTo) : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$NestedPerFieldToJson.simple(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$NestedPerFieldToJson.simple(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.simple(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$NestedPerFieldToJson.simple(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.simple(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$NestedPerFieldToJson.simple(e)),
+        whereNotIn: whereNotIn?.map((e) => _$NestedPerFieldToJson.simple(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -2527,15 +2552,32 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$NestedFieldMap['boolList']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$NestedPerFieldToJson.boolList(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$NestedPerFieldToJson.boolList(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$NestedPerFieldToJson.boolList(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.boolList(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$NestedPerFieldToJson.boolList(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.boolList(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains,
-        arrayContainsAny: arrayContainsAny,
+        arrayContains: arrayContains != null
+            ? (_$NestedPerFieldToJson.boolList([arrayContains]) as List?)!.first
+            : null,
+        arrayContainsAny: arrayContainsAny != null
+            ? _$NestedPerFieldToJson.boolList(arrayContainsAny)
+                as Iterable<Object>?
+            : null,
       ),
       $queryCursor: $queryCursor,
     );
@@ -2556,15 +2598,33 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$NestedFieldMap['stringList']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$NestedPerFieldToJson.stringList(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$NestedPerFieldToJson.stringList(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$NestedPerFieldToJson.stringList(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.stringList(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$NestedPerFieldToJson.stringList(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.stringList(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains,
-        arrayContainsAny: arrayContainsAny,
+        arrayContains: arrayContains != null
+            ? (_$NestedPerFieldToJson.stringList([arrayContains]) as List?)!
+                .first
+            : null,
+        arrayContainsAny: arrayContainsAny != null
+            ? _$NestedPerFieldToJson.stringList(arrayContainsAny)
+                as Iterable<Object>?
+            : null,
       ),
       $queryCursor: $queryCursor,
     );
@@ -2585,15 +2645,32 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$NestedFieldMap['numList']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$NestedPerFieldToJson.numList(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$NestedPerFieldToJson.numList(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$NestedPerFieldToJson.numList(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.numList(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$NestedPerFieldToJson.numList(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.numList(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains,
-        arrayContainsAny: arrayContainsAny,
+        arrayContains: arrayContains != null
+            ? (_$NestedPerFieldToJson.numList([arrayContains]) as List?)!.first
+            : null,
+        arrayContainsAny: arrayContainsAny != null
+            ? _$NestedPerFieldToJson.numList(arrayContainsAny)
+                as Iterable<Object>?
+            : null,
       ),
       $queryCursor: $queryCursor,
     );
@@ -2614,15 +2691,33 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$NestedFieldMap['objectList']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$NestedPerFieldToJson.objectList(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$NestedPerFieldToJson.objectList(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$NestedPerFieldToJson.objectList(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.objectList(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$NestedPerFieldToJson.objectList(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.objectList(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains,
-        arrayContainsAny: arrayContainsAny,
+        arrayContains: arrayContains != null
+            ? (_$NestedPerFieldToJson.objectList([arrayContains]) as List?)!
+                .first
+            : null,
+        arrayContainsAny: arrayContainsAny != null
+            ? _$NestedPerFieldToJson.objectList(arrayContainsAny)
+                as Iterable<Object>?
+            : null,
       ),
       $queryCursor: $queryCursor,
     );
@@ -2643,15 +2738,33 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$NestedFieldMap['dynamicList']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$NestedPerFieldToJson.dynamicList(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$NestedPerFieldToJson.dynamicList(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$NestedPerFieldToJson.dynamicList(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.dynamicList(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$NestedPerFieldToJson.dynamicList(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.dynamicList(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains,
-        arrayContainsAny: arrayContainsAny,
+        arrayContains: arrayContains != null
+            ? (_$NestedPerFieldToJson.dynamicList([arrayContains]) as List?)!
+                .first
+            : null,
+        arrayContainsAny: arrayContainsAny != null
+            ? _$NestedPerFieldToJson.dynamicList(arrayContainsAny)
+                as Iterable<Object>?
+            : null,
       ),
       $queryCursor: $queryCursor,
     );
@@ -2672,21 +2785,27 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$NestedFieldMap['enumValue']!,
-        isEqualTo: isEqualTo == null ? null : _$TestEnumEnumMap[isEqualTo]!,
-        isNotEqualTo:
-            isNotEqualTo == null ? null : _$TestEnumEnumMap[isNotEqualTo]!,
-        isLessThan: isLessThan == null ? null : _$TestEnumEnumMap[isLessThan]!,
-        isLessThanOrEqualTo: isLessThanOrEqualTo == null
-            ? null
-            : _$TestEnumEnumMap[isLessThanOrEqualTo]!,
-        isGreaterThan:
-            isGreaterThan == null ? null : _$TestEnumEnumMap[isGreaterThan]!,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo == null
-            ? null
-            : _$TestEnumEnumMap[isGreaterThanOrEqualTo]!,
+        isEqualTo: isEqualTo != null
+            ? _$NestedPerFieldToJson.enumValue(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$NestedPerFieldToJson.enumValue(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$NestedPerFieldToJson.enumValue(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.enumValue(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$NestedPerFieldToJson.enumValue(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.enumValue(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn?.map((e) => _$TestEnumEnumMap[e]!).toList(),
-        whereNotIn: whereNotIn?.map((e) => _$TestEnumEnumMap[e]!).toList(),
+        whereIn: whereIn?.map((e) => _$NestedPerFieldToJson.enumValue(e)),
+        whereNotIn: whereNotIn?.map((e) => _$NestedPerFieldToJson.enumValue(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -2707,21 +2826,29 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$NestedFieldMap['nullableEnumValue']!,
-        isEqualTo: isEqualTo == null ? null : _$TestEnumEnumMap[isEqualTo]!,
-        isNotEqualTo:
-            isNotEqualTo == null ? null : _$TestEnumEnumMap[isNotEqualTo]!,
-        isLessThan: isLessThan == null ? null : _$TestEnumEnumMap[isLessThan]!,
-        isLessThanOrEqualTo: isLessThanOrEqualTo == null
-            ? null
-            : _$TestEnumEnumMap[isLessThanOrEqualTo]!,
-        isGreaterThan:
-            isGreaterThan == null ? null : _$TestEnumEnumMap[isGreaterThan]!,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo == null
-            ? null
-            : _$TestEnumEnumMap[isGreaterThanOrEqualTo]!,
+        isEqualTo: isEqualTo != null
+            ? _$NestedPerFieldToJson.nullableEnumValue(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$NestedPerFieldToJson.nullableEnumValue(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$NestedPerFieldToJson.nullableEnumValue(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.nullableEnumValue(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$NestedPerFieldToJson.nullableEnumValue(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.nullableEnumValue(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn?.map((e) => _$TestEnumEnumMap[e]!).toList(),
-        whereNotIn: whereNotIn?.map((e) => _$TestEnumEnumMap[e]!).toList(),
+        whereIn:
+            whereIn?.map((e) => _$NestedPerFieldToJson.nullableEnumValue(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$NestedPerFieldToJson.nullableEnumValue(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -2742,19 +2869,32 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$NestedFieldMap['enumList']!,
-        isEqualTo: isEqualTo?.map((e) => _$TestEnumEnumMap[e]!).toList(),
-        isNotEqualTo: isNotEqualTo?.map((e) => _$TestEnumEnumMap[e]!).toList(),
-        isLessThan: isLessThan?.map((e) => _$TestEnumEnumMap[e]!).toList(),
-        isLessThanOrEqualTo:
-            isLessThanOrEqualTo?.map((e) => _$TestEnumEnumMap[e]!).toList(),
-        isGreaterThan:
-            isGreaterThan?.map((e) => _$TestEnumEnumMap[e]!).toList(),
-        isGreaterThanOrEqualTo:
-            isGreaterThanOrEqualTo?.map((e) => _$TestEnumEnumMap[e]!).toList(),
+        isEqualTo: isEqualTo != null
+            ? _$NestedPerFieldToJson.enumList(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$NestedPerFieldToJson.enumList(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$NestedPerFieldToJson.enumList(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.enumList(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$NestedPerFieldToJson.enumList(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.enumList(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains,
-        arrayContainsAny:
-            arrayContainsAny?.map((e) => _$TestEnumEnumMap[e]!).toList(),
+        arrayContains: arrayContains != null
+            ? (_$NestedPerFieldToJson.enumList([arrayContains]) as List?)!.first
+            : null,
+        arrayContainsAny: arrayContainsAny != null
+            ? _$NestedPerFieldToJson.enumList(arrayContainsAny)
+                as Iterable<Object>?
+            : null,
       ),
       $queryCursor: $queryCursor,
     );
@@ -2775,19 +2915,34 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$NestedFieldMap['nullableEnumList']!,
-        isEqualTo: isEqualTo?.map((e) => _$TestEnumEnumMap[e]!).toList(),
-        isNotEqualTo: isNotEqualTo?.map((e) => _$TestEnumEnumMap[e]!).toList(),
-        isLessThan: isLessThan?.map((e) => _$TestEnumEnumMap[e]!).toList(),
-        isLessThanOrEqualTo:
-            isLessThanOrEqualTo?.map((e) => _$TestEnumEnumMap[e]!).toList(),
-        isGreaterThan:
-            isGreaterThan?.map((e) => _$TestEnumEnumMap[e]!).toList(),
-        isGreaterThanOrEqualTo:
-            isGreaterThanOrEqualTo?.map((e) => _$TestEnumEnumMap[e]!).toList(),
+        isEqualTo: isEqualTo != null
+            ? _$NestedPerFieldToJson.nullableEnumList(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$NestedPerFieldToJson.nullableEnumList(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$NestedPerFieldToJson.nullableEnumList(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.nullableEnumList(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$NestedPerFieldToJson.nullableEnumList(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.nullableEnumList(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains,
-        arrayContainsAny:
-            arrayContainsAny?.map((e) => _$TestEnumEnumMap[e]!).toList(),
+        arrayContains: arrayContains != null
+            ? (_$NestedPerFieldToJson.nullableEnumList([arrayContains])
+                    as List?)!
+                .first
+            : null,
+        arrayContainsAny: arrayContainsAny != null
+            ? _$NestedPerFieldToJson.nullableEnumList(arrayContainsAny)
+                as Iterable<Object>?
+            : null,
       ),
       $queryCursor: $queryCursor,
     );
@@ -12352,6 +12507,37 @@ const _$NestedFieldMap = <String, String>{
   'enumList': 'enumList',
   'nullableEnumList': 'nullableEnumList',
 };
+
+// ignore: unused_element
+abstract class _$NestedPerFieldToJson {
+  // ignore: unused_element
+  static Object? value(Nested? instance) => instance;
+  // ignore: unused_element
+  static Object? simple(int? instance) => instance;
+  // ignore: unused_element
+  static Object? valueList(List<Nested>? instance) => instance;
+  // ignore: unused_element
+  static Object? boolList(List<bool>? instance) => instance;
+  // ignore: unused_element
+  static Object? stringList(List<String>? instance) => instance;
+  // ignore: unused_element
+  static Object? numList(List<num>? instance) => instance;
+  // ignore: unused_element
+  static Object? objectList(List<Object?>? instance) => instance;
+  // ignore: unused_element
+  static Object? dynamicList(List<dynamic>? instance) => instance;
+  // ignore: unused_element
+  static Object? enumValue(TestEnum instance) => _$TestEnumEnumMap[instance]!;
+  // ignore: unused_element
+  static Object? nullableEnumValue(TestEnum? instance) =>
+      _$TestEnumEnumMap[instance];
+  // ignore: unused_element
+  static Object? enumList(List<TestEnum> instance) =>
+      instance.map((e) => _$TestEnumEnumMap[e]!).toList();
+  // ignore: unused_element
+  static Object? nullableEnumList(List<TestEnum>? instance) =>
+      instance?.map((e) => _$TestEnumEnumMap[e]!).toList();
+}
 
 Map<String, dynamic> _$NestedToJson(Nested instance) => <String, dynamic>{
       'value': instance.value,

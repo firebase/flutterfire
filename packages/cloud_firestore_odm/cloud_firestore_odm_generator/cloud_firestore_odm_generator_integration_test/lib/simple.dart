@@ -41,7 +41,7 @@ enum TestEnum {
   three;
 }
 
-@JsonSerializable()
+@JsonSerializable(createPerFieldToJson: true)
 class Nested {
   Nested({
     required this.value,

@@ -22,30 +22,18 @@ import 'templates/query_snapshot.dart';
 
 const namedQueryChecker = TypeChecker.fromRuntime(NamedQuery);
 
-typedef ParameterMapping = String Function(String name, bool nullable);
-ParameterMapping? listParameterMapping(ParameterMapping? mapping) {
-  if (mapping == null) return null;
-  return (name, nullable) {
-    var mapped = name;
-    if (nullable) mapped += '?';
-    return '$mapped.map((e) => ${mapping('e', false)}).toList()';
-  };
-}
-
 class QueryingField {
   QueryingField(
     this.name,
     this.type, {
     required this.field,
     required this.updatable,
-    this.parameterMapping,
   });
 
   final String name;
   final DartType type;
   final String field;
   final bool updatable;
-  final ParameterMapping? parameterMapping;
 }
 
 class Data {

@@ -5,7 +5,7 @@ repository: https://github.com/firebase/flutterfire/tree/master/packages/cloud_f
 version: 1.0.0-dev.64
 
 environment:
-  sdk: ^3.0.0
+  sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
   analyzer: '>=5.12.0 <6.0.0'

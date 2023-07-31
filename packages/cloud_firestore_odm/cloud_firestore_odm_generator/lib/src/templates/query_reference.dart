@@ -7,7 +7,6 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_provider.dart';
 
 import '../collection_data.dart';
-import '../collection_generator.dart';
 
 class QueryTemplate {
   QueryTemplate(this.data);
@@ -381,40 +380,44 @@ class ${data.queryReferenceImplName}
               ? '${field.type}'
               : '${field.type}?';
 
-      final operators = <String, (String, ParameterMapping?)>{
-        'isEqualTo': (nullableType, field.parameterMapping),
-        'isNotEqualTo': (nullableType, field.parameterMapping),
-        'isLessThan': (nullableType, field.parameterMapping),
-        'isLessThanOrEqualTo': (nullableType, field.parameterMapping),
-        'isGreaterThan': (nullableType, field.parameterMapping),
-        'isGreaterThanOrEqualTo': (nullableType, field.parameterMapping),
-        'isNull': ('bool?', null),
+      final operators = {
+        'isEqualTo': nullableType,
+        'isNotEqualTo': nullableType,
+        'isLessThan': nullableType,
+        'isLessThanOrEqualTo': nullableType,
+        'isGreaterThan': nullableType,
+        'isGreaterThanOrEqualTo': nullableType,
+        'isNull': 'bool?',
         if (field.type.isDartCoreList) ...{
-          'arrayContains': (
-            data.libraryElement.typeProvider
-                .asNullable((field.type as InterfaceType).typeArguments.first)
-                .toString(),
-            null
-          ),
-          'arrayContainsAny': (nullableType, field.parameterMapping),
+          'arrayContains': data.libraryElement.typeProvider
+              .asNullable((field.type as InterfaceType).typeArguments.first),
+          'arrayContainsAny': nullableType,
         } else ...{
-          'whereIn': (
-            'List<${field.type}>?',
-            listParameterMapping(field.parameterMapping),
-          ),
-          'whereNotIn': (
-            'List<${field.type}>?',
-            listParameterMapping(field.parameterMapping),
-          ),
+          'whereIn': 'List<${field.type}>?',
+          'whereNotIn': 'List<${field.type}>?',
         }
       };
 
       final prototype =
-          operators.entries.map((e) => '${e.value.$1} ${e.key},').join();
+          operators.entries.map((e) => '${e.value} ${e.key},').join();
 
-      final parameters = operators.entries
-          .map((e) => '${e.key}: ${e.value.$2?.call(e.key, true) ?? e.key},')
-          .join();
+      final perFieldToJson = data.perFieldToJson(field);
+
+      final parameters = operators.keys.map((e) {
+        if (perFieldToJson == null) {
+          return '$e: $e,';
+        } else if (field.name == 'documentId' || e == 'isNull') {
+          return '$e: $e,';
+        } else if ({'whereIn', 'whereNotIn'}.contains(e)) {
+          return '$e: $e?.map((e) => $perFieldToJson(e)),';
+        } else if (e == 'arrayContainsAny') {
+          return '$e: $e != null ? $perFieldToJson($e) as Iterable<Object>? : null,';
+        } else if (e == 'arrayContains') {
+          return '$e: $e != null ? ($perFieldToJson([$e]) as List?)!.first : null,';
+        } else {
+          return '$e: $e != null ? $perFieldToJson($e) : null,';
+        }
+      }).join();
 
       // TODO support whereX(isEqual: null);
       // TODO handle JsonSerializable case change and JsonKey(name: ...)
