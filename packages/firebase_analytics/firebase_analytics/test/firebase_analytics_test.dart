@@ -1158,7 +1158,11 @@ void main() {
 
     group('filter out nulls', () {
       test('filters out null values', () {
-        final Map<String, dynamic> original = <String, dynamic>{'a': 1, 'b': null, 'c': 'd'};
+        final Map<String, dynamic> original = <String, dynamic>{
+          'a': 1,
+          'b': null,
+          'c': 'd'
+        };
         final Map<String, dynamic> filtered = filterOutNulls(original);
 
         expect(filtered, isNot(same(original)));
@@ -1204,7 +1208,8 @@ void main() {
       });
 
       test('setUserProperty', () async {
-        await analytics!.setUserProperty(name: 'test_name', value: 'test-value');
+        await analytics!
+            .setUserProperty(name: 'test_name', value: 'test-value');
         expect(
           methodCallLog,
           <Matcher>[
@@ -1237,7 +1242,8 @@ void main() {
         );
         // reserved prefix
         expect(
-          analytics!.setUserProperty(name: 'firebase_test', value: 'test-value'),
+          analytics!
+              .setUserProperty(name: 'firebase_test', value: 'test-value'),
           throwsArgumentError,
         );
       });
@@ -1258,7 +1264,8 @@ void main() {
       test(
         'setSessionTimeoutDuration',
         () async {
-          await analytics!.setSessionTimeoutDuration(const Duration(milliseconds: 234));
+          await analytics!
+              .setSessionTimeoutDuration(const Duration(milliseconds: 234));
           expect(
             methodCallLog,
             <Matcher>[

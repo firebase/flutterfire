@@ -6,7 +6,8 @@ part of firebase_analytics;
 
 /// Firebase Analytics API.
 class FirebaseAnalytics extends FirebasePluginPlatform {
-  FirebaseAnalytics._({required this.app}) : super(app.name, 'plugins.flutter.io/firebase_analytics');
+  FirebaseAnalytics._({required this.app})
+      : super(app.name, 'plugins.flutter.io/firebase_analytics');
 
   /// Namespace for analytics API available on Android only. This is deprecated in favor of
   /// `FirebaseAnalytics.instance.setSessionTimeoutDuration()`.
@@ -23,7 +24,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     'Android namespace will be removed in a future release. Please use FirebaseAnalytics.instance.setSessionTimeoutDuration()',
   )
   final FirebaseAnalyticsAndroid? android =
-      defaultTargetPlatform == TargetPlatform.android && !kIsWeb ? FirebaseAnalyticsAndroid() : null;
+      defaultTargetPlatform == TargetPlatform.android && !kIsWeb
+          ? FirebaseAnalyticsAndroid()
+          : null;
 
   static Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
 
@@ -33,7 +36,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   FirebaseAnalyticsPlatform? _delegatePackingProperty;
 
   FirebaseAnalyticsPlatform get _delegate {
-    return _delegatePackingProperty ??= FirebaseAnalyticsPlatform.instanceFor(app: app);
+    return _delegatePackingProperty ??=
+        FirebaseAnalyticsPlatform.instanceFor(app: app);
   }
 
   /// Returns an instance using a specified [FirebaseApp].
@@ -210,7 +214,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required String? value,
     AnalyticsCallOptions? callOptions,
   }) async {
-    if (name.isEmpty || name.length > 24 || name.indexOf(_alpha) != 0 || name.contains(_nonAlphaNumeric)) {
+    if (name.isEmpty ||
+        name.length > 24 ||
+        name.indexOf(_alpha) != 0 ||
+        name.contains(_nonAlphaNumeric)) {
       throw ArgumentError.value(
         name,
         'name',
@@ -1457,7 +1464,8 @@ List<Map<String, dynamic>>? _marshalItems(List<AnalyticsEventItem>? items) {
   return items.map((AnalyticsEventItem item) => item.asMap()).toList();
 }
 
-void _assertParameterTypesAreCorrect(Map<String, Object?>? parameters) => parameters?.forEach((key, value) {
+void _assertParameterTypesAreCorrect(Map<String, Object?>? parameters) =>
+    parameters?.forEach((key, value) {
       assert(
         value is String || value is num,
         "'string' OR 'number' must be set as the value of the parameter: $key. $value found instead",
