@@ -89,10 +89,10 @@ class _InstallationsCardState extends State<InstallationsCard> {
 
   Future<void> getId() async {
     try {
-      final _newId = await FirebaseInstallations.instance.getId();
+      final _newid = await FirebaseInstallations.instance.getId();
 
       setState(() {
-        id = _newId;
+        id = _newid;
       });
     } catch (e) {
       log('$e');
