@@ -40,7 +40,7 @@ class InstallationsCard extends StatefulWidget {
   const InstallationsCard({Key? key}) : super(key: key);
 
   @override
-  State<InstallationsCard> createState() => _InstallationsCardState();
+  _InstallationsCardState createState() => _InstallationsCardState();
 }
 
 class _InstallationsCardState extends State<InstallationsCard> {
@@ -89,10 +89,10 @@ class _InstallationsCardState extends State<InstallationsCard> {
 
   Future<void> getId() async {
     try {
-      final newId = await FirebaseInstallations.instance.getId();
+      final _newId = await FirebaseInstallations.instance.getId();
 
       setState(() {
-        id = newId;
+        id = _newId;
       });
     } catch (e) {
       log('$e');

@@ -36,11 +36,11 @@ class _MyAppState extends State<MyApp> {
 
   /// Initially get the local model if found, and asynchronously get the latest one in background.
   initWithLocalModel() async {
-    final model = await FirebaseModelDownloader.instance.getModel(
+    final _model = await FirebaseModelDownloader.instance.getModel(
         kModelName, FirebaseModelDownloadType.localModelUpdateInBackground);
 
     setState(() {
-      this.model = model;
+      model = _model;
     });
   }
 
@@ -82,12 +82,12 @@ class _MyAppState extends State<MyApp> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          final model = await FirebaseModelDownloader.instance
+                          final _model = await FirebaseModelDownloader.instance
                               .getModel(kModelName,
                                   FirebaseModelDownloadType.latestModel);
 
                           setState(() {
-                            this.model = model;
+                            model = _model;
                           });
                         },
                         child: const Text('Get latest model'),
