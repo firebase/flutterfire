@@ -227,6 +227,23 @@ void main() {
         // https://github.com/firebase/flutterfire/issues/9652
         skip: defaultTargetPlatform == TargetPlatform.android,
       );
+
+      test(
+        'allow passing of `limitedUseAppCheckToken` as option',
+            () async {
+          final instance = FirebaseFunctions.instance;
+          instance.useFunctionsEmulator('localhost', 5001);
+          final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
+            kTestFunctionDefaultRegion,
+            options: HttpsCallableOptions(timeout: const Duration(seconds: 3), limitedUseAppCheckToken: true),
+          );
+
+          HttpsCallableResult results = await timeoutCallable(null);
+          expect(results.data, equals('null'));
+        },
+        // Apple skip because the 'limitedUseAppCheckToken' option is not available on Firebase iOS SDK for obj-c
+        skip: defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS,
+      );
     });
   });
 }
