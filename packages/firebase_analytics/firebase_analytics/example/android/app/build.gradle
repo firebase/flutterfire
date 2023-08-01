@@ -27,7 +27,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     namespace 'io.flutter.plugins.firebase.analytics.example'
-    compileSdkVersion 33
+    compileSdk 33
 
     lintOptions {
         disable 'InvalidPackage'

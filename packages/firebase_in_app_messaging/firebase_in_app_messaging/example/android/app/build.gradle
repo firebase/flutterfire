@@ -26,7 +26,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace 'io.flutter.plugins.firebase.tests'
-    compileSdkVersion 33
+    compileSdk 33
 
     lintOptions {
         disable 'InvalidPackage'

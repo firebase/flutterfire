@@ -29,7 +29,7 @@ android {
     buildConfig = true
   }
 
-  compileSdkVersion 33
+  compileSdk 33
 
     defaultConfig {
         minSdkVersion 16
