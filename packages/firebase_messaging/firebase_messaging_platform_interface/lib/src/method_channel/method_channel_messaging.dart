@@ -130,7 +130,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   // Created this to check APNS token is available before certain Apple Firebase
   // Messaging requests. See this issue:
   // https://github.com/firebase/flutterfire/issues/10625
-  _APNSTokenCheck() async {
+  Future<void> _APNSTokenCheck() async {
     if (Platform.isMacOS || Platform.isIOS) {
       String? token = await getAPNSToken();
 
