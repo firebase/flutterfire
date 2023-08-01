@@ -75,7 +75,8 @@ public class FlutterFirebaseFunctionsPlugin
             String functionUri = (String) arguments.get("functionUri");
             String origin = (String) arguments.get("origin");
             Integer timeout = (Integer) arguments.get("timeout");
-            boolean limitedUseAppCheckToken = (boolean) Objects.requireNonNull(arguments.get("limitedUseAppCheckToken"));
+            boolean limitedUseAppCheckToken =
+                (boolean) Objects.requireNonNull(arguments.get("limitedUseAppCheckToken"));
             Object parameters = arguments.get("parameters");
 
             if (origin != null) {
