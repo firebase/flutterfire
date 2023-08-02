@@ -639,4 +639,92 @@ FlutterStandardMethodCodec *_codec;
   return identifier;
 }
 
+- (void)aggregateQueryCountApp:(nonnull PigeonFirebaseApp *)app path:(nonnull NSString *)path parameters:(nonnull PigeonQueryParameters *)parameters source:(AggregateSource)source completion:(nonnull void (^)(NSNumber * _Nullable, FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)clearPersistenceApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)disableNetworkApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)documentReferenceDeleteApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)documentReferenceGetApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(PigeonDocumentSnapshot * _Nullable, FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)documentReferenceSetApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)documentReferenceSnapshotApp:(nonnull PigeonFirebaseApp *)app parameters:(nonnull DocumentReferenceRequest *)parameters includeMetadataChanges:(nonnull NSNumber *)includeMetadataChanges completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)documentReferenceUpdateApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)enableNetworkApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)loadBundleApp:(nonnull PigeonFirebaseApp *)app bundle:(nonnull FlutterStandardTypedData *)bundle completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)namedQueryGetApp:(nonnull PigeonFirebaseApp *)app name:(nonnull NSString *)name options:(nonnull PigeonGetOptions *)options completion:(nonnull void (^)(PigeonQuerySnapshot * _Nullable, FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)queryGetApp:(nonnull PigeonFirebaseApp *)app path:(nonnull NSString *)path isCollectionGroup:(nonnull NSNumber *)isCollectionGroup parameters:(nonnull PigeonQueryParameters *)parameters options:(nonnull PigeonGetOptions *)options completion:(nonnull void (^)(PigeonQuerySnapshot * _Nullable, FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)querySnapshotApp:(nonnull PigeonFirebaseApp *)app path:(nonnull NSString *)path isCollectionGroup:(nonnull NSNumber *)isCollectionGroup parameters:(nonnull PigeonQueryParameters *)parameters options:(nonnull PigeonGetOptions *)options includeMetadataChanges:(nonnull NSNumber *)includeMetadataChanges completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)setIndexConfigurationApp:(nonnull PigeonFirebaseApp *)app indexConfiguration:(nonnull NSString *)indexConfiguration completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)setLoggingEnabledLoggingEnabled:(nonnull NSNumber *)loggingEnabled completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)snapshotsInSyncSetupWithCompletion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)terminateApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)transactionCreateWithCompletion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)transactionGetApp:(nonnull PigeonFirebaseApp *)app transactionId:(nonnull NSString *)transactionId path:(nonnull NSString *)path completion:(nonnull void (^)(PigeonDocumentSnapshot * _Nullable, FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)transactionStoreResultTransactionId:(nonnull NSString *)transactionId resultType:(PigeonTransactionResult)resultType commands:(nullable NSArray<PigeonTransactionCommand *> *)commands completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)waitForPendingWritesApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
+- (void)writeBatchCommitApp:(nonnull PigeonFirebaseApp *)app writes:(nonnull NSArray<PigeonTransactionCommand *> *)writes completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+    <#code#>
+}
+
 @end

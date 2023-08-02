@@ -11,7 +11,8 @@
 
 #import <Foundation/Foundation.h>
 #import <firebase_core/FLTFirebasePlugin.h>
+#import <cloud_firestore/messages.g.h>
 
-@interface FLTFirebaseFirestorePlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
+@interface FLTFirebaseFirestorePlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FirebaseFirestoreHostApi>
 + (NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap;
 @end
