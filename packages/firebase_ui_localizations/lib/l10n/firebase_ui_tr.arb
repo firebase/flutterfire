@@ -260,7 +260,7 @@
     "description": "",
     "placeholders": {}
   },
-  "registerActionText": "Kaydet",
+  "registerActionText": "Kaydol",
   "@registerActionText": {
     "description": "Used as a label of the EmailForm submit button when the AuthAction is AuthAction.signUp.",
     "placeholders": {}
@@ -270,7 +270,7 @@
     "description": "Used as a hint text of the LoginView suggesting to create a new account.",
     "placeholders": {}
   },
-  "registerText": "Kaydedin",
+  "registerText": "Kaydolun",
   "@registerText": {
     "description": "Used as a title of the LoginView when AuthAction is AuthAction.signUp.",
     "placeholders": {}
