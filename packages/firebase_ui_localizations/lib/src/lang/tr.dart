@@ -168,13 +168,13 @@ class TrLocalizations extends FirebaseUILocalizationLabels {
   String get referenceLabel => "referans";
 
   @override
-  String get registerActionText => "Kaydet";
+  String get registerActionText => "Kaydol";
 
   @override
   String get registerHintText => "Hesabınız yok mu?";
 
   @override
-  String get registerText => "Kaydedin";
+  String get registerText => "Kaydolun";
 
   @override
   String get resetPasswordButtonLabel => "Şifreyi sıfırla";
