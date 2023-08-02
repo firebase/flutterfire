@@ -34,7 +34,7 @@ android {
     buildConfig = true
   }
 
-  compileSdk flutter.compileSdkVersion
+  compileSdk 33
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
