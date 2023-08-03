@@ -78,8 +78,8 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
       String databaseURL;
       // There is no way of getting database URL from Firebase android SDK API so we cache it ourselves
-      synchronized (io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
-        databaseURL = io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName).getDatabaseURL();
+      synchronized (FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
+        databaseURL = FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName).getDatabaseURL();
       }
       writeValue(stream, databaseURL);
     } else if (value instanceof DocumentSnapshot) {
@@ -151,7 +151,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     List<SnapshotMetadata> metadatas = new ArrayList<>();
 
     DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
-        io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.get(value.hashCode());
+        FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.get(value.hashCode());
 
     for (DocumentSnapshot document : value.getDocuments()) {
       paths.add(document.getReference().getPath());
@@ -169,7 +169,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     querySnapshotMap.put("documentChanges", value.getDocumentChanges());
     querySnapshotMap.put("metadata", value.getMetadata());
 
-    io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
+    FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
     writeValue(stream, querySnapshotMap);
   }
 
@@ -210,7 +210,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
     if (value.exists()) {
       DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior =
-          io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.get(value.hashCode());
+          FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.get(value.hashCode());
       if (serverTimestampBehavior != null) {
         snapshotMap.put("data", value.getData(serverTimestampBehavior));
       } else {
@@ -222,7 +222,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
     snapshotMap.put("metadata", value.getMetadata());
 
-    io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
+    FlutterFirebaseFirestorePlugin.serverTimestampBehaviorHashMap.remove(value.hashCode());
     writeValue(stream, snapshotMap);
   }
 
@@ -287,17 +287,17 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     String appName = (String) readValue(buffer);
     String databaseURL = (String) readValue(buffer);
     FirebaseFirestoreSettings settings = (FirebaseFirestoreSettings) readValue(buffer);
-    synchronized (io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
-      if (io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName)
+    synchronized (FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
+      if (FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName)
           != null) {
-        return io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName).getInstance();
+        return FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName).getInstance();
       }
 
       FirebaseApp app = FirebaseApp.getInstance(appName);
       FirebaseFirestore firestore = FirebaseFirestore.getInstance(app, databaseURL);
       firestore.setFirestoreSettings(settings);
 
-      io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.setCachedFirebaseFirestoreInstanceForKey(firestore, appName, databaseURL);
+      FlutterFirebaseFirestorePlugin.setCachedFirebaseFirestoreInstanceForKey(firestore, appName, databaseURL);
       return firestore;
     }
   }
