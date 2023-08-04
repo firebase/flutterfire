@@ -4,6 +4,8 @@
 
 import 'dart:io';
 
+import 'package:barcode_widget/barcode_widget.dart';
+import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_example/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -408,7 +410,15 @@ class _AuthGateState extends State<AuthGate> {
       setState(() {
         error = '${e.message}';
       });
-      final firstHint = e.resolver.hints.first;
+      final firstHint = e.resolver.hints
+          .firstWhereOrNull((element) => element is TotpMultiFactorInfo);
+      final code = await getSmsCodeFromUser(context);
+      final assertion = await TotpMultiFactorGenerator.getAssertionForSignIn(
+        firstHint!.uid,
+        code!,
+      );
+      await e.resolver.resolveSignIn(assertion);
+
       if (firstHint is! PhoneMultiFactorInfo) {
         return;
       }
@@ -629,6 +639,64 @@ Future<String?> getSmsCodeFromUser(BuildContext context) async {
             },
             textAlign: TextAlign.center,
             autofocus: true,
+          ),
+        ),
+      );
+    },
+  );
+
+  return smsCode;
+}
+
+Future<String?> getTotpFromUser(
+  BuildContext context,
+  TotpSecret totpSecret,
+) async {
+  String? smsCode;
+
+  final qrCodeUrl = await totpSecret.generateQrCodeUrl();
+
+  // Update the UI - wait for the user to enter the SMS code
+  await showDialog<String>(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('TOTP code:'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Sign in'),
+          ),
+          OutlinedButton(
+            onPressed: () {
+              smsCode = null;
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+        ],
+        content: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              BarcodeWidget(
+                barcode: Barcode.qrCode(),
+                data: qrCodeUrl,
+                width: 150,
+                height: 150,
+              ),
+              TextField(
+                onChanged: (value) {
+                  smsCode = value;
+                },
+                textAlign: TextAlign.center,
+                autofocus: true,
+              ),
+            ],
           ),
         ),
       );

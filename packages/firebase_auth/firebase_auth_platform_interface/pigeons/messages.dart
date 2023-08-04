@@ -532,6 +532,13 @@ abstract class MultiFactorUserHostApi {
   );
 
   @async
+  void enrollTotp(
+    PigeonFirebaseApp app,
+    String assertionId,
+    String? displayName,
+  );
+
+  @async
   PigeonMultiFactorSession getSession(
     PigeonFirebaseApp app,
   );
@@ -553,7 +560,8 @@ abstract class MultiFactoResolverHostApi {
   @async
   PigeonUserCredential resolveSignIn(
     String resolverId,
-    PigeonPhoneMultiFactorAssertion assertion,
+    PigeonPhoneMultiFactorAssertion? assertion,
+    String? totpAssertionId,
   );
 }
 
@@ -568,7 +576,7 @@ class PigeonTotpSecret {
 
   final int codeIntervalSeconds;
   final int codeLength;
-  final double enrollmentCompletionDeadline;
+  final int enrollmentCompletionDeadline;
   final String hashingAlgorithm;
   final String secretKey;
 }
@@ -577,7 +585,29 @@ class PigeonTotpSecret {
 abstract class MultiFactorTotpHostApi {
   @async
   PigeonTotpSecret generateSecret(
-    PigeonMultiFactorSession session,
+    String sessionId,
+  );
+
+  @async
+  String getAssertionForEnrollment(
+    String secretKey,
+    String oneTimePassword,
+  );
+
+  @async
+  String getAssertionForSignIn(
+    String enrollmentId,
+    String oneTimePassword,
+  );
+}
+
+@HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')
+abstract class MultiFactorTotpSecretHostApi {
+  @async
+  String generateQrCodeUrl(
+    String secretKey,
+    String? accountName,
+    String? issuer,
   );
 }
 

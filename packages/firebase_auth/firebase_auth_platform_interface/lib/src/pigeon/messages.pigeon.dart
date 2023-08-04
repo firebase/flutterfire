@@ -673,7 +673,7 @@ class PigeonTotpSecret {
 
   int codeLength;
 
-  double enrollmentCompletionDeadline;
+  int enrollmentCompletionDeadline;
 
   String hashingAlgorithm;
 
@@ -694,7 +694,7 @@ class PigeonTotpSecret {
     return PigeonTotpSecret(
       codeIntervalSeconds: result[0]! as int,
       codeLength: result[1]! as int,
-      enrollmentCompletionDeadline: result[2]! as double,
+      enrollmentCompletionDeadline: result[2]! as int,
       hashingAlgorithm: result[3]! as String,
       secretKey: result[4]! as String,
     );
@@ -1904,6 +1904,28 @@ class MultiFactorUserHostApi {
     }
   }
 
+  Future<void> enrollTotp(PigeonFirebaseApp arg_app, String arg_assertionId, String? arg_displayName) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_assertionId, arg_displayName]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
   Future<PigeonMultiFactorSession> getSession(PigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession', codec,
@@ -2039,12 +2061,12 @@ class MultiFactoResolverHostApi {
 
   static const MessageCodec<Object?> codec = _MultiFactoResolverHostApiCodec();
 
-  Future<PigeonUserCredential> resolveSignIn(String arg_resolverId, PigeonPhoneMultiFactorAssertion arg_assertion) async {
+  Future<PigeonUserCredential> resolveSignIn(String arg_resolverId, PigeonPhoneMultiFactorAssertion? arg_assertion, String? arg_totpAssertionId) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_resolverId, arg_assertion]) as List<Object?>?;
+        await channel.send(<Object?>[arg_resolverId, arg_assertion, arg_totpAssertionId]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -2071,11 +2093,8 @@ class _MultiFactorTotpHostApiCodec extends StandardMessageCodec {
   const _MultiFactorTotpHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonMultiFactorSession) {
+    if (value is PigeonTotpSecret) {
       buffer.putUint8(128);
-      writeValue(buffer, value.encode());
-    } else if (value is PigeonTotpSecret) {
-      buffer.putUint8(129);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -2086,8 +2105,6 @@ class _MultiFactorTotpHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128: 
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
-      case 129: 
         return PigeonTotpSecret.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -2105,12 +2122,12 @@ class MultiFactorTotpHostApi {
 
   static const MessageCodec<Object?> codec = _MultiFactorTotpHostApiCodec();
 
-  Future<PigeonTotpSecret> generateSecret(PigeonMultiFactorSession arg_session) async {
+  Future<PigeonTotpSecret> generateSecret(String arg_sessionId) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_session]) as List<Object?>?;
+        await channel.send(<Object?>[arg_sessionId]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -2129,6 +2146,98 @@ class MultiFactorTotpHostApi {
       );
     } else {
       return (replyList[0] as PigeonTotpSecret?)!;
+    }
+  }
+
+  Future<String> getAssertionForEnrollment(String arg_secretKey, String arg_oneTimePassword) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_secretKey, arg_oneTimePassword]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as String?)!;
+    }
+  }
+
+  Future<String> getAssertionForSignIn(String arg_enrollmentId, String arg_oneTimePassword) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_enrollmentId, arg_oneTimePassword]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as String?)!;
+    }
+  }
+}
+
+class MultiFactorTotpSecretHostApi {
+  /// Constructor for [MultiFactorTotpSecretHostApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  MultiFactorTotpSecretHostApi({BinaryMessenger? binaryMessenger})
+      : _binaryMessenger = binaryMessenger;
+  final BinaryMessenger? _binaryMessenger;
+
+  static const MessageCodec<Object?> codec = StandardMessageCodec();
+
+  Future<String> generateQrCodeUrl(String arg_secretKey, String? arg_accountName, String? arg_issuer) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_secretKey, arg_accountName, arg_issuer]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as String?)!;
     }
   }
 }

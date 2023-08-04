@@ -8,6 +8,7 @@ dependencies:
   firebase_auth: ^4.7.2
   firebase_core: ^2.15.0
   firebase_messaging: ^14.6.5
+  barcode_widget: ^2.0.4
   flutter:
     sdk: flutter
   flutter_signin_button: ^2.0.0

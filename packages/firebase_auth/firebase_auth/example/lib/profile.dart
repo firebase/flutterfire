@@ -236,6 +236,31 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       TextButton(
                         onPressed: () async {
+                          final session = await user.multiFactor.getSession();
+                          final totpSecret =
+                              await TotpMultiFactorGenerator.generateSecret(
+                            session,
+                          );
+                          print(totpSecret);
+                          final code =
+                              await getTotpFromUser(context, totpSecret);
+                          print('code: $code');
+                          if (code == null) {
+                            return;
+                          }
+                          await user.multiFactor.enroll(
+                            await TotpMultiFactorGenerator
+                                .getAssertionForEnrollment(
+                              totpSecret,
+                              code,
+                            ),
+                            displayName: 'TOTP',
+                          );
+                        },
+                        child: const Text('Enroll TOTP'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
                           try {
                             final enrolledFactors =
                                 await user.multiFactor.getEnrolledFactors();

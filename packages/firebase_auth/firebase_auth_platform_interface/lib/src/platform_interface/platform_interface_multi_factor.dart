@@ -158,6 +158,16 @@ class PhoneMultiFactorInfo extends MultiFactorInfo {
   final String phoneNumber;
 }
 
+/// Represents the information for a phone second factor.
+class TotpMultiFactorInfo extends MultiFactorInfo {
+  const TotpMultiFactorInfo({
+    super.displayName,
+    required super.enrollmentTimestamp,
+    required super.factorId,
+    required super.uid,
+  });
+}
+
 /// Helper class used to generate PhoneMultiFactorAssertions.
 class PhoneMultiFactorGeneratorPlatform extends PlatformInterface {
   static PhoneMultiFactorGeneratorPlatform? _instance;
@@ -214,7 +224,7 @@ class TotpMultiFactorGeneratorPlatform extends PlatformInterface {
   }
 
   /// Generate a TOTP secret for the authenticated user.
-  TotpSecretPlatform generateSecret(
+  Future<TotpSecretPlatform> generateSecret(
     MultiFactorSession session,
   ) {
     throw UnimplementedError('generateSecret() is not implemented');
@@ -222,7 +232,7 @@ class TotpMultiFactorGeneratorPlatform extends PlatformInterface {
 
   /// Get a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a TOTP second factor.
-  MultiFactorAssertionPlatform getAssertionForEnrollment(
+  Future<MultiFactorAssertionPlatform> getAssertionForEnrollment(
     TotpSecretPlatform secret,
     String oneTimePassword,
   ) {
@@ -231,7 +241,7 @@ class TotpMultiFactorGeneratorPlatform extends PlatformInterface {
 
   /// Get a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a TOTP second factor.
-  MultiFactorAssertionPlatform getAssertionForSignIn(
+  Future<MultiFactorAssertionPlatform> getAssertionForSignIn(
     String enrollmentId,
     String oneTimePassword,
   ) {
@@ -241,8 +251,6 @@ class TotpMultiFactorGeneratorPlatform extends PlatformInterface {
 
 /// Helper class used to generate TotpMultiFactorAssertions.
 class TotpSecretPlatform extends PlatformInterface {
-  static TotpSecretPlatform? _instance;
-
   static final Object _token = Object();
 
   final int codeIntervalSeconds;
@@ -259,23 +267,8 @@ class TotpSecretPlatform extends PlatformInterface {
     this.secretKey,
   ) : super(token: _token);
 
-  /// The current default [TotpMultiFactorGeneratorPlatform] instance.
-  ///
-  /// It will always default to [MethodChannelTotpMultiFactorGenerator]
-  /// if no other implementation was provided.
-  static TotpSecretPlatform get instance {
-    _instance ??= MethodChannelTotpSecret();
-    return _instance!;
-  }
-
-  /// Sets the [PhoneMultiFactorGeneratorPlatform.instance]
-  static set instance(TotpSecretPlatform instance) {
-    PlatformInterface.verify(instance, _token);
-    _instance = instance;
-  }
-
   /// Generate a TOTP secret for the authenticated user.
-  String generateQrCodeUrl({
+  Future<String> generateQrCodeUrl({
     String? accountName,
     String? issuer,
   }) {

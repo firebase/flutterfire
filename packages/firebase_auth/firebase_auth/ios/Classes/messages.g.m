@@ -1830,6 +1830,27 @@ void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
   {
     FlutterBasicMessageChannel *channel =
       [[FlutterBasicMessageChannel alloc]
+        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp"
+        binaryMessenger:binaryMessenger
+        codec:MultiFactorUserHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(enrollTotpApp:assertionId:displayName:completion:)], @"MultiFactorUserHostApi api (%@) doesn't respond to @selector(enrollTotpApp:assertionId:displayName:completion:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_assertionId = GetNullableObjectAtIndex(args, 1);
+        NSString *arg_displayName = GetNullableObjectAtIndex(args, 2);
+        [api enrollTotpApp:arg_app assertionId:arg_assertionId displayName:arg_displayName completion:^(FlutterError *_Nullable error) {
+          callback(wrapResult(nil, error));
+        }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [[FlutterBasicMessageChannel alloc]
         initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession"
         binaryMessenger:binaryMessenger
         codec:MultiFactorUserHostApiGetCodec()];
@@ -1966,12 +1987,13 @@ void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, 
         binaryMessenger:binaryMessenger
         codec:MultiFactoResolverHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(resolveSignInResolverId:assertion:completion:)], @"MultiFactoResolverHostApi api (%@) doesn't respond to @selector(resolveSignInResolverId:assertion:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(resolveSignInResolverId:assertion:totpAssertionId:completion:)], @"MultiFactoResolverHostApi api (%@) doesn't respond to @selector(resolveSignInResolverId:assertion:totpAssertionId:completion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_resolverId = GetNullableObjectAtIndex(args, 0);
         PigeonPhoneMultiFactorAssertion *arg_assertion = GetNullableObjectAtIndex(args, 1);
-        [api resolveSignInResolverId:arg_resolverId assertion:arg_assertion completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
+        NSString *arg_totpAssertionId = GetNullableObjectAtIndex(args, 2);
+        [api resolveSignInResolverId:arg_resolverId assertion:arg_assertion totpAssertionId:arg_totpAssertionId completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
           callback(wrapResult(output, error));
         }];
       }];
@@ -1986,8 +2008,6 @@ void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, 
 - (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
     case 128: 
-      return [PigeonMultiFactorSession fromList:[self readValue]];
-    case 129: 
       return [PigeonTotpSecret fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -1999,11 +2019,8 @@ void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, 
 @end
 @implementation MultiFactorTotpHostApiCodecWriter
 - (void)writeValue:(id)value {
-  if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
+  if ([value isKindOfClass:[PigeonTotpSecret class]]) {
     [self writeByte:128];
-    [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonTotpSecret class]]) {
-    [self writeByte:129];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];
@@ -2040,11 +2057,80 @@ void MultiFactorTotpHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
         binaryMessenger:binaryMessenger
         codec:MultiFactorTotpHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(generateSecretSession:completion:)], @"MultiFactorTotpHostApi api (%@) doesn't respond to @selector(generateSecretSession:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(generateSecretSessionId:completion:)], @"MultiFactorTotpHostApi api (%@) doesn't respond to @selector(generateSecretSessionId:completion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonMultiFactorSession *arg_session = GetNullableObjectAtIndex(args, 0);
-        [api generateSecretSession:arg_session completion:^(PigeonTotpSecret *_Nullable output, FlutterError *_Nullable error) {
+        NSString *arg_sessionId = GetNullableObjectAtIndex(args, 0);
+        [api generateSecretSessionId:arg_sessionId completion:^(PigeonTotpSecret *_Nullable output, FlutterError *_Nullable error) {
+          callback(wrapResult(output, error));
+        }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [[FlutterBasicMessageChannel alloc]
+        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment"
+        binaryMessenger:binaryMessenger
+        codec:MultiFactorTotpHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(getAssertionForEnrollmentSecretKey:oneTimePassword:completion:)], @"MultiFactorTotpHostApi api (%@) doesn't respond to @selector(getAssertionForEnrollmentSecretKey:oneTimePassword:completion:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        NSString *arg_secretKey = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_oneTimePassword = GetNullableObjectAtIndex(args, 1);
+        [api getAssertionForEnrollmentSecretKey:arg_secretKey oneTimePassword:arg_oneTimePassword completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
+          callback(wrapResult(output, error));
+        }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [[FlutterBasicMessageChannel alloc]
+        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn"
+        binaryMessenger:binaryMessenger
+        codec:MultiFactorTotpHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(getAssertionForSignInEnrollmentId:oneTimePassword:completion:)], @"MultiFactorTotpHostApi api (%@) doesn't respond to @selector(getAssertionForSignInEnrollmentId:oneTimePassword:completion:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        NSString *arg_enrollmentId = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_oneTimePassword = GetNullableObjectAtIndex(args, 1);
+        [api getAssertionForSignInEnrollmentId:arg_enrollmentId oneTimePassword:arg_oneTimePassword completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
+          callback(wrapResult(output, error));
+        }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+}
+NSObject<FlutterMessageCodec> *MultiFactorTotpSecretHostApiGetCodec(void) {
+  static FlutterStandardMessageCodec *sSharedObject = nil;
+  sSharedObject = [FlutterStandardMessageCodec sharedInstance];
+  return sSharedObject;
+}
+
+void MultiFactorTotpSecretHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactorTotpSecretHostApi> *api) {
+  {
+    FlutterBasicMessageChannel *channel =
+      [[FlutterBasicMessageChannel alloc]
+        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl"
+        binaryMessenger:binaryMessenger
+        codec:MultiFactorTotpSecretHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(generateQrCodeUrlSecretKey:accountName:issuer:completion:)], @"MultiFactorTotpSecretHostApi api (%@) doesn't respond to @selector(generateQrCodeUrlSecretKey:accountName:issuer:completion:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        NSString *arg_secretKey = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_accountName = GetNullableObjectAtIndex(args, 1);
+        NSString *arg_issuer = GetNullableObjectAtIndex(args, 2);
+        [api generateQrCodeUrlSecretKey:arg_secretKey accountName:arg_accountName issuer:arg_issuer completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
           callback(wrapResult(output, error));
         }];
       }];
