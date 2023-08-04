@@ -468,7 +468,7 @@ void main() {
               .whereTags(arrayContains: 'serious')
               .orderByTitle()
               .get();
-          
+
           expect(
             querySnap2.docs.map((e) => e.data.title),
             ['B', 'C'],
