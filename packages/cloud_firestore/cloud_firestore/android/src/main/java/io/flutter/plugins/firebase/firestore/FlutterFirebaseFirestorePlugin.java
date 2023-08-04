@@ -95,20 +95,20 @@ public class FlutterFirebaseFirestorePlugin
     }
   }
 
-  protected static FirebaseFirestore getFirestoreInstanceByAppName(String appName) {
+  protected static FirebaseFirestore getFirestoreInstanceByNameAndDatabaseUrl(String appName, String databaseURL) {
     for (Map.Entry<FirebaseFirestore, FlutterFirebaseFirestoreExtension> entry : firestoreInstanceCache.entrySet()) {
-      if (entry.getValue().getDatabaseURL().equals(appName)) {
+      if (entry.getValue().getInstance().getApp().getName().equals(appName) && entry.getValue().getDatabaseURL().equals(databaseURL)) {
         return entry.getKey();
       }
     }
     return null;  // return null if no matching FirebaseFirestore instance was found
   }
 
-  private static void destroyCachedFirebaseFirestoreInstanceForKey(String key) {
+  private static void destroyCachedFirebaseFirestoreInstanceForKey(FirebaseFirestore firestore) {
     synchronized (firestoreInstanceCache) {
-      FlutterFirebaseFirestoreExtension existingInstance = firestoreInstanceCache.get(key);
+      FlutterFirebaseFirestoreExtension existingInstance = firestoreInstanceCache.get(firestore);
       if (existingInstance != null) {
-        firestoreInstanceCache.remove(key);
+        firestoreInstanceCache.remove(firestore);
       }
     }
   }
@@ -520,7 +520,7 @@ public class FlutterFirebaseFirestorePlugin
             FirebaseFirestore firestore =
                 (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
             Tasks.await(firestore.terminate());
-            destroyCachedFirebaseFirestoreInstanceForKey(firestore.getApp().getName());
+            destroyCachedFirebaseFirestoreInstanceForKey(firestore);
 
             taskCompletionSource.setResult(null);
           } catch (Exception e) {
@@ -751,12 +751,11 @@ public class FlutterFirebaseFirestorePlugin
         () -> {
           try {
             // Context is ignored by API so we don't send it over even though annotated non-null.
-
-            for (FirebaseApp app : FirebaseApp.getApps(null)) {
-              FirebaseFirestore firestore = FirebaseFirestore.getInstance(app);
-              Tasks.await(firestore.terminate());
+            for (Map.Entry<FirebaseFirestore, FlutterFirebaseFirestoreExtension> entry : firestoreInstanceCache.entrySet()) {
+                FirebaseFirestore firestore = entry.getKey();
+               Tasks.await(firestore.terminate());
               FlutterFirebaseFirestorePlugin.destroyCachedFirebaseFirestoreInstanceForKey(
-                  app.getName());
+                  firestore);
             }
 
             removeEventListeners();
