@@ -557,6 +557,30 @@ abstract class MultiFactoResolverHostApi {
   );
 }
 
+class PigeonTotpSecret {
+  const PigeonTotpSecret({
+    required this.codeIntervalSeconds,
+    required this.codeLength,
+    required this.enrollmentCompletionDeadline,
+    required this.hashingAlgorithm,
+    required this.secretKey,
+  });
+
+  final int codeIntervalSeconds;
+  final int codeLength;
+  final double enrollmentCompletionDeadline;
+  final String hashingAlgorithm;
+  final String secretKey;
+}
+
+@HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')
+abstract class MultiFactorTotpHostApi {
+  @async
+  PigeonTotpSecret generateSecret(
+    PigeonMultiFactorSession session,
+  );
+}
+
 /// Only used to generate the object interface that are use outside of the Pigeon interface
 @HostApi()
 abstract class GenerateInterfaces {

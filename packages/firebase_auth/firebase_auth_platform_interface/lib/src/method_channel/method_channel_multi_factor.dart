@@ -181,3 +181,57 @@ class MethodChannelPhoneMultiFactorGenerator
     return MultiFactorAssertion(credential);
   }
 }
+
+/// Helper class used to generate PhoneMultiFactorAssertions.
+class MethodChannelTotpMultiFactorGenerator
+    extends TotpMultiFactorGeneratorPlatform {
+  final MethodChannelFirebaseAuth _auth;
+  final _api = MultiFactorTotpHostApi();
+
+  MethodChannelTotpMultiFactorGenerator(this._auth);
+
+  /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a phone second factor.
+  @override
+  TotpSecretPlatform generateSecret(
+    MultiFactorSession session,
+  ) {
+    throw UnimplementedError('generateSecret() is not implemented');
+  }
+
+  /// Get a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a TOTP second factor.
+  @override
+  MultiFactorAssertionPlatform getAssertionForEnrollment(
+    TotpSecretPlatform secret,
+    String oneTimePassword,
+  ) {
+    throw UnimplementedError('getAssertionForEnrollment() is not implemented');
+  }
+
+  /// Get a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a TOTP second factor.
+  @override
+  MultiFactorAssertionPlatform getAssertionForSignIn(
+    String enrollmentId,
+    String oneTimePassword,
+  ) {
+    throw UnimplementedError('getAssertionForSignIn() is not implemented');
+  }
+}
+
+/// Helper class used to generate PhoneMultiFactorAssertions.
+class MethodChannelTotpSecret extends TotpSecretPlatform {
+  final _api = MultiFactorTotpSecretHostApi();
+
+  /// Returns a QR code URL as described in https://github.com/google/google-authenticator/wiki/Key-Uri-Format
+  /// This can be displayed to the user as a QR code to be scanned into a TOTP app like Google Authenticator.
+  /// If the optional parameters are unspecified, an accountName of and issuer of are used.
+  @override
+  String generateQrCodeUrl({
+    String? accountName,
+    String? issuer,
+  }) {
+    throw UnimplementedError('generateSecret() is not implemented');
+  }
+}

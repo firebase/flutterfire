@@ -189,3 +189,96 @@ class PhoneMultiFactorGeneratorPlatform extends PlatformInterface {
     throw UnimplementedError('getAssertion() is not implemented');
   }
 }
+
+/// Helper class used to generate TotpMultiFactorAssertions.
+class TotpMultiFactorGeneratorPlatform extends PlatformInterface {
+  static TotpMultiFactorGeneratorPlatform? _instance;
+
+  static final Object _token = Object();
+
+  TotpMultiFactorGeneratorPlatform() : super(token: _token);
+
+  /// The current default [TotpMultiFactorGeneratorPlatform] instance.
+  ///
+  /// It will always default to [MethodChannelTotpMultiFactorGenerator]
+  /// if no other implementation was provided.
+  static TotpMultiFactorGeneratorPlatform get instance {
+    _instance ??= MethodChannelTotpMultiFactorGenerator();
+    return _instance!;
+  }
+
+  /// Sets the [PhoneMultiFactorGeneratorPlatform.instance]
+  static set instance(TotpMultiFactorGeneratorPlatform instance) {
+    PlatformInterface.verify(instance, _token);
+    _instance = instance;
+  }
+
+  /// Generate a TOTP secret for the authenticated user.
+  TotpSecretPlatform generateSecret(
+    MultiFactorSession session,
+  ) {
+    throw UnimplementedError('generateSecret() is not implemented');
+  }
+
+  /// Get a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a TOTP second factor.
+  MultiFactorAssertionPlatform getAssertionForEnrollment(
+    TotpSecretPlatform secret,
+    String oneTimePassword,
+  ) {
+    throw UnimplementedError('getAssertionForEnrollment() is not implemented');
+  }
+
+  /// Get a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a TOTP second factor.
+  MultiFactorAssertionPlatform getAssertionForSignIn(
+    String enrollmentId,
+    String oneTimePassword,
+  ) {
+    throw UnimplementedError('getAssertionForSignIn() is not implemented');
+  }
+}
+
+/// Helper class used to generate TotpMultiFactorAssertions.
+class TotpSecretPlatform extends PlatformInterface {
+  static TotpSecretPlatform? _instance;
+
+  static final Object _token = Object();
+
+  final int codeIntervalSeconds;
+  final int codeLength;
+  final DateTime enrollmentCompletionDeadline;
+  final String hashingAlgorithm;
+  final String secretKey;
+
+  TotpSecretPlatform(
+    this.codeIntervalSeconds,
+    this.codeLength,
+    this.enrollmentCompletionDeadline,
+    this.hashingAlgorithm,
+    this.secretKey,
+  ) : super(token: _token);
+
+  /// The current default [TotpMultiFactorGeneratorPlatform] instance.
+  ///
+  /// It will always default to [MethodChannelTotpMultiFactorGenerator]
+  /// if no other implementation was provided.
+  static TotpSecretPlatform get instance {
+    _instance ??= MethodChannelTotpSecret();
+    return _instance!;
+  }
+
+  /// Sets the [PhoneMultiFactorGeneratorPlatform.instance]
+  static set instance(TotpSecretPlatform instance) {
+    PlatformInterface.verify(instance, _token);
+    _instance = instance;
+  }
+
+  /// Generate a TOTP secret for the authenticated user.
+  String generateQrCodeUrl({
+    String? accountName,
+    String? issuer,
+  }) {
+    throw UnimplementedError('generateSecret() is not implemented');
+  }
+}
