@@ -15,15 +15,8 @@ public class FlutterFirebaseFirestoreExtension {
     return instance;
   }
 
-  public void setInstance(FirebaseFirestore instance) {
-    this.instance = instance;
-  }
-
   public String getDatabaseURL() {
     return databaseURL;
   }
 
-  public void setDatabaseURL(String databaseURL) {
-    this.databaseURL = databaseURL;
-  }
 }
