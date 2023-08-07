@@ -7,77 +7,74 @@
 package io.flutter.plugins.firebase.auth;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.MultiFactor;
-import com.google.firebase.auth.MultiFactorAssertion;
-import com.google.firebase.auth.MultiFactorInfo;
-import com.google.firebase.auth.MultiFactorResolver;
 import com.google.firebase.auth.MultiFactorSession;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.auth.PhoneMultiFactorGenerator;
 import com.google.firebase.auth.TotpMultiFactorAssertion;
 import com.google.firebase.auth.TotpMultiFactorGenerator;
 import com.google.firebase.auth.TotpSecret;
-import com.google.firebase.internal.api.FirebaseNoSignedInUserException;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class FlutterFirebaseTotpMultiFactor
-    implements
-        GeneratedAndroidFirebaseAuth.MultiFactorTotpHostApi {
+    implements GeneratedAndroidFirebaseAuth.MultiFactorTotpHostApi {
 
   // Map an app id to a map of user id to a TotpSecret object.
-  static final Map<String,  TotpSecret> multiFactorSecret = new HashMap<>();
-
+  static final Map<String, TotpSecret> multiFactorSecret = new HashMap<>();
 
   @Override
-  public void generateSecret(@NonNull String sessionId, @NonNull GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonTotpSecret> result) {
+  public void generateSecret(
+      @NonNull String sessionId,
+      @NonNull
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonTotpSecret>
+              result) {
     MultiFactorSession multiFactorSession =
-              FlutterFirebaseMultiFactor.multiFactorSessionMap.get(sessionId);
+        FlutterFirebaseMultiFactor.multiFactorSessionMap.get(sessionId);
 
     assert multiFactorSession != null;
-    TotpMultiFactorGenerator.generateSecret(multiFactorSession).addOnCompleteListener(
+    TotpMultiFactorGenerator.generateSecret(multiFactorSession)
+        .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
                 TotpSecret secret = task.getResult();
                 multiFactorSecret.put(secret.getSharedSecretKey(), secret);
                 result.success(
-                        new GeneratedAndroidFirebaseAuth.PigeonTotpSecret.Builder()
-                                .setCodeIntervalSeconds((long) secret.getCodeIntervalSeconds())
-                                .setCodeLength((long) secret.getCodeLength())
-                                .setSecretKey(secret.getSharedSecretKey())
-                                .setHashingAlgorithm(secret.getHashAlgorithm())
-                                .setEnrollmentCompletionDeadline(secret.getEnrollmentCompletionDeadline())
-                                .build());
+                    new GeneratedAndroidFirebaseAuth.PigeonTotpSecret.Builder()
+                        .setCodeIntervalSeconds((long) secret.getCodeIntervalSeconds())
+                        .setCodeLength((long) secret.getCodeLength())
+                        .setSecretKey(secret.getSharedSecretKey())
+                        .setHashingAlgorithm(secret.getHashAlgorithm())
+                        .setEnrollmentCompletionDeadline(secret.getEnrollmentCompletionDeadline())
+                        .build());
               } else {
                 result.error(
-                        FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
-                                task.getException()));
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
               }
             });
   }
 
   @Override
-  public void getAssertionForEnrollment(@NonNull String secretKey, @NonNull String oneTimePassword, @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
+  public void getAssertionForEnrollment(
+      @NonNull String secretKey,
+      @NonNull String oneTimePassword,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
     final TotpSecret secret = multiFactorSecret.get(secretKey);
 
     assert secret != null;
-    TotpMultiFactorAssertion assertion = TotpMultiFactorGenerator.getAssertionForEnrollment(secret, oneTimePassword);
+    TotpMultiFactorAssertion assertion =
+        TotpMultiFactorGenerator.getAssertionForEnrollment(secret, oneTimePassword);
     String assertionId = UUID.randomUUID().toString();
     FlutterFirebaseMultiFactor.multiFactorAssertionMap.put(assertionId, assertion);
     result.success(assertionId);
   }
 
   @Override
-  public void getAssertionForSignIn(@NonNull String enrollmentId, @NonNull String oneTimePassword, @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
-    TotpMultiFactorAssertion assertion = TotpMultiFactorGenerator.getAssertionForSignIn(enrollmentId, oneTimePassword);
+  public void getAssertionForSignIn(
+      @NonNull String enrollmentId,
+      @NonNull String oneTimePassword,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<String> result) {
+    TotpMultiFactorAssertion assertion =
+        TotpMultiFactorGenerator.getAssertionForSignIn(enrollmentId, oneTimePassword);
     String assertionId = UUID.randomUUID().toString();
     FlutterFirebaseMultiFactor.multiFactorAssertionMap.put(assertionId, assertion);
     result.success(assertionId);

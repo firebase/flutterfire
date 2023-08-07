@@ -22,6 +22,8 @@
                          FirebaseAuthUserHostApi,
                          MultiFactorUserHostApi,
                          MultiFactoResolverHostApi,
+                         MultiFactorTotpHostApi,
+                         MultiFactorTotpSecretHostApi,
                          ASAuthorizationControllerDelegate,
                          ASAuthorizationControllerPresentationContextProviding>
 

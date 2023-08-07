@@ -574,10 +574,10 @@ class PigeonTotpSecret {
     required this.secretKey,
   });
 
-  final int codeIntervalSeconds;
-  final int codeLength;
-  final int enrollmentCompletionDeadline;
-  final String hashingAlgorithm;
+  final int? codeIntervalSeconds;
+  final int? codeLength;
+  final int? enrollmentCompletionDeadline;
+  final String? hashingAlgorithm;
   final String secretKey;
 }
 

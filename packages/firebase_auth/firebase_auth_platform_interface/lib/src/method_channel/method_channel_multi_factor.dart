@@ -237,9 +237,11 @@ class MethodChannelTotpMultiFactorGenerator
     return MethodChannelTotpSecret(
       pigeonSecret.codeIntervalSeconds,
       pigeonSecret.codeLength,
-      DateTime.fromMillisecondsSinceEpoch(
-        pigeonSecret.enrollmentCompletionDeadline,
-      ),
+      pigeonSecret.enrollmentCompletionDeadline != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+              pigeonSecret.enrollmentCompletionDeadline!,
+            )
+          : null,
       pigeonSecret.hashingAlgorithm,
       pigeonSecret.secretKey,
     );

@@ -119,10 +119,10 @@ class TotpMultiFactorGenerator {
 class TotpSecret {
   final TotpSecretPlatform _instance;
 
-  final int codeIntervalSeconds;
-  final int codeLength;
-  final DateTime enrollmentCompletionDeadline;
-  final String hashingAlgorithm;
+  final int? codeIntervalSeconds;
+  final int? codeLength;
+  final DateTime? enrollmentCompletionDeadline;
+  final String? hashingAlgorithm;
   final String secretKey;
 
   TotpSecret._(

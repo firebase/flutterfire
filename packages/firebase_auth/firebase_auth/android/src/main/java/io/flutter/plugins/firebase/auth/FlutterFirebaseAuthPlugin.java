@@ -57,7 +57,8 @@ public class FlutterFirebaseAuthPlugin
   private final FlutterFirebaseAuthUser firebaseAuthUser = new FlutterFirebaseAuthUser();
   private final FlutterFirebaseMultiFactor firebaseMultiFactor = new FlutterFirebaseMultiFactor();
 
-  private final FlutterFirebaseTotpMultiFactor firebaseTotpMultiFactor = new FlutterFirebaseTotpMultiFactor();
+  private final FlutterFirebaseTotpMultiFactor firebaseTotpMultiFactor =
+      new FlutterFirebaseTotpMultiFactor();
   private final FlutterFirebaseTotpSecret firebaseTotpSecret = new FlutterFirebaseTotpSecret();
 
   private void initInstance(BinaryMessenger messenger) {

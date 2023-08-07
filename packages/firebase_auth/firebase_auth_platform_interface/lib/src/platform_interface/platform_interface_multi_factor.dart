@@ -253,10 +253,10 @@ class TotpMultiFactorGeneratorPlatform extends PlatformInterface {
 class TotpSecretPlatform extends PlatformInterface {
   static final Object _token = Object();
 
-  final int codeIntervalSeconds;
-  final int codeLength;
-  final DateTime enrollmentCompletionDeadline;
-  final String hashingAlgorithm;
+  final int? codeIntervalSeconds;
+  final int? codeLength;
+  final DateTime? enrollmentCompletionDeadline;
+  final String? hashingAlgorithm;
   final String secretKey;
 
   TotpSecretPlatform(
