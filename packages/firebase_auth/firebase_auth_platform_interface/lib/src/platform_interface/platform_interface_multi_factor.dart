@@ -272,13 +272,13 @@ class TotpSecretPlatform extends PlatformInterface {
     String? accountName,
     String? issuer,
   }) {
-    throw UnimplementedError('generateSecret() is not implemented');
+    throw UnimplementedError('generateQrCodeUrl() is not implemented');
   }
 
   /// Opens the specified QR Code URL in a password manager like iCloud Keychain.
   Future<void> openInOtpApp(
     String qrCodeUrl,
   ) async {
-    throw UnimplementedError('generateSecret() is not implemented');
+    throw UnimplementedError('openInOtpApp() is not implemented');
   }
 }
