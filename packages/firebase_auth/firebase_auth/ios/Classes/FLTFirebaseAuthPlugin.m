@@ -145,9 +145,11 @@ NSString *const kErrMsgInvalidCredential =
   [registrar publish:instance];
   [registrar addApplicationDelegate:instance];
   FirebaseAuthHostApiSetup(registrar.messenger, instance);
-  FirebaseAuthUserHostApiSetup(registrar.messenger, instance);
+  FirebaseAuthUserHostApiSetup(registrar.messenger,instance);
   MultiFactorUserHostApiSetup(registrar.messenger, instance);
   MultiFactoResolverHostApiSetup(registrar.messenger, instance);
+  MultiFactorTotpHostApiSetup(registrar.messenger, instance);
+  MultiFactorTotpSecretHostApiSetup(registrar.messenger, instance);
 #endif
 }
 
@@ -852,8 +854,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
     FIRPhoneAuthCredential *credential =
         [[FIRPhoneAuthProvider provider] credentialWithVerificationID:[assertion verificationId]
                                                      verificationCode:[assertion verificationCode]];
-
-    FIRMultiFactorAssertion *multiFactorAssertion =
+    multiFactorAssertion =
         [FIRPhoneMultiFactorGenerator assertionWithCredential:credential];
   } else if (totpAssertionId != nil) {
     multiFactorAssertion = _multiFactorAssertionMap[totpAssertionId];
@@ -924,6 +925,9 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
   FIRTOTPMultiFactorAssertion *assertion =
       [FIRTOTPMultiFactorGenerator assertionForSignInWithEnrollmentID:enrollmentId
                                                       oneTimePassword:oneTimePassword];
+    NSString *UUID = [[NSUUID UUID] UUIDString];
+    self->_multiFactorAssertionMap[UUID] = assertion;
+    completion(UUID, nil);
 }
 
 - (void)generateQrCodeUrlSecretKey:(nonnull NSString *)secretKey

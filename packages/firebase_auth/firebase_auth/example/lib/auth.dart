@@ -654,7 +654,10 @@ Future<String?> getTotpFromUser(
 ) async {
   String? smsCode;
 
-  final qrCodeUrl = await totpSecret.generateQrCodeUrl();
+  final qrCodeUrl = await totpSecret.generateQrCodeUrl(
+    accountName: FirebaseAuth.instance.currentUser!.email,
+    issuer: 'Firebase',
+  );
 
   // Update the UI - wait for the user to enter the SMS code
   await showDialog<String>(
@@ -663,21 +666,6 @@ Future<String?> getTotpFromUser(
     builder: (context) {
       return AlertDialog(
         title: const Text('TOTP code:'),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Sign in'),
-          ),
-          OutlinedButton(
-            onPressed: () {
-              smsCode = null;
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cancel'),
-          ),
-        ],
         content: Container(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -696,9 +684,30 @@ Future<String?> getTotpFromUser(
                 textAlign: TextAlign.center,
                 autofocus: true,
               ),
+              ElevatedButton(
+                onPressed: () {
+                  totpSecret.openInOtpApp(qrCodeUrl);
+                },
+                child: const Text('Open in OTP App'),
+              )
             ],
           ),
         ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Sign in'),
+          ),
+          OutlinedButton(
+            onPressed: () {
+              smsCode = null;
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+        ],
       );
     },
   );

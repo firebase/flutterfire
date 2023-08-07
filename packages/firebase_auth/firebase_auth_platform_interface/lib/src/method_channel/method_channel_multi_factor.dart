@@ -299,4 +299,15 @@ class MethodChannelTotpSecret extends TotpSecretPlatform {
     );
     return pigeonResponse;
   }
+
+  /// Opens the specified QR Code URL in a password manager like iCloud Keychain.
+  @override
+  Future<void> openInOtpApp(
+    String qrCodeUrl,
+  ) async {
+    await _api.openInOtpApp(
+      secretKey,
+      qrCodeUrl,
+    );
+  }
 }

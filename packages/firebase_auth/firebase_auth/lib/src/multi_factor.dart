@@ -144,6 +144,16 @@ class TotpSecret {
       issuer: issuer,
     );
   }
+
+  /// Opens the specified QR Code URL in a password manager like iCloud Keychain.
+  @override
+  Future<void> openInOtpApp(
+    String qrCodeUrl,
+  ) async {
+    await _instance.openInOtpApp(
+      qrCodeUrl,
+    );
+  }
 }
 
 /// Represents an assertion that the Firebase Authentication server
