@@ -609,6 +609,12 @@ abstract class MultiFactorTotpSecretHostApi {
     String? accountName,
     String? issuer,
   );
+
+  @async
+  void openInOtpApp(
+    String secretKey,
+    String qrCodeUrl,
+  );
 }
 
 /// Only used to generate the object interface that are use outside of the Pigeon interface

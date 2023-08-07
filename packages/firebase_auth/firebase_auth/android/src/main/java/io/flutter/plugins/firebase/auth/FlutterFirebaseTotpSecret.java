@@ -28,4 +28,15 @@ public class FlutterFirebaseTotpSecret
     }
     result.success(secret.generateQrCodeUrl(accountName, issuer));
   }
+
+  @Override
+  public void openInOtpApp(
+      @NonNull String secretKey,
+      @NonNull String qrCodeUrl,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+    final TotpSecret secret = FlutterFirebaseTotpMultiFactor.multiFactorSecret.get(secretKey);
+    assert secret != null;
+    secret.openInOtpApp(qrCodeUrl);
+    result.success(null);
+  }
 }

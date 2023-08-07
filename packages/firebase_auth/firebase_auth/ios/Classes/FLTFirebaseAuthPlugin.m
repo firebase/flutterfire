@@ -890,8 +890,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                                 completion:^(FIRTOTPSecret *_Nullable secret,
                                              NSError *_Nullable error) {
                                   if (error == nil) {
-                                    NSString *UUID = [[NSUUID UUID] UUIDString];
-                                    self->_multiFactorTotpSecretMap[UUID] = secret;
+                                    self->_multiFactorTotpSecretMap[secret.sharedSecretKey] =
+                                        secret;
                                     completion([PigeonParser getPigeonTotpSecret:secret], nil);
                                   } else {
                                     completion(
@@ -933,6 +933,14 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                                                      FlutterError *_Nullable))completion {
   FIRTOTPSecret *totpSecret = _multiFactorTotpSecretMap[secretKey];
   completion([totpSecret generateQRCodeURLWithAccountName:accountName issuer:issuer], nil);
+}
+
+- (void)openInOtpAppSecretKey:(nonnull NSString *)secretKey
+                    qrCodeUrl:(nonnull NSString *)qrCodeUrl
+                   completion:(nonnull void (^)(FlutterError *_Nullable))completion {
+  FIRTOTPSecret *totpSecret = _multiFactorTotpSecretMap[secretKey];
+  [totpSecret openInOTPAppWithQRCodeURL:qrCodeUrl];
+  completion(nil);
 }
 
 #endif

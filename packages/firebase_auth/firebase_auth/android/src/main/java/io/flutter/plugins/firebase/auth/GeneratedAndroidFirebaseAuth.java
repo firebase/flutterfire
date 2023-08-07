@@ -4309,6 +4309,9 @@ public class GeneratedAndroidFirebaseAuth {
         @Nullable String issuer,
         @NonNull Result<String> result);
 
+    void openInOtpApp(
+        @NonNull String secretKey, @NonNull String qrCodeUrl, @NonNull Result<Void> result);
+
     /** The codec used by MultiFactorTotpSecretHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return new StandardMessageCodec();
@@ -4347,6 +4350,38 @@ public class GeneratedAndroidFirebaseAuth {
                     };
 
                 api.generateQrCodeUrl(secretKeyArg, accountNameArg, issuerArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                String secretKeyArg = (String) args.get(0);
+                String qrCodeUrlArg = (String) args.get(1);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.openInOtpApp(secretKeyArg, qrCodeUrlArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

@@ -1695,6 +1695,8 @@ abstract class TestMultiFactoResolverHostApi {
   Future<String> generateQrCodeUrl(
       String secretKey, String? accountName, String? issuer);
 
+  Future<void> openInOtpApp(String secretKey, String qrCodeUrl);
+
   static void setup(TestMultiFactoResolverHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
     {
@@ -1720,6 +1722,32 @@ abstract class TestMultiFactoResolverHostApi {
           final String output = await api.generateQrCodeUrl(
               arg_secretKey!, arg_accountName, arg_issuer);
           return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_secretKey = (args[0] as String?);
+          assert(arg_secretKey != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp was null, expected non-null String.');
+          final String? arg_qrCodeUrl = (args[1] as String?);
+          assert(arg_qrCodeUrl != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp was null, expected non-null String.');
+          await api.openInOtpApp(arg_secretKey!, arg_qrCodeUrl!);
+          return <Object?>[];
         });
       }
     }

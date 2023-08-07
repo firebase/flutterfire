@@ -497,6 +497,9 @@ NSObject<FlutterMessageCodec> *MultiFactorTotpSecretHostApiGetCodec(void);
                             issuer:(nullable NSString *)issuer
                         completion:
                             (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)openInOtpAppSecretKey:(NSString *)secretKey
+                    qrCodeUrl:(NSString *)qrCodeUrl
+                   completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
 extern void MultiFactorTotpSecretHostApiSetup(

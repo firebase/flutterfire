@@ -2420,6 +2420,31 @@ void MultiFactorTotpSecretHostApiSetup(id<FlutterBinaryMessenger> binaryMessenge
       [channel setMessageHandler:nil];
     }
   }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"MultiFactorTotpSecretHostApi.openInOtpApp"
+        binaryMessenger:binaryMessenger
+                  codec:MultiFactorTotpSecretHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(openInOtpAppSecretKey:qrCodeUrl:completion:)],
+                @"MultiFactorTotpSecretHostApi api (%@) doesn't respond to "
+                @"@selector(openInOtpAppSecretKey:qrCodeUrl:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        NSString *arg_secretKey = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_qrCodeUrl = GetNullableObjectAtIndex(args, 1);
+        [api openInOtpAppSecretKey:arg_secretKey
+                         qrCodeUrl:arg_qrCodeUrl
+                        completion:^(FlutterError *_Nullable error) {
+                          callback(wrapResult(nil, error));
+                        }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
 }
 @interface GenerateInterfacesCodecReader : FlutterStandardReader
 @end
