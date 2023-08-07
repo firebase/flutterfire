@@ -410,21 +410,27 @@ class _AuthGateState extends State<AuthGate> {
       setState(() {
         error = '${e.message}';
       });
-      final firstHint = e.resolver.hints
+      final firstTotpHint = e.resolver.hints
           .firstWhereOrNull((element) => element is TotpMultiFactorInfo);
-      final code = await getSmsCodeFromUser(context);
-      final assertion = await TotpMultiFactorGenerator.getAssertionForSignIn(
-        firstHint!.uid,
-        code!,
-      );
-      await e.resolver.resolveSignIn(assertion);
+      if (firstTotpHint != null) {
+        final code = await getSmsCodeFromUser(context);
+        final assertion = await TotpMultiFactorGenerator.getAssertionForSignIn(
+          firstTotpHint.uid,
+          code!,
+        );
+        await e.resolver.resolveSignIn(assertion);
+        return;
+      }
 
-      if (firstHint is! PhoneMultiFactorInfo) {
+      final firstPhoneHint = e.resolver.hints
+          .firstWhereOrNull((element) => element is PhoneMultiFactorInfo);
+
+      if (firstPhoneHint is! PhoneMultiFactorInfo) {
         return;
       }
       await auth.verifyPhoneNumber(
         multiFactorSession: e.resolver.session,
-        multiFactorInfo: firstHint,
+        multiFactorInfo: firstPhoneHint,
         verificationCompleted: (_) {},
         verificationFailed: print,
         codeSent: (String verificationId, int? resendToken) async {
