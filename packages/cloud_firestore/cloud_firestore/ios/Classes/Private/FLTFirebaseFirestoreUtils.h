@@ -44,13 +44,18 @@ typedef NS_ENUM(UInt8, FirestoreDataType) {
 @interface FLTFirebaseFirestoreUtils : NSObject
 + (FIRFirestoreSource)FIRFirestoreSourceFromArguments:(NSDictionary *_Nonnull)arguments;
 + (NSArray *_Nonnull)ErrorCodeAndMessageFromNSError:(NSError *_Nonnull)error;
-+ (FLTFirebaseFirestoreExtension *_Nullable)getCachedFIRFirestoreInstanceForAppName:(NSString *_Nonnull)appName databaseURL:(NSString *_Nonnull)url;
++ (FLTFirebaseFirestoreExtension *_Nullable)
+    getCachedFIRFirestoreInstanceForAppName:(NSString *_Nonnull)appName
+                                databaseURL:(NSString *_Nonnull)url;
 + (void)setCachedFIRFirestoreInstance:(FIRFirestore *_Nonnull)firestore
-                          forAppName:(NSString *_Nonnull)appName
-                          databaseURL: (NSString *_Nonnull) url;
-+ (void)destroyCachedInstanceForFirestore:(NSString *_Nonnull)appName databaseURL:(NSString *_Nonnull)databaseURL;
-+ (FIRFirestore *_Nullable)getFirestoreInstanceByName:(NSString *_Nonnull)appName databaseURL:(NSString *_Nonnull)databaseURL;
+                           forAppName:(NSString *_Nonnull)appName
+                          databaseURL:(NSString *_Nonnull)url;
++ (void)destroyCachedInstanceForFirestore:(NSString *_Nonnull)appName
+                              databaseURL:(NSString *_Nonnull)databaseURL;
++ (FIRFirestore *_Nullable)getFirestoreInstanceByName:(NSString *_Nonnull)appName
+                                          databaseURL:(NSString *_Nonnull)databaseURL;
 + (void)cleanupFirestoreInstances:(void (^_Nullable)(void))completion;
-+ (NSUInteger) count;
-+ (FLTFirebaseFirestoreExtension *_Nullable)getCachedInstanceForFirestore:(FIRFirestore *_Nonnull)firestore;
++ (NSUInteger)count;
++ (FLTFirebaseFirestoreExtension *_Nullable)getCachedInstanceForFirestore:
+    (FIRFirestore *_Nonnull)firestore;
 @end

@@ -18,5 +18,4 @@ public class FlutterFirebaseFirestoreExtension {
   public String getDatabaseURL() {
     return databaseURL;
   }
-
 }

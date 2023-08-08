@@ -4,11 +4,10 @@
 
 #import <Firebase/Firebase.h>
 
-#import "Private/FLTFirebaseFirestoreUtils.h"
-#import "Private/FLTFirebaseFirestoreReader.h"
-#import "Private/FLTFirebaseFirestoreWriter.h"
 #import "Private/FLTFirebaseFirestoreExtension.h"
-
+#import "Private/FLTFirebaseFirestoreReader.h"
+#import "Private/FLTFirebaseFirestoreUtils.h"
+#import "Private/FLTFirebaseFirestoreWriter.h"
 
 @implementation FLTFirebaseFirestoreReaderWriter
 - (FlutterStandardWriter *_Nonnull)writerWithData:(NSMutableData *)data {
@@ -24,10 +23,12 @@ NSMutableDictionary<NSString *, FLTFirebaseFirestoreExtension *> *firestoreInsta
 @implementation FLTFirebaseFirestoreUtils
 
 + (NSString *)generateKeyForAppName:(NSString *)appName andDatabaseURL:(NSString *)databaseURL {
-    return [NSString stringWithFormat:@"%@|%@", appName, databaseURL];
+  return [NSString stringWithFormat:@"%@|%@", appName, databaseURL];
 }
 
-+ (FLTFirebaseFirestoreExtension *_Nullable)getCachedFIRFirestoreInstanceForAppName:(NSString *_Nonnull)appName databaseURL:(NSString *_Nonnull)url {
++ (FLTFirebaseFirestoreExtension *_Nullable)
+    getCachedFIRFirestoreInstanceForAppName:(NSString *_Nonnull)appName
+                                databaseURL:(NSString *_Nonnull)url {
   @synchronized(firestoreInstanceCache) {
     if (firestoreInstanceCache == nil) {
       firestoreInstanceCache = [NSMutableDictionary dictionary];
@@ -40,46 +41,50 @@ NSMutableDictionary<NSString *, FLTFirebaseFirestoreExtension *> *firestoreInsta
 }
 
 + (void)setCachedFIRFirestoreInstance:(FIRFirestore *_Nonnull)firestore
-                          forAppName:(NSString *_Nonnull)appName
-                          databaseURL: (NSString *_Nonnull) url {
+                           forAppName:(NSString *_Nonnull)appName
+                          databaseURL:(NSString *_Nonnull)url {
   @synchronized(firestoreInstanceCache) {
     if (firestoreInstanceCache == nil) {
       firestoreInstanceCache = [NSMutableDictionary dictionary];
     }
     NSString *key = [self generateKeyForAppName:appName andDatabaseURL:url];
-    firestoreInstanceCache[key] = [[FLTFirebaseFirestoreExtension alloc] initWithFirestoreInstance:firestore databaseURL:url];
+    firestoreInstanceCache[key] =
+        [[FLTFirebaseFirestoreExtension alloc] initWithFirestoreInstance:firestore databaseURL:url];
   }
 }
 
-+ (void)destroyCachedInstanceForFirestore:(NSString *_Nonnull)appName databaseURL:(NSString *_Nonnull)databaseURL {
-    @synchronized(firestoreInstanceCache) {
-        if (firestoreInstanceCache != nil) {
-            NSString *key = [self generateKeyForAppName:appName andDatabaseURL:databaseURL];
-            FLTFirebaseFirestoreExtension *extension = firestoreInstanceCache[key];
++ (void)destroyCachedInstanceForFirestore:(NSString *_Nonnull)appName
+                              databaseURL:(NSString *_Nonnull)databaseURL {
+  @synchronized(firestoreInstanceCache) {
+    if (firestoreInstanceCache != nil) {
+      NSString *key = [self generateKeyForAppName:appName andDatabaseURL:databaseURL];
+      FLTFirebaseFirestoreExtension *extension = firestoreInstanceCache[key];
 
-            if (extension != nil) {
-                [firestoreInstanceCache removeObjectForKey:key];
-            }
-        }
+      if (extension != nil) {
+        [firestoreInstanceCache removeObjectForKey:key];
+      }
     }
+  }
 }
 
-+ (FIRFirestore *)getFirestoreInstanceByName:(NSString *)appName databaseURL:(NSString *)databaseURL {
-    NSString *key = [self generateKeyForAppName:appName andDatabaseURL:databaseURL];
-    FLTFirebaseFirestoreExtension *extension = firestoreInstanceCache[key];
++ (FIRFirestore *)getFirestoreInstanceByName:(NSString *)appName
+                                 databaseURL:(NSString *)databaseURL {
+  NSString *key = [self generateKeyForAppName:appName andDatabaseURL:databaseURL];
+  FLTFirebaseFirestoreExtension *extension = firestoreInstanceCache[key];
 
-    if (extension != nil) {
-        return extension.instance;
-    }
+  if (extension != nil) {
+    return extension.instance;
+  }
 
-    return nil;
+  return nil;
 }
 
-+ (NSUInteger) count {
++ (NSUInteger)count {
   return [firestoreInstanceCache count];
 }
 
-+ (FLTFirebaseFirestoreExtension *_Nullable)getCachedInstanceForFirestore:(FIRFirestore *_Nonnull)firestore {
++ (FLTFirebaseFirestoreExtension *_Nullable)getCachedInstanceForFirestore:
+    (FIRFirestore *_Nonnull)firestore {
   @synchronized(firestoreInstanceCache) {
     if (firestoreInstanceCache == nil) {
       return nil;
@@ -91,7 +96,7 @@ NSMutableDictionary<NSString *, FLTFirebaseFirestoreExtension *> *firestoreInsta
         FLTFirebaseFirestoreExtension *value = firestoreInstanceCache[key];
 
         if (value.instance == firestore) {
-            return value;
+          return value;
         }
       }
 
@@ -100,29 +105,30 @@ NSMutableDictionary<NSString *, FLTFirebaseFirestoreExtension *> *firestoreInsta
   }
 }
 
-
 + (void)cleanupFirestoreInstances:(void (^)(void))completion {
   __block int instancesTerminated = 0;
   NSUInteger numberOfInstances = [firestoreInstanceCache count];
   void (^firestoreTerminateInstanceCompletion)(NSError *) = ^void(NSError *error) {
-      instancesTerminated++;
-      if (instancesTerminated == numberOfInstances && completion != nil) {
-          completion();
-      }
+    instancesTerminated++;
+    if (instancesTerminated == numberOfInstances && completion != nil) {
+      completion();
+    }
   };
 
   if (numberOfInstances > 0) {
-      for (NSString *key in firestoreInstanceCache) {
-          FLTFirebaseFirestoreExtension *firestoreExtension = firestoreInstanceCache[key];
-          FIRFirestore *firestore = firestoreExtension.instance;
+    for (NSString *key in firestoreInstanceCache) {
+      FLTFirebaseFirestoreExtension *firestoreExtension = firestoreInstanceCache[key];
+      FIRFirestore *firestore = firestoreExtension.instance;
 
-          dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-              [firestore terminateWithCompletion:^(NSError *error) {
-                  [FLTFirebaseFirestoreUtils destroyCachedInstanceForFirestore:firestore.app.name databaseURL:firestoreExtension.databaseURL];
-                  firestoreTerminateInstanceCompletion(error);
-              }];
-          });
-      }
+      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [firestore terminateWithCompletion:^(NSError *error) {
+          [FLTFirebaseFirestoreUtils
+              destroyCachedInstanceForFirestore:firestore.app.name
+                                    databaseURL:firestoreExtension.databaseURL];
+          firestoreTerminateInstanceCompletion(error);
+        }];
+      });
+    }
   }
 }
 

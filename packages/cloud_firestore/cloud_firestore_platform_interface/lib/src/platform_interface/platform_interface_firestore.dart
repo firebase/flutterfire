@@ -37,7 +37,8 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     required FirebaseApp app,
     required String databaseURL,
   }) {
-    return FirebaseFirestorePlatform.instance.delegateFor(app: app, databaseURL: databaseURL);
+    return FirebaseFirestorePlatform.instance
+        .delegateFor(app: app, databaseURL: databaseURL);
   }
 
   /// The current default [FirebaseFirestorePlatform] instance.
@@ -45,7 +46,8 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// It will always default to [MethodChannelFirebaseFirestore]
   /// if no other implementation was provided.
   static FirebaseFirestorePlatform get instance {
-    return _instance ??= MethodChannelFirebaseFirestore(app: Firebase.app(), databaseURL: '(default)');
+    return _instance ??= MethodChannelFirebaseFirestore(
+        app: Firebase.app(), databaseURL: '(default)');
   }
 
   static FirebaseFirestorePlatform? _instance;
@@ -56,11 +58,11 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     _instance = instance;
   }
 
-
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseFirestorePlatform delegateFor({required FirebaseApp app, required String databaseURL}) {
+  FirebaseFirestorePlatform delegateFor(
+      {required FirebaseApp app, required String databaseURL}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 

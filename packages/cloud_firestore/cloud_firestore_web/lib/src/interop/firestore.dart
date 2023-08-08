@@ -26,8 +26,8 @@ Firestore getFirestoreInstance(
   String database = databaseURL ?? '(default)';
 
   if (app != null && settings != null) {
-    return Firestore.getInstance(
-        firestore_interop.initializeFirestore(app.jsObject, settings, database));
+    return Firestore.getInstance(firestore_interop.initializeFirestore(
+        app.jsObject, settings, database));
   }
 
   return Firestore.getInstance(app != null

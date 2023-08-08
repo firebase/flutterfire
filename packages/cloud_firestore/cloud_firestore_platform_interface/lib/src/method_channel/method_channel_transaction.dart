@@ -24,8 +24,8 @@ class MethodChannelTransaction extends TransactionPlatform {
   MethodChannelTransaction(String transactionId, this.appName, this.databaseURL)
       : _transactionId = transactionId,
         super() {
-    _firestore =
-        FirebaseFirestorePlatform.instanceFor(app: Firebase.app(appName), databaseURL: databaseURL);
+    _firestore = FirebaseFirestorePlatform.instanceFor(
+        app: Firebase.app(appName), databaseURL: databaseURL);
   }
 
   List<Map<String, dynamic>> _commands = [];

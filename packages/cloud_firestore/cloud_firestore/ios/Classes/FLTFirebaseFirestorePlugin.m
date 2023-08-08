@@ -145,7 +145,7 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)cleanupFirestoreInstances:(void (^)(void))completion {
-  if([FLTFirebaseFirestoreUtils count] > 0) {
+  if ([FLTFirebaseFirestoreUtils count] > 0) {
     [FLTFirebaseFirestoreUtils cleanupFirestoreInstances:completion];
   } else {
     if (completion != nil) completion();
@@ -327,8 +327,10 @@ FlutterStandardMethodCodec *_codec;
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
-      FLTFirebaseFirestoreExtension *firestoreExtension = [FLTFirebaseFirestoreUtils getCachedInstanceForFirestore:firestore];
-      [FLTFirebaseFirestoreUtils destroyCachedInstanceForFirestore:firestore.app.name databaseURL:firestoreExtension.databaseURL];
+      FLTFirebaseFirestoreExtension *firestoreExtension =
+          [FLTFirebaseFirestoreUtils getCachedInstanceForFirestore:firestore];
+      [FLTFirebaseFirestoreUtils destroyCachedInstanceForFirestore:firestore.app.name
+                                                       databaseURL:firestoreExtension.databaseURL];
       result.success(nil);
     }
   }];

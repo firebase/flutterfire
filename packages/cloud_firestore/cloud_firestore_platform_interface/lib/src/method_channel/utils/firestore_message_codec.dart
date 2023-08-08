@@ -139,7 +139,8 @@ class FirestoreMessageCodec extends StandardMessageCodec {
 
         final FirebaseApp app = Firebase.app(appName);
         final FirebaseFirestorePlatform firestore =
-            FirebaseFirestorePlatform.instanceFor(app: app, databaseURL: databaseURL);
+            FirebaseFirestorePlatform.instanceFor(
+                app: app, databaseURL: databaseURL);
         return firestore.doc(path);
       case _kBlob:
         final int length = readSize(buffer);

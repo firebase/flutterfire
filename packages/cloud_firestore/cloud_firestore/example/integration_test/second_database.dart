@@ -15,22 +15,23 @@ void runSecondDatabaseTests() {
     late FirebaseFirestore firestore;
 
     setUpAll(() async {
-      firestore = FirebaseFirestore.instanceFor(app: Firebase.app(), databaseURL: 'flutterfire-2');
+      firestore = FirebaseFirestore.instanceFor(
+          app: Firebase.app(), databaseURL: 'flutterfire-2');
     });
 
     Future<CollectionReference<Map<String, dynamic>>> initializeTest(
-        String id,
-        ) async {
+      String id,
+    ) async {
       // Pushed rules which only allow database "flutterfire-2" to have "flutterfire-2" collection writes
       String collectionForSecondDatabase = 'flutterfire-2';
       CollectionReference<Map<String, dynamic>> collection =
-      firestore.collection('$collectionForSecondDatabase/$id/query-tests');
+          firestore.collection('$collectionForSecondDatabase/$id/query-tests');
       QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
 
       await Future.forEach(snapshot.docs,
-              (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
-            return documentSnapshot.reference.delete();
-          });
+          (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+        return documentSnapshot.reference.delete();
+      });
       return collection;
     }
 
@@ -39,7 +40,7 @@ void runSecondDatabaseTests() {
       testWidgets('handles deeply compares query parameters', (_) async {
         final movies = firestore.collection('/movies');
         final starWarsComments =
-        firestore.collection('/movies/star-wars/comments');
+            firestore.collection('/movies/star-wars/comments');
 
         expect(
           movies.where('genre', arrayContains: ['Flutter']),
@@ -56,30 +57,30 @@ void runSecondDatabaseTests() {
       });
 
       testWidgets('differentiate queries from a different app instance',
-              (_) async {
-            final fooApp = await Firebase.initializeApp(
-              name: 'foo',
-              options: Firebase.app().options,
-            );
+          (_) async {
+        final fooApp = await Firebase.initializeApp(
+          name: 'foo',
+          options: Firebase.app().options,
+        );
 
-            expect(
-              FirebaseFirestore.instanceFor(app: fooApp)
-                  .collection('movies')
-                  .limit(42),
-              FirebaseFirestore.instanceFor(app: fooApp)
-                  .collection('movies')
-                  .limit(42),
-            );
+        expect(
+          FirebaseFirestore.instanceFor(app: fooApp)
+              .collection('movies')
+              .limit(42),
+          FirebaseFirestore.instanceFor(app: fooApp)
+              .collection('movies')
+              .limit(42),
+        );
 
-            expect(
-              firestore.collection('movies').limit(42),
-              isNot(
-                FirebaseFirestore.instanceFor(app: fooApp)
-                    .collection('movies')
-                    .limit(42),
-              ),
-            );
-          });
+        expect(
+          firestore.collection('movies').limit(42),
+          isNot(
+            FirebaseFirestore.instanceFor(app: fooApp)
+                .collection('movies')
+                .limit(42),
+          ),
+        );
+      });
 
       testWidgets('differentiate collection group', (_) async {
         expect(
@@ -98,58 +99,58 @@ void runSecondDatabaseTests() {
     group('Query.get()', () {
       testWidgets('returns a [QuerySnapshot]', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('get');
+            await initializeTest('get');
         QuerySnapshot<Map<String, dynamic>> qs = await collection.get();
         expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
       });
 
       testWidgets('uses [GetOptions] cache', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('get');
+            await initializeTest('get');
         QuerySnapshot<Map<String, dynamic>> qs =
-        await collection.get(const GetOptions(source: Source.cache));
+            await collection.get(const GetOptions(source: Source.cache));
         expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
         expect(qs.metadata.isFromCache, isTrue);
       });
 
       testWidgets('uses [GetOptions] server', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('get');
+            await initializeTest('get');
         QuerySnapshot<Map<String, dynamic>> qs =
-        await collection.get(const GetOptions(source: Source.server));
+            await collection.get(const GetOptions(source: Source.server));
         expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
         expect(qs.metadata.isFromCache, isFalse);
       });
 
       testWidgets('uses [GetOptions] serverTimestampBehavior previous',
-              (_) async {
-            CollectionReference<Map<String, dynamic>> collection =
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('get');
-            QuerySnapshot<Map<String, dynamic>> qs = await collection.get(
-              const GetOptions(
-                serverTimestampBehavior: ServerTimestampBehavior.previous,
-              ),
-            );
-            expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
-          });
+        QuerySnapshot<Map<String, dynamic>> qs = await collection.get(
+          const GetOptions(
+            serverTimestampBehavior: ServerTimestampBehavior.previous,
+          ),
+        );
+        expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
+      });
 
       testWidgets('uses [GetOptions] serverTimestampBehavior estimate',
-              (_) async {
-            CollectionReference<Map<String, dynamic>> collection =
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('get');
-            QuerySnapshot<Map<String, dynamic>> qs = await collection.get(
-              const GetOptions(
-                serverTimestampBehavior: ServerTimestampBehavior.estimate,
-              ),
-            );
-            expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
-          });
+        QuerySnapshot<Map<String, dynamic>> qs = await collection.get(
+          const GetOptions(
+            serverTimestampBehavior: ServerTimestampBehavior.estimate,
+          ),
+        );
+        expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
+      });
 
       testWidgets(
         'throws a [FirebaseException]',
-            (_) async {
+        (_) async {
           CollectionReference<Map<String, dynamic>> collection =
-          firestore.collection('not-allowed');
+              firestore.collection('not-allowed');
 
           try {
             await collection.get();
@@ -174,30 +175,30 @@ void runSecondDatabaseTests() {
     group('Query.snapshots()', () {
       testWidgets('returns a [Stream]', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('get');
+            await initializeTest('get');
         Stream<QuerySnapshot<Map<String, dynamic>>> stream =
-        collection.snapshots();
+            collection.snapshots();
         expect(stream, isA<Stream<QuerySnapshot<Map<String, dynamic>>>>());
       });
 
       testWidgets('listens to a single response', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('get-single');
+            await initializeTest('get-single');
         await collection.add({'foo': 'bar'});
         Stream<QuerySnapshot<Map<String, dynamic>>> stream =
-        collection.snapshots();
+            collection.snapshots();
         int call = 0;
 
         stream.listen(
           expectAsync1(
-                (QuerySnapshot<Map<String, dynamic>> snapshot) {
+            (QuerySnapshot<Map<String, dynamic>> snapshot) {
               call++;
               if (call == 1) {
                 expect(snapshot.docs.length, equals(1));
 
                 expect(snapshot.docs[0], isA<QueryDocumentSnapshot>());
                 QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                snapshot.docs[0];
+                    snapshot.docs[0];
                 expect(documentSnapshot.data()['foo'], equals('bar'));
               } else {
                 fail('Should not have been called');
@@ -211,9 +212,9 @@ void runSecondDatabaseTests() {
 
       testWidgets('listens to multiple queries', (_) async {
         CollectionReference<Map<String, dynamic>> collection1 =
-        await initializeTest('document-snapshot-1');
+            await initializeTest('document-snapshot-1');
         CollectionReference<Map<String, dynamic>> collection2 =
-        await initializeTest('document-snapshot-2');
+            await initializeTest('document-snapshot-2');
 
         await collection1.add({'test': 'value1'});
         await collection2.add({'test': 'value2'});
@@ -233,26 +234,26 @@ void runSecondDatabaseTests() {
 
       testWidgets('listens to a multiple changes response', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('get-multiple');
+            await initializeTest('get-multiple');
         await collection.add({'foo': 'bar'});
 
         Stream<QuerySnapshot<Map<String, dynamic>>> stream =
-        collection.snapshots();
+            collection.snapshots();
         int call = 0;
 
         StreamSubscription subscription = stream.listen(
           expectAsync1(
-                (QuerySnapshot<Map<String, dynamic>> snapshot) {
+            (QuerySnapshot<Map<String, dynamic>> snapshot) {
               call++;
               if (call == 1) {
                 expect(snapshot.docs.length, equals(1));
                 QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                snapshot.docs[0];
+                    snapshot.docs[0];
                 expect(documentSnapshot.data()['foo'], equals('bar'));
               } else if (call == 2) {
                 expect(snapshot.docs.length, equals(2));
                 QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                snapshot.docs.firstWhere((doc) => doc.id == 'doc1');
+                    snapshot.docs.firstWhere((doc) => doc.id == 'doc1');
                 expect(documentSnapshot.data()['bar'], equals('baz'));
               } else if (call == 3) {
                 expect(snapshot.docs.length, equals(1));
@@ -263,12 +264,12 @@ void runSecondDatabaseTests() {
               } else if (call == 4) {
                 expect(snapshot.docs.length, equals(2));
                 QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
+                    snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
                 expect(documentSnapshot.data()['foo'], equals('bar'));
               } else if (call == 5) {
                 expect(snapshot.docs.length, equals(2));
                 QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
+                    snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
                 expect(documentSnapshot.data()['foo'], equals('baz'));
               } else {
                 fail('Should not have been called');
@@ -290,11 +291,11 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'listeners throws a [FirebaseException]',
-            (_) async {
+        (_) async {
           CollectionReference<Map<String, dynamic>> collection =
-          firestore.collection('not-allowed');
+              firestore.collection('not-allowed');
           Stream<QuerySnapshot<Map<String, dynamic>>> stream =
-          collection.snapshots();
+              collection.snapshots();
 
           try {
             await stream.first;
@@ -323,7 +324,7 @@ void runSecondDatabaseTests() {
     group('Query.endAt{Document}()', () {
       testWidgets('ends at string field paths', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('endAt-string');
+            await initializeTest('endAt-string');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -348,7 +349,7 @@ void runSecondDatabaseTests() {
         expect(snapshot.docs[1].id, equals('doc2'));
 
         QuerySnapshot<Map<String, dynamic>> snapshot2 =
-        await collection.orderBy('foo').endAt([2]).get();
+            await collection.orderBy('foo').endAt([2]).get();
 
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc1'));
@@ -357,7 +358,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('ends at string field paths with Iterable', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('endAt-string');
+            await initializeTest('endAt-string');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -382,7 +383,7 @@ void runSecondDatabaseTests() {
         expect(snapshot.docs[1].id, equals('doc2'));
 
         QuerySnapshot<Map<String, dynamic>> snapshot2 =
-        await collection.orderBy('foo').endAt([2]).get();
+            await collection.orderBy('foo').endAt([2]).get();
 
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc1'));
@@ -391,7 +392,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('ends at field paths', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('endAt-field-path');
+            await initializeTest('endAt-field-path');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -416,7 +417,7 @@ void runSecondDatabaseTests() {
         expect(snapshot.docs[1].id, equals('doc2'));
 
         QuerySnapshot<Map<String, dynamic>> snapshot2 =
-        await collection.orderBy(FieldPath(const ['foo'])).endAt([2]).get();
+            await collection.orderBy(FieldPath(const ['foo'])).endAt([2]).get();
 
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc1'));
@@ -425,7 +426,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('endAtDocument() ends at a document field value', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('endAt-document');
+            await initializeTest('endAt-document');
         await Future.wait([
           collection.doc('doc1').set({
             'bar': {'value': 3}
@@ -452,7 +453,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('endAtDocument() ends at a document', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('endAt-document');
+            await initializeTest('endAt-document');
         await Future.wait([
           collection.doc('doc1').set({
             'bar': {'value': 1}
@@ -471,7 +472,7 @@ void runSecondDatabaseTests() {
         DocumentSnapshot endAtSnapshot = await collection.doc('doc3').get();
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.endAtDocument(endAtSnapshot).get();
+            await collection.endAtDocument(endAtSnapshot).get();
 
         expect(snapshot.docs.length, equals(3));
         expect(snapshot.docs[0].id, equals('doc1'));
@@ -487,7 +488,7 @@ void runSecondDatabaseTests() {
     group('Query.startAt{Document}()', () {
       testWidgets('starts at string field paths', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('startAt-string');
+            await initializeTest('startAt-string');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -512,7 +513,7 @@ void runSecondDatabaseTests() {
         expect(snapshot.docs[1].id, equals('doc1'));
 
         QuerySnapshot<Map<String, dynamic>> snapshot2 =
-        await collection.orderBy('foo').startAt([2]).get();
+            await collection.orderBy('foo').startAt([2]).get();
 
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc2'));
@@ -521,7 +522,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('starts at string field paths with Iterable', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('startAt-string');
+            await initializeTest('startAt-string');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -546,7 +547,7 @@ void runSecondDatabaseTests() {
         expect(snapshot.docs[1].id, equals('doc1'));
 
         QuerySnapshot<Map<String, dynamic>> snapshot2 =
-        await collection.orderBy('foo').startAt({2}).get();
+            await collection.orderBy('foo').startAt({2}).get();
 
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc2'));
@@ -555,7 +556,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('starts at field paths', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('startAt-field-path');
+            await initializeTest('startAt-field-path');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -589,36 +590,36 @@ void runSecondDatabaseTests() {
       });
 
       testWidgets('startAtDocument() starts at a document field value',
-              (_) async {
-            CollectionReference<Map<String, dynamic>> collection =
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startAt-document-field-value');
-            await Future.wait([
-              collection.doc('doc1').set({
-                'bar': {'value': 3}
-              }),
-              collection.doc('doc2').set({
-                'bar': {'value': 2}
-              }),
-              collection.doc('doc3').set({
-                'bar': {'value': 1}
-              }),
-            ]);
+        await Future.wait([
+          collection.doc('doc1').set({
+            'bar': {'value': 3}
+          }),
+          collection.doc('doc2').set({
+            'bar': {'value': 2}
+          }),
+          collection.doc('doc3').set({
+            'bar': {'value': 1}
+          }),
+        ]);
 
-            DocumentSnapshot startAtSnapshot = await collection.doc('doc2').get();
+        DocumentSnapshot startAtSnapshot = await collection.doc('doc2').get();
 
-            QuerySnapshot<Map<String, dynamic>> snapshot = await collection
-                .orderBy('bar.value')
-                .startAtDocument(startAtSnapshot)
-                .get();
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .orderBy('bar.value')
+            .startAtDocument(startAtSnapshot)
+            .get();
 
-            expect(snapshot.docs.length, equals(2));
-            expect(snapshot.docs[0].id, equals('doc2'));
-            expect(snapshot.docs[1].id, equals('doc1'));
-          });
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc2'));
+        expect(snapshot.docs[1].id, equals('doc1'));
+      });
 
       testWidgets('startAtDocument() starts at a document', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('startAt-document');
+            await initializeTest('startAt-document');
         await Future.wait([
           collection.doc('doc1').set({
             'bar': {'value': 1}
@@ -637,7 +638,7 @@ void runSecondDatabaseTests() {
         DocumentSnapshot startAtSnapshot = await collection.doc('doc3').get();
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.startAtDocument(startAtSnapshot).get();
+            await collection.startAtDocument(startAtSnapshot).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc3'));
@@ -652,7 +653,7 @@ void runSecondDatabaseTests() {
     group('Query.endBefore{Document}()', () {
       testWidgets('ends before string field paths', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('endBefore-string');
+            await initializeTest('endBefore-string');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -677,7 +678,7 @@ void runSecondDatabaseTests() {
         expect(snapshot.docs[1].id, equals('doc2'));
 
         QuerySnapshot<Map<String, dynamic>> snapshot2 =
-        await collection.orderBy('foo').endBefore([3]).get();
+            await collection.orderBy('foo').endBefore([3]).get();
 
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc1'));
@@ -686,7 +687,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('ends before string field paths with Iterable', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('endBefore-string');
+            await initializeTest('endBefore-string');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -711,7 +712,7 @@ void runSecondDatabaseTests() {
         expect(snapshot.docs[1].id, equals('doc2'));
 
         QuerySnapshot<Map<String, dynamic>> snapshot2 =
-        await collection.orderBy('foo').endBefore([3]).get();
+            await collection.orderBy('foo').endBefore([3]).get();
 
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc1'));
@@ -720,7 +721,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('ends before field paths', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('endBefore-field-path');
+            await initializeTest('endBefore-field-path');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -754,36 +755,36 @@ void runSecondDatabaseTests() {
       });
 
       testWidgets('endbeforeDocument() ends before a document field value',
-              (_) async {
-            CollectionReference<Map<String, dynamic>> collection =
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endBefore-document-field-value');
-            await Future.wait([
-              collection.doc('doc1').set({
-                'bar': {'value': 3}
-              }),
-              collection.doc('doc2').set({
-                'bar': {'value': 2}
-              }),
-              collection.doc('doc3').set({
-                'bar': {'value': 1}
-              }),
-            ]);
+        await Future.wait([
+          collection.doc('doc1').set({
+            'bar': {'value': 3}
+          }),
+          collection.doc('doc2').set({
+            'bar': {'value': 2}
+          }),
+          collection.doc('doc3').set({
+            'bar': {'value': 1}
+          }),
+        ]);
 
-            DocumentSnapshot endAtSnapshot = await collection.doc('doc1').get();
+        DocumentSnapshot endAtSnapshot = await collection.doc('doc1').get();
 
-            QuerySnapshot<Map<String, dynamic>> snapshot = await collection
-                .orderBy('bar.value')
-                .endBeforeDocument(endAtSnapshot)
-                .get();
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .orderBy('bar.value')
+            .endBeforeDocument(endAtSnapshot)
+            .get();
 
-            expect(snapshot.docs.length, equals(2));
-            expect(snapshot.docs[0].id, equals('doc3'));
-            expect(snapshot.docs[1].id, equals('doc2'));
-          });
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc3'));
+        expect(snapshot.docs[1].id, equals('doc2'));
+      });
 
       testWidgets('endBeforeDocument() ends before a document', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('endBefore-document');
+            await initializeTest('endBefore-document');
         await Future.wait([
           collection.doc('doc1').set({
             'bar': {'value': 1}
@@ -802,7 +803,7 @@ void runSecondDatabaseTests() {
         DocumentSnapshot endAtSnapshot = await collection.doc('doc4').get();
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.endBeforeDocument(endAtSnapshot).get();
+            await collection.endBeforeDocument(endAtSnapshot).get();
 
         expect(snapshot.docs.length, equals(3));
         expect(snapshot.docs[0].id, equals('doc1'));
@@ -817,7 +818,7 @@ void runSecondDatabaseTests() {
     group('Query.startAfter{Document}()', () {
       testWidgets('starts after string field paths', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('startAfter-string');
+            await initializeTest('startAfter-string');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -842,7 +843,7 @@ void runSecondDatabaseTests() {
         expect(snapshot.docs[1].id, equals('doc1'));
 
         QuerySnapshot<Map<String, dynamic>> snapshot2 =
-        await collection.orderBy('foo').startAfter([1]).get();
+            await collection.orderBy('foo').startAfter([1]).get();
 
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc2'));
@@ -851,7 +852,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('starts after field paths', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('startAfter-field-path');
+            await initializeTest('startAfter-field-path');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -885,37 +886,37 @@ void runSecondDatabaseTests() {
       });
 
       testWidgets('startAfterDocument() starts after a document field value',
-              (_) async {
-            CollectionReference<Map<String, dynamic>> collection =
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startAfter-document-field-value');
-            await Future.wait([
-              collection.doc('doc1').set({
-                'bar': {'value': 3}
-              }),
-              collection.doc('doc2').set({
-                'bar': {'value': 2}
-              }),
-              collection.doc('doc3').set({
-                'bar': {'value': 1}
-              }),
-            ]);
+        await Future.wait([
+          collection.doc('doc1').set({
+            'bar': {'value': 3}
+          }),
+          collection.doc('doc2').set({
+            'bar': {'value': 2}
+          }),
+          collection.doc('doc3').set({
+            'bar': {'value': 1}
+          }),
+        ]);
 
-            DocumentSnapshot startAfterSnapshot =
+        DocumentSnapshot startAfterSnapshot =
             await collection.doc('doc3').get();
 
-            QuerySnapshot<Map<String, dynamic>> snapshot = await collection
-                .orderBy('bar.value')
-                .startAfterDocument(startAfterSnapshot)
-                .get();
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .orderBy('bar.value')
+            .startAfterDocument(startAfterSnapshot)
+            .get();
 
-            expect(snapshot.docs.length, equals(2));
-            expect(snapshot.docs[0].id, equals('doc2'));
-            expect(snapshot.docs[1].id, equals('doc1'));
-          });
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc2'));
+        expect(snapshot.docs[1].id, equals('doc1'));
+      });
 
       testWidgets('startAfterDocument() starts after a document', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('startAfter-document');
+            await initializeTest('startAfter-document');
         await Future.wait([
           collection.doc('doc1').set({
             'bar': {'value': 1}
@@ -934,7 +935,7 @@ void runSecondDatabaseTests() {
         DocumentSnapshot startAtSnapshot = await collection.doc('doc2').get();
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.startAfterDocument(startAtSnapshot).get();
+            await collection.startAfterDocument(startAtSnapshot).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc3'));
@@ -949,7 +950,7 @@ void runSecondDatabaseTests() {
     group('Query.startAt/endAt', () {
       testWidgets('starts at & ends at a document', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('start-end-string');
+            await initializeTest('start-end-string');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -966,7 +967,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.orderBy('foo').startAt([2]).endAt([3]).get();
+            await collection.orderBy('foo').startAt([2]).endAt([3]).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc2'));
@@ -975,7 +976,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('starts at & ends before a document', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('start-end-string');
+            await initializeTest('start-end-string');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -992,7 +993,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.orderBy('foo').startAt([2]).endBefore([4]).get();
+            await collection.orderBy('foo').startAt([2]).endBefore([4]).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc2'));
@@ -1001,7 +1002,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('starts after & ends at a document', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('start-end-field-path');
+            await initializeTest('start-end-field-path');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -1018,7 +1019,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.orderBy('foo').startAfter([1]).endAt([3]).get();
+            await collection.orderBy('foo').startAfter([1]).endAt([3]).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc2'));
@@ -1027,7 +1028,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('starts a document and ends before document', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('start-end-document');
+            await initializeTest('start-end-document');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -1064,7 +1065,7 @@ void runSecondDatabaseTests() {
     group('Query.limit{toLast}()', () {
       testWidgets('limits documents', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('limit');
+            await initializeTest('limit');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -1078,14 +1079,14 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.limit(2).get();
+            await collection.limit(2).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc1'));
         expect(snapshot.docs[1].id, equals('doc2'));
 
         QuerySnapshot<Map<String, dynamic>> snapshot2 =
-        await collection.orderBy('foo', descending: true).limit(2).get();
+            await collection.orderBy('foo', descending: true).limit(2).get();
 
         expect(snapshot2.docs.length, equals(2));
         expect(snapshot2.docs[0].id, equals('doc3'));
@@ -1094,7 +1095,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('limits to last documents', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('limitToLast');
+            await initializeTest('limitToLast');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -1108,7 +1109,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.orderBy('foo').limitToLast(2).get();
+            await collection.orderBy('foo').limitToLast(2).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].id, equals('doc2'));
@@ -1131,7 +1132,7 @@ void runSecondDatabaseTests() {
     group('Query.orderBy()', () {
       testWidgets('allows ordering by documentId', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('order-document-id');
+            await initializeTest('order-document-id');
 
         await Future.wait([
           collection.doc('doc1').set({
@@ -1149,7 +1150,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.orderBy('foo').orderBy(FieldPath.documentId).get();
+            await collection.orderBy('foo').orderBy(FieldPath.documentId).get();
 
         expect(snapshot.docs.length, equals(3));
         expect(snapshot.docs[0].id, equals('doc1'));
@@ -1159,7 +1160,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('orders async by default', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('order-asc');
+            await initializeTest('order-asc');
 
         await Future.wait([
           collection.doc('doc1').set({
@@ -1174,7 +1175,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.orderBy('foo').get();
+            await collection.orderBy('foo').get();
 
         expect(snapshot.docs.length, equals(3));
         expect(snapshot.docs[0].id, equals('doc3'));
@@ -1184,7 +1185,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('orders descending', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('order-desc');
+            await initializeTest('order-desc');
         await Future.wait([
           collection.doc('doc1').set({
             'foo': 1,
@@ -1198,7 +1199,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.orderBy('foo', descending: true).get();
+            await collection.orderBy('foo', descending: true).get();
 
         expect(snapshot.docs.length, equals(3));
         expect(snapshot.docs[0].id, equals('doc3'));
@@ -1214,56 +1215,56 @@ void runSecondDatabaseTests() {
     group('Query.where()', () {
       testWidgets(
           'returns documents when querying for properties that are not null',
-              (_) async {
-            CollectionReference<Map<String, dynamic>> collection =
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('not-null');
-            await Future.wait([
-              collection.doc('doc1').set({
-                'foo': 'bar',
-              }),
-              collection.doc('doc2').set({
-                'foo': 'bar',
-              }),
-              collection.doc('doc3').set({
-                'foo': null,
-              }),
-            ]);
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 'bar',
+          }),
+          collection.doc('doc2').set({
+            'foo': 'bar',
+          }),
+          collection.doc('doc3').set({
+            'foo': null,
+          }),
+        ]);
 
-            QuerySnapshot<Map<String, dynamic>> snapshot =
+        QuerySnapshot<Map<String, dynamic>> snapshot =
             await collection.where('foo', isNull: false).get();
 
-            expect(snapshot.docs.length, equals(2));
-            expect(snapshot.docs[0].id, equals('doc1'));
-            expect(snapshot.docs[1].id, equals('doc2'));
-          });
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc1'));
+        expect(snapshot.docs[1].id, equals('doc2'));
+      });
 
       testWidgets(
           'returns documents when querying properties that are equal to null',
-              (_) async {
-            CollectionReference<Map<String, dynamic>> collection =
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('not-null');
-            await Future.wait([
-              collection.doc('doc1').set({
-                'foo': 'bar',
-              }),
-              collection.doc('doc2').set({
-                'foo': 'bar',
-              }),
-              collection.doc('doc3').set({
-                'foo': null,
-              }),
-            ]);
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 'bar',
+          }),
+          collection.doc('doc2').set({
+            'foo': 'bar',
+          }),
+          collection.doc('doc3').set({
+            'foo': null,
+          }),
+        ]);
 
-            QuerySnapshot<Map<String, dynamic>> snapshot =
+        QuerySnapshot<Map<String, dynamic>> snapshot =
             await collection.where('foo', isNull: true).get();
 
-            expect(snapshot.docs.length, equals(1));
-            expect(snapshot.docs[0].id, equals('doc3'));
-          });
+        expect(snapshot.docs.length, equals(1));
+        expect(snapshot.docs[0].id, equals('doc3'));
+      });
 
       testWidgets('returns with equal checks', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-equal');
+            await initializeTest('where-equal');
         int rand = Random().nextInt(9999);
 
         await Future.wait([
@@ -1279,7 +1280,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.where('foo', isEqualTo: rand).get();
+            await collection.where('foo', isEqualTo: rand).get();
 
         expect(snapshot.docs.length, equals(2));
         snapshot.docs.forEach((doc) {
@@ -1289,7 +1290,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns with not equal checks', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-not-equal');
+            await initializeTest('where-not-equal');
         int rand = Random().nextInt(9999);
 
         await Future.wait([
@@ -1305,7 +1306,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.where('foo', isNotEqualTo: rand).get();
+            await collection.where('foo', isNotEqualTo: rand).get();
 
         expect(snapshot.docs.length, equals(1));
         snapshot.docs.forEach((doc) {
@@ -1315,7 +1316,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns with greater than checks', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-greater-than');
+            await initializeTest('where-greater-than');
         int rand = Random().nextInt(9999);
 
         await Future.wait([
@@ -1334,7 +1335,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.where('foo', isGreaterThan: rand).get();
+            await collection.where('foo', isGreaterThan: rand).get();
 
         expect(snapshot.docs.length, equals(2));
         snapshot.docs.forEach((doc) {
@@ -1344,7 +1345,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns with greater than or equal to checks', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-greater-than-equal');
+            await initializeTest('where-greater-than-equal');
         int rand = Random().nextInt(9999);
 
         await Future.wait([
@@ -1363,7 +1364,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.where('foo', isGreaterThanOrEqualTo: rand).get();
+            await collection.where('foo', isGreaterThanOrEqualTo: rand).get();
 
         expect(snapshot.docs.length, equals(3));
         snapshot.docs.forEach((doc) {
@@ -1373,7 +1374,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns with less than checks', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-less-than');
+            await initializeTest('where-less-than');
         int rand = Random().nextInt(9999);
 
         await Future.wait([
@@ -1389,7 +1390,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.where('foo', isLessThan: rand).get();
+            await collection.where('foo', isLessThan: rand).get();
 
         expect(snapshot.docs.length, equals(2));
         snapshot.docs.forEach((doc) {
@@ -1399,7 +1400,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns with less than equal checks', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-less-than');
+            await initializeTest('where-less-than');
         int rand = Random().nextInt(9999);
 
         await Future.wait([
@@ -1418,7 +1419,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.where('foo', isLessThanOrEqualTo: rand).get();
+            await collection.where('foo', isLessThanOrEqualTo: rand).get();
 
         expect(snapshot.docs.length, equals(3));
         snapshot.docs.forEach((doc) {
@@ -1428,7 +1429,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns with array-contains filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-array-contains');
+            await initializeTest('where-array-contains');
         int rand = Random().nextInt(9999);
 
         await Future.wait([
@@ -1444,7 +1445,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.where('foo', arrayContains: '$rand').get();
+            await collection.where('foo', arrayContains: '$rand').get();
 
         expect(snapshot.docs.length, equals(2));
         snapshot.docs.forEach((doc) {
@@ -1454,7 +1455,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns with in filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-in');
+            await initializeTest('where-in');
 
         await Future.wait([
           collection.doc('doc1').set({
@@ -1483,7 +1484,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns with in filter using Iterable', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-in-iterable');
+            await initializeTest('where-in-iterable');
 
         await Future.wait([
           collection.doc('doc1').set({
@@ -1502,10 +1503,10 @@ void runSecondDatabaseTests() {
 
         QuerySnapshot<Map<String, dynamic>> snapshot = await collection
             .where(
-          'status',
-          // To force the list to be an iterable
-          whereIn: ['Ready to Ship', 'Ordered'].map((e) => e),
-        )
+              'status',
+              // To force the list to be an iterable
+              whereIn: ['Ready to Ship', 'Ordered'].map((e) => e),
+            )
             .get();
 
         expect(snapshot.docs.length, equals(3));
@@ -1517,7 +1518,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns with in filter using Set', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-in');
+            await initializeTest('where-in');
 
         await Future.wait([
           collection.doc('doc1').set({
@@ -1546,7 +1547,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns with not-in filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-not-in');
+            await initializeTest('where-not-in');
 
         await Future.wait([
           collection.doc('doc1').set({
@@ -1575,7 +1576,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns with not-in filter with Iterable', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-not-in');
+            await initializeTest('where-not-in');
 
         await Future.wait([
           collection.doc('doc1').set({
@@ -1604,7 +1605,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns with array-contains-any filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-array-contains-any');
+            await initializeTest('where-array-contains-any');
 
         await Future.wait([
           collection.doc('doc1').set({
@@ -1631,39 +1632,39 @@ void runSecondDatabaseTests() {
       });
 
       testWidgets('returns with array-contains-any filter using Set',
-              (_) async {
-            CollectionReference<Map<String, dynamic>> collection =
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-array-contains-any');
 
-            await Future.wait([
-              collection.doc('doc1').set({
-                'category': ['Appliances', 'Housewares', 'Cooking'],
-              }),
-              collection.doc('doc2').set({
-                'category': ['Appliances', 'Electronics', 'Nursery'],
-              }),
-              collection.doc('doc3').set({
-                'category': ['Audio/Video', 'Electronics'],
-              }),
-              collection.doc('doc4').set({
-                'category': ['Beauty'],
-              }),
-            ]);
+        await Future.wait([
+          collection.doc('doc1').set({
+            'category': ['Appliances', 'Housewares', 'Cooking'],
+          }),
+          collection.doc('doc2').set({
+            'category': ['Appliances', 'Electronics', 'Nursery'],
+          }),
+          collection.doc('doc3').set({
+            'category': ['Audio/Video', 'Electronics'],
+          }),
+          collection.doc('doc4').set({
+            'category': ['Beauty'],
+          }),
+        ]);
 
-            QuerySnapshot<Map<String, dynamic>> snapshot = await collection.where(
-              'category',
-              arrayContainsAny: {'Appliances', 'Electronics'},
-            ).get();
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection.where(
+          'category',
+          arrayContainsAny: {'Appliances', 'Electronics'},
+        ).get();
 
-            // 2nd record should only be returned once
-            expect(snapshot.docs.length, equals(3));
-          });
+        // 2nd record should only be returned once
+        expect(snapshot.docs.length, equals(3));
+      });
 
       // When documents have a key with a '.' in them, only a [FieldPath]
       // can access the value, rather than a raw string
       testWidgets('returns where FieldPath', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-field-path');
+            await initializeTest('where-field-path');
 
         FieldPath fieldPath = FieldPath(const ['nested', 'foo.bar@gmail.com']);
 
@@ -1687,7 +1688,7 @@ void runSecondDatabaseTests() {
         ]);
 
         QuerySnapshot<Map<String, dynamic>> snapshot =
-        await collection.where(fieldPath, isEqualTo: true).get();
+            await collection.where(fieldPath, isEqualTo: true).get();
 
         expect(snapshot.docs.length, equals(2));
         expect(snapshot.docs[0].get(fieldPath), isTrue);
@@ -1697,7 +1698,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns results using FieldPath.documentId', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-field-path-document-id');
+            await initializeTest('where-field-path-document-id');
 
         DocumentReference<Map<String, dynamic>> docRef = await collection.add({
           'foo': 'bar',
@@ -1718,10 +1719,9 @@ void runSecondDatabaseTests() {
 
       testWidgets('returns an encoded DocumentReference', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-document-reference');
+            await initializeTest('where-document-reference');
 
-        DocumentReference<Map<String, dynamic>> ref =
-        firestore.doc('foo/bar');
+        DocumentReference<Map<String, dynamic>> ref = firestore.doc('foo/bar');
 
         await Future.wait([
           collection.add({
@@ -1747,47 +1747,47 @@ void runSecondDatabaseTests() {
     group('Query.where() with Filter class', () {
       testWidgets(
         'Exception thrown when combining `arrayContainsAny` & `isNotEqualTo` in multiple conjunctive queries',
-            (_) async {
+        (_) async {
           CollectionReference<Map<String, dynamic>> collection =
-          await initializeTest('multiple-conjunctive-queries');
+              await initializeTest('multiple-conjunctive-queries');
 
           try {
             await collection
                 .where(
-              Filter.and(
-                Filter('rating1', isEqualTo: 3.8),
-                Filter('year1', isEqualTo: 1970),
-                Filter('runtime1', isEqualTo: 90),
-                Filter('director1', isEqualTo: 'Director2'),
-                Filter('producer1', isEqualTo: 'Producer2'),
-                Filter('budget1', isEqualTo: 20000000),
-                Filter('boxOffice1', isEqualTo: 50000000),
-                Filter('actor1', isEqualTo: 'Actor2'),
-                Filter('language1', isEqualTo: 'English'),
-                Filter('award1', isEqualTo: 'Award2'),
-                Filter('genre1', arrayContainsAny: ['sci-fi']),
-                Filter('country1', isEqualTo: 'USA'),
-                Filter('released1', isEqualTo: true),
-                Filter('screenplay1', isEqualTo: 'Screenplay2'),
-                Filter('cinematography1', isEqualTo: 'Cinematography2'),
-                Filter('music1', isEqualTo: 'Music2'),
-                Filter('rating2', isEqualTo: 4.2),
-                Filter('year2', isEqualTo: 1982),
-                Filter('runtime2', isEqualTo: 60),
-                Filter('director2', isEqualTo: 'Director3'),
-                Filter('producer2', isEqualTo: 'Producer3'),
-                Filter('budget2', isEqualTo: 30000000),
-                Filter('boxOffice2', isEqualTo: 60000000),
-                Filter('actor2', isEqualTo: 'Actor3'),
-                Filter('language2', isEqualTo: 'Korean'),
-                Filter('award2', isEqualTo: 'Award3'),
-                Filter('genre2', isEqualTo: ['sci-fi', 'action']),
-                Filter('country2', isEqualTo: 'South Korea'),
-                Filter('released2', isEqualTo: false),
-                // Fails because this is not allowed when arrayContainsAny is included in the Query
-                Filter('screenplay2', isNotEqualTo: 'blah'),
-              ),
-            )
+                  Filter.and(
+                    Filter('rating1', isEqualTo: 3.8),
+                    Filter('year1', isEqualTo: 1970),
+                    Filter('runtime1', isEqualTo: 90),
+                    Filter('director1', isEqualTo: 'Director2'),
+                    Filter('producer1', isEqualTo: 'Producer2'),
+                    Filter('budget1', isEqualTo: 20000000),
+                    Filter('boxOffice1', isEqualTo: 50000000),
+                    Filter('actor1', isEqualTo: 'Actor2'),
+                    Filter('language1', isEqualTo: 'English'),
+                    Filter('award1', isEqualTo: 'Award2'),
+                    Filter('genre1', arrayContainsAny: ['sci-fi']),
+                    Filter('country1', isEqualTo: 'USA'),
+                    Filter('released1', isEqualTo: true),
+                    Filter('screenplay1', isEqualTo: 'Screenplay2'),
+                    Filter('cinematography1', isEqualTo: 'Cinematography2'),
+                    Filter('music1', isEqualTo: 'Music2'),
+                    Filter('rating2', isEqualTo: 4.2),
+                    Filter('year2', isEqualTo: 1982),
+                    Filter('runtime2', isEqualTo: 60),
+                    Filter('director2', isEqualTo: 'Director3'),
+                    Filter('producer2', isEqualTo: 'Producer3'),
+                    Filter('budget2', isEqualTo: 30000000),
+                    Filter('boxOffice2', isEqualTo: 60000000),
+                    Filter('actor2', isEqualTo: 'Actor3'),
+                    Filter('language2', isEqualTo: 'Korean'),
+                    Filter('award2', isEqualTo: 'Award3'),
+                    Filter('genre2', isEqualTo: ['sci-fi', 'action']),
+                    Filter('country2', isEqualTo: 'South Korea'),
+                    Filter('released2', isEqualTo: false),
+                    // Fails because this is not allowed when arrayContainsAny is included in the Query
+                    Filter('screenplay2', isNotEqualTo: 'blah'),
+                  ),
+                )
                 .orderBy('rating1', descending: true)
                 .get();
           } catch (e) {
@@ -1804,53 +1804,53 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'Exception thrown when combining `arrayContainsAny` & `isNotEqualTo` in multiple disjunctive queries',
-            (_) async {
+        (_) async {
           CollectionReference<Map<String, dynamic>> collection =
-          await initializeTest('multiple-disjunctive-queries');
+              await initializeTest('multiple-disjunctive-queries');
 
           try {
             await collection
                 .where(
-              Filter.or(
-                Filter('rating', isEqualTo: 3.8),
-                Filter('year', isEqualTo: 1970),
-                Filter('runtime', isEqualTo: 90),
-                Filter('director', isEqualTo: 'Director2'),
-                Filter('country', isEqualTo: 'Wales'),
-                Filter('budget', isEqualTo: 20000000),
-                Filter('boxOffice', isEqualTo: 50000000),
-                Filter('genre', arrayContainsAny: ['sci-fi']),
-                Filter('actor', isEqualTo: 'Actor2'),
-                Filter('language', isEqualTo: 'English'),
-                Filter('award', isEqualTo: 'Award2'),
-                Filter('screenWriter', isEqualTo: 'ScreenWriter2'),
-                Filter('editor', isEqualTo: 'Editor2'),
-                Filter('cinematographer', isEqualTo: 'Cinematographer2'),
-                Filter('releaseCountry', isEqualTo: 'Country2'),
-                Filter('distributor', isEqualTo: 'Distributor2'),
-                Filter('ratingSystem', isEqualTo: 'RatingSystem2'),
-                Filter('soundtrackComposer', isEqualTo: 'Composer2'),
-                Filter(
-                  'visualEffectsCompany',
-                  isEqualTo: 'EffectsCompany2',
-                ),
-                Filter(
-                  'productionCompany',
-                  isEqualTo: 'ProductionCompany2',
-                ),
-                Filter('filmFormat', isEqualTo: 'FilmFormat2'),
-                Filter('aspectRatio', isEqualTo: 'AspectRatio2'),
-                Filter('colorProcess', isEqualTo: 'ColorProcess2'),
-                Filter('soundProcess', isEqualTo: 'SoundProcess2'),
-                Filter('numberOfTheaters', isEqualTo: 2000),
-                Filter('openingWeekendRevenue', isEqualTo: 10000000),
-                Filter('totalDomesticRevenue', isEqualTo: 60000000),
-                Filter('totalWorldwideRevenue', isEqualTo: 200000000),
-                Filter('estimatedProfit', isEqualTo: 140000000),
-                // Fails because this is not allowed when arrayContainsAny is included in the Query
-                Filter('mainCharacter', isNotEqualTo: 'MainCharacter2'),
-              ),
-            )
+                  Filter.or(
+                    Filter('rating', isEqualTo: 3.8),
+                    Filter('year', isEqualTo: 1970),
+                    Filter('runtime', isEqualTo: 90),
+                    Filter('director', isEqualTo: 'Director2'),
+                    Filter('country', isEqualTo: 'Wales'),
+                    Filter('budget', isEqualTo: 20000000),
+                    Filter('boxOffice', isEqualTo: 50000000),
+                    Filter('genre', arrayContainsAny: ['sci-fi']),
+                    Filter('actor', isEqualTo: 'Actor2'),
+                    Filter('language', isEqualTo: 'English'),
+                    Filter('award', isEqualTo: 'Award2'),
+                    Filter('screenWriter', isEqualTo: 'ScreenWriter2'),
+                    Filter('editor', isEqualTo: 'Editor2'),
+                    Filter('cinematographer', isEqualTo: 'Cinematographer2'),
+                    Filter('releaseCountry', isEqualTo: 'Country2'),
+                    Filter('distributor', isEqualTo: 'Distributor2'),
+                    Filter('ratingSystem', isEqualTo: 'RatingSystem2'),
+                    Filter('soundtrackComposer', isEqualTo: 'Composer2'),
+                    Filter(
+                      'visualEffectsCompany',
+                      isEqualTo: 'EffectsCompany2',
+                    ),
+                    Filter(
+                      'productionCompany',
+                      isEqualTo: 'ProductionCompany2',
+                    ),
+                    Filter('filmFormat', isEqualTo: 'FilmFormat2'),
+                    Filter('aspectRatio', isEqualTo: 'AspectRatio2'),
+                    Filter('colorProcess', isEqualTo: 'ColorProcess2'),
+                    Filter('soundProcess', isEqualTo: 'SoundProcess2'),
+                    Filter('numberOfTheaters', isEqualTo: 2000),
+                    Filter('openingWeekendRevenue', isEqualTo: 10000000),
+                    Filter('totalDomesticRevenue', isEqualTo: 60000000),
+                    Filter('totalWorldwideRevenue', isEqualTo: 200000000),
+                    Filter('estimatedProfit', isEqualTo: 140000000),
+                    // Fails because this is not allowed when arrayContainsAny is included in the Query
+                    Filter('mainCharacter', isNotEqualTo: 'MainCharacter2'),
+                  ),
+                )
                 .orderBy('rating', descending: true)
                 .get();
           } catch (e) {
@@ -1869,7 +1869,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('isEqualTo filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-filter-isequalto');
+            await initializeTest('where-filter-isequalto');
         await Future.wait([
           collection.doc('doc1').set({'value': 5}),
           collection.doc('doc2').set({'value': 5}),
@@ -1878,8 +1878,8 @@ void runSecondDatabaseTests() {
 
         final results = await collection
             .where(
-          Filter('value', isEqualTo: 5),
-        )
+              Filter('value', isEqualTo: 5),
+            )
             .get();
 
         expect(results.docs.length, equals(2));
@@ -1889,7 +1889,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('isNotEqualTo filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-filter-isnotequalto');
+            await initializeTest('where-filter-isnotequalto');
         await Future.wait([
           collection.doc('doc1').set({'value': 5}),
           collection.doc('doc2').set({'value': 5}),
@@ -1898,8 +1898,8 @@ void runSecondDatabaseTests() {
 
         final results = await collection
             .where(
-          Filter('value', isNotEqualTo: 5),
-        )
+              Filter('value', isNotEqualTo: 5),
+            )
             .get();
 
         expect(results.docs.length, equals(1));
@@ -1908,7 +1908,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('isLessThan filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-filter-islessthan');
+            await initializeTest('where-filter-islessthan');
         await Future.wait([
           collection.doc('doc1').set({'value': 5}),
           collection.doc('doc2').set({'value': 7}),
@@ -1917,8 +1917,8 @@ void runSecondDatabaseTests() {
 
         final results = await collection
             .where(
-          Filter('value', isLessThan: 7),
-        )
+              Filter('value', isLessThan: 7),
+            )
             .get();
 
         expect(results.docs.length, equals(1));
@@ -1927,7 +1927,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('isLessThanOrEqualTo filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-filter-islessthanequalto');
+            await initializeTest('where-filter-islessthanequalto');
         await Future.wait([
           collection.doc('doc1').set({'value': 5}),
           collection.doc('doc2').set({'value': 7}),
@@ -1936,8 +1936,8 @@ void runSecondDatabaseTests() {
 
         final results = await collection
             .where(
-          Filter('value', isLessThanOrEqualTo: 7),
-        )
+              Filter('value', isLessThanOrEqualTo: 7),
+            )
             .get();
 
         expect(results.docs.length, equals(2));
@@ -1947,7 +1947,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('isGreaterThan filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-filter-isgreaterthan');
+            await initializeTest('where-filter-isgreaterthan');
         await Future.wait([
           collection.doc('doc1').set({'value': 5}),
           collection.doc('doc2').set({'value': 7}),
@@ -1956,8 +1956,8 @@ void runSecondDatabaseTests() {
 
         final results = await collection
             .where(
-          Filter('value', isGreaterThan: 5),
-        )
+              Filter('value', isGreaterThan: 5),
+            )
             .get();
 
         expect(results.docs.length, equals(2));
@@ -1967,7 +1967,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('isGreaterThanOrEqualTo filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-filter-isgreaterthanequalto');
+            await initializeTest('where-filter-isgreaterthanequalto');
         await Future.wait([
           collection.doc('doc1').set({'value': 5}),
           collection.doc('doc2').set({'value': 7}),
@@ -1976,8 +1976,8 @@ void runSecondDatabaseTests() {
 
         final results = await collection
             .where(
-          Filter('value', isGreaterThanOrEqualTo: 7),
-        )
+              Filter('value', isGreaterThanOrEqualTo: 7),
+            )
             .get();
 
         expect(results.docs.length, equals(2));
@@ -1987,7 +1987,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('arrayContains filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-filter-arraycontains');
+            await initializeTest('where-filter-arraycontains');
         await Future.wait([
           collection.doc('doc1').set({
             'value': [1, 2, 3]
@@ -2002,8 +2002,8 @@ void runSecondDatabaseTests() {
 
         final results = await collection
             .where(
-          Filter('value', arrayContains: 1),
-        )
+              Filter('value', arrayContains: 1),
+            )
             .get();
 
         expect(results.docs.length, equals(2));
@@ -2013,7 +2013,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('arrayContainsAny filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-filter-arraycontainsany');
+            await initializeTest('where-filter-arraycontainsany');
         await Future.wait([
           collection.doc('doc1').set({
             'value': [1, 2, 3]
@@ -2028,8 +2028,8 @@ void runSecondDatabaseTests() {
 
         final results = await collection
             .where(
-          Filter('value', arrayContainsAny: [1, 7]),
-        )
+              Filter('value', arrayContainsAny: [1, 7]),
+            )
             .get();
 
         expect(results.docs.length, equals(3));
@@ -2037,7 +2037,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('whereIn filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-filter-wherein');
+            await initializeTest('where-filter-wherein');
         await Future.wait([
           collection.doc('doc1').set({'value': 'A'}),
           collection.doc('doc2').set({'value': 'B'}),
@@ -2046,8 +2046,8 @@ void runSecondDatabaseTests() {
 
         final results = await collection
             .where(
-          Filter('value', whereIn: ['A', 'C']),
-        )
+              Filter('value', whereIn: ['A', 'C']),
+            )
             .get();
 
         expect(results.docs.length, equals(2));
@@ -2057,7 +2057,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('whereNotIn filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-filter-wherenotin');
+            await initializeTest('where-filter-wherenotin');
         await Future.wait([
           collection.doc('doc1').set({'value': 'A'}),
           collection.doc('doc2').set({'value': 'B'}),
@@ -2066,8 +2066,8 @@ void runSecondDatabaseTests() {
 
         final results = await collection
             .where(
-          Filter('value', whereNotIn: ['A', 'C']),
-        )
+              Filter('value', whereNotIn: ['A', 'C']),
+            )
             .get();
 
         expect(results.docs.length, equals(1));
@@ -2076,7 +2076,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('isNull filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('where-filter-isnull');
+            await initializeTest('where-filter-isnull');
         await Future.wait([
           collection.doc('doc1').set({'value': 'A'}),
           collection.doc('doc2').set({'value': null}),
@@ -2085,8 +2085,8 @@ void runSecondDatabaseTests() {
 
         final results = await collection
             .where(
-          Filter('value', isNull: true),
-        )
+              Filter('value', isNull: true),
+            )
             .get();
 
         expect(results.docs.length, equals(1));
@@ -2095,7 +2095,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('endAt filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('endat-filter');
+            await initializeTest('endat-filter');
         await Future.wait([
           collection.doc('doc1').set({'value': 1, 'title': 'A'}),
           collection.doc('doc2').set({'value': 2, 'title': 'B'}),
@@ -2117,7 +2117,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('endBefore filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('endbefore-filter');
+            await initializeTest('endbefore-filter');
         await Future.wait([
           collection.doc('doc1').set({'value': 1, 'title': 'A'}),
           collection.doc('doc2').set({'value': 2, 'title': 'B'}),
@@ -2140,7 +2140,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('endBeforeDocument filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('endbeforedocument-filter');
+            await initializeTest('endbeforedocument-filter');
         await Future.wait([
           collection.doc('doc1').set({'value': 1, 'title': 'A'}),
           collection.doc('doc2').set({'value': 2, 'title': 'B'}),
@@ -2166,7 +2166,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('limit filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('limit-filter');
+            await initializeTest('limit-filter');
         await Future.wait([
           collection.doc('doc1').set({'value': 1, 'title': 'A'}),
           collection.doc('doc2').set({'value': 2, 'title': 'B'}),
@@ -2190,7 +2190,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('limitToLast filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('limittolast-filter');
+            await initializeTest('limittolast-filter');
         await Future.wait([
           collection.doc('doc1').set({'value': 1, 'title': 'A'}),
           collection.doc('doc2').set({'value': 2, 'title': 'B'}),
@@ -2214,7 +2214,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('orderBy filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('orderby-filter');
+            await initializeTest('orderby-filter');
         await Future.wait([
           collection.doc('doc1').set({'value': 1, 'title': 'A'}),
           collection.doc('doc2').set({'value': 2, 'title': 'B'}),
@@ -2239,7 +2239,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('startAfter filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('startafter-filter');
+            await initializeTest('startafter-filter');
         await Future.wait([
           collection.doc('doc1').set({'value': 1, 'title': 'A'}),
           collection.doc('doc2').set({'value': 2, 'title': 'B'}),
@@ -2262,7 +2262,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('startAfterDocument filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('startafterdocument-filter');
+            await initializeTest('startafterdocument-filter');
         await Future.wait([
           collection.doc('doc1').set({'value': 1, 'title': 'A'}),
           collection.doc('doc2').set({'value': 2, 'title': 'B'}),
@@ -2289,7 +2289,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('startAt filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('startat-filter');
+            await initializeTest('startat-filter');
         await Future.wait([
           collection.doc('doc1').set({'value': 1, 'title': 'A'}),
           collection.doc('doc2').set({'value': 2, 'title': 'B'}),
@@ -2314,7 +2314,7 @@ void runSecondDatabaseTests() {
 
       testWidgets('startAtDocument filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-        await initializeTest('startatdocument-filter');
+            await initializeTest('startatdocument-filter');
         await Future.wait([
           collection.doc('doc1').set({'value': 1, 'title': 'A'}),
           collection.doc('doc2').set({'value': 2, 'title': 'B'}),
@@ -2344,16 +2344,16 @@ void runSecondDatabaseTests() {
     group('withConverter', () {
       testWidgets(
         'from a query instead of collection',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final query = collection //
               .where('value', isGreaterThan: 0)
               .withConverter<int>(
-            fromFirestore: (snapshots, _) =>
-            snapshots.data()!['value']! as int,
-            toFirestore: (value, _) => {'value': value},
-          );
+                fromFirestore: (snapshots, _) =>
+                    snapshots.data()!['value']! as int,
+                toFirestore: (value, _) => {'value': value},
+              );
 
           await collection.add({'value': 42});
           await collection.add({'value': -1});
@@ -2375,7 +2375,7 @@ void runSecondDatabaseTests() {
             snapshot,
             emits(
               isA<QuerySnapshot<int>>().having(
-                    (e) => e.docs,
+                (e) => e.docs,
                 'docs',
                 unorderedEquals(
                   [
@@ -2394,16 +2394,16 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'from a Filter query instead of collection',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final query = collection //
               .where(Filter('value', isGreaterThan: 0))
               .withConverter<int>(
-            fromFirestore: (snapshots, _) =>
-            snapshots.data()!['value']! as int,
-            toFirestore: (value, _) => {'value': value},
-          );
+                fromFirestore: (snapshots, _) =>
+                    snapshots.data()!['value']! as int,
+                toFirestore: (value, _) => {'value': value},
+              );
 
           await collection.add({'value': 42});
           await collection.add({'value': -1});
@@ -2425,7 +2425,7 @@ void runSecondDatabaseTests() {
             snapshot,
             emits(
               isA<QuerySnapshot<int>>().having(
-                    (e) => e.docs,
+                (e) => e.docs,
                 'docs',
                 unorderedEquals(
                   [
@@ -2444,7 +2444,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'snapshots',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -2456,7 +2456,7 @@ void runSecondDatabaseTests() {
           await converted.add(-1);
 
           final snapshot =
-          converted.where('value', isGreaterThan: 0).snapshots();
+              converted.where('value', isGreaterThan: 0).snapshots();
 
           await expectLater(
             snapshot,
@@ -2473,7 +2473,7 @@ void runSecondDatabaseTests() {
             snapshot,
             emits(
               isA<QuerySnapshot<int>>().having(
-                    (e) => e.docs,
+                (e) => e.docs,
                 'docs',
                 unorderedEquals([
                   isA<DocumentSnapshot<int>>()
@@ -2490,7 +2490,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'get',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -2514,7 +2514,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'orderBy',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -2538,7 +2538,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'limit',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -2561,7 +2561,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'limitToLast',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -2630,7 +2630,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'endAtDocument',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -2703,7 +2703,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'endBeforeDocument',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -2729,7 +2729,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'startAt',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -2758,7 +2758,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'startAt with Iterable',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -2787,7 +2787,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'startAtDocument',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -2816,7 +2816,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'startAfter',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -2842,7 +2842,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'startAfter with Iterable',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -2868,7 +2868,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'startAfterDocument',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -2894,7 +2894,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'count()',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('count');
 
           await Future.wait([
@@ -2915,7 +2915,7 @@ void runSecondDatabaseTests() {
 
       testWidgets(
         'count() with query',
-            (_) async {
+        (_) async {
           final collection = await initializeTest('count');
 
           await Future.wait([
@@ -2924,7 +2924,7 @@ void runSecondDatabaseTests() {
           ]);
 
           AggregateQuery query =
-          collection.where('foo', isEqualTo: 'bar').count();
+              collection.where('foo', isEqualTo: 'bar').count();
 
           AggregateQuerySnapshot snapshot = await query.get();
 
@@ -2939,26 +2939,26 @@ void runSecondDatabaseTests() {
     group('startAfterDocument', () {
       testWidgets(
           'startAfterDocument() accept DocumentReference in query parameters',
-              (_) async {
-            final collection = await initializeTest('start-after-document');
+          (_) async {
+        final collection = await initializeTest('start-after-document');
 
-            final doc1 = collection.doc('1');
-            final doc2 = collection.doc('2');
-            final doc3 = collection.doc('3');
-            final doc4 = collection.doc('4');
-            await doc1.set({'ref': doc1});
-            await doc2.set({'ref': doc2});
-            await doc3.set({'ref': doc3});
-            await doc4.set({'ref': null});
+        final doc1 = collection.doc('1');
+        final doc2 = collection.doc('2');
+        final doc3 = collection.doc('3');
+        final doc4 = collection.doc('4');
+        await doc1.set({'ref': doc1});
+        await doc2.set({'ref': doc2});
+        await doc3.set({'ref': doc3});
+        await doc4.set({'ref': null});
 
-            final q = collection
-                .where('ref', isNull: false)
-                .orderBy('ref')
-                .startAfterDocument(await doc1.get());
+        final q = collection
+            .where('ref', isNull: false)
+            .orderBy('ref')
+            .startAfterDocument(await doc1.get());
 
-            final res = await q.get();
-            expect(res.docs.map((e) => e.reference), [doc2, doc3]);
-          });
+        final res = await q.get();
+        expect(res.docs.map((e) => e.reference), [doc2, doc3]);
+      });
     });
   });
 }

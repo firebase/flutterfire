@@ -5,22 +5,23 @@
 
 #import "Private/FLTFirebaseFirestoreExtension.h"
 
-@interface FLTFirebaseFirestoreExtension()
+@interface FLTFirebaseFirestoreExtension ()
 
-@property (nonatomic, strong, readwrite) FIRFirestore *instance;
-@property (nonatomic, strong, readwrite) NSString *databaseURL;
+@property(nonatomic, strong, readwrite) FIRFirestore *instance;
+@property(nonatomic, strong, readwrite) NSString *databaseURL;
 
 @end
 
 @implementation FLTFirebaseFirestoreExtension
 
-- (instancetype)initWithFirestoreInstance:(FIRFirestore *)firestore databaseURL:(NSString *)databaseURL {
-    self = [super init];
-    if (self) {
-        _instance = firestore;
-        _databaseURL = [databaseURL copy];
-    }
-    return self;
+- (instancetype)initWithFirestoreInstance:(FIRFirestore *)firestore
+                              databaseURL:(NSString *)databaseURL {
+  self = [super init];
+  if (self) {
+    _instance = firestore;
+    _databaseURL = [databaseURL copy];
+  }
+  return self;
 }
 
 @end

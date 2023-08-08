@@ -292,14 +292,18 @@
     FIRFirestoreSettings *settings = [self readValue];
     FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
 
-    if ([FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name databaseURL:databaseUrl] != nil) {
-      return [FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name databaseURL:databaseUrl];
+    if ([FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
+                                                  databaseURL:databaseUrl] != nil) {
+      return [FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
+                                                       databaseURL:databaseUrl];
     }
-    
-    FIRFirestore *firestore = [FIRFirestore firestoreForApp:app database: databaseUrl];
+
+    FIRFirestore *firestore = [FIRFirestore firestoreForApp:app database:databaseUrl];
     firestore.settings = settings;
 
-    [FLTFirebaseFirestoreUtils setCachedFIRFirestoreInstance:firestore forAppName:app.name databaseURL:databaseUrl];
+    [FLTFirebaseFirestoreUtils setCachedFIRFirestoreInstance:firestore
+                                                  forAppName:app.name
+                                                 databaseURL:databaseUrl];
     return firestore;
   }
 }

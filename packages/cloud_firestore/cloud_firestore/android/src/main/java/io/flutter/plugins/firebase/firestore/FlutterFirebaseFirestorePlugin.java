@@ -54,8 +54,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class FlutterFirebaseFirestorePlugin
     implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware {
-  protected static final HashMap<FirebaseFirestore, FlutterFirebaseFirestoreExtension> firestoreInstanceCache =
-      new HashMap<>();
+  protected static final HashMap<FirebaseFirestore, FlutterFirebaseFirestoreExtension>
+      firestoreInstanceCache = new HashMap<>();
 
   public static final String DEFAULT_ERROR_CODE = "firebase_firestore";
 
@@ -79,7 +79,8 @@ public class FlutterFirebaseFirestorePlugin
   public static final Map<Integer, DocumentSnapshot.ServerTimestampBehavior>
       serverTimestampBehaviorHashMap = new HashMap<>();
 
-  protected static FlutterFirebaseFirestoreExtension getCachedFirebaseFirestoreInstanceForKey(FirebaseFirestore firestore) {
+  protected static FlutterFirebaseFirestoreExtension getCachedFirebaseFirestoreInstanceForKey(
+      FirebaseFirestore firestore) {
     synchronized (firestoreInstanceCache) {
       return firestoreInstanceCache.get(firestore);
     }
@@ -90,18 +91,22 @@ public class FlutterFirebaseFirestorePlugin
     synchronized (firestoreInstanceCache) {
       FlutterFirebaseFirestoreExtension existingInstance = firestoreInstanceCache.get(firestore);
       if (existingInstance == null) {
-        firestoreInstanceCache.put(firestore, new FlutterFirebaseFirestoreExtension(firestore, databaseURL));
+        firestoreInstanceCache.put(
+            firestore, new FlutterFirebaseFirestoreExtension(firestore, databaseURL));
       }
     }
   }
 
-  protected static FirebaseFirestore getFirestoreInstanceByNameAndDatabaseUrl(String appName, String databaseURL) {
-    for (Map.Entry<FirebaseFirestore, FlutterFirebaseFirestoreExtension> entry : firestoreInstanceCache.entrySet()) {
-      if (entry.getValue().getInstance().getApp().getName().equals(appName) && entry.getValue().getDatabaseURL().equals(databaseURL)) {
+  protected static FirebaseFirestore getFirestoreInstanceByNameAndDatabaseUrl(
+      String appName, String databaseURL) {
+    for (Map.Entry<FirebaseFirestore, FlutterFirebaseFirestoreExtension> entry :
+        firestoreInstanceCache.entrySet()) {
+      if (entry.getValue().getInstance().getApp().getName().equals(appName)
+          && entry.getValue().getDatabaseURL().equals(databaseURL)) {
         return entry.getKey();
       }
     }
-    return null;  // return null if no matching FirebaseFirestore instance was found
+    return null; // return null if no matching FirebaseFirestore instance was found
   }
 
   private static void destroyCachedFirebaseFirestoreInstanceForKey(FirebaseFirestore firestore) {
@@ -751,9 +756,10 @@ public class FlutterFirebaseFirestorePlugin
         () -> {
           try {
             // Context is ignored by API so we don't send it over even though annotated non-null.
-            for (Map.Entry<FirebaseFirestore, FlutterFirebaseFirestoreExtension> entry : firestoreInstanceCache.entrySet()) {
-                FirebaseFirestore firestore = entry.getKey();
-               Tasks.await(firestore.terminate());
+            for (Map.Entry<FirebaseFirestore, FlutterFirebaseFirestoreExtension> entry :
+                firestoreInstanceCache.entrySet()) {
+              FirebaseFirestore firestore = entry.getKey();
+              Tasks.await(firestore.terminate());
               FlutterFirebaseFirestorePlugin.destroyCachedFirebaseFirestoreInstanceForKey(
                   firestore);
             }
