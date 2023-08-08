@@ -106,7 +106,7 @@ public class FlutterFirebaseFirestorePlugin
         return entry.getKey();
       }
     }
-    return null; // return null if no matching FirebaseFirestore instance was found
+    return null;
   }
 
   private static void destroyCachedFirebaseFirestoreInstanceForKey(FirebaseFirestore firestore) {
