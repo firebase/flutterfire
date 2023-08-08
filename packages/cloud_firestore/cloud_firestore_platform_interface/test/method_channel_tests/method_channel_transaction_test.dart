@@ -70,7 +70,7 @@ void main() {
     when(mockDocumentReference.id).thenReturn(kDocumentId);
     setUp(() {
       transaction = MethodChannelTransaction(
-          _kTransactionId, FirebaseFirestorePlatform.instance.app.name);
+          _kTransactionId, FirebaseFirestorePlatform.instance.app.name, '(default)');
       isMethodCalled = false;
     });
 
