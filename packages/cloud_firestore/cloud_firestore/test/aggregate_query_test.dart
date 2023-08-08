@@ -71,7 +71,9 @@ class AggregateQueryMessageCodec extends FirestoreMessageCodec {
         readValue(buffer);
         final FirebaseApp app = Firebase.app(appName);
         return MethodChannelFirebaseFirestore(
-            app: app, databaseURL: '(default)');
+          app: app,
+          databaseURL: '(default)',
+        );
       case _kFirestoreQuery:
         Map<dynamic, dynamic> values =
             readValue(buffer)! as Map<dynamic, dynamic>;

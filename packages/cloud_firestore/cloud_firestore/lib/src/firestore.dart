@@ -33,8 +33,10 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
-  static FirebaseFirestore instanceFor(
-      {required FirebaseApp app, String? databaseURL}) {
+  static FirebaseFirestore instanceFor({
+    required FirebaseApp app,
+    String? databaseURL,
+  }) {
     String url = databaseURL ?? '(default)';
     String cacheKey = '${app.name}|$url';
     if (_cachedInstances.containsKey(cacheKey)) {
@@ -55,7 +57,9 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   FirebaseFirestorePlatform get _delegate {
     return _delegatePackingProperty ??= FirebaseFirestorePlatform.instanceFor(
-        app: app, databaseURL: databaseURL);
+      app: app,
+      databaseURL: databaseURL,
+    );
   }
 
   /// The [FirebaseApp] for this current [FirebaseFirestore] instance.

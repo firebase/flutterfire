@@ -16,7 +16,9 @@ void runSecondDatabaseTests() {
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instanceFor(
-          app: Firebase.app(), databaseURL: 'flutterfire-2');
+        app: Firebase.app(),
+        databaseURL: 'flutterfire-2',
+      );
     });
 
     Future<CollectionReference<Map<String, dynamic>>> initializeTest(

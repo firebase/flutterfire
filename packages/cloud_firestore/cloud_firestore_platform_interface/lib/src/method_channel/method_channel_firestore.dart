@@ -79,7 +79,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   FirebaseFirestorePlatform delegateFor({
     required FirebaseApp app,
-    required databaseURL,
+    required String databaseURL,
   }) {
     return MethodChannelFirebaseFirestore(app: app, databaseURL: databaseURL);
   }
