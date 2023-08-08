@@ -409,7 +409,6 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     try {
       @SuppressWarnings("unchecked")
       Map<String, Object> values = (Map<String, Object>) readValue(buffer);
-      // TODO - double check this goes through the readType of firestore instance
       FirebaseFirestore firestore =
           (FirebaseFirestore) Objects.requireNonNull(values.get("firestore"));
 
