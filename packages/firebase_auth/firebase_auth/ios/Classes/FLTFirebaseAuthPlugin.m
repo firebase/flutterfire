@@ -466,7 +466,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                                                  FlutterError *_Nullable))completion
                      withError:(NSError *_Nullable)error {
 #if TARGET_OS_OSX
-  completion(nil, [FlutterError errorWithCode:@"multi-factor-auth-required"
+  completion(nil, [FlutterError errorWithCode:@"second-factor-required"
                                       message:error.description
                                       details:nil]);
 #else
@@ -508,7 +508,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
     kArgumentMultiFactorSessionId : sessionId,
     kArgumentMultiFactorResolverId : resolverId,
   };
-  completion(nil, [FlutterError errorWithCode:@"multi-factor-auth-required"
+  completion(nil, [FlutterError errorWithCode:@"second-factor-required"
                                       message:error.description
                                       details:output]);
 #endif
@@ -1188,7 +1188,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
         @"MacOS platform.");
   completion(nil, nil);
 #else
-  self.authProvider = [FIROAuthProvider providerWithProviderID:signInProvider.providerId];
+  self.authProvider = [FIROAuthProvider providerWithProviderID:signInProvider.providerId auth:auth];
   NSArray *scopes = signInProvider.scopes;
   if (scopes != nil) {
     [self.authProvider setScopes:scopes];
