@@ -241,8 +241,6 @@ void main() {
           HttpsCallableResult results = await timeoutCallable(null);
           expect(results.data, equals('null'));
         },
-        // Apple skip because the 'limitedUseAppCheckToken' option is not available on Firebase iOS SDK for obj-c
-        skip: defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS,
       );
     });
   });
