@@ -69,26 +69,30 @@ NSMutableDictionary<NSString *, FLTFirebaseFirestoreExtension *> *firestoreInsta
 
 + (FIRFirestore *)getFirestoreInstanceByName:(NSString *)appName
                                  databaseURL:(NSString *)databaseURL {
-  NSString *key = [self generateKeyForAppName:appName andDatabaseURL:databaseURL];
-  FLTFirebaseFirestoreExtension *extension = firestoreInstanceCache[key];
-
-  if (extension != nil) {
-    return extension.instance;
+  @synchronized(firestoreInstanceCache) {
+    if (firestoreInstanceCache == nil) {
+      firestoreInstanceCache = [NSMutableDictionary dictionary];
+    }
+    NSString *key = [self generateKeyForAppName:appName andDatabaseURL:databaseURL];
+    FLTFirebaseFirestoreExtension *extension = firestoreInstanceCache[key];
+    
+    if (extension != nil) {
+      return extension.instance;
+    }
+    
+    return nil;
   }
-
-  return nil;
 }
 
 + (NSUInteger)count {
   return [firestoreInstanceCache count];
 }
 
+// Require this method when we don't have access to the "databaseURL"
 + (FLTFirebaseFirestoreExtension *_Nullable)getCachedInstanceForFirestore:
     (FIRFirestore *_Nonnull)firestore {
   @synchronized(firestoreInstanceCache) {
-    if (firestoreInstanceCache == nil) {
-      return nil;
-    } else {
+    if (firestoreInstanceCache != nil) {
       NSEnumerator *enumerator = [firestoreInstanceCache keyEnumerator];
       NSString *key;
 
@@ -99,9 +103,8 @@ NSMutableDictionary<NSString *, FLTFirebaseFirestoreExtension *> *firestoreInsta
           return value;
         }
       }
-
-      return nil;
     }
+    @throw [NSException exceptionWithName:@"NoCachedInstance" reason:@"No cached instance of Firestore" userInfo:nil];
   }
 }
 
