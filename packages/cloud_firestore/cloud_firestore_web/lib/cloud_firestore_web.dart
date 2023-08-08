@@ -34,7 +34,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// Lazily initialize [_webFirestore] on first method call
   firestore_interop.Firestore get _delegate {
     return _webFirestore ??= firestore_interop.getFirestoreInstance(
-        core_interop.app(app.name), _settings);
+        core_interop.app(app.name), _settings, databaseURL);
   }
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
@@ -51,7 +51,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   FirebaseFirestorePlatform delegateFor(
-      {required FirebaseApp app, String? databaseURL}) {
+      {required FirebaseApp app, required String databaseURL}) {
     return FirebaseFirestoreWeb(app: app, databaseURL: databaseURL);
   }
 
