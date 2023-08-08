@@ -75,11 +75,11 @@ NSMutableDictionary<NSString *, FLTFirebaseFirestoreExtension *> *firestoreInsta
     }
     NSString *key = [self generateKeyForAppName:appName andDatabaseURL:databaseURL];
     FLTFirebaseFirestoreExtension *extension = firestoreInstanceCache[key];
-    
+
     if (extension != nil) {
       return extension.instance;
     }
-    
+
     return nil;
   }
 }
@@ -104,7 +104,9 @@ NSMutableDictionary<NSString *, FLTFirebaseFirestoreExtension *> *firestoreInsta
         }
       }
     }
-    @throw [NSException exceptionWithName:@"NoCachedInstance" reason:@"No cached instance of Firestore" userInfo:nil];
+    @throw [NSException exceptionWithName:@"NoCachedInstance"
+                                   reason:@"No cached instance of Firestore"
+                                 userInfo:nil];
   }
 }
 

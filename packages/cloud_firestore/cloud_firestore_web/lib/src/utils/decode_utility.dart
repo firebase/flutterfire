@@ -14,7 +14,8 @@ import '../interop/firestore.dart' as firestore_interop;
 /// Class containing static utility methods to decode firestore data.
 class DecodeUtility {
   /// Decodes the values on an incoming Map to their proper types.
-  static Map<String, dynamic>? decodeMapData(Map<String, dynamic>? data, FirebaseFirestorePlatform firestore) {
+  static Map<String, dynamic>? decodeMapData(
+      Map<String, dynamic>? data, FirebaseFirestorePlatform firestore) {
     if (data == null) {
       return null;
     }
@@ -22,7 +23,8 @@ class DecodeUtility {
   }
 
   /// Decodes the values on an incoming Array to their proper types.
-  static List<dynamic>? decodeArrayData(List<dynamic>? data, FirebaseFirestorePlatform firestore) {
+  static List<dynamic>? decodeArrayData(
+      List<dynamic>? data, FirebaseFirestorePlatform firestore) {
     if (data == null) {
       return null;
     }
@@ -30,7 +32,8 @@ class DecodeUtility {
   }
 
   /// Decodes an incoming value to its proper type.
-  static dynamic valueDecode(dynamic value, FirebaseFirestorePlatform firestore) {
+  static dynamic valueDecode(
+      dynamic value, FirebaseFirestorePlatform firestore) {
     if (util.instanceof(value, GeoPointConstructor)) {
       return GeoPoint(value.latitude as double, value.longitude as double);
     } else if (value is DateTime) {
@@ -38,8 +41,7 @@ class DecodeUtility {
     } else if (util.instanceof(value, BytesConstructor)) {
       return Blob(value.toUint8Array());
     } else if (value is firestore_interop.DocumentReference) {
-      return (firestore as FirebaseFirestoreWeb)
-          .doc(value.path);
+      return (firestore as FirebaseFirestoreWeb).doc(value.path);
     } else if (value is Map<String, dynamic>) {
       return decodeMapData(value, firestore);
     } else if (value is List<dynamic>) {
