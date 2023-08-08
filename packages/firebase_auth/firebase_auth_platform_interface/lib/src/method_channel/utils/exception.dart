@@ -77,7 +77,7 @@ FirebaseException platformExceptionToFirebaseAuthException(
 
   if (details != null) {
     code = details['code'] ?? code;
-    if (code == 'second-factor-required') {
+    if (code == kMultiFactorError) {
       return parseMultiFactorError(platformException);
     }
 
