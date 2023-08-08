@@ -19,7 +19,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   final FirebaseApp? appInstance;
 
   /// Create an instance using [app]
-  FirebaseFirestorePlatform({this.appInstance, this.databaseURL = '(default)'})
+  FirebaseFirestorePlatform({this.appInstance, this.databaseChoice})
       : super(token: _token);
 
   /// Returns the [FirebaseApp] for the current instance.
@@ -27,8 +27,12 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     return appInstance ?? Firebase.app();
   }
 
+  final String? databaseChoice;
+
   /// Firestore Database URL for this instance. Falls back to default database: "(default)"
-  final String? databaseURL;
+  String get databaseURL {
+    return databaseChoice ?? '(default)';
+  }
 
   static final Object _token = Object();
 
