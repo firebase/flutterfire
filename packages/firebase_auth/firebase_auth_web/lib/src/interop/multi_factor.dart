@@ -141,10 +141,10 @@ class MultiFactorResolver
       : super.fromJsObject(jsObject);
 
   List<MultiFactorInfo> get hints => jsObject.hints.map<MultiFactorInfo>((e) {
-        if (e.factorId == "phone") {
+        if (e.factorId == 'phone') {
           return PhoneMultiFactorInfo.fromJsObject(
               e as auth_interop.PhoneMultiFactorInfoJsImpl);
-        } else if (e.factorId == "totp") {
+        } else if (e.factorId == 'totp') {
           return TotpMultiFactorInfo.fromJsObject(
               e as auth_interop.TotpMultiFactorInfoJsImpl);
         } else {
