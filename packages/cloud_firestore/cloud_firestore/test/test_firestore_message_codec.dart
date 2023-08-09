@@ -61,11 +61,12 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
         );
       case _kFirestoreInstance:
         String appName = readValue(buffer)! as String;
+        String databaseURL = readValue(buffer)! as String;
         readValue(buffer);
         final FirebaseApp app = Firebase.app(appName);
         return MethodChannelFirebaseFirestore(
           app: app,
-          databaseURL: '(default)',
+          databaseURL: databaseURL,
         );
       case _kFirestoreQuery:
         String appName = readValue(buffer)! as String;
