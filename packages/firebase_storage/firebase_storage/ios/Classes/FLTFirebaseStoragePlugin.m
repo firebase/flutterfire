@@ -62,6 +62,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
 @interface FLTFirebaseStoragePlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
+@property(strong, nonatomic) PigeonFirebaseApp *appleArguments;
 @end
 
 @implementation FLTFirebaseStoragePlugin {

@@ -17,7 +17,7 @@ import 'package:pigeon/pigeon.dart';
       package: 'io.flutter.plugins.firebase.storage',
       className: 'GeneratedAndroidFirebaseStorage',
     ),
-    objcHeaderOut: '../firebase_storage/ios/Classes/Public/messages.g.h',
+    objcHeaderOut: '../firebase_storage/ios/Classes/messages.g.h',
     objcSourceOut: '../firebase_storage/ios/Classes/messages.g.m',
   ),
 )

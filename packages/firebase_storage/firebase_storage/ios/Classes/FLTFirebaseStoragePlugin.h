@@ -11,6 +11,7 @@
 
 #import <Foundation/Foundation.h>
 #import <firebase_core/FLTFirebasePlugin.h>
+#import "messages.g.h"
 
 @interface FLTFirebaseStoragePlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
 @end
