@@ -148,10 +148,6 @@ Warning: From iOS SDK 10.4.0 and higher, it is a requirement that the APNS token
 is available before making API requests. The APNS token is not guaranteed to have been received
 before making FCM plugin API requests.
 
-We recommend that you call `FirebaseMessaging.instance.getToken()` as early as possible to ensure the
-FCM plugin works as intended. For instance, `FirebaseMessaging.onMessage` handler
-may not be called if this request has not been made.
-
 ```dart
 // You may set the permission requests to "provisional" which allows the user to choose what type
 // of notifications they would like to receive once the user receives a notification.
@@ -160,8 +156,7 @@ final notificationSettings = await FirebaseMessaging.instance.requestPermission(
 // For apple platforms, ensure the APNS token is available before making any FCM plugin API calls
 final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
 if (apnsToken != null) {
-  // Ensure you call `getToken()` to initialize FCM plugin
-  final fcmToken = await FirebaseMessaging.instance.getToken();
+ // APNS token is available, make FCM plugin API requests...
 }
 ```
 
