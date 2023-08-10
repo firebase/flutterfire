@@ -68,41 +68,10 @@ void _firebaseMessagingCallbackDispatcher() {
 class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   /// Create an instance of [MethodChannelFirebaseMessaging] with optional [FirebaseApp]
   MethodChannelFirebaseMessaging({required FirebaseApp app})
-      : super(appInstance: app) {
-    if (_initialized) return;
-    channel.setMethodCallHandler((MethodCall call) async {
-      switch (call.method) {
-        case 'Messaging#onTokenRefresh':
-          _tokenStreamController.add(call.arguments as String);
-          break;
-        case 'Messaging#onMessage':
-          Map<String, dynamic> messageMap =
-              Map<String, dynamic>.from(call.arguments);
-          FirebaseMessagingPlatform.onMessage
-              .add(RemoteMessage.fromMap(messageMap));
-          break;
-        case 'Messaging#onMessageOpenedApp':
-          Map<String, dynamic> messageMap =
-              Map<String, dynamic>.from(call.arguments);
-          FirebaseMessagingPlatform.onMessageOpenedApp
-              .add(RemoteMessage.fromMap(messageMap));
-          break;
-        case 'Messaging#onBackgroundMessage':
-          // Apple only. Android calls via separate background channel.
-          Map<String, dynamic> messageMap =
-              Map<String, dynamic>.from(call.arguments);
-          return FirebaseMessagingPlatform.onBackgroundMessage
-              ?.call(RemoteMessage.fromMap(messageMap));
-        default:
-          throw UnimplementedError('${call.method} has not been implemented');
-      }
-    });
-    _initialized = true;
-  }
+      : super(appInstance: app);
 
   late bool _autoInitEnabled;
 
-  static bool _initialized = false;
   static bool _bgHandlerInitialized = false;
 
   /// Returns a stub instance to allow the platform interface to access
@@ -117,13 +86,11 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   /// then initialized via the [delegateFor] method.
   MethodChannelFirebaseMessaging._() : super(appInstance: null);
 
-  /// The [MethodChannel] to which calls will be delegated.
-  @visibleForTesting
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/firebase_messaging',
   );
 
-  final StreamController<String> _tokenStreamController =
+  static StreamController<String> tokenStreamController =
       StreamController<String>.broadcast();
 
   @override
@@ -305,7 +272,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Stream<String> get onTokenRefresh {
-    return _tokenStreamController.stream;
+    return tokenStreamController.stream;
   }
 
   @override
