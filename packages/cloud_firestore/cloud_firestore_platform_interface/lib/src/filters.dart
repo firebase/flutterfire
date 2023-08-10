@@ -118,7 +118,8 @@ class Filter {
           'Exactly one operator must be specified',
         ),
         assert(
-            field is String || field is FieldPath || field is FieldPathType) {
+          field is String || field is FieldPath || field is FieldPathType,
+        ) {
     final _field = (field is String ? FieldPath.fromString(field) : field);
 
     _filterQuery = _FilterQuery(
