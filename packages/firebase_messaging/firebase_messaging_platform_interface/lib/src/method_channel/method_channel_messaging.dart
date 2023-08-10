@@ -90,6 +90,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     'plugins.flutter.io/firebase_messaging',
   );
 
+  // ignore: close_sinks, never closed
   static StreamController<String> tokenStreamController =
       StreamController<String>.broadcast();
 
