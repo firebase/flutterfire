@@ -13,6 +13,7 @@
 #import "Private/FLTSnapshotsInSyncStreamHandler.h"
 #import "Private/FLTTransactionStreamHandler.h"
 #import "Public/FLTFirebaseFirestorePlugin.h"
+#import "Private/PigeonParser.h"
 
 NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase_firestore";
 NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =
@@ -593,29 +594,6 @@ FlutterStandardMethodCodec *_codec;
   }];
 }
 
-- (void)aggregateQuery:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRQuery *query = arguments[@"query"];
-
-  // NOTE: There is only "server" as the source at the moment. So this
-  // is unused for the time being. Using "FIRAggregateSourceServer".
-  // NSString *source = arguments[@"source"];
-
-  FIRAggregateQuery *aggregateQuery = [query count];
-
-  [aggregateQuery aggregationWithSource:FIRAggregateSourceServer
-                             completion:^(FIRAggregateQuerySnapshot *_Nullable snapshot,
-                                          NSError *_Nullable error) {
-                               if (error != nil) {
-                                 result.error(nil, nil, nil, error);
-                               } else {
-                                 NSMutableDictionary *response = [NSMutableDictionary dictionary];
-                                 response[@"count"] = snapshot.count;
-
-                                 result.success(response);
-                               }
-                             }];
-}
-
 - (NSString *)registerEventChannelWithPrefix:(NSString *)prefix
                                streamHandler:(NSObject<FlutterStreamHandler> *)handler {
   return [self registerEventChannelWithPrefix:prefix
@@ -639,8 +617,55 @@ FlutterStandardMethodCodec *_codec;
   return identifier;
 }
 
-- (void)aggregateQueryCountApp:(nonnull PigeonFirebaseApp *)app path:(nonnull NSString *)path parameters:(nonnull PigeonQueryParameters *)parameters source:(AggregateSource)source completion:(nonnull void (^)(NSNumber * _Nullable, FlutterError * _Nullable))completion { 
-    <#code#>
+- (FIRFirestore *_Nullable)getFIRFirestoreFromAppNameFromPigeon:(PigeonFirebaseApp *)pigeonApp {
+  FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:pigeonApp.appName];
+  FIRFirestore *firestore = [FIRFirestore firestoreForApp:app];
+
+  return firestore;
+}
+
++ (FlutterError *)convertToFlutterError:(NSError *)error {
+  NSString *code = [NSString stringWithFormat:@"ios-%ld", (long)error.code]
+  NSString *message = @"An unknown error has occurred.";
+
+  if (error == nil) {
+    return [FlutterError errorWithCode:code message:message details:@{}];
+  }
+    
+  // message
+  if ([error userInfo][NSLocalizedDescriptionKey] != nil) {
+    message = [error userInfo][NSLocalizedDescriptionKey];
+  }
+
+  NSMutableDictionary *additionalData = [NSMutableDictionary dictionary];
+
+  return [FlutterError errorWithCode:code message:message details:additionalData];
+}
+
+
+
+- (void)aggregateQueryCountApp:(nonnull PigeonFirebaseApp *)app path:(nonnull NSString *)path parameters:(nonnull PigeonQueryParameters *)parameters source:(AggregateSource)source completion:(nonnull void (^)(NSNumber * _Nullable, FlutterError * _Nullable))completion {
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+
+    FIRQuery *query = [PigeonParser parseQueryWithParameters:parameters firestore:firestore path:path isCollectionGroup:NO];
+
+    // NOTE: There is only "server" as the source at the moment. So this
+    // is unused for the time being. Using "FIRAggregateSourceServer".
+    // NSString *source = arguments[@"source"];
+
+    FIRAggregateQuery *aggregateQuery = [query count];
+
+    [aggregateQuery aggregationWithSource:FIRAggregateSourceServer
+                               completion:^(FIRAggregateQuerySnapshot *_Nullable snapshot,
+                                            NSError *_Nullable error) {
+                                 if (error != nil) {
+                                     completion(nil, [self convertToFlutterError:error]);
+                                 } else {
+                                     completion(snapshot.count, nil);
+                                
+                                 }
+                               }];
+
 }
 
 - (void)clearPersistenceApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 

@@ -15,4 +15,5 @@
 
 @interface FLTFirebaseFirestorePlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FirebaseFirestoreHostApi>
 + (NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap;
++ (FlutterError *)convertToFlutterError:(NSError *)error;
 @end
