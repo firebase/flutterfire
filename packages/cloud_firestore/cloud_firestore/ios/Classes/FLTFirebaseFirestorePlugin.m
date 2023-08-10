@@ -328,16 +328,6 @@ FlutterStandardMethodCodec *_codec;
   }];
 }
 
-- (void)clearPersistence:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRFirestore *firestore = arguments[@"firestore"];
-  [firestore clearPersistenceWithCompletion:^(NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(nil);
-    }
-  }];
-}
 
 - (void)terminate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRFirestore *firestore = arguments[@"firestore"];
@@ -362,16 +352,6 @@ FlutterStandardMethodCodec *_codec;
   }];
 }
 
-- (void)disableNetwork:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRFirestore *firestore = arguments[@"firestore"];
-  [firestore disableNetworkWithCompletion:^(NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(nil);
-    }
-  }];
-}
 
 - (void)transactionGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -463,18 +443,6 @@ FlutterStandardMethodCodec *_codec;
                 result.success(nil);
               }
             }];
-}
-
-- (void)documentDelete:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRDocumentReference *document = arguments[@"reference"];
-
-  [document deleteDocumentWithCompletion:^(NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(nil);
-    }
-  }];
 }
 
 - (void)documentGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -624,8 +592,8 @@ FlutterStandardMethodCodec *_codec;
   return firestore;
 }
 
-+ (FlutterError *)convertToFlutterError:(NSError *)error {
-  NSString *code = [NSString stringWithFormat:@"ios-%ld", (long)error.code]
+- (FlutterError *)convertToFlutterError:(NSError *)error {
+    NSString *code = [NSString stringWithFormat:@"ios-%ld", (long)error.code];
   NSString *message = @"An unknown error has occurred.";
 
   if (error == nil) {
@@ -649,10 +617,6 @@ FlutterStandardMethodCodec *_codec;
 
     FIRQuery *query = [PigeonParser parseQueryWithParameters:parameters firestore:firestore path:path isCollectionGroup:NO];
 
-    // NOTE: There is only "server" as the source at the moment. So this
-    // is unused for the time being. Using "FIRAggregateSourceServer".
-    // NSString *source = arguments[@"source"];
-
     FIRAggregateQuery *aggregateQuery = [query count];
 
     [aggregateQuery aggregationWithSource:FIRAggregateSourceServer
@@ -669,15 +633,41 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)clearPersistenceApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
-    <#code#>
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    [firestore clearPersistenceWithCompletion:^(NSError *error) {
+      if (error != nil) {
+          completion([self convertToFlutterError:error]);
+      } else {
+        completion(nil);
+      }
+    }];
+
 }
 
 - (void)disableNetworkApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
-    <#code#>
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    [firestore disableNetworkWithCompletion:^(NSError *error) {
+      if (error != nil) {
+          completion([self convertToFlutterError:error]);
+      } else {
+          completion(nil);
+      }
+    }];
+
 }
 
 - (void)documentReferenceDeleteApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
-    <#code#>
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    FIRDocumentReference *document = [firestore documentWithPath:request.path];
+
+    [document deleteDocumentWithCompletion:^(NSError *error) {
+      if (error != nil) {
+          completion([self convertToFlutterError:error]);
+      } else {
+          completion(nil);
+      }
+    }];
+
 }
 
 - (void)documentReferenceGetApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(PigeonDocumentSnapshot * _Nullable, FlutterError * _Nullable))completion { 
