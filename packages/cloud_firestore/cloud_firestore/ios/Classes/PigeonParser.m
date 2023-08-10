@@ -196,4 +196,39 @@
     return [PigeonDocumentSnapshot makeWithPath:documentSnapshot.reference.path data:[documentSnapshot dataWithServerTimestampBehavior:serverTimestampBehavior] metadata:[PigeonParser toPigeonSnapshotMetadata:documentSnapshot.metadata]];
 }
 
+
++ (DocumentChangeType) toPigeonDocumentChangeType:(FIRDocumentChangeType)documentChangeType {
+    switch (documentChangeType) {
+        case FIRDocumentChangeTypeAdded:
+        return DocumentChangeTypeAdded;
+        case FIRDocumentChangeTypeModified:
+        return DocumentChangeTypeModified;
+        case FIRDocumentChangeTypeRemoved:
+        return DocumentChangeTypeRemoved;
+        default:
+        @throw [NSException exceptionWithName:@"InvalidDocumentChangeType" reason:@"Invalid document change type" userInfo:nil];
+    }
+
+}
+
++ (PigeonDocumentChange *) toPigeonDocumentChange:(FIRDocumentChange*)documentChange serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
+    return [PigeonDocumentChange makeWithType:[PigeonParser toPigeonDocumentChangeType:documentChange.type] document:[PigeonParser toPigeonDocumentSnapshot:documentChange.document serverTimestampBehavior:serverTimestampBehavior] oldIndex:@(documentChange.oldIndex) newIndex:@(documentChange.newIndex)];
+}
+
++ (NSArray<PigeonDocumentChange*> *) toPigeonDocumentChanges:(NSArray<FIRDocumentChange*>*)documentChanges serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior  {
+    NSMutableArray* pigeonDocumentChanges = [NSMutableArray array];
+    for (FIRDocumentChange* documentChange in documentChanges) {
+        [pigeonDocumentChanges addObject:[PigeonParser toPigeonDocumentChange:documentChange serverTimestampBehavior:serverTimestampBehavior]];
+    }
+    return pigeonDocumentChanges;
+}
+
++ (PigeonQuerySnapshot *) toPigeonQuerySnapshot:(FIRQuerySnapshot*)querySnaphot serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
+    NSMutableArray* documentSnapshots = [NSMutableArray array];
+    for (FIRDocumentSnapshot* documentSnapshot in querySnaphot.documents) {
+        [documentSnapshots addObject:[PigeonParser toPigeonDocumentSnapshot:documentSnapshot serverTimestampBehavior:serverTimestampBehavior]];
+    }
+    return [PigeonQuerySnapshot makeWithDocuments:documentSnapshots documentChanges:[PigeonParser toPigeonDocumentChanges:querySnaphot.documentChanges serverTimestampBehavior:serverTimestampBehavior] metadata:[PigeonParser toPigeonSnapshotMetadata:querySnaphot.metadata]];
+}
+
 @end

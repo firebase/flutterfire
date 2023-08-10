@@ -16,5 +16,10 @@
 + (FIRFirestoreSource) parseSource:(Source)source;
 + (FIRServerTimestampBehavior) parseServerTimestampBehavior:(ServerTimestampBehavior)serverTimestampBehavior;
 + (PigeonDocumentSnapshot *) toPigeonDocumentSnapshot:(FIRDocumentSnapshot*)documentSnapshot serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
++ (PigeonQuerySnapshot *) toPigeonQuerySnapshot:(FIRQuerySnapshot*)querySnaphot serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
++ (NSArray<PigeonDocumentChange*> *) toPigeonDocumentChanges:(NSArray<FIRDocumentChange*>*)documentChanges serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
++ (PigeonDocumentChange *) toPigeonDocumentChange:(FIRDocumentChange*)documentChange serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
 + (PigeonSnapshotMetadata *) toPigeonSnapshotMetadata:(FIRSnapshotMetadata*)snapshotMetadata;
++ (DocumentChangeType) toPigeonDocumentChangeType:(FIRDocumentChangeType)documentChangeType;
+
 @end

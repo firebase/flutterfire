@@ -341,16 +341,6 @@ FlutterStandardMethodCodec *_codec;
   }];
 }
 
-- (void)enableNetwork:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRFirestore *firestore = arguments[@"firestore"];
-  [firestore enableNetworkWithCompletion:^(NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(nil);
-    }
-  }];
-}
 
 
 - (void)transactionGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -409,42 +399,6 @@ FlutterStandardMethodCodec *_codec;
   result.success(nil);
 }
 
-- (void)documentSet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  id data = arguments[@"data"];
-  FIRDocumentReference *document = arguments[@"reference"];
-
-  NSDictionary *options = arguments[@"options"];
-  void (^completionBlock)(NSError *) = ^(NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(nil);
-    }
-  };
-
-  if ([options[@"merge"] isEqual:@YES]) {
-    [document setData:data merge:YES completion:completionBlock];
-  } else if (![options[@"mergeFields"] isEqual:[NSNull null]]) {
-    [document setData:data mergeFields:options[@"mergeFields"] completion:completionBlock];
-  } else {
-    [document setData:data completion:completionBlock];
-  }
-}
-
-- (void)documentUpdate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  id data = arguments[@"data"];
-  FIRDocumentReference *document = arguments[@"reference"];
-
-  [document updateData:data
-            completion:^(NSError *error) {
-              if (error != nil) {
-                result.error(nil, nil, nil, error);
-              } else {
-                result.success(nil);
-              }
-            }];
-}
-
 
 - (void)queryGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRQuery *query = arguments[@"query"];
@@ -472,36 +426,6 @@ FlutterStandardMethodCodec *_codec;
                      }];
 }
 
-- (void)namedQueryGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRFirestore *firestore = arguments[@"firestore"];
-  NSString *name = arguments[@"name"];
-
-  FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
-  NSString *serverTimestampBehaviorString = arguments[@"serverTimestampBehavior"];
-
-  [firestore getQueryNamed:name
-                completion:^(FIRQuery *_Nullable query) {
-                  if (query == nil) {
-                    result.error(@"non-existent-named-query",
-                                 @"Named query has not been found. Please check it has been loaded "
-                                 @"properly via loadBundle().",
-                                 nil, nil);
-                    return;
-                  }
-                  [query getDocumentsWithSource:source
-                                     completion:^(FIRQuerySnapshot *_Nullable snapshot,
-                                                  NSError *_Nullable error) {
-                                       if (error != nil) {
-                                         result.error(nil, nil, nil, error);
-                                       } else {
-                                         [_serverTimestampMap
-                                             setObject:serverTimestampBehaviorString
-                                                forKey:@([snapshot hash])];
-                                         result.success(snapshot);
-                                       }
-                                     }];
-                }];
-}
 
 - (void)setLoggingEnabled:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSNumber *enabled = arguments[@"enabled"];
@@ -674,7 +598,26 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)documentReferenceSetApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
-    <#code#>
+    id data = request.data;
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    FIRDocumentReference *document = [firestore documentWithPath:request.path];
+
+    void (^completionBlock)(NSError *) = ^(NSError *error) {
+      if (error != nil) {
+          completion([self convertToFlutterError:error]);
+      } else {
+          completion(nil);
+      }
+    };
+
+    if ([request.option.merge isEqual:@YES]) {
+      [document setData:data merge:YES completion:completionBlock];
+    } else if (![request.option.mergeFields isEqual:[NSNull null]]) {
+      [document setData:data mergeFields:request.option.mergeFields completion:completionBlock];
+    } else {
+      [document setData:data completion:completionBlock];
+    }
+
 }
 
 - (void)documentReferenceSnapshotApp:(nonnull PigeonFirebaseApp *)app parameters:(nonnull DocumentReferenceRequest *)parameters includeMetadataChanges:(nonnull NSNumber *)includeMetadataChanges completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion { 
@@ -682,11 +625,31 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)documentReferenceUpdateApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
-    <#code#>
+    id data = request.data;
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    FIRDocumentReference *document = [firestore documentWithPath:request.path];
+
+    [document updateData:data
+              completion:^(NSError *error) {
+                if (error != nil) {
+                    completion([self convertToFlutterError:error]);
+                } else {
+                    completion(nil);
+                }
+              }];
+
 }
 
 - (void)enableNetworkApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
-    <#code#>
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    [firestore enableNetworkWithCompletion:^(NSError *error) {
+      if (error != nil) {
+          completion([self convertToFlutterError:error]);
+      } else {
+          completion(nil);
+      }
+    }];
+
 }
 
 - (void)loadBundleApp:(nonnull PigeonFirebaseApp *)app bundle:(nonnull FlutterStandardTypedData *)bundle completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion { 
@@ -694,7 +657,30 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)namedQueryGetApp:(nonnull PigeonFirebaseApp *)app name:(nonnull NSString *)name options:(nonnull PigeonGetOptions *)options completion:(nonnull void (^)(PigeonQuerySnapshot * _Nullable, FlutterError * _Nullable))completion { 
-    <#code#>
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+
+    FIRFirestoreSource source = [PigeonParser parseSource:options.source];
+    FIRServerTimestampBehavior serverTimestampBehavior = [PigeonParser parseServerTimestampBehavior:options.serverTimestampBehavior];
+
+    [firestore getQueryNamed:name
+                  completion:^(FIRQuery *_Nullable query) {
+                    if (query == nil) {
+                        completion(nil, [FlutterError errorWithCode:@"non-existent-named-query" message:@"Named query has not been found. Please check it has been loaded properly via loadBundle()." details:nil]);
+                        
+                      return;
+                    }
+                    [query getDocumentsWithSource:source
+                                       completion:^(FIRQuerySnapshot *_Nullable snapshot,
+                                                    NSError *_Nullable error) {
+                                         if (error != nil) {
+                                             completion(nil, [self convertToFlutterError:error]);
+                                         } else {
+                                             completion([PigeonParser toPigeonQuerySnapshot:snapshot serverTimestampBehavior:serverTimestampBehavior], nil);
+
+                                         }
+                                       }];
+                  }];
+
 }
 
 - (void)queryGetApp:(nonnull PigeonFirebaseApp *)app path:(nonnull NSString *)path isCollectionGroup:(nonnull NSNumber *)isCollectionGroup parameters:(nonnull PigeonQueryParameters *)parameters options:(nonnull PigeonGetOptions *)options completion:(nonnull void (^)(PigeonQuerySnapshot * _Nullable, FlutterError * _Nullable))completion { 
