@@ -8,7 +8,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.5.4'
+    classpath 'com.android.tools.build:gradle:8.0.1'
   }
 }
 
@@ -39,7 +39,7 @@ android {
   if (project.android.hasProperty("namespace")) {
     namespace 'io.flutter.plugins.firebase.functions'
   }
-  
+
   compileSdkVersion 31
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8

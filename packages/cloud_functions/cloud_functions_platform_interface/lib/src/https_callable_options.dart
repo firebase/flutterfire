@@ -5,10 +5,16 @@
 
 /// Interface representing an HttpsCallable instance's options,
 class HttpsCallableOptions {
-  /// Constructs a new [HttpsCallableOptions] instance with given timeout.
+  /// Constructs a new [HttpsCallableOptions] instance with given `timeout` & `limitedUseAppCheckToken`
   /// Defaults [timeout] to 60 seconds.
-  HttpsCallableOptions({this.timeout = const Duration(seconds: 60)});
+  /// Defaults [limitedUseAppCheckToken] to `false`
+  HttpsCallableOptions(
+      {this.timeout = const Duration(seconds: 60),
+      this.limitedUseAppCheckToken = false});
 
   /// Returns the timeout for this instance
   Duration timeout;
+
+  /// Sets whether or not to use limited-use App Check tokens when invoking the associated function.
+  bool limitedUseAppCheckToken;
 }

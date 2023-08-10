@@ -30,7 +30,9 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
 
     functions_interop.HttpsCallableOptions callableOptions =
         functions_interop.HttpsCallableOptions(
-            timeout: options.timeout.inMilliseconds);
+      timeout: options.timeout.inMilliseconds,
+      limitedUseAppCheckTokens: options.limitedUseAppCheckToken,
+    );
 
     late functions_interop.HttpsCallable callable;
 
