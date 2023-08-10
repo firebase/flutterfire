@@ -13,5 +13,8 @@
 + (FIRQuery *)parseQueryWithParameters:
 (nonnull PigeonQueryParameters *)parameters firestore:(nonnull FIRFirestore*)firestore path:(nonnull NSString*)path isCollectionGroup:(Boolean)isCollectionGroup;
 + (FIRFilter *_Nonnull)filterFromJson:(NSDictionary<NSString *, id> *_Nullable)map;
-
++ (FIRFirestoreSource) parseSource:(Source)source;
++ (FIRServerTimestampBehavior) parseServerTimestampBehavior:(ServerTimestampBehavior)serverTimestampBehavior;
++ (PigeonDocumentSnapshot *) toPigeonDocumentSnapshot:(FIRDocumentSnapshot*)documentSnapshot serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
++ (PigeonSnapshotMetadata *) toPigeonSnapshotMetadata:(FIRSnapshotMetadata*)snapshotMetadata;
 @end

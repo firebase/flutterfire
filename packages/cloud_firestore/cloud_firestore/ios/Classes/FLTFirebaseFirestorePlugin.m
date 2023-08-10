@@ -445,21 +445,6 @@ FlutterStandardMethodCodec *_codec;
             }];
 }
 
-- (void)documentGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRDocumentReference *document = arguments[@"reference"];
-  FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
-  NSString *serverTimestampBehaviorString = arguments[@"serverTimestampBehavior"];
-  id completion = ^(FIRDocumentSnapshot *_Nullable snapshot, NSError *_Nullable error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      [_serverTimestampMap setObject:serverTimestampBehaviorString forKey:@([snapshot hash])];
-      result.success(snapshot);
-    }
-  };
-
-  [document getDocumentWithSource:source completion:completion];
-}
 
 - (void)queryGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRQuery *query = arguments[@"query"];
@@ -671,7 +656,21 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)documentReferenceGetApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(PigeonDocumentSnapshot * _Nullable, FlutterError * _Nullable))completion { 
-    <#code#>
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    FIRDocumentReference *document = [firestore documentWithPath:request.path];
+    FIRFirestoreSource source = [PigeonParser parseSource:request.source];
+    FIRServerTimestampBehavior serverTimestampBehavior = [PigeonParser parseServerTimestampBehavior:request.serverTimestampBehavior];
+
+    id completionGet = ^(FIRDocumentSnapshot *_Nullable snapshot, NSError *_Nullable error) {
+      if (error != nil) {
+          completion(nil, [self convertToFlutterError:error]);
+      } else {
+          completion([PigeonParser toPigeonDocumentSnapshot:snapshot serverTimestampBehavior:serverTimestampBehavior], nil);
+      }
+    };
+
+    [document getDocumentWithSource:source completion:completionGet];
+
 }
 
 - (void)documentReferenceSetApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(FlutterError * _Nullable))completion { 

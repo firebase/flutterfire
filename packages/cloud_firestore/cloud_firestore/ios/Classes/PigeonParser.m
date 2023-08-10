@@ -162,4 +162,38 @@
       }
 }
 
++ (FIRFirestoreSource) parseSource:(Source)source {
+    switch (source) {
+        case SourceServerAndCache:
+        return FIRFirestoreSourceDefault;
+        case SourceServer:
+        return FIRFirestoreSourceServer;
+        case SourceCache:
+        return FIRFirestoreSourceCache;
+        default:
+        @throw [NSException exceptionWithName:@"InvalidSource" reason:@"Invalid source" userInfo:nil];
+    }
+}
+
++ (FIRServerTimestampBehavior) parseServerTimestampBehavior:(ServerTimestampBehavior)serverTimestampBehavior {
+    switch (serverTimestampBehavior) {
+        case ServerTimestampBehaviorNone:
+        return FIRServerTimestampBehaviorNone;
+        case ServerTimestampBehaviorEstimate:
+        return FIRServerTimestampBehaviorEstimate;
+        case ServerTimestampBehaviorPrevious:
+        return FIRServerTimestampBehaviorPrevious;
+        default:
+        @throw [NSException exceptionWithName:@"InvalidServerTimestampBehavior" reason:@"Invalid server timestamp behavior" userInfo:nil];
+    }
+}
+
++ (PigeonSnapshotMetadata *) toPigeonSnapshotMetadata:(FIRSnapshotMetadata*)snapshotMetadata {
+    return [PigeonSnapshotMetadata makeWithHasPendingWrites:[NSNumber numberWithBool:snapshotMetadata.hasPendingWrites] isFromCache:[NSNumber numberWithBool:snapshotMetadata.isFromCache]];
+}
+
++ (PigeonDocumentSnapshot *) toPigeonDocumentSnapshot:(FIRDocumentSnapshot*)documentSnapshot serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
+    return [PigeonDocumentSnapshot makeWithPath:documentSnapshot.reference.path data:[documentSnapshot dataWithServerTimestampBehavior:serverTimestampBehavior] metadata:[PigeonParser toPigeonSnapshotMetadata:documentSnapshot.metadata]];
+}
+
 @end
