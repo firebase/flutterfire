@@ -10,6 +10,7 @@
 #endif
 
 #import <Firebase/Firebase.h>
+#import <cloud_firestore/messages.g.h>
 
 #import <Foundation/Foundation.h>
 
@@ -20,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithId:(NSString *)transactionId
                    started:(void (^)(FIRTransaction *))startedListener
                      ended:(void (^)(void))endedListener;
-- (void)receiveTransactionResponse:(NSDictionary *)response;
+- (void)receiveTransactionResponse:(PigeonTransactionResult)resultType commands:(NSArray<PigeonTransactionCommand*>*)commands;
 
 @end
 

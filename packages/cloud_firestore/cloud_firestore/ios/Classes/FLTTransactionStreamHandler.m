@@ -12,7 +12,9 @@
 @property(nonatomic, copy, nonnull) void (^started)(FIRTransaction *);
 @property(nonatomic, copy, nonnull) void (^ended)(void);
 @property(strong) dispatch_semaphore_t semaphore;
-@property NSDictionary *response;
+@property PigeonTransactionResult resultType;
+@property NSArray<PigeonTransactionCommand*> *commands;
+
 @end
 
 @implementation FLTTransactionStreamHandler {
@@ -28,7 +30,6 @@
     self.started = startedListener;
     self.ended = endedListener;
     self.semaphore = dispatch_semaphore_create(0);
-    self.response = [NSMutableDictionary dictionary];
   }
   return self;
 }
@@ -71,40 +72,35 @@
       });
     }
 
-    NSDictionary *response = strongSelf.response;
-
-    if (response.count == 0) {
-      return nil;
-    }
-
-    NSString *dartResponseType = response[@"type"];
-
-    if ([@"ERROR" isEqualToString:dartResponseType]) {
-      // Do nothing - already handled in Dart land.
-      return nil;
-    }
-
-    NSArray<NSDictionary *> *commands = response[@"commands"];
-    for (NSDictionary *command in commands) {
-      NSString *commandType = command[@"type"];
-      NSString *documentPath = command[@"path"];
-      FIRDocumentReference *reference = [firestore documentWithPath:documentPath];
-      if ([@"DELETE" isEqualToString:commandType]) {
-        [transaction deleteDocument:reference];
-      } else if ([@"UPDATE" isEqualToString:commandType]) {
-        NSDictionary *data = command[@"data"];
-        [transaction updateData:data forDocument:reference];
-      } else if ([@"SET" isEqualToString:commandType]) {
-        NSDictionary *data = command[@"data"];
-        NSDictionary *options = command[@"options"];
-        if ([options[@"merge"] isEqual:@YES]) {
-          [transaction setData:data forDocument:reference merge:YES];
-        } else if (![options[@"mergeFields"] isEqual:[NSNull null]]) {
-          [transaction setData:data forDocument:reference mergeFields:options[@"mergeFields"]];
-        } else {
-          [transaction setData:data forDocument:reference];
-        }
+      if (self.resultType == PigeonTransactionResultFailure) {
+          // Do nothing - already handled in Dart land.
+          return nil;
       }
+
+    for (PigeonTransactionCommand* command in self.commands) {
+      PigeonTransactionType commandType = command.type;
+      NSString *documentPath = command.path;
+      FIRDocumentReference *reference = [firestore documentWithPath:documentPath];
+        
+        switch (commandType) {
+            case PigeonTransactionTypeDelete:
+                [transaction deleteDocument:reference];
+                break;
+            case PigeonTransactionTypeUpdate:
+                [transaction updateData:command.data forDocument:reference];
+                break;
+            case PigeonTransactionTypeSet:
+                if ([command.option.merge isEqual:@YES]) {
+                  [transaction setData:command.data forDocument:reference merge:YES];
+                } else if (![command.option.mergeFields isEqual:[NSNull null]]) {
+                  [transaction setData:command.data forDocument:reference mergeFields:command.option.mergeFields];
+                } else {
+                  [transaction setData:command.data forDocument:reference];
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     return nil;
@@ -151,8 +147,9 @@
   return nil;
 }
 
-- (void)receiveTransactionResponse:(NSDictionary *)response {
-  self.response = response;
+- (void)receiveTransactionResponse:(PigeonTransactionResult)resultType commands:(NSArray<PigeonTransactionCommand*>*)commands{
+  self.resultType = resultType;
+    self.commands = commands;
 
   dispatch_semaphore_signal(self.semaphore);
 }

@@ -174,81 +174,6 @@ FlutterStandardMethodCodec *_codec;
   [self cleanupEventListeners];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  FLTFirebaseMethodCallErrorBlock errorBlock = ^(
-      NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-      NSError *_Nullable error) {
-    if (code == nil) {
-      NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
-      code = codeAndMessage[0];
-      message = codeAndMessage[1];
-      details = @{
-        @"code" : code,
-        @"message" : message,
-      };
-    }
-    if ([@"unknown" isEqualToString:code]) {
-      NSLog(@"FLTFirebaseFirestore: An error occurred while calling method %@", call.method);
-    }
-    flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
-                                                        message:message
-                                                optionalDetails:details
-                                             andOptionalNSError:error]);
-  };
-
-  FLTFirebaseMethodCallResult *methodCallResult =
-      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
-
-  if ([@"Transaction#get" isEqualToString:call.method]) {
-    [self transactionGet:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Transaction#create" isEqualToString:call.method]) {
-    [self transactionCreate:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Transaction#storeResult" isEqualToString:call.method]) {
-    [self transactionStoreResult:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"DocumentReference#set" isEqualToString:call.method]) {
-    [self documentSet:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"DocumentReference#update" isEqualToString:call.method]) {
-    [self documentUpdate:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"DocumentReference#delete" isEqualToString:call.method]) {
-    [self documentDelete:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"DocumentReference#get" isEqualToString:call.method]) {
-    [self documentGet:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Firestore#namedQueryGet" isEqualToString:call.method]) {
-    [self namedQueryGet:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Firestore#setLoggingEnabled" isEqualToString:call.method]) {
-    [self setLoggingEnabled:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Query#get" isEqualToString:call.method]) {
-    [self queryGet:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"WriteBatch#commit" isEqualToString:call.method]) {
-    [self batchCommit:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Firestore#terminate" isEqualToString:call.method]) {
-    [self terminate:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Firestore#enableNetwork" isEqualToString:call.method]) {
-    [self enableNetwork:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Firestore#disableNetwork" isEqualToString:call.method]) {
-    [self disableNetwork:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Firestore#clearPersistence" isEqualToString:call.method]) {
-    [self clearPersistence:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Firestore#waitForPendingWrites" isEqualToString:call.method]) {
-    [self waitForPendingWrites:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"SnapshotsInSync#setup" isEqualToString:call.method]) {
-    [self setupSnapshotsInSyncListener:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Query#snapshots" isEqualToString:call.method]) {
-    [self setupQuerySnapshotsListener:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"DocumentReference#snapshots" isEqualToString:call.method]) {
-    [self setupDocumentReferenceSnapshotsListener:call.arguments
-                             withMethodCallResult:methodCallResult];
-  } else if ([@"LoadBundle#snapshots" isEqualToString:call.method]) {
-    [self setupLoadBundleListener:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"AggregateQuery#count" isEqualToString:call.method]) {
-    [self aggregateQuery:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Firestore#setIndexConfiguration" isEqualToString:call.method]) {
-    [self setIndexConfiguration:call.arguments withMethodCallResult:methodCallResult];
-  } else {
-    methodCallResult.success(FlutterMethodNotImplemented);
-  }
-}
-
 #pragma mark - FLTFirebasePlugin
 
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
@@ -274,202 +199,6 @@ FlutterStandardMethodCodec *_codec;
 
 #pragma mark - Firestore API
 
-- (void)setIndexConfiguration:(id)arguments
-         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRFirestore *firestore = arguments[@"firestore"];
-  NSString *indexConfiguration = arguments[@"indexConfiguration"];
-
-  [firestore setIndexConfigurationFromJSON:indexConfiguration
-                                completion:^(NSError *_Nullable error) {
-                                  if (error != nil) {
-                                    result.error(nil, nil, nil, error);
-                                  } else {
-                                    result.success(nil);
-                                  }
-                                }];
-}
-
-- (void)setupSnapshotsInSyncListener:(id)arguments
-                withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  result.success([self
-      registerEventChannelWithPrefix:kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName
-                       streamHandler:[FLTSnapshotsInSyncStreamHandler new]]);
-}
-
-- (void)setupLoadBundleListener:(id)arguments
-           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  result.success([self registerEventChannelWithPrefix:kFLTFirebaseFirestoreLoadBundleChannelName
-                                        streamHandler:[FLTLoadBundleStreamHandler new]]);
-}
-
-- (void)setupDocumentReferenceSnapshotsListener:(id)arguments
-                           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  result.success([self
-      registerEventChannelWithPrefix:kFLTFirebaseFirestoreDocumentSnapshotEventChannelName
-                       streamHandler:[FLTDocumentSnapshotStreamHandler new]]);
-}
-
-- (void)setupQuerySnapshotsListener:(id)arguments
-               withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  result.success([self
-      registerEventChannelWithPrefix:kFLTFirebaseFirestoreQuerySnapshotEventChannelName
-                       streamHandler:[FLTQuerySnapshotStreamHandler new]]);
-}
-
-- (void)waitForPendingWrites:(id)arguments
-        withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRFirestore *firestore = arguments[@"firestore"];
-  [firestore waitForPendingWritesWithCompletion:^(NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(nil);
-    }
-  }];
-}
-
-
-- (void)terminate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRFirestore *firestore = arguments[@"firestore"];
-  [firestore terminateWithCompletion:^(NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      [FLTFirebaseFirestoreUtils destroyCachedFIRFirestoreInstanceForKey:firestore.app.name];
-      result.success(nil);
-    }
-  }];
-}
-
-
-
-- (void)transactionGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    NSString *transactionId = arguments[@"transactionId"];
-    FIRDocumentReference *document = arguments[@"reference"];
-
-    FIRTransaction *transaction = self->_transactions[transactionId];
-
-    if (transaction == nil) {
-      result.error(@"missing-transaction",
-                   @"An error occurred while getting the native transaction. "
-                   @"It could be caused by a timeout in a preceding transaction operation.",
-                   nil, nil);
-    }
-
-    NSError *error = [[NSError alloc] init];
-    FIRDocumentSnapshot *snapshot = [transaction getDocument:document error:&error];
-
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else if (snapshot != nil) {
-      result.success(snapshot);
-    } else {
-      result.success(nil);
-    }
-  });
-}
-
-- (void)transactionCreate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *transactionId = [[[NSUUID UUID] UUIDString] lowercaseString];
-
-  FLTTransactionStreamHandler *handler =
-      [[FLTTransactionStreamHandler alloc] initWithId:transactionId
-          started:^(FIRTransaction *_Nonnull transaction) {
-            self->_transactions[transactionId] = transaction;
-          }
-          ended:^{
-            self->_transactions[transactionId] = nil;
-          }];
-
-  _transactionHandlers[transactionId] = handler;
-
-  result.success([self registerEventChannelWithPrefix:kFLTFirebaseFirestoreTransactionChannelName
-                                           identifier:transactionId
-                                        streamHandler:handler]);
-}
-
-- (void)transactionStoreResult:(id)arguments
-          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *transactionId = arguments[@"transactionId"];
-  NSDictionary *transactionResult = arguments[@"result"];
-
-  [_transactionHandlers[transactionId] receiveTransactionResponse:transactionResult];
-
-  result.success(nil);
-}
-
-
-- (void)queryGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRQuery *query = arguments[@"query"];
-  // Why we check [NSNull null]:  https://github.com/firebase/flutterfire/issues/9328
-  if (query == nil || query == [NSNull null]) {
-    result.error(@"sdk-error",
-                 @"An error occurred while parsing query arguments, see native logs for more "
-                 @"information. Please report this issue.",
-                 nil, nil);
-    return;
-  }
-
-  NSString *serverTimestampBehaviorString = arguments[@"serverTimestampBehavior"];
-
-  FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
-  [query getDocumentsWithSource:source
-                     completion:^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
-                       if (error != nil) {
-                         result.error(nil, nil, nil, error);
-                       } else {
-                         [_serverTimestampMap setObject:serverTimestampBehaviorString
-                                                 forKey:@([snapshot hash])];
-                         result.success(snapshot);
-                       }
-                     }];
-}
-
-
-- (void)setLoggingEnabled:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSNumber *enabled = arguments[@"enabled"];
-
-  [FIRFirestore enableLogging:[enabled boolValue]];
-  result.success(nil);
-}
-
-- (void)batchCommit:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRFirestore *firestore = arguments[@"firestore"];
-  NSArray<NSDictionary *> *writes = arguments[@"writes"];
-  FIRWriteBatch *batch = [firestore batch];
-
-  for (NSDictionary *write in writes) {
-    NSString *type = write[@"type"];
-    NSString *path = write[@"path"];
-    FIRDocumentReference *reference = [firestore documentWithPath:path];
-
-    if ([@"DELETE" isEqualToString:type]) {
-      [batch deleteDocument:reference];
-    } else if ([@"UPDATE" isEqualToString:type]) {
-      NSDictionary *data = write[@"data"];
-      [batch updateData:data forDocument:reference];
-    } else if ([@"SET" isEqualToString:type]) {
-      NSDictionary *data = write[@"data"];
-      NSDictionary *options = write[@"options"];
-      if ([options[@"merge"] isEqual:@YES]) {
-        [batch setData:data forDocument:reference merge:YES];
-      } else if (![options[@"mergeFields"] isEqual:[NSNull null]]) {
-        [batch setData:data forDocument:reference mergeFields:options[@"mergeFields"]];
-      } else {
-        [batch setData:data forDocument:reference];
-      }
-    }
-  }
-
-  [batch commitWithCompletion:^(NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success(nil);
-    }
-  }];
-}
 
 - (NSString *)registerEventChannelWithPrefix:(NSString *)prefix
                                streamHandler:(NSObject<FlutterStreamHandler> *)handler {
@@ -541,7 +270,7 @@ FlutterStandardMethodCodec *_codec;
 
 }
 
-- (void)clearPersistenceApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+- (void)clearPersistenceApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion {
     FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
     [firestore clearPersistenceWithCompletion:^(NSError *error) {
       if (error != nil) {
@@ -553,7 +282,7 @@ FlutterStandardMethodCodec *_codec;
 
 }
 
-- (void)disableNetworkApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+- (void)disableNetworkApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion {
     FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
     [firestore disableNetworkWithCompletion:^(NSError *error) {
       if (error != nil) {
@@ -565,7 +294,7 @@ FlutterStandardMethodCodec *_codec;
 
 }
 
-- (void)documentReferenceDeleteApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+- (void)documentReferenceDeleteApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(FlutterError * _Nullable))completion {
     FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
     FIRDocumentReference *document = [firestore documentWithPath:request.path];
 
@@ -579,7 +308,7 @@ FlutterStandardMethodCodec *_codec;
 
 }
 
-- (void)documentReferenceGetApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(PigeonDocumentSnapshot * _Nullable, FlutterError * _Nullable))completion { 
+- (void)documentReferenceGetApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(PigeonDocumentSnapshot * _Nullable, FlutterError * _Nullable))completion {
     FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
     FIRDocumentReference *document = [firestore documentWithPath:request.path];
     FIRFirestoreSource source = [PigeonParser parseSource:request.source];
@@ -597,7 +326,7 @@ FlutterStandardMethodCodec *_codec;
 
 }
 
-- (void)documentReferenceSetApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+- (void)documentReferenceSetApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(FlutterError * _Nullable))completion {
     id data = request.data;
     FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
     FIRDocumentReference *document = [firestore documentWithPath:request.path];
@@ -620,11 +349,19 @@ FlutterStandardMethodCodec *_codec;
 
 }
 
-- (void)documentReferenceSnapshotApp:(nonnull PigeonFirebaseApp *)app parameters:(nonnull DocumentReferenceRequest *)parameters includeMetadataChanges:(nonnull NSNumber *)includeMetadataChanges completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion { 
-    <#code#>
+- (void)documentReferenceSnapshotApp:(nonnull PigeonFirebaseApp *)app parameters:(nonnull DocumentReferenceRequest *)parameters includeMetadataChanges:(nonnull NSNumber *)includeMetadataChanges completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion {
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    FIRDocumentReference *document = [firestore documentWithPath:parameters.path];
+    FIRServerTimestampBehavior serverTimestampBehavior = [PigeonParser parseServerTimestampBehavior:parameters.serverTimestampBehavior];
+
+    
+    completion([self
+        registerEventChannelWithPrefix:kFLTFirebaseFirestoreDocumentSnapshotEventChannelName
+                         streamHandler:[[FLTDocumentSnapshotStreamHandler alloc] initWithFirestore:firestore reference:document includeMetadataChanges:includeMetadataChanges.boolValue serverTimestampBehavior:serverTimestampBehavior]], nil);
+
 }
 
-- (void)documentReferenceUpdateApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+- (void)documentReferenceUpdateApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(FlutterError * _Nullable))completion {
     id data = request.data;
     FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
     FIRDocumentReference *document = [firestore documentWithPath:request.path];
@@ -640,7 +377,7 @@ FlutterStandardMethodCodec *_codec;
 
 }
 
-- (void)enableNetworkApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
+- (void)enableNetworkApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion {
     FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
     [firestore enableNetworkWithCompletion:^(NSError *error) {
       if (error != nil) {
@@ -652,11 +389,16 @@ FlutterStandardMethodCodec *_codec;
 
 }
 
-- (void)loadBundleApp:(nonnull PigeonFirebaseApp *)app bundle:(nonnull FlutterStandardTypedData *)bundle completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion { 
-    <#code#>
+- (void)loadBundleApp:(nonnull PigeonFirebaseApp *)app bundle:(nonnull FlutterStandardTypedData *)bundle completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion {
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+
+    
+    completion([self registerEventChannelWithPrefix:kFLTFirebaseFirestoreLoadBundleChannelName
+                                      streamHandler:[[FLTLoadBundleStreamHandler alloc] initWithFirestore:firestore bundle:bundle]], nil);
+
 }
 
-- (void)namedQueryGetApp:(nonnull PigeonFirebaseApp *)app name:(nonnull NSString *)name options:(nonnull PigeonGetOptions *)options completion:(nonnull void (^)(PigeonQuerySnapshot * _Nullable, FlutterError * _Nullable))completion { 
+- (void)namedQueryGetApp:(nonnull PigeonFirebaseApp *)app name:(nonnull NSString *)name options:(nonnull PigeonGetOptions *)options completion:(nonnull void (^)(PigeonQuerySnapshot * _Nullable, FlutterError * _Nullable))completion {
     FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
 
     FIRFirestoreSource source = [PigeonParser parseSource:options.source];
@@ -683,48 +425,178 @@ FlutterStandardMethodCodec *_codec;
 
 }
 
-- (void)queryGetApp:(nonnull PigeonFirebaseApp *)app path:(nonnull NSString *)path isCollectionGroup:(nonnull NSNumber *)isCollectionGroup parameters:(nonnull PigeonQueryParameters *)parameters options:(nonnull PigeonGetOptions *)options completion:(nonnull void (^)(PigeonQuerySnapshot * _Nullable, FlutterError * _Nullable))completion { 
-    <#code#>
+- (void)queryGetApp:(nonnull PigeonFirebaseApp *)app path:(nonnull NSString *)path isCollectionGroup:(nonnull NSNumber *)isCollectionGroup parameters:(nonnull PigeonQueryParameters *)parameters options:(nonnull PigeonGetOptions *)options completion:(nonnull void (^)(PigeonQuerySnapshot * _Nullable, FlutterError * _Nullable))completion {
+
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    FIRQuery *query = [PigeonParser parseQueryWithParameters:parameters firestore:firestore path:path isCollectionGroup:[isCollectionGroup boolValue]];
+    FIRFirestoreSource source = [PigeonParser parseSource:options.source];
+    FIRServerTimestampBehavior serverTimestampBehavior = [PigeonParser parseServerTimestampBehavior:options.serverTimestampBehavior];
+    
+    [query getDocumentsWithSource:source
+                       completion:^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
+                         if (error != nil) {
+                             completion(nil, [self convertToFlutterError:error]);
+                         } else {
+                             completion([PigeonParser toPigeonQuerySnapshot:snapshot serverTimestampBehavior:serverTimestampBehavior], nil);
+                         }
+                       }];
+
 }
 
-- (void)querySnapshotApp:(nonnull PigeonFirebaseApp *)app path:(nonnull NSString *)path isCollectionGroup:(nonnull NSNumber *)isCollectionGroup parameters:(nonnull PigeonQueryParameters *)parameters options:(nonnull PigeonGetOptions *)options includeMetadataChanges:(nonnull NSNumber *)includeMetadataChanges completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion { 
-    <#code#>
+- (void)querySnapshotApp:(nonnull PigeonFirebaseApp *)app path:(nonnull NSString *)path isCollectionGroup:(nonnull NSNumber *)isCollectionGroup parameters:(nonnull PigeonQueryParameters *)parameters options:(nonnull PigeonGetOptions *)options includeMetadataChanges:(nonnull NSNumber *)includeMetadataChanges completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion {
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    FIRQuery *query = [PigeonParser parseQueryWithParameters:parameters firestore:firestore path:path isCollectionGroup:[isCollectionGroup boolValue]];
+    FIRServerTimestampBehavior serverTimestampBehavior = [PigeonParser parseServerTimestampBehavior:options.serverTimestampBehavior];
+
+    
+    completion([self
+        registerEventChannelWithPrefix:kFLTFirebaseFirestoreQuerySnapshotEventChannelName
+                         streamHandler:[[FLTQuerySnapshotStreamHandler alloc] initWithFirestore:firestore query:query includeMetadataChanges:includeMetadataChanges.boolValue serverTimestampBehavior:serverTimestampBehavior], nil]);
+
 }
 
-- (void)setIndexConfigurationApp:(nonnull PigeonFirebaseApp *)app indexConfiguration:(nonnull NSString *)indexConfiguration completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
-    <#code#>
+- (void)setIndexConfigurationApp:(nonnull PigeonFirebaseApp *)app indexConfiguration:(nonnull NSString *)indexConfiguration completion:(nonnull void (^)(FlutterError * _Nullable))completion {
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+
+    [firestore setIndexConfigurationFromJSON:indexConfiguration
+                                  completion:^(NSError *_Nullable error) {
+                                    if (error != nil) {
+                                        completion([self convertToFlutterError:error]);
+                                    } else {
+                                        completion(nil);
+                                    }
+                                  }];
+
 }
 
-- (void)setLoggingEnabledLoggingEnabled:(nonnull NSNumber *)loggingEnabled completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
-    <#code#>
+- (void)setLoggingEnabledLoggingEnabled:(nonnull NSNumber *)loggingEnabled completion:(nonnull void (^)(FlutterError * _Nullable))completion {
+    [FIRFirestore enableLogging:[loggingEnabled boolValue]];
+    completion(nil);
 }
 
-- (void)snapshotsInSyncSetupWithCompletion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion { 
-    <#code#>
+- (void)snapshotsInSyncSetupWithCompletion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion {
+    completion([self
+        registerEventChannelWithPrefix:kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName
+                         streamHandler:[FLTSnapshotsInSyncStreamHandler new]], nil);
+
 }
 
-- (void)terminateApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
-    <#code#>
+- (void)terminateApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion {
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    [firestore terminateWithCompletion:^(NSError *error) {
+      if (error != nil) {
+          completion([self convertToFlutterError:error]);
+      } else {
+        [FLTFirebaseFirestoreUtils destroyCachedFIRFirestoreInstanceForKey:firestore.app.name];
+          completion(nil);
+      }
+    }];
+
 }
 
-- (void)transactionCreateWithCompletion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion { 
-    <#code#>
+- (void)transactionCreateWithCompletion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion {
+    NSString *transactionId = [[[NSUUID UUID] UUIDString] lowercaseString];
+
+    FLTTransactionStreamHandler *handler =
+        [[FLTTransactionStreamHandler alloc] initWithId:transactionId
+            started:^(FIRTransaction *_Nonnull transaction) {
+              self->_transactions[transactionId] = transaction;
+            }
+            ended:^{
+              self->_transactions[transactionId] = nil;
+            }];
+
+    _transactionHandlers[transactionId] = handler;
+
+    completion([self registerEventChannelWithPrefix:kFLTFirebaseFirestoreTransactionChannelName
+                                             identifier:transactionId
+                                          streamHandler:handler], nil);
+
 }
 
-- (void)transactionGetApp:(nonnull PigeonFirebaseApp *)app transactionId:(nonnull NSString *)transactionId path:(nonnull NSString *)path completion:(nonnull void (^)(PigeonDocumentSnapshot * _Nullable, FlutterError * _Nullable))completion { 
-    <#code#>
+- (void)transactionGetApp:(nonnull PigeonFirebaseApp *)app transactionId:(nonnull NSString *)transactionId path:(nonnull NSString *)path completion:(nonnull void (^)(PigeonDocumentSnapshot * _Nullable, FlutterError * _Nullable))completion {
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    FIRDocumentReference *document = [firestore documentWithPath:path];
+
+    FIRTransaction *transaction = self->_transactions[transactionId];
+
+    if (transaction == nil) {
+        completion(nil, [FlutterError errorWithCode:@"missing-transaction"
+                                            message:@"An error occurred while getting the native transaction. "
+                                                    @"It could be caused by a timeout in a preceding transaction operation."
+                                            details:nil]);
+        return;
+    }
+
+    NSError *error = [[NSError alloc] init];
+    FIRDocumentSnapshot *snapshot = [transaction getDocument:document error:&error];
+    
+    if (error != nil) {
+        completion(nil, [self convertToFlutterError:error]);
+    } else if (snapshot != nil) {
+        completion([PigeonParser toPigeonDocumentSnapshot:snapshot serverTimestampBehavior:FIRServerTimestampBehaviorNone], nil);
+    } else {
+        completion(nil, nil);
+    }
 }
 
-- (void)transactionStoreResultTransactionId:(nonnull NSString *)transactionId resultType:(PigeonTransactionResult)resultType commands:(nullable NSArray<PigeonTransactionCommand *> *)commands completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
-    <#code#>
+- (void)transactionStoreResultTransactionId:(nonnull NSString *)transactionId resultType:(PigeonTransactionResult)resultType commands:(nullable NSArray<PigeonTransactionCommand *> *)commands completion:(nonnull void (^)(FlutterError * _Nullable))completion {
+
+    [_transactionHandlers[transactionId] receiveTransactionResponse:resultType commands:commands];
+
+    completion(nil);
 }
 
-- (void)waitForPendingWritesApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
-    <#code#>
+- (void)waitForPendingWritesApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(FlutterError * _Nullable))completion {
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    [firestore waitForPendingWritesWithCompletion:^(NSError *error) {
+      if (error != nil) {
+          completion([self convertToFlutterError:error]);
+      } else {
+        completion(nil);
+      }
+    }];
+
 }
 
-- (void)writeBatchCommitApp:(nonnull PigeonFirebaseApp *)app writes:(nonnull NSArray<PigeonTransactionCommand *> *)writes completion:(nonnull void (^)(FlutterError * _Nullable))completion { 
-    <#code#>
+- (void)writeBatchCommitApp:(nonnull PigeonFirebaseApp *)app writes:(nonnull NSArray<PigeonTransactionCommand *> *)writes completion:(nonnull void (^)(FlutterError * _Nullable))completion {
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    FIRWriteBatch *batch = [firestore batch];
+
+    for (PigeonTransactionCommand *write in writes) {
+      PigeonTransactionType type = write.type;
+      NSString *path = write.path;
+      FIRDocumentReference *reference = [firestore documentWithPath:path];
+        
+      switch(type) {
+          case PigeonTransactionTypeGet:
+              break;
+        case PigeonTransactionTypeDelete:
+          [batch deleteDocument:reference];
+          break;
+        case PigeonTransactionTypeUpdate:
+          [batch updateData:write.data forDocument:reference];
+          break;
+        case PigeonTransactionTypeSet:
+              if ([write.option.merge isEqual:@YES]) {
+                [batch setData:write.data forDocument:reference merge:YES];
+              } else if (![write.option.mergeFields isEqual:[NSNull null]]) {
+                [batch setData:write.data forDocument:reference mergeFields:write.option.mergeFields];
+              } else {
+                [batch setData:write.data forDocument:reference];
+              }
+          break;
+      }
+    }
+
+    [batch commitWithCompletion:^(NSError *error) {
+      if (error != nil) {
+          completion([self convertToFlutterError:error]);
+      } else {
+          completion(nil);
+      }
+    }];
+
 }
 
 @end

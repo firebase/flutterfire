@@ -703,7 +703,6 @@ public class FlutterFirebaseFirestorePlugin
     cachedThreadPool.execute(
         () -> {
           try {
-            @SuppressWarnings("unchecked")
             FirebaseFirestore firestore = getFirestoreFromPigeon(app);
             WriteBatch batch = firestore.batch();
 

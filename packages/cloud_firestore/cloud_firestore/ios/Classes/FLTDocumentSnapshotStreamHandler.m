@@ -14,12 +14,20 @@
 
 @implementation FLTDocumentSnapshotStreamHandler
 
+- (nonnull instancetype)initWithFirestore:(nonnull FIRFirestore *)firestore reference:(nonnull FIRDocumentReference *)reference includeMetadataChanges:(BOOL)includeMetadataChanges serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
+    self = [super init];
+    if (self) {
+        self.firestore = firestore;
+        self.reference = reference;
+        self.includeMetadataChanges = includeMetadataChanges;
+        self.serverTimestampBehavior = serverTimestampBehavior;
+    }
+    return self;
+}
+
+
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
-  NSNumber *includeMetadataChanges = arguments[@"includeMetadataChanges"];
-
-  FIRDocumentReference *document = arguments[@"reference"];
-
   id listener = ^(FIRDocumentSnapshot *snapshot, NSError *_Nullable error) {
     if (error) {
       NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
@@ -43,7 +51,7 @@
   };
 
   self.listenerRegistration =
-      [document addSnapshotListenerWithIncludeMetadataChanges:includeMetadataChanges.boolValue
+      [_reference addSnapshotListenerWithIncludeMetadataChanges:_includeMetadataChanges
                                                      listener:listener];
 
   return nil;
@@ -55,5 +63,6 @@
 
   return nil;
 }
+
 
 @end

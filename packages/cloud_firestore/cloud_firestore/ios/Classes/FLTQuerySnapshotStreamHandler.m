@@ -14,9 +14,21 @@
 
 @implementation FLTQuerySnapshotStreamHandler
 
+- (instancetype)initWithFirestore:(FIRFirestore *)firestore query:(FIRQuery*)query includeMetadataChanges:(BOOL)includeMetadataChanges serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
+    self = [super init];
+    if (self) {
+        _firestore = firestore;
+        _query = query;
+        _includeMetadataChanges = includeMetadataChanges;
+        _serverTimestampBehavior = serverTimestampBehavior;
+    }
+    return self;
+}
+
+
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
-  FIRQuery *query = arguments[@"query"];
+  FIRQuery *query = _query;
 
   if (query == nil) {
     return [FlutterError
@@ -26,7 +38,6 @@
               details:nil];
   }
 
-  NSNumber *includeMetadataChanges = arguments[@"includeMetadataChanges"];
 
   id listener = ^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
     if (error) {
@@ -51,7 +62,7 @@
   };
 
   self.listenerRegistration =
-      [query addSnapshotListenerWithIncludeMetadataChanges:includeMetadataChanges.boolValue
+      [query addSnapshotListenerWithIncludeMetadataChanges:_includeMetadataChanges
                                                   listener:listener];
 
   return nil;
@@ -63,5 +74,6 @@
 
   return nil;
 }
+
 
 @end
