@@ -664,7 +664,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   }
 
   /// Apple only. Users signed in with Apple provider can revoke their token using an authorization code.
-  /// Authorization code can be generated using the "sign_in_with_apple" plugin for example.
+  /// Authorization code can retrieved on the user credential i.e. userCredential.additionalUserInfo.authorizationCode
   Future<void> revokeTokenWithAuthorizationCode(String authorizationCode) {
     throw UnimplementedError(
         'revokeTokenWithAuthorizationCode() is not implemented');
