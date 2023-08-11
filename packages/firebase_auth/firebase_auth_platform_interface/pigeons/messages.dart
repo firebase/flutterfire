@@ -400,6 +400,11 @@ abstract class FirebaseAuthHostApi {
     PigeonFirebaseApp app,
     PigeonVerifyPhoneNumberRequest request,
   );
+  @async
+  void revokeTokenWithAuthorizationCode(
+    PigeonFirebaseApp app,
+    String authorizationCode,
+  );
 }
 
 class PigeonIdTokenResult {

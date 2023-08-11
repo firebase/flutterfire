@@ -852,6 +852,20 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
              }];
 }
 
+- (void)revokeTokenWithAuthorizationCode:(nonnull PigeonFirebaseApp *)app
+                                    code:(nonnull NSString *)authorizationCode
+                              completion:(nonnull void (^)(FlutterError *_Nullable))completion {
+  FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+  [auth revokeTokenWithAuthorizationCode:authorizationCode
+                              completion:^(NSError *_Nullable error) {
+                                if (error != nil) {
+                                  completion([FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                                } else {
+                                  completion(nil);
+                                }
+                              }];
+}
+
 - (void)checkActionCodeApp:(nonnull PigeonFirebaseApp *)app
                       code:(nonnull NSString *)code
                 completion:(nonnull void (^)(PigeonActionCodeInfo *_Nullable,
