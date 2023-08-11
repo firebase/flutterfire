@@ -640,6 +640,14 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @Override
+  public void revokeTokenWithAuthorizationCode(
+      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull String authorizationCode,
+      @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
+    // Should never get here as we throw Exception on Dart side.
+  }
+
+  @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
