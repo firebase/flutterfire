@@ -163,9 +163,14 @@ jobs:
         run: |
           # Boot simulator and wait for System app to be ready.
           # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md#installed-simulators
-          SIMULATOR="iPhone 14,OS=16.4"
+          SIMULATOR="iPhone 14"
+          echo "1111111111111"
+          xcrun simctl list --json devices available
+          echo "2222222222222"
           xcrun simctl bootstatus "$SIMULATOR" -b
+          echo "33333333333333"
           xcrun simctl logverbose "$SIMULATOR" enable
+          echo "44444444444444"
           # Sleep to allow simulator to settle.
           sleep 15
           # Uncomment following line to have simulator logs printed out for debugging purposes.
