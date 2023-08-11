@@ -11,8 +11,15 @@ import '../utils/test_common.dart';
 
 const _kPath = 'document';
 
-DocumentSnapshotPlatform documentSnapshotPlatform =
-    DocumentSnapshotPlatform(FirebaseFirestorePlatform.instance, _kPath, {});
+DocumentSnapshotPlatform documentSnapshotPlatform = DocumentSnapshotPlatform(
+  FirebaseFirestorePlatform.instance,
+  _kPath,
+  {},
+  PigeonSnapshotMetadata(
+    hasPendingWrites: true,
+    isFromCache: true,
+  ),
+);
 final List<DocumentSnapshotPlatform> _kDocuments = [documentSnapshotPlatform];
 DocumentChangePlatform documentChangePlatform = DocumentChangePlatform(
     DocumentChangeType.added, -1, 1, documentSnapshotPlatform);

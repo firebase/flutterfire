@@ -10,13 +10,19 @@ import 'package:flutter_test/flutter_test.dart';
 import '../utils/test_common.dart';
 
 const _kPath = 'document';
-const _kMetadata = {'isFromCache': true, 'hasPendingWrites': true};
 const _kData = {'foo': 'bar'};
 
 class TestDocumentSnapshot extends DocumentSnapshotPlatform {
   TestDocumentSnapshot._()
-      : super(FirebaseFirestorePlatform.instance, _kPath,
-            {'data': _kData, 'metadata': _kMetadata});
+      : super(
+          FirebaseFirestorePlatform.instance,
+          _kPath,
+          _kData,
+          PigeonSnapshotMetadata(
+            hasPendingWrites: true,
+            isFromCache: true,
+          ),
+        );
 }
 
 void main() {
