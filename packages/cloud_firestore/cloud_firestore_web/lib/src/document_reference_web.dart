@@ -54,7 +54,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     return convertWebDocumentSnapshot(
       firestore,
       documentSnapshot,
-      getServerTimestampBehaviorString(options.serverTimestampBehavior),
+      options.serverTimestampBehavior,
     );
   }
 
@@ -78,7 +78,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
         return convertWebDocumentSnapshot(
           firestore,
           webSnapshot,
-          ServerTimestampBehavior.none.name,
+          ServerTimestampBehavior.none,
         );
       }),
     );

@@ -37,7 +37,7 @@ class TransactionWeb extends TransactionPlatform {
         return convertWebDocumentSnapshot(
           _firestore,
           webDocumentSnapshot,
-          ServerTimestampBehavior.none.name,
+          ServerTimestampBehavior.none,
         );
       },
     );
