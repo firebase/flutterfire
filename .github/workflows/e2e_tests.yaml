@@ -169,7 +169,7 @@ jobs:
           # Sleep to allow simulator to settle.
           sleep 15
           # Uncomment following line to have simulator logs printed out for debugging purposes.
-          # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
+          xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
           flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true
 
   macos:
