@@ -163,7 +163,7 @@ jobs:
         run: |
           # Boot simulator and wait for System app to be ready.
           # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md#installed-simulators
-          SIMULATOR="platform=iOS Simulator,name=iPhone 14 Plus,OS=latest"
+          SIMULATOR="iPhone 14,OS=16.4"
           xcrun simctl bootstatus "$SIMULATOR" -b
           xcrun simctl logverbose "$SIMULATOR" enable
           # Sleep to allow simulator to settle.
