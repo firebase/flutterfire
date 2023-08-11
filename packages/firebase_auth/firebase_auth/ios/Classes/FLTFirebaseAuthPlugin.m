@@ -346,7 +346,6 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
     }
     return;
   }
-  // this might be the route back to dart
   object.appleCompletion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
                                                            authorizationCode:authorizationCode],
                          nil);
@@ -377,8 +376,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
       authorizationCode = [[NSString alloc] initWithData:appleIDCredential.authorizationCode
                                                 encoding:NSUTF8StringEncoding];
     }
-    // We need this back in dart land: appleIDCredential.authorizationCode
-    //  Initialize a Firebase credential, including the user's full name.
+
     FIROAuthCredential *credential =
         [FIROAuthProvider appleCredentialWithIDToken:idToken
                                             rawNonce:rawNonce
