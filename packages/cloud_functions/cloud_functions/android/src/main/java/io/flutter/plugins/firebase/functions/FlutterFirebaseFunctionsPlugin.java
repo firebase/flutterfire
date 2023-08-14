@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.FirebaseFunctionsException;
+import com.google.firebase.functions.HttpsCallableOptions;
 import com.google.firebase.functions.HttpsCallableReference;
 import com.google.firebase.functions.HttpsCallableResult;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -74,6 +75,8 @@ public class FlutterFirebaseFunctionsPlugin
             String functionUri = (String) arguments.get("functionUri");
             String origin = (String) arguments.get("origin");
             Integer timeout = (Integer) arguments.get("timeout");
+            boolean limitedUseAppCheckToken =
+                (boolean) Objects.requireNonNull(arguments.get("limitedUseAppCheckToken"));
             Object parameters = arguments.get("parameters");
 
             if (origin != null) {
@@ -82,12 +85,16 @@ public class FlutterFirebaseFunctionsPlugin
             }
 
             HttpsCallableReference httpsCallableReference;
+            HttpsCallableOptions options =
+                new HttpsCallableOptions.Builder()
+                    .setLimitedUseAppCheckTokens(limitedUseAppCheckToken)
+                    .build();
 
             if (functionName != null) {
-              httpsCallableReference = firebaseFunctions.getHttpsCallable(functionName);
+              httpsCallableReference = firebaseFunctions.getHttpsCallable(functionName, options);
             } else if (functionUri != null) {
               httpsCallableReference =
-                  firebaseFunctions.getHttpsCallableFromUrl(new URL(functionUri));
+                  firebaseFunctions.getHttpsCallableFromUrl(new URL(functionUri), options);
             } else {
               throw new IllegalArgumentException("Either functionName or functionUri must be set");
             }
