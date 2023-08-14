@@ -26,13 +26,10 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace 'io.flutter.plugins.firebase.functions.example'
-    compileSdkVersion 33
+    compileSdk 33
 
-    lintOptions {
-        disable 'InvalidPackage'
-    }
 
-    defaultConfig {
+  defaultConfig {
         applicationId "io.flutter.plugins.firebase.functions.example"
         minSdkVersion 16
         targetSdkVersion 33
@@ -48,6 +45,9 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+  lint {
+    disable 'InvalidPackage'
+  }
 }
 
 flutter {
