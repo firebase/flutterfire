@@ -45,7 +45,7 @@ public class FirebaseInstallationsPluginSwift: FLTFirebasePlugin, FlutterPlugin 
 
   /// Gets Installations instance for a Firebase App.
   /// - Returns: a Firebase Installations instance for the passed app from Dart
-  internal func getInstallations() -> Installations {
+  func getInstallations() -> Installations {
     let app: FirebaseApp = FLTFirebasePlugin.firebaseAppNamed(args["appName"] as! String)!
     return Installations.installations(app: app)
   }
@@ -53,7 +53,7 @@ public class FirebaseInstallationsPluginSwift: FLTFirebasePlugin, FlutterPlugin 
   /// Gets Installations Id for an instance.
   /// - Parameter arguments: the arguments passed by the Dart calling method
   /// - Parameter result: the result instance used to send the result to Dart.
-  internal func getId() {
+  func getId() {
     let instance: Installations = getInstallations()
     instance.installationID { (id: String?, error: Error?) in
       if error != nil {
@@ -65,7 +65,7 @@ public class FirebaseInstallationsPluginSwift: FLTFirebasePlugin, FlutterPlugin 
   }
 
   /// Deletes Installations Id for an instance.
-  internal func deleteId() {
+  func deleteId() {
     let instance: Installations = getInstallations()
     instance.delete { (error: Error?) in
       if error != nil {
@@ -77,7 +77,7 @@ public class FirebaseInstallationsPluginSwift: FLTFirebasePlugin, FlutterPlugin 
   }
 
   /// Gets the token Id for an instance.
-  internal func getToken() {
+  func getToken() {
     let instance: Installations = getInstallations()
     let forceRefresh: Bool = (args["forceRefresh"] as? Bool) ?? false
 
@@ -94,7 +94,7 @@ public class FirebaseInstallationsPluginSwift: FLTFirebasePlugin, FlutterPlugin 
   }
 
   /// Starts listening to Installation ID events for an instance.
-  internal func registerIdChangeListener() {
+  func registerIdChangeListener() {
     let instance: Installations = getInstallations()
 
     let appName = (args["appName"] as! String)
@@ -111,7 +111,7 @@ public class FirebaseInstallationsPluginSwift: FLTFirebasePlugin, FlutterPlugin 
     result?.success(eventChannelName)
   }
 
-  internal func mapInstallationsErrorCodes(code: UInt) -> NSString {
+  func mapInstallationsErrorCodes(code: UInt) -> NSString {
     let error = InstallationsErrorCode(InstallationsErrorCode
       .Code(rawValue: Int(code)) ?? InstallationsErrorCode.unknown)
 
