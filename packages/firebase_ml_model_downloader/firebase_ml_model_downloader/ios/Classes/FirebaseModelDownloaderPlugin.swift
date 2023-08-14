@@ -36,7 +36,7 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
     #endif
   }
 
-  internal func mapErrorCodes(error: Error) -> NSString {
+  func mapErrorCodes(error: Error) -> NSString {
     switch error {
     case DownloadError.notFound:
       return "no-existing-model"
@@ -89,8 +89,8 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
     }
   }
 
-  internal func listDownloadedModels(arguments: [String: Any],
-                                     result: FLTFirebaseMethodCallResult) {
+  func listDownloadedModels(arguments: [String: Any],
+                            result: FLTFirebaseMethodCallResult) {
     let modelDownloader = modelDownloaderFromArguments(arguments: arguments)
 
     modelDownloader?.listDownloadedModels { response in
@@ -111,7 +111,7 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
     }
   }
 
-  internal func getModel(arguments: [String: Any], result: FLTFirebaseMethodCallResult) {
+  func getModel(arguments: [String: Any], result: FLTFirebaseMethodCallResult) {
     let modelDownloader = modelDownloaderFromArguments(arguments: arguments)
     let modelName = arguments["modelName"] as! String
     let downloadType = arguments["downloadType"] as! String
@@ -148,8 +148,8 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
     }
   }
 
-  internal func deleteDownloadedModel(arguments: [String: Any],
-                                      result: FLTFirebaseMethodCallResult) {
+  func deleteDownloadedModel(arguments: [String: Any],
+                             result: FLTFirebaseMethodCallResult) {
     let modelDownloader = modelDownloaderFromArguments(arguments: arguments)
     let modelName = arguments["modelName"]
 
@@ -163,7 +163,7 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
     }
   }
 
-  internal func modelDownloaderFromArguments(arguments: [String: Any]) -> ModelDownloader? {
+  func modelDownloaderFromArguments(arguments: [String: Any]) -> ModelDownloader? {
     let app: FirebaseApp = FLTFirebasePlugin.firebaseAppNamed(arguments["appName"] as! String)!
     return ModelDownloader.modelDownloader(app: app)
   }
