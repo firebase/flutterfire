@@ -201,7 +201,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             AuthGate.appleAuthorizationCode = null;
                           } else {
                             print(
-                                'Apple `authorizationCode` is null, cannot revoke token.');
+                              'Apple `authorizationCode` is null, cannot revoke token.',
+                            );
                           }
                         },
                         child: const Text('Revoke Apple auth token'),
