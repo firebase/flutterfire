@@ -98,7 +98,8 @@ jobs:
           flutter test integration_test/e2e_test.dart --dart-define=CI=true
 
   ios:
-    runs-on: macos-13
+    # Dropped down to macos-12 as macos-13 was timing out. This suspected issue:https://github.com/actions/runner-images/issues/8023
+    runs-on: macos-12
     timeout-minutes: 45
     strategy:
       matrix:
