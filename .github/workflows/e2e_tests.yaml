@@ -98,7 +98,7 @@ jobs:
           flutter test integration_test/e2e_test.dart --dart-define=CI=true
 
   ios:
-    runs-on: macos-13
+    runs-on: macos-12
     timeout-minutes: 45
     strategy:
       matrix:
@@ -163,19 +163,13 @@ jobs:
         run: |
           # Boot simulator and wait for System app to be ready.
           # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md#installed-simulators
-          SIMULATOR="iPhone 14 Plus"
-          echo "1111111111111"
-          # xcrun simctl list --json devices available
-          xcrun simctl boot C6D80BC6-C0E0-48DD-B084-118BDC11CD0E
-          echo "2222222222222"
+          SIMULATOR="iPhone 14"
           xcrun simctl bootstatus "$SIMULATOR" -b
-          echo "33333333333333"
           xcrun simctl logverbose "$SIMULATOR" enable
-          echo "44444444444444"
           # Sleep to allow simulator to settle.
           sleep 15
           # Uncomment following line to have simulator logs printed out for debugging purposes.
-          xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
+          # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
           flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true
 
   macos:
