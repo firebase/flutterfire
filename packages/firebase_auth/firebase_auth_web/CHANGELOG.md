@@ -1,3 +1,16 @@
+## 5.6.2
+
+ - **FIX**(auth,web): convert `NativeError` to `FirebaseAuthError` ([#11258](https://github.com/firebase/flutterfire/issues/11258)). ([b95c3807](https://github.com/firebase/flutterfire/commit/b95c38075cd3b48395d56f3fea38e5be32b21a06))
+
+## 5.6.1
+
+ - **FIX**(auth,web): fix an issue preventing Web to properly parse providerData ([#11301](https://github.com/firebase/flutterfire/issues/11301)). ([08299050](https://github.com/firebase/flutterfire/commit/08299050db0fc3a849e35fb4a1a600d643ce5ffe))
+
+## 5.6.0
+
+ - **FIX**(auth,web): add guarding to error casting in useEmulator ([#11247](https://github.com/firebase/flutterfire/issues/11247)). ([aca20481](https://github.com/firebase/flutterfire/commit/aca204814bc2463818fe5114bce8ff23876ec7e1))
+ - **FEAT**(auth): move to Pigeon for Platform channels ([#10802](https://github.com/firebase/flutterfire/issues/10802)). ([43e5b20b](https://github.com/firebase/flutterfire/commit/43e5b20b14799102a6544a4763476eaba44b9cfb))
+
 ## 5.5.3
 
  - **FIX**(core): Omit unnecessary libraries for web ([#10068](https://github.com/firebase/flutterfire/issues/10068)). ([8659d4ed](https://github.com/firebase/flutterfire/commit/8659d4ed805ac92964c2c92d55192f6ef40d721a))

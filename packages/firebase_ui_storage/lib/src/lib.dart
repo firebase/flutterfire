@@ -21,13 +21,13 @@ class FirebaseUIStorage {
   static final ConfigsMap _configs = {};
 
   /// Checks if FirebaseUIStorage is configured for a specific
-  /// [FirebaseStorage] intance.
+  /// [FirebaseStorage] instance.
   static bool isConfigured(FirebaseStorage storage) {
     return _configs.containsKey(storage);
   }
 
   /// Returns a [FirebaseUIStorageConfiguration] for a specific
-  /// [FirebaseStorage] intance.
+  /// [FirebaseStorage] instance.
   static FirebaseUIStorageConfiguration configurationFor(
     FirebaseStorage storage,
   ) {

@@ -1,3 +1,7 @@
+## 5.15.3
+
+ - **FIX**(firestore): allow up to 30 Filter queries within `Filter.or()` & `Filter.and()` ([#11140](https://github.com/firebase/flutterfire/issues/11140)). ([e1f0064d](https://github.com/firebase/flutterfire/commit/e1f0064db7f24b360da131b991e39020f47ffd1c))
+
 ## 5.15.2
 
  - **FIX**(firestore,apple): issue where setting persistence caused a crash. `kFIRFirestoreCacheSizeUnlimited` no longer usable. ([#11174](https://github.com/firebase/flutterfire/issues/11174)). ([536cbf07](https://github.com/firebase/flutterfire/commit/536cbf07f6b07c0539e0f31552ae15dfa56c6352))

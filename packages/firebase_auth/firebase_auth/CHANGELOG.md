@@ -1,3 +1,18 @@
+## 4.7.2
+
+ - **FIX**(auth): fix MFA issue where the error wouldn't be properly catched ([#11370](https://github.com/firebase/flutterfire/issues/11370)). ([72fef03f](https://github.com/firebase/flutterfire/commit/72fef03f775702aaf9a2ce0c6b31aea2a3c200a9))
+ - **FIX**(auth,android): `getIdToken()` `IllegalStateException` crash fix ([#11362](https://github.com/firebase/flutterfire/issues/11362)). ([e925b4c9](https://github.com/firebase/flutterfire/commit/e925b4c9a937d90de0bdfb59ffa005938b3862dd))
+ - **FIX**(auth,apple): pass in Firebase auth instance for correct app when using Provider sign in ([#11284](https://github.com/firebase/flutterfire/issues/11284)). ([1cffae79](https://github.com/firebase/flutterfire/commit/1cffae79ded28808ba55f2f4c9c1b47817987999))
+
+## 4.7.1
+
+ - **FIX**(auth,android): Fix crash on Android where detaching from engine ([#11296](https://github.com/firebase/flutterfire/issues/11296)). ([d0a37332](https://github.com/firebase/flutterfire/commit/d0a373323a818d5005a58e95042b7ea3652ead50))
+ - **FIX**(auth,ios): fix scoping of import for message.g.h, could cause incompatibility with other packages ([#11300](https://github.com/firebase/flutterfire/issues/11300)). ([91ccc57d](https://github.com/firebase/flutterfire/commit/91ccc57d4b40b1b7a77dc0d871f9ff7d3f24ba13))
+
+## 4.7.0
+
+ - **FEAT**(auth): move to Pigeon for Platform channels ([#10802](https://github.com/firebase/flutterfire/issues/10802)). ([43e5b20b](https://github.com/firebase/flutterfire/commit/43e5b20b14799102a6544a4763476eaba44b9cfb))
+
 ## 4.6.3
 
  - Update a dependency to the latest release.

@@ -2391,6 +2391,42 @@ void runQueryTests() {
         expect(results.docs[1].id, equals('doc3'));
       });
 
+      testWidgets('"whereIn" query combined with "arrayContainsAny"',
+          (widgetTester) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-arraycontainsany-in-combined');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'value': [1, 2, 3],
+            'prop': 'foo',
+          }),
+          collection.doc('doc2').set({
+            'value': [2, 4, 5],
+            'prop': 'bar',
+          }),
+          collection.doc('doc3').set({
+            'value': [6, 7, 8],
+            'prop': 'basalt',
+          }),
+        ]);
+
+        final results = await collection
+            .where(
+              'value',
+              arrayContainsAny: [1, 7],
+            )
+            .where(
+              'prop',
+              whereIn: ['foo', 'basalt'],
+            )
+            .orderBy('prop')
+            .get();
+
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].id, equals('doc3'));
+        expect(results.docs[1].id, equals('doc1'));
+      });
+
       testWidgets('isEqualTo filter', (_) async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-isequalto');
