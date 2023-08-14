@@ -1,1 +1,1 @@
-/Users/russellwheatley/projects/flutterfire/packages/cloud_firestore/cloud_firestore/ios/Classes/Private/FLTFirebaseFirestoreExtension.h
+../../../ios/Classes/Private/FLTFirebaseFirestoreExtension.h
