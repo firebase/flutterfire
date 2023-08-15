@@ -822,7 +822,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   }
 
   /// Apple only. Users signed in with Apple provider can revoke their token using an authorization code.
-  /// Authorization code can retrieved on the user credential i.e. userCredential.additionalUserInfo.authorizationCode
+  /// Authorization code can be retrieved on the user credential i.e. userCredential.additionalUserInfo.authorizationCode
   Future<void> revokeTokenWithAuthorizationCode(String authorizationCode) {
     return _delegate.revokeTokenWithAuthorizationCode(authorizationCode);
   }
