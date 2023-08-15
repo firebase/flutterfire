@@ -86,7 +86,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// if no other implementation was provided.
   static FirebaseMessagingPlatform get instance {
     if (_instance == null) {
-      // This is only called for method channels
+      // This is only called for method channels since Web is setting the instance before we use `get`
       setMethodCallHandlers();
     }
     return _instance ??= MethodChannelFirebaseMessaging.instance;
