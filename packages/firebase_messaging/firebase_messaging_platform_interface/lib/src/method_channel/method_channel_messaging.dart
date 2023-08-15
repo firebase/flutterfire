@@ -86,6 +86,38 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   /// then initialized via the [delegateFor] method.
   MethodChannelFirebaseMessaging._() : super(appInstance: null);
 
+  static void setMethodCallHandlers() {
+    MethodChannelFirebaseMessaging.channel
+        .setMethodCallHandler((MethodCall call) async {
+      switch (call.method) {
+        case 'Messaging#onTokenRefresh':
+          MethodChannelFirebaseMessaging.tokenStreamController
+              .add(call.arguments as String);
+          break;
+        case 'Messaging#onMessage':
+          Map<String, dynamic> messageMap =
+              Map<String, dynamic>.from(call.arguments);
+          FirebaseMessagingPlatform.onMessage
+              .add(RemoteMessage.fromMap(messageMap));
+          break;
+        case 'Messaging#onMessageOpenedApp':
+          Map<String, dynamic> messageMap =
+              Map<String, dynamic>.from(call.arguments);
+          FirebaseMessagingPlatform.onMessageOpenedApp
+              .add(RemoteMessage.fromMap(messageMap));
+          break;
+        case 'Messaging#onBackgroundMessage':
+          // Apple only. Android calls via separate background channel.
+          Map<String, dynamic> messageMap =
+              Map<String, dynamic>.from(call.arguments);
+          return FirebaseMessagingPlatform.onBackgroundMessage
+              ?.call(RemoteMessage.fromMap(messageMap));
+        default:
+          throw UnimplementedError('${call.method} has not been implemented');
+      }
+    });
+  }
+
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/firebase_messaging',
   );

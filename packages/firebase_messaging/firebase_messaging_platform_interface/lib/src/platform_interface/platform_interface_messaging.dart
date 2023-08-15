@@ -8,7 +8,6 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -48,38 +47,6 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
 
   static FirebaseMessagingPlatform? _instance;
 
-  static void setMethodCallHandlers() {
-    MethodChannelFirebaseMessaging.channel
-        .setMethodCallHandler((MethodCall call) async {
-      switch (call.method) {
-        case 'Messaging#onTokenRefresh':
-          MethodChannelFirebaseMessaging.tokenStreamController
-              .add(call.arguments as String);
-          break;
-        case 'Messaging#onMessage':
-          Map<String, dynamic> messageMap =
-              Map<String, dynamic>.from(call.arguments);
-          FirebaseMessagingPlatform.onMessage
-              .add(RemoteMessage.fromMap(messageMap));
-          break;
-        case 'Messaging#onMessageOpenedApp':
-          Map<String, dynamic> messageMap =
-              Map<String, dynamic>.from(call.arguments);
-          FirebaseMessagingPlatform.onMessageOpenedApp
-              .add(RemoteMessage.fromMap(messageMap));
-          break;
-        case 'Messaging#onBackgroundMessage':
-          // Apple only. Android calls via separate background channel.
-          Map<String, dynamic> messageMap =
-              Map<String, dynamic>.from(call.arguments);
-          return FirebaseMessagingPlatform.onBackgroundMessage
-              ?.call(RemoteMessage.fromMap(messageMap));
-        default:
-          throw UnimplementedError('${call.method} has not been implemented');
-      }
-    });
-  }
-
   /// The current default [FirebaseMessagingPlatform] instance.
   ///
   /// It will always default to [MethodChannelFirebaseMessaging]
@@ -87,7 +54,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   static FirebaseMessagingPlatform get instance {
     if (_instance == null) {
       // This is only called for method channels since Web is setting the instance before we use `get`
-      setMethodCallHandlers();
+      MethodChannelFirebaseMessaging.setMethodCallHandlers();
     }
     return _instance ??= MethodChannelFirebaseMessaging.instance;
   }
