@@ -129,6 +129,8 @@ abstract class EnumsDocumentReference
   ///
   /// If no document exists yet, the update will fail.
   Future<void> update({
+    String id,
+    FieldValue idFieldValue,
     TestEnum enumValue,
     FieldValue enumValueFieldValue,
     TestEnum? nullableEnumValue,
@@ -144,6 +146,8 @@ abstract class EnumsDocumentReference
   /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
+    String id,
+    FieldValue idFieldValue,
     TestEnum enumValue,
     FieldValue enumValueFieldValue,
     TestEnum? nullableEnumValue,
@@ -184,6 +188,8 @@ class _$EnumsDocumentReference
   }
 
   Future<void> update({
+    Object? id = _sentinel,
+    FieldValue? idFieldValue,
     Object? enumValue = _sentinel,
     FieldValue? enumValueFieldValue,
     Object? nullableEnumValue = _sentinel,
@@ -193,6 +199,10 @@ class _$EnumsDocumentReference
     Object? nullableEnumList = _sentinel,
     FieldValue? nullableEnumListFieldValue,
   }) async {
+    assert(
+      id == _sentinel || idFieldValue == null,
+      "Cannot specify both id and idFieldValue",
+    );
     assert(
       enumValue == _sentinel || enumValueFieldValue == null,
       "Cannot specify both enumValue and enumValueFieldValue",
@@ -210,6 +220,9 @@ class _$EnumsDocumentReference
       "Cannot specify both nullableEnumList and nullableEnumListFieldValue",
     );
     final json = {
+      if (id != _sentinel)
+        _$EnumsFieldMap['id']!: _$EnumsPerFieldToJson.id(id as String),
+      if (idFieldValue != null) _$EnumsFieldMap['id']!: idFieldValue,
       if (enumValue != _sentinel)
         _$EnumsFieldMap['enumValue']!:
             _$EnumsPerFieldToJson.enumValue(enumValue as TestEnum),
@@ -237,6 +250,8 @@ class _$EnumsDocumentReference
 
   void transactionUpdate(
     Transaction transaction, {
+    Object? id = _sentinel,
+    FieldValue? idFieldValue,
     Object? enumValue = _sentinel,
     FieldValue? enumValueFieldValue,
     Object? nullableEnumValue = _sentinel,
@@ -246,6 +261,10 @@ class _$EnumsDocumentReference
     Object? nullableEnumList = _sentinel,
     FieldValue? nullableEnumListFieldValue,
   }) {
+    assert(
+      id == _sentinel || idFieldValue == null,
+      "Cannot specify both id and idFieldValue",
+    );
     assert(
       enumValue == _sentinel || enumValueFieldValue == null,
       "Cannot specify both enumValue and enumValueFieldValue",
@@ -263,6 +282,9 @@ class _$EnumsDocumentReference
       "Cannot specify both nullableEnumList and nullableEnumListFieldValue",
     );
     final json = {
+      if (id != _sentinel)
+        _$EnumsFieldMap['id']!: _$EnumsPerFieldToJson.id(id as String),
+      if (idFieldValue != null) _$EnumsFieldMap['id']!: idFieldValue,
       if (enumValue != _sentinel)
         _$EnumsFieldMap['enumValue']!:
             _$EnumsPerFieldToJson.enumValue(enumValue as TestEnum),
@@ -383,6 +405,17 @@ abstract class EnumsQuery implements QueryReference<Enums, EnumsQuerySnapshot> {
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
+  EnumsQuery whereId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   EnumsQuery whereEnumValue({
     TestEnum? isEqualTo,
     TestEnum? isNotEqualTo,
@@ -429,6 +462,18 @@ abstract class EnumsQuery implements QueryReference<Enums, EnumsQuerySnapshot> {
   });
 
   EnumsQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    EnumsDocumentSnapshot? startAtDocument,
+    EnumsDocumentSnapshot? endAtDocument,
+    EnumsDocumentSnapshot? endBeforeDocument,
+    EnumsDocumentSnapshot? startAfterDocument,
+  });
+
+  EnumsQuery orderById({
     bool descending = false,
     String startAt,
     String startAfter,
@@ -665,6 +710,45 @@ class _$EnumsQuery extends QueryReference<Enums, EnumsQuerySnapshot>
     );
   }
 
+  EnumsQuery whereId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$EnumsQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$EnumsFieldMap['id']!,
+        isEqualTo:
+            isEqualTo != null ? _$EnumsPerFieldToJson.id(isEqualTo) : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$EnumsPerFieldToJson.id(isNotEqualTo)
+            : null,
+        isLessThan:
+            isLessThan != null ? _$EnumsPerFieldToJson.id(isLessThan) : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$EnumsPerFieldToJson.id(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$EnumsPerFieldToJson.id(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$EnumsPerFieldToJson.id(isGreaterThanOrEqualTo)
+            : null,
+        isNull: isNull,
+        whereIn: whereIn?.map((e) => _$EnumsPerFieldToJson.id(e)),
+        whereNotIn: whereNotIn?.map((e) => _$EnumsPerFieldToJson.id(e)),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
   EnumsQuery whereEnumValue({
     TestEnum? isEqualTo,
     TestEnum? isNotEqualTo,
@@ -855,6 +939,78 @@ class _$EnumsQuery extends QueryReference<Enums, EnumsQuerySnapshot>
     EnumsDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$EnumsQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  EnumsQuery orderById({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    EnumsDocumentSnapshot? startAtDocument,
+    EnumsDocumentSnapshot? endAtDocument,
+    EnumsDocumentSnapshot? endBeforeDocument,
+    EnumsDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(_$EnumsFieldMap['id']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -1301,6 +1457,7 @@ class EnumsQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Enums>
 // **************************************************************************
 
 Enums _$EnumsFromJson(Map<String, dynamic> json) => Enums(
+      id: json['id'] as String,
       enumValue: $enumDecode(_$TestEnumEnumMap, json['enumValue']),
       nullableEnumValue:
           $enumDecodeNullable(_$TestEnumEnumMap, json['nullableEnumValue']),
@@ -1313,6 +1470,7 @@ Enums _$EnumsFromJson(Map<String, dynamic> json) => Enums(
     );
 
 const _$EnumsFieldMap = <String, String>{
+  'id': 'id',
   'enumValue': 'enumValue',
   'nullableEnumValue': 'nullableEnumValue',
   'enumList': 'enumList',
@@ -1321,6 +1479,8 @@ const _$EnumsFieldMap = <String, String>{
 
 // ignore: unused_element
 abstract class _$EnumsPerFieldToJson {
+  // ignore: unused_element
+  static Object? id(String instance) => instance;
   // ignore: unused_element
   static Object? enumValue(TestEnum instance) => _$TestEnumEnumMap[instance]!;
   // ignore: unused_element
@@ -1335,6 +1495,7 @@ abstract class _$EnumsPerFieldToJson {
 }
 
 Map<String, dynamic> _$EnumsToJson(Enums instance) => <String, dynamic>{
+      'id': instance.id,
       'enumValue': _$TestEnumEnumMap[instance.enumValue]!,
       'nullableEnumValue': _$TestEnumEnumMap[instance.nullableEnumValue],
       'enumList': instance.enumList.map((e) => _$TestEnumEnumMap[e]!).toList(),

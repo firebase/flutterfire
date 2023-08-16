@@ -52,6 +52,7 @@ class Nested {
     required this.numList,
     required this.objectList,
     required this.dynamicList,
+    required this.boolSet,
     required this.enumValue,
     required this.nullableEnumValue,
     required this.enumList,
@@ -70,6 +71,7 @@ class Nested {
   final List<num>? numList;
   final List<Object?>? objectList;
   final List<dynamic>? dynamicList;
+  final Set<bool>? boolSet;
   final TestEnum enumValue;
   final TestEnum? nullableEnumValue;
   final List<TestEnum> enumList;

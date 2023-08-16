@@ -1678,6 +1678,8 @@ abstract class NestedDocumentReference
     FieldValue objectListFieldValue,
     List<dynamic>? dynamicList,
     FieldValue dynamicListFieldValue,
+    Set<bool>? boolSet,
+    FieldValue boolSetFieldValue,
     TestEnum enumValue,
     FieldValue enumValueFieldValue,
     TestEnum? nullableEnumValue,
@@ -1705,6 +1707,8 @@ abstract class NestedDocumentReference
     FieldValue objectListFieldValue,
     List<dynamic>? dynamicList,
     FieldValue dynamicListFieldValue,
+    Set<bool>? boolSet,
+    FieldValue boolSetFieldValue,
     TestEnum enumValue,
     FieldValue enumValueFieldValue,
     TestEnum? nullableEnumValue,
@@ -1757,6 +1761,8 @@ class _$NestedDocumentReference
     FieldValue? objectListFieldValue,
     Object? dynamicList = _sentinel,
     FieldValue? dynamicListFieldValue,
+    Object? boolSet = _sentinel,
+    FieldValue? boolSetFieldValue,
     Object? enumValue = _sentinel,
     FieldValue? enumValueFieldValue,
     Object? nullableEnumValue = _sentinel,
@@ -1789,6 +1795,10 @@ class _$NestedDocumentReference
     assert(
       dynamicList == _sentinel || dynamicListFieldValue == null,
       "Cannot specify both dynamicList and dynamicListFieldValue",
+    );
+    assert(
+      boolSet == _sentinel || boolSetFieldValue == null,
+      "Cannot specify both boolSet and boolSetFieldValue",
     );
     assert(
       enumValue == _sentinel || enumValueFieldValue == null,
@@ -1837,6 +1847,11 @@ class _$NestedDocumentReference
             _$NestedPerFieldToJson.dynamicList(dynamicList as List<dynamic>?),
       if (dynamicListFieldValue != null)
         _$NestedFieldMap['dynamicList']!: dynamicListFieldValue,
+      if (boolSet != _sentinel)
+        _$NestedFieldMap['boolSet']!:
+            _$NestedPerFieldToJson.boolSet(boolSet as Set<bool>?),
+      if (boolSetFieldValue != null)
+        _$NestedFieldMap['boolSet']!: boolSetFieldValue,
       if (enumValue != _sentinel)
         _$NestedFieldMap['enumValue']!:
             _$NestedPerFieldToJson.enumValue(enumValue as TestEnum),
@@ -1876,6 +1891,8 @@ class _$NestedDocumentReference
     FieldValue? objectListFieldValue,
     Object? dynamicList = _sentinel,
     FieldValue? dynamicListFieldValue,
+    Object? boolSet = _sentinel,
+    FieldValue? boolSetFieldValue,
     Object? enumValue = _sentinel,
     FieldValue? enumValueFieldValue,
     Object? nullableEnumValue = _sentinel,
@@ -1908,6 +1925,10 @@ class _$NestedDocumentReference
     assert(
       dynamicList == _sentinel || dynamicListFieldValue == null,
       "Cannot specify both dynamicList and dynamicListFieldValue",
+    );
+    assert(
+      boolSet == _sentinel || boolSetFieldValue == null,
+      "Cannot specify both boolSet and boolSetFieldValue",
     );
     assert(
       enumValue == _sentinel || enumValueFieldValue == null,
@@ -1956,6 +1977,11 @@ class _$NestedDocumentReference
             _$NestedPerFieldToJson.dynamicList(dynamicList as List<dynamic>?),
       if (dynamicListFieldValue != null)
         _$NestedFieldMap['dynamicList']!: dynamicListFieldValue,
+      if (boolSet != _sentinel)
+        _$NestedFieldMap['boolSet']!:
+            _$NestedPerFieldToJson.boolSet(boolSet as Set<bool>?),
+      if (boolSetFieldValue != null)
+        _$NestedFieldMap['boolSet']!: boolSetFieldValue,
       if (enumValue != _sentinel)
         _$NestedFieldMap['enumValue']!:
             _$NestedPerFieldToJson.enumValue(enumValue as TestEnum),
@@ -2143,6 +2169,17 @@ abstract class NestedQuery
     dynamic arrayContains,
     List<dynamic>? arrayContainsAny,
   });
+  NestedQuery whereBoolSet({
+    Set<bool>? isEqualTo,
+    Set<bool>? isNotEqualTo,
+    Set<bool>? isLessThan,
+    Set<bool>? isLessThanOrEqualTo,
+    Set<bool>? isGreaterThan,
+    Set<bool>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    bool? arrayContains,
+    Set<bool>? arrayContainsAny,
+  });
   NestedQuery whereEnumValue({
     TestEnum? isEqualTo,
     TestEnum? isNotEqualTo,
@@ -2266,6 +2303,18 @@ abstract class NestedQuery
     List<dynamic>? startAfter,
     List<dynamic>? endAt,
     List<dynamic>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByBoolSet({
+    bool descending = false,
+    Set<bool>? startAt,
+    Set<bool>? startAfter,
+    Set<bool>? endAt,
+    Set<bool>? endBefore,
     NestedDocumentSnapshot? startAtDocument,
     NestedDocumentSnapshot? endAtDocument,
     NestedDocumentSnapshot? endBeforeDocument,
@@ -2763,6 +2812,52 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.dynamicList(arrayContainsAny)
+                as Iterable<Object>?
+            : null,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  NestedQuery whereBoolSet({
+    Set<bool>? isEqualTo,
+    Set<bool>? isNotEqualTo,
+    Set<bool>? isLessThan,
+    Set<bool>? isLessThanOrEqualTo,
+    Set<bool>? isGreaterThan,
+    Set<bool>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    bool? arrayContains,
+    Set<bool>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$NestedFieldMap['boolSet']!,
+        isEqualTo: isEqualTo != null
+            ? _$NestedPerFieldToJson.boolSet(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$NestedPerFieldToJson.boolSet(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$NestedPerFieldToJson.boolSet(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.boolSet(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$NestedPerFieldToJson.boolSet(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.boolSet(isGreaterThanOrEqualTo)
+            : null,
+        isNull: isNull,
+        arrayContains: arrayContains != null
+            ? (_$NestedPerFieldToJson.boolSet([arrayContains]) as List?)!.first
+            : null,
+        arrayContainsAny: arrayContainsAny != null
+            ? _$NestedPerFieldToJson.boolSet(arrayContainsAny)
                 as Iterable<Object>?
             : null,
       ),
@@ -3393,6 +3488,78 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   }) {
     final query = $referenceWithoutCursor
         .orderBy(_$NestedFieldMap['dynamicList']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  NestedQuery orderByBoolSet({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['boolSet']!,
+        descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
@@ -12482,6 +12649,8 @@ Nested _$NestedFromJson(Map<String, dynamic> json) => Nested(
           (json['numList'] as List<dynamic>?)?.map((e) => e as num).toList(),
       objectList: json['objectList'] as List<dynamic>?,
       dynamicList: json['dynamicList'] as List<dynamic>?,
+      boolSet:
+          (json['boolSet'] as List<dynamic>?)?.map((e) => e as bool).toSet(),
       enumValue: $enumDecode(_$TestEnumEnumMap, json['enumValue']),
       nullableEnumValue:
           $enumDecodeNullable(_$TestEnumEnumMap, json['nullableEnumValue']),
@@ -12502,6 +12671,7 @@ const _$NestedFieldMap = <String, String>{
   'numList': 'numList',
   'objectList': 'objectList',
   'dynamicList': 'dynamicList',
+  'boolSet': 'boolSet',
   'enumValue': 'enumValue',
   'nullableEnumValue': 'nullableEnumValue',
   'enumList': 'enumList',
@@ -12527,6 +12697,8 @@ abstract class _$NestedPerFieldToJson {
   // ignore: unused_element
   static Object? dynamicList(List<dynamic>? instance) => instance;
   // ignore: unused_element
+  static Object? boolSet(Set<bool>? instance) => instance?.toList();
+  // ignore: unused_element
   static Object? enumValue(TestEnum instance) => _$TestEnumEnumMap[instance]!;
   // ignore: unused_element
   static Object? nullableEnumValue(TestEnum? instance) =>
@@ -12548,6 +12720,7 @@ Map<String, dynamic> _$NestedToJson(Nested instance) => <String, dynamic>{
       'numList': instance.numList,
       'objectList': instance.objectList,
       'dynamicList': instance.dynamicList,
+      'boolSet': instance.boolSet?.toList(),
       'enumValue': _$TestEnumEnumMap[instance.enumValue]!,
       'nullableEnumValue': _$TestEnumEnumMap[instance.nullableEnumValue],
       'enumList': instance.enumList.map((e) => _$TestEnumEnumMap[e]!).toList(),

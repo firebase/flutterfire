@@ -388,7 +388,7 @@ class ${data.queryReferenceImplName}
         'isGreaterThan': nullableType,
         'isGreaterThanOrEqualTo': nullableType,
         'isNull': 'bool?',
-        if (field.type.isDartCoreList) ...{
+        if (field.type.isSupportedIterable) ...{
           'arrayContains': data.libraryElement.typeProvider
               .asNullable((field.type as InterfaceType).typeArguments.first),
           'arrayContainsAny': nullableType,

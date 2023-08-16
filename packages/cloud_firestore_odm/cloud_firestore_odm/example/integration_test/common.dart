@@ -25,6 +25,7 @@ Future<T>
 
 Movie createMovie({
   List<String> genre = const [],
+  Set<String> tags = const {},
   int likes = 0,
   String poster = '',
   String rated = '',
@@ -35,6 +36,7 @@ Movie createMovie({
 }) {
   return Movie(
     genre: genre,
+    tags: tags,
     likes: likes,
     poster: poster,
     rated: rated,

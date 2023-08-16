@@ -44,9 +44,12 @@ abstract class FunctionsJsImpl {
 @JS('HttpsCallableOptions')
 @anonymous
 abstract class HttpsCallableOptions {
-  external factory HttpsCallableOptions({int? timeout});
+  external factory HttpsCallableOptions(
+      {int? timeout, bool? limitedUseAppCheckTokens});
   external int get timeout;
   external set timeout(int t);
+  external bool get limitedUseAppCheckTokens;
+  external set limitedUseAppCheckTokens(bool t);
 }
 
 /// An HttpsCallableResult wraps a single result from a function call.
