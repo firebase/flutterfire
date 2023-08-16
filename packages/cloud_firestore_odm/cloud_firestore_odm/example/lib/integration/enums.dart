@@ -14,7 +14,7 @@ enum TestEnum {
   three;
 }
 
-@JsonSerializable(createPerFieldToJson: true)
+@JsonSerializable()
 class Enums {
   Enums({
     required this.id,

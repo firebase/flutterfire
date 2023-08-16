@@ -184,7 +184,9 @@ class _$IgnoredGetterDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$IgnoredGetterFieldMap['value']!: value as int,
+      if (value != _sentinel)
+        _$IgnoredGetterFieldMap['value']!:
+            _$IgnoredGetterPerFieldToJson.value(value as int),
       if (valueFieldValue != null)
         _$IgnoredGetterFieldMap['value']!: valueFieldValue,
     };
@@ -202,7 +204,9 @@ class _$IgnoredGetterDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$IgnoredGetterFieldMap['value']!: value as int,
+      if (value != _sentinel)
+        _$IgnoredGetterFieldMap['value']!:
+            _$IgnoredGetterPerFieldToJson.value(value as int),
       if (valueFieldValue != null)
         _$IgnoredGetterFieldMap['value']!: valueFieldValue,
     };
@@ -539,15 +543,28 @@ class _$IgnoredGetterQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$IgnoredGetterFieldMap['value']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$IgnoredGetterPerFieldToJson.value(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$IgnoredGetterPerFieldToJson.value(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$IgnoredGetterPerFieldToJson.value(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$IgnoredGetterPerFieldToJson.value(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$IgnoredGetterPerFieldToJson.value(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$IgnoredGetterPerFieldToJson.value(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$IgnoredGetterPerFieldToJson.value(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$IgnoredGetterPerFieldToJson.value(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -956,7 +973,8 @@ class _$ModelDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$ModelFieldMap['value']!: value as String,
+      if (value != _sentinel)
+        _$ModelFieldMap['value']!: _$ModelPerFieldToJson.value(value as String),
       if (valueFieldValue != null) _$ModelFieldMap['value']!: valueFieldValue,
     };
 
@@ -973,7 +991,8 @@ class _$ModelDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$ModelFieldMap['value']!: value as String,
+      if (value != _sentinel)
+        _$ModelFieldMap['value']!: _$ModelPerFieldToJson.value(value as String),
       if (valueFieldValue != null) _$ModelFieldMap['value']!: valueFieldValue,
     };
 
@@ -1303,15 +1322,25 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$ModelFieldMap['value']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo:
+            isEqualTo != null ? _$ModelPerFieldToJson.value(isEqualTo) : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$ModelPerFieldToJson.value(isNotEqualTo)
+            : null,
+        isLessThan:
+            isLessThan != null ? _$ModelPerFieldToJson.value(isLessThan) : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$ModelPerFieldToJson.value(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$ModelPerFieldToJson.value(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$ModelPerFieldToJson.value(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$ModelPerFieldToJson.value(e)),
+        whereNotIn: whereNotIn?.map((e) => _$ModelPerFieldToJson.value(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -5362,7 +5391,9 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$OptionalJsonFieldMap['value']!: value as int,
+      if (value != _sentinel)
+        _$OptionalJsonFieldMap['value']!:
+            _$OptionalJsonPerFieldToJson.value(value as int),
       if (valueFieldValue != null)
         _$OptionalJsonFieldMap['value']!: valueFieldValue,
     };
@@ -5380,7 +5411,9 @@ class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$OptionalJsonFieldMap['value']!: value as int,
+      if (value != _sentinel)
+        _$OptionalJsonFieldMap['value']!:
+            _$OptionalJsonPerFieldToJson.value(value as int),
       if (valueFieldValue != null)
         _$OptionalJsonFieldMap['value']!: valueFieldValue,
     };
@@ -5717,15 +5750,28 @@ class _$OptionalJsonQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$OptionalJsonFieldMap['value']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$OptionalJsonPerFieldToJson.value(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$OptionalJsonPerFieldToJson.value(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$OptionalJsonPerFieldToJson.value(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$OptionalJsonPerFieldToJson.value(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$OptionalJsonPerFieldToJson.value(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$OptionalJsonPerFieldToJson.value(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$OptionalJsonPerFieldToJson.value(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$OptionalJsonPerFieldToJson.value(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -6134,7 +6180,9 @@ class _$MixedJsonDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$MixedJsonFieldMap['value']!: value as int,
+      if (value != _sentinel)
+        _$MixedJsonFieldMap['value']!:
+            _$MixedJsonPerFieldToJson.value(value as int),
       if (valueFieldValue != null)
         _$MixedJsonFieldMap['value']!: valueFieldValue,
     };
@@ -6152,7 +6200,9 @@ class _$MixedJsonDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$MixedJsonFieldMap['value']!: value as int,
+      if (value != _sentinel)
+        _$MixedJsonFieldMap['value']!:
+            _$MixedJsonPerFieldToJson.value(value as int),
       if (valueFieldValue != null)
         _$MixedJsonFieldMap['value']!: valueFieldValue,
     };
@@ -6486,15 +6536,27 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$MixedJsonFieldMap['value']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$MixedJsonPerFieldToJson.value(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$MixedJsonPerFieldToJson.value(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$MixedJsonPerFieldToJson.value(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$MixedJsonPerFieldToJson.value(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$MixedJsonPerFieldToJson.value(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$MixedJsonPerFieldToJson.value(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$MixedJsonPerFieldToJson.value(e)),
+        whereNotIn: whereNotIn?.map((e) => _$MixedJsonPerFieldToJson.value(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -6950,10 +7012,13 @@ class _$RootDocumentReference
     );
     final json = {
       if (nonNullable != _sentinel)
-        _$RootFieldMap['nonNullable']!: nonNullable as String,
+        _$RootFieldMap['nonNullable']!:
+            _$RootPerFieldToJson.nonNullable(nonNullable as String),
       if (nonNullableFieldValue != null)
         _$RootFieldMap['nonNullable']!: nonNullableFieldValue,
-      if (nullable != _sentinel) _$RootFieldMap['nullable']!: nullable as int?,
+      if (nullable != _sentinel)
+        _$RootFieldMap['nullable']!:
+            _$RootPerFieldToJson.nullable(nullable as int?),
       if (nullableFieldValue != null)
         _$RootFieldMap['nullable']!: nullableFieldValue,
     };
@@ -6978,10 +7043,13 @@ class _$RootDocumentReference
     );
     final json = {
       if (nonNullable != _sentinel)
-        _$RootFieldMap['nonNullable']!: nonNullable as String,
+        _$RootFieldMap['nonNullable']!:
+            _$RootPerFieldToJson.nonNullable(nonNullable as String),
       if (nonNullableFieldValue != null)
         _$RootFieldMap['nonNullable']!: nonNullableFieldValue,
-      if (nullable != _sentinel) _$RootFieldMap['nullable']!: nullable as int?,
+      if (nullable != _sentinel)
+        _$RootFieldMap['nullable']!:
+            _$RootPerFieldToJson.nullable(nullable as int?),
       if (nullableFieldValue != null)
         _$RootFieldMap['nullable']!: nullableFieldValue,
     };
@@ -7335,15 +7403,27 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$RootFieldMap['nonNullable']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$RootPerFieldToJson.nonNullable(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$RootPerFieldToJson.nonNullable(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$RootPerFieldToJson.nonNullable(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$RootPerFieldToJson.nonNullable(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$RootPerFieldToJson.nonNullable(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$RootPerFieldToJson.nonNullable(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$RootPerFieldToJson.nonNullable(e)),
+        whereNotIn: whereNotIn?.map((e) => _$RootPerFieldToJson.nonNullable(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -7364,15 +7444,26 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$RootFieldMap['nullable']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo:
+            isEqualTo != null ? _$RootPerFieldToJson.nullable(isEqualTo) : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$RootPerFieldToJson.nullable(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$RootPerFieldToJson.nullable(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$RootPerFieldToJson.nullable(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$RootPerFieldToJson.nullable(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$RootPerFieldToJson.nullable(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$RootPerFieldToJson.nullable(e)),
+        whereNotIn: whereNotIn?.map((e) => _$RootPerFieldToJson.nullable(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -7876,10 +7967,13 @@ class _$SubDocumentReference
     );
     final json = {
       if (nonNullable != _sentinel)
-        _$SubFieldMap['nonNullable']!: nonNullable as String,
+        _$SubFieldMap['nonNullable']!:
+            _$SubPerFieldToJson.nonNullable(nonNullable as String),
       if (nonNullableFieldValue != null)
         _$SubFieldMap['nonNullable']!: nonNullableFieldValue,
-      if (nullable != _sentinel) _$SubFieldMap['nullable']!: nullable as int?,
+      if (nullable != _sentinel)
+        _$SubFieldMap['nullable']!:
+            _$SubPerFieldToJson.nullable(nullable as int?),
       if (nullableFieldValue != null)
         _$SubFieldMap['nullable']!: nullableFieldValue,
     };
@@ -7904,10 +7998,13 @@ class _$SubDocumentReference
     );
     final json = {
       if (nonNullable != _sentinel)
-        _$SubFieldMap['nonNullable']!: nonNullable as String,
+        _$SubFieldMap['nonNullable']!:
+            _$SubPerFieldToJson.nonNullable(nonNullable as String),
       if (nonNullableFieldValue != null)
         _$SubFieldMap['nonNullable']!: nonNullableFieldValue,
-      if (nullable != _sentinel) _$SubFieldMap['nullable']!: nullable as int?,
+      if (nullable != _sentinel)
+        _$SubFieldMap['nullable']!:
+            _$SubPerFieldToJson.nullable(nullable as int?),
       if (nullableFieldValue != null)
         _$SubFieldMap['nullable']!: nullableFieldValue,
     };
@@ -8261,15 +8358,27 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$SubFieldMap['nonNullable']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$SubPerFieldToJson.nonNullable(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$SubPerFieldToJson.nonNullable(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$SubPerFieldToJson.nonNullable(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$SubPerFieldToJson.nonNullable(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$SubPerFieldToJson.nonNullable(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$SubPerFieldToJson.nonNullable(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$SubPerFieldToJson.nonNullable(e)),
+        whereNotIn: whereNotIn?.map((e) => _$SubPerFieldToJson.nonNullable(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -8290,15 +8399,26 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$SubFieldMap['nullable']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo:
+            isEqualTo != null ? _$SubPerFieldToJson.nullable(isEqualTo) : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$SubPerFieldToJson.nullable(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$SubPerFieldToJson.nullable(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$SubPerFieldToJson.nullable(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$SubPerFieldToJson.nullable(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$SubPerFieldToJson.nullable(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$SubPerFieldToJson.nullable(e)),
+        whereNotIn: whereNotIn?.map((e) => _$SubPerFieldToJson.nullable(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -8796,7 +8916,9 @@ class _$AsCamelCaseDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$AsCamelCaseFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$AsCamelCaseFieldMap['value']!:
+            _$AsCamelCasePerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$AsCamelCaseFieldMap['value']!: valueFieldValue,
     };
@@ -8814,7 +8936,9 @@ class _$AsCamelCaseDocumentReference
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$AsCamelCaseFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$AsCamelCaseFieldMap['value']!:
+            _$AsCamelCasePerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$AsCamelCaseFieldMap['value']!: valueFieldValue,
     };
@@ -9151,15 +9275,28 @@ class _$AsCamelCaseQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$AsCamelCaseFieldMap['value']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$AsCamelCasePerFieldToJson.value(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$AsCamelCasePerFieldToJson.value(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$AsCamelCasePerFieldToJson.value(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$AsCamelCasePerFieldToJson.value(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$AsCamelCasePerFieldToJson.value(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$AsCamelCasePerFieldToJson.value(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$AsCamelCasePerFieldToJson.value(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$AsCamelCasePerFieldToJson.value(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -9591,7 +9728,9 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$CustomSubNameFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$CustomSubNameFieldMap['value']!:
+            _$CustomSubNamePerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$CustomSubNameFieldMap['value']!: valueFieldValue,
     };
@@ -9609,7 +9748,9 @@ class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$CustomSubNameFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$CustomSubNameFieldMap['value']!:
+            _$CustomSubNamePerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$CustomSubNameFieldMap['value']!: valueFieldValue,
     };
@@ -9946,15 +10087,28 @@ class _$CustomSubNameQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$CustomSubNameFieldMap['value']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$CustomSubNamePerFieldToJson.value(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$CustomSubNamePerFieldToJson.value(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$CustomSubNamePerFieldToJson.value(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$CustomSubNamePerFieldToJson.value(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$CustomSubNamePerFieldToJson.value(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$CustomSubNamePerFieldToJson.value(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$CustomSubNamePerFieldToJson.value(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$CustomSubNamePerFieldToJson.value(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -10391,7 +10545,8 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (value != _sentinel)
-        _$CustomClassPrefixFieldMap['value']!: value as num,
+        _$CustomClassPrefixFieldMap['value']!:
+            _$CustomClassPrefixPerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$CustomClassPrefixFieldMap['value']!: valueFieldValue,
     };
@@ -10410,7 +10565,8 @@ class _$ThisIsACustomPrefixDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (value != _sentinel)
-        _$CustomClassPrefixFieldMap['value']!: value as num,
+        _$CustomClassPrefixFieldMap['value']!:
+            _$CustomClassPrefixPerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$CustomClassPrefixFieldMap['value']!: valueFieldValue,
     };
@@ -10749,15 +10905,29 @@ class _$ThisIsACustomPrefixQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$CustomClassPrefixFieldMap['value']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$CustomClassPrefixPerFieldToJson.value(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$CustomClassPrefixPerFieldToJson.value(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$CustomClassPrefixPerFieldToJson.value(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$CustomClassPrefixPerFieldToJson.value(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$CustomClassPrefixPerFieldToJson.value(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$CustomClassPrefixPerFieldToJson.value(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn:
+            whereIn?.map((e) => _$CustomClassPrefixPerFieldToJson.value(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$CustomClassPrefixPerFieldToJson.value(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -11182,7 +11352,9 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$ExplicitPathFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$ExplicitPathFieldMap['value']!:
+            _$ExplicitPathPerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$ExplicitPathFieldMap['value']!: valueFieldValue,
     };
@@ -11200,7 +11372,9 @@ class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$ExplicitPathFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$ExplicitPathFieldMap['value']!:
+            _$ExplicitPathPerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$ExplicitPathFieldMap['value']!: valueFieldValue,
     };
@@ -11537,15 +11711,28 @@ class _$ExplicitPathQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$ExplicitPathFieldMap['value']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$ExplicitPathPerFieldToJson.value(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$ExplicitPathPerFieldToJson.value(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$ExplicitPathPerFieldToJson.value(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$ExplicitPathPerFieldToJson.value(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$ExplicitPathPerFieldToJson.value(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$ExplicitPathPerFieldToJson.value(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$ExplicitPathPerFieldToJson.value(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$ExplicitPathPerFieldToJson.value(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -11978,7 +12165,9 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$ExplicitSubPathFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$ExplicitSubPathFieldMap['value']!:
+            _$ExplicitSubPathPerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$ExplicitSubPathFieldMap['value']!: valueFieldValue,
     };
@@ -11996,7 +12185,9 @@ class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both value and valueFieldValue",
     );
     final json = {
-      if (value != _sentinel) _$ExplicitSubPathFieldMap['value']!: value as num,
+      if (value != _sentinel)
+        _$ExplicitSubPathFieldMap['value']!:
+            _$ExplicitSubPathPerFieldToJson.value(value as num),
       if (valueFieldValue != null)
         _$ExplicitSubPathFieldMap['value']!: valueFieldValue,
     };
@@ -12333,15 +12524,28 @@ class _$ExplicitSubPathQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$ExplicitSubPathFieldMap['value']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$ExplicitSubPathPerFieldToJson.value(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$ExplicitSubPathPerFieldToJson.value(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$ExplicitSubPathPerFieldToJson.value(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$ExplicitSubPathPerFieldToJson.value(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$ExplicitSubPathPerFieldToJson.value(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$ExplicitSubPathPerFieldToJson.value(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$ExplicitSubPathPerFieldToJson.value(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$ExplicitSubPathPerFieldToJson.value(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -12614,6 +12818,14 @@ const _$IgnoredGetterFieldMap = <String, String>{
   'count3': 'count3',
 };
 
+// ignore: unused_element
+abstract class _$IgnoredGetterPerFieldToJson {
+  // ignore: unused_element
+  static Object? value(int instance) => instance;
+  // ignore: unused_element
+  static Object? count3(int instance) => instance;
+}
+
 Map<String, dynamic> _$IgnoredGetterToJson(IgnoredGetter instance) =>
     <String, dynamic>{
       'value': instance.value,
@@ -12627,6 +12839,12 @@ Model _$ModelFromJson(Map<String, dynamic> json) => Model(
 const _$ModelFieldMap = <String, String>{
   'value': 'value',
 };
+
+// ignore: unused_element
+abstract class _$ModelPerFieldToJson {
+  // ignore: unused_element
+  static Object? value(String instance) => instance;
+}
 
 Map<String, dynamic> _$ModelToJson(Model instance) => <String, dynamic>{
       'value': instance.value,
@@ -12738,6 +12956,9 @@ EmptyModel _$EmptyModelFromJson(Map<String, dynamic> json) => EmptyModel();
 
 const _$EmptyModelFieldMap = <String, String>{};
 
+// ignore: unused_element
+abstract class _$EmptyModelPerFieldToJson {}
+
 Map<String, dynamic> _$EmptyModelToJson(EmptyModel instance) =>
     <String, dynamic>{};
 
@@ -12753,6 +12974,16 @@ const _$MinValidationFieldMap = <String, String>{
   'doubleNbr': 'doubleNbr',
   'numNbr': 'numNbr',
 };
+
+// ignore: unused_element
+abstract class _$MinValidationPerFieldToJson {
+  // ignore: unused_element
+  static Object? intNbr(int instance) => instance;
+  // ignore: unused_element
+  static Object? doubleNbr(double instance) => instance;
+  // ignore: unused_element
+  static Object? numNbr(num instance) => instance;
+}
 
 Map<String, dynamic> _$MinValidationToJson(MinValidation instance) =>
     <String, dynamic>{
@@ -12771,6 +13002,14 @@ const _$RootFieldMap = <String, String>{
   'nullable': 'nullable',
 };
 
+// ignore: unused_element
+abstract class _$RootPerFieldToJson {
+  // ignore: unused_element
+  static Object? nonNullable(String instance) => instance;
+  // ignore: unused_element
+  static Object? nullable(int? instance) => instance;
+}
+
 Map<String, dynamic> _$RootToJson(Root instance) => <String, dynamic>{
       'nonNullable': instance.nonNullable,
       'nullable': instance.nullable,
@@ -12784,6 +13023,12 @@ const _$OptionalJsonFieldMap = <String, String>{
   'value': 'value',
 };
 
+// ignore: unused_element
+abstract class _$OptionalJsonPerFieldToJson {
+  // ignore: unused_element
+  static Object? value(int instance) => instance;
+}
+
 Map<String, dynamic> _$OptionalJsonToJson(OptionalJson instance) =>
     <String, dynamic>{
       'value': instance.value,
@@ -12796,6 +13041,12 @@ MixedJson _$MixedJsonFromJson(Map<String, dynamic> json) => MixedJson(
 const _$MixedJsonFieldMap = <String, String>{
   'value': 'value',
 };
+
+// ignore: unused_element
+abstract class _$MixedJsonPerFieldToJson {
+  // ignore: unused_element
+  static Object? value(int instance) => instance;
+}
 
 Map<String, dynamic> _$MixedJsonToJson(MixedJson instance) => <String, dynamic>{
       'value': instance.value,
@@ -12811,6 +13062,14 @@ const _$SubFieldMap = <String, String>{
   'nullable': 'nullable',
 };
 
+// ignore: unused_element
+abstract class _$SubPerFieldToJson {
+  // ignore: unused_element
+  static Object? nonNullable(String instance) => instance;
+  // ignore: unused_element
+  static Object? nullable(int? instance) => instance;
+}
+
 Map<String, dynamic> _$SubToJson(Sub instance) => <String, dynamic>{
       'nonNullable': instance.nonNullable,
       'nullable': instance.nullable,
@@ -12825,6 +13084,12 @@ const _$CustomSubNameFieldMap = <String, String>{
   'value': 'value',
 };
 
+// ignore: unused_element
+abstract class _$CustomSubNamePerFieldToJson {
+  // ignore: unused_element
+  static Object? value(num instance) => instance;
+}
+
 Map<String, dynamic> _$CustomSubNameToJson(CustomSubName instance) =>
     <String, dynamic>{
       'value': instance.value,
@@ -12837,6 +13102,12 @@ AsCamelCase _$AsCamelCaseFromJson(Map<String, dynamic> json) => AsCamelCase(
 const _$AsCamelCaseFieldMap = <String, String>{
   'value': 'value',
 };
+
+// ignore: unused_element
+abstract class _$AsCamelCasePerFieldToJson {
+  // ignore: unused_element
+  static Object? value(num instance) => instance;
+}
 
 Map<String, dynamic> _$AsCamelCaseToJson(AsCamelCase instance) =>
     <String, dynamic>{
@@ -12852,6 +13123,12 @@ const _$CustomClassPrefixFieldMap = <String, String>{
   'value': 'value',
 };
 
+// ignore: unused_element
+abstract class _$CustomClassPrefixPerFieldToJson {
+  // ignore: unused_element
+  static Object? value(num instance) => instance;
+}
+
 Map<String, dynamic> _$CustomClassPrefixToJson(CustomClassPrefix instance) =>
     <String, dynamic>{
       'value': instance.value,
@@ -12864,6 +13141,12 @@ ExplicitPath _$ExplicitPathFromJson(Map<String, dynamic> json) => ExplicitPath(
 const _$ExplicitPathFieldMap = <String, String>{
   'value': 'value',
 };
+
+// ignore: unused_element
+abstract class _$ExplicitPathPerFieldToJson {
+  // ignore: unused_element
+  static Object? value(num instance) => instance;
+}
 
 Map<String, dynamic> _$ExplicitPathToJson(ExplicitPath instance) =>
     <String, dynamic>{
@@ -12878,6 +13161,12 @@ ExplicitSubPath _$ExplicitSubPathFromJson(Map<String, dynamic> json) =>
 const _$ExplicitSubPathFieldMap = <String, String>{
   'value': 'value',
 };
+
+// ignore: unused_element
+abstract class _$ExplicitSubPathPerFieldToJson {
+  // ignore: unused_element
+  static Object? value(num instance) => instance;
+}
 
 Map<String, dynamic> _$ExplicitSubPathToJson(ExplicitSubPath instance) =>
     <String, dynamic>{
