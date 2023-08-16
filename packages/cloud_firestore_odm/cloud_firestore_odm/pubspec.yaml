@@ -2,7 +2,7 @@ name: cloud_firestore_odm
 description: An ODM for Firebase Cloud Firestore (cloud_firestore).
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/cloud_firestore_odm
 repository: https://github.com/firebase/flutterfire/tree/master/packages/cloud_firestore_odm/cloud_firestore_odm
-version: 1.0.0-dev.64
+version: 1.0.0-dev.65
 
 false_secrets:
   - example/**
@@ -11,7 +11,7 @@ environment:
   sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
-  cloud_firestore: ^4.8.4
+  cloud_firestore: ^4.8.5
   flutter:
     sdk: flutter
   json_annotation: ^4.8.1
