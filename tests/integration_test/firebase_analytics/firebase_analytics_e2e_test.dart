@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -272,5 +274,31 @@ void main() {
         expect(result2, isA<String>());
       }
     });
+
+    test(
+      'getSessionId',
+      () async {
+        // FIXME: Android returns null for getSessionId in tests,
+        // but works when running in the context of an app.
+        // Need to investigate why this is the case.
+        if (kIsWeb) {
+          await expectLater(
+            FirebaseAnalytics.instance.getSessionId(),
+            throwsA(isA<UnimplementedError>()),
+          );
+        } else {
+          await expectLater(
+            FirebaseAnalytics.instance.setConsent(
+              analyticsStorageConsentGranted: true,
+              adStorageConsentGranted: true,
+            ),
+            completes,
+          );
+
+          final result = await FirebaseAnalytics.instance.getSessionId();
+          expect(result, isA<int>());
+        }
+      },
+    );
   });
 }

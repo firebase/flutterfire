@@ -133,6 +133,19 @@ void main() {
       );
     });
 
+    test('getSessionId', () async {
+      await analytics.getSessionId();
+      expect(
+        methodCallLogger,
+        <Matcher>[
+          isMethodCall(
+            'Analytics#getSessionId',
+            arguments: null,
+          ),
+        ],
+      );
+    });
+
     test('logEvent', () async {
       await analytics.logEvent(
         name: 'test-event',

@@ -13,6 +13,8 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
+import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -136,6 +138,9 @@ public class FlutterFirebaseAnalyticsPlugin
       case "Analytics#getAppInstanceId":
         methodCallTask = handleGetAppInstanceId();
         break;
+      case "Analytics#getSessionId":
+        methodCallTask = handleGetSessionId();
+        break;
       default:
         result.notImplemented();
         return;
@@ -152,6 +157,22 @@ public class FlutterFirebaseAnalyticsPlugin
             result.error("firebase_analytics", message, null);
           }
         });
+  }
+
+  private Task<Long> handleGetSessionId() {
+    TaskCompletionSource<Long> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+      () -> {
+        try {
+          Log.d("ANALYTICS: ", analytics.getSessionId().toString());
+          taskCompletionSource.setResult(Tasks.await(analytics.getSessionId()));
+        } catch (Exception e) {
+          taskCompletionSource.setException(e);
+        }
+      });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> handleLogEvent(final Map<String, Object> arguments) {
