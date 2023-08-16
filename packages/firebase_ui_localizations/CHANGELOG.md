@@ -1,3 +1,7 @@
+## 1.5.1
+
+ - **FIX**(firebase_ui_localizations): fixed register translation for turkish ([#11339](https://github.com/firebase/flutterfire/issues/11339)). ([0b9ae721](https://github.com/firebase/flutterfire/commit/0b9ae721c860026a02d2fae63a735bc6abe6898e))
+
 ## 1.5.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))

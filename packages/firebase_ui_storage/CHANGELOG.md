@@ -1,3 +1,7 @@
+## 0.1.0-dev.9
+
+ - Update a dependency to the latest release.
+
 ## 0.1.0-dev.8
 
  - **FEAT**(ui_storage): add StorageGridView widget ([#11206](https://github.com/firebase/flutterfire/issues/11206)). ([48a3a396](https://github.com/firebase/flutterfire/commit/48a3a3960aa10e2d0850c9e6e2256a54c9f0cc4f))

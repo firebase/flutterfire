@@ -1,3 +1,10 @@
+## 4.7.3
+
+ - **FIX**(auth): rename import header to "firebase_auth_messages.g.h". ([#11472](https://github.com/firebase/flutterfire/issues/11472)). ([693a6f3c](https://github.com/firebase/flutterfire/commit/693a6f3cba3620933b905a964126406ae6ae3374))
+ - **FIX**(firebase_auth): Fix forceRefresh parameter conversion before calling native API ([#11464](https://github.com/firebase/flutterfire/issues/11464)). ([86639876](https://github.com/firebase/flutterfire/commit/86639876b8e9138af740a1c74c122fcdb5c4566d))
+ - **FIX**(auth): set the tenant id on iOS `FIRAuth` instance ([#11427](https://github.com/firebase/flutterfire/issues/11427)). ([15f3cf5d](https://github.com/firebase/flutterfire/commit/15f3cf5d9b86f287fac22370ea09abf9e773ea60))
+ - **FIX**(firebase_auth,android): Remove implicit default locale used in error message ([#11321](https://github.com/firebase/flutterfire/issues/11321)). ([3a20f41c](https://github.com/firebase/flutterfire/commit/3a20f41c0d8a4d61d789874d7bb16d6ef710c9d1))
+
 ## 4.7.2
 
  - **FIX**(auth): fix MFA issue where the error wouldn't be properly catched ([#11370](https://github.com/firebase/flutterfire/issues/11370)). ([72fef03f](https://github.com/firebase/flutterfire/commit/72fef03f775702aaf9a2ce0c6b31aea2a3c200a9))

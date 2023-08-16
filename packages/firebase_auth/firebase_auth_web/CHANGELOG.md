@@ -1,3 +1,7 @@
+## 5.6.3
+
+ - Update a dependency to the latest release.
+
 ## 5.6.2
 
  - **FIX**(auth,web): convert `NativeError` to `FirebaseAuthError` ([#11258](https://github.com/firebase/flutterfire/issues/11258)). ([b95c3807](https://github.com/firebase/flutterfire/commit/b95c38075cd3b48395d56f3fea38e5be32b21a06))

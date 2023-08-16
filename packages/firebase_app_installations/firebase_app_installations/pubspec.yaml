@@ -1,7 +1,7 @@
 # FlutterFire_X naming due to package being take already on Pub.dev.
 name: firebase_app_installations
 description: A Flutter plugin allowing you to use Firebase Installations.
-version: 0.2.3+4
+version: 0.2.3+5
 homepage: https://firebase.google.com/docs/projects/manage-installations#flutter
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_app_installations/firebase_app_installations
 
@@ -13,9 +13,9 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  firebase_app_installations_platform_interface: ^0.1.4+4
-  firebase_app_installations_web: ^0.1.3+4
-  firebase_core: ^2.15.0
+  firebase_app_installations_platform_interface: ^0.1.4+5
+  firebase_app_installations_web: ^0.1.3+5
+  firebase_core: ^2.15.1
   firebase_core_platform_interface: ^4.8.0
   flutter:
     sdk: flutter

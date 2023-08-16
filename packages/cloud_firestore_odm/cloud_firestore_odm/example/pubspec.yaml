@@ -6,9 +6,9 @@ environment:
   sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
-  cloud_firestore: ^4.8.4
-  cloud_firestore_odm: ^1.0.0-dev.64
-  firebase_core: ^2.15.0
+  cloud_firestore: ^4.8.5
+  cloud_firestore_odm: ^1.0.0-dev.65
+  firebase_core: ^2.15.1
   flutter:
     sdk: flutter
   freezed_annotation: ^2.2.0
@@ -17,7 +17,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.4.2
-  cloud_firestore_odm_generator: ^1.0.0-dev.64
+  cloud_firestore_odm_generator: ^1.0.0-dev.65
   cloud_firestore_odm_generator_integration_test:
     path: ../../cloud_firestore_odm_generator/cloud_firestore_odm_generator_integration_test
   flutter_test:

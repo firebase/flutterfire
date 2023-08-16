@@ -1,3 +1,7 @@
+## 4.8.5
+
+ - **FIX**(firestore): allow `FieldPath.documentId` as a field argument in queries ([#11443](https://github.com/firebase/flutterfire/issues/11443)). ([4e01a9d8](https://github.com/firebase/flutterfire/commit/4e01a9d84ededf0e0ba74bdc2eba75492e1aa532))
+
 ## 4.8.4
 
  - **FIX**(firestore): remove assertion for `arrayContainsAny` & `whereIn` query combined ([#11342](https://github.com/firebase/flutterfire/issues/11342)). ([199e1fc4](https://github.com/firebase/flutterfire/commit/199e1fc43654b913ddb8257c4e3a3ceddcbb97d1))

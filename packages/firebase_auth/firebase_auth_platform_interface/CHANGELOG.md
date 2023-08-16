@@ -1,3 +1,7 @@
+## 6.16.2
+
+ - **FIX**(auth): rename import header to "firebase_auth_messages.g.h". ([#11472](https://github.com/firebase/flutterfire/issues/11472)). ([693a6f3c](https://github.com/firebase/flutterfire/commit/693a6f3cba3620933b905a964126406ae6ae3374))
+
 ## 6.16.1
 
  - **FIX**(auth): fix MFA issue where the error wouldn't be properly catched ([#11370](https://github.com/firebase/flutterfire/issues/11370)). ([72fef03f](https://github.com/firebase/flutterfire/commit/72fef03f775702aaf9a2ce0c6b31aea2a3c200a9))

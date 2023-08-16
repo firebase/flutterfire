@@ -1,3 +1,7 @@
+## 2.15.1
+
+ - Update a dependency to the latest release.
+
 ## 2.15.0
 
  - **FEAT**: bump Firebase android SDK to `32.2.0` ([#11282](https://github.com/firebase/flutterfire/issues/11282)). ([7fc1f643](https://github.com/firebase/flutterfire/commit/7fc1f643303ceb8294c9b46390148969e306faeb))
