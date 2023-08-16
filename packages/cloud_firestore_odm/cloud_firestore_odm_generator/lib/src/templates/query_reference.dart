@@ -404,9 +404,7 @@ class ${data.queryReferenceImplName}
       final perFieldToJson = data.perFieldToJson(field);
 
       final parameters = operators.keys.map((e) {
-        if (perFieldToJson == null) {
-          return '$e: $e,';
-        } else if (field.name == 'documentId' || e == 'isNull') {
+        if (field.name == 'documentId' || e == 'isNull') {
           return '$e: $e,';
         } else if ({'whereIn', 'whereNotIn'}.contains(e)) {
           return '$e: $e?.map((e) => $perFieldToJson(e)),';
