@@ -12,6 +12,7 @@ part 'movie.g.dart';
 class Movie {
   Movie({
     this.genre,
+    this.tags,
     required this.likes,
     required this.poster,
     required this.rated,
@@ -34,6 +35,7 @@ class Movie {
   final String runtime;
   final String rated;
   final List<String>? genre;
+  final Set<String>? tags;
 }
 
 @Collection<Movie>('firestore-example-app')

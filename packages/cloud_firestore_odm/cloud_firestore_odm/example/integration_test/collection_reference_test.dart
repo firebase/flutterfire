@@ -381,13 +381,25 @@ void main() {
           final collection = await initializeTest(MovieCollectionReference());
 
           await collection.add(
-            createMovie(title: 'A', genre: ['foo', 'unrelated']),
+            createMovie(
+              title: 'A',
+              genre: ['foo', 'unrelated'],
+              tags: {'funny', 'unrelated'},
+            ),
           );
           await collection.add(
-            createMovie(title: 'B', genre: ['bar', 'unrelated']),
+            createMovie(
+              title: 'B',
+              genre: ['bar', 'unrelated'],
+              tags: {'serious', 'unrelated'},
+            ),
           );
           await collection.add(
-            createMovie(title: 'C', genre: ['bar', 'unrelated']),
+            createMovie(
+              title: 'C',
+              genre: ['bar', 'unrelated'],
+              tags: {'serious', 'unrelated'},
+            ),
           );
 
           final querySnap = await collection
@@ -402,19 +414,44 @@ void main() {
             querySnap.docs.map((e) => e.data.title),
             ['B', 'C'],
           );
+
+          final querySnap2 = await collection
+              .whereFieldPath(
+                FieldPath.fromString('tags'),
+                arrayContains: 'serious',
+              )
+              .orderByTitle()
+              .get();
+
+          expect(
+            querySnap2.docs.map((e) => e.data.title),
+            ['B', 'C'],
+          );
         });
 
         test('supports whereProperty', () async {
           final collection = await initializeTest(MovieCollectionReference());
 
           await collection.add(
-            createMovie(title: 'A', genre: ['foo', 'unrelated']),
+            createMovie(
+              title: 'A',
+              genre: ['foo', 'unrelated'],
+              tags: {'funny', 'unrelated'},
+            ),
           );
           await collection.add(
-            createMovie(title: 'B', genre: ['bar', 'unrelated']),
+            createMovie(
+              title: 'B',
+              genre: ['bar', 'unrelated'],
+              tags: {'serious', 'unrelated'},
+            ),
           );
           await collection.add(
-            createMovie(title: 'C', genre: ['bar', 'unrelated']),
+            createMovie(
+              title: 'C',
+              genre: ['bar', 'unrelated'],
+              tags: {'serious', 'unrelated'},
+            ),
           );
 
           final querySnap = await collection
@@ -424,6 +461,16 @@ void main() {
 
           expect(
             querySnap.docs.map((e) => e.data.title),
+            ['B', 'C'],
+          );
+
+          final querySnap2 = await collection
+              .whereTags(arrayContains: 'serious')
+              .orderByTitle()
+              .get();
+
+          expect(
+            querySnap2.docs.map((e) => e.data.title),
             ['B', 'C'],
           );
         });

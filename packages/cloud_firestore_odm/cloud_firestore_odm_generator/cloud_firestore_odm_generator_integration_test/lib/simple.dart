@@ -46,6 +46,7 @@ class Nested {
     required this.numList,
     required this.objectList,
     required this.dynamicList,
+    required this.boolSet,
   });
 
   factory Nested.fromJson(Map<String, Object?> json) => _$NestedFromJson(json);
@@ -60,6 +61,7 @@ class Nested {
   final List<num>? numList;
   final List<Object?>? objectList;
   final List<dynamic>? dynamicList;
+  final Set<bool>? boolSet;
 }
 
 @Collection<Nested>('nested')
