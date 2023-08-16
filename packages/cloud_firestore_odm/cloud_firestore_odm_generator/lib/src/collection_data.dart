@@ -346,7 +346,7 @@ represents the content of the collection must be in the same file.
         type.isDartCoreInt ||
         type.isDartCoreDouble ||
         type.isDartCoreBool ||
-        type.isPrimitiveIterable ||
+        type.isSupportedPrimitiveIterable ||
         type.isJsonDocumentReference ||
         dateTimeChecker.isAssignableFromType(type) ||
         timestampChecker.isAssignableFromType(type) ||
@@ -445,7 +445,7 @@ extension DartTypeExtension on DartType {
       _coreListChecker.isExactlyType(this) ||
       _coreSetChecker.isExactlyType(this);
 
-  bool get isPrimitiveIterable {
+  bool get isSupportedPrimitiveIterable {
     if (!isSupportedIterable) return false;
 
     final generic = (this as InterfaceType).typeArguments.single;
