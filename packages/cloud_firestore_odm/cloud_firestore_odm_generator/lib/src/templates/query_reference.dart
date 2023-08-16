@@ -413,7 +413,13 @@ class ${data.queryReferenceImplName}
         } else if (e == 'arrayContainsAny') {
           return '$e: $e != null ? $perFieldToJson($e) as Iterable<Object>? : null,';
         } else if (e == 'arrayContains') {
-          return '$e: $e != null ? ($perFieldToJson([$e]) as List?)!.first : null,';
+          var transform = '$e: $e != null ? ($perFieldToJson(';
+          if (field.type.isSet) {
+            transform += '{$e}';
+          } else {
+            transform += '[$e]';
+          }
+          return '$transform) as List?)!.first : null,';
         } else {
           return '$e: $e != null ? $perFieldToJson($e) : null,';
         }

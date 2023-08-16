@@ -2854,7 +2854,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : null,
         isNull: isNull,
         arrayContains: arrayContains != null
-            ? (_$NestedPerFieldToJson.boolSet([arrayContains]) as List?)!.first
+            ? (_$NestedPerFieldToJson.boolSet({arrayContains}) as List?)!.first
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.boolSet(arrayContainsAny)

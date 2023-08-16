@@ -477,9 +477,9 @@ extension DartTypeExtension on DartType {
         (this as InterfaceType).typeArguments.single.isDartCoreMap;
   }
 
-  bool get isSupportedIterable =>
-      _coreListChecker.isExactlyType(this) ||
-      _coreSetChecker.isExactlyType(this);
+  bool get isList => _coreListChecker.isAssignableFromType(this);
+  bool get isSet => _coreSetChecker.isAssignableFromType(this);
+  bool get isSupportedIterable => isList || isSet;
 
   bool get isSupportedPrimitiveIterable {
     if (!isSupportedIterable) return false;
