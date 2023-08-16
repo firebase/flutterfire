@@ -13,8 +13,8 @@
 
 #import <AuthenticationServices/AuthenticationServices.h>
 #import <Foundation/Foundation.h>
-#import <firebase_auth/messages.g.h>
 #import <firebase_core/FLTFirebasePlugin.h>
+#import "firebase_auth_messages.g.h"
 
 @interface FLTFirebaseAuthPlugin
     : FLTFirebasePlugin <FlutterPlugin,
