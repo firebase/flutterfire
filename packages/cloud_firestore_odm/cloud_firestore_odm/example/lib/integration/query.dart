@@ -8,6 +8,15 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'query.g.dart';
 
+@Collection<DurationQuery>('firestore-example-app/42/duration')
+final durationQueryRef = DurationQueryCollectionReference();
+
+@JsonSerializable(converters: firestoreJsonConverters)
+class DurationQuery {
+  DurationQuery(this.duration);
+  final Duration duration;
+}
+
 @Collection<DateTimeQuery>('firestore-example-app/42/date-time')
 final dateTimeQueryRef = DateTimeQueryCollectionReference();
 

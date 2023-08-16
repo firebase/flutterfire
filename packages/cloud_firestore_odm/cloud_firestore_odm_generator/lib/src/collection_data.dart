@@ -15,6 +15,7 @@ import 'package:source_helper/source_helper.dart';
 import 'collection_generator.dart';
 import 'names.dart';
 
+const durationChecker = TypeChecker.fromRuntime(Duration);
 const collectionChecker = TypeChecker.fromRuntime(Collection);
 const dateTimeChecker = TypeChecker.fromRuntime(DateTime);
 const timestampChecker = TypeChecker.fromUrl(
@@ -352,6 +353,7 @@ represents the content of the collection must be in the same file.
         type.isSupportedPrimitiveIterable ||
         type.isJsonDocumentReference ||
         type.isEnum ||
+        durationChecker.isAssignableFromType(type) ||
         dateTimeChecker.isAssignableFromType(type) ||
         timestampChecker.isAssignableFromType(type) ||
         geoPointChecker.isAssignableFromType(type);
