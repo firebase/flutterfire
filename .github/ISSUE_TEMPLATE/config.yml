@@ -1,8 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Feature Request
-    url: https://github.com/firebase/flutterfire/discussions/new?category=feature-request
-    about: Share ideas for new features.
   - name: Ask a Question
     url: https://github.com/firebase/flutterfire/discussions/new?category=q-a
     about: Ask the community for help.
