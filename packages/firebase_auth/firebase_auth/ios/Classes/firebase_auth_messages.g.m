@@ -2,6 +2,7 @@
 // See also: https://pub.dev/packages/pigeon
 
 #import "firebase_auth_messages.g.h"
+
 #if TARGET_OS_OSX
 #import <FlutterMacOS/FlutterMacOS.h>
 #else
