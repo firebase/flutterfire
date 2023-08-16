@@ -1345,7 +1345,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
   }
 
   [currentUser
-      getIDTokenResultForcingRefresh:forceRefresh
+      getIDTokenResultForcingRefresh:[forceRefresh boolValue]
                           completion:^(FIRAuthTokenResult *tokenResult, NSError *error) {
                             if (error != nil) {
                               completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
