@@ -1,6 +1,6 @@
 name: firebase_ui_localizations
 description: Localization package for firebase_ui_auth, firebase_ui_firestore and firebase_ui_database
-version: 1.5.0
+version: 1.5.1
 homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_ui_localizations
 
 false_secrets:

@@ -2,6 +2,50 @@
 
 All notable changes for firebase_ui packages
 
+## 2023-08-16
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_ui_localizations` - `v1.5.1`](#firebase_ui_localizations---v151)
+ - [`firebase_ui_firestore` - `v1.5.7`](#firebase_ui_firestore---v157)
+ - [`firebase_ui_oauth_google` - `v1.2.8`](#firebase_ui_oauth_google---v128)
+ - [`firebase_ui_oauth` - `v1.4.8`](#firebase_ui_oauth---v148)
+ - [`firebase_ui_auth` - `v1.6.3`](#firebase_ui_auth---v163)
+ - [`firebase_ui_oauth_facebook` - `v1.2.8`](#firebase_ui_oauth_facebook---v128)
+ - [`firebase_ui_oauth_twitter` - `v1.2.8`](#firebase_ui_oauth_twitter---v128)
+ - [`firebase_ui_oauth_apple` - `v1.2.8`](#firebase_ui_oauth_apple---v128)
+ - [`firebase_ui_database` - `v1.3.5`](#firebase_ui_database---v135)
+ - [`firebase_ui_storage` - `v0.1.0-dev.9`](#firebase_ui_storage---v010-dev9)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_ui_firestore` - `v1.5.7`
+ - `firebase_ui_oauth_google` - `v1.2.8`
+ - `firebase_ui_oauth` - `v1.4.8`
+ - `firebase_ui_auth` - `v1.6.3`
+ - `firebase_ui_oauth_facebook` - `v1.2.8`
+ - `firebase_ui_oauth_twitter` - `v1.2.8`
+ - `firebase_ui_oauth_apple` - `v1.2.8`
+ - `firebase_ui_database` - `v1.3.5`
+ - `firebase_ui_storage` - `v0.1.0-dev.9`
+
+---
+
+#### `firebase_ui_localizations` - `v1.5.1`
+
+ - **FIX**(firebase_ui_localizations): fixed register translation for turkish ([#11339](https://github.com/firebase/flutterfire/issues/11339)). ([0b9ae721](https://github.com/firebase/flutterfire/commit/0b9ae721c860026a02d2fae63a735bc6abe6898e))
+
+
 ## 2023-07-26
 
 ### Changes
