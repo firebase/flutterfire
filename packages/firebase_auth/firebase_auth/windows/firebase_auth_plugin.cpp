@@ -52,46 +52,11 @@ FirebaseAuthPlugin::FirebaseAuthPlugin() {}
 
 FirebaseAuthPlugin::~FirebaseAuthPlugin() = default;
 
- firebase::auth::Auth* GetAuthFromPigeon(
+ Auth* GetAuthFromPigeon(
     const PigeonFirebaseApp& pigeonApp) {   
-  std::vector<std::string> app_vector = GetFirebaseApp(pigeonApp.app_name());
 
-  // print coucou
-  std::cout << "coucou" << std::endl;
-
-  // print vector lenghts
-  std::cout << app_vector.size() << std::endl;
-
-  // print the vector
-  for (std::string n : app_vector) {
-    std::cout << n << std::endl;
-  }
-
-  firebase::AppOptions options;
-
-  options.set_api_key(app_vector[1].c_str());
-  options.set_app_id(app_vector[2].c_str());
-   options.set_database_url(app_vector[3].c_str());
-  
-  //   options.set_ga_tracking_id(app_vector[4].c_str());
-  
-  options.set_messaging_sender_id(app_vector[5].c_str());
-
-  options.set_project_id(app_vector[6].c_str());
-
-  options.set_storage_bucket(app_vector[7].c_str());
-  
-  
-
-  App* app =
-      App::Create(options, pigeonApp.app_name().c_str());
-
-
-  App* app = App::Create(options, pigeonApp.app_name().c_str());
-
-  Auth* auth = Auth::GetAuth(app);
-
-  // firebase::auth::Auth* auth = firebase::auth::Auth::GetAuth(app.get());
+  void* auth_ptr = GetFirebaseAuth(pigeonApp.app_name());
+  Auth* auth = static_cast<Auth*>(auth_ptr);
 
   return auth;
 }

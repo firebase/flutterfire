@@ -20,7 +20,6 @@
 
 #include <future>
 #include <iostream>
-#include <map>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
@@ -115,48 +114,14 @@ PigeonInitializeResponse AppToPigeonInitializeResponse(const App &app) {
   return response;
 }
 
-std::map<std::string, std::vector<std::string>> apps;
-
-
-std::vector<std::string> FirebaseCorePlugin::GetFirebaseApp(std::string appName) {
-  auto app_it = apps.find(appName);
-
-  // If the app is already in the map, return the stored shared_ptr
-  if (app_it != apps.end()) {
-    return app_it->second;
-  }
-
-  std::vector<std::string> app_vector;
-  return app_vector;
-}
-
 void FirebaseCorePlugin::InitializeApp(
     const std::string &app_name,
     const PigeonFirebaseOptions &initialize_app_request,
     std::function<void(ErrorOr<PigeonInitializeResponse> reply)> result) {
   // Create an app
-  App *app = App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
+  App *app;
+  app = App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
                     app_name.c_str());
-
-  auto app_it = apps.find(app_name);
-
-  // If the app is already in the map, return the stored shared_ptr
-  if (app_it == apps.end()) {
-    std::vector<std::string> app_vector;
-    app_vector.push_back(app_name);
-    app_vector.push_back(initialize_app_request.api_key());
-    app_vector.push_back(initialize_app_request.app_id());
-    app_vector.push_back(*initialize_app_request.database_u_r_l());
-    app_vector.push_back(*initialize_app_request.tracking_id());
-    app_vector.push_back(initialize_app_request.messaging_sender_id());
-    app_vector.push_back(initialize_app_request.project_id());
-    app_vector.push_back(*initialize_app_request.storage_bucket());
-
-    apps[app_name] = app_vector;
-  }
-
-
-
 
   // Send back the result to Flutter
   result(AppToPigeonInitializeResponse(*app));

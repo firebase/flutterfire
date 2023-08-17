@@ -17,6 +17,10 @@
 #define FLUTTER_PLUGIN_EXPORT __declspec(dllimport)
 #endif
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 FLUTTER_PLUGIN_EXPORT void FirebaseCorePluginCApiRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar);
 
