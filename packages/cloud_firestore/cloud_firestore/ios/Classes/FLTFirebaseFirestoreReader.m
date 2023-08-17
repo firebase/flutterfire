@@ -94,7 +94,25 @@
   FIRFirestoreSettings *settings = [[FIRFirestoreSettings alloc] init];
 
   if (![values[@"persistenceEnabled"] isEqual:[NSNull null]]) {
-    settings.persistenceEnabled = [((NSNumber *)values[@"persistenceEnabled"]) boolValue];
+    bool persistEnabled = [((NSNumber *)values[@"persistenceEnabled"]) boolValue];
+
+    // This is the maximum amount of cache allowed. We use the same number on android.
+    // This now causes an exception: kFIRFirestoreCacheSizeUnlimited
+    NSNumber *size = @104857600;
+
+    if (![values[@"cacheSizeBytes"] isEqual:[NSNull null]]) {
+      NSNumber *cacheSizeBytes = ((NSNumber *)values[@"cacheSizeBytes"]);
+      if ([cacheSizeBytes intValue] != -1) {
+        size = cacheSizeBytes;
+      }
+    }
+
+    if (persistEnabled) {
+      settings.cacheSettings = [[FIRPersistentCacheSettings alloc] initWithSizeBytes:size];
+    } else {
+      settings.cacheSettings = [[FIRMemoryCacheSettings alloc]
+          initWithGarbageCollectorSettings:[[FIRMemoryLRUGCSettings alloc] init]];
+    }
   }
 
   if (![values[@"host"] isEqual:[NSNull null]]) {
@@ -102,15 +120,6 @@
     // Only allow changing ssl if host is also specified.
     if (![values[@"sslEnabled"] isEqual:[NSNull null]]) {
       settings.sslEnabled = [((NSNumber *)values[@"sslEnabled"]) boolValue];
-    }
-  }
-
-  if (![values[@"cacheSizeBytes"] isEqual:[NSNull null]]) {
-    int size = [((NSNumber *)values[@"cacheSizeBytes"]) intValue];
-    if (size == -1) {
-      settings.cacheSizeBytes = kFIRFirestoreCacheSizeUnlimited;
-    } else {
-      settings.cacheSizeBytes = (int64_t)size;
     }
   }
 

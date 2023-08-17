@@ -12,7 +12,7 @@ Install dependencies
 flutter pub add firebase_core firebase_storage firebase_ui_storage
 ```
 
-Donwload Firebase project config
+Download Firebase project config
 
 ```sh
 flutterfire configure
@@ -138,4 +138,37 @@ class MyUploadProgress extends StatelessWidget {
     );
   }
 }
+```
+
+### StorageListView
+
+```dart
+StorageListView(
+  ref: storage.ref('images'),
+  itemBuilder: (context, ref) {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: StorageImage(ref: ref),
+    );
+  },
+  loadingBuilder: (context) {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  },
+  errorBuilder: (context, error, controller) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Error: $error'),
+          TextButton(
+            onPressed: () => controller.load(),
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
+    );
+  },
+);
 ```

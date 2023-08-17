@@ -169,6 +169,32 @@ void runCollectionReferenceTests() {
         },
         timeout: const Timeout.factor(3),
       );
+
+      testWidgets(
+        'returning null from `fromFirestore` should not throw a null check error',
+        (_) async {
+          final foo = await initializeTest('foo');
+          await foo.add({'value': 42});
+          final fooConverter = foo.withConverter(
+            fromFirestore: (_, __) => null,
+            toFirestore: (_, __) => {}, // unused
+          );
+
+          final fooConverterSnapshot = fooConverter.snapshots();
+
+          await expectLater(
+            fooConverterSnapshot,
+            emits(
+              // ignore: prefer_void_to_null
+              isA<QuerySnapshot<Null>>().having((e) => e.docs, 'docs', [
+                // ignore: prefer_void_to_null
+                isA<QueryDocumentSnapshot<Null>>()
+                    .having((e) => e.data(), 'data', null)
+              ]),
+            ),
+          );
+        },
+      );
     });
   });
 }

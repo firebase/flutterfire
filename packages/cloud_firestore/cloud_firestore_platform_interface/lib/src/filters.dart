@@ -4,6 +4,8 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
+import 'internal/field_path_type.dart';
+
 class _FilterObject {
   Map<String, Object?> build() {
     throw UnimplementedError();
@@ -11,9 +13,10 @@ class _FilterObject {
 }
 
 class _FilterQuery extends _FilterObject {
-  _FilterQuery(this._field, this._operator, this._value);
+  _FilterQuery(this._field, this._operator, this._value)
+      : assert(_field is FieldPathType || _field is FieldPath);
 
-  final FieldPath _field;
+  final Object _field;
   final String _operator;
   final Object? _value;
 
@@ -114,9 +117,10 @@ class Filter {
           }(),
           'Exactly one operator must be specified',
         ),
-        assert(field is String || field is FieldPath) {
-    final _field =
-        field is String ? FieldPath.fromString(field) : field as FieldPath;
+        assert(
+          field is String || field is FieldPath || field is FieldPathType,
+        ) {
+    final _field = (field is String ? FieldPath.fromString(field) : field);
 
     _filterQuery = _FilterQuery(
       _field,
@@ -223,7 +227,7 @@ class Filter {
     Filter filter1,
     Filter filter2,
     // Number of OR operation is limited on the server side
-    // We let here 10 as a limit
+    // We let here 30 as a limit
     [
     Filter? filter3,
     Filter? filter4,
@@ -233,6 +237,26 @@ class Filter {
     Filter? filter8,
     Filter? filter9,
     Filter? filter10,
+    Filter? filter11,
+    Filter? filter12,
+    Filter? filter13,
+    Filter? filter14,
+    Filter? filter15,
+    Filter? filter16,
+    Filter? filter17,
+    Filter? filter18,
+    Filter? filter19,
+    Filter? filter20,
+    Filter? filter21,
+    Filter? filter22,
+    Filter? filter23,
+    Filter? filter24,
+    Filter? filter25,
+    Filter? filter26,
+    Filter? filter27,
+    Filter? filter28,
+    Filter? filter29,
+    Filter? filter30,
   ]) {
     return _generateFilter(
       'OR',
@@ -247,6 +271,26 @@ class Filter {
         filter8,
         filter9,
         filter10,
+        filter11,
+        filter12,
+        filter13,
+        filter14,
+        filter15,
+        filter16,
+        filter17,
+        filter18,
+        filter19,
+        filter20,
+        filter21,
+        filter22,
+        filter23,
+        filter24,
+        filter25,
+        filter26,
+        filter27,
+        filter28,
+        filter29,
+        filter30,
       ],
     );
   }
@@ -265,6 +309,26 @@ class Filter {
     Filter? filter8,
     Filter? filter9,
     Filter? filter10,
+    Filter? filter11,
+    Filter? filter12,
+    Filter? filter13,
+    Filter? filter14,
+    Filter? filter15,
+    Filter? filter16,
+    Filter? filter17,
+    Filter? filter18,
+    Filter? filter19,
+    Filter? filter20,
+    Filter? filter21,
+    Filter? filter22,
+    Filter? filter23,
+    Filter? filter24,
+    Filter? filter25,
+    Filter? filter26,
+    Filter? filter27,
+    Filter? filter28,
+    Filter? filter29,
+    Filter? filter30,
   ]) {
     return _generateFilter(
       'AND',
@@ -279,6 +343,26 @@ class Filter {
         filter8,
         filter9,
         filter10,
+        filter11,
+        filter12,
+        filter13,
+        filter14,
+        filter15,
+        filter16,
+        filter17,
+        filter18,
+        filter19,
+        filter20,
+        filter21,
+        filter22,
+        filter23,
+        filter24,
+        filter25,
+        filter26,
+        filter27,
+        filter28,
+        filter29,
+        filter30,
       ],
     );
   }

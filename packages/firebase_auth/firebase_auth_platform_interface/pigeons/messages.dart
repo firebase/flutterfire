@@ -17,12 +17,9 @@ import 'package:pigeon/pigeon.dart';
       package: 'io.flutter.plugins.firebase.auth',
       className: 'GeneratedAndroidFirebaseAuth',
     ),
-    objcHeaderOut: '../firebase_auth/ios/Classes/Public/messages.g.h',
-    objcSourceOut: '../firebase_auth/ios/Classes/messages.g.m',
-    cppHeaderOut: '../firebase_auth/windows/messages.g.h',
-    cppSourceOut: '../firebase_auth/windows/messages.g.cpp',
-    cppOptions: CppOptions(namespace: 'firebase_auth_windows'),
-    copyrightHeader: 'pigeons/copyright.txt',
+    objcHeaderOut:
+        '../firebase_auth/ios/Classes/Public/firebase_auth_messages.g.h',
+    objcSourceOut: '../firebase_auth/ios/Classes/firebase_auth_messages.g.m',
   ),
 )
 class PigeonMultiFactorSession {
@@ -94,6 +91,16 @@ enum ActionCodeInfoOperation {
   revertSecondFactorAddition,
 }
 
+class PigeonActionCodeInfo {
+  const PigeonActionCodeInfo({
+    required this.operation,
+    required this.data,
+  });
+
+  final ActionCodeInfoOperation operation;
+  final PigeonActionCodeInfoData data;
+}
+
 class PigeonActionCodeInfoData {
   const PigeonActionCodeInfoData({
     this.email,
@@ -104,14 +111,44 @@ class PigeonActionCodeInfoData {
   final String? previousEmail;
 }
 
-class PigeonActionCodeInfo {
-  const PigeonActionCodeInfo({
-    required this.operation,
-    required this.data,
+class PigeonUserCredential {
+  const PigeonUserCredential({
+    required this.user,
+    required this.additionalUserInfo,
+    required this.credential,
   });
 
-  final ActionCodeInfoOperation operation;
-  final PigeonActionCodeInfoData data;
+  final PigeonUserDetails? user;
+  final PigeonAdditionalUserInfo? additionalUserInfo;
+  final PigeonAuthCredential? credential;
+}
+
+class PigeonAdditionalUserInfo {
+  const PigeonAdditionalUserInfo({
+    required this.isNewUser,
+    required this.providerId,
+    required this.username,
+    this.profile,
+  });
+
+  final bool isNewUser;
+  final String? providerId;
+  final String? username;
+  final Map<String?, Object?>? profile;
+}
+
+class PigeonAuthCredential {
+  const PigeonAuthCredential({
+    required this.providerId,
+    required this.signInMethod,
+    required this.nativeId,
+    required this.accessToken,
+  });
+
+  final String providerId;
+  final String signInMethod;
+  final int nativeId;
+  final String? accessToken;
 }
 
 class PigeonUserInfo {
@@ -152,46 +189,6 @@ class PigeonUserDetails {
 
   final PigeonUserInfo userInfo;
   final List<Map<Object?, Object?>?> providerData;
-}
-
-class PigeonAuthCredential {
-  const PigeonAuthCredential({
-    required this.providerId,
-    required this.signInMethod,
-    required this.nativeId,
-    required this.accessToken,
-  });
-
-  final String providerId;
-  final String signInMethod;
-  final int nativeId;
-  final String? accessToken;
-}
-
-class PigeonAdditionalUserInfo {
-  const PigeonAdditionalUserInfo({
-    required this.isNewUser,
-    required this.providerId,
-    required this.username,
-    this.profile,
-  });
-
-  final bool isNewUser;
-  final String? providerId;
-  final String? username;
-  final Map<String?, Object?>? profile;
-}
-
-class PigeonUserCredential {
-  const PigeonUserCredential({
-    required this.user,
-    required this.additionalUserInfo,
-    required this.credential,
-  });
-
-  final PigeonUserDetails? user;
-  final PigeonAdditionalUserInfo? additionalUserInfo;
-  final PigeonAuthCredential? credential;
 }
 
 class PigeonAuthCredentialInput {

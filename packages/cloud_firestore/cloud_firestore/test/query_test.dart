@@ -116,19 +116,30 @@ void main() {
         );
       });
 
-      test('throws if whereIn query length is greater than 10', () {
+      test('throws if whereIn query length is greater than 30', () {
+        List<int> numbers = List.generate(31, (i) => i + 1);
         expect(
-          () => query!
-              .where('foo.bar', whereIn: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+          () => query!.where('foo.bar', whereIn: numbers),
           throwsAssertionError,
         );
       });
 
-      test('throws if arrayContainsAny query length is greater than 10', () {
+      test('throws if arrayContainsAny query length is greater than 30', () {
+        List<int> numbers = List.generate(31, (i) => i + 1);
         expect(
           () => query!.where(
             'foo',
-            arrayContainsAny: [1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9],
+            arrayContainsAny: numbers,
+          ),
+          throwsAssertionError,
+        );
+      });
+
+      test('throws if whereNotIn query length is greater than 10', () {
+        expect(
+          () => query!.where(
+            'foo',
+            whereNotIn: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
           ),
           throwsAssertionError,
         );
@@ -175,20 +186,6 @@ void main() {
         );
         expect(
           () => query!.where('foo', arrayContainsAny: [1]).where(
-            'foo',
-            arrayContainsAny: [2, 3],
-          ),
-          throwsAssertionError,
-        );
-        expect(
-          () => query!.where('foo', arrayContainsAny: [2, 3]).where(
-            'foo',
-            whereIn: [2, 3],
-          ),
-          throwsAssertionError,
-        );
-        expect(
-          () => query!.where('foo', whereIn: [2, 3]).where(
             'foo',
             arrayContainsAny: [2, 3],
           ),
@@ -401,6 +398,37 @@ void main() {
             ),
           ),
         );
+      });
+    });
+
+    group('Settings()', () {
+      test('Test the assert for setting `cacheSizeBytes` minimum and maximum',
+          () {
+        void configureCache(int? cacheSizeBytes) {
+          assert(
+            cacheSizeBytes == null ||
+                cacheSizeBytes == Settings.CACHE_SIZE_UNLIMITED ||
+                (cacheSizeBytes >= 1048576 && cacheSizeBytes <= 104857600),
+            'Cache size, if specified, must be either CACHE_SIZE_UNLIMITED or between 1048576 bytes (inclusive) and 104857600 bytes (inclusive).',
+          );
+        }
+
+        // Happy paths
+        expect(() => configureCache(null), returnsNormally);
+        expect(
+          () => configureCache(Settings.CACHE_SIZE_UNLIMITED),
+          returnsNormally,
+        );
+        expect(() => configureCache(5000000), returnsNormally);
+        expect(() => configureCache(1048577), returnsNormally);
+        expect(() => configureCache(104857600), returnsNormally);
+        expect(() => configureCache(104857500), returnsNormally);
+
+        // Assertion triggers
+        expect(() => configureCache(1), throwsA(isA<AssertionError>()));
+        expect(() => configureCache(1000), throwsA(isA<AssertionError>()));
+        expect(() => configureCache(200000000), throwsA(isA<AssertionError>()));
+        expect(() => configureCache(500000), throwsA(isA<AssertionError>()));
       });
     });
   });

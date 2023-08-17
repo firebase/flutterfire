@@ -730,9 +730,17 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
           value is Iterable,
           "A non-empty [Iterable] is required for '$operator' filters.",
         );
+        // This assert checks every operator other than "in" or "array-contains-any" have 10 or less filters
         assert(
-          (value as Iterable).length <= 10,
+          (operator == 'in' || operator == 'array-contains-any') ||
+              (value as Iterable).length <= 10,
           "'$operator' filters support a maximum of 10 elements in the value [Iterable].",
+        );
+        // This assert checks whether "in" or "array-contains-any" have 30 or less filters
+        assert(
+          (operator != 'in' && operator != 'array-contains-any') ||
+              (value as Iterable).length <= 30,
+          "'$operator' filters support a maximum of 30 elements in the value [Iterable].",
         );
         assert(
           (value as Iterable).isNotEmpty,
@@ -782,13 +790,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
           "You cannot use 'array-contains-any' filters more than once.",
         );
         hasArrayContainsAny = true;
-      }
-
-      if (operator == 'array-contains-any' || operator == 'in') {
-        assert(
-          !(hasIn && hasArrayContainsAny),
-          "You cannot use 'in' filters with 'array-contains-any' filters.",
-        );
       }
 
       if (operator == 'array-contains' || operator == 'array-contains-any') {

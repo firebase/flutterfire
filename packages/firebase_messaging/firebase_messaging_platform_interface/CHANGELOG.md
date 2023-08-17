@@ -1,3 +1,19 @@
+## 4.5.5
+
+ - **FIX**(messaging): Method channel handlers were not created if `FirebaseMessaging.instance.*` is not invoked beforehand ([#11447](https://github.com/firebase/flutterfire/issues/11447)). ([a3a07768](https://github.com/firebase/flutterfire/commit/a3a07768389fad0cfa564bd11189d8e0888d27a9))
+
+## 4.5.4
+
+ - Update a dependency to the latest release.
+
+## 4.5.3
+
+ - Update a dependency to the latest release.
+
+## 4.5.2
+
+ - Update a dependency to the latest release.
+
 ## 4.5.1
 
  - Update a dependency to the latest release.
