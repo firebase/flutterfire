@@ -273,7 +273,7 @@ represents the content of the collection must be in the same file.
               freezedConstructors: redirectedFreezedConstructors,
             )
             .where((f) => f.isPublic)
-            .where((f) => _isSupportedType(f.type))
+            // .where((f) => _isSupportedType(f.type))
             .where((f) => !f.hasId())
             .where((f) => !f.isJsonIgnored())
             .map(
