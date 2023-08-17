@@ -1133,7 +1133,7 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
     final json = {
       if (value != _sentinel)
         _$$PublicRedirected2FieldMap['value']!:
-            _$$_PublicRedirectedPerFieldToJson.value(value as String),
+            _$$PublicRedirected2PerFieldToJson.value(value as String),
       if (valueFieldValue != null)
         _$$PublicRedirected2FieldMap['value']!: valueFieldValue,
     };
@@ -1153,7 +1153,7 @@ class _$PublicRedirectedDocumentReference extends FirestoreDocumentReference<
     final json = {
       if (value != _sentinel)
         _$$PublicRedirected2FieldMap['value']!:
-            _$$_PublicRedirectedPerFieldToJson.value(value as String),
+            _$$PublicRedirected2PerFieldToJson.value(value as String),
       if (valueFieldValue != null)
         _$$PublicRedirected2FieldMap['value']!: valueFieldValue,
     };
@@ -1491,28 +1491,28 @@ class _$PublicRedirectedQuery
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$$PublicRedirected2FieldMap['value']!,
         isEqualTo: isEqualTo != null
-            ? _$$_PublicRedirectedPerFieldToJson.value(isEqualTo)
+            ? _$$PublicRedirected2PerFieldToJson.value(isEqualTo)
             : null,
         isNotEqualTo: isNotEqualTo != null
-            ? _$$_PublicRedirectedPerFieldToJson.value(isNotEqualTo)
+            ? _$$PublicRedirected2PerFieldToJson.value(isNotEqualTo)
             : null,
         isLessThan: isLessThan != null
-            ? _$$_PublicRedirectedPerFieldToJson.value(isLessThan)
+            ? _$$PublicRedirected2PerFieldToJson.value(isLessThan)
             : null,
         isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$$_PublicRedirectedPerFieldToJson.value(isLessThanOrEqualTo)
+            ? _$$PublicRedirected2PerFieldToJson.value(isLessThanOrEqualTo)
             : null,
         isGreaterThan: isGreaterThan != null
-            ? _$$_PublicRedirectedPerFieldToJson.value(isGreaterThan)
+            ? _$$PublicRedirected2PerFieldToJson.value(isGreaterThan)
             : null,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$$_PublicRedirectedPerFieldToJson.value(isGreaterThanOrEqualTo)
+            ? _$$PublicRedirected2PerFieldToJson.value(isGreaterThanOrEqualTo)
             : null,
         isNull: isNull,
         whereIn:
-            whereIn?.map((e) => _$$_PublicRedirectedPerFieldToJson.value(e)),
+            whereIn?.map((e) => _$$PublicRedirected2PerFieldToJson.value(e)),
         whereNotIn:
-            whereNotIn?.map((e) => _$$_PublicRedirectedPerFieldToJson.value(e)),
+            whereNotIn?.map((e) => _$$PublicRedirected2PerFieldToJson.value(e)),
       ),
       $queryCursor: $queryCursor,
     );
