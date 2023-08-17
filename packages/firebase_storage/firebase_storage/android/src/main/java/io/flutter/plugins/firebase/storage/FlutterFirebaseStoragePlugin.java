@@ -32,7 +32,10 @@ import java.util.Map;
 import java.util.Objects;
 
 public class FlutterFirebaseStoragePlugin
-    implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin {
+    implements FlutterFirebasePlugin,
+      FlutterPlugin,
+      GeneratedAndroidFirebaseStorage.FirebaseStorageHostApi {
+
   private MethodChannel channel;
 
   static Map<String, Object> parseMetadata(StorageMetadata storageMetadata) {
@@ -108,12 +111,11 @@ public class FlutterFirebaseStoragePlugin
     if (exception instanceof StorageException) {
       storageException = new FlutterFirebaseStorageException(exception, exception.getCause());
     } else if (exception.getCause() != null && exception.getCause() instanceof StorageException) {
-      storageException =
-          new FlutterFirebaseStorageException(
-              (StorageException) exception.getCause(),
-              exception.getCause().getCause() != null
-                  ? exception.getCause().getCause()
-                  : exception.getCause());
+      storageException = new FlutterFirebaseStorageException(
+          (StorageException) exception.getCause(),
+          exception.getCause().getCause() != null
+              ? exception.getCause().getCause()
+              : exception.getCause());
     }
 
     if (storageException != null) {
@@ -139,8 +141,9 @@ public class FlutterFirebaseStoragePlugin
   private void initInstance(BinaryMessenger messenger) {
     String channelName = "plugins.flutter.io/firebase_storage";
     channel = new MethodChannel(messenger, channelName);
-    channel.setMethodCallHandler(this);
     FlutterFirebasePluginRegistry.registerPlugin(channelName, this);
+
+    GeneratedAndroidFirebaseStorage.FirebaseStorageHostApi.setup(messenger, this);
   }
 
   private FirebaseStorage getStorage(Map<String, Object> arguments) {
@@ -216,6 +219,8 @@ public class FlutterFirebaseStoragePlugin
 
     return taskCompletionSource.getTask();
   }
+
+  // FirebaseStorageHostApi Reference releated api override
 
   private Task<Void> referenceDelete(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
@@ -294,15 +299,13 @@ public class FlutterFirebaseStoragePlugin
           Task<ListResult> task;
 
           @SuppressWarnings("unchecked")
-          Map<String, Object> listOptions =
-              (Map<String, Object>) Objects.requireNonNull(arguments.get("options"));
+          Map<String, Object> listOptions = (Map<String, Object>) Objects.requireNonNull(arguments.get("options"));
 
           int maxResults = (Integer) Objects.requireNonNull(listOptions.get("maxResults"));
 
           if (listOptions.get("pageToken") != null) {
-            task =
-                reference.list(
-                    maxResults, (String) Objects.requireNonNull(listOptions.get("pageToken")));
+            task = reference.list(
+                maxResults, (String) Objects.requireNonNull(listOptions.get("pageToken")));
           } else {
             task = reference.list(maxResults);
           }
@@ -341,8 +344,7 @@ public class FlutterFirebaseStoragePlugin
           StorageReference reference = getReference(arguments);
 
           @SuppressWarnings("unchecked")
-          Map<String, Object> metadata =
-              (Map<String, Object>) Objects.requireNonNull(arguments.get("metadata"));
+          Map<String, Object> metadata = (Map<String, Object>) Objects.requireNonNull(arguments.get("metadata"));
 
           try {
             taskCompletionSource.setResult(
@@ -355,6 +357,7 @@ public class FlutterFirebaseStoragePlugin
     return taskCompletionSource.getTask();
   }
 
+  // FirebaseStorageHostApi Task releated api override
   private Task<Void> taskPutData(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -367,9 +370,8 @@ public class FlutterFirebaseStoragePlugin
           Map<String, Object> metadata = (Map<String, Object>) arguments.get("metadata");
 
           final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.uploadBytes(
-                  handle, reference, bytes, parseMetadata(metadata));
+          FlutterFirebaseStorageTask task = FlutterFirebaseStorageTask.uploadBytes(
+              handle, reference, bytes, parseMetadata(metadata));
           try {
             task.startTaskWithMethodChannel(channel);
             taskCompletionSource.setResult(null);
@@ -394,9 +396,8 @@ public class FlutterFirebaseStoragePlugin
           Map<String, Object> metadata = (Map<String, Object>) arguments.get("metadata");
 
           final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.uploadBytes(
-                  handle, reference, stringToByteData(data, format), parseMetadata(metadata));
+          FlutterFirebaseStorageTask task = FlutterFirebaseStorageTask.uploadBytes(
+              handle, reference, stringToByteData(data, format), parseMetadata(metadata));
 
           try {
             task.startTaskWithMethodChannel(channel);
@@ -421,9 +422,8 @@ public class FlutterFirebaseStoragePlugin
           Map<String, Object> metadata = (Map<String, Object>) arguments.get("metadata");
 
           final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.uploadFile(
-                  handle, reference, Uri.fromFile(new File(filePath)), parseMetadata(metadata));
+          FlutterFirebaseStorageTask task = FlutterFirebaseStorageTask.uploadFile(
+              handle, reference, Uri.fromFile(new File(filePath)), parseMetadata(metadata));
 
           try {
             task.startTaskWithMethodChannel(channel);
@@ -444,8 +444,8 @@ public class FlutterFirebaseStoragePlugin
           String filePath = (String) Objects.requireNonNull(arguments.get("filePath"));
 
           final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.downloadFile(handle, reference, new File(filePath));
+          FlutterFirebaseStorageTask task = FlutterFirebaseStorageTask.downloadFile(handle, reference,
+              new File(filePath));
 
           try {
             task.startTaskWithMethodChannel(channel);
@@ -463,8 +463,7 @@ public class FlutterFirebaseStoragePlugin
     cachedThreadPool.execute(
         () -> {
           final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle);
+          FlutterFirebaseStorageTask task = FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle);
 
           if (task == null) {
             taskCompletionSource.setException(
@@ -495,8 +494,7 @@ public class FlutterFirebaseStoragePlugin
     cachedThreadPool.execute(
         () -> {
           final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle);
+          FlutterFirebaseStorageTask task = FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle);
 
           if (task == null) {
             taskCompletionSource.setException(
@@ -527,8 +525,7 @@ public class FlutterFirebaseStoragePlugin
     cachedThreadPool.execute(
         () -> {
           final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle);
+          FlutterFirebaseStorageTask task = FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle);
           if (task == null) {
             taskCompletionSource.setException(
                 new Exception("Cancel operation was called on a task which does not exist."));
@@ -647,8 +644,7 @@ public class FlutterFirebaseStoragePlugin
     }
     if (metadata.get("customMetadata") != null) {
       @SuppressWarnings("unchecked")
-      Map<String, String> customMetadata =
-          (Map<String, String>) Objects.requireNonNull(metadata.get("customMetadata"));
+      Map<String, String> customMetadata = (Map<String, String>) Objects.requireNonNull(metadata.get("customMetadata"));
       for (String key : customMetadata.keySet()) {
         builder.setCustomMetadata(key, customMetadata.get(key));
       }
@@ -701,4 +697,5 @@ public class FlutterFirebaseStoragePlugin
 
     return taskCompletionSource.getTask();
   }
+
 }

@@ -51,52 +51,6 @@ enum PigeonTaskState {
   error,
 }
 
-class PigeonTaskSnapShot {
-  const PigeonTaskSnapShot({
-
-    required this.bytesTransferred,
-    required this.metadata,
-    required this.state,
-    required this.totalBytes,
-  });
-
-  final int bytesTransferred;
-  final PigeonFullMetaData? metadata;
-  final PigeonTaskState state;
-  final int totalBytes;
-}
-
-@HostApi(dartHostTestHandler: 'TestFirebaseStorageHostApi')
-abstract class FirebaseStorageHostApi {
-
-  PigeonStorageReference getReferencebyPath(
-    PigeonFirebaseApp app,
-    String path,
-  );
-
-  void setMaxOperationRetryTime(
-    PigeonFirebaseApp app,
-    int time,
-  );
-
-  void setMaxUploadRetryTime(
-    PigeonFirebaseApp app,
-    int time,
-  );
-
-  void setMaxDownloadRetryTime(
-    PigeonFirebaseApp app,
-    int time,
-  );
-
-  @async
-  void useStorageEmulator(
-    PigeonFirebaseApp app,
-    String host,
-    int port,
-  );
-}
-
 class PigeonStorageReference {
   const PigeonStorageReference({
     required this.bucket,
@@ -173,76 +127,130 @@ class PigeonSettableMetadata {
   final Map<String?, String?>? customMetadata;
 }
 
-@HostApi(dartHostTestHandler: 'TestFirebaseStorageReferenceHostApi')
-abstract class FirebaseStorageReferenceHostApi {
 
-  PigeonStorageReference getParent(
-    PigeonFirebaseApp app,
-  );
-  PigeonStorageReference getRoot(
-    PigeonFirebaseApp app,
-  );
-  PigeonStorageReference getChild(
+class PigeonTaskSnapShot {
+  const PigeonTaskSnapShot({
+
+    required this.bytesTransferred,
+    required this.metadata,
+    required this.state,
+    required this.totalBytes,
+  });
+
+  final int bytesTransferred;
+  final PigeonFullMetaData? metadata;
+  final PigeonTaskState state;
+  final int totalBytes;
+}
+
+@HostApi(dartHostTestHandler: 'TestFirebaseStorageHostApi')
+abstract class FirebaseStorageHostApi {
+
+  PigeonStorageReference getReferencebyPath(
     PigeonFirebaseApp app,
     String path,
   );
 
-  @async
-  void delete(
+  void setMaxOperationRetryTime(
     PigeonFirebaseApp app,
+    int time,
+  );
+
+  void setMaxUploadRetryTime(
+    PigeonFirebaseApp app,
+    int time,
+  );
+
+  void setMaxDownloadRetryTime(
+    PigeonFirebaseApp app,
+    int time,
   );
 
   @async
-  String getDownloadURL(
+  void useStorageEmulator(
     PigeonFirebaseApp app,
+    String host,
+    int port,
+  );
+
+  // APIs for Reference class
+  PigeonStorageReference referenceGetParent(
+    PigeonFirebaseApp app,
+    PigeonStorageReference reference,
+  );
+  PigeonStorageReference referenceGetRoot(
+    PigeonFirebaseApp app,
+    PigeonStorageReference reference,
+  );
+  PigeonStorageReference referenceGetChild(
+    PigeonFirebaseApp app,
+    PigeonStorageReference reference,
+    String path,
   );
 
   @async
-  PigeonFullMetaData getMetaData(
+  void referenceDelete(
     PigeonFirebaseApp app,
+    PigeonStorageReference reference,
   );
 
   @async
-  List<PigeonStorageReference> list(
+  String referenceGetDownloadURL(
     PigeonFirebaseApp app,
+    PigeonStorageReference reference,
+  );
+
+  @async
+  PigeonFullMetaData referenceGetMetaData(
+    PigeonFirebaseApp app,
+    PigeonStorageReference reference,
+  );
+
+  @async
+  List<PigeonStorageReference> referenceList(
+    PigeonFirebaseApp app,
+    PigeonStorageReference reference,
     PigeonListOptions options,
   );
 
   @async
-  List<PigeonStorageReference> listAll(
+  List<PigeonStorageReference> referenceListAll(
     PigeonFirebaseApp app,
+    PigeonStorageReference reference,
   );
 
-  List<int> getData(
+  @async
+  Uint8List? referenceGetData(
     PigeonFirebaseApp app,
+    PigeonStorageReference reference,
     int maxSize,
   );
 
   // TODO figure out how to manage the UploadTask and DownloadTask
 
   @async
-  PigeonFullMetaData updateMetadata(
+  PigeonFullMetaData referenceUpdateMetadata(
     PigeonFirebaseApp app,
+    PigeonStorageReference reference,
     PigeonSettableMetadata metadata,
   );
 
+  // APIs for Task class
+  @async
+  bool taskPause(
+    PigeonFirebaseApp app,
+    PigeonTaskSnapShot taskSnap,
+  );
+
+  @async
+  bool taskResume(
+    PigeonFirebaseApp app,
+    PigeonTaskSnapShot taskSnap,
+  );
+
+  @async
+  bool taskCancel(
+    PigeonFirebaseApp app,
+    PigeonTaskSnapShot taskSnap,
+  );
 }
-
-@HostApi(dartHostTestHandler: 'TestFirebaseStorageTaskHostApi')
-abstract class FirebaseStorageTaskHostApi {
-  @async
-  bool pause(
-    PigeonFirebaseApp app,
-  );
-
-  @async
-  bool resume(
-    PigeonFirebaseApp app,
-  );
-
-  @async
-  bool cancel(
-    PigeonFirebaseApp app,
-  );
-}
-

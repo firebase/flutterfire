@@ -10,6 +10,7 @@ import 'dart:typed_data';
 import 'package:firebase_core/firebase_core.dart';
 
 import '../../firebase_storage_platform_interface.dart';
+import '../pigeon/messages.pigeon.dart';
 import 'method_channel_firebase_storage.dart';
 import 'method_channel_task_snapshot.dart';
 import 'utils/exception.dart';
@@ -87,6 +88,35 @@ abstract class MethodChannelTask extends TaskPlatform {
     }, cancelOnError: true);
   }
 
+  /// Default FirebaseApp pigeon instance
+  PigeonFirebaseApp get pigeonFirebaseAppDefault {
+    return PigeonFirebaseApp(
+      appName: storage.app.name,
+    );
+  }
+
+  PigeonTaskState convertToPigeonTaskState(TaskState state) {
+    switch (state) {
+      case TaskState.canceled:
+        return PigeonTaskState.canceled;
+      case TaskState.error:
+        return PigeonTaskState.canceled;
+      case TaskState.paused:
+        return PigeonTaskState.canceled;
+      case TaskState.running:
+        return PigeonTaskState.canceled;
+      case TaskState.success:
+        return PigeonTaskState.canceled;
+    }
+  }
+
+  PigeonTaskSnapShot get pigeonTaskSnap {
+    return PigeonTaskSnapShot(
+        bytesTransferred: snapshot.bytesTransferred,
+        state: convertToPigeonTaskState(snapshot.state),
+        totalBytes: snapshot.totalBytes);
+  }
+
   Object? _exception;
 
   late StackTrace _stackTrace;
@@ -135,18 +165,19 @@ abstract class MethodChannelTask extends TaskPlatform {
       if (!_initialTaskCompleter.isCompleted) {
         await _initialTaskCompleter.future;
       }
+      return await MethodChannelFirebaseStorage.pigeonChannel.taskPause(pigeonFirebaseAppDefault, pigeonTaskSnap);
 
-      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
-          .invokeMapMethod<String, dynamic>('Task#pause', <String, dynamic>{
-        'handle': _handle,
-      });
+      // Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
+      //     .invokeMapMethod<String, dynamic>('Task#pause', <String, dynamic>{
+      //   'handle': _handle,
+      // });
 
-      bool success = data!['status'];
-      if (success) {
-        _snapshot = MethodChannelTaskSnapshot(storage, TaskState.paused,
-            Map<String, dynamic>.from(data['snapshot']));
-      }
-      return success;
+      // bool success = data!['status'];
+      // if (success) {
+      //   _snapshot = MethodChannelTaskSnapshot(storage, TaskState.paused,
+      //       Map<String, dynamic>.from(data['snapshot']));
+      // }
+      // return success;
     } catch (e, stack) {
       return catchFuturePlatformException<bool>(e, stack);
     }
@@ -158,18 +189,18 @@ abstract class MethodChannelTask extends TaskPlatform {
       if (!_initialTaskCompleter.isCompleted) {
         await _initialTaskCompleter.future;
       }
+      return await MethodChannelFirebaseStorage.pigeonChannel.taskResume(pigeonFirebaseAppDefault, pigeonTaskSnap);
+      // Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
+      //     .invokeMapMethod<String, dynamic>('Task#resume', <String, dynamic>{
+      //   'handle': _handle,
+      // });
 
-      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
-          .invokeMapMethod<String, dynamic>('Task#resume', <String, dynamic>{
-        'handle': _handle,
-      });
-
-      bool success = data!['status'];
-      if (success) {
-        _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running,
-            Map<String, dynamic>.from(data['snapshot']));
-      }
-      return success;
+      // bool success = data!['status'];
+      // if (success) {
+      //   _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running,
+      //       Map<String, dynamic>.from(data['snapshot']));
+      // }
+      // return success;
     } catch (e, stack) {
       return catchFuturePlatformException<bool>(e, stack);
     }
@@ -181,18 +212,18 @@ abstract class MethodChannelTask extends TaskPlatform {
       if (!_initialTaskCompleter.isCompleted) {
         await _initialTaskCompleter.future;
       }
+      return await MethodChannelFirebaseStorage.pigeonChannel.taskCancel(pigeonFirebaseAppDefault, pigeonTaskSnap);
+      // Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
+      //     .invokeMapMethod<String, dynamic>('Task#cancel', <String, dynamic>{
+      //   'handle': _handle,
+      // });
 
-      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
-          .invokeMapMethod<String, dynamic>('Task#cancel', <String, dynamic>{
-        'handle': _handle,
-      });
-
-      bool success = data!['status'];
-      if (success) {
-        _snapshot = MethodChannelTaskSnapshot(storage, TaskState.canceled,
-            Map<String, dynamic>.from(data['snapshot']));
-      }
-      return success;
+      // bool success = data!['status'];
+      // if (success) {
+      //   _snapshot = MethodChannelTaskSnapshot(storage, TaskState.canceled,
+      //       Map<String, dynamic>.from(data['snapshot']));
+      // }
+      // return success;
     } catch (e, stack) {
       return catchFuturePlatformException<bool>(e, stack);
     }

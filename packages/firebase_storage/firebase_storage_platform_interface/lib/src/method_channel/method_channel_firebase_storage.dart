@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 
 import './utils/exception.dart';
 import '../../firebase_storage_platform_interface.dart';
+import '../pigeon/messages.pigeon.dart';
 import 'method_channel_reference.dart';
 import 'method_channel_task_snapshot.dart';
 
@@ -63,6 +64,14 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// When the user code calls an storage method, the real instance is
   /// then initialized via the [delegateFor] method.
   MethodChannelFirebaseStorage._() : super(appInstance: null, bucket: '');
+
+  static final FirebaseStorageHostApi pigeonChannel = FirebaseStorageHostApi();
+  /// Default FirebaseApp pigeon instance
+  PigeonFirebaseApp get pigeonFirebaseAppDefault {
+    return PigeonFirebaseApp(
+      appName: app.name,
+    );
+  }
 
   /// Keep an internal reference to whether the [MethodChannelFirebaseStorage]
   /// class has already been initialized.
@@ -148,16 +157,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     emulatorHost = host;
     emulatorPort = port;
     try {
-      await MethodChannelFirebaseStorage.channel
-          .invokeMethod('Storage#useEmulator', <String, dynamic>{
-        'appName': app.name,
-        'maxOperationRetryTime': maxOperationRetryTime,
-        'maxUploadRetryTime': maxUploadRetryTime,
-        'maxDownloadRetryTime': maxDownloadRetryTime,
-        'bucket': bucket,
-        'host': emulatorHost,
-        'port': emulatorPort
-      });
+      await pigeonChannel.useStorageEmulator(pigeonFirebaseAppDefault, host, port);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -166,15 +166,18 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   @override
   void setMaxOperationRetryTime(int time) {
     maxOperationRetryTime = time;
+    pigeonChannel.setMaxOperationRetryTime(pigeonFirebaseAppDefault, time);
   }
 
   @override
   void setMaxUploadRetryTime(int time) {
     maxUploadRetryTime = time;
+    pigeonChannel.setMaxUploadRetryTime(pigeonFirebaseAppDefault, time);
   }
 
   @override
   Future<void> setMaxDownloadRetryTime(int time) async {
     maxDownloadRetryTime = time;
+    await pigeonChannel.setMaxDownloadRetryTime(pigeonFirebaseAppDefault, time);
   }
 }

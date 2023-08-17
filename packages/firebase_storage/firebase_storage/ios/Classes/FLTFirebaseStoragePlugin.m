@@ -117,6 +117,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   [registrar publish:instance];
 #endif
   [registrar addMethodCallDelegate:instance channel:channel];
+
+  FirebaseStorageHostApiSetup(registrar.messenger, instance);
 }
 
 - (void)cleanupWithCompletion:(void (^)(void))completion {
