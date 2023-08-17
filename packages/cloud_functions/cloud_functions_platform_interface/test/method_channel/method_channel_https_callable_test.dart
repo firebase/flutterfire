@@ -89,6 +89,7 @@ void main() {
         expect(httpsCallable!.options, isInstanceOf<HttpsCallableOptions>());
         expect(httpsCallable!.options.timeout, isInstanceOf<Duration>());
         expect(httpsCallable!.options.timeout.inMinutes, 1);
+        expect(httpsCallable!.options.limitedUseAppCheckToken, false);
       });
     });
 
@@ -119,6 +120,7 @@ void main() {
               'region': functions!.region,
               'timeout': httpsCallable!.options.timeout.inMilliseconds,
               'parameters': kParameters,
+              'limitedUseAppCheckToken': false,
             },
           ),
         ]);
@@ -149,6 +151,7 @@ void main() {
               'region': functions!.region,
               'timeout': httpsCallable!.options.timeout.inMilliseconds,
               'parameters': kParameters,
+              'limitedUseAppCheckToken': false,
             },
           ),
         ]);
@@ -169,6 +172,7 @@ void main() {
               'region': functions!.region,
               'timeout': httpsCallable!.options.timeout.inMilliseconds,
               'parameters': null,
+              'limitedUseAppCheckToken': false,
             },
           ),
         ]);
@@ -189,6 +193,7 @@ void main() {
               'region': functions!.region,
               'timeout': httpsCallable!.options.timeout.inMilliseconds,
               'parameters': null,
+              'limitedUseAppCheckToken': false,
             },
           ),
         ]);

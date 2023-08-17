@@ -4,6 +4,8 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
+import 'internal/field_path_type.dart';
+
 class _FilterObject {
   Map<String, Object?> build() {
     throw UnimplementedError();
@@ -11,9 +13,10 @@ class _FilterObject {
 }
 
 class _FilterQuery extends _FilterObject {
-  _FilterQuery(this._field, this._operator, this._value);
+  _FilterQuery(this._field, this._operator, this._value)
+      : assert(_field is FieldPathType || _field is FieldPath);
 
-  final FieldPath _field;
+  final Object _field;
   final String _operator;
   final Object? _value;
 
@@ -114,9 +117,10 @@ class Filter {
           }(),
           'Exactly one operator must be specified',
         ),
-        assert(field is String || field is FieldPath) {
-    final _field =
-        field is String ? FieldPath.fromString(field) : field as FieldPath;
+        assert(
+          field is String || field is FieldPath || field is FieldPathType,
+        ) {
+    final _field = (field is String ? FieldPath.fromString(field) : field);
 
     _filterQuery = _FilterQuery(
       _field,

@@ -1,3 +1,7 @@
+## 1.0.0-dev.65
+
+ - **FEAT**(cloud_firestore_odm_generator): Support Sets as well as Lists for query method generation ([#11361](https://github.com/firebase/flutterfire/issues/11361)). ([d60cfe63](https://github.com/firebase/flutterfire/commit/d60cfe63a42d0a960ef241a2c062d880a3df17ec))
+
 ## 1.0.0-dev.64
 
  - Update a dependency to the latest release.

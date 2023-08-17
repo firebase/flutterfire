@@ -8,12 +8,9 @@ To learn more about Firebase Remote Config, please visit the [Firebase website](
 
 ## Getting Started
 
-To get started with Firebase Remote Config for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/remote-config/overview) available
-at [https://firebase.flutter.dev](https://firebase.flutter.dev)
-
-## Usage
-
-To use this plugin, please visit the [Firebase Remote Config Usage documentation](https://firebase.google.com/docs/remote-config/get-started?platform=flutter)
+To get started with Firebase Remote Config for Flutter, please
+see the [Flutter specific documentation](https://firebase.google.com/docs/remote-config/get-started?platform=flutter) available at
+[https://firebase.google.com/](https://firebase.google.com/).
 
 ## Issues and feedback
 

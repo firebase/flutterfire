@@ -21,7 +21,7 @@ class IdChangedStreamHandler: NSObject, FlutterStreamHandler {
     self.instance = instance
   }
 
-  internal func handleIdChange() {
+  func handleIdChange() {
     var events = [String: String]()
     instance.installationID { (newId: String?, error: Error?) in
       if error != nil {
