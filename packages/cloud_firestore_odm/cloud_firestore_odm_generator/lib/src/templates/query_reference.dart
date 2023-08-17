@@ -401,7 +401,7 @@ class ${data.queryReferenceImplName}
       final prototype =
           operators.entries.map((e) => '${e.value} ${e.key},').join();
 
-      final perFieldToJson = data.perFieldToJson(field);
+      final perFieldToJson = data.perFieldToJson(field.name);
 
       final parameters = operators.keys.map((e) {
         if (field.name == 'documentId' || e == 'isNull') {

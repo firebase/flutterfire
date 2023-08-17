@@ -95,6 +95,7 @@ class CollectionData with Names {
     required this.queryableFields,
     required this.fromJson,
     required this.toJson,
+    required this.perFieldToJson,
     required this.idKey,
     required this.libraryElement,
   }) : collectionName =
@@ -231,6 +232,9 @@ represents the content of the collection must be in the same file.
       }
     }
 
+    final publicType = type.toString().public;
+    final redirectedFreezedClass = redirectedFreezedConstructors
+        .singleOrNull?.redirectedConstructor!.enclosingElement.name;
     final data = CollectionData(
       type: type,
       hasFreezed: hasFreezed,
@@ -240,12 +244,15 @@ represents the content of the collection must be in the same file.
       libraryElement: libraryElement,
       fromJson: (json) {
         if (fromJson != null) return '$type.fromJson($json)';
-        return '_\$${type.toString().public}FromJson($json)';
+        return '_\$${publicType}FromJson($json)';
       },
       toJson: (value) {
         if (toJson != null) return '$value.toJson()';
-        return '_\$${type.toString().public}ToJson($value)';
+        return '_\$${publicType}ToJson($value)';
       },
+      perFieldToJson: (field) => hasFreezed
+          ? '_\$\$${redirectedFreezedClass}PerFieldToJson.$field'
+          : '_\$${type}PerFieldToJson.$field',
       idKey: collectionTargetElement
           .allFields(
             hasFreezed: hasFreezed,
@@ -276,7 +283,7 @@ represents the content of the collection must be in the same file.
             if (hasFreezed) {
               key =
                   // two $ because both Freezed and json_serializable add one
-                  '_\$\$${redirectedFreezedConstructors.single.redirectedConstructor!.enclosingElement.name}FieldMap[$key]!';
+                  '_\$\$${redirectedFreezedClass}FieldMap[$key]!';
             } else if (hasJsonSerializable) {
               key = '_\$${collectionTargetElement.name.public}FieldMap[$key]!';
             }
@@ -360,13 +367,6 @@ represents the content of the collection must be in the same file.
     // TODO filter list other than List<string|bool|num>
   }
 
-  String perFieldToJson(QueryingField field) {
-    final type = this.type.getDisplayString(withNullability: false);
-    return hasFreezed
-        ? '_\$\$_${type}PerFieldToJson.${field.name}'
-        : '_\$${type}PerFieldToJson.${field.name}';
-  }
-
   @override
   final String? collectionPrefix;
   @override
@@ -390,6 +390,7 @@ represents the content of the collection must be in the same file.
 
   String Function(String json) fromJson;
   String Function(String value) toJson;
+  String Function(String field) perFieldToJson;
 
   @override
   String toString() {
