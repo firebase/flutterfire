@@ -16,13 +16,6 @@ command:
     # Additionally build a changelog at the root of the workspace.
     workspaceChangelog: true
 
-    changelogs:
-      - path: firebase_ui_changelog.md
-        packageFilters:
-          scope: firebase_ui_*
-        description: |
-          All notable changes for firebase_ui packages
-
   bootstrap:
     # It seems so that running "pub get" in parallel has some issues (like
     # https://github.com/dart-lang/pub/issues/3404). Disabling this feature
