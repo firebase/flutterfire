@@ -72,9 +72,10 @@ static NSMutableDictionary<NSNumber *, NSString *> *_serverTimestampMap;
 FlutterStandardMethodCodec *_codec;
 
 + (NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap {
-  if (_serverTimestampMap == nil) {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
     _serverTimestampMap = [NSMutableDictionary<NSNumber *, NSString *> dictionary];
-  }
+  });
   return _serverTimestampMap;
 }
 
@@ -107,7 +108,6 @@ FlutterStandardMethodCodec *_codec;
     _eventChannels = [NSMutableDictionary dictionary];
     _streamHandlers = [NSMutableDictionary dictionary];
     _transactionHandlers = [NSMutableDictionary dictionary];
-    _serverTimestampMap = [NSMutableDictionary dictionary];
   }
   return self;
 }
@@ -484,7 +484,8 @@ FlutterStandardMethodCodec *_codec;
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
-      [_serverTimestampMap setObject:serverTimestampBehaviorString forKey:@([snapshot hash])];
+      [FLTFirebaseFirestorePlugin.serverTimestampMap setObject:serverTimestampBehaviorString
+                                                        forKey:@([snapshot hash])];
       result.success(snapshot);
     }
   };
