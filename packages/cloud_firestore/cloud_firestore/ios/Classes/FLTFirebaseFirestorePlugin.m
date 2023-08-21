@@ -60,7 +60,7 @@ NSString *const kFLTFirebaseFirestoreLoadBundleChannelName =
                                streamHandler:(NSObject<FlutterStreamHandler> *)handler;
 @end
 
-static NSMutableDictionary<NSNumber *, NSString *> *_serverTimestampMap;
+static NSCache<NSNumber *, NSString *> *_serverTimestampMap;
 
 @implementation FLTFirebaseFirestorePlugin {
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
@@ -74,7 +74,7 @@ FlutterStandardMethodCodec *_codec;
 + (NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    _serverTimestampMap = [NSMutableDictionary<NSNumber *, NSString *> dictionary];
+    _serverTimestampMap = [NSCache<NSNumber *, NSString *> new];
   });
   return _serverTimestampMap;
 }
@@ -484,8 +484,7 @@ FlutterStandardMethodCodec *_codec;
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
-      [FLTFirebaseFirestorePlugin.serverTimestampMap setObject:serverTimestampBehaviorString
-                                                        forKey:@([snapshot hash])];
+      [FLTFirebaseFirestorePlugin.serverTimestampMap setObject:serverTimestampBehaviorString forKey:@([snapshot hash])];
       result.success(snapshot);
     }
   };

@@ -160,10 +160,9 @@
 
   FIRServerTimestampBehavior serverTimestampBehavior =
       [self toServerTimestampBehavior:timestampBehaviorString];
+  
 
-  if (FLTFirebaseFirestorePlugin.serverTimestampMap[documentSnapshotHash] != nil) {
-    [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:documentSnapshotHash];
-  }
+  [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:documentSnapshotHash];
 
   return @{
     @"path" : documentSnapshot.reference.path,
@@ -213,9 +212,7 @@
   FIRServerTimestampBehavior serverTimestampBehavior =
       [self toServerTimestampBehavior:timestampBehaviorString];
 
-  if (FLTFirebaseFirestorePlugin.serverTimestampMap[querySnapshotHash] != nil) {
-    [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:querySnapshotHash];
-  }
+  [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:querySnapshotHash];
 
   for (FIRDocumentSnapshot *document in querySnapshot.documents) {
     [paths addObject:document.reference.path];
