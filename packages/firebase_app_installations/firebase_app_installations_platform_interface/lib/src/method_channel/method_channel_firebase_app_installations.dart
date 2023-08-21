@@ -73,10 +73,10 @@ class MethodChannelFirebaseAppInstallations
   @override
   Future<String> getId() async {
     try {
-      String? id =
-          await channel.invokeMethod<String>('FirebaseInstallations#getId', {
-        'appName': app!.name,
-      });
+      final id = (await channel.invokeMethod<String>(
+        'FirebaseInstallations#getId',
+        {'appName': app!.name},
+      ))!;
 
       return id;
     } catch (e, s) {
@@ -87,9 +87,10 @@ class MethodChannelFirebaseAppInstallations
   @override
   Future<String> getToken(bool forceRefresh) async {
     try {
-      String? id = await channel.invokeMethod<String>(
-          'FirebaseInstallations#getToken',
-          {'appName': app!.name, 'forceRefresh': forceRefresh});
+      final id = (await channel.invokeMethod<String>(
+        'FirebaseInstallations#getToken',
+        {'appName': app!.name, 'forceRefresh': forceRefresh},
+      ))!;
 
       return id;
     } catch (e, s) {

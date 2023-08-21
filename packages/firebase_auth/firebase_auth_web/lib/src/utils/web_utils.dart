@@ -34,8 +34,8 @@ bool _hasFirebaseAuthErrorCodeAndMessage(Object e) {
   if (_isFirebaseAuthError(e)) {
     String? code = getProperty(e, 'code');
     String? message = getProperty(e, 'message');
-    if (!code.startsWith('auth/')) return false;
-    if (!message.contains('Firebase')) return false;
+    if (code == null || !code.startsWith('auth/')) return false;
+    if (message == null || !message.contains('Firebase')) return false;
     return true;
   } else {
     return false;

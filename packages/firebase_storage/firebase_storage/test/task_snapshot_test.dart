@@ -61,7 +61,7 @@ void main() {
         final result = taskSnapshot.metadata;
 
         expect(result, isA<FullMetadata>());
-        expect(result.contentType, 'gif');
+        expect(result?.contentType, 'gif');
 
         verify(mockTaskSnapshotPlatform.metadata);
       });

@@ -14,8 +14,8 @@ void main() {
 
   late TestFirebaseAnalyticsPlatform firebaseAnalyticsPlatform;
 
-  FirebaseApp? app;
-  FirebaseApp? secondaryApp;
+  late FirebaseApp app;
+  late FirebaseApp secondaryApp;
 
   group('$FirebaseAnalyticsPlatform', () {
     setUpAll(() async {
@@ -64,7 +64,7 @@ void main() {
 
     test('throws if .delegateFor() not implemented', () async {
       await expectLater(
-        () => firebaseAnalyticsPlatform.delegateFor(app: app!),
+        () => firebaseAnalyticsPlatform.delegateFor(app: app),
         throwsA(
           isA<UnimplementedError>().having(
             (e) => e.message,

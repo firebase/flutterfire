@@ -176,9 +176,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     if (!_bgHandlerInitialized) {
       _bgHandlerInitialized = true;
       final CallbackHandle bgHandle = PluginUtilities.getCallbackHandle(
-          _firebaseMessagingCallbackDispatcher);
+        _firebaseMessagingCallbackDispatcher,
+      )!;
       final CallbackHandle userHandle =
-          PluginUtilities.getCallbackHandle(handler);
+          PluginUtilities.getCallbackHandle(handler)!;
       await channel.invokeMapMethod('Messaging#startBackgroundIsolate', {
         'pluginCallbackHandle': bgHandle.toRawHandle(),
         'userCallbackHandle': userHandle.toRawHandle(),
@@ -209,7 +210,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         'appName': app.name,
       });
 
-      return data['token'];
+      return data!['token'];
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -225,7 +226,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         'appName': app.name,
       });
 
-      return data['token'];
+      return data!['token'];
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -245,7 +246,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         'appName': app.name,
       });
 
-      return convertToNotificationSettings(response);
+      return convertToNotificationSettings(response!);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -282,7 +283,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         }
       });
 
-      return convertToNotificationSettings(response);
+      return convertToNotificationSettings(response!);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -297,7 +298,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         'enabled': enabled,
       });
 
-      _autoInitEnabled = data['isAutoInitEnabled'] as bool;
+      _autoInitEnabled = data!['isAutoInitEnabled'] as bool;
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

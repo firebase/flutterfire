@@ -90,9 +90,9 @@ void main() {
       test('sets values correctly', () {
         expect(userCredential.auth, isA<FirebaseAuthPlatform>());
 
-        final additionalUserInfo = userCredential.additionalUserInfo;
-        final credential = userCredential.credential;
-        final user = userCredential.user;
+        final additionalUserInfo = userCredential.additionalUserInfo!;
+        final credential = userCredential.credential!;
+        final user = userCredential.user!;
 
         expect(additionalUserInfo, isA<AdditionalUserInfo>());
 

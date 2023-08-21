@@ -37,7 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    user = auth.currentUser;
+    user = auth.currentUser!;
     controller = TextEditingController(text: user.displayName);
 
     controller.addListener(_onNameChanged);

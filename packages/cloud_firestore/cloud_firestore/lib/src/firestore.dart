@@ -322,7 +322,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       {
         'indexes': indexes.map((index) => index.toMap()).toList(),
         'fieldOverrides':
-            fieldOverrides?.map((index) => index.toMap()).toList() ?? []
+            fieldOverrides?.map((index) => index.toMap()).toList() ?? [],
       },
     );
 

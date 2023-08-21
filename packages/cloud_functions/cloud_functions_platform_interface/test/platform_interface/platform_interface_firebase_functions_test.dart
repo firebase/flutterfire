@@ -14,8 +14,8 @@ void main() {
   setupFirebaseFunctionsMocks();
 
   TestFirebaseFunctionsPlatform? firebaseFunctionsPlatform;
-  FirebaseApp? app;
-  FirebaseApp? secondaryApp;
+  late FirebaseApp app;
+  late FirebaseApp secondaryApp;
 
   group('$FirebaseFunctionsPlatform()', () {
     setUpAll(() async {

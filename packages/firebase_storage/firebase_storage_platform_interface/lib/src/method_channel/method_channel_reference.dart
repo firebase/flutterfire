@@ -55,7 +55,7 @@ class MethodChannelReference extends ReferencePlatform {
         'path': fullPath,
       });
 
-      return data['downloadURL'];
+      return data!['downloadURL'];
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -77,7 +77,7 @@ class MethodChannelReference extends ReferencePlatform {
         'path': fullPath,
       });
 
-      return FullMetadata(data);
+      return FullMetadata(data!);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -104,7 +104,7 @@ class MethodChannelReference extends ReferencePlatform {
 
       return MethodChannelListResult(
         storage,
-        nextPageToken: data['nextPageToken'],
+        nextPageToken: data!['nextPageToken'],
         items: List.from(data['items']),
         prefixes: List.from(data['prefixes']),
       );
@@ -130,7 +130,7 @@ class MethodChannelReference extends ReferencePlatform {
       });
       return MethodChannelListResult(
         storage,
-        nextPageToken: data['nextPageToken'],
+        nextPageToken: data!['nextPageToken'],
         items: List.from(data['items']),
         prefixes: List.from(data['prefixes']),
       );
@@ -208,7 +208,7 @@ class MethodChannelReference extends ReferencePlatform {
         'metadata': metadata.asMap(),
       });
 
-      return FullMetadata(data);
+      return FullMetadata(data!);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

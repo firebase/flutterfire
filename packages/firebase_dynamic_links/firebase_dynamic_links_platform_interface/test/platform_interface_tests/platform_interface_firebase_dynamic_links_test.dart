@@ -14,8 +14,8 @@ void main() {
 
   TestFirebaseDynamicLinksPlatform? firebaseDynamicLinksPlatformPlatform;
 
-  FirebaseApp? app;
-  FirebaseApp? secondaryApp;
+  late FirebaseApp app;
+  late FirebaseApp secondaryApp;
   final link = Uri.parse('uri');
   final parameters = DynamicLinkParameters(uriPrefix: '', link: link);
 

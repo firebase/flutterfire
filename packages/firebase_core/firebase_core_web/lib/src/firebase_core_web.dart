@@ -111,7 +111,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
         'TrustedTypes available. Creating policy:',
         trustedPolicyName,
       );
-      final DomTrustedTypePolicyFactory factory = trustedTypes;
+      final DomTrustedTypePolicyFactory factory = trustedTypes!;
       try {
         final DomTrustedTypePolicy policy = factory.createPolicy(
           trustedPolicyName,

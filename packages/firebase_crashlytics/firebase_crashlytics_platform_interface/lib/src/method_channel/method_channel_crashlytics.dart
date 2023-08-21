@@ -51,7 +51,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
           await channel.invokeMapMethod<String, dynamic>(
               'Crashlytics#checkForUnsentReports');
 
-      return data['unsentReports'];
+      return data!['unsentReports'];
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -82,7 +82,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
           await channel.invokeMapMethod<String, dynamic>(
               'Crashlytics#didCrashOnPreviousExecution');
 
-      return data['didCrashOnPreviousExecution'];
+      return data!['didCrashOnPreviousExecution'];
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -141,7 +141,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
         'enabled': enabled,
       });
 
-      _isCrashlyticsCollectionEnabled = data['isCrashlyticsCollectionEnabled'];
+      _isCrashlyticsCollectionEnabled = data!['isCrashlyticsCollectionEnabled'];
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }

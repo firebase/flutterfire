@@ -112,6 +112,7 @@ class CollectionData with Names {
 
     final path = annotation.getField('path')!.toStringValue();
     _assertIsValidCollectionPath(path, annotatedElement);
+    path!;
 
     final type = CollectionData.modelTypeOfAnnotation(annotation);
 
@@ -294,8 +295,8 @@ represents the content of the collection must be in the same file.
             ?.contains(classPrefix) ??
         false) {
       throw InvalidGenerationSourceError(
-        'Defined a collection with duplicate class prefix $classPrefix.'
-        ' Either use a different class, or set a unique class prefix.',
+        'Defined a collection with duplicate class prefix $classPrefix. '
+        'Either use a different class, or set a unique class prefix.',
       );
     }
 
@@ -306,12 +307,20 @@ represents the content of the collection must be in the same file.
     return data;
   }
 
-  static void _assertIsValidCollectionPath(String path, Element element) {
+  static void _assertIsValidCollectionPath(String? path, Element element) {
+    if (path == null) {
+      throw InvalidGenerationSourceError(
+        'The annotation @Collection received "$path" as collection path, '
+        'but the path was null, which is not allowed.',
+        element: element,
+      );
+    }
+
     final allowedCharactersRegex = RegExp(r'^[0-9a-zA-Z/*-_]+$');
     if (!allowedCharactersRegex.hasMatch(path)) {
       throw InvalidGenerationSourceError(
         'The annotation @Collection received "$path" as collection path, '
-        ' but the path contains illegal characters.',
+        'but the path contains illegal characters.',
         element: element,
       );
     }
@@ -320,7 +329,7 @@ represents the content of the collection must be in the same file.
     if (pathSplit.length.isEven) {
       throw InvalidGenerationSourceError(
         'The annotation @Collection received "$path" as collection path, '
-        ' but this path points to a document instead of a collection',
+        'but this path points to a document instead of a collection',
         element: element,
       );
     }
@@ -329,7 +338,7 @@ represents the content of the collection must be in the same file.
       if (pathSplit[i] == '*') {
         throw InvalidGenerationSourceError(
           'The annotation @Collection received "$path" as collection path, '
-          ' but ${pathSplit[i]} is not a valid collection name',
+          'but ${pathSplit[i]} is not a valid collection name',
           element: element,
         );
       }

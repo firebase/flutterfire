@@ -124,7 +124,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
         'appName': app.name,
       });
       await _updateConfigParameters();
-      return configChanged;
+      return configChanged!;
     } catch (exception, stackTrace) {
       convertPlatformException(exception, stackTrace);
     }
@@ -153,7 +153,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       });
       await _updateConfigParameters();
       await _updateConfigProperties();
-      return configChanged;
+      return configChanged!;
     } catch (exception, stackTrace) {
       // Ensure that fetch status is updated.
       await _updateConfigProperties();
@@ -243,7 +243,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
             'RemoteConfig#getAll', <String, dynamic>{
       'appName': app.name,
     });
-    _activeParameters = _parseParameters(parameters);
+    _activeParameters = _parseParameters(parameters!);
   }
 
   Future<void> _updateConfigProperties() async {
@@ -252,7 +252,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
             'RemoteConfig#getProperties', <String, dynamic>{
       'appName': app.name,
     });
-    final fetchTimeout = Duration(seconds: properties['fetchTimeout']);
+    final fetchTimeout = Duration(seconds: properties!['fetchTimeout']);
     final minimumFetchInterval =
         Duration(seconds: properties['minimumFetchInterval']);
     final lastFetchMillis = properties['lastFetchTime'];

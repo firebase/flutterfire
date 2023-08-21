@@ -57,7 +57,7 @@ void main() {
     expect(
       await aRef.reference
           .withConverter<Map<String, dynamic>>(
-            fromFirestore: (value, _) => value.data(),
+            fromFirestore: (value, _) => value.data()!,
             toFirestore: (value, _) => value,
           )
           .get(),

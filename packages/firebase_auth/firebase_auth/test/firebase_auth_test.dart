@@ -63,12 +63,12 @@ void main() {
     ],
   );
 
-  MockUserPlatform? mockUserPlatform;
-  MockUserCredentialPlatform? mockUserCredPlatform;
-  MockConfirmationResultPlatform? mockConfirmationResultPlatform;
-  MockRecaptchaVerifier? mockVerifier;
-  AdditionalUserInfo? mockAdditionalUserInfo;
-  EmailAuthCredential? mockCredential;
+  late MockUserPlatform mockUserPlatform;
+  late MockUserCredentialPlatform mockUserCredPlatform;
+  late MockConfirmationResultPlatform mockConfirmationResultPlatform;
+  late MockRecaptchaVerifier mockVerifier;
+  late AdditionalUserInfo mockAdditionalUserInfo;
+  late EmailAuthCredential mockCredential;
 
   MockFirebaseAuth mockAuthPlatform = MockFirebaseAuth();
 
@@ -116,7 +116,7 @@ void main() {
       mockVerifier = MockRecaptchaVerifier();
 
       when(mockAuthPlatform.signInAnonymously())
-          .thenAnswer((_) async => mockUserCredPlatform!);
+          .thenAnswer((_) async => mockUserCredPlatform);
 
       when(mockAuthPlatform.signInWithCredential(any)).thenAnswer(
           (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
@@ -138,27 +138,27 @@ void main() {
       )).thenAnswer((_) => mockAuthPlatform);
 
       when(mockAuthPlatform.createUserWithEmailAndPassword(any, any))
-          .thenAnswer((_) async => mockUserCredPlatform!);
+          .thenAnswer((_) async => mockUserCredPlatform);
 
       when(mockAuthPlatform.getRedirectResult())
-          .thenAnswer((_) async => mockUserCredPlatform!);
+          .thenAnswer((_) async => mockUserCredPlatform);
 
       when(mockAuthPlatform.signInWithCustomToken(any))
-          .thenAnswer((_) async => mockUserCredPlatform!);
+          .thenAnswer((_) async => mockUserCredPlatform);
 
       when(mockAuthPlatform.signInWithEmailAndPassword(any, any))
-          .thenAnswer((_) async => mockUserCredPlatform!);
+          .thenAnswer((_) async => mockUserCredPlatform);
 
       when(mockAuthPlatform.signInWithEmailLink(any, any))
-          .thenAnswer((_) async => mockUserCredPlatform!);
+          .thenAnswer((_) async => mockUserCredPlatform);
 
       when(mockAuthPlatform.signInWithPhoneNumber(any, any))
-          .thenAnswer((_) async => mockConfirmationResultPlatform!);
+          .thenAnswer((_) async => mockConfirmationResultPlatform);
 
-      when(mockVerifier!.delegate).thenReturn(mockVerifier!.mockDelegate);
+      when(mockVerifier.delegate).thenReturn(mockVerifier.mockDelegate);
 
       when(mockAuthPlatform.signInWithPopup(any))
-          .thenAnswer((_) async => mockUserCredPlatform!);
+          .thenAnswer((_) async => mockUserCredPlatform);
 
       when(mockAuthPlatform.signInWithRedirect(any))
           .thenAnswer((_) async => mockUserCredPlatform);

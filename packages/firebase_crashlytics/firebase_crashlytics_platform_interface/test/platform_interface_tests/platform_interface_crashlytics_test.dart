@@ -15,8 +15,8 @@ void main() {
 
   TestFirebaseCrashlyticsPlatform? firebaseCrashlyticsPlatform;
 
-  FirebaseApp? app;
-  FirebaseApp? secondaryApp;
+  late FirebaseApp app;
+  late FirebaseApp secondaryApp;
 
   group('$FirebaseCrashlyticsPlatform()', () {
     setUpAll(() async {

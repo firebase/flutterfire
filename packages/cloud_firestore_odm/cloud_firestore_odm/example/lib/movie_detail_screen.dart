@@ -30,7 +30,7 @@ class MovieDetail extends StatelessWidget {
               if (asyncSnapshot.hasError) return const Text('error');
               if (!asyncSnapshot.hasData) return const Text('loading');
 
-              final snapshot = asyncSnapshot.data;
+              final snapshot = asyncSnapshot.data!;
 
               return MovieItem(snapshot.data!, snapshot.reference);
             },
@@ -42,7 +42,7 @@ class MovieDetail extends StatelessWidget {
                 if (asyncSnapshot.hasError) return const Text('error');
                 if (!asyncSnapshot.hasData) return const Text('loading');
 
-                final snapshot = asyncSnapshot.data;
+                final snapshot = asyncSnapshot.data!;
 
                 if (snapshot.docs.isEmpty) return Container();
 

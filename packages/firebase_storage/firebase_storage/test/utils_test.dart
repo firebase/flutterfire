@@ -50,8 +50,8 @@ void main() {
 
       final result = partsFromHttpUrl(url);
 
-      expect(result['bucket'], 'valid-url.appspot.com');
-      expect(result['path'], 'path');
+      expect(result?['bucket'], 'valid-url.appspot.com');
+      expect(result?['path'], 'path');
     });
 
     test('parses a https url with host "firebasestorage.googleapis.com"', () {
@@ -60,8 +60,8 @@ void main() {
 
       final result = partsFromHttpUrl(url);
 
-      expect(result['bucket'], 'valid-url.appspot.com');
-      expect(result['path'], 'path');
+      expect(result?['bucket'], 'valid-url.appspot.com');
+      expect(result?['path'], 'path');
     });
 
     test('parses a https url with host "storage.cloud.google.com"', () {
@@ -70,8 +70,8 @@ void main() {
 
       final result = partsFromHttpUrl(url);
 
-      expect(result['bucket'], 'valid-url.appspot.com');
-      expect(result['path'], 'path/to/file');
+      expect(result?['bucket'], 'valid-url.appspot.com');
+      expect(result?['path'], 'path/to/file');
     });
 
     test('parses a encoded https url', () {
@@ -80,8 +80,8 @@ void main() {
 
       final result = partsFromHttpUrl(url);
 
-      expect(result['bucket'], 'react-native-firebase-testing.appspot.com');
-      expect(result['path'], '1mbTestFile.gif');
+      expect(result?['bucket'], 'react-native-firebase-testing.appspot.com');
+      expect(result?['path'], '1mbTestFile.gif');
     });
 
     test('parses a un-encoded https url with special characters', () {
@@ -90,8 +90,8 @@ void main() {
 
       final result = partsFromHttpUrl(url);
 
-      expect(result['bucket'], 'valid-url.appspot.com');
-      expect(result['path'], 'foo+bar/file with  spaces .png');
+      expect(result?['bucket'], 'valid-url.appspot.com');
+      expect(result?['path'], 'foo+bar/file with  spaces .png');
     });
 
     // TODO(helenaford): regexp can't handle no paths
