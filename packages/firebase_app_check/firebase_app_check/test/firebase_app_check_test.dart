@@ -67,9 +67,9 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': defaultFirebaseAppName,
                 'androidProvider': 'playIntegrity',
-                'appleProvider': 'deviceCheck'
+                'appleProvider': 'deviceCheck',
               },
-            )
+            ),
           ],
         );
       });
@@ -85,9 +85,9 @@ void main() {
               'FirebaseAppCheck#getToken',
               arguments: <String, dynamic>{
                 'appName': defaultFirebaseAppName,
-                'forceRefresh': true
+                'forceRefresh': true,
               },
-            )
+            ),
           ],
         );
       });
@@ -104,9 +104,9 @@ void main() {
               'FirebaseAppCheck#setTokenAutoRefreshEnabled',
               arguments: <String, dynamic>{
                 'appName': defaultFirebaseAppName,
-                'isTokenAutoRefreshEnabled': false
+                'isTokenAutoRefreshEnabled': false,
               },
-            )
+            ),
           ],
         );
       });

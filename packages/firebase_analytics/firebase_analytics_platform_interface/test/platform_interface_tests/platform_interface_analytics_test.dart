@@ -31,7 +31,7 @@ void main() {
       );
 
       firebaseAnalyticsPlatform = TestFirebaseAnalyticsPlatform(
-        app!,
+        app,
       );
     });
 
@@ -53,7 +53,7 @@ void main() {
 
     test('set.instance', () {
       FirebaseAnalyticsPlatform.instance =
-          TestFirebaseAnalyticsPlatform(secondaryApp!);
+          TestFirebaseAnalyticsPlatform(secondaryApp);
 
       expect(
         FirebaseAnalyticsPlatform.instance,

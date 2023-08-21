@@ -109,9 +109,9 @@ void main() {
       ) as EmailAuthCredential;
       mockUserCredPlatform = MockUserCredentialPlatform(
         FirebaseAuthPlatform.instance,
-        mockAdditionalUserInfo!,
-        mockCredential!,
-        mockUserPlatform!,
+        mockAdditionalUserInfo,
+        mockCredential,
+        mockUserPlatform,
       );
       mockVerifier = MockRecaptchaVerifier();
 
@@ -164,13 +164,13 @@ void main() {
           .thenAnswer((_) async => mockUserCredPlatform);
 
       when(mockAuthPlatform.authStateChanges()).thenAnswer((_) =>
-          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
+          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]));
 
       when(mockAuthPlatform.idTokenChanges()).thenAnswer((_) =>
-          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
+          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]));
 
       when(mockAuthPlatform.userChanges()).thenAnswer((_) =>
-          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
+          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]));
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(MethodChannelFirebaseAuth.channel,

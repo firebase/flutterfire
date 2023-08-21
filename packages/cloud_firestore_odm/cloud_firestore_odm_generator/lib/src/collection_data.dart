@@ -110,7 +110,7 @@ class CollectionData with Names {
 
     // TODO(validate name)
 
-    final path = annotation.getField('path')!.toStringValue()!;
+    final path = annotation.getField('path')!.toStringValue();
     _assertIsValidCollectionPath(path, annotatedElement);
 
     final type = CollectionData.modelTypeOfAnnotation(annotation);
@@ -156,7 +156,7 @@ class CollectionData with Names {
       );
     }
 
-    final annotatedElementSource = annotatedElement.librarySource!;
+    final annotatedElementSource = annotatedElement.librarySource;
 
     // TODO(rrousselGit) handle parts
     // Whether the model class and the reference variable are defined in the same file

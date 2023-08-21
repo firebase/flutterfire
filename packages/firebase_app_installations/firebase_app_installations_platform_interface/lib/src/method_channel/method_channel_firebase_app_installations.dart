@@ -78,7 +78,7 @@ class MethodChannelFirebaseAppInstallations
         'appName': app!.name,
       });
 
-      return id!;
+      return id;
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -91,7 +91,7 @@ class MethodChannelFirebaseAppInstallations
           'FirebaseInstallations#getToken',
           {'appName': app!.name, 'forceRefresh': forceRefresh});
 
-      return id!;
+      return id;
     } catch (e, s) {
       convertPlatformException(e, s);
     }

@@ -36,7 +36,7 @@ void main() {
           String? token = await user!.getIdToken();
 
           // // Assertions
-          expect(token?.length, greaterThan(24));
+          expect(token.length, greaterThan(24));
         });
 
         test('should return a token using `getIdToken()` after sign in', () async {
@@ -50,7 +50,7 @@ void main() {
 
           String? token = await userCredential.user!.getIdToken(true);
 
-          expect(token?.length, greaterThan(24));
+          expect(token.length, greaterThan(24));
         });
 
         test('should return a token using `getIdTokenResult()` after sign in', () async {
@@ -77,7 +77,7 @@ void main() {
             email: email,
             password: testPassword,
           );
-          user = userCredential.user!;
+          user = userCredential.user;
 
           // needed for method to throw an error
           await FirebaseAuth.instance.signOut();
@@ -105,7 +105,7 @@ void main() {
             email: email,
             password: testPassword,
           );
-          user = userCredential.user!;
+          user = userCredential.user;
 
           // Test
           final idTokenResult = await user.getIdTokenResult();
@@ -134,7 +134,7 @@ void main() {
             ),
           );
 
-          User linkedUser = linkedUserCredential.user!;
+          User linkedUser = linkedUserCredential.user;
           expect(linkedUser.email, equals(email));
           expect(
             linkedUser.email,
@@ -278,7 +278,7 @@ void main() {
             email: email,
             password: testPassword,
           );
-          User initialUser = FirebaseAuth.instance.currentUser!;
+          User initialUser = FirebaseAuth.instance.currentUser;
 
           // Test
           AuthCredential credential = EmailAuthProvider.credential(
@@ -289,7 +289,7 @@ void main() {
               .reauthenticateWithCredential(credential);
 
           // Assertions
-          User currentUser = FirebaseAuth.instance.currentUser!;
+          User currentUser = FirebaseAuth.instance.currentUser;
           expect(currentUser.email, equals(email));
           expect(currentUser.uid, equals(initialUser.uid));
         });
@@ -341,7 +341,7 @@ void main() {
             email: email,
             password: testPassword,
           );
-          User user = userCredential.user!;
+          User user = userCredential.user;
 
           try {
             // Test
@@ -489,7 +489,7 @@ void main() {
               .linkWithCredential(credential);
 
           // verify user is linked
-          User linkedUser = FirebaseAuth.instance.currentUser!;
+          User linkedUser = FirebaseAuth.instance.currentUser;
           expect(linkedUser.email, email);
           expect(linkedUser.providerData, isA<List<UserInfo>>());
           expect(linkedUser.providerData.length, equals(1));
@@ -499,7 +499,7 @@ void main() {
               .unlink(EmailAuthProvider.PROVIDER_ID);
 
           // Assertions
-          User unlinkedUser = FirebaseAuth.instance.currentUser!;
+          User unlinkedUser = FirebaseAuth.instance.currentUser;
           expect(unlinkedUser.providerData, isA<List<UserInfo>>());
           expect(unlinkedUser.providerData.length, equals(0));
         });
@@ -517,7 +517,7 @@ void main() {
               .linkWithCredential(credential);
 
           // verify user is linked
-          User linkedUser = FirebaseAuth.instance.currentUser!;
+          User linkedUser = FirebaseAuth.instance.currentUser;
           expect(linkedUser.email, email);
 
           // Test
@@ -673,7 +673,7 @@ void main() {
             email: generateRandomEmail(),
             password: testPassword,
           );
-          User user = FirebaseAuth.instance.currentUser!;
+          User user = FirebaseAuth.instance.currentUser;
 
           // Test
           UserMetadata metadata = user.metadata;
@@ -968,7 +968,7 @@ void main() {
             email: email,
             password: testPassword,
           );
-          user = userCredential.user!;
+          user = userCredential.user;
 
           // Test
           await user.delete();
@@ -999,7 +999,7 @@ void main() {
             email: email,
             password: testPassword,
           );
-          user = userCredential.user!;
+          user = userCredential.user;
 
           await FirebaseAuth.instance.signOut();
 

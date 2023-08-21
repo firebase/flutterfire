@@ -247,7 +247,7 @@ void main() {
 
           Function successCallback = (UserCredential newUserCredential) async {
             expect(newUserCredential.user, isA<User>());
-            User newUser = newUserCredential.user!;
+            User newUser = newUserCredential.user;
 
             expect(newUser.uid, isA<String>());
             expect(newUser.email, equals(email));
@@ -255,7 +255,7 @@ void main() {
             expect(newUser.isAnonymous, isFalse);
             expect(newUser.uid, equals(FirebaseAuth.instance.currentUser!.uid));
 
-            var additionalUserInfo = newUserCredential.additionalUserInfo!;
+            var additionalUserInfo = newUserCredential.additionalUserInfo;
             expect(additionalUserInfo, isA<AdditionalUserInfo>());
             expect(additionalUserInfo.isNewUser, isTrue);
 
@@ -503,7 +503,7 @@ void main() {
       group('signInAnonymously()', () {
         test('should sign in anonymously', () async {
           Future successCallback(UserCredential currentUserCredential) async {
-            var currentUser = currentUserCredential.user!;
+            var currentUser = currentUserCredential.user;
 
             expect(currentUser, isA<User>());
             expect(currentUser.uid, isA<String>());
@@ -609,8 +609,8 @@ void main() {
           final claims = {
             'roles': [
               {'role': 'member'},
-              {'role': 'admin'}
-            ]
+              {'role': 'admin'},
+            ],
           };
 
           await ensureSignedOut();
@@ -809,7 +809,7 @@ void main() {
                   ),
                 );
 
-                return completer.future as FutureOr<PhoneAuthCredential>;
+                return completer.future;
               }
 
               PhoneAuthCredential credential = await getCredential();

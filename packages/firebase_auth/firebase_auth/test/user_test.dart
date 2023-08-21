@@ -108,13 +108,13 @@ void main() {
 
       user = kMockUser;
 
-      mockUserPlatform = MockUserPlatform(mockAuthPlatform, user!);
+      mockUserPlatform = MockUserPlatform(mockAuthPlatform, user);
 
       mockUserCredPlatform = MockUserCredentialPlatform(
         FirebaseAuthPlatform.instance,
         mockAdditionalInfo,
         mockCredential,
-        mockUserPlatform!,
+        mockUserPlatform,
       );
 
       when(mockAuthPlatform.signInAnonymously()).thenAnswer(
@@ -325,7 +325,7 @@ void main() {
 
     test('toString()', () async {
       when(mockAuthPlatform.currentUser).thenReturn(TestUserPlatform(
-          mockAuthPlatform, TestMultiFactorPlatform(mockAuthPlatform), user!));
+          mockAuthPlatform, TestMultiFactorPlatform(mockAuthPlatform), user));
 
       const userInfo = 'UserInfo('
           'displayName: Flutter Test User, '

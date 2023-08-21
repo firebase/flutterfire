@@ -141,7 +141,7 @@ abstract class MethodChannelTask extends TaskPlatform {
         'handle': _handle,
       });
 
-      bool success = data!['status'];
+      bool success = data['status'];
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.paused,
             Map<String, dynamic>.from(data['snapshot']));
@@ -164,7 +164,7 @@ abstract class MethodChannelTask extends TaskPlatform {
         'handle': _handle,
       });
 
-      bool success = data!['status'];
+      bool success = data['status'];
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running,
             Map<String, dynamic>.from(data['snapshot']));
@@ -187,7 +187,7 @@ abstract class MethodChannelTask extends TaskPlatform {
         'handle': _handle,
       });
 
-      bool success = data!['status'];
+      bool success = data['status'];
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.canceled,
             Map<String, dynamic>.from(data['snapshot']));

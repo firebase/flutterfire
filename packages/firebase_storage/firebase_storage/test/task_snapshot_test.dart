@@ -58,7 +58,7 @@ void main() {
       test('verify delegate method is called', () {
         when(mockTaskSnapshotPlatform.metadata).thenReturn(fullMetadata);
 
-        final result = taskSnapshot.metadata!;
+        final result = taskSnapshot.metadata;
 
         expect(result, isA<FullMetadata>());
         expect(result.contentType, 'gif');

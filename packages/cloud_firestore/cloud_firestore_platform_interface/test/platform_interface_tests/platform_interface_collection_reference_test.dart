@@ -60,7 +60,7 @@ void main() {
 
     test('parent', () {
       final collection = TestSubcollectionReference._();
-      final parent = collection.parent!;
+      final parent = collection.parent;
       final parentPath = parent.path;
       expect(parent, isInstanceOf<DocumentReferencePlatform>());
       expect(parentPath, equals('$_kCollectionId/$_kDocumentId'));

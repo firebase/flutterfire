@@ -33,7 +33,7 @@ void main() {
       );
 
       firebaseDynamicLinksPlatformPlatform = TestFirebaseDynamicLinksPlatform(
-        app!,
+        app,
       );
     });
 
@@ -59,7 +59,7 @@ void main() {
     group('set.instance', () {
       test('sets the current instance', () {
         FirebaseDynamicLinksPlatform.instance =
-            TestFirebaseDynamicLinksPlatform(secondaryApp!);
+            TestFirebaseDynamicLinksPlatform(secondaryApp);
 
         expect(
           FirebaseDynamicLinksPlatform.instance,

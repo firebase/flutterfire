@@ -31,7 +31,7 @@ void main() {
       );
 
       firebaseAppCheckPlatform = TestFirebaseAppCheckPlatform(
-        app!,
+        app,
       );
     });
 
@@ -53,7 +53,7 @@ void main() {
 
     test('set.instance', () {
       FirebaseAppCheckPlatform.instance =
-          TestFirebaseAppCheckPlatform(secondaryApp!);
+          TestFirebaseAppCheckPlatform(secondaryApp);
 
       expect(
         FirebaseAppCheckPlatform.instance,

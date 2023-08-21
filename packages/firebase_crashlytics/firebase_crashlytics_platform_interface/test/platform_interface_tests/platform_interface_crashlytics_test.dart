@@ -32,7 +32,7 @@ void main() {
       );
 
       firebaseCrashlyticsPlatform = TestFirebaseCrashlyticsPlatform(
-        app!,
+        app,
       );
     });
 
@@ -51,7 +51,7 @@ void main() {
     group('set.instance', () {
       test('sets the current instance', () {
         FirebaseCrashlyticsPlatform.instance =
-            TestFirebaseCrashlyticsPlatform(secondaryApp!);
+            TestFirebaseCrashlyticsPlatform(secondaryApp);
 
         expect(FirebaseCrashlyticsPlatform.instance,
             isA<FirebaseCrashlyticsPlatform>());
