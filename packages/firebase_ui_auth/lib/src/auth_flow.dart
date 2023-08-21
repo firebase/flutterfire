@@ -7,7 +7,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
 /// An exception that is being thrown when user cancels the authentication

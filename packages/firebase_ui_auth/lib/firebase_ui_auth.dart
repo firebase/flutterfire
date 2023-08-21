@@ -2,7 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
+import 'package:firebase_auth/firebase_auth.dart'
+    hide OAuthProvider, AuthProvider;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_oauth/firebase_ui_oauth.dart';
 import 'package:flutter/widgets.dart';
