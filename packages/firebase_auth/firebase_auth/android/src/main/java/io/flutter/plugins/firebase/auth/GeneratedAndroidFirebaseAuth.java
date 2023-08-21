@@ -19,9 +19,6 @@ import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +35,7 @@ public class GeneratedAndroidFirebaseAuth {
     /** The error details. Must be a datatype supported by the api codec. */
     public final Object details;
 
-    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) 
-    {
+    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) {
       super(message);
       this.code = code;
       this.details = details;
@@ -58,15 +54,12 @@ public class GeneratedAndroidFirebaseAuth {
       errorList.add(exception.toString());
       errorList.add(exception.getClass().getSimpleName());
       errorList.add(
-        "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
+          "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
     }
     return errorList;
   }
 
-  /**
-   * The type of operation that generated the action code from calling
-   * [checkActionCode].
-   */
+  /** The type of operation that generated the action code from calling [checkActionCode]. */
   public enum ActionCodeInfoOperation {
     /** Unknown operation. */
     UNKNOWN(0),
@@ -484,9 +477,11 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull PigeonActionCodeInfo fromList(@NonNull ArrayList<Object> list) {
       PigeonActionCodeInfo pigeonResult = new PigeonActionCodeInfo();
       Object operation = list.get(0);
-      pigeonResult.setOperation(operation == null ? null : ActionCodeInfoOperation.values()[(int) operation]);
+      pigeonResult.setOperation(
+          operation == null ? null : ActionCodeInfoOperation.values()[(int) operation]);
       Object data = list.get(1);
-      pigeonResult.setData((data == null) ? null : PigeonActionCodeInfoData.fromList((ArrayList<Object>) data));
+      pigeonResult.setData(
+          (data == null) ? null : PigeonActionCodeInfoData.fromList((ArrayList<Object>) data));
       return pigeonResult;
     }
   }
@@ -631,11 +626,18 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull PigeonUserCredential fromList(@NonNull ArrayList<Object> list) {
       PigeonUserCredential pigeonResult = new PigeonUserCredential();
       Object user = list.get(0);
-      pigeonResult.setUser((user == null) ? null : PigeonUserDetails.fromList((ArrayList<Object>) user));
+      pigeonResult.setUser(
+          (user == null) ? null : PigeonUserDetails.fromList((ArrayList<Object>) user));
       Object additionalUserInfo = list.get(1);
-      pigeonResult.setAdditionalUserInfo((additionalUserInfo == null) ? null : PigeonAdditionalUserInfo.fromList((ArrayList<Object>) additionalUserInfo));
+      pigeonResult.setAdditionalUserInfo(
+          (additionalUserInfo == null)
+              ? null
+              : PigeonAdditionalUserInfo.fromList((ArrayList<Object>) additionalUserInfo));
       Object credential = list.get(2);
-      pigeonResult.setCredential((credential == null) ? null : PigeonAuthCredential.fromList((ArrayList<Object>) credential));
+      pigeonResult.setCredential(
+          (credential == null)
+              ? null
+              : PigeonAuthCredential.fromList((ArrayList<Object>) credential));
       return pigeonResult;
     }
   }
@@ -863,7 +865,10 @@ public class GeneratedAndroidFirebaseAuth {
       Object signInMethod = list.get(1);
       pigeonResult.setSignInMethod((String) signInMethod);
       Object nativeId = list.get(2);
-      pigeonResult.setNativeId((nativeId == null) ? null : ((nativeId instanceof Integer) ? (Integer) nativeId : (Long) nativeId));
+      pigeonResult.setNativeId(
+          (nativeId == null)
+              ? null
+              : ((nativeId instanceof Integer) ? (Integer) nativeId : (Long) nativeId));
       Object accessToken = list.get(3);
       pigeonResult.setAccessToken((String) accessToken);
       return pigeonResult;
@@ -1149,9 +1154,19 @@ public class GeneratedAndroidFirebaseAuth {
       Object refreshToken = list.get(9);
       pigeonResult.setRefreshToken((String) refreshToken);
       Object creationTimestamp = list.get(10);
-      pigeonResult.setCreationTimestamp((creationTimestamp == null) ? null : ((creationTimestamp instanceof Integer) ? (Integer) creationTimestamp : (Long) creationTimestamp));
+      pigeonResult.setCreationTimestamp(
+          (creationTimestamp == null)
+              ? null
+              : ((creationTimestamp instanceof Integer)
+                  ? (Integer) creationTimestamp
+                  : (Long) creationTimestamp));
       Object lastSignInTimestamp = list.get(11);
-      pigeonResult.setLastSignInTimestamp((lastSignInTimestamp == null) ? null : ((lastSignInTimestamp instanceof Integer) ? (Integer) lastSignInTimestamp : (Long) lastSignInTimestamp));
+      pigeonResult.setLastSignInTimestamp(
+          (lastSignInTimestamp == null)
+              ? null
+              : ((lastSignInTimestamp instanceof Integer)
+                  ? (Integer) lastSignInTimestamp
+                  : (Long) lastSignInTimestamp));
       return pigeonResult;
     }
   }
@@ -1222,7 +1237,8 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull PigeonUserDetails fromList(@NonNull ArrayList<Object> list) {
       PigeonUserDetails pigeonResult = new PigeonUserDetails();
       Object userInfo = list.get(0);
-      pigeonResult.setUserInfo((userInfo == null) ? null : PigeonUserInfo.fromList((ArrayList<Object>) userInfo));
+      pigeonResult.setUserInfo(
+          (userInfo == null) ? null : PigeonUserInfo.fromList((ArrayList<Object>) userInfo));
       Object providerData = list.get(1);
       pigeonResult.setProviderData((List<Map<Object, Object>>) providerData);
       return pigeonResult;
@@ -1420,7 +1436,8 @@ public class GeneratedAndroidFirebaseAuth {
 
     public void setAppVerificationDisabledForTesting(@NonNull Boolean setterArg) {
       if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"appVerificationDisabledForTesting\" is null.");
+        throw new IllegalStateException(
+            "Nonnull field \"appVerificationDisabledForTesting\" is null.");
       }
       this.appVerificationDisabledForTesting = setterArg;
     }
@@ -1530,7 +1547,8 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull PigeonFirebaseAuthSettings fromList(@NonNull ArrayList<Object> list) {
       PigeonFirebaseAuthSettings pigeonResult = new PigeonFirebaseAuthSettings();
       Object appVerificationDisabledForTesting = list.get(0);
-      pigeonResult.setAppVerificationDisabledForTesting((Boolean) appVerificationDisabledForTesting);
+      pigeonResult.setAppVerificationDisabledForTesting(
+          (Boolean) appVerificationDisabledForTesting);
       Object userAccessGroup = list.get(1);
       pigeonResult.setUserAccessGroup((String) userAccessGroup);
       Object phoneNumber = list.get(2);
@@ -1775,9 +1793,17 @@ public class GeneratedAndroidFirebaseAuth {
       Object phoneNumber = list.get(0);
       pigeonResult.setPhoneNumber((String) phoneNumber);
       Object timeout = list.get(1);
-      pigeonResult.setTimeout((timeout == null) ? null : ((timeout instanceof Integer) ? (Integer) timeout : (Long) timeout));
+      pigeonResult.setTimeout(
+          (timeout == null)
+              ? null
+              : ((timeout instanceof Integer) ? (Integer) timeout : (Long) timeout));
       Object forceResendingToken = list.get(2);
-      pigeonResult.setForceResendingToken((forceResendingToken == null) ? null : ((forceResendingToken instanceof Integer) ? (Integer) forceResendingToken : (Long) forceResendingToken));
+      pigeonResult.setForceResendingToken(
+          (forceResendingToken == null)
+              ? null
+              : ((forceResendingToken instanceof Integer)
+                  ? (Integer) forceResendingToken
+                  : (Long) forceResendingToken));
       Object autoRetrievedSmsCodeForTesting = list.get(3);
       pigeonResult.setAutoRetrievedSmsCodeForTesting((String) autoRetrievedSmsCodeForTesting);
       Object multiFactorInfoId = list.get(4);
@@ -1942,11 +1968,26 @@ public class GeneratedAndroidFirebaseAuth {
       Object token = list.get(0);
       pigeonResult.setToken((String) token);
       Object expirationTimestamp = list.get(1);
-      pigeonResult.setExpirationTimestamp((expirationTimestamp == null) ? null : ((expirationTimestamp instanceof Integer) ? (Integer) expirationTimestamp : (Long) expirationTimestamp));
+      pigeonResult.setExpirationTimestamp(
+          (expirationTimestamp == null)
+              ? null
+              : ((expirationTimestamp instanceof Integer)
+                  ? (Integer) expirationTimestamp
+                  : (Long) expirationTimestamp));
       Object authTimestamp = list.get(2);
-      pigeonResult.setAuthTimestamp((authTimestamp == null) ? null : ((authTimestamp instanceof Integer) ? (Integer) authTimestamp : (Long) authTimestamp));
+      pigeonResult.setAuthTimestamp(
+          (authTimestamp == null)
+              ? null
+              : ((authTimestamp instanceof Integer)
+                  ? (Integer) authTimestamp
+                  : (Long) authTimestamp));
       Object issuedAtTimestamp = list.get(3);
-      pigeonResult.setIssuedAtTimestamp((issuedAtTimestamp == null) ? null : ((issuedAtTimestamp instanceof Integer) ? (Integer) issuedAtTimestamp : (Long) issuedAtTimestamp));
+      pigeonResult.setIssuedAtTimestamp(
+          (issuedAtTimestamp == null)
+              ? null
+              : ((issuedAtTimestamp instanceof Integer)
+                  ? (Integer) issuedAtTimestamp
+                  : (Long) issuedAtTimestamp));
       Object signInProvider = list.get(4);
       pigeonResult.setSignInProvider((String) signInProvider);
       Object claims = list.get(5);
@@ -2192,11 +2233,24 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull PigeonTotpSecret fromList(@NonNull ArrayList<Object> list) {
       PigeonTotpSecret pigeonResult = new PigeonTotpSecret();
       Object codeIntervalSeconds = list.get(0);
-      pigeonResult.setCodeIntervalSeconds((codeIntervalSeconds == null) ? null : ((codeIntervalSeconds instanceof Integer) ? (Integer) codeIntervalSeconds : (Long) codeIntervalSeconds));
+      pigeonResult.setCodeIntervalSeconds(
+          (codeIntervalSeconds == null)
+              ? null
+              : ((codeIntervalSeconds instanceof Integer)
+                  ? (Integer) codeIntervalSeconds
+                  : (Long) codeIntervalSeconds));
       Object codeLength = list.get(1);
-      pigeonResult.setCodeLength((codeLength == null) ? null : ((codeLength instanceof Integer) ? (Integer) codeLength : (Long) codeLength));
+      pigeonResult.setCodeLength(
+          (codeLength == null)
+              ? null
+              : ((codeLength instanceof Integer) ? (Integer) codeLength : (Long) codeLength));
       Object enrollmentCompletionDeadline = list.get(2);
-      pigeonResult.setEnrollmentCompletionDeadline((enrollmentCompletionDeadline == null) ? null : ((enrollmentCompletionDeadline instanceof Integer) ? (Integer) enrollmentCompletionDeadline : (Long) enrollmentCompletionDeadline));
+      pigeonResult.setEnrollmentCompletionDeadline(
+          (enrollmentCompletionDeadline == null)
+              ? null
+              : ((enrollmentCompletionDeadline instanceof Integer)
+                  ? (Integer) enrollmentCompletionDeadline
+                  : (Long) enrollmentCompletionDeadline));
       Object hashingAlgorithm = list.get(3);
       pigeonResult.setHashingAlgorithm((String) hashingAlgorithm);
       Object secretKey = list.get(4);
@@ -2330,54 +2384,114 @@ public class GeneratedAndroidFirebaseAuth {
 
     void registerAuthStateListener(@NonNull PigeonFirebaseApp app, @NonNull Result<String> result);
 
-    void useEmulator(@NonNull PigeonFirebaseApp app, @NonNull String host, @NonNull Long port, @NonNull Result<Void> result);
+    void useEmulator(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String host,
+        @NonNull Long port,
+        @NonNull Result<Void> result);
 
-    void applyActionCode(@NonNull PigeonFirebaseApp app, @NonNull String code, @NonNull Result<Void> result);
+    void applyActionCode(
+        @NonNull PigeonFirebaseApp app, @NonNull String code, @NonNull Result<Void> result);
 
-    void checkActionCode(@NonNull PigeonFirebaseApp app, @NonNull String code, @NonNull Result<PigeonActionCodeInfo> result);
+    void checkActionCode(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String code,
+        @NonNull Result<PigeonActionCodeInfo> result);
 
-    void confirmPasswordReset(@NonNull PigeonFirebaseApp app, @NonNull String code, @NonNull String newPassword, @NonNull Result<Void> result);
+    void confirmPasswordReset(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String code,
+        @NonNull String newPassword,
+        @NonNull Result<Void> result);
 
-    void createUserWithEmailAndPassword(@NonNull PigeonFirebaseApp app, @NonNull String email, @NonNull String password, @NonNull Result<PigeonUserCredential> result);
+    void createUserWithEmailAndPassword(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String email,
+        @NonNull String password,
+        @NonNull Result<PigeonUserCredential> result);
 
-    void signInAnonymously(@NonNull PigeonFirebaseApp app, @NonNull Result<PigeonUserCredential> result);
+    void signInAnonymously(
+        @NonNull PigeonFirebaseApp app, @NonNull Result<PigeonUserCredential> result);
 
-    void signInWithCredential(@NonNull PigeonFirebaseApp app, @NonNull Map<String, Object> input, @NonNull Result<PigeonUserCredential> result);
+    void signInWithCredential(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull Map<String, Object> input,
+        @NonNull Result<PigeonUserCredential> result);
 
-    void signInWithCustomToken(@NonNull PigeonFirebaseApp app, @NonNull String token, @NonNull Result<PigeonUserCredential> result);
+    void signInWithCustomToken(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String token,
+        @NonNull Result<PigeonUserCredential> result);
 
-    void signInWithEmailAndPassword(@NonNull PigeonFirebaseApp app, @NonNull String email, @NonNull String password, @NonNull Result<PigeonUserCredential> result);
+    void signInWithEmailAndPassword(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String email,
+        @NonNull String password,
+        @NonNull Result<PigeonUserCredential> result);
 
-    void signInWithEmailLink(@NonNull PigeonFirebaseApp app, @NonNull String email, @NonNull String emailLink, @NonNull Result<PigeonUserCredential> result);
+    void signInWithEmailLink(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String email,
+        @NonNull String emailLink,
+        @NonNull Result<PigeonUserCredential> result);
 
-    void signInWithProvider(@NonNull PigeonFirebaseApp app, @NonNull PigeonSignInProvider signInProvider, @NonNull Result<PigeonUserCredential> result);
+    void signInWithProvider(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull PigeonSignInProvider signInProvider,
+        @NonNull Result<PigeonUserCredential> result);
 
     void signOut(@NonNull PigeonFirebaseApp app, @NonNull Result<Void> result);
 
-    void fetchSignInMethodsForEmail(@NonNull PigeonFirebaseApp app, @NonNull String email, @NonNull Result<List<String>> result);
+    void fetchSignInMethodsForEmail(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String email,
+        @NonNull Result<List<String>> result);
 
-    void sendPasswordResetEmail(@NonNull PigeonFirebaseApp app, @NonNull String email, @Nullable PigeonActionCodeSettings actionCodeSettings, @NonNull Result<Void> result);
+    void sendPasswordResetEmail(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String email,
+        @Nullable PigeonActionCodeSettings actionCodeSettings,
+        @NonNull Result<Void> result);
 
-    void sendSignInLinkToEmail(@NonNull PigeonFirebaseApp app, @NonNull String email, @NonNull PigeonActionCodeSettings actionCodeSettings, @NonNull Result<Void> result);
+    void sendSignInLinkToEmail(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String email,
+        @NonNull PigeonActionCodeSettings actionCodeSettings,
+        @NonNull Result<Void> result);
 
-    void setLanguageCode(@NonNull PigeonFirebaseApp app, @Nullable String languageCode, @NonNull Result<String> result);
+    void setLanguageCode(
+        @NonNull PigeonFirebaseApp app,
+        @Nullable String languageCode,
+        @NonNull Result<String> result);
 
-    void setSettings(@NonNull PigeonFirebaseApp app, @NonNull PigeonFirebaseAuthSettings settings, @NonNull Result<Void> result);
+    void setSettings(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull PigeonFirebaseAuthSettings settings,
+        @NonNull Result<Void> result);
 
-    void verifyPasswordResetCode(@NonNull PigeonFirebaseApp app, @NonNull String code, @NonNull Result<String> result);
+    void verifyPasswordResetCode(
+        @NonNull PigeonFirebaseApp app, @NonNull String code, @NonNull Result<String> result);
 
-    void verifyPhoneNumber(@NonNull PigeonFirebaseApp app, @NonNull PigeonVerifyPhoneNumberRequest request, @NonNull Result<String> result);
+    void verifyPhoneNumber(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull PigeonVerifyPhoneNumberRequest request,
+        @NonNull Result<String> result);
 
     /** The codec used by FirebaseAuthHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return FirebaseAuthHostApiCodec.INSTANCE;
     }
-    /**Sets up an instance of `FirebaseAuthHostApi` to handle messages through the `binaryMessenger`. */
+    /**
+     * Sets up an instance of `FirebaseAuthHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseAuthHostApi api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2406,7 +2520,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2435,7 +2551,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2457,7 +2575,11 @@ public class GeneratedAndroidFirebaseAuth {
                       }
                     };
 
-                api.useEmulator(appArg, hostArg, (portArg == null) ? null : portArg.longValue(), resultCallback);
+                api.useEmulator(
+                    appArg,
+                    hostArg,
+                    (portArg == null) ? null : portArg.longValue(),
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -2466,7 +2588,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2496,7 +2620,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2526,7 +2652,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2557,7 +2685,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2588,7 +2718,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2617,7 +2749,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2647,7 +2781,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2677,7 +2813,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2708,7 +2846,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2739,7 +2879,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2769,7 +2911,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2798,7 +2942,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2828,7 +2974,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2836,7 +2984,8 @@ public class GeneratedAndroidFirebaseAuth {
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
                 String emailArg = (String) args.get(1);
-                PigeonActionCodeSettings actionCodeSettingsArg = (PigeonActionCodeSettings) args.get(2);
+                PigeonActionCodeSettings actionCodeSettingsArg =
+                    (PigeonActionCodeSettings) args.get(2);
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -2859,7 +3008,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2867,7 +3018,8 @@ public class GeneratedAndroidFirebaseAuth {
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
                 String emailArg = (String) args.get(1);
-                PigeonActionCodeSettings actionCodeSettingsArg = (PigeonActionCodeSettings) args.get(2);
+                PigeonActionCodeSettings actionCodeSettingsArg =
+                    (PigeonActionCodeSettings) args.get(2);
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -2890,7 +3042,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2920,7 +3074,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2950,7 +3106,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -2980,14 +3138,17 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
-                PigeonVerifyPhoneNumberRequest requestArg = (PigeonVerifyPhoneNumberRequest) args.get(1);
+                PigeonVerifyPhoneNumberRequest requestArg =
+                    (PigeonVerifyPhoneNumberRequest) args.get(1);
                 Result<String> resultCallback =
                     new Result<String>() {
                       public void success(String result) {
@@ -3126,42 +3287,85 @@ public class GeneratedAndroidFirebaseAuth {
 
     void delete(@NonNull PigeonFirebaseApp app, @NonNull Result<Void> result);
 
-    void getIdToken(@NonNull PigeonFirebaseApp app, @NonNull Boolean forceRefresh, @NonNull Result<PigeonIdTokenResult> result);
+    void getIdToken(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull Boolean forceRefresh,
+        @NonNull Result<PigeonIdTokenResult> result);
 
-    void linkWithCredential(@NonNull PigeonFirebaseApp app, @NonNull Map<String, Object> input, @NonNull Result<PigeonUserCredential> result);
+    void linkWithCredential(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull Map<String, Object> input,
+        @NonNull Result<PigeonUserCredential> result);
 
-    void linkWithProvider(@NonNull PigeonFirebaseApp app, @NonNull PigeonSignInProvider signInProvider, @NonNull Result<PigeonUserCredential> result);
+    void linkWithProvider(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull PigeonSignInProvider signInProvider,
+        @NonNull Result<PigeonUserCredential> result);
 
-    void reauthenticateWithCredential(@NonNull PigeonFirebaseApp app, @NonNull Map<String, Object> input, @NonNull Result<PigeonUserCredential> result);
+    void reauthenticateWithCredential(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull Map<String, Object> input,
+        @NonNull Result<PigeonUserCredential> result);
 
-    void reauthenticateWithProvider(@NonNull PigeonFirebaseApp app, @NonNull PigeonSignInProvider signInProvider, @NonNull Result<PigeonUserCredential> result);
+    void reauthenticateWithProvider(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull PigeonSignInProvider signInProvider,
+        @NonNull Result<PigeonUserCredential> result);
 
     void reload(@NonNull PigeonFirebaseApp app, @NonNull Result<PigeonUserDetails> result);
 
-    void sendEmailVerification(@NonNull PigeonFirebaseApp app, @Nullable PigeonActionCodeSettings actionCodeSettings, @NonNull Result<Void> result);
+    void sendEmailVerification(
+        @NonNull PigeonFirebaseApp app,
+        @Nullable PigeonActionCodeSettings actionCodeSettings,
+        @NonNull Result<Void> result);
 
-    void unlink(@NonNull PigeonFirebaseApp app, @NonNull String providerId, @NonNull Result<PigeonUserCredential> result);
+    void unlink(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String providerId,
+        @NonNull Result<PigeonUserCredential> result);
 
-    void updateEmail(@NonNull PigeonFirebaseApp app, @NonNull String newEmail, @NonNull Result<PigeonUserDetails> result);
+    void updateEmail(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String newEmail,
+        @NonNull Result<PigeonUserDetails> result);
 
-    void updatePassword(@NonNull PigeonFirebaseApp app, @NonNull String newPassword, @NonNull Result<PigeonUserDetails> result);
+    void updatePassword(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String newPassword,
+        @NonNull Result<PigeonUserDetails> result);
 
-    void updatePhoneNumber(@NonNull PigeonFirebaseApp app, @NonNull Map<String, Object> input, @NonNull Result<PigeonUserDetails> result);
+    void updatePhoneNumber(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull Map<String, Object> input,
+        @NonNull Result<PigeonUserDetails> result);
 
-    void updateProfile(@NonNull PigeonFirebaseApp app, @NonNull PigeonUserProfile profile, @NonNull Result<PigeonUserDetails> result);
+    void updateProfile(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull PigeonUserProfile profile,
+        @NonNull Result<PigeonUserDetails> result);
 
-    void verifyBeforeUpdateEmail(@NonNull PigeonFirebaseApp app, @NonNull String newEmail, @Nullable PigeonActionCodeSettings actionCodeSettings, @NonNull Result<Void> result);
+    void verifyBeforeUpdateEmail(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String newEmail,
+        @Nullable PigeonActionCodeSettings actionCodeSettings,
+        @NonNull Result<Void> result);
 
     /** The codec used by FirebaseAuthUserHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return FirebaseAuthUserHostApiCodec.INSTANCE;
     }
-    /**Sets up an instance of `FirebaseAuthUserHostApi` to handle messages through the `binaryMessenger`. */
-    static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseAuthUserHostApi api) {
+    /**
+     * Sets up an instance of `FirebaseAuthUserHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
+    static void setup(
+        @NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseAuthUserHostApi api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3190,7 +3394,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3220,7 +3426,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3250,7 +3458,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3280,7 +3490,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3310,7 +3522,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3340,7 +3554,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3369,14 +3585,17 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
-                PigeonActionCodeSettings actionCodeSettingsArg = (PigeonActionCodeSettings) args.get(1);
+                PigeonActionCodeSettings actionCodeSettingsArg =
+                    (PigeonActionCodeSettings) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -3399,7 +3618,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3429,7 +3650,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3459,7 +3682,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3489,7 +3714,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3519,7 +3746,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3549,7 +3778,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3557,7 +3788,8 @@ public class GeneratedAndroidFirebaseAuth {
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
                 String newEmailArg = (String) args.get(1);
-                PigeonActionCodeSettings actionCodeSettingsArg = (PigeonActionCodeSettings) args.get(2);
+                PigeonActionCodeSettings actionCodeSettingsArg =
+                    (PigeonActionCodeSettings) args.get(2);
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -3571,7 +3803,8 @@ public class GeneratedAndroidFirebaseAuth {
                       }
                     };
 
-                api.verifyBeforeUpdateEmail(appArg, newEmailArg, actionCodeSettingsArg, resultCallback);
+                api.verifyBeforeUpdateEmail(
+                    appArg, newEmailArg, actionCodeSettingsArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -3624,33 +3857,51 @@ public class GeneratedAndroidFirebaseAuth {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface MultiFactorUserHostApi {
 
-    void enrollPhone(@NonNull PigeonFirebaseApp app, @NonNull PigeonPhoneMultiFactorAssertion assertion, @Nullable String displayName, @NonNull Result<Void> result);
+    void enrollPhone(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull PigeonPhoneMultiFactorAssertion assertion,
+        @Nullable String displayName,
+        @NonNull Result<Void> result);
 
-    void enrollTotp(@NonNull PigeonFirebaseApp app, @NonNull String assertionId, @Nullable String displayName, @NonNull Result<Void> result);
+    void enrollTotp(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String assertionId,
+        @Nullable String displayName,
+        @NonNull Result<Void> result);
 
-    void getSession(@NonNull PigeonFirebaseApp app, @NonNull Result<PigeonMultiFactorSession> result);
+    void getSession(
+        @NonNull PigeonFirebaseApp app, @NonNull Result<PigeonMultiFactorSession> result);
 
-    void unenroll(@NonNull PigeonFirebaseApp app, @NonNull String factorUid, @NonNull Result<Void> result);
+    void unenroll(
+        @NonNull PigeonFirebaseApp app, @NonNull String factorUid, @NonNull Result<Void> result);
 
-    void getEnrolledFactors(@NonNull PigeonFirebaseApp app, @NonNull Result<List<PigeonMultiFactorInfo>> result);
+    void getEnrolledFactors(
+        @NonNull PigeonFirebaseApp app, @NonNull Result<List<PigeonMultiFactorInfo>> result);
 
     /** The codec used by MultiFactorUserHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return MultiFactorUserHostApiCodec.INSTANCE;
     }
-    /**Sets up an instance of `MultiFactorUserHostApi` to handle messages through the `binaryMessenger`. */
-    static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactorUserHostApi api) {
+    /**
+     * Sets up an instance of `MultiFactorUserHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
+    static void setup(
+        @NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactorUserHostApi api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
-                PigeonPhoneMultiFactorAssertion assertionArg = (PigeonPhoneMultiFactorAssertion) args.get(1);
+                PigeonPhoneMultiFactorAssertion assertionArg =
+                    (PigeonPhoneMultiFactorAssertion) args.get(1);
                 String displayNameArg = (String) args.get(2);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -3674,7 +3925,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3705,7 +3958,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3734,7 +3989,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3764,7 +4021,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3794,7 +4053,8 @@ public class GeneratedAndroidFirebaseAuth {
   }
 
   private static class MultiFactoResolverHostApiCodec extends StandardMessageCodec {
-    public static final MultiFactoResolverHostApiCodec INSTANCE = new MultiFactoResolverHostApiCodec();
+    public static final MultiFactoResolverHostApiCodec INSTANCE =
+        new MultiFactoResolverHostApiCodec();
 
     private MultiFactoResolverHostApiCodec() {}
 
@@ -3847,25 +4107,36 @@ public class GeneratedAndroidFirebaseAuth {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface MultiFactoResolverHostApi {
 
-    void resolveSignIn(@NonNull String resolverId, @Nullable PigeonPhoneMultiFactorAssertion assertion, @Nullable String totpAssertionId, @NonNull Result<PigeonUserCredential> result);
+    void resolveSignIn(
+        @NonNull String resolverId,
+        @Nullable PigeonPhoneMultiFactorAssertion assertion,
+        @Nullable String totpAssertionId,
+        @NonNull Result<PigeonUserCredential> result);
 
     /** The codec used by MultiFactoResolverHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return MultiFactoResolverHostApiCodec.INSTANCE;
     }
-    /**Sets up an instance of `MultiFactoResolverHostApi` to handle messages through the `binaryMessenger`. */
-    static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactoResolverHostApi api) {
+    /**
+     * Sets up an instance of `MultiFactoResolverHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
+    static void setup(
+        @NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactoResolverHostApi api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 String resolverIdArg = (String) args.get(0);
-                PigeonPhoneMultiFactorAssertion assertionArg = (PigeonPhoneMultiFactorAssertion) args.get(1);
+                PigeonPhoneMultiFactorAssertion assertionArg =
+                    (PigeonPhoneMultiFactorAssertion) args.get(1);
                 String totpAssertionIdArg = (String) args.get(2);
                 Result<PigeonUserCredential> resultCallback =
                     new Result<PigeonUserCredential>() {
@@ -3920,20 +4191,30 @@ public class GeneratedAndroidFirebaseAuth {
 
     void generateSecret(@NonNull String sessionId, @NonNull Result<PigeonTotpSecret> result);
 
-    void getAssertionForEnrollment(@NonNull String secretKey, @NonNull String oneTimePassword, @NonNull Result<String> result);
+    void getAssertionForEnrollment(
+        @NonNull String secretKey, @NonNull String oneTimePassword, @NonNull Result<String> result);
 
-    void getAssertionForSignIn(@NonNull String enrollmentId, @NonNull String oneTimePassword, @NonNull Result<String> result);
+    void getAssertionForSignIn(
+        @NonNull String enrollmentId,
+        @NonNull String oneTimePassword,
+        @NonNull Result<String> result);
 
     /** The codec used by MultiFactorTotpHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return MultiFactorTotpHostApiCodec.INSTANCE;
     }
-    /**Sets up an instance of `MultiFactorTotpHostApi` to handle messages through the `binaryMessenger`. */
-    static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactorTotpHostApi api) {
+    /**
+     * Sets up an instance of `MultiFactorTotpHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
+    static void setup(
+        @NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactorTotpHostApi api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3962,7 +4243,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -3992,7 +4275,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -4024,20 +4309,31 @@ public class GeneratedAndroidFirebaseAuth {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface MultiFactorTotpSecretHostApi {
 
-    void generateQrCodeUrl(@NonNull String secretKey, @Nullable String accountName, @Nullable String issuer, @NonNull Result<String> result);
+    void generateQrCodeUrl(
+        @NonNull String secretKey,
+        @Nullable String accountName,
+        @Nullable String issuer,
+        @NonNull Result<String> result);
 
-    void openInOtpApp(@NonNull String secretKey, @NonNull String qrCodeUrl, @NonNull Result<Void> result);
+    void openInOtpApp(
+        @NonNull String secretKey, @NonNull String qrCodeUrl, @NonNull Result<Void> result);
 
     /** The codec used by MultiFactorTotpSecretHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return new StandardMessageCodec();
     }
-    /**Sets up an instance of `MultiFactorTotpSecretHostApi` to handle messages through the `binaryMessenger`. */
-    static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactorTotpSecretHostApi api) {
+    /**
+     * Sets up an instance of `MultiFactorTotpSecretHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
+    static void setup(
+        @NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactorTotpSecretHostApi api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -4068,7 +4364,9 @@ public class GeneratedAndroidFirebaseAuth {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -4127,7 +4425,7 @@ public class GeneratedAndroidFirebaseAuth {
   /**
    * Only used to generate the object interface that are use outside of the Pigeon interface
    *
-   * Generated interface from Pigeon that represents a handler of messages from Flutter.
+   * <p>Generated interface from Pigeon that represents a handler of messages from Flutter.
    */
   public interface GenerateInterfaces {
 
@@ -4137,12 +4435,16 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull MessageCodec<Object> getCodec() {
       return GenerateInterfacesCodec.INSTANCE;
     }
-    /**Sets up an instance of `GenerateInterfaces` to handle messages through the `binaryMessenger`. */
+    /**
+     * Sets up an instance of `GenerateInterfaces` to handle messages through the `binaryMessenger`.
+     */
     static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable GenerateInterfaces api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.GenerateInterfaces.generateInterfaces", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.GenerateInterfaces.generateInterfaces",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -4152,8 +4454,7 @@ public class GeneratedAndroidFirebaseAuth {
                 try {
                   api.generateInterfaces(infoArg);
                   wrapped.add(0, null);
-                }
- catch (Throwable exception) {
+                } catch (Throwable exception) {
                   ArrayList<Object> wrappedError = wrapError(exception);
                   wrapped = wrappedError;
                 }
