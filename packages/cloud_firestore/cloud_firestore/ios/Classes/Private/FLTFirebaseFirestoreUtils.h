@@ -1,6 +1,7 @@
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
 #import <TargetConditionals.h>
 
 #if TARGET_OS_OSX
@@ -11,6 +12,7 @@
 
 #import <Firebase/Firebase.h>
 #import <Foundation/Foundation.h>
+#import "FLTFirebaseFirestoreExtension.h"
 
 typedef NS_ENUM(UInt8, FirestoreDataType) {
   FirestoreDataTypeDateTime = 128,
@@ -42,8 +44,18 @@ typedef NS_ENUM(UInt8, FirestoreDataType) {
 @interface FLTFirebaseFirestoreUtils : NSObject
 + (FIRFirestoreSource)FIRFirestoreSourceFromArguments:(NSDictionary *_Nonnull)arguments;
 + (NSArray *_Nonnull)ErrorCodeAndMessageFromNSError:(NSError *_Nonnull)error;
-+ (FIRFirestore *_Nullable)getCachedFIRFirestoreInstanceForKey:(NSString *_Nonnull)key;
++ (FLTFirebaseFirestoreExtension *_Nullable)
+    getCachedFIRFirestoreInstanceForAppName:(NSString *_Nonnull)appName
+                                databaseURL:(NSString *_Nonnull)url;
 + (void)setCachedFIRFirestoreInstance:(FIRFirestore *_Nonnull)firestore
-                               forKey:(NSString *_Nonnull)key;
-+ (void)destroyCachedFIRFirestoreInstanceForKey:(NSString *_Nonnull)key;
+                           forAppName:(NSString *_Nonnull)appName
+                          databaseURL:(NSString *_Nonnull)url;
++ (void)destroyCachedInstanceForFirestore:(NSString *_Nonnull)appName
+                              databaseURL:(NSString *_Nonnull)databaseURL;
++ (FIRFirestore *_Nullable)getFirestoreInstanceByName:(NSString *_Nonnull)appName
+                                          databaseURL:(NSString *_Nonnull)databaseURL;
++ (void)cleanupFirestoreInstances:(void (^_Nullable)(void))completion;
++ (NSUInteger)count;
++ (FLTFirebaseFirestoreExtension *_Nullable)getCachedInstanceForFirestore:
+    (FIRFirestore *_Nonnull)firestore;
 @end

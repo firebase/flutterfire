@@ -288,17 +288,22 @@
 - (FIRFirestore *)FIRFirestore {
   @synchronized(self) {
     NSString *appNameDart = [self readValue];
+    NSString *databaseUrl = [self readValue];
     FIRFirestoreSettings *settings = [self readValue];
     FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
 
-    if ([FLTFirebaseFirestoreUtils getCachedFIRFirestoreInstanceForKey:app.name] != nil) {
-      return [FLTFirebaseFirestoreUtils getCachedFIRFirestoreInstanceForKey:app.name];
+    if ([FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
+                                                  databaseURL:databaseUrl] != nil) {
+      return [FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
+                                                       databaseURL:databaseUrl];
     }
 
-    FIRFirestore *firestore = [FIRFirestore firestoreForApp:app];
+    FIRFirestore *firestore = [FIRFirestore firestoreForApp:app database:databaseUrl];
     firestore.settings = settings;
 
-    [FLTFirebaseFirestoreUtils setCachedFIRFirestoreInstance:firestore forKey:app.name];
+    [FLTFirebaseFirestoreUtils setCachedFIRFirestoreInstance:firestore
+                                                  forAppName:app.name
+                                                 databaseURL:databaseUrl];
     return firestore;
   }
 }

@@ -69,8 +69,8 @@ void main() {
     when(mockDocumentReference.path).thenReturn('$kCollectionId/$kDocumentId');
     when(mockDocumentReference.id).thenReturn(kDocumentId);
     setUp(() {
-      transaction = MethodChannelTransaction(
-          _kTransactionId, FirebaseFirestorePlatform.instance.app.name);
+      transaction = MethodChannelTransaction(_kTransactionId,
+          FirebaseFirestorePlatform.instance.app.name, '(default)');
       isMethodCalled = false;
     });
 

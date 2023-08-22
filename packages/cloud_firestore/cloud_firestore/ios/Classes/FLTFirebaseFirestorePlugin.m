@@ -145,25 +145,8 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)cleanupFirestoreInstances:(void (^)(void))completion {
-  __block int instancesTerminated = 0;
-  NSUInteger numberOfApps = [[FIRApp allApps] count];
-  void (^firestoreTerminateInstanceCompletion)(NSError *) = ^void(NSError *error) {
-    instancesTerminated++;
-    if (instancesTerminated == numberOfApps && completion != nil) {
-      completion();
-    }
-  };
-
-  if (numberOfApps > 0) {
-    for (NSString *appName in [FIRApp allApps]) {
-      FIRApp *app = [FIRApp appNamed:appName];
-      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [[FIRFirestore firestoreForApp:app] terminateWithCompletion:^(NSError *error) {
-          [FLTFirebaseFirestoreUtils destroyCachedFIRFirestoreInstanceForKey:appName];
-          firestoreTerminateInstanceCompletion(error);
-        }];
-      });
-    }
+  if ([FLTFirebaseFirestoreUtils count] > 0) {
+    [FLTFirebaseFirestoreUtils cleanupFirestoreInstances:completion];
   } else {
     if (completion != nil) completion();
   }
@@ -344,7 +327,10 @@ FlutterStandardMethodCodec *_codec;
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
-      [FLTFirebaseFirestoreUtils destroyCachedFIRFirestoreInstanceForKey:firestore.app.name];
+      FLTFirebaseFirestoreExtension *firestoreExtension =
+          [FLTFirebaseFirestoreUtils getCachedInstanceForFirestore:firestore];
+      [FLTFirebaseFirestoreUtils destroyCachedInstanceForFirestore:firestore.app.name
+                                                       databaseURL:firestoreExtension.databaseURL];
       result.success(nil);
     }
   }];
