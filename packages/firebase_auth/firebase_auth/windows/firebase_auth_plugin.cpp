@@ -10,6 +10,7 @@
 #include "firebase/auth.h"
 #include "firebase/future.h"
 #include "firebase/util.h"
+#include "firebase/log.h"
 #include "firebase_core/firebase_core_plugin_c_api.h"
 #include "messages.g.h"
 
@@ -48,15 +49,26 @@ void FirebaseAuthPlugin::RegisterWithRegistrar(
   binaryMessenger = registrar->messenger();
 }
 
-FirebaseAuthPlugin::FirebaseAuthPlugin() {}
+FirebaseAuthPlugin::FirebaseAuthPlugin() {
+  firebase::SetLogLevel(firebase::kLogLevelVerbose);
+}
 
 FirebaseAuthPlugin::~FirebaseAuthPlugin() = default;
 
  Auth* GetAuthFromPigeon(
-    const PigeonFirebaseApp& pigeonApp) {   
+    const PigeonFirebaseApp& pigeonApp) {
 
-  void* auth_ptr = GetFirebaseAuth(pigeonApp.app_name());
-  Auth* auth = static_cast<Auth*>(auth_ptr);
+  std::vector<std::string> app_vector = GetFirebaseApp(pigeonApp.app_name());
+  firebase::AppOptions options;
+
+  options.set_api_key(app_vector[1].c_str());
+  options.set_app_id(app_vector[2].c_str());
+  options.set_database_url(app_vector[3].c_str());
+  options.set_project_id(app_vector[4].c_str());
+
+  App* app = App::Create(options, pigeonApp.app_name().c_str());
+
+  Auth* auth = Auth::GetAuth(app);
 
   return auth;
 }

@@ -320,5 +320,7 @@ jobs:
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "E2E Tests"
         working-directory: tests
+        env:
+          USE_AUTH_EMULATOR: yes
         run: |
           flutter test .\integration_test\e2e_test.dart -d windows

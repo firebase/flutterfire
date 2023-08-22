@@ -11,6 +11,7 @@
 #include <flutter/plugin_registrar_windows.h>
 
 #include <memory>
+#include <map>
 
 #include "messages.g.h"
 
@@ -21,7 +22,7 @@ class FirebaseCorePlugin : public flutter::Plugin,
                            public FirebaseAppHostApi {
  public:
   static void RegisterWithRegistrar(flutter::PluginRegistrarWindows *registrar);
-  static void *GetFirebaseApp(std::string appName);
+  static std::vector<std::string> GetFirebaseApp(std::string appName);
   static void *GetFirebaseAuth(std::string appName);
   static void *GetFirebaseRemoteConfig(std::string appName);
 
@@ -59,6 +60,7 @@ class FirebaseCorePlugin : public flutter::Plugin,
 
  private:
   bool coreInitialized = false;
+  static std::map<std::string, std::vector<std::string>> firebase_apps;
 };
 
 }  // namespace firebase_core_windows
