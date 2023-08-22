@@ -656,6 +656,100 @@ public class GeneratedAndroidFirebaseStorage {
     }
   }
 
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonListResult {
+    private @NonNull List<PigeonStorageReference> items;
+
+    public @NonNull List<PigeonStorageReference> getItems() {
+      return items;
+    }
+
+    public void setItems(@NonNull List<PigeonStorageReference> setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"items\" is null.");
+      }
+      this.items = setterArg;
+    }
+
+    private @Nullable String pageToken;
+
+    public @Nullable String getPageToken() {
+      return pageToken;
+    }
+
+    public void setPageToken(@Nullable String setterArg) {
+      this.pageToken = setterArg;
+    }
+
+    private @NonNull List<PigeonStorageReference> prefixs;
+
+    public @NonNull List<PigeonStorageReference> getPrefixs() {
+      return prefixs;
+    }
+
+    public void setPrefixs(@NonNull List<PigeonStorageReference> setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"prefixs\" is null.");
+      }
+      this.prefixs = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonListResult() {}
+
+    public static final class Builder {
+
+      private @Nullable List<PigeonStorageReference> items;
+
+      public @NonNull Builder setItems(@NonNull List<PigeonStorageReference> setterArg) {
+        this.items = setterArg;
+        return this;
+      }
+
+      private @Nullable String pageToken;
+
+      public @NonNull Builder setPageToken(@Nullable String setterArg) {
+        this.pageToken = setterArg;
+        return this;
+      }
+
+      private @Nullable List<PigeonStorageReference> prefixs;
+
+      public @NonNull Builder setPrefixs(@NonNull List<PigeonStorageReference> setterArg) {
+        this.prefixs = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonListResult build() {
+        PigeonListResult pigeonReturn = new PigeonListResult();
+        pigeonReturn.setItems(items);
+        pigeonReturn.setPageToken(pageToken);
+        pigeonReturn.setPrefixs(prefixs);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(3);
+      toListResult.add(items);
+      toListResult.add(pageToken);
+      toListResult.add(prefixs);
+      return toListResult;
+    }
+
+    static @NonNull PigeonListResult fromList(@NonNull ArrayList<Object> list) {
+      PigeonListResult pigeonResult = new PigeonListResult();
+      Object items = list.get(0);
+      pigeonResult.setItems((List<PigeonStorageReference>) items);
+      Object pageToken = list.get(1);
+      pigeonResult.setPageToken((String) pageToken);
+      Object prefixs = list.get(2);
+      pigeonResult.setPrefixs((List<PigeonStorageReference>) prefixs);
+      return pigeonResult;
+    }
+  }
+
   public interface Result<T> {
     @SuppressWarnings("UnknownNullness")
     void success(T result);
@@ -678,10 +772,12 @@ public class GeneratedAndroidFirebaseStorage {
         case (byte) 130:
           return PigeonListOptions.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 131:
-          return PigeonSettableMetadata.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonListResult.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 132:
-          return PigeonStorageReference.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonSettableMetadata.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 133:
+          return PigeonStorageReference.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 134:
           return PigeonTaskSnapShot.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
@@ -699,14 +795,17 @@ public class GeneratedAndroidFirebaseStorage {
       } else if (value instanceof PigeonListOptions) {
         stream.write(130);
         writeValue(stream, ((PigeonListOptions) value).toList());
-      } else if (value instanceof PigeonSettableMetadata) {
+      } else if (value instanceof PigeonListResult) {
         stream.write(131);
+        writeValue(stream, ((PigeonListResult) value).toList());
+      } else if (value instanceof PigeonSettableMetadata) {
+        stream.write(132);
         writeValue(stream, ((PigeonSettableMetadata) value).toList());
       } else if (value instanceof PigeonStorageReference) {
-        stream.write(132);
+        stream.write(133);
         writeValue(stream, ((PigeonStorageReference) value).toList());
       } else if (value instanceof PigeonTaskSnapShot) {
-        stream.write(133);
+        stream.write(134);
         writeValue(stream, ((PigeonTaskSnapShot) value).toList());
       } else {
         super.writeValue(stream, value);
@@ -717,8 +816,10 @@ public class GeneratedAndroidFirebaseStorage {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseStorageHostApi {
 
+    void registerStorageTask(@NonNull PigeonFirebaseApp app, @Nullable String bucket, @NonNull Result<String> result);
+
     @NonNull 
-    PigeonStorageReference getReferencebyPath(@NonNull PigeonFirebaseApp app, @NonNull String path);
+    PigeonStorageReference getReferencebyPath(@NonNull PigeonFirebaseApp app, @NonNull String path, @Nullable String bucket);
 
     void setMaxOperationRetryTime(@NonNull PigeonFirebaseApp app, @NonNull Long time);
 
@@ -728,24 +829,15 @@ public class GeneratedAndroidFirebaseStorage {
 
     void useStorageEmulator(@NonNull PigeonFirebaseApp app, @NonNull String host, @NonNull Long port, @NonNull Result<Void> result);
 
-    @NonNull 
-    PigeonStorageReference referenceGetParent(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference);
-
-    @NonNull 
-    PigeonStorageReference referenceGetRoot(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference);
-
-    @NonNull 
-    PigeonStorageReference referenceGetChild(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull String path);
-
     void referenceDelete(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<Void> result);
 
     void referenceGetDownloadURL(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<String> result);
 
     void referenceGetMetaData(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<PigeonFullMetaData> result);
 
-    void referenceList(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull PigeonListOptions options, @NonNull Result<List<PigeonStorageReference>> result);
+    void referenceList(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull PigeonListOptions options, @NonNull Result<PigeonListResult> result);
 
-    void referenceListAll(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<List<PigeonStorageReference>> result);
+    void referenceListAll(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<PigeonListResult> result);
 
     void referenceGetData(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Long maxSize, @NonNull Result<byte[]> result);
 
@@ -766,6 +858,36 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
+                binaryMessenger, "dev.flutter.pigeon.FirebaseStorageHostApi.registerStorageTask", getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                String bucketArg = (String) args.get(1);
+                Result<String> resultCallback =
+                    new Result<String>() {
+                      public void success(String result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.registerStorageTask(appArg, bucketArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
                 binaryMessenger, "dev.flutter.pigeon.FirebaseStorageHostApi.getReferencebyPath", getCodec());
         if (api != null) {
           channel.setMessageHandler(
@@ -774,8 +896,9 @@ public class GeneratedAndroidFirebaseStorage {
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
                 String pathArg = (String) args.get(1);
+                String bucketArg = (String) args.get(2);
                 try {
-                  PigeonStorageReference output = api.getReferencebyPath(appArg, pathArg);
+                  PigeonStorageReference output = api.getReferencebyPath(appArg, pathArg, bucketArg);
                   wrapped.add(0, output);
                 }
  catch (Throwable exception) {
@@ -897,82 +1020,6 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.FirebaseStorageHostApi.referenceGetParent", getCodec());
-        if (api != null) {
-          channel.setMessageHandler(
-              (message, reply) -> {
-                ArrayList<Object> wrapped = new ArrayList<Object>();
-                ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
-                PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
-                try {
-                  PigeonStorageReference output = api.referenceGetParent(appArg, referenceArg);
-                  wrapped.add(0, output);
-                }
- catch (Throwable exception) {
-                  ArrayList<Object> wrappedError = wrapError(exception);
-                  wrapped = wrappedError;
-                }
-                reply.reply(wrapped);
-              });
-        } else {
-          channel.setMessageHandler(null);
-        }
-      }
-      {
-        BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.FirebaseStorageHostApi.referenceGetRoot", getCodec());
-        if (api != null) {
-          channel.setMessageHandler(
-              (message, reply) -> {
-                ArrayList<Object> wrapped = new ArrayList<Object>();
-                ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
-                PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
-                try {
-                  PigeonStorageReference output = api.referenceGetRoot(appArg, referenceArg);
-                  wrapped.add(0, output);
-                }
- catch (Throwable exception) {
-                  ArrayList<Object> wrappedError = wrapError(exception);
-                  wrapped = wrappedError;
-                }
-                reply.reply(wrapped);
-              });
-        } else {
-          channel.setMessageHandler(null);
-        }
-      }
-      {
-        BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.FirebaseStorageHostApi.referenceGetChild", getCodec());
-        if (api != null) {
-          channel.setMessageHandler(
-              (message, reply) -> {
-                ArrayList<Object> wrapped = new ArrayList<Object>();
-                ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
-                PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
-                String pathArg = (String) args.get(2);
-                try {
-                  PigeonStorageReference output = api.referenceGetChild(appArg, referenceArg, pathArg);
-                  wrapped.add(0, output);
-                }
- catch (Throwable exception) {
-                  ArrayList<Object> wrappedError = wrapError(exception);
-                  wrapped = wrappedError;
-                }
-                reply.reply(wrapped);
-              });
-        } else {
-          channel.setMessageHandler(null);
-        }
-      }
-      {
-        BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(
                 binaryMessenger, "dev.flutter.pigeon.FirebaseStorageHostApi.referenceDelete", getCodec());
         if (api != null) {
           channel.setMessageHandler(
@@ -1072,9 +1119,9 @@ public class GeneratedAndroidFirebaseStorage {
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
                 PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
                 PigeonListOptions optionsArg = (PigeonListOptions) args.get(2);
-                Result<List<PigeonStorageReference>> resultCallback =
-                    new Result<List<PigeonStorageReference>>() {
-                      public void success(List<PigeonStorageReference> result) {
+                Result<PigeonListResult> resultCallback =
+                    new Result<PigeonListResult>() {
+                      public void success(PigeonListResult result) {
                         wrapped.add(0, result);
                         reply.reply(wrapped);
                       }
@@ -1102,9 +1149,9 @@ public class GeneratedAndroidFirebaseStorage {
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
                 PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
-                Result<List<PigeonStorageReference>> resultCallback =
-                    new Result<List<PigeonStorageReference>>() {
-                      public void success(List<PigeonStorageReference> result) {
+                Result<PigeonListResult> resultCallback =
+                    new Result<PigeonListResult>() {
+                      public void success(PigeonListResult result) {
                         wrapped.add(0, result);
                         reply.reply(wrapped);
                       }

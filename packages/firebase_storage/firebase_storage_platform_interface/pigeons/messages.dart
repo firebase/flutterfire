@@ -143,12 +143,31 @@ class PigeonTaskSnapShot {
   final int totalBytes;
 }
 
+class PigeonListResult {
+  const PigeonListResult({
+    required this.items,
+    required this.pageToken,
+    required this.prefixs,
+  });
+
+  final List<PigeonStorageReference?> items;
+  final String? pageToken;
+  final List<PigeonStorageReference?> prefixs;
+}
+
 @HostApi(dartHostTestHandler: 'TestFirebaseStorageHostApi')
 abstract class FirebaseStorageHostApi {
+
+  @async
+  String registerStorageTask(
+    PigeonFirebaseApp app,
+    String? bucket,
+  );
 
   PigeonStorageReference getReferencebyPath(
     PigeonFirebaseApp app,
     String path,
+    String? bucket,
   );
 
   void setMaxOperationRetryTime(
@@ -174,19 +193,6 @@ abstract class FirebaseStorageHostApi {
   );
 
   // APIs for Reference class
-  PigeonStorageReference referenceGetParent(
-    PigeonFirebaseApp app,
-    PigeonStorageReference reference,
-  );
-  PigeonStorageReference referenceGetRoot(
-    PigeonFirebaseApp app,
-    PigeonStorageReference reference,
-  );
-  PigeonStorageReference referenceGetChild(
-    PigeonFirebaseApp app,
-    PigeonStorageReference reference,
-    String path,
-  );
 
   @async
   void referenceDelete(
@@ -207,14 +213,14 @@ abstract class FirebaseStorageHostApi {
   );
 
   @async
-  List<PigeonStorageReference> referenceList(
+  PigeonListResult referenceList(
     PigeonFirebaseApp app,
     PigeonStorageReference reference,
     PigeonListOptions options,
   );
 
   @async
-  List<PigeonStorageReference> referenceListAll(
+  PigeonListResult referenceListAll(
     PigeonFirebaseApp app,
     PigeonStorageReference reference,
   );
@@ -227,6 +233,8 @@ abstract class FirebaseStorageHostApi {
   );
 
   // TODO figure out how to manage the UploadTask and DownloadTask
+  @async
+
 
   @async
   PigeonFullMetaData referenceUpdateMetadata(

@@ -57,6 +57,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList;
 @end
 
+@interface PigeonListResult ()
++ (PigeonListResult *)fromList:(NSArray *)list;
++ (nullable PigeonListResult *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
 @implementation PigeonFirebaseApp
 + (instancetype)makeWithAppName:(NSString *)appName
     tenantId:(nullable NSString *)tenantId {
@@ -237,6 +243,37 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
+@implementation PigeonListResult
++ (instancetype)makeWithItems:(NSArray<PigeonStorageReference *> *)items
+    pageToken:(nullable NSString *)pageToken
+    prefixs:(NSArray<PigeonStorageReference *> *)prefixs {
+  PigeonListResult* pigeonResult = [[PigeonListResult alloc] init];
+  pigeonResult.items = items;
+  pigeonResult.pageToken = pageToken;
+  pigeonResult.prefixs = prefixs;
+  return pigeonResult;
+}
++ (PigeonListResult *)fromList:(NSArray *)list {
+  PigeonListResult *pigeonResult = [[PigeonListResult alloc] init];
+  pigeonResult.items = GetNullableObjectAtIndex(list, 0);
+  NSAssert(pigeonResult.items != nil, @"");
+  pigeonResult.pageToken = GetNullableObjectAtIndex(list, 1);
+  pigeonResult.prefixs = GetNullableObjectAtIndex(list, 2);
+  NSAssert(pigeonResult.prefixs != nil, @"");
+  return pigeonResult;
+}
++ (nullable PigeonListResult *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonListResult fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    (self.items ?: [NSNull null]),
+    (self.pageToken ?: [NSNull null]),
+    (self.prefixs ?: [NSNull null]),
+  ];
+}
+@end
+
 @interface FirebaseStorageHostApiCodecReader : FlutterStandardReader
 @end
 @implementation FirebaseStorageHostApiCodecReader
@@ -249,10 +286,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     case 130: 
       return [PigeonListOptions fromList:[self readValue]];
     case 131: 
-      return [PigeonSettableMetadata fromList:[self readValue]];
+      return [PigeonListResult fromList:[self readValue]];
     case 132: 
-      return [PigeonStorageReference fromList:[self readValue]];
+      return [PigeonSettableMetadata fromList:[self readValue]];
     case 133: 
+      return [PigeonStorageReference fromList:[self readValue]];
+    case 134: 
       return [PigeonTaskSnapShot fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -273,14 +312,17 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   } else if ([value isKindOfClass:[PigeonListOptions class]]) {
     [self writeByte:130];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonSettableMetadata class]]) {
+  } else if ([value isKindOfClass:[PigeonListResult class]]) {
     [self writeByte:131];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonStorageReference class]]) {
+  } else if ([value isKindOfClass:[PigeonSettableMetadata class]]) {
     [self writeByte:132];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonTaskSnapShot class]]) {
+  } else if ([value isKindOfClass:[PigeonStorageReference class]]) {
     [self writeByte:133];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonTaskSnapShot class]]) {
+    [self writeByte:134];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];
@@ -313,17 +355,38 @@ void FirebaseStorageHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
   {
     FlutterBasicMessageChannel *channel =
       [[FlutterBasicMessageChannel alloc]
+        initWithName:@"dev.flutter.pigeon.FirebaseStorageHostApi.registerStorageTask"
+        binaryMessenger:binaryMessenger
+        codec:FirebaseStorageHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(registerStorageTaskApp:bucket:completion:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(registerStorageTaskApp:bucket:completion:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_bucket = GetNullableObjectAtIndex(args, 1);
+        [api registerStorageTaskApp:arg_app bucket:arg_bucket completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
+          callback(wrapResult(output, error));
+        }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [[FlutterBasicMessageChannel alloc]
         initWithName:@"dev.flutter.pigeon.FirebaseStorageHostApi.getReferencebyPath"
         binaryMessenger:binaryMessenger
         codec:FirebaseStorageHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getReferencebyPathApp:path:error:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(getReferencebyPathApp:path:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(getReferencebyPathApp:path:bucket:error:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(getReferencebyPathApp:path:bucket:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_path = GetNullableObjectAtIndex(args, 1);
+        NSString *arg_bucket = GetNullableObjectAtIndex(args, 2);
         FlutterError *error;
-        PigeonStorageReference *output = [api getReferencebyPathApp:arg_app path:arg_path error:&error];
+        PigeonStorageReference *output = [api getReferencebyPathApp:arg_app path:arg_path bucket:arg_bucket error:&error];
         callback(wrapResult(output, error));
       }];
     } else {
@@ -414,67 +477,6 @@ void FirebaseStorageHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
   {
     FlutterBasicMessageChannel *channel =
       [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.FirebaseStorageHostApi.referenceGetParent"
-        binaryMessenger:binaryMessenger
-        codec:FirebaseStorageHostApiGetCodec()];
-    if (api) {
-      NSCAssert([api respondsToSelector:@selector(referenceGetParentApp:reference:error:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(referenceGetParentApp:reference:error:)", api);
-      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        PigeonStorageReference *arg_reference = GetNullableObjectAtIndex(args, 1);
-        FlutterError *error;
-        PigeonStorageReference *output = [api referenceGetParentApp:arg_app reference:arg_reference error:&error];
-        callback(wrapResult(output, error));
-      }];
-    } else {
-      [channel setMessageHandler:nil];
-    }
-  }
-  {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.FirebaseStorageHostApi.referenceGetRoot"
-        binaryMessenger:binaryMessenger
-        codec:FirebaseStorageHostApiGetCodec()];
-    if (api) {
-      NSCAssert([api respondsToSelector:@selector(referenceGetRootApp:reference:error:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(referenceGetRootApp:reference:error:)", api);
-      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        PigeonStorageReference *arg_reference = GetNullableObjectAtIndex(args, 1);
-        FlutterError *error;
-        PigeonStorageReference *output = [api referenceGetRootApp:arg_app reference:arg_reference error:&error];
-        callback(wrapResult(output, error));
-      }];
-    } else {
-      [channel setMessageHandler:nil];
-    }
-  }
-  {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.FirebaseStorageHostApi.referenceGetChild"
-        binaryMessenger:binaryMessenger
-        codec:FirebaseStorageHostApiGetCodec()];
-    if (api) {
-      NSCAssert([api respondsToSelector:@selector(referenceGetChildApp:reference:path:error:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(referenceGetChildApp:reference:path:error:)", api);
-      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        PigeonStorageReference *arg_reference = GetNullableObjectAtIndex(args, 1);
-        NSString *arg_path = GetNullableObjectAtIndex(args, 2);
-        FlutterError *error;
-        PigeonStorageReference *output = [api referenceGetChildApp:arg_app reference:arg_reference path:arg_path error:&error];
-        callback(wrapResult(output, error));
-      }];
-    } else {
-      [channel setMessageHandler:nil];
-    }
-  }
-  {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
         initWithName:@"dev.flutter.pigeon.FirebaseStorageHostApi.referenceDelete"
         binaryMessenger:binaryMessenger
         codec:FirebaseStorageHostApiGetCodec()];
@@ -545,7 +547,7 @@ void FirebaseStorageHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         PigeonStorageReference *arg_reference = GetNullableObjectAtIndex(args, 1);
         PigeonListOptions *arg_options = GetNullableObjectAtIndex(args, 2);
-        [api referenceListApp:arg_app reference:arg_reference options:arg_options completion:^(NSArray<PigeonStorageReference *> *_Nullable output, FlutterError *_Nullable error) {
+        [api referenceListApp:arg_app reference:arg_reference options:arg_options completion:^(PigeonListResult *_Nullable output, FlutterError *_Nullable error) {
           callback(wrapResult(output, error));
         }];
       }];
@@ -565,7 +567,7 @@ void FirebaseStorageHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         PigeonStorageReference *arg_reference = GetNullableObjectAtIndex(args, 1);
-        [api referenceListAllApp:arg_app reference:arg_reference completion:^(NSArray<PigeonStorageReference *> *_Nullable output, FlutterError *_Nullable error) {
+        [api referenceListAllApp:arg_app reference:arg_reference completion:^(PigeonListResult *_Nullable output, FlutterError *_Nullable error) {
           callback(wrapResult(output, error));
         }];
       }];

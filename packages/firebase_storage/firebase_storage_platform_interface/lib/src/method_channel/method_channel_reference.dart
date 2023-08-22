@@ -126,7 +126,7 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   ListResultPlatform convertListReference(
-      List<PigeonStorageReference?> pigeonReferenceList) {
+      PigeonListResult pigeonReferenceList) {
     // TODO
     return MethodChannelListResult(storage);
   }
@@ -135,7 +135,7 @@ class MethodChannelReference extends ReferencePlatform {
   Future<ListResultPlatform> list([ListOptions? options]) async {
     try {
       PigeonListOptions pigeonOptions = convertOptions(options);
-      List<PigeonStorageReference?> pigeonReferenceList =
+      PigeonListResult pigeonReferenceList =
           await MethodChannelFirebaseStorage.pigeonChannel.referenceList(
               pigeonFirebaseAppDefault, pigeonReference, pigeonOptions);
       return convertListReference(pigeonReferenceList);
@@ -169,9 +169,9 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   Future<ListResultPlatform> listAll() async {
     try {
-      List<PigeonStorageReference?> pigeonReferenceList =
-          await MethodChannelFirebaseStorage.pigeonChannel
-              .referenceListAll(pigeonFirebaseAppDefault, pigeonReference);
+      PigeonListResult pigeonReferenceList = await MethodChannelFirebaseStorage
+          .pigeonChannel
+          .referenceListAll(pigeonFirebaseAppDefault, pigeonReference);
       return convertListReference(pigeonReferenceList);
       // Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
       //     .invokeMapMethod<String, dynamic>(
