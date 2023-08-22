@@ -160,7 +160,6 @@
 
   FIRServerTimestampBehavior serverTimestampBehavior =
       [self toServerTimestampBehavior:timestampBehaviorString];
-  
 
   [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:documentSnapshotHash];
 

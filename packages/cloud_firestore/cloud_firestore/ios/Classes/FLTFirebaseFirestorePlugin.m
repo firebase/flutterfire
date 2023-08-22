@@ -484,7 +484,8 @@ FlutterStandardMethodCodec *_codec;
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
-      [FLTFirebaseFirestorePlugin.serverTimestampMap setObject:serverTimestampBehaviorString forKey:@([snapshot hash])];
+      [FLTFirebaseFirestorePlugin.serverTimestampMap setObject:serverTimestampBehaviorString
+                                                        forKey:@([snapshot hash])];
       result.success(snapshot);
     }
   };
