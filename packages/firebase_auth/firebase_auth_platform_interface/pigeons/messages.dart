@@ -17,8 +17,9 @@ import 'package:pigeon/pigeon.dart';
       package: 'io.flutter.plugins.firebase.auth',
       className: 'GeneratedAndroidFirebaseAuth',
     ),
-    objcHeaderOut: '../firebase_auth/ios/Classes/Public/messages.g.h',
-    objcSourceOut: '../firebase_auth/ios/Classes/messages.g.m',
+    objcHeaderOut:
+        '../firebase_auth/ios/Classes/Public/firebase_auth_messages.g.h',
+    objcSourceOut: '../firebase_auth/ios/Classes/firebase_auth_messages.g.m',
   ),
 )
 class PigeonMultiFactorSession {
