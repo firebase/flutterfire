@@ -144,8 +144,8 @@ To retrieve the current registration token for an app instance, call
 ask the user for notification permissions. Otherwise, it returns a token or
 rejects the future due to an error.
 
-Warning: From iOS SDK 10.4.0 and higher, it is a requirement that the APNS token
-is available before making API requests. The APNS token is not guaranteed to have been received
+Warning: In iOS SDK 10.4.0 and higher, it is a requirement that the APNs token
+is available before making API requests. The APNs token is not guaranteed to have been received
 before making FCM plugin API requests.
 
 ```dart
