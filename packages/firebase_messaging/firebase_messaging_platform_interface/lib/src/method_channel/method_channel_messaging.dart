@@ -69,12 +69,31 @@ void _firebaseMessagingCallbackDispatcher() {
 class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   /// Create an instance of [MethodChannelFirebaseMessaging] with optional [FirebaseApp]
   MethodChannelFirebaseMessaging({required FirebaseApp app})
-      : super(appInstance: app) {
-    if (_initialized) return;
-    channel.setMethodCallHandler((MethodCall call) async {
+      : super(appInstance: app);
+
+  late bool _autoInitEnabled;
+
+  static bool _bgHandlerInitialized = false;
+
+  /// Returns a stub instance to allow the platform interface to access
+  /// the class instance statically.
+  static MethodChannelFirebaseMessaging get instance {
+    return MethodChannelFirebaseMessaging._();
+  }
+
+  /// Internal stub class initializer.
+  ///
+  /// When the user code calls an auth method, the real instance is
+  /// then initialized via the [delegateFor] method.
+  MethodChannelFirebaseMessaging._() : super(appInstance: null);
+
+  static void setMethodCallHandlers() {
+    MethodChannelFirebaseMessaging.channel
+        .setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
         case 'Messaging#onTokenRefresh':
-          _tokenStreamController.add(call.arguments as String);
+          MethodChannelFirebaseMessaging.tokenStreamController
+              .add(call.arguments as String);
           break;
         case 'Messaging#onMessage':
           Map<String, dynamic> messageMap =
@@ -98,33 +117,14 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           throw UnimplementedError('${call.method} has not been implemented');
       }
     });
-    _initialized = true;
   }
 
-  late bool _autoInitEnabled;
-
-  static bool _initialized = false;
-  static bool _bgHandlerInitialized = false;
-
-  /// Returns a stub instance to allow the platform interface to access
-  /// the class instance statically.
-  static MethodChannelFirebaseMessaging get instance {
-    return MethodChannelFirebaseMessaging._();
-  }
-
-  /// Internal stub class initializer.
-  ///
-  /// When the user code calls an auth method, the real instance is
-  /// then initialized via the [delegateFor] method.
-  MethodChannelFirebaseMessaging._() : super(appInstance: null);
-
-  /// The [MethodChannel] to which calls will be delegated.
-  @visibleForTesting
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/firebase_messaging',
   );
 
-  final StreamController<String> _tokenStreamController =
+  // ignore: close_sinks, never closed
+  static StreamController<String> tokenStreamController =
       StreamController<String>.broadcast();
 
   // Created this to check APNS token is available before certain Apple Firebase
@@ -195,7 +195,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     if (!_bgHandlerInitialized) {
       _bgHandlerInitialized = true;
       final CallbackHandle bgHandle = PluginUtilities.getCallbackHandle(
-          _firebaseMessagingCallbackDispatcher)!;
+        _firebaseMessagingCallbackDispatcher,
+      )!;
       final CallbackHandle userHandle =
           PluginUtilities.getCallbackHandle(handler)!;
       await channel.invokeMapMethod('Messaging#startBackgroundIsolate', {
@@ -230,7 +231,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         'appName': app.name,
       });
 
-      return data?['token'];
+      return data!['token'];
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -248,7 +249,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         'appName': app.name,
       });
 
-      return data?['token'];
+      return data!['token'];
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -320,7 +321,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         'enabled': enabled,
       });
 
-      _autoInitEnabled = data?['isAutoInitEnabled'] as bool;
+      _autoInitEnabled = data!['isAutoInitEnabled'] as bool;
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -328,7 +329,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Stream<String> get onTokenRefresh {
-    return _tokenStreamController.stream;
+    return tokenStreamController.stream;
   }
 
   @override

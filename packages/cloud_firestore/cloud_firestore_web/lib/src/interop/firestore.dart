@@ -22,14 +22,16 @@ export 'firestore_interop.dart';
 
 /// Given an AppJSImp, return the Firestore instance.
 Firestore getFirestoreInstance(
-    [App? app, firestore_interop.Settings? settings]) {
+    [App? app, firestore_interop.Settings? settings, String? databaseURL]) {
+  String database = databaseURL ?? '(default)';
+
   if (app != null && settings != null) {
-    return Firestore.getInstance(
-        firestore_interop.initializeFirestore(app.jsObject, settings));
+    return Firestore.getInstance(firestore_interop.initializeFirestore(
+        app.jsObject, settings, database));
   }
 
   return Firestore.getInstance(app != null
-      ? firestore_interop.getFirestore(app.jsObject)
+      ? firestore_interop.getFirestore(app.jsObject, database)
       : firestore_interop.getFirestore());
 }
 

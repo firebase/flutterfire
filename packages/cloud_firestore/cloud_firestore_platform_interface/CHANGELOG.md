@@ -1,3 +1,7 @@
+## 5.15.4
+
+ - **FIX**(firestore): allow `FieldPath.documentId` as a field argument in queries ([#11443](https://github.com/firebase/flutterfire/issues/11443)). ([4e01a9d8](https://github.com/firebase/flutterfire/commit/4e01a9d84ededf0e0ba74bdc2eba75492e1aa532))
+
 ## 5.15.3
 
  - **FIX**(firestore): allow up to 30 Filter queries within `Filter.or()` & `Filter.and()` ([#11140](https://github.com/firebase/flutterfire/issues/11140)). ([e1f0064d](https://github.com/firebase/flutterfire/commit/e1f0064db7f24b360da131b991e39020f47ffd1c))

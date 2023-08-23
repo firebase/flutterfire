@@ -19,18 +19,30 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   final FirebaseApp? appInstance;
 
   /// Create an instance using [app]
-  FirebaseFirestorePlatform({this.appInstance}) : super(token: _token);
+  FirebaseFirestorePlatform({this.appInstance, this.databaseChoice})
+      : super(token: _token);
 
   /// Returns the [FirebaseApp] for the current instance.
   FirebaseApp get app {
     return appInstance ?? Firebase.app();
   }
 
+  final String? databaseChoice;
+
+  /// Firestore Database URL for this instance. Falls back to default database: "(default)"
+  String get databaseURL {
+    return databaseChoice ?? '(default)';
+  }
+
   static final Object _token = Object();
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseFirestorePlatform.instanceFor({required FirebaseApp app}) {
-    return FirebaseFirestorePlatform.instance.delegateFor(app: app);
+  factory FirebaseFirestorePlatform.instanceFor({
+    required FirebaseApp app,
+    required String databaseURL,
+  }) {
+    return FirebaseFirestorePlatform.instance
+        .delegateFor(app: app, databaseURL: databaseURL);
   }
 
   /// The current default [FirebaseFirestorePlatform] instance.
@@ -38,7 +50,8 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// It will always default to [MethodChannelFirebaseFirestore]
   /// if no other implementation was provided.
   static FirebaseFirestorePlatform get instance {
-    return _instance ??= MethodChannelFirebaseFirestore(app: Firebase.app());
+    return _instance ??= MethodChannelFirebaseFirestore(
+        app: Firebase.app(), databaseURL: '(default)');
   }
 
   static FirebaseFirestorePlatform? _instance;
@@ -52,7 +65,8 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseFirestorePlatform delegateFor({required FirebaseApp app}) {
+  FirebaseFirestorePlatform delegateFor(
+      {required FirebaseApp app, required String databaseURL}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 

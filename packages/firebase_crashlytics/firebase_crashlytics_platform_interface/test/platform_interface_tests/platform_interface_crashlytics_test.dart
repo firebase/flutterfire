@@ -15,8 +15,8 @@ void main() {
 
   TestFirebaseCrashlyticsPlatform? firebaseCrashlyticsPlatform;
 
-  FirebaseApp? app;
-  FirebaseApp? secondaryApp;
+  late FirebaseApp app;
+  late FirebaseApp secondaryApp;
 
   group('$FirebaseCrashlyticsPlatform()', () {
     setUpAll(() async {
@@ -32,7 +32,7 @@ void main() {
       );
 
       firebaseCrashlyticsPlatform = TestFirebaseCrashlyticsPlatform(
-        app!,
+        app,
       );
     });
 
@@ -51,7 +51,7 @@ void main() {
     group('set.instance', () {
       test('sets the current instance', () {
         FirebaseCrashlyticsPlatform.instance =
-            TestFirebaseCrashlyticsPlatform(secondaryApp!);
+            TestFirebaseCrashlyticsPlatform(secondaryApp);
 
         expect(FirebaseCrashlyticsPlatform.instance,
             isA<FirebaseCrashlyticsPlatform>());
