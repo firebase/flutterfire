@@ -1,7 +1,7 @@
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
+import 'dart:io';
 import 'dart:async';
 import 'dart:math';
 
@@ -9,6 +9,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+String getCurrentPlatform() {
+  if (kIsWeb) {
+    return 'web';
+  } else if (Platform.isAndroid) {
+    return 'android';
+  } else if (Platform.isIOS) {
+    return 'ios';
+  } else if (Platform.isMacOS) {
+    return 'macos';
+  } else if (Platform.isWindows) {
+    return 'windows';
+  } else {
+    return 'unknown';
+  }
+}
 
 void runSecondDatabaseTests() {
   group('Second Database', () {
@@ -26,8 +42,11 @@ void runSecondDatabaseTests() {
     ) async {
       // Pushed rules which only allow database "flutterfire-2" to have "flutterfire-2" collection writes
       String collectionForSecondDatabase = 'flutterfire-2';
+
       CollectionReference<Map<String, dynamic>> collection =
-          firestore.collection('$collectionForSecondDatabase/$id/query-tests');
+          firestore.collection(
+        '$collectionForSecondDatabase/$id/${getCurrentPlatform()}',
+      );
       QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
 
       await Future.forEach(snapshot.docs,
