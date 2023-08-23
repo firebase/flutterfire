@@ -161,7 +161,7 @@ class _AuthGateState extends State<AuthGate> {
                                     'dismiss',
                                     style: TextStyle(color: Colors.white),
                                   ),
-                                )
+                                ),
                               ],
                               contentTextStyle:
                                   const TextStyle(color: Colors.white),
