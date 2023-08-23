@@ -335,7 +335,7 @@ NSString *const kErrMsgInvalidCredential =
 }
 
 static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResult *authResult,
-                                  NSError *error) {
+                                  NSString *authorizationCode, NSError *error) {
   if (error != nil) {
     if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
       [object handleMultiFactorError:object.appleArguments
@@ -346,7 +346,9 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
     }
     return;
   }
-  object.appleCompletion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
+  object.appleCompletion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                                           authorizationCode:authorizationCode],
+                         nil);
 }
 
 - (void)authorizationController:(ASAuthorizationController *)controller
@@ -369,7 +371,12 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
       NSLog(@"Unable to serialize id token from data: %@", appleIDCredential.identityToken);
     }
 
-    // Initialize a Firebase credential, including the user's full name.
+    NSString *authorizationCode = nil;
+    if (appleIDCredential.authorizationCode != nil) {
+      authorizationCode = [[NSString alloc] initWithData:appleIDCredential.authorizationCode
+                                                encoding:NSUTF8StringEncoding];
+    }
+
     FIROAuthCredential *credential =
         [FIROAuthProvider appleCredentialWithIDToken:idToken
                                             rawNonce:rawNonce
@@ -381,15 +388,16 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
           reauthenticateWithCredential:credential
                             completion:^(FIRAuthDataResult *_Nullable authResult,
                                          NSError *_Nullable error) {
-                              handleSignInWithApple(self, authResult, error);
+                              handleSignInWithApple(self, authResult, authorizationCode, error);
                             }];
 
     } else if (self.linkWithAppleUser != nil) {
-      [self.linkWithAppleUser linkWithCredential:credential
-                                      completion:^(FIRAuthDataResult *authResult, NSError *error) {
-                                        self.linkWithAppleUser = nil;
-                                        handleSignInWithApple(self, authResult, error);
-                                      }];
+      [self.linkWithAppleUser
+          linkWithCredential:credential
+                  completion:^(FIRAuthDataResult *authResult, NSError *error) {
+                    self.linkWithAppleUser = nil;
+                    handleSignInWithApple(self, authResult, authorizationCode, error);
+                  }];
 
     } else {
       FIRAuth *signInAuth =
@@ -398,7 +406,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                             completion:^(FIRAuthDataResult *_Nullable authResult,
                                          NSError *_Nullable error) {
                               self.signInWithAppleAuth = nil;
-                              handleSignInWithApple(self, authResult, error);
+                              handleSignInWithApple(self, authResult, authorizationCode, error);
                             }];
     }
   }
@@ -586,7 +594,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                                                               details:error.userInfo]);
                         }
                       } else {
-                        completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult],
+                        completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                                                     authorizationCode:nil],
                                    nil);
                       }
                     }];
@@ -828,8 +837,9 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                       completion:^(FIRAuthDataResult *_Nullable authResult,
                                    NSError *_Nullable error) {
                         if (error == nil) {
-                          completion(
-                              [PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
+                          completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                                                       authorizationCode:nil],
+                                     nil);
                         } else {
                           completion(nil, [FlutterError errorWithCode:@"resolve-signin-failed"
                                                               message:error.localizedDescription
@@ -852,6 +862,20 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                  completion(nil);
                }
              }];
+}
+
+- (void)revokeTokenWithAuthorizationCodeApp:(nonnull PigeonFirebaseApp *)app
+                          authorizationCode:(nonnull NSString *)authorizationCode
+                                 completion:(nonnull void (^)(FlutterError *_Nullable))completion {
+  FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+  [auth revokeTokenWithAuthorizationCode:authorizationCode
+                              completion:^(NSError *_Nullable error) {
+                                if (error != nil) {
+                                  completion([FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                                } else {
+                                  completion(nil);
+                                }
+                              }];
 }
 
 - (void)checkActionCodeApp:(nonnull PigeonFirebaseApp *)app
@@ -891,16 +915,17 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                                completion:(nonnull void (^)(PigeonUserCredential *_Nullable,
                                                             FlutterError *_Nullable))completion {
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
-  [auth
-      createUserWithEmail:email
-                 password:password
-               completion:^(FIRAuthDataResult *_Nullable authResult, NSError *_Nullable error) {
-                 if (error != nil) {
-                   completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
-                 } else {
-                   completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
-                 }
-               }];
+  [auth createUserWithEmail:email
+                   password:password
+                 completion:^(FIRAuthDataResult *_Nullable authResult, NSError *_Nullable error) {
+                   if (error != nil) {
+                     completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                   } else {
+                     completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                                                  authorizationCode:nil],
+                                nil);
+                   }
+                 }];
 }
 
 - (void)fetchSignInMethodsForEmailApp:(nonnull PigeonFirebaseApp *)app
@@ -1055,7 +1080,9 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
     if (error != nil) {
       completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
     } else {
-      completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
+      completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                                   authorizationCode:nil],
+                 nil);
     }
   }];
 }
@@ -1099,7 +1126,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                         }
                       }
                     } else {
-                      completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult],
+                      completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                                                   authorizationCode:nil],
                                  nil);
                     }
                   }];
@@ -1122,7 +1150,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                          completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
                        }
                      } else {
-                       completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult],
+                       completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                                                    authorizationCode:nil],
                                   nil);
                      }
                    }];
@@ -1146,7 +1175,9 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                    completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
                  }
                } else {
-                 completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
+                 completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                                              authorizationCode:nil],
+                            nil);
                }
              }];
 }
@@ -1169,7 +1200,9 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                    completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
                  }
                } else {
-                 completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
+                 completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                                              authorizationCode:nil],
+                            nil);
                }
              }];
 }
@@ -1377,19 +1410,22 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
     return;
   }
 
-  [currentUser
-      linkWithCredential:credential
-              completion:^(FIRAuthDataResult *authResult, NSError *error) {
-                if (error != nil) {
-                  if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
-                    [self handleMultiFactorError:app completion:completion withError:error];
-                  } else {
-                    completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
-                  }
-                } else {
-                  completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult], nil);
-                }
-              }];
+  [currentUser linkWithCredential:credential
+                       completion:^(FIRAuthDataResult *authResult, NSError *error) {
+                         if (error != nil) {
+                           if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+                             [self handleMultiFactorError:app
+                                               completion:completion
+                                                withError:error];
+                           } else {
+                             completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                           }
+                         } else {
+                           completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                                                        authorizationCode:nil],
+                                      nil);
+                         }
+                       }];
 }
 
 - (void)linkWithProviderApp:(nonnull PigeonFirebaseApp *)app
@@ -1468,7 +1504,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                             }
                           } else {
                             completion(
-                                [PigeonParser getPigeonUserCredentialFromAuthResult:authResult],
+                                [PigeonParser getPigeonUserCredentialFromAuthResult:authResult
+                                                                  authorizationCode:nil],
                                 nil);
                           }
                         }];

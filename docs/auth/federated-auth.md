@@ -97,7 +97,7 @@ You can authenticate users in your Android game using Play Games Sign-In.
 
 * {Android}
 
-  Follow the instructions for Google setup on Android, then configure 
+  Follow the instructions for Google setup on Android, then configure
   [Play Games services with your Firebase app information](https://firebase.google.com/docs/auth/android/play-games#configure-play-games-with-firebase-info).
 
   The following will trigger the sign-in flow, create a new credential and sign in the user:
@@ -232,6 +232,25 @@ Future<UserCredential> signInWithApple() async {
 }
 ```
 
+### Revoke Apple auth tokens
+
+Apple sign-in on Apple platforms will return an authorization code that can be used to revoke the Apple auth token
+using the `revokeTokenWithAuthorizationCode()` API.
+
+```dart
+import 'package:firebase_auth/firebase_auth.dart';
+
+Future<UserCredential> signInWithApple() async {
+  final appleProvider = AppleAuthProvider();
+
+  UserCredential userCredential = await FirebaseAuth.instance.signInWithPopup(appleProvider);
+  // Keep the authorization code returned from Apple platforms
+  String? authCode = userCredential.additionalUserInfo?.authorizationCode;
+  // Revoke Apple auth token
+  await FirebaseAuth.instance.revokeTokenWithAuthorizationCode(authCode!);
+}
+```
+
 ## Microsoft
 
 * {iOS+}
@@ -241,7 +260,7 @@ Future<UserCredential> signInWithApple() async {
 
 * {Android}
   Before you begin [configure Microsoft Login for Android](/docs/auth/android/microsoft-oauth#before_you_begin).
-  
+
   Don't forget to add your app's SHA-1 fingerprint.
 
 * {Web}
@@ -264,7 +283,7 @@ Future<UserCredential> signInWithMicrosoft() async {
 ## Twitter
 
 Ensure the "Twitter" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers)
-with an API Key and API Secret set. Ensure your Firebase OAuth redirect URI (e.g. my-app-12345.firebaseapp.com/__/auth/handler) 
+with an API Key and API Secret set. Ensure your Firebase OAuth redirect URI (e.g. my-app-12345.firebaseapp.com/__/auth/handler)
 is set as your Authorization callback URL in your app's settings page on your [Twitter app's config](https://apps.twitter.com/).
 
 You also might need to request elevated [API access depending on your app](https://developer.twitter.com/en/portal/products/elevated).
@@ -275,7 +294,7 @@ You also might need to request elevated [API access depending on your app](https
 
 * {Android}
 
-  If you haven't yet specified your app's SHA-1 fingerprint, do so from the [Settings page](https://console.firebase.google.com/project/_/settings/general/) 
+  If you haven't yet specified your app's SHA-1 fingerprint, do so from the [Settings page](https://console.firebase.google.com/project/_/settings/general/)
   of the Firebase console. Refer to [Authenticating Your Client](https://developers.google.com/android/guides/client-auth) for details on how to get your app's SHA-1 fingerprint.
 
 * {Web}
@@ -347,7 +366,7 @@ with the Client ID and Secret are set, with the callback URL set in the GitHub a
 ## Yahoo
 
 Ensure the "Yahoo" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers)
-with an API Key and API Secret set. Also make sure your Firebase OAuth redirect URI (e.g. my-app-12345.firebaseapp.com/__/auth/handler) 
+with an API Key and API Secret set. Also make sure your Firebase OAuth redirect URI (e.g. my-app-12345.firebaseapp.com/__/auth/handler)
 is set as a redirect URI in your app's Yahoo Developer Network configuration.
 
 
@@ -358,7 +377,7 @@ is set as a redirect URI in your app's Yahoo Developer Network configuration.
 
 * {Android}
   Before you begin, [configure Yahoo Login for Android](/docs/auth/android/yahoo-oauth#before_you_begin).
-  
+
   Don't forget to add your app's SHA-1 fingerprint.
 
 * {Web}
@@ -403,7 +422,7 @@ final appleProvider = AppleAuthProvider();
 
 if (kIsWeb) {
   await FirebaseAuth.instance.currentUser?.linkWithPopup(appleProvider);
-  
+
   // You can also use `linkWithRedirect`
 } else {
   await FirebaseAuth.instance.currentUser?.linkWithProvider(appleProvider);
@@ -422,7 +441,7 @@ final appleProvider = AppleAuthProvider();
 
 if (kIsWeb) {
   await FirebaseAuth.instance.currentUser?.reauthenticateWithPopup(appleProvider);
-  
+
   // Or you can reauthenticate with a redirection
   // await FirebaseAuth.instance.currentUser?.reauthenticateWithRedirect(appleProvider);
 } else {

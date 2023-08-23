@@ -15,7 +15,7 @@ import 'auth.dart';
 const placeholderImage =
     'https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png';
 
-/// Profile page shows after sign in or registerationg
+/// Profile page shows after sign in or registration.
 class ProfilePage extends StatefulWidget {
   // ignore: public_member_api_docs
   const ProfilePage({Key? key}) : super(key: key);
@@ -187,6 +187,25 @@ class _ProfilePageState extends State<ProfilePage> {
                           print(a);
                         },
                         child: const Text('Get enrolled factors'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          if (AuthGate.appleAuthorizationCode != null) {
+                            // The `authorizationCode` is on the user credential.
+                            // e.g. final authorizationCode = userCredential.additionalUserInfo?.authorizationCode;
+                            await FirebaseAuth.instance
+                                .revokeTokenWithAuthorizationCode(
+                              AuthGate.appleAuthorizationCode!,
+                            );
+                            // You may wish to delete the user at this point
+                            AuthGate.appleAuthorizationCode = null;
+                          } else {
+                            print(
+                              'Apple `authorizationCode` is null, cannot revoke token.',
+                            );
+                          }
+                        },
+                        child: const Text('Revoke Apple auth token'),
                       ),
                       TextFormField(
                         controller: phoneController,

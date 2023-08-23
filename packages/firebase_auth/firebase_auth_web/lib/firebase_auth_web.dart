@@ -555,6 +555,14 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       verificationFailed(getFirebaseAuthException(e));
     }
   }
+
+  @override
+  Future<void> revokeTokenWithAuthorizationCode(
+      String authorizationCode) async {
+    throw UnimplementedError(
+      'revokeTokenWithAuthorizationCode() is only available on apple platforms.',
+    );
+  }
 }
 
 String getOriginName(String appName) {

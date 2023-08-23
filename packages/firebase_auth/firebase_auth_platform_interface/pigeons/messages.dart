@@ -129,11 +129,13 @@ class PigeonAdditionalUserInfo {
     required this.providerId,
     required this.username,
     this.profile,
+    this.authorizationCode,
   });
 
   final bool isNewUser;
   final String? providerId;
   final String? username;
+  final String? authorizationCode;
   final Map<String?, Object?>? profile;
 }
 
@@ -400,6 +402,11 @@ abstract class FirebaseAuthHostApi {
   String verifyPhoneNumber(
     PigeonFirebaseApp app,
     PigeonVerifyPhoneNumberRequest request,
+  );
+  @async
+  void revokeTokenWithAuthorizationCode(
+    PigeonFirebaseApp app,
+    String authorizationCode,
   );
 }
 
