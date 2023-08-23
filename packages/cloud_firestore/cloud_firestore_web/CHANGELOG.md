@@ -1,3 +1,7 @@
+## 3.7.0
+
+ - **FEAT**(firestore): add support for multiple database instances ([#11310](https://github.com/firebase/flutterfire/issues/11310)). ([ce6efcc1](https://github.com/firebase/flutterfire/commit/ce6efcc16ced0317e86b0ad12aa02ff5795a8207))
+
 ## 3.6.4
 
  - Update a dependency to the latest release.

@@ -1,3 +1,7 @@
+## 4.5.6
+
+ - **FIX**(messaging): Throw exception if APNS token is not yet available ([#11400](https://github.com/firebase/flutterfire/issues/11400)). ([346d6022](https://github.com/firebase/flutterfire/commit/346d6022d425e0f8c83f50ea05427a02a2214166))
+
 ## 4.5.5
 
  - **FIX**(messaging): Method channel handlers were not created if `FirebaseMessaging.instance.*` is not invoked beforehand ([#11447](https://github.com/firebase/flutterfire/issues/11447)). ([a3a07768](https://github.com/firebase/flutterfire/commit/a3a07768389fad0cfa564bd11189d8e0888d27a9))
