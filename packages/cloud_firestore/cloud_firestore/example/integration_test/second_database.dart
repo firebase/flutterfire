@@ -2366,7 +2366,8 @@ void runSecondDatabaseTests() {
             snapshot,
             emits(
               isA<QuerySnapshot<int>>().having((e) => e.docs, 'docs', [
-                isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42),
+                isA<DocumentSnapshot<int>>()
+                    .having((e) => e.data(), 'data', 42),
               ]),
             ),
           );
@@ -2416,7 +2417,8 @@ void runSecondDatabaseTests() {
             snapshot,
             emits(
               isA<QuerySnapshot<int>>().having((e) => e.docs, 'docs', [
-                isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42),
+                isA<DocumentSnapshot<int>>()
+                    .having((e) => e.data(), 'data', 42),
               ]),
             ),
           );
@@ -2464,7 +2466,8 @@ void runSecondDatabaseTests() {
             snapshot,
             emits(
               isA<QuerySnapshot<int>>().having((e) => e.docs, 'docs', [
-                isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42),
+                isA<DocumentSnapshot<int>>()
+                    .having((e) => e.data(), 'data', 42),
               ]),
             ),
           );
