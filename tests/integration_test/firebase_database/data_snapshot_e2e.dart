@@ -65,7 +65,7 @@ void setupDataSnapshotTests() {
           2,
           true,
           ['foo'],
-          ['hello', 'foo']
+          ['hello', 'foo'],
         ]),
       );
     });
@@ -115,7 +115,7 @@ void setupDataSnapshotTests() {
 
     test('hasChild returns true', () async {
       await ref.set({
-        'foo': {'bar': 'baz'}
+        'foo': {'bar': 'baz'},
       });
       final s = await ref.get();
       expect(s.hasChild('bar'), isFalse);
@@ -130,7 +130,7 @@ void setupDataSnapshotTests() {
 
     test('child returns the correct snapshot', () async {
       await ref.set({
-        'foo': {'bar': 'baz'}
+        'foo': {'bar': 'baz'},
       });
       final s = await ref.get();
       expect(s.child('foo/bar'), isA<DataSnapshot>());
