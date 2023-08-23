@@ -232,7 +232,7 @@ Future<UserCredential> signInWithApple() async {
 }
 ```
 
-### Revoke Apple Auth Token
+### Revoke Apple auth tokens
 
 Apple sign-in on Apple platforms will return an authorization code that can be used to revoke the Apple auth token
 using the `revokeTokenWithAuthorizationCode()` API.
