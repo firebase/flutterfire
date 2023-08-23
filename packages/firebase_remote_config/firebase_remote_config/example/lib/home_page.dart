@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
               }
             },
             buttonText: subscription != null ? 'Cancel' : 'Listen',
-          )
+          ),
         ],
       ),
     );

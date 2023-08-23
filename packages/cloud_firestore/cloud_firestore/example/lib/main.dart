@@ -112,7 +112,7 @@ class _FilmListState extends State<FilmList> {
                   style: Theme.of(context).textTheme.bodySmall,
                 );
               },
-            )
+            ),
           ],
         ),
         actions: <Widget>[
@@ -234,7 +234,7 @@ class _MovieItem extends StatelessWidget {
           Likes(
             reference: reference,
             currentLikes: movie.likes,
-          )
+          ),
         ],
       ),
     );
@@ -278,7 +278,7 @@ class _MovieItem extends StatelessWidget {
               style: const TextStyle(color: Colors.white),
             ),
           ),
-        )
+        ),
     ];
   }
 

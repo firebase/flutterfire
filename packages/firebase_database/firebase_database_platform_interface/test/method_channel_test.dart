@@ -89,9 +89,9 @@ void main() {
               'committed': true,
               'snapshot': <String, dynamic>{
                 'key': 'fakeKey',
-                'value': updatedValue
+                'value': updatedValue,
               },
-              'childKeys': ['fakeKey']
+              'childKeys': ['fakeKey'],
             };
           default:
             return null;
@@ -120,7 +120,7 @@ void main() {
               'cacheSizeBytes': 10000,
               'loggingEnabled': true,
               'emulatorHost': 'localhost',
-              'emulatorPort': 1234
+              'emulatorPort': 1234,
             },
           ),
         ],
@@ -179,7 +179,7 @@ void main() {
       test('set & setWithPriority', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
         final dynamic serverValue = <String, dynamic>{
-          'qux': ServerValue.increment(8)
+          'qux': ServerValue.increment(8),
         };
         const int priority = 42;
         await database.ref('foo').set(value);
@@ -225,8 +225,8 @@ void main() {
                 'path': 'baz',
                 'value': {
                   'qux': {
-                    '.sv': {'increment': 8}
-                  }
+                    '.sv': {'increment': 8},
+                  },
                 },
               },
             ),
@@ -556,7 +556,7 @@ void main() {
                 'eventChannelNamePrefix':
                     'foo-testApp-https://fake-database-url2.firebaseio.com-DatabaseEventType.value-[]',
               },
-            )
+            ),
           ],
         );
       });

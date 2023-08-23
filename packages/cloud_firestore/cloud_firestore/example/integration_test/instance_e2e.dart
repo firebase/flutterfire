@@ -159,7 +159,7 @@ void runInstanceTests() {
               fieldPath: 'fieldPath',
               order: Order.ascending,
               arrayConfig: ArrayConfig.contains,
-            )
+            ),
           ],
         );
 
@@ -239,17 +239,17 @@ void runInstanceTests() {
               'queryScope': 'COLLECTION',
               'fields': [
                 {'fieldPath': 'author', 'arrayConfig': 'CONTAINS'},
-                {'fieldPath': 'timestamp', 'order': 'DESCENDING'}
-              ]
+                {'fieldPath': 'timestamp', 'order': 'DESCENDING'},
+              ],
             }
           ],
           'fieldOverrides': [
             {
               'collectionGroup': 'posts',
               'fieldPath': 'myBigMapField',
-              'indexes': []
+              'indexes': [],
             }
-          ]
+          ],
         });
 
         await firestore.setIndexConfigurationFromJSON(json);

@@ -293,7 +293,7 @@ void main() {
         expect(() => query!.endAt(['123']), throwsAssertionError);
         expect(
           () => query!.startAt([
-            FieldPath(const ['123'])
+            FieldPath(const ['123']),
           ]),
           throwsAssertionError,
         );

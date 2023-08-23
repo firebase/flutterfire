@@ -96,10 +96,10 @@ void runFieldValueTests() {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-array-union-update-array');
         await doc.set({
-          'foo': [1, 2]
+          'foo': [1, 2],
         });
         await doc.update({
-          'foo': FieldValue.arrayUnion([3, 4])
+          'foo': FieldValue.arrayUnion([3, 4]),
         });
         DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
         expect(snapshot.data()!['foo'], equals([1, 2, 3, 4]));
@@ -111,7 +111,7 @@ void runFieldValueTests() {
             await initializeTest('field-value-array-union-replace');
         await doc.set({'foo': 'bar'});
         await doc.update({
-          'foo': FieldValue.arrayUnion([3, 4])
+          'foo': FieldValue.arrayUnion([3, 4]),
         });
         DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
         expect(snapshot.data()!['foo'], equals([3, 4]));
@@ -122,7 +122,7 @@ void runFieldValueTests() {
             await initializeTest('field-value-array-union-replace');
         await doc.set({'foo': 'bar'});
         await doc.set({
-          'foo': FieldValue.arrayUnion([3, 4])
+          'foo': FieldValue.arrayUnion([3, 4]),
         });
         DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
         expect(snapshot.data()!['foo'], equals([3, 4]));
@@ -134,10 +134,10 @@ void runFieldValueTests() {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('field-value-array-remove-existing');
         await doc.set({
-          'foo': [1, 2, 3, 4]
+          'foo': [1, 2, 3, 4],
         });
         await doc.update({
-          'foo': FieldValue.arrayRemove([3, 4])
+          'foo': FieldValue.arrayRemove([3, 4]),
         });
         DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
         expect(snapshot.data()!['foo'], equals([1, 2]));
@@ -149,7 +149,7 @@ void runFieldValueTests() {
             await initializeTest('field-value-array-remove-replace');
         await doc.set({'foo': 'bar'});
         await doc.update({
-          'foo': FieldValue.arrayUnion([3, 4])
+          'foo': FieldValue.arrayUnion([3, 4]),
         });
         DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
         expect(snapshot.data()!['foo'], equals([3, 4]));
@@ -161,7 +161,7 @@ void runFieldValueTests() {
             await initializeTest('field-value-array-remove-replace');
         await doc.set({'foo': 'bar'});
         await doc.set({
-          'foo': FieldValue.arrayUnion([3, 4])
+          'foo': FieldValue.arrayUnion([3, 4]),
         });
         DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
         expect(snapshot.data()!['foo'], equals([3, 4]));
@@ -179,10 +179,10 @@ void runFieldValueTests() {
               FirebaseFirestore.instance.doc('foo/bar');
 
           await doc.set({
-            'foo': [1]
+            'foo': [1],
           });
           await doc.update({
-            'foo': FieldValue.arrayUnion([2, ref])
+            'foo': FieldValue.arrayUnion([2, ref]),
           });
           DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
           expect(snapshot.data()!['foo'], equals([1, 2, ref]));

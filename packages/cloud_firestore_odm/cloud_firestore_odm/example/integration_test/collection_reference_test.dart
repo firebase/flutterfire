@@ -137,7 +137,7 @@ void main() {
             await stream.next,
             isA<MovieQuerySnapshot>().having((e) => e.docs, 'doc', [
               isA<MovieQueryDocumentSnapshot>()
-                  .having((e) => e.data.title, 'data.title', 'title')
+                  .having((e) => e.data.title, 'data.title', 'title'),
             ]),
           );
         });

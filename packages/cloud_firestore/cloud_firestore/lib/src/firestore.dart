@@ -333,11 +333,13 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     required List<Index> indexes,
     List<FieldOverrides>? fieldOverrides,
   }) async {
-    String json = jsonEncode({
-      'indexes': indexes.map((index) => index.toMap()).toList(),
-      'fieldOverrides':
-          fieldOverrides?.map((index) => index.toMap()).toList() ?? []
-    });
+    String json = jsonEncode(
+      {
+        'indexes': indexes.map((index) => index.toMap()).toList(),
+        'fieldOverrides':
+            fieldOverrides?.map((index) => index.toMap()).toList() ?? [],
+      },
+    );
 
     return _delegate.setIndexConfiguration(json);
   }

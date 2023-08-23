@@ -117,7 +117,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
         'FirebaseAppCheck#setTokenAutoRefreshEnabled',
         {
           'appName': app.name,
-          'isTokenAutoRefreshEnabled': isTokenAutoRefreshEnabled
+          'isTokenAutoRefreshEnabled': isTokenAutoRefreshEnabled,
         },
       );
     } on PlatformException catch (e, s) {

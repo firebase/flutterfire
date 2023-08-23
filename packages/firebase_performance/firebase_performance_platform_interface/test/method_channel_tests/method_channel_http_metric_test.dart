@@ -117,7 +117,7 @@ void main() {
               'responseContentType': 'baz',
               'responsePayloadSize': 23,
             },
-          )
+          ),
         ]);
       });
 

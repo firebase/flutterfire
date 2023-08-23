@@ -14,8 +14,8 @@ void main() {
 
   TestFirebaseDynamicLinksPlatform? firebaseDynamicLinksPlatformPlatform;
 
-  FirebaseApp? app;
-  FirebaseApp? secondaryApp;
+  late FirebaseApp app;
+  late FirebaseApp secondaryApp;
   final link = Uri.parse('uri');
   final parameters = DynamicLinkParameters(uriPrefix: '', link: link);
 
@@ -33,7 +33,7 @@ void main() {
       );
 
       firebaseDynamicLinksPlatformPlatform = TestFirebaseDynamicLinksPlatform(
-        app!,
+        app,
       );
     });
 
@@ -59,7 +59,7 @@ void main() {
     group('set.instance', () {
       test('sets the current instance', () {
         FirebaseDynamicLinksPlatform.instance =
-            TestFirebaseDynamicLinksPlatform(secondaryApp!);
+            TestFirebaseDynamicLinksPlatform(secondaryApp);
 
         expect(
           FirebaseDynamicLinksPlatform.instance,

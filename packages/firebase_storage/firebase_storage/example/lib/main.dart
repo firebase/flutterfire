@@ -231,9 +231,9 @@ class _TaskManager extends State<TaskManager> {
                   // ignore: sort_child_properties_last
                   child: Text('Clear list'),
                   value: UploadType.clear,
-                )
+                ),
             ],
-          )
+          ),
         ],
       ),
       body: _uploadTasks.isEmpty

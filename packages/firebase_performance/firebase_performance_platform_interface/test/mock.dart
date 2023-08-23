@@ -35,7 +35,7 @@ Future<void> testExceptionHandling(
     anyOf([
       completes,
       if (type == 'PLATFORM' || type == 'EXCEPTION')
-        throwsA(isA<FirebaseException>())
+        throwsA(isA<FirebaseException>()),
     ]),
   );
 }

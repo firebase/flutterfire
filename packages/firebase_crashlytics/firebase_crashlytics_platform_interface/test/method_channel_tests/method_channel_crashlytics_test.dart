@@ -37,7 +37,7 @@ void main() {
         'fileName': 'method_channel_crashlytics_test.dart',
         'lineNumber': '99999',
       }
-    ]
+    ],
   };
 
   group('$MethodChannelFirebaseCrashlytics', () {

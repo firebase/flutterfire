@@ -22,7 +22,7 @@ void main() {
 
         expect(snapshot.docs, [
           isA<ExplicitPathQueryDocumentSnapshot>()
-              .having((e) => e.data.value, 'data.value', 42)
+              .having((e) => e.data.value, 'data.value', 42),
         ]);
       });
 
@@ -37,7 +37,7 @@ void main() {
 
         expect(snapshot.docs, [
           isA<ExplicitSubPathQueryDocumentSnapshot>()
-              .having((e) => e.data.value, 'data.value', 42)
+              .having((e) => e.data.value, 'data.value', 42),
         ]);
       });
     });
@@ -54,7 +54,7 @@ void main() {
 
         expect(snapshot.docs, [
           isA<AsCamelCaseQueryDocumentSnapshot>()
-              .having((e) => e.data.value, 'data.value', 42)
+              .having((e) => e.data.value, 'data.value', 42),
         ]);
       });
 
@@ -71,7 +71,7 @@ void main() {
 
         expect(snapshot.docs, [
           isA<CustomSubNameQueryDocumentSnapshot>()
-              .having((e) => e.data.value, 'data.value', 42)
+              .having((e) => e.data.value, 'data.value', 42),
         ]);
       });
     });
@@ -91,7 +91,7 @@ void main() {
 
       expect(snapshot.docs, [
         isA<ThisIsACustomPrefixDocumentSnapshot>()
-            .having((e) => e.data?.value, 'data.value', 42)
+            .having((e) => e.data?.value, 'data.value', 42),
       ]);
     });
   });

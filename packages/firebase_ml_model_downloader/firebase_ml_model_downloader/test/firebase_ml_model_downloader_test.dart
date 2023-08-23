@@ -108,7 +108,7 @@ void main() {
           hash: 'hash',
           name: 'name',
           size: 123,
-        )
+        ),
       ];
       when(kMockDownloaderPlatform.listDownloadedModels())
           .thenAnswer((_) => Future.value(customModels));

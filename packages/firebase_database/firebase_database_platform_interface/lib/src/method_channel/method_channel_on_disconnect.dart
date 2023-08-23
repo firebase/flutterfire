@@ -40,7 +40,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
           {
             'path': ref.path,
             if (value != null) 'value': transformValue(value),
-            if (priority != null) 'priority': priority
+            if (priority != null) 'priority': priority,
           },
         ),
       );

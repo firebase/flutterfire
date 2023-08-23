@@ -137,7 +137,7 @@ void main() {
                 'eventName': 'test-event',
                 'parameters': {'a': 'b'},
               },
-            )
+            ),
           ],
         );
       });
@@ -165,7 +165,7 @@ void main() {
                   ITEMS: [ITEM.asMap()],
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -193,7 +193,7 @@ void main() {
                   ITEMS: [ITEM.asMap()],
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -218,7 +218,7 @@ void main() {
                   ITEMS: [ITEM.asMap()],
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -243,7 +243,7 @@ void main() {
                   ITEMS: [ITEM.asMap()],
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -274,7 +274,7 @@ void main() {
                   AD_UNIT_NAME: AD_UNIT_NAME,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -289,9 +289,9 @@ void main() {
               'Analytics#logEvent',
               arguments: <String, dynamic>{
                 'eventName': 'app_open',
-                'parameters': null
+                'parameters': null,
               },
-            )
+            ),
           ],
         );
       });
@@ -318,7 +318,7 @@ void main() {
                   COUPON: COUPON,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -351,7 +351,7 @@ void main() {
                   CP1: CP1,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -374,7 +374,7 @@ void main() {
                   VIRTUAL_CURRENCY_NAME: VIRTUAL_CURRENCY_NAME,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -397,7 +397,7 @@ void main() {
                   CURRENCY: CURRENCY,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -418,7 +418,7 @@ void main() {
                   GROUP_ID: GROUP_ID,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -435,7 +435,7 @@ void main() {
                 'eventName': 'level_up',
                 'parameters': {LEVEL: LEVEL_INT, CHARACTER: CHARACTER},
               },
-            )
+            ),
           ],
         );
       });
@@ -456,7 +456,7 @@ void main() {
                   LEVEL_NAME: LEVEL_NAME,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -477,7 +477,7 @@ void main() {
                   SUCCESS: SUCCESS_INT,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -496,7 +496,7 @@ void main() {
                   METHOD: METHOD,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -521,7 +521,7 @@ void main() {
                   CHARACTER: CHARACTER,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -556,7 +556,7 @@ void main() {
                   AFFILIATION: AFFILIATION,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -581,7 +581,7 @@ void main() {
                   ITEMS: [ITEM.asMap()],
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -604,7 +604,7 @@ void main() {
                   SCREEN_NAME: SCREEN_NAME,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -629,7 +629,7 @@ void main() {
                   ITEMS: [ITEM.asMap()],
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -660,7 +660,7 @@ void main() {
                   ITEMS: [ITEM.asMap()],
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -685,7 +685,7 @@ void main() {
                   ITEMS: [ITEM.asMap()],
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -722,7 +722,7 @@ void main() {
                   TRAVEL_CLASS: TRAVEL_CLASS,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -745,7 +745,7 @@ void main() {
                   ITEM_ID: ITEM_ID,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -770,7 +770,7 @@ void main() {
                   METHOD: METHOD,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -789,7 +789,7 @@ void main() {
                   METHOD: METHOD,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -814,7 +814,7 @@ void main() {
                   VALUE: VALUE_DOUBLE,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -831,7 +831,7 @@ void main() {
                 'eventName': 'tutorial_begin',
                 'parameters': null,
               },
-            )
+            ),
           ],
         );
       });
@@ -846,9 +846,9 @@ void main() {
               'Analytics#logEvent',
               arguments: <String, dynamic>{
                 'eventName': 'tutorial_complete',
-                'parameters': null
+                'parameters': null,
               },
-            )
+            ),
           ],
         );
       });
@@ -865,7 +865,7 @@ void main() {
                 'eventName': 'unlock_achievement',
                 'parameters': {ACHIEVEMENT_ID: ACHIEVEMENT_ID},
               },
-            )
+            ),
           ],
         );
       });
@@ -887,10 +887,10 @@ void main() {
                 'parameters': {
                   CURRENCY: CURRENCY,
                   VALUE: VALUE_DOUBLE,
-                  ITEMS: [ITEM.asMap()]
+                  ITEMS: [ITEM.asMap()],
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -915,7 +915,7 @@ void main() {
                   ITEMS: [ITEM.asMap()],
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -946,7 +946,7 @@ void main() {
                   ITEMS: [ITEM.asMap()],
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -965,7 +965,7 @@ void main() {
                   SEARCH_TERM: SEARCH_TERM,
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -1000,7 +1000,7 @@ void main() {
                   ITEMS: [ITEM.asMap()],
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -1065,7 +1065,7 @@ void main() {
         final Map<String, dynamic> original = <String, dynamic>{
           'a': 1,
           'b': null,
-          'c': 'd'
+          'c': 'd',
         };
         final Map<String, dynamic> filtered = filterOutNulls(original);
 
@@ -1084,7 +1084,7 @@ void main() {
             isMethodCall(
               'Analytics#setUserId',
               arguments: {'userId': 'test-user-id'},
-            )
+            ),
           ],
         );
       });
@@ -1106,7 +1106,7 @@ void main() {
                   'screen_class': 'test-class-override',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -1123,7 +1123,7 @@ void main() {
                 'name': 'test_name',
                 'value': 'test-value',
               },
-            )
+            ),
           ],
         );
       });
@@ -1160,7 +1160,7 @@ void main() {
             isMethodCall(
               'Analytics#setAnalyticsCollectionEnabled',
               arguments: {'enabled': false},
-            )
+            ),
           ],
         );
       });
@@ -1176,7 +1176,7 @@ void main() {
               isMethodCall(
                 'Analytics#setSessionTimeoutDuration',
                 arguments: 234,
-              )
+              ),
             ],
           );
         },
@@ -1191,7 +1191,7 @@ void main() {
             isMethodCall(
               'Analytics#resetAnalyticsData',
               arguments: null,
-            )
+            ),
           ],
         );
       });
@@ -1204,7 +1204,7 @@ void main() {
             isMethodCall(
               'Analytics#getAppInstanceId',
               arguments: null,
-            )
+            ),
           ],
         );
       });

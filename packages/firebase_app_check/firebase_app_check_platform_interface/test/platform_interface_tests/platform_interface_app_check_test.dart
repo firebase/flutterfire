@@ -14,8 +14,8 @@ void main() {
 
   late TestFirebaseAppCheckPlatform firebaseAppCheckPlatform;
 
-  FirebaseApp? app;
-  FirebaseApp? secondaryApp;
+  late FirebaseApp app;
+  late FirebaseApp secondaryApp;
 
   group('$FirebaseAppCheckPlatform', () {
     setUpAll(() async {
@@ -31,7 +31,7 @@ void main() {
       );
 
       firebaseAppCheckPlatform = TestFirebaseAppCheckPlatform(
-        app!,
+        app,
       );
     });
 
@@ -53,7 +53,7 @@ void main() {
 
     test('set.instance', () {
       FirebaseAppCheckPlatform.instance =
-          TestFirebaseAppCheckPlatform(secondaryApp!);
+          TestFirebaseAppCheckPlatform(secondaryApp);
 
       expect(
         FirebaseAppCheckPlatform.instance,
@@ -65,7 +65,7 @@ void main() {
     test('throws if .delegateFor() not implemented', () async {
       await expectLater(
         // ignore: invalid_use_of_protected_member
-        () => firebaseAppCheckPlatform.delegateFor(app: app!),
+        () => firebaseAppCheckPlatform.delegateFor(app: app),
         throwsA(
           isA<UnimplementedError>().having(
             (e) => e.message,

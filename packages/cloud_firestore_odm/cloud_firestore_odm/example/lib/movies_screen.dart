@@ -75,7 +75,7 @@ class _FilmListState extends State<FilmList> {
                   style: Theme.of(context).textTheme.bodySmall,
                 );
               },
-            )
+            ),
           ],
         ),
         actions: <Widget>[

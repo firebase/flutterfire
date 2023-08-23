@@ -84,7 +84,7 @@ Future<void> testExceptionHandling(
     anyOf([
       completes,
       if (type == 'PLATFORM' || type == 'EXCEPTION')
-        throwsA(isA<FirebaseAuthException>())
+        throwsA(isA<FirebaseAuthException>()),
     ]),
   );
 }

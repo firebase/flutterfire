@@ -483,10 +483,10 @@ void setupQueryTests() {
             ref.orderByChild('nuggets').onChildMoved,
             emitsInOrder([
               isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
-                'nuggets': 57
+                'nuggets': 57,
               }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
               isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
-                'nuggets': 61
+                'nuggets': 61,
               }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
             ]),
           );

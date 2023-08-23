@@ -176,7 +176,7 @@ class _MainScreenState extends State<_MainScreen> {
                       style: const TextStyle(color: Colors.blue),
                     ),
                   ),
-                  Text(_linkMessage == null ? '' : _testString)
+                  Text(_linkMessage == null ? '' : _testString),
                 ],
               ),
             );

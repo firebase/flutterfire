@@ -49,7 +49,7 @@ void main() {
             'apiKey': 'abc',
             'appId': '123',
             'messagingSenderId': 'msg',
-            'projectId': 'test'
+            'projectId': 'test',
           },
         });
       });
@@ -76,7 +76,7 @@ void main() {
               'apiKey': 'abc',
               'appId': '123',
               'messagingSenderId': 'msg',
-              'projectId': 'test'
+              'projectId': 'test',
             },
           });
         } else {
