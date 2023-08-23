@@ -45,7 +45,8 @@ void runSecondDatabaseTests() {
 
       CollectionReference<Map<String, dynamic>> collection =
           firestore.collection(
-              '$collectionForSecondDatabase/$id/${getCurrentPlatform()}');
+        '$collectionForSecondDatabase/$id/${getCurrentPlatform()}',
+      );
       QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
 
       await Future.forEach(snapshot.docs,
