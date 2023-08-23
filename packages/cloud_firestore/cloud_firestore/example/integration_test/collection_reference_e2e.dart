@@ -119,7 +119,7 @@ void runCollectionReferenceTests() {
             emits(
               isA<QuerySnapshot>().having((e) => e.docs, 'docs', [
                 isA<QueryDocumentSnapshot>()
-                    .having((e) => e.data(), 'data', {'value': 42})
+                    .having((e) => e.data(), 'data', {'value': 42}),
               ]),
             ),
           );
@@ -128,7 +128,7 @@ void runCollectionReferenceTests() {
             emits(
               isA<QuerySnapshot<int>>().having((e) => e.docs, 'docs', [
                 isA<QueryDocumentSnapshot<int>>()
-                    .having((e) => e.data(), 'data', 42)
+                    .having((e) => e.data(), 'data', 42),
               ]),
             ),
           );
@@ -145,7 +145,7 @@ void runCollectionReferenceTests() {
                   isA<QueryDocumentSnapshot<Map<String, dynamic>>>()
                       .having((e) => e.data(), 'data', {'value': 42}),
                   isA<QueryDocumentSnapshot<Map<String, dynamic>>>()
-                      .having((e) => e.data(), 'data', {'value': 21})
+                      .having((e) => e.data(), 'data', {'value': 21}),
                 ]),
               ),
             ),
@@ -161,7 +161,7 @@ void runCollectionReferenceTests() {
                   isA<QueryDocumentSnapshot<int>>()
                       .having((e) => e.data(), 'data', 42),
                   isA<QueryDocumentSnapshot<int>>()
-                      .having((e) => e.data(), 'data', 21)
+                      .having((e) => e.data(), 'data', 21),
                 ]),
               ),
             ),
@@ -189,7 +189,7 @@ void runCollectionReferenceTests() {
               isA<QuerySnapshot<Null>>().having((e) => e.docs, 'docs', [
                 // ignore: prefer_void_to_null
                 isA<QueryDocumentSnapshot<Null>>()
-                    .having((e) => e.data(), 'data', null)
+                    .having((e) => e.data(), 'data', null),
               ]),
             ),
           );
