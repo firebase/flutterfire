@@ -39,6 +39,13 @@
     [self writeByte:FirestoreDataTypeDocumentReference];
     [self writeValue:appName];
     [self writeValue:documentPath];
+
+    FIRFirestore *firestore = document.firestore;
+
+    FLTFirebaseFirestoreExtension *extension =
+        [FLTFirebaseFirestoreUtils getCachedInstanceForFirestore:firestore];
+    [self writeValue:extension.databaseURL];
+
   } else if ([value isKindOfClass:[FIRDocumentSnapshot class]]) {
     [super writeValue:[self FIRDocumentSnapshot:value]];
   } else if ([value isKindOfClass:[FIRLoadBundleTaskProgress class]]) {
