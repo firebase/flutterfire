@@ -111,7 +111,8 @@ jobs:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
       - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
-          channel: 'stable'
+          # TODO - revert back to 'stable' once this hot fix lands: https://github.com/flutter/flutter/issues/132711
+          channel: 'dev'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:
