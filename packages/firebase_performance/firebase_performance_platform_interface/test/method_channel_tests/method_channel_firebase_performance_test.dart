@@ -83,7 +83,7 @@ void main() {
         isMethodCall(
           'FirebasePerformance#isPerformanceCollectionEnabled',
           arguments: null,
-        )
+        ),
       ]);
     });
 
@@ -107,7 +107,7 @@ void main() {
         isMethodCall(
           'FirebasePerformance#setPerformanceCollectionEnabled',
           arguments: {'enable': true},
-        )
+        ),
       ]);
     });
 

@@ -31,7 +31,7 @@ void main() {
         'metadata': {
           'hasPendingWrites': true,
           'isFromCache': true,
-        }
+        },
       };
     }
 
@@ -42,7 +42,7 @@ void main() {
         'metadata': {
           'hasPendingWrites': false,
           'isFromCache': false,
-        }
+        },
       };
     }
 
@@ -56,14 +56,14 @@ void main() {
           'ben': {
             'foo': {
               'bar': 'baz',
-            }
+            },
           },
           'dot.field': true,
         },
         'metadata': {
           'hasPendingWrites': false,
           'isFromCache': false,
-        }
+        },
       };
     }
 

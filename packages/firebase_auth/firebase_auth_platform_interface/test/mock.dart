@@ -81,12 +81,10 @@ Future<void> testExceptionHandling(
 ) async {
   await expectLater(
     () async => testMethod(),
-    anyOf(
-      [
-        completes,
-        if (type == 'PLATFORM' || type == 'EXCEPTION')
-          throwsA(isA<FirebaseAuthException>())
-      ],
-    ),
+    anyOf([
+      completes,
+      if (type == 'PLATFORM' || type == 'EXCEPTION')
+        throwsA(isA<FirebaseAuthException>()),
+    ]),
   );
 }

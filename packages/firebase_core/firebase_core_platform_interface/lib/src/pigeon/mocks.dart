@@ -34,7 +34,7 @@ class MockFirebaseApp implements TestFirebaseCoreHostApi {
           messagingSenderId: '123',
         ),
         pluginConstants: {},
-      )
+      ),
     ];
   }
 

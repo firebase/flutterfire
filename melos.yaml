@@ -160,7 +160,7 @@ scripts:
   test:e2e:cloud_firestore:
     run: |
       cd packages/cloud_firestore/cloud_firestore/example
-      flutter test integration_test/cloud_firestore_e2e_test.dart
+      flutter test integration_test/e2e_test.dart
     description: |
       Run all e2e tests for cloud_firestore.
 
