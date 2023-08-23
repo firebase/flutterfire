@@ -106,7 +106,7 @@ jobs:
 
   build_examples_dart:
     timeout-minutes: 30
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
       - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
