@@ -10,7 +10,7 @@
 
 #include "cloud_firestore_plugin.h"
 
-namespace cloud_firestore {
+namespace cloud_firestore_windows {
 namespace test {
 
 namespace {
@@ -21,23 +21,6 @@ using flutter::MethodCall;
 using flutter::MethodResultFunctions;
 
 }  // namespace
-
-TEST(CloudFirestorePlugin, GetPlatformVersion) {
-  CloudFirestorePlugin plugin;
-  // Save the reply value from the success callback.
-  std::string result_string;
-  plugin.HandleMethodCall(
-      MethodCall("getPlatformVersion", std::make_unique<EncodableValue>()),
-      std::make_unique<MethodResultFunctions<>>(
-          [&result_string](const EncodableValue* result) {
-            result_string = std::get<std::string>(*result);
-          },
-          nullptr, nullptr));
-
-  // Since the exact string varies by host, just ensure that it's a string
-  // with the expected format.
-  EXPECT_TRUE(result_string.rfind("Windows ", 0) == 0);
-}
 
 }  // namespace test
 }  // namespace cloud_firestore

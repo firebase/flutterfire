@@ -4,6 +4,7 @@
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/plugin_registrar_windows.h>
+#include "firebase/app.h";
 #include "messages.g.h"
 
 #include <memory>

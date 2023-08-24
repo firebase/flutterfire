@@ -3,8 +3,10 @@
 // This must be included before many other Windows headers.
 #include <windows.h>
 
-// For getPlatformVersion; remove unless needed for your plugin implementation.
-#include <VersionHelpers.h>
+#include "firebase/app.h";
+
+#include "messages.g.h"
+
 
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
@@ -25,6 +27,8 @@ void CloudFirestorePlugin::RegisterWithRegistrar(
 
   auto plugin = std::make_unique<CloudFirestorePlugin>();
 
+  FirebaseFirestoreHostApi::SetUp(registrar->messenger(), plugin.get());
+
 
   registrar->AddPlugin(std::move(plugin));
 }
@@ -33,9 +37,12 @@ CloudFirestorePlugin::CloudFirestorePlugin() {}
 
 CloudFirestorePlugin::~CloudFirestorePlugin() {}
 
+
 void CloudFirestorePlugin::LoadBundle(
     const PigeonFirebaseApp& app, const std::vector<uint8_t>& bundle,
-    std::function<void(ErrorOr<std::string> reply)> result) {}
+    std::function<void(ErrorOr<std::string> reply)> result) {
+  // TODO: uses EventChannels
+}
 
 void CloudFirestorePlugin::NamedQueryGet(
     const PigeonFirebaseApp& app, const std::string& name,

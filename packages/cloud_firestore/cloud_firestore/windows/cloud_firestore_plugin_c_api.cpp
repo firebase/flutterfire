@@ -6,7 +6,7 @@
 
 void CloudFirestorePluginCApiRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar) {
-  cloud_firestore::CloudFirestorePlugin::RegisterWithRegistrar(
+  cloud_firestore_windows::CloudFirestorePlugin::RegisterWithRegistrar(
       flutter::PluginRegistrarManager::GetInstance()
           ->GetRegistrar<flutter::PluginRegistrarWindows>(registrar));
 }
