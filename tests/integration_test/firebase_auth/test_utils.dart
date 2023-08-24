@@ -225,7 +225,7 @@ Future<void> ensureSignedIn(String testEmail) async {
       );
     } on FirebaseAuthException catch (e) {
       // The Windows error codes are not consistent
-      if (e.code == 'email-already-in-use' || e.code.contains('already in use by another account.')) {
+      if (e.code == 'email-already-in-use') {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: testEmail,
           password: testPassword,

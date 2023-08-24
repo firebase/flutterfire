@@ -136,6 +136,119 @@ flutter::EncodableValue FirebaseAuthPlugin::ParseUserInfoToMap(
        flutter::EncodableValue(false)}});
 }
 
+
+
+std::string FirebaseAuthPlugin::GetAuthErrorCode(AuthError authError) {
+  switch (authError) {
+    case firebase::auth::kAuthErrorInvalidCustomToken:
+      return "invalid-custom-token";
+    case firebase::auth::kAuthErrorCustomTokenMismatch:
+      return "custom-token-mismatch";
+    case firebase::auth::kAuthErrorInvalidCredential:
+      return "invalid-credential";
+    case firebase::auth::kAuthErrorUserDisabled:
+      return "user-disabled";
+    case firebase::auth::kAuthErrorEmailAlreadyInUse:
+      return "email-already-in-use";
+    case firebase::auth::kAuthErrorWrongPassword:
+      return "wrong-password";
+    case firebase::auth::kAuthErrorTooManyRequests:
+      return "too-many-requests";
+    case firebase::auth::kAuthErrorAccountExistsWithDifferentCredentials:
+      return "account-exists-with-different-credentials";
+    case firebase::auth::kAuthErrorRequiresRecentLogin:
+      return "requires-recent-login";
+    case firebase::auth::kAuthErrorProviderAlreadyLinked:
+      return "provider-already-linked";
+    case firebase::auth::kAuthErrorNoSuchProvider:
+      return "no-such-provider";
+    case firebase::auth::kAuthErrorInvalidUserToken:
+      return "invalid-user-token";
+    case firebase::auth::kAuthErrorUserTokenExpired:
+      return "user-token-expired";
+    case firebase::auth::kAuthErrorUserNotFound:
+      return "user-not-found";
+    case firebase::auth::kAuthErrorInvalidApiKey:
+      return "invalid-api-key";
+    case firebase::auth::kAuthErrorCredentialAlreadyInUse:
+      return "credential-already-in-use";
+    case firebase::auth::kAuthErrorOperationNotAllowed:
+      return "operation-not-allowed";
+    case firebase::auth::kAuthErrorWeakPassword:
+      return "weak-password";
+    case firebase::auth::kAuthErrorAppNotAuthorized:
+      return "app-not-authorized";
+    case firebase::auth::kAuthErrorExpiredActionCode:
+      return "expired-action-code";
+    case firebase::auth::kAuthErrorInvalidActionCode:
+      return "invalid-action-code";
+    case firebase::auth::kAuthErrorInvalidMessagePayload:
+      return "invalid-message-payload";
+    case firebase::auth::kAuthErrorInvalidSender:
+      return "invalid-sender";
+    case firebase::auth::kAuthErrorInvalidRecipientEmail:
+      return "invalid-recipient-email";
+    case firebase::auth::kAuthErrorUnauthorizedDomain:
+      return "unauthorized-domain";
+    case firebase::auth::kAuthErrorInvalidContinueUri:
+      return "invalid-continue-uri";
+    case firebase::auth::kAuthErrorMissingContinueUri:
+      return "missing-continue-uri";
+    case firebase::auth::kAuthErrorMissingEmail:
+      return "missing-email";
+    case firebase::auth::kAuthErrorMissingPhoneNumber:
+      return "missing-phone-number";
+    case firebase::auth::kAuthErrorInvalidPhoneNumber:
+      return "invalid-phone-number";
+    case firebase::auth::kAuthErrorMissingVerificationCode:
+      return "missing-verification-code";
+    case firebase::auth::kAuthErrorInvalidVerificationCode:
+      return "invalid-verification-code";
+    case firebase::auth::kAuthErrorMissingVerificationId:
+      return "missing-verification-id";
+    case firebase::auth::kAuthErrorInvalidVerificationId:
+      return "invalid-verification-id";
+    case firebase::auth::kAuthErrorSessionExpired:
+      return "session-expired";
+    case firebase::auth::kAuthErrorQuotaExceeded:
+      return "quota-exceeded";
+    case firebase::auth::kAuthErrorMissingAppCredential:
+      return "missing-app-credential";
+    case firebase::auth::kAuthErrorInvalidAppCredential:
+      return "invalid-app-credential";
+    case firebase::auth::kAuthErrorMissingClientIdentifier:
+      return "missing-client-identifier";
+    case firebase::auth::kAuthErrorTenantIdMismatch:
+      return "tenant-id-mismatch";
+    case firebase::auth::kAuthErrorUnsupportedTenantOperation:
+      return "unsupported-tenant-operation";
+    case firebase::auth::kAuthErrorUserMismatch:
+      return "user-mismatch";
+    case firebase::auth::kAuthErrorNetworkRequestFailed:
+      return "network-request-failed";
+    case firebase::auth::kAuthErrorNoSignedInUser:
+      return "no-signed-in-user";
+    case firebase::auth::kAuthErrorCancelled:
+      return "cancelled";
+
+    default:
+      return "unknown-error";
+  }
+}
+
+FlutterError FirebaseAuthPlugin::ParseError(
+    const firebase::FutureBase& completed_future){
+  const AuthError errorCode =
+      static_cast<const AuthError>(completed_future.error());
+
+  return FlutterError(FirebaseAuthPlugin::GetAuthErrorCode(errorCode),
+      completed_future.error_message());
+
+
+   }
+
+
+
 std::string const kFLTFirebaseAuthChannelName = "firebase_auth_plugin";
 
 class FlutterIdTokenListener : public firebase::auth::IdTokenListener {
@@ -344,7 +457,7 @@ void FirebaseAuthPlugin::CreateUserWithEmailAndPassword(
               ParseAuthResult(completed_future.result());
           result(credential);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -366,7 +479,7 @@ void FirebaseAuthPlugin::SignInAnonymously(
               ParseAuthResult(completed_future.result());
           result(credential);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -488,7 +601,7 @@ void FirebaseAuthPlugin::SignInWithCredential(
           PigeonUserInfo credential = ParseUserInfo(completed_future.result());
           // result(credential);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -510,7 +623,7 @@ void FirebaseAuthPlugin::SignInWithCustomToken(
               ParseAuthResult(completed_future.result());
           result(credential);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -533,7 +646,7 @@ void FirebaseAuthPlugin::SignInWithEmailAndPassword(
               ParseAuthResult(completed_future.result());
           result(credential);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -604,7 +717,7 @@ void FirebaseAuthPlugin::SignInWithProvider(
               ParseAuthResult(completed_future.result());
           result(credential);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -646,7 +759,7 @@ void FirebaseAuthPlugin::FetchSignInMethodsForEmail(
         if (completed_future.error() == 0) {
           result(TransformStringList(completed_future.result()->providers));
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -666,7 +779,7 @@ void FirebaseAuthPlugin::SendPasswordResetEmail(
         if (completed_future.error() == 0) {
           result(std::nullopt);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -719,7 +832,7 @@ void FirebaseAuthPlugin::Delete(
     if (completed_future.error() == 0) {
       result(std::nullopt);
     } else {
-      result(FlutterError(completed_future.error_message()));
+      result(FirebaseAuthPlugin::ParseError(completed_future));
     }
   });
 }
@@ -741,7 +854,7 @@ void FirebaseAuthPlugin::GetIdToken(
           token_result.set_token(sv);
           result(token_result);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -764,7 +877,7 @@ void FirebaseAuthPlugin::LinkWithCredential(
               ParseAuthResult(completed_future.result());
           result(credential);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -787,7 +900,7 @@ void FirebaseAuthPlugin::LinkWithProvider(
               ParseAuthResult(completed_future.result());
           result(credential);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -806,7 +919,7 @@ void FirebaseAuthPlugin::ReauthenticateWithCredential(
     if (completed_future.error() == 0) {
       // TODO: wrong return type
     } else {
-      result(FlutterError(completed_future.error_message()));
+      result(FirebaseAuthPlugin::ParseError(completed_future));
     }
   });
 }
@@ -830,7 +943,7 @@ void FirebaseAuthPlugin::ReauthenticateWithProvider(
               ParseAuthResult(completed_future.result());
           result(credential);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -850,7 +963,7 @@ void FirebaseAuthPlugin::Reload(
       PigeonUserDetails user = ParseUserDetails(firebaseAuth->current_user());
       result(user);
     } else {
-      result(FlutterError(completed_future.error_message()));
+      result(FirebaseAuthPlugin::ParseError(completed_future));
     }
   });
 }
@@ -869,7 +982,7 @@ void FirebaseAuthPlugin::SendEmailVerification(
     if (completed_future.error() == 0) {
       result(std::nullopt);
     } else {
-      result(FlutterError(completed_future.error_message()));
+      result(FirebaseAuthPlugin::ParseError(completed_future));
     }
   });
 }
@@ -892,7 +1005,7 @@ void FirebaseAuthPlugin::Unlink(
               ParseAuthResult(completed_future.result());
           result(credential);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -912,7 +1025,7 @@ void FirebaseAuthPlugin::UpdateEmail(
       PigeonUserDetails user = ParseUserDetails(firebaseAuth->current_user());
       result(user);
     } else {
-      result(FlutterError(completed_future.error_message()));
+      result(FirebaseAuthPlugin::ParseError(completed_future));
     }
   });
 }
@@ -932,7 +1045,7 @@ void FirebaseAuthPlugin::UpdatePassword(
       PigeonUserDetails user = ParseUserDetails(firebaseAuth->current_user());
       result(user);
     } else {
-      result(FlutterError(completed_future.error_message()));
+      result(FirebaseAuthPlugin::ParseError(completed_future));
     }
   });
 }
@@ -975,7 +1088,7 @@ void FirebaseAuthPlugin::UpdatePhoneNumber(
           PigeonUserDetails user = ParseUserDetails(*completed_future.result());
           result(user);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(FirebaseAuthPlugin::ParseError(completed_future));
         }
       });
 }
@@ -1004,7 +1117,7 @@ void FirebaseAuthPlugin::UpdateProfile(
       PigeonUserDetails user = ParseUserDetails(firebaseAuth->current_user());
       result(user);
     } else {
-      result(FlutterError(completed_future.error_message()));
+      result(FirebaseAuthPlugin::ParseError(completed_future));
     }
   });
 }

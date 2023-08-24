@@ -9,7 +9,10 @@
 #include "firebase/app.h"
 #include "firebase/auth.h"
 #include "firebase/future.h"
+#include "firebase/auth/types.h"
 #include "messages.g.h"
+
+using firebase::auth::AuthError;
 
 namespace firebase_auth_windows {
 
@@ -28,6 +31,9 @@ class FirebaseAuthPlugin : public flutter::Plugin,
   FirebaseAuthPlugin& operator=(const FirebaseAuthPlugin&) = delete;
 
   // Parser functions
+  static std::string GetAuthErrorCode(AuthError authError);
+  static FlutterError ParseError(const firebase::FutureBase& future);
+
   static PigeonUserDetails ParseUserDetails(const firebase::auth::User user);
   static PigeonUserInfo ParseUserInfo(const firebase::auth::User* user);
   static flutter::EncodableList ParseProviderData(
