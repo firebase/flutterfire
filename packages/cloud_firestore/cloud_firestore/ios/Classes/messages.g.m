@@ -53,15 +53,15 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList;
 @end
 
-@interface PigeonQuerySnapshot ()
-+ (PigeonQuerySnapshot *)fromList:(NSArray *)list;
-+ (nullable PigeonQuerySnapshot *)nullableFromList:(NSArray *)list;
-- (NSArray *)toList;
-@end
-
 @interface PigeonDocumentChange ()
 + (PigeonDocumentChange *)fromList:(NSArray *)list;
 + (nullable PigeonDocumentChange *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
+@interface PigeonQuerySnapshot ()
++ (PigeonQuerySnapshot *)fromList:(NSArray *)list;
++ (nullable PigeonQuerySnapshot *)nullableFromList:(NSArray *)list;
 - (NSArray *)toList;
 @end
 
@@ -218,38 +218,6 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
-@implementation PigeonQuerySnapshot
-+ (instancetype)makeWithDocuments:(NSArray<PigeonDocumentSnapshot *> *)documents
-    documentChanges:(NSArray<PigeonDocumentChange *> *)documentChanges
-    metadata:(PigeonSnapshotMetadata *)metadata {
-  PigeonQuerySnapshot* pigeonResult = [[PigeonQuerySnapshot alloc] init];
-  pigeonResult.documents = documents;
-  pigeonResult.documentChanges = documentChanges;
-  pigeonResult.metadata = metadata;
-  return pigeonResult;
-}
-+ (PigeonQuerySnapshot *)fromList:(NSArray *)list {
-  PigeonQuerySnapshot *pigeonResult = [[PigeonQuerySnapshot alloc] init];
-  pigeonResult.documents = GetNullableObjectAtIndex(list, 0);
-  NSAssert(pigeonResult.documents != nil, @"");
-  pigeonResult.documentChanges = GetNullableObjectAtIndex(list, 1);
-  NSAssert(pigeonResult.documentChanges != nil, @"");
-  pigeonResult.metadata = [PigeonSnapshotMetadata nullableFromList:(GetNullableObjectAtIndex(list, 2))];
-  NSAssert(pigeonResult.metadata != nil, @"");
-  return pigeonResult;
-}
-+ (nullable PigeonQuerySnapshot *)nullableFromList:(NSArray *)list {
-  return (list) ? [PigeonQuerySnapshot fromList:list] : nil;
-}
-- (NSArray *)toList {
-  return @[
-    (self.documents ?: [NSNull null]),
-    (self.documentChanges ?: [NSNull null]),
-    (self.metadata ? [self.metadata toList] : [NSNull null]),
-  ];
-}
-@end
-
 @implementation PigeonDocumentChange
 + (instancetype)makeWithType:(DocumentChangeType)type
     document:(PigeonDocumentSnapshot *)document
@@ -282,6 +250,38 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     (self.document ? [self.document toList] : [NSNull null]),
     (self.oldIndex ?: [NSNull null]),
     (self.newIndex ?: [NSNull null]),
+  ];
+}
+@end
+
+@implementation PigeonQuerySnapshot
++ (instancetype)makeWithDocuments:(NSArray<PigeonDocumentSnapshot *> *)documents
+    documentChanges:(NSArray<PigeonDocumentChange *> *)documentChanges
+    metadata:(PigeonSnapshotMetadata *)metadata {
+  PigeonQuerySnapshot* pigeonResult = [[PigeonQuerySnapshot alloc] init];
+  pigeonResult.documents = documents;
+  pigeonResult.documentChanges = documentChanges;
+  pigeonResult.metadata = metadata;
+  return pigeonResult;
+}
++ (PigeonQuerySnapshot *)fromList:(NSArray *)list {
+  PigeonQuerySnapshot *pigeonResult = [[PigeonQuerySnapshot alloc] init];
+  pigeonResult.documents = GetNullableObjectAtIndex(list, 0);
+  NSAssert(pigeonResult.documents != nil, @"");
+  pigeonResult.documentChanges = GetNullableObjectAtIndex(list, 1);
+  NSAssert(pigeonResult.documentChanges != nil, @"");
+  pigeonResult.metadata = [PigeonSnapshotMetadata nullableFromList:(GetNullableObjectAtIndex(list, 2))];
+  NSAssert(pigeonResult.metadata != nil, @"");
+  return pigeonResult;
+}
++ (nullable PigeonQuerySnapshot *)nullableFromList:(NSArray *)list {
+  return (list) ? [PigeonQuerySnapshot fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    (self.documents ?: [NSNull null]),
+    (self.documentChanges ?: [NSNull null]),
+    (self.metadata ? [self.metadata toList] : [NSNull null]),
   ];
 }
 @end

@@ -67,15 +67,15 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
   PigeonTransactionTypeGet = 0,
   PigeonTransactionTypeUpdate = 1,
   PigeonTransactionTypeSet = 2,
-  PigeonTransactionTypeDelete = 3,
+  PigeonTransactionTypeDeleteType = 3,
 };
 
 @class PigeonFirebaseSettings;
 @class PigeonFirebaseApp;
 @class PigeonSnapshotMetadata;
 @class PigeonDocumentSnapshot;
-@class PigeonQuerySnapshot;
 @class PigeonDocumentChange;
+@class PigeonQuerySnapshot;
 @class PigeonGetOptions;
 @class PigeonDocumentOption;
 @class PigeonTransactionCommand;
@@ -126,17 +126,6 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 @property(nonatomic, strong) PigeonSnapshotMetadata * metadata;
 @end
 
-@interface PigeonQuerySnapshot : NSObject
-/// `init` unavailable to enforce nonnull fields, see the `make` class method.
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithDocuments:(NSArray<PigeonDocumentSnapshot *> *)documents
-    documentChanges:(NSArray<PigeonDocumentChange *> *)documentChanges
-    metadata:(PigeonSnapshotMetadata *)metadata;
-@property(nonatomic, strong) NSArray<PigeonDocumentSnapshot *> * documents;
-@property(nonatomic, strong) NSArray<PigeonDocumentChange *> * documentChanges;
-@property(nonatomic, strong) PigeonSnapshotMetadata * metadata;
-@end
-
 @interface PigeonDocumentChange : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
@@ -148,6 +137,17 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 @property(nonatomic, strong) PigeonDocumentSnapshot * document;
 @property(nonatomic, strong) NSNumber * oldIndex;
 @property(nonatomic, strong) NSNumber * newIndex;
+@end
+
+@interface PigeonQuerySnapshot : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithDocuments:(NSArray<PigeonDocumentSnapshot *> *)documents
+    documentChanges:(NSArray<PigeonDocumentChange *> *)documentChanges
+    metadata:(PigeonSnapshotMetadata *)metadata;
+@property(nonatomic, strong) NSArray<PigeonDocumentSnapshot *> * documents;
+@property(nonatomic, strong) NSArray<PigeonDocumentChange *> * documentChanges;
+@property(nonatomic, strong) PigeonSnapshotMetadata * metadata;
 @end
 
 @interface PigeonGetOptions : NSObject

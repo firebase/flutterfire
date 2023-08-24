@@ -54,7 +54,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
     _assertNotCommitted();
     _writes.add(PigeonTransactionCommand(
       path: documentPath,
-      type: PigeonTransactionType.delete,
+      type: PigeonTransactionType.deleteType,
     ));
   }
 

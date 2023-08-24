@@ -113,7 +113,7 @@ enum class PigeonTransactionType {
   get = 0,
   update = 1,
   set = 2,
-  delete = 3
+  deleteType = 3
 };
 
 // Generated class from Pigeon that represents data sent in messages.
@@ -258,37 +258,6 @@ class PigeonDocumentSnapshot {
 
 
 // Generated class from Pigeon that represents data sent in messages.
-class PigeonQuerySnapshot {
- public:
-  // Constructs an object setting all fields.
-  explicit PigeonQuerySnapshot(
-    const flutter::EncodableList& documents,
-    const flutter::EncodableList& document_changes,
-    const PigeonSnapshotMetadata& metadata);
-
-  const flutter::EncodableList& documents() const;
-  void set_documents(const flutter::EncodableList& value_arg);
-
-  const flutter::EncodableList& document_changes() const;
-  void set_document_changes(const flutter::EncodableList& value_arg);
-
-  const PigeonSnapshotMetadata& metadata() const;
-  void set_metadata(const PigeonSnapshotMetadata& value_arg);
-
-
- private:
-  static PigeonQuerySnapshot FromEncodableList(const flutter::EncodableList& list);
-  flutter::EncodableList ToEncodableList() const;
-  friend class FirebaseFirestoreHostApi;
-  friend class FirebaseFirestoreHostApiCodecSerializer;
-  flutter::EncodableList documents_;
-  flutter::EncodableList document_changes_;
-  PigeonSnapshotMetadata metadata_;
-
-};
-
-
-// Generated class from Pigeon that represents data sent in messages.
 class PigeonDocumentChange {
  public:
   // Constructs an object setting all fields.
@@ -320,6 +289,37 @@ class PigeonDocumentChange {
   PigeonDocumentSnapshot document_;
   int64_t old_index_;
   int64_t new_index_;
+
+};
+
+
+// Generated class from Pigeon that represents data sent in messages.
+class PigeonQuerySnapshot {
+ public:
+  // Constructs an object setting all fields.
+  explicit PigeonQuerySnapshot(
+    const flutter::EncodableList& documents,
+    const flutter::EncodableList& document_changes,
+    const PigeonSnapshotMetadata& metadata);
+
+  const flutter::EncodableList& documents() const;
+  void set_documents(const flutter::EncodableList& value_arg);
+
+  const flutter::EncodableList& document_changes() const;
+  void set_document_changes(const flutter::EncodableList& value_arg);
+
+  const PigeonSnapshotMetadata& metadata() const;
+  void set_metadata(const PigeonSnapshotMetadata& value_arg);
+
+
+ private:
+  static PigeonQuerySnapshot FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseFirestoreHostApi;
+  friend class FirebaseFirestoreHostApiCodecSerializer;
+  flutter::EncodableList documents_;
+  flutter::EncodableList document_changes_;
+  PigeonSnapshotMetadata metadata_;
 
 };
 

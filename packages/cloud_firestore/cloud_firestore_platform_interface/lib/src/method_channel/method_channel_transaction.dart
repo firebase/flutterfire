@@ -58,7 +58,7 @@ class MethodChannelTransaction extends TransactionPlatform {
   @override
   MethodChannelTransaction delete(String documentPath) {
     _commands.add(PigeonTransactionCommand(
-      type: PigeonTransactionType.delete,
+      type: PigeonTransactionType.deleteType,
       path: documentPath,
     ));
 
