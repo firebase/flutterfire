@@ -423,7 +423,9 @@ void FirebaseAuthPlugin::UseEmulator(
 
 void FirebaseAuthPlugin::ApplyActionCode(
     const PigeonFirebaseApp& app, const std::string& code,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  // TODO: C++ function missing
+}
 
 void FirebaseAuthPlugin::CheckActionCode(
     const PigeonFirebaseApp& app, const std::string& code,

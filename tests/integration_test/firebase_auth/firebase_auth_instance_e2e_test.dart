@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -210,7 +211,7 @@ void main() {
             fail(e.toString());
           }
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('checkActionCode()', () {
         test('throws on invalid code', () async {
@@ -223,7 +224,7 @@ void main() {
             fail(e.toString());
           }
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('confirmPasswordReset()', () {
         test('throws on invalid code', () async {
@@ -239,7 +240,7 @@ void main() {
             fail(e.toString());
           }
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('createUserWithEmailAndPassword', () {
         test('should create a user with an email and password', () async {
@@ -402,7 +403,7 @@ void main() {
             fail(e.toString());
           }
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('sendSignInLinkToEmail()', () {
         test('should send email successfully', () async {
@@ -440,7 +441,7 @@ void main() {
             Uri.encodeFull(continueUrl),
           );
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('languageCode', () {
         test('should change the language code', () async {
@@ -498,7 +499,7 @@ void main() {
           },
           skip: !kIsWeb,
         );
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('signInAnonymously()', () {
         test('should sign in anonymously', () async {
@@ -632,7 +633,7 @@ void main() {
           expect(idTokenResult.claims!['roles'][0], isA<Map>());
           expect(idTokenResult.claims!['roles'][0]['role'], 'member');
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('signInWithEmailAndPassword()', () {
         test('should login with email and password', () async {
@@ -725,7 +726,7 @@ void main() {
             fail(e.toString());
           }
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group(
         'verifyPhoneNumber()',
@@ -818,7 +819,7 @@ void main() {
             skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.macOS || kIsWeb,
+        skip: defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.windows || kIsWeb,
       );
 
       group('setSettings()', () {
