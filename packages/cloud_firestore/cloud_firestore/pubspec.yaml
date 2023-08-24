@@ -41,3 +41,6 @@ flutter:
         pluginClass: FLTFirebaseFirestorePlugin
       web:
         default_package: cloud_firestore_web
+      windows:
+        pluginClass: CloudFirestorePluginCApi
+
