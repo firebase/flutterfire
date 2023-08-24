@@ -20,6 +20,8 @@ set(PLUGIN_NAME "cloud_firestore_plugin")
 list(APPEND PLUGIN_SOURCES
   "cloud_firestore_plugin.cpp"
   "cloud_firestore_plugin.h"
+  "messages.g.cpp"
+  "messages.g.h"
 )
 
 # Define the plugin library target. Its name must not be changed (see comment

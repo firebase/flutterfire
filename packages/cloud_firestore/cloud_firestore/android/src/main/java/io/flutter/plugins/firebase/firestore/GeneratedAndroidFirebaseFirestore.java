@@ -537,6 +537,103 @@ public class GeneratedAndroidFirebaseFirestore {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonQuerySnapshot {
+    private @NonNull List<PigeonDocumentSnapshot> documents;
+
+    public @NonNull List<PigeonDocumentSnapshot> getDocuments() {
+      return documents;
+    }
+
+    public void setDocuments(@NonNull List<PigeonDocumentSnapshot> setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"documents\" is null.");
+      }
+      this.documents = setterArg;
+    }
+
+    private @NonNull List<PigeonDocumentChange> documentChanges;
+
+    public @NonNull List<PigeonDocumentChange> getDocumentChanges() {
+      return documentChanges;
+    }
+
+    public void setDocumentChanges(@NonNull List<PigeonDocumentChange> setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"documentChanges\" is null.");
+      }
+      this.documentChanges = setterArg;
+    }
+
+    private @NonNull PigeonSnapshotMetadata metadata;
+
+    public @NonNull PigeonSnapshotMetadata getMetadata() {
+      return metadata;
+    }
+
+    public void setMetadata(@NonNull PigeonSnapshotMetadata setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"metadata\" is null.");
+      }
+      this.metadata = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonQuerySnapshot() {}
+
+    public static final class Builder {
+
+      private @Nullable List<PigeonDocumentSnapshot> documents;
+
+      public @NonNull Builder setDocuments(@NonNull List<PigeonDocumentSnapshot> setterArg) {
+        this.documents = setterArg;
+        return this;
+      }
+
+      private @Nullable List<PigeonDocumentChange> documentChanges;
+
+      public @NonNull Builder setDocumentChanges(@NonNull List<PigeonDocumentChange> setterArg) {
+        this.documentChanges = setterArg;
+        return this;
+      }
+
+      private @Nullable PigeonSnapshotMetadata metadata;
+
+      public @NonNull Builder setMetadata(@NonNull PigeonSnapshotMetadata setterArg) {
+        this.metadata = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonQuerySnapshot build() {
+        PigeonQuerySnapshot pigeonReturn = new PigeonQuerySnapshot();
+        pigeonReturn.setDocuments(documents);
+        pigeonReturn.setDocumentChanges(documentChanges);
+        pigeonReturn.setMetadata(metadata);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(3);
+      toListResult.add(documents);
+      toListResult.add(documentChanges);
+      toListResult.add((metadata == null) ? null : metadata.toList());
+      return toListResult;
+    }
+
+    static @NonNull PigeonQuerySnapshot fromList(@NonNull ArrayList<Object> list) {
+      PigeonQuerySnapshot pigeonResult = new PigeonQuerySnapshot();
+      Object documents = list.get(0);
+      pigeonResult.setDocuments((List<PigeonDocumentSnapshot>) documents);
+      Object documentChanges = list.get(1);
+      pigeonResult.setDocumentChanges((List<PigeonDocumentChange>) documentChanges);
+      Object metadata = list.get(2);
+      pigeonResult.setMetadata((metadata == null) ? null : PigeonSnapshotMetadata.fromList((ArrayList<Object>) metadata));
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
   public static final class PigeonDocumentChange {
     private @NonNull DocumentChangeType type;
 
@@ -653,103 +750,6 @@ public class GeneratedAndroidFirebaseFirestore {
       pigeonResult.setOldIndex((oldIndex == null) ? null : ((oldIndex instanceof Integer) ? (Integer) oldIndex : (Long) oldIndex));
       Object newIndex = list.get(3);
       pigeonResult.setNewIndex((newIndex == null) ? null : ((newIndex instanceof Integer) ? (Integer) newIndex : (Long) newIndex));
-      return pigeonResult;
-    }
-  }
-
-  /** Generated class from Pigeon that represents data sent in messages. */
-  public static final class PigeonQuerySnapshot {
-    private @NonNull List<PigeonDocumentSnapshot> documents;
-
-    public @NonNull List<PigeonDocumentSnapshot> getDocuments() {
-      return documents;
-    }
-
-    public void setDocuments(@NonNull List<PigeonDocumentSnapshot> setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"documents\" is null.");
-      }
-      this.documents = setterArg;
-    }
-
-    private @NonNull List<PigeonDocumentChange> documentChanges;
-
-    public @NonNull List<PigeonDocumentChange> getDocumentChanges() {
-      return documentChanges;
-    }
-
-    public void setDocumentChanges(@NonNull List<PigeonDocumentChange> setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"documentChanges\" is null.");
-      }
-      this.documentChanges = setterArg;
-    }
-
-    private @NonNull PigeonSnapshotMetadata metadata;
-
-    public @NonNull PigeonSnapshotMetadata getMetadata() {
-      return metadata;
-    }
-
-    public void setMetadata(@NonNull PigeonSnapshotMetadata setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"metadata\" is null.");
-      }
-      this.metadata = setterArg;
-    }
-
-    /** Constructor is non-public to enforce null safety; use Builder. */
-    PigeonQuerySnapshot() {}
-
-    public static final class Builder {
-
-      private @Nullable List<PigeonDocumentSnapshot> documents;
-
-      public @NonNull Builder setDocuments(@NonNull List<PigeonDocumentSnapshot> setterArg) {
-        this.documents = setterArg;
-        return this;
-      }
-
-      private @Nullable List<PigeonDocumentChange> documentChanges;
-
-      public @NonNull Builder setDocumentChanges(@NonNull List<PigeonDocumentChange> setterArg) {
-        this.documentChanges = setterArg;
-        return this;
-      }
-
-      private @Nullable PigeonSnapshotMetadata metadata;
-
-      public @NonNull Builder setMetadata(@NonNull PigeonSnapshotMetadata setterArg) {
-        this.metadata = setterArg;
-        return this;
-      }
-
-      public @NonNull PigeonQuerySnapshot build() {
-        PigeonQuerySnapshot pigeonReturn = new PigeonQuerySnapshot();
-        pigeonReturn.setDocuments(documents);
-        pigeonReturn.setDocumentChanges(documentChanges);
-        pigeonReturn.setMetadata(metadata);
-        return pigeonReturn;
-      }
-    }
-
-    @NonNull
-    ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(3);
-      toListResult.add(documents);
-      toListResult.add(documentChanges);
-      toListResult.add((metadata == null) ? null : metadata.toList());
-      return toListResult;
-    }
-
-    static @NonNull PigeonQuerySnapshot fromList(@NonNull ArrayList<Object> list) {
-      PigeonQuerySnapshot pigeonResult = new PigeonQuerySnapshot();
-      Object documents = list.get(0);
-      pigeonResult.setDocuments((List<PigeonDocumentSnapshot>) documents);
-      Object documentChanges = list.get(1);
-      pigeonResult.setDocumentChanges((List<PigeonDocumentChange>) documentChanges);
-      Object metadata = list.get(2);
-      pigeonResult.setMetadata((metadata == null) ? null : PigeonSnapshotMetadata.fromList((ArrayList<Object>) metadata));
       return pigeonResult;
     }
   }

@@ -284,6 +284,60 @@ PigeonDocumentSnapshot PigeonDocumentSnapshot::FromEncodableList(const Encodable
   return decoded;
 }
 
+// PigeonQuerySnapshot
+
+PigeonQuerySnapshot::PigeonQuerySnapshot(
+  const EncodableList& documents,
+  const EncodableList& document_changes,
+  const PigeonSnapshotMetadata& metadata)
+ : documents_(documents),
+    document_changes_(document_changes),
+    metadata_(metadata) {}
+
+const EncodableList& PigeonQuerySnapshot::documents() const {
+  return documents_;
+}
+
+void PigeonQuerySnapshot::set_documents(const EncodableList& value_arg) {
+  documents_ = value_arg;
+}
+
+
+const EncodableList& PigeonQuerySnapshot::document_changes() const {
+  return document_changes_;
+}
+
+void PigeonQuerySnapshot::set_document_changes(const EncodableList& value_arg) {
+  document_changes_ = value_arg;
+}
+
+
+const PigeonSnapshotMetadata& PigeonQuerySnapshot::metadata() const {
+  return metadata_;
+}
+
+void PigeonQuerySnapshot::set_metadata(const PigeonSnapshotMetadata& value_arg) {
+  metadata_ = value_arg;
+}
+
+
+EncodableList PigeonQuerySnapshot::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(3);
+  list.push_back(EncodableValue(documents_));
+  list.push_back(EncodableValue(document_changes_));
+  list.push_back(EncodableValue(metadata_.ToEncodableList()));
+  return list;
+}
+
+PigeonQuerySnapshot PigeonQuerySnapshot::FromEncodableList(const EncodableList& list) {
+  PigeonQuerySnapshot decoded(
+    std::get<EncodableList>(list[0]),
+    std::get<EncodableList>(list[1]),
+    PigeonSnapshotMetadata::FromEncodableList(std::get<EncodableList>(list[2])));
+  return decoded;
+}
+
 // PigeonDocumentChange
 
 PigeonDocumentChange::PigeonDocumentChange(
@@ -348,60 +402,6 @@ PigeonDocumentChange PigeonDocumentChange::FromEncodableList(const EncodableList
     PigeonDocumentSnapshot::FromEncodableList(std::get<EncodableList>(list[1])),
     list[2].LongValue(),
     list[3].LongValue());
-  return decoded;
-}
-
-// PigeonQuerySnapshot
-
-PigeonQuerySnapshot::PigeonQuerySnapshot(
-  const EncodableList& documents,
-  const EncodableList& document_changes,
-  const PigeonSnapshotMetadata& metadata)
- : documents_(documents),
-    document_changes_(document_changes),
-    metadata_(metadata) {}
-
-const EncodableList& PigeonQuerySnapshot::documents() const {
-  return documents_;
-}
-
-void PigeonQuerySnapshot::set_documents(const EncodableList& value_arg) {
-  documents_ = value_arg;
-}
-
-
-const EncodableList& PigeonQuerySnapshot::document_changes() const {
-  return document_changes_;
-}
-
-void PigeonQuerySnapshot::set_document_changes(const EncodableList& value_arg) {
-  document_changes_ = value_arg;
-}
-
-
-const PigeonSnapshotMetadata& PigeonQuerySnapshot::metadata() const {
-  return metadata_;
-}
-
-void PigeonQuerySnapshot::set_metadata(const PigeonSnapshotMetadata& value_arg) {
-  metadata_ = value_arg;
-}
-
-
-EncodableList PigeonQuerySnapshot::ToEncodableList() const {
-  EncodableList list;
-  list.reserve(3);
-  list.push_back(EncodableValue(documents_));
-  list.push_back(EncodableValue(document_changes_));
-  list.push_back(EncodableValue(metadata_.ToEncodableList()));
-  return list;
-}
-
-PigeonQuerySnapshot PigeonQuerySnapshot::FromEncodableList(const EncodableList& list) {
-  PigeonQuerySnapshot decoded(
-    std::get<EncodableList>(list[0]),
-    std::get<EncodableList>(list[1]),
-    PigeonSnapshotMetadata::FromEncodableList(std::get<EncodableList>(list[2])));
   return decoded;
 }
 

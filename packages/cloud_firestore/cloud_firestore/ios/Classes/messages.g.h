@@ -74,8 +74,8 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 @class PigeonFirebaseApp;
 @class PigeonSnapshotMetadata;
 @class PigeonDocumentSnapshot;
-@class PigeonDocumentChange;
 @class PigeonQuerySnapshot;
+@class PigeonDocumentChange;
 @class PigeonGetOptions;
 @class PigeonDocumentOption;
 @class PigeonTransactionCommand;
@@ -126,6 +126,17 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 @property(nonatomic, strong) PigeonSnapshotMetadata * metadata;
 @end
 
+@interface PigeonQuerySnapshot : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithDocuments:(NSArray<PigeonDocumentSnapshot *> *)documents
+    documentChanges:(NSArray<PigeonDocumentChange *> *)documentChanges
+    metadata:(PigeonSnapshotMetadata *)metadata;
+@property(nonatomic, strong) NSArray<PigeonDocumentSnapshot *> * documents;
+@property(nonatomic, strong) NSArray<PigeonDocumentChange *> * documentChanges;
+@property(nonatomic, strong) PigeonSnapshotMetadata * metadata;
+@end
+
 @interface PigeonDocumentChange : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
@@ -137,17 +148,6 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 @property(nonatomic, strong) PigeonDocumentSnapshot * document;
 @property(nonatomic, strong) NSNumber * oldIndex;
 @property(nonatomic, strong) NSNumber * newIndex;
-@end
-
-@interface PigeonQuerySnapshot : NSObject
-/// `init` unavailable to enforce nonnull fields, see the `make` class method.
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithDocuments:(NSArray<PigeonDocumentSnapshot *> *)documents
-    documentChanges:(NSArray<PigeonDocumentChange *> *)documentChanges
-    metadata:(PigeonSnapshotMetadata *)metadata;
-@property(nonatomic, strong) NSArray<PigeonDocumentSnapshot *> * documents;
-@property(nonatomic, strong) NSArray<PigeonDocumentChange *> * documentChanges;
-@property(nonatomic, strong) PigeonSnapshotMetadata * metadata;
 @end
 
 @interface PigeonGetOptions : NSObject

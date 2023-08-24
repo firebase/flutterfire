@@ -86,6 +86,18 @@ enum DocumentChangeType {
   removed,
 }
 
+class PigeonQuerySnapshot {
+  const PigeonQuerySnapshot({
+    required this.documents,
+    required this.documentChanges,
+    required this.metadata,
+  });
+
+  final List<PigeonDocumentSnapshot?> documents;
+  final List<PigeonDocumentChange?> documentChanges;
+  final PigeonSnapshotMetadata metadata;
+}
+
 class PigeonDocumentChange {
   const PigeonDocumentChange({
     required this.type,
@@ -100,17 +112,6 @@ class PigeonDocumentChange {
   final int newIndex;
 }
 
-class PigeonQuerySnapshot {
-  const PigeonQuerySnapshot({
-    required this.documents,
-    required this.documentChanges,
-    required this.metadata,
-  });
-
-  final List<PigeonDocumentSnapshot?> documents;
-  final List<PigeonDocumentChange?> documentChanges;
-  final PigeonSnapshotMetadata metadata;
-}
 
 /// An enumeration of firestore source types.
 enum Source {

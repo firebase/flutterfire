@@ -192,6 +192,37 @@ class PigeonDocumentSnapshot {
   }
 }
 
+class PigeonQuerySnapshot {
+  PigeonQuerySnapshot({
+    required this.documents,
+    required this.documentChanges,
+    required this.metadata,
+  });
+
+  List<PigeonDocumentSnapshot?> documents;
+
+  List<PigeonDocumentChange?> documentChanges;
+
+  PigeonSnapshotMetadata metadata;
+
+  Object encode() {
+    return <Object?>[
+      documents,
+      documentChanges,
+      metadata.encode(),
+    ];
+  }
+
+  static PigeonQuerySnapshot decode(Object result) {
+    result as List<Object?>;
+    return PigeonQuerySnapshot(
+      documents: (result[0] as List<Object?>?)!.cast<PigeonDocumentSnapshot?>(),
+      documentChanges: (result[1] as List<Object?>?)!.cast<PigeonDocumentChange?>(),
+      metadata: PigeonSnapshotMetadata.decode(result[2]! as List<Object?>),
+    );
+  }
+}
+
 class PigeonDocumentChange {
   PigeonDocumentChange({
     required this.type,
@@ -224,37 +255,6 @@ class PigeonDocumentChange {
       document: PigeonDocumentSnapshot.decode(result[1]! as List<Object?>),
       oldIndex: result[2]! as int,
       newIndex: result[3]! as int,
-    );
-  }
-}
-
-class PigeonQuerySnapshot {
-  PigeonQuerySnapshot({
-    required this.documents,
-    required this.documentChanges,
-    required this.metadata,
-  });
-
-  List<PigeonDocumentSnapshot?> documents;
-
-  List<PigeonDocumentChange?> documentChanges;
-
-  PigeonSnapshotMetadata metadata;
-
-  Object encode() {
-    return <Object?>[
-      documents,
-      documentChanges,
-      metadata.encode(),
-    ];
-  }
-
-  static PigeonQuerySnapshot decode(Object result) {
-    result as List<Object?>;
-    return PigeonQuerySnapshot(
-      documents: (result[0] as List<Object?>?)!.cast<PigeonDocumentSnapshot?>(),
-      documentChanges: (result[1] as List<Object?>?)!.cast<PigeonDocumentChange?>(),
-      metadata: PigeonSnapshotMetadata.decode(result[2]! as List<Object?>),
     );
   }
 }
