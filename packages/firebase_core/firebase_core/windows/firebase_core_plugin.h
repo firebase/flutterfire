@@ -10,8 +10,8 @@
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 
-#include <memory>
 #include <map>
+#include <memory>
 
 #include "messages.g.h"
 

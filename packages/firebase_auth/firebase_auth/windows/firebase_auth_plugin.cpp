@@ -1,3 +1,7 @@
+// Copyright 2023, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 #include "firebase_auth_plugin.h"
 
 // This must be included before many other Windows headers.
@@ -9,8 +13,8 @@
 #include "firebase/app.h"
 #include "firebase/auth.h"
 #include "firebase/future.h"
-#include "firebase/util.h"
 #include "firebase/log.h"
+#include "firebase/util.h"
 #include "firebase_core/firebase_core_plugin_c_api.h"
 #include "messages.g.h"
 
@@ -55,9 +59,7 @@ FirebaseAuthPlugin::FirebaseAuthPlugin() {
 
 FirebaseAuthPlugin::~FirebaseAuthPlugin() = default;
 
- Auth* GetAuthFromPigeon(
-    const PigeonFirebaseApp& pigeonApp) {
-
+Auth* GetAuthFromPigeon(const PigeonFirebaseApp& pigeonApp) {
   std::vector<std::string> app_vector = GetFirebaseApp(pigeonApp.app_name());
   firebase::AppOptions options;
 
@@ -135,8 +137,6 @@ flutter::EncodableValue FirebaseAuthPlugin::ParseUserInfoToMap(
       {flutter::EncodableValue("isAnonymous"),
        flutter::EncodableValue(false)}});
 }
-
-
 
 std::string FirebaseAuthPlugin::GetAuthErrorCode(AuthError authError) {
   switch (authError) {
@@ -237,17 +237,13 @@ std::string FirebaseAuthPlugin::GetAuthErrorCode(AuthError authError) {
 }
 
 FlutterError FirebaseAuthPlugin::ParseError(
-    const firebase::FutureBase& completed_future){
+    const firebase::FutureBase& completed_future) {
   const AuthError errorCode =
       static_cast<const AuthError>(completed_future.error());
 
   return FlutterError(FirebaseAuthPlugin::GetAuthErrorCode(errorCode),
-      completed_future.error_message());
-
-
-   }
-
-
+                      completed_future.error_message());
+}
 
 std::string const kFLTFirebaseAuthChannelName = "firebase_auth_plugin";
 

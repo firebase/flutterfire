@@ -20,12 +20,12 @@
 
 #include <future>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <map>
 
 using ::firebase::App;
 using ::firebase::auth::Auth;
@@ -131,11 +131,10 @@ void FirebaseCorePlugin::InitializeApp(
     const std::string &app_name,
     const PigeonFirebaseOptions &initialize_app_request,
     std::function<void(ErrorOr<PigeonInitializeResponse> reply)> result) {
-
-
   // Create an app
-  App *app = App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
-                    app_name.c_str());
+  App *app =
+      App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
+                  app_name.c_str());
 
   auto app_it = apps.find(app_name);
 
