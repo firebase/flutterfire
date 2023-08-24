@@ -18,6 +18,10 @@ import 'package:pigeon/pigeon.dart';
     ),
     objcHeaderOut: '../cloud_firestore/ios/Classes/messages.g.h',
     objcSourceOut: '../cloud_firestore/ios/Classes/messages.g.m',
+    cppHeaderOut: '../cloud_firestore/windows/messages.g.h',
+    cppSourceOut: '../cloud_firestore/windows/messages.g.cpp',
+    cppOptions: CppOptions(namespace: 'cloud_firestore_windows'),
+    copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
 class PigeonFirebaseSettings {
