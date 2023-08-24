@@ -16,8 +16,12 @@ part of cloud_firestore;
 /// FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: secondaryApp);
 /// ```
 class FirebaseFirestore extends FirebasePluginPlatform {
-  FirebaseFirestore._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_firestore');
+  FirebaseFirestore._({required this.app, required this.databaseURL})
+      : super(app.name, 'plugins.flutter.io/firebase_firestore') {
+    if (databaseURL.endsWith('/')) {
+      databaseURL = databaseURL.substring(0, databaseURL.length - 1);
+    }
+  }
 
   static final Map<String, FirebaseFirestore> _cachedInstances = {};
 
@@ -29,13 +33,19 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
-  static FirebaseFirestore instanceFor({required FirebaseApp app}) {
-    if (_cachedInstances.containsKey(app.name)) {
-      return _cachedInstances[app.name]!;
+  static FirebaseFirestore instanceFor({
+    required FirebaseApp app,
+    String? databaseURL,
+  }) {
+    String url = databaseURL ?? '(default)';
+    String cacheKey = '${app.name}|$url';
+    if (_cachedInstances.containsKey(cacheKey)) {
+      return _cachedInstances[cacheKey]!;
     }
 
-    FirebaseFirestore newInstance = FirebaseFirestore._(app: app);
-    _cachedInstances[app.name] = newInstance;
+    FirebaseFirestore newInstance =
+        FirebaseFirestore._(app: app, databaseURL: url);
+    _cachedInstances[cacheKey] = newInstance;
 
     return newInstance;
   }
@@ -46,12 +56,17 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   FirebaseFirestorePlatform? _delegatePackingProperty;
 
   FirebaseFirestorePlatform get _delegate {
-    return _delegatePackingProperty ??=
-        FirebaseFirestorePlatform.instanceFor(app: app);
+    return _delegatePackingProperty ??= FirebaseFirestorePlatform.instanceFor(
+      app: app,
+      databaseURL: databaseURL,
+    );
   }
 
   /// The [FirebaseApp] for this current [FirebaseFirestore] instance.
   FirebaseApp app;
+
+  /// Firestore Database URL for this instance. Falls back to default database: "(default)"
+  String databaseURL;
 
   /// Gets a [CollectionReference] for the specified Firestore path.
   CollectionReference<Map<String, dynamic>> collection(String collectionPath) {
@@ -318,11 +333,13 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     required List<Index> indexes,
     List<FieldOverrides>? fieldOverrides,
   }) async {
-    String json = jsonEncode({
-      'indexes': indexes.map((index) => index.toMap()).toList(),
-      'fieldOverrides':
-          fieldOverrides?.map((index) => index.toMap()).toList() ?? []
-    });
+    String json = jsonEncode(
+      {
+        'indexes': indexes.map((index) => index.toMap()).toList(),
+        'fieldOverrides':
+            fieldOverrides?.map((index) => index.toMap()).toList() ?? [],
+      },
+    );
 
     return _delegate.setIndexConfiguration(json);
   }

@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-08-23
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.9.0`](#cloud_firestore---v490)
+ - [`cloud_firestore_platform_interface` - `v5.16.0`](#cloud_firestore_platform_interface---v5160)
+ - [`cloud_firestore_web` - `v3.7.0`](#cloud_firestore_web---v370)
+ - [`firebase_auth` - `v4.8.0`](#firebase_auth---v480)
+ - [`firebase_auth_platform_interface` - `v6.17.0`](#firebase_auth_platform_interface---v6170)
+ - [`firebase_auth_web` - `v5.7.0`](#firebase_auth_web---v570)
+ - [`firebase_messaging_platform_interface` - `v4.5.6`](#firebase_messaging_platform_interface---v456)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.66`](#cloud_firestore_odm---v100-dev66)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.66`](#cloud_firestore_odm_generator---v100-dev66)
+ - [`firebase_messaging_web` - `v3.5.6`](#firebase_messaging_web---v356)
+ - [`firebase_messaging` - `v14.6.7`](#firebase_messaging---v1467)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_firestore_odm` - `v1.0.0-dev.66`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.66`
+ - `firebase_messaging_web` - `v3.5.6`
+ - `firebase_messaging` - `v14.6.7`
+
+---
+
+#### `cloud_firestore` - `v4.9.0`
+
+ - **FEAT**(firestore): add support for multiple database instances ([#11310](https://github.com/firebase/flutterfire/issues/11310)). ([ce6efcc1](https://github.com/firebase/flutterfire/commit/ce6efcc16ced0317e86b0ad12aa02ff5795a8207))
+
+#### `cloud_firestore_platform_interface` - `v5.16.0`
+
+ - **FEAT**(firestore): add support for multiple database instances ([#11310](https://github.com/firebase/flutterfire/issues/11310)). ([ce6efcc1](https://github.com/firebase/flutterfire/commit/ce6efcc16ced0317e86b0ad12aa02ff5795a8207))
+
+#### `cloud_firestore_web` - `v3.7.0`
+
+ - **FEAT**(firestore): add support for multiple database instances ([#11310](https://github.com/firebase/flutterfire/issues/11310)). ([ce6efcc1](https://github.com/firebase/flutterfire/commit/ce6efcc16ced0317e86b0ad12aa02ff5795a8207))
+
+#### `firebase_auth` - `v4.8.0`
+
+ - **FEAT**(auth): `revokeTokenWithAuthorizationCode()` implementation for revoking Apple sign-in token ([#11454](https://github.com/firebase/flutterfire/issues/11454)). ([92de98c9](https://github.com/firebase/flutterfire/commit/92de98c9e62f2bf20712dbfed22dd39f6883eb58))
+
+#### `firebase_auth_platform_interface` - `v6.17.0`
+
+ - **FEAT**(auth): `revokeTokenWithAuthorizationCode()` implementation for revoking Apple sign-in token ([#11454](https://github.com/firebase/flutterfire/issues/11454)). ([92de98c9](https://github.com/firebase/flutterfire/commit/92de98c9e62f2bf20712dbfed22dd39f6883eb58))
+
+#### `firebase_auth_web` - `v5.7.0`
+
+ - **FEAT**(auth): `revokeTokenWithAuthorizationCode()` implementation for revoking Apple sign-in token ([#11454](https://github.com/firebase/flutterfire/issues/11454)). ([92de98c9](https://github.com/firebase/flutterfire/commit/92de98c9e62f2bf20712dbfed22dd39f6883eb58))
+
+#### `firebase_messaging_platform_interface` - `v4.5.6`
+
+ - **FIX**(messaging): Throw exception if APNS token is not yet available ([#11400](https://github.com/firebase/flutterfire/issues/11400)). ([346d6022](https://github.com/firebase/flutterfire/commit/346d6022d425e0f8c83f50ea05427a02a2214166))
+
+
 ## 2023-08-16
 
 ### Changes

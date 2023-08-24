@@ -662,4 +662,11 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   }) {
     throw UnimplementedError('verifyPhoneNumber() is not implemented');
   }
+
+  /// Apple only. Users signed in with Apple provider can revoke their token using an authorization code.
+  /// Authorization code can be retrieved on the user credential i.e. userCredential.additionalUserInfo.authorizationCode
+  Future<void> revokeTokenWithAuthorizationCode(String authorizationCode) {
+    throw UnimplementedError(
+        'revokeTokenWithAuthorizationCode() is not implemented');
+  }
 }

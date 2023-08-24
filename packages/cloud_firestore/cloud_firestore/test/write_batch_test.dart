@@ -27,7 +27,7 @@ void main() {
         'metadata': {
           'hasPendingWrites': true,
           'isFromCache': true,
-        }
+        },
       };
     }
 
