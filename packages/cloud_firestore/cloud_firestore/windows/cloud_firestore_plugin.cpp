@@ -4,6 +4,7 @@
 #include <windows.h>
 
 #include "firebase/app.h";
+#include "firebase/log.h";
 #include "firebase/firestore.h";
 #include "firebase_core/firebase_core_plugin_c_api.h"
 
@@ -267,19 +268,49 @@ void CloudFirestorePlugin::EnableNetwork(
 
 void CloudFirestorePlugin::Terminate(
     const PigeonFirebaseApp& app,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+  firestore->Terminate().OnCompletion([result](const Future<void>& completed_future) {
+    if (completed_future.error() == 0) {
+      result(std::nullopt);
+    }
+    else {
+      result(FlutterError(completed_future.error_message()));
+      return;
+    }
+  });
+}
 
 void CloudFirestorePlugin::WaitForPendingWrites(
     const PigeonFirebaseApp& app,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+  firestore->WaitForPendingWrites().OnCompletion([result](const Future<void>& completed_future) {
+    if (completed_future.error() == 0) {
+      result(std::nullopt);
+    }
+    else {
+      result(FlutterError(completed_future.error_message()));
+      return;
+    }
+  });
+}
 
 void CloudFirestorePlugin::SetIndexConfiguration(
     const PigeonFirebaseApp& app, const std::string& index_configuration,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+  // TODO: not available in C++ SDK
+}
 
 void CloudFirestorePlugin::SetLoggingEnabled(
     bool logging_enabled,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+      firebase::firestore::Firestore::set_log_level(logging_enabled
+                                                     ? firebase::LogLevel::kLogLevelDebug
+                                                     : firebase::LogLevel::kLogLevelError);
+  result(std::nullopt);
+}
 
 void CloudFirestorePlugin::SnapshotsInSyncSetup(
     std::function<void(ErrorOr<std::string> reply)> result) {}
