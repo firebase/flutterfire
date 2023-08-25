@@ -313,25 +313,40 @@ void CloudFirestorePlugin::SetLoggingEnabled(
 }
 
 void CloudFirestorePlugin::SnapshotsInSyncSetup(
-    std::function<void(ErrorOr<std::string> reply)> result) {}
+    std::function<void(ErrorOr<std::string> reply)> result) {
+  // TODO: uses EventChannels
+}
 
 void CloudFirestorePlugin::TransactionCreate(
-    std::function<void(ErrorOr<std::string> reply)> result) {}
+    std::function<void(ErrorOr<std::string> reply)> result) {
+  // TODO: uses EventChannels
+}
 
 void CloudFirestorePlugin::TransactionStoreResult(
     const std::string& transaction_id,
     const PigeonTransactionResult& result_type,
     const flutter::EncodableList* commands,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  // TODO: uses EventChannels
+}
 
 void CloudFirestorePlugin::TransactionGet(
     const PigeonFirebaseApp& app, const std::string& transaction_id,
     const std::string& path,
-    std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result) {}
+    std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result) {
+  // TODO: uses EventChannels
+}
+
+using firebase::firestore::DocumentReference;
 
 void CloudFirestorePlugin::DocumentReferenceSet(
     const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+  DocumentReference document_reference = firestore->Document(request.path());
+
+
+}
 
 void CloudFirestorePlugin::DocumentReferenceUpdate(
     const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
