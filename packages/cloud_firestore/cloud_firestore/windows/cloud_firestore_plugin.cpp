@@ -222,15 +222,48 @@ void CloudFirestorePlugin::NamedQueryGet(
 
 void CloudFirestorePlugin::ClearPersistence(
     const PigeonFirebaseApp& app,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+  firestore->ClearPersistence().OnCompletion([result](const Future<void>& completed_future) {
+    if (completed_future.error() == 0) {
+      result(std::nullopt);
+    }
+    else {
+      result(FlutterError(completed_future.error_message()));
+      return;
+    }
+  });
+}
 
 void CloudFirestorePlugin::DisableNetwork(
     const PigeonFirebaseApp& app,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+  firestore->DisableNetwork().OnCompletion([result](const Future<void>& completed_future) {
+    if (completed_future.error() == 0) {
+      result(std::nullopt);
+    }
+    else {
+      result(FlutterError(completed_future.error_message()));
+      return;
+    }
+  });
+}
 
 void CloudFirestorePlugin::EnableNetwork(
     const PigeonFirebaseApp& app,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+  firestore->EnableNetwork().OnCompletion([result](const Future<void>& completed_future) {
+    if (completed_future.error() == 0) {
+      result(std::nullopt);
+    }
+    else {
+      result(FlutterError(completed_future.error_message()));
+      return;
+    }
+  });
+}
 
 void CloudFirestorePlugin::Terminate(
     const PigeonFirebaseApp& app,
