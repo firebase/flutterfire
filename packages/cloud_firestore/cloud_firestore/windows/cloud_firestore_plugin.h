@@ -5,6 +5,8 @@
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/plugin_registrar_windows.h>
 #include "firebase/app.h";
+#include "firebase/firestore.h";
+#include "firebase_core/firebase_core_plugin_c_api.h"
 #include "messages.g.h"
 
 #include <memory>
