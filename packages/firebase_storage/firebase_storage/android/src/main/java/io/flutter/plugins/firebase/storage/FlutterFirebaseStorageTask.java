@@ -242,8 +242,6 @@ class FlutterFirebaseStorageTask {
 
     return new TaskStateChannelStreamHandler(reference.getStorage(), storageTask);
 
-    //registerEventChannel(FlutterFirebaseStoragePlugin.METHOD_CHANNEL_NAME + "/taskState", taskStateHandler);
-
     // storageTask.addOnProgressListener(
     //     taskExecutor,
     //     taskSnapshot -> {
