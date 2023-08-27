@@ -21,7 +21,6 @@ import 'package:pigeon/pigeon.dart';
     objcSourceOut: '../firebase_storage/ios/Classes/messages.g.m',
   ),
 )
-
 class PigeonFirebaseApp {
   const PigeonFirebaseApp({
     required this.appName,
@@ -127,10 +126,8 @@ class PigeonSettableMetadata {
   final Map<String?, String?>? customMetadata;
 }
 
-
 class PigeonTaskSnapShot {
   const PigeonTaskSnapShot({
-
     required this.bytesTransferred,
     required this.metadata,
     required this.state,
@@ -157,12 +154,6 @@ class PigeonListResult {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseStorageHostApi')
 abstract class FirebaseStorageHostApi {
-
-  @async
-  String registerStorageTask(
-    PigeonFirebaseApp app,
-    String? bucket,
-  );
 
   PigeonStorageReference getReferencebyPath(
     PigeonFirebaseApp app,
@@ -234,7 +225,40 @@ abstract class FirebaseStorageHostApi {
 
   // TODO figure out how to manage the UploadTask and DownloadTask
   @async
+  String referencePutData(
+    PigeonFirebaseApp app,
+    PigeonStorageReference reference,
+    Uint8List data,
+    PigeonSettableMetadata settableMetaData,
+    int handle,
+  );
 
+  @async
+  String refrencePutString(
+    PigeonFirebaseApp app,
+    PigeonStorageReference reference,
+    String data,
+    int format,
+    PigeonSettableMetadata settableMetaData,
+    int handle,
+  );
+
+  @async
+  String referencePutFile(
+    PigeonFirebaseApp app,
+    PigeonStorageReference reference,
+    String filePath,
+    PigeonSettableMetadata settableMetaData,
+    int handle,
+  );
+
+  @async
+  String referenceDownloadFile(
+    PigeonFirebaseApp app,
+    PigeonStorageReference reference,
+    String filePath,
+    int handle,
+  );
 
   @async
   PigeonFullMetaData referenceUpdateMetadata(
@@ -245,20 +269,20 @@ abstract class FirebaseStorageHostApi {
 
   // APIs for Task class
   @async
-  bool taskPause(
+  Map<String, Object> taskPause(
     PigeonFirebaseApp app,
-    PigeonTaskSnapShot taskSnap,
+    int handle,
   );
 
   @async
-  bool taskResume(
+  Map<String, Object> taskResume(
     PigeonFirebaseApp app,
-    PigeonTaskSnapShot taskSnap,
+    int handle,
   );
 
   @async
-  bool taskCancel(
+  Map<String, Object> taskCancel(
     PigeonFirebaseApp app,
-    PigeonTaskSnapShot taskSnap,
+    int handle,
   );
 }

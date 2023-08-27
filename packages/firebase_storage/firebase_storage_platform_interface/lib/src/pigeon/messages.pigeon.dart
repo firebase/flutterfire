@@ -195,44 +195,6 @@ class PigeonSettableMetadata {
   }
 }
 
-class PigeonTaskSnapShot {
-  PigeonTaskSnapShot({
-    required this.bytesTransferred,
-    this.metadata,
-    required this.state,
-    required this.totalBytes,
-  });
-
-  int bytesTransferred;
-
-  PigeonFullMetaData? metadata;
-
-  PigeonTaskState state;
-
-  int totalBytes;
-
-  Object encode() {
-    return <Object?>[
-      bytesTransferred,
-      metadata?.encode(),
-      state.index,
-      totalBytes,
-    ];
-  }
-
-  static PigeonTaskSnapShot decode(Object result) {
-    result as List<Object?>;
-    return PigeonTaskSnapShot(
-      bytesTransferred: result[0]! as int,
-      metadata: result[1] != null
-          ? PigeonFullMetaData.decode(result[1]! as List<Object?>)
-          : null,
-      state: PigeonTaskState.values[result[2]! as int],
-      totalBytes: result[3]! as int,
-    );
-  }
-}
-
 class PigeonListResult {
   PigeonListResult({
     required this.items,
@@ -286,9 +248,6 @@ class _FirebaseStorageHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonStorageReference) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonTaskSnapShot) {
-      buffer.putUint8(134);
-      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -309,8 +268,6 @@ class _FirebaseStorageHostApiCodec extends StandardMessageCodec {
         return PigeonSettableMetadata.decode(readValue(buffer)!);
       case 133: 
         return PigeonStorageReference.decode(readValue(buffer)!);
-      case 134: 
-        return PigeonTaskSnapShot.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -326,33 +283,6 @@ class FirebaseStorageHostApi {
   final BinaryMessenger? _binaryMessenger;
 
   static const MessageCodec<Object?> codec = _FirebaseStorageHostApiCodec();
-
-  Future<String> registerStorageTask(PigeonFirebaseApp arg_app, String? arg_bucket) async {
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseStorageHostApi.registerStorageTask', codec,
-        binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_app, arg_bucket]) as List<Object?>?;
-    if (replyList == null) {
-      throw PlatformException(
-        code: 'channel-error',
-        message: 'Unable to establish connection on channel.',
-      );
-    } else if (replyList.length > 1) {
-      throw PlatformException(
-        code: replyList[0]! as String,
-        message: replyList[1] as String?,
-        details: replyList[2],
-      );
-    } else if (replyList[0] == null) {
-      throw PlatformException(
-        code: 'null-error',
-        message: 'Host platform returned null value for non-null return value.',
-      );
-    } else {
-      return (replyList[0] as String?)!;
-    }
-  }
 
   Future<PigeonStorageReference> getReferencebyPath(PigeonFirebaseApp arg_app, String arg_path, String? arg_bucket) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -621,6 +551,114 @@ class FirebaseStorageHostApi {
     }
   }
 
+  Future<String> referencePutData(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, Uint8List arg_data, PigeonSettableMetadata arg_settableMetaData, int arg_handle) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseStorageHostApi.referencePutData', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_reference, arg_data, arg_settableMetaData, arg_handle]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as String?)!;
+    }
+  }
+
+  Future<String> refrencePutString(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, String arg_data, int arg_format, PigeonSettableMetadata arg_settableMetaData, int arg_handle) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseStorageHostApi.refrencePutString', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_reference, arg_data, arg_format, arg_settableMetaData, arg_handle]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as String?)!;
+    }
+  }
+
+  Future<String> referencePutFile(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, String arg_filePath, PigeonSettableMetadata arg_settableMetaData, int arg_handle) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseStorageHostApi.referencePutFile', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_reference, arg_filePath, arg_settableMetaData, arg_handle]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as String?)!;
+    }
+  }
+
+  Future<String> referenceDownloadFile(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, String arg_filePath, int arg_handle) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.FirebaseStorageHostApi.referenceDownloadFile', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_reference, arg_filePath, arg_handle]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as String?)!;
+    }
+  }
+
   Future<PigeonFullMetaData> referenceUpdateMetadata(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, PigeonSettableMetadata arg_metadata) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.FirebaseStorageHostApi.referenceUpdateMetadata', codec,
@@ -648,12 +686,12 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<bool> taskPause(PigeonFirebaseApp arg_app, PigeonTaskSnapShot arg_taskSnap) async {
+  Future<Map<String?, Object?>> taskPause(PigeonFirebaseApp arg_app, int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.FirebaseStorageHostApi.taskPause', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_app, arg_taskSnap]) as List<Object?>?;
+        await channel.send(<Object?>[arg_app, arg_handle]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -671,16 +709,16 @@ class FirebaseStorageHostApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (replyList[0] as bool?)!;
+      return (replyList[0] as Map<Object?, Object?>?)!.cast<String?, Object?>();
     }
   }
 
-  Future<bool> taskResume(PigeonFirebaseApp arg_app, PigeonTaskSnapShot arg_taskSnap) async {
+  Future<Map<String?, Object?>> taskResume(PigeonFirebaseApp arg_app, int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.FirebaseStorageHostApi.taskResume', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_app, arg_taskSnap]) as List<Object?>?;
+        await channel.send(<Object?>[arg_app, arg_handle]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -698,16 +736,16 @@ class FirebaseStorageHostApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (replyList[0] as bool?)!;
+      return (replyList[0] as Map<Object?, Object?>?)!.cast<String?, Object?>();
     }
   }
 
-  Future<bool> taskCancel(PigeonFirebaseApp arg_app, PigeonTaskSnapShot arg_taskSnap) async {
+  Future<Map<String?, Object?>> taskCancel(PigeonFirebaseApp arg_app, int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.FirebaseStorageHostApi.taskCancel', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_app, arg_taskSnap]) as List<Object?>?;
+        await channel.send(<Object?>[arg_app, arg_handle]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -725,7 +763,7 @@ class FirebaseStorageHostApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (replyList[0] as bool?)!;
+      return (replyList[0] as Map<Object?, Object?>?)!.cast<String?, Object?>();
     }
   }
 }

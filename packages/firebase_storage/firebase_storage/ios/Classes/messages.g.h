@@ -30,7 +30,6 @@ typedef NS_ENUM(NSUInteger, PigeonTaskState) {
 @class PigeonFullMetaData;
 @class PigeonListOptions;
 @class PigeonSettableMetadata;
-@class PigeonTaskSnapShot;
 @class PigeonListResult;
 
 @interface PigeonFirebaseApp : NSObject
@@ -102,19 +101,6 @@ typedef NS_ENUM(NSUInteger, PigeonTaskState) {
 @property(nonatomic, strong, nullable) NSDictionary<NSString *, NSString *> * customMetadata;
 @end
 
-@interface PigeonTaskSnapShot : NSObject
-/// `init` unavailable to enforce nonnull fields, see the `make` class method.
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithBytesTransferred:(NSNumber *)bytesTransferred
-    metadata:(nullable PigeonFullMetaData *)metadata
-    state:(PigeonTaskState)state
-    totalBytes:(NSNumber *)totalBytes;
-@property(nonatomic, strong) NSNumber * bytesTransferred;
-@property(nonatomic, strong, nullable) PigeonFullMetaData * metadata;
-@property(nonatomic, assign) PigeonTaskState state;
-@property(nonatomic, strong) NSNumber * totalBytes;
-@end
-
 @interface PigeonListResult : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
@@ -130,7 +116,6 @@ typedef NS_ENUM(NSUInteger, PigeonTaskState) {
 NSObject<FlutterMessageCodec> *FirebaseStorageHostApiGetCodec(void);
 
 @protocol FirebaseStorageHostApi
-- (void)registerStorageTaskApp:(PigeonFirebaseApp *)app bucket:(nullable NSString *)bucket completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 /// @return `nil` only when `error != nil`.
 - (nullable PigeonStorageReference *)getReferencebyPathApp:(PigeonFirebaseApp *)app path:(NSString *)path bucket:(nullable NSString *)bucket error:(FlutterError *_Nullable *_Nonnull)error;
 - (void)setMaxOperationRetryTimeApp:(PigeonFirebaseApp *)app time:(NSNumber *)time error:(FlutterError *_Nullable *_Nonnull)error;
@@ -143,10 +128,14 @@ NSObject<FlutterMessageCodec> *FirebaseStorageHostApiGetCodec(void);
 - (void)referenceListApp:(PigeonFirebaseApp *)app reference:(PigeonStorageReference *)reference options:(PigeonListOptions *)options completion:(void (^)(PigeonListResult *_Nullable, FlutterError *_Nullable))completion;
 - (void)referenceListAllApp:(PigeonFirebaseApp *)app reference:(PigeonStorageReference *)reference completion:(void (^)(PigeonListResult *_Nullable, FlutterError *_Nullable))completion;
 - (void)referenceGetDataApp:(PigeonFirebaseApp *)app reference:(PigeonStorageReference *)reference maxSize:(NSNumber *)maxSize completion:(void (^)(FlutterStandardTypedData *_Nullable, FlutterError *_Nullable))completion;
+- (void)referencePutDataApp:(PigeonFirebaseApp *)app reference:(PigeonStorageReference *)reference data:(FlutterStandardTypedData *)data settableMetaData:(PigeonSettableMetadata *)settableMetaData handle:(NSNumber *)handle completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)refrencePutStringApp:(PigeonFirebaseApp *)app reference:(PigeonStorageReference *)reference data:(NSString *)data format:(NSNumber *)format settableMetaData:(PigeonSettableMetadata *)settableMetaData handle:(NSNumber *)handle completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)referencePutFileApp:(PigeonFirebaseApp *)app reference:(PigeonStorageReference *)reference filePath:(NSString *)filePath settableMetaData:(PigeonSettableMetadata *)settableMetaData handle:(NSNumber *)handle completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)referenceDownloadFileApp:(PigeonFirebaseApp *)app reference:(PigeonStorageReference *)reference filePath:(NSString *)filePath handle:(NSNumber *)handle completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 - (void)referenceUpdateMetadataApp:(PigeonFirebaseApp *)app reference:(PigeonStorageReference *)reference metadata:(PigeonSettableMetadata *)metadata completion:(void (^)(PigeonFullMetaData *_Nullable, FlutterError *_Nullable))completion;
-- (void)taskPauseApp:(PigeonFirebaseApp *)app taskSnap:(PigeonTaskSnapShot *)taskSnap completion:(void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion;
-- (void)taskResumeApp:(PigeonFirebaseApp *)app taskSnap:(PigeonTaskSnapShot *)taskSnap completion:(void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion;
-- (void)taskCancelApp:(PigeonFirebaseApp *)app taskSnap:(PigeonTaskSnapShot *)taskSnap completion:(void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion;
+- (void)taskPauseApp:(PigeonFirebaseApp *)app handle:(NSNumber *)handle completion:(void (^)(NSDictionary<NSString *, id> *_Nullable, FlutterError *_Nullable))completion;
+- (void)taskResumeApp:(PigeonFirebaseApp *)app handle:(NSNumber *)handle completion:(void (^)(NSDictionary<NSString *, id> *_Nullable, FlutterError *_Nullable))completion;
+- (void)taskCancelApp:(PigeonFirebaseApp *)app handle:(NSNumber *)handle completion:(void (^)(NSDictionary<NSString *, id> *_Nullable, FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseStorageHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseStorageHostApi> *_Nullable api);

@@ -26,22 +26,6 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     // is no need to register the caller more than once.
     if (_initialized) return;
 
-    pigeonChannel
-        .registerStorageTask(pigeonFirebaseAppDefault, bucket)
-        .then((channelName) {
-      final events = EventChannel(channelName, channel.codec);
-      events
-          .receiveGuardedBroadcastStream(onError: convertPlatformException)
-          .listen(
-        (arguments) {
-          _handleStorageTask(app.name, bucket, arguments);
-        },
-      );
-    });
-
-    _storageTasks[app.name] =
-        _createBroadcastStream<_ValueWrapper<TaskPlatform>>();
-
     channel.setMethodCallHandler((MethodCall call) async {
       Map<dynamic, dynamic> arguments = call.arguments;
 
@@ -82,6 +66,8 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// then initialized via the [delegateFor] method.
   MethodChannelFirebaseStorage._() : super(appInstance: null, bucket: '');
 
+  static const String METHOD_CHANNEL_NAME = 'plugins.flutter.io/firebase_storage';
+
   static final FirebaseStorageHostApi pigeonChannel = FirebaseStorageHostApi();
 
   /// Default FirebaseApp pigeon instance
@@ -103,7 +89,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   /// The [MethodChannelFirebaseStorage] method channel.
   static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_storage',
+    METHOD_CHANNEL_NAME,
   );
 
   static Map<String, MethodChannelFirebaseStorage>
@@ -118,6 +104,25 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   StreamController<T> _createBroadcastStream<T>() {
     return StreamController<T>.broadcast();
+  }
+  static PigeonStorageReference getPigeonReference(String bucket, String fullPath, String name) {
+    return PigeonStorageReference(bucket: bucket, fullPath: fullPath, name: name);
+  }
+
+  static PigeonFirebaseApp getPigeonFirebaseApp(String appName) {
+    return PigeonFirebaseApp(
+      appName: appName,
+    );
+  }
+
+  static PigeonSettableMetadata getPigeonSettableMetaData(SettableMetadata metaData) {
+    return PigeonSettableMetadata(
+      cacheControl: metaData.cacheControl,
+      contentDisposition: metaData.contentDisposition,
+      contentEncoding: metaData.contentEncoding,
+      contentLanguage: metaData.contentLanguage,
+      contentType: metaData.contentType,
+      customMetadata: metaData.customMetadata);
   }
 
   static int _methodChannelHandleId = 0;
@@ -141,26 +146,6 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   static final Map<String, StreamController<_ValueWrapper<TaskPlatform>>>
       _storageTasks = <String, StreamController<_ValueWrapper<TaskPlatform>>>{};
 
-  Future<void> _handleStorageTask(
-      String appName, String bucket, Map<dynamic, dynamic> arguments) async {
-    // ignore: close_sinks
-    final streamController = _storageTasks[appName]!;
-    MethodChannelFirebaseStorage instance =
-        _methodChannelFirebaseStorageInstances[
-        _getInstanceKey(appName, bucket)]!;
-
-    // final userMap = arguments['user'];
-    // if (userMap == null) {
-    //   instance.currentUser = null;
-    //   streamController.add(const _ValueWrapper.absent());
-    // } else {
-    //   final MethodChannelUser user = MethodChannelUser(
-    //       instance, multiFactorInstance, PigeonUserDetails.decode(userMap));
-
-    //   instance.currentUser = user;
-    //   streamController.add(_ValueWrapper(instance.currentUser));
-    // }
-  }
 
   Future<void> _handleTaskStateChange(
       TaskState taskState, Map<dynamic, dynamic> arguments) async {
@@ -203,7 +188,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     emulatorHost = host;
     emulatorPort = port;
     try {
-      await pigeonChannel.useStorageEmulator(
+      return await pigeonChannel.useStorageEmulator(
           pigeonFirebaseAppDefault, host, port);
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -223,9 +208,9 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   }
 
   @override
-  Future<void> setMaxDownloadRetryTime(int time) async {
+  void setMaxDownloadRetryTime(int time) {
     maxDownloadRetryTime = time;
-    await pigeonChannel.setMaxDownloadRetryTime(pigeonFirebaseAppDefault, time);
+    pigeonChannel.setMaxDownloadRetryTime(pigeonFirebaseAppDefault, time);
   }
 }
 

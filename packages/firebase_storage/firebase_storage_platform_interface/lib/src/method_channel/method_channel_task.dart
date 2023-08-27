@@ -100,21 +100,14 @@ abstract class MethodChannelTask extends TaskPlatform {
       case TaskState.canceled:
         return PigeonTaskState.canceled;
       case TaskState.error:
-        return PigeonTaskState.canceled;
+        return PigeonTaskState.error;
       case TaskState.paused:
-        return PigeonTaskState.canceled;
+        return PigeonTaskState.paused;
       case TaskState.running:
-        return PigeonTaskState.canceled;
+        return PigeonTaskState.running;
       case TaskState.success:
-        return PigeonTaskState.canceled;
+        return PigeonTaskState.success;
     }
-  }
-
-  PigeonTaskSnapShot get pigeonTaskSnap {
-    return PigeonTaskSnapShot(
-        bytesTransferred: snapshot.bytesTransferred,
-        state: convertToPigeonTaskState(snapshot.state),
-        totalBytes: snapshot.totalBytes);
   }
 
   Object? _exception;
@@ -165,19 +158,20 @@ abstract class MethodChannelTask extends TaskPlatform {
       if (!_initialTaskCompleter.isCompleted) {
         await _initialTaskCompleter.future;
       }
-      return await MethodChannelFirebaseStorage.pigeonChannel.taskPause(pigeonFirebaseAppDefault, pigeonTaskSnap);
+      Map<String, dynamic>? data = (await MethodChannelFirebaseStorage.pigeonChannel
+          .taskPause(pigeonFirebaseAppDefault, _handle)).cast<String, dynamic>();
 
       // Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
       //     .invokeMapMethod<String, dynamic>('Task#pause', <String, dynamic>{
       //   'handle': _handle,
       // });
 
-      // bool success = data!['status'];
-      // if (success) {
-      //   _snapshot = MethodChannelTaskSnapshot(storage, TaskState.paused,
-      //       Map<String, dynamic>.from(data['snapshot']));
-      // }
-      // return success;
+      bool success = data!['status'];
+      if (success) {
+        _snapshot = MethodChannelTaskSnapshot(storage, TaskState.paused,
+            Map<String, dynamic>.from(data['snapshot']));
+      }
+      return success;
     } catch (e, stack) {
       return catchFuturePlatformException<bool>(e, stack);
     }
@@ -189,18 +183,19 @@ abstract class MethodChannelTask extends TaskPlatform {
       if (!_initialTaskCompleter.isCompleted) {
         await _initialTaskCompleter.future;
       }
-      return await MethodChannelFirebaseStorage.pigeonChannel.taskResume(pigeonFirebaseAppDefault, pigeonTaskSnap);
+      Map<String, dynamic>? data = (await MethodChannelFirebaseStorage.pigeonChannel
+          .taskResume(pigeonFirebaseAppDefault, _handle)).cast<String, dynamic>();
       // Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
       //     .invokeMapMethod<String, dynamic>('Task#resume', <String, dynamic>{
       //   'handle': _handle,
       // });
 
-      // bool success = data!['status'];
-      // if (success) {
-      //   _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running,
-      //       Map<String, dynamic>.from(data['snapshot']));
-      // }
-      // return success;
+      bool success = data!['status'];
+      if (success) {
+        _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running,
+            Map<String, dynamic>.from(data['snapshot']));
+      }
+      return success;
     } catch (e, stack) {
       return catchFuturePlatformException<bool>(e, stack);
     }
@@ -212,18 +207,19 @@ abstract class MethodChannelTask extends TaskPlatform {
       if (!_initialTaskCompleter.isCompleted) {
         await _initialTaskCompleter.future;
       }
-      return await MethodChannelFirebaseStorage.pigeonChannel.taskCancel(pigeonFirebaseAppDefault, pigeonTaskSnap);
+      Map<String, dynamic>? data = (await MethodChannelFirebaseStorage.pigeonChannel
+          .taskCancel(pigeonFirebaseAppDefault, _handle)).cast<String, dynamic>();
       // Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
       //     .invokeMapMethod<String, dynamic>('Task#cancel', <String, dynamic>{
       //   'handle': _handle,
       // });
 
-      // bool success = data!['status'];
-      // if (success) {
-      //   _snapshot = MethodChannelTaskSnapshot(storage, TaskState.canceled,
-      //       Map<String, dynamic>.from(data['snapshot']));
-      // }
-      // return success;
+      bool success = data!['status'];
+      if (success) {
+        _snapshot = MethodChannelTaskSnapshot(storage, TaskState.canceled,
+            Map<String, dynamic>.from(data['snapshot']));
+      }
+      return success;
     } catch (e, stack) {
       return catchFuturePlatformException<bool>(e, stack);
     }
@@ -244,20 +240,29 @@ class MethodChannelPutFileTask extends MethodChannelTask {
       String path,
       File file,
       SettableMetadata? metadata) {
-    return () => MethodChannelFirebaseStorage.channel
-            .invokeMethod<void>('Task#startPutFile', <String, dynamic>{
-          'appName': storage.app.name,
-          'maxOperationRetryTime': storage.maxOperationRetryTime,
-          'maxUploadRetryTime': storage.maxUploadRetryTime,
-          'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-          'bucket': storage.bucket,
-          'host': storage.emulatorHost,
-          'port': storage.emulatorPort,
-          'handle': handle,
-          'path': path,
-          'filePath': file.absolute.path,
-          'metadata': metadata?.asMap(),
-        });
+    return () => MethodChannelFirebaseStorage.pigeonChannel.referencePutFile(
+          MethodChannelFirebaseStorage.getPigeonFirebaseApp(storage.app.name),
+          MethodChannelFirebaseStorage.getPigeonReference(
+              storage.bucket, path, 'putFile'),
+          file.path,
+          MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata!),
+          handle,
+        );
+
+    // return () => MethodChannelFirebaseStorage.channel
+    //         .invokeMethod<void>('Task#startPutFile', <String, dynamic>{
+    //       'appName': storage.app.name,
+    //       'maxOperationRetryTime': storage.maxOperationRetryTime,
+    //       'maxUploadRetryTime': storage.maxUploadRetryTime,
+    //       'maxDownloadRetryTime': storage.maxDownloadRetryTime,
+    //       'bucket': storage.bucket,
+    //       'host': storage.emulatorHost,
+    //       'port': storage.emulatorPort,
+    //       'handle': handle,
+    //       'path': path,
+    //       'filePath': file.absolute.path,
+    //       'metadata': metadata?.asMap(),
+    //     });
   }
 }
 
@@ -281,21 +286,31 @@ class MethodChannelPutStringTask extends MethodChannelTask {
       String data,
       PutStringFormat format,
       SettableMetadata? metadata) {
-    return () => MethodChannelFirebaseStorage.channel
-            .invokeMethod<void>('Task#startPutString', <String, dynamic>{
-          'appName': storage.app.name,
-          'bucket': storage.bucket,
-          'maxOperationRetryTime': storage.maxOperationRetryTime,
-          'maxUploadRetryTime': storage.maxUploadRetryTime,
-          'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-          'host': storage.emulatorHost,
-          'port': storage.emulatorPort,
-          'handle': handle,
-          'path': path,
-          'data': data,
-          'format': format.index,
-          'metadata': metadata?.asMap(),
-        });
+    return () => MethodChannelFirebaseStorage.pigeonChannel.refrencePutString(
+          MethodChannelFirebaseStorage.getPigeonFirebaseApp(storage.app.name),
+          MethodChannelFirebaseStorage.getPigeonReference(
+              storage.bucket, path, 'putString'),
+          data,
+          format.index,
+          MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata!),
+          handle,
+        );
+
+    // return () => MethodChannelFirebaseStorage.channel
+    //         .invokeMethod<void>('Task#startPutString', <String, dynamic>{
+    //       'appName': storage.app.name,
+    //       'bucket': storage.bucket,
+    //       'maxOperationRetryTime': storage.maxOperationRetryTime,
+    //       'maxUploadRetryTime': storage.maxUploadRetryTime,
+    //       'maxDownloadRetryTime': storage.maxDownloadRetryTime,
+    //       'host': storage.emulatorHost,
+    //       'port': storage.emulatorPort,
+    //       'handle': handle,
+    //       'path': path,
+    //       'data': data,
+    //       'format': format.index,
+    //       'metadata': metadata?.asMap(),
+    //     });
   }
 }
 
@@ -313,20 +328,29 @@ class MethodChannelPutTask extends MethodChannelTask {
       String path,
       Uint8List data,
       SettableMetadata? metadata) {
-    return () => MethodChannelFirebaseStorage.channel
-            .invokeMethod<void>('Task#startPutData', <String, dynamic>{
-          'appName': storage.app.name,
-          'bucket': storage.bucket,
-          'maxOperationRetryTime': storage.maxOperationRetryTime,
-          'maxUploadRetryTime': storage.maxUploadRetryTime,
-          'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-          'host': storage.emulatorHost,
-          'port': storage.emulatorPort,
-          'handle': handle,
-          'path': path,
-          'data': data,
-          'metadata': metadata?.asMap(),
-        });
+    return () => MethodChannelFirebaseStorage.pigeonChannel.referencePutData(
+          MethodChannelFirebaseStorage.getPigeonFirebaseApp(storage.app.name),
+          MethodChannelFirebaseStorage.getPigeonReference(
+              storage.bucket, path, 'putData'),
+          data,
+          MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata!),
+          handle,
+        );
+
+    // return () => MethodChannelFirebaseStorage.channel
+    //         .invokeMethod<void>('Task#startPutData', <String, dynamic>{
+    //       'appName': storage.app.name,
+    //       'bucket': storage.bucket,
+    //       'maxOperationRetryTime': storage.maxOperationRetryTime,
+    //       'maxUploadRetryTime': storage.maxUploadRetryTime,
+    //       'maxDownloadRetryTime': storage.maxDownloadRetryTime,
+    //       'host': storage.emulatorHost,
+    //       'port': storage.emulatorPort,
+    //       'handle': handle,
+    //       'path': path,
+    //       'data': data,
+    //       'metadata': metadata?.asMap(),
+    //     });
   }
 }
 
@@ -339,18 +363,26 @@ class MethodChannelDownloadTask extends MethodChannelTask {
 
   static Future<void> Function() _getTask(
       int handle, FirebaseStoragePlatform storage, String path, File file) {
-    return () => MethodChannelFirebaseStorage.channel
-            .invokeMethod<void>('Task#writeToFile', <String, dynamic>{
-          'appName': storage.app.name,
-          'maxOperationRetryTime': storage.maxOperationRetryTime,
-          'maxUploadRetryTime': storage.maxUploadRetryTime,
-          'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-          'host': storage.emulatorHost,
-          'port': storage.emulatorPort,
-          'bucket': storage.bucket,
-          'handle': handle,
-          'path': path,
-          'filePath': file.path,
-        });
+    return () =>
+        MethodChannelFirebaseStorage.pigeonChannel.referenceDownloadFile(
+          MethodChannelFirebaseStorage.getPigeonFirebaseApp(storage.app.name),
+          MethodChannelFirebaseStorage.getPigeonReference(
+              storage.bucket, path, 'putData'),
+          path,
+          handle,
+        );
+    // return () => MethodChannelFirebaseStorage.channel
+    //         .invokeMethod<void>('Task#writeToFile', <String, dynamic>{
+    //       'appName': storage.app.name,
+    //       'maxOperationRetryTime': storage.maxOperationRetryTime,
+    //       'maxUploadRetryTime': storage.maxUploadRetryTime,
+    //       'maxDownloadRetryTime': storage.maxDownloadRetryTime,
+    //       'host': storage.emulatorHost,
+    //       'port': storage.emulatorPort,
+    //       'bucket': storage.bucket,
+    //       'handle': handle,
+    //       'path': path,
+    //       'filePath': file.path,
+    //     });
   }
 }

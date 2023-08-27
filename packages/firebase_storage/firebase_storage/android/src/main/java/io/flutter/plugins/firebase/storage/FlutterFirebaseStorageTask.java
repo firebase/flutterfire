@@ -221,7 +221,7 @@ class FlutterFirebaseStorageTask {
     return taskCompletionSource.getTask();
   }
 
-  void startTaskWithMethodChannel(@NonNull MethodChannel channel) throws Exception {
+  TaskStateChannelStreamHandler startTaskWithMethodChannel(@NonNull MethodChannel channel) throws Exception {
     if (type == FlutterFirebaseStorageTaskType.BYTES && bytes != null) {
       if (metadata == null) {
         storageTask = reference.putBytes(bytes);
@@ -240,65 +240,69 @@ class FlutterFirebaseStorageTask {
       throw new Exception("Unable to start task. Some arguments have no been initialized.");
     }
 
-    storageTask.addOnProgressListener(
-        taskExecutor,
-        taskSnapshot -> {
-          if (destroyed) return;
-          new Handler(Looper.getMainLooper())
-              .post(
-                  () ->
-                      channel.invokeMethod("Task#onProgress", getTaskEventMap(taskSnapshot, null)));
-          synchronized (resumeSyncObject) {
-            resumeSyncObject.notifyAll();
-          }
-        });
+    return new TaskStateChannelStreamHandler(reference.getStorage(), storageTask);
 
-    storageTask.addOnPausedListener(
-        taskExecutor,
-        taskSnapshot -> {
-          if (destroyed) return;
-          new Handler(Looper.getMainLooper())
-              .post(
-                  () -> channel.invokeMethod("Task#onPaused", getTaskEventMap(taskSnapshot, null)));
-          synchronized (pauseSyncObject) {
-            pauseSyncObject.notifyAll();
-          }
-        });
+    //registerEventChannel(FlutterFirebaseStoragePlugin.METHOD_CHANNEL_NAME + "/taskState", taskStateHandler);
 
-    storageTask.addOnSuccessListener(
-        taskExecutor,
-        taskSnapshot -> {
-          if (destroyed) return;
-          new Handler(Looper.getMainLooper())
-              .post(
-                  () ->
-                      channel.invokeMethod("Task#onSuccess", getTaskEventMap(taskSnapshot, null)));
-          destroy();
-        });
+    // storageTask.addOnProgressListener(
+    //     taskExecutor,
+    //     taskSnapshot -> {
+    //       if (destroyed) return;
+    //       new Handler(Looper.getMainLooper())
+    //           .post(
+    //               () ->
+    //                   channel.invokeMethod("Task#onProgress", getTaskEventMap(taskSnapshot, null)));
+    //       synchronized (resumeSyncObject) {
+    //         resumeSyncObject.notifyAll();
+    //       }
+    //     });
 
-    storageTask.addOnCanceledListener(
-        taskExecutor,
-        () -> {
-          if (destroyed) return;
-          new Handler(Looper.getMainLooper())
-              .post(
-                  () -> {
-                    channel.invokeMethod("Task#onCanceled", getTaskEventMap(null, null));
-                    destroy();
-                  });
-        });
+    // storageTask.addOnPausedListener(
+    //     taskExecutor,
+    //     taskSnapshot -> {
+    //       if (destroyed) return;
+    //       new Handler(Looper.getMainLooper())
+    //           .post(
+    //               () -> channel.invokeMethod("Task#onPaused", getTaskEventMap(taskSnapshot, null)));
+    //       synchronized (pauseSyncObject) {
+    //         pauseSyncObject.notifyAll();
+    //       }
+    //     });
 
-    storageTask.addOnFailureListener(
-        taskExecutor,
-        exception -> {
-          if (destroyed) return;
-          new Handler(Looper.getMainLooper())
-              .post(
-                  () -> {
-                    channel.invokeMethod("Task#onFailure", getTaskEventMap(null, exception));
-                    destroy();
-                  });
-        });
+    // storageTask.addOnSuccessListener(
+    //     taskExecutor,
+    //     taskSnapshot -> {
+    //       if (destroyed) return;
+    //       new Handler(Looper.getMainLooper())
+    //           .post(
+    //               () ->
+    //                   channel.invokeMethod("Task#onSuccess", getTaskEventMap(taskSnapshot, null)));
+    //       destroy();
+    //     });
+
+    // storageTask.addOnCanceledListener(
+    //     taskExecutor,
+    //     () -> {
+    //       if (destroyed) return;
+    //       new Handler(Looper.getMainLooper())
+    //           .post(
+    //               () -> {
+    //                 channel.invokeMethod("Task#onCanceled", getTaskEventMap(null, null));
+    //                 destroy();
+    //               });
+    //     });
+
+    // storageTask.addOnFailureListener(
+    //     taskExecutor,
+    //     exception -> {
+    //       if (destroyed) return;
+    //       new Handler(Looper.getMainLooper())
+    //           .post(
+    //               () -> {
+    //                 channel.invokeMethod("Task#onFailure", getTaskEventMap(null, exception));
+    //                 destroy();
+    //               });
+    //     });
   }
 
   private Map<String, Object> getTaskEventMap(
