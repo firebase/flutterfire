@@ -174,6 +174,45 @@ PigeonQuerySnapshot ParseQuerySnapshot(
   return pigeonQuerySnapshot;
 }
 
+firebase::firestore::FieldValue ConvertToFieldValue(
+    const EncodableValue& value) {
+  const flutter::internal::EncodableValueVariant& variant =
+      value;  // Replace with appropriate way to access the variant from
+              // EncodableValue
+  if (std::holds_alternative<bool>(variant)) {
+    return firebase::firestore::FieldValue::Boolean(std::get<bool>(variant));
+  } else if (std::holds_alternative<int64_t>(variant)) {
+    return firebase::firestore::FieldValue::Integer(std::get<int64_t>(variant));
+  } else if (std::holds_alternative<double>(variant)) {
+    return firebase::firestore::FieldValue::Double(std::get<double>(variant));
+  } else if (std::holds_alternative<std::string>(variant)) {
+    return firebase::firestore::FieldValue::String(
+        std::get<std::string>(variant));
+  } else {
+    // Add more types as needed
+    // You may throw an exception or handle this some other way
+    throw std::runtime_error("Unsupported EncodableValue type");
+  }
+}
+
+firebase::firestore::MapFieldValue ConvertToMapFieldValue(const EncodableMap& originalMap) {
+  firebase::firestore::MapFieldValue convertedMap;
+
+  for (const auto& kv : originalMap) {
+    if (std::holds_alternative<std::string>(kv.first)) {
+      std::string key = std::get<std::string>(kv.first);
+      firebase::firestore::FieldValue value = ConvertToFieldValue(kv.second);
+      convertedMap[key] = value;
+    } else {
+      // Handle or skip non-string keys
+      // You may throw an exception or handle this some other way
+      throw std::runtime_error("Unsupported key type");
+    }
+  }
+
+  return convertedMap;
+}
+
 
 
 void CloudFirestorePlugin::LoadBundle(
@@ -338,6 +377,21 @@ void CloudFirestorePlugin::TransactionGet(
 }
 
 using firebase::firestore::DocumentReference;
+using firebase::firestore::SetOptions;
+
+std::vector<std::string> ConvertToFieldPathVector(
+    const flutter::EncodableList& encodableList) {
+  std::vector<std::string> fieldVector;
+
+  for (const auto& element : encodableList) {
+    std::string fieldPath = std::get<std::string>(element);
+
+    // Was already converted by the Codec
+    fieldVector.push_back(fieldPath);
+  }
+
+  return fieldVector;
+}
 
 void CloudFirestorePlugin::DocumentReferenceSet(
     const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
@@ -345,8 +399,32 @@ void CloudFirestorePlugin::DocumentReferenceSet(
   Firestore* firestore = GetFirestoreFromPigeon(app);
   DocumentReference document_reference = firestore->Document(request.path());
 
+  // Get the data
+  Future<void> future;
 
-}
+  if (request.option()->merge() != nullptr && request.option()->merge()) {
+    future = document_reference.Set(ConvertToMapFieldValue(*request.data()),
+                                    SetOptions::Merge());
+  }
+  else if (request.option()->merge_fields()) {
+    future = document_reference.Set(ConvertToMapFieldValue(*request.data()),
+        SetOptions::MergeFields(
+            ConvertToFieldPathVector(*request.option()->merge_fields())));
+  }
+  else {
+    future = document_reference.Set(ConvertToMapFieldValue(*request.data()));
+  }
+
+  future.OnCompletion([result](const Future<void>& completed_future) {
+    if (completed_future.error() == 0) {
+      result(std::nullopt);
+    }
+    else {
+      result(FlutterError(completed_future.error_message()));
+      return;
+    }
+  });
+ }
 
 void CloudFirestorePlugin::DocumentReferenceUpdate(
     const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
