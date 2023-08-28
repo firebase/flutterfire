@@ -793,11 +793,18 @@ void CloudFirestorePlugin::QuerySnapshot(
     const PigeonFirebaseApp& app, const std::string& path,
     bool is_collection_group, const PigeonQueryParameters& parameters,
     const PigeonGetOptions& options, bool include_metadata_changes,
-    std::function<void(ErrorOr<std::string> reply)> result) {}
+    std::function<void(ErrorOr<std::string> reply)> result) {
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+  Query query = ParseQuery(firestore, path, is_collection_group, parameters);
+
+  // TODO: event channels
+}
 
 void CloudFirestorePlugin::DocumentReferenceSnapshot(
     const PigeonFirebaseApp& app, const DocumentReferenceRequest& parameters,
     bool include_metadata_changes,
-    std::function<void(ErrorOr<std::string> reply)> result) {}
+    std::function<void(ErrorOr<std::string> reply)> result) {
+  // TODO: event channels
+}
 
 }  // namespace cloud_firestore
