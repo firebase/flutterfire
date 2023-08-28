@@ -17,6 +17,7 @@
 
 #include <memory>
 #include <sstream>
+using namespace firebase::firestore;
 
 using firebase::firestore::Firestore;
 using firebase::App;
@@ -188,6 +189,17 @@ firebase::firestore::FieldValue ConvertToFieldValue(
   } else if (std::holds_alternative<std::string>(variant)) {
     return firebase::firestore::FieldValue::String(
         std::get<std::string>(variant));
+    } else if (std::holds_alternative<flutter::EncodableList>(variant)) {
+      const flutter::EncodableList& list = std::get<flutter::EncodableList>(variant);
+      std::vector<firebase::firestore::FieldValue> convertedList;
+      for (const auto& item : list) {
+        convertedList.push_back(ConvertToFieldValue(item));
+      }
+      return firebase::firestore::FieldValue::Array(convertedList);
+      } else if (std::holds_alternative<flutter::EncodableMap>(variant)) {
+        const flutter::EncodableMap& map = std::get<flutter::EncodableMap>(variant);
+        firebase::firestore::MapFieldValue convertedMap = ConvertToMapFieldValue(map);
+        return firebase::firestore::FieldValue::Map(convertedMap);
   } else {
     // Add more types as needed
     // You may throw an exception or handle this some other way
@@ -212,6 +224,34 @@ firebase::firestore::MapFieldValue ConvertToMapFieldValue(const EncodableMap& or
 
   return convertedMap;
 }
+
+firebase::firestore::MapFieldPathValue ConvertToMapFieldPathValue(
+    const EncodableMap& originalMap) {
+  firebase::firestore::MapFieldPathValue convertedMap;
+
+  for (const auto& kv : originalMap) {
+    if (std::holds_alternative<std::string>(kv.first)) {
+      std::string key = std::get<std::string>(kv.first);
+      std::vector<std::string> convertedList;
+      convertedList.push_back(key);
+
+
+      firebase::firestore::FieldValue value = ConvertToFieldValue(kv.second);
+      convertedMap[FieldPath(convertedList)] = value;
+    } else if (std::holds_alternative<FieldPath>(kv.first)) {
+      FieldPath key = std::get<FieldPath>(kv.first);
+      firebase::firestore::FieldValue value = ConvertToFieldValue(kv.second);
+      convertedMap[key] = value;
+    } else {
+      // Handle or skip non-string keys
+      // You may throw an exception or handle this some other way
+      throw std::runtime_error("Unsupported key type");
+    }
+  }
+
+  return convertedMap;
+}
+
 
 
 
@@ -428,15 +468,69 @@ void CloudFirestorePlugin::DocumentReferenceSet(
 
 void CloudFirestorePlugin::DocumentReferenceUpdate(
     const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+  DocumentReference document_reference = firestore->Document(request.path());
+
+  // Get the data
+  MapFieldPathValue data = ConvertToMapFieldPathValue(*request.data());
+  Future<void> future = document_reference.Update(ConvertToMapFieldValue(*request.data()));
+
+  future.OnCompletion([result](const Future<void>& completed_future) {
+    if (completed_future.error() == 0) {
+      result(std::nullopt);
+    }
+    else {
+      result(FlutterError(completed_future.error_message()));
+      return;
+    }
+  });
+}
 
 void CloudFirestorePlugin::DocumentReferenceGet(
     const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
-    std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result) {}
+    std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result) {
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+  DocumentReference document_reference = firestore->Document(request.path());
+
+  firebase::firestore::Source source = GetSourceFromPigeon(*request.source());
+
+  Future<DocumentSnapshot> future = document_reference.Get(source);
+
+  future.OnCompletion([result, request](
+                          const Future<DocumentSnapshot>& completed_future) {
+    if (completed_future.error() == 0) {
+          const DocumentSnapshot* document_snapshot = completed_future.result();
+      result(ParseDocumentSnapshot(* document_snapshot,
+                                    GetServerTimestampBehaviorFromPigeon(
+                                      *request.server_timestamp_behavior())));
+    }
+    else {
+      result(FlutterError(completed_future.error_message()));
+      return;
+    }
+  });
+}
 
 void CloudFirestorePlugin::DocumentReferenceDelete(
     const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
-    std::function<void(std::optional<FlutterError> reply)> result) {}
+    std::function<void(std::optional<FlutterError> reply)> result) {
+
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+  DocumentReference document_reference = firestore->Document(request.path());
+
+  Future<void> future = document_reference.Delete();
+
+  future.OnCompletion([result](const Future<void>& completed_future) {
+    if (completed_future.error() == 0) {
+      result(std::nullopt);
+    }
+    else {
+      result(FlutterError(completed_future.error_message()));
+      return;
+    }
+  });
+}
 
 void CloudFirestorePlugin::QueryGet(
     const PigeonFirebaseApp& app, const std::string& path,
