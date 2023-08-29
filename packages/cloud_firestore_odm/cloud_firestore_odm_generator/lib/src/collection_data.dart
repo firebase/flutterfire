@@ -172,6 +172,18 @@ class CollectionData with Names {
         collectionTargetElement.name.public;
     final fromJson = collectionTargetElement.constructors
         .firstWhereOrNull((ctor) => ctor.name == 'fromJson');
+    if (fromJson != null) {
+      if (fromJson.parameters.length != 1 ||
+          !fromJson.parameters.first.isRequiredPositional ||
+          !fromJson.parameters.first.type.isDartCoreMap) {
+        // TODO support deserializing generic objects
+        throw InvalidGenerationSourceError(
+          '@Collection was used with the class ${collectionTargetElement.name} but '
+          'its fromJson does not match `Function(Map json)`.',
+          element: annotatedElement,
+        );
+      }
+    }
     final toJson = collectionTargetElement
         // Looking into fromJson from superTypes too
         .allMethods
@@ -183,6 +195,16 @@ class CollectionData with Names {
       redirectedFreezedClass: redirectedFreezedClass,
       collectionTargetElementPublicType: collectionTargetElementPublicType,
     );
+    if (toJson != null) {
+      if (toJson.parameters.isNotEmpty || !toJson.returnType.isDartCoreMap) {
+        // TODO support serializing generic objects
+        throw InvalidGenerationSourceError(
+          '@Collection was used with the class ${collectionTargetElement.name} but '
+          'its toJson does not match `Map Function()`.',
+          element: annotatedElement,
+        );
+      }
+    }
     final data = CollectionData(
       type: type,
       hasFreezed: hasFreezed,
