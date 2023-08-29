@@ -981,9 +981,9 @@ void main() {
     test('enumValue', () async {
       final collection = await initializeTest(EnumsCollectionReference());
 
-      await collection.add(createEnums(id: 'A'));
-      await collection.add(createEnums(id: 'B', enumValue: TestEnum.two));
-      await collection.add(createEnums(id: 'C', enumValue: TestEnum.two));
+      await collection.add(Enums(id: 'A'));
+      await collection.add(Enums(id: 'B', enumValue: TestEnum.two));
+      await collection.add(Enums(id: 'C', enumValue: TestEnum.two));
 
       final querySnap =
           await collection.whereEnumValue(isEqualTo: TestEnum.two).get();
@@ -997,11 +997,9 @@ void main() {
     test('nullable enumValue', () async {
       final collection = await initializeTest(EnumsCollectionReference());
 
-      await collection.add(createEnums(id: 'A'));
-      await collection
-          .add(createEnums(id: 'B', nullableEnumValue: TestEnum.two));
-      await collection
-          .add(createEnums(id: 'C', nullableEnumValue: TestEnum.two));
+      await collection.add(Enums(id: 'A'));
+      await collection.add(Enums(id: 'B', nullableEnumValue: TestEnum.two));
+      await collection.add(Enums(id: 'C', nullableEnumValue: TestEnum.two));
 
       final querySnap = await collection
           .whereNullableEnumValue(isEqualTo: TestEnum.two)
@@ -1017,11 +1015,11 @@ void main() {
       final collection = await initializeTest(EnumsCollectionReference());
 
       await collection
-          .add(createEnums(id: 'A', enumList: [TestEnum.one, TestEnum.three]));
+          .add(Enums(id: 'A', enumList: [TestEnum.one, TestEnum.three]));
       await collection
-          .add(createEnums(id: 'B', enumList: [TestEnum.two, TestEnum.three]));
+          .add(Enums(id: 'B', enumList: [TestEnum.two, TestEnum.three]));
       await collection
-          .add(createEnums(id: 'C', enumList: [TestEnum.two, TestEnum.three]));
+          .add(Enums(id: 'C', enumList: [TestEnum.two, TestEnum.three]));
 
       final querySnap =
           await collection.whereEnumList(arrayContains: TestEnum.two).get();
@@ -1036,13 +1034,13 @@ void main() {
       final collection = await initializeTest(EnumsCollectionReference());
 
       await collection.add(
-        createEnums(id: 'A', nullableEnumList: [TestEnum.one, TestEnum.three]),
+        Enums(id: 'A', nullableEnumList: [TestEnum.one, TestEnum.three]),
       );
       await collection.add(
-        createEnums(id: 'B', nullableEnumList: [TestEnum.two, TestEnum.three]),
+        Enums(id: 'B', nullableEnumList: [TestEnum.two, TestEnum.three]),
       );
       await collection.add(
-        createEnums(id: 'C', nullableEnumList: [TestEnum.two, TestEnum.three]),
+        Enums(id: 'C', nullableEnumList: [TestEnum.two, TestEnum.three]),
       );
 
       final querySnap = await collection

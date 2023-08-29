@@ -5,7 +5,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
-import 'package:cloud_firestore_odm_example/integration/enums.dart';
 import 'package:cloud_firestore_odm_example/movie.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mockito/mockito.dart';
@@ -44,22 +43,6 @@ Movie createMovie({
     title: title,
     year: year,
     id: id,
-  );
-}
-
-Enums createEnums({
-  required String id,
-  TestEnum enumValue = TestEnum.one,
-  TestEnum? nullableEnumValue,
-  List<TestEnum> enumList = const [],
-  List<TestEnum>? nullableEnumList,
-}) {
-  return Enums(
-    id: id,
-    enumValue: enumValue,
-    nullableEnumValue: nullableEnumValue,
-    enumList: enumList,
-    nullableEnumList: nullableEnumList,
   );
 }
 

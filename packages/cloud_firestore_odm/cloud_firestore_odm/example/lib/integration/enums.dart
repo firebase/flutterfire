@@ -18,10 +18,10 @@ enum TestEnum {
 class Enums {
   Enums({
     required this.id,
-    required this.enumValue,
-    required this.nullableEnumValue,
-    required this.enumList,
-    required this.nullableEnumList,
+    this.enumValue = TestEnum.one,
+    this.nullableEnumValue,
+    this.enumList = const [],
+    this.nullableEnumList,
   });
 
   factory Enums.fromJson(Map<String, Object?> json) => _$EnumsFromJson(json);
