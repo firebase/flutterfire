@@ -634,6 +634,26 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       convertPlatformException(e, stack);
     }
   }
+
+  @override
+  Future<void> revokeTokenWithAuthorizationCode(
+      String authorizationCode) async {
+    if (defaultTargetPlatform == TargetPlatform.macOS ||
+        defaultTargetPlatform == TargetPlatform.iOS) {
+      try {
+        await _api.revokeTokenWithAuthorizationCode(
+          pigeonDefault,
+          authorizationCode,
+        );
+      } catch (e, stack) {
+        convertPlatformException(e, stack);
+      }
+    } else {
+      throw UnimplementedError(
+        'revokeTokenWithAuthorizationCode() is only available on apple platforms.',
+      );
+    }
+  }
 }
 
 /// Simple helper class to make nullable values transferable through StreamControllers.
