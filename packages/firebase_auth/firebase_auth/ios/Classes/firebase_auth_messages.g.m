@@ -2079,10 +2079,10 @@ void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
   }
   {
     FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
-            initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
-                         @"MultiFactorUserHostApi.enrollTotp"
-         binaryMessenger:binaryMessenger
-                   codec:MultiFactorUserHostApiGetCodec()];
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"MultiFactorUserHostApi.enrollTotp"
+        binaryMessenger:binaryMessenger
+                  codec:MultiFactorUserHostApiGetCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(enrollTotpApp:
                                                     assertionId:displayName:completion:)],
