@@ -395,7 +395,7 @@ class ${data.queryReferenceImplName}
         } else ...{
           'whereIn': 'List<${field.type}>?',
           'whereNotIn': 'List<${field.type}>?',
-        }
+        },
       };
 
       final prototype =
