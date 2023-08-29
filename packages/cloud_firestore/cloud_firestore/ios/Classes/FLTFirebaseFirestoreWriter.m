@@ -163,14 +163,12 @@
 
   NSNumber *documentSnapshotHash = @([documentSnapshot hash]);
   NSString *timestampBehaviorString =
-      FLTFirebaseFirestorePlugin.serverTimestampMap[documentSnapshotHash];
+      [FLTFirebaseFirestorePlugin.serverTimestampMap objectForKey:documentSnapshotHash];
 
   FIRServerTimestampBehavior serverTimestampBehavior =
       [self toServerTimestampBehavior:timestampBehaviorString];
 
-  if (FLTFirebaseFirestorePlugin.serverTimestampMap[documentSnapshotHash] != nil) {
-    [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:documentSnapshotHash];
-  }
+  [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:documentSnapshotHash];
 
   return @{
     @"path" : documentSnapshot.reference.path,
@@ -215,14 +213,12 @@
   NSMutableArray *documents = [NSMutableArray array];
   NSMutableArray *metadatas = [NSMutableArray array];
   NSString *timestampBehaviorString =
-      FLTFirebaseFirestorePlugin.serverTimestampMap[querySnapshotHash];
+      [FLTFirebaseFirestorePlugin.serverTimestampMap objectForKey:querySnapshotHash];
 
   FIRServerTimestampBehavior serverTimestampBehavior =
       [self toServerTimestampBehavior:timestampBehaviorString];
 
-  if (FLTFirebaseFirestorePlugin.serverTimestampMap[querySnapshotHash] != nil) {
-    [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:querySnapshotHash];
-  }
+  [FLTFirebaseFirestorePlugin.serverTimestampMap removeObjectForKey:querySnapshotHash];
 
   for (FIRDocumentSnapshot *document in querySnapshot.documents) {
     [paths addObject:document.reference.path];

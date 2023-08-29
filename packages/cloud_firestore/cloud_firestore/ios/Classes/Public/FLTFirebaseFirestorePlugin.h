@@ -13,5 +13,5 @@
 #import <firebase_core/FLTFirebasePlugin.h>
 
 @interface FLTFirebaseFirestorePlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
-+ (NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap;
++ (NSCache<NSNumber *, NSString *> *)serverTimestampMap;
 @end
