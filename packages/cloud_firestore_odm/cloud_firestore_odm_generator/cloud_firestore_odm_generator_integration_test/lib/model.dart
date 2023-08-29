@@ -5,6 +5,11 @@
 // When separated accross multiple files, it is necessary to specify fromJson/toJson
 // We voluntarily don't use JsonSerializable here, as it is not supported due to
 // the generated FieldMap being private.
+import 'package:json_annotation/json_annotation.dart';
+
+part 'model.g.dart';
+
+@JsonSerializable()
 class SplitFileModel {
   SplitFileModel();
 

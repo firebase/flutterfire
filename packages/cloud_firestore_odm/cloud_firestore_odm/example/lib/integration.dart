@@ -22,6 +22,7 @@ class EmptyModel {
 final emptyModelRef = EmptyModelCollectionReference();
 
 @Collection<ManualJson>('root')
+@JsonSerializable()
 class ManualJson {
   ManualJson(this.value);
 
