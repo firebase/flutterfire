@@ -927,11 +927,67 @@ void CloudFirestorePlugin::QuerySnapshot(
   result(channelName);
 }
 
+class DocumentSnapshotStreamHandler
+    : public flutter::StreamHandler<flutter::EncodableValue> {
+ public:
+  DocumentSnapshotStreamHandler(
+      DocumentReference* query, bool includeMetadataChanges,
+      firebase::firestore::DocumentSnapshot::ServerTimestampBehavior
+          serverTimestampBehavior) {
+    documentReference_ = query;
+    includeMetadataChanges_ = includeMetadataChanges;
+    serverTimestampBehavior_ = serverTimestampBehavior;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnListenInternal(
+      const flutter::EncodableValue* arguments,
+      std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
+      override {
+    MetadataChanges metadataChanges = includeMetadataChanges_
+                                          ? MetadataChanges::kInclude
+                                          : MetadataChanges::kExclude;
+
+    listener_ = documentReference_->AddSnapshotListener(
+        metadataChanges,
+        [events = std::move(events),
+         serverTimestampBehavior = serverTimestampBehavior_,
+         metadataChanges](const firebase::firestore::DocumentSnapshot& snapshot,
+                          firebase::firestore::Error error,
+                          const std::string& errorMessage) mutable {
+          if (error == firebase::firestore::kErrorOk) {
+            events->Success(ParseDocumentSnapshot(snapshot, serverTimestampBehavior).ToEncodableList());
+          } else {
+            events->Error("Error parsing QuerySnapshot");
+          }
+        });
+    return nullptr;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    listener_.Remove();
+    return nullptr;
+  }
+
+ private:
+  ListenerRegistration listener_;
+  DocumentReference* documentReference_;
+  bool includeMetadataChanges_;
+  firebase::firestore::DocumentSnapshot::ServerTimestampBehavior
+      serverTimestampBehavior_;
+};
+
 void CloudFirestorePlugin::DocumentReferenceSnapshot(
     const PigeonFirebaseApp& app, const DocumentReferenceRequest& parameters,
     bool include_metadata_changes,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  // TODO: event channels
+      Firestore* firestore = GetFirestoreFromPigeon(app);
+  DocumentReference documentReference = firestore->Document(parameters.path());
+  auto document_snapshot_handler =
+      std::make_unique<DocumentSnapshotStreamHandler>(&documentReference, include_metadata_changes);
+  std::string channelName = RegisterEventChannel(METHOD_CHANNEL_NAME, *document_snapshot_handler);
+  result(channelName);
 }
 
 }  // namespace cloud_firestore
