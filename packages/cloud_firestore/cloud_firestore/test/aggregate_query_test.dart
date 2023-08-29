@@ -68,15 +68,19 @@ class AggregateQueryMessageCodec extends FirestoreMessageCodec {
       // code paths.
       case _kFirestoreInstance:
         String appName = readValue(buffer)! as String;
+        String databaseURL = readValue(buffer)! as String;
         readValue(buffer);
         final FirebaseApp app = Firebase.app(appName);
-        return MethodChannelFirebaseFirestore(app: app);
+        return MethodChannelFirebaseFirestore(
+          app: app,
+          databaseURL: databaseURL,
+        );
       case _kFirestoreQuery:
         Map<dynamic, dynamic> values =
             readValue(buffer)! as Map<dynamic, dynamic>;
         final FirebaseApp app = Firebase.app();
         return MethodChannelQuery(
-          MethodChannelFirebaseFirestore(app: app),
+          MethodChannelFirebaseFirestore(app: app, databaseURL: '(default)'),
           values['path'],
         );
       case _kFirestoreSettings:

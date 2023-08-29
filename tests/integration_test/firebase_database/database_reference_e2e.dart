@@ -144,9 +144,7 @@ void setupDatabaseReferenceTests() {
 
         await ref.set({'list': data});
 
-        final transactionResult = await ref.runTransaction((mutableData) {
-          return Transaction.success(mutableData);
-        });
+        final transactionResult = await ref.runTransaction(Transaction.success);
 
         var value = transactionResult.snapshot.value as dynamic;
         expect(value, isNotNull);

@@ -23,6 +23,7 @@ class MethodChannelUserCredential extends UserCredentialPlatform {
                       data.additionalUserInfo!.profile ?? {}),
                   providerId: data.additionalUserInfo!.providerId,
                   username: data.additionalUserInfo!.username,
+                  authorizationCode: data.additionalUserInfo?.authorizationCode,
                 ),
           credential: data.credential == null
               ? null
