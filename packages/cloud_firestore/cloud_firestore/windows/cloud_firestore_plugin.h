@@ -30,7 +30,8 @@ class CloudFirestorePlugin : public flutter::Plugin,
   // FirebaseFirestoreHostApi methods.
 
 
-// Inherited via FirebaseFirestoreHostApi
+
+  // Inherited via FirebaseFirestoreHostApi
   virtual void LoadBundle(
       const PigeonFirebaseApp& app, const std::vector<uint8_t>& bundle,
       std::function<void(ErrorOr<std::string> reply)> result) override;
@@ -107,6 +108,18 @@ class CloudFirestorePlugin : public flutter::Plugin,
       const PigeonFirebaseApp& app, const DocumentReferenceRequest& parameters,
       bool include_metadata_changes,
       std::function<void(ErrorOr<std::string> reply)> result) override;
+
+
+  static flutter::BinaryMessenger* messenger_;
+  static std::map<
+      std::string,
+      std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>>
+      event_channels_;
+  static std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
+      stream_handlers_;
+
+  private:
+
 };
 
 }  // namespace cloud_firestore_windows

@@ -1,4 +1,6 @@
 #include "cloud_firestore_plugin.h"
+#pragma comment(lib, \
+                "rpcrt4.lib")  // UuidCreate - Minimum supported OS Win 2000
 
 // This must be included before many other Windows headers.
 #include <windows.h>
@@ -12,6 +14,7 @@
 
 
 #include <flutter/method_channel.h>
+#include <flutter/event_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
 
@@ -35,11 +38,43 @@ void CloudFirestorePlugin::RegisterWithRegistrar(
 
   auto plugin = std::make_unique<CloudFirestorePlugin>();
 
+  messenger_ = registrar->messenger();
+
   FirebaseFirestoreHostApi::SetUp(registrar->messenger(), plugin.get());
 
 
   registrar->AddPlugin(std::move(plugin));
 }
+
+std::map<std::string,
+         std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>>
+    event_channels_;
+std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
+    stream_handlers_;
+
+
+std::string RegisterEventChannel(
+    std::string prefix, const flutter::StreamHandler<EncodableValue>& handler) {
+  UUID uuid;
+  UuidCreate(&uuid);
+  char* str;
+  UuidToStringA(&uuid, (RPC_CSTR*)&str);
+  std::string channelName = prefix + "_" + str;
+  flutter::EventChannel<flutter::EncodableValue>* channel =
+      new flutter::EventChannel<flutter::EncodableValue>(
+          CloudFirestorePlugin::messenger_, channelName,
+          &flutter::StandardMethodCodec::GetInstance());
+
+  event_channels_[channelName] =
+      std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(channel);
+  stream_handlers_[channelName] = std::make_unique<flutter::StreamHandler<>>(handler);
+
+  event_channels_[channelName]->SetStreamHandler(
+      std::move(stream_handlers_[channelName]));
+
+  return channelName;
+}
+
 
 CloudFirestorePlugin::CloudFirestorePlugin() {}
 
@@ -261,6 +296,8 @@ firebase::firestore::MapFieldPathValue ConvertToMapFieldPathValue(
 
   return convertedMap;
 }
+
+
 
 
 
@@ -789,6 +826,91 @@ void CloudFirestorePlugin::WriteBatchCommit(
   }
 }
 
+std::string METHOD_CHANNEL_NAME = "cloud_firestore";
+
+using firebase::firestore::ListenerRegistration;
+
+class QuerySnapshotStreamHandler
+    : public flutter::StreamHandler<flutter::EncodableValue> {
+ public:
+  QuerySnapshotStreamHandler(
+      Query* query, bool includeMetadataChanges,
+      firebase::firestore::DocumentSnapshot::ServerTimestampBehavior serverTimestampBehavior) {
+    query_ = query;
+    includeMetadataChanges_ = includeMetadataChanges;
+    serverTimestampBehavior_ = serverTimestampBehavior;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnListenInternal(
+      const flutter::EncodableValue* arguments,
+      std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
+      override {
+
+    MetadataChanges metadataChanges = includeMetadataChanges_
+                                           ? MetadataChanges::kInclude
+                                           : MetadataChanges::kExclude;
+
+      listener_ = query_->AddSnapshotListener(
+        metadataChanges,
+        [events = std::move(events),
+         serverTimestampBehavior = serverTimestampBehavior_,
+                          metadataChanges](
+            const firebase::firestore::QuerySnapshot& snapshot,
+            firebase::firestore::Error error,
+            const std::string& errorMessage) mutable {
+          if (error == firebase::firestore::kErrorOk) {
+            flutter::EncodableList toListResult(
+                3); 
+            std::vector<flutter::EncodableValue> documents(
+                snapshot.documents().size());
+            std::vector<flutter::EncodableValue> documentChanges(
+                snapshot.DocumentChanges(metadataChanges)
+                    .size());
+
+            for (const auto& documentSnapshot : snapshot.documents()) {
+              documents.push_back(ParseDocumentSnapshot(
+                                      documentSnapshot, serverTimestampBehavior)
+                                      .ToEncodableList());
+            }
+
+            // Assuming querySnapshot.getDocumentChanges() returns an iterable
+            // collection
+            for (const auto& documentChange :
+                 snapshot.DocumentChanges(metadataChanges)) {
+              documentChanges.push_back(
+                  ParseDocumentChange(documentChange,
+                                                       serverTimestampBehavior)
+                      .ToEncodableList());
+            }
+
+            toListResult[0] = documents;
+            toListResult[1] = documentChanges;
+            toListResult[2] = ParseSnapshotMetadata(
+                                  snapshot.metadata())
+                                  .ToEncodableList();
+
+            events->Success(toListResult);
+          } else {
+            events->Error("Error parsing QuerySnapshot");
+          } 
+      });
+    return nullptr;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    listener_.Remove();
+    return nullptr;
+  }
+
+ private:
+  ListenerRegistration listener_;
+  Query* query_;
+  bool includeMetadataChanges_;
+  firebase::firestore::DocumentSnapshot::ServerTimestampBehavior serverTimestampBehavior_;
+};
+
 void CloudFirestorePlugin::QuerySnapshot(
     const PigeonFirebaseApp& app, const std::string& path,
     bool is_collection_group, const PigeonQueryParameters& parameters,
@@ -797,7 +919,12 @@ void CloudFirestorePlugin::QuerySnapshot(
   Firestore* firestore = GetFirestoreFromPigeon(app);
   Query query = ParseQuery(firestore, path, is_collection_group, parameters);
 
-  // TODO: event channels
+    auto query_snapshot_handler =
+      std::make_unique<QuerySnapshotStreamHandler>(&query, include_metadata_changes);
+
+  std::string channelName = RegisterEventChannel(METHOD_CHANNEL_NAME, *query_snapshot_handler);
+
+  result(channelName);
 }
 
 void CloudFirestorePlugin::DocumentReferenceSnapshot(
