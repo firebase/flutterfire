@@ -15,16 +15,6 @@ import 'package:source_helper/source_helper.dart';
 import 'collection_generator.dart';
 import 'names.dart';
 
-const durationChecker = TypeChecker.fromRuntime(Duration);
-const collectionChecker = TypeChecker.fromRuntime(Collection);
-const dateTimeChecker = TypeChecker.fromRuntime(DateTime);
-const timestampChecker = TypeChecker.fromUrl(
-  'package:cloud_firestore_platform_interface/src/timestamp.dart#Timestamp',
-);
-const geoPointChecker = TypeChecker.fromUrl(
-  'package:cloud_firestore_platform_interface/src/geo_point.dart#GeoPoint',
-);
-
 const jsonSerializableChecker = TypeChecker.fromRuntime(JsonSerializable);
 const freezedChecker = TypeChecker.fromRuntime(Freezed);
 
