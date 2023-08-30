@@ -15,6 +15,7 @@ class AdditionalUserInfo {
     this.profile,
     this.providerId,
     this.username,
+    this.authorizationCode,
   });
 
   /// Whether the user account has been recently created.
@@ -30,12 +31,16 @@ class AdditionalUserInfo {
   /// The username given from the federated identity provider.
   final String? username;
 
+  /// The authorization code given from apple sign in. `null` if the user didn't sign in with Apple on an Apple platform.
+  final String? authorizationCode;
+
   @override
   String toString() {
     return '$AdditionalUserInfo('
         'isNewUser: $isNewUser, '
         'profile: $profile, '
         'providerId: $providerId, '
-        'username: $username)';
+        'username: $username, '
+        'authorizationCode: $authorizationCode)';
   }
 }

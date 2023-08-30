@@ -1,3 +1,11 @@
+## 5.7.0
+
+ - **FEAT**(auth): `revokeTokenWithAuthorizationCode()` implementation for revoking Apple sign-in token ([#11454](https://github.com/firebase/flutterfire/issues/11454)). ([92de98c9](https://github.com/firebase/flutterfire/commit/92de98c9e62f2bf20712dbfed22dd39f6883eb58))
+
+## 5.6.3
+
+ - Update a dependency to the latest release.
+
 ## 5.6.2
 
  - **FIX**(auth,web): convert `NativeError` to `FirebaseAuthError` ([#11258](https://github.com/firebase/flutterfire/issues/11258)). ([b95c3807](https://github.com/firebase/flutterfire/commit/b95c38075cd3b48395d56f3fea38e5be32b21a06))

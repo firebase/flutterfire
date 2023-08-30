@@ -94,7 +94,7 @@ void main() {
             'FirebaseAppCheck#getToken',
             arguments: {
               'appName': defaultFirebaseAppName,
-              'forceRefresh': true
+              'forceRefresh': true,
             },
           ),
         ],

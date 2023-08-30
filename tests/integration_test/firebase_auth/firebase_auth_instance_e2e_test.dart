@@ -247,17 +247,20 @@ void main() {
 
           Function successCallback = (UserCredential newUserCredential) async {
             expect(newUserCredential.user, isA<User>());
-            User newUser = newUserCredential.user!;
+            final newUser = newUserCredential.user;
 
-            expect(newUser.uid, isA<String>());
-            expect(newUser.email, equals(email));
-            expect(newUser.emailVerified, isFalse);
-            expect(newUser.isAnonymous, isFalse);
-            expect(newUser.uid, equals(FirebaseAuth.instance.currentUser!.uid));
+            expect(newUser?.uid, isA<String>());
+            expect(newUser?.email, equals(email));
+            expect(newUser?.emailVerified, isFalse);
+            expect(newUser?.isAnonymous, isFalse);
+            expect(
+              newUser?.uid,
+              equals(FirebaseAuth.instance.currentUser!.uid),
+            );
 
-            var additionalUserInfo = newUserCredential.additionalUserInfo!;
+            var additionalUserInfo = newUserCredential.additionalUserInfo;
             expect(additionalUserInfo, isA<AdditionalUserInfo>());
-            expect(additionalUserInfo.isNewUser, isTrue);
+            expect(additionalUserInfo?.isNewUser, isTrue);
 
             await FirebaseAuth.instance.currentUser?.delete();
           };
@@ -503,14 +506,14 @@ void main() {
       group('signInAnonymously()', () {
         test('should sign in anonymously', () async {
           Future successCallback(UserCredential currentUserCredential) async {
-            var currentUser = currentUserCredential.user!;
+            final currentUser = currentUserCredential.user;
 
             expect(currentUser, isA<User>());
-            expect(currentUser.uid, isA<String>());
-            expect(currentUser.email, isNull);
-            expect(currentUser.isAnonymous, isTrue);
+            expect(currentUser?.uid, isA<String>());
+            expect(currentUser?.email, isNull);
+            expect(currentUser?.isAnonymous, isTrue);
             expect(
-              currentUser.uid,
+              currentUser?.uid,
               equals(FirebaseAuth.instance.currentUser!.uid),
             );
 
@@ -609,8 +612,8 @@ void main() {
           final claims = {
             'roles': [
               {'role': 'member'},
-              {'role': 'admin'}
-            ]
+              {'role': 'admin'},
+            ],
           };
 
           await ensureSignedOut();
@@ -776,7 +779,7 @@ void main() {
               await FirebaseAuth.instance.signInAnonymously();
 
               Future<PhoneAuthCredential> getCredential() async {
-                Completer completer = Completer<PhoneAuthCredential>();
+                final completer = Completer<PhoneAuthCredential>();
 
                 unawaited(
                   FirebaseAuth.instance.verifyPhoneNumber(
@@ -809,7 +812,7 @@ void main() {
                   ),
                 );
 
-                return completer.future as FutureOr<PhoneAuthCredential>;
+                return completer.future;
               }
 
               PhoneAuthCredential credential = await getCredential();

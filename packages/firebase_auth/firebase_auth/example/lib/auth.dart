@@ -60,7 +60,7 @@ extension on AuthMode {
 class AuthGate extends StatefulWidget {
   // ignore: public_member_api_docs
   const AuthGate({Key? key}) : super(key: key);
-
+  static String? appleAuthorizationCode;
   @override
   State<StatefulWidget> createState() => _AuthGateState();
 }
@@ -161,7 +161,7 @@ class _AuthGateState extends State<AuthGate> {
                                     'dismiss',
                                     style: TextStyle(color: Colors.white),
                                   ),
-                                )
+                                ),
                               ],
                               contentTextStyle:
                                   const TextStyle(color: Colors.white),
@@ -560,7 +560,9 @@ class _AuthGateState extends State<AuthGate> {
       // Once signed in, return the UserCredential
       await auth.signInWithPopup(appleProvider);
     } else {
-      await auth.signInWithProvider(appleProvider);
+      final userCred = await auth.signInWithProvider(appleProvider);
+      AuthGate.appleAuthorizationCode =
+          userCred.additionalUserInfo?.authorizationCode;
     }
   }
 

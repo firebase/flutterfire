@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'dart:ui';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -126,6 +127,24 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   static StreamController<String> tokenStreamController =
       StreamController<String>.broadcast();
 
+  // Created this to check APNS token is available before certain Apple Firebase
+  // Messaging requests. See this issue:
+  // https://github.com/firebase/flutterfire/issues/10625
+  Future<void> _APNSTokenCheck() async {
+    if (Platform.isMacOS || Platform.isIOS) {
+      String? token = await getAPNSToken();
+
+      if (token == null) {
+        throw FirebaseException(
+          plugin: 'firebase_messaging',
+          code: 'apns-token-not-set',
+          message:
+              'APNS token has not been set yet. Please ensure the APNS token is available by calling `getAPNSToken()`.',
+        );
+      }
+    }
+  }
+
   @override
   FirebaseMessagingPlatform delegateFor({required FirebaseApp app}) {
     return MethodChannelFirebaseMessaging(app: app);
@@ -176,7 +195,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     if (!_bgHandlerInitialized) {
       _bgHandlerInitialized = true;
       final CallbackHandle bgHandle = PluginUtilities.getCallbackHandle(
-          _firebaseMessagingCallbackDispatcher)!;
+        _firebaseMessagingCallbackDispatcher,
+      )!;
       final CallbackHandle userHandle =
           PluginUtilities.getCallbackHandle(handler)!;
       await channel.invokeMapMethod('Messaging#startBackgroundIsolate', {
@@ -188,6 +208,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> deleteToken() async {
+    await _APNSTokenCheck();
+
     try {
       await channel
           .invokeMapMethod('Messaging#deleteToken', {'appName': app.name});
@@ -209,7 +231,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         'appName': app.name,
       });
 
-      return data?['token'];
+      return data!['token'];
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -219,13 +241,15 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   Future<String?> getToken({
     String? vapidKey, // not used yet; web only property
   }) async {
+    await _APNSTokenCheck();
+
     try {
       Map<String, String?>? data =
           await channel.invokeMapMethod<String, String>('Messaging#getToken', {
         'appName': app.name,
       });
 
-      return data?['token'];
+      return data!['token'];
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -297,7 +321,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         'enabled': enabled,
       });
 
-      _autoInitEnabled = data?['isAutoInitEnabled'] as bool;
+      _autoInitEnabled = data!['isAutoInitEnabled'] as bool;
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -363,6 +387,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> subscribeToTopic(String topic) async {
+    await _APNSTokenCheck();
+
     try {
       await channel.invokeMapMethod('Messaging#subscribeToTopic', {
         'appName': app.name,
@@ -375,6 +401,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> unsubscribeFromTopic(String topic) async {
+    await _APNSTokenCheck();
+
     try {
       await channel.invokeMapMethod('Messaging#unsubscribeFromTopic', {
         'appName': app.name,

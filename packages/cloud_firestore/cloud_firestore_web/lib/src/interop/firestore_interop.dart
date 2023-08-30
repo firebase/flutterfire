@@ -16,11 +16,11 @@ import 'package:js/js.dart';
 import './firestore.dart';
 
 @JS()
-external FirestoreJsImpl getFirestore([AppJsImpl? app]);
+external FirestoreJsImpl getFirestore([AppJsImpl? app, String? databasURL]);
 
 @JS()
 external FirestoreJsImpl initializeFirestore(
-    [AppJsImpl app, Settings settings]);
+    [AppJsImpl app, Settings settings, String? databaseURL]);
 
 @JS()
 external PromiseJsImpl<DocumentReferenceJsImpl> addDoc(

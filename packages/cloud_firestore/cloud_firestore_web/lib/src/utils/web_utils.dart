@@ -49,9 +49,11 @@ DocumentSnapshotPlatform convertWebDocumentSnapshot(
     firestore,
     webSnapshot.ref!.path,
     <String, dynamic>{
-      'data': DecodeUtility.decodeMapData(webSnapshot.data(SnapshotOptions(
-        serverTimestamps: serverTimestampBehavior,
-      ))),
+      'data': DecodeUtility.decodeMapData(
+          webSnapshot.data(SnapshotOptions(
+            serverTimestamps: serverTimestampBehavior,
+          )),
+          firestore),
       'metadata': <String, bool>{
         'hasPendingWrites': webSnapshot.metadata.hasPendingWrites,
         'isFromCache': webSnapshot.metadata.fromCache,

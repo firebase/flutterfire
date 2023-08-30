@@ -72,8 +72,18 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       writeDouble(stream, ((GeoPoint) value).getLongitude());
     } else if (value instanceof DocumentReference) {
       stream.write(DATA_TYPE_DOCUMENT_REFERENCE);
-      writeValue(stream, ((DocumentReference) value).getFirestore().getApp().getName());
+      FirebaseFirestore firestore = ((DocumentReference) value).getFirestore();
+      String appName = firestore.getApp().getName();
+      writeValue(stream, appName);
       writeValue(stream, ((DocumentReference) value).getPath());
+      String databaseURL;
+      // There is no way of getting database URL from Firebase android SDK API so we cache it ourselves
+      synchronized (FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
+        databaseURL =
+            FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(firestore)
+                .getDatabaseURL();
+      }
+      writeValue(stream, databaseURL);
     } else if (value instanceof DocumentSnapshot) {
       writeDocumentSnapshot(stream, (DocumentSnapshot) value);
     } else if (value instanceof QuerySnapshot) {
@@ -277,20 +287,22 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
   private FirebaseFirestore readFirestoreInstance(ByteBuffer buffer) {
     String appName = (String) readValue(buffer);
+    String databaseURL = (String) readValue(buffer);
     FirebaseFirestoreSettings settings = (FirebaseFirestoreSettings) readValue(buffer);
-
     synchronized (FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
-      if (FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName)
+      if (FlutterFirebaseFirestorePlugin.getFirestoreInstanceByNameAndDatabaseUrl(
+              appName, databaseURL)
           != null) {
-        return FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName);
+        return FlutterFirebaseFirestorePlugin.getFirestoreInstanceByNameAndDatabaseUrl(
+            appName, databaseURL);
       }
 
       FirebaseApp app = FirebaseApp.getInstance(appName);
-      FirebaseFirestore firestore = FirebaseFirestore.getInstance(app);
-
+      FirebaseFirestore firestore = FirebaseFirestore.getInstance(app, databaseURL);
       firestore.setFirestoreSettings(settings);
 
-      FlutterFirebaseFirestorePlugin.setCachedFirebaseFirestoreInstanceForKey(firestore, appName);
+      FlutterFirebaseFirestorePlugin.setCachedFirebaseFirestoreInstanceForKey(
+          firestore, databaseURL);
       return firestore;
     }
   }
