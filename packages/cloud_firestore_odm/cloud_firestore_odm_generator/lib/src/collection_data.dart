@@ -243,7 +243,6 @@ class CollectionData with Names {
               freezedConstructors: redirectedFreezedConstructors,
             )
             .where((f) => f.isPublic)
-            // .where((f) => _isSupportedType(f.type))
             .where((f) => !f.hasId())
             .where((f) => !f.isJsonIgnored())
             .map(
@@ -328,22 +327,6 @@ class CollectionData with Names {
     } else {
       return '_\$$collectionTargetElementPublicType';
     }
-  }
-
-  static bool _isSupportedType(DartType type) {
-    return type.isDartCoreString ||
-        type.isDartCoreNum ||
-        type.isDartCoreInt ||
-        type.isDartCoreDouble ||
-        type.isDartCoreBool ||
-        type.isSupportedPrimitiveIterable ||
-        type.isJsonDocumentReference ||
-        type.isEnum ||
-        durationChecker.isAssignableFromType(type) ||
-        dateTimeChecker.isAssignableFromType(type) ||
-        timestampChecker.isAssignableFromType(type) ||
-        geoPointChecker.isAssignableFromType(type);
-    // TODO filter list other than List<string|bool|num>
   }
 
   @override

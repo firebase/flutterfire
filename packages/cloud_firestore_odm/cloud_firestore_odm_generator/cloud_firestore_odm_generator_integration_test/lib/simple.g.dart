@@ -1695,8 +1695,12 @@ abstract class NestedDocumentReference
   ///
   /// If no document exists yet, the update will fail.
   Future<void> update({
+    Nested? value,
+    FieldValue valueFieldValue,
     int? simple,
     FieldValue simpleFieldValue,
+    List<Nested>? valueList,
+    FieldValue valueListFieldValue,
     List<bool>? boolList,
     FieldValue boolListFieldValue,
     List<String>? stringList,
@@ -1724,8 +1728,12 @@ abstract class NestedDocumentReference
   /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
+    Nested? value,
+    FieldValue valueFieldValue,
     int? simple,
     FieldValue simpleFieldValue,
+    List<Nested>? valueList,
+    FieldValue valueListFieldValue,
     List<bool>? boolList,
     FieldValue boolListFieldValue,
     List<String>? stringList,
@@ -1778,8 +1786,12 @@ class _$NestedDocumentReference
   }
 
   Future<void> update({
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
     Object? simple = _sentinel,
     FieldValue? simpleFieldValue,
+    Object? valueList = _sentinel,
+    FieldValue? valueListFieldValue,
     Object? boolList = _sentinel,
     FieldValue? boolListFieldValue,
     Object? stringList = _sentinel,
@@ -1802,8 +1814,16 @@ class _$NestedDocumentReference
     FieldValue? nullableEnumListFieldValue,
   }) async {
     assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
+    assert(
       simple == _sentinel || simpleFieldValue == null,
       "Cannot specify both simple and simpleFieldValue",
+    );
+    assert(
+      valueList == _sentinel || valueListFieldValue == null,
+      "Cannot specify both valueList and valueListFieldValue",
     );
     assert(
       boolList == _sentinel || boolListFieldValue == null,
@@ -1846,11 +1866,20 @@ class _$NestedDocumentReference
       "Cannot specify both nullableEnumList and nullableEnumListFieldValue",
     );
     final json = {
+      if (value != _sentinel)
+        _$NestedFieldMap['value']!:
+            _$NestedPerFieldToJson.value(value as Nested?),
+      if (valueFieldValue != null) _$NestedFieldMap['value']!: valueFieldValue,
       if (simple != _sentinel)
         _$NestedFieldMap['simple']!:
             _$NestedPerFieldToJson.simple(simple as int?),
       if (simpleFieldValue != null)
         _$NestedFieldMap['simple']!: simpleFieldValue,
+      if (valueList != _sentinel)
+        _$NestedFieldMap['valueList']!:
+            _$NestedPerFieldToJson.valueList(valueList as List<Nested>?),
+      if (valueListFieldValue != null)
+        _$NestedFieldMap['valueList']!: valueListFieldValue,
       if (boolList != _sentinel)
         _$NestedFieldMap['boolList']!:
             _$NestedPerFieldToJson.boolList(boolList as List<bool>?),
@@ -1908,8 +1937,12 @@ class _$NestedDocumentReference
 
   void transactionUpdate(
     Transaction transaction, {
+    Object? value = _sentinel,
+    FieldValue? valueFieldValue,
     Object? simple = _sentinel,
     FieldValue? simpleFieldValue,
+    Object? valueList = _sentinel,
+    FieldValue? valueListFieldValue,
     Object? boolList = _sentinel,
     FieldValue? boolListFieldValue,
     Object? stringList = _sentinel,
@@ -1932,8 +1965,16 @@ class _$NestedDocumentReference
     FieldValue? nullableEnumListFieldValue,
   }) {
     assert(
+      value == _sentinel || valueFieldValue == null,
+      "Cannot specify both value and valueFieldValue",
+    );
+    assert(
       simple == _sentinel || simpleFieldValue == null,
       "Cannot specify both simple and simpleFieldValue",
+    );
+    assert(
+      valueList == _sentinel || valueListFieldValue == null,
+      "Cannot specify both valueList and valueListFieldValue",
     );
     assert(
       boolList == _sentinel || boolListFieldValue == null,
@@ -1976,11 +2017,20 @@ class _$NestedDocumentReference
       "Cannot specify both nullableEnumList and nullableEnumListFieldValue",
     );
     final json = {
+      if (value != _sentinel)
+        _$NestedFieldMap['value']!:
+            _$NestedPerFieldToJson.value(value as Nested?),
+      if (valueFieldValue != null) _$NestedFieldMap['value']!: valueFieldValue,
       if (simple != _sentinel)
         _$NestedFieldMap['simple']!:
             _$NestedPerFieldToJson.simple(simple as int?),
       if (simpleFieldValue != null)
         _$NestedFieldMap['simple']!: simpleFieldValue,
+      if (valueList != _sentinel)
+        _$NestedFieldMap['valueList']!:
+            _$NestedPerFieldToJson.valueList(valueList as List<Nested>?),
+      if (valueListFieldValue != null)
+        _$NestedFieldMap['valueList']!: valueListFieldValue,
       if (boolList != _sentinel)
         _$NestedFieldMap['boolList']!:
             _$NestedPerFieldToJson.boolList(boolList as List<bool>?),
@@ -2132,6 +2182,17 @@ abstract class NestedQuery
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
+  NestedQuery whereValue({
+    Nested? isEqualTo,
+    Nested? isNotEqualTo,
+    Nested? isLessThan,
+    Nested? isLessThanOrEqualTo,
+    Nested? isGreaterThan,
+    Nested? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<Nested?>? whereIn,
+    List<Nested?>? whereNotIn,
+  });
   NestedQuery whereSimple({
     int? isEqualTo,
     int? isNotEqualTo,
@@ -2142,6 +2203,17 @@ abstract class NestedQuery
     bool? isNull,
     List<int?>? whereIn,
     List<int?>? whereNotIn,
+  });
+  NestedQuery whereValueList({
+    List<Nested>? isEqualTo,
+    List<Nested>? isNotEqualTo,
+    List<Nested>? isLessThan,
+    List<Nested>? isLessThanOrEqualTo,
+    List<Nested>? isGreaterThan,
+    List<Nested>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    Nested? arrayContains,
+    List<Nested>? arrayContainsAny,
   });
   NestedQuery whereBoolList({
     List<bool>? isEqualTo,
@@ -2266,12 +2338,36 @@ abstract class NestedQuery
     NestedDocumentSnapshot? startAfterDocument,
   });
 
+  NestedQuery orderByValue({
+    bool descending = false,
+    Nested? startAt,
+    Nested? startAfter,
+    Nested? endAt,
+    Nested? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
   NestedQuery orderBySimple({
     bool descending = false,
     int? startAt,
     int? startAfter,
     int? endAt,
     int? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByValueList({
+    bool descending = false,
+    List<Nested>? startAt,
+    List<Nested>? startAfter,
+    List<Nested>? endAt,
+    List<Nested>? endBefore,
     NestedDocumentSnapshot? startAtDocument,
     NestedDocumentSnapshot? endAtDocument,
     NestedDocumentSnapshot? endBeforeDocument,
@@ -2575,6 +2671,46 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     );
   }
 
+  NestedQuery whereValue({
+    Nested? isEqualTo,
+    Nested? isNotEqualTo,
+    Nested? isLessThan,
+    Nested? isLessThanOrEqualTo,
+    Nested? isGreaterThan,
+    Nested? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<Nested?>? whereIn,
+    List<Nested?>? whereNotIn,
+  }) {
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$NestedFieldMap['value']!,
+        isEqualTo:
+            isEqualTo != null ? _$NestedPerFieldToJson.value(isEqualTo) : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$NestedPerFieldToJson.value(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$NestedPerFieldToJson.value(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.value(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$NestedPerFieldToJson.value(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.value(isGreaterThanOrEqualTo)
+            : null,
+        isNull: isNull,
+        whereIn: whereIn?.map((e) => _$NestedPerFieldToJson.value(e)),
+        whereNotIn: whereNotIn?.map((e) => _$NestedPerFieldToJson.value(e)),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
   NestedQuery whereSimple({
     int? isEqualTo,
     int? isNotEqualTo,
@@ -2610,6 +2746,53 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$NestedPerFieldToJson.simple(e)),
         whereNotIn: whereNotIn?.map((e) => _$NestedPerFieldToJson.simple(e)),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  NestedQuery whereValueList({
+    List<Nested>? isEqualTo,
+    List<Nested>? isNotEqualTo,
+    List<Nested>? isLessThan,
+    List<Nested>? isLessThanOrEqualTo,
+    List<Nested>? isGreaterThan,
+    List<Nested>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    Nested? arrayContains,
+    List<Nested>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$NestedFieldMap['valueList']!,
+        isEqualTo: isEqualTo != null
+            ? _$NestedPerFieldToJson.valueList(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$NestedPerFieldToJson.valueList(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$NestedPerFieldToJson.valueList(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.valueList(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$NestedPerFieldToJson.valueList(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$NestedPerFieldToJson.valueList(isGreaterThanOrEqualTo)
+            : null,
+        isNull: isNull,
+        arrayContains: arrayContains != null
+            ? (_$NestedPerFieldToJson.valueList([arrayContains]) as List?)!
+                .single
+            : null,
+        arrayContainsAny: arrayContainsAny != null
+            ? _$NestedPerFieldToJson.valueList(arrayContainsAny)
+                as Iterable<Object>?
+            : null,
       ),
       $queryCursor: $queryCursor,
     );
@@ -3146,6 +3329,78 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     );
   }
 
+  NestedQuery orderByValue({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['value']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
   NestedQuery orderBySimple({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -3159,6 +3414,78 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   }) {
     final query = $referenceWithoutCursor.orderBy(_$NestedFieldMap['simple']!,
         descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$NestedQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  NestedQuery orderByValueList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$NestedFieldMap['valueList']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
