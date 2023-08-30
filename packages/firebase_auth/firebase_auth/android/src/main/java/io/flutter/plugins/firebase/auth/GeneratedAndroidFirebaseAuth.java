@@ -2134,6 +2134,152 @@ public class GeneratedAndroidFirebaseAuth {
     }
   }
 
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonTotpSecret {
+    private @Nullable Long codeIntervalSeconds;
+
+    public @Nullable Long getCodeIntervalSeconds() {
+      return codeIntervalSeconds;
+    }
+
+    public void setCodeIntervalSeconds(@Nullable Long setterArg) {
+      this.codeIntervalSeconds = setterArg;
+    }
+
+    private @Nullable Long codeLength;
+
+    public @Nullable Long getCodeLength() {
+      return codeLength;
+    }
+
+    public void setCodeLength(@Nullable Long setterArg) {
+      this.codeLength = setterArg;
+    }
+
+    private @Nullable Long enrollmentCompletionDeadline;
+
+    public @Nullable Long getEnrollmentCompletionDeadline() {
+      return enrollmentCompletionDeadline;
+    }
+
+    public void setEnrollmentCompletionDeadline(@Nullable Long setterArg) {
+      this.enrollmentCompletionDeadline = setterArg;
+    }
+
+    private @Nullable String hashingAlgorithm;
+
+    public @Nullable String getHashingAlgorithm() {
+      return hashingAlgorithm;
+    }
+
+    public void setHashingAlgorithm(@Nullable String setterArg) {
+      this.hashingAlgorithm = setterArg;
+    }
+
+    private @NonNull String secretKey;
+
+    public @NonNull String getSecretKey() {
+      return secretKey;
+    }
+
+    public void setSecretKey(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"secretKey\" is null.");
+      }
+      this.secretKey = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonTotpSecret() {}
+
+    public static final class Builder {
+
+      private @Nullable Long codeIntervalSeconds;
+
+      public @NonNull Builder setCodeIntervalSeconds(@Nullable Long setterArg) {
+        this.codeIntervalSeconds = setterArg;
+        return this;
+      }
+
+      private @Nullable Long codeLength;
+
+      public @NonNull Builder setCodeLength(@Nullable Long setterArg) {
+        this.codeLength = setterArg;
+        return this;
+      }
+
+      private @Nullable Long enrollmentCompletionDeadline;
+
+      public @NonNull Builder setEnrollmentCompletionDeadline(@Nullable Long setterArg) {
+        this.enrollmentCompletionDeadline = setterArg;
+        return this;
+      }
+
+      private @Nullable String hashingAlgorithm;
+
+      public @NonNull Builder setHashingAlgorithm(@Nullable String setterArg) {
+        this.hashingAlgorithm = setterArg;
+        return this;
+      }
+
+      private @Nullable String secretKey;
+
+      public @NonNull Builder setSecretKey(@NonNull String setterArg) {
+        this.secretKey = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonTotpSecret build() {
+        PigeonTotpSecret pigeonReturn = new PigeonTotpSecret();
+        pigeonReturn.setCodeIntervalSeconds(codeIntervalSeconds);
+        pigeonReturn.setCodeLength(codeLength);
+        pigeonReturn.setEnrollmentCompletionDeadline(enrollmentCompletionDeadline);
+        pigeonReturn.setHashingAlgorithm(hashingAlgorithm);
+        pigeonReturn.setSecretKey(secretKey);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(5);
+      toListResult.add(codeIntervalSeconds);
+      toListResult.add(codeLength);
+      toListResult.add(enrollmentCompletionDeadline);
+      toListResult.add(hashingAlgorithm);
+      toListResult.add(secretKey);
+      return toListResult;
+    }
+
+    static @NonNull PigeonTotpSecret fromList(@NonNull ArrayList<Object> list) {
+      PigeonTotpSecret pigeonResult = new PigeonTotpSecret();
+      Object codeIntervalSeconds = list.get(0);
+      pigeonResult.setCodeIntervalSeconds(
+          (codeIntervalSeconds == null)
+              ? null
+              : ((codeIntervalSeconds instanceof Integer)
+                  ? (Integer) codeIntervalSeconds
+                  : (Long) codeIntervalSeconds));
+      Object codeLength = list.get(1);
+      pigeonResult.setCodeLength(
+          (codeLength == null)
+              ? null
+              : ((codeLength instanceof Integer) ? (Integer) codeLength : (Long) codeLength));
+      Object enrollmentCompletionDeadline = list.get(2);
+      pigeonResult.setEnrollmentCompletionDeadline(
+          (enrollmentCompletionDeadline == null)
+              ? null
+              : ((enrollmentCompletionDeadline instanceof Integer)
+                  ? (Integer) enrollmentCompletionDeadline
+                  : (Long) enrollmentCompletionDeadline));
+      Object hashingAlgorithm = list.get(3);
+      pigeonResult.setHashingAlgorithm((String) hashingAlgorithm);
+      Object secretKey = list.get(4);
+      pigeonResult.setSecretKey((String) secretKey);
+      return pigeonResult;
+    }
+  }
+
   public interface Result<T> {
     @SuppressWarnings("UnknownNullness")
     void success(T result);
@@ -2174,14 +2320,16 @@ public class GeneratedAndroidFirebaseAuth {
         case (byte) 139:
           return PigeonSignInProvider.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 140:
-          return PigeonUserCredential.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonTotpSecret.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 141:
-          return PigeonUserDetails.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonUserCredential.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 142:
-          return PigeonUserInfo.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonUserDetails.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 143:
-          return PigeonUserProfile.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonUserInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 144:
+          return PigeonUserProfile.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 145:
           return PigeonVerifyPhoneNumberRequest.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
@@ -2226,20 +2374,23 @@ public class GeneratedAndroidFirebaseAuth {
       } else if (value instanceof PigeonSignInProvider) {
         stream.write(139);
         writeValue(stream, ((PigeonSignInProvider) value).toList());
-      } else if (value instanceof PigeonUserCredential) {
+      } else if (value instanceof PigeonTotpSecret) {
         stream.write(140);
+        writeValue(stream, ((PigeonTotpSecret) value).toList());
+      } else if (value instanceof PigeonUserCredential) {
+        stream.write(141);
         writeValue(stream, ((PigeonUserCredential) value).toList());
       } else if (value instanceof PigeonUserDetails) {
-        stream.write(141);
+        stream.write(142);
         writeValue(stream, ((PigeonUserDetails) value).toList());
       } else if (value instanceof PigeonUserInfo) {
-        stream.write(142);
+        stream.write(143);
         writeValue(stream, ((PigeonUserInfo) value).toList());
       } else if (value instanceof PigeonUserProfile) {
-        stream.write(143);
+        stream.write(144);
         writeValue(stream, ((PigeonUserProfile) value).toList());
       } else if (value instanceof PigeonVerifyPhoneNumberRequest) {
-        stream.write(144);
+        stream.write(145);
         writeValue(stream, ((PigeonVerifyPhoneNumberRequest) value).toList());
       } else {
         super.writeValue(stream, value);
@@ -3111,14 +3262,16 @@ public class GeneratedAndroidFirebaseAuth {
         case (byte) 139:
           return PigeonSignInProvider.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 140:
-          return PigeonUserCredential.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonTotpSecret.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 141:
-          return PigeonUserDetails.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonUserCredential.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 142:
-          return PigeonUserInfo.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonUserDetails.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 143:
-          return PigeonUserProfile.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonUserInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 144:
+          return PigeonUserProfile.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 145:
           return PigeonVerifyPhoneNumberRequest.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
@@ -3163,20 +3316,23 @@ public class GeneratedAndroidFirebaseAuth {
       } else if (value instanceof PigeonSignInProvider) {
         stream.write(139);
         writeValue(stream, ((PigeonSignInProvider) value).toList());
-      } else if (value instanceof PigeonUserCredential) {
+      } else if (value instanceof PigeonTotpSecret) {
         stream.write(140);
+        writeValue(stream, ((PigeonTotpSecret) value).toList());
+      } else if (value instanceof PigeonUserCredential) {
+        stream.write(141);
         writeValue(stream, ((PigeonUserCredential) value).toList());
       } else if (value instanceof PigeonUserDetails) {
-        stream.write(141);
+        stream.write(142);
         writeValue(stream, ((PigeonUserDetails) value).toList());
       } else if (value instanceof PigeonUserInfo) {
-        stream.write(142);
+        stream.write(143);
         writeValue(stream, ((PigeonUserInfo) value).toList());
       } else if (value instanceof PigeonUserProfile) {
-        stream.write(143);
+        stream.write(144);
         writeValue(stream, ((PigeonUserProfile) value).toList());
       } else if (value instanceof PigeonVerifyPhoneNumberRequest) {
-        stream.write(144);
+        stream.write(145);
         writeValue(stream, ((PigeonVerifyPhoneNumberRequest) value).toList());
       } else {
         super.writeValue(stream, value);
@@ -3765,6 +3921,12 @@ public class GeneratedAndroidFirebaseAuth {
         @Nullable String displayName,
         @NonNull Result<Void> result);
 
+    void enrollTotp(
+        @NonNull PigeonFirebaseApp app,
+        @NonNull String assertionId,
+        @Nullable String displayName,
+        @NonNull Result<Void> result);
+
     void getSession(
         @NonNull PigeonFirebaseApp app, @NonNull Result<PigeonMultiFactorSession> result);
 
@@ -3813,6 +3975,39 @@ public class GeneratedAndroidFirebaseAuth {
                     };
 
                 api.enrollPhone(appArg, assertionArg, displayNameArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                String assertionIdArg = (String) args.get(1);
+                String displayNameArg = (String) args.get(2);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.enrollTotp(appArg, assertionIdArg, displayNameArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -3972,7 +4167,8 @@ public class GeneratedAndroidFirebaseAuth {
 
     void resolveSignIn(
         @NonNull String resolverId,
-        @NonNull PigeonPhoneMultiFactorAssertion assertion,
+        @Nullable PigeonPhoneMultiFactorAssertion assertion,
+        @Nullable String totpAssertionId,
         @NonNull Result<PigeonUserCredential> result);
 
     /** The codec used by MultiFactoResolverHostApi. */
@@ -3999,6 +4195,7 @@ public class GeneratedAndroidFirebaseAuth {
                 String resolverIdArg = (String) args.get(0);
                 PigeonPhoneMultiFactorAssertion assertionArg =
                     (PigeonPhoneMultiFactorAssertion) args.get(1);
+                String totpAssertionIdArg = (String) args.get(2);
                 Result<PigeonUserCredential> resultCallback =
                     new Result<PigeonUserCredential>() {
                       public void success(PigeonUserCredential result) {
@@ -4012,7 +4209,243 @@ public class GeneratedAndroidFirebaseAuth {
                       }
                     };
 
-                api.resolveSignIn(resolverIdArg, assertionArg, resultCallback);
+                api.resolveSignIn(resolverIdArg, assertionArg, totpAssertionIdArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+    }
+  }
+
+  private static class MultiFactorTotpHostApiCodec extends StandardMessageCodec {
+    public static final MultiFactorTotpHostApiCodec INSTANCE = new MultiFactorTotpHostApiCodec();
+
+    private MultiFactorTotpHostApiCodec() {}
+
+    @Override
+    protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
+      switch (type) {
+        case (byte) 128:
+          return PigeonTotpSecret.fromList((ArrayList<Object>) readValue(buffer));
+        default:
+          return super.readValueOfType(type, buffer);
+      }
+    }
+
+    @Override
+    protected void writeValue(@NonNull ByteArrayOutputStream stream, Object value) {
+      if (value instanceof PigeonTotpSecret) {
+        stream.write(128);
+        writeValue(stream, ((PigeonTotpSecret) value).toList());
+      } else {
+        super.writeValue(stream, value);
+      }
+    }
+  }
+
+  /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+  public interface MultiFactorTotpHostApi {
+
+    void generateSecret(@NonNull String sessionId, @NonNull Result<PigeonTotpSecret> result);
+
+    void getAssertionForEnrollment(
+        @NonNull String secretKey, @NonNull String oneTimePassword, @NonNull Result<String> result);
+
+    void getAssertionForSignIn(
+        @NonNull String enrollmentId,
+        @NonNull String oneTimePassword,
+        @NonNull Result<String> result);
+
+    /** The codec used by MultiFactorTotpHostApi. */
+    static @NonNull MessageCodec<Object> getCodec() {
+      return MultiFactorTotpHostApiCodec.INSTANCE;
+    }
+    /**
+     * Sets up an instance of `MultiFactorTotpHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
+    static void setup(
+        @NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactorTotpHostApi api) {
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                String sessionIdArg = (String) args.get(0);
+                Result<PigeonTotpSecret> resultCallback =
+                    new Result<PigeonTotpSecret>() {
+                      public void success(PigeonTotpSecret result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.generateSecret(sessionIdArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                String secretKeyArg = (String) args.get(0);
+                String oneTimePasswordArg = (String) args.get(1);
+                Result<String> resultCallback =
+                    new Result<String>() {
+                      public void success(String result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.getAssertionForEnrollment(secretKeyArg, oneTimePasswordArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                String enrollmentIdArg = (String) args.get(0);
+                String oneTimePasswordArg = (String) args.get(1);
+                Result<String> resultCallback =
+                    new Result<String>() {
+                      public void success(String result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.getAssertionForSignIn(enrollmentIdArg, oneTimePasswordArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+    }
+  }
+  /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+  public interface MultiFactorTotpSecretHostApi {
+
+    void generateQrCodeUrl(
+        @NonNull String secretKey,
+        @Nullable String accountName,
+        @Nullable String issuer,
+        @NonNull Result<String> result);
+
+    void openInOtpApp(
+        @NonNull String secretKey, @NonNull String qrCodeUrl, @NonNull Result<Void> result);
+
+    /** The codec used by MultiFactorTotpSecretHostApi. */
+    static @NonNull MessageCodec<Object> getCodec() {
+      return new StandardMessageCodec();
+    }
+    /**
+     * Sets up an instance of `MultiFactorTotpSecretHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
+    static void setup(
+        @NonNull BinaryMessenger binaryMessenger, @Nullable MultiFactorTotpSecretHostApi api) {
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                String secretKeyArg = (String) args.get(0);
+                String accountNameArg = (String) args.get(1);
+                String issuerArg = (String) args.get(2);
+                Result<String> resultCallback =
+                    new Result<String>() {
+                      public void success(String result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.generateQrCodeUrl(secretKeyArg, accountNameArg, issuerArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                String secretKeyArg = (String) args.get(0);
+                String qrCodeUrlArg = (String) args.get(1);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.openInOtpApp(secretKeyArg, qrCodeUrlArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

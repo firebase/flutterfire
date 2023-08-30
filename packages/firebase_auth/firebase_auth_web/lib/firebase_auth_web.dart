@@ -125,6 +125,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     );
     FirebaseAuthPlatform.instance = FirebaseAuthWeb.instance;
     PhoneMultiFactorGeneratorPlatform.instance = PhoneMultiFactorGeneratorWeb();
+    TotpMultiFactorGeneratorPlatform.instance = TotpMultiFactorGeneratorWeb();
     RecaptchaVerifierFactoryPlatform.instance =
         RecaptchaVerifierFactoryWeb.instance;
   }

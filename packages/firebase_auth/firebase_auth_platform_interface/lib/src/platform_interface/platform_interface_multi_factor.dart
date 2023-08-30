@@ -158,6 +158,16 @@ class PhoneMultiFactorInfo extends MultiFactorInfo {
   final String phoneNumber;
 }
 
+/// Represents the information for a phone second factor.
+class TotpMultiFactorInfo extends MultiFactorInfo {
+  const TotpMultiFactorInfo({
+    super.displayName,
+    required super.enrollmentTimestamp,
+    required super.factorId,
+    required super.uid,
+  });
+}
+
 /// Helper class used to generate PhoneMultiFactorAssertions.
 class PhoneMultiFactorGeneratorPlatform extends PlatformInterface {
   static PhoneMultiFactorGeneratorPlatform? _instance;
@@ -187,5 +197,88 @@ class PhoneMultiFactorGeneratorPlatform extends PlatformInterface {
     PhoneAuthCredential credential,
   ) {
     throw UnimplementedError('getAssertion() is not implemented');
+  }
+}
+
+/// Helper class used to generate TotpMultiFactorAssertions.
+class TotpMultiFactorGeneratorPlatform extends PlatformInterface {
+  static TotpMultiFactorGeneratorPlatform? _instance;
+
+  static final Object _token = Object();
+
+  TotpMultiFactorGeneratorPlatform() : super(token: _token);
+
+  /// The current default [TotpMultiFactorGeneratorPlatform] instance.
+  ///
+  /// It will always default to [MethodChannelTotpMultiFactorGenerator]
+  /// if no other implementation was provided.
+  static TotpMultiFactorGeneratorPlatform get instance {
+    _instance ??= MethodChannelTotpMultiFactorGenerator();
+    return _instance!;
+  }
+
+  /// Sets the [PhoneMultiFactorGeneratorPlatform.instance]
+  static set instance(TotpMultiFactorGeneratorPlatform instance) {
+    PlatformInterface.verify(instance, _token);
+    _instance = instance;
+  }
+
+  /// Generate a TOTP secret for the authenticated user.
+  Future<TotpSecretPlatform> generateSecret(
+    MultiFactorSession session,
+  ) {
+    throw UnimplementedError('generateSecret() is not implemented');
+  }
+
+  /// Get a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a TOTP second factor.
+  Future<MultiFactorAssertionPlatform> getAssertionForEnrollment(
+    TotpSecretPlatform secret,
+    String oneTimePassword,
+  ) {
+    throw UnimplementedError('getAssertionForEnrollment() is not implemented');
+  }
+
+  /// Get a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a TOTP second factor.
+  Future<MultiFactorAssertionPlatform> getAssertionForSignIn(
+    String enrollmentId,
+    String oneTimePassword,
+  ) {
+    throw UnimplementedError('getAssertionForSignIn() is not implemented');
+  }
+}
+
+/// Helper class used to generate TotpMultiFactorAssertions.
+class TotpSecretPlatform extends PlatformInterface {
+  static final Object _token = Object();
+
+  final int? codeIntervalSeconds;
+  final int? codeLength;
+  final DateTime? enrollmentCompletionDeadline;
+  final String? hashingAlgorithm;
+  final String secretKey;
+
+  TotpSecretPlatform(
+    this.codeIntervalSeconds,
+    this.codeLength,
+    this.enrollmentCompletionDeadline,
+    this.hashingAlgorithm,
+    this.secretKey,
+  ) : super(token: _token);
+
+  /// Generate a TOTP secret for the authenticated user.
+  Future<String> generateQrCodeUrl({
+    String? accountName,
+    String? issuer,
+  }) {
+    throw UnimplementedError('generateQrCodeUrl() is not implemented');
+  }
+
+  /// Opens the specified QR Code URL in a password manager like iCloud Keychain.
+  Future<void> openInOtpApp(
+    String qrCodeUrl,
+  ) async {
+    throw UnimplementedError('openInOtpApp() is not implemented');
   }
 }

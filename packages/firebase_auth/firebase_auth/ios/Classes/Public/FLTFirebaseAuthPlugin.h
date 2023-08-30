@@ -22,10 +22,10 @@
                          FirebaseAuthUserHostApi,
                          MultiFactorUserHostApi,
                          MultiFactoResolverHostApi,
+                         MultiFactorTotpHostApi,
+                         MultiFactorTotpSecretHostApi,
                          ASAuthorizationControllerDelegate,
                          ASAuthorizationControllerPresentationContextProviding>
 
-+ (NSDictionary *)getNSDictionaryFromUserInfo:(id<FIRUserInfo>)userInfo;
-+ (NSMutableDictionary *)getNSDictionaryFromUser:(FIRUser *)user;
 + (FlutterError *)convertToFlutterError:(NSError *)error;
 @end

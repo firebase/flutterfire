@@ -46,6 +46,7 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @class PigeonVerifyPhoneNumberRequest;
 @class PigeonIdTokenResult;
 @class PigeonUserProfile;
+@class PigeonTotpSecret;
 
 @interface PigeonMultiFactorSession : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
@@ -271,6 +272,21 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 @property(nonatomic, strong) NSNumber *photoUrlChanged;
 @end
 
+@interface PigeonTotpSecret : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithCodeIntervalSeconds:(nullable NSNumber *)codeIntervalSeconds
+                                 codeLength:(nullable NSNumber *)codeLength
+               enrollmentCompletionDeadline:(nullable NSNumber *)enrollmentCompletionDeadline
+                           hashingAlgorithm:(nullable NSString *)hashingAlgorithm
+                                  secretKey:(NSString *)secretKey;
+@property(nonatomic, strong, nullable) NSNumber *codeIntervalSeconds;
+@property(nonatomic, strong, nullable) NSNumber *codeLength;
+@property(nonatomic, strong, nullable) NSNumber *enrollmentCompletionDeadline;
+@property(nonatomic, copy, nullable) NSString *hashingAlgorithm;
+@property(nonatomic, copy) NSString *secretKey;
+@end
+
 /// The codec used by FirebaseAuthHostApi.
 NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void);
 
@@ -425,6 +441,10 @@ NSObject<FlutterMessageCodec> *MultiFactorUserHostApiGetCodec(void);
              assertion:(PigeonPhoneMultiFactorAssertion *)assertion
            displayName:(nullable NSString *)displayName
             completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)enrollTotpApp:(PigeonFirebaseApp *)app
+          assertionId:(NSString *)assertionId
+          displayName:(nullable NSString *)displayName
+           completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)getSessionApp:(PigeonFirebaseApp *)app
            completion:
                (void (^)(PigeonMultiFactorSession *_Nullable, FlutterError *_Nullable))completion;
@@ -444,13 +464,52 @@ NSObject<FlutterMessageCodec> *MultiFactoResolverHostApiGetCodec(void);
 
 @protocol MultiFactoResolverHostApi
 - (void)resolveSignInResolverId:(NSString *)resolverId
-                      assertion:(PigeonPhoneMultiFactorAssertion *)assertion
+                      assertion:(nullable PigeonPhoneMultiFactorAssertion *)assertion
+                totpAssertionId:(nullable NSString *)totpAssertionId
                      completion:(void (^)(PigeonUserCredential *_Nullable,
                                           FlutterError *_Nullable))completion;
 @end
 
 extern void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                                            NSObject<MultiFactoResolverHostApi> *_Nullable api);
+
+/// The codec used by MultiFactorTotpHostApi.
+NSObject<FlutterMessageCodec> *MultiFactorTotpHostApiGetCodec(void);
+
+@protocol MultiFactorTotpHostApi
+- (void)generateSecretSessionId:(NSString *)sessionId
+                     completion:
+                         (void (^)(PigeonTotpSecret *_Nullable, FlutterError *_Nullable))completion;
+- (void)getAssertionForEnrollmentSecretKey:(NSString *)secretKey
+                           oneTimePassword:(NSString *)oneTimePassword
+                                completion:(void (^)(NSString *_Nullable,
+                                                     FlutterError *_Nullable))completion;
+- (void)getAssertionForSignInEnrollmentId:(NSString *)enrollmentId
+                          oneTimePassword:(NSString *)oneTimePassword
+                               completion:(void (^)(NSString *_Nullable,
+                                                    FlutterError *_Nullable))completion;
+@end
+
+extern void MultiFactorTotpHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                        NSObject<MultiFactorTotpHostApi> *_Nullable api);
+
+/// The codec used by MultiFactorTotpSecretHostApi.
+NSObject<FlutterMessageCodec> *MultiFactorTotpSecretHostApiGetCodec(void);
+
+@protocol MultiFactorTotpSecretHostApi
+- (void)generateQrCodeUrlSecretKey:(NSString *)secretKey
+                       accountName:(nullable NSString *)accountName
+                            issuer:(nullable NSString *)issuer
+                        completion:
+                            (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)openInOtpAppSecretKey:(NSString *)secretKey
+                    qrCodeUrl:(NSString *)qrCodeUrl
+                   completion:(void (^)(FlutterError *_Nullable))completion;
+@end
+
+extern void MultiFactorTotpSecretHostApiSetup(
+    id<FlutterBinaryMessenger> binaryMessenger,
+    NSObject<MultiFactorTotpSecretHostApi> *_Nullable api);
 
 /// The codec used by GenerateInterfaces.
 NSObject<FlutterMessageCodec> *GenerateInterfacesGetCodec(void);

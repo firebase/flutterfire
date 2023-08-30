@@ -8,6 +8,7 @@
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
+import 'package:http_parser/http_parser.dart';
 
 import 'auth.dart' as auth;
 import 'auth_interop.dart' as auth_interop;
@@ -103,6 +104,13 @@ class PhoneMultiFactorInfo
   String get phoneNumber => jsObject.phoneNumber;
 }
 
+class TotpMultiFactorInfo
+    extends MultiFactorInfo<auth_interop.TotpMultiFactorInfoJsImpl> {
+  TotpMultiFactorInfo.fromJsObject(
+      auth_interop.TotpMultiFactorInfoJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+}
+
 /// https://firebase.google.com/docs/reference/js/auth.multifactorsession.md#multifactorsession_interface
 class MultiFactorSession
     extends JsObjectWrapper<auth_interop.MultiFactorSessionJsImpl> {
@@ -132,9 +140,13 @@ class MultiFactorResolver
   MultiFactorResolver.fromJsObject(auth.MultiFactorResolverJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  List<MultiFactorInfo> get hints => jsObject.hints.map((e) {
-        if (e is auth_interop.PhoneMultiFactorInfoJsImpl) {
-          return PhoneMultiFactorInfo.fromJsObject(e);
+  List<MultiFactorInfo> get hints => jsObject.hints.map<MultiFactorInfo>((e) {
+        if (e.factorId == 'phone') {
+          return PhoneMultiFactorInfo.fromJsObject(
+              e as auth_interop.PhoneMultiFactorInfoJsImpl);
+        } else if (e.factorId == 'totp') {
+          return TotpMultiFactorInfo.fromJsObject(
+              e as auth_interop.TotpMultiFactorInfoJsImpl);
         } else {
           return MultiFactorInfo.fromJsObject(e);
         }
@@ -159,5 +171,61 @@ class PhoneMultiFactorGenerator
       auth.PhoneAuthCredentialJsImpl credential) {
     return PhoneMultiFactorAssertion.fromJsObject(
         auth_interop.PhoneMultiFactorGeneratorJsImpl.assertion(credential)!);
+  }
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.totpmultifactorassertion
+class TotpMultiFactorAssertion
+    extends MultiFactorAssertion<auth_interop.TotpMultiFactorAssertionJsImpl> {
+  TotpMultiFactorAssertion.fromJsObject(
+      auth.TotpMultiFactorAssertionJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+}
+
+class TotpSecret extends JsObjectWrapper<auth_interop.TotpSecretJsImpl> {
+  TotpSecret.fromJsObject(auth_interop.TotpSecretJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
+  int get codeInterval => jsObject.codeIntervalSeconds.toInt();
+  int get codeLength => jsObject.codeLength.toInt();
+  DateTime get enrollmentCompletionDeadline =>
+      parseHttpDate(jsObject.enrollmentCompletionDeadline);
+  String get hashingAlgorithm => jsObject.hashingAlgorithm;
+  String get secretKey => jsObject.secretKey;
+
+  String generateQrCodeUrl(String? accountName, String? issuer) {
+    return jsObject.generateQrCodeUrl(accountName, issuer);
+  }
+}
+
+class TotpMultiFactorGenerator
+    extends JsObjectWrapper<auth_interop.TotpMultiFactorGeneratorJsImpl> {
+  TotpMultiFactorGenerator.fromJsObject(
+      auth.TotpMultiFactorGeneratorJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
+  static TotpMultiFactorAssertion assertionForSignIn(
+      String enrollmentId, String oneTimePassword) {
+    return TotpMultiFactorAssertion.fromJsObject(
+      auth_interop.TotpMultiFactorGeneratorJsImpl.assertionForSignIn(
+          enrollmentId, oneTimePassword)!,
+    );
+  }
+
+  static TotpMultiFactorAssertion assertionForEnrollment(
+      TotpSecret secret, String oneTimePassword) {
+    return TotpMultiFactorAssertion.fromJsObject(
+      auth_interop.TotpMultiFactorGeneratorJsImpl.assertionForEnrollment(
+        secret.jsObject,
+        oneTimePassword,
+      )!,
+    );
+  }
+
+  static Future<TotpSecret> generateSecret(MultiFactorSession session) {
+    return handleThenable(
+      auth_interop.TotpMultiFactorGeneratorJsImpl.generateSecret(
+          session.jsObject),
+    ).then(TotpSecret.fromJsObject);
   }
 }

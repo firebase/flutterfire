@@ -24,6 +24,9 @@ class MultiFactor {
     MultiFactorAssertion assertion, {
     String? displayName,
   }) async {
+    if (assertion._delegate is TotpMultiFactorGeneratorPlatform) {
+      assert(displayName != null, 'displayName is mandatory for TOTP');
+    }
     return _delegate.enroll(assertion._delegate, displayName: displayName);
   }
 
@@ -60,6 +63,95 @@ class PhoneMultiFactorGenerator {
     final assertion =
         PhoneMultiFactorGeneratorPlatform.instance.getAssertion(credential);
     return MultiFactorAssertion._(assertion);
+  }
+}
+
+/// Provider for generating a PhoneMultiFactorAssertion.
+class TotpMultiFactorGenerator {
+  /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a phone second factor.
+  static Future<TotpSecret> generateSecret(
+    MultiFactorSession session,
+  ) async {
+    final secret =
+        await TotpMultiFactorGeneratorPlatform.instance.generateSecret(session);
+    return TotpSecret._(
+      secret.codeIntervalSeconds,
+      secret.codeLength,
+      secret.enrollmentCompletionDeadline,
+      secret.hashingAlgorithm,
+      secret.secretKey,
+      secret,
+    );
+  }
+
+  /// Get a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a TOTP second factor.
+  static Future<MultiFactorAssertion> getAssertionForEnrollment(
+    TotpSecret secret,
+    String oneTimePassword,
+  ) async {
+    final assertion = await TotpMultiFactorGeneratorPlatform.instance
+        .getAssertionForEnrollment(
+      secret._instance,
+      oneTimePassword,
+    );
+
+    return MultiFactorAssertion._(assertion);
+  }
+
+  /// Get a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a TOTP second factor.
+  static Future<MultiFactorAssertion> getAssertionForSignIn(
+    String enrollmentId,
+    String oneTimePassword,
+  ) async {
+    final assertion =
+        await TotpMultiFactorGeneratorPlatform.instance.getAssertionForSignIn(
+      enrollmentId,
+      oneTimePassword,
+    );
+
+    return MultiFactorAssertion._(assertion);
+  }
+}
+
+class TotpSecret {
+  final TotpSecretPlatform _instance;
+
+  final int? codeIntervalSeconds;
+  final int? codeLength;
+  final DateTime? enrollmentCompletionDeadline;
+  final String? hashingAlgorithm;
+  final String secretKey;
+
+  TotpSecret._(
+    this.codeIntervalSeconds,
+    this.codeLength,
+    this.enrollmentCompletionDeadline,
+    this.hashingAlgorithm,
+    this.secretKey,
+    this._instance,
+  );
+
+  /// Generate a TOTP secret for the authenticated user.
+  Future<String> generateQrCodeUrl({
+    String? accountName,
+    String? issuer,
+  }) {
+    return _instance.generateQrCodeUrl(
+      accountName: accountName,
+      issuer: issuer,
+    );
+  }
+
+  /// Opens the specified QR Code URL in a password manager like iCloud Keychain.
+  Future<void> openInOtpApp(
+    String qrCodeUrl,
+  ) async {
+    await _instance.openInOtpApp(
+      qrCodeUrl,
+    );
   }
 }
 
