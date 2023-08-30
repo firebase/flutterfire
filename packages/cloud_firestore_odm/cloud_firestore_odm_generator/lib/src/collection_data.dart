@@ -15,6 +15,7 @@ import 'package:source_helper/source_helper.dart';
 import 'collection_generator.dart';
 import 'names.dart';
 
+const collectionChecker = TypeChecker.fromRuntime(Collection);
 const jsonSerializableChecker = TypeChecker.fromRuntime(JsonSerializable);
 const freezedChecker = TypeChecker.fromRuntime(Freezed);
 
