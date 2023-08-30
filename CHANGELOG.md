@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-08-30
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.9.1`](#cloud_firestore---v491)
+ - [`firebase_auth` - `v4.9.0`](#firebase_auth---v490)
+ - [`firebase_auth_platform_interface` - `v6.18.0`](#firebase_auth_platform_interface---v6180)
+ - [`firebase_auth_web` - `v5.8.0`](#firebase_auth_web---v580)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.67`](#cloud_firestore_odm---v100-dev67)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.67`](#cloud_firestore_odm_generator---v100-dev67)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_firestore_odm` - `v1.0.0-dev.67`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.67`
+
+---
+
+#### `cloud_firestore` - `v4.9.1`
+
+ - **FIX**(cloud_firestore): Fix crashes on iOS/macOS ([#11501](https://github.com/firebase/flutterfire/issues/11501)). ([3ed53470](https://github.com/firebase/flutterfire/commit/3ed53470f0536294d4d1905c759c91aabf1d39ff))
+
+#### `firebase_auth` - `v4.9.0`
+
+ - **FEAT**(auth): TOTP (time-based one-time password) support for multi-factor authentication ([#11420](https://github.com/firebase/flutterfire/issues/11420)). ([3cc1243c](https://github.com/firebase/flutterfire/commit/3cc1243c94368de44d3a5c4be96b905a0a37b963))
+
+#### `firebase_auth_platform_interface` - `v6.18.0`
+
+ - **FEAT**(auth): TOTP (time-based one-time password) support for multi-factor authentication ([#11420](https://github.com/firebase/flutterfire/issues/11420)). ([3cc1243c](https://github.com/firebase/flutterfire/commit/3cc1243c94368de44d3a5c4be96b905a0a37b963))
+
+#### `firebase_auth_web` - `v5.8.0`
+
+ - **FIX**(firebase_auth): Update the position of the auth parameter for `RecaptchaVerifier` in the interop code to reflect changes in `firebase-js-sdk` ([#11514](https://github.com/firebase/flutterfire/issues/11514)). ([a836dba1](https://github.com/firebase/flutterfire/commit/a836dba186b0765745a8e81a04229fe8fd8f96b2))
+ - **FEAT**(auth): TOTP (time-based one-time password) support for multi-factor authentication ([#11420](https://github.com/firebase/flutterfire/issues/11420)). ([3cc1243c](https://github.com/firebase/flutterfire/commit/3cc1243c94368de44d3a5c4be96b905a0a37b963))
+
+
 ## 2023-08-23
 
 ### Changes
