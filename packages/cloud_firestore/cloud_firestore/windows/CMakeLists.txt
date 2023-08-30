@@ -22,6 +22,8 @@ list(APPEND PLUGIN_SOURCES
   "cloud_firestore_plugin.h"
   "messages.g.cpp"
   "messages.g.h"
+  "transaction_stream_handler.cpp"
+  "transaction_stream_handler.h"
 )
 
 # Define the plugin library target. Its name must not be changed (see comment

@@ -110,7 +110,7 @@ abstract class TestFirebaseFirestoreHostApi {
 
   Future<String> snapshotsInSyncSetup();
 
-  Future<String> transactionCreate();
+  Future<String> transactionCreate(PigeonFirebaseApp app, int timeout, int maxAttempts);
 
   Future<void> transactionStoreResult(String transactionId, PigeonTransactionResult resultType, List<PigeonTransactionCommand?>? commands);
 
@@ -340,8 +340,19 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
-          // ignore message
-          final String output = await api.transactionCreate();
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null PigeonFirebaseApp.');
+          final int? arg_timeout = (args[1] as int?);
+          assert(arg_timeout != null,
+              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null int.');
+          final int? arg_maxAttempts = (args[2] as int?);
+          assert(arg_maxAttempts != null,
+              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null int.');
+          final String output = await api.transactionCreate(arg_app!, arg_timeout!, arg_maxAttempts!);
           return <Object?>[output];
         });
       }

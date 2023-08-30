@@ -775,12 +775,12 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<String> transactionCreate() async {
+  Future<String> transactionCreate(PigeonFirebaseApp arg_app, int arg_timeout, int arg_maxAttempts) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+        await channel.send(<Object?>[arg_app, arg_timeout, arg_maxAttempts]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',

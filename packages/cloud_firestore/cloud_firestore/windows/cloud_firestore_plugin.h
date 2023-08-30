@@ -63,6 +63,7 @@ class CloudFirestorePlugin : public flutter::Plugin,
   virtual void SnapshotsInSyncSetup(
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void TransactionCreate(
+      const PigeonFirebaseApp& app, int64_t timeout, int64_t max_attempts,
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void TransactionStoreResult(
       const std::string& transaction_id,
@@ -117,6 +118,11 @@ class CloudFirestorePlugin : public flutter::Plugin,
       event_channels_;
   static std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
       stream_handlers_;
+  static std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
+      transaction_handlers_;
+  static std::map<std::string, std::unique_ptr<Transaction>>
+      transactions_;
+
 
   private:
 

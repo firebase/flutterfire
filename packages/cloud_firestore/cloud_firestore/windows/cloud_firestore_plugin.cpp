@@ -11,6 +11,7 @@
 #include "firebase_core/firebase_core_plugin_c_api.h"
 
 #include "messages.g.h"
+#include "transaction_stream_handler.h"
 
 
 #include <flutter/method_channel.h>
@@ -51,6 +52,30 @@ std::map<std::string,
     event_channels_;
 std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
     stream_handlers_;
+std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
+    transaction_handlers_;
+std::map<std::string, std::unique_ptr<Transaction>> transactions_;
+
+ 
+
+std::string RegisterEventChannelWithUUID(
+    std::string prefix, std::string uuid, const flutter::StreamHandler<EncodableValue>& handler) {
+  std::string channelName = prefix + uuid;
+  flutter::EventChannel<flutter::EncodableValue>* channel =
+      new flutter::EventChannel<flutter::EncodableValue>(
+          CloudFirestorePlugin::messenger_, channelName,
+          &flutter::StandardMethodCodec::GetInstance());
+
+  event_channels_[channelName] =
+      std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(channel);
+  stream_handlers_[channelName] =
+      std::make_unique<flutter::StreamHandler<>>(handler);
+
+  event_channels_[channelName]->SetStreamHandler(
+      std::move(stream_handlers_[channelName]));
+
+  return channelName;
+}
 
 
 std::string RegisterEventChannel(
@@ -59,6 +84,7 @@ std::string RegisterEventChannel(
   UuidCreate(&uuid);
   char* str;
   UuidToStringA(&uuid, (RPC_CSTR*)&str);
+
   std::string channelName = prefix + "_" + str;
   flutter::EventChannel<flutter::EncodableValue>* channel =
       new flutter::EventChannel<flutter::EncodableValue>(
@@ -67,7 +93,8 @@ std::string RegisterEventChannel(
 
   event_channels_[channelName] =
       std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(channel);
-  stream_handlers_[channelName] = std::make_unique<flutter::StreamHandler<>>(handler);
+  stream_handlers_[channelName] =
+      std::make_unique<flutter::StreamHandler<>>(handler);
 
   event_channels_[channelName]->SetStreamHandler(
       std::move(stream_handlers_[channelName]));
@@ -299,13 +326,68 @@ firebase::firestore::MapFieldPathValue ConvertToMapFieldPathValue(
 
 
 
+class LoadBundleStreamHandler
+    : public flutter::StreamHandler<flutter::EncodableValue> {
+ public:
+  LoadBundleStreamHandler(Firestore* firestore,
+      std::vector<uint8_t>* bundle) {
+    firestore_ = firestore;
+    bundle_ = bundle;
+  }
 
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnListenInternal(
+      const flutter::EncodableValue* arguments,
+      std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
+      override {
+    std::string bundle(bundle_->begin(), bundle_->end());
 
+    firestore_->LoadBundle(
+        bundle,
+        [events = std::move(events)](
+                                       const LoadBundleTaskProgress& progress) {
+          switch (progress.state()) {
+            case LoadBundleTaskProgress::State::kError: {
+              events->Error("LoadBundleError", "Error loading the bundle");
+              return;
+            }
+            case LoadBundleTaskProgress::State::kInProgress: {
+              std::cout << "Bytes loaded from bundle: "
+                        << progress.bytes_loaded() << std::endl;
+              events->Success(flutter::EncodableValue(progress.bytes_loaded()));
+              break;
+            }
+            case LoadBundleTaskProgress::State::kSuccess: {
+              std::cout << "Bundle load succeeeded" << std::endl;
+              events->Success(flutter::EncodableValue(progress.bytes_loaded()));
+              break;
+            }
+          }
+        });
+    return nullptr;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    return nullptr;
+  }
+
+ private:
+   Firestore* firestore_;
+  std::vector<uint8_t>* bundle_;
+};
 
 void CloudFirestorePlugin::LoadBundle(
     const PigeonFirebaseApp& app, const std::vector<uint8_t>& bundle,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  // TODO: uses EventChannels
+      Firestore  * firestore = GetFirestoreFromPigeon(app);
+
+  auto handler =
+          std::make_unique<LoadBundleStreamHandler>(
+              &firestore, bundle);
+
+      std::string channelName = RegisterEventChannel("loadbundle", *handler);
+      result(channelName);
 }
 
 using firebase::firestore::Query;
@@ -443,9 +525,131 @@ void CloudFirestorePlugin::SnapshotsInSyncSetup(
   // TODO: uses EventChannels
 }
 
+class TransactionStreamHandler
+    : public flutter::StreamHandler<flutter::EncodableValue> {
+ public:
+  TransactionStreamHandler(Firestore* firestore,
+                           long timeout, int maxAttempts,
+                           std::string transactionId) {
+    firestore_ = firestore;
+    timeout_ = timeout;
+    maxAttempts_ = maxAttempts;
+    transactionId_ = transactionId;
+  }
+
+  void ReceiveTransactionResponse(
+    PigeonTransactionResult resultType,
+    std::vector<PigeonTransactionCommand>* commands) {
+    resultType_ = resultType;
+  commands_ = commands;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnListenInternal(
+      const flutter::EncodableValue* arguments,
+      std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
+      override {
+    TransactionOptions transaction_options;
+    transaction_options.set_max_attempts(
+        maxAttempts_);
+
+    firestore_->RunTransaction(
+       transaction_options,
+            [commands = commands_, firestore = firestore_,
+             transactionId = transactionId_](
+                Transaction& transaction,
+                                   std::string& str) -> Error {
+              transactions_[transactionId] = std::make_unique<Transaction>(transaction);
+              for (PigeonTransactionCommand& command : *commands) {
+                DocumentReference reference =
+                    firestore->Document(command.path());
+
+        switch (command.type()) {
+          case PigeonTransactionType::set:
+                    if (command.option()->merge() != nullptr &&
+                command.option()->merge()) {
+                      transaction.Set(reference,
+                          ConvertToMapFieldValue(*command.data()),
+                          SetOptions::Merge());
+                    } else if (command.option()->merge_fields()) {
+                      transaction.Set(reference,
+                                      ConvertToMapFieldValue(*command.data()),
+                          SetOptions::MergeFields(ConvertToFieldPathVector(
+                              *command.option()->merge_fields())));
+                    } else {
+                      transaction.Set(reference,
+                                      ConvertToMapFieldValue(*command.data()));
+                    }
+
+            break;
+          case PigeonTransactionType::update:
+            transaction.Update(reference, ConvertToMapFieldValue(*command.data()));
+            break;
+          case PigeonTransactionType::deleteType:
+            transaction.Delete(reference);
+            break;
+        }
+      }
+      return Error::kErrorOk;
+            })
+        .OnCompletion([this, events = std::move(events)](
+                          const Future<void>& completed_future) {
+          flutter::EncodableMap result;
+        if (completed_future.error() == firebase::firestore::kErrorOk) {
+            result.insert(std::make_pair(flutter::EncodableValue("complete"),
+                                                      flutter::EncodableValue(true)));
+          events->Success(result);
+        }
+        else {
+        events->Error("transaction_error", completed_future.error_message());
+      }
+        events->EndOfStream();
+    });
+
+    return nullptr;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    return nullptr;
+  }
+
+ private:
+  Firestore* firestore_;
+  std::string transactionId_;
+  std::vector<PigeonTransactionCommand>* commands_;
+  PigeonTransactionResult resultType_;
+  long timeout_;
+  int maxAttempts_;
+};
+
 void CloudFirestorePlugin::TransactionCreate(
+    const PigeonFirebaseApp& app,
+    int64_t timeout,
+    int64_t max_attempts,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  // TODO: uses EventChannels
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+
+  UUID uuid;
+  UuidCreate(&uuid);
+  char* str;
+  UuidToStringA(&uuid, (RPC_CSTR*)&str);
+  std::string transactionId(str);
+
+
+      auto handler =
+        std::make_unique<TransactionStreamHandler>(
+        firestore, timeout, max_attempts);
+
+
+  std::string channelName = RegisterEventChannelWithUUID(
+      "plugins.flutter.io/firebase_firestore/transaction/", transactionId,
+      *handler);
+
+  transaction_handlers_[channelName] =
+      std::make_unique<flutter::StreamHandler<>>(handler);
+
+  result(transactionId);
 }
 
 void CloudFirestorePlugin::TransactionStoreResult(
@@ -453,14 +657,41 @@ void CloudFirestorePlugin::TransactionStoreResult(
     const PigeonTransactionResult& result_type,
     const flutter::EncodableList* commands,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  // TODO: uses EventChannels
+  TransactionStreamHandler& handler = *static_cast<TransactionStreamHandler*>(
+      transaction_handlers_[transaction_id].get());
+
+  // Convert Flutter EncodableList to std::vector<PigeonTransactionCommand>
+  std::vector<PigeonTransactionCommand> commandVector;
+  for (const auto& element : *commands) {
+    PigeonTransactionCommand command = std::get<PigeonTransactionCommand>(element);
+    commandVector.push_back(command);
+  }
+
+  handler.ReceiveTransactionResponse(result_type, &commandVector);
+  result(std::nullopt);
 }
 
 void CloudFirestorePlugin::TransactionGet(
     const PigeonFirebaseApp& app, const std::string& transaction_id,
     const std::string& path,
     std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result) {
-  // TODO: uses EventChannels
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+  DocumentReference reference = firestore->Document(path);
+
+  Transaction transaction = *transactions_[transaction_id];
+  Error error_code;
+  std::string error_message;
+
+  // Call the Get function
+  DocumentSnapshot snapshot =
+      transaction.Get(reference, &error_code, &error_message);
+
+  if (error_code != Error::kErrorOk) {
+    result(FlutterError(error_message));
+  }
+  else {
+    result(ParseDocumentSnapshot(snapshot, DocumentSnapshot::ServerTimestampBehavior::kDefault));
+  }
 }
 
 using firebase::firestore::DocumentReference;
@@ -958,7 +1189,7 @@ class DocumentSnapshotStreamHandler
           if (error == firebase::firestore::kErrorOk) {
             events->Success(ParseDocumentSnapshot(snapshot, serverTimestampBehavior).ToEncodableList());
           } else {
-            events->Error("Error parsing QuerySnapshot");
+            events->Error("Error parsing Dpciùe,tSnapshot");
           }
         });
     return nullptr;

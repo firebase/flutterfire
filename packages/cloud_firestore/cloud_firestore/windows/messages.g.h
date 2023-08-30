@@ -274,7 +274,7 @@ class PigeonDocumentChange {
 
   int64_t new_index() const;
   void set_new_index(int64_t value_arg);
-
+  
 
   static PigeonDocumentChange FromEncodableList(const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
@@ -598,7 +598,11 @@ class FirebaseFirestoreHostApi {
     bool logging_enabled,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SnapshotsInSyncSetup(std::function<void(ErrorOr<std::string> reply)> result) = 0;
-  virtual void TransactionCreate(std::function<void(ErrorOr<std::string> reply)> result) = 0;
+  virtual void TransactionCreate(
+    const PigeonFirebaseApp& app,
+    int64_t timeout,
+    int64_t max_attempts,
+    std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void TransactionStoreResult(
     const std::string& transaction_id,
     const PigeonTransactionResult& result_type,

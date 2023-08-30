@@ -1316,7 +1316,26 @@ void FirebaseFirestoreHostApi::SetUp(
     if (api != nullptr) {
       channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
-          api->TransactionCreate([reply](ErrorOr<std::string>&& output) {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_timeout_arg = args.at(1);
+          if (encodable_timeout_arg.IsNull()) {
+            reply(WrapError("timeout_arg unexpectedly null."));
+            return;
+          }
+          const int64_t timeout_arg = encodable_timeout_arg.LongValue();
+          const auto& encodable_max_attempts_arg = args.at(2);
+          if (encodable_max_attempts_arg.IsNull()) {
+            reply(WrapError("max_attempts_arg unexpectedly null."));
+            return;
+          }
+          const int64_t max_attempts_arg = encodable_max_attempts_arg.LongValue();
+          api->TransactionCreate(app_arg, timeout_arg, max_attempts_arg, [reply](ErrorOr<std::string>&& output) {
             if (output.has_error()) {
               reply(WrapError(output.error()));
               return;

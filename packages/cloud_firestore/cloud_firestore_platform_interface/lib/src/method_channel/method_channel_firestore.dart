@@ -219,7 +219,11 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     assert(timeout.inMilliseconds > 0,
         'Transaction timeout must be more than 0 milliseconds');
 
-    final String transactionId = await pigeonChannel.transactionCreate();
+    final String transactionId = await pigeonChannel.transactionCreate(
+      pigeonApp,
+      timeout.inMilliseconds,
+      maxAttempts,
+    );
 
     Completer<T> completer = Completer();
 
