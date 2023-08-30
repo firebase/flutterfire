@@ -868,7 +868,7 @@ class _$EnumsQuery extends QueryReference<Enums, EnumsQuerySnapshot>
             : null,
         isNull: isNull,
         arrayContains: arrayContains != null
-            ? (_$EnumsPerFieldToJson.enumList([arrayContains]) as List?)!.first
+            ? (_$EnumsPerFieldToJson.enumList([arrayContains]) as List?)!.single
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$EnumsPerFieldToJson.enumList(arrayContainsAny)
@@ -916,7 +916,7 @@ class _$EnumsQuery extends QueryReference<Enums, EnumsQuerySnapshot>
         arrayContains: arrayContains != null
             ? (_$EnumsPerFieldToJson.nullableEnumList([arrayContains])
                     as List?)!
-                .first
+                .single
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$EnumsPerFieldToJson.nullableEnumList(arrayContainsAny)
@@ -1458,12 +1458,14 @@ class EnumsQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Enums>
 
 Enums _$EnumsFromJson(Map<String, dynamic> json) => Enums(
       id: json['id'] as String,
-      enumValue: $enumDecode(_$TestEnumEnumMap, json['enumValue']),
+      enumValue: $enumDecodeNullable(_$TestEnumEnumMap, json['enumValue']) ??
+          TestEnum.one,
       nullableEnumValue:
           $enumDecodeNullable(_$TestEnumEnumMap, json['nullableEnumValue']),
-      enumList: (json['enumList'] as List<dynamic>)
-          .map((e) => $enumDecode(_$TestEnumEnumMap, e))
-          .toList(),
+      enumList: (json['enumList'] as List<dynamic>?)
+              ?.map((e) => $enumDecode(_$TestEnumEnumMap, e))
+              .toList() ??
+          const [],
       nullableEnumList: (json['nullableEnumList'] as List<dynamic>?)
           ?.map((e) => $enumDecode(_$TestEnumEnumMap, e))
           .toList(),

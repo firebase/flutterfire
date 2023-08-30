@@ -417,7 +417,7 @@ class ${data.queryReferenceImplName}
           } else {
             transform += '[$e]';
           }
-          return '$transform) as List?)!.first : null,';
+          return '$transform) as List?)!.single : null,';
         } else {
           return '$e: $e != null ? $perFieldToJson($e) : null,';
         }

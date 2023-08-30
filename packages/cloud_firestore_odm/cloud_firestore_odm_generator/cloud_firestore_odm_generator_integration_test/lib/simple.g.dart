@@ -2650,7 +2650,8 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : null,
         isNull: isNull,
         arrayContains: arrayContains != null
-            ? (_$NestedPerFieldToJson.boolList([arrayContains]) as List?)!.first
+            ? (_$NestedPerFieldToJson.boolList([arrayContains]) as List?)!
+                .single
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.boolList(arrayContainsAny)
@@ -2697,7 +2698,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNull: isNull,
         arrayContains: arrayContains != null
             ? (_$NestedPerFieldToJson.stringList([arrayContains]) as List?)!
-                .first
+                .single
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.stringList(arrayContainsAny)
@@ -2743,7 +2744,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : null,
         isNull: isNull,
         arrayContains: arrayContains != null
-            ? (_$NestedPerFieldToJson.numList([arrayContains]) as List?)!.first
+            ? (_$NestedPerFieldToJson.numList([arrayContains]) as List?)!.single
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.numList(arrayContainsAny)
@@ -2790,7 +2791,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNull: isNull,
         arrayContains: arrayContains != null
             ? (_$NestedPerFieldToJson.objectList([arrayContains]) as List?)!
-                .first
+                .single
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.objectList(arrayContainsAny)
@@ -2837,7 +2838,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNull: isNull,
         arrayContains: arrayContains != null
             ? (_$NestedPerFieldToJson.dynamicList([arrayContains]) as List?)!
-                .first
+                .single
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.dynamicList(arrayContainsAny)
@@ -2883,7 +2884,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : null,
         isNull: isNull,
         arrayContains: arrayContains != null
-            ? (_$NestedPerFieldToJson.boolSet({arrayContains}) as List?)!.first
+            ? (_$NestedPerFieldToJson.boolSet({arrayContains}) as List?)!.single
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.boolSet(arrayContainsAny)
@@ -3013,7 +3014,8 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : null,
         isNull: isNull,
         arrayContains: arrayContains != null
-            ? (_$NestedPerFieldToJson.enumList([arrayContains]) as List?)!.first
+            ? (_$NestedPerFieldToJson.enumList([arrayContains]) as List?)!
+                .single
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.enumList(arrayContainsAny)
@@ -3061,7 +3063,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         arrayContains: arrayContains != null
             ? (_$NestedPerFieldToJson.nullableEnumList([arrayContains])
                     as List?)!
-                .first
+                .single
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.nullableEnumList(arrayContainsAny)

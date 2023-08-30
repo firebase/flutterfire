@@ -1118,7 +1118,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
             : null,
         isNull: isNull,
         arrayContains: arrayContains != null
-            ? (_$MoviePerFieldToJson.genre([arrayContains]) as List?)!.first
+            ? (_$MoviePerFieldToJson.genre([arrayContains]) as List?)!.single
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$MoviePerFieldToJson.genre(arrayContainsAny) as Iterable<Object>?
@@ -1161,7 +1161,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
             : null,
         isNull: isNull,
         arrayContains: arrayContains != null
-            ? (_$MoviePerFieldToJson.tags({arrayContains}) as List?)!.first
+            ? (_$MoviePerFieldToJson.tags({arrayContains}) as List?)!.single
             : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$MoviePerFieldToJson.tags(arrayContainsAny) as Iterable<Object>?
