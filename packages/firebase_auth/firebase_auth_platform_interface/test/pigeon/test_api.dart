@@ -54,20 +54,23 @@ class _TestFirebaseAuthHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonSignInProvider) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserCredential) {
+    } else if (value is PigeonTotpSecret) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserDetails) {
+    } else if (value is PigeonUserCredential) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserInfo) {
+    } else if (value is PigeonUserDetails) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserProfile) {
+    } else if (value is PigeonUserInfo) {
       buffer.putUint8(143);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonVerifyPhoneNumberRequest) {
+    } else if (value is PigeonUserProfile) {
       buffer.putUint8(144);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonVerifyPhoneNumberRequest) {
+      buffer.putUint8(145);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -102,14 +105,16 @@ class _TestFirebaseAuthHostApiCodec extends StandardMessageCodec {
       case 139:
         return PigeonSignInProvider.decode(readValue(buffer)!);
       case 140:
-        return PigeonUserCredential.decode(readValue(buffer)!);
+        return PigeonTotpSecret.decode(readValue(buffer)!);
       case 141:
-        return PigeonUserDetails.decode(readValue(buffer)!);
+        return PigeonUserCredential.decode(readValue(buffer)!);
       case 142:
-        return PigeonUserInfo.decode(readValue(buffer)!);
+        return PigeonUserDetails.decode(readValue(buffer)!);
       case 143:
-        return PigeonUserProfile.decode(readValue(buffer)!);
+        return PigeonUserInfo.decode(readValue(buffer)!);
       case 144:
+        return PigeonUserProfile.decode(readValue(buffer)!);
+      case 145:
         return PigeonVerifyPhoneNumberRequest.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -824,20 +829,23 @@ class _TestFirebaseAuthUserHostApiCodec extends StandardMessageCodec {
     } else if (value is PigeonSignInProvider) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserCredential) {
+    } else if (value is PigeonTotpSecret) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserDetails) {
+    } else if (value is PigeonUserCredential) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserInfo) {
+    } else if (value is PigeonUserDetails) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonUserProfile) {
+    } else if (value is PigeonUserInfo) {
       buffer.putUint8(143);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonVerifyPhoneNumberRequest) {
+    } else if (value is PigeonUserProfile) {
       buffer.putUint8(144);
+      writeValue(buffer, value.encode());
+    } else if (value is PigeonVerifyPhoneNumberRequest) {
+      buffer.putUint8(145);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -872,14 +880,16 @@ class _TestFirebaseAuthUserHostApiCodec extends StandardMessageCodec {
       case 139:
         return PigeonSignInProvider.decode(readValue(buffer)!);
       case 140:
-        return PigeonUserCredential.decode(readValue(buffer)!);
+        return PigeonTotpSecret.decode(readValue(buffer)!);
       case 141:
-        return PigeonUserDetails.decode(readValue(buffer)!);
+        return PigeonUserCredential.decode(readValue(buffer)!);
       case 142:
-        return PigeonUserInfo.decode(readValue(buffer)!);
+        return PigeonUserDetails.decode(readValue(buffer)!);
       case 143:
-        return PigeonUserProfile.decode(readValue(buffer)!);
+        return PigeonUserInfo.decode(readValue(buffer)!);
       case 144:
+        return PigeonUserProfile.decode(readValue(buffer)!);
+      case 145:
         return PigeonVerifyPhoneNumberRequest.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -1358,6 +1368,9 @@ abstract class TestMultiFactorUserHostApi {
   Future<void> enrollPhone(PigeonFirebaseApp app,
       PigeonPhoneMultiFactorAssertion assertion, String? displayName);
 
+  Future<void> enrollTotp(
+      PigeonFirebaseApp app, String assertionId, String? displayName);
+
   Future<PigeonMultiFactorSession> getSession(PigeonFirebaseApp app);
 
   Future<void> unenroll(PigeonFirebaseApp app, String factorUid);
@@ -1391,6 +1404,33 @@ abstract class TestMultiFactorUserHostApi {
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone was null, expected non-null PigeonPhoneMultiFactorAssertion.');
           final String? arg_displayName = (args[2] as String?);
           await api.enrollPhone(arg_app!, arg_assertion!, arg_displayName);
+          return <Object?>[];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp was null, expected non-null PigeonFirebaseApp.');
+          final String? arg_assertionId = (args[1] as String?);
+          assert(arg_assertionId != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp was null, expected non-null String.');
+          final String? arg_displayName = (args[2] as String?);
+          await api.enrollTotp(arg_app!, arg_assertionId!, arg_displayName);
           return <Object?>[];
         });
       }
@@ -1526,8 +1566,8 @@ abstract class TestMultiFactoResolverHostApi {
   static const MessageCodec<Object?> codec =
       _TestMultiFactoResolverHostApiCodec();
 
-  Future<PigeonUserCredential> resolveSignIn(
-      String resolverId, PigeonPhoneMultiFactorAssertion assertion);
+  Future<PigeonUserCredential> resolveSignIn(String resolverId,
+      PigeonPhoneMultiFactorAssertion? assertion, String? totpAssertionId);
 
   static void setup(TestMultiFactoResolverHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -1551,11 +1591,197 @@ abstract class TestMultiFactoResolverHostApi {
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn was null, expected non-null String.');
           final PigeonPhoneMultiFactorAssertion? arg_assertion =
               (args[1] as PigeonPhoneMultiFactorAssertion?);
-          assert(arg_assertion != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn was null, expected non-null PigeonPhoneMultiFactorAssertion.');
-          final PigeonUserCredential output =
-              await api.resolveSignIn(arg_resolverId!, arg_assertion!);
+          final String? arg_totpAssertionId = (args[2] as String?);
+          final PigeonUserCredential output = await api.resolveSignIn(
+              arg_resolverId!, arg_assertion, arg_totpAssertionId);
           return <Object?>[output];
+        });
+      }
+    }
+  }
+}
+
+class _TestMultiFactoResolverHostApiCodec extends StandardMessageCodec {
+  const _TestMultiFactoResolverHostApiCodec();
+  @override
+  void writeValue(WriteBuffer buffer, Object? value) {
+    if (value is PigeonTotpSecret) {
+      buffer.putUint8(128);
+      writeValue(buffer, value.encode());
+    } else {
+      super.writeValue(buffer, value);
+    }
+  }
+
+  @override
+  Object? readValueOfType(int type, ReadBuffer buffer) {
+    switch (type) {
+      case 128:
+        return PigeonTotpSecret.decode(readValue(buffer)!);
+      default:
+        return super.readValueOfType(type, buffer);
+    }
+  }
+}
+
+abstract class TestMultiFactoResolverHostApi {
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
+      TestDefaultBinaryMessengerBinding.instance;
+  static const MessageCodec<Object?> codec =
+      _TestMultiFactoResolverHostApiCodec();
+
+  Future<PigeonTotpSecret> generateSecret(String sessionId);
+
+  Future<String> getAssertionForEnrollment(
+      String secretKey, String oneTimePassword);
+
+  Future<String> getAssertionForSignIn(
+      String enrollmentId, String oneTimePassword);
+
+  static void setup(TestMultiFactoResolverHostApi? api,
+      {BinaryMessenger? binaryMessenger}) {
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_sessionId = (args[0] as String?);
+          assert(arg_sessionId != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret was null, expected non-null String.');
+          final PigeonTotpSecret output =
+              await api.generateSecret(arg_sessionId!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_secretKey = (args[0] as String?);
+          assert(arg_secretKey != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment was null, expected non-null String.');
+          final String? arg_oneTimePassword = (args[1] as String?);
+          assert(arg_oneTimePassword != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment was null, expected non-null String.');
+          final String output = await api.getAssertionForEnrollment(
+              arg_secretKey!, arg_oneTimePassword!);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_enrollmentId = (args[0] as String?);
+          assert(arg_enrollmentId != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn was null, expected non-null String.');
+          final String? arg_oneTimePassword = (args[1] as String?);
+          assert(arg_oneTimePassword != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn was null, expected non-null String.');
+          final String output = await api.getAssertionForSignIn(
+              arg_enrollmentId!, arg_oneTimePassword!);
+          return <Object?>[output];
+        });
+      }
+    }
+  }
+}
+
+abstract class TestMultiFactoResolverHostApi {
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
+      TestDefaultBinaryMessengerBinding.instance;
+  static const MessageCodec<Object?> codec = StandardMessageCodec();
+
+  Future<String> generateQrCodeUrl(
+      String secretKey, String? accountName, String? issuer);
+
+  Future<void> openInOtpApp(String secretKey, String qrCodeUrl);
+
+  static void setup(TestMultiFactoResolverHostApi? api,
+      {BinaryMessenger? binaryMessenger}) {
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_secretKey = (args[0] as String?);
+          assert(arg_secretKey != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl was null, expected non-null String.');
+          final String? arg_accountName = (args[1] as String?);
+          final String? arg_issuer = (args[2] as String?);
+          final String output = await api.generateQrCodeUrl(
+              arg_secretKey!, arg_accountName, arg_issuer);
+          return <Object?>[output];
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_secretKey = (args[0] as String?);
+          assert(arg_secretKey != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp was null, expected non-null String.');
+          final String? arg_qrCodeUrl = (args[1] as String?);
+          assert(arg_qrCodeUrl != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp was null, expected non-null String.');
+          await api.openInOtpApp(arg_secretKey!, arg_qrCodeUrl!);
+          return <Object?>[];
         });
       }
     }

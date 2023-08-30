@@ -57,6 +57,10 @@ public class FlutterFirebaseAuthPlugin
   private final FlutterFirebaseAuthUser firebaseAuthUser = new FlutterFirebaseAuthUser();
   private final FlutterFirebaseMultiFactor firebaseMultiFactor = new FlutterFirebaseMultiFactor();
 
+  private final FlutterFirebaseTotpMultiFactor firebaseTotpMultiFactor =
+      new FlutterFirebaseTotpMultiFactor();
+  private final FlutterFirebaseTotpSecret firebaseTotpSecret = new FlutterFirebaseTotpSecret();
+
   private void initInstance(BinaryMessenger messenger) {
     registerPlugin(METHOD_CHANNEL_NAME, this);
     channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
@@ -64,6 +68,8 @@ public class FlutterFirebaseAuthPlugin
     GeneratedAndroidFirebaseAuth.FirebaseAuthUserHostApi.setup(messenger, firebaseAuthUser);
     GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(messenger, firebaseMultiFactor);
     GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setup(messenger, firebaseMultiFactor);
+    GeneratedAndroidFirebaseAuth.MultiFactorTotpHostApi.setup(messenger, firebaseTotpMultiFactor);
+    GeneratedAndroidFirebaseAuth.MultiFactorTotpSecretHostApi.setup(messenger, firebaseTotpSecret);
 
     this.messenger = messenger;
   }
@@ -82,6 +88,8 @@ public class FlutterFirebaseAuthPlugin
     GeneratedAndroidFirebaseAuth.FirebaseAuthUserHostApi.setup(messenger, null);
     GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(messenger, null);
     GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setup(messenger, null);
+    GeneratedAndroidFirebaseAuth.MultiFactorTotpHostApi.setup(messenger, null);
+    GeneratedAndroidFirebaseAuth.MultiFactorTotpSecretHostApi.setup(messenger, null);
 
     channel = null;
     messenger = null;

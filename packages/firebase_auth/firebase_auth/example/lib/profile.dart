@@ -4,6 +4,7 @@
 
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_example/main.dart';
 import 'package:flutter/material.dart';
@@ -252,6 +253,46 @@ class _ProfilePageState extends State<ProfilePage> {
                           );
                         },
                         child: const Text('Verify Number For MFA'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          final totp =
+                              (await user.multiFactor.getEnrolledFactors())
+                                  .firstWhereOrNull(
+                            (element) => element.factorId == 'totp',
+                          );
+                          if (totp != null) {
+                            await user.multiFactor.unenroll(
+                              factorUid:
+                                  (await user.multiFactor.getEnrolledFactors())
+                                      .firstWhere(
+                                        (element) => element.factorId == 'totp',
+                                      )
+                                      .uid,
+                            );
+                          }
+                          final session = await user.multiFactor.getSession();
+                          final totpSecret =
+                              await TotpMultiFactorGenerator.generateSecret(
+                            session,
+                          );
+                          print(totpSecret);
+                          final code =
+                              await getTotpFromUser(context, totpSecret);
+                          print('code: $code');
+                          if (code == null) {
+                            return;
+                          }
+                          await user.multiFactor.enroll(
+                            await TotpMultiFactorGenerator
+                                .getAssertionForEnrollment(
+                              totpSecret,
+                              code,
+                            ),
+                            displayName: 'TOTP',
+                          );
+                        },
+                        child: const Text('Enroll TOTP'),
                       ),
                       TextButton(
                         onPressed: () async {
