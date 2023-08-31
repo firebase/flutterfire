@@ -45,7 +45,9 @@ public class FlutterFirebaseStoragePlugin
   @Nullable
   private BinaryMessenger messenger;
 
-  static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_storage";
+  static final String STORAGE_METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_storage";
+  static final String STORAGE_TASK_EVENT_NAME = "taskEvent";
+  static final String DEFAULT_ERROR_CODE = "firebase_storage";
 
   private final Map<String, EventChannel> eventChannels = new HashMap<>();
   private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
@@ -155,8 +157,8 @@ public class FlutterFirebaseStoragePlugin
   }
 
   private void initInstance(BinaryMessenger messenger) {
-    channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
-    FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this);
+    channel = new MethodChannel(messenger, STORAGE_METHOD_CHANNEL_NAME);
+    FlutterFirebasePluginRegistry.registerPlugin(STORAGE_METHOD_CHANNEL_NAME, this);
 
     GeneratedAndroidFirebaseStorage.FirebaseStorageHostApi.setup(messenger, this);
     this.messenger = messenger;
@@ -481,7 +483,7 @@ public class FlutterFirebaseStoragePlugin
     try {
       TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel);
       result.success(registerEventChannel(
-          METHOD_CHANNEL_NAME + "/taskState", handler));
+        STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, handler));
     } catch (Exception e) {
       result.error(e);
     }
@@ -503,7 +505,7 @@ public class FlutterFirebaseStoragePlugin
     try {
       TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel);
       result.success(registerEventChannel(
-          METHOD_CHANNEL_NAME + "/taskState", handler));
+        STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, handler));
     } catch (Exception e) {
       result.error(e);
     }
@@ -525,7 +527,7 @@ public class FlutterFirebaseStoragePlugin
     try {
       TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel);
       result.success(registerEventChannel(
-          METHOD_CHANNEL_NAME + "/taskState", handler));
+        STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, handler));
     } catch (Exception e) {
       result.error(e);
     }
@@ -544,7 +546,7 @@ public class FlutterFirebaseStoragePlugin
     try {
       TaskStateChannelStreamHandler handler = storageTask.startTaskWithMethodChannel(channel);
       result.success(registerEventChannel(
-          METHOD_CHANNEL_NAME + "/taskState", handler));
+        STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, handler));
     } catch (Exception e) {
       result.error(e);
     }
@@ -653,78 +655,6 @@ public class FlutterFirebaseStoragePlugin
     FirebaseStorage androidStorage = getStorageFromPigeon(app);
     androidStorage.setMaxDownloadRetryTimeMillis(time);
   }
-
-  // @Override
-  // public void onMethodCall(@NonNull MethodCall call, @NonNull final Result
-  // result) {
-  // Task<?> methodCallTask;
-
-  // switch (call.method) {
-  // // case "Storage#useEmulator":
-  // // methodCallTask = useEmulator(call.arguments());
-  // // break;
-  // // case "Reference#delete":
-  // // methodCallTask = referenceDelete(call.arguments());
-  // // break;
-  // // case "Reference#getDownloadURL":
-  // // methodCallTask = referenceGetDownloadURL(call.arguments());
-  // // break;
-  // // case "Reference#getMetadata":
-  // // methodCallTask = referenceGetMetadata(call.arguments());
-  // // break;
-  // // case "Reference#getData":
-  // // methodCallTask = referenceGetData(call.arguments());
-  // // break;
-  // // case "Reference#list":
-  // // methodCallTask = referenceList(call.arguments());
-  // // break;
-  // // case "Reference#listAll":
-  // // methodCallTask = referenceListAll(call.arguments());
-  // // break;
-  // // case "Reference#updateMetadata":
-  // // methodCallTask = referenceUpdateMetadata(call.arguments());
-  // // break;
-  // case "Task#startPutData":
-  // methodCallTask = taskPutData(call.arguments());
-  // break;
-  // case "Task#startPutString":
-  // methodCallTask = taskPutString(call.arguments());
-  // break;
-  // case "Task#startPutFile":
-  // methodCallTask = taskPutFile(call.arguments());
-  // break;
-  // // case "Task#pause":
-  // // methodCallTask = taskPause(call.arguments());
-  // // break;
-  // // case "Task#resume":
-  // // methodCallTask = taskResume(call.arguments());
-  // // break;
-  // // case "Task#cancel":
-  // // methodCallTask = taskCancel(call.arguments());
-  // // break;
-  // case "Task#writeToFile":
-  // methodCallTask = taskWriteToFile(call.arguments());
-  // break;
-  // default:
-  // result.notImplemented();
-  // return;
-  // }
-
-  // methodCallTask.addOnCompleteListener(
-  // task -> {
-  // if (task.isSuccessful()) {
-  // result.success(task.getResult());
-  // } else {
-  // Exception exception = task.getException();
-  // Map<String, String> exceptionDetails = getExceptionDetails(exception);
-
-  // result.error(
-  // "firebase_storage",
-  // exception != null ? exception.getMessage() : null,
-  // exceptionDetails);
-  // }
-  // });
-  // }
 
   private StorageMetadata parseMetadata(Map<String, Object> metadata) {
     if (metadata == null) {

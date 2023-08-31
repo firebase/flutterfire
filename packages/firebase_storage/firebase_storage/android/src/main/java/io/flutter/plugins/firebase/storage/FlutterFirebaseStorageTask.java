@@ -241,66 +241,6 @@ class FlutterFirebaseStorageTask {
     }
 
     return new TaskStateChannelStreamHandler(reference.getStorage(), storageTask);
-
-    // storageTask.addOnProgressListener(
-    //     taskExecutor,
-    //     taskSnapshot -> {
-    //       if (destroyed) return;
-    //       new Handler(Looper.getMainLooper())
-    //           .post(
-    //               () ->
-    //                   channel.invokeMethod("Task#onProgress", getTaskEventMap(taskSnapshot, null)));
-    //       synchronized (resumeSyncObject) {
-    //         resumeSyncObject.notifyAll();
-    //       }
-    //     });
-
-    // storageTask.addOnPausedListener(
-    //     taskExecutor,
-    //     taskSnapshot -> {
-    //       if (destroyed) return;
-    //       new Handler(Looper.getMainLooper())
-    //           .post(
-    //               () -> channel.invokeMethod("Task#onPaused", getTaskEventMap(taskSnapshot, null)));
-    //       synchronized (pauseSyncObject) {
-    //         pauseSyncObject.notifyAll();
-    //       }
-    //     });
-
-    // storageTask.addOnSuccessListener(
-    //     taskExecutor,
-    //     taskSnapshot -> {
-    //       if (destroyed) return;
-    //       new Handler(Looper.getMainLooper())
-    //           .post(
-    //               () ->
-    //                   channel.invokeMethod("Task#onSuccess", getTaskEventMap(taskSnapshot, null)));
-    //       destroy();
-    //     });
-
-    // storageTask.addOnCanceledListener(
-    //     taskExecutor,
-    //     () -> {
-    //       if (destroyed) return;
-    //       new Handler(Looper.getMainLooper())
-    //           .post(
-    //               () -> {
-    //                 channel.invokeMethod("Task#onCanceled", getTaskEventMap(null, null));
-    //                 destroy();
-    //               });
-    //     });
-
-    // storageTask.addOnFailureListener(
-    //     taskExecutor,
-    //     exception -> {
-    //       if (destroyed) return;
-    //       new Handler(Looper.getMainLooper())
-    //           .post(
-    //               () -> {
-    //                 channel.invokeMethod("Task#onFailure", getTaskEventMap(null, exception));
-    //                 destroy();
-    //               });
-    //     });
   }
 
   private Map<String, Object> getTaskEventMap(

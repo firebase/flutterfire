@@ -21,44 +21,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// [bucket].
   MethodChannelFirebaseStorage(
       {required FirebaseApp app, required String bucket})
-      : super(appInstance: app, bucket: bucket) {
-    // The channel setMethodCallHandler callback is not app specific, so there
-    // is no need to register the caller more than once.
-    if (_initialized) return;
-
-    channel.setMethodCallHandler((MethodCall call) async {
-      Map<dynamic, dynamic> arguments = call.arguments;
-
-      switch (call.method) {
-        case 'Task#onProgress':
-          return _handleTaskStateChange(TaskState.running, arguments);
-        case 'Task#onPaused':
-          return _handleTaskStateChange(TaskState.paused, arguments);
-        case 'Task#onSuccess':
-          return _handleTaskStateChange(TaskState.success, arguments);
-        case 'Task#onCanceled':
-          return _sendTaskException(
-              arguments['handle'],
-              FirebaseException(
-                plugin: 'firebase_storage',
-                code: 'canceled',
-                message: 'User canceled the upload/download.',
-              ));
-        case 'Task#onFailure':
-          Map<String, dynamic> errorMap =
-              Map<String, dynamic>.from(arguments['error']);
-          return _sendTaskException(
-              arguments['handle'],
-              FirebaseException(
-                plugin: 'firebase_storage',
-                code: errorMap['code'],
-                message: errorMap['message'],
-              ));
-      }
-    });
-
-    _initialized = true;
-  }
+      : super(appInstance: app, bucket: bucket) {}
 
   /// Internal stub class initializer.
   ///
@@ -66,7 +29,15 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// then initialized via the [delegateFor] method.
   MethodChannelFirebaseStorage._() : super(appInstance: null, bucket: '');
 
-  static const String METHOD_CHANNEL_NAME = 'plugins.flutter.io/firebase_storage';
+  static const String STORAGE_METHOD_CHANNEL_NAME = 'plugins.flutter.io/firebase_storage';
+  static const String STORAGE_TASK_EVENT_NAME = "taskEvent";
+
+  /// The [EventChannel] used for storageTask
+  static EventChannel storageTaskChannel(String id) {
+    return EventChannel(
+      '$STORAGE_METHOD_CHANNEL_NAME/$STORAGE_TASK_EVENT_NAME/$id'
+    );
+  }
 
   static final FirebaseStorageHostApi pigeonChannel = FirebaseStorageHostApi();
 
@@ -77,10 +48,6 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     );
   }
 
-  /// Keep an internal reference to whether the [MethodChannelFirebaseStorage]
-  /// class has already been initialized.
-  static bool _initialized = false;
-
   /// Returns a unique key to identify the instance by [FirebaseApp] name and
   /// any custom storage buckets.
   static String _getInstanceKey(String /*!*/ appName, String bucket) {
@@ -89,7 +56,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   /// The [MethodChannelFirebaseStorage] method channel.
   static const MethodChannel channel = MethodChannel(
-    METHOD_CHANNEL_NAME,
+    STORAGE_METHOD_CHANNEL_NAME,
   );
 
   static Map<String, MethodChannelFirebaseStorage>
@@ -102,9 +69,6 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     return MethodChannelFirebaseStorage._();
   }
 
-  StreamController<T> _createBroadcastStream<T>() {
-    return StreamController<T>.broadcast();
-  }
   static PigeonStorageReference getPigeonReference(String bucket, String fullPath, String name) {
     return PigeonStorageReference(bucket: bucket, fullPath: fullPath, name: name);
   }
@@ -130,10 +94,6 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// Increments and returns the next channel ID handler for Storage.
   static int get nextMethodChannelHandleId => _methodChannelHandleId++;
 
-  /// A map containing all Task stream observers, keyed by their handle.
-  static final Map<int, StreamController<dynamic>> taskObservers =
-      <int, StreamController<TaskSnapshotPlatform>>{};
-
   @override
   int maxOperationRetryTime = const Duration(minutes: 2).inMilliseconds;
 
@@ -142,32 +102,6 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   @override
   int maxDownloadRetryTime = const Duration(minutes: 10).inMilliseconds;
-
-  static final Map<String, StreamController<_ValueWrapper<TaskPlatform>>>
-      _storageTasks = <String, StreamController<_ValueWrapper<TaskPlatform>>>{};
-
-
-  Future<void> _handleTaskStateChange(
-      TaskState taskState, Map<dynamic, dynamic> arguments) async {
-    // Get & cast native snapshot data to a Map
-    Map<String, dynamic> snapshotData =
-        Map<String, dynamic>.from(arguments['snapshot']);
-
-    // Get the cached Storage instance.
-    FirebaseStoragePlatform storage = _methodChannelFirebaseStorageInstances[
-        _getInstanceKey(arguments['appName'], arguments['bucket'])]!;
-
-    // Create a snapshot.
-    TaskSnapshotPlatform snapshot =
-        MethodChannelTaskSnapshot(storage, taskState, snapshotData);
-
-    // Fire a snapshot event.
-    taskObservers[arguments['handle']]!.add(snapshot);
-  }
-
-  void _sendTaskException(int handle, FirebaseException exception) {
-    taskObservers[handle]!.addError(exception);
-  }
 
   @override
   FirebaseStoragePlatform delegateFor(
@@ -212,13 +146,4 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     maxDownloadRetryTime = time;
     pigeonChannel.setMaxDownloadRetryTime(pigeonFirebaseAppDefault, time);
   }
-}
-
-/// Simple helper class to make nullable values transferable through StreamControllers.
-class _ValueWrapper<T> {
-  const _ValueWrapper(this.value);
-
-  const _ValueWrapper.absent() : value = null;
-
-  final T? value;
 }

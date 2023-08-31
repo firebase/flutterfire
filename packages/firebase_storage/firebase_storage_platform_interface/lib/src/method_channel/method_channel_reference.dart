@@ -41,17 +41,6 @@ class MethodChannelReference extends ReferencePlatform {
     try {
       await MethodChannelFirebaseStorage.pigeonChannel
           .referenceDelete(pigeonFirebaseAppDefault, pigeonReference);
-      // await MethodChannelFirebaseStorage.channel
-      //     .invokeMethod('Reference#delete', <String, dynamic>{
-      //   'appName': storage.app.name,
-      //   'maxOperationRetryTime': storage.maxOperationRetryTime,
-      //   'maxUploadRetryTime': storage.maxUploadRetryTime,
-      //   'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-      //   'bucket': storage.bucket,
-      //   'host': storage.emulatorHost,
-      //   'port': storage.emulatorPort,
-      //   'path': fullPath,
-      // });
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -63,20 +52,6 @@ class MethodChannelReference extends ReferencePlatform {
       String url = await MethodChannelFirebaseStorage.pigeonChannel
           .referenceGetDownloadURL(pigeonFirebaseAppDefault, pigeonReference);
       return url;
-      // Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
-      //     .invokeMapMethod<String, dynamic>(
-      //         'Reference#getDownloadURL', <String, dynamic>{
-      //   'appName': storage.app.name,
-      //   'maxOperationRetryTime': storage.maxOperationRetryTime,
-      //   'maxUploadRetryTime': storage.maxUploadRetryTime,
-      //   'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-      //   'bucket': storage.bucket,
-      //   'host': storage.emulatorHost,
-      //   'port': storage.emulatorPort,
-      //   'path': fullPath,
-      // });
-
-      // return data!['downloadURL'];
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -99,21 +74,6 @@ class MethodChannelReference extends ReferencePlatform {
           .pigeonChannel
           .referenceGetMetaData(pigeonFirebaseAppDefault, pigeonReference);
       return convertMetadata(metaData);
-
-      // Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
-      //     .invokeMapMethod<String, dynamic>(
-      //         'Reference#getMetadata', <String, dynamic>{
-      //   'appName': storage.app.name,
-      //   'maxOperationRetryTime': storage.maxOperationRetryTime,
-      //   'maxUploadRetryTime': storage.maxUploadRetryTime,
-      //   'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-      //   'bucket': storage.bucket,
-      //   'host': storage.emulatorHost,
-      //   'port': storage.emulatorPort,
-      //   'path': fullPath,
-      // });
-
-      // return FullMetadata(data!);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -138,28 +98,6 @@ class MethodChannelReference extends ReferencePlatform {
           await MethodChannelFirebaseStorage.pigeonChannel.referenceList(
               pigeonFirebaseAppDefault, pigeonReference, pigeonOptions);
       return convertListReference(pigeonReferenceList);
-      // Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
-      //     .invokeMapMethod<String, dynamic>('Reference#list', <String, dynamic>{
-      //   'appName': storage.app.name,
-      //   'maxOperationRetryTime': storage.maxOperationRetryTime,
-      //   'maxUploadRetryTime': storage.maxUploadRetryTime,
-      //   'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-      //   'bucket': storage.bucket,
-      //   'host': storage.emulatorHost,
-      //   'port': storage.emulatorPort,
-      //   'path': fullPath,
-      //   'options': <String, dynamic>{
-      //     'maxResults': options?.maxResults ?? 1000,
-      //     'pageToken': options?.pageToken,
-      //   },
-      // });
-
-      // return MethodChannelListResult(
-      //   storage,
-      //   nextPageToken: data!['nextPageToken'],
-      //   items: List.from(data['items']),
-      //   prefixes: List.from(data['prefixes']),
-      // );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -172,24 +110,6 @@ class MethodChannelReference extends ReferencePlatform {
           .pigeonChannel
           .referenceListAll(pigeonFirebaseAppDefault, pigeonReference);
       return convertListReference(pigeonReferenceList);
-      // Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
-      //     .invokeMapMethod<String, dynamic>(
-      //         'Reference#listAll', <String, dynamic>{
-      //   'appName': storage.app.name,
-      //   'maxOperationRetryTime': storage.maxOperationRetryTime,
-      //   'maxUploadRetryTime': storage.maxUploadRetryTime,
-      //   'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-      //   'bucket': storage.bucket,
-      //   'host': storage.emulatorHost,
-      //   'port': storage.emulatorPort,
-      //   'path': fullPath,
-      // });
-      // return MethodChannelListResult(
-      //   storage,
-      //   nextPageToken: data!['nextPageToken'],
-      //   items: List.from(data['items']),
-      //   prefixes: List.from(data['prefixes']),
-      // );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -200,20 +120,6 @@ class MethodChannelReference extends ReferencePlatform {
     try {
       return await MethodChannelFirebaseStorage.pigeonChannel
           .referenceGetData(pigeonFirebaseAppDefault, pigeonReference, maxSize);
-      // return Uint8List.fromList(data);
-
-      // return MethodChannelFirebaseStorage.channel
-      //     .invokeMethod<Uint8List>('Reference#getData', <String, dynamic>{
-      //   'appName': storage.app.name,
-      //   'maxOperationRetryTime': storage.maxOperationRetryTime,
-      //   'maxUploadRetryTime': storage.maxUploadRetryTime,
-      //   'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-      //   'bucket': storage.bucket,
-      //   'host': storage.emulatorHost,
-      //   'port': storage.emulatorPort,
-      //   'path': fullPath,
-      //   'maxSize': maxSize,
-      // });
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -222,8 +128,6 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   TaskPlatform putData(Uint8List data, [SettableMetadata? metadata]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
-    MethodChannelFirebaseStorage.taskObservers[handle] =
-        StreamController<TaskSnapshotPlatform>.broadcast();
     return MethodChannelPutTask(handle, storage, fullPath, data, metadata);
   }
 
@@ -236,8 +140,6 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   TaskPlatform putFile(File file, [SettableMetadata? metadata]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
-    MethodChannelFirebaseStorage.taskObservers[handle] =
-        StreamController<TaskSnapshotPlatform>.broadcast();
     return MethodChannelPutFileTask(handle, storage, fullPath, file, metadata);
   }
 
@@ -245,8 +147,6 @@ class MethodChannelReference extends ReferencePlatform {
   TaskPlatform putString(String data, PutStringFormat format,
       [SettableMetadata? metadata]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
-    MethodChannelFirebaseStorage.taskObservers[handle] =
-        StreamController<TaskSnapshotPlatform>.broadcast();
     return MethodChannelPutStringTask(
         handle, storage, fullPath, data, format, metadata);
   }
@@ -263,21 +163,6 @@ class MethodChannelReference extends ReferencePlatform {
           .referenceUpdateMetadata(pigeonFirebaseAppDefault, pigeonReference,
               convertToPigeonMetaData(metadata));
       return convertMetadata(updatedMetaData);
-      // Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
-      //     .invokeMapMethod<String, dynamic>(
-      //         'Reference#updateMetadata', <String, dynamic>{
-      //   'appName': storage.app.name,
-      //   'maxOperationRetryTime': storage.maxOperationRetryTime,
-      //   'maxUploadRetryTime': storage.maxUploadRetryTime,
-      //   'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-      //   'bucket': storage.bucket,
-      //   'host': storage.emulatorHost,
-      //   'port': storage.emulatorPort,
-      //   'path': fullPath,
-      //   'metadata': metadata.asMap(),
-      // });
-
-      // return FullMetadata(data!);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -286,8 +171,6 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   TaskPlatform writeToFile(File file) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
-    MethodChannelFirebaseStorage.taskObservers[handle] =
-        StreamController<TaskSnapshotPlatform>.broadcast();
     return MethodChannelDownloadTask(handle, storage, fullPath, file);
   }
 }

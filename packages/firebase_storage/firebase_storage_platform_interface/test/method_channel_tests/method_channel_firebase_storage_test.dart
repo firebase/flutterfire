@@ -80,10 +80,10 @@ void main() {
       nextMockHandleId;
     });
 
-    test('taskObservers', () {
-      expect(MethodChannelFirebaseStorage.taskObservers,
-          isInstanceOf<Map<int, StreamController<TaskSnapshotPlatform>>>());
-    });
+    // test('taskObservers', () {
+    //   expect(MethodChannelFirebaseStorage.taskObservers,
+    //       isInstanceOf<Map<int, StreamController<TaskSnapshotPlatform>>>());
+    // });
 
     group('delegateFor()', () {
       test('returns a [FirebaseStoragePlatform] with arguments', () {
