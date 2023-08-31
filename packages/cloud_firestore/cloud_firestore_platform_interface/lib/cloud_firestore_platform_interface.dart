@@ -31,6 +31,7 @@ export 'src/platform_interface/platform_interface_load_bundle_task.dart';
 export 'src/platform_interface/platform_interface_load_bundle_task_snapshot.dart';
 export 'src/platform_interface/platform_interface_query.dart';
 export 'src/platform_interface/platform_interface_query_snapshot.dart';
+export 'src/platform_interface/platform_interface_query_snapshot_changes.dart';
 export 'src/platform_interface/platform_interface_transaction.dart';
 export 'src/platform_interface/platform_interface_write_batch.dart';
 export 'src/platform_interface/utils/load_bundle_task_state.dart';

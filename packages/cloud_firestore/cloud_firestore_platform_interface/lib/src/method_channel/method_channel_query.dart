@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'method_channel_aggregate_query.dart';
 import 'method_channel_firestore.dart';
 import 'method_channel_query_snapshot.dart';
+import 'method_channel_query_snapshot_changes.dart';
 import 'utils/exception.dart';
 import 'utils/source.dart';
 
@@ -170,6 +171,51 @@ class MethodChannelQuery extends QueryPlatform {
       },
       onCancel: () {
         snapshotStreamSubscription?.cancel();
+      },
+    );
+
+    return controller.stream;
+  }
+
+  @override
+  Stream<QuerySnapshotChangesPlatform> snapshotChanges({
+    bool includeMetadataChanges = false,
+    ServerTimestampBehavior serverTimestampBehavior =
+        ServerTimestampBehavior.none,
+  }) {
+    // It's fine to let the StreamController be garbage collected once all the
+    // subscribers have cancelled; this analyzer warning is safe to ignore.
+    late StreamController<QuerySnapshotChangesPlatform>
+    controller; // ignore: close_sinks
+
+    StreamSubscription<dynamic>? snapshotChangesStreamSubscription;
+
+    controller = StreamController<QuerySnapshotChangesPlatform>.broadcast(
+      onListen: () async {
+        final observerId = await MethodChannelFirebaseFirestore.channel
+            .invokeMethod<String>('Query#snapshotChanges');
+
+        snapshotChangesStreamSubscription =
+            MethodChannelFirebaseFirestore.querySnapshotChannel(observerId!)
+                .receiveGuardedBroadcastStream(
+              arguments: <String, dynamic>{
+                'query': this,
+                'includeMetadataChanges': includeMetadataChanges,
+                'serverTimestampBehavior': getServerTimestampBehaviorString(
+                  serverTimestampBehavior,
+                ),
+              },
+              onError: convertPlatformException,
+            ).listen(
+                  (snapshotChanges) {
+                controller.add(
+                    MethodChannelQuerySnapshotChanges(firestore, snapshotChanges));
+              },
+              onError: controller.addError,
+            );
+      },
+      onCancel: () {
+        snapshotChangesStreamSubscription?.cancel();
       },
     );
 
