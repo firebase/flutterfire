@@ -148,8 +148,25 @@ class CollectionData with Names {
       );
     }
 
-    // TODO throw when using json_serializable if the Model type and
-    // the collection are defined in separate libraries
+    final annotatedElementSource = annotatedElement.librarySource;
+    // TODO(rrousselGit) handle parts
+    // Whether the model class and the reference variable are defined in the same file
+    // This is important because json_serializable generates private code for
+    // decoding a Model class.
+    final modelAndReferenceInTheSameLibrary =
+        collectionTargetElement.librarySource == annotatedElementSource;
+    if (!modelAndReferenceInTheSameLibrary) {
+      throw InvalidGenerationSourceError(
+        '''
+When using json_serializable, the `@Collection` annotation and the class that
+represents the content of the collection must be in the same file.
+
+- @Collection is from $annotatedElementSource
+- `$collectionTargetElement` is from ${collectionTargetElement.librarySource}
+''',
+        element: annotatedElement,
+      );
+    }
 
     // TODO test error handling
     if (redirectedFreezedConstructors.length > 1) {
@@ -159,7 +176,6 @@ class CollectionData with Names {
       );
     }
 
-    final annotatedElementSource = annotatedElement.librarySource!;
     final collectionTargetElementPublicType =
         collectionTargetElement.name.public;
     final fromJson = collectionTargetElement.constructors
