@@ -14,13 +14,16 @@ void main() {
   };
   const String kMockProviderId = 'password';
   const String kMockUsername = 'username';
+  const String kMockAuthorizationCode = '123';
 
   group('$AdditionalUserInfo', () {
     AdditionalUserInfo additionalUserInfo = AdditionalUserInfo(
-        isNewUser: kMockIsNewUser,
-        profile: kMockProfile,
-        providerId: kMockProviderId,
-        username: kMockUsername);
+      isNewUser: kMockIsNewUser,
+      profile: kMockProfile,
+      providerId: kMockProviderId,
+      username: kMockUsername,
+      authorizationCode: kMockAuthorizationCode,
+    );
     group('Constructor', () {
       test('returns an instance of [AdditionalUserInfo]', () {
         expect(additionalUserInfo, isA<AdditionalUserInfo>());
@@ -29,6 +32,8 @@ void main() {
         expect(additionalUserInfo.isNewUser, equals(kMockIsNewUser));
         expect(additionalUserInfo.username, equals(kMockUsername));
         expect(additionalUserInfo.profile, equals(kMockProfile));
+        expect(additionalUserInfo.authorizationCode,
+            equals(kMockAuthorizationCode));
       });
     });
 
@@ -39,7 +44,7 @@ void main() {
         expect(
             result,
             equals(
-                '$AdditionalUserInfo(isNewUser: $kMockIsNewUser, profile: $kMockProfile, providerId: $kMockProviderId, username: $kMockUsername)'));
+                '$AdditionalUserInfo(isNewUser: $kMockIsNewUser, profile: $kMockProfile, providerId: $kMockProviderId, username: $kMockUsername, authorizationCode: $kMockAuthorizationCode)'));
       });
     });
   });

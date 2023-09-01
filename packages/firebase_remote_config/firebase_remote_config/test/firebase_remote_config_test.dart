@@ -223,7 +223,7 @@ void main() {
       test('should throw when non-primitive value is passed', () {
         expect(
           () => remoteConfig.setDefaults({
-            'key': {'nested': 'object'}
+            'key': {'nested': 'object'},
           }),
           throwsArgumentError,
         );

@@ -1077,9 +1077,9 @@ class RecaptchaVerifier
       container, Map<String, dynamic> parameters, Auth auth) {
     return RecaptchaVerifier.fromJsObject(
       auth_interop.RecaptchaVerifierJsImpl(
+        auth.jsObject,
         container,
         jsify(parameters),
-        auth.jsObject,
       ),
     );
   }

@@ -1,3 +1,7 @@
+## 3.3.5
+
+ - Update a dependency to the latest release.
+
 ## 3.3.4
 
  - **DOCS**(crashlytics): illustrate different methods for recording crashes ([#11275](https://github.com/firebase/flutterfire/issues/11275)). ([d00c3ed2](https://github.com/firebase/flutterfire/commit/d00c3ed2a28656830ffd15f6737a4c8a607053b7))
