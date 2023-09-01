@@ -23,7 +23,6 @@
 
 package io.flutter.plugins.firebase.firestore.streamhandler;
 
-import com.google.firebase.firestore.QuerySnapshot;
 import static com.google.firebase.firestore.util.Preconditions.checkNotNull;
 
 import androidx.annotation.NonNull;
@@ -33,10 +32,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SnapshotMetadata;
-import com.google.firebase.firestore.core.ViewSnapshot;
-import com.google.firebase.firestore.model.Document;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -132,8 +129,8 @@ public class QuerySnapshotWrapper {
    */
   @NonNull
   public <T> List<T> toObjects(
-    @NonNull Class<T> clazz,
-    @NonNull DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior) {
+      @NonNull Class<T> clazz,
+      @NonNull DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior) {
 
     return querySnapshot.toObjects(clazz, serverTimestampBehavior);
   }
@@ -147,5 +144,4 @@ public class QuerySnapshotWrapper {
   public int hashCode() {
     return querySnapshot.hashCode();
   }
-
 }

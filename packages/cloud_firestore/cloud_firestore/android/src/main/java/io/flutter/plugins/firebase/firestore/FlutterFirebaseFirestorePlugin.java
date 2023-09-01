@@ -38,8 +38,8 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
 import io.flutter.plugins.firebase.firestore.streamhandler.DocumentSnapshotsStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.LoadBundleStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.OnTransactionResultListener;
-import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotChangesStreamHandler;
+import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
@@ -645,8 +645,8 @@ public class FlutterFirebaseFirestorePlugin
         return;
       case "Query#snapshotChanges":
         result.success(
-          registerEventChannel(
-            METHOD_CHANNEL_NAME + "/query", new QuerySnapshotChangesStreamHandler()));
+            registerEventChannel(
+                METHOD_CHANNEL_NAME + "/query", new QuerySnapshotChangesStreamHandler()));
         return;
       case "DocumentReference#snapshots":
         result.success(

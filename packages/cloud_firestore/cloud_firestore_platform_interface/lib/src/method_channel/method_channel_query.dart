@@ -186,7 +186,7 @@ class MethodChannelQuery extends QueryPlatform {
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     late StreamController<QuerySnapshotChangesPlatform>
-    controller; // ignore: close_sinks
+        controller; // ignore: close_sinks
 
     StreamSubscription<dynamic>? snapshotChangesStreamSubscription;
 
@@ -198,21 +198,21 @@ class MethodChannelQuery extends QueryPlatform {
         snapshotChangesStreamSubscription =
             MethodChannelFirebaseFirestore.querySnapshotChannel(observerId!)
                 .receiveGuardedBroadcastStream(
-              arguments: <String, dynamic>{
-                'query': this,
-                'includeMetadataChanges': includeMetadataChanges,
-                'serverTimestampBehavior': getServerTimestampBehaviorString(
-                  serverTimestampBehavior,
-                ),
-              },
-              onError: convertPlatformException,
-            ).listen(
-                  (snapshotChanges) {
-                controller.add(
-                    MethodChannelQuerySnapshotChanges(firestore, snapshotChanges));
-              },
-              onError: controller.addError,
-            );
+          arguments: <String, dynamic>{
+            'query': this,
+            'includeMetadataChanges': includeMetadataChanges,
+            'serverTimestampBehavior': getServerTimestampBehaviorString(
+              serverTimestampBehavior,
+            ),
+          },
+          onError: convertPlatformException,
+        ).listen(
+          (snapshotChanges) {
+            controller.add(
+                MethodChannelQuerySnapshotChanges(firestore, snapshotChanges));
+          },
+          onError: controller.addError,
+        );
       },
       onCancel: () {
         snapshotChangesStreamSubscription?.cancel();
