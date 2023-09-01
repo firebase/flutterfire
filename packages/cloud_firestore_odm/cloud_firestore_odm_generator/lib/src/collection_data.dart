@@ -79,7 +79,6 @@ class CollectionGraph {
 class CollectionData with Names {
   CollectionData({
     required this.type,
-    required this.hasFreezed,
     required String? collectionName,
     required this.collectionPrefix,
     required this.path,
@@ -215,7 +214,6 @@ represents the content of the collection must be in the same file.
     }
     final data = CollectionData(
       type: type,
-      hasFreezed: hasFreezed,
       path: path,
       collectionName: name,
       collectionPrefix: prefix,
@@ -341,7 +339,6 @@ represents the content of the collection must be in the same file.
   @override
   final DartType type;
 
-  final bool hasFreezed;
   final String collectionName;
   final String path;
   final String? idKey;
