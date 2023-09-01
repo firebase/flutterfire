@@ -14,23 +14,26 @@ import '../interop/firestore.dart' as firestore_interop;
 /// Class containing static utility methods to decode firestore data.
 class DecodeUtility {
   /// Decodes the values on an incoming Map to their proper types.
-  static Map<String, dynamic>? decodeMapData(Map<String, dynamic>? data) {
+  static Map<String, dynamic>? decodeMapData(
+      Map<String, dynamic>? data, FirebaseFirestorePlatform firestore) {
     if (data == null) {
       return null;
     }
-    return data..updateAll((key, value) => valueDecode(value));
+    return data..updateAll((key, value) => valueDecode(value, firestore));
   }
 
   /// Decodes the values on an incoming Array to their proper types.
-  static List<dynamic>? decodeArrayData(List<dynamic>? data) {
+  static List<dynamic>? decodeArrayData(
+      List<dynamic>? data, FirebaseFirestorePlatform firestore) {
     if (data == null) {
       return null;
     }
-    return data.map(valueDecode).toList();
+    return data.map((v) => valueDecode(v, firestore)).toList();
   }
 
   /// Decodes an incoming value to its proper type.
-  static dynamic valueDecode(dynamic value) {
+  static dynamic valueDecode(
+      dynamic value, FirebaseFirestorePlatform firestore) {
     if (util.instanceof(value, GeoPointConstructor)) {
       return GeoPoint(value.latitude as double, value.longitude as double);
     } else if (value is DateTime) {
@@ -38,12 +41,11 @@ class DecodeUtility {
     } else if (util.instanceof(value, BytesConstructor)) {
       return Blob(value.toUint8Array());
     } else if (value is firestore_interop.DocumentReference) {
-      return (FirebaseFirestorePlatform.instance as FirebaseFirestoreWeb)
-          .doc(value.path);
+      return (firestore as FirebaseFirestoreWeb).doc(value.path);
     } else if (value is Map<String, dynamic>) {
-      return decodeMapData(value);
+      return decodeMapData(value, firestore);
     } else if (value is List<dynamic>) {
-      return decodeArrayData(value);
+      return decodeArrayData(value, firestore);
     }
     return value;
   }

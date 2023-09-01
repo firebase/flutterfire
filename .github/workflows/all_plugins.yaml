@@ -112,6 +112,8 @@ jobs:
       - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
           channel: 'stable'
+          # TODO - remove the below fixed version once hot fix lands: https://github.com/flutter/flutter/issues/132711
+          flutter-version: '3.10.6'
           cache: true
       - uses: bluefireteam/melos-action@dd3c344d731938d2ab2567a261f54a19a68b5f6a
         with:

@@ -21,6 +21,7 @@ import 'snapshot_metadata_e2e.dart';
 import 'timestamp_e2e.dart';
 import 'transaction_e2e.dart';
 import 'write_batch_e2e.dart';
+import 'second_database.dart';
 
 bool kUseFirestoreEmulator = true;
 
@@ -52,5 +53,6 @@ void main() {
     runWriteBatchTests();
     runLoadBundleTests();
     runSecondAppTests();
+    runSecondDatabaseTests();
   });
 }
