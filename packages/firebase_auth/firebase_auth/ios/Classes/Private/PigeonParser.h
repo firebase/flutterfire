@@ -20,5 +20,6 @@
     (nullable PigeonActionCodeSettings *)settings;
 + (PigeonUserCredential *_Nullable)getPigeonUserCredentialFromFIRUser:(nonnull FIRUser *)user;
 + (PigeonIdTokenResult *)parseIdTokenResult:(FIRAuthTokenResult *)tokenResult;
++ (PigeonTotpSecret *_Nonnull)getPigeonTotpSecret:(nonnull FIRTOTPSecret *)secret;
 
 @end

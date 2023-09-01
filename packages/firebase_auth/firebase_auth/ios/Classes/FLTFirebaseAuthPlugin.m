@@ -89,6 +89,13 @@ NSString *const kErrMsgInvalidCredential =
 
   // Map an id to a MultiFactorResolver object.
   NSMutableDictionary<NSString *, FIRMultiFactorResolver *> *_multiFactorResolverMap;
+
+  // Map an id to a MultiFactorResolver object.
+  NSMutableDictionary<NSString *, FIRMultiFactorAssertion *> *_multiFactorAssertionMap;
+
+  // Map an id to a MultiFactorResolver object.
+  NSMutableDictionary<NSString *, FIRTOTPSecret *> *_multiFactorTotpSecretMap;
+
 #endif
 
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
@@ -111,6 +118,9 @@ NSString *const kErrMsgInvalidCredential =
 #if TARGET_OS_IPHONE
     _multiFactorSessionMap = [NSMutableDictionary dictionary];
     _multiFactorResolverMap = [NSMutableDictionary dictionary];
+    _multiFactorAssertionMap = [NSMutableDictionary dictionary];
+    _multiFactorTotpSecretMap = [NSMutableDictionary dictionary];
+
 #endif
   }
   return self;
@@ -138,6 +148,8 @@ NSString *const kErrMsgInvalidCredential =
   FirebaseAuthUserHostApiSetup(registrar.messenger, instance);
   MultiFactorUserHostApiSetup(registrar.messenger, instance);
   MultiFactoResolverHostApiSetup(registrar.messenger, instance);
+  MultiFactorTotpHostApiSetup(registrar.messenger, instance);
+  MultiFactorTotpSecretHostApiSetup(registrar.messenger, instance);
 #endif
 }
 
@@ -819,18 +831,50 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                           }];
 }
 
+- (void)enrollTotpApp:(nonnull PigeonFirebaseApp *)app
+          assertionId:(nonnull NSString *)assertionId
+          displayName:(nullable NSString *)displayName
+           completion:(nonnull void (^)(FlutterError *_Nullable))completion {
+  FIRMultiFactor *multiFactor = [self getAppMultiFactorFromPigeon:app];
+
+  FIRMultiFactorAssertion *assertion = _multiFactorAssertionMap[assertionId];
+
+  [multiFactor enrollWithAssertion:assertion
+                       displayName:displayName
+                        completion:^(NSError *_Nullable error) {
+                          if (error == nil) {
+                            completion(nil);
+                          } else {
+                            completion([FlutterError errorWithCode:@"enroll-failed"
+                                                           message:error.localizedDescription
+                                                           details:nil]);
+                          }
+                        }];
+}
+
 - (void)resolveSignInResolverId:(nonnull NSString *)resolverId
-                      assertion:(nonnull PigeonPhoneMultiFactorAssertion *)assertion
+                      assertion:(nullable PigeonPhoneMultiFactorAssertion *)assertion
+                totpAssertionId:(nullable NSString *)totpAssertionId
                      completion:(nonnull void (^)(PigeonUserCredential *_Nullable,
                                                   FlutterError *_Nullable))completion {
   FIRMultiFactorResolver *resolver = _multiFactorResolverMap[resolverId];
 
-  FIRPhoneAuthCredential *credential =
-      [[FIRPhoneAuthProvider provider] credentialWithVerificationID:[assertion verificationId]
-                                                   verificationCode:[assertion verificationCode]];
+  FIRMultiFactorAssertion *multiFactorAssertion;
 
-  FIRMultiFactorAssertion *multiFactorAssertion =
-      [FIRPhoneMultiFactorGenerator assertionWithCredential:credential];
+  if (assertion != nil) {
+    FIRPhoneAuthCredential *credential =
+        [[FIRPhoneAuthProvider provider] credentialWithVerificationID:[assertion verificationId]
+                                                     verificationCode:[assertion verificationCode]];
+    multiFactorAssertion = [FIRPhoneMultiFactorGenerator assertionWithCredential:credential];
+  } else if (totpAssertionId != nil) {
+    multiFactorAssertion = _multiFactorAssertionMap[totpAssertionId];
+  } else {
+    completion(nil,
+               [FlutterError errorWithCode:@"resolve-signin-failed"
+                                   message:@"Neither assertion nor totpAssertionId were provided"
+                                   details:nil]);
+    return;
+  }
 
   [resolver
       resolveSignInWithAssertion:multiFactorAssertion
@@ -846,6 +890,72 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                                                               details:nil]);
                         }
                       }];
+}
+
+- (void)generateSecretSessionId:(nonnull NSString *)sessionId
+                     completion:(nonnull void (^)(PigeonTotpSecret *_Nullable,
+                                                  FlutterError *_Nullable))completion {
+  FIRMultiFactorSession *multiFactorSession = _multiFactorSessionMap[sessionId];
+
+  [FIRTOTPMultiFactorGenerator
+      generateSecretWithMultiFactorSession:multiFactorSession
+                                completion:^(FIRTOTPSecret *_Nullable secret,
+                                             NSError *_Nullable error) {
+                                  if (error == nil) {
+                                    self->_multiFactorTotpSecretMap[secret.sharedSecretKey] =
+                                        secret;
+                                    completion([PigeonParser getPigeonTotpSecret:secret], nil);
+                                  } else {
+                                    completion(
+                                        nil, [FlutterError errorWithCode:@"generate-secret-failed"
+                                                                 message:error.localizedDescription
+                                                                 details:nil]);
+                                  }
+                                }];
+}
+
+- (void)getAssertionForEnrollmentSecretKey:(nonnull NSString *)secretKey
+                           oneTimePassword:(nonnull NSString *)oneTimePassword
+                                completion:(nonnull void (^)(NSString *_Nullable,
+                                                             FlutterError *_Nullable))completion {
+  FIRTOTPSecret *totpSecret = _multiFactorTotpSecretMap[secretKey];
+
+  FIRTOTPMultiFactorAssertion *assertion =
+      [FIRTOTPMultiFactorGenerator assertionForEnrollmentWithSecret:totpSecret
+                                                    oneTimePassword:oneTimePassword];
+
+  NSString *UUID = [[NSUUID UUID] UUIDString];
+  self->_multiFactorAssertionMap[UUID] = assertion;
+  completion(UUID, nil);
+}
+
+- (void)getAssertionForSignInEnrollmentId:(nonnull NSString *)enrollmentId
+                          oneTimePassword:(nonnull NSString *)oneTimePassword
+                               completion:(nonnull void (^)(NSString *_Nullable,
+                                                            FlutterError *_Nullable))completion {
+  FIRTOTPMultiFactorAssertion *assertion =
+      [FIRTOTPMultiFactorGenerator assertionForSignInWithEnrollmentID:enrollmentId
+                                                      oneTimePassword:oneTimePassword];
+  NSString *UUID = [[NSUUID UUID] UUIDString];
+  self->_multiFactorAssertionMap[UUID] = assertion;
+  completion(UUID, nil);
+}
+
+- (void)generateQrCodeUrlSecretKey:(nonnull NSString *)secretKey
+                       accountName:(nullable NSString *)accountName
+                            issuer:(nullable NSString *)issuer
+                        completion:(nonnull void (^)(NSString *_Nullable,
+                                                     FlutterError *_Nullable))completion {
+  FIRTOTPSecret *totpSecret = _multiFactorTotpSecretMap[secretKey];
+  completion([totpSecret generateQRCodeURLWithAccountName:accountName issuer:issuer], nil);
+}
+
+- (void)openInOtpAppSecretKey:(nonnull NSString *)secretKey
+                    qrCodeUrl:(nonnull NSString *)qrCodeUrl
+                   completion:(nonnull void (^)(FlutterError *_Nullable))completion {
+  FIRTOTPSecret *totpSecret = _multiFactorTotpSecretMap[secretKey];
+  [totpSecret openInOTPAppWithQRCodeURL:qrCodeUrl];
+  completion(nil);
 }
 
 #endif

@@ -99,6 +99,15 @@ FirebaseAuthException getFirebaseAuthException(
               uid: e.uid,
               phoneNumber: e.phoneNumber,
             );
+          } else if (e is multi_factor_interop.TotpMultiFactorInfo) {
+            return TotpMultiFactorInfo(
+              displayName: e.displayName,
+              factorId: e.factorId,
+              enrollmentTimestamp:
+                  HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch /
+                      1000,
+              uid: e.uid,
+            );
           }
           return MultiFactorInfo(
             displayName: e.displayName,

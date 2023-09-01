@@ -79,6 +79,14 @@
                                              profile:userInfo.profile];
 }
 
++ (PigeonTotpSecret *)getPigeonTotpSecret:(FIRTOTPSecret *)secret {
+  return [PigeonTotpSecret makeWithCodeIntervalSeconds:nil
+                                            codeLength:nil
+                          enrollmentCompletionDeadline:nil
+                                      hashingAlgorithm:nil
+                                             secretKey:secret.sharedSecretKey];
+}
+
 + (PigeonAuthCredential *)getPigeonAuthCredential:(FIRAuthCredential *)authCredential {
   if (authCredential == nil) {
     return nil;
