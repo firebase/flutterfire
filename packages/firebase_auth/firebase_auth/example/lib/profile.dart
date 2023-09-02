@@ -4,6 +4,7 @@
 
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_example/main.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ import 'auth.dart';
 const placeholderImage =
     'https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png';
 
-/// Profile page shows after sign in or registerationg
+/// Profile page shows after sign in or registration.
 class ProfilePage extends StatefulWidget {
   // ignore: public_member_api_docs
   const ProfilePage({Key? key}) : super(key: key);
@@ -188,6 +189,25 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                         child: const Text('Get enrolled factors'),
                       ),
+                      TextButton(
+                        onPressed: () async {
+                          if (AuthGate.appleAuthorizationCode != null) {
+                            // The `authorizationCode` is on the user credential.
+                            // e.g. final authorizationCode = userCredential.additionalUserInfo?.authorizationCode;
+                            await FirebaseAuth.instance
+                                .revokeTokenWithAuthorizationCode(
+                              AuthGate.appleAuthorizationCode!,
+                            );
+                            // You may wish to delete the user at this point
+                            AuthGate.appleAuthorizationCode = null;
+                          } else {
+                            print(
+                              'Apple `authorizationCode` is null, cannot revoke token.',
+                            );
+                          }
+                        },
+                        child: const Text('Revoke Apple auth token'),
+                      ),
                       TextFormField(
                         controller: phoneController,
                         decoration: const InputDecoration(
@@ -233,6 +253,46 @@ class _ProfilePageState extends State<ProfilePage> {
                           );
                         },
                         child: const Text('Verify Number For MFA'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          final totp =
+                              (await user.multiFactor.getEnrolledFactors())
+                                  .firstWhereOrNull(
+                            (element) => element.factorId == 'totp',
+                          );
+                          if (totp != null) {
+                            await user.multiFactor.unenroll(
+                              factorUid:
+                                  (await user.multiFactor.getEnrolledFactors())
+                                      .firstWhere(
+                                        (element) => element.factorId == 'totp',
+                                      )
+                                      .uid,
+                            );
+                          }
+                          final session = await user.multiFactor.getSession();
+                          final totpSecret =
+                              await TotpMultiFactorGenerator.generateSecret(
+                            session,
+                          );
+                          print(totpSecret);
+                          final code =
+                              await getTotpFromUser(context, totpSecret);
+                          print('code: $code');
+                          if (code == null) {
+                            return;
+                          }
+                          await user.multiFactor.enroll(
+                            await TotpMultiFactorGenerator
+                                .getAssertionForEnrollment(
+                              totpSecret,
+                              code,
+                            ),
+                            displayName: 'TOTP',
+                          );
+                        },
+                        child: const Text('Enroll TOTP'),
                       ),
                       TextButton(
                         onPressed: () async {
