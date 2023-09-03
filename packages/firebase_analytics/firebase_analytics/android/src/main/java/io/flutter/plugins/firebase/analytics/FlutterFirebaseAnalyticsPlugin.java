@@ -165,7 +165,6 @@ public class FlutterFirebaseAnalyticsPlugin
     cachedThreadPool.execute(
       () -> {
         try {
-          Log.d("ANALYTICS: ", analytics.getSessionId().toString());
           taskCompletionSource.setResult(Tasks.await(analytics.getSessionId()));
         } catch (Exception e) {
           taskCompletionSource.setException(e);

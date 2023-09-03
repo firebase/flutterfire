@@ -19,6 +19,29 @@ void main() {
       );
     });
 
+    // getSessionId has to be first, else Android returns null
+    test(
+      'getSessionId',
+      () async {
+        if (kIsWeb) {
+          await expectLater(
+            FirebaseAnalytics.instance.getSessionId(),
+            throwsA(isA<UnimplementedError>()),
+          );
+        } else {
+          await expectLater(
+            FirebaseAnalytics.instance.setConsent(
+              analyticsStorageConsentGranted: true,
+            ),
+            completes,
+          );
+
+          final result = await FirebaseAnalytics.instance.getSessionId();
+          expect(result, isA<int>());
+        }
+      },
+    );
+
     test('isSupported', () async {
       final result = await FirebaseAnalytics.instance.isSupported();
       expect(result, isA<bool>());
@@ -272,31 +295,5 @@ void main() {
         expect(result2, isA<String>());
       }
     });
-
-    test(
-      'getSessionId',
-      () async {
-        // FIXME: Android returns null for getSessionId in tests,
-        // but works when running in the context of an app.
-        // Need to investigate why this is the case.
-        if (kIsWeb) {
-          await expectLater(
-            FirebaseAnalytics.instance.getSessionId(),
-            throwsA(isA<UnimplementedError>()),
-          );
-        } else {
-          await expectLater(
-            FirebaseAnalytics.instance.setConsent(
-              analyticsStorageConsentGranted: true,
-              adStorageConsentGranted: true,
-            ),
-            completes,
-          );
-
-          final result = await FirebaseAnalytics.instance.getSessionId();
-          expect(result, isA<int>());
-        }
-      },
-    );
   });
 }
