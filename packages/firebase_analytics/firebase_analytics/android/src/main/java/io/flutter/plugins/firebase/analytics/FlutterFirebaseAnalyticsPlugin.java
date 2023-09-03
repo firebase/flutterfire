@@ -13,8 +13,6 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
-
-import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -163,13 +161,13 @@ public class FlutterFirebaseAnalyticsPlugin
     TaskCompletionSource<Long> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
-      () -> {
-        try {
-          taskCompletionSource.setResult(Tasks.await(analytics.getSessionId()));
-        } catch (Exception e) {
-          taskCompletionSource.setException(e);
-        }
-      });
+        () -> {
+          try {
+            taskCompletionSource.setResult(Tasks.await(analytics.getSessionId()));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
 
     return taskCompletionSource.getTask();
   }

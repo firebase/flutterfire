@@ -82,13 +82,13 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
 #pragma mark - Firebase Analytics API
 
 - (void)getSessionIdWithMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-    [FIRAnalytics sessionIDWithCompletion:^(int64_t sessionID, NSError * _Nullable error) {
-        if (error != nil) {
-            result.error(nil, nil, nil, error);
-        } else {
-            result.success([NSNumber numberWithLongLong:sessionID]);
-        }
-    }];
+  [FIRAnalytics sessionIDWithCompletion:^(int64_t sessionID, NSError *_Nullable error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success([NSNumber numberWithLongLong:sessionID]);
+    }
+  }];
 }
 
 - (void)logEvent:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
