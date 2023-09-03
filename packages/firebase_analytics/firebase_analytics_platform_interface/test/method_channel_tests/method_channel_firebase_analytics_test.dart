@@ -24,6 +24,8 @@ void main() {
         switch (call.method) {
           case 'Analytics#getAppInstanceId':
             return 'ABCD1234';
+          case 'Analytics#getSessionId':
+            return 0;
 
           default:
             return true;
