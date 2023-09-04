@@ -28,8 +28,9 @@ import 'token_monitor.dart';
 /// 2. Run `melos bootstrap` in FlutterFire project.
 /// 3. In your terminal, root to ./packages/firebase_messaging/firebase_messaging/example directory.
 /// 4. Run `flutterfire configure` in the example/ directory to setup your app with your Firebase project.
-/// 5. Run the app on an actual device for iOS, android is fine to run on an emulator.
-/// 6. Use the following script to send a message to your device: scripts/send-message.js. To run this script,
+/// 5. Open `token_monitor.dart` and change `vapidKey` to yours.
+/// 6. Run the app on an actual device for iOS, android is fine to run on an emulator.
+/// 7. Use the following script to send a message to your device: scripts/send-message.js. To run this script,
 ///    you will need nodejs installed on your computer. Then the following:
 ///     a. Download a service account key (JSON file) from your Firebase console, rename it to "google-services.json" and add to the example/scripts directory.
 ///     b. Ensure your device/emulator is running, and run the FirebaseMessaging example app using `flutter run`.
