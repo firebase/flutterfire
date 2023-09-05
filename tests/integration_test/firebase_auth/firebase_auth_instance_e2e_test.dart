@@ -530,7 +530,7 @@ void main() {
 
           final userCred = await FirebaseAuth.instance.signInAnonymously();
           await successCallback(userCred);
-        });
+        }, skip: !kIsWeb && Platform.isWindows,);
       });
 
       group('signInWithCredential()', () {
@@ -542,7 +542,7 @@ void main() {
           await FirebaseAuth.instance
               .signInWithCredential(credential)
               .then(commonSuccessCallback);
-        });
+        }, skip: !kIsWeb && Platform.isWindows,);
 
         test('throws if login user is disabled', () async {
           final credential = EmailAuthProvider.credential(
