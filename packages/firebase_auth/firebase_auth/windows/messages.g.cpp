@@ -1881,7 +1881,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.registerIdTokenListener",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -1918,7 +1918,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.registerAuthStateListener",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -1954,7 +1954,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   }
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger, "dev.flutter.pigeon.FirebaseAuthHostApi.useEmulator",
+        binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2002,7 +2002,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.applyActionCode", &GetCodec());
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode", &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
           [api](const EncodableValue& message,
@@ -2044,7 +2044,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.checkActionCode", &GetCodec());
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode", &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
           [api](const EncodableValue& message,
@@ -2087,7 +2087,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.confirmPasswordReset",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2137,7 +2137,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.createUserWithEmailAndPassword",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2189,7 +2189,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.signInAnonymously",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2226,7 +2226,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.signInWithCredential",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2271,7 +2271,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.signInWithCustomToken",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2316,7 +2316,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.signInWithEmailAndPassword",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2368,7 +2368,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.signInWithEmailLink",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2420,7 +2420,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.signInWithProvider",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2466,7 +2466,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   }
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger, "dev.flutter.pigeon.FirebaseAuthHostApi.signOut",
+        binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2502,7 +2502,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.fetchSignInMethodsForEmail",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2546,7 +2546,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.sendPasswordResetEmail",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2595,7 +2595,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.sendSignInLinkToEmail",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2648,7 +2648,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.setLanguageCode", &GetCodec());
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode", &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
           [api](const EncodableValue& message,
@@ -2686,7 +2686,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   }
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger, "dev.flutter.pigeon.FirebaseAuthHostApi.setSettings",
+        binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2730,7 +2730,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.verifyPasswordResetCode",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -2773,7 +2773,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthHostApi.verifyPhoneNumber",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -3046,7 +3046,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                                     FirebaseAuthUserHostApi* api) {
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger, "dev.flutter.pigeon.FirebaseAuthUserHostApi.delete",
+        binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -3082,7 +3082,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthUserHostApi.getIdToken", &GetCodec());
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken", &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
           [api](const EncodableValue& message,
@@ -3125,7 +3125,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthUserHostApi.linkWithCredential",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -3170,7 +3170,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthUserHostApi.linkWithProvider",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -3217,7 +3217,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthUserHostApi."
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi."
         "reauthenticateWithCredential",
         &GetCodec());
     if (api != nullptr) {
@@ -3263,7 +3263,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthUserHostApi.reauthenticateWithProvider",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -3309,7 +3309,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   }
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger, "dev.flutter.pigeon.FirebaseAuthUserHostApi.reload",
+        binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -3346,7 +3346,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthUserHostApi.sendEmailVerification",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -3387,7 +3387,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   }
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger, "dev.flutter.pigeon.FirebaseAuthUserHostApi.unlink",
+        binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -3431,7 +3431,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthUserHostApi.updateEmail", &GetCodec());
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail", &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
           [api](const EncodableValue& message,
@@ -3474,7 +3474,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthUserHostApi.updatePassword",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -3518,7 +3518,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthUserHostApi.updatePhoneNumber",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -3563,7 +3563,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthUserHostApi.updateProfile",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -3607,7 +3607,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -3744,7 +3744,7 @@ void MultiFactorUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone", &GetCodec());
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone", &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
           [api](const EncodableValue& message,
@@ -3790,7 +3790,7 @@ void MultiFactorUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.MultiFactorUserHostApi.getSession", &GetCodec());
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession", &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
           [api](const EncodableValue& message,
@@ -3825,7 +3825,7 @@ void MultiFactorUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   }
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
-        binary_messenger, "dev.flutter.pigeon.MultiFactorUserHostApi.unenroll",
+        binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -3868,7 +3868,7 @@ void MultiFactorUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -4016,7 +4016,7 @@ void MultiFactoResolverHostApi::SetUp(
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn",
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -4116,7 +4116,7 @@ void GenerateInterfaces::SetUp(flutter::BinaryMessenger* binary_messenger,
   {
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
-        "dev.flutter.pigeon.GenerateInterfaces.pigeonInterface", &GetCodec());
+        "dev.flutter.pigeon.firebase_auth_platform_interface.GenerateInterfaces.pigeonInterface", &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
           [api](const EncodableValue& message,
