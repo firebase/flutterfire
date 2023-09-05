@@ -94,7 +94,7 @@ void main() {
           }
           fail('should have thrown an error');
         });
-      });
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
 
       group('getIdTokenResult()', () {
         test('should return a valid IdTokenResult Object', () async {
@@ -235,7 +235,7 @@ void main() {
                 ?.unlink(PhoneAuthProvider.PROVIDER_ID);
             await FirebaseAuth.instance.currentUser?.delete();
           },
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.windows,
         ); // verifyPhoneNumber not supported on web.
 
         test(
