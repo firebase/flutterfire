@@ -24,10 +24,8 @@ void main() {
         options: DefaultFirebaseOptions.currentPlatform,
       );
 
-      if (!Platform.isWindows) {
-        await FirebaseAuth.instance
-            .useAuthEmulator(testEmulatorHost, testEmulatorPort);
-      }
+      await FirebaseAuth.instance
+          .useAuthEmulator(testEmulatorHost, testEmulatorPort);
     });
 
     setUp(() async {

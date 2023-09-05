@@ -11,6 +11,7 @@
 #include <thread>
 
 #include "firebase/app.h"
+#include "firebase/variant.h"
 #include "firebase/auth.h"
 #include "firebase/future.h"
 #include "firebase/log.h"
@@ -79,6 +80,62 @@ PigeonUserCredential ParseAuthResult(
     const firebase::auth::AuthResult* authResult) {
   PigeonUserCredential result = PigeonUserCredential();
   result.set_user(FirebaseAuthPlugin::ParseUserDetails(authResult->user));
+  result.set_additional_user_info(
+      FirebaseAuthPlugin::ParseAdditionalUserInfo(authResult->additional_user_info));
+  return result;
+}
+
+using flutter::EncodableMap;
+using flutter::EncodableValue;
+
+flutter::EncodableMap
+firebase_auth_windows::FirebaseAuthPlugin::ConvertToEncodableMap(
+    const std::map<firebase::Variant, firebase::Variant>& originalMap) {
+  EncodableMap convertedMap;
+  for (const auto& kv : originalMap) {
+    EncodableValue key = ConvertToEncodableValue(
+        kv.first);  // convert std::string to EncodableValue
+    EncodableValue value = ConvertToEncodableValue(
+        kv.second);             // convert FieldValue to EncodableValue
+    convertedMap[key] = value;  // insert into the new map
+  }
+  return convertedMap;
+}
+
+flutter::EncodableValue
+firebase_auth_windows::FirebaseAuthPlugin::ConvertToEncodableValue(
+    const firebase::Variant& variant) {
+  switch (variant.type()) {
+    case firebase::Variant::kTypeNull:
+      return EncodableValue();
+    case firebase::Variant::kTypeInt64:
+      return EncodableValue(variant.int64_value());
+    case firebase::Variant::kTypeDouble:
+      return EncodableValue(variant.double_value());
+    case firebase::Variant::kTypeBool:
+      return EncodableValue(variant.bool_value());
+    case firebase::Variant::kTypeStaticString:
+      return EncodableValue(variant.string_value());
+    case firebase::Variant::kTypeMutableString:
+      return EncodableValue(variant.mutable_string());
+    case firebase::Variant::kTypeMap:
+      return FirebaseAuthPlugin::ConvertToEncodableMap(variant.map());
+    case firebase::Variant::kTypeStaticBlob:
+      return EncodableValue(variant.blob_data());
+    case firebase::Variant::kTypeMutableBlob:
+      return EncodableValue(variant.mutable_blob_data());
+    default:
+      return EncodableValue();
+  }
+}
+
+PigeonAdditionalUserInfo FirebaseAuthPlugin::ParseAdditionalUserInfo(
+  const firebase::auth::AdditionalUserInfo additionalUserInfo) {
+  // Cannot know if the user is new or not with current API
+  PigeonAdditionalUserInfo result = PigeonAdditionalUserInfo(false);
+  result.set_profile(ConvertToEncodableMap(additionalUserInfo.profile));
+  result.set_provider_id(additionalUserInfo.provider_id);
+  result.set_username(additionalUserInfo.user_name);
   return result;
 }
 
@@ -144,6 +201,8 @@ std::string FirebaseAuthPlugin::GetAuthErrorCode(AuthError authError) {
       return "invalid-custom-token";
     case firebase::auth::kAuthErrorCustomTokenMismatch:
       return "custom-token-mismatch";
+    case firebase::auth::kAuthErrorInvalidEmail:
+      return "invalid-email";
     case firebase::auth::kAuthErrorInvalidCredential:
       return "invalid-credential";
     case firebase::auth::kAuthErrorUserDisabled:

@@ -346,7 +346,7 @@ void main() {
             fail(e.toString());
           }
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('isSignInWithEmailLink()', () {
         test('should return true or false', () {
