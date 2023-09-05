@@ -30,6 +30,14 @@ Future<void> main() async {
   );
   auth = FirebaseAuth.instanceFor(app: app);
 
+          final credential = EmailAuthProvider.credential(
+            email: "test@mail.com",
+            password: "Azeqsd123@",
+          );
+
+          await FirebaseAuth.instance
+              .signInWithCredential(credential);
+              
   if (shouldUseFirebaseEmulator) {
     await auth.useAuthEmulator('localhost', 9099);
   }

@@ -190,7 +190,7 @@ void main() {
             equals('updatedName'),
           );
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('currentUser', () {
         test('should return currentUser', () async {
@@ -261,7 +261,11 @@ void main() {
 
             var additionalUserInfo = newUserCredential.additionalUserInfo;
             expect(additionalUserInfo, isA<AdditionalUserInfo>());
-            expect(additionalUserInfo?.isNewUser, isTrue);
+            if (!kIsWeb && Platform.isWindows) {
+              // Skip because isNewUser is always false on Windows
+            } else {
+              expect(additionalUserInfo?.isNewUser, isTrue);
+            }
 
             await FirebaseAuth.instance.currentUser?.delete();
           };

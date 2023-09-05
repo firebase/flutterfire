@@ -581,17 +581,13 @@ firebase::auth::Credential getCredentialFromArguments(
   std::string signInMethod =
       std::get<std::string>(arguments[kArgumentSignInMethod]);
   std::string secret = std::get<std::string>(arguments[kArgumentSecret]);
-  std::string idToken = std::get<std::string>(arguments[kArgumentIdToken]);
-  std::string accessToken =
-      std::get<std::string>(arguments[kArgumentAccessToken]);
-  std::string rawNonce = std::get<std::string>(arguments[kArgumentRawNonce]);
 
   // Password Auth
   if (signInMethod == kSignInMethodPassword) {
     std::string email = std::get<std::string>(arguments[kArgumentEmail]);
-    return firebase::auth::EmailAuthProvider::GetCredential(email.c_str(),
-                                                            secret.c_str());
+    return firebase::auth::EmailAuthProvider::GetCredential(email.c_str(),                                                         secret.c_str());
   }
+
   // Email Link Auth
   if (signInMethod == kSignInMethodEmailLink) {
     // Firebase C++ SDK doesn't have email link authentication as of my
@@ -600,6 +596,12 @@ firebase::auth::Credential getCredentialFromArguments(
                  "SDK as of September 2021.\n";
     return firebase::auth::Credential();
   }
+
+    std::string idToken = std::get<std::string>(arguments[kArgumentIdToken]);
+  std::string accessToken =
+      std::get<std::string>(arguments[kArgumentAccessToken]);
+  std::string rawNonce = std::get<std::string>(arguments[kArgumentRawNonce]);
+
 
   // Facebook Auth
   if (signInMethod == kSignInMethodFacebook) {
@@ -658,7 +660,10 @@ void FirebaseAuthPlugin::SignInWithCredential(
         if (completed_future.error() == 0) {
           // TODO: not the right return type from C++ SDK
           PigeonUserInfo credential = ParseUserInfo(completed_future.result());
-          // result(credential);
+          PigeonUserCredential userCredential = PigeonUserCredential();
+          PigeonUserDetails user = PigeonUserDetails(credential, flutter::EncodableList());
+          userCredential.set_user(user);
+          result(userCredential);
         } else {
           result(FirebaseAuthPlugin::ParseError(completed_future));
         }
@@ -854,6 +859,12 @@ void FirebaseAuthPlugin::SetLanguageCode(
     const PigeonFirebaseApp& app, const std::string* language_code,
     std::function<void(ErrorOr<std::string> reply)> result) {
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+
+  if (language_code == nullptr) {
+    firebaseAuth->UseAppLanguage();
+    result(firebaseAuth->language_code());
+    return;
+  }
 
   firebaseAuth->set_language_code(language_code->c_str());
 
