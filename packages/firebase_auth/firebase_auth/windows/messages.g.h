@@ -240,40 +240,6 @@ class PigeonFirebaseApp {
 
 
 // Generated class from Pigeon that represents data sent in messages.
-class PigeonActionCodeInfo {
- public:
-  // Constructs an object setting all fields.
-  explicit PigeonActionCodeInfo(
-    const ActionCodeInfoOperation& operation,
-    const PigeonActionCodeInfoData& data);
-
-  const ActionCodeInfoOperation& operation() const;
-  void set_operation(const ActionCodeInfoOperation& value_arg);
-
-  const PigeonActionCodeInfoData& data() const;
-  void set_data(const PigeonActionCodeInfoData& value_arg);
-
-
- private:
-  static PigeonActionCodeInfo FromEncodableList(const flutter::EncodableList& list);
-  flutter::EncodableList ToEncodableList() const;
-  friend class FirebaseAuthHostApi;
-  friend class FirebaseAuthHostApiCodecSerializer;
-  friend class FirebaseAuthUserHostApi;
-  friend class FirebaseAuthUserHostApiCodecSerializer;
-  friend class MultiFactorUserHostApi;
-  friend class MultiFactorUserHostApiCodecSerializer;
-  friend class MultiFactoResolverHostApi;
-  friend class MultiFactoResolverHostApiCodecSerializer;
-  friend class GenerateInterfaces;
-  friend class GenerateInterfacesCodecSerializer;
-  ActionCodeInfoOperation operation_;
-  PigeonActionCodeInfoData data_;
-
-};
-
-
-// Generated class from Pigeon that represents data sent in messages.
 class PigeonActionCodeInfoData {
  public:
   // Constructs an object setting all non-nullable fields.
@@ -314,32 +280,22 @@ class PigeonActionCodeInfoData {
 
 
 // Generated class from Pigeon that represents data sent in messages.
-class PigeonUserCredential {
+class PigeonActionCodeInfo {
  public:
-  // Constructs an object setting all non-nullable fields.
-  PigeonUserCredential();
-
   // Constructs an object setting all fields.
-  explicit PigeonUserCredential(
-    const PigeonUserDetails* user,
-    const PigeonAdditionalUserInfo* additional_user_info,
-    const PigeonAuthCredential* credential);
+  explicit PigeonActionCodeInfo(
+    const ActionCodeInfoOperation& operation,
+    const PigeonActionCodeInfoData& data);
 
-  const PigeonUserDetails* user() const;
-  void set_user(const PigeonUserDetails* value_arg);
-  void set_user(const PigeonUserDetails& value_arg);
+  const ActionCodeInfoOperation& operation() const;
+  void set_operation(const ActionCodeInfoOperation& value_arg);
 
-  const PigeonAdditionalUserInfo* additional_user_info() const;
-  void set_additional_user_info(const PigeonAdditionalUserInfo* value_arg);
-  void set_additional_user_info(const PigeonAdditionalUserInfo& value_arg);
-
-  const PigeonAuthCredential* credential() const;
-  void set_credential(const PigeonAuthCredential* value_arg);
-  void set_credential(const PigeonAuthCredential& value_arg);
+  const PigeonActionCodeInfoData& data() const;
+  void set_data(const PigeonActionCodeInfoData& value_arg);
 
 
  private:
-  static PigeonUserCredential FromEncodableList(const flutter::EncodableList& list);
+  static PigeonActionCodeInfo FromEncodableList(const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthHostApiCodecSerializer;
@@ -351,9 +307,8 @@ class PigeonUserCredential {
   friend class MultiFactoResolverHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
-  std::optional<PigeonUserDetails> user_;
-  std::optional<PigeonAdditionalUserInfo> additional_user_info_;
-  std::optional<PigeonAuthCredential> credential_;
+  ActionCodeInfoOperation operation_;
+  PigeonActionCodeInfoData data_;
 
 };
 
@@ -580,11 +535,11 @@ class PigeonUserDetails {
 
   const flutter::EncodableList& provider_data() const;
   void set_provider_data(const flutter::EncodableList& value_arg);
+  static PigeonUserDetails FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
 
 
  private:
-  static PigeonUserDetails FromEncodableList(const flutter::EncodableList& list);
-  flutter::EncodableList ToEncodableList() const;
   friend class PigeonUserCredential;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthHostApiCodecSerializer;
@@ -598,6 +553,51 @@ class PigeonUserDetails {
   friend class GenerateInterfacesCodecSerializer;
   PigeonUserInfo user_info_;
   flutter::EncodableList provider_data_;
+
+};
+
+
+// Generated class from Pigeon that represents data sent in messages.
+class PigeonUserCredential {
+ public:
+  // Constructs an object setting all non-nullable fields.
+  PigeonUserCredential();
+
+  // Constructs an object setting all fields.
+  explicit PigeonUserCredential(
+    const PigeonUserDetails* user,
+    const PigeonAdditionalUserInfo* additional_user_info,
+    const PigeonAuthCredential* credential);
+
+  const PigeonUserDetails* user() const;
+  void set_user(const PigeonUserDetails* value_arg);
+  void set_user(const PigeonUserDetails& value_arg);
+
+  const PigeonAdditionalUserInfo* additional_user_info() const;
+  void set_additional_user_info(const PigeonAdditionalUserInfo* value_arg);
+  void set_additional_user_info(const PigeonAdditionalUserInfo& value_arg);
+
+  const PigeonAuthCredential* credential() const;
+  void set_credential(const PigeonAuthCredential* value_arg);
+  void set_credential(const PigeonAuthCredential& value_arg);
+
+
+ private:
+  static PigeonUserCredential FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseAuthHostApi;
+  friend class FirebaseAuthHostApiCodecSerializer;
+  friend class FirebaseAuthUserHostApi;
+  friend class FirebaseAuthUserHostApiCodecSerializer;
+  friend class MultiFactorUserHostApi;
+  friend class MultiFactorUserHostApiCodecSerializer;
+  friend class MultiFactoResolverHostApi;
+  friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class GenerateInterfaces;
+  friend class GenerateInterfacesCodecSerializer;
+  std::optional<PigeonUserDetails> user_;
+  std::optional<PigeonAdditionalUserInfo> additional_user_info_;
+  std::optional<PigeonAuthCredential> credential_;
 
 };
 

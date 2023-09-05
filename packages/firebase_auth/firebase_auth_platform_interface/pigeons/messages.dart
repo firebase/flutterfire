@@ -95,16 +95,6 @@ enum ActionCodeInfoOperation {
   revertSecondFactorAddition,
 }
 
-class PigeonActionCodeInfo {
-  const PigeonActionCodeInfo({
-    required this.operation,
-    required this.data,
-  });
-
-  final ActionCodeInfoOperation operation;
-  final PigeonActionCodeInfoData data;
-}
-
 class PigeonActionCodeInfoData {
   const PigeonActionCodeInfoData({
     this.email,
@@ -115,16 +105,14 @@ class PigeonActionCodeInfoData {
   final String? previousEmail;
 }
 
-class PigeonUserCredential {
-  const PigeonUserCredential({
-    required this.user,
-    required this.additionalUserInfo,
-    required this.credential,
+class PigeonActionCodeInfo {
+  const PigeonActionCodeInfo({
+    required this.operation,
+    required this.data,
   });
 
-  final PigeonUserDetails? user;
-  final PigeonAdditionalUserInfo? additionalUserInfo;
-  final PigeonAuthCredential? credential;
+  final ActionCodeInfoOperation operation;
+  final PigeonActionCodeInfoData data;
 }
 
 class PigeonAdditionalUserInfo {
@@ -195,6 +183,18 @@ class PigeonUserDetails {
 
   final PigeonUserInfo userInfo;
   final List<Map<Object?, Object?>?> providerData;
+}
+
+class PigeonUserCredential {
+  const PigeonUserCredential({
+    required this.user,
+    required this.additionalUserInfo,
+    required this.credential,
+  });
+
+  final PigeonUserDetails? user;
+  final PigeonAdditionalUserInfo? additionalUserInfo;
+  final PigeonAuthCredential? credential;
 }
 
 class PigeonAuthCredentialInput {

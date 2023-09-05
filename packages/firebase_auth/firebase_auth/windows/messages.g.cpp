@@ -250,47 +250,6 @@ PigeonFirebaseApp PigeonFirebaseApp::FromEncodableList(const EncodableList& list
   return decoded;
 }
 
-// PigeonActionCodeInfo
-
-PigeonActionCodeInfo::PigeonActionCodeInfo(
-  const ActionCodeInfoOperation& operation,
-  const PigeonActionCodeInfoData& data)
- : operation_(operation),
-    data_(data) {}
-
-const ActionCodeInfoOperation& PigeonActionCodeInfo::operation() const {
-  return operation_;
-}
-
-void PigeonActionCodeInfo::set_operation(const ActionCodeInfoOperation& value_arg) {
-  operation_ = value_arg;
-}
-
-
-const PigeonActionCodeInfoData& PigeonActionCodeInfo::data() const {
-  return data_;
-}
-
-void PigeonActionCodeInfo::set_data(const PigeonActionCodeInfoData& value_arg) {
-  data_ = value_arg;
-}
-
-
-EncodableList PigeonActionCodeInfo::ToEncodableList() const {
-  EncodableList list;
-  list.reserve(2);
-  list.push_back(EncodableValue((int)operation_));
-  list.push_back(EncodableValue(data_.ToEncodableList()));
-  return list;
-}
-
-PigeonActionCodeInfo PigeonActionCodeInfo::FromEncodableList(const EncodableList& list) {
-  PigeonActionCodeInfo decoded(
-    (ActionCodeInfoOperation)(std::get<int32_t>(list[0])),
-    PigeonActionCodeInfoData::FromEncodableList(std::get<EncodableList>(list[1])));
-  return decoded;
-}
-
 // PigeonActionCodeInfoData
 
 PigeonActionCodeInfoData::PigeonActionCodeInfoData() {}
@@ -348,80 +307,44 @@ PigeonActionCodeInfoData PigeonActionCodeInfoData::FromEncodableList(const Encod
   return decoded;
 }
 
-// PigeonUserCredential
+// PigeonActionCodeInfo
 
-PigeonUserCredential::PigeonUserCredential() {}
+PigeonActionCodeInfo::PigeonActionCodeInfo(
+  const ActionCodeInfoOperation& operation,
+  const PigeonActionCodeInfoData& data)
+ : operation_(operation),
+    data_(data) {}
 
-PigeonUserCredential::PigeonUserCredential(
-  const PigeonUserDetails* user,
-  const PigeonAdditionalUserInfo* additional_user_info,
-  const PigeonAuthCredential* credential)
- : user_(user ? std::optional<PigeonUserDetails>(*user) : std::nullopt),
-    additional_user_info_(additional_user_info ? std::optional<PigeonAdditionalUserInfo>(*additional_user_info) : std::nullopt),
-    credential_(credential ? std::optional<PigeonAuthCredential>(*credential) : std::nullopt) {}
-
-const PigeonUserDetails* PigeonUserCredential::user() const {
-  return user_ ? &(*user_) : nullptr;
+const ActionCodeInfoOperation& PigeonActionCodeInfo::operation() const {
+  return operation_;
 }
 
-void PigeonUserCredential::set_user(const PigeonUserDetails* value_arg) {
-  user_ = value_arg ? std::optional<PigeonUserDetails>(*value_arg) : std::nullopt;
-}
-
-void PigeonUserCredential::set_user(const PigeonUserDetails& value_arg) {
-  user_ = value_arg;
+void PigeonActionCodeInfo::set_operation(const ActionCodeInfoOperation& value_arg) {
+  operation_ = value_arg;
 }
 
 
-const PigeonAdditionalUserInfo* PigeonUserCredential::additional_user_info() const {
-  return additional_user_info_ ? &(*additional_user_info_) : nullptr;
+const PigeonActionCodeInfoData& PigeonActionCodeInfo::data() const {
+  return data_;
 }
 
-void PigeonUserCredential::set_additional_user_info(const PigeonAdditionalUserInfo* value_arg) {
-  additional_user_info_ = value_arg ? std::optional<PigeonAdditionalUserInfo>(*value_arg) : std::nullopt;
-}
-
-void PigeonUserCredential::set_additional_user_info(const PigeonAdditionalUserInfo& value_arg) {
-  additional_user_info_ = value_arg;
+void PigeonActionCodeInfo::set_data(const PigeonActionCodeInfoData& value_arg) {
+  data_ = value_arg;
 }
 
 
-const PigeonAuthCredential* PigeonUserCredential::credential() const {
-  return credential_ ? &(*credential_) : nullptr;
-}
-
-void PigeonUserCredential::set_credential(const PigeonAuthCredential* value_arg) {
-  credential_ = value_arg ? std::optional<PigeonAuthCredential>(*value_arg) : std::nullopt;
-}
-
-void PigeonUserCredential::set_credential(const PigeonAuthCredential& value_arg) {
-  credential_ = value_arg;
-}
-
-
-EncodableList PigeonUserCredential::ToEncodableList() const {
+EncodableList PigeonActionCodeInfo::ToEncodableList() const {
   EncodableList list;
-  list.reserve(3);
-  list.push_back(user_ ? EncodableValue(user_->ToEncodableList()) : EncodableValue());
-  list.push_back(additional_user_info_ ? EncodableValue(additional_user_info_->ToEncodableList()) : EncodableValue());
-  list.push_back(credential_ ? EncodableValue(credential_->ToEncodableList()) : EncodableValue());
+  list.reserve(2);
+  list.push_back(EncodableValue((int)operation_));
+  list.push_back(EncodableValue(data_.ToEncodableList()));
   return list;
 }
 
-PigeonUserCredential PigeonUserCredential::FromEncodableList(const EncodableList& list) {
-  PigeonUserCredential decoded;
-  auto& encodable_user = list[0];
-  if (!encodable_user.IsNull()) {
-    decoded.set_user(PigeonUserDetails::FromEncodableList(std::get<EncodableList>(encodable_user)));
-  }
-  auto& encodable_additional_user_info = list[1];
-  if (!encodable_additional_user_info.IsNull()) {
-    decoded.set_additional_user_info(PigeonAdditionalUserInfo::FromEncodableList(std::get<EncodableList>(encodable_additional_user_info)));
-  }
-  auto& encodable_credential = list[2];
-  if (!encodable_credential.IsNull()) {
-    decoded.set_credential(PigeonAuthCredential::FromEncodableList(std::get<EncodableList>(encodable_credential)));
-  }
+PigeonActionCodeInfo PigeonActionCodeInfo::FromEncodableList(const EncodableList& list) {
+  PigeonActionCodeInfo decoded(
+    (ActionCodeInfoOperation)(std::get<int32_t>(list[0])),
+    PigeonActionCodeInfoData::FromEncodableList(std::get<EncodableList>(list[1])));
   return decoded;
 }
 
@@ -898,6 +821,83 @@ PigeonUserDetails PigeonUserDetails::FromEncodableList(const EncodableList& list
   PigeonUserDetails decoded(
     PigeonUserInfo::FromEncodableList(std::get<EncodableList>(list[0])),
     std::get<EncodableList>(list[1]));
+  return decoded;
+}
+
+// PigeonUserCredential
+
+PigeonUserCredential::PigeonUserCredential() {}
+
+PigeonUserCredential::PigeonUserCredential(
+  const PigeonUserDetails* user,
+  const PigeonAdditionalUserInfo* additional_user_info,
+  const PigeonAuthCredential* credential)
+ : user_(user ? std::optional<PigeonUserDetails>(*user) : std::nullopt),
+    additional_user_info_(additional_user_info ? std::optional<PigeonAdditionalUserInfo>(*additional_user_info) : std::nullopt),
+    credential_(credential ? std::optional<PigeonAuthCredential>(*credential) : std::nullopt) {}
+
+const PigeonUserDetails* PigeonUserCredential::user() const {
+  return user_ ? &(*user_) : nullptr;
+}
+
+void PigeonUserCredential::set_user(const PigeonUserDetails* value_arg) {
+  user_ = value_arg ? std::optional<PigeonUserDetails>(*value_arg) : std::nullopt;
+}
+
+void PigeonUserCredential::set_user(const PigeonUserDetails& value_arg) {
+  user_ = value_arg;
+}
+
+
+const PigeonAdditionalUserInfo* PigeonUserCredential::additional_user_info() const {
+  return additional_user_info_ ? &(*additional_user_info_) : nullptr;
+}
+
+void PigeonUserCredential::set_additional_user_info(const PigeonAdditionalUserInfo* value_arg) {
+  additional_user_info_ = value_arg ? std::optional<PigeonAdditionalUserInfo>(*value_arg) : std::nullopt;
+}
+
+void PigeonUserCredential::set_additional_user_info(const PigeonAdditionalUserInfo& value_arg) {
+  additional_user_info_ = value_arg;
+}
+
+
+const PigeonAuthCredential* PigeonUserCredential::credential() const {
+  return credential_ ? &(*credential_) : nullptr;
+}
+
+void PigeonUserCredential::set_credential(const PigeonAuthCredential* value_arg) {
+  credential_ = value_arg ? std::optional<PigeonAuthCredential>(*value_arg) : std::nullopt;
+}
+
+void PigeonUserCredential::set_credential(const PigeonAuthCredential& value_arg) {
+  credential_ = value_arg;
+}
+
+
+EncodableList PigeonUserCredential::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(3);
+  list.push_back(user_ ? EncodableValue(user_->ToEncodableList()) : EncodableValue());
+  list.push_back(additional_user_info_ ? EncodableValue(additional_user_info_->ToEncodableList()) : EncodableValue());
+  list.push_back(credential_ ? EncodableValue(credential_->ToEncodableList()) : EncodableValue());
+  return list;
+}
+
+PigeonUserCredential PigeonUserCredential::FromEncodableList(const EncodableList& list) {
+  PigeonUserCredential decoded;
+  auto& encodable_user = list[0];
+  if (!encodable_user.IsNull()) {
+    decoded.set_user(PigeonUserDetails::FromEncodableList(std::get<EncodableList>(encodable_user)));
+  }
+  auto& encodable_additional_user_info = list[1];
+  if (!encodable_additional_user_info.IsNull()) {
+    decoded.set_additional_user_info(PigeonAdditionalUserInfo::FromEncodableList(std::get<EncodableList>(encodable_additional_user_info)));
+  }
+  auto& encodable_credential = list[2];
+  if (!encodable_credential.IsNull()) {
+    decoded.set_credential(PigeonAuthCredential::FromEncodableList(std::get<EncodableList>(encodable_credential)));
+  }
   return decoded;
 }
 

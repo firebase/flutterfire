@@ -1188,4 +1188,10 @@ void FirebaseAuthPlugin::VerifyBeforeUpdateEmail(
   // TODO: missing function
 }
 
+void FirebaseAuthPlugin::RevokeTokenWithAuthorizationCode(
+    const PigeonFirebaseApp& app, const std::string& authorization_code,
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  // TODO: missing function
+}
+
 }  // namespace firebase_auth_windows
