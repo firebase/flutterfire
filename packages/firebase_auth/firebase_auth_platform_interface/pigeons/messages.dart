@@ -20,6 +20,10 @@ import 'package:pigeon/pigeon.dart';
     objcHeaderOut:
         '../firebase_auth/ios/Classes/Public/firebase_auth_messages.g.h',
     objcSourceOut: '../firebase_auth/ios/Classes/firebase_auth_messages.g.m',
+    cppHeaderOut: '../firebase_auth/windows/messages.g.h',
+    cppSourceOut: '../firebase_auth/windows/messages.g.cpp',
+    cppOptions: CppOptions(namespace: 'firebase_auth_windows'),
+    copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
 class PigeonMultiFactorSession {
