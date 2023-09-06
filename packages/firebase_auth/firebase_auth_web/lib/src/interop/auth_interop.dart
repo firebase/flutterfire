@@ -488,9 +488,9 @@ abstract class ApplicationVerifierJsImpl {
 @JS('RecaptchaVerifier')
 class RecaptchaVerifierJsImpl extends ApplicationVerifierJsImpl {
   external factory RecaptchaVerifierJsImpl(
+    AuthJsImpl authExtern,
     containerOrId,
     Object parameters,
-    AuthJsImpl authExtern,
   );
   external void clear();
   external PromiseJsImpl<num> render();
@@ -738,11 +738,14 @@ class MultiFactorResolverJsImpl {
 class MultiFactorSessionJsImpl {}
 
 /// https://firebase.google.com/docs/reference/js/auth.phonemultifactorinfo
-@JS()
-@anonymous
+@JS('PhoneMultiFactorInfo')
 class PhoneMultiFactorInfoJsImpl extends MultiFactorInfoJsImpl {
   external String get phoneNumber;
 }
+
+/// https://firebase.google.com/docs/reference/js/auth.totpmultifactorinfo
+@JS('TotpMultiFactorInfo')
+class TotpMultiFactorInfoJsImpl extends MultiFactorInfoJsImpl {}
 
 /// https://firebase.google.com/docs/reference/js/auth.phonemultifactorenrollinfooptions
 @JS()
@@ -760,10 +763,39 @@ class PhoneMultiFactorGeneratorJsImpl {
       PhoneAuthCredentialJsImpl credential);
 }
 
+/// https://firebase.google.com/docs/reference/js/auth.totpsecret
+@JS('TotpSecret')
+class TotpSecretJsImpl {
+  external num get codeIntervalSeconds;
+  external num get codeLength;
+  external String get enrollmentCompletionDeadline;
+  external String get hashingAlgorithm;
+  external String get secretKey;
+
+  external String generateQrCodeUrl(String? accountName, String? issuer);
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.totpmultifactorgenerator
+@JS('TotpMultiFactorGenerator')
+class TotpMultiFactorGeneratorJsImpl {
+  external static String get FACTOR_ID;
+  external static TotpMultiFactorAssertionJsImpl? assertionForEnrollment(
+      TotpSecretJsImpl secret, String oneTimePassword);
+  external static TotpMultiFactorAssertionJsImpl? assertionForSignIn(
+      String enrollmentId, String oneTimePassword);
+  external static PromiseJsImpl<TotpSecretJsImpl> generateSecret(
+      MultiFactorSessionJsImpl session);
+}
+
 /// https://firebase.google.com/docs/reference/js/auth.phonemultifactorassertion
 @JS()
 @anonymous
 class PhoneMultiFactorAssertionJsImpl extends MultiFactorAssertionJsImpl {}
+
+/// https://firebase.google.com/docs/reference/js/auth.totpmultifactorassertion
+@JS()
+@anonymous
+class TotpMultiFactorAssertionJsImpl extends MultiFactorAssertionJsImpl {}
 
 /// https://firebase.google.com/docs/reference/js/auth.phoneauthcredential
 @JS()
