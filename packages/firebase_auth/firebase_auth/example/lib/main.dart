@@ -29,7 +29,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   auth = FirebaseAuth.instanceFor(app: app);
-              
+
   if (shouldUseFirebaseEmulator) {
     await auth.useAuthEmulator('localhost', 9099);
   }
