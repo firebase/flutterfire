@@ -34,21 +34,21 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         name: Install Node.js 16
         with:
           node-version: '16'
-      - uses: actions/setup-java@5ffc13f4174014e2d4d4572b3d74c3fa61aeb2c2
+      - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
           java-version: '11'
-      - uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
+      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         name: Gradle Cache
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-v4-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle-v4
-      - uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
+      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         name: AVD Cache
         id: avd-cache
         with:
@@ -57,7 +57,7 @@ jobs:
             ~/.android/adb*
           key: avd
       - name: Firebase Emulator Cache
-        uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
+        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v2-${{ github.run_id }}
@@ -98,7 +98,8 @@ jobs:
           flutter test integration_test/e2e_test.dart --dart-define=CI=true
 
   ios:
-    runs-on: macos-13
+    # Dropped down to macos-12 as macos-13 was timing out. This suspected issue:https://github.com/actions/runner-images/issues/8023
+    runs-on: macos-12
     timeout-minutes: 45
     strategy:
       matrix:
@@ -106,11 +107,11 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         name: Install Node.js 16
         with:
           node-version: '16'
-      - uses: actions/setup-java@5ffc13f4174014e2d4d4572b3d74c3fa61aeb2c2
+      - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
           java-version: '11'
@@ -119,7 +120,7 @@ jobs:
         with:
           key: ${{ runner.os }}-ios-v3
           max-size: 700M
-      - uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
+      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         name: Pods Cache
         id: pods-cache
         with:
@@ -127,7 +128,7 @@ jobs:
           key: ${{ runner.os }}-pods-v3-${{ hashFiles('tests/ios/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-ios-pods-v2
       - name: Firebase Emulator Cache
-        uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
+        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
@@ -181,11 +182,11 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         name: Install Node.js 16
         with:
           node-version: '16'
-      - uses: actions/setup-java@5ffc13f4174014e2d4d4572b3d74c3fa61aeb2c2
+      - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
           java-version: '11'
@@ -194,7 +195,7 @@ jobs:
         with:
           key: ${{ runner.os }}-macos-v2
           max-size: 700M
-      - uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
+      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         name: Pods Cache
         id: pods-cache
         with:
@@ -202,7 +203,7 @@ jobs:
           key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
           restore-keys: ${{ runner.os }}-macos-pods-v1
       - name: Cache Firebase Emulator
-        uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
+        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
@@ -250,11 +251,11 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         name: Install Node.js 16
         with:
           node-version: '16'
-      - uses: actions/setup-java@5ffc13f4174014e2d4d4572b3d74c3fa61aeb2c2
+      - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
           java-version: '11'
@@ -272,7 +273,7 @@ jobs:
         run: |
           sudo npm i -g firebase-tools
       - name: Cache Firebase Emulator
-        uses: actions/cache@69d9d449aced6a2ede0bc19182fadc3a0a42d2b0
+        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v1-${{ github.run_id }}
@@ -298,7 +299,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         name: Install Node.js 16
         with:
           node-version: "16"

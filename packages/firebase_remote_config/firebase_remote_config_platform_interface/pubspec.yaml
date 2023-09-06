@@ -4,15 +4,15 @@ homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_
 repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config_platform_interface
 # NOTE: We strongly prefer non-breaking changes, even at the expense of a
 # less-clean API. See https://flutter.dev/go/platform-interface-breaking-changes
-version: 1.4.4
+version: 1.4.5
 
 environment:
   sdk: '>=2.18.0 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:
-  _flutterfire_internals: ^1.3.4
-  firebase_core: ^2.15.0
+  _flutterfire_internals: ^1.3.5
+  firebase_core: ^2.15.1
   flutter:
     sdk: flutter
   meta: ^1.8.0

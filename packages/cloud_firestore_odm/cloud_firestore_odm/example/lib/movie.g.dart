@@ -147,6 +147,8 @@ abstract class MovieDocumentReference
     FieldValue ratedFieldValue,
     List<String>? genre,
     FieldValue genreFieldValue,
+    Set<String>? tags,
+    FieldValue tagsFieldValue,
   });
 
   /// Updates fields in the current document using the transaction API.
@@ -168,6 +170,8 @@ abstract class MovieDocumentReference
     FieldValue ratedFieldValue,
     List<String>? genre,
     FieldValue genreFieldValue,
+    Set<String>? tags,
+    FieldValue tagsFieldValue,
   });
 }
 
@@ -218,6 +222,8 @@ class _$MovieDocumentReference
     FieldValue? ratedFieldValue,
     Object? genre = _sentinel,
     FieldValue? genreFieldValue,
+    Object? tags = _sentinel,
+    FieldValue? tagsFieldValue,
   }) async {
     assert(
       poster == _sentinel || posterFieldValue == null,
@@ -247,6 +253,10 @@ class _$MovieDocumentReference
       genre == _sentinel || genreFieldValue == null,
       "Cannot specify both genre and genreFieldValue",
     );
+    assert(
+      tags == _sentinel || tagsFieldValue == null,
+      "Cannot specify both tags and tagsFieldValue",
+    );
     final json = {
       if (poster != _sentinel) _$MovieFieldMap['poster']!: poster as String,
       if (posterFieldValue != null)
@@ -264,6 +274,8 @@ class _$MovieDocumentReference
       if (ratedFieldValue != null) _$MovieFieldMap['rated']!: ratedFieldValue,
       if (genre != _sentinel) _$MovieFieldMap['genre']!: genre as List<String>?,
       if (genreFieldValue != null) _$MovieFieldMap['genre']!: genreFieldValue,
+      if (tags != _sentinel) _$MovieFieldMap['tags']!: tags as Set<String>?,
+      if (tagsFieldValue != null) _$MovieFieldMap['tags']!: tagsFieldValue,
     };
 
     return reference.update(json);
@@ -285,6 +297,8 @@ class _$MovieDocumentReference
     FieldValue? ratedFieldValue,
     Object? genre = _sentinel,
     FieldValue? genreFieldValue,
+    Object? tags = _sentinel,
+    FieldValue? tagsFieldValue,
   }) {
     assert(
       poster == _sentinel || posterFieldValue == null,
@@ -314,6 +328,10 @@ class _$MovieDocumentReference
       genre == _sentinel || genreFieldValue == null,
       "Cannot specify both genre and genreFieldValue",
     );
+    assert(
+      tags == _sentinel || tagsFieldValue == null,
+      "Cannot specify both tags and tagsFieldValue",
+    );
     final json = {
       if (poster != _sentinel) _$MovieFieldMap['poster']!: poster as String,
       if (posterFieldValue != null)
@@ -331,6 +349,8 @@ class _$MovieDocumentReference
       if (ratedFieldValue != null) _$MovieFieldMap['rated']!: ratedFieldValue,
       if (genre != _sentinel) _$MovieFieldMap['genre']!: genre as List<String>?,
       if (genreFieldValue != null) _$MovieFieldMap['genre']!: genreFieldValue,
+      if (tags != _sentinel) _$MovieFieldMap['tags']!: tags as Set<String>?,
+      if (tagsFieldValue != null) _$MovieFieldMap['tags']!: tagsFieldValue,
     };
 
     transaction.update(reference, json);
@@ -508,6 +528,17 @@ abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
     String? arrayContains,
     List<String>? arrayContainsAny,
   });
+  MovieQuery whereTags({
+    Set<String>? isEqualTo,
+    Set<String>? isNotEqualTo,
+    Set<String>? isLessThan,
+    Set<String>? isLessThanOrEqualTo,
+    Set<String>? isGreaterThan,
+    Set<String>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    String? arrayContains,
+    Set<String>? arrayContainsAny,
+  });
 
   MovieQuery orderByDocumentId({
     bool descending = false,
@@ -599,6 +630,18 @@ abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
     List<String>? startAfter,
     List<String>? endAt,
     List<String>? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  MovieQuery orderByTags({
+    bool descending = false,
+    Set<String>? startAt,
+    Set<String>? startAfter,
+    Set<String>? endAt,
+    Set<String>? endBefore,
     MovieDocumentSnapshot? startAtDocument,
     MovieDocumentSnapshot? endAtDocument,
     MovieDocumentSnapshot? endBeforeDocument,
@@ -971,6 +1014,35 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$MovieFieldMap['genre']!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  MovieQuery whereTags({
+    Set<String>? isEqualTo,
+    Set<String>? isNotEqualTo,
+    Set<String>? isLessThan,
+    Set<String>? isLessThanOrEqualTo,
+    Set<String>? isGreaterThan,
+    Set<String>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    String? arrayContains,
+    Set<String>? arrayContainsAny,
+  }) {
+    return _$MovieQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$MovieFieldMap['tags']!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1501,6 +1573,78 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? startAfterDocument,
   }) {
     final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['genre']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$MovieQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  MovieQuery orderByTags({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap['tags']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2603,6 +2747,7 @@ void _$assertMovie(Movie instance) {
 Movie _$MovieFromJson(Map<String, dynamic> json) => Movie(
       genre:
           (json['genre'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toSet(),
       likes: json['likes'] as int,
       poster: json['poster'] as String,
       rated: json['rated'] as String,
@@ -2621,6 +2766,7 @@ const _$MovieFieldMap = <String, String>{
   'runtime': 'runtime',
   'rated': 'rated',
   'genre': 'genre',
+  'tags': 'tags',
 };
 
 Map<String, dynamic> _$MovieToJson(Movie instance) => <String, dynamic>{
@@ -2632,6 +2778,7 @@ Map<String, dynamic> _$MovieToJson(Movie instance) => <String, dynamic>{
       'runtime': instance.runtime,
       'rated': instance.rated,
       'genre': instance.genre,
+      'tags': instance.tags?.toList(),
     };
 
 Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(

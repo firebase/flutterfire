@@ -1,3 +1,15 @@
+## 4.9.1
+
+ - **FIX**(cloud_firestore): Fix crashes on iOS/macOS ([#11501](https://github.com/firebase/flutterfire/issues/11501)). ([3ed53470](https://github.com/firebase/flutterfire/commit/3ed53470f0536294d4d1905c759c91aabf1d39ff))
+
+## 4.9.0
+
+ - **FEAT**(firestore): add support for multiple database instances ([#11310](https://github.com/firebase/flutterfire/issues/11310)). ([ce6efcc1](https://github.com/firebase/flutterfire/commit/ce6efcc16ced0317e86b0ad12aa02ff5795a8207))
+
+## 4.8.5
+
+ - **FIX**(firestore): allow `FieldPath.documentId` as a field argument in queries ([#11443](https://github.com/firebase/flutterfire/issues/11443)). ([4e01a9d8](https://github.com/firebase/flutterfire/commit/4e01a9d84ededf0e0ba74bdc2eba75492e1aa532))
+
 ## 4.8.4
 
  - **FIX**(firestore): remove assertion for `arrayContainsAny` & `whereIn` query combined ([#11342](https://github.com/firebase/flutterfire/issues/11342)). ([199e1fc4](https://github.com/firebase/flutterfire/commit/199e1fc43654b913ddb8257c4e3a3ceddcbb97d1))

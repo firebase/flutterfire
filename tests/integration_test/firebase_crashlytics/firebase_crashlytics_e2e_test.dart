@@ -77,7 +77,7 @@ void main() {
                 context: DiagnosticsNode.message('bar reason'),
                 informationCollector: () => <DiagnosticsNode>[
                   DiagnosticsNode.message('first message'),
-                  DiagnosticsNode.message('second message')
+                  DiagnosticsNode.message('second message'),
                 ],
               ),
             );

@@ -163,10 +163,10 @@ abstract class MethodChannelTask extends TaskPlatform {
               .taskPause(pigeonFirebaseAppDefault, _handle))
           .cast<String, dynamic>();
 
-      bool success = data!['status'];
+      final success = data?['status'] ?? false;
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.paused,
-            Map<String, dynamic>.from(data['snapshot']));
+            Map<String, dynamic>.from(data!['snapshot']));
       }
       return success;
     } catch (e, stack) {
@@ -185,10 +185,10 @@ abstract class MethodChannelTask extends TaskPlatform {
               .taskResume(pigeonFirebaseAppDefault, _handle))
           .cast<String, dynamic>();
 
-      bool success = data!['status'];
+      final success = data?['status'] ?? false;
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running,
-            Map<String, dynamic>.from(data['snapshot']));
+            Map<String, dynamic>.from(data!['snapshot']));
       }
       return success;
     } catch (e, stack) {
@@ -207,10 +207,10 @@ abstract class MethodChannelTask extends TaskPlatform {
               .taskCancel(pigeonFirebaseAppDefault, _handle))
           .cast<String, dynamic>();
 
-      bool success = data!['status'];
+      final success = data?['status'] ?? false;
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.canceled,
-            Map<String, dynamic>.from(data['snapshot']));
+            Map<String, dynamic>.from(data!['snapshot']));
       }
       return success;
     } catch (e, stack) {
