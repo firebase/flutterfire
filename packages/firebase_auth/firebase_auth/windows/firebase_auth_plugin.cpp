@@ -474,7 +474,7 @@ void FirebaseAuthPlugin::UseEmulator(
     const PigeonFirebaseApp& app, const std::string& host, int64_t port,
     std::function<void(std::optional<FlutterError> reply)> result) {
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
-  firebaseAuth->useEmulator(host, static_cast<uint32_t>(port));
+  firebaseAuth->UseEmulator(host, static_cast<uint32_t>(port));
   result(std::nullopt);
 }
 
