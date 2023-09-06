@@ -1600,6 +1600,117 @@ PigeonUserProfile PigeonUserProfile::FromEncodableList(const EncodableList& list
   return decoded;
 }
 
+// PigeonTotpSecret
+
+PigeonTotpSecret::PigeonTotpSecret(const std::string& secret_key)
+ : secret_key_(secret_key) {}
+
+PigeonTotpSecret::PigeonTotpSecret(
+  const int64_t* code_interval_seconds,
+  const int64_t* code_length,
+  const int64_t* enrollment_completion_deadline,
+  const std::string* hashing_algorithm,
+  const std::string& secret_key)
+ : code_interval_seconds_(code_interval_seconds ? std::optional<int64_t>(*code_interval_seconds) : std::nullopt),
+    code_length_(code_length ? std::optional<int64_t>(*code_length) : std::nullopt),
+    enrollment_completion_deadline_(enrollment_completion_deadline ? std::optional<int64_t>(*enrollment_completion_deadline) : std::nullopt),
+    hashing_algorithm_(hashing_algorithm ? std::optional<std::string>(*hashing_algorithm) : std::nullopt),
+    secret_key_(secret_key) {}
+
+const int64_t* PigeonTotpSecret::code_interval_seconds() const {
+  return code_interval_seconds_ ? &(*code_interval_seconds_) : nullptr;
+}
+
+void PigeonTotpSecret::set_code_interval_seconds(const int64_t* value_arg) {
+  code_interval_seconds_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+}
+
+void PigeonTotpSecret::set_code_interval_seconds(int64_t value_arg) {
+  code_interval_seconds_ = value_arg;
+}
+
+
+const int64_t* PigeonTotpSecret::code_length() const {
+  return code_length_ ? &(*code_length_) : nullptr;
+}
+
+void PigeonTotpSecret::set_code_length(const int64_t* value_arg) {
+  code_length_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+}
+
+void PigeonTotpSecret::set_code_length(int64_t value_arg) {
+  code_length_ = value_arg;
+}
+
+
+const int64_t* PigeonTotpSecret::enrollment_completion_deadline() const {
+  return enrollment_completion_deadline_ ? &(*enrollment_completion_deadline_) : nullptr;
+}
+
+void PigeonTotpSecret::set_enrollment_completion_deadline(const int64_t* value_arg) {
+  enrollment_completion_deadline_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+}
+
+void PigeonTotpSecret::set_enrollment_completion_deadline(int64_t value_arg) {
+  enrollment_completion_deadline_ = value_arg;
+}
+
+
+const std::string* PigeonTotpSecret::hashing_algorithm() const {
+  return hashing_algorithm_ ? &(*hashing_algorithm_) : nullptr;
+}
+
+void PigeonTotpSecret::set_hashing_algorithm(const std::string_view* value_arg) {
+  hashing_algorithm_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void PigeonTotpSecret::set_hashing_algorithm(std::string_view value_arg) {
+  hashing_algorithm_ = value_arg;
+}
+
+
+const std::string& PigeonTotpSecret::secret_key() const {
+  return secret_key_;
+}
+
+void PigeonTotpSecret::set_secret_key(std::string_view value_arg) {
+  secret_key_ = value_arg;
+}
+
+
+EncodableList PigeonTotpSecret::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(5);
+  list.push_back(code_interval_seconds_ ? EncodableValue(*code_interval_seconds_) : EncodableValue());
+  list.push_back(code_length_ ? EncodableValue(*code_length_) : EncodableValue());
+  list.push_back(enrollment_completion_deadline_ ? EncodableValue(*enrollment_completion_deadline_) : EncodableValue());
+  list.push_back(hashing_algorithm_ ? EncodableValue(*hashing_algorithm_) : EncodableValue());
+  list.push_back(EncodableValue(secret_key_));
+  return list;
+}
+
+PigeonTotpSecret PigeonTotpSecret::FromEncodableList(const EncodableList& list) {
+  PigeonTotpSecret decoded(
+    std::get<std::string>(list[4]));
+  auto& encodable_code_interval_seconds = list[0];
+  if (!encodable_code_interval_seconds.IsNull()) {
+    decoded.set_code_interval_seconds(encodable_code_interval_seconds.LongValue());
+  }
+  auto& encodable_code_length = list[1];
+  if (!encodable_code_length.IsNull()) {
+    decoded.set_code_length(encodable_code_length.LongValue());
+  }
+  auto& encodable_enrollment_completion_deadline = list[2];
+  if (!encodable_enrollment_completion_deadline.IsNull()) {
+    decoded.set_enrollment_completion_deadline(encodable_enrollment_completion_deadline.LongValue());
+  }
+  auto& encodable_hashing_algorithm = list[3];
+  if (!encodable_hashing_algorithm.IsNull()) {
+    decoded.set_hashing_algorithm(std::get<std::string>(encodable_hashing_algorithm));
+  }
+  return decoded;
+}
+
 
 FirebaseAuthHostApiCodecSerializer::FirebaseAuthHostApiCodecSerializer() {}
 
@@ -1632,14 +1743,16 @@ EncodableValue FirebaseAuthHostApiCodecSerializer::ReadValueOfType(
     case 139:
       return CustomEncodableValue(PigeonSignInProvider::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 140:
-      return CustomEncodableValue(PigeonUserCredential::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonTotpSecret::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 141:
-      return CustomEncodableValue(PigeonUserDetails::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonUserCredential::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 142:
-      return CustomEncodableValue(PigeonUserInfo::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonUserDetails::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 143:
-      return CustomEncodableValue(PigeonUserProfile::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonUserInfo::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 144:
+      return CustomEncodableValue(PigeonUserProfile::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+    case 145:
       return CustomEncodableValue(PigeonVerifyPhoneNumberRequest::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     default:
       return flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
@@ -1710,28 +1823,33 @@ void FirebaseAuthHostApiCodecSerializer::WriteValue(
       WriteValue(EncodableValue(std::any_cast<PigeonSignInProvider>(*custom_value).ToEncodableList()), stream);
       return;
     }
-    if (custom_value->type() == typeid(PigeonUserCredential)) {
+    if (custom_value->type() == typeid(PigeonTotpSecret)) {
       stream->WriteByte(140);
+      WriteValue(EncodableValue(std::any_cast<PigeonTotpSecret>(*custom_value).ToEncodableList()), stream);
+      return;
+    }
+    if (custom_value->type() == typeid(PigeonUserCredential)) {
+      stream->WriteByte(141);
       WriteValue(EncodableValue(std::any_cast<PigeonUserCredential>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonUserDetails)) {
-      stream->WriteByte(141);
+      stream->WriteByte(142);
       WriteValue(EncodableValue(std::any_cast<PigeonUserDetails>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonUserInfo)) {
-      stream->WriteByte(142);
+      stream->WriteByte(143);
       WriteValue(EncodableValue(std::any_cast<PigeonUserInfo>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonUserProfile)) {
-      stream->WriteByte(143);
+      stream->WriteByte(144);
       WriteValue(EncodableValue(std::any_cast<PigeonUserProfile>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonVerifyPhoneNumberRequest)) {
-      stream->WriteByte(144);
+      stream->WriteByte(145);
       WriteValue(EncodableValue(std::any_cast<PigeonVerifyPhoneNumberRequest>(*custom_value).ToEncodableList()), stream);
       return;
     }
@@ -2578,14 +2696,16 @@ EncodableValue FirebaseAuthUserHostApiCodecSerializer::ReadValueOfType(
     case 139:
       return CustomEncodableValue(PigeonSignInProvider::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 140:
-      return CustomEncodableValue(PigeonUserCredential::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonTotpSecret::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 141:
-      return CustomEncodableValue(PigeonUserDetails::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonUserCredential::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 142:
-      return CustomEncodableValue(PigeonUserInfo::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonUserDetails::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 143:
-      return CustomEncodableValue(PigeonUserProfile::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      return CustomEncodableValue(PigeonUserInfo::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     case 144:
+      return CustomEncodableValue(PigeonUserProfile::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+    case 145:
       return CustomEncodableValue(PigeonVerifyPhoneNumberRequest::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
     default:
       return flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
@@ -2656,28 +2776,33 @@ void FirebaseAuthUserHostApiCodecSerializer::WriteValue(
       WriteValue(EncodableValue(std::any_cast<PigeonSignInProvider>(*custom_value).ToEncodableList()), stream);
       return;
     }
-    if (custom_value->type() == typeid(PigeonUserCredential)) {
+    if (custom_value->type() == typeid(PigeonTotpSecret)) {
       stream->WriteByte(140);
+      WriteValue(EncodableValue(std::any_cast<PigeonTotpSecret>(*custom_value).ToEncodableList()), stream);
+      return;
+    }
+    if (custom_value->type() == typeid(PigeonUserCredential)) {
+      stream->WriteByte(141);
       WriteValue(EncodableValue(std::any_cast<PigeonUserCredential>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonUserDetails)) {
-      stream->WriteByte(141);
+      stream->WriteByte(142);
       WriteValue(EncodableValue(std::any_cast<PigeonUserDetails>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonUserInfo)) {
-      stream->WriteByte(142);
+      stream->WriteByte(143);
       WriteValue(EncodableValue(std::any_cast<PigeonUserInfo>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonUserProfile)) {
-      stream->WriteByte(143);
+      stream->WriteByte(144);
       WriteValue(EncodableValue(std::any_cast<PigeonUserProfile>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonVerifyPhoneNumberRequest)) {
-      stream->WriteByte(144);
+      stream->WriteByte(145);
       WriteValue(EncodableValue(std::any_cast<PigeonVerifyPhoneNumberRequest>(*custom_value).ToEncodableList()), stream);
       return;
     }
@@ -3283,6 +3408,43 @@ void MultiFactorUserHostApi::SetUp(
     }
   }
   {
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp", &GetCodec());
+    if (api != nullptr) {
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_assertion_id_arg = args.at(1);
+          if (encodable_assertion_id_arg.IsNull()) {
+            reply(WrapError("assertion_id_arg unexpectedly null."));
+            return;
+          }
+          const auto& assertion_id_arg = std::get<std::string>(encodable_assertion_id_arg);
+          const auto& encodable_display_name_arg = args.at(2);
+          const auto* display_name_arg = std::get_if<std::string>(&encodable_display_name_arg);
+          api->EnrollTotp(app_arg, assertion_id_arg, display_name_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel->SetMessageHandler(nullptr);
+    }
+  }
+  {
     auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession", &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
@@ -3477,12 +3639,10 @@ void MultiFactoResolverHostApi::SetUp(
           }
           const auto& resolver_id_arg = std::get<std::string>(encodable_resolver_id_arg);
           const auto& encodable_assertion_arg = args.at(1);
-          if (encodable_assertion_arg.IsNull()) {
-            reply(WrapError("assertion_arg unexpectedly null."));
-            return;
-          }
-          const auto& assertion_arg = std::any_cast<const PigeonPhoneMultiFactorAssertion&>(std::get<CustomEncodableValue>(encodable_assertion_arg));
-          api->ResolveSignIn(resolver_id_arg, assertion_arg, [reply](ErrorOr<PigeonUserCredential>&& output) {
+          const auto* assertion_arg = &(std::any_cast<const PigeonPhoneMultiFactorAssertion&>(std::get<CustomEncodableValue>(encodable_assertion_arg)));
+          const auto& encodable_totp_assertion_id_arg = args.at(2);
+          const auto* totp_assertion_id_arg = std::get_if<std::string>(&encodable_totp_assertion_id_arg);
+          api->ResolveSignIn(resolver_id_arg, assertion_arg, totp_assertion_id_arg, [reply](ErrorOr<PigeonUserCredential>&& output) {
             if (output.has_error()) {
               reply(WrapError(output.error()));
               return;
@@ -3510,6 +3670,254 @@ EncodableValue MultiFactoResolverHostApi::WrapError(std::string_view error_messa
 }
 
 EncodableValue MultiFactoResolverHostApi::WrapError(const FlutterError& error) {
+  return EncodableValue(EncodableList{
+    EncodableValue(error.code()),
+    EncodableValue(error.message()),
+    error.details()
+  });
+}
+
+
+MultiFactorTotpHostApiCodecSerializer::MultiFactorTotpHostApiCodecSerializer() {}
+
+EncodableValue MultiFactorTotpHostApiCodecSerializer::ReadValueOfType(
+  uint8_t type,
+  flutter::ByteStreamReader* stream) const {
+  switch (type) {
+    case 128:
+      return CustomEncodableValue(PigeonTotpSecret::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+    default:
+      return flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
+  }
+}
+
+void MultiFactorTotpHostApiCodecSerializer::WriteValue(
+  const EncodableValue& value,
+  flutter::ByteStreamWriter* stream) const {
+  if (const CustomEncodableValue* custom_value = std::get_if<CustomEncodableValue>(&value)) {
+    if (custom_value->type() == typeid(PigeonTotpSecret)) {
+      stream->WriteByte(128);
+      WriteValue(EncodableValue(std::any_cast<PigeonTotpSecret>(*custom_value).ToEncodableList()), stream);
+      return;
+    }
+  }
+  flutter::StandardCodecSerializer::WriteValue(value, stream);
+}
+
+/// The codec used by MultiFactorTotpHostApi.
+const flutter::StandardMessageCodec& MultiFactorTotpHostApi::GetCodec() {
+  return flutter::StandardMessageCodec::GetInstance(&MultiFactorTotpHostApiCodecSerializer::GetInstance());
+}
+
+// Sets up an instance of `MultiFactorTotpHostApi` to handle messages through the `binary_messenger`.
+void MultiFactorTotpHostApi::SetUp(
+  flutter::BinaryMessenger* binary_messenger,
+  MultiFactorTotpHostApi* api) {
+  {
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret", &GetCodec());
+    if (api != nullptr) {
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_session_id_arg = args.at(0);
+          if (encodable_session_id_arg.IsNull()) {
+            reply(WrapError("session_id_arg unexpectedly null."));
+            return;
+          }
+          const auto& session_id_arg = std::get<std::string>(encodable_session_id_arg);
+          api->GenerateSecret(session_id_arg, [reply](ErrorOr<PigeonTotpSecret>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel->SetMessageHandler(nullptr);
+    }
+  }
+  {
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment", &GetCodec());
+    if (api != nullptr) {
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_secret_key_arg = args.at(0);
+          if (encodable_secret_key_arg.IsNull()) {
+            reply(WrapError("secret_key_arg unexpectedly null."));
+            return;
+          }
+          const auto& secret_key_arg = std::get<std::string>(encodable_secret_key_arg);
+          const auto& encodable_one_time_password_arg = args.at(1);
+          if (encodable_one_time_password_arg.IsNull()) {
+            reply(WrapError("one_time_password_arg unexpectedly null."));
+            return;
+          }
+          const auto& one_time_password_arg = std::get<std::string>(encodable_one_time_password_arg);
+          api->GetAssertionForEnrollment(secret_key_arg, one_time_password_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel->SetMessageHandler(nullptr);
+    }
+  }
+  {
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn", &GetCodec());
+    if (api != nullptr) {
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_enrollment_id_arg = args.at(0);
+          if (encodable_enrollment_id_arg.IsNull()) {
+            reply(WrapError("enrollment_id_arg unexpectedly null."));
+            return;
+          }
+          const auto& enrollment_id_arg = std::get<std::string>(encodable_enrollment_id_arg);
+          const auto& encodable_one_time_password_arg = args.at(1);
+          if (encodable_one_time_password_arg.IsNull()) {
+            reply(WrapError("one_time_password_arg unexpectedly null."));
+            return;
+          }
+          const auto& one_time_password_arg = std::get<std::string>(encodable_one_time_password_arg);
+          api->GetAssertionForSignIn(enrollment_id_arg, one_time_password_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel->SetMessageHandler(nullptr);
+    }
+  }
+}
+
+EncodableValue MultiFactorTotpHostApi::WrapError(std::string_view error_message) {
+  return EncodableValue(EncodableList{
+    EncodableValue(std::string(error_message)),
+    EncodableValue("Error"),
+    EncodableValue()
+  });
+}
+
+EncodableValue MultiFactorTotpHostApi::WrapError(const FlutterError& error) {
+  return EncodableValue(EncodableList{
+    EncodableValue(error.code()),
+    EncodableValue(error.message()),
+    error.details()
+  });
+}
+
+/// The codec used by MultiFactorTotpSecretHostApi.
+const flutter::StandardMessageCodec& MultiFactorTotpSecretHostApi::GetCodec() {
+  return flutter::StandardMessageCodec::GetInstance(&flutter::StandardCodecSerializer::GetInstance());
+}
+
+// Sets up an instance of `MultiFactorTotpSecretHostApi` to handle messages through the `binary_messenger`.
+void MultiFactorTotpSecretHostApi::SetUp(
+  flutter::BinaryMessenger* binary_messenger,
+  MultiFactorTotpSecretHostApi* api) {
+  {
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl", &GetCodec());
+    if (api != nullptr) {
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_secret_key_arg = args.at(0);
+          if (encodable_secret_key_arg.IsNull()) {
+            reply(WrapError("secret_key_arg unexpectedly null."));
+            return;
+          }
+          const auto& secret_key_arg = std::get<std::string>(encodable_secret_key_arg);
+          const auto& encodable_account_name_arg = args.at(1);
+          const auto* account_name_arg = std::get_if<std::string>(&encodable_account_name_arg);
+          const auto& encodable_issuer_arg = args.at(2);
+          const auto* issuer_arg = std::get_if<std::string>(&encodable_issuer_arg);
+          api->GenerateQrCodeUrl(secret_key_arg, account_name_arg, issuer_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel->SetMessageHandler(nullptr);
+    }
+  }
+  {
+    auto channel = std::make_unique<BasicMessageChannel<>>(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp", &GetCodec());
+    if (api != nullptr) {
+      channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_secret_key_arg = args.at(0);
+          if (encodable_secret_key_arg.IsNull()) {
+            reply(WrapError("secret_key_arg unexpectedly null."));
+            return;
+          }
+          const auto& secret_key_arg = std::get<std::string>(encodable_secret_key_arg);
+          const auto& encodable_qr_code_url_arg = args.at(1);
+          if (encodable_qr_code_url_arg.IsNull()) {
+            reply(WrapError("qr_code_url_arg unexpectedly null."));
+            return;
+          }
+          const auto& qr_code_url_arg = std::get<std::string>(encodable_qr_code_url_arg);
+          api->OpenInOtpApp(secret_key_arg, qr_code_url_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel->SetMessageHandler(nullptr);
+    }
+  }
+}
+
+EncodableValue MultiFactorTotpSecretHostApi::WrapError(std::string_view error_message) {
+  return EncodableValue(EncodableList{
+    EncodableValue(std::string(error_message)),
+    EncodableValue("Error"),
+    EncodableValue()
+  });
+}
+
+EncodableValue MultiFactorTotpSecretHostApi::WrapError(const FlutterError& error) {
   return EncodableValue(EncodableList{
     EncodableValue(error.code()),
     EncodableValue(error.message()),

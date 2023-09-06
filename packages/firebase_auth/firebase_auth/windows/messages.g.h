@@ -55,6 +55,8 @@ template<class T> class ErrorOr {
   friend class FirebaseAuthUserHostApi;
   friend class MultiFactorUserHostApi;
   friend class MultiFactoResolverHostApi;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpSecretHostApi;
   friend class GenerateInterfaces;
   ErrorOr() = default;
   T TakeValue() && { return std::get<T>(std::move(v_)); }
@@ -103,6 +105,10 @@ class PigeonMultiFactorSession {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   std::string id_;
@@ -136,6 +142,10 @@ class PigeonPhoneMultiFactorAssertion {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   std::string verification_id_;
@@ -190,6 +200,10 @@ class PigeonMultiFactorInfo {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   std::optional<std::string> display_name_;
@@ -231,6 +245,10 @@ class PigeonFirebaseApp {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   std::string app_name_;
@@ -271,6 +289,10 @@ class PigeonActionCodeInfoData {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   std::optional<std::string> email_;
@@ -305,6 +327,10 @@ class PigeonActionCodeInfo {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   ActionCodeInfoOperation operation_;
@@ -359,6 +385,10 @@ class PigeonAdditionalUserInfo {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   bool is_new_user_;
@@ -412,6 +442,10 @@ class PigeonAuthCredential {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   std::string provider_id_;
@@ -504,6 +538,10 @@ class PigeonUserInfo {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   std::string uid_;
@@ -535,11 +573,11 @@ class PigeonUserDetails {
 
   const flutter::EncodableList& provider_data() const;
   void set_provider_data(const flutter::EncodableList& value_arg);
-  static PigeonUserDetails FromEncodableList(const flutter::EncodableList& list);
-  flutter::EncodableList ToEncodableList() const;
 
 
  private:
+  static PigeonUserDetails FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
   friend class PigeonUserCredential;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthHostApiCodecSerializer;
@@ -549,6 +587,10 @@ class PigeonUserDetails {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   PigeonUserInfo user_info_;
@@ -593,6 +635,10 @@ class PigeonUserCredential {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   std::optional<PigeonUserDetails> user_;
@@ -658,6 +704,10 @@ class PigeonActionCodeSettings {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   std::string url_;
@@ -716,6 +766,10 @@ class PigeonFirebaseAuthSettings {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   bool app_verification_disabled_for_testing_;
@@ -762,6 +816,10 @@ class PigeonSignInProvider {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   std::string provider_id_;
@@ -821,6 +879,10 @@ class PigeonVerifyPhoneNumberRequest {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   std::optional<std::string> phone_number_;
@@ -889,6 +951,10 @@ class PigeonIdTokenResult {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   std::optional<std::string> token_;
@@ -943,12 +1009,76 @@ class PigeonUserProfile {
   friend class MultiFactorUserHostApiCodecSerializer;
   friend class MultiFactoResolverHostApi;
   friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
   friend class GenerateInterfaces;
   friend class GenerateInterfacesCodecSerializer;
   std::optional<std::string> display_name_;
   std::optional<std::string> photo_url_;
   bool display_name_changed_;
   bool photo_url_changed_;
+
+};
+
+
+// Generated class from Pigeon that represents data sent in messages.
+class PigeonTotpSecret {
+ public:
+  // Constructs an object setting all non-nullable fields.
+  explicit PigeonTotpSecret(const std::string& secret_key);
+
+  // Constructs an object setting all fields.
+  explicit PigeonTotpSecret(
+    const int64_t* code_interval_seconds,
+    const int64_t* code_length,
+    const int64_t* enrollment_completion_deadline,
+    const std::string* hashing_algorithm,
+    const std::string& secret_key);
+
+  const int64_t* code_interval_seconds() const;
+  void set_code_interval_seconds(const int64_t* value_arg);
+  void set_code_interval_seconds(int64_t value_arg);
+
+  const int64_t* code_length() const;
+  void set_code_length(const int64_t* value_arg);
+  void set_code_length(int64_t value_arg);
+
+  const int64_t* enrollment_completion_deadline() const;
+  void set_enrollment_completion_deadline(const int64_t* value_arg);
+  void set_enrollment_completion_deadline(int64_t value_arg);
+
+  const std::string* hashing_algorithm() const;
+  void set_hashing_algorithm(const std::string_view* value_arg);
+  void set_hashing_algorithm(std::string_view value_arg);
+
+  const std::string& secret_key() const;
+  void set_secret_key(std::string_view value_arg);
+
+
+ private:
+  static PigeonTotpSecret FromEncodableList(const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseAuthHostApi;
+  friend class FirebaseAuthHostApiCodecSerializer;
+  friend class FirebaseAuthUserHostApi;
+  friend class FirebaseAuthUserHostApiCodecSerializer;
+  friend class MultiFactorUserHostApi;
+  friend class MultiFactorUserHostApiCodecSerializer;
+  friend class MultiFactoResolverHostApi;
+  friend class MultiFactoResolverHostApiCodecSerializer;
+  friend class MultiFactorTotpHostApi;
+  friend class MultiFactorTotpHostApiCodecSerializer;
+  friend class MultiFactorTotpSecretHostApi;
+  friend class MultiFactorTotpSecretHostApiCodecSerializer;
+  friend class GenerateInterfaces;
+  friend class GenerateInterfacesCodecSerializer;
+  std::optional<int64_t> code_interval_seconds_;
+  std::optional<int64_t> code_length_;
+  std::optional<int64_t> enrollment_completion_deadline_;
+  std::optional<std::string> hashing_algorithm_;
+  std::string secret_key_;
 
 };
 
@@ -1206,6 +1336,11 @@ class MultiFactorUserHostApi {
     const PigeonPhoneMultiFactorAssertion& assertion,
     const std::string* display_name,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void EnrollTotp(
+    const PigeonFirebaseApp& app,
+    const std::string& assertion_id,
+    const std::string* display_name,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void GetSession(
     const PigeonFirebaseApp& app,
     std::function<void(ErrorOr<PigeonMultiFactorSession> reply)> result) = 0;
@@ -1257,7 +1392,8 @@ class MultiFactoResolverHostApi {
   virtual ~MultiFactoResolverHostApi() {}
   virtual void ResolveSignIn(
     const std::string& resolver_id,
-    const PigeonPhoneMultiFactorAssertion& assertion,
+    const PigeonPhoneMultiFactorAssertion* assertion,
+    const std::string* totp_assertion_id,
     std::function<void(ErrorOr<PigeonUserCredential> reply)> result) = 0;
 
   // The codec used by MultiFactoResolverHostApi.
@@ -1271,6 +1407,85 @@ class MultiFactoResolverHostApi {
 
  protected:
   MultiFactoResolverHostApi() = default;
+
+};
+class MultiFactorTotpHostApiCodecSerializer : public flutter::StandardCodecSerializer {
+ public:
+  MultiFactorTotpHostApiCodecSerializer();
+  inline static MultiFactorTotpHostApiCodecSerializer& GetInstance() {
+    static MultiFactorTotpHostApiCodecSerializer sInstance;
+    return sInstance;
+  }
+
+  void WriteValue(
+    const flutter::EncodableValue& value,
+    flutter::ByteStreamWriter* stream) const override;
+
+ protected:
+  flutter::EncodableValue ReadValueOfType(
+    uint8_t type,
+    flutter::ByteStreamReader* stream) const override;
+
+};
+
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
+class MultiFactorTotpHostApi {
+ public:
+  MultiFactorTotpHostApi(const MultiFactorTotpHostApi&) = delete;
+  MultiFactorTotpHostApi& operator=(const MultiFactorTotpHostApi&) = delete;
+  virtual ~MultiFactorTotpHostApi() {}
+  virtual void GenerateSecret(
+    const std::string& session_id,
+    std::function<void(ErrorOr<PigeonTotpSecret> reply)> result) = 0;
+  virtual void GetAssertionForEnrollment(
+    const std::string& secret_key,
+    const std::string& one_time_password,
+    std::function<void(ErrorOr<std::string> reply)> result) = 0;
+  virtual void GetAssertionForSignIn(
+    const std::string& enrollment_id,
+    const std::string& one_time_password,
+    std::function<void(ErrorOr<std::string> reply)> result) = 0;
+
+  // The codec used by MultiFactorTotpHostApi.
+  static const flutter::StandardMessageCodec& GetCodec();
+  // Sets up an instance of `MultiFactorTotpHostApi` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    flutter::BinaryMessenger* binary_messenger,
+    MultiFactorTotpHostApi* api);
+  static flutter::EncodableValue WrapError(std::string_view error_message);
+  static flutter::EncodableValue WrapError(const FlutterError& error);
+
+ protected:
+  MultiFactorTotpHostApi() = default;
+
+};
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
+class MultiFactorTotpSecretHostApi {
+ public:
+  MultiFactorTotpSecretHostApi(const MultiFactorTotpSecretHostApi&) = delete;
+  MultiFactorTotpSecretHostApi& operator=(const MultiFactorTotpSecretHostApi&) = delete;
+  virtual ~MultiFactorTotpSecretHostApi() {}
+  virtual void GenerateQrCodeUrl(
+    const std::string& secret_key,
+    const std::string* account_name,
+    const std::string* issuer,
+    std::function<void(ErrorOr<std::string> reply)> result) = 0;
+  virtual void OpenInOtpApp(
+    const std::string& secret_key,
+    const std::string& qr_code_url,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+
+  // The codec used by MultiFactorTotpSecretHostApi.
+  static const flutter::StandardMessageCodec& GetCodec();
+  // Sets up an instance of `MultiFactorTotpSecretHostApi` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    flutter::BinaryMessenger* binary_messenger,
+    MultiFactorTotpSecretHostApi* api);
+  static flutter::EncodableValue WrapError(std::string_view error_message);
+  static flutter::EncodableValue WrapError(const FlutterError& error);
+
+ protected:
+  MultiFactorTotpSecretHostApi() = default;
 
 };
 class GenerateInterfacesCodecSerializer : public flutter::StandardCodecSerializer {
