@@ -151,7 +151,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonMultiFactorSession
 + (instancetype)makeWithId:(NSString *)id {
-  PigeonMultiFactorSession* pigeonResult = [[PigeonMultiFactorSession alloc] init];
+  PigeonMultiFactorSession *pigeonResult = [[PigeonMultiFactorSession alloc] init];
   pigeonResult.id = id;
   return pigeonResult;
 }
@@ -173,8 +173,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonPhoneMultiFactorAssertion
 + (instancetype)makeWithVerificationId:(NSString *)verificationId
-    verificationCode:(NSString *)verificationCode {
-  PigeonPhoneMultiFactorAssertion* pigeonResult = [[PigeonPhoneMultiFactorAssertion alloc] init];
+                      verificationCode:(NSString *)verificationCode {
+  PigeonPhoneMultiFactorAssertion *pigeonResult = [[PigeonPhoneMultiFactorAssertion alloc] init];
   pigeonResult.verificationId = verificationId;
   pigeonResult.verificationCode = verificationCode;
   return pigeonResult;
@@ -200,11 +200,11 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonMultiFactorInfo
 + (instancetype)makeWithDisplayName:(nullable NSString *)displayName
-    enrollmentTimestamp:(NSNumber *)enrollmentTimestamp
-    factorId:(nullable NSString *)factorId
-    uid:(NSString *)uid
-    phoneNumber:(nullable NSString *)phoneNumber {
-  PigeonMultiFactorInfo* pigeonResult = [[PigeonMultiFactorInfo alloc] init];
+                enrollmentTimestamp:(NSNumber *)enrollmentTimestamp
+                           factorId:(nullable NSString *)factorId
+                                uid:(NSString *)uid
+                        phoneNumber:(nullable NSString *)phoneNumber {
+  PigeonMultiFactorInfo *pigeonResult = [[PigeonMultiFactorInfo alloc] init];
   pigeonResult.displayName = displayName;
   pigeonResult.enrollmentTimestamp = enrollmentTimestamp;
   pigeonResult.factorId = factorId;
@@ -238,9 +238,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @end
 
 @implementation PigeonFirebaseApp
-+ (instancetype)makeWithAppName:(NSString *)appName
-    tenantId:(nullable NSString *)tenantId {
-  PigeonFirebaseApp* pigeonResult = [[PigeonFirebaseApp alloc] init];
++ (instancetype)makeWithAppName:(NSString *)appName tenantId:(nullable NSString *)tenantId {
+  PigeonFirebaseApp *pigeonResult = [[PigeonFirebaseApp alloc] init];
   pigeonResult.appName = appName;
   pigeonResult.tenantId = tenantId;
   return pigeonResult;
@@ -265,8 +264,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonActionCodeInfoData
 + (instancetype)makeWithEmail:(nullable NSString *)email
-    previousEmail:(nullable NSString *)previousEmail {
-  PigeonActionCodeInfoData* pigeonResult = [[PigeonActionCodeInfoData alloc] init];
+                previousEmail:(nullable NSString *)previousEmail {
+  PigeonActionCodeInfoData *pigeonResult = [[PigeonActionCodeInfoData alloc] init];
   pigeonResult.email = email;
   pigeonResult.previousEmail = previousEmail;
   return pigeonResult;
@@ -290,8 +289,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonActionCodeInfo
 + (instancetype)makeWithOperation:(ActionCodeInfoOperation)operation
-    data:(PigeonActionCodeInfoData *)data {
-  PigeonActionCodeInfo* pigeonResult = [[PigeonActionCodeInfo alloc] init];
+                             data:(PigeonActionCodeInfoData *)data {
+  PigeonActionCodeInfo *pigeonResult = [[PigeonActionCodeInfo alloc] init];
   pigeonResult.operation = operation;
   pigeonResult.data = data;
   return pigeonResult;
@@ -299,7 +298,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 + (PigeonActionCodeInfo *)fromList:(NSArray *)list {
   PigeonActionCodeInfo *pigeonResult = [[PigeonActionCodeInfo alloc] init];
   pigeonResult.operation = [GetNullableObjectAtIndex(list, 0) integerValue];
-  pigeonResult.data = [PigeonActionCodeInfoData nullableFromList:(GetNullableObjectAtIndex(list, 1))];
+  pigeonResult.data =
+      [PigeonActionCodeInfoData nullableFromList:(GetNullableObjectAtIndex(list, 1))];
   NSAssert(pigeonResult.data != nil, @"");
   return pigeonResult;
 }
@@ -316,11 +316,11 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonAdditionalUserInfo
 + (instancetype)makeWithIsNewUser:(NSNumber *)isNewUser
-    providerId:(nullable NSString *)providerId
-    username:(nullable NSString *)username
-    authorizationCode:(nullable NSString *)authorizationCode
-    profile:(nullable NSDictionary<NSString *, id> *)profile {
-  PigeonAdditionalUserInfo* pigeonResult = [[PigeonAdditionalUserInfo alloc] init];
+                       providerId:(nullable NSString *)providerId
+                         username:(nullable NSString *)username
+                authorizationCode:(nullable NSString *)authorizationCode
+                          profile:(nullable NSDictionary<NSString *, id> *)profile {
+  PigeonAdditionalUserInfo *pigeonResult = [[PigeonAdditionalUserInfo alloc] init];
   pigeonResult.isNewUser = isNewUser;
   pigeonResult.providerId = providerId;
   pigeonResult.username = username;
@@ -354,10 +354,10 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonAuthCredential
 + (instancetype)makeWithProviderId:(NSString *)providerId
-    signInMethod:(NSString *)signInMethod
-    nativeId:(NSNumber *)nativeId
-    accessToken:(nullable NSString *)accessToken {
-  PigeonAuthCredential* pigeonResult = [[PigeonAuthCredential alloc] init];
+                      signInMethod:(NSString *)signInMethod
+                          nativeId:(NSNumber *)nativeId
+                       accessToken:(nullable NSString *)accessToken {
+  PigeonAuthCredential *pigeonResult = [[PigeonAuthCredential alloc] init];
   pigeonResult.providerId = providerId;
   pigeonResult.signInMethod = signInMethod;
   pigeonResult.nativeId = nativeId;
@@ -390,18 +390,18 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonUserInfo
 + (instancetype)makeWithUid:(NSString *)uid
-    email:(nullable NSString *)email
-    displayName:(nullable NSString *)displayName
-    photoUrl:(nullable NSString *)photoUrl
-    phoneNumber:(nullable NSString *)phoneNumber
-    isAnonymous:(NSNumber *)isAnonymous
-    isEmailVerified:(NSNumber *)isEmailVerified
-    providerId:(nullable NSString *)providerId
-    tenantId:(nullable NSString *)tenantId
-    refreshToken:(nullable NSString *)refreshToken
-    creationTimestamp:(nullable NSNumber *)creationTimestamp
-    lastSignInTimestamp:(nullable NSNumber *)lastSignInTimestamp {
-  PigeonUserInfo* pigeonResult = [[PigeonUserInfo alloc] init];
+                      email:(nullable NSString *)email
+                displayName:(nullable NSString *)displayName
+                   photoUrl:(nullable NSString *)photoUrl
+                phoneNumber:(nullable NSString *)phoneNumber
+                isAnonymous:(NSNumber *)isAnonymous
+            isEmailVerified:(NSNumber *)isEmailVerified
+                 providerId:(nullable NSString *)providerId
+                   tenantId:(nullable NSString *)tenantId
+               refreshToken:(nullable NSString *)refreshToken
+          creationTimestamp:(nullable NSNumber *)creationTimestamp
+        lastSignInTimestamp:(nullable NSNumber *)lastSignInTimestamp {
+  PigeonUserInfo *pigeonResult = [[PigeonUserInfo alloc] init];
   pigeonResult.uid = uid;
   pigeonResult.email = email;
   pigeonResult.displayName = displayName;
@@ -458,8 +458,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonUserDetails
 + (instancetype)makeWithUserInfo:(PigeonUserInfo *)userInfo
-    providerData:(NSArray<NSDictionary<id, id> *> *)providerData {
-  PigeonUserDetails* pigeonResult = [[PigeonUserDetails alloc] init];
+                    providerData:(NSArray<NSDictionary<id, id> *> *)providerData {
+  PigeonUserDetails *pigeonResult = [[PigeonUserDetails alloc] init];
   pigeonResult.userInfo = userInfo;
   pigeonResult.providerData = providerData;
   return pigeonResult;
@@ -485,9 +485,9 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonUserCredential
 + (instancetype)makeWithUser:(nullable PigeonUserDetails *)user
-    additionalUserInfo:(nullable PigeonAdditionalUserInfo *)additionalUserInfo
-    credential:(nullable PigeonAuthCredential *)credential {
-  PigeonUserCredential* pigeonResult = [[PigeonUserCredential alloc] init];
+          additionalUserInfo:(nullable PigeonAdditionalUserInfo *)additionalUserInfo
+                  credential:(nullable PigeonAuthCredential *)credential {
+  PigeonUserCredential *pigeonResult = [[PigeonUserCredential alloc] init];
   pigeonResult.user = user;
   pigeonResult.additionalUserInfo = additionalUserInfo;
   pigeonResult.credential = credential;
@@ -496,8 +496,10 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 + (PigeonUserCredential *)fromList:(NSArray *)list {
   PigeonUserCredential *pigeonResult = [[PigeonUserCredential alloc] init];
   pigeonResult.user = [PigeonUserDetails nullableFromList:(GetNullableObjectAtIndex(list, 0))];
-  pigeonResult.additionalUserInfo = [PigeonAdditionalUserInfo nullableFromList:(GetNullableObjectAtIndex(list, 1))];
-  pigeonResult.credential = [PigeonAuthCredential nullableFromList:(GetNullableObjectAtIndex(list, 2))];
+  pigeonResult.additionalUserInfo =
+      [PigeonAdditionalUserInfo nullableFromList:(GetNullableObjectAtIndex(list, 1))];
+  pigeonResult.credential =
+      [PigeonAuthCredential nullableFromList:(GetNullableObjectAtIndex(list, 2))];
   return pigeonResult;
 }
 + (nullable PigeonUserCredential *)nullableFromList:(NSArray *)list {
@@ -514,13 +516,13 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonActionCodeSettings
 + (instancetype)makeWithUrl:(NSString *)url
-    dynamicLinkDomain:(nullable NSString *)dynamicLinkDomain
-    handleCodeInApp:(NSNumber *)handleCodeInApp
-    iOSBundleId:(nullable NSString *)iOSBundleId
-    androidPackageName:(nullable NSString *)androidPackageName
-    androidInstallApp:(NSNumber *)androidInstallApp
-    androidMinimumVersion:(nullable NSString *)androidMinimumVersion {
-  PigeonActionCodeSettings* pigeonResult = [[PigeonActionCodeSettings alloc] init];
+          dynamicLinkDomain:(nullable NSString *)dynamicLinkDomain
+            handleCodeInApp:(NSNumber *)handleCodeInApp
+                iOSBundleId:(nullable NSString *)iOSBundleId
+         androidPackageName:(nullable NSString *)androidPackageName
+          androidInstallApp:(NSNumber *)androidInstallApp
+      androidMinimumVersion:(nullable NSString *)androidMinimumVersion {
+  PigeonActionCodeSettings *pigeonResult = [[PigeonActionCodeSettings alloc] init];
   pigeonResult.url = url;
   pigeonResult.dynamicLinkDomain = dynamicLinkDomain;
   pigeonResult.handleCodeInApp = handleCodeInApp;
@@ -561,12 +563,13 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @end
 
 @implementation PigeonFirebaseAuthSettings
-+ (instancetype)makeWithAppVerificationDisabledForTesting:(NSNumber *)appVerificationDisabledForTesting
-    userAccessGroup:(nullable NSString *)userAccessGroup
-    phoneNumber:(nullable NSString *)phoneNumber
-    smsCode:(nullable NSString *)smsCode
-    forceRecaptchaFlow:(nullable NSNumber *)forceRecaptchaFlow {
-  PigeonFirebaseAuthSettings* pigeonResult = [[PigeonFirebaseAuthSettings alloc] init];
++ (instancetype)makeWithAppVerificationDisabledForTesting:
+                    (NSNumber *)appVerificationDisabledForTesting
+                                          userAccessGroup:(nullable NSString *)userAccessGroup
+                                              phoneNumber:(nullable NSString *)phoneNumber
+                                                  smsCode:(nullable NSString *)smsCode
+                                       forceRecaptchaFlow:(nullable NSNumber *)forceRecaptchaFlow {
+  PigeonFirebaseAuthSettings *pigeonResult = [[PigeonFirebaseAuthSettings alloc] init];
   pigeonResult.appVerificationDisabledForTesting = appVerificationDisabledForTesting;
   pigeonResult.userAccessGroup = userAccessGroup;
   pigeonResult.phoneNumber = phoneNumber;
@@ -600,9 +603,10 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonSignInProvider
 + (instancetype)makeWithProviderId:(NSString *)providerId
-    scopes:(nullable NSArray<NSString *> *)scopes
-    customParameters:(nullable NSDictionary<NSString *, NSString *> *)customParameters {
-  PigeonSignInProvider* pigeonResult = [[PigeonSignInProvider alloc] init];
+                            scopes:(nullable NSArray<NSString *> *)scopes
+                  customParameters:
+                      (nullable NSDictionary<NSString *, NSString *> *)customParameters {
+  PigeonSignInProvider *pigeonResult = [[PigeonSignInProvider alloc] init];
   pigeonResult.providerId = providerId;
   pigeonResult.scopes = scopes;
   pigeonResult.customParameters = customParameters;
@@ -630,12 +634,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonVerifyPhoneNumberRequest
 + (instancetype)makeWithPhoneNumber:(nullable NSString *)phoneNumber
-    timeout:(NSNumber *)timeout
-    forceResendingToken:(nullable NSNumber *)forceResendingToken
-    autoRetrievedSmsCodeForTesting:(nullable NSString *)autoRetrievedSmsCodeForTesting
-    multiFactorInfoId:(nullable NSString *)multiFactorInfoId
-    multiFactorSessionId:(nullable NSString *)multiFactorSessionId {
-  PigeonVerifyPhoneNumberRequest* pigeonResult = [[PigeonVerifyPhoneNumberRequest alloc] init];
+                            timeout:(NSNumber *)timeout
+                forceResendingToken:(nullable NSNumber *)forceResendingToken
+     autoRetrievedSmsCodeForTesting:(nullable NSString *)autoRetrievedSmsCodeForTesting
+                  multiFactorInfoId:(nullable NSString *)multiFactorInfoId
+               multiFactorSessionId:(nullable NSString *)multiFactorSessionId {
+  PigeonVerifyPhoneNumberRequest *pigeonResult = [[PigeonVerifyPhoneNumberRequest alloc] init];
   pigeonResult.phoneNumber = phoneNumber;
   pigeonResult.timeout = timeout;
   pigeonResult.forceResendingToken = forceResendingToken;
@@ -672,13 +676,13 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonIdTokenResult
 + (instancetype)makeWithToken:(nullable NSString *)token
-    expirationTimestamp:(nullable NSNumber *)expirationTimestamp
-    authTimestamp:(nullable NSNumber *)authTimestamp
-    issuedAtTimestamp:(nullable NSNumber *)issuedAtTimestamp
-    signInProvider:(nullable NSString *)signInProvider
-    claims:(nullable NSDictionary<NSString *, id> *)claims
-    signInSecondFactor:(nullable NSString *)signInSecondFactor {
-  PigeonIdTokenResult* pigeonResult = [[PigeonIdTokenResult alloc] init];
+          expirationTimestamp:(nullable NSNumber *)expirationTimestamp
+                authTimestamp:(nullable NSNumber *)authTimestamp
+            issuedAtTimestamp:(nullable NSNumber *)issuedAtTimestamp
+               signInProvider:(nullable NSString *)signInProvider
+                       claims:(nullable NSDictionary<NSString *, id> *)claims
+           signInSecondFactor:(nullable NSString *)signInSecondFactor {
+  PigeonIdTokenResult *pigeonResult = [[PigeonIdTokenResult alloc] init];
   pigeonResult.token = token;
   pigeonResult.expirationTimestamp = expirationTimestamp;
   pigeonResult.authTimestamp = authTimestamp;
@@ -717,10 +721,10 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonUserProfile
 + (instancetype)makeWithDisplayName:(nullable NSString *)displayName
-    photoUrl:(nullable NSString *)photoUrl
-    displayNameChanged:(NSNumber *)displayNameChanged
-    photoUrlChanged:(NSNumber *)photoUrlChanged {
-  PigeonUserProfile* pigeonResult = [[PigeonUserProfile alloc] init];
+                           photoUrl:(nullable NSString *)photoUrl
+                 displayNameChanged:(NSNumber *)displayNameChanged
+                    photoUrlChanged:(NSNumber *)photoUrlChanged {
+  PigeonUserProfile *pigeonResult = [[PigeonUserProfile alloc] init];
   pigeonResult.displayName = displayName;
   pigeonResult.photoUrl = photoUrl;
   pigeonResult.displayNameChanged = displayNameChanged;
@@ -752,11 +756,11 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation PigeonTotpSecret
 + (instancetype)makeWithCodeIntervalSeconds:(nullable NSNumber *)codeIntervalSeconds
-    codeLength:(nullable NSNumber *)codeLength
-    enrollmentCompletionDeadline:(nullable NSNumber *)enrollmentCompletionDeadline
-    hashingAlgorithm:(nullable NSString *)hashingAlgorithm
-    secretKey:(NSString *)secretKey {
-  PigeonTotpSecret* pigeonResult = [[PigeonTotpSecret alloc] init];
+                                 codeLength:(nullable NSNumber *)codeLength
+               enrollmentCompletionDeadline:(nullable NSNumber *)enrollmentCompletionDeadline
+                           hashingAlgorithm:(nullable NSString *)hashingAlgorithm
+                                  secretKey:(NSString *)secretKey {
+  PigeonTotpSecret *pigeonResult = [[PigeonTotpSecret alloc] init];
   pigeonResult.codeIntervalSeconds = codeIntervalSeconds;
   pigeonResult.codeLength = codeLength;
   pigeonResult.enrollmentCompletionDeadline = enrollmentCompletionDeadline;
@@ -793,41 +797,41 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @implementation FirebaseAuthHostApiCodecReader
 - (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
-    case 128: 
+    case 128:
       return [PigeonActionCodeInfo fromList:[self readValue]];
-    case 129: 
+    case 129:
       return [PigeonActionCodeInfoData fromList:[self readValue]];
-    case 130: 
+    case 130:
       return [PigeonActionCodeSettings fromList:[self readValue]];
-    case 131: 
+    case 131:
       return [PigeonAdditionalUserInfo fromList:[self readValue]];
-    case 132: 
+    case 132:
       return [PigeonAuthCredential fromList:[self readValue]];
-    case 133: 
+    case 133:
       return [PigeonFirebaseApp fromList:[self readValue]];
-    case 134: 
+    case 134:
       return [PigeonFirebaseAuthSettings fromList:[self readValue]];
-    case 135: 
+    case 135:
       return [PigeonIdTokenResult fromList:[self readValue]];
-    case 136: 
+    case 136:
       return [PigeonMultiFactorInfo fromList:[self readValue]];
-    case 137: 
+    case 137:
       return [PigeonMultiFactorSession fromList:[self readValue]];
-    case 138: 
+    case 138:
       return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
-    case 139: 
+    case 139:
       return [PigeonSignInProvider fromList:[self readValue]];
-    case 140: 
+    case 140:
       return [PigeonTotpSecret fromList:[self readValue]];
-    case 141: 
+    case 141:
       return [PigeonUserCredential fromList:[self readValue]];
-    case 142: 
+    case 142:
       return [PigeonUserDetails fromList:[self readValue]];
-    case 143: 
+    case 143:
       return [PigeonUserInfo fromList:[self readValue]];
-    case 144: 
+    case 144:
       return [PigeonUserProfile fromList:[self readValue]];
-    case 145: 
+    case 145:
       return [PigeonVerifyPhoneNumberRequest fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -914,451 +918,586 @@ NSObject<FlutterMessageCodec> *FirebaseAuthHostApiGetCodec(void) {
   static FlutterStandardMessageCodec *sSharedObject = nil;
   static dispatch_once_t sPred = 0;
   dispatch_once(&sPred, ^{
-    FirebaseAuthHostApiCodecReaderWriter *readerWriter = [[FirebaseAuthHostApiCodecReaderWriter alloc] init];
+    FirebaseAuthHostApiCodecReaderWriter *readerWriter =
+        [[FirebaseAuthHostApiCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
 }
 
-void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseAuthHostApi> *api) {
+void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                              NSObject<FirebaseAuthHostApi> *api) {
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"registerIdTokenListener"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(registerIdTokenListenerApp:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(registerIdTokenListenerApp:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(registerIdTokenListenerApp:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(registerIdTokenListenerApp:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        [api registerIdTokenListenerApp:arg_app completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api registerIdTokenListenerApp:arg_app
+                             completion:^(NSString *_Nullable output,
+                                          FlutterError *_Nullable error) {
+                               callback(wrapResult(output, error));
+                             }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"registerAuthStateListener"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(registerAuthStateListenerApp:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(registerAuthStateListenerApp:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(registerAuthStateListenerApp:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(registerAuthStateListenerApp:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        [api registerAuthStateListenerApp:arg_app completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api registerAuthStateListenerApp:arg_app
+                               completion:^(NSString *_Nullable output,
+                                            FlutterError *_Nullable error) {
+                                 callback(wrapResult(output, error));
+                               }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"useEmulator"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(useEmulatorApp:host:port:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(useEmulatorApp:host:port:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(useEmulatorApp:host:port:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(useEmulatorApp:host:port:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_host = GetNullableObjectAtIndex(args, 1);
         NSNumber *arg_port = GetNullableObjectAtIndex(args, 2);
-        [api useEmulatorApp:arg_app host:arg_host port:arg_port completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api useEmulatorApp:arg_app
+                       host:arg_host
+                       port:arg_port
+                 completion:^(FlutterError *_Nullable error) {
+                   callback(wrapResult(nil, error));
+                 }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"applyActionCode"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(applyActionCodeApp:code:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(applyActionCodeApp:code:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(applyActionCodeApp:code:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(applyActionCodeApp:code:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_code = GetNullableObjectAtIndex(args, 1);
-        [api applyActionCodeApp:arg_app code:arg_code completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api applyActionCodeApp:arg_app
+                           code:arg_code
+                     completion:^(FlutterError *_Nullable error) {
+                       callback(wrapResult(nil, error));
+                     }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"checkActionCode"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(checkActionCodeApp:code:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(checkActionCodeApp:code:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(checkActionCodeApp:code:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(checkActionCodeApp:code:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_code = GetNullableObjectAtIndex(args, 1);
-        [api checkActionCodeApp:arg_app code:arg_code completion:^(PigeonActionCodeInfo *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api checkActionCodeApp:arg_app
+                           code:arg_code
+                     completion:^(PigeonActionCodeInfo *_Nullable output,
+                                  FlutterError *_Nullable error) {
+                       callback(wrapResult(output, error));
+                     }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"confirmPasswordReset"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(confirmPasswordResetApp:code:newPassword:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(confirmPasswordResetApp:code:newPassword:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(confirmPasswordResetApp:
+                                                                     code:newPassword:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(confirmPasswordResetApp:code:newPassword:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_code = GetNullableObjectAtIndex(args, 1);
         NSString *arg_newPassword = GetNullableObjectAtIndex(args, 2);
-        [api confirmPasswordResetApp:arg_app code:arg_code newPassword:arg_newPassword completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api confirmPasswordResetApp:arg_app
+                                code:arg_code
+                         newPassword:arg_newPassword
+                          completion:^(FlutterError *_Nullable error) {
+                            callback(wrapResult(nil, error));
+                          }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"createUserWithEmailAndPassword"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(createUserWithEmailAndPasswordApp:email:password:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(createUserWithEmailAndPasswordApp:email:password:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector
+                     (createUserWithEmailAndPasswordApp:email:password:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(createUserWithEmailAndPasswordApp:email:password:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_email = GetNullableObjectAtIndex(args, 1);
         NSString *arg_password = GetNullableObjectAtIndex(args, 2);
-        [api createUserWithEmailAndPasswordApp:arg_app email:arg_email password:arg_password completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api createUserWithEmailAndPasswordApp:arg_app
+                                         email:arg_email
+                                      password:arg_password
+                                    completion:^(PigeonUserCredential *_Nullable output,
+                                                 FlutterError *_Nullable error) {
+                                      callback(wrapResult(output, error));
+                                    }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"signInAnonymously"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(signInAnonymouslyApp:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(signInAnonymouslyApp:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(signInAnonymouslyApp:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(signInAnonymouslyApp:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        [api signInAnonymouslyApp:arg_app completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api signInAnonymouslyApp:arg_app
+                       completion:^(PigeonUserCredential *_Nullable output,
+                                    FlutterError *_Nullable error) {
+                         callback(wrapResult(output, error));
+                       }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"signInWithCredential"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(signInWithCredentialApp:input:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(signInWithCredentialApp:input:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(signInWithCredentialApp:input:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(signInWithCredentialApp:input:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSDictionary<NSString *, id> *arg_input = GetNullableObjectAtIndex(args, 1);
-        [api signInWithCredentialApp:arg_app input:arg_input completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api signInWithCredentialApp:arg_app
+                               input:arg_input
+                          completion:^(PigeonUserCredential *_Nullable output,
+                                       FlutterError *_Nullable error) {
+                            callback(wrapResult(output, error));
+                          }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"signInWithCustomToken"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(signInWithCustomTokenApp:token:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(signInWithCustomTokenApp:token:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(signInWithCustomTokenApp:token:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(signInWithCustomTokenApp:token:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_token = GetNullableObjectAtIndex(args, 1);
-        [api signInWithCustomTokenApp:arg_app token:arg_token completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api signInWithCustomTokenApp:arg_app
+                                token:arg_token
+                           completion:^(PigeonUserCredential *_Nullable output,
+                                        FlutterError *_Nullable error) {
+                             callback(wrapResult(output, error));
+                           }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"signInWithEmailAndPassword"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(signInWithEmailAndPasswordApp:email:password:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(signInWithEmailAndPasswordApp:email:password:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector
+                     (signInWithEmailAndPasswordApp:email:password:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(signInWithEmailAndPasswordApp:email:password:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_email = GetNullableObjectAtIndex(args, 1);
         NSString *arg_password = GetNullableObjectAtIndex(args, 2);
-        [api signInWithEmailAndPasswordApp:arg_app email:arg_email password:arg_password completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api signInWithEmailAndPasswordApp:arg_app
+                                     email:arg_email
+                                  password:arg_password
+                                completion:^(PigeonUserCredential *_Nullable output,
+                                             FlutterError *_Nullable error) {
+                                  callback(wrapResult(output, error));
+                                }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"signInWithEmailLink"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(signInWithEmailLinkApp:email:emailLink:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(signInWithEmailLinkApp:email:emailLink:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(signInWithEmailLinkApp:
+                                                                   email:emailLink:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(signInWithEmailLinkApp:email:emailLink:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_email = GetNullableObjectAtIndex(args, 1);
         NSString *arg_emailLink = GetNullableObjectAtIndex(args, 2);
-        [api signInWithEmailLinkApp:arg_app email:arg_email emailLink:arg_emailLink completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api signInWithEmailLinkApp:arg_app
+                              email:arg_email
+                          emailLink:arg_emailLink
+                         completion:^(PigeonUserCredential *_Nullable output,
+                                      FlutterError *_Nullable error) {
+                           callback(wrapResult(output, error));
+                         }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"signInWithProvider"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(signInWithProviderApp:signInProvider:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(signInWithProviderApp:signInProvider:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(signInWithProviderApp:
+                                                         signInProvider:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(signInWithProviderApp:signInProvider:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         PigeonSignInProvider *arg_signInProvider = GetNullableObjectAtIndex(args, 1);
-        [api signInWithProviderApp:arg_app signInProvider:arg_signInProvider completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api signInWithProviderApp:arg_app
+                    signInProvider:arg_signInProvider
+                        completion:^(PigeonUserCredential *_Nullable output,
+                                     FlutterError *_Nullable error) {
+                          callback(wrapResult(output, error));
+                        }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:
+               @"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(signOutApp:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(signOutApp:completion:)", api);
+      NSCAssert(
+          [api respondsToSelector:@selector(signOutApp:completion:)],
+          @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(signOutApp:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        [api signOutApp:arg_app completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api signOutApp:arg_app
+             completion:^(FlutterError *_Nullable error) {
+               callback(wrapResult(nil, error));
+             }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"fetchSignInMethodsForEmail"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(fetchSignInMethodsForEmailApp:email:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(fetchSignInMethodsForEmailApp:email:completion:)", api);
-      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        NSString *arg_email = GetNullableObjectAtIndex(args, 1);
-        [api fetchSignInMethodsForEmailApp:arg_app email:arg_email completion:^(NSArray<NSString *> *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
-      }];
-    } else {
-      [channel setMessageHandler:nil];
-    }
-  }
-  {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail"
-        binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
-    if (api) {
-      NSCAssert([api respondsToSelector:@selector(sendPasswordResetEmailApp:email:actionCodeSettings:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(sendPasswordResetEmailApp:email:actionCodeSettings:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(fetchSignInMethodsForEmailApp:email:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(fetchSignInMethodsForEmailApp:email:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_email = GetNullableObjectAtIndex(args, 1);
-        PigeonActionCodeSettings *arg_actionCodeSettings = GetNullableObjectAtIndex(args, 2);
-        [api sendPasswordResetEmailApp:arg_app email:arg_email actionCodeSettings:arg_actionCodeSettings completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api fetchSignInMethodsForEmailApp:arg_app
+                                     email:arg_email
+                                completion:^(NSArray<NSString *> *_Nullable output,
+                                             FlutterError *_Nullable error) {
+                                  callback(wrapResult(output, error));
+                                }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"sendPasswordResetEmail"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(sendSignInLinkToEmailApp:email:actionCodeSettings:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(sendSignInLinkToEmailApp:email:actionCodeSettings:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector
+                     (sendPasswordResetEmailApp:email:actionCodeSettings:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(sendPasswordResetEmailApp:email:actionCodeSettings:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_email = GetNullableObjectAtIndex(args, 1);
         PigeonActionCodeSettings *arg_actionCodeSettings = GetNullableObjectAtIndex(args, 2);
-        [api sendSignInLinkToEmailApp:arg_app email:arg_email actionCodeSettings:arg_actionCodeSettings completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api sendPasswordResetEmailApp:arg_app
+                                 email:arg_email
+                    actionCodeSettings:arg_actionCodeSettings
+                            completion:^(FlutterError *_Nullable error) {
+                              callback(wrapResult(nil, error));
+                            }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"sendSignInLinkToEmail"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(setLanguageCodeApp:languageCode:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(setLanguageCodeApp:languageCode:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector
+                     (sendSignInLinkToEmailApp:email:actionCodeSettings:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(sendSignInLinkToEmailApp:email:actionCodeSettings:completion:)",
+                api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        NSString *arg_email = GetNullableObjectAtIndex(args, 1);
+        PigeonActionCodeSettings *arg_actionCodeSettings = GetNullableObjectAtIndex(args, 2);
+        [api sendSignInLinkToEmailApp:arg_app
+                                email:arg_email
+                   actionCodeSettings:arg_actionCodeSettings
+                           completion:^(FlutterError *_Nullable error) {
+                             callback(wrapResult(nil, error));
+                           }];
+      }];
+    } else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"setLanguageCode"
+        binaryMessenger:binaryMessenger
+                  codec:FirebaseAuthHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(setLanguageCodeApp:languageCode:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(setLanguageCodeApp:languageCode:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_languageCode = GetNullableObjectAtIndex(args, 1);
-        [api setLanguageCodeApp:arg_app languageCode:arg_languageCode completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api setLanguageCodeApp:arg_app
+                   languageCode:arg_languageCode
+                     completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
+                       callback(wrapResult(output, error));
+                     }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"setSettings"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(setSettingsApp:settings:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(setSettingsApp:settings:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(setSettingsApp:settings:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(setSettingsApp:settings:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         PigeonFirebaseAuthSettings *arg_settings = GetNullableObjectAtIndex(args, 1);
-        [api setSettingsApp:arg_app settings:arg_settings completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api setSettingsApp:arg_app
+                   settings:arg_settings
+                 completion:^(FlutterError *_Nullable error) {
+                   callback(wrapResult(nil, error));
+                 }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"verifyPasswordResetCode"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(verifyPasswordResetCodeApp:code:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(verifyPasswordResetCodeApp:code:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(verifyPasswordResetCodeApp:code:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(verifyPasswordResetCodeApp:code:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_code = GetNullableObjectAtIndex(args, 1);
-        [api verifyPasswordResetCodeApp:arg_app code:arg_code completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api verifyPasswordResetCodeApp:arg_app
+                                   code:arg_code
+                             completion:^(NSString *_Nullable output,
+                                          FlutterError *_Nullable error) {
+                               callback(wrapResult(output, error));
+                             }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"verifyPhoneNumber"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(verifyPhoneNumberApp:request:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(verifyPhoneNumberApp:request:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(verifyPhoneNumberApp:request:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(verifyPhoneNumberApp:request:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         PigeonVerifyPhoneNumberRequest *arg_request = GetNullableObjectAtIndex(args, 1);
-        [api verifyPhoneNumberApp:arg_app request:arg_request completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api verifyPhoneNumberApp:arg_app
+                          request:arg_request
+                       completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
+                         callback(wrapResult(output, error));
+                       }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi."
+                        @"revokeTokenWithAuthorizationCode"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthHostApiGetCodec()];
+                  codec:FirebaseAuthHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(revokeTokenWithAuthorizationCodeApp:authorizationCode:completion:)], @"FirebaseAuthHostApi api (%@) doesn't respond to @selector(revokeTokenWithAuthorizationCodeApp:authorizationCode:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(revokeTokenWithAuthorizationCodeApp:
+                                                                    authorizationCode:completion:)],
+                @"FirebaseAuthHostApi api (%@) doesn't respond to "
+                @"@selector(revokeTokenWithAuthorizationCodeApp:authorizationCode:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_authorizationCode = GetNullableObjectAtIndex(args, 1);
-        [api revokeTokenWithAuthorizationCodeApp:arg_app authorizationCode:arg_authorizationCode completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api revokeTokenWithAuthorizationCodeApp:arg_app
+                               authorizationCode:arg_authorizationCode
+                                      completion:^(FlutterError *_Nullable error) {
+                                        callback(wrapResult(nil, error));
+                                      }];
       }];
     } else {
       [channel setMessageHandler:nil];
@@ -1370,41 +1509,41 @@ void FirebaseAuthHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObje
 @implementation FirebaseAuthUserHostApiCodecReader
 - (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
-    case 128: 
+    case 128:
       return [PigeonActionCodeInfo fromList:[self readValue]];
-    case 129: 
+    case 129:
       return [PigeonActionCodeInfoData fromList:[self readValue]];
-    case 130: 
+    case 130:
       return [PigeonActionCodeSettings fromList:[self readValue]];
-    case 131: 
+    case 131:
       return [PigeonAdditionalUserInfo fromList:[self readValue]];
-    case 132: 
+    case 132:
       return [PigeonAuthCredential fromList:[self readValue]];
-    case 133: 
+    case 133:
       return [PigeonFirebaseApp fromList:[self readValue]];
-    case 134: 
+    case 134:
       return [PigeonFirebaseAuthSettings fromList:[self readValue]];
-    case 135: 
+    case 135:
       return [PigeonIdTokenResult fromList:[self readValue]];
-    case 136: 
+    case 136:
       return [PigeonMultiFactorInfo fromList:[self readValue]];
-    case 137: 
+    case 137:
       return [PigeonMultiFactorSession fromList:[self readValue]];
-    case 138: 
+    case 138:
       return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
-    case 139: 
+    case 139:
       return [PigeonSignInProvider fromList:[self readValue]];
-    case 140: 
+    case 140:
       return [PigeonTotpSecret fromList:[self readValue]];
-    case 141: 
+    case 141:
       return [PigeonUserCredential fromList:[self readValue]];
-    case 142: 
+    case 142:
       return [PigeonUserDetails fromList:[self readValue]];
-    case 143: 
+    case 143:
       return [PigeonUserInfo fromList:[self readValue]];
-    case 144: 
+    case 144:
       return [PigeonUserProfile fromList:[self readValue]];
-    case 145: 
+    case 145:
       return [PigeonVerifyPhoneNumberRequest fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -1491,287 +1630,369 @@ NSObject<FlutterMessageCodec> *FirebaseAuthUserHostApiGetCodec(void) {
   static FlutterStandardMessageCodec *sSharedObject = nil;
   static dispatch_once_t sPred = 0;
   dispatch_once(&sPred, ^{
-    FirebaseAuthUserHostApiCodecReaderWriter *readerWriter = [[FirebaseAuthUserHostApiCodecReaderWriter alloc] init];
+    FirebaseAuthUserHostApiCodecReaderWriter *readerWriter =
+        [[FirebaseAuthUserHostApiCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
 }
 
-void FirebaseAuthUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseAuthUserHostApi> *api) {
+void FirebaseAuthUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                  NSObject<FirebaseAuthUserHostApi> *api) {
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:
+               @"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(deleteApp:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(deleteApp:completion:)", api);
+      NSCAssert(
+          [api respondsToSelector:@selector(deleteApp:completion:)],
+          @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(deleteApp:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        [api deleteApp:arg_app completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api deleteApp:arg_app
+            completion:^(FlutterError *_Nullable error) {
+              callback(wrapResult(nil, error));
+            }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"FirebaseAuthUserHostApi.getIdToken"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getIdTokenApp:forceRefresh:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(getIdTokenApp:forceRefresh:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(getIdTokenApp:forceRefresh:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(getIdTokenApp:forceRefresh:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSNumber *arg_forceRefresh = GetNullableObjectAtIndex(args, 1);
-        [api getIdTokenApp:arg_app forceRefresh:arg_forceRefresh completion:^(PigeonIdTokenResult *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api getIdTokenApp:arg_app
+              forceRefresh:arg_forceRefresh
+                completion:^(PigeonIdTokenResult *_Nullable output, FlutterError *_Nullable error) {
+                  callback(wrapResult(output, error));
+                }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"FirebaseAuthUserHostApi.linkWithCredential"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(linkWithCredentialApp:input:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(linkWithCredentialApp:input:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(linkWithCredentialApp:input:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(linkWithCredentialApp:input:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSDictionary<NSString *, id> *arg_input = GetNullableObjectAtIndex(args, 1);
-        [api linkWithCredentialApp:arg_app input:arg_input completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api linkWithCredentialApp:arg_app
+                             input:arg_input
+                        completion:^(PigeonUserCredential *_Nullable output,
+                                     FlutterError *_Nullable error) {
+                          callback(wrapResult(output, error));
+                        }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"FirebaseAuthUserHostApi.linkWithProvider"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(linkWithProviderApp:signInProvider:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(linkWithProviderApp:signInProvider:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(linkWithProviderApp:signInProvider:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(linkWithProviderApp:signInProvider:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         PigeonSignInProvider *arg_signInProvider = GetNullableObjectAtIndex(args, 1);
-        [api linkWithProviderApp:arg_app signInProvider:arg_signInProvider completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api linkWithProviderApp:arg_app
+                  signInProvider:arg_signInProvider
+                      completion:^(PigeonUserCredential *_Nullable output,
+                                   FlutterError *_Nullable error) {
+                        callback(wrapResult(output, error));
+                      }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"FirebaseAuthUserHostApi.reauthenticateWithCredential"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(reauthenticateWithCredentialApp:input:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(reauthenticateWithCredentialApp:input:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(reauthenticateWithCredentialApp:
+                                                                            input:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(reauthenticateWithCredentialApp:input:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSDictionary<NSString *, id> *arg_input = GetNullableObjectAtIndex(args, 1);
-        [api reauthenticateWithCredentialApp:arg_app input:arg_input completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api reauthenticateWithCredentialApp:arg_app
+                                       input:arg_input
+                                  completion:^(PigeonUserCredential *_Nullable output,
+                                               FlutterError *_Nullable error) {
+                                    callback(wrapResult(output, error));
+                                  }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"FirebaseAuthUserHostApi.reauthenticateWithProvider"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(reauthenticateWithProviderApp:signInProvider:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(reauthenticateWithProviderApp:signInProvider:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(reauthenticateWithProviderApp:
+                                                                 signInProvider:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(reauthenticateWithProviderApp:signInProvider:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         PigeonSignInProvider *arg_signInProvider = GetNullableObjectAtIndex(args, 1);
-        [api reauthenticateWithProviderApp:arg_app signInProvider:arg_signInProvider completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api reauthenticateWithProviderApp:arg_app
+                            signInProvider:arg_signInProvider
+                                completion:^(PigeonUserCredential *_Nullable output,
+                                             FlutterError *_Nullable error) {
+                                  callback(wrapResult(output, error));
+                                }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:
+               @"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(reloadApp:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(reloadApp:completion:)", api);
+      NSCAssert(
+          [api respondsToSelector:@selector(reloadApp:completion:)],
+          @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(reloadApp:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        [api reloadApp:arg_app completion:^(PigeonUserDetails *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api reloadApp:arg_app
+            completion:^(PigeonUserDetails *_Nullable output, FlutterError *_Nullable error) {
+              callback(wrapResult(output, error));
+            }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"FirebaseAuthUserHostApi.sendEmailVerification"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(sendEmailVerificationApp:actionCodeSettings:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(sendEmailVerificationApp:actionCodeSettings:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(sendEmailVerificationApp:
+                                                        actionCodeSettings:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(sendEmailVerificationApp:actionCodeSettings:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         PigeonActionCodeSettings *arg_actionCodeSettings = GetNullableObjectAtIndex(args, 1);
-        [api sendEmailVerificationApp:arg_app actionCodeSettings:arg_actionCodeSettings completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api sendEmailVerificationApp:arg_app
+                   actionCodeSettings:arg_actionCodeSettings
+                           completion:^(FlutterError *_Nullable error) {
+                             callback(wrapResult(nil, error));
+                           }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:
+               @"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(unlinkApp:providerId:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(unlinkApp:providerId:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(unlinkApp:providerId:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(unlinkApp:providerId:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_providerId = GetNullableObjectAtIndex(args, 1);
-        [api unlinkApp:arg_app providerId:arg_providerId completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api unlinkApp:arg_app
+            providerId:arg_providerId
+            completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
+              callback(wrapResult(output, error));
+            }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"FirebaseAuthUserHostApi.updateEmail"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(updateEmailApp:newEmail:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(updateEmailApp:newEmail:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(updateEmailApp:newEmail:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(updateEmailApp:newEmail:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_newEmail = GetNullableObjectAtIndex(args, 1);
-        [api updateEmailApp:arg_app newEmail:arg_newEmail completion:^(PigeonUserDetails *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api updateEmailApp:arg_app
+                   newEmail:arg_newEmail
+                 completion:^(PigeonUserDetails *_Nullable output, FlutterError *_Nullable error) {
+                   callback(wrapResult(output, error));
+                 }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"FirebaseAuthUserHostApi.updatePassword"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(updatePasswordApp:newPassword:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(updatePasswordApp:newPassword:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(updatePasswordApp:newPassword:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(updatePasswordApp:newPassword:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_newPassword = GetNullableObjectAtIndex(args, 1);
-        [api updatePasswordApp:arg_app newPassword:arg_newPassword completion:^(PigeonUserDetails *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api updatePasswordApp:arg_app
+                   newPassword:arg_newPassword
+                    completion:^(PigeonUserDetails *_Nullable output,
+                                 FlutterError *_Nullable error) {
+                      callback(wrapResult(output, error));
+                    }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"FirebaseAuthUserHostApi.updatePhoneNumber"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(updatePhoneNumberApp:input:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(updatePhoneNumberApp:input:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(updatePhoneNumberApp:input:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(updatePhoneNumberApp:input:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSDictionary<NSString *, id> *arg_input = GetNullableObjectAtIndex(args, 1);
-        [api updatePhoneNumberApp:arg_app input:arg_input completion:^(PigeonUserDetails *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api updatePhoneNumberApp:arg_app
+                            input:arg_input
+                       completion:^(PigeonUserDetails *_Nullable output,
+                                    FlutterError *_Nullable error) {
+                         callback(wrapResult(output, error));
+                       }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"FirebaseAuthUserHostApi.updateProfile"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(updateProfileApp:profile:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(updateProfileApp:profile:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(updateProfileApp:profile:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(updateProfileApp:profile:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         PigeonUserProfile *arg_profile = GetNullableObjectAtIndex(args, 1);
-        [api updateProfileApp:arg_app profile:arg_profile completion:^(PigeonUserDetails *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api
+            updateProfileApp:arg_app
+                     profile:arg_profile
+                  completion:^(PigeonUserDetails *_Nullable output, FlutterError *_Nullable error) {
+                    callback(wrapResult(output, error));
+                  }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"FirebaseAuthUserHostApi.verifyBeforeUpdateEmail"
         binaryMessenger:binaryMessenger
-        codec:FirebaseAuthUserHostApiGetCodec()];
+                  codec:FirebaseAuthUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(verifyBeforeUpdateEmailApp:newEmail:actionCodeSettings:completion:)], @"FirebaseAuthUserHostApi api (%@) doesn't respond to @selector(verifyBeforeUpdateEmailApp:newEmail:actionCodeSettings:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector
+                     (verifyBeforeUpdateEmailApp:newEmail:actionCodeSettings:completion:)],
+                @"FirebaseAuthUserHostApi api (%@) doesn't respond to "
+                @"@selector(verifyBeforeUpdateEmailApp:newEmail:actionCodeSettings:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_newEmail = GetNullableObjectAtIndex(args, 1);
         PigeonActionCodeSettings *arg_actionCodeSettings = GetNullableObjectAtIndex(args, 2);
-        [api verifyBeforeUpdateEmailApp:arg_app newEmail:arg_newEmail actionCodeSettings:arg_actionCodeSettings completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api verifyBeforeUpdateEmailApp:arg_app
+                               newEmail:arg_newEmail
+                     actionCodeSettings:arg_actionCodeSettings
+                             completion:^(FlutterError *_Nullable error) {
+                               callback(wrapResult(nil, error));
+                             }];
       }];
     } else {
       [channel setMessageHandler:nil];
@@ -1783,13 +2004,13 @@ void FirebaseAuthUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NS
 @implementation MultiFactorUserHostApiCodecReader
 - (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
-    case 128: 
+    case 128:
       return [PigeonFirebaseApp fromList:[self readValue]];
-    case 129: 
+    case 129:
       return [PigeonMultiFactorInfo fromList:[self readValue]];
-    case 130: 
+    case 130:
       return [PigeonMultiFactorSession fromList:[self readValue]];
-    case 131: 
+    case 131:
       return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -1834,108 +2055,139 @@ NSObject<FlutterMessageCodec> *MultiFactorUserHostApiGetCodec(void) {
   static FlutterStandardMessageCodec *sSharedObject = nil;
   static dispatch_once_t sPred = 0;
   dispatch_once(&sPred, ^{
-    MultiFactorUserHostApiCodecReaderWriter *readerWriter = [[MultiFactorUserHostApiCodecReaderWriter alloc] init];
+    MultiFactorUserHostApiCodecReaderWriter *readerWriter =
+        [[MultiFactorUserHostApiCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
 }
 
-void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactorUserHostApi> *api) {
+void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                 NSObject<MultiFactorUserHostApi> *api) {
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"MultiFactorUserHostApi.enrollPhone"
         binaryMessenger:binaryMessenger
-        codec:MultiFactorUserHostApiGetCodec()];
+                  codec:MultiFactorUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(enrollPhoneApp:assertion:displayName:completion:)], @"MultiFactorUserHostApi api (%@) doesn't respond to @selector(enrollPhoneApp:assertion:displayName:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(enrollPhoneApp:
+                                                       assertion:displayName:completion:)],
+                @"MultiFactorUserHostApi api (%@) doesn't respond to "
+                @"@selector(enrollPhoneApp:assertion:displayName:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         PigeonPhoneMultiFactorAssertion *arg_assertion = GetNullableObjectAtIndex(args, 1);
         NSString *arg_displayName = GetNullableObjectAtIndex(args, 2);
-        [api enrollPhoneApp:arg_app assertion:arg_assertion displayName:arg_displayName completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api enrollPhoneApp:arg_app
+                  assertion:arg_assertion
+                displayName:arg_displayName
+                 completion:^(FlutterError *_Nullable error) {
+                   callback(wrapResult(nil, error));
+                 }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"MultiFactorUserHostApi.enrollTotp"
         binaryMessenger:binaryMessenger
-        codec:MultiFactorUserHostApiGetCodec()];
+                  codec:MultiFactorUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(enrollTotpApp:assertionId:displayName:completion:)], @"MultiFactorUserHostApi api (%@) doesn't respond to @selector(enrollTotpApp:assertionId:displayName:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(enrollTotpApp:
+                                                    assertionId:displayName:completion:)],
+                @"MultiFactorUserHostApi api (%@) doesn't respond to "
+                @"@selector(enrollTotpApp:assertionId:displayName:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_assertionId = GetNullableObjectAtIndex(args, 1);
         NSString *arg_displayName = GetNullableObjectAtIndex(args, 2);
-        [api enrollTotpApp:arg_app assertionId:arg_assertionId displayName:arg_displayName completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api enrollTotpApp:arg_app
+               assertionId:arg_assertionId
+               displayName:arg_displayName
+                completion:^(FlutterError *_Nullable error) {
+                  callback(wrapResult(nil, error));
+                }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"MultiFactorUserHostApi.getSession"
         binaryMessenger:binaryMessenger
-        codec:MultiFactorUserHostApiGetCodec()];
+                  codec:MultiFactorUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getSessionApp:completion:)], @"MultiFactorUserHostApi api (%@) doesn't respond to @selector(getSessionApp:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(getSessionApp:completion:)],
+                @"MultiFactorUserHostApi api (%@) doesn't respond to "
+                @"@selector(getSessionApp:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        [api getSessionApp:arg_app completion:^(PigeonMultiFactorSession *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api getSessionApp:arg_app
+                completion:^(PigeonMultiFactorSession *_Nullable output,
+                             FlutterError *_Nullable error) {
+                  callback(wrapResult(output, error));
+                }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"MultiFactorUserHostApi.unenroll"
         binaryMessenger:binaryMessenger
-        codec:MultiFactorUserHostApiGetCodec()];
+                  codec:MultiFactorUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(unenrollApp:factorUid:completion:)], @"MultiFactorUserHostApi api (%@) doesn't respond to @selector(unenrollApp:factorUid:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(unenrollApp:factorUid:completion:)],
+                @"MultiFactorUserHostApi api (%@) doesn't respond to "
+                @"@selector(unenrollApp:factorUid:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_factorUid = GetNullableObjectAtIndex(args, 1);
-        [api unenrollApp:arg_app factorUid:arg_factorUid completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api unenrollApp:arg_app
+               factorUid:arg_factorUid
+              completion:^(FlutterError *_Nullable error) {
+                callback(wrapResult(nil, error));
+              }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"MultiFactorUserHostApi.getEnrolledFactors"
         binaryMessenger:binaryMessenger
-        codec:MultiFactorUserHostApiGetCodec()];
+                  codec:MultiFactorUserHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getEnrolledFactorsApp:completion:)], @"MultiFactorUserHostApi api (%@) doesn't respond to @selector(getEnrolledFactorsApp:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(getEnrolledFactorsApp:completion:)],
+                @"MultiFactorUserHostApi api (%@) doesn't respond to "
+                @"@selector(getEnrolledFactorsApp:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
-        [api getEnrolledFactorsApp:arg_app completion:^(NSArray<PigeonMultiFactorInfo *> *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api getEnrolledFactorsApp:arg_app
+                        completion:^(NSArray<PigeonMultiFactorInfo *> *_Nullable output,
+                                     FlutterError *_Nullable error) {
+                          callback(wrapResult(output, error));
+                        }];
       }];
     } else {
       [channel setMessageHandler:nil];
@@ -1947,17 +2199,17 @@ void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
 @implementation MultiFactoResolverHostApiCodecReader
 - (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
-    case 128: 
+    case 128:
       return [PigeonAdditionalUserInfo fromList:[self readValue]];
-    case 129: 
+    case 129:
       return [PigeonAuthCredential fromList:[self readValue]];
-    case 130: 
+    case 130:
       return [PigeonPhoneMultiFactorAssertion fromList:[self readValue]];
-    case 131: 
+    case 131:
       return [PigeonUserCredential fromList:[self readValue]];
-    case 132: 
+    case 132:
       return [PigeonUserDetails fromList:[self readValue]];
-    case 133: 
+    case 133:
       return [PigeonUserInfo fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -2008,29 +2260,39 @@ NSObject<FlutterMessageCodec> *MultiFactoResolverHostApiGetCodec(void) {
   static FlutterStandardMessageCodec *sSharedObject = nil;
   static dispatch_once_t sPred = 0;
   dispatch_once(&sPred, ^{
-    MultiFactoResolverHostApiCodecReaderWriter *readerWriter = [[MultiFactoResolverHostApiCodecReaderWriter alloc] init];
+    MultiFactoResolverHostApiCodecReaderWriter *readerWriter =
+        [[MultiFactoResolverHostApiCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
 }
 
-void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactoResolverHostApi> *api) {
+void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                    NSObject<MultiFactoResolverHostApi> *api) {
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"MultiFactoResolverHostApi.resolveSignIn"
         binaryMessenger:binaryMessenger
-        codec:MultiFactoResolverHostApiGetCodec()];
+                  codec:MultiFactoResolverHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(resolveSignInResolverId:assertion:totpAssertionId:completion:)], @"MultiFactoResolverHostApi api (%@) doesn't respond to @selector(resolveSignInResolverId:assertion:totpAssertionId:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector
+                     (resolveSignInResolverId:assertion:totpAssertionId:completion:)],
+                @"MultiFactoResolverHostApi api (%@) doesn't respond to "
+                @"@selector(resolveSignInResolverId:assertion:totpAssertionId:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_resolverId = GetNullableObjectAtIndex(args, 0);
         PigeonPhoneMultiFactorAssertion *arg_assertion = GetNullableObjectAtIndex(args, 1);
         NSString *arg_totpAssertionId = GetNullableObjectAtIndex(args, 2);
-        [api resolveSignInResolverId:arg_resolverId assertion:arg_assertion totpAssertionId:arg_totpAssertionId completion:^(PigeonUserCredential *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api resolveSignInResolverId:arg_resolverId
+                           assertion:arg_assertion
+                     totpAssertionId:arg_totpAssertionId
+                          completion:^(PigeonUserCredential *_Nullable output,
+                                       FlutterError *_Nullable error) {
+                            callback(wrapResult(output, error));
+                          }];
       }];
     } else {
       [channel setMessageHandler:nil];
@@ -2042,7 +2304,7 @@ void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, 
 @implementation MultiFactorTotpHostApiCodecReader
 - (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
-    case 128: 
+    case 128:
       return [PigeonTotpSecret fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -2078,67 +2340,88 @@ NSObject<FlutterMessageCodec> *MultiFactorTotpHostApiGetCodec(void) {
   static FlutterStandardMessageCodec *sSharedObject = nil;
   static dispatch_once_t sPred = 0;
   dispatch_once(&sPred, ^{
-    MultiFactorTotpHostApiCodecReaderWriter *readerWriter = [[MultiFactorTotpHostApiCodecReaderWriter alloc] init];
+    MultiFactorTotpHostApiCodecReaderWriter *readerWriter =
+        [[MultiFactorTotpHostApiCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
 }
 
-void MultiFactorTotpHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactorTotpHostApi> *api) {
+void MultiFactorTotpHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                 NSObject<MultiFactorTotpHostApi> *api) {
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"MultiFactorTotpHostApi.generateSecret"
         binaryMessenger:binaryMessenger
-        codec:MultiFactorTotpHostApiGetCodec()];
+                  codec:MultiFactorTotpHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(generateSecretSessionId:completion:)], @"MultiFactorTotpHostApi api (%@) doesn't respond to @selector(generateSecretSessionId:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(generateSecretSessionId:completion:)],
+                @"MultiFactorTotpHostApi api (%@) doesn't respond to "
+                @"@selector(generateSecretSessionId:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_sessionId = GetNullableObjectAtIndex(args, 0);
-        [api generateSecretSessionId:arg_sessionId completion:^(PigeonTotpSecret *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api generateSecretSessionId:arg_sessionId
+                          completion:^(PigeonTotpSecret *_Nullable output,
+                                       FlutterError *_Nullable error) {
+                            callback(wrapResult(output, error));
+                          }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"MultiFactorTotpHostApi.getAssertionForEnrollment"
         binaryMessenger:binaryMessenger
-        codec:MultiFactorTotpHostApiGetCodec()];
+                  codec:MultiFactorTotpHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getAssertionForEnrollmentSecretKey:oneTimePassword:completion:)], @"MultiFactorTotpHostApi api (%@) doesn't respond to @selector(getAssertionForEnrollmentSecretKey:oneTimePassword:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(getAssertionForEnrollmentSecretKey:
+                                                                     oneTimePassword:completion:)],
+                @"MultiFactorTotpHostApi api (%@) doesn't respond to "
+                @"@selector(getAssertionForEnrollmentSecretKey:oneTimePassword:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_secretKey = GetNullableObjectAtIndex(args, 0);
         NSString *arg_oneTimePassword = GetNullableObjectAtIndex(args, 1);
-        [api getAssertionForEnrollmentSecretKey:arg_secretKey oneTimePassword:arg_oneTimePassword completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api getAssertionForEnrollmentSecretKey:arg_secretKey
+                                oneTimePassword:arg_oneTimePassword
+                                     completion:^(NSString *_Nullable output,
+                                                  FlutterError *_Nullable error) {
+                                       callback(wrapResult(output, error));
+                                     }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"MultiFactorTotpHostApi.getAssertionForSignIn"
         binaryMessenger:binaryMessenger
-        codec:MultiFactorTotpHostApiGetCodec()];
+                  codec:MultiFactorTotpHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getAssertionForSignInEnrollmentId:oneTimePassword:completion:)], @"MultiFactorTotpHostApi api (%@) doesn't respond to @selector(getAssertionForSignInEnrollmentId:oneTimePassword:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(getAssertionForSignInEnrollmentId:
+                                                                    oneTimePassword:completion:)],
+                @"MultiFactorTotpHostApi api (%@) doesn't respond to "
+                @"@selector(getAssertionForSignInEnrollmentId:oneTimePassword:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_enrollmentId = GetNullableObjectAtIndex(args, 0);
         NSString *arg_oneTimePassword = GetNullableObjectAtIndex(args, 1);
-        [api getAssertionForSignInEnrollmentId:arg_enrollmentId oneTimePassword:arg_oneTimePassword completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api getAssertionForSignInEnrollmentId:arg_enrollmentId
+                               oneTimePassword:arg_oneTimePassword
+                                    completion:^(NSString *_Nullable output,
+                                                 FlutterError *_Nullable error) {
+                                      callback(wrapResult(output, error));
+                                    }];
       }];
     } else {
       [channel setMessageHandler:nil];
@@ -2151,43 +2434,57 @@ NSObject<FlutterMessageCodec> *MultiFactorTotpSecretHostApiGetCodec(void) {
   return sSharedObject;
 }
 
-void MultiFactorTotpSecretHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactorTotpSecretHostApi> *api) {
+void MultiFactorTotpSecretHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                       NSObject<MultiFactorTotpSecretHostApi> *api) {
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"MultiFactorTotpSecretHostApi.generateQrCodeUrl"
         binaryMessenger:binaryMessenger
-        codec:MultiFactorTotpSecretHostApiGetCodec()];
+                  codec:MultiFactorTotpSecretHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(generateQrCodeUrlSecretKey:accountName:issuer:completion:)], @"MultiFactorTotpSecretHostApi api (%@) doesn't respond to @selector(generateQrCodeUrlSecretKey:accountName:issuer:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(generateQrCodeUrlSecretKey:
+                                                                 accountName:issuer:completion:)],
+                @"MultiFactorTotpSecretHostApi api (%@) doesn't respond to "
+                @"@selector(generateQrCodeUrlSecretKey:accountName:issuer:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_secretKey = GetNullableObjectAtIndex(args, 0);
         NSString *arg_accountName = GetNullableObjectAtIndex(args, 1);
         NSString *arg_issuer = GetNullableObjectAtIndex(args, 2);
-        [api generateQrCodeUrlSecretKey:arg_secretKey accountName:arg_accountName issuer:arg_issuer completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api generateQrCodeUrlSecretKey:arg_secretKey
+                            accountName:arg_accountName
+                                 issuer:arg_issuer
+                             completion:^(NSString *_Nullable output,
+                                          FlutterError *_Nullable error) {
+                               callback(wrapResult(output, error));
+                             }];
       }];
     } else {
       [channel setMessageHandler:nil];
     }
   }
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface."
+                        @"MultiFactorTotpSecretHostApi.openInOtpApp"
         binaryMessenger:binaryMessenger
-        codec:MultiFactorTotpSecretHostApiGetCodec()];
+                  codec:MultiFactorTotpSecretHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(openInOtpAppSecretKey:qrCodeUrl:completion:)], @"MultiFactorTotpSecretHostApi api (%@) doesn't respond to @selector(openInOtpAppSecretKey:qrCodeUrl:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(openInOtpAppSecretKey:qrCodeUrl:completion:)],
+                @"MultiFactorTotpSecretHostApi api (%@) doesn't respond to "
+                @"@selector(openInOtpAppSecretKey:qrCodeUrl:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_secretKey = GetNullableObjectAtIndex(args, 0);
         NSString *arg_qrCodeUrl = GetNullableObjectAtIndex(args, 1);
-        [api openInOtpAppSecretKey:arg_secretKey qrCodeUrl:arg_qrCodeUrl completion:^(FlutterError *_Nullable error) {
-          callback(wrapResult(nil, error));
-        }];
+        [api openInOtpAppSecretKey:arg_secretKey
+                         qrCodeUrl:arg_qrCodeUrl
+                        completion:^(FlutterError *_Nullable error) {
+                          callback(wrapResult(nil, error));
+                        }];
       }];
     } else {
       [channel setMessageHandler:nil];
@@ -2199,7 +2496,7 @@ void MultiFactorTotpSecretHostApiSetup(id<FlutterBinaryMessenger> binaryMessenge
 @implementation GenerateInterfacesCodecReader
 - (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
-    case 128: 
+    case 128:
       return [PigeonMultiFactorInfo fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -2235,21 +2532,26 @@ NSObject<FlutterMessageCodec> *GenerateInterfacesGetCodec(void) {
   static FlutterStandardMessageCodec *sSharedObject = nil;
   static dispatch_once_t sPred = 0;
   dispatch_once(&sPred, ^{
-    GenerateInterfacesCodecReaderWriter *readerWriter = [[GenerateInterfacesCodecReaderWriter alloc] init];
+    GenerateInterfacesCodecReaderWriter *readerWriter =
+        [[GenerateInterfacesCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
 }
 
-void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<GenerateInterfaces> *api) {
+void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                             NSObject<GenerateInterfaces> *api) {
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.GenerateInterfaces.pigeonInterface"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.firebase_auth_platform_interface.GenerateInterfaces."
+                        @"pigeonInterface"
         binaryMessenger:binaryMessenger
-        codec:GenerateInterfacesGetCodec()];
+                  codec:GenerateInterfacesGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(pigeonInterfaceInfo:error:)], @"GenerateInterfaces api (%@) doesn't respond to @selector(pigeonInterfaceInfo:error:)", api);
+      NSCAssert(
+          [api respondsToSelector:@selector(pigeonInterfaceInfo:error:)],
+          @"GenerateInterfaces api (%@) doesn't respond to @selector(pigeonInterfaceInfo:error:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonMultiFactorInfo *arg_info = GetNullableObjectAtIndex(args, 0);

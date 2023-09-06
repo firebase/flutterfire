@@ -11,11 +11,11 @@
 #include <thread>
 
 #include "firebase/app.h"
-#include "firebase/variant.h"
 #include "firebase/auth.h"
 #include "firebase/future.h"
 #include "firebase/log.h"
 #include "firebase/util.h"
+#include "firebase/variant.h"
 #include "firebase_core/firebase_core_plugin_c_api.h"
 #include "messages.g.h"
 
@@ -80,8 +80,8 @@ PigeonUserCredential ParseAuthResult(
     const firebase::auth::AuthResult* authResult) {
   PigeonUserCredential result = PigeonUserCredential();
   result.set_user(FirebaseAuthPlugin::ParseUserDetails(authResult->user));
-  result.set_additional_user_info(
-      FirebaseAuthPlugin::ParseAdditionalUserInfo(authResult->additional_user_info));
+  result.set_additional_user_info(FirebaseAuthPlugin::ParseAdditionalUserInfo(
+      authResult->additional_user_info));
   return result;
 }
 
@@ -130,7 +130,7 @@ firebase_auth_windows::FirebaseAuthPlugin::ConvertToEncodableValue(
 }
 
 PigeonAdditionalUserInfo FirebaseAuthPlugin::ParseAdditionalUserInfo(
-  const firebase::auth::AdditionalUserInfo additionalUserInfo) {
+    const firebase::auth::AdditionalUserInfo additionalUserInfo) {
   // Cannot know if the user is new or not with current API
   PigeonAdditionalUserInfo result = PigeonAdditionalUserInfo(false);
   result.set_profile(ConvertToEncodableMap(additionalUserInfo.profile));
@@ -585,7 +585,8 @@ firebase::auth::Credential getCredentialFromArguments(
   // Password Auth
   if (signInMethod == kSignInMethodPassword) {
     std::string email = std::get<std::string>(arguments[kArgumentEmail]);
-    return firebase::auth::EmailAuthProvider::GetCredential(email.c_str(),                                                         secret.c_str());
+    return firebase::auth::EmailAuthProvider::GetCredential(email.c_str(),
+                                                            secret.c_str());
   }
 
   // Email Link Auth
@@ -597,11 +598,10 @@ firebase::auth::Credential getCredentialFromArguments(
     return firebase::auth::Credential();
   }
 
-    std::string idToken = std::get<std::string>(arguments[kArgumentIdToken]);
+  std::string idToken = std::get<std::string>(arguments[kArgumentIdToken]);
   std::string accessToken =
       std::get<std::string>(arguments[kArgumentAccessToken]);
   std::string rawNonce = std::get<std::string>(arguments[kArgumentRawNonce]);
-
 
   // Facebook Auth
   if (signInMethod == kSignInMethodFacebook) {
@@ -661,7 +661,8 @@ void FirebaseAuthPlugin::SignInWithCredential(
           // TODO: not the right return type from C++ SDK
           PigeonUserInfo credential = ParseUserInfo(completed_future.result());
           PigeonUserCredential userCredential = PigeonUserCredential();
-          PigeonUserDetails user = PigeonUserDetails(credential, flutter::EncodableList());
+          PigeonUserDetails user =
+              PigeonUserDetails(credential, flutter::EncodableList());
           userCredential.set_user(user);
           result(userCredential);
         } else {

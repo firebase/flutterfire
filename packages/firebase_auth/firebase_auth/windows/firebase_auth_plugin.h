@@ -175,10 +175,9 @@ class FirebaseAuthPlugin : public flutter::Plugin,
       const PigeonActionCodeSettings* action_code_settings,
       std::function<void(std::optional<FlutterError> reply)> result) override;
 
-    virtual void RevokeTokenWithAuthorizationCode(
+  virtual void RevokeTokenWithAuthorizationCode(
       const PigeonFirebaseApp& app, const std::string& authorization_code,
       std::function<void(std::optional<FlutterError> reply)> result) override;
-
 
  private:
   static flutter::BinaryMessenger* binaryMessenger;
