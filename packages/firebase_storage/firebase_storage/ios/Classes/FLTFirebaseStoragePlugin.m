@@ -141,69 +141,94 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   }];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  FLTFirebaseMethodCallErrorBlock errorBlock = ^(
-      NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-      NSError *_Nullable error) {
-    if (code == nil) {
-      NSDictionary *errorDetails = [self NSDictionaryFromNSError:error];
-      code = errorDetails[@"code"];
-      message = errorDetails[@"message"];
-      details = errorDetails;
-    }
-    if ([@"unknown" isEqualToString:code]) {
-      NSLog(@"FLTFirebaseStorage: An unknown error occurred while calling method %@", call.method);
-    }
-    flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
-                                                        message:message
-                                                optionalDetails:details
-                                             andOptionalNSError:error]);
-  };
+// - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
+//   FLTFirebaseMethodCallErrorBlock errorBlock = ^(
+//       NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
+//       NSError *_Nullable error) {
+//     if (code == nil) {
+//       NSDictionary *errorDetails = [self NSDictionaryFromNSError:error];
+//       code = errorDetails[@"code"];
+//       message = errorDetails[@"message"];
+//       details = errorDetails;
+//     }
+//     if ([@"unknown" isEqualToString:code]) {
+//       NSLog(@"FLTFirebaseStorage: An unknown error occurred while calling method %@", call.method);
+//     }
+//     flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
+//                                                         message:message
+//                                                 optionalDetails:details
+//                                              andOptionalNSError:error]);
+//   };
 
-  FLTFirebaseMethodCallResult *methodCallResult =
-      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
+//   FLTFirebaseMethodCallResult *methodCallResult =
+//       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
 
-  if ([@"Storage#useEmulator" isEqualToString:call.method]) {
-    [self useEmulator:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Reference#delete" isEqualToString:call.method]) {
-    [self referenceDelete:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Reference#getDownloadURL" isEqualToString:call.method]) {
-    [self referenceGetDownloadUrl:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Reference#getMetadata" isEqualToString:call.method]) {
-    [self referenceGetMetadata:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Reference#getData" isEqualToString:call.method]) {
-    [self referenceGetData:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Reference#list" isEqualToString:call.method]) {
-    [self referenceList:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Reference#listAll" isEqualToString:call.method]) {
-    [self referenceListAll:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Reference#updateMetadata" isEqualToString:call.method]) {
-    [self referenceUpdateMetadata:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Task#startPutData" isEqualToString:call.method]) {
-    [self taskStartPutData:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Task#startPutString" isEqualToString:call.method]) {
-    [self taskStartPutString:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Task#startPutFile" isEqualToString:call.method]) {
-    [self taskStartPutFile:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Task#pause" isEqualToString:call.method]) {
-    [self taskPause:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Task#resume" isEqualToString:call.method]) {
-    [self taskResume:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Task#cancel" isEqualToString:call.method]) {
-    [self taskCancel:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Task#writeToFile" isEqualToString:call.method]) {
-    [self taskWriteToFile:call.arguments withMethodCallResult:methodCallResult];
-  } else {
-    flutterResult(FlutterMethodNotImplemented);
-  }
+//   if ([@"Storage#useEmulator" isEqualToString:call.method]) {
+//     [self useEmulator:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Reference#delete" isEqualToString:call.method]) {
+//     [self referenceDelete:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Reference#getDownloadURL" isEqualToString:call.method]) {
+//     [self referenceGetDownloadUrl:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Reference#getMetadata" isEqualToString:call.method]) {
+//     [self referenceGetMetadata:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Reference#getData" isEqualToString:call.method]) {
+//     [self referenceGetData:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Reference#list" isEqualToString:call.method]) {
+//     [self referenceList:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Reference#listAll" isEqualToString:call.method]) {
+//     [self referenceListAll:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Reference#updateMetadata" isEqualToString:call.method]) {
+//     [self referenceUpdateMetadata:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Task#startPutData" isEqualToString:call.method]) {
+//     [self taskStartPutData:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Task#startPutString" isEqualToString:call.method]) {
+//     [self taskStartPutString:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Task#startPutFile" isEqualToString:call.method]) {
+//     [self taskStartPutFile:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Task#pause" isEqualToString:call.method]) {
+//     [self taskPause:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Task#resume" isEqualToString:call.method]) {
+//     [self taskResume:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Task#cancel" isEqualToString:call.method]) {
+//     [self taskCancel:call.arguments withMethodCallResult:methodCallResult];
+//   } else if ([@"Task#writeToFile" isEqualToString:call.method]) {
+//     [self taskWriteToFile:call.arguments withMethodCallResult:methodCallResult];
+//   } else {
+//     flutterResult(FlutterMethodNotImplemented);
+//   }
+// }
+
+- (FIRStorage *_Nullable)getFIRStorageFromAppNameFromPigeon:(PigeonFirebaseApp *)pigeonApp {
+  FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:pigeonApp.appName];
+  FIRStorage *storage = [FIRStorage storageForApp:app];
+
+  return storage;
 }
 
 #pragma mark - Firebase Storage API
 
-- (void)useEmulator:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  [self FIRStorageForArguments:arguments];
-  result.success(nil);
+- (void)useStorageEmulatorApp:(PigeonFirebaseApp *)app
+                              host:(NSString *)host
+                              port:(NSNumber *)port
+                              completion:(void (^)(FlutterError *_Nullable))completion {
+  FIRStorage *storage = [self getFIRStorageFromAppNameFromPigeon:app];
+  [storage useEmulatorWithHost:host port:[port integerValue]];
+  completion(nil);
 }
+
+
+// - (void)useEmulatorApp:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+//   [self FIRStorageForArguments:arguments];
+//   result.success(nil);
+// }
+
+- (nullable PigeonStorageReference *)getReferencebyPathApp:(PigeonFirebaseApp *)app
+                                                            path:(NSString *)path
+                                                            bucket:(nullable NSString *)bucket
+                                                            error:(FlutterError *_Nullable *_Nonnull)error {
+  FIRStorage *storage = [self getFIRStorageFromAppNameFromPigeon:app];
+}
+
 
 - (void)referenceDelete:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];
