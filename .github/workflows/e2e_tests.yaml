@@ -321,7 +321,7 @@ jobs:
         run: |
           npm install -g firebase-tools
       - name: Start Firebase Emulator
-        run: cd ./.github/workflows/scripts && firebase emulators:start --only auth,firestore,functions,storage,database --project flutterfire-e2e-tests
+        run: cd ./.github/workflows/scripts && firebase login:ci && firebase emulators:start --only auth,firestore,functions,storage,database --project flutterfire-e2e-tests
       - name: "E2E Tests"
         working-directory: tests
         run: |
