@@ -6,8 +6,7 @@ part of firebase_analytics;
 
 /// Firebase Analytics API.
 class FirebaseAnalytics extends FirebasePluginPlatform {
-  FirebaseAnalytics._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_analytics');
+  FirebaseAnalytics._({required this.app}) : super(app.name, 'plugins.flutter.io/firebase_analytics');
 
   /// Namespace for analytics API available on Android only. This is deprecated in favor of
   /// `FirebaseAnalytics.instance.setSessionTimeoutDuration()`.
@@ -24,9 +23,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     'Android namespace will be removed in a future release. Please use FirebaseAnalytics.instance.setSessionTimeoutDuration()',
   )
   final FirebaseAnalyticsAndroid? android =
-      defaultTargetPlatform == TargetPlatform.android && !kIsWeb
-          ? FirebaseAnalyticsAndroid()
-          : null;
+      defaultTargetPlatform == TargetPlatform.android && !kIsWeb ? FirebaseAnalyticsAndroid() : null;
 
   static Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
 
@@ -36,8 +33,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   FirebaseAnalyticsPlatform? _delegatePackingProperty;
 
   FirebaseAnalyticsPlatform get _delegate {
-    return _delegatePackingProperty ??=
-        FirebaseAnalyticsPlatform.instanceFor(app: app);
+    return _delegatePackingProperty ??= FirebaseAnalyticsPlatform.instanceFor(app: app);
   }
 
   /// Returns an instance using a specified [FirebaseApp].
@@ -214,10 +210,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required String? value,
     AnalyticsCallOptions? callOptions,
   }) async {
-    if (name.isEmpty ||
-        name.length > 24 ||
-        name.indexOf(_alpha) != 0 ||
-        name.contains(_nonAlphaNumeric)) {
+    if (name.isEmpty || name.length > 24 || name.indexOf(_alpha) != 0 || name.contains(_nonAlphaNumeric)) {
       throw ArgumentError.value(
         name,
         'name',
@@ -257,10 +250,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'add_payment_info',
@@ -292,10 +282,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'add_shipping_info',
@@ -328,10 +315,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     _requireValueAndCurrencyTogether(value, currency);
 
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'add_to_cart',
@@ -363,10 +347,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     _requireValueAndCurrencyTogether(value, currency);
 
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'add_to_wishlist',
@@ -503,10 +484,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     _requireValueAndCurrencyTogether(value, currency);
 
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'begin_checkout',
@@ -859,10 +837,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     _requireValueAndCurrencyTogether(value, currency);
 
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'purchase',
@@ -896,10 +871,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     _requireValueAndCurrencyTogether(value, currency);
 
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'remove_from_cart',
@@ -950,10 +922,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'select_item',
@@ -983,10 +952,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'select_promotion',
@@ -1016,10 +982,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     AnalyticsCallOptions? callOptions,
   }) {
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'view_cart',
@@ -1252,10 +1215,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     _requireValueAndCurrencyTogether(value, currency);
 
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'view_item',
@@ -1281,10 +1241,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     Map<String, Object?>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'view_item_list',
@@ -1312,10 +1269,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     Map<String, Object?>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'view_promotion',
@@ -1369,10 +1323,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     Map<String, Object?>? parameters,
   }) {
     _assertParameterTypesAreCorrect(parameters);
-
-    items?.forEach((item) {
-      _assertParameterTypesAreCorrect(item.parameters);
-    });
+    _assertItemsParameterTypesAreCorrect(items);
 
     return _delegate.logEvent(
       name: 'refund',
@@ -1464,12 +1415,15 @@ List<Map<String, dynamic>>? _marshalItems(List<AnalyticsEventItem>? items) {
   return items.map((AnalyticsEventItem item) => item.asMap()).toList();
 }
 
-void _assertParameterTypesAreCorrect(Map<String, Object?>? parameters) =>
-    parameters?.forEach((key, value) {
+void _assertParameterTypesAreCorrect(Map<String, Object?>? parameters) => parameters?.forEach((key, value) {
       assert(
         value is String || value is num,
         "'string' OR 'number' must be set as the value of the parameter: $key. $value found instead",
       );
+    });
+
+void _assertItemsParameterTypesAreCorrect(List<AnalyticsEventItem>? items) => items?.forEach((item) {
+      _assertParameterTypesAreCorrect(item.parameters);
     });
 
 /// Reserved event names that cannot be used.
