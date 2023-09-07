@@ -5,13 +5,12 @@
 // This must be included before many other Windows headers.
 #include <windows.h>
 
-#include "firebase/app.h";
-#include "firebase/log.h";
-#include "firebase/firestore.h";
+#include "firebase/app.h"
+#include "firebase/log.h"
+#include "firebase/firestore.h"
 #include "firebase_core/firebase_core_plugin_c_api.h"
 
 #include "messages.g.h"
-#include "transaction_stream_handler.h"
 
 
 #include <flutter/method_channel.h>
@@ -25,6 +24,7 @@ using namespace firebase::firestore;
 
 using firebase::firestore::Firestore;
 using firebase::App;
+using flutter::EncodableValue;
 
 
 namespace cloud_firestore_windows {
@@ -59,7 +59,7 @@ std::map<std::string, std::unique_ptr<Transaction>> transactions_;
  
 
 std::string RegisterEventChannelWithUUID(
-    std::string prefix, std::string uuid, const flutter::StreamHandler<EncodableValue>& handler) {
+    std::string prefix, std::string uuid, const flutter::StreamHandler<flutter::EncodableValue>& handler) {
   std::string channelName = prefix + uuid;
   flutter::EventChannel<flutter::EncodableValue>* channel =
       new flutter::EventChannel<flutter::EncodableValue>(
@@ -174,9 +174,11 @@ PigeonSnapshotMetadata ParseSnapshotMetadata(
 PigeonDocumentSnapshot ParseDocumentSnapshot(
     DocumentSnapshot document,
     DocumentSnapshot::ServerTimestampBehavior serverTimestampBehavior) {
+  auto tempMap =
+      ConvertToEncodableMap(document.GetData(serverTimestampBehavior));
+
   PigeonDocumentSnapshot pigeonDocumentSnapshot = PigeonDocumentSnapshot(
-      document.reference().path(),
-      &ConvertToEncodableMap(document.GetData(serverTimestampBehavior)),
+      document.reference().path(), &tempMap,
       ParseSnapshotMetadata(document.metadata()));
   return pigeonDocumentSnapshot;
 }
@@ -311,9 +313,16 @@ firebase::firestore::MapFieldPathValue ConvertToMapFieldPathValue(
       firebase::firestore::FieldValue value = ConvertToFieldValue(kv.second);
       convertedMap[FieldPath(convertedList)] = value;
     } else if (std::holds_alternative<FieldPath>(kv.first)) {
-      FieldPath key = std::get<FieldPath>(kv.first);
-      firebase::firestore::FieldValue value = ConvertToFieldValue(kv.second);
-      convertedMap[key] = value;
+      auto maybeKey = std::get_if<FieldPath>(&kv.first);
+      if (maybeKey != nullptr) {
+        FieldPath key = *maybeKey;
+        firebase::firestore::FieldValue value = ConvertToFieldValue(kv.second);
+        convertedMap[key] = value;
+      } else {
+        // Handle or skip non-string keys
+        // You may throw an exception or handle this some other way
+        throw std::runtime_error("Unsupported key type");
+      }
     } else {
       // Handle or skip non-string keys
       // You may throw an exception or handle this some other way
@@ -507,7 +516,6 @@ void CloudFirestorePlugin::WaitForPendingWrites(
 void CloudFirestorePlugin::SetIndexConfiguration(
     const PigeonFirebaseApp& app, const std::string& index_configuration,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  Firestore* firestore = GetFirestoreFromPigeon(app);
   // TODO: not available in C++ SDK
 }
 
@@ -663,10 +671,21 @@ void CloudFirestorePlugin::TransactionStoreResult(
   // Convert Flutter EncodableList to std::vector<PigeonTransactionCommand>
   std::vector<PigeonTransactionCommand> commandVector;
   for (const auto& element : *commands) {
-    PigeonTransactionCommand command = std::get<PigeonTransactionCommand>(element);
-    commandVector.push_back(command);
+    if (std::holds_alternative<PigeonTransactionCommand>(element)) {
+      auto maybeCommand = std::get_if<PigeonTransactionCommand>(&element);
+      if (maybeCommand != nullptr) {
+        commandVector.push_back(*maybeCommand);
+      } else {
+        result(std::make_optional<FlutterError>(
+            "Failed to extract PigeonTransactionCommand from variant"));
+        return;
+      }
+    } else {
+      result(std::make_optional<FlutterError>(
+          "Invalid command type in transaction result"));
+      return;
+    }
   }
-
   handler.ReceiveTransactionResponse(result_type, &commandVector);
   result(std::nullopt);
 }
@@ -678,13 +697,14 @@ void CloudFirestorePlugin::TransactionGet(
   Firestore* firestore = GetFirestoreFromPigeon(app);
   DocumentReference reference = firestore->Document(path);
 
-  Transaction transaction = *transactions_[transaction_id];
+std::unique_ptr<Transaction> transaction =
+      std::move(transactions_[transaction_id]);
   Error error_code;
   std::string error_message;
 
   // Call the Get function
   DocumentSnapshot snapshot =
-      transaction.Get(reference, &error_code, &error_message);
+      transaction->Get(reference, &error_code, &error_message);
 
   if (error_code != Error::kErrorOk) {
     result(FlutterError(error_message));
@@ -851,48 +871,58 @@ firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
         ConvertToConditions(*parameters.where());
 
     for (const auto& condition : conditions) {
-      auto fieldPath = std::get<FieldPath>(condition[0]);
-      std::string op = std::get<std::string>(condition[1]);
-      auto value = condition[2];
+      auto maybeFieldPath = std::get_if<FieldPath>(&condition[0]);
+      auto maybeOp = std::get_if<std::string>(&condition[1]);
 
-      if (op == "==") {
-        query = query.WhereEqualTo(fieldPath, ConvertToFieldValue(value));
-      } else if (op == "!=") {
-                          query = query.WhereNotEqualTo(fieldPath, ConvertToFieldValue(value));
-      } else if (op == "<") {
-        query = query.WhereLessThan(fieldPath, ConvertToFieldValue(value));
-      } else if (op == "<=") {
-        query = query.WhereLessThanOrEqualTo(fieldPath, ConvertToFieldValue(value));
-      } else if (op == ">") {
-        query = query.WhereGreaterThan(fieldPath, ConvertToFieldValue(value));
-      } else if (op == ">=") {
-        query = query.WhereGreaterThanOrEqualTo(fieldPath, ConvertToFieldValue(value));
-      } else if (op == "array-contains") {
-        query = query.WhereArrayContains(fieldPath, ConvertToFieldValue(value));
-      } else if (op == "array-contains-any") {
-        query = query.WhereArrayContainsAny(
-            fieldPath,
-            ConvertToFieldValueList(std::get<flutter::EncodableList>(value)));
-      } else if (op == "in") {
-        query = query.WhereIn(
-            fieldPath,
-            ConvertToFieldValueList(std::get<flutter::EncodableList>(value)));
-      } else if (op == "not-in") {
-        query = query.WhereNotIn(
-            fieldPath,
-            ConvertToFieldValueList(std::get<flutter::EncodableList>(value)));
+      if (maybeFieldPath != nullptr && maybeOp != nullptr) {
+        FieldPath fieldPath = *maybeFieldPath;
+        std::string op = *maybeOp;
+        auto value = condition[2];
+        if (op == "==") {
+          query = query.WhereEqualTo(fieldPath, ConvertToFieldValue(value));
+        } else if (op == "!=") {
+          query = query.WhereNotEqualTo(fieldPath, ConvertToFieldValue(value));
+        } else if (op == "<") {
+          query = query.WhereLessThan(fieldPath, ConvertToFieldValue(value));
+        } else if (op == "<=") {
+          query = query.WhereLessThanOrEqualTo(fieldPath,
+                                               ConvertToFieldValue(value));
+        } else if (op == ">") {
+          query = query.WhereGreaterThan(fieldPath, ConvertToFieldValue(value));
+        } else if (op == ">=") {
+          query = query.WhereGreaterThanOrEqualTo(fieldPath,
+                                                  ConvertToFieldValue(value));
+        } else if (op == "array-contains") {
+          query =
+              query.WhereArrayContains(fieldPath, ConvertToFieldValue(value));
+        } else if (op == "array-contains-any") {
+          query = query.WhereArrayContainsAny(
+              fieldPath,
+              ConvertToFieldValueList(std::get<flutter::EncodableList>(value)));
+        } else if (op == "in") {
+          query = query.WhereIn(
+              fieldPath,
+              ConvertToFieldValueList(std::get<flutter::EncodableList>(value)));
+        } else if (op == "not-in") {
+          query = query.WhereNotIn(
+              fieldPath,
+              ConvertToFieldValueList(std::get<flutter::EncodableList>(value)));
+        } else {
+          throw std::runtime_error("Unknown operator");
+        }
       } else {
-        throw std::runtime_error("Unknown operator");
+        throw std::runtime_error("Invalid condition");  
       }
-
     }
 
     if (parameters.limit()) {
-      query = query.Limit(*parameters.limit());
+      query =
+          query.Limit(static_cast<int32_t>(* parameters.limit()));
     }
 
     if (parameters.limit_to_last()) {
-      query = query.LimitToLast(*parameters.limit_to_last());
+      query = query.LimitToLast(static_cast<int32_t>(*
+                                parameters.limit_to_last()));
     }
 
     if (parameters.order_by() == nullptr) {
@@ -903,18 +933,23 @@ firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
         ConvertToConditions(*parameters.order_by());
 
     for (const auto& order_by : order_bys) {
-      auto fieldPath = std::get<FieldPath>(order_by[0]);
-      std::string direction = std::get<std::string>(order_by[1]);
+      auto maybeFieldPath = std::get_if<FieldPath>(&order_by[0]);
+      auto maybeDirection = std::get_if<std::string>(&order_by[1]);
 
-      if (direction == "desc") {
-        query = query.OrderBy(fieldPath, Query::Direction::kDescending);
-      }
-      else if (direction == "asc") {
-        query = query.OrderBy(fieldPath, Query::Direction::kAscending);
-      }
-      else {
+      if (maybeFieldPath != nullptr && maybeDirection != nullptr) {
+        auto fieldPath = *maybeFieldPath;
+        std::string direction = *maybeDirection;
+        if (direction == "desc") {
+          query = query.OrderBy(fieldPath, Query::Direction::kDescending);
+        } else if (direction == "asc") {
+          query = query.OrderBy(fieldPath, Query::Direction::kAscending);
+        } else {
+          throw std::runtime_error("Unknown direction");
+        }
+      } else {
         throw std::runtime_error("Unknown direction");
       }
+
     }
 
     if (parameters.start_at()) {
@@ -989,7 +1024,7 @@ void CloudFirestorePlugin::AggregateQueryCount(
     if (completed_future.error() == firebase::firestore::kErrorOk) {
       const AggregateQuerySnapshot* aggregateQuerySnapshot =
           completed_future.result();
-      result(aggregateQuerySnapshot->count());
+      result(static_cast<double>(aggregateQuerySnapshot->count()));
     }
     else {
       result(FlutterError(completed_future.error_message()));
@@ -1006,40 +1041,43 @@ void CloudFirestorePlugin::WriteBatchCommit(
     firebase::firestore::WriteBatch batch = firestore->batch();
 
     for (const auto& write : writes) {
-      PigeonTransactionCommand transaction =
-          std::get<PigeonTransactionCommand>(write);
+      auto maybeTransaction = std::get_if<PigeonTransactionCommand>(&write);
 
-      PigeonTransactionType type = transaction.type();
-      std::string path = transaction.path();
-      auto data =
-          transaction.data();  
+      if (maybeTransaction != nullptr) {
+        PigeonTransactionCommand transaction = *maybeTransaction;
+        PigeonTransactionType type = transaction.type();
+        std::string path = transaction.path();
+        auto data = transaction.data();
 
-      firebase::firestore::DocumentReference documentReference =
-          firestore->Document(path);
+        firebase::firestore::DocumentReference documentReference =
+            firestore->Document(path);
 
-      switch (type) {
-        case PigeonTransactionType::deleteType:
-          batch.Delete(documentReference);
-          break;
-        case PigeonTransactionType::update:
-          batch.Update(documentReference,
-                       ConvertToMapFieldValue(*data));  
-          break;
-        case PigeonTransactionType::set:
-          const PigeonDocumentOption* options =
-              transaction.option();  
+        switch (type) {
+          case PigeonTransactionType::deleteType:
+            batch.Delete(documentReference);
+            break;
+          case PigeonTransactionType::update:
+            batch.Update(documentReference, ConvertToMapFieldValue(*data));
+            break;
+          case PigeonTransactionType::set:
+            const PigeonDocumentOption* options = transaction.option();
 
-          if (options->merge()) {
-            batch.Set(documentReference, ConvertToMapFieldValue(*data),
-                      firebase::firestore::SetOptions::Merge());
-          } else if (options->merge_fields()) {
-            batch.Set(documentReference, ConvertToMapFieldValue(*data),
-                      SetOptions::MergeFields(ConvertToFieldPathVector(*options->merge_fields())));
-          } else {
-            batch.Set(documentReference, ConvertToMapFieldValue(*data));
-          }
-          break;
+            if (options->merge()) {
+              batch.Set(documentReference, ConvertToMapFieldValue(*data),
+                        firebase::firestore::SetOptions::Merge());
+            } else if (options->merge_fields()) {
+              batch.Set(documentReference, ConvertToMapFieldValue(*data),
+                        SetOptions::MergeFields(ConvertToFieldPathVector(
+                            *options->merge_fields())));
+            } else {
+              batch.Set(documentReference, ConvertToMapFieldValue(*data));
+            }
+            break;
+        }
+      } else {
+        throw std::runtime_error("Unknown write type");
       }
+
     }
 
     batch.Commit().OnCompletion([result](const Future<void>& completed_future) {

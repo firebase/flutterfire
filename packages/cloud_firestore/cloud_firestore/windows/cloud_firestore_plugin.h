@@ -2,11 +2,12 @@
 #define FLUTTER_PLUGIN_CLOUD_FIRESTORE_PLUGIN_H_
 
 #include <flutter/method_channel.h>
+#include <flutter/event_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/plugin_registrar_windows.h>
-#include "firebase/app.h";
-#include "firebase/log.h";
-#include "firebase/firestore.h";
+#include "firebase/app.h"
+#include "firebase/log.h"
+#include "firebase/firestore.h"
 #include "firebase_core/firebase_core_plugin_c_api.h"
 #include "messages.g.h"
 
@@ -120,13 +121,19 @@ class CloudFirestorePlugin : public flutter::Plugin,
       stream_handlers_;
   static std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
       transaction_handlers_;
-  static std::map<std::string, std::unique_ptr<Transaction>>
+  static std::map<std::string, std::unique_ptr<firebase::firestore::Transaction>>
       transactions_;
 
 
   private:
 
 };
+
+firebase::firestore::MapFieldValue ConvertToMapFieldValue(
+    const flutter::EncodableMap& originalMap);
+
+std::vector<std::string> ConvertToFieldPathVector(
+    const flutter::EncodableList& encodableList);
 
 }  // namespace cloud_firestore_windows
 
