@@ -116,11 +116,10 @@ typedef NS_ENUM(NSUInteger, PigeonTaskState) {
 NSObject<FlutterMessageCodec> *FirebaseStorageHostApiGetCodec(void);
 
 @protocol FirebaseStorageHostApi
-/// @return `nil` only when `error != nil`.
-- (nullable PigeonStorageReference *)getReferencebyPathApp:(PigeonFirebaseApp *)app path:(NSString *)path bucket:(nullable NSString *)bucket error:(FlutterError *_Nullable *_Nonnull)error;
-- (void)setMaxOperationRetryTimeApp:(PigeonFirebaseApp *)app time:(NSNumber *)time error:(FlutterError *_Nullable *_Nonnull)error;
-- (void)setMaxUploadRetryTimeApp:(PigeonFirebaseApp *)app time:(NSNumber *)time error:(FlutterError *_Nullable *_Nonnull)error;
-- (void)setMaxDownloadRetryTimeApp:(PigeonFirebaseApp *)app time:(NSNumber *)time error:(FlutterError *_Nullable *_Nonnull)error;
+- (void)getReferencebyPathApp:(PigeonFirebaseApp *)app path:(NSString *)path bucket:(nullable NSString *)bucket completion:(void (^)(PigeonStorageReference *_Nullable, FlutterError *_Nullable))completion;
+- (void)setMaxOperationRetryTimeApp:(PigeonFirebaseApp *)app time:(NSNumber *)time completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)setMaxUploadRetryTimeApp:(PigeonFirebaseApp *)app time:(NSNumber *)time completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)setMaxDownloadRetryTimeApp:(PigeonFirebaseApp *)app time:(NSNumber *)time completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)useStorageEmulatorApp:(PigeonFirebaseApp *)app host:(NSString *)host port:(NSNumber *)port completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)referenceDeleteApp:(PigeonFirebaseApp *)app reference:(PigeonStorageReference *)reference completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)referenceGetDownloadURLApp:(PigeonFirebaseApp *)app reference:(PigeonStorageReference *)reference completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;

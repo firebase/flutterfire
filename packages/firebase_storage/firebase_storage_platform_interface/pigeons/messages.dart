@@ -19,6 +19,9 @@ import 'package:pigeon/pigeon.dart';
     ),
     objcHeaderOut: '../firebase_storage/ios/Classes/messages.g.h',
     objcSourceOut: '../firebase_storage/ios/Classes/messages.g.m',
+    cppHeaderOut: '../firebase_storage/windows/messages.g.h',
+    cppSourceOut: '../firebase_storage/windows/messages.g.cpp',
+    cppOptions: CppOptions(namespace: 'firebase_storage_windows'),
   ),
 )
 class PigeonFirebaseApp {
@@ -154,23 +157,23 @@ class PigeonListResult {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseStorageHostApi')
 abstract class FirebaseStorageHostApi {
-
+  @async
   PigeonStorageReference getReferencebyPath(
     PigeonFirebaseApp app,
     String path,
     String? bucket,
   );
-
+  @async
   void setMaxOperationRetryTime(
     PigeonFirebaseApp app,
     int time,
   );
-
+  @async
   void setMaxUploadRetryTime(
     PigeonFirebaseApp app,
     int time,
   );
-
+  @async
   void setMaxDownloadRetryTime(
     PigeonFirebaseApp app,
     int time,

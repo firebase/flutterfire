@@ -27,3 +27,8 @@ void* GetFirebaseRemoteConfig(std::string appName) {
   return firebase_core_windows::FirebaseCorePlugin::GetFirebaseRemoteConfig(
       appName);
 }
+
+void* GetFirebaseStorage(std::string appName, std::string path) {
+  return firebase_core_windows::FirebaseCorePlugin::GetFirebaseStorage(
+      appName);
+}

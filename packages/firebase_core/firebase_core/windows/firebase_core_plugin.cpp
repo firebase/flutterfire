@@ -28,6 +28,7 @@
 using ::firebase::App;
 using ::firebase::auth::Auth;
 using ::firebase::remote_config::RemoteConfig;
+using ::firebase::storage::Storage;
 
 namespace firebase_core_windows {
 
@@ -60,6 +61,19 @@ void *FirebaseCorePlugin::GetFirebaseRemoteConfig(std::string appName) {
     return nullptr;
   }
   return RemoteConfig::GetInstance(app);
+}
+
+void *FirebaseCorePlugin::GetFirebaseStorage(std::string appName,
+                                             std::string path) {
+  App *app = App::GetInstance(appName.c_str());
+  if (app == nullptr) {
+    return nullptr;
+  }
+  if (path.empty()) {
+    return Storage::GetInstance(app);
+  } else {
+    return Storage::GetInstance(app, path);
+  }
 }
 
 FirebaseCorePlugin::FirebaseCorePlugin() {}

@@ -62,13 +62,13 @@ abstract class TestFirebaseStorageHostApi {
   static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> codec = _TestFirebaseStorageHostApiCodec();
 
-  PigeonStorageReference getReferencebyPath(PigeonFirebaseApp app, String path, String? bucket);
+  Future<PigeonStorageReference> getReferencebyPath(PigeonFirebaseApp app, String path, String? bucket);
 
-  void setMaxOperationRetryTime(PigeonFirebaseApp app, int time);
+  Future<void> setMaxOperationRetryTime(PigeonFirebaseApp app, int time);
 
-  void setMaxUploadRetryTime(PigeonFirebaseApp app, int time);
+  Future<void> setMaxUploadRetryTime(PigeonFirebaseApp app, int time);
 
-  void setMaxDownloadRetryTime(PigeonFirebaseApp app, int time);
+  Future<void> setMaxDownloadRetryTime(PigeonFirebaseApp app, int time);
 
   Future<void> useStorageEmulator(PigeonFirebaseApp app, String host, int port);
 
@@ -119,7 +119,7 @@ abstract class TestFirebaseStorageHostApi {
           assert(arg_path != null,
               'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.getReferencebyPath was null, expected non-null String.');
           final String? arg_bucket = (args[2] as String?);
-          final PigeonStorageReference output = api.getReferencebyPath(arg_app!, arg_path!, arg_bucket);
+          final PigeonStorageReference output = await api.getReferencebyPath(arg_app!, arg_path!, arg_bucket);
           return <Object?>[output];
         });
       }
@@ -141,7 +141,7 @@ abstract class TestFirebaseStorageHostApi {
           final int? arg_time = (args[1] as int?);
           assert(arg_time != null,
               'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.setMaxOperationRetryTime was null, expected non-null int.');
-          api.setMaxOperationRetryTime(arg_app!, arg_time!);
+          await api.setMaxOperationRetryTime(arg_app!, arg_time!);
           return <Object?>[];
         });
       }
@@ -163,7 +163,7 @@ abstract class TestFirebaseStorageHostApi {
           final int? arg_time = (args[1] as int?);
           assert(arg_time != null,
               'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.setMaxUploadRetryTime was null, expected non-null int.');
-          api.setMaxUploadRetryTime(arg_app!, arg_time!);
+          await api.setMaxUploadRetryTime(arg_app!, arg_time!);
           return <Object?>[];
         });
       }
@@ -185,7 +185,7 @@ abstract class TestFirebaseStorageHostApi {
           final int? arg_time = (args[1] as int?);
           assert(arg_time != null,
               'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.setMaxDownloadRetryTime was null, expected non-null int.');
-          api.setMaxDownloadRetryTime(arg_app!, arg_time!);
+          await api.setMaxDownloadRetryTime(arg_app!, arg_time!);
           return <Object?>[];
         });
       }

@@ -24,6 +24,7 @@ class FirebaseCorePlugin : public flutter::Plugin,
   static void *GetFirebaseApp(std::string appName);
   static void *GetFirebaseAuth(std::string appName);
   static void *GetFirebaseRemoteConfig(std::string appName);
+  static void *GetFirebaseStorage(std::string appName, std::string path);
 
   FirebaseCorePlugin();
 
