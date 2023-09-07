@@ -313,15 +313,15 @@ void FirebaseStorageHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
         binaryMessenger:binaryMessenger
         codec:FirebaseStorageHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getReferencebyPathApp:path:bucket:error:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(getReferencebyPathApp:path:bucket:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(getReferencebyPathApp:path:bucket:completion:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(getReferencebyPathApp:path:bucket:completion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_path = GetNullableObjectAtIndex(args, 1);
         NSString *arg_bucket = GetNullableObjectAtIndex(args, 2);
-        FlutterError *error;
-        PigeonStorageReference *output = [api getReferencebyPathApp:arg_app path:arg_path bucket:arg_bucket error:&error];
-        callback(wrapResult(output, error));
+        [api getReferencebyPathApp:arg_app path:arg_path bucket:arg_bucket completion:^(PigeonStorageReference *_Nullable output, FlutterError *_Nullable error) {
+          callback(wrapResult(output, error));
+        }];
       }];
     } else {
       [channel setMessageHandler:nil];
@@ -334,14 +334,14 @@ void FirebaseStorageHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
         binaryMessenger:binaryMessenger
         codec:FirebaseStorageHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(setMaxOperationRetryTimeApp:time:error:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(setMaxOperationRetryTimeApp:time:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(setMaxOperationRetryTimeApp:time:completion:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(setMaxOperationRetryTimeApp:time:completion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSNumber *arg_time = GetNullableObjectAtIndex(args, 1);
-        FlutterError *error;
-        [api setMaxOperationRetryTimeApp:arg_app time:arg_time error:&error];
-        callback(wrapResult(nil, error));
+        [api setMaxOperationRetryTimeApp:arg_app time:arg_time completion:^(FlutterError *_Nullable error) {
+          callback(wrapResult(nil, error));
+        }];
       }];
     } else {
       [channel setMessageHandler:nil];
@@ -354,14 +354,14 @@ void FirebaseStorageHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
         binaryMessenger:binaryMessenger
         codec:FirebaseStorageHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(setMaxUploadRetryTimeApp:time:error:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(setMaxUploadRetryTimeApp:time:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(setMaxUploadRetryTimeApp:time:completion:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(setMaxUploadRetryTimeApp:time:completion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSNumber *arg_time = GetNullableObjectAtIndex(args, 1);
-        FlutterError *error;
-        [api setMaxUploadRetryTimeApp:arg_app time:arg_time error:&error];
-        callback(wrapResult(nil, error));
+        [api setMaxUploadRetryTimeApp:arg_app time:arg_time completion:^(FlutterError *_Nullable error) {
+          callback(wrapResult(nil, error));
+        }];
       }];
     } else {
       [channel setMessageHandler:nil];
@@ -374,14 +374,14 @@ void FirebaseStorageHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
         binaryMessenger:binaryMessenger
         codec:FirebaseStorageHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(setMaxDownloadRetryTimeApp:time:error:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(setMaxDownloadRetryTimeApp:time:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(setMaxDownloadRetryTimeApp:time:completion:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(setMaxDownloadRetryTimeApp:time:completion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSNumber *arg_time = GetNullableObjectAtIndex(args, 1);
-        FlutterError *error;
-        [api setMaxDownloadRetryTimeApp:arg_app time:arg_time error:&error];
-        callback(wrapResult(nil, error));
+        [api setMaxDownloadRetryTimeApp:arg_app time:arg_time completion:^(FlutterError *_Nullable error) {
+          callback(wrapResult(nil, error));
+        }];
       }];
     } else {
       [channel setMessageHandler:nil];

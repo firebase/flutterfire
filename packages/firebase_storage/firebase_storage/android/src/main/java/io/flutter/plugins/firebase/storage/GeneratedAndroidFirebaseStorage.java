@@ -693,14 +693,13 @@ public class GeneratedAndroidFirebaseStorage {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseStorageHostApi {
 
-    @NonNull 
-    PigeonStorageReference getReferencebyPath(@NonNull PigeonFirebaseApp app, @NonNull String path, @Nullable String bucket);
+    void getReferencebyPath(@NonNull PigeonFirebaseApp app, @NonNull String path, @Nullable String bucket, @NonNull Result<PigeonStorageReference> result);
 
-    void setMaxOperationRetryTime(@NonNull PigeonFirebaseApp app, @NonNull Long time);
+    void setMaxOperationRetryTime(@NonNull PigeonFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
 
-    void setMaxUploadRetryTime(@NonNull PigeonFirebaseApp app, @NonNull Long time);
+    void setMaxUploadRetryTime(@NonNull PigeonFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
 
-    void setMaxDownloadRetryTime(@NonNull PigeonFirebaseApp app, @NonNull Long time);
+    void setMaxDownloadRetryTime(@NonNull PigeonFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
 
     void useStorageEmulator(@NonNull PigeonFirebaseApp app, @NonNull String host, @NonNull Long port, @NonNull Result<Void> result);
 
@@ -750,15 +749,20 @@ public class GeneratedAndroidFirebaseStorage {
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
                 String pathArg = (String) args.get(1);
                 String bucketArg = (String) args.get(2);
-                try {
-                  PigeonStorageReference output = api.getReferencebyPath(appArg, pathArg, bucketArg);
-                  wrapped.add(0, output);
-                }
- catch (Throwable exception) {
-                  ArrayList<Object> wrappedError = wrapError(exception);
-                  wrapped = wrappedError;
-                }
-                reply.reply(wrapped);
+                Result<PigeonStorageReference> resultCallback =
+                    new Result<PigeonStorageReference>() {
+                      public void success(PigeonStorageReference result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.getReferencebyPath(appArg, pathArg, bucketArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -775,15 +779,20 @@ public class GeneratedAndroidFirebaseStorage {
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
                 Number timeArg = (Number) args.get(1);
-                try {
-                  api.setMaxOperationRetryTime(appArg, (timeArg == null) ? null : timeArg.longValue());
-                  wrapped.add(0, null);
-                }
- catch (Throwable exception) {
-                  ArrayList<Object> wrappedError = wrapError(exception);
-                  wrapped = wrappedError;
-                }
-                reply.reply(wrapped);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.setMaxOperationRetryTime(appArg, (timeArg == null) ? null : timeArg.longValue(), resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -800,15 +809,20 @@ public class GeneratedAndroidFirebaseStorage {
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
                 Number timeArg = (Number) args.get(1);
-                try {
-                  api.setMaxUploadRetryTime(appArg, (timeArg == null) ? null : timeArg.longValue());
-                  wrapped.add(0, null);
-                }
- catch (Throwable exception) {
-                  ArrayList<Object> wrappedError = wrapError(exception);
-                  wrapped = wrappedError;
-                }
-                reply.reply(wrapped);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.setMaxUploadRetryTime(appArg, (timeArg == null) ? null : timeArg.longValue(), resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -825,15 +839,20 @@ public class GeneratedAndroidFirebaseStorage {
                 ArrayList<Object> args = (ArrayList<Object>) message;
                 PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
                 Number timeArg = (Number) args.get(1);
-                try {
-                  api.setMaxDownloadRetryTime(appArg, (timeArg == null) ? null : timeArg.longValue());
-                  wrapped.add(0, null);
-                }
- catch (Throwable exception) {
-                  ArrayList<Object> wrappedError = wrapError(exception);
-                  wrapped = wrappedError;
-                }
-                reply.reply(wrapped);
+                Result<Void> resultCallback =
+                    new Result<Void>() {
+                      public void success(Void result) {
+                        wrapped.add(0, null);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.setMaxDownloadRetryTime(appArg, (timeArg == null) ? null : timeArg.longValue(), resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

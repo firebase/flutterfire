@@ -154,23 +154,23 @@ class PigeonListResult {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseStorageHostApi')
 abstract class FirebaseStorageHostApi {
-
+  @async
   PigeonStorageReference getReferencebyPath(
     PigeonFirebaseApp app,
     String path,
     String? bucket,
   );
-
+  @async
   void setMaxOperationRetryTime(
     PigeonFirebaseApp app,
     int time,
   );
-
+  @async
   void setMaxUploadRetryTime(
     PigeonFirebaseApp app,
     int time,
   );
-
+  @async
   void setMaxDownloadRetryTime(
     PigeonFirebaseApp app,
     int time,
