@@ -1,3 +1,24 @@
+## 4.9.0
+
+ - **FEAT**(auth): TOTP (time-based one-time password) support for multi-factor authentication ([#11420](https://github.com/firebase/flutterfire/issues/11420)). ([3cc1243c](https://github.com/firebase/flutterfire/commit/3cc1243c94368de44d3a5c4be96b905a0a37b963))
+
+## 4.8.0
+
+ - **FEAT**(auth): `revokeTokenWithAuthorizationCode()` implementation for revoking Apple sign-in token ([#11454](https://github.com/firebase/flutterfire/issues/11454)). ([92de98c9](https://github.com/firebase/flutterfire/commit/92de98c9e62f2bf20712dbfed22dd39f6883eb58))
+
+## 4.7.3
+
+ - **FIX**(auth): rename import header to "firebase_auth_messages.g.h". ([#11472](https://github.com/firebase/flutterfire/issues/11472)). ([693a6f3c](https://github.com/firebase/flutterfire/commit/693a6f3cba3620933b905a964126406ae6ae3374))
+ - **FIX**(firebase_auth): Fix forceRefresh parameter conversion before calling native API ([#11464](https://github.com/firebase/flutterfire/issues/11464)). ([86639876](https://github.com/firebase/flutterfire/commit/86639876b8e9138af740a1c74c122fcdb5c4566d))
+ - **FIX**(auth): set the tenant id on iOS `FIRAuth` instance ([#11427](https://github.com/firebase/flutterfire/issues/11427)). ([15f3cf5d](https://github.com/firebase/flutterfire/commit/15f3cf5d9b86f287fac22370ea09abf9e773ea60))
+ - **FIX**(firebase_auth,android): Remove implicit default locale used in error message ([#11321](https://github.com/firebase/flutterfire/issues/11321)). ([3a20f41c](https://github.com/firebase/flutterfire/commit/3a20f41c0d8a4d61d789874d7bb16d6ef710c9d1))
+
+## 4.7.2
+
+ - **FIX**(auth): fix MFA issue where the error wouldn't be properly catched ([#11370](https://github.com/firebase/flutterfire/issues/11370)). ([72fef03f](https://github.com/firebase/flutterfire/commit/72fef03f775702aaf9a2ce0c6b31aea2a3c200a9))
+ - **FIX**(auth,android): `getIdToken()` `IllegalStateException` crash fix ([#11362](https://github.com/firebase/flutterfire/issues/11362)). ([e925b4c9](https://github.com/firebase/flutterfire/commit/e925b4c9a937d90de0bdfb59ffa005938b3862dd))
+ - **FIX**(auth,apple): pass in Firebase auth instance for correct app when using Provider sign in ([#11284](https://github.com/firebase/flutterfire/issues/11284)). ([1cffae79](https://github.com/firebase/flutterfire/commit/1cffae79ded28808ba55f2f4c9c1b47817987999))
+
 ## 4.7.1
 
  - **FIX**(auth,android): Fix crash on Android where detaching from engine ([#11296](https://github.com/firebase/flutterfire/issues/11296)). ([d0a37332](https://github.com/firebase/flutterfire/commit/d0a373323a818d5005a58e95042b7ea3652ead50))

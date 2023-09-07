@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'dart:ui';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -68,12 +69,31 @@ void _firebaseMessagingCallbackDispatcher() {
 class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   /// Create an instance of [MethodChannelFirebaseMessaging] with optional [FirebaseApp]
   MethodChannelFirebaseMessaging({required FirebaseApp app})
-      : super(appInstance: app) {
-    if (_initialized) return;
-    channel.setMethodCallHandler((MethodCall call) async {
+      : super(appInstance: app);
+
+  late bool _autoInitEnabled;
+
+  static bool _bgHandlerInitialized = false;
+
+  /// Returns a stub instance to allow the platform interface to access
+  /// the class instance statically.
+  static MethodChannelFirebaseMessaging get instance {
+    return MethodChannelFirebaseMessaging._();
+  }
+
+  /// Internal stub class initializer.
+  ///
+  /// When the user code calls an auth method, the real instance is
+  /// then initialized via the [delegateFor] method.
+  MethodChannelFirebaseMessaging._() : super(appInstance: null);
+
+  static void setMethodCallHandlers() {
+    MethodChannelFirebaseMessaging.channel
+        .setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
         case 'Messaging#onTokenRefresh':
-          _tokenStreamController.add(call.arguments as String);
+          MethodChannelFirebaseMessaging.tokenStreamController
+              .add(call.arguments as String);
           break;
         case 'Messaging#onMessage':
           Map<String, dynamic> messageMap =
@@ -97,34 +117,33 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           throw UnimplementedError('${call.method} has not been implemented');
       }
     });
-    _initialized = true;
   }
 
-  late bool _autoInitEnabled;
-
-  static bool _initialized = false;
-  static bool _bgHandlerInitialized = false;
-
-  /// Returns a stub instance to allow the platform interface to access
-  /// the class instance statically.
-  static MethodChannelFirebaseMessaging get instance {
-    return MethodChannelFirebaseMessaging._();
-  }
-
-  /// Internal stub class initializer.
-  ///
-  /// When the user code calls an auth method, the real instance is
-  /// then initialized via the [delegateFor] method.
-  MethodChannelFirebaseMessaging._() : super(appInstance: null);
-
-  /// The [MethodChannel] to which calls will be delegated.
-  @visibleForTesting
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/firebase_messaging',
   );
 
-  final StreamController<String> _tokenStreamController =
+  // ignore: close_sinks, never closed
+  static StreamController<String> tokenStreamController =
       StreamController<String>.broadcast();
+
+  // Created this to check APNS token is available before certain Apple Firebase
+  // Messaging requests. See this issue:
+  // https://github.com/firebase/flutterfire/issues/10625
+  Future<void> _APNSTokenCheck() async {
+    if (Platform.isMacOS || Platform.isIOS) {
+      String? token = await getAPNSToken();
+
+      if (token == null) {
+        throw FirebaseException(
+          plugin: 'firebase_messaging',
+          code: 'apns-token-not-set',
+          message:
+              'APNS token has not been set yet. Please ensure the APNS token is available by calling `getAPNSToken()`.',
+        );
+      }
+    }
+  }
 
   @override
   FirebaseMessagingPlatform delegateFor({required FirebaseApp app}) {
@@ -176,7 +195,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     if (!_bgHandlerInitialized) {
       _bgHandlerInitialized = true;
       final CallbackHandle bgHandle = PluginUtilities.getCallbackHandle(
-          _firebaseMessagingCallbackDispatcher)!;
+        _firebaseMessagingCallbackDispatcher,
+      )!;
       final CallbackHandle userHandle =
           PluginUtilities.getCallbackHandle(handler)!;
       await channel.invokeMapMethod('Messaging#startBackgroundIsolate', {
@@ -188,6 +208,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> deleteToken() async {
+    await _APNSTokenCheck();
+
     try {
       await channel
           .invokeMapMethod('Messaging#deleteToken', {'appName': app.name});
@@ -209,7 +231,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         'appName': app.name,
       });
 
-      return data?['token'];
+      return data!['token'];
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -219,13 +241,15 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   Future<String?> getToken({
     String? vapidKey, // not used yet; web only property
   }) async {
+    await _APNSTokenCheck();
+
     try {
       Map<String, String?>? data =
           await channel.invokeMapMethod<String, String>('Messaging#getToken', {
         'appName': app.name,
       });
 
-      return data?['token'];
+      return data!['token'];
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -297,7 +321,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         'enabled': enabled,
       });
 
-      _autoInitEnabled = data?['isAutoInitEnabled'] as bool;
+      _autoInitEnabled = data!['isAutoInitEnabled'] as bool;
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -305,7 +329,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Stream<String> get onTokenRefresh {
-    return _tokenStreamController.stream;
+    return tokenStreamController.stream;
   }
 
   @override
@@ -363,6 +387,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> subscribeToTopic(String topic) async {
+    await _APNSTokenCheck();
+
     try {
       await channel.invokeMapMethod('Messaging#subscribeToTopic', {
         'appName': app.name,
@@ -375,6 +401,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> unsubscribeFromTopic(String topic) async {
+    await _APNSTokenCheck();
+
     try {
       await channel.invokeMapMethod('Messaging#unsubscribeFromTopic', {
         'appName': app.name,

@@ -21,6 +21,14 @@ List<MultiFactorInfo> multiFactorInfoPigeonToObject(
         phoneNumber: e.phoneNumber!,
       );
     }
+    if (e.factorId == 'totp') {
+      return TotpMultiFactorInfo(
+        displayName: e.displayName,
+        enrollmentTimestamp: e.enrollmentTimestamp,
+        factorId: e.factorId ?? 'totp',
+        uid: e.uid,
+      );
+    }
     return MultiFactorInfo(
       displayName: e.displayName,
       enrollmentTimestamp: e.enrollmentTimestamp,

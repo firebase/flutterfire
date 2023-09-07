@@ -4,6 +4,8 @@
 
 import 'dart:io';
 
+import 'package:barcode_widget/barcode_widget.dart';
+import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_example/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -60,7 +62,7 @@ extension on AuthMode {
 class AuthGate extends StatefulWidget {
   // ignore: public_member_api_docs
   const AuthGate({Key? key}) : super(key: key);
-
+  static String? appleAuthorizationCode;
   @override
   State<StatefulWidget> createState() => _AuthGateState();
 }
@@ -161,7 +163,7 @@ class _AuthGateState extends State<AuthGate> {
                                     'dismiss',
                                     style: TextStyle(color: Colors.white),
                                   ),
-                                )
+                                ),
                               ],
                               contentTextStyle:
                                   const TextStyle(color: Colors.white),
@@ -408,13 +410,27 @@ class _AuthGateState extends State<AuthGate> {
       setState(() {
         error = '${e.message}';
       });
-      final firstHint = e.resolver.hints.first;
-      if (firstHint is! PhoneMultiFactorInfo) {
+      final firstTotpHint = e.resolver.hints
+          .firstWhereOrNull((element) => element is TotpMultiFactorInfo);
+      if (firstTotpHint != null) {
+        final code = await getSmsCodeFromUser(context);
+        final assertion = await TotpMultiFactorGenerator.getAssertionForSignIn(
+          firstTotpHint.uid,
+          code!,
+        );
+        await e.resolver.resolveSignIn(assertion);
+        return;
+      }
+
+      final firstPhoneHint = e.resolver.hints
+          .firstWhereOrNull((element) => element is PhoneMultiFactorInfo);
+
+      if (firstPhoneHint is! PhoneMultiFactorInfo) {
         return;
       }
       await auth.verifyPhoneNumber(
         multiFactorSession: e.resolver.session,
-        multiFactorInfo: firstHint,
+        multiFactorInfo: firstPhoneHint,
         verificationCompleted: (_) {},
         verificationFailed: print,
         codeSent: (String verificationId, int? resendToken) async {
@@ -560,7 +576,9 @@ class _AuthGateState extends State<AuthGate> {
       // Once signed in, return the UserCredential
       await auth.signInWithPopup(appleProvider);
     } else {
-      await auth.signInWithProvider(appleProvider);
+      final userCred = await auth.signInWithProvider(appleProvider);
+      AuthGate.appleAuthorizationCode =
+          userCred.additionalUserInfo?.authorizationCode;
     }
   }
 
@@ -631,6 +649,73 @@ Future<String?> getSmsCodeFromUser(BuildContext context) async {
             autofocus: true,
           ),
         ),
+      );
+    },
+  );
+
+  return smsCode;
+}
+
+Future<String?> getTotpFromUser(
+  BuildContext context,
+  TotpSecret totpSecret,
+) async {
+  String? smsCode;
+
+  final qrCodeUrl = await totpSecret.generateQrCodeUrl(
+    accountName: FirebaseAuth.instance.currentUser!.email,
+    issuer: 'Firebase',
+  );
+
+  // Update the UI - wait for the user to enter the SMS code
+  await showDialog<String>(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('TOTP code:'),
+        content: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              BarcodeWidget(
+                barcode: Barcode.qrCode(),
+                data: qrCodeUrl,
+                width: 150,
+                height: 150,
+              ),
+              TextField(
+                onChanged: (value) {
+                  smsCode = value;
+                },
+                textAlign: TextAlign.center,
+                autofocus: true,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  totpSecret.openInOtpApp(qrCodeUrl);
+                },
+                child: const Text('Open in OTP App'),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Sign in'),
+          ),
+          OutlinedButton(
+            onPressed: () {
+              smsCode = null;
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+        ],
       );
     },
   );

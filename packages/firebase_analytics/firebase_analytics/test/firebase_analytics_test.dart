@@ -139,7 +139,7 @@ void main() {
                 'eventName': 'test-event',
                 'parameters': {'a': 'b'},
               },
-            )
+            ),
           ],
         );
       });
@@ -169,7 +169,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -199,7 +199,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -226,7 +226,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -253,7 +253,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -286,7 +286,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -307,7 +307,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -336,7 +336,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -371,7 +371,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -396,7 +396,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -421,7 +421,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -444,7 +444,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -469,7 +469,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -492,7 +492,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -517,7 +517,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -540,7 +540,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -567,7 +567,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -604,7 +604,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -631,7 +631,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -656,7 +656,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -683,7 +683,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -716,7 +716,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -743,7 +743,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -782,7 +782,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -807,7 +807,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -834,7 +834,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -857,7 +857,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -884,7 +884,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -905,7 +905,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -926,7 +926,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -949,7 +949,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -976,7 +976,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -1003,7 +1003,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -1036,7 +1036,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -1059,7 +1059,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -1096,7 +1096,7 @@ void main() {
                   'a': 'b',
                 },
               },
-            )
+            ),
           ],
         );
       });
@@ -1161,7 +1161,7 @@ void main() {
         final Map<String, dynamic> original = <String, dynamic>{
           'a': 1,
           'b': null,
-          'c': 'd'
+          'c': 'd',
         };
         final Map<String, dynamic> filtered = filterOutNulls(original);
 
@@ -1180,7 +1180,7 @@ void main() {
             isMethodCall(
               'Analytics#setUserId',
               arguments: {'userId': 'test-user-id'},
-            )
+            ),
           ],
         );
       });
@@ -1202,14 +1202,13 @@ void main() {
                   'screen_class': 'test-class-override',
                 },
               },
-            )
+            ),
           ],
         );
       });
 
       test('setUserProperty', () async {
-        await analytics!
-            .setUserProperty(name: 'test_name', value: 'test-value');
+        await analytics!.setUserProperty(name: 'test_name', value: 'test-value');
         expect(
           methodCallLog,
           <Matcher>[
@@ -1219,7 +1218,7 @@ void main() {
                 'name': 'test_name',
                 'value': 'test-value',
               },
-            )
+            ),
           ],
         );
       });
@@ -1242,8 +1241,7 @@ void main() {
         );
         // reserved prefix
         expect(
-          analytics!
-              .setUserProperty(name: 'firebase_test', value: 'test-value'),
+          analytics!.setUserProperty(name: 'firebase_test', value: 'test-value'),
           throwsArgumentError,
         );
       });
@@ -1256,7 +1254,7 @@ void main() {
             isMethodCall(
               'Analytics#setAnalyticsCollectionEnabled',
               arguments: {'enabled': false},
-            )
+            ),
           ],
         );
       });
@@ -1264,15 +1262,14 @@ void main() {
       test(
         'setSessionTimeoutDuration',
         () async {
-          await analytics!
-              .setSessionTimeoutDuration(const Duration(milliseconds: 234));
+          await analytics!.setSessionTimeoutDuration(const Duration(milliseconds: 234));
           expect(
             methodCallLog,
             <Matcher>[
               isMethodCall(
                 'Analytics#setSessionTimeoutDuration',
                 arguments: 234,
-              )
+              ),
             ],
           );
         },
@@ -1287,7 +1284,7 @@ void main() {
             isMethodCall(
               'Analytics#resetAnalyticsData',
               arguments: null,
-            )
+            ),
           ],
         );
       });
@@ -1300,7 +1297,7 @@ void main() {
             isMethodCall(
               'Analytics#getAppInstanceId',
               arguments: null,
-            )
+            ),
           ],
         );
       });

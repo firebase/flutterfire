@@ -125,6 +125,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     );
     FirebaseAuthPlatform.instance = FirebaseAuthWeb.instance;
     PhoneMultiFactorGeneratorPlatform.instance = PhoneMultiFactorGeneratorWeb();
+    TotpMultiFactorGeneratorPlatform.instance = TotpMultiFactorGeneratorWeb();
     RecaptchaVerifierFactoryPlatform.instance =
         RecaptchaVerifierFactoryWeb.instance;
   }
@@ -554,6 +555,14 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     } catch (e) {
       verificationFailed(getFirebaseAuthException(e));
     }
+  }
+
+  @override
+  Future<void> revokeTokenWithAuthorizationCode(
+      String authorizationCode) async {
+    throw UnimplementedError(
+      'revokeTokenWithAuthorizationCode() is only available on apple platforms.',
+    );
   }
 }
 

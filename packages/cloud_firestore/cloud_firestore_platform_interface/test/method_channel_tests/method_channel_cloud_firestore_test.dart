@@ -111,8 +111,11 @@ void main() {
 
     group('delegateFor()', () {
       test('returns a [FirestorePlatform] with arguments', () {
-        expect(firestore!.delegateFor(app: secondaryApp!),
-            FirebaseFirestorePlatform.instanceFor(app: secondaryApp!));
+        expect(
+            firestore!
+                .delegateFor(app: secondaryApp!, databaseURL: '(default)'),
+            FirebaseFirestorePlatform.instanceFor(
+                app: secondaryApp!, databaseURL: '(default)'));
       });
     });
 
