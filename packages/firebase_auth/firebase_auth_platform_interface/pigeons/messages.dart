@@ -17,8 +17,13 @@ import 'package:pigeon/pigeon.dart';
       package: 'io.flutter.plugins.firebase.auth',
       className: 'GeneratedAndroidFirebaseAuth',
     ),
-    objcHeaderOut: '../firebase_auth/ios/Classes/Public/messages.g.h',
-    objcSourceOut: '../firebase_auth/ios/Classes/messages.g.m',
+    objcHeaderOut:
+        '../firebase_auth/ios/Classes/Public/firebase_auth_messages.g.h',
+    objcSourceOut: '../firebase_auth/ios/Classes/firebase_auth_messages.g.m',
+    cppHeaderOut: '../firebase_auth/windows/messages.g.h',
+    cppSourceOut: '../firebase_auth/windows/messages.g.cpp',
+    cppOptions: CppOptions(namespace: 'firebase_auth_windows'),
+    copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
 class PigeonMultiFactorSession {
@@ -90,16 +95,6 @@ enum ActionCodeInfoOperation {
   revertSecondFactorAddition,
 }
 
-class PigeonActionCodeInfo {
-  const PigeonActionCodeInfo({
-    required this.operation,
-    required this.data,
-  });
-
-  final ActionCodeInfoOperation operation;
-  final PigeonActionCodeInfoData data;
-}
-
 class PigeonActionCodeInfoData {
   const PigeonActionCodeInfoData({
     this.email,
@@ -110,16 +105,14 @@ class PigeonActionCodeInfoData {
   final String? previousEmail;
 }
 
-class PigeonUserCredential {
-  const PigeonUserCredential({
-    required this.user,
-    required this.additionalUserInfo,
-    required this.credential,
+class PigeonActionCodeInfo {
+  const PigeonActionCodeInfo({
+    required this.operation,
+    required this.data,
   });
 
-  final PigeonUserDetails? user;
-  final PigeonAdditionalUserInfo? additionalUserInfo;
-  final PigeonAuthCredential? credential;
+  final ActionCodeInfoOperation operation;
+  final PigeonActionCodeInfoData data;
 }
 
 class PigeonAdditionalUserInfo {
@@ -128,11 +121,13 @@ class PigeonAdditionalUserInfo {
     required this.providerId,
     required this.username,
     this.profile,
+    this.authorizationCode,
   });
 
   final bool isNewUser;
   final String? providerId;
   final String? username;
+  final String? authorizationCode;
   final Map<String?, Object?>? profile;
 }
 
@@ -188,6 +183,18 @@ class PigeonUserDetails {
 
   final PigeonUserInfo userInfo;
   final List<Map<Object?, Object?>?> providerData;
+}
+
+class PigeonUserCredential {
+  const PigeonUserCredential({
+    required this.user,
+    required this.additionalUserInfo,
+    required this.credential,
+  });
+
+  final PigeonUserDetails? user;
+  final PigeonAdditionalUserInfo? additionalUserInfo;
+  final PigeonAuthCredential? credential;
 }
 
 class PigeonAuthCredentialInput {
@@ -400,6 +407,11 @@ abstract class FirebaseAuthHostApi {
     PigeonFirebaseApp app,
     PigeonVerifyPhoneNumberRequest request,
   );
+  @async
+  void revokeTokenWithAuthorizationCode(
+    PigeonFirebaseApp app,
+    String authorizationCode,
+  );
 }
 
 class PigeonIdTokenResult {
@@ -532,6 +544,13 @@ abstract class MultiFactorUserHostApi {
   );
 
   @async
+  void enrollTotp(
+    PigeonFirebaseApp app,
+    String assertionId,
+    String? displayName,
+  );
+
+  @async
   PigeonMultiFactorSession getSession(
     PigeonFirebaseApp app,
   );
@@ -553,12 +572,65 @@ abstract class MultiFactoResolverHostApi {
   @async
   PigeonUserCredential resolveSignIn(
     String resolverId,
-    PigeonPhoneMultiFactorAssertion assertion,
+    PigeonPhoneMultiFactorAssertion? assertion,
+    String? totpAssertionId,
+  );
+}
+
+class PigeonTotpSecret {
+  const PigeonTotpSecret({
+    required this.codeIntervalSeconds,
+    required this.codeLength,
+    required this.enrollmentCompletionDeadline,
+    required this.hashingAlgorithm,
+    required this.secretKey,
+  });
+
+  final int? codeIntervalSeconds;
+  final int? codeLength;
+  final int? enrollmentCompletionDeadline;
+  final String? hashingAlgorithm;
+  final String secretKey;
+}
+
+@HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')
+abstract class MultiFactorTotpHostApi {
+  @async
+  PigeonTotpSecret generateSecret(
+    String sessionId,
+  );
+
+  @async
+  String getAssertionForEnrollment(
+    String secretKey,
+    String oneTimePassword,
+  );
+
+  @async
+  String getAssertionForSignIn(
+    String enrollmentId,
+    String oneTimePassword,
+  );
+}
+
+@HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')
+abstract class MultiFactorTotpSecretHostApi {
+  @async
+  String generateQrCodeUrl(
+    String secretKey,
+    String? accountName,
+    String? issuer,
+  );
+
+  @async
+  void openInOtpApp(
+    String secretKey,
+    String qrCodeUrl,
   );
 }
 
 /// Only used to generate the object interface that are use outside of the Pigeon interface
 @HostApi()
 abstract class GenerateInterfaces {
-  void generateInterfaces(PigeonMultiFactorInfo info);
+  void pigeonInterface(PigeonMultiFactorInfo info);
 }

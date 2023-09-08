@@ -25,7 +25,8 @@ import 'utils/firestore_message_codec.dart';
 /// You can get an instance by calling [FirebaseFirestore.instance].
 class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// Create an instance of [MethodChannelFirebaseFirestore] with optional [FirebaseApp]
-  MethodChannelFirebaseFirestore({FirebaseApp? app}) : super(appInstance: app);
+  MethodChannelFirebaseFirestore({FirebaseApp? app, String? databaseURL})
+      : super(appInstance: app, databaseChoice: databaseURL);
 
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///
@@ -79,8 +80,11 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// Gets a [FirebaseFirestorePlatform] with specific arguments such as a different
   /// [FirebaseApp].
   @override
-  FirebaseFirestorePlatform delegateFor({required FirebaseApp app}) {
-    return MethodChannelFirebaseFirestore(app: app);
+  FirebaseFirestorePlatform delegateFor({
+    required FirebaseApp app,
+    required String databaseURL,
+  }) {
+    return MethodChannelFirebaseFirestore(app: app, databaseURL: databaseURL);
   }
 
   @override
@@ -263,6 +267,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           transactionId,
           event['appName'],
           pigeonApp,
+          databaseURL,
         );
 
         // If the transaction fails on Dart side, then forward the error

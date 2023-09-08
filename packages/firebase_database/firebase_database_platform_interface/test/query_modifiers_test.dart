@@ -52,7 +52,7 @@ void main() {
               'type': 'cursor',
               'name': 'startAfter',
               'value': 'foo',
-              'key': 'bar'
+              'key': 'bar',
             }
           ]),
         );
@@ -88,7 +88,7 @@ void main() {
         expect(
           modifiers.toList(),
           equals([
-            {'type': 'cursor', 'name': 'endAt', 'value': 'foo', 'key': 'bar'}
+            {'type': 'cursor', 'name': 'endAt', 'value': 'foo', 'key': 'bar'},
           ]),
         );
       });
@@ -123,7 +123,7 @@ void main() {
         expect(
           modifiers.toList(),
           equals([
-            {'type': 'limit', 'name': 'limitToLast', 'limit': 10}
+            {'type': 'limit', 'name': 'limitToLast', 'limit': 10},
           ]),
         );
       });

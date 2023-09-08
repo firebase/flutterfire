@@ -14,8 +14,8 @@ void main() {
   setupFirebaseFunctionsMocks();
 
   TestFirebaseFunctionsPlatform? firebaseFunctionsPlatform;
-  FirebaseApp? app;
-  FirebaseApp? secondaryApp;
+  late FirebaseApp app;
+  late FirebaseApp secondaryApp;
 
   group('$FirebaseFunctionsPlatform()', () {
     setUpAll(() async {
@@ -73,7 +73,7 @@ void main() {
 
     test('throws if .delegateFor is not implemented', () {
       try {
-        firebaseFunctionsPlatform!.testDelegateFor(app!);
+        firebaseFunctionsPlatform!.testDelegateFor(app);
         // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('delegateFor() is not implemented'));

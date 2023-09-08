@@ -156,3 +156,93 @@ class PhoneMultiFactorGeneratorWeb extends PhoneMultiFactorGeneratorPlatform {
         multi_factor_interop.PhoneMultiFactorGenerator.assertion(cred));
   }
 }
+
+class TotpSecretWeb extends TotpSecretPlatform {
+  TotpSecretWeb(
+      this.webSecret,
+      super.codeIntervalSeconds,
+      super.codeLength,
+      super.enrollmentCompletionDeadline,
+      super.hashingAlgorithm,
+      super.secretKey);
+
+  final multi_factor_interop.TotpSecret webSecret;
+
+  @override
+
+  /// Generate a TOTP secret for the authenticated user.
+  @override
+  Future<String> generateQrCodeUrl({
+    String? accountName,
+    String? issuer,
+  }) {
+    return Future.value(
+      webSecret.generateQrCodeUrl(
+        accountName,
+        issuer,
+      ),
+    );
+  }
+
+  /// Opens the specified QR Code URL in a password manager like iCloud Keychain.
+  @override
+  Future<void> openInOtpApp(
+    String qrCodeUrl,
+  ) async {
+    throw UnimplementedError('openInOtpApp() is not available on Web');
+  }
+}
+
+class TotpMultiFactorGeneratorWeb extends TotpMultiFactorGeneratorPlatform {
+  /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a phone second factor.
+  @override
+  Future<TotpSecretPlatform> generateSecret(
+    MultiFactorSession session,
+  ) async {
+    final _webMultiFactorSession = session as MultiFactorSessionWeb;
+    final _webSecret =
+        await multi_factor_interop.TotpMultiFactorGenerator.generateSecret(
+            _webMultiFactorSession.webSession);
+
+    return TotpSecretWeb(
+      _webSecret,
+      _webSecret.codeInterval,
+      _webSecret.codeLength,
+      _webSecret.enrollmentCompletionDeadline,
+      _webSecret.hashingAlgorithm,
+      _webSecret.secretKey,
+    );
+  }
+
+  /// Get a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a TOTP second factor.
+  @override
+  Future<MultiFactorAssertionPlatform> getAssertionForEnrollment(
+    TotpSecretPlatform secret,
+    String oneTimePassword,
+  ) async {
+    final _webSecret = secret as TotpSecretWeb;
+    final totpAssertion =
+        multi_factor_interop.TotpMultiFactorGenerator.assertionForEnrollment(
+      _webSecret.webSecret,
+      oneTimePassword,
+    );
+    return MultiFactorAssertionWeb(totpAssertion);
+  }
+
+  /// Get a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a TOTP second factor.
+  @override
+  Future<MultiFactorAssertionPlatform> getAssertionForSignIn(
+    String enrollmentId,
+    String oneTimePassword,
+  ) async {
+    final totpAssertion =
+        multi_factor_interop.TotpMultiFactorGenerator.assertionForSignIn(
+      enrollmentId,
+      oneTimePassword,
+    );
+    return MultiFactorAssertionWeb(totpAssertion);
+  }
+}

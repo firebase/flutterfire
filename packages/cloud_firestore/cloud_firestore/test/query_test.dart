@@ -192,20 +192,6 @@ void main() {
           throwsAssertionError,
         );
         expect(
-          () => query!.where('foo', arrayContainsAny: [2, 3]).where(
-            'foo',
-            whereIn: [2, 3],
-          ),
-          throwsAssertionError,
-        );
-        expect(
-          () => query!.where('foo', whereIn: [2, 3]).where(
-            'foo',
-            arrayContainsAny: [2, 3],
-          ),
-          throwsAssertionError,
-        );
-        expect(
           () => query!
               .where('foo', whereIn: [2, 3])
               .where('foo', arrayContains: 1)
@@ -307,7 +293,7 @@ void main() {
         expect(() => query!.endAt(['123']), throwsAssertionError);
         expect(
           () => query!.startAt([
-            FieldPath(const ['123'])
+            FieldPath(const ['123']),
           ]),
           throwsAssertionError,
         );

@@ -61,7 +61,7 @@ NSString *const kFLTFirebaseFirestoreLoadBundleChannelName =
                                streamHandler:(NSObject<FlutterStreamHandler> *)handler;
 @end
 
-static NSMutableDictionary<NSNumber *, NSString *> *_serverTimestampMap;
+static NSCache<NSNumber *, NSString *> *_serverTimestampMap;
 
 @implementation FLTFirebaseFirestorePlugin {
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
@@ -73,9 +73,10 @@ static NSMutableDictionary<NSNumber *, NSString *> *_serverTimestampMap;
 FlutterStandardMethodCodec *_codec;
 
 + (NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap {
-  if (_serverTimestampMap == nil) {
-    _serverTimestampMap = [NSMutableDictionary<NSNumber *, NSString *> dictionary];
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    _serverTimestampMap = [NSCache<NSNumber *, NSString *> new];
+  });
   return _serverTimestampMap;
 }
 
@@ -108,7 +109,6 @@ FlutterStandardMethodCodec *_codec;
     _eventChannels = [NSMutableDictionary dictionary];
     _streamHandlers = [NSMutableDictionary dictionary];
     _transactionHandlers = [NSMutableDictionary dictionary];
-    _serverTimestampMap = [NSMutableDictionary dictionary];
   }
   return self;
 }
@@ -146,25 +146,8 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)cleanupFirestoreInstances:(void (^)(void))completion {
-  __block int instancesTerminated = 0;
-  NSUInteger numberOfApps = [[FIRApp allApps] count];
-  void (^firestoreTerminateInstanceCompletion)(NSError *) = ^void(NSError *error) {
-    instancesTerminated++;
-    if (instancesTerminated == numberOfApps && completion != nil) {
-      completion();
-    }
-  };
-
-  if (numberOfApps > 0) {
-    for (NSString *appName in [FIRApp allApps]) {
-      FIRApp *app = [FIRApp appNamed:appName];
-      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [[FIRFirestore firestoreForApp:app] terminateWithCompletion:^(NSError *error) {
-          [FLTFirebaseFirestoreUtils destroyCachedFIRFirestoreInstanceForKey:appName];
-          firestoreTerminateInstanceCompletion(error);
-        }];
-      });
-    }
+  if ([FLTFirebaseFirestoreUtils count] > 0) {
+    [FLTFirebaseFirestoreUtils cleanupFirestoreInstances:completion];
   } else {
     if (completion != nil) completion();
   }
@@ -305,7 +288,21 @@ FlutterStandardMethodCodec *_codec;
           completion(nil);
       }
     }];
+}
 
+- (void)terminate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRFirestore *firestore = arguments[@"firestore"];
+  [firestore terminateWithCompletion:^(NSError *error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      FLTFirebaseFirestoreExtension *firestoreExtension =
+          [FLTFirebaseFirestoreUtils getCachedInstanceForFirestore:firestore];
+      [FLTFirebaseFirestoreUtils destroyCachedInstanceForFirestore:firestore.app.name
+                                                       databaseURL:firestoreExtension.databaseURL];
+      result.success(nil);
+    }
+  }];
 }
 
 - (void)documentReferenceGetApp:(nonnull PigeonFirebaseApp *)app request:(nonnull DocumentReferenceRequest *)request completion:(nonnull void (^)(PigeonDocumentSnapshot * _Nullable, FlutterError * _Nullable))completion {

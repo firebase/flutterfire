@@ -1,3 +1,11 @@
+## 3.6.6
+
+ - Update a dependency to the latest release.
+
+## 3.6.5
+
+ - Update a dependency to the latest release.
+
 ## 3.6.4
 
  - **FIX**(firebase_storage): updated `firebase_storage_web` to allow  `http` package dependency range '>=0.13.0 <2.0.0'. Fixes dependency resolution. ([#11158](https://github.com/firebase/flutterfire/issues/11158)). ([7d0ca257](https://github.com/firebase/flutterfire/commit/7d0ca25737cf261eaff79fc3c29ce47c4526e6b8))

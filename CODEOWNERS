@@ -8,4 +8,3 @@ packages/* @ehesp @salakar @kroikie @rrousselGit @russellwheatley
 website/* @ehesp
 docs/* @ehesp @salakar @kroikie
 .github/ @salakar @kroikie
-packages/firebase_ui* @lesnitsky

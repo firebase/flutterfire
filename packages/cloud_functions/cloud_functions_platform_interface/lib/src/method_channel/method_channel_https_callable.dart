@@ -28,6 +28,7 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
         'region': functions.region,
         'timeout': options.timeout.inMilliseconds,
         'parameters': parameters,
+        'limitedUseAppCheckToken': options.limitedUseAppCheckToken,
       });
 
       if (result is Map) {

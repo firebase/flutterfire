@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -189,7 +190,7 @@ void main() {
             equals('updatedName'),
           );
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('currentUser', () {
         test('should return currentUser', () async {
@@ -210,7 +211,7 @@ void main() {
             fail(e.toString());
           }
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('checkActionCode()', () {
         test('throws on invalid code', () async {
@@ -223,7 +224,7 @@ void main() {
             fail(e.toString());
           }
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('confirmPasswordReset()', () {
         test('throws on invalid code', () async {
@@ -239,7 +240,7 @@ void main() {
             fail(e.toString());
           }
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('createUserWithEmailAndPassword', () {
         test('should create a user with an email and password', () async {
@@ -247,17 +248,24 @@ void main() {
 
           Function successCallback = (UserCredential newUserCredential) async {
             expect(newUserCredential.user, isA<User>());
-            User newUser = newUserCredential.user!;
+            final newUser = newUserCredential.user;
 
-            expect(newUser.uid, isA<String>());
-            expect(newUser.email, equals(email));
-            expect(newUser.emailVerified, isFalse);
-            expect(newUser.isAnonymous, isFalse);
-            expect(newUser.uid, equals(FirebaseAuth.instance.currentUser!.uid));
+            expect(newUser?.uid, isA<String>());
+            expect(newUser?.email, equals(email));
+            expect(newUser?.emailVerified, isFalse);
+            expect(newUser?.isAnonymous, isFalse);
+            expect(
+              newUser?.uid,
+              equals(FirebaseAuth.instance.currentUser!.uid),
+            );
 
-            var additionalUserInfo = newUserCredential.additionalUserInfo!;
+            var additionalUserInfo = newUserCredential.additionalUserInfo;
             expect(additionalUserInfo, isA<AdditionalUserInfo>());
-            expect(additionalUserInfo.isNewUser, isTrue);
+            if (!kIsWeb && Platform.isWindows) {
+              // Skip because isNewUser is always false on Windows
+            } else {
+              expect(additionalUserInfo?.isNewUser, isTrue);
+            }
 
             await FirebaseAuth.instance.currentUser?.delete();
           };
@@ -342,7 +350,7 @@ void main() {
             fail(e.toString());
           }
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('isSignInWithEmailLink()', () {
         test('should return true or false', () {
@@ -402,7 +410,7 @@ void main() {
             fail(e.toString());
           }
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('sendSignInLinkToEmail()', () {
         test('should send email successfully', () async {
@@ -440,7 +448,7 @@ void main() {
             Uri.encodeFull(continueUrl),
           );
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('languageCode', () {
         test('should change the language code', () async {
@@ -498,19 +506,19 @@ void main() {
           },
           skip: !kIsWeb,
         );
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('signInAnonymously()', () {
         test('should sign in anonymously', () async {
           Future successCallback(UserCredential currentUserCredential) async {
-            var currentUser = currentUserCredential.user!;
+            final currentUser = currentUserCredential.user;
 
             expect(currentUser, isA<User>());
-            expect(currentUser.uid, isA<String>());
-            expect(currentUser.email, isNull);
-            expect(currentUser.isAnonymous, isTrue);
+            expect(currentUser?.uid, isA<String>());
+            expect(currentUser?.email, isNull);
+            expect(currentUser?.isAnonymous, isTrue);
             expect(
-              currentUser.uid,
+              currentUser?.uid,
               equals(FirebaseAuth.instance.currentUser!.uid),
             );
 
@@ -522,7 +530,7 @@ void main() {
 
           final userCred = await FirebaseAuth.instance.signInAnonymously();
           await successCallback(userCred);
-        });
+        }, skip: !kIsWeb && Platform.isWindows,);
       });
 
       group('signInWithCredential()', () {
@@ -534,7 +542,7 @@ void main() {
           await FirebaseAuth.instance
               .signInWithCredential(credential)
               .then(commonSuccessCallback);
-        });
+        }, skip: !kIsWeb && Platform.isWindows,);
 
         test('throws if login user is disabled', () async {
           final credential = EmailAuthProvider.credential(
@@ -609,8 +617,8 @@ void main() {
           final claims = {
             'roles': [
               {'role': 'member'},
-              {'role': 'admin'}
-            ]
+              {'role': 'admin'},
+            ],
           };
 
           await ensureSignedOut();
@@ -632,7 +640,7 @@ void main() {
           expect(idTokenResult.claims!['roles'][0], isA<Map>());
           expect(idTokenResult.claims!['roles'][0]['role'], 'member');
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group('signInWithEmailAndPassword()', () {
         test('should login with email and password', () async {
@@ -725,7 +733,7 @@ void main() {
             fail(e.toString());
           }
         });
-      });
+      }, skip: !kIsWeb && Platform.isWindows,);
 
       group(
         'verifyPhoneNumber()',
@@ -776,7 +784,7 @@ void main() {
               await FirebaseAuth.instance.signInAnonymously();
 
               Future<PhoneAuthCredential> getCredential() async {
-                Completer completer = Completer<PhoneAuthCredential>();
+                final completer = Completer<PhoneAuthCredential>();
 
                 unawaited(
                   FirebaseAuth.instance.verifyPhoneNumber(
@@ -809,7 +817,7 @@ void main() {
                   ),
                 );
 
-                return completer.future as FutureOr<PhoneAuthCredential>;
+                return completer.future;
               }
 
               PhoneAuthCredential credential = await getCredential();
@@ -818,7 +826,7 @@ void main() {
             skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.macOS || kIsWeb,
+        skip: defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.windows || kIsWeb,
       );
 
       group('setSettings()', () {
