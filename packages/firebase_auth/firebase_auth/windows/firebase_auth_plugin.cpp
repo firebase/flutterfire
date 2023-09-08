@@ -481,26 +481,26 @@ void FirebaseAuthPlugin::UseEmulator(
 void FirebaseAuthPlugin::ApplyActionCode(
     const PigeonFirebaseApp& app, const std::string& code,
     std::function<void(std::optional<FlutterError> reply)> result) {
-      result(FlutterError(
-      "unimplemented",
-      "ApplyActionCode is not available on this platform yet.", nullptr));
+  result(FlutterError("unimplemented",
+                      "ApplyActionCode is not available on this platform yet.",
+                      nullptr));
 }
 
 void FirebaseAuthPlugin::CheckActionCode(
     const PigeonFirebaseApp& app, const std::string& code,
     std::function<void(ErrorOr<PigeonActionCodeInfo> reply)> result) {
-      result(FlutterError(
-          "unimplemented",
-          "CheckActionCode is not available on this platform yet.", nullptr));
+  result(FlutterError("unimplemented",
+                      "CheckActionCode is not available on this platform yet.",
+                      nullptr));
 }
 
 void FirebaseAuthPlugin::ConfirmPasswordReset(
     const PigeonFirebaseApp& app, const std::string& code,
     const std::string& new_password,
     std::function<void(std::optional<FlutterError> reply)> result) {
-      result(FlutterError(
-          "unimplemented",
-          "ConfirmPasswordReset is not available on this platform yet.", nullptr));
+  result(FlutterError(
+      "unimplemented",
+      "ConfirmPasswordReset is not available on this platform yet.", nullptr));
 }
 
 void FirebaseAuthPlugin::CreateUserWithEmailAndPassword(
@@ -725,9 +725,9 @@ void FirebaseAuthPlugin::SignInWithEmailLink(
     const PigeonFirebaseApp& app, const std::string& email,
     const std::string& email_link,
     std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {
-  result(FlutterError("unimplemented",
-                      "SignInWithEmailLink is not available on this platform yet.",
-                      nullptr));
+  result(FlutterError(
+      "unimplemented",
+      "SignInWithEmailLink is not available on this platform yet.", nullptr));
 }
 
 std::vector<std::string> TransformEncodableList(
@@ -860,9 +860,9 @@ void FirebaseAuthPlugin::SendSignInLinkToEmail(
     const PigeonFirebaseApp& app, const std::string& email,
     const PigeonActionCodeSettings& action_code_settings,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  result(FlutterError("unimplemented",
-                      "SendSignInLinkToEmail is not available on this platform yet.",
-                      nullptr));
+  result(FlutterError(
+      "unimplemented",
+      "SendSignInLinkToEmail is not available on this platform yet.", nullptr));
 }
 
 void FirebaseAuthPlugin::SetLanguageCode(
@@ -892,17 +892,18 @@ void FirebaseAuthPlugin::SetSettings(
 void FirebaseAuthPlugin::VerifyPasswordResetCode(
     const PigeonFirebaseApp& app, const std::string& code,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  result(FlutterError("unimplemented",
-                      "VerifyPasswordResetCode is not available on this platform yet.",
-                      nullptr));
+  result(FlutterError(
+      "unimplemented",
+      "VerifyPasswordResetCode is not available on this platform yet.",
+      nullptr));
 }
 
 void FirebaseAuthPlugin::VerifyPhoneNumber(
     const PigeonFirebaseApp& app, const PigeonVerifyPhoneNumberRequest& request,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  result(FlutterError("unimplemented",
-                      "VerifyPhoneNumber is not available on this platform yet.",
-                      nullptr));
+  result(FlutterError(
+      "unimplemented",
+      "VerifyPhoneNumber is not available on this platform yet.", nullptr));
 }
 
 void FirebaseAuthPlugin::Delete(
@@ -1212,17 +1213,19 @@ void FirebaseAuthPlugin::VerifyBeforeUpdateEmail(
     const PigeonFirebaseApp& app, const std::string& new_email,
     const PigeonActionCodeSettings* action_code_settings,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  result(FlutterError("unimplemented",
-                      "VerifyBeforeUpdateEmail is not available on this platform yet.",
-                      nullptr));
+  result(FlutterError(
+      "unimplemented",
+      "VerifyBeforeUpdateEmail is not available on this platform yet.",
+      nullptr));
 }
 
 void FirebaseAuthPlugin::RevokeTokenWithAuthorizationCode(
     const PigeonFirebaseApp& app, const std::string& authorization_code,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  result(FlutterError("unimplemented",
-                      "RevokeTokenWithAuthorizationCode is not available on this platform yet.",
-                      nullptr));
+  result(FlutterError(
+      "unimplemented",
+      "RevokeTokenWithAuthorizationCode is not available on this platform yet.",
+      nullptr));
 }
 
 }  // namespace firebase_auth_windows
