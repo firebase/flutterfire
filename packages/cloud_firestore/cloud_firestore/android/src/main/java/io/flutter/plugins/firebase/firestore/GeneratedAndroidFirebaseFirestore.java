@@ -1456,7 +1456,7 @@ public class GeneratedAndroidFirebaseFirestore {
 
     void snapshotsInSyncSetup(@NonNull Result<String> result);
 
-    void transactionCreate(@NonNull Result<String> result);
+    void transactionCreate(@NonNull PigeonFirebaseApp app, @NonNull Long timeout, @NonNull Long maxAttempts, @NonNull Result<String> result);
 
     void transactionStoreResult(@NonNull String transactionId, @NonNull PigeonTransactionResult resultType, @Nullable List<PigeonTransactionCommand> commands, @NonNull Result<Void> result);
 
@@ -1786,6 +1786,10 @@ public class GeneratedAndroidFirebaseFirestore {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                Number timeoutArg = (Number) args.get(1);
+                Number maxAttemptsArg = (Number) args.get(2);
                 Result<String> resultCallback =
                     new Result<String>() {
                       public void success(String result) {
@@ -1799,7 +1803,7 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.transactionCreate(resultCallback);
+                api.transactionCreate(appArg, (timeoutArg == null) ? null : timeoutArg.longValue(), (maxAttemptsArg == null) ? null : maxAttemptsArg.longValue(), resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

@@ -229,7 +229,7 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
 - (void)setIndexConfigurationApp:(PigeonFirebaseApp *)app indexConfiguration:(NSString *)indexConfiguration completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)setLoggingEnabledLoggingEnabled:(NSNumber *)loggingEnabled completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)snapshotsInSyncSetupWithCompletion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)transactionCreateWithCompletion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)transactionCreateApp:(PigeonFirebaseApp *)app timeout:(NSNumber *)timeout maxAttempts:(NSNumber *)maxAttempts completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 - (void)transactionStoreResultTransactionId:(NSString *)transactionId resultType:(PigeonTransactionResult)resultType commands:(nullable NSArray<PigeonTransactionCommand *> *)commands completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)transactionGetApp:(PigeonFirebaseApp *)app transactionId:(NSString *)transactionId path:(NSString *)path completion:(void (^)(PigeonDocumentSnapshot *_Nullable, FlutterError *_Nullable))completion;
 - (void)documentReferenceSetApp:(PigeonFirebaseApp *)app request:(DocumentReferenceRequest *)request completion:(void (^)(FlutterError *_Nullable))completion;
