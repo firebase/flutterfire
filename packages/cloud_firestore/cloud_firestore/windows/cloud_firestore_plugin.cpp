@@ -1,6 +1,7 @@
-#include "cloud_firestore_plugin.h"
 #pragma comment(lib, \
                 "rpcrt4.lib")  // UuidCreate - Minimum supported OS Win 2000
+
+#include "cloud_firestore_plugin.h"
 
 // This must be included before many other Windows headers.
 #include <windows.h>
@@ -54,7 +55,7 @@ std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
     stream_handlers_;
 std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
     transaction_handlers_;
-std::map<std::string, std::unique_ptr<Transaction>> transactions_;
+std::map<std::string, std::shared_ptr<Transaction>> transactions_;
 
  
 
@@ -338,8 +339,7 @@ firebase::firestore::MapFieldPathValue ConvertToMapFieldPathValue(
 class LoadBundleStreamHandler
     : public flutter::StreamHandler<flutter::EncodableValue> {
  public:
-  LoadBundleStreamHandler(Firestore* firestore,
-      std::vector<uint8_t>* bundle) {
+  LoadBundleStreamHandler(Firestore* firestore, std::string bundle) {
     firestore_ = firestore;
     bundle_ = bundle;
   }
@@ -349,10 +349,9 @@ class LoadBundleStreamHandler
       const flutter::EncodableValue* arguments,
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
-    std::string bundle(bundle_->begin(), bundle_->end());
 
     firestore_->LoadBundle(
-        bundle,
+        bundle_,
         [events = std::move(events)](
                                        const LoadBundleTaskProgress& progress) {
           switch (progress.state()) {
@@ -383,17 +382,17 @@ class LoadBundleStreamHandler
 
  private:
    Firestore* firestore_;
-  std::vector<uint8_t>* bundle_;
+  std::string bundle_;
 };
 
 void CloudFirestorePlugin::LoadBundle(
     const PigeonFirebaseApp& app, const std::vector<uint8_t>& bundle,
     std::function<void(ErrorOr<std::string> reply)> result) {
-      Firestore  * firestore = GetFirestoreFromPigeon(app);
+      Firestore* firestore = GetFirestoreFromPigeon(app);
 
-  auto handler =
-          std::make_unique<LoadBundleStreamHandler>(
-              &firestore, bundle);
+          std::string bundleConverted(bundle.begin(), bundle.end());
+
+  auto handler = std::make_unique<LoadBundleStreamHandler>(firestore, bundleConverted);
 
       std::string channelName = RegisterEventChannel("loadbundle", *handler);
       result(channelName);
@@ -567,7 +566,9 @@ class TransactionStreamHandler
              transactionId = transactionId_](
                 Transaction& transaction,
                                    std::string& str) -> Error {
-              transactions_[transactionId] = std::make_unique<Transaction>(transaction);
+              auto noopDeleter = [](Transaction*) {};
+              std::shared_ptr<Transaction> ptr(&transaction, noopDeleter);
+              transactions_[transactionId] = std::move(ptr);
               for (PigeonTransactionCommand& command : *commands) {
                 DocumentReference reference =
                     firestore->Document(command.path());
@@ -647,7 +648,7 @@ void CloudFirestorePlugin::TransactionCreate(
 
       auto handler =
         std::make_unique<TransactionStreamHandler>(
-        firestore, timeout, max_attempts);
+        firestore, timeout, max_attempts, transactionId);
 
 
   std::string channelName = RegisterEventChannelWithUUID(
@@ -697,8 +698,8 @@ void CloudFirestorePlugin::TransactionGet(
   Firestore* firestore = GetFirestoreFromPigeon(app);
   DocumentReference reference = firestore->Document(path);
 
-std::unique_ptr<Transaction> transaction =
-      std::move(transactions_[transaction_id]);
+std::shared_ptr<Transaction> transaction =
+      transactions_[transaction_id];
   Error error_code;
   std::string error_message;
 
@@ -1189,21 +1190,21 @@ void CloudFirestorePlugin::QuerySnapshot(
   Query query = ParseQuery(firestore, path, is_collection_group, parameters);
 
     auto query_snapshot_handler =
-      std::make_unique<QuerySnapshotStreamHandler>(&query, include_metadata_changes);
+      std::make_unique<QuerySnapshotStreamHandler>(&query, include_metadata_changes, GetServerTimestampBehaviorFromPigeon(options.server_timestamp_behavior()));
 
   std::string channelName = RegisterEventChannel(METHOD_CHANNEL_NAME, *query_snapshot_handler);
 
   result(channelName);
 }
 
+
 class DocumentSnapshotStreamHandler
     : public flutter::StreamHandler<flutter::EncodableValue> {
  public:
   DocumentSnapshotStreamHandler(
-      DocumentReference* query, bool includeMetadataChanges,
-      firebase::firestore::DocumentSnapshot::ServerTimestampBehavior
-          serverTimestampBehavior) {
-    documentReference_ = query;
+      DocumentReference* reference, bool includeMetadataChanges,
+      firebase::firestore::DocumentSnapshot::ServerTimestampBehavior serverTimestampBehavior) {
+    reference_ = reference;
     includeMetadataChanges_ = includeMetadataChanges;
     serverTimestampBehavior_ = serverTimestampBehavior;
   }
@@ -1217,7 +1218,7 @@ class DocumentSnapshotStreamHandler
                                           ? MetadataChanges::kInclude
                                           : MetadataChanges::kExclude;
 
-    listener_ = documentReference_->AddSnapshotListener(
+    listener_ = reference_->AddSnapshotListener(
         metadataChanges,
         [events = std::move(events),
          serverTimestampBehavior = serverTimestampBehavior_,
@@ -1225,7 +1226,9 @@ class DocumentSnapshotStreamHandler
                           firebase::firestore::Error error,
                           const std::string& errorMessage) mutable {
           if (error == firebase::firestore::kErrorOk) {
-            events->Success(ParseDocumentSnapshot(snapshot, serverTimestampBehavior).ToEncodableList());
+            events->Success(
+                ParseDocumentSnapshot(snapshot, serverTimestampBehavior)
+                    .ToEncodableList());
           } else {
             events->Error("Error parsing Dpciùe,tSnapshot");
           }
@@ -1240,11 +1243,10 @@ class DocumentSnapshotStreamHandler
   }
 
  private:
-  ListenerRegistration listener_;
-  DocumentReference* documentReference_;
+  firebase::firestore::ListenerRegistration listener_;
+  DocumentReference* reference_;
   bool includeMetadataChanges_;
-  firebase::firestore::DocumentSnapshot::ServerTimestampBehavior
-      serverTimestampBehavior_;
+  firebase::firestore::DocumentSnapshot::ServerTimestampBehavior serverTimestampBehavior_;
 };
 
 void CloudFirestorePlugin::DocumentReferenceSnapshot(
@@ -1254,7 +1256,7 @@ void CloudFirestorePlugin::DocumentReferenceSnapshot(
       Firestore* firestore = GetFirestoreFromPigeon(app);
   DocumentReference documentReference = firestore->Document(parameters.path());
   auto document_snapshot_handler =
-      std::make_unique<DocumentSnapshotStreamHandler>(&documentReference, include_metadata_changes);
+      std::make_unique<DocumentSnapshotStreamHandler>(&documentReference, include_metadata_changes, GetServerTimestampBehaviorFromPigeon(*parameters.server_timestamp_behavior()));
   std::string channelName = RegisterEventChannel(METHOD_CHANNEL_NAME, *document_snapshot_handler);
   result(channelName);
 }

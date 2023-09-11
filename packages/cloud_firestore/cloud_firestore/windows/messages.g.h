@@ -204,11 +204,12 @@ class PigeonSnapshotMetadata {
 
   bool is_from_cache() const;
   void set_is_from_cache(bool value_arg);
+  static PigeonSnapshotMetadata FromEncodableList(
+      const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
 
 
  private:
-  static PigeonSnapshotMetadata FromEncodableList(const flutter::EncodableList& list);
-  flutter::EncodableList ToEncodableList() const;
   friend class PigeonDocumentSnapshot;
   friend class PigeonQuerySnapshot;
   friend class FirebaseFirestoreHostApi;
@@ -242,11 +243,12 @@ class PigeonDocumentSnapshot {
 
   const PigeonSnapshotMetadata& metadata() const;
   void set_metadata(const PigeonSnapshotMetadata& value_arg);
+  static PigeonDocumentSnapshot FromEncodableList(
+      const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
 
 
  private:
-  static PigeonDocumentSnapshot FromEncodableList(const flutter::EncodableList& list);
-  flutter::EncodableList ToEncodableList() const;
   friend class PigeonDocumentChange;
   friend class FirebaseFirestoreHostApi;
   friend class FirebaseFirestoreHostApiCodecSerializer;
@@ -278,11 +280,12 @@ class PigeonDocumentChange {
 
   int64_t new_index() const;
   void set_new_index(int64_t value_arg);
+  static PigeonDocumentChange FromEncodableList(
+      const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
 
 
  private:
-  static PigeonDocumentChange FromEncodableList(const flutter::EncodableList& list);
-  flutter::EncodableList ToEncodableList() const;
   friend class FirebaseFirestoreHostApi;
   friend class FirebaseFirestoreHostApiCodecSerializer;
   DocumentChangeType type_;

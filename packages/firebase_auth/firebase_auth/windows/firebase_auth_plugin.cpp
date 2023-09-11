@@ -19,8 +19,6 @@
 #include "firebase_core/firebase_core_plugin_c_api.h"
 #include "messages.g.h"
 
-// For getPlatformVersion; remove unless needed for your plugin implementation.
-#include <VersionHelpers.h>
 #include <flutter/event_channel.h>
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
