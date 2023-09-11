@@ -8,6 +8,7 @@
 import 'dart:async';
 import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
 
+import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 
@@ -457,7 +458,7 @@ class PigeonQueryParameters {
   }
 }
 
-class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
+class _FirebaseFirestoreHostApiCodec extends FirestoreMessageCodec {
   const _FirebaseFirestoreHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {

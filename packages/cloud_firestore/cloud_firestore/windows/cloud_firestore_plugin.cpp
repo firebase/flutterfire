@@ -48,14 +48,19 @@ void CloudFirestorePlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
 }
 
+flutter::BinaryMessenger*
+    cloud_firestore_windows::CloudFirestorePlugin::messenger_ = nullptr;
+
 std::map<std::string,
          std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>>
     event_channels_;
 std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
     stream_handlers_;
-std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
-    transaction_handlers_;
-std::map<std::string, std::shared_ptr<Transaction>> transactions_;
+std::map<std::string,
+         std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>>>
+    cloud_firestore_windows::CloudFirestorePlugin::transaction_handlers_;
+std::map<std::string, std::shared_ptr<firebase::firestore::Transaction>>
+    cloud_firestore_windows::CloudFirestorePlugin::transactions_;
 
  
 
@@ -120,6 +125,7 @@ firebase::firestore::Source GetSourceFromPigeon(
   const Source& pigeonSource) {
   switch (pigeonSource) {
     case Source::serverAndCache:
+    default:
       return firebase::firestore::Source::kDefault;
     case Source::server:
       return firebase::firestore::Source::kServer;
@@ -136,6 +142,7 @@ firebase::firestore::DocumentSnapshot::ServerTimestampBehavior GetServerTimestam
     case ServerTimestampBehavior::previous:
       return firebase::firestore::DocumentSnapshot::ServerTimestampBehavior::kPrevious;
     case ServerTimestampBehavior::none:
+    default:
       return firebase::firestore::DocumentSnapshot::ServerTimestampBehavior::kNone;
   }
 }
@@ -143,14 +150,15 @@ firebase::firestore::DocumentSnapshot::ServerTimestampBehavior GetServerTimestam
 using firebase::firestore::DocumentSnapshot;
 using flutter::EncodableMap;
 using flutter::EncodableValue;
+using flutter::CustomEncodableValue;
 
 flutter::EncodableMap ConvertToEncodableMap(const firebase::firestore::MapFieldValue& originalMap) {
   EncodableMap convertedMap;
   for (const auto& kv : originalMap) {
-    EncodableValue key =
-        EncodableValue(kv.first);  // convert std::string to EncodableValue
-    EncodableValue value =
-        EncodableValue(kv.second);  // convert FieldValue to EncodableValue
+    EncodableValue key = CustomEncodableValue(
+        kv.first);  // convert std::string to EncodableValue
+    EncodableValue value = CustomEncodableValue(
+        kv.second);             // convert FieldValue to EncodableValue
     convertedMap[key] = value;      // insert into the new map
   }
   return convertedMap;
@@ -182,7 +190,7 @@ flutter::EncodableList ParseDocumentSnapshots(
   flutter::EncodableList pigeonDocumentSnapshot = flutter::EncodableList();
 
   for (const auto& document : documents) {
-    pigeonDocumentSnapshot.push_back(EncodableValue(
+    pigeonDocumentSnapshot.push_back(CustomEncodableValue(
         ParseDocumentSnapshot(document, serverTimestampBehavior)));
   }
   return pigeonDocumentSnapshot;
@@ -199,6 +207,8 @@ DocumentChangeType ParseDocumentChangeType(
     case firebase::firestore::DocumentChange::Type::kModified:
       return DocumentChangeType::modified;
   }
+
+  throw std::invalid_argument("Invalid DocumentChangeType");
 }
 
 PigeonDocumentChange ParseDocumentChange(
@@ -214,7 +224,7 @@ flutter::EncodableList ParseDocumentChanges(
     DocumentSnapshot::ServerTimestampBehavior serverTimestampBehavior) {
   flutter::EncodableList pigeonDocumentChanges = flutter::EncodableList();
   for (const auto& document_change : document_changes) {
-    pigeonDocumentChanges.push_back(EncodableValue(
+    pigeonDocumentChanges.push_back(CustomEncodableValue(
         ParseDocumentChange(document_change, serverTimestampBehavior)));
   }
   return pigeonDocumentChanges;
@@ -338,7 +348,7 @@ class LoadBundleStreamHandler
 
     firestore_->LoadBundle(
         bundle_,
-        [events = std::move(events)](
+        [&events](
                                        const LoadBundleTaskProgress& progress) {
           switch (progress.state()) {
             case LoadBundleTaskProgress::State::kError: {
@@ -554,7 +564,7 @@ class TransactionStreamHandler
                                    std::string& str) -> Error {
               auto noopDeleter = [](Transaction*) {};
               std::shared_ptr<Transaction> ptr(&transaction, noopDeleter);
-              transactions_[transactionId] = std::move(ptr);
+              CloudFirestorePlugin::transactions_[transactionId] = std::move(ptr);
               for (PigeonTransactionCommand& command : *commands) {
                 DocumentReference reference =
                     firestore->Document(command.path());
@@ -587,7 +597,7 @@ class TransactionStreamHandler
       }
       return Error::kErrorOk;
             })
-        .OnCompletion([this, events = std::move(events)](
+        .OnCompletion([this, &events](
                           const Future<void>& completed_future) {
           flutter::EncodableMap result;
         if (completed_future.error() == firebase::firestore::kErrorOk) {
@@ -634,14 +644,16 @@ void CloudFirestorePlugin::TransactionCreate(
 
       auto handler =
         std::make_unique<TransactionStreamHandler>(
-        firestore, timeout, max_attempts, transactionId);
+      firestore, static_cast<long>(timeout),
+      static_cast<int>(max_attempts),
+      transactionId);
 
 
   std::string channelName = RegisterEventChannelWithUUID(
       "plugins.flutter.io/firebase_firestore/transaction/", transactionId,
       std::move(handler));
 
-  transaction_handlers_[channelName] =
+  CloudFirestorePlugin::transaction_handlers_[channelName] =
       std::move(handler);
 
   result(transactionId);
@@ -655,7 +667,7 @@ void CloudFirestorePlugin::TransactionStoreResult(
     const flutter::EncodableList* commands,
     std::function<void(std::optional<FlutterError> reply)> result) {
   TransactionStreamHandler& handler = *static_cast<TransactionStreamHandler*>(
-      transaction_handlers_[transaction_id].get());
+      CloudFirestorePlugin::transaction_handlers_[transaction_id].get());
 
   // Convert Flutter EncodableList to std::vector<PigeonTransactionCommand>
   std::vector<PigeonTransactionCommand> commandVector;
@@ -980,6 +992,7 @@ using firebase::firestore::AggregateQuery;
 firebase::firestore::AggregateSource GetAggregateSourceFromPigeon(const AggregateSource& source) {
   switch (source) {
     case AggregateSource::server:
+    default:
       return firebase::firestore::AggregateSource::kServer;
   }
 }
@@ -1093,7 +1106,7 @@ class QuerySnapshotStreamHandler
 
       listener_ = query_->AddSnapshotListener(
         metadataChanges,
-        [events = std::move(events),
+        [&events,
          serverTimestampBehavior = serverTimestampBehavior_,
                           metadataChanges](
             const firebase::firestore::QuerySnapshot& snapshot,
@@ -1190,7 +1203,7 @@ class DocumentSnapshotStreamHandler
 
     listener_ = reference_->AddSnapshotListener(
         metadataChanges,
-        [events = std::move(events),
+        [&events,
          serverTimestampBehavior = serverTimestampBehavior_,
          metadataChanges](const firebase::firestore::DocumentSnapshot& snapshot,
                           firebase::firestore::Error error,

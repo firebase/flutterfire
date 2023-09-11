@@ -18,6 +18,8 @@ list(APPEND PLUGIN_SOURCES
   "cloud_firestore_plugin.h"
   "messages.g.cpp"
   "messages.g.h"
+  "firestore_codec.cpp"
+  "firestore_codec.h"
 )
 
 # Define the plugin library target. Its name must not be changed (see comment
@@ -44,7 +46,7 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
 # dependencies here.
 set(MSVC_RUNTIME_MODE MD)
 set(firebase_libs firebase_core_plugin firebase_auth firebase_firestore firebase_app)
-set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32 shell32)
+set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32 shell32 Bcrypt.lib DbgHelp.lib)
 target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}" "${ADDITIONAL_LIBS}")
 
 
