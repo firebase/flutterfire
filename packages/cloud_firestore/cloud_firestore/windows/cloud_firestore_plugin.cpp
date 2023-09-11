@@ -301,6 +301,9 @@ firebase::firestore::MapFieldValue ConvertToMapFieldValue(const EncodableMap& or
   return convertedMap;
 }
 
+
+using flutter::CustomEncodableValue;
+
 firebase::firestore::MapFieldPathValue ConvertToMapFieldPathValue(
     const EncodableMap& originalMap) {
   firebase::firestore::MapFieldPathValue convertedMap;
@@ -313,17 +316,11 @@ firebase::firestore::MapFieldPathValue ConvertToMapFieldPathValue(
 
       firebase::firestore::FieldValue value = ConvertToFieldValue(kv.second);
       convertedMap[FieldPath(convertedList)] = value;
-    } else if (std::holds_alternative<FieldPath>(kv.first)) {
-      auto maybeKey = std::get_if<FieldPath>(&kv.first);
-      if (maybeKey != nullptr) {
-        FieldPath key = *maybeKey;
+    } else if (std::holds_alternative<CustomEncodableValue>(kv.first)) {
+      const FieldPath& fieldPath =
+          std::any_cast<FieldPath>(std::get<CustomEncodableValue>(kv.first));
         firebase::firestore::FieldValue value = ConvertToFieldValue(kv.second);
-        convertedMap[key] = value;
-      } else {
-        // Handle or skip non-string keys
-        // You may throw an exception or handle this some other way
-        throw std::runtime_error("Unsupported key type");
-      }
+        convertedMap[fieldPath] = value;
     } else {
       // Handle or skip non-string keys
       // You may throw an exception or handle this some other way
@@ -661,6 +658,8 @@ void CloudFirestorePlugin::TransactionCreate(
   result(transactionId);
 }
 
+using flutter::CustomEncodableValue;
+
 void CloudFirestorePlugin::TransactionStoreResult(
     const std::string& transaction_id,
     const PigeonTransactionResult& result_type,
@@ -672,20 +671,10 @@ void CloudFirestorePlugin::TransactionStoreResult(
   // Convert Flutter EncodableList to std::vector<PigeonTransactionCommand>
   std::vector<PigeonTransactionCommand> commandVector;
   for (const auto& element : *commands) {
-    if (std::holds_alternative<PigeonTransactionCommand>(element)) {
-      auto maybeCommand = std::get_if<PigeonTransactionCommand>(&element);
-      if (maybeCommand != nullptr) {
-        commandVector.push_back(*maybeCommand);
-      } else {
-        result(std::make_optional<FlutterError>(
-            "Failed to extract PigeonTransactionCommand from variant"));
-        return;
-      }
-    } else {
-      result(std::make_optional<FlutterError>(
-          "Invalid command type in transaction result"));
-      return;
-    }
+    const PigeonTransactionCommand& command =
+        std::any_cast<PigeonTransactionCommand>(
+            std::get<CustomEncodableValue>(element));
+    commandVector.push_back(command);
   }
   handler.ReceiveTransactionResponse(result_type, &commandVector);
   result(std::nullopt);
@@ -872,12 +861,14 @@ firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
         ConvertToConditions(*parameters.where());
 
     for (const auto& condition : conditions) {
-      auto maybeFieldPath = std::get_if<FieldPath>(&condition[0]);
-      auto maybeOp = std::get_if<std::string>(&condition[1]);
+      const FieldPath& fieldPath =
+          std::any_cast<FieldPath>(
+          std::get<CustomEncodableValue>(condition[0]));
+      const std::string& op=
+          std::any_cast<std::string>(
+          std::get<CustomEncodableValue>(condition[1]));
 
-      if (maybeFieldPath != nullptr && maybeOp != nullptr) {
-        FieldPath fieldPath = *maybeFieldPath;
-        std::string op = *maybeOp;
+
         auto value = condition[2];
         if (op == "==") {
           query = query.WhereEqualTo(fieldPath, ConvertToFieldValue(value));
@@ -911,9 +902,6 @@ firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
         } else {
           throw std::runtime_error("Unknown operator");
         }
-      } else {
-        throw std::runtime_error("Invalid condition");  
-      }
     }
 
     if (parameters.limit()) {
@@ -934,12 +922,12 @@ firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
         ConvertToConditions(*parameters.order_by());
 
     for (const auto& order_by : order_bys) {
-      auto maybeFieldPath = std::get_if<FieldPath>(&order_by[0]);
-      auto maybeDirection = std::get_if<std::string>(&order_by[1]);
+      const FieldPath& fieldPath=
+          std::any_cast<FieldPath>(std::get<CustomEncodableValue>(order_by[0]));
+      const std::string& direction =
+          std::any_cast<std::string>(std::get<CustomEncodableValue>(order_by[1]));
 
-      if (maybeFieldPath != nullptr && maybeDirection != nullptr) {
-        auto fieldPath = *maybeFieldPath;
-        std::string direction = *maybeDirection;
+
         if (direction == "desc") {
           query = query.OrderBy(fieldPath, Query::Direction::kDescending);
         } else if (direction == "asc") {
@@ -947,9 +935,6 @@ firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
         } else {
           throw std::runtime_error("Unknown direction");
         }
-      } else {
-        throw std::runtime_error("Unknown direction");
-      }
 
     }
 
@@ -1042,10 +1027,10 @@ void CloudFirestorePlugin::WriteBatchCommit(
     firebase::firestore::WriteBatch batch = firestore->batch();
 
     for (const auto& write : writes) {
-      auto maybeTransaction = std::get_if<PigeonTransactionCommand>(&write);
+      const PigeonTransactionCommand& transaction =
+          std::any_cast<PigeonTransactionCommand>(
+              std::get<CustomEncodableValue>(write));
 
-      if (maybeTransaction != nullptr) {
-        PigeonTransactionCommand transaction = *maybeTransaction;
         PigeonTransactionType type = transaction.type();
         std::string path = transaction.path();
         auto data = transaction.data();
@@ -1075,10 +1060,6 @@ void CloudFirestorePlugin::WriteBatchCommit(
             }
             break;
         }
-      } else {
-        throw std::runtime_error("Unknown write type");
-      }
-
     }
 
     batch.Commit().OnCompletion([result](const Future<void>& completed_future) {
