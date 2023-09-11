@@ -60,17 +60,12 @@ std::map<std::string, std::shared_ptr<Transaction>> transactions_;
  
 
 std::string RegisterEventChannelWithUUID(
-    std::string prefix, std::string uuid, const flutter::StreamHandler<flutter::EncodableValue>& handler) {
+    std::string prefix, std::string uuid, std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>> handler) {
   std::string channelName = prefix + uuid;
-  flutter::EventChannel<flutter::EncodableValue>* channel =
-      new flutter::EventChannel<flutter::EncodableValue>(
-          CloudFirestorePlugin::messenger_, channelName,
-          &flutter::StandardMethodCodec::GetInstance());
-
-  event_channels_[channelName] =
-      std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(channel);
-  stream_handlers_[channelName] =
-      std::make_unique<flutter::StreamHandler<>>(handler);
+event_channels_[channelName] = std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
+    CloudFirestorePlugin::messenger_, channelName, &flutter::StandardMethodCodec::GetInstance());
+    
+stream_handlers_[channelName] = std::move(handler);
 
   event_channels_[channelName]->SetStreamHandler(
       std::move(stream_handlers_[channelName]));
@@ -80,22 +75,19 @@ std::string RegisterEventChannelWithUUID(
 
 
 std::string RegisterEventChannel(
-    std::string prefix, const flutter::StreamHandler<EncodableValue>& handler) {
+    std::string prefix,
+    std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>> handler) {
   UUID uuid;
   UuidCreate(&uuid);
   char* str;
   UuidToStringA(&uuid, (RPC_CSTR*)&str);
 
   std::string channelName = prefix + "_" + str;
-  flutter::EventChannel<flutter::EncodableValue>* channel =
-      new flutter::EventChannel<flutter::EncodableValue>(
+  event_channels_[channelName] =
+      std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
           CloudFirestorePlugin::messenger_, channelName,
           &flutter::StandardMethodCodec::GetInstance());
-
-  event_channels_[channelName] =
-      std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(channel);
-  stream_handlers_[channelName] =
-      std::make_unique<flutter::StreamHandler<>>(handler);
+  stream_handlers_[channelName] = std::move(handler);
 
   event_channels_[channelName]->SetStreamHandler(
       std::move(stream_handlers_[channelName]));
@@ -241,10 +233,7 @@ PigeonQuerySnapshot ParseQuerySnapshot(
 }
 
 firebase::firestore::FieldValue ConvertToFieldValue(
-    const EncodableValue& value) {
-  const flutter::internal::EncodableValueVariant& variant =
-      value;  // Replace with appropriate way to access the variant from
-              // EncodableValue
+    const EncodableValue& variant) {
   if (std::holds_alternative<bool>(variant)) {
     return firebase::firestore::FieldValue::Boolean(std::get<bool>(variant));
   } else if (std::holds_alternative<int64_t>(variant)) {
@@ -391,7 +380,7 @@ void CloudFirestorePlugin::LoadBundle(
 
   auto handler = std::make_unique<LoadBundleStreamHandler>(firestore, bundleConverted);
 
-      std::string channelName = RegisterEventChannel("loadbundle", *handler);
+      std::string channelName = RegisterEventChannel("loadbundle", std::move(handler));
       result(channelName);
 }
 
@@ -650,10 +639,10 @@ void CloudFirestorePlugin::TransactionCreate(
 
   std::string channelName = RegisterEventChannelWithUUID(
       "plugins.flutter.io/firebase_firestore/transaction/", transactionId,
-      *handler);
+      std::move(handler));
 
   transaction_handlers_[channelName] =
-      std::make_unique<flutter::StreamHandler<>>(handler);
+      std::move(handler);
 
   result(transactionId);
 }
@@ -1173,7 +1162,7 @@ void CloudFirestorePlugin::QuerySnapshot(
     auto query_snapshot_handler =
       std::make_unique<QuerySnapshotStreamHandler>(&query, include_metadata_changes, GetServerTimestampBehaviorFromPigeon(options.server_timestamp_behavior()));
 
-  std::string channelName = RegisterEventChannel(METHOD_CHANNEL_NAME, *query_snapshot_handler);
+  std::string channelName = RegisterEventChannel(METHOD_CHANNEL_NAME, std::move(query_snapshot_handler));
 
   result(channelName);
 }
@@ -1238,7 +1227,9 @@ void CloudFirestorePlugin::DocumentReferenceSnapshot(
   DocumentReference documentReference = firestore->Document(parameters.path());
   auto document_snapshot_handler =
       std::make_unique<DocumentSnapshotStreamHandler>(&documentReference, include_metadata_changes, GetServerTimestampBehaviorFromPigeon(*parameters.server_timestamp_behavior()));
-  std::string channelName = RegisterEventChannel(METHOD_CHANNEL_NAME, *document_snapshot_handler);
+
+  std::string channelName = RegisterEventChannel(
+      METHOD_CHANNEL_NAME, std::move(document_snapshot_handler));
   result(channelName);
 }
 
