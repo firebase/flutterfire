@@ -10,6 +10,7 @@
 #include "firebase/app.h"
 #include "firebase/auth.h"
 #include "firebase/remote_config.h"
+#include "firebase/storage.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -69,11 +70,12 @@ void *FirebaseCorePlugin::GetFirebaseStorage(std::string appName,
   if (app == nullptr) {
     return nullptr;
   }
-  if (path.empty()) {
-    return Storage::GetInstance(app);
-  } else {
-    return Storage::GetInstance(app, path);
-  }
+  return Storage::GetInstance(app);
+  // if (path.empty()) {
+  //   return Storage::GetInstance(app);
+  // } else {
+  //   return Storage::GetInstance(app, path.c_str(), nullptr);
+  // }
 }
 
 FirebaseCorePlugin::FirebaseCorePlugin() {}
