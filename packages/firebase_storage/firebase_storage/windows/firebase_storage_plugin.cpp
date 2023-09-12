@@ -7,7 +7,6 @@
 // This must be included before many other Windows headers.
 #include <windows.h>
 
-#include "firebase/"
 #include "firebase/app.h"
 #include "firebase/future.h"
 #include "firebase/storage.h"
@@ -21,6 +20,7 @@
 // For getPlatformVersion; remove unless needed for your plugin implementation.
 #include <VersionHelpers.h>
 #include <Windows.h>
+#include <flutter/event_channel.h>
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
@@ -42,6 +42,8 @@ using ::firebase::storage::Metadata;
 using ::firebase::storage::Storage;
 using ::firebase::storage::StorageReference;
 
+using flutter::EncodableValue;
+
 namespace firebase_storage_windows {
 
 // static
@@ -51,6 +53,9 @@ void FirebaseStoragePlugin::RegisterWithRegistrar(
 
   FirebaseStorageHostApi::SetUp(registrar->messenger(), plugin.get());
 
+  std::cout << "[C++] FirebaseStoragePlugin::RegisterWithRegistrar()"
+            << std::endl;
+
   registrar->AddPlugin(std::move(plugin));
 }
 
@@ -59,8 +64,7 @@ FirebaseStoragePlugin::FirebaseStoragePlugin() {}
 FirebaseStoragePlugin::~FirebaseStoragePlugin() = default;
 
 Storage* GetCPPStorageFromPigeon(const PigeonFirebaseApp& pigeonApp,
-                                 const std::string& pathconst
-                                     std::string& path) {
+                                 const std::string& path) {
   void* storage_ptr = GetFirebaseStorage(pigeonApp.app_name(), path);
   Storage* cpp_storage = static_cast<Storage*>(storage_ptr);
 
@@ -70,26 +74,34 @@ Storage* GetCPPStorageFromPigeon(const PigeonFirebaseApp& pigeonApp,
 StorageReference GetCPPStorageReferenceFromPigeon(
     const PigeonFirebaseApp& pigeonApp, const std::string& bucket,
     const PigeonStorageReference& pigeonReference) {
-  Storage* cpp_storage = GetCPPStorageFromPigeon(app, *bucket);
+  Storage* cpp_storage = GetCPPStorageFromPigeon(pigeonApp, bucket);
   return cpp_storage->GetReference(pigeonReference.full_path());
 }
+
+// std::map<std::string,
+//          std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>>
+//     event_channels_;
+// std::map<std::string,
+//          std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>>>
+//     stream_handlers_;
 
 std::string RegisterEventChannelWithUUID(
     std::string prefix, std::string uuid,
     const flutter::StreamHandler<flutter::EncodableValue>& handler) {
   std::string channelName = prefix + uuid;
-  flutter::EventChannel<flutter::EncodableValue>* channel =
-      new flutter::EventChannel<flutter::EncodableValue>(
-          FirebaseStoragePlugin::messenger_, channelName,
-          &flutter::StandardMethodCodec::GetInstance());
+  //   flutter::EventChannel<flutter::EncodableValue>* channel =
+  //       new flutter::EventChannel<flutter::EncodableValue>(
+  //           FirebaseStoragePlugin::messenger_, channelName,
+  //           &flutter::StandardMethodCodec::GetInstance());
 
-  event_channels_[channelName] =
-      std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(channel);
-  stream_handlers_[channelName] =
-      std::make_unique<flutter::StreamHandler<>>(handler);
+  //   event_channels_[channelName] =
+  //       std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(channel);
+  //   stream_handlers_[channelName] =
+  //       std::make_unique<flutter::StreamHandler<flutter::EncodableValue>>(
+  //           handler);
 
-  event_channels_[channelName]->SetStreamHandler(
-      std::move(stream_handlers_[channelName]));
+  //   event_channels_[channelName]->SetStreamHandler(
+  //       std::move(stream_handlers_[channelName]));
 
   return channelName;
 }
@@ -102,18 +114,19 @@ std::string RegisterEventChannel(
   UuidToStringA(&uuid, (RPC_CSTR*)&str);
 
   std::string channelName = prefix + "_" + str;
-  flutter::EventChannel<flutter::EncodableValue>* channel =
-      new flutter::EventChannel<flutter::EncodableValue>(
-          FirebaseStoragePlugin::messenger_, channelName,
-          &flutter::StandardMethodCodec::GetInstance());
+  //   flutter::EventChannel<flutter::EncodableValue>* channel =
+  //       new flutter::EventChannel<flutter::EncodableValue>(
+  //           FirebaseStoragePlugin::messenger_, channelName,
+  //           &flutter::StandardMethodCodec::GetInstance());
 
-  event_channels_[channelName] =
-      std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(channel);
-  stream_handlers_[channelName] =
-      std::make_unique<flutter::StreamHandler<>>(handler);
+  //   event_channels_[channelName] =
+  //       std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(channel);
+  //   stream_handlers_[channelName] =
+  //       std::make_unique<flutter::StreamHandler<flutter::EncodableValue>>(
+  //           handler);
 
-  event_channels_[channelName]->SetStreamHandler(
-      std::move(stream_handlers_[channelName]));
+  //   event_channels_[channelName]->SetStreamHandler(
+  //       std::move(stream_handlers_[channelName]));
 
   return channelName;
 }
@@ -129,24 +142,24 @@ void FirebaseStoragePlugin::GetReferencebyPath(
   result(*value_ptr);
 }
 
-std::optional<FlutterError> FirebaseStoragePlugin::SetMaxOperationRetryTime(
+void FirebaseStoragePlugin::SetMaxOperationRetryTime(
     const PigeonFirebaseApp& app, int64_t time,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  Storage* cpp_storage = GetCPPStorageFromPigeon(app, *bucket);
+  Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
   cpp_storage->set_max_operation_retry_time((double)time);
 }
 
-std::optional<FlutterError> FirebaseStoragePlugin::SetMaxUploadRetryTime(
+void FirebaseStoragePlugin::SetMaxUploadRetryTime(
     const PigeonFirebaseApp& app, int64_t time,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  Storage* cpp_storage = GetCPPStorageFromPigeon(app, *bucket);
+  Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
   cpp_storage->set_max_upload_retry_time((double)time);
 }
 
-std::optional<FlutterError> FirebaseStoragePlugin::SetMaxDownloadRetryTime(
+void FirebaseStoragePlugin::SetMaxDownloadRetryTime(
     const PigeonFirebaseApp& app, int64_t time,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  Storage* cpp_storage = GetCPPStorageFromPigeon(app, *bucket);
+  Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
   cpp_storage->set_max_download_retry_time((double)time);
 }
 
@@ -180,11 +193,11 @@ void FirebaseStoragePlugin::ReferenceGetDownloadURL(
         std::cout
             << "[C++] FirebaseStoragePlugin::ReferenceGetDownloadURL() COMPLETE"
             << std::endl;
-        result(string_result.result());
+        result(*string_result.result());
       });
 }
 
-flutter::EncodableMap ConvertMedadataToPigeon(Metadata* meta) {
+flutter::EncodableMap ConvertMedadataToPigeon(const Metadata* meta) {
   flutter::EncodableMap meta_map = flutter::EncodableMap();
   // TODO: parse the meta
   return meta_map;
@@ -192,7 +205,7 @@ flutter::EncodableMap ConvertMedadataToPigeon(Metadata* meta) {
 
 void GetMetadataFromPigeon(PigeonSettableMetadata pigeonMetadata,
                            Metadata* out_metadata) {
-  out_metadata->set_cache_control(pigeonMetadata.cache_control());
+  // out_metadata->set_cache_control(pigeonMetadata.cache_control());
 }
 
 void FirebaseStoragePlugin::ReferenceGetMetaData(
@@ -205,9 +218,8 @@ void FirebaseStoragePlugin::ReferenceGetMetaData(
     // TODO error handling
     std::cout << "[C++] FirebaseStoragePlugin::ReferenceGetMetaData() COMPLETE"
               << std::endl;
-
-    PigeonFullMetaData pigeon_meta =
-        PigeonFullMetaData(ConvertMedadataToPigeon(metadata_result.result()));
+    PigeonFullMetaData pigeon_meta = PigeonFullMetaData();
+    pigeon_meta.set_metadata(ConvertMedadataToPigeon(metadata_result.result()));
 
     result(pigeon_meta);
   });
@@ -237,16 +249,18 @@ void FirebaseStoragePlugin::ReferenceListAll(
 class TaskStateStreamHandler
     : public flutter::StreamHandler<flutter::EncodableValue> {
  public:
-  TaskStateStreamHandler(Storage* storage, Listener* listener) {
+  TaskStateStreamHandler(Storage* storage, StorageReference* reference) {
     storage_ = storage;
-    listener_ = listener;
+    reference_ = reference;
   }
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnListenInternal(
       const flutter::EncodableValue* arguments,
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
-      override {}
+      override {
+    return nullptr;
+  }
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
@@ -255,7 +269,7 @@ class TaskStateStreamHandler
 
  private:
   Storage* storage_;
-  Listener* listener_;
+  StorageReference* reference_;
 };
 
 void FirebaseStoragePlugin::ReferenceGetData(
@@ -265,15 +279,19 @@ void FirebaseStoragePlugin::ReferenceGetData(
         result) {
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, "", reference);
-  int8_t byte_buffer[max_size];
+  const size_t kMaxAllowedSize = 1 * 1024 * 1024;
+  int8_t byte_buffer[kMaxAllowedSize];
 
   Future<size_t> future_result = cpp_reference.GetBytes(byte_buffer, max_size);
-  future_result.OnCompletion([result](const Future<size_t>& data_result) {
+  future_result.OnCompletion([result,
+                              byte_buffer](const Future<size_t>& data_result) {
     // TODO error handling
     std::cout << "[C++] FirebaseStoragePlugin::ReferenceGetData() COMPLETE"
               << std::endl;
+    size_t vector_size = *data_result.result();
+    std::vector<uint8_t> vector_buffer(byte_buffer, byte_buffer + vector_size);
 
-    result(byte_buffer);
+    // result(vector_buffer);
   });
 }
 
@@ -282,18 +300,18 @@ void FirebaseStoragePlugin::ReferencePutData(
     const std::vector<uint8_t>& data,
     const PigeonSettableMetadata& settable_meta_data, int64_t handle,
     std::function<void(ErrorOr<std::string> reply)> result) {
+  Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, "", reference);
-  Controller controller;
-  Listener listener;
+  controllers_[handle] = std::make_unique<Controller>();
+  // Listener listener;
   auto handler =
-      std::make_unique<TaskStateStreamHandler>(&cpp_reference, &listener);
+      std::make_unique<TaskStateStreamHandler>(cpp_storage, &cpp_reference);
 
   std::string channelName = RegisterEventChannel("putData", *handler);
 
-  Future<Metadata> future_result =
-      cpp_reference.PutBytes(data, data.size(), &listener, &controller);
-  controllers_[handle] = controller;
+  Future<Metadata> future_result = cpp_reference.PutBytes(
+      &data, data.size(), nullptr, controllers_[handle].get());
 
   result(channelName);
 }
@@ -303,18 +321,21 @@ void FirebaseStoragePlugin::RefrencePutString(
     const std::string& data, int64_t format,
     const PigeonSettableMetadata& settable_meta_data, int64_t handle,
     std::function<void(ErrorOr<std::string> reply)> result) {
+  std::cout << "[C++] FirebaseStoragePlugin::ReferenceUpdateMetadata() START"
+            << std::endl;
+  Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, "", reference);
-  Controller controller;
-  Listener listener;
+  controllers_[handle] = std::make_unique<Controller>();
+
+  // Listener listener;
   auto handler =
-      std::make_unique<TaskStateStreamHandler>(&cpp_reference, &listener);
+      std::make_unique<TaskStateStreamHandler>(cpp_storage, &cpp_reference);
 
   std::string channelName = RegisterEventChannel("putString", *handler);
 
-  Future<Metadata> future_result =
-      cpp_reference.PutBytes(data, data.size(), &listener, &controller);
-  controllers_[handle] = controller;
+  Future<Metadata> future_result = cpp_reference.PutBytes(
+      &data, data.size(), nullptr, controllers_[handle].get());
 
   result(channelName);
 }
@@ -324,18 +345,19 @@ void FirebaseStoragePlugin::ReferencePutFile(
     const std::string& file_path,
     const PigeonSettableMetadata& settable_meta_data, int64_t handle,
     std::function<void(ErrorOr<std::string> reply)> result) {
+  Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, "", reference);
-  Controller controller;
-  Listener listener;
+  controllers_[handle] = std::make_unique<Controller>();
+
+  // Listener listener;
   auto handler =
-      std::make_unique<TaskStateStreamHandler>(&cpp_reference, &listener);
+      std::make_unique<TaskStateStreamHandler>(cpp_storage, &cpp_reference);
 
   std::string channelName = RegisterEventChannel("putFile", *handler);
 
-  Future<Metadata> future_result =
-      cpp_reference.PutFile(file_path.c_str(), &listener, &controller);
-  controllers_[handle] = controller;
+  Future<Metadata> future_result = cpp_reference.PutFile(
+      file_path.c_str(), nullptr, controllers_[handle].get());
 
   result(channelName);
 }
@@ -344,18 +366,18 @@ void FirebaseStoragePlugin::ReferenceDownloadFile(
     const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
     const std::string& file_path, int64_t handle,
     std::function<void(ErrorOr<std::string> reply)> result) {
+  Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, "", reference);
-  Controller controller;
-  Listener listener;
+  controllers_[handle] = std::make_unique<Controller>();
+  // Listener listener;
   auto handler =
-      std::make_unique<TaskStateStreamHandler>(&cpp_reference, &listener);
+      std::make_unique<TaskStateStreamHandler>(cpp_storage, &cpp_reference);
 
   std::string channelName = RegisterEventChannel("putFile", *handler);
 
-  Future<Metadata> future_result =
-      cpp_reference.GetFile(file_path.c_str(), &listener, &controller);
-  controllers_[handle] = controller;
+  Future<size_t> future_result = cpp_reference.GetFile(
+      file_path.c_str(), nullptr, controllers_[handle].get());
 
   result(channelName);
 }
@@ -368,7 +390,7 @@ void FirebaseStoragePlugin::ReferenceUpdateMetadata(
       GetCPPStorageReferenceFromPigeon(app, "", reference);
   Metadata cpp_meta;
   GetMetadataFromPigeon(metadata, &cpp_meta);
-  Future<MetaData> future_result = cpp_reference.UpdateMetadata(cpp_meta);
+  Future<Metadata> future_result = cpp_reference.UpdateMetadata(cpp_meta);
   future_result.OnCompletion([result](const Future<Metadata>& data_result) {
     // TODO error handling
     std::cout
