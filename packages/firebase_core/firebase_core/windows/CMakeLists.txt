@@ -4,7 +4,7 @@
 # customers of the plugin.
 cmake_minimum_required(VERSION 3.14)
 
-set(FIREBASE_SDK_VERSION "11.2.0")
+set(FIREBASE_SDK_VERSION "11.4.2")
 
 if (EXISTS $ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h)
     file(READ "$ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h" existing_version)
@@ -25,8 +25,8 @@ if(existing_version VERSION_EQUAL FIREBASE_SDK_VERSION)
     message(STATUS "Found Firebase SDK version ${existing_version}")
     set(FIREBASE_CPP_SDK_DIR $ENV{FIREBASE_CPP_SDK_DIR})
 else()
-    set(firebase_sdk_url "https://dl.google.com/firebase/sdk/cpp/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
-    set(firebase_sdk_filename "${CMAKE_BINARY_DIR}/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
+    set(firebase_sdk_url "https://dl.google.com/firebase/sdk/cpp/firebase_cpp_sdk_windows_${FIREBASE_SDK_VERSION}.zip")
+    set(firebase_sdk_filename "${CMAKE_BINARY_DIR}/firebase_cpp_sdk_windows_${FIREBASE_SDK_VERSION}.zip")
     set(extracted_path "${CMAKE_BINARY_DIR}/extracted")
     if(NOT EXISTS ${firebase_sdk_filename})
         file(DOWNLOAD ${firebase_sdk_url} ${firebase_sdk_filename}
@@ -44,7 +44,7 @@ else()
         file(ARCHIVE_EXTRACT INPUT ${firebase_sdk_filename}
              DESTINATION ${extracted_path})
     endif()
-    set(FIREBASE_CPP_SDK_DIR "${extracted_path}/firebase_cpp_sdk")
+    set(FIREBASE_CPP_SDK_DIR "${extracted_path}/firebase_cpp_sdk_windows")
 endif()
 
 # Project-level configuration.
