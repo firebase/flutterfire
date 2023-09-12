@@ -19,6 +19,29 @@ void main() {
       );
     });
 
+    // getSessionId has to be first, else Android returns null
+    test(
+      'getSessionId',
+      () async {
+        if (kIsWeb) {
+          await expectLater(
+            FirebaseAnalytics.instance.getSessionId(),
+            throwsA(isA<UnimplementedError>()),
+          );
+        } else {
+          await expectLater(
+            FirebaseAnalytics.instance.setConsent(
+              analyticsStorageConsentGranted: true,
+            ),
+            completes,
+          );
+
+          final result = await FirebaseAnalytics.instance.getSessionId();
+          expect(result, isA<int>());
+        }
+      },
+    );
+
     test('isSupported', () async {
       final result = await FirebaseAnalytics.instance.isSupported();
       expect(result, isA<bool>());

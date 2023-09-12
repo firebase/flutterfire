@@ -45,6 +45,15 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   }
 
   @override
+  Future<int?> getSessionId() {
+    try {
+      return channel.invokeMethod<int>('Analytics#getSessionId');
+    } catch (e, s) {
+      convertPlatformException(e, s);
+    }
+  }
+
+  @override
   Future<void> logEvent({
     required String name,
     Map<String, Object?>? parameters,

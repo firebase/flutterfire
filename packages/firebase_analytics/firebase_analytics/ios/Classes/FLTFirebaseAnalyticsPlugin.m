@@ -72,12 +72,24 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
     [self setDefaultEventParameters:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Analytics#getAppInstanceId" isEqualToString:call.method]) {
     [self getAppInstanceIdWithMethodCallResult:methodCallResult];
+  } else if ([@"Analytics#getSessionId" isEqualToString:call.method]) {
+    [self getSessionIdWithMethodCallResult:methodCallResult];
   } else {
     result(FlutterMethodNotImplemented);
   }
 }
 
 #pragma mark - Firebase Analytics API
+
+- (void)getSessionIdWithMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  [FIRAnalytics sessionIDWithCompletion:^(int64_t sessionID, NSError *_Nullable error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success([NSNumber numberWithLongLong:sessionID]);
+    }
+  }];
+}
 
 - (void)logEvent:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *eventName = arguments[kFLTFirebaseAnalyticsEventName];
