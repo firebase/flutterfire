@@ -6,6 +6,9 @@
 
 #include <flutter/plugin_registrar_windows.h>
 
+#include <string>
+#include <vector>
+
 #include "firebase_core_plugin.h"
 
 void FirebaseCorePluginCApiRegisterWithRegistrar(
@@ -15,7 +18,7 @@ void FirebaseCorePluginCApiRegisterWithRegistrar(
           ->GetRegistrar<flutter::PluginRegistrarWindows>(registrar));
 }
 
-void* GetFirebaseApp(std::string appName) {
+std::vector<std::string> GetFirebaseApp(std::string appName) {
   return firebase_core_windows::FirebaseCorePlugin::GetFirebaseApp(appName);
 }
 

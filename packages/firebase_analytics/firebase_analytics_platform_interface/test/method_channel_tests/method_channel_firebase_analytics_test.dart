@@ -24,6 +24,8 @@ void main() {
         switch (call.method) {
           case 'Analytics#getAppInstanceId':
             return 'ABCD1234';
+          case 'Analytics#getSessionId':
+            return 0;
 
           default:
             return true;
@@ -127,6 +129,19 @@ void main() {
         <Matcher>[
           isMethodCall(
             'Analytics#getAppInstanceId',
+            arguments: null,
+          ),
+        ],
+      );
+    });
+
+    test('getSessionId', () async {
+      await analytics.getSessionId();
+      expect(
+        methodCallLogger,
+        <Matcher>[
+          isMethodCall(
+            'Analytics#getSessionId',
             arguments: null,
           ),
         ],
