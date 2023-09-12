@@ -76,7 +76,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
 
   @override
   Future<void> activate({
-    String? webRecaptchaSiteKey,
+    WebProvider? webProvider,
     AndroidProvider? androidProvider,
     AppleProvider? appleProvider,
   }) async {

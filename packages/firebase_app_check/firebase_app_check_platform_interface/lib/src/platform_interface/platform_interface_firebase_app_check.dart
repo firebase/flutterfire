@@ -63,7 +63,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   ///
   /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
   Future<void> activate({
-    String? webRecaptchaSiteKey,
+    WebProvider? webProvider,
     AndroidProvider? androidProvider,
     AppleProvider? appleProvider,
   }) {
