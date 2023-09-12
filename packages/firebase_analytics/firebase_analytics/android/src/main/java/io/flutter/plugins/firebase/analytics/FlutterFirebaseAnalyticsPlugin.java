@@ -136,6 +136,9 @@ public class FlutterFirebaseAnalyticsPlugin
       case "Analytics#getAppInstanceId":
         methodCallTask = handleGetAppInstanceId();
         break;
+      case "Analytics#getSessionId":
+        methodCallTask = handleGetSessionId();
+        break;
       default:
         result.notImplemented();
         return;
@@ -152,6 +155,21 @@ public class FlutterFirebaseAnalyticsPlugin
             result.error("firebase_analytics", message, null);
           }
         });
+  }
+
+  private Task<Long> handleGetSessionId() {
+    TaskCompletionSource<Long> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(Tasks.await(analytics.getSessionId()));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> handleLogEvent(final Map<String, Object> arguments) {
