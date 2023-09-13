@@ -54,7 +54,7 @@ jobs:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         name: Install Node.js 16
         with:
           node-version: '16'

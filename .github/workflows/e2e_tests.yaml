@@ -34,7 +34,7 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         name: Install Node.js 16
         with:
           node-version: '16'
@@ -107,7 +107,7 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         name: Install Node.js 16
         with:
           node-version: '16'
@@ -182,7 +182,7 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         name: Install Node.js 16
         with:
           node-version: '16'
@@ -251,7 +251,7 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         name: Install Node.js 16
         with:
           node-version: '16'
@@ -299,7 +299,11 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         name: Install Node.js 16
         with:
           node-version: "16"
@@ -316,9 +320,5 @@ jobs:
       - name: "Install Tools"
         run: |
           npm install -g firebase-tools
-      - name: Start Firebase Emulator
-        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - name: "E2E Tests"
-        working-directory: tests
-        run: |
-          flutter test .\integration_test\e2e_test.dart -d windows
+      - name: Start Firebase Emulator and run tests
+        run: cd ./.github/workflows/scripts && firebase emulators:exec --project flutterfire-e2e-tests "cd ../../../tests && flutter test .\integration_test\e2e_test.dart -d windows"
