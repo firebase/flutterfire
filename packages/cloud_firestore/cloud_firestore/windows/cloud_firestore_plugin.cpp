@@ -68,9 +68,11 @@ std::string RegisterEventChannelWithUUID(
     std::string prefix, std::string uuid, std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>> handler) {
   std::string channelName = prefix + uuid;
 event_channels_[channelName] = std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
-    CloudFirestorePlugin::messenger_, channelName, &flutter::StandardMethodCodec::GetInstance());
-    
-stream_handlers_[channelName] = std::move(handler);
+          CloudFirestorePlugin::messenger_, channelName,
+          &flutter::StandardMethodCodec::GetInstance(
+              &FirebaseFirestoreHostApiCodecSerializer::GetInstance()));
+
+    stream_handlers_[channelName] = std::move(handler);
 
   event_channels_[channelName]->SetStreamHandler(
       std::move(stream_handlers_[channelName]));
@@ -87,17 +89,18 @@ std::string RegisterEventChannel(
   char* str;
   UuidToStringA(&uuid, (RPC_CSTR*)&str);
 
-  std::string channelName = prefix + "_" + str;
+  std::string channelName = prefix + str;
   event_channels_[channelName] =
       std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
           CloudFirestorePlugin::messenger_, channelName,
-          &flutter::StandardMethodCodec::GetInstance());
+          &flutter::StandardMethodCodec::GetInstance(
+              &FirebaseFirestoreHostApiCodecSerializer::GetInstance()));
   stream_handlers_[channelName] = std::move(handler);
 
   event_channels_[channelName]->SetStreamHandler(
       std::move(stream_handlers_[channelName]));
 
-  return channelName;
+  return str;
 }
 
 
@@ -152,12 +155,59 @@ using flutter::EncodableMap;
 using flutter::EncodableValue;
 using flutter::CustomEncodableValue;
 
+EncodableValue ConvertFieldValueToEncodableValue(const FieldValue& fieldValue) {
+  switch (fieldValue.type()) {
+    case FieldValue::Type::kNull:
+      return EncodableValue(nullptr);
+
+    case FieldValue::Type::kBoolean:
+      return EncodableValue(fieldValue.boolean_value());
+
+    case FieldValue::Type::kInteger:
+      return EncodableValue(static_cast<int64_t>(fieldValue.integer_value()));
+
+    case FieldValue::Type::kDouble:
+      return EncodableValue(fieldValue.double_value());
+
+    case FieldValue::Type::kTimestamp:
+      // Assuming timestamp can be converted to int64_t or some other type that
+      // EncodableValue accepts
+      return CustomEncodableValue(fieldValue.timestamp_value());
+
+    case FieldValue::Type::kString:
+      return EncodableValue(fieldValue.string_value());
+
+
+    case FieldValue::Type::kMap: {
+      EncodableMap encodableMap;
+      for (const auto& [key, val] : fieldValue.map_value()) {
+        encodableMap[EncodableValue(key)] =
+            ConvertFieldValueToEncodableValue(val);
+      }
+      return EncodableValue(encodableMap);
+    }
+
+                                   case FieldValue::Type::kArray: {
+      flutter::EncodableList encodableList;
+      for (const auto&  val: fieldValue.array_value()) {
+        encodableList.push_back(ConvertFieldValueToEncodableValue(val));
+      }
+      return encodableList;
+    }
+
+
+    default:
+      return EncodableValue(nullptr);
+  }
+}
+
+
 flutter::EncodableMap ConvertToEncodableMap(const firebase::firestore::MapFieldValue& originalMap) {
   EncodableMap convertedMap;
   for (const auto& kv : originalMap) {
-    EncodableValue key = CustomEncodableValue(
-        kv.first);  // convert std::string to EncodableValue
-    EncodableValue value = CustomEncodableValue(
+    EncodableValue key = EncodableValue(
+        kv.first);
+    EncodableValue value = ConvertFieldValueToEncodableValue(
         kv.second);             // convert FieldValue to EncodableValue
     convertedMap[key] = value;      // insert into the new map
   }
@@ -925,13 +975,13 @@ firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
     for (const auto& order_by : order_bys) {
       const FieldPath& fieldPath=
           std::any_cast<FieldPath>(std::get<CustomEncodableValue>(order_by[0]));
-      const std::string& direction =
-          std::any_cast<std::string>(std::get<CustomEncodableValue>(order_by[1]));
+      const bool& direction =
+          std::get<bool>(order_by[1]);
 
 
-        if (direction == "desc") {
+        if (direction) {
           query = query.OrderBy(fieldPath, Query::Direction::kDescending);
-        } else if (direction == "asc") {
+        } else if (!direction) {
           query = query.OrderBy(fieldPath, Query::Direction::kAscending);
         } else {
           throw std::runtime_error("Unknown direction");
@@ -1087,9 +1137,9 @@ class QuerySnapshotStreamHandler
     : public flutter::StreamHandler<flutter::EncodableValue> {
  public:
   QuerySnapshotStreamHandler(
-      Query* query, bool includeMetadataChanges,
+      std::unique_ptr<Query> query, bool includeMetadataChanges,
       firebase::firestore::DocumentSnapshot::ServerTimestampBehavior serverTimestampBehavior) {
-    query_ = query;
+    query_ = std::move(query);
     includeMetadataChanges_ = includeMetadataChanges;
     serverTimestampBehavior_ = serverTimestampBehavior;
   }
@@ -1104,9 +1154,11 @@ class QuerySnapshotStreamHandler
                                            ? MetadataChanges::kInclude
                                            : MetadataChanges::kExclude;
 
+    events_ = std::move(events);
+
       listener_ = query_->AddSnapshotListener(
         metadataChanges,
-        [&events,
+        [this,
          serverTimestampBehavior = serverTimestampBehavior_,
                           metadataChanges](
             const firebase::firestore::QuerySnapshot& snapshot,
@@ -1115,11 +1167,8 @@ class QuerySnapshotStreamHandler
           if (error == firebase::firestore::kErrorOk) {
             flutter::EncodableList toListResult(
                 3); 
-            std::vector<flutter::EncodableValue> documents(
-                snapshot.documents().size());
-            std::vector<flutter::EncodableValue> documentChanges(
-                snapshot.DocumentChanges(metadataChanges)
-                    .size());
+            std::vector<flutter::EncodableValue> documents;
+            std::vector<flutter::EncodableValue> documentChanges;
 
             for (const auto& documentSnapshot : snapshot.documents()) {
               documents.push_back(ParseDocumentSnapshot(
@@ -1143,9 +1192,9 @@ class QuerySnapshotStreamHandler
                                   snapshot.metadata())
                                   .ToEncodableList();
 
-            events->Success(toListResult);
+            events_->Success(toListResult);
           } else {
-            events->Error("Error parsing QuerySnapshot");
+            events_->Error("Error parsing QuerySnapshot");
           } 
       });
     return nullptr;
@@ -1159,7 +1208,8 @@ class QuerySnapshotStreamHandler
 
  private:
   ListenerRegistration listener_;
-  Query* query_;
+  std::unique_ptr<Query> query_;
+  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events_;
   bool includeMetadataChanges_;
   firebase::firestore::DocumentSnapshot::ServerTimestampBehavior serverTimestampBehavior_;
 };
@@ -1170,12 +1220,15 @@ void CloudFirestorePlugin::QuerySnapshot(
     const PigeonGetOptions& options, bool include_metadata_changes,
     std::function<void(ErrorOr<std::string> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
-  Query query = ParseQuery(firestore, path, is_collection_group, parameters);
+  std::unique_ptr<Query> query_ptr = std::make_unique<Query>(
+      ParseQuery(firestore, path, is_collection_group, parameters));
 
-    auto query_snapshot_handler =
-      std::make_unique<QuerySnapshotStreamHandler>(&query, include_metadata_changes, GetServerTimestampBehaviorFromPigeon(options.server_timestamp_behavior()));
+  auto query_snapshot_handler = std::make_unique<QuerySnapshotStreamHandler>(
+      std::move(query_ptr), include_metadata_changes,
+      GetServerTimestampBehaviorFromPigeon(
+          options.server_timestamp_behavior()));
 
-  std::string channelName = RegisterEventChannel(METHOD_CHANNEL_NAME, std::move(query_snapshot_handler));
+  std::string channelName = RegisterEventChannel("plugins.flutter.io/firebase_firestore/query/", std::move(query_snapshot_handler));
 
   result(channelName);
 }

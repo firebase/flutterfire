@@ -17,18 +17,10 @@ using firebase::firestore::FieldPath;
 using firebase::firestore::GeoPoint;
 using firebase::firestore::DocumentReference;
 using firebase::firestore::Firestore;
-using firebase::firestore::Blob;
 
 using flutter::EncodableValue;
 using flutter::CustomEncodableValue;
 
-using flutter::StandardCodecSerializer::WriteLong;
-using flutter::StandardCodecSerializer::WriteDouble;
-using flutter::StandardCodecSerializer::WriteInt;
-using flutter::StandardCodecSerializer::WriteAlignement;
-using flutter::StandardCodecSerializer::WriteString;
-using flutter::StandardCodecSerializer::WriteValue;
-using flutter::StandardCodecSerializer::WriteBytes;
 
 cloud_firestore_windows::FirestoreCodec::FirestoreCodec() {}
 
@@ -38,40 +30,39 @@ void cloud_firestore_windows::FirestoreCodec::WriteValue(
 
   if (std::holds_alternative<CustomEncodableValue>(value)) {
     const CustomEncodableValue& custom_value = std::get<CustomEncodableValue>(value);
-    if (custom_value->type() == typeid(Timestamp)) {
+    if (custom_value.type() == typeid(Timestamp)) {
       const Timestamp& timestamp = std::any_cast<Timestamp>(custom_value);
       stream->WriteByte(DATA_TYPE_TIMESTAMP);
-      WriteLong(stream, timestamp.seconds());
-      WriteInt(stream, timestamp.nano_seconds());
-    } else if (custom_value->type() == typeid(GeoPoint)) {
+      stream->WriteInt64(timestamp.seconds());
+      stream->WriteInt32(timestamp.nanoseconds());
+    } else if (custom_value.type() == typeid(GeoPoint)) {
       const GeoPoint& geopoint = std::any_cast<GeoPoint>(custom_value);
       stream->WriteByte(DATA_TYPE_GEO_POINT);
-      WriteAlignement(stream, 8);
-      WriteDouble(stream, geopoint.latitude());
-      WriteDouble(stream, geopoint.longitude());
-    } else if (custom_value->type() == typeid(DocumentReference)) {
+      stream->WriteAlignment(8);
+      flutter::StandardCodecSerializer::WriteValue(geopoint.latitude(), stream);
+      flutter::StandardCodecSerializer::WriteValue(geopoint.longitude(),
+                                                   stream);
+    } else if (custom_value.type() == typeid(DocumentReference)) {
       const DocumentReference& reference = std::any_cast<DocumentReference>(custom_value);
       stream->WriteByte(DATA_TYPE_DOCUMENT_REFERENCE);
-      Firestore* firestore = reference.firestore();
-      std::string appName = firestore.app().name();
-      WriteValue(stream, appName)
-      WriteValue(stream, reference.path());
-      WriteValue(std::nullopt);
-    } else if (custom_value->type() == typeid(Blob)) {
-      const Blob& blob = std::any_cast<Blob>(custom_value);
-      stream->WriteByte(DATA_TYPE_BLOB);
-      WriteBytes(stream, blob.bytes());
-    } else if (custom_value->type() == typeid(Double)) {
-      const Double& double = std::any_cast<Double>(custom_value);
-      if (Double.isNaN(double)) {
-        stream->WriteByte(DATA_TYPE_NAN);
-      } else if (double == std::numeric_limits<double>::infinity()) {
-        stream->WriteByte(DATA_TYPE_INFINITY);
-      } else if (double == -std::numeric_limits<double>::infinity()) {
-        stream->WriteByte(DATA_TYPE_NEGATIVE_INFINITY);
-      } else {
-        flutter::StandardCodecSerializer::WriteValue(value, stream);
-      }
+      const Firestore* firestore = reference.firestore();
+      std::string appName = firestore->app()->name();
+      flutter::StandardCodecSerializer::WriteValue(appName, stream);
+          flutter::StandardCodecSerializer::WriteValue(
+                                                       reference.path(), stream);
+      flutter::StandardCodecSerializer::WriteValue(nullptr, stream);
+    } else if (custom_value.type() ==
+        typeid(double)) {  // Assuming Double is standard C++ double
+          const double& myDouble = std::any_cast<double>(custom_value);
+          if (std::isnan(myDouble)) {
+            stream->WriteByte(DATA_TYPE_NAN);
+          } else if (myDouble == std::numeric_limits<double>::infinity()) {
+            stream->WriteByte(DATA_TYPE_INFINITY);
+          } else if (myDouble == -std::numeric_limits<double>::infinity()) {
+            stream->WriteByte(DATA_TYPE_NEGATIVE_INFINITY);
+          } else {
+            flutter::StandardCodecSerializer::WriteValue(custom_value, stream);
+          }
     }
   } else {
     flutter::StandardCodecSerializer::WriteValue(value, stream);
