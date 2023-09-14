@@ -229,7 +229,7 @@ abstract class QueryPlatform extends PlatformInterface {
     throw UnimplementedError('where() is not implemented');
   }
 
-  QueryPlatform whereFilter(Filter filter) {
+  QueryPlatform whereFilter(FilterPlatformInterface filter) {
     throw UnimplementedError('whereFilter() is not implemented');
   }
 
