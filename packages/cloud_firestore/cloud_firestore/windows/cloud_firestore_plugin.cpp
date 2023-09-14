@@ -18,6 +18,8 @@
 #include <flutter/event_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
+#include <condition_variable>
+#include <mutex>
 
 #include <memory>
 #include <sstream>
@@ -61,6 +63,8 @@ std::map<std::string,
     cloud_firestore_windows::CloudFirestorePlugin::transaction_handlers_;
 std::map<std::string, std::shared_ptr<firebase::firestore::Transaction>>
     cloud_firestore_windows::CloudFirestorePlugin::transactions_;
+std::map<std::string, firebase::firestore::Firestore*>
+    cloud_firestore_windows::CloudFirestorePlugin::firestoreInstances_;
 
  
 
@@ -120,6 +124,11 @@ Firestore* GetFirestoreFromPigeon(const PigeonFirebaseApp& pigeonApp) {
   App* app = App::Create(options, pigeonApp.app_name().c_str());
 
   Firestore* firestore = Firestore::GetInstance(app);
+
+  if (CloudFirestorePlugin::firestoreInstances_.find(pigeonApp.app_name()) ==
+      CloudFirestorePlugin::firestoreInstances_.end()) {
+    CloudFirestorePlugin::firestoreInstances_[pigeonApp.app_name()] = firestore;
+  }
 
   return firestore;
 }
@@ -581,20 +590,24 @@ void CloudFirestorePlugin::SnapshotsInSyncSetup(
 class TransactionStreamHandler
     : public flutter::StreamHandler<flutter::EncodableValue> {
  public:
-  TransactionStreamHandler(Firestore* firestore,
-                           long timeout, int maxAttempts,
-                           std::string transactionId) {
-    firestore_ = firestore;
-    timeout_ = timeout;
-    maxAttempts_ = maxAttempts;
-    transactionId_ = transactionId;
+  TransactionStreamHandler(Firestore* firestore, long timeout, int maxAttempts,
+                           std::string transactionId)
+      : firestore_(firestore),
+        timeout_(timeout),
+        maxAttempts_(maxAttempts),
+        transactionId_(transactionId),
+        commands_(nullptr) {  // Initializing all member variables
   }
 
   void ReceiveTransactionResponse(
-    PigeonTransactionResult resultType,
-    std::vector<PigeonTransactionCommand>* commands) {
+      PigeonTransactionResult resultType,
+      std::vector<PigeonTransactionCommand>* commands) {
     resultType_ = resultType;
-  commands_ = commands;
+    commands_ = std::move(commands);
+
+    std::unique_lock<std::mutex> lock(mtx_);
+    transactionProcessed_ = true;
+    cv_.notify_one();  // Signal that transaction response has been processed.
   }
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
@@ -602,22 +615,48 @@ class TransactionStreamHandler
       const flutter::EncodableValue* arguments,
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
-    TransactionOptions transaction_options;
-    transaction_options.set_max_attempts(
-        maxAttempts_);
 
-    firestore_->RunTransaction(
+    events_ = std::move(events);
+
+    // Configure the Firestore transaction options
+    TransactionOptions transaction_options;
+    transaction_options.set_max_attempts(maxAttempts_);
+
+
+    firestore_
+        ->RunTransaction(
        transaction_options,
-            [commands = commands_, firestore = firestore_,
-             transactionId = transactionId_](
-                Transaction& transaction,
-                                   std::string& str) -> Error {
-              auto noopDeleter = [](Transaction*) {};
-              std::shared_ptr<Transaction> ptr(&transaction, noopDeleter);
-              CloudFirestorePlugin::transactions_[transactionId] = std::move(ptr);
-              for (PigeonTransactionCommand& command : *commands) {
-                DocumentReference reference =
-                    firestore->Document(command.path());
+            [this, firestore = firestore_,
+      transactionId = transactionId_](
+        Transaction& transaction,
+                            std::string& str) -> Error {
+      auto noopDeleter = [](Transaction*) {};
+      std::shared_ptr<Transaction> ptr(&transaction, noopDeleter);
+      CloudFirestorePlugin::transactions_[transactionId] = std::move(ptr);
+
+          // Send the initial event indicating the transaction attempt
+      flutter::EncodableMap attemptMap;
+      attemptMap.insert(
+          std::make_pair(flutter::EncodableValue("appName"),
+                         flutter::EncodableValue(firestore_->app()->name())));
+      events_->Success(attemptMap);
+
+      {
+        std::unique_lock<std::mutex> lock(mtx_);
+        if (!cv_.wait_for(lock, std::chrono::milliseconds(timeout_),
+                          [this]() { return transactionProcessed_; })) {
+          // Handle the timeout situation.
+          events_->Error("transaction_timeout", "The transaction timed out.");
+          events_->EndOfStream();
+          return Error::kErrorDeadlineExceeded;
+        }
+      }
+
+
+
+      for (PigeonTransactionCommand& command : *commands_) {
+        DocumentReference reference =
+            firestore->Document(command.path());
 
         switch (command.type()) {
           case PigeonTransactionType::set:
@@ -647,18 +686,18 @@ class TransactionStreamHandler
       }
       return Error::kErrorOk;
             })
-        .OnCompletion([this, &events](
+        .OnCompletion([this](
                           const Future<void>& completed_future) {
           flutter::EncodableMap result;
         if (completed_future.error() == firebase::firestore::kErrorOk) {
             result.insert(std::make_pair(flutter::EncodableValue("complete"),
                                                       flutter::EncodableValue(true)));
-          events->Success(result);
+          events_->Success(result);
         }
         else {
-        events->Error("transaction_error", completed_future.error_message());
+        events_->Error("transaction_error", completed_future.error_message());
       }
-        events->EndOfStream();
+        events_->EndOfStream();
     });
 
     return nullptr;
@@ -666,6 +705,9 @@ class TransactionStreamHandler
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    std::unique_lock<std::mutex> lock(mtx_);
+    transactionProcessed_ = true;
+    cv_.notify_one();  // Signal that transaction response has been processed.
     return nullptr;
   }
 
@@ -676,6 +718,10 @@ class TransactionStreamHandler
   PigeonTransactionResult resultType_;
   long timeout_;
   int maxAttempts_;
+  std::mutex mtx_;
+  std::condition_variable cv_;
+  bool transactionProcessed_ = false;
+  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events_ = nullptr;
 };
 
 void CloudFirestorePlugin::TransactionCreate(

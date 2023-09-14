@@ -122,6 +122,10 @@ class CloudFirestorePlugin : public flutter::Plugin,
       transaction_handlers_;
   static std::map<std::string, std::shared_ptr<firebase::firestore::Transaction>>
       transactions_;
+  static std::map<std::string,
+                  firebase::firestore::Firestore*>
+      firestoreInstances_;
+
 
 
   private:

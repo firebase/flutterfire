@@ -1,10 +1,12 @@
 #include "firestore_codec.h"
 
+#include "firebase/app.h"
 #include "firebase/firestore/field_value.h"
 #include "firebase/firestore/timestamp.h"
 #include "firebase/firestore/field_path.h"
 #include "firebase/firestore/geo_point.h"
 #include "firebase/firestore.h"
+#include "cloud_firestore_plugin.h"
 
 #include <map>
 #include <optional>
@@ -165,18 +167,42 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
       return CustomEncodableValue(FieldPath::DocumentId());
     }
 
-    //case DATA_TYPE_FIRESTORE_INSTANCE: {
-    //  return CustomEncodableValue(ReadFirestoreInstance(stream));
-    //}
+    case DATA_TYPE_FIRESTORE_INSTANCE: {
+      std::string appName = std::get<std::string>(FirestoreCodec::ReadValue(stream));
+      std::string databaseUrl = std::get<std::string>(FirestoreCodec::ReadValue(stream));
+      const firebase::firestore::Settings& settings =
+          std::any_cast<firebase::firestore::Settings>(
+              std::get<CustomEncodableValue>(
+              FirestoreCodec::ReadValue(stream)));
+
+      // Print out the settings
+      std::cout << "Host: " << settings.host() << std::endl;
+
+      if (CloudFirestorePlugin::firestoreInstances_[appName] != nullptr) {
+          return CustomEncodableValue(CloudFirestorePlugin::firestoreInstances_[appName]);
+      }
+
+        firebase::AppOptions options;
+
+      options.set_database_url(databaseUrl.c_str());
+
+      firebase::App* app =
+          firebase::App::Create(options, appName.c_str());
+
+      Firestore* firestore = Firestore::GetInstance(app);
+
+      return CustomEncodableValue(firestore);
+    }
 
     //case DATA_TYPE_FIRESTORE_QUERY: {
     //  return CustomEncodableValue(ReadFirestoreQuery(stream));
     //}
 
-    //case DATA_TYPE_FIRESTORE_SETTINGS: {
-    //  // Similar logic to read Firestore settings
-    //  return CustomEncodableValue(ReadFirestoreSettings(stream));
-    //}
+    case DATA_TYPE_FIRESTORE_SETTINGS: {
+      flutter::EncodableMap settingsMap =
+          std::get<flutter::EncodableMap>(FirestoreCodec::ReadValue(stream));
+      return CustomEncodableValue(firebase::firestore::Settings());
+    }
 
     case DATA_TYPE_NAN: {
       return CustomEncodableValue(std::nan(""));
