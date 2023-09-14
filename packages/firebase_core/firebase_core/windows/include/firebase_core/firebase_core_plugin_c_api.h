@@ -31,8 +31,4 @@ FLUTTER_PLUGIN_EXPORT void* GetFirebaseRemoteConfig(std::string appName);
 FLUTTER_PLUGIN_EXPORT void* GetFirebaseStorage(std::string appName,
                                                std::string path);
 
-#if defined(__cplusplus)
-}  // extern "C"
-#endif
-
 #endif  // FLUTTER_PLUGIN_FIREBASE_CORE_PLUGIN_C_API_H_

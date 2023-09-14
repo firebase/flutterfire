@@ -59,7 +59,7 @@ apply_standard_settings(flutter_wrapper_plugin)
 set_target_properties(flutter_wrapper_plugin PROPERTIES
   POSITION_INDEPENDENT_CODE ON)
 set_target_properties(flutter_wrapper_plugin PROPERTIES
-  CXX_VISIBILITY_PRESET hidden)
+  CXX_VISIBILITY_PRESET default)
 target_link_libraries(flutter_wrapper_plugin PUBLIC flutter)
 target_include_directories(flutter_wrapper_plugin PUBLIC
   "${WRAPPER_ROOT}/include"

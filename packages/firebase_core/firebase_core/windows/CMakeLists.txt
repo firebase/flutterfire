@@ -4,7 +4,7 @@
 # customers of the plugin.
 cmake_minimum_required(VERSION 3.14)
 
-set(FIREBASE_SDK_VERSION "11.4.2")
+set(FIREBASE_SDK_VERSION "11.4.0")
 
 if (EXISTS $ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h)
     file(READ "$ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h" existing_version)
@@ -81,8 +81,8 @@ apply_standard_settings(${PLUGIN_NAME})
 # between plugins. This should not be removed; any symbols that should be
 # exported should be explicitly exported with the FLUTTER_PLUGIN_EXPORT macro.
 set_target_properties(${PLUGIN_NAME} PROPERTIES
-  CXX_VISIBILITY_PRESET hidden)
-target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
+  CXX_VISIBILITY_PRESET default)
+target_compile_definitions(${PLUGIN_NAME} PUBLIC FLUTTER_PLUGIN_IMPL)
 
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.
@@ -90,7 +90,7 @@ set(MSVC_RUNTIME_MODE MD)
 add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${FIREBASE_CPP_SDK_DIR}/include")
-set(FIREBASE_LIBS firebase_app firebase_auth firebase_remote_config firebase_storage)
+set(FIREBASE_LIBS firebase_app) # firebase_auth firebase_remote_config firebase_storage)
 foreach(firebase_lib IN ITEMS ${FIREBASE_LIBS})
     get_target_property(firebase_lib_path ${firebase_lib} IMPORTED_LOCATION)
     string(REPLACE "Debug" "Release" firebase_lib_release_path ${firebase_lib_path})
@@ -102,11 +102,11 @@ endforeach()
 
 set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32 icu)
 
-target_link_libraries(${PLUGIN_NAME} PRIVATE "${FIREBASE_LIBS}" "${ADDITIONAL_LIBS}")
+target_link_libraries(${PLUGIN_NAME} PUBLIC "${FIREBASE_LIBS}" "${ADDITIONAL_LIBS}")
 
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
-target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
+target_link_libraries(${PLUGIN_NAME} PUBLIC flutter flutter_wrapper_plugin)
 
 # List of absolute paths to libraries that should be bundled with the plugin.
 # This list could contain prebuilt libraries, or libraries created by an

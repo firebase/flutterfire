@@ -147,6 +147,7 @@ void FirebaseCorePlugin::InitializeApp(
     const std::string &app_name,
     const PigeonFirebaseOptions &initialize_app_request,
     std::function<void(ErrorOr<PigeonInitializeResponse> reply)> result) {
+  std::cout << "FirebaseCorePlugin::InitializeApp()" << std::endl;
   // Create an app
   App *app =
       App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
