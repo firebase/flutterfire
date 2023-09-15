@@ -19,6 +19,8 @@
 #include "firebase_core/firebase_core_plugin_c_api.h"
 #include "messages.g.h"
 
+// For getPlatformVersion; remove unless needed for your plugin implementation.
+#include <VersionHelpers.h>
 #include <flutter/event_channel.h>
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
@@ -59,15 +61,7 @@ FirebaseAuthPlugin::FirebaseAuthPlugin() {
 FirebaseAuthPlugin::~FirebaseAuthPlugin() = default;
 
 Auth* GetAuthFromPigeon(const PigeonFirebaseApp& pigeonApp) {
-  std::vector<std::string> app_vector = GetFirebaseApp(pigeonApp.app_name());
-  firebase::AppOptions options;
-
-  options.set_api_key(app_vector[1].c_str());
-  options.set_app_id(app_vector[2].c_str());
-  options.set_database_url(app_vector[3].c_str());
-  options.set_project_id(app_vector[4].c_str());
-
-  App* app = App::Create(options, pigeonApp.app_name().c_str());
+  App* app = App::GetInstance(pigeonApp.app_name().c_str());
 
   Auth* auth = Auth::GetAuth(app);
 

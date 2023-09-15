@@ -24,7 +24,7 @@ list(APPEND PLUGIN_SOURCES
 
 # Define the plugin library target. Its name must not be changed (see comment
 # on PLUGIN_NAME above).
-add_library(${PLUGIN_NAME} SHARED
+add_library(${PLUGIN_NAME} STATIC
   "include/cloud_firestore/cloud_firestore_plugin_c_api.h"
   "cloud_firestore_plugin_c_api.cpp"
   ${PLUGIN_SOURCES}
@@ -40,12 +40,12 @@ apply_standard_settings(${PLUGIN_NAME})
 # exported should be explicitly exported with the FLUTTER_PLUGIN_EXPORT macro.
 set_target_properties(${PLUGIN_NAME} PROPERTIES
   CXX_VISIBILITY_PRESET hidden)
-target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
+target_compile_definitions(${PLUGIN_NAME} PUBLIC FLUTTER_PLUGIN_IMPL)
 
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.
 set(MSVC_RUNTIME_MODE MD)
-set(firebase_libs firebase_core_plugin firebase_auth firebase_firestore firebase_app)
+set(firebase_libs firebase_core_plugin firebase_auth firebase_firestore)
 set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32 shell32 Bcrypt.lib DbgHelp.lib)
 target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}" "${ADDITIONAL_LIBS}")
 
