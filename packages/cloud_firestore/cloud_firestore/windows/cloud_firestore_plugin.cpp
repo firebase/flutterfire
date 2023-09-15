@@ -655,11 +655,22 @@ class TransactionStreamHandler
 
 
       for (PigeonTransactionCommand& command : *commands_) {
-        DocumentReference reference =
-            firestore->Document(command.path());
+        std::string path = command.path();
+        PigeonTransactionType type = command.type();
+        if (path.empty() /* or some other invalid condition */) {
+          std::cerr << "Path is invalid: " << path << std::endl;
+          continue;  // Skip this iteration.
+        }
 
-        switch (command.type()) {
+        std::cout << "Before: " << path << std::endl;  // Debug print.
+
+        DocumentReference reference = firestore->Document(path);
+        std::cout << "After: " << command.path() << std::endl;  // debug print
+
+        switch (type) {
           case PigeonTransactionType::set:
+            std::cout << "Transaction set" << path << std::endl;  // Debug print.
+
                     if (command.option()->merge() != nullptr &&
                 command.option()->merge()) {
                       transaction.Set(reference,
@@ -677,9 +688,15 @@ class TransactionStreamHandler
 
             break;
           case PigeonTransactionType::update:
+            std::cout << "Transaction update" << path
+                      << std::endl;  // Debug print.
+
             transaction.Update(reference, ConvertToMapFieldValue(*command.data()));
             break;
           case PigeonTransactionType::deleteType:
+            std::cout << "Transaction delete" << path
+                      << std::endl;  // Debug print.
+
             transaction.Delete(reference);
             break;
         }
@@ -725,9 +742,7 @@ class TransactionStreamHandler
 };
 
 void CloudFirestorePlugin::TransactionCreate(
-    const PigeonFirebaseApp& app,
-    int64_t timeout,
-    int64_t max_attempts,
+    const PigeonFirebaseApp& app, int64_t timeout, int64_t max_attempts,
     std::function<void(ErrorOr<std::string> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
 
@@ -737,21 +752,21 @@ void CloudFirestorePlugin::TransactionCreate(
   UuidToStringA(&uuid, (RPC_CSTR*)&str);
   std::string transactionId(str);
 
-
-      auto handler =
-        std::make_unique<TransactionStreamHandler>(
-      firestore, static_cast<long>(timeout),
-      static_cast<int>(max_attempts),
+  auto handler = std::make_unique<TransactionStreamHandler>(
+      firestore, static_cast<long>(timeout), static_cast<int>(max_attempts),
       transactionId);
 
+  // Temporarily release the ownership.
+  TransactionStreamHandler* raw_handler = handler.release();
+  CloudFirestorePlugin::transaction_handlers_[transactionId] =
+      std::unique_ptr<TransactionStreamHandler>(raw_handler);
 
+  // Register the event channel.
   std::string channelName = RegisterEventChannelWithUUID(
       "plugins.flutter.io/firebase_firestore/transaction/", transactionId,
-      std::move(handler));
+      std::unique_ptr<TransactionStreamHandler>(raw_handler));
 
-  CloudFirestorePlugin::transaction_handlers_[channelName] =
-      std::move(handler);
-
+  // Return the result (assumed to be transaction ID in this example).
   result(transactionId);
 }
 
@@ -762,19 +777,24 @@ void CloudFirestorePlugin::TransactionStoreResult(
     const PigeonTransactionResult& result_type,
     const flutter::EncodableList* commands,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  TransactionStreamHandler& handler = *static_cast<TransactionStreamHandler*>(
-      CloudFirestorePlugin::transaction_handlers_[transaction_id].get());
 
-  // Convert Flutter EncodableList to std::vector<PigeonTransactionCommand>
-  std::vector<PigeonTransactionCommand> commandVector;
-  for (const auto& element : *commands) {
-    const PigeonTransactionCommand& command =
-        std::any_cast<PigeonTransactionCommand>(
-            std::get<CustomEncodableValue>(element));
-    commandVector.push_back(command);
+  if (CloudFirestorePlugin::transaction_handlers_[transaction_id]) {
+    TransactionStreamHandler& handler = *static_cast<TransactionStreamHandler*>(
+        CloudFirestorePlugin::transaction_handlers_[transaction_id].get());
+    std::vector<PigeonTransactionCommand> commandVector;
+    for (const auto& element : *commands) {
+      const PigeonTransactionCommand& command =
+          std::any_cast<PigeonTransactionCommand>(
+              std::get<CustomEncodableValue>(element));
+      commandVector.push_back(command);
+    }
+    handler.ReceiveTransactionResponse(result_type, &commandVector);
+    result(std::nullopt);
+
+  } else {
+    result(std::make_optional(FlutterError(
+        "transaction_not_found", "Transaction not found", transaction_id)));
   }
-  handler.ReceiveTransactionResponse(result_type, &commandVector);
-  result(std::nullopt);
 }
 
 void CloudFirestorePlugin::TransactionGet(
