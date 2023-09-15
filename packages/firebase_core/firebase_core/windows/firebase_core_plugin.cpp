@@ -8,8 +8,6 @@
 #include <windows.h>
 
 #include "firebase/app.h"
-#include "firebase/auth.h"
-#include "firebase/remote_config.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -28,8 +26,6 @@
 #include <vector>
 
 using ::firebase::App;
-using ::firebase::auth::Auth;
-using ::firebase::remote_config::RemoteConfig;
 
 namespace firebase_core_windows {
 
@@ -45,35 +41,6 @@ void FirebaseCorePlugin::RegisterWithRegistrar(
 }
 
 std::map<std::string, std::vector<std::string>> apps;
-
-std::vector<std::string> FirebaseCorePlugin::GetFirebaseApp(
-    std::string appName) {
-  auto app_it = apps.find(appName);
-
-  // If the app is already in the map, return the stored shared_ptr
-  if (app_it != apps.end()) {
-    return app_it->second;
-  }
-
-  std::vector<std::string> app_vector;
-  return app_vector;
-}
-
-void *FirebaseCorePlugin::GetFirebaseAuth(std::string appName) {
-  App *app = App::GetInstance(appName.c_str());
-  if (app == nullptr) {
-    return nullptr;
-  }
-  return Auth::GetAuth(app);
-}
-
-void *FirebaseCorePlugin::GetFirebaseRemoteConfig(std::string appName) {
-  App *app = App::GetInstance(appName.c_str());
-  if (app == nullptr) {
-    return nullptr;
-  }
-  return RemoteConfig::GetInstance(app);
-}
 
 FirebaseCorePlugin::FirebaseCorePlugin() {}
 
