@@ -595,6 +595,7 @@ class TransactionStreamHandler
   void ReceiveTransactionResponse(
       PigeonTransactionResult resultType,
       std::vector<PigeonTransactionCommand>* commands) {
+    std::lock_guard<std::mutex> lockCommand(commands_mutex_);
     resultType_ = resultType;
     commands_ = std::move(commands);
 
@@ -643,6 +644,11 @@ class TransactionStreamHandler
         }
       }
 
+      std::unique_lock<std::mutex> lock(commands_mutex_);
+      if (commands_ == nullptr) {
+        std::cerr << "Commands pointer is null." << std::endl;
+        return Error::kErrorInternal;
+      }
 
 
       for (PigeonTransactionCommand& command : *commands_) {
@@ -726,6 +732,7 @@ class TransactionStreamHandler
   long timeout_;
   int maxAttempts_;
   std::mutex mtx_;
+  std::mutex commands_mutex_;
   std::condition_variable cv_;
   bool transactionProcessed_ = false;
   std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events_ =
