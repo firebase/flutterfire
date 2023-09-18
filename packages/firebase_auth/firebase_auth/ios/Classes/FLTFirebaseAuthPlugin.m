@@ -1049,7 +1049,11 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                           if (error != nil) {
                             completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
                           } else {
-                            completion(providers, nil);
+                            if (providers == nil) {
+                              completion(@[], nil);
+                            } else {
+                              completion(providers, nil);
+                            }
                           }
                         }];
 }
