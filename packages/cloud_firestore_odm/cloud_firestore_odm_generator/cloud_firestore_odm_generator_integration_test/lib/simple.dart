@@ -81,9 +81,6 @@ class Nested {
 @Collection<Nested>('nested')
 final nestedRef = NestedCollectionReference();
 
-@Collection<SplitFileModel>('split-file')
-final splitFileRef = SplitFileModelCollectionReference();
-
 @JsonSerializable()
 class EmptyModel {
   EmptyModel();
