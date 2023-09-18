@@ -71,7 +71,7 @@ static NSCache<NSNumber *, NSString *> *_serverTimestampMap;
 
 FlutterStandardMethodCodec *_codec;
 
-+ (NSMutableDictionary<NSNumber *, NSString *> *)serverTimestampMap {
++ (NSCache<NSNumber *, NSString *> *)serverTimestampMap {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     _serverTimestampMap = [NSCache<NSNumber *, NSString *> new];
