@@ -8,9 +8,6 @@
 #include <windows.h>
 
 #include "firebase/app.h"
-#include "firebase/auth.h"
-#include "firebase/remote_config.h"
-#include "firebase/storage.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -29,9 +26,6 @@
 #include <vector>
 
 using ::firebase::App;
-using ::firebase::auth::Auth;
-using ::firebase::remote_config::RemoteConfig;
-using ::firebase::storage::Storage;
 
 namespace firebase_core_windows {
 
@@ -47,49 +41,6 @@ void FirebaseCorePlugin::RegisterWithRegistrar(
 }
 
 std::map<std::string, std::vector<std::string>> apps;
-
-std::vector<std::string> FirebaseCorePlugin::GetFirebaseApp(
-    std::string appName) {
-  auto app_it = apps.find(appName);
-
-  // If the app is already in the map, return the stored shared_ptr
-  if (app_it != apps.end()) {
-    return app_it->second;
-  }
-
-  std::vector<std::string> app_vector;
-  return app_vector;
-}
-
-void *FirebaseCorePlugin::GetFirebaseAuth(std::string appName) {
-  App *app = App::GetInstance(appName.c_str());
-  if (app == nullptr) {
-    return nullptr;
-  }
-  return Auth::GetAuth(app);
-}
-
-void *FirebaseCorePlugin::GetFirebaseRemoteConfig(std::string appName) {
-  App *app = App::GetInstance(appName.c_str());
-  if (app == nullptr) {
-    return nullptr;
-  }
-  return RemoteConfig::GetInstance(app);
-}
-
-void *FirebaseCorePlugin::GetFirebaseStorage(std::string appName,
-                                             std::string path) {
-  App *app = App::GetInstance(appName.c_str());
-  if (app == nullptr) {
-    return nullptr;
-  }
-  return Storage::GetInstance(app);
-  // if (path.empty()) {
-  //   return Storage::GetInstance(app);
-  // } else {
-  //   return Storage::GetInstance(app, path.c_str(), nullptr);
-  // }
-}
 
 FirebaseCorePlugin::FirebaseCorePlugin() {}
 
