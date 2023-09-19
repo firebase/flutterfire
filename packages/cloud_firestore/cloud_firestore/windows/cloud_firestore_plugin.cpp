@@ -300,6 +300,8 @@ firebase::firestore::FieldValue ConvertToFieldValue(
     const EncodableValue& variant) {
   if (std::holds_alternative<bool>(variant)) {
     return firebase::firestore::FieldValue::Boolean(std::get<bool>(variant));
+  } else if (std::holds_alternative<int32_t>(variant)) {
+    return firebase::firestore::FieldValue::Integer(std::get<int32_t>(variant));
   } else if (std::holds_alternative<int64_t>(variant)) {
     return firebase::firestore::FieldValue::Integer(std::get<int64_t>(variant));
   } else if (std::holds_alternative<double>(variant)) {
@@ -588,20 +590,15 @@ class TransactionStreamHandler
       : firestore_(firestore),
         timeout_(timeout),
         maxAttempts_(maxAttempts),
-        transactionId_(transactionId),
-        commands_(nullptr) {  // Initializing all member variables
-  }
+        transactionId_(transactionId) {}
 
   void ReceiveTransactionResponse(
       PigeonTransactionResult resultType,
-      std::vector<PigeonTransactionCommand>* commands) {
-    std::lock_guard<std::mutex> lockCommand(commands_mutex_);
+      std::vector<PigeonTransactionCommand> commands) {
+    std::lock_guard<std::mutex> lock(commands_mutex_);
     resultType_ = resultType;
-    commands_ = std::move(commands);
-
-    std::unique_lock<std::mutex> lock(mtx_);
-    transactionProcessed_ = true;
-    cv_.notify_one();  // Signal that transaction response has been processed.
+    commands_ = commands;
+    cv_.notify_one();
   }
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
@@ -610,48 +607,34 @@ class TransactionStreamHandler
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
     events_ = std::move(events);
-
-    // Configure the Firestore transaction options
-    TransactionOptions transaction_options;
-    transaction_options.set_max_attempts(maxAttempts_);
+    TransactionOptions options;
+    options.set_max_attempts(maxAttempts_);
 
     firestore_
         ->RunTransaction(
-       transaction_options,
-            [this, firestore = firestore_,
-      transactionId = transactionId_](
-        Transaction& transaction,
-                            std::string& str) -> Error {
-      auto noopDeleter = [](Transaction*) {};
+            options,
+            [this](Transaction& transaction, std::string& str) -> Error {
+                    auto noopDeleter = [](Transaction*) {};
       std::shared_ptr<Transaction> ptr(&transaction, noopDeleter);
-      CloudFirestorePlugin::transactions_[transactionId] = std::move(ptr);
+      CloudFirestorePlugin::transactions_[transactionId_] = std::move(ptr);
 
-          // Send the initial event indicating the transaction attempt
-      flutter::EncodableMap attemptMap;
-      attemptMap.insert(
-          std::make_pair(flutter::EncodableValue("appName"),
-                         flutter::EncodableValue(firestore_->app()->name())));
-      events_->Success(attemptMap);
+              flutter::EncodableMap map;
+              map.emplace("appName", firestore_->app()->name());
+              events_->Success(flutter::EncodableValue(map));
 
-      {
-        std::unique_lock<std::mutex> lock(mtx_);
-        if (!cv_.wait_for(lock, std::chrono::milliseconds(timeout_),
-                          [this]() { return transactionProcessed_; })) {
-          // Handle the timeout situation.
-          events_->Error("transaction_timeout", "The transaction timed out.");
-          events_->EndOfStream();
-          return Error::kErrorDeadlineExceeded;
-        }
-      }
+              std::unique_lock<std::mutex> lock(mtx_);
+              if (cv_.wait_for(lock, std::chrono::milliseconds(timeout_)) ==
+                  std::cv_status::timeout) {
+                events_->Error("Timeout", "Transaction timed out.");
+                return Error::kErrorDeadlineExceeded;
+              }
 
-      std::unique_lock<std::mutex> lock(commands_mutex_);
-      if (commands_ == nullptr) {
-        std::cerr << "Commands pointer is null." << std::endl;
-        return Error::kErrorInternal;
-      }
+              std::lock_guard<std::mutex> command_lock(commands_mutex_);
+              if (commands_.empty()) return Error::kErrorOk;
 
 
-      for (PigeonTransactionCommand& command : *commands_) {
+
+      for (PigeonTransactionCommand& command : commands_) {
         std::string path = command.path();
         PigeonTransactionType type = command.type();
         if (path.empty() /* or some other invalid condition */) {
@@ -661,7 +644,7 @@ class TransactionStreamHandler
 
         std::cout << "Before: " << path << std::endl;  // Debug print.
 
-        DocumentReference reference = firestore->Document(path);
+        DocumentReference reference = firestore_->Document(path);
         std::cout << "After: " << command.path() << std::endl;  // debug print
 
         switch (type) {
@@ -719,24 +702,21 @@ class TransactionStreamHandler
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
     std::unique_lock<std::mutex> lock(mtx_);
-    transactionProcessed_ = true;
-    cv_.notify_one();  // Signal that transaction response has been processed.
+    cv_.notify_one();
     return nullptr;
   }
 
  private:
   Firestore* firestore_;
-  std::string transactionId_;
-  std::vector<PigeonTransactionCommand>* commands_;
-  PigeonTransactionResult resultType_;
   long timeout_;
   int maxAttempts_;
+  std::string transactionId_;
+  std::vector<PigeonTransactionCommand> commands_;
+  PigeonTransactionResult resultType_;
   std::mutex mtx_;
   std::mutex commands_mutex_;
   std::condition_variable cv_;
-  bool transactionProcessed_ = false;
-  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events_ =
-      nullptr;
+  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events_;
 };
 
 void CloudFirestorePlugin::TransactionCreate(
@@ -786,7 +766,7 @@ void CloudFirestorePlugin::TransactionStoreResult(
               std::get<CustomEncodableValue>(element));
       commandVector.push_back(command);
     }
-    handler.ReceiveTransactionResponse(result_type, &commandVector);
+    handler.ReceiveTransactionResponse(result_type, commandVector);
     result(std::nullopt);
 
   } else {
