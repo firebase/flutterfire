@@ -9,6 +9,7 @@
 
 #include "firebase/app.h"
 #include "firebase/future.h"
+#include "firebase/log.h"
 #include "firebase/storage.h"
 #include "firebase/storage/controller.h"
 #include "firebase/storage/listener.h"
@@ -46,10 +47,15 @@ using flutter::EncodableValue;
 
 namespace firebase_storage_windows {
 
+static std::string kStorageMethodChannelName =
+    "plugins.flutter.io/firebase_storage";
+static std::string kStorageTaskEventName = "taskEvent";
 // static
 void FirebaseStoragePlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows* registrar) {
   auto plugin = std::make_unique<FirebaseStoragePlugin>();
+
+  messenger_ = registrar->messenger();
 
   FirebaseStorageHostApi::SetUp(registrar->messenger(), plugin.get());
 
@@ -57,6 +63,7 @@ void FirebaseStoragePlugin::RegisterWithRegistrar(
             << std::endl;
 
   registrar->AddPlugin(std::move(plugin));
+  firebase::SetLogLevel(firebase::kLogLevelVerbose);
 }
 
 FirebaseStoragePlugin::FirebaseStoragePlugin() {}
@@ -64,9 +71,10 @@ FirebaseStoragePlugin::FirebaseStoragePlugin() {}
 FirebaseStoragePlugin::~FirebaseStoragePlugin() = default;
 
 Storage* GetCPPStorageFromPigeon(const PigeonFirebaseApp& pigeonApp,
-                                 const std::string& path) {
-  void* storage_ptr = GetFirebaseStorage(pigeonApp.app_name(), path);
-  Storage* cpp_storage = static_cast<Storage*>(storage_ptr);
+                                 const std::string& bucket_path) {
+  std::string default_url = std::string("gs://") + bucket_path;
+  App* app = App::GetInstance(pigeonApp.app_name().c_str());
+  Storage* cpp_storage = Storage::GetInstance(app, default_url.c_str());
 
   return cpp_storage;
 }
@@ -78,57 +86,51 @@ StorageReference GetCPPStorageReferenceFromPigeon(
   return cpp_storage->GetReference(pigeonReference.full_path());
 }
 
-// std::map<std::string,
-//          std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>>
-//     event_channels_;
-// std::map<std::string,
-//          std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>>>
-//     stream_handlers_;
+flutter::BinaryMessenger*
+    firebase_storage_windows::FirebaseStoragePlugin::messenger_ = nullptr;
+std::map<std::string,
+         std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>>
+    event_channels_;
+std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
+    stream_handlers_;
 
 std::string RegisterEventChannelWithUUID(
     std::string prefix, std::string uuid,
-    const flutter::StreamHandler<flutter::EncodableValue>& handler) {
-  std::string channelName = prefix + uuid;
-  //   flutter::EventChannel<flutter::EncodableValue>* channel =
-  //       new flutter::EventChannel<flutter::EncodableValue>(
-  //           FirebaseStoragePlugin::messenger_, channelName,
-  //           &flutter::StandardMethodCodec::GetInstance());
+    std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>> handler) {
+  std::string channelName = prefix + "/" + uuid;
 
-  //   event_channels_[channelName] =
-  //       std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(channel);
-  //   stream_handlers_[channelName] =
-  //       std::make_unique<flutter::StreamHandler<flutter::EncodableValue>>(
-  //           handler);
+  event_channels_[channelName] =
+      std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
+          FirebaseStoragePlugin::messenger_, channelName,
+          &flutter::StandardMethodCodec::GetInstance());
+  stream_handlers_[channelName] = std::move(handler);
 
-  //   event_channels_[channelName]->SetStreamHandler(
-  //       std::move(stream_handlers_[channelName]));
+  event_channels_[channelName]->SetStreamHandler(
+      std::move(stream_handlers_[channelName]));
 
-  return channelName;
+  return uuid;
 }
 
 std::string RegisterEventChannel(
-    std::string prefix, const flutter::StreamHandler<EncodableValue>& handler) {
+    std::string prefix,
+    std::unique_ptr<flutter::StreamHandler<EncodableValue>> handler) {
   UUID uuid;
   UuidCreate(&uuid);
   char* str;
   UuidToStringA(&uuid, (RPC_CSTR*)&str);
 
-  std::string channelName = prefix + "_" + str;
-  //   flutter::EventChannel<flutter::EncodableValue>* channel =
-  //       new flutter::EventChannel<flutter::EncodableValue>(
-  //           FirebaseStoragePlugin::messenger_, channelName,
-  //           &flutter::StandardMethodCodec::GetInstance());
+  std::string channelName = prefix + "/" + str;
 
-  //   event_channels_[channelName] =
-  //       std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(channel);
-  //   stream_handlers_[channelName] =
-  //       std::make_unique<flutter::StreamHandler<flutter::EncodableValue>>(
-  //           handler);
+  event_channels_[channelName] =
+      std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
+          FirebaseStoragePlugin::messenger_, channelName,
+          &flutter::StandardMethodCodec::GetInstance());
+  stream_handlers_[channelName] = std::move(handler);
 
-  //   event_channels_[channelName]->SetStreamHandler(
-  //       std::move(stream_handlers_[channelName]));
+  event_channels_[channelName]->SetStreamHandler(
+      std::move(stream_handlers_[channelName]));
 
-  return channelName;
+  return str;
 }
 
 void FirebaseStoragePlugin::GetReferencebyPath(
@@ -246,32 +248,6 @@ void FirebaseStoragePlugin::ReferenceListAll(
   result(pigeon_result);
 }
 
-class TaskStateStreamHandler
-    : public flutter::StreamHandler<flutter::EncodableValue> {
- public:
-  TaskStateStreamHandler(Storage* storage, StorageReference* reference) {
-    storage_ = storage;
-    reference_ = reference;
-  }
-
-  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
-  OnListenInternal(
-      const flutter::EncodableValue* arguments,
-      std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
-      override {
-    return nullptr;
-  }
-
-  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
-  OnCancelInternal(const flutter::EncodableValue* arguments) override {
-    return nullptr;
-  }
-
- private:
-  Storage* storage_;
-  StorageReference* reference_;
-};
-
 void FirebaseStoragePlugin::ReferenceGetData(
     const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
     int64_t max_size,
@@ -295,90 +271,334 @@ void FirebaseStoragePlugin::ReferenceGetData(
   });
 }
 
+std::string kTaskStateName = "taskState";
+std::string kTaskAppName = "appName";
+std::string kTaskSnapshotName = "snapshot";
+std::string kTaskSnapshotPath = "path";
+std::string kTaskSnapshotBytesTransferred = "bytesTransferred";
+std::string kTaskSnapshotTotalBytes = "totalBytes";
+
+class TaskStateListener : public Listener {
+ public:
+  TaskStateListener(flutter::EventSink<flutter::EncodableValue>* events) {
+    events_ = events;
+  }
+  virtual void OnProgress(firebase::storage::Controller* controller) {
+    // A progress event occurred
+    // TODO error handling
+    std::cout << "[C++] TaskStateListener::OnProgress()" << std::endl;
+    flutter::EncodableMap event = flutter::EncodableMap();
+    event[kTaskStateName] = static_cast<int>(PigeonTaskState::running);
+    event[kTaskAppName] = controller->GetReference().storage()->app()->name();
+    flutter::EncodableMap snapshot = flutter::EncodableMap();
+    snapshot[kTaskSnapshotPath] = controller->GetReference().full_path();
+    snapshot[kTaskSnapshotTotalBytes] = controller->total_byte_count();
+    snapshot[kTaskSnapshotBytesTransferred] = controller->bytes_transferred();
+    event[kTaskSnapshotName] = snapshot;
+
+    events_->Success(event);
+  }
+
+  virtual void OnPaused(firebase::storage::Controller* controller) {
+    std::cout << "[C++] TaskStateListener::OnPaused()" << std::endl;
+    // A progress event occurred
+    flutter::EncodableMap event = flutter::EncodableMap();
+    event[kTaskStateName] = static_cast<int>(PigeonTaskState::paused);
+    event[kTaskAppName] = controller->GetReference().storage()->app()->name();
+    flutter::EncodableMap snapshot = flutter::EncodableMap();
+    snapshot[kTaskSnapshotPath] = controller->GetReference().full_path();
+    snapshot[kTaskSnapshotTotalBytes] = controller->total_byte_count();
+    snapshot[kTaskSnapshotBytesTransferred] = controller->bytes_transferred();
+    event[kTaskSnapshotName] = snapshot;
+
+    events_->Success(event);
+  }
+
+  flutter::EventSink<flutter::EncodableValue>* events_;
+};
+
+class PutDataStreamHandler
+    : public flutter::StreamHandler<flutter::EncodableValue> {
+ public:
+  PutDataStreamHandler(Storage* storage, std::string reference_path,
+                       const void* data, size_t buffer_size,
+                       Controller* controller) {
+    storage_ = storage;
+    reference_path_ = reference_path;
+    data_ = data;
+    buffer_size_ = buffer_size;
+    controller_ = controller;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnListenInternal(
+      const flutter::EncodableValue* arguments,
+      std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
+      override {
+    events_ = std::move(events);
+    std::cout << "[C++] PutStringStreamHandler::OnListenInternal() START"
+              << std::endl;
+    TaskStateListener putStringListener = TaskStateListener(events_.get());
+    StorageReference reference = storage_->GetReference(reference_path_);
+    Future<Metadata> future_result = reference.PutBytes(
+        data_, buffer_size_, &putStringListener, controller_);
+    std::cout << "[C++] PutDataStreamHandler::OnListenInternal() after "
+                 "reference putString"
+              << std::endl;
+    future_result.OnCompletion([this](const Future<Metadata>& data_result) {
+      // TODO error handling
+      std::cout << "[C++] PutDataStreamHandler::OnCompletion(), result error:"
+                << data_result.error()
+                << ", error message: " << data_result.error_message()
+                << std::endl;
+      flutter::EncodableMap event = flutter::EncodableMap();
+      event[kTaskStateName] = static_cast<int>(PigeonTaskState::success);
+      event[kTaskAppName] = std::string(storage_->app()->name());
+      flutter::EncodableMap snapshot = flutter::EncodableMap();
+      snapshot[kTaskSnapshotPath] = data_result.result()->path();
+      snapshot[kTaskSnapshotTotalBytes] = data_result.result()->size_bytes();
+      snapshot[kTaskSnapshotBytesTransferred] =
+          data_result.result()->size_bytes();
+      event[kTaskSnapshotName] = snapshot;
+
+      events_->Success(event);
+    });
+    return nullptr;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    std::cout << "[C++] TaskStateStreamHandler::OnCancelInternal() START"
+              << std::endl;
+    return nullptr;
+  }
+
+ public:
+  Storage* storage_;
+  std::string reference_path_;
+  const void* data_;
+  size_t buffer_size_;
+  Controller* controller_;
+  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events_ =
+      nullptr;
+};
+
+class PutFileStreamHandler
+    : public flutter::StreamHandler<flutter::EncodableValue> {
+ public:
+  PutFileStreamHandler(Storage* storage, std::string reference_path,
+                       std::string file_path, Controller* controller) {
+    storage_ = storage;
+    reference_path_ = reference_path;
+    file_path_ = file_path;
+    controller_ = controller;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnListenInternal(
+      const flutter::EncodableValue* arguments,
+      std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
+      override {
+    events_ = std::move(events);
+    std::cout << "[C++] PutFileStreamHandler::OnListenInternal() START"
+              << std::endl;
+    TaskStateListener putStringListener = TaskStateListener(events_.get());
+    StorageReference reference = storage_->GetReference(reference_path_);
+    Future<Metadata> future_result =
+        reference.PutFile(file_path_.c_str(), &putStringListener, controller_);
+    std::cout << "[C++] PutFileStreamHandler::OnListenInternal() after "
+                 "reference putFile"
+              << std::endl;
+    future_result.OnCompletion([this](const Future<Metadata>& data_result) {
+      // TODO error handling
+      std::cout << "[C++] PutFileStreamHandler::OnCompletion(), result error:"
+                << data_result.error()
+                << ", error message: " << data_result.error_message()
+                << std::endl;
+      flutter::EncodableMap event = flutter::EncodableMap();
+      event[kTaskStateName] = static_cast<int>(PigeonTaskState::success);
+      event[kTaskAppName] = std::string(storage_->app()->name());
+      flutter::EncodableMap snapshot = flutter::EncodableMap();
+      snapshot[kTaskSnapshotPath] = data_result.result()->path();
+      snapshot[kTaskSnapshotTotalBytes] = data_result.result()->size_bytes();
+      snapshot[kTaskSnapshotBytesTransferred] =
+          data_result.result()->size_bytes();
+      event[kTaskSnapshotName] = snapshot;
+
+      events_->Success(event);
+    });
+    return nullptr;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    std::cout << "[C++] TaskStateStreamHandler::OnCancelInternal() START"
+              << std::endl;
+    return nullptr;
+  }
+
+ public:
+  Storage* storage_;
+  std::string reference_path_;
+  std::string file_path_;
+  Controller* controller_;
+  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events_ =
+      nullptr;
+};
+
+class GetFileStreamHandler
+    : public flutter::StreamHandler<flutter::EncodableValue> {
+ public:
+  GetFileStreamHandler(Storage* storage, std::string reference_path,
+                       std::string file_path, Controller* controller) {
+    storage_ = storage;
+    reference_path_ = reference_path;
+    file_path_ = file_path;
+    controller_ = controller;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnListenInternal(
+      const flutter::EncodableValue* arguments,
+      std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
+      override {
+    events_ = std::move(events);
+    std::cout << "[C++] GetFileStreamHandler::OnListenInternal() START"
+              << std::endl;
+    TaskStateListener putStringListener = TaskStateListener(events_.get());
+    StorageReference reference = storage_->GetReference(reference_path_);
+    Future<size_t> future_result =
+        reference.GetFile(file_path_.c_str(), &putStringListener, controller_);
+    std::cout << "[C++] GetFileStreamHandler::OnListenInternal() after "
+                 "reference putString"
+              << std::endl;
+    future_result.OnCompletion([this](const Future<size_t>& data_result) {
+      // TODO error handling
+      std::cout << "[C++] GetFileStreamHandler::OnCompletion(), result error:"
+                << data_result.error()
+                << ", error message: " << data_result.error_message()
+                << std::endl;
+      flutter::EncodableMap event = flutter::EncodableMap();
+      event[kTaskStateName] = static_cast<int>(PigeonTaskState::success);
+      event[kTaskAppName] = std::string(storage_->app()->name());
+      flutter::EncodableMap snapshot = flutter::EncodableMap();
+      // snapshot[kTaskSnapshotPath] = data_result.result()->path();
+      snapshot[kTaskSnapshotTotalBytes] = data_result.result();
+      snapshot[kTaskSnapshotBytesTransferred] = data_result.result();
+      event[kTaskSnapshotName] = snapshot;
+
+      events_->Success(event);
+    });
+    return nullptr;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    std::cout << "[C++] GetFileStreamHandler::OnCancelInternal() START"
+              << std::endl;
+    return nullptr;
+  }
+
+ public:
+  Storage* storage_;
+  std::string reference_path_;
+  std::string file_path_;
+  Controller* controller_;
+  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events_ =
+      nullptr;
+};
+
 void FirebaseStoragePlugin::ReferencePutData(
-    const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
+    const PigeonFirebaseApp& pigeon_app,
+    const PigeonStorageReference& pigeon_reference,
     const std::vector<uint8_t>& data,
-    const PigeonSettableMetadata& settable_meta_data, int64_t handle,
+    const PigeonSettableMetadata& pigeon_meta_data, int64_t handle,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
-  StorageReference cpp_reference =
-      GetCPPStorageReferenceFromPigeon(app, "", reference);
+  std::cout << "[C++] FirebaseStoragePlugin::ReferencePutData() START"
+            << std::endl;
+  Storage* cpp_storage =
+      GetCPPStorageFromPigeon(pigeon_app, pigeon_reference.bucket());
   controllers_[handle] = std::make_unique<Controller>();
-  // Listener listener;
-  auto handler =
-      std::make_unique<TaskStateStreamHandler>(cpp_storage, &cpp_reference);
 
-  std::string channelName = RegisterEventChannel("putData", *handler);
+  auto handler = std::make_unique<PutDataStreamHandler>(
+      cpp_storage, pigeon_reference.full_path(), &data, data.size(),
+      controllers_[handle].get());
 
-  Future<Metadata> future_result = cpp_reference.PutBytes(
-      &data, data.size(), nullptr, controllers_[handle].get());
+  std::string channelName = RegisterEventChannel(
+      kStorageMethodChannelName + "/" + kStorageTaskEventName,
+      std::move(handler));
 
   result(channelName);
 }
 
 void FirebaseStoragePlugin::RefrencePutString(
-    const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
-    const std::string& data, int64_t format,
-    const PigeonSettableMetadata& settable_meta_data, int64_t handle,
-    std::function<void(ErrorOr<std::string> reply)> result) {
-  std::cout << "[C++] FirebaseStoragePlugin::ReferenceUpdateMetadata() START"
+    const PigeonFirebaseApp& pigeon_app,
+    const PigeonStorageReference& pigeon_reference, const std::string& data,
+    int64_t format, const PigeonSettableMetadata& settable_meta_data,
+    int64_t handle, std::function<void(ErrorOr<std::string> reply)> result) {
+  std::cout << "[C++] FirebaseStoragePlugin::RefrencePutString() START"
             << std::endl;
-  Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
-  StorageReference cpp_reference =
-      GetCPPStorageReferenceFromPigeon(app, "", reference);
+  Storage* cpp_storage =
+      GetCPPStorageFromPigeon(pigeon_app, pigeon_reference.bucket());
   controllers_[handle] = std::make_unique<Controller>();
 
-  // Listener listener;
-  auto handler =
-      std::make_unique<TaskStateStreamHandler>(cpp_storage, &cpp_reference);
+  auto handler = std::make_unique<PutDataStreamHandler>(
+      cpp_storage, pigeon_reference.full_path(), &data, data.size(),
+      controllers_[handle].get());
 
-  std::string channelName = RegisterEventChannel("putString", *handler);
-
-  Future<Metadata> future_result = cpp_reference.PutBytes(
-      &data, data.size(), nullptr, controllers_[handle].get());
-
+  std::string channelName = RegisterEventChannel(
+      kStorageMethodChannelName + "/" + kStorageTaskEventName,
+      std::move(handler));
+  std::cout << "[C++] FirebaseStoragePlugin::RefrencePutString() End with "
+               "channel:"
+            << channelName << std::endl;
   result(channelName);
 }
 
 void FirebaseStoragePlugin::ReferencePutFile(
-    const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
+    const PigeonFirebaseApp& pigeon_app,
+    const PigeonStorageReference& pigeon_reference,
     const std::string& file_path,
     const PigeonSettableMetadata& settable_meta_data, int64_t handle,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
-  StorageReference cpp_reference =
-      GetCPPStorageReferenceFromPigeon(app, "", reference);
+  std::cout << "[C++] FirebaseStoragePlugin::ReferencePutFile() START"
+            << std::endl;
+  Storage* cpp_storage =
+      GetCPPStorageFromPigeon(pigeon_app, pigeon_reference.bucket());
   controllers_[handle] = std::make_unique<Controller>();
 
-  // Listener listener;
-  auto handler =
-      std::make_unique<TaskStateStreamHandler>(cpp_storage, &cpp_reference);
+  auto handler = std::make_unique<PutFileStreamHandler>(
+      cpp_storage, pigeon_reference.full_path(), std::move(file_path),
+      controllers_[handle].get());
 
-  std::string channelName = RegisterEventChannel("putFile", *handler);
-
-  Future<Metadata> future_result = cpp_reference.PutFile(
-      file_path.c_str(), nullptr, controllers_[handle].get());
+  std::string channelName = RegisterEventChannel(
+      kStorageMethodChannelName + "/" + kStorageTaskEventName,
+      std::move(handler));
 
   result(channelName);
 }
 
 void FirebaseStoragePlugin::ReferenceDownloadFile(
-    const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
+    const PigeonFirebaseApp& pigeon_app,
+    const PigeonStorageReference& pigeon_reference,
     const std::string& file_path, int64_t handle,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
-  StorageReference cpp_reference =
-      GetCPPStorageReferenceFromPigeon(app, "", reference);
+  std::cout << "[C++] FirebaseStoragePlugin::ReferenceDownloadFile() START:"
+            << file_path << std::endl;
+  Storage* cpp_storage =
+      GetCPPStorageFromPigeon(pigeon_app, pigeon_reference.bucket());
   controllers_[handle] = std::make_unique<Controller>();
-  // Listener listener;
-  auto handler =
-      std::make_unique<TaskStateStreamHandler>(cpp_storage, &cpp_reference);
 
-  std::string channelName = RegisterEventChannel("putFile", *handler);
+  auto handler = std::make_unique<GetFileStreamHandler>(
+      cpp_storage, pigeon_reference.full_path(), std::move(file_path),
+      controllers_[handle].get());
 
-  Future<size_t> future_result = cpp_reference.GetFile(
-      file_path.c_str(), nullptr, controllers_[handle].get());
-
+  std::string channelName = RegisterEventChannel(
+      kStorageMethodChannelName + "/" + kStorageTaskEventName,
+      std::move(handler));
+  std::cout << "[C++] FirebaseStoragePlugin::ReferenceDownloadFile() End with "
+               "channel:"
+            << channelName << std::endl;
   result(channelName);
 }
 

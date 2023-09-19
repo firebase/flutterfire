@@ -107,14 +107,12 @@ class FirebaseStoragePlugin : public flutter::Plugin,
       override;
 
   static flutter::BinaryMessenger* messenger_;
-  // static std::map<
-  //     std::string,
-  //     std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>>
-  //     event_channels_;
-  // static std::map<
-  //     std::string,
-  //     std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>>>
-  //     stream_handlers_;
+  static std::map<
+      std::string,
+      std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>>
+      event_channels_;
+  static std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
+      stream_handlers_;
 
  private:
   bool storageInitialized = false;

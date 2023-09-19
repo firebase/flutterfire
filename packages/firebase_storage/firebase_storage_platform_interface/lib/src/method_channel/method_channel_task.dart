@@ -34,7 +34,9 @@ abstract class MethodChannelTask extends TaskPlatform {
           MethodChannelFirebaseStorage.storageTaskChannel(observerId!)
               .receiveBroadcastStream();
       try {
+        developer.log('TaskMethodChannel, start listen');
         await for (final events in nativePlatformStream) {
+          developer.log('TaskMethodChannel, get events');
           final appName = events['appName'];
           final taskState = TaskState.values[events['taskState']];
           developer.log(
@@ -62,6 +64,7 @@ abstract class MethodChannelTask extends TaskPlatform {
         // TODO this should be refactored to use `convertPlatformException`,
         // then change receiveBroadcastStream -> receiveGuardedBroadedStream
         if (exception is! Exception || exception is! PlatformException) {
+          developer.log('TaskMethodChannel, got general exception');
           rethrow;
         }
 
@@ -305,7 +308,7 @@ class MethodChannelDownloadTask extends MethodChannelTask {
     return MethodChannelFirebaseStorage.pigeonChannel.referenceDownloadFile(
       MethodChannelFirebaseStorage.getPigeonFirebaseApp(storage.app.name),
       MethodChannelFirebaseStorage.getPigeonReference(
-          storage.bucket, path, 'putData'),
+          storage.bucket, path, 'downloadData'),
       path,
       handle,
     );
