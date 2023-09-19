@@ -1,3 +1,7 @@
+## 5.8.1
+
+ - **FIX**(auth): deprecate `FirebaseAuth.instanceFor`'s `persistence` parameter ([#11259](https://github.com/firebase/flutterfire/issues/11259)). ([a1966e82](https://github.com/firebase/flutterfire/commit/a1966e82c15f13119cb28a262a57c67b4f2b8d3b))
+
 ## 5.8.0
 
  - **FIX**(firebase_auth): Update the position of the auth parameter for `RecaptchaVerifier` in the interop code to reflect changes in `firebase-js-sdk` ([#11514](https://github.com/firebase/flutterfire/issues/11514)). ([a836dba1](https://github.com/firebase/flutterfire/commit/a836dba186b0765745a8e81a04229fe8fd8f96b2))

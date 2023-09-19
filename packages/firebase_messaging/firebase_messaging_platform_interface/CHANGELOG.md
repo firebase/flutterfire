@@ -1,3 +1,7 @@
+## 4.5.7
+
+ - Update a dependency to the latest release.
+
 ## 4.5.6
 
  - **FIX**(messaging): Throw exception if APNS token is not yet available ([#11400](https://github.com/firebase/flutterfire/issues/11400)). ([346d6022](https://github.com/firebase/flutterfire/commit/346d6022d425e0f8c83f50ea05427a02a2214166))

@@ -1,3 +1,8 @@
+## 4.9.2
+
+ - **FIX**(firestore): allow `DocumentReference` to be used to in Filter queries ([#11593](https://github.com/firebase/flutterfire/issues/11593)). ([3f570c6d](https://github.com/firebase/flutterfire/commit/3f570c6d42305bef299e75de6053eb57d8520c8a))
+ - **FIX**(firestore): Correct static property getter `serverTimestampMap` ([#11570](https://github.com/firebase/flutterfire/issues/11570)). ([251d15e9](https://github.com/firebase/flutterfire/commit/251d15e970c771f30bc03aeda319538e9b3b76fc))
+
 ## 4.9.1
 
  - **FIX**(cloud_firestore): Fix crashes on iOS/macOS ([#11501](https://github.com/firebase/flutterfire/issues/11501)). ([3ed53470](https://github.com/firebase/flutterfire/commit/3ed53470f0536294d4d1905c759c91aabf1d39ff))
