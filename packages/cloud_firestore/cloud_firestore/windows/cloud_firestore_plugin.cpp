@@ -566,6 +566,7 @@ void CloudFirestorePlugin::SetIndexConfiguration(
     const PigeonFirebaseApp& app, const std::string& index_configuration,
     std::function<void(std::optional<FlutterError> reply)> result) {
   // TODO: not available in C++ SDK
+  result(FlutterError("Not available in C++ SDK"))
 }
 
 void CloudFirestorePlugin::SetLoggingEnabled(
