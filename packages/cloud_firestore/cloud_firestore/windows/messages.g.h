@@ -11,11 +11,11 @@
 #include <flutter/encodable_value.h>
 #include <flutter/standard_message_codec.h>
 
-#include "firestore_codec.h"
-
 #include <map>
 #include <optional>
 #include <string>
+
+#include "firestore_codec.h"
 
 namespace cloud_firestore_windows {
 
