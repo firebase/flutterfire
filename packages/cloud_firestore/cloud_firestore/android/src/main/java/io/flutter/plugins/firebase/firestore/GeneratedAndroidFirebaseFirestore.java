@@ -1391,7 +1391,7 @@ public class GeneratedAndroidFirebaseFirestore {
     void error(@NonNull Throwable error);
   }
 
-  private static class FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
+  private static class FirebaseFirestoreHostApiCodec extends FlutterFirebaseFirestoreMessageCodec {
     public static final FirebaseFirestoreHostApiCodec INSTANCE =
         new FirebaseFirestoreHostApiCodec();
 
