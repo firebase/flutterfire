@@ -35,7 +35,7 @@ public class GeneratedAndroidFirebaseFirestore {
     /** The error details. Must be a datatype supported by the api codec. */
     public final Object details;
 
-    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) 
+    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details)
     {
       super(message);
       this.code = code;
@@ -425,7 +425,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(hasPendingWrites);
       toListResult.add(isFromCache);
@@ -516,7 +516,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(path);
       toListResult.add(data);
@@ -634,7 +634,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(4);
       toListResult.add(type == null ? null : type.index);
       toListResult.add((document == null) ? null : document.toList());

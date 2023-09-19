@@ -17,8 +17,10 @@ enum DocumentChangeType {
   /// Indicates a new document was added to the set of documents matching the
   /// query.
   added,
+
   /// Indicates a document within the query was modified.
   modified,
+
   /// Indicates a document within the query was removed (either deleted or no
   /// longer matches the query.
   removed,
@@ -29,11 +31,13 @@ enum Source {
   /// Causes Firestore to try to retrieve an up-to-date (server-retrieved) snapshot, but fall back to
   /// returning cached data if the server can't be reached.
   serverAndCache,
+
   /// Causes Firestore to avoid the cache, generating an error if the server cannot be reached. Note
   /// that the cache will still be updated if the server request succeeds. Also note that
   /// latency-compensation still takes effect, so any pending write operations will be visible in the
   /// returned data (merged into the server-provided data).
   server,
+
   /// Causes Firestore to immediately return a value from the cache, ignoring the server completely
   /// (implying that the returned value may be stale with respect to the value on the server). If
   /// there is no data in the cache to satisfy the `get` call,
@@ -45,8 +49,10 @@ enum Source {
 enum ServerTimestampBehavior {
   /// Return null for [FieldValue.serverTimestamp()] values that have not yet
   none,
+
   /// Return local estimates for [FieldValue.serverTimestamp()] values that have not yet been set to their final value.
   estimate,
+
   /// Return the previous value for [FieldValue.serverTimestamp()] values that have not yet been set to their final value.
   previous,
 }
@@ -254,7 +260,8 @@ class PigeonQuerySnapshot {
     result as List<Object?>;
     return PigeonQuerySnapshot(
       documents: (result[0] as List<Object?>?)!.cast<PigeonDocumentSnapshot?>(),
-      documentChanges: (result[1] as List<Object?>?)!.cast<PigeonDocumentChange?>(),
+      documentChanges:
+          (result[1] as List<Object?>?)!.cast<PigeonDocumentChange?>(),
       metadata: PigeonSnapshotMetadata.decode(result[2]! as List<Object?>),
     );
   }
@@ -281,7 +288,8 @@ class PigeonGetOptions {
     result as List<Object?>;
     return PigeonGetOptions(
       source: Source.values[result[0]! as int],
-      serverTimestampBehavior: ServerTimestampBehavior.values[result[1]! as int],
+      serverTimestampBehavior:
+          ServerTimestampBehavior.values[result[1]! as int],
     );
   }
 }
@@ -387,9 +395,7 @@ class DocumentReferenceRequest {
       option: result[2] != null
           ? PigeonDocumentOption.decode(result[2]! as List<Object?>)
           : null,
-      source: result[3] != null
-          ? Source.values[result[3]! as int]
-          : null,
+      source: result[3] != null ? Source.values[result[3]! as int] : null,
       serverTimestampBehavior: result[4] != null
           ? ServerTimestampBehavior.values[result[4]! as int]
           : null,
@@ -503,27 +509,27 @@ class _FirebaseFirestoreHostApiCodec extends FirestoreMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 128: 
+      case 128:
         return DocumentReferenceRequest.decode(readValue(buffer)!);
-      case 129: 
+      case 129:
         return PigeonDocumentChange.decode(readValue(buffer)!);
-      case 130: 
+      case 130:
         return PigeonDocumentOption.decode(readValue(buffer)!);
-      case 131: 
+      case 131:
         return PigeonDocumentSnapshot.decode(readValue(buffer)!);
-      case 132: 
+      case 132:
         return PigeonFirebaseApp.decode(readValue(buffer)!);
-      case 133: 
+      case 133:
         return PigeonFirebaseSettings.decode(readValue(buffer)!);
-      case 134: 
+      case 134:
         return PigeonGetOptions.decode(readValue(buffer)!);
-      case 135: 
+      case 135:
         return PigeonQueryParameters.decode(readValue(buffer)!);
-      case 136: 
+      case 136:
         return PigeonQuerySnapshot.decode(readValue(buffer)!);
-      case 137: 
+      case 137:
         return PigeonSnapshotMetadata.decode(readValue(buffer)!);
-      case 138: 
+      case 138:
         return PigeonTransactionCommand.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -541,9 +547,11 @@ class FirebaseFirestoreHostApi {
 
   static const MessageCodec<Object?> codec = _FirebaseFirestoreHostApiCodec();
 
-  Future<String> loadBundle(PigeonFirebaseApp arg_app, Uint8List arg_bundle) async {
+  Future<String> loadBundle(
+      PigeonFirebaseApp arg_app, Uint8List arg_bundle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_app, arg_bundle]) as List<Object?>?;
@@ -568,12 +576,14 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<PigeonQuerySnapshot> namedQueryGet(PigeonFirebaseApp arg_app, String arg_name, PigeonGetOptions arg_options) async {
+  Future<PigeonQuerySnapshot> namedQueryGet(PigeonFirebaseApp arg_app,
+      String arg_name, PigeonGetOptions arg_options) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_app, arg_name, arg_options]) as List<Object?>?;
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_app, arg_name, arg_options]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -597,7 +607,8 @@ class FirebaseFirestoreHostApi {
 
   Future<void> clearPersistence(PigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_app]) as List<Object?>?;
@@ -619,7 +630,8 @@ class FirebaseFirestoreHostApi {
 
   Future<void> disableNetwork(PigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_app]) as List<Object?>?;
@@ -641,7 +653,8 @@ class FirebaseFirestoreHostApi {
 
   Future<void> enableNetwork(PigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_app]) as List<Object?>?;
@@ -663,7 +676,8 @@ class FirebaseFirestoreHostApi {
 
   Future<void> terminate(PigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_app]) as List<Object?>?;
@@ -685,7 +699,8 @@ class FirebaseFirestoreHostApi {
 
   Future<void> waitForPendingWrites(PigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_app]) as List<Object?>?;
@@ -705,12 +720,14 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<void> setIndexConfiguration(PigeonFirebaseApp arg_app, String arg_indexConfiguration) async {
+  Future<void> setIndexConfiguration(
+      PigeonFirebaseApp arg_app, String arg_indexConfiguration) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_app, arg_indexConfiguration]) as List<Object?>?;
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_app, arg_indexConfiguration]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -729,7 +746,8 @@ class FirebaseFirestoreHostApi {
 
   Future<void> setLoggingEnabled(bool arg_loggingEnabled) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_loggingEnabled]) as List<Object?>?;
@@ -751,7 +769,8 @@ class FirebaseFirestoreHostApi {
 
   Future<String> snapshotsInSyncSetup(PigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_app]) as List<Object?>?;
@@ -776,12 +795,15 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<String> transactionCreate(PigeonFirebaseApp arg_app, int arg_timeout, int arg_maxAttempts) async {
+  Future<String> transactionCreate(
+      PigeonFirebaseApp arg_app, int arg_timeout, int arg_maxAttempts) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_app, arg_timeout, arg_maxAttempts]) as List<Object?>?;
+        await channel.send(<Object?>[arg_app, arg_timeout, arg_maxAttempts])
+            as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -803,12 +825,17 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<void> transactionStoreResult(String arg_transactionId, PigeonTransactionResult arg_resultType, List<PigeonTransactionCommand?>? arg_commands) async {
+  Future<void> transactionStoreResult(
+      String arg_transactionId,
+      PigeonTransactionResult arg_resultType,
+      List<PigeonTransactionCommand?>? arg_commands) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_transactionId, arg_resultType.index, arg_commands]) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(
+            <Object?>[arg_transactionId, arg_resultType.index, arg_commands])
+        as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -825,12 +852,15 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<PigeonDocumentSnapshot> transactionGet(PigeonFirebaseApp arg_app, String arg_transactionId, String arg_path) async {
+  Future<PigeonDocumentSnapshot> transactionGet(PigeonFirebaseApp arg_app,
+      String arg_transactionId, String arg_path) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_app, arg_transactionId, arg_path]) as List<Object?>?;
+        await channel.send(<Object?>[arg_app, arg_transactionId, arg_path])
+            as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -852,9 +882,11 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<void> documentReferenceSet(PigeonFirebaseApp arg_app, DocumentReferenceRequest arg_request) async {
+  Future<void> documentReferenceSet(
+      PigeonFirebaseApp arg_app, DocumentReferenceRequest arg_request) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_app, arg_request]) as List<Object?>?;
@@ -874,9 +906,11 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<void> documentReferenceUpdate(PigeonFirebaseApp arg_app, DocumentReferenceRequest arg_request) async {
+  Future<void> documentReferenceUpdate(
+      PigeonFirebaseApp arg_app, DocumentReferenceRequest arg_request) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_app, arg_request]) as List<Object?>?;
@@ -896,9 +930,11 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<PigeonDocumentSnapshot> documentReferenceGet(PigeonFirebaseApp arg_app, DocumentReferenceRequest arg_request) async {
+  Future<PigeonDocumentSnapshot> documentReferenceGet(
+      PigeonFirebaseApp arg_app, DocumentReferenceRequest arg_request) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_app, arg_request]) as List<Object?>?;
@@ -923,9 +959,11 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<void> documentReferenceDelete(PigeonFirebaseApp arg_app, DocumentReferenceRequest arg_request) async {
+  Future<void> documentReferenceDelete(
+      PigeonFirebaseApp arg_app, DocumentReferenceRequest arg_request) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_app, arg_request]) as List<Object?>?;
@@ -945,12 +983,23 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<PigeonQuerySnapshot> queryGet(PigeonFirebaseApp arg_app, String arg_path, bool arg_isCollectionGroup, PigeonQueryParameters arg_parameters, PigeonGetOptions arg_options) async {
+  Future<PigeonQuerySnapshot> queryGet(
+      PigeonFirebaseApp arg_app,
+      String arg_path,
+      bool arg_isCollectionGroup,
+      PigeonQueryParameters arg_parameters,
+      PigeonGetOptions arg_options) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_app, arg_path, arg_isCollectionGroup, arg_parameters, arg_options]) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(<Object?>[
+      arg_app,
+      arg_path,
+      arg_isCollectionGroup,
+      arg_parameters,
+      arg_options
+    ]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -972,12 +1021,15 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<double> aggregateQueryCount(PigeonFirebaseApp arg_app, String arg_path, PigeonQueryParameters arg_parameters, AggregateSource arg_source) async {
+  Future<double> aggregateQueryCount(PigeonFirebaseApp arg_app, String arg_path,
+      PigeonQueryParameters arg_parameters, AggregateSource arg_source) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQueryCount', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQueryCount',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_app, arg_path, arg_parameters, arg_source.index]) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(
+            <Object?>[arg_app, arg_path, arg_parameters, arg_source.index])
+        as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -999,9 +1051,11 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<void> writeBatchCommit(PigeonFirebaseApp arg_app, List<PigeonTransactionCommand?> arg_writes) async {
+  Future<void> writeBatchCommit(PigeonFirebaseApp arg_app,
+      List<PigeonTransactionCommand?> arg_writes) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_app, arg_writes]) as List<Object?>?;
@@ -1021,12 +1075,25 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<String> querySnapshot(PigeonFirebaseApp arg_app, String arg_path, bool arg_isCollectionGroup, PigeonQueryParameters arg_parameters, PigeonGetOptions arg_options, bool arg_includeMetadataChanges) async {
+  Future<String> querySnapshot(
+      PigeonFirebaseApp arg_app,
+      String arg_path,
+      bool arg_isCollectionGroup,
+      PigeonQueryParameters arg_parameters,
+      PigeonGetOptions arg_options,
+      bool arg_includeMetadataChanges) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_app, arg_path, arg_isCollectionGroup, arg_parameters, arg_options, arg_includeMetadataChanges]) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(<Object?>[
+      arg_app,
+      arg_path,
+      arg_isCollectionGroup,
+      arg_parameters,
+      arg_options,
+      arg_includeMetadataChanges
+    ]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1048,12 +1115,17 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<String> documentReferenceSnapshot(PigeonFirebaseApp arg_app, DocumentReferenceRequest arg_parameters, bool arg_includeMetadataChanges) async {
+  Future<String> documentReferenceSnapshot(
+      PigeonFirebaseApp arg_app,
+      DocumentReferenceRequest arg_parameters,
+      bool arg_includeMetadataChanges) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot', codec,
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_app, arg_parameters, arg_includeMetadataChanges]) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(
+            <Object?>[arg_app, arg_parameters, arg_includeMetadataChanges])
+        as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',

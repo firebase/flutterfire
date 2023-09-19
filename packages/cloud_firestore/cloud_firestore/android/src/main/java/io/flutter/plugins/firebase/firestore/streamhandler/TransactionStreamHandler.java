@@ -38,9 +38,18 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
   }
 
   final OnTransactionStartedListener onTransactionStartedListener;
+  final FirebaseFirestore firestore;
+  final String transactionId;
+  final Long timeout;
 
-  public TransactionStreamHandler(OnTransactionStartedListener onTransactionStartedListener) {
+  final Long maxAttempts;
+
+  public TransactionStreamHandler(OnTransactionStartedListener onTransactionStartedListener, FirebaseFirestore firestore, String transactionId, Long timeout, Long maxAttempts) {
     this.onTransactionStartedListener = onTransactionStartedListener;
+    this.firestore = firestore;
+    this.transactionId = transactionId;
+    this.timeout = timeout;
+    this.maxAttempts = maxAttempts;
   }
 
   final Semaphore semaphore = new Semaphore(0);
@@ -51,29 +60,9 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
 
   @Override
   public void onListen(Object arguments, EventSink events) {
-    @SuppressWarnings("unchecked")
-    Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
-
-    FirebaseFirestore firestore =
-        (FirebaseFirestore) Objects.requireNonNull(argumentsMap.get("firestore"));
-
-    Object value = argumentsMap.get("timeout");
-    Long timeout;
-
-    if (value instanceof Long) {
-      timeout = (Long) value;
-    } else if (value instanceof Integer) {
-      timeout = Long.valueOf((Integer) value);
-    } else {
-      timeout = 5000L;
-    }
-
-    // Always sent by the PlatformChannel
-    int maxAttempts = (int) argumentsMap.get("maxAttempts");
-
     firestore
         .runTransaction(
-            new TransactionOptions.Builder().setMaxAttempts(maxAttempts).build(),
+            new TransactionOptions.Builder().setMaxAttempts(maxAttempts.intValue()).build(),
             transaction -> {
               onTransactionStartedListener.onStarted(transaction);
 
@@ -104,7 +93,7 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
                 DocumentReference documentReference = firestore.document(command.getPath());
 
                 switch (command.getType()) {
-                  case DELETE:
+                  case DELETE_TYPE:
                     transaction.delete(documentReference);
                     break;
                   case UPDATE:

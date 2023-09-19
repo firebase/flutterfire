@@ -16,15 +16,14 @@ import java.util.Objects;
 public class SnapshotsInSyncStreamHandler implements StreamHandler {
 
   ListenerRegistration listenerRegistration;
+  FirebaseFirestore firestore;
+
+  public SnapshotsInSyncStreamHandler(FirebaseFirestore firestore) {
+    this.firestore = firestore;
+  }
 
   @Override
   public void onListen(Object arguments, EventSink events) {
-    @SuppressWarnings("unchecked")
-    Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
-
-    FirebaseFirestore firestore =
-        (FirebaseFirestore) Objects.requireNonNull(argumentsMap.get("firestore"));
-
     Runnable snapshotsInSyncRunnable = () -> events.success(null);
 
     listenerRegistration = firestore.addSnapshotsInSyncListener(snapshotsInSyncRunnable);
