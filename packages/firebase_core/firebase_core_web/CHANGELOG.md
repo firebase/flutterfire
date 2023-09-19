@@ -1,3 +1,7 @@
+## 2.8.0
+
+ - **FEAT**: bump Firebase web JS SDK `10.3.1` ([#11588](https://github.com/firebase/flutterfire/issues/11588)). ([e65b270e](https://github.com/firebase/flutterfire/commit/e65b270ea420a696671c26768751df4bdd6a46c1))
+
 ## 2.7.0
 
  - **FEAT**: bump Firebase web JS SDK `10.1.0` ([#11431](https://github.com/firebase/flutterfire/issues/11431)). ([b569f16d](https://github.com/firebase/flutterfire/commit/b569f16d43bff5503a1fde4c2706e198d99a444b))
