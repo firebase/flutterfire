@@ -1376,7 +1376,9 @@ void FirebaseFirestoreHostApi::SetUp(
             reply(WrapError("result_type_arg unexpectedly null."));
             return;
           }
-          const auto& result_type_arg = std::any_cast<const PigeonTransactionResult&>(std::get<CustomEncodableValue>(encodable_result_type_arg));
+          const auto& result_type_arg =
+              std::any_cast<const PigeonTransactionResult&>(
+                  std::get<CustomEncodableValue>(encodable_result_type_arg));
           const auto& encodable_commands_arg = args.at(2);
           const auto* commands_arg = std::get_if<EncodableList>(&encodable_commands_arg);
           api->TransactionStoreResult(transaction_id_arg, result_type_arg, commands_arg, [reply](std::optional<FlutterError>&& output) {

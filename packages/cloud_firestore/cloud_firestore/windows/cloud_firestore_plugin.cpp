@@ -590,9 +590,10 @@ class SnapshotInSyncStreamHandler
       const flutter::EncodableValue* arguments,
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
+    events_ = std::move(events);
     listener_ = firestore_->AddSnapshotsInSyncListener(
-        [events = std::move(events)]() {
-          events->Success(flutter::EncodableValue());
+        [this]() {
+          events_->Success(flutter::EncodableValue());
         });
     return nullptr;
   }
@@ -606,6 +607,7 @@ class SnapshotInSyncStreamHandler
  private:
   Firestore* firestore_;
   ListenerRegistration listener_;
+  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events_;
 };
 
 void CloudFirestorePlugin::SnapshotsInSyncSetup(
@@ -615,9 +617,17 @@ void CloudFirestorePlugin::SnapshotsInSyncSetup(
 
   auto handler = std::make_unique<SnapshotInSyncStreamHandler>(firestore);
 
-  std::string channelName =
-      RegisterEventChannel("plugins.flutter.io/firebase_firestore/snapshotsInSync", std::move(handler));
-  result(channelName);
+    UUID uuid;
+  UuidCreate(&uuid);
+  char* str;
+  UuidToStringA(&uuid, (RPC_CSTR*)&str);
+  std::string snapshotInSyncId(str);
+
+
+  std::string channelName = RegisterEventChannelWithUUID(
+      "plugins.flutter.io/firebase_firestore/snapshotsInSync/",
+      snapshotInSyncId, std::move(handler));
+  result(snapshotInSyncId);
 }
 
 class TransactionStreamHandler
