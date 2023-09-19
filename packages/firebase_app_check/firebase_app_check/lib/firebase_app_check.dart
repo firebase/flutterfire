@@ -10,7 +10,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
 export 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart'
-    show AndroidProvider, AppleProvider;
+    show
+        AndroidProvider,
+        AppleProvider,
+        ReCaptchaEnterpriseProvider,
+        ReCaptchaV3Provider;
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;
 

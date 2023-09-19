@@ -35,8 +35,16 @@ external void setTokenAutoRefreshEnabled(
 );
 
 @JS()
-class ReCaptchaV3Provider {
+abstract class ReCaptchaProvider {}
+
+@JS()
+class ReCaptchaV3Provider implements ReCaptchaProvider {
   external factory ReCaptchaV3Provider(recaptchaKey);
+}
+
+@JS()
+class ReCaptchaEnterpriseProvider implements ReCaptchaProvider {
+  external factory ReCaptchaEnterpriseProvider(recaptchaKey);
 }
 
 @JS()
@@ -48,10 +56,12 @@ abstract class AppCheckTokenResult {
 @JS()
 class AppCheckOptions {
   external bool? get isTokenAutoRefreshEnabled;
-  external ReCaptchaV3Provider get provider;
+
+  external ReCaptchaProvider get provider;
+
   external factory AppCheckOptions({
     bool? isTokenAutoRefreshEnabled,
-    ReCaptchaV3Provider provider,
+    ReCaptchaProvider provider,
   });
 }
 
