@@ -61,6 +61,7 @@ class CloudFirestorePlugin : public flutter::Plugin,
       bool logging_enabled,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void SnapshotsInSyncSetup(
+      const PigeonFirebaseApp& app,
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void TransactionCreate(
       const PigeonFirebaseApp& app, int64_t timeout, int64_t max_attempts,

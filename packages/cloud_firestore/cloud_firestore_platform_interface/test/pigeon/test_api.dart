@@ -108,7 +108,7 @@ abstract class TestFirebaseFirestoreHostApi {
 
   Future<void> setLoggingEnabled(bool loggingEnabled);
 
-  Future<String> snapshotsInSyncSetup();
+  Future<String> snapshotsInSyncSetup(PigeonFirebaseApp app);
 
   Future<String> transactionCreate(PigeonFirebaseApp app, int timeout, int maxAttempts);
 
@@ -326,8 +326,13 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
-          // ignore message
-          final String output = await api.snapshotsInSyncSetup();
+          assert(message != null,
+          'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup was null, expected non-null PigeonFirebaseApp.');
+          final String output = await api.snapshotsInSyncSetup(arg_app!);
           return <Object?>[output];
         });
       }

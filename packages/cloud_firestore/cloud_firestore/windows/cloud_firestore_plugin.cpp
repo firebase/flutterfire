@@ -566,7 +566,7 @@ void CloudFirestorePlugin::SetIndexConfiguration(
     const PigeonFirebaseApp& app, const std::string& index_configuration,
     std::function<void(std::optional<FlutterError> reply)> result) {
   // TODO: not available in C++ SDK
-  result(FlutterError("Not available in C++ SDK"))
+  result(FlutterError("Not available in C++ SDK"));
 }
 
 void CloudFirestorePlugin::SetLoggingEnabled(
@@ -578,9 +578,46 @@ void CloudFirestorePlugin::SetLoggingEnabled(
   result(std::nullopt);
 }
 
+class SnapshotInSyncStreamHandler
+    : public flutter::StreamHandler<flutter::EncodableValue> {
+ public:
+  SnapshotInSyncStreamHandler(Firestore* firestore) {
+    firestore_ = firestore;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnListenInternal(
+      const flutter::EncodableValue* arguments,
+      std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
+      override {
+    listener_ = firestore_->AddSnapshotsInSyncListener(
+        [events = std::move(events)]() {
+          events->Success(flutter::EncodableValue());
+        });
+    return nullptr;
+  }
+
+  std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+  OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    listener_.Remove();
+    return nullptr;
+  }
+
+ private:
+  Firestore* firestore_;
+  ListenerRegistration listener_;
+};
+
 void CloudFirestorePlugin::SnapshotsInSyncSetup(
+    const PigeonFirebaseApp& app,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  // TODO: uses EventChannels
+  Firestore* firestore = GetFirestoreFromPigeon(app);
+
+  auto handler = std::make_unique<SnapshotInSyncStreamHandler>(firestore);
+
+  std::string channelName =
+      RegisterEventChannel("plugins.flutter.io/firebase_firestore/snapshotsInSync", std::move(handler));
+  result(channelName);
 }
 
 class TransactionStreamHandler

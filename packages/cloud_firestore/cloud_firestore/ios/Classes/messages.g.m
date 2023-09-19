@@ -741,9 +741,11 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, N
         binaryMessenger:binaryMessenger
         codec:FirebaseFirestoreHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(snapshotsInSyncSetupWithCompletion:)], @"FirebaseFirestoreHostApi api (%@) doesn't respond to @selector(snapshotsInSyncSetupWithCompletion:)", api);
+      NSCAssert([api respondsToSelector:@selector(snapshotsInSyncSetupApp:completion:)], @"FirebaseFirestoreHostApi api (%@) doesn't respond to @selector(snapshotsInSyncSetupApp:completion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        [api snapshotsInSyncSetupWithCompletion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
+        NSArray *args = message;
+        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        [api snapshotsInSyncSetupApp:arg_app completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
           callback(wrapResult(output, error));
         }];
       }];

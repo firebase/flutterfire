@@ -8,7 +8,6 @@
 import 'dart:async';
 import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
 
-import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 
@@ -458,7 +457,7 @@ class PigeonQueryParameters {
   }
 }
 
-class _FirebaseFirestoreHostApiCodec extends FirestoreMessageCodec {
+class _FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   const _FirebaseFirestoreHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
@@ -749,12 +748,12 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<String> snapshotsInSyncSetup() async {
+  Future<String> snapshotsInSyncSetup(PigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+        await channel.send(<Object?>[arg_app]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',

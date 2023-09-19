@@ -194,7 +194,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
     controller = StreamController<void>.broadcast(
       onListen: () async {
-        final observerId = await pigeonChannel.snapshotsInSyncSetup();
+        final observerId = await pigeonChannel.snapshotsInSyncSetup(pigeonApp);
 
         snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId)

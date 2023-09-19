@@ -1454,7 +1454,7 @@ public class GeneratedAndroidFirebaseFirestore {
 
     void setLoggingEnabled(@NonNull Boolean loggingEnabled, @NonNull Result<Void> result);
 
-    void snapshotsInSyncSetup(@NonNull Result<String> result);
+    void snapshotsInSyncSetup(@NonNull PigeonFirebaseApp app, @NonNull Result<String> result);
 
     void transactionCreate(@NonNull PigeonFirebaseApp app, @NonNull Long timeout, @NonNull Long maxAttempts, @NonNull Result<String> result);
 
@@ -1759,6 +1759,8 @@ public class GeneratedAndroidFirebaseFirestore {
           channel.setMessageHandler(
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
                 Result<String> resultCallback =
                     new Result<String>() {
                       public void success(String result) {
@@ -1772,7 +1774,7 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.snapshotsInSyncSetup(resultCallback);
+                api.snapshotsInSyncSetup(appArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

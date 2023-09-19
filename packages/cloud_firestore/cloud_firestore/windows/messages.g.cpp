@@ -1294,7 +1294,14 @@ void FirebaseFirestoreHostApi::SetUp(
     if (api != nullptr) {
       channel->SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
         try {
-          api->SnapshotsInSyncSetup([reply](ErrorOr<std::string>&& output) {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->SnapshotsInSyncSetup(app_arg, [reply](ErrorOr<std::string>&& output) {
             if (output.has_error()) {
               reply(WrapError(output.error()));
               return;
@@ -1369,7 +1376,7 @@ void FirebaseFirestoreHostApi::SetUp(
             reply(WrapError("result_type_arg unexpectedly null."));
             return;
           }
-          const auto& result_type_arg = PigeonTransactionResult::success;
+          const auto& result_type_arg = std::any_cast<const PigeonTransactionResult&>(std::get<CustomEncodableValue>(encodable_result_type_arg));
           const auto& encodable_commands_arg = args.at(2);
           const auto* commands_arg = std::get_if<EncodableList>(&encodable_commands_arg);
           api->TransactionStoreResult(transaction_id_arg, result_type_arg, commands_arg, [reply](std::optional<FlutterError>&& output) {

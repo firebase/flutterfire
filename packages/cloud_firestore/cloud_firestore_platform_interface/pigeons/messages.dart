@@ -290,7 +290,9 @@ abstract class FirebaseFirestoreHostApi {
   );
 
   @async
-  String snapshotsInSyncSetup();
+  String snapshotsInSyncSetup(
+    PigeonFirebaseApp app,
+  );
 
   @async
   String transactionCreate(
