@@ -58,7 +58,7 @@ public class FlutterFirebaseFirestorePlugin
         ActivityAware,
         GeneratedAndroidFirebaseFirestore.FirebaseFirestoreHostApi {
   protected static final HashMap<FirebaseFirestore, FlutterFirebaseFirestoreExtension>
-    firestoreInstanceCache = new HashMap<>();
+      firestoreInstanceCache = new HashMap<>();
 
   public static final String DEFAULT_ERROR_CODE = "firebase_firestore";
 
@@ -202,7 +202,7 @@ public class FlutterFirebaseFirestorePlugin
               FirebaseFirestore firestore = entry.getKey();
               Tasks.await(firestore.terminate());
               FlutterFirebaseFirestorePlugin.destroyCachedFirebaseFirestoreInstanceForKey(
-                firestore);
+                  firestore);
 
               removeEventListeners();
 
@@ -466,22 +466,32 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   @Override
-  public void snapshotsInSyncSetup(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
+  public void snapshotsInSyncSetup(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
     FirebaseFirestore firestore = getFirestoreFromPigeon(app);
 
     result.success(
-      registerEventChannel(
-        METHOD_CHANNEL_NAME + "/snapshotsInSync", new SnapshotsInSyncStreamHandler(firestore)));
+        registerEventChannel(
+            METHOD_CHANNEL_NAME + "/snapshotsInSync", new SnapshotsInSyncStreamHandler(firestore)));
   }
 
-
   @Override
-  public void transactionCreate(@NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app, @NonNull Long timeout, @NonNull Long maxAttempts, @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
+  public void transactionCreate(
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull Long timeout,
+      @NonNull Long maxAttempts,
+      @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
     FirebaseFirestore firestore = getFirestoreFromPigeon(app);
 
     final String transactionId = UUID.randomUUID().toString().toLowerCase(Locale.US);
     final TransactionStreamHandler handler =
-        new TransactionStreamHandler(transaction -> transactions.put(transactionId, transaction), firestore, transactionId, timeout, maxAttempts);
+        new TransactionStreamHandler(
+            transaction -> transactions.put(transactionId, transaction),
+            firestore,
+            transactionId,
+            timeout,
+            maxAttempts);
 
     registerEventChannel(METHOD_CHANNEL_NAME + "/transaction", transactionId, handler);
     transactionHandlers.put(transactionId, handler);
@@ -771,8 +781,6 @@ public class FlutterFirebaseFirestorePlugin
           }
         });
   }
-
-
 
   @Override
   public void querySnapshot(

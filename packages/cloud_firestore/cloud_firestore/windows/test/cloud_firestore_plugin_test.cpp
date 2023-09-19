@@ -1,3 +1,5 @@
+#include "cloud_firestore_plugin.h"
+
 #include <flutter/method_call.h>
 #include <flutter/method_result_functions.h>
 #include <flutter/standard_method_codec.h>
@@ -7,8 +9,6 @@
 #include <memory>
 #include <string>
 #include <variant>
-
-#include "cloud_firestore_plugin.h"
 
 namespace cloud_firestore_windows {
 namespace test {
@@ -23,4 +23,4 @@ using flutter::MethodResultFunctions;
 }  // namespace
 
 }  // namespace test
-}  // namespace cloud_firestore
+}  // namespace cloud_firestore_windows

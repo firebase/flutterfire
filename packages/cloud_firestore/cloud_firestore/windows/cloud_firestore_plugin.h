@@ -1,23 +1,24 @@
 #ifndef FLUTTER_PLUGIN_CLOUD_FIRESTORE_PLUGIN_H_
 #define FLUTTER_PLUGIN_CLOUD_FIRESTORE_PLUGIN_H_
 
-#include "firebase/app.h"
-#include "firebase/log.h"
-#include "firebase/firestore.h"
-#include <flutter/method_channel.h>
 #include <flutter/event_channel.h>
+#include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
-#include "firebase_core/firebase_core_plugin_c_api.h"
-#include "messages.g.h"
 
 #include <memory>
+
+#include "firebase/app.h"
+#include "firebase/firestore.h"
+#include "firebase/log.h"
+#include "firebase_core/firebase_core_plugin_c_api.h"
+#include "messages.g.h"
 
 namespace cloud_firestore_windows {
 
 class CloudFirestorePlugin : public flutter::Plugin,
                              public FirebaseFirestoreHostApi {
  public:
-  static void RegisterWithRegistrar(flutter::PluginRegistrarWindows *registrar);
+  static void RegisterWithRegistrar(flutter::PluginRegistrarWindows* registrar);
 
   CloudFirestorePlugin();
 
@@ -28,8 +29,6 @@ class CloudFirestorePlugin : public flutter::Plugin,
   CloudFirestorePlugin& operator=(const CloudFirestorePlugin&) = delete;
 
   // FirebaseFirestoreHostApi methods.
-
-
 
   // Inherited via FirebaseFirestoreHostApi
   virtual void LoadBundle(
@@ -111,7 +110,6 @@ class CloudFirestorePlugin : public flutter::Plugin,
       bool include_metadata_changes,
       std::function<void(ErrorOr<std::string> reply)> result) override;
 
-
   static flutter::BinaryMessenger* messenger_;
   static std::map<
       std::string,
@@ -121,16 +119,13 @@ class CloudFirestorePlugin : public flutter::Plugin,
       stream_handlers_;
   static std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
       transaction_handlers_;
-  static std::map<std::string, std::shared_ptr<firebase::firestore::Transaction>>
-      transactions_;
   static std::map<std::string,
-                  firebase::firestore::Firestore*>
+                  std::shared_ptr<firebase::firestore::Transaction>>
+      transactions_;
+  static std::map<std::string, firebase::firestore::Firestore*>
       firestoreInstances_;
 
-
-
-  private:
-
+ private:
 };
 
 firebase::firestore::MapFieldValue ConvertToMapFieldValue(

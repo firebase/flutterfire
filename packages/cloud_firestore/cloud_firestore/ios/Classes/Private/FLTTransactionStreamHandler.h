@@ -21,7 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithId:(NSString *)transactionId
                    started:(void (^)(FIRTransaction *))startedListener
                      ended:(void (^)(void))endedListener;
-- (void)receiveTransactionResponse:(PigeonTransactionResult)resultType commands:(NSArray<PigeonTransactionCommand*>*)commands;
+- (void)receiveTransactionResponse:(PigeonTransactionResult)resultType
+                          commands:(NSArray<PigeonTransactionCommand *> *)commands;
 
 @end
 

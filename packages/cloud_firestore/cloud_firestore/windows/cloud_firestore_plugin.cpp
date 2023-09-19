@@ -581,9 +581,7 @@ void CloudFirestorePlugin::SetLoggingEnabled(
 class SnapshotInSyncStreamHandler
     : public flutter::StreamHandler<flutter::EncodableValue> {
  public:
-  SnapshotInSyncStreamHandler(Firestore* firestore) {
-    firestore_ = firestore;
-  }
+  SnapshotInSyncStreamHandler(Firestore* firestore) { firestore_ = firestore; }
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnListenInternal(
@@ -592,9 +590,7 @@ class SnapshotInSyncStreamHandler
       override {
     events_ = std::move(events);
     listener_ = firestore_->AddSnapshotsInSyncListener(
-        [this]() {
-          events_->Success(flutter::EncodableValue());
-        });
+        [this]() { events_->Success(flutter::EncodableValue()); });
     return nullptr;
   }
 
@@ -617,12 +613,11 @@ void CloudFirestorePlugin::SnapshotsInSyncSetup(
 
   auto handler = std::make_unique<SnapshotInSyncStreamHandler>(firestore);
 
-    UUID uuid;
+  UUID uuid;
   UuidCreate(&uuid);
   char* str;
   UuidToStringA(&uuid, (RPC_CSTR*)&str);
   std::string snapshotInSyncId(str);
-
 
   std::string channelName = RegisterEventChannelWithUUID(
       "plugins.flutter.io/firebase_firestore/snapshotsInSync/",
@@ -662,9 +657,10 @@ class TransactionStreamHandler
         ->RunTransaction(
             options,
             [this](Transaction& transaction, std::string& str) -> Error {
-                    auto noopDeleter = [](Transaction*) {};
-      std::shared_ptr<Transaction> ptr(&transaction, noopDeleter);
-      CloudFirestorePlugin::transactions_[transactionId_] = std::move(ptr);
+              auto noopDeleter = [](Transaction*) {};
+              std::shared_ptr<Transaction> ptr(&transaction, noopDeleter);
+              CloudFirestorePlugin::transactions_[transactionId_] =
+                  std::move(ptr);
 
               flutter::EncodableMap map;
               map.emplace("appName", firestore_->app()->name());
@@ -680,24 +676,24 @@ class TransactionStreamHandler
               std::lock_guard<std::mutex> command_lock(commands_mutex_);
               if (commands_.empty()) return Error::kErrorOk;
 
+              for (PigeonTransactionCommand& command : commands_) {
+                std::string path = command.path();
+                PigeonTransactionType type = command.type();
+                if (path.empty() /* or some other invalid condition */) {
+                  std::cerr << "Path is invalid: " << path << std::endl;
+                  continue;  // Skip this iteration.
+                }
 
+                std::cout << "Before: " << path << std::endl;  // Debug print.
 
-      for (PigeonTransactionCommand& command : commands_) {
-        std::string path = command.path();
-        PigeonTransactionType type = command.type();
-        if (path.empty() /* or some other invalid condition */) {
-          std::cerr << "Path is invalid: " << path << std::endl;
-          continue;  // Skip this iteration.
-        }
+                DocumentReference reference = firestore_->Document(path);
+                std::cout << "After: " << command.path()
+                          << std::endl;  // debug print
 
-        std::cout << "Before: " << path << std::endl;  // Debug print.
-
-        DocumentReference reference = firestore_->Document(path);
-        std::cout << "After: " << command.path() << std::endl;  // debug print
-
-        switch (type) {
-          case PigeonTransactionType::set:
-            std::cout << "Transaction set" << path << std::endl;  // Debug print.
+                switch (type) {
+                  case PigeonTransactionType::set:
+                    std::cout << "Transaction set" << path
+                              << std::endl;  // Debug print.
 
                     if (command.option()->merge() != nullptr &&
                         command.option()->merge()) {
@@ -714,22 +710,23 @@ class TransactionStreamHandler
                                       ConvertToMapFieldValue(*command.data()));
                     }
 
-            break;
-          case PigeonTransactionType::update:
-            std::cout << "Transaction update" << path
-                      << std::endl;  // Debug print.
+                    break;
+                  case PigeonTransactionType::update:
+                    std::cout << "Transaction update" << path
+                              << std::endl;  // Debug print.
 
-            transaction.Update(reference, ConvertToMapFieldValue(*command.data()));
-            break;
-          case PigeonTransactionType::deleteType:
-            std::cout << "Transaction delete" << path
-                      << std::endl;  // Debug print.
+                    transaction.Update(reference,
+                                       ConvertToMapFieldValue(*command.data()));
+                    break;
+                  case PigeonTransactionType::deleteType:
+                    std::cout << "Transaction delete" << path
+                              << std::endl;  // Debug print.
 
-            transaction.Delete(reference);
-            break;
-        }
-      }
-      return Error::kErrorOk;
+                    transaction.Delete(reference);
+                    break;
+                }
+              }
+              return Error::kErrorOk;
             })
         .OnCompletion([this](const Future<void>& completed_future) {
           flutter::EncodableMap result;
@@ -803,7 +800,6 @@ void CloudFirestorePlugin::TransactionStoreResult(
     const PigeonTransactionResult& result_type,
     const flutter::EncodableList* commands,
     std::function<void(std::optional<FlutterError> reply)> result) {
-
   if (CloudFirestorePlugin::transaction_handlers_[transaction_id]) {
     TransactionStreamHandler& handler = *static_cast<TransactionStreamHandler*>(
         CloudFirestorePlugin::transaction_handlers_[transaction_id].get());

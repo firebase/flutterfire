@@ -44,7 +44,12 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
 
   final Long maxAttempts;
 
-  public TransactionStreamHandler(OnTransactionStartedListener onTransactionStartedListener, FirebaseFirestore firestore, String transactionId, Long timeout, Long maxAttempts) {
+  public TransactionStreamHandler(
+      OnTransactionStartedListener onTransactionStartedListener,
+      FirebaseFirestore firestore,
+      String transactionId,
+      Long timeout,
+      Long maxAttempts) {
     this.onTransactionStartedListener = onTransactionStartedListener;
     this.firestore = firestore;
     this.transactionId = transactionId;

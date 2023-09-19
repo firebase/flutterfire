@@ -60,33 +60,33 @@
   @throw [NSException exceptionWithName:@"InvalidOperator" reason:@"Invalid operator" userInfo:nil];
 }
 
-+ (FIRQuery *)parseQueryWithParameters:
-(nonnull PigeonQueryParameters *)parameters firestore:(nonnull FIRFirestore*)firestore path:(nonnull NSString*)path isCollectionGroup:(Boolean)isCollectionGroup  {
++ (FIRQuery *)parseQueryWithParameters:(nonnull PigeonQueryParameters *)parameters
+                             firestore:(nonnull FIRFirestore *)firestore
+                                  path:(nonnull NSString *)path
+                     isCollectionGroup:(Boolean)isCollectionGroup {
+  @try {
+    FIRQuery *query;
 
-      @try {
-        FIRQuery *query;
+    NSArray *whereConditions = parameters.where;
 
-        NSArray *whereConditions = parameters.where;
+    if (isCollectionGroup) {
+      query = [firestore collectionGroupWithID:path];
+    } else {
+      query = (FIRQuery *)[firestore collectionWithPath:path];
+    }
 
-        if (isCollectionGroup) {
-          query = [firestore collectionGroupWithID:path];
-        } else {
-          query = (FIRQuery *)[firestore collectionWithPath:path];
-        }
+    BOOL isFilterQuery = parameters.filters != nil;
+    if (isFilterQuery) {
+      FIRFilter *filter = [PigeonParser filterFromJson:parameters.filters];
+      query = [query queryWhereFilter:filter];
+    }
 
-        BOOL isFilterQuery = parameters.filters != nil;
-        if (isFilterQuery) {
-          FIRFilter *filter =
-              [PigeonParser filterFromJson:parameters.filters];
-          query = [query queryWhereFilter:filter];
-        }
-
-        // Filters
-        for (id item in whereConditions) {
-          NSArray *condition = item;
-          FIRFieldPath *fieldPath = (FIRFieldPath *)condition[0];
-          NSString *operator= condition[1];
-          id value = condition[2];
+    // Filters
+    for (id item in whereConditions) {
+      NSArray *condition = item;
+      FIRFieldPath *fieldPath = (FIRFieldPath *)condition[0];
+      NSString *operator= condition[1];
+      id value = condition[2];
           if ([operator isEqualToString:@"=="]) {
             query = [query queryWhereFieldPath:fieldPath isEqualTo:value];
           } else if ([operator isEqualToString:@"!="]) {
@@ -108,127 +108,157 @@
           } else if ([operator isEqualToString:@"not-in"]) {
             query = [query queryWhereFieldPath:fieldPath notIn:value];
           } else {
-            NSLog(@"FLTFirebaseFirestore: An invalid query operator %@ was received but not handled.",
-                  operator);
+            NSLog(
+                @"FLTFirebaseFirestore: An invalid query operator %@ was received but not handled.",
+                operator);
           }
-        }
+    }
 
-        // Limit
-        id limit = parameters.limit;
-        if (![limit isEqual:[NSNull null]]) {
+    // Limit
+    id limit = parameters.limit;
+    if (![limit isEqual:[NSNull null]]) {
           query = [query queryLimitedTo:((NSNumber *)limit).intValue];
-        }
+    }
 
-        // Limit To Last
-        id limitToLast = parameters.limitToLast;
-        if (![limitToLast isEqual:[NSNull null]]) {
+    // Limit To Last
+    id limitToLast = parameters.limitToLast;
+    if (![limitToLast isEqual:[NSNull null]]) {
           query = [query queryLimitedToLast:((NSNumber *)limitToLast).intValue];
-        }
+    }
 
-        // Ordering
-        NSArray *orderBy = parameters.orderBy;
-        if ([orderBy isEqual:[NSNull null]]) {
-          // We return early if no ordering set as cursor queries below require at least one orderBy set
+    // Ordering
+    NSArray *orderBy = parameters.orderBy;
+    if ([orderBy isEqual:[NSNull null]]) {
+          // We return early if no ordering set as cursor queries below require at least one orderBy
+          // set
           return query;
-        }
+    }
 
-        for (NSArray *orderByParameters in orderBy) {
+    for (NSArray *orderByParameters in orderBy) {
           FIRFieldPath *fieldPath = (FIRFieldPath *)orderByParameters[0];
           NSNumber *descending = orderByParameters[1];
           query = [query queryOrderedByFieldPath:fieldPath descending:[descending boolValue]];
-        }
+    }
 
-        // Start At
-        id startAt = parameters.startAt;
-        if (![startAt isEqual:[NSNull null]]) query = [query queryStartingAtValues:(NSArray *)startAt];
-        // Start After
-        id startAfter = parameters.startAfter;
-        if (![startAfter isEqual:[NSNull null]])
+    // Start At
+    id startAt = parameters.startAt;
+    if (![startAt isEqual:[NSNull null]]) query = [query queryStartingAtValues:(NSArray *)startAt];
+    // Start After
+    id startAfter = parameters.startAfter;
+    if (![startAfter isEqual:[NSNull null]])
           query = [query queryStartingAfterValues:(NSArray *)startAfter];
-        // End At
-        id endAt = parameters.endAt;
-        if (![endAt isEqual:[NSNull null]]) query = [query queryEndingAtValues:(NSArray *)endAt];
-        // End Before
-        id endBefore = parameters.endBefore;
-        if (![endBefore isEqual:[NSNull null]])
+    // End At
+    id endAt = parameters.endAt;
+    if (![endAt isEqual:[NSNull null]]) query = [query queryEndingAtValues:(NSArray *)endAt];
+    // End Before
+    id endBefore = parameters.endBefore;
+    if (![endBefore isEqual:[NSNull null]])
           query = [query queryEndingBeforeValues:(NSArray *)endBefore];
 
-        return query;
-      } @catch (NSException *exception) {
-        NSLog(@"An error occurred while parsing query arguments, this is most likely an error with "
-              @"this SDK. %@",
-              [exception callStackSymbols]);
-        return nil;
-      }
+    return query;
+  } @catch (NSException *exception) {
+    NSLog(@"An error occurred while parsing query arguments, this is most likely an error with "
+          @"this SDK. %@",
+          [exception callStackSymbols]);
+    return nil;
+  }
 }
 
-+ (FIRFirestoreSource) parseSource:(Source)source {
-    switch (source) {
-        case SourceServerAndCache:
-        return FIRFirestoreSourceDefault;
-        case SourceServer:
-        return FIRFirestoreSourceServer;
-        case SourceCache:
-        return FIRFirestoreSourceCache;
-        default:
-        @throw [NSException exceptionWithName:@"InvalidSource" reason:@"Invalid source" userInfo:nil];
-    }
++ (FIRFirestoreSource)parseSource:(Source)source {
+  switch (source) {
+    case SourceServerAndCache:
+          return FIRFirestoreSourceDefault;
+    case SourceServer:
+          return FIRFirestoreSourceServer;
+    case SourceCache:
+          return FIRFirestoreSourceCache;
+    default:
+          @throw [NSException exceptionWithName:@"InvalidSource"
+                                         reason:@"Invalid source"
+                                       userInfo:nil];
+  }
 }
 
-+ (FIRServerTimestampBehavior) parseServerTimestampBehavior:(ServerTimestampBehavior)serverTimestampBehavior {
-    switch (serverTimestampBehavior) {
-        case ServerTimestampBehaviorNone:
-        return FIRServerTimestampBehaviorNone;
-        case ServerTimestampBehaviorEstimate:
-        return FIRServerTimestampBehaviorEstimate;
-        case ServerTimestampBehaviorPrevious:
-        return FIRServerTimestampBehaviorPrevious;
-        default:
-        @throw [NSException exceptionWithName:@"InvalidServerTimestampBehavior" reason:@"Invalid server timestamp behavior" userInfo:nil];
-    }
++ (FIRServerTimestampBehavior)parseServerTimestampBehavior:
+    (ServerTimestampBehavior)serverTimestampBehavior {
+  switch (serverTimestampBehavior) {
+    case ServerTimestampBehaviorNone:
+          return FIRServerTimestampBehaviorNone;
+    case ServerTimestampBehaviorEstimate:
+          return FIRServerTimestampBehaviorEstimate;
+    case ServerTimestampBehaviorPrevious:
+          return FIRServerTimestampBehaviorPrevious;
+    default:
+          @throw [NSException exceptionWithName:@"InvalidServerTimestampBehavior"
+                                         reason:@"Invalid server timestamp behavior"
+                                       userInfo:nil];
+  }
 }
 
-+ (PigeonSnapshotMetadata *) toPigeonSnapshotMetadata:(FIRSnapshotMetadata*)snapshotMetadata {
-    return [PigeonSnapshotMetadata makeWithHasPendingWrites:[NSNumber numberWithBool:snapshotMetadata.hasPendingWrites] isFromCache:[NSNumber numberWithBool:snapshotMetadata.isFromCache]];
++ (PigeonSnapshotMetadata *)toPigeonSnapshotMetadata:(FIRSnapshotMetadata *)snapshotMetadata {
+  return [PigeonSnapshotMetadata
+      makeWithHasPendingWrites:[NSNumber numberWithBool:snapshotMetadata.hasPendingWrites]
+                   isFromCache:[NSNumber numberWithBool:snapshotMetadata.isFromCache]];
 }
 
-+ (PigeonDocumentSnapshot *) toPigeonDocumentSnapshot:(FIRDocumentSnapshot*)documentSnapshot serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
-    return [PigeonDocumentSnapshot makeWithPath:documentSnapshot.reference.path data:[documentSnapshot dataWithServerTimestampBehavior:serverTimestampBehavior] metadata:[PigeonParser toPigeonSnapshotMetadata:documentSnapshot.metadata]];
++ (PigeonDocumentSnapshot *)toPigeonDocumentSnapshot:(FIRDocumentSnapshot *)documentSnapshot
+                             serverTimestampBehavior:
+                                 (FIRServerTimestampBehavior)serverTimestampBehavior {
+  return [PigeonDocumentSnapshot
+      makeWithPath:documentSnapshot.reference.path
+              data:[documentSnapshot dataWithServerTimestampBehavior:serverTimestampBehavior]
+          metadata:[PigeonParser toPigeonSnapshotMetadata:documentSnapshot.metadata]];
 }
 
-
-+ (DocumentChangeType) toPigeonDocumentChangeType:(FIRDocumentChangeType)documentChangeType {
-    switch (documentChangeType) {
-        case FIRDocumentChangeTypeAdded:
-        return DocumentChangeTypeAdded;
-        case FIRDocumentChangeTypeModified:
-        return DocumentChangeTypeModified;
-        case FIRDocumentChangeTypeRemoved:
-        return DocumentChangeTypeRemoved;
-        default:
-        @throw [NSException exceptionWithName:@"InvalidDocumentChangeType" reason:@"Invalid document change type" userInfo:nil];
-    }
-
++ (DocumentChangeType)toPigeonDocumentChangeType:(FIRDocumentChangeType)documentChangeType {
+  switch (documentChangeType) {
+    case FIRDocumentChangeTypeAdded:
+          return DocumentChangeTypeAdded;
+    case FIRDocumentChangeTypeModified:
+          return DocumentChangeTypeModified;
+    case FIRDocumentChangeTypeRemoved:
+          return DocumentChangeTypeRemoved;
+    default:
+          @throw [NSException exceptionWithName:@"InvalidDocumentChangeType"
+                                         reason:@"Invalid document change type"
+                                       userInfo:nil];
+  }
 }
 
-+ (PigeonDocumentChange *) toPigeonDocumentChange:(FIRDocumentChange*)documentChange serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
-    return [PigeonDocumentChange makeWithType:[PigeonParser toPigeonDocumentChangeType:documentChange.type] document:[PigeonParser toPigeonDocumentSnapshot:documentChange.document serverTimestampBehavior:serverTimestampBehavior] oldIndex:@(documentChange.oldIndex) newIndex:@(documentChange.newIndex)];
++ (PigeonDocumentChange *)toPigeonDocumentChange:(FIRDocumentChange *)documentChange
+                         serverTimestampBehavior:
+                             (FIRServerTimestampBehavior)serverTimestampBehavior {
+  return [PigeonDocumentChange
+      makeWithType:[PigeonParser toPigeonDocumentChangeType:documentChange.type]
+          document:[PigeonParser toPigeonDocumentSnapshot:documentChange.document
+                                  serverTimestampBehavior:serverTimestampBehavior]
+          oldIndex:@(documentChange.oldIndex)
+          newIndex:@(documentChange.newIndex)];
 }
 
-+ (NSArray<PigeonDocumentChange*> *) toPigeonDocumentChanges:(NSArray<FIRDocumentChange*>*)documentChanges serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior  {
-    NSMutableArray* pigeonDocumentChanges = [NSMutableArray array];
-    for (FIRDocumentChange* documentChange in documentChanges) {
-        [pigeonDocumentChanges addObject:[PigeonParser toPigeonDocumentChange:documentChange serverTimestampBehavior:serverTimestampBehavior]];
-    }
-    return pigeonDocumentChanges;
++ (NSArray<PigeonDocumentChange *> *)
+    toPigeonDocumentChanges:(NSArray<FIRDocumentChange *> *)documentChanges
+    serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
+  NSMutableArray *pigeonDocumentChanges = [NSMutableArray array];
+  for (FIRDocumentChange *documentChange in documentChanges) {
+    [pigeonDocumentChanges addObject:[PigeonParser toPigeonDocumentChange:documentChange
+                                                  serverTimestampBehavior:serverTimestampBehavior]];
+  }
+  return pigeonDocumentChanges;
 }
 
-+ (PigeonQuerySnapshot *) toPigeonQuerySnapshot:(FIRQuerySnapshot*)querySnaphot serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
-    NSMutableArray* documentSnapshots = [NSMutableArray array];
-    for (FIRDocumentSnapshot* documentSnapshot in querySnaphot.documents) {
-        [documentSnapshots addObject:[PigeonParser toPigeonDocumentSnapshot:documentSnapshot serverTimestampBehavior:serverTimestampBehavior]];
-    }
-    return [PigeonQuerySnapshot makeWithDocuments:documentSnapshots documentChanges:[PigeonParser toPigeonDocumentChanges:querySnaphot.documentChanges serverTimestampBehavior:serverTimestampBehavior] metadata:[PigeonParser toPigeonSnapshotMetadata:querySnaphot.metadata]];
++ (PigeonQuerySnapshot *)toPigeonQuerySnapshot:(FIRQuerySnapshot *)querySnaphot
+                       serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
+  NSMutableArray *documentSnapshots = [NSMutableArray array];
+  for (FIRDocumentSnapshot *documentSnapshot in querySnaphot.documents) {
+    [documentSnapshots addObject:[PigeonParser toPigeonDocumentSnapshot:documentSnapshot
+                                                serverTimestampBehavior:serverTimestampBehavior]];
+  }
+  return [PigeonQuerySnapshot
+      makeWithDocuments:documentSnapshots
+        documentChanges:[PigeonParser toPigeonDocumentChanges:querySnaphot.documentChanges
+                                      serverTimestampBehavior:serverTimestampBehavior]
+               metadata:[PigeonParser toPigeonSnapshotMetadata:querySnaphot.metadata]];
 }
 
 @end

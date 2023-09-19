@@ -14,17 +14,19 @@
 
 @implementation FLTQuerySnapshotStreamHandler
 
-- (instancetype)initWithFirestore:(FIRFirestore *)firestore query:(FIRQuery*)query includeMetadataChanges:(BOOL)includeMetadataChanges serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
-    self = [super init];
-    if (self) {
-        _firestore = firestore;
-        _query = query;
-        _includeMetadataChanges = includeMetadataChanges;
-        _serverTimestampBehavior = serverTimestampBehavior;
-    }
-    return self;
+- (instancetype)initWithFirestore:(FIRFirestore *)firestore
+                            query:(FIRQuery *)query
+           includeMetadataChanges:(BOOL)includeMetadataChanges
+          serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
+  self = [super init];
+  if (self) {
+    _firestore = firestore;
+    _query = query;
+    _includeMetadataChanges = includeMetadataChanges;
+    _serverTimestampBehavior = serverTimestampBehavior;
+  }
+  return self;
 }
-
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
@@ -37,7 +39,6 @@
                       @"information. Please report this issue."
               details:nil];
   }
-
 
   id listener = ^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
     if (error) {
@@ -74,6 +75,5 @@
 
   return nil;
 }
-
 
 @end

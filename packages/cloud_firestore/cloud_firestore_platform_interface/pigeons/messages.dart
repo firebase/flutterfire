@@ -112,9 +112,6 @@ class PigeonQuerySnapshot {
   final PigeonSnapshotMetadata metadata;
 }
 
-
-
-
 /// An enumeration of firestore source types.
 enum Source {
   /// Causes Firestore to try to retrieve an up-to-date (server-retrieved) snapshot, but fall back to
@@ -296,9 +293,9 @@ abstract class FirebaseFirestoreHostApi {
 
   @async
   String transactionCreate(
-        PigeonFirebaseApp app,
-int timeout,
-int maxAttempts,
+    PigeonFirebaseApp app,
+    int timeout,
+    int maxAttempts,
   );
 
   @async

@@ -14,13 +14,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FLTQuerySnapshotStreamHandler : NSObject <FlutterStreamHandler>
-@property (nonatomic, strong) FIRFirestore *firestore;
-@property (nonatomic, assign)  FIRQuery* query;
-@property (nonatomic, assign)  BOOL includeMetadataChanges;
-@property (nonatomic, assign)  FIRServerTimestampBehavior serverTimestampBehavior;
+@property(nonatomic, strong) FIRFirestore *firestore;
+@property(nonatomic, assign) FIRQuery *query;
+@property(nonatomic, assign) BOOL includeMetadataChanges;
+@property(nonatomic, assign) FIRServerTimestampBehavior serverTimestampBehavior;
 
-
-- (instancetype)initWithFirestore:(FIRFirestore *)firestore query:(FIRQuery*)query includeMetadataChanges:(BOOL)includeMetadataChanges serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
+- (instancetype)initWithFirestore:(FIRFirestore *)firestore
+                            query:(FIRQuery *)query
+           includeMetadataChanges:(BOOL)includeMetadataChanges
+          serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
 
 @end
 

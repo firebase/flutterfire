@@ -66,7 +66,8 @@ DocumentSnapshotPlatform convertWebDocumentSnapshot(
         serverTimestamps:
             getServerTimestampBehaviorString(serverTimestampBehavior),
       )),
-    firestore,),
+      firestore,
+    ),
     PigeonSnapshotMetadata(
       hasPendingWrites: webSnapshot.metadata.hasPendingWrites,
       isFromCache: webSnapshot.metadata.fromCache,

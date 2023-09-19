@@ -6,17 +6,15 @@
 #include <flutter/encodable_value.h>
 #include <flutter/standard_message_codec.h>
 
-#include "firebase/firestore/field_value.h"
-
 #include <map>
+#include <memory>
 #include <optional>
 #include <string>
-#include <memory>
 
+#include "firebase/firestore/field_value.h"
 
 namespace cloud_firestore_windows {
-class FirestoreCodec
-    : public flutter::StandardCodecSerializer {
+class FirestoreCodec : public flutter::StandardCodecSerializer {
  public:
   static const uint8_t DATA_TYPE_DATE_TIME = 180;
   static const uint8_t DATA_TYPE_GEO_POINT = 181;
@@ -38,7 +36,6 @@ class FirestoreCodec
   static const uint8_t DATA_TYPE_FIRESTORE_QUERY = 197;
   static const uint8_t DATA_TYPE_FIRESTORE_SETTINGS = 198;
 
-
   FirestoreCodec();
   inline static FirestoreCodec& GetInstance() {
     static FirestoreCodec sInstance;
@@ -52,6 +49,6 @@ class FirestoreCodec
   flutter::EncodableValue ReadValueOfType(
       uint8_t type, flutter::ByteStreamReader* stream) const override;
 };
-}
+}  // namespace cloud_firestore_windows
 
 #endif  // FIRESTORE_CODEC_H_

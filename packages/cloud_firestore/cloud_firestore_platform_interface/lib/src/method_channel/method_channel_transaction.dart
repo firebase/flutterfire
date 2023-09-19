@@ -22,7 +22,8 @@ class MethodChannelTransaction extends TransactionPlatform {
   PigeonFirebaseApp pigeonApp;
 
   /// Constructor.
-  MethodChannelTransaction(String transactionId, this.appName, this.pigeonApp, this.databaseURL)
+  MethodChannelTransaction(
+      String transactionId, this.appName, this.pigeonApp, this.databaseURL)
       : _transactionId = transactionId,
         super() {
     _firestore = FirebaseFirestorePlatform.instanceFor(
