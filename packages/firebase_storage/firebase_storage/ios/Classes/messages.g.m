@@ -556,11 +556,11 @@ void FirebaseStorageHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
   {
     FlutterBasicMessageChannel *channel =
       [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.FirebaseStorageHostApi.refrencePutString"
+        initWithName:@"dev.flutter.pigeon.FirebaseStorageHostApi.referencePutString"
         binaryMessenger:binaryMessenger
         codec:FirebaseStorageHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(refrencePutStringApp:reference:data:format:settableMetaData:handle:completion:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(refrencePutStringApp:reference:data:format:settableMetaData:handle:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(referencePutStringApp:reference:data:format:settableMetaData:handle:completion:)], @"FirebaseStorageHostApi api (%@) doesn't respond to @selector(referencePutStringApp:reference:data:format:settableMetaData:handle:completion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
@@ -569,7 +569,7 @@ void FirebaseStorageHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
         NSNumber *arg_format = GetNullableObjectAtIndex(args, 3);
         PigeonSettableMetadata *arg_settableMetaData = GetNullableObjectAtIndex(args, 4);
         NSNumber *arg_handle = GetNullableObjectAtIndex(args, 5);
-        [api refrencePutStringApp:arg_app reference:arg_reference data:arg_data format:arg_format settableMetaData:arg_settableMetaData handle:arg_handle completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
+        [api referencePutStringApp:arg_app reference:arg_reference data:arg_data format:arg_format settableMetaData:arg_settableMetaData handle:arg_handle completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
           callback(wrapResult(output, error));
         }];
       }];

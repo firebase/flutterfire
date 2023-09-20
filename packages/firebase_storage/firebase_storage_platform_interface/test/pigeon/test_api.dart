@@ -86,7 +86,7 @@ abstract class TestFirebaseStorageHostApi {
 
   Future<String> referencePutData(PigeonFirebaseApp app, PigeonStorageReference reference, Uint8List data, PigeonSettableMetadata settableMetaData, int handle);
 
-  Future<String> refrencePutString(PigeonFirebaseApp app, PigeonStorageReference reference, String data, int format, PigeonSettableMetadata settableMetaData, int handle);
+  Future<String> referencePutString(PigeonFirebaseApp app, PigeonStorageReference reference, String data, int format, PigeonSettableMetadata settableMetaData, int handle);
 
   Future<String> referencePutFile(PigeonFirebaseApp app, PigeonStorageReference reference, String filePath, PigeonSettableMetadata settableMetaData, int handle);
 
@@ -386,34 +386,34 @@ abstract class TestFirebaseStorageHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.FirebaseStorageHostApi.refrencePutString', codec,
+          'dev.flutter.pigeon.FirebaseStorageHostApi.referencePutString', codec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(channel, (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.refrencePutString was null.');
+          'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.referencePutString was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.refrencePutString was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.referencePutString was null, expected non-null PigeonFirebaseApp.');
           final PigeonStorageReference? arg_reference = (args[1] as PigeonStorageReference?);
           assert(arg_reference != null,
-              'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.refrencePutString was null, expected non-null PigeonStorageReference.');
+              'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.referencePutString was null, expected non-null PigeonStorageReference.');
           final String? arg_data = (args[2] as String?);
           assert(arg_data != null,
-              'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.refrencePutString was null, expected non-null String.');
+              'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.referencePutString was null, expected non-null String.');
           final int? arg_format = (args[3] as int?);
           assert(arg_format != null,
-              'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.refrencePutString was null, expected non-null int.');
+              'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.referencePutString was null, expected non-null int.');
           final PigeonSettableMetadata? arg_settableMetaData = (args[4] as PigeonSettableMetadata?);
           assert(arg_settableMetaData != null,
-              'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.refrencePutString was null, expected non-null PigeonSettableMetadata.');
+              'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.referencePutString was null, expected non-null PigeonSettableMetadata.');
           final int? arg_handle = (args[5] as int?);
           assert(arg_handle != null,
-              'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.refrencePutString was null, expected non-null int.');
-          final String output = await api.refrencePutString(arg_app!, arg_reference!, arg_data!, arg_format!, arg_settableMetaData!, arg_handle!);
+              'Argument for dev.flutter.pigeon.FirebaseStorageHostApi.referencePutString was null, expected non-null int.');
+          final String output = await api.referencePutString(arg_app!, arg_reference!, arg_data!, arg_format!, arg_settableMetaData!, arg_handle!);
           return <Object?>[output];
         });
       }

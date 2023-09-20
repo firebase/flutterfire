@@ -223,7 +223,6 @@ abstract class FirebaseStorageHostApi {
     int maxSize,
   );
 
-  // TODO figure out how to manage the UploadTask and DownloadTask
   @async
   String referencePutData(
     PigeonFirebaseApp app,
@@ -234,7 +233,7 @@ abstract class FirebaseStorageHostApi {
   );
 
   @async
-  String refrencePutString(
+  String referencePutString(
     PigeonFirebaseApp app,
     PigeonStorageReference reference,
     String data,

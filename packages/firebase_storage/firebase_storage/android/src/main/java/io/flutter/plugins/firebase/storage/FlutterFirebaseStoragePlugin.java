@@ -491,7 +491,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void refrencePutString(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void referencePutString(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull String data, @NonNull Long format,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData,

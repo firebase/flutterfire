@@ -717,7 +717,7 @@ public class GeneratedAndroidFirebaseStorage {
 
     void referencePutData(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull byte[] data, @NonNull PigeonSettableMetadata settableMetaData, @NonNull Long handle, @NonNull Result<String> result);
 
-    void refrencePutString(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull String data, @NonNull Long format, @NonNull PigeonSettableMetadata settableMetaData, @NonNull Long handle, @NonNull Result<String> result);
+    void referencePutString(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull String data, @NonNull Long format, @NonNull PigeonSettableMetadata settableMetaData, @NonNull Long handle, @NonNull Result<String> result);
 
     void referencePutFile(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull String filePath, @NonNull PigeonSettableMetadata settableMetaData, @NonNull Long handle, @NonNull Result<String> result);
 
@@ -1107,7 +1107,7 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.FirebaseStorageHostApi.refrencePutString", getCodec());
+                binaryMessenger, "dev.flutter.pigeon.FirebaseStorageHostApi.referencePutString", getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1132,7 +1132,7 @@ public class GeneratedAndroidFirebaseStorage {
                       }
                     };
 
-                api.refrencePutString(appArg, referenceArg, dataArg, (formatArg == null) ? null : formatArg.longValue(), settableMetaDataArg, (handleArg == null) ? null : handleArg.longValue(), resultCallback);
+                api.referencePutString(appArg, referenceArg, dataArg, (formatArg == null) ? null : formatArg.longValue(), settableMetaDataArg, (handleArg == null) ? null : handleArg.longValue(), resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

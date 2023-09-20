@@ -78,7 +78,8 @@ abstract class MethodChannelTask extends TaskPlatform {
       }
     }
 
-    _stream = mapNativeStream().asBroadcastStream();
+    _stream = mapNativeStream().asBroadcastStream(
+        onListen: (sub) => sub.resume(), onCancel: (sub) => sub.pause());
 
     // Keep reference to whether the initial "start" task has completed.
     _initialTaskCompleter = Completer<void>();
@@ -147,6 +148,9 @@ abstract class MethodChannelTask extends TaskPlatform {
     } else if (_didComplete && _exception != null) {
       return catchFuturePlatformException(_exception!, _stackTrace);
     } else {
+      // Call _stream.last to trigger the stream initialization, in case it hasn't been.
+      // ignore: unawaited_futures
+      _stream.last;
       _completer ??= Completer<TaskSnapshotPlatform>();
       return _completer!.future;
     }
@@ -260,7 +264,7 @@ class MethodChannelPutStringTask extends MethodChannelTask {
       String data,
       PutStringFormat format,
       SettableMetadata? metadata) {
-    return MethodChannelFirebaseStorage.pigeonChannel.refrencePutString(
+    return MethodChannelFirebaseStorage.pigeonChannel.referencePutString(
       MethodChannelFirebaseStorage.getPigeonFirebaseApp(storage.app.name),
       MethodChannelFirebaseStorage.getPigeonReference(
           storage.bucket, path, 'putString'),
@@ -305,8 +309,8 @@ class MethodChannelDownloadTask extends MethodChannelTask {
     return MethodChannelFirebaseStorage.pigeonChannel.referenceDownloadFile(
       MethodChannelFirebaseStorage.getPigeonFirebaseApp(storage.app.name),
       MethodChannelFirebaseStorage.getPigeonReference(
-          storage.bucket, path, 'putData'),
-      path,
+          storage.bucket, path, 'writeToFile'),
+      file.path,
       handle,
     );
   }
