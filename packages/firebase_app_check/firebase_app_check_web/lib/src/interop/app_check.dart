@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:js';
 
+import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'app_check_interop.dart' as app_check_interop;
@@ -12,9 +13,21 @@ import 'app_check_interop.dart' as app_check_interop;
 export 'app_check_interop.dart';
 
 /// Given an AppJSImp, return the AppCheck instance.
-AppCheck? getAppCheckInstance([App? app, String? recaptchaKey]) {
-  final provider = app_check_interop.ReCaptchaV3Provider(recaptchaKey);
-  final options = app_check_interop.AppCheckOptions(provider: provider);
+AppCheck? getAppCheckInstance([App? app, WebProvider? provider]) {
+  late app_check_interop.ReCaptchaProvider jsProvider;
+
+  if (provider is ReCaptchaV3Provider) {
+    jsProvider = app_check_interop.ReCaptchaV3Provider(provider.siteKey);
+  } else if (provider is ReCaptchaEnterpriseProvider) {
+    jsProvider =
+        app_check_interop.ReCaptchaEnterpriseProvider(provider.siteKey);
+  } else {
+    throw ArgumentError(
+      'A `WebProvider` is required for `activate()` to initialise App Check on the web platform',
+    );
+  }
+
+  final options = app_check_interop.AppCheckOptions(provider: jsProvider);
 
   return AppCheck.getInstance(
     app != null
