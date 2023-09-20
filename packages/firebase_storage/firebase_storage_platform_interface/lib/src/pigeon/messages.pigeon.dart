@@ -578,9 +578,9 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<String> refrencePutString(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, String arg_data, int arg_format, PigeonSettableMetadata arg_settableMetaData, int arg_handle) async {
+  Future<String> referencePutString(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, String arg_data, int arg_format, PigeonSettableMetadata arg_settableMetaData, int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseStorageHostApi.refrencePutString', codec,
+        'dev.flutter.pigeon.FirebaseStorageHostApi.referencePutString', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_app, arg_reference, arg_data, arg_format, arg_settableMetaData, arg_handle]) as List<Object?>?;
