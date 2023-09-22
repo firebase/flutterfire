@@ -34,6 +34,7 @@
 #include <stdexcept>
 #include <string>
 // #include <thread>
+#include <mutex>
 #include <vector>
 using ::firebase::App;
 using ::firebase::Future;
@@ -188,7 +189,13 @@ void FirebaseStoragePlugin::ReferenceGetDownloadURL(
     std::function<void(ErrorOr<std::string> reply)> result) {
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, "", reference);
+  std::cout << "[C++] FirebaseStoragePlugin::ReferenceGetDownloadURL() START"
+            << std::endl;
   Future<std::string> future_result = cpp_reference.GetDownloadUrl();
+  std::cout << "[C++] FirebaseStoragePlugin::ReferenceGetDownloadURL() after "
+               "reference get url"
+            << std::endl;
+  ::Sleep(1000);
   future_result.OnCompletion(
       [result](const Future<std::string>& string_result) {
         // TODO error handling
@@ -216,6 +223,7 @@ void FirebaseStoragePlugin::ReferenceGetMetaData(
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, "", reference);
   Future<Metadata> future_result = cpp_reference.GetMetadata();
+  ::Sleep(1000);
   future_result.OnCompletion([result](const Future<Metadata>& metadata_result) {
     // TODO error handling
     std::cout << "[C++] FirebaseStoragePlugin::ReferenceGetMetaData() COMPLETE"
@@ -259,6 +267,7 @@ void FirebaseStoragePlugin::ReferenceGetData(
   int8_t byte_buffer[kMaxAllowedSize];
 
   Future<size_t> future_result = cpp_reference.GetBytes(byte_buffer, max_size);
+  ::Sleep(1000);
   future_result.OnCompletion([result,
                               byte_buffer](const Future<size_t>& data_result) {
     // TODO error handling
@@ -342,6 +351,7 @@ class PutDataStreamHandler
     StorageReference reference = storage_->GetReference(reference_path_);
     Future<Metadata> future_result = reference.PutBytes(
         data_, buffer_size_, &putStringListener, controller_);
+    ::Sleep(1000);
     std::cout << "[C++] PutDataStreamHandler::OnListenInternal() after "
                  "reference putString"
               << std::endl;
@@ -409,6 +419,7 @@ class PutFileStreamHandler
     std::cout << "[C++] PutFileStreamHandler::OnListenInternal() after "
                  "reference putFile"
               << std::endl;
+    ::Sleep(1000);
     future_result.OnCompletion([this](const Future<Metadata>& data_result) {
       // TODO error handling
       std::cout << "[C++] PutFileStreamHandler::OnCompletion(), result error:"
@@ -463,6 +474,7 @@ class GetFileStreamHandler
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
     events_ = std::move(events);
+    std::unique_lock<std::mutex> lock(mtx_);
     std::cout << "[C++] GetFileStreamHandler::OnListenInternal() START"
               << std::endl;
     TaskStateListener putStringListener = TaskStateListener(events_.get());
@@ -470,8 +482,9 @@ class GetFileStreamHandler
     Future<size_t> future_result =
         reference.GetFile(file_path_.c_str(), &putStringListener, controller_);
     std::cout << "[C++] GetFileStreamHandler::OnListenInternal() after "
-                 "reference putString"
+                 "reference getfile"
               << std::endl;
+    ::Sleep(1000);
     future_result.OnCompletion([this](const Future<size_t>& data_result) {
       // TODO error handling
       std::cout << "[C++] GetFileStreamHandler::OnCompletion(), result error:"
@@ -494,6 +507,7 @@ class GetFileStreamHandler
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    std::unique_lock<std::mutex> lock(mtx_);
     std::cout << "[C++] GetFileStreamHandler::OnCancelInternal() START"
               << std::endl;
     return nullptr;
@@ -504,6 +518,7 @@ class GetFileStreamHandler
   std::string reference_path_;
   std::string file_path_;
   Controller* controller_;
+  std::mutex mtx_;
   std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events_ =
       nullptr;
 };
@@ -531,7 +546,7 @@ void FirebaseStoragePlugin::ReferencePutData(
   result(channelName);
 }
 
-void FirebaseStoragePlugin::RefrencePutString(
+void FirebaseStoragePlugin::ReferencePutString(
     const PigeonFirebaseApp& pigeon_app,
     const PigeonStorageReference& pigeon_reference, const std::string& data,
     int64_t format, const PigeonSettableMetadata& settable_meta_data,

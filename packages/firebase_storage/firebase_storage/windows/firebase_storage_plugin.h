@@ -75,7 +75,7 @@ class FirebaseStoragePlugin : public flutter::Plugin,
       const std::vector<uint8_t>& data,
       const PigeonSettableMetadata& settable_meta_data, int64_t handle,
       std::function<void(ErrorOr<std::string> reply)> result) override;
-  virtual void RefrencePutString(
+  virtual void ReferencePutString(
       const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
       const std::string& data, int64_t format,
       const PigeonSettableMetadata& settable_meta_data, int64_t handle,
