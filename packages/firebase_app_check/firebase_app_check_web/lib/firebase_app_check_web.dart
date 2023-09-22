@@ -3,6 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'dart:async';
+import 'dart:html';
 
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,11 +29,30 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    final instance =
+        FirebaseAppCheckPlatform.instance = FirebaseAppCheckWeb.instance;
+
     FirebaseCoreWeb.registerService(
       'app-check',
       productNameOverride: 'app_check',
+      ensurePluginInitialized: (firebaseApp) async {
+        final recaptchaType =
+            window.sessionStorage['${firebaseApp.name}-recaptchaType'];
+        final recaptchaSiteKey =
+            window.sessionStorage['${firebaseApp.name}-recaptchaSiteKey'];
+        if (recaptchaType != null && recaptchaSiteKey != null) {
+          final WebProvider provider;
+          if (recaptchaType == 'recaptcha-v3') {
+            provider = ReCaptchaV3Provider(recaptchaSiteKey);
+          } else if (recaptchaType == 'enterprise') {
+            provider = ReCaptchaEnterpriseProvider(recaptchaSiteKey);
+          } else {
+            throw Exception('Invalid recaptcha type: $recaptchaType');
+          }
+          await instance.activate(webProvider: provider);
+        }
+      },
     );
-    FirebaseAppCheckPlatform.instance = FirebaseAppCheckWeb.instance;
   }
 
   /// Initializes a stub instance to allow the class to be registered.
@@ -68,6 +88,21 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     AndroidProvider? androidProvider,
     AppleProvider? appleProvider,
   }) async {
+    // save the recaptcha type and site key for future startups
+    if (webProvider != null) {
+      final String recaptchaType;
+      if (webProvider is ReCaptchaV3Provider) {
+        recaptchaType = 'recaptcha-v3';
+      } else if (webProvider is ReCaptchaEnterpriseProvider) {
+        recaptchaType = 'enterprise';
+      } else {
+        throw Exception('Invalid web provider: $webProvider');
+      }
+      window.sessionStorage['${app.name}-recaptchaType'] = recaptchaType;
+      window.sessionStorage['${app.name}-recaptchaSiteKey'] =
+          webProvider.siteKey;
+    }
+
     // activate API no longer exists, recaptcha key has to be passed on initialization of app-check instance.
     return convertWebExceptions<Future<void>>(() async {
       _webAppCheck ??= app_check_interop.getAppCheckInstance(
