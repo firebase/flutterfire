@@ -83,7 +83,7 @@
       FIRDocumentReference *reference = [firestore documentWithPath:documentPath];
 
       switch (commandType) {
-        case PigeonTransactionTypeDelete:
+        case PigeonTransactionTypeDeleteType:
           [transaction deleteDocument:reference];
           break;
         case PigeonTransactionTypeUpdate:

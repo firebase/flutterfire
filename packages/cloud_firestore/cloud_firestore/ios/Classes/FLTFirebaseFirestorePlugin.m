@@ -501,14 +501,15 @@ FlutterStandardMethodCodec *_codec;
   FIRServerTimestampBehavior serverTimestampBehavior =
       [PigeonParser parseServerTimestampBehavior:options.serverTimestampBehavior];
 
-  completion([self
-      registerEventChannelWithPrefix:kFLTFirebaseFirestoreQuerySnapshotEventChannelName
-                       streamHandler:[[FLTQuerySnapshotStreamHandler alloc]
-                                               initWithFirestore:firestore
-                                                           query:query
-                                          includeMetadataChanges:includeMetadataChanges.boolValue
-                                         serverTimestampBehavior:serverTimestampBehavior],
-                                     nil]);
+  completion(
+      [self registerEventChannelWithPrefix:kFLTFirebaseFirestoreQuerySnapshotEventChannelName
+                             streamHandler:[[FLTQuerySnapshotStreamHandler alloc]
+                                                     initWithFirestore:firestore
+                                                                 query:query
+                                                includeMetadataChanges:includeMetadataChanges
+                                                                           .boolValue
+                                               serverTimestampBehavior:serverTimestampBehavior]],
+      nil);
 }
 
 - (void)setIndexConfigurationApp:(nonnull PigeonFirebaseApp *)app
@@ -547,7 +548,10 @@ FlutterStandardMethodCodec *_codec;
     if (error != nil) {
       completion([self convertToFlutterError:error]);
     } else {
-      [FLTFirebaseFirestoreUtils destroyCachedFIRFirestoreInstanceForKey:firestore.app.name];
+      FLTFirebaseFirestoreExtension *firestoreExtension =
+          [FLTFirebaseFirestoreUtils getCachedInstanceForFirestore:firestore];
+      [FLTFirebaseFirestoreUtils destroyCachedInstanceForFirestore:firestore.app.name
+                                                       databaseURL:firestoreExtension.databaseURL];
       completion(nil);
     }
   }];
@@ -644,7 +648,7 @@ FlutterStandardMethodCodec *_codec;
     switch (type) {
       case PigeonTransactionTypeGet:
         break;
-      case PigeonTransactionTypeDelete:
+      case PigeonTransactionTypeDeleteType:
         [batch deleteDocument:reference];
         break;
       case PigeonTransactionTypeUpdate:
