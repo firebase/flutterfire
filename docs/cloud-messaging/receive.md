@@ -32,9 +32,10 @@ receive message payloads via FCM:
 - On Android, if the user force-quits the app from device settings, it must be manually reopened for messages to start working.
 - On web, you must have requested a token (using `getToken()`) with your web push certificate.
 
-## Request permission to receive messages (Apple and Web)
+## Request permission to receive messages
 
-On iOS, macOS and web, before FCM payloads can be received on your device, you must first ask the user's permission.
+On iOS, macOS, web and Android 13 (or newer), before FCM payloads can be received on your device,
+you must first ask the user's permission.
 
 The `firebase_messaging` package provides a simple API for requesting permission via the [`requestPermission`](https://pub.dev/documentation/firebase_messaging/latest/firebase_messaging/FirebaseMessaging/requestPermission.html) method.
 This API accepts a number of named arguments which define the type of permissions you'd like to request, such as whether
@@ -68,7 +69,7 @@ the request can be used to determine the user's overall decision:
 - `notDetermined`: The user has not yet chosen whether to grant permission.
 - `provisional`: The user granted provisional permission
 
-Note: On Android `authorizationStatus` will return `authorized` if the user has not disabled notifications for the app via the operating systems settings.
+Note: On Android versions prior to 13, `authorizationStatus` will return `authorized` if the user has not disabled notifications for the app via the operating system settings.
 
 The other properties on `NotificationSettings` return whether a specific permission is enabled, disabled or not supported on the current
 device.
