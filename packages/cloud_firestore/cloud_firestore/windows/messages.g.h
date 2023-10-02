@@ -173,13 +173,17 @@ class PigeonFirebaseApp {
  public:
   // Constructs an object setting all fields.
   explicit PigeonFirebaseApp(const std::string& app_name,
-                             const PigeonFirebaseSettings& settings);
+                             const PigeonFirebaseSettings& settings,
+                             const std::string& database_u_r_l);
 
   const std::string& app_name() const;
   void set_app_name(std::string_view value_arg);
 
   const PigeonFirebaseSettings& settings() const;
   void set_settings(const PigeonFirebaseSettings& value_arg);
+
+  const std::string& database_u_r_l() const;
+  void set_database_u_r_l(std::string_view value_arg);
 
  private:
   static PigeonFirebaseApp FromEncodableList(
@@ -189,6 +193,7 @@ class PigeonFirebaseApp {
   friend class FirebaseFirestoreHostApiCodecSerializer;
   std::string app_name_;
   PigeonFirebaseSettings settings_;
+  std::string database_u_r_l_;
 };
 
 // Generated class from Pigeon that represents data sent in messages.

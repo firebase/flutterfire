@@ -327,6 +327,19 @@ public class GeneratedAndroidFirebaseFirestore {
       this.settings = setterArg;
     }
 
+    private @NonNull String databaseURL;
+
+    public @NonNull String getDatabaseURL() {
+      return databaseURL;
+    }
+
+    public void setDatabaseURL(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"databaseURL\" is null.");
+      }
+      this.databaseURL = setterArg;
+    }
+
     /** Constructor is non-public to enforce null safety; use Builder. */
     PigeonFirebaseApp() {}
 
@@ -346,19 +359,28 @@ public class GeneratedAndroidFirebaseFirestore {
         return this;
       }
 
+      private @Nullable String databaseURL;
+
+      public @NonNull Builder setDatabaseURL(@NonNull String setterArg) {
+        this.databaseURL = setterArg;
+        return this;
+      }
+
       public @NonNull PigeonFirebaseApp build() {
         PigeonFirebaseApp pigeonReturn = new PigeonFirebaseApp();
         pigeonReturn.setAppName(appName);
         pigeonReturn.setSettings(settings);
+        pigeonReturn.setDatabaseURL(databaseURL);
         return pigeonReturn;
       }
     }
 
     @NonNull
     ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+      ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(appName);
       toListResult.add((settings == null) ? null : settings.toList());
+      toListResult.add(databaseURL);
       return toListResult;
     }
 
@@ -371,6 +393,8 @@ public class GeneratedAndroidFirebaseFirestore {
           (settings == null)
               ? null
               : PigeonFirebaseSettings.fromList((ArrayList<Object>) settings));
+      Object databaseURL = list.get(2);
+      pigeonResult.setDatabaseURL((String) databaseURL);
       return pigeonResult;
     }
   }

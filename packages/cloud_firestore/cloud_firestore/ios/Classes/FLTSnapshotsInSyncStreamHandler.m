@@ -22,7 +22,6 @@
   return self;
 }
 
-
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
   id listener = ^() {

@@ -140,9 +140,12 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 @interface PigeonFirebaseApp : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithAppName:(NSString *)appName settings:(PigeonFirebaseSettings *)settings;
++ (instancetype)makeWithAppName:(NSString *)appName
+                       settings:(PigeonFirebaseSettings *)settings
+                    databaseURL:(NSString *)databaseURL;
 @property(nonatomic, copy) NSString *appName;
 @property(nonatomic, strong) PigeonFirebaseSettings *settings;
+@property(nonatomic, copy) NSString *databaseURL;
 @end
 
 @interface PigeonSnapshotMetadata : NSObject

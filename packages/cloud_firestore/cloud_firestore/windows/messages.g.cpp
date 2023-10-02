@@ -143,8 +143,11 @@ PigeonFirebaseSettings PigeonFirebaseSettings::FromEncodableList(
 // PigeonFirebaseApp
 
 PigeonFirebaseApp::PigeonFirebaseApp(const std::string& app_name,
-                                     const PigeonFirebaseSettings& settings)
-    : app_name_(app_name), settings_(settings) {}
+                                     const PigeonFirebaseSettings& settings,
+                                     const std::string& database_u_r_l)
+    : app_name_(app_name),
+      settings_(settings),
+      database_u_r_l_(database_u_r_l) {}
 
 const std::string& PigeonFirebaseApp::app_name() const { return app_name_; }
 
@@ -160,11 +163,20 @@ void PigeonFirebaseApp::set_settings(const PigeonFirebaseSettings& value_arg) {
   settings_ = value_arg;
 }
 
+const std::string& PigeonFirebaseApp::database_u_r_l() const {
+  return database_u_r_l_;
+}
+
+void PigeonFirebaseApp::set_database_u_r_l(std::string_view value_arg) {
+  database_u_r_l_ = value_arg;
+}
+
 EncodableList PigeonFirebaseApp::ToEncodableList() const {
   EncodableList list;
-  list.reserve(2);
+  list.reserve(3);
   list.push_back(EncodableValue(app_name_));
   list.push_back(EncodableValue(settings_.ToEncodableList()));
+  list.push_back(EncodableValue(database_u_r_l_));
   return list;
 }
 
@@ -172,7 +184,8 @@ PigeonFirebaseApp PigeonFirebaseApp::FromEncodableList(
     const EncodableList& list) {
   PigeonFirebaseApp decoded(std::get<std::string>(list[0]),
                             PigeonFirebaseSettings::FromEncodableList(
-                                std::get<EncodableList>(list[1])));
+                                std::get<EncodableList>(list[1])),
+                            std::get<std::string>(list[2]));
   return decoded;
 }
 

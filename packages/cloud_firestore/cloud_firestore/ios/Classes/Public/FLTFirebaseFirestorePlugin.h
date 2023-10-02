@@ -10,8 +10,8 @@
 #endif
 
 #import <Foundation/Foundation.h>
-#import "FirestoreMessages.g.h"
 #import <firebase_core/FLTFirebasePlugin.h>
+#import "FirestoreMessages.g.h"
 
 @interface FLTFirebaseFirestorePlugin
     : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FirebaseFirestoreHostApi>
