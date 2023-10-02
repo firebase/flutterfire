@@ -1,3 +1,7 @@
+## 5.16.1
+
+ - **FIX**(firestore): allow `DocumentReference` to be used to in Filter queries ([#11593](https://github.com/firebase/flutterfire/issues/11593)). ([3f570c6d](https://github.com/firebase/flutterfire/commit/3f570c6d42305bef299e75de6053eb57d8520c8a))
+
 ## 5.16.0
 
  - **FEAT**(firestore): add support for multiple database instances ([#11310](https://github.com/firebase/flutterfire/issues/11310)). ([ce6efcc1](https://github.com/firebase/flutterfire/commit/ce6efcc16ced0317e86b0ad12aa02ff5795a8207))

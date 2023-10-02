@@ -247,7 +247,7 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  QueryPlatform whereFilter(Filter filter) {
+  QueryPlatform whereFilter(FilterPlatformInterface filter) {
     return _copyWithParameters(<String, dynamic>{
       'filters': filter.toJson(),
     });

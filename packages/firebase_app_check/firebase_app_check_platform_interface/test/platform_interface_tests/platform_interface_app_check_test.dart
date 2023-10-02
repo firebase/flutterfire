@@ -78,8 +78,9 @@ void main() {
 
     test('throws if .activate() not implemented', () async {
       await expectLater(
-        () =>
-            firebaseAppCheckPlatform.activate(webRecaptchaSiteKey: 'test key'),
+        () => firebaseAppCheckPlatform.activate(
+          webProvider: ReCaptchaV3Provider('test key'),
+        ),
         throwsA(
           isA<UnimplementedError>().having(
             (e) => e.message,
