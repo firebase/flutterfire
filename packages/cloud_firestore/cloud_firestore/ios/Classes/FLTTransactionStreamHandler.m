@@ -22,11 +22,16 @@
 }
 
 - (instancetype)initWithId:(NSString *)transactionId
+                 firestore:(FIRFirestore *)firestore
+                   timeout:(nonnull NSNumber *)timeout maxAttempts:(nonnull NSNumber *)maxAttempts
                    started:(void (^)(FIRTransaction *))startedListener
                      ended:(void (^)(void))endedListener {
   self = [super init];
   if (self) {
     _transactionId = transactionId;
+      self.firestore = firestore;
+      self.maxAttempts = maxAttempts;
+      self.timeout = timeout;
     self.started = startedListener;
     self.ended = endedListener;
     self.semaphore = dispatch_semaphore_create(0);
@@ -36,9 +41,6 @@
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
-  FIRFirestore *firestore = arguments[@"firestore"];
-  NSNumber *transactionTimeout = arguments[@"timeout"];
-  NSNumber *maxAttempts = arguments[@"maxAttempts"];
 
   __weak FLTTransactionStreamHandler *weakSelf = self;
 
@@ -48,12 +50,12 @@
     strongSelf.started(transaction);
 
     dispatch_async(dispatch_get_main_queue(), ^{
-      events(@{@"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:firestore.app.name]});
+      events(@{@"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:self.firestore.app.name]});
     });
 
     long timedOut = dispatch_semaphore_wait(
         strongSelf.semaphore,
-        dispatch_time(DISPATCH_TIME_NOW, [transactionTimeout integerValue] * NSEC_PER_MSEC));
+        dispatch_time(DISPATCH_TIME_NOW, [self.timeout integerValue] * NSEC_PER_MSEC));
 
     if (timedOut) {
       NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils
@@ -80,7 +82,7 @@
     for (PigeonTransactionCommand *command in self.commands) {
       PigeonTransactionType commandType = command.type;
       NSString *documentPath = command.path;
-      FIRDocumentReference *reference = [firestore documentWithPath:documentPath];
+      FIRDocumentReference *reference = [self.firestore documentWithPath:documentPath];
 
       switch (commandType) {
         case PigeonTransactionTypeDeleteType:
@@ -134,9 +136,9 @@
     strongSelf.ended();
   };
   FIRTransactionOptions *options = [[FIRTransactionOptions alloc] init];
-  options.maxAttempts = maxAttempts.integerValue;
+  options.maxAttempts = _maxAttempts.integerValue;
 
-  [firestore runTransactionWithOptions:options
+  [_firestore runTransactionWithOptions:options
                                  block:transactionRunBlock
                             completion:transactionCompleteBlock];
 

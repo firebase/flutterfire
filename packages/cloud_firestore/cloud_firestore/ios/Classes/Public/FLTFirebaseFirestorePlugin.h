@@ -10,7 +10,7 @@
 #endif
 
 #import <Foundation/Foundation.h>
-#import <cloud_firestore/messages.g.h>
+#import "FirestoreMessages.g.h"
 #import <firebase_core/FLTFirebasePlugin.h>
 
 @interface FLTFirebaseFirestorePlugin

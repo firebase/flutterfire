@@ -128,6 +128,7 @@ FlutterStandardMethodCodec *_codec;
 #else
   [registrar publish:instance];
 #endif
+  FirebaseFirestoreHostApiSetup(registrar.messenger, instance);
 }
 
 - (void)cleanupEventListeners {
@@ -208,6 +209,11 @@ FlutterStandardMethodCodec *_codec;
 - (FIRFirestore *_Nullable)getFIRFirestoreFromAppNameFromPigeon:(PigeonFirebaseApp *)pigeonApp {
   FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:pigeonApp.appName];
   FIRFirestore *firestore = [FIRFirestore firestoreForApp:app];
+    
+    [FLTFirebaseFirestoreUtils setCachedFIRFirestoreInstance:firestore
+                                                  forAppName:app.name
+                                                 databaseURL:databaseUrl];
+
 
   return firestore;
 }
@@ -533,14 +539,6 @@ FlutterStandardMethodCodec *_codec;
   completion(nil);
 }
 
-- (void)snapshotsInSyncSetupWithCompletion:(nonnull void (^)(NSString *_Nullable,
-                                                             FlutterError *_Nullable))completion {
-  completion(
-      [self registerEventChannelWithPrefix:kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName
-                             streamHandler:[FLTSnapshotsInSyncStreamHandler new]],
-      nil);
-}
-
 - (void)terminateApp:(nonnull PigeonFirebaseApp *)app
           completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
@@ -555,27 +553,6 @@ FlutterStandardMethodCodec *_codec;
       completion(nil);
     }
   }];
-}
-
-- (void)transactionCreateWithCompletion:(nonnull void (^)(NSString *_Nullable,
-                                                          FlutterError *_Nullable))completion {
-  NSString *transactionId = [[[NSUUID UUID] UUIDString] lowercaseString];
-
-  FLTTransactionStreamHandler *handler =
-      [[FLTTransactionStreamHandler alloc] initWithId:transactionId
-          started:^(FIRTransaction *_Nonnull transaction) {
-            self->_transactions[transactionId] = transaction;
-          }
-          ended:^{
-            self->_transactions[transactionId] = nil;
-          }];
-
-  _transactionHandlers[transactionId] = handler;
-
-  completion([self registerEventChannelWithPrefix:kFLTFirebaseFirestoreTransactionChannelName
-                                       identifier:transactionId
-                                    streamHandler:handler],
-             nil);
 }
 
 - (void)transactionGetApp:(nonnull PigeonFirebaseApp *)app
@@ -674,5 +651,41 @@ FlutterStandardMethodCodec *_codec;
     }
   }];
 }
+
+- (void)snapshotsInSyncSetupApp:(nonnull PigeonFirebaseApp *)app completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion {
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+
+    completion(
+        [self registerEventChannelWithPrefix:kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName
+                               streamHandler:[[FLTSnapshotsInSyncStreamHandler alloc]
+                                              initWithFirestore:firestore]],
+        nil);
+}
+
+
+- (void)transactionCreateApp:(nonnull PigeonFirebaseApp *)app timeout:(nonnull NSNumber *)timeout maxAttempts:(nonnull NSNumber *)maxAttempts completion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion { 
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+
+    NSString *transactionId = [[[NSUUID UUID] UUIDString] lowercaseString];
+
+    FLTTransactionStreamHandler *handler =
+        [[FLTTransactionStreamHandler alloc] initWithId:transactionId
+            firestore:firestore timeout:timeout maxAttempts:maxAttempts
+            started:^(FIRTransaction *_Nonnull transaction) {
+              self->_transactions[transactionId] = transaction;
+            }
+            ended:^{
+              self->_transactions[transactionId] = nil;
+            }];
+
+    _transactionHandlers[transactionId] = handler;
+
+    completion([self registerEventChannelWithPrefix:kFLTFirebaseFirestoreTransactionChannelName
+                                         identifier:transactionId
+                                      streamHandler:handler],
+               nil);
+
+}
+
 
 @end

@@ -6,7 +6,7 @@
 
 #import <Firebase/Firebase.h>
 #import <Foundation/Foundation.h>
-#import "messages.g.h"
+#import "FirestoreMessages.g.h"
 
 @interface PigeonParser : NSObject
 

@@ -10,16 +10,21 @@
 #endif
 
 #import <Firebase/Firebase.h>
-#import <cloud_firestore/messages.g.h>
+#import "FirestoreMessages.g.h"
 
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FLTTransactionStreamHandler : NSObject <FlutterStreamHandler>
+@property(nonatomic, strong) FIRFirestore *firestore;
+@property(nonatomic, strong) NSNumber *timeout;
+@property(nonatomic, strong) NSNumber *maxAttempts;
+
 
 - (instancetype)initWithId:(NSString *)transactionId
-                   started:(void (^)(FIRTransaction *))startedListener
+                 firestore:(FIRFirestore *)firestore
+                   timeout:(nonnull NSNumber *)timeout maxAttempts:(nonnull NSNumber *)maxAttempts                   started:(void (^)(FIRTransaction *))startedListener
                      ended:(void (^)(void))endedListener;
 - (void)receiveTransactionResponse:(PigeonTransactionResult)resultType
                           commands:(NSArray<PigeonTransactionCommand *> *)commands;

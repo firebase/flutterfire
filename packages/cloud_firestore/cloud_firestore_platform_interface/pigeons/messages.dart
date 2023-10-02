@@ -16,8 +16,9 @@ import 'package:pigeon/pigeon.dart';
       package: 'io.flutter.plugins.firebase.firestore',
       className: 'GeneratedAndroidFirebaseFirestore',
     ),
-    objcHeaderOut: '../cloud_firestore/ios/Classes/messages.g.h',
-    objcSourceOut: '../cloud_firestore/ios/Classes/messages.g.m',
+    objcHeaderOut:
+        '../cloud_firestore/ios/Classes/Private/FirestoreMessages.g.h',
+    objcSourceOut: '../cloud_firestore/ios/Classes/FirestoreMessages.g.m',
     cppHeaderOut: '../cloud_firestore/windows/messages.g.h',
     cppSourceOut: '../cloud_firestore/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'cloud_firestore_windows'),
@@ -44,10 +45,12 @@ class PigeonFirebaseApp {
   const PigeonFirebaseApp({
     required this.appName,
     required this.settings,
+    required this.databaseURL,
   });
 
   final String appName;
   final PigeonFirebaseSettings settings;
+  final String databaseURL;
 }
 
 class PigeonSnapshotMetadata {
