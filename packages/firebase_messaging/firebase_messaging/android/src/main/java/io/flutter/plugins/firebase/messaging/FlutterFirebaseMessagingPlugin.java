@@ -39,7 +39,8 @@ import java.util.Map;
 import java.util.Objects;
 
 /** FlutterFirebaseMessagingPlugin */
-public class FlutterFirebaseMessagingPlugin implements FlutterFirebasePlugin,
+public class FlutterFirebaseMessagingPlugin
+    implements FlutterFirebasePlugin,
         MethodCallHandler,
         NewIntentListener,
         FlutterPlugin,
@@ -49,11 +50,11 @@ public class FlutterFirebaseMessagingPlugin implements FlutterFirebasePlugin,
   private MethodChannel channel;
   private Activity mainActivity;
 
-  private final LiveData<RemoteMessage> liveDataRemoteMessage = FlutterFirebaseRemoteMessageLiveData.getInstance();
+  private final LiveData<RemoteMessage> liveDataRemoteMessage =
+      FlutterFirebaseRemoteMessageLiveData.getInstance();
   private Observer<RemoteMessage> remoteMessageObserver;
   private final LiveData<String> liveDataToken = FlutterFirebaseTokenLiveData.getInstance();
   private Observer<String> tokenObserver;
-
 
   private RemoteMessage initialMessage;
   // We store the initial notification in a separate variable
@@ -69,10 +70,12 @@ public class FlutterFirebaseMessagingPlugin implements FlutterFirebasePlugin,
     channel.setMethodCallHandler(this);
     permissionManager = new FlutterFirebasePermissionManager();
 
-    remoteMessageObserver = remoteMessage -> {
-      Map<String, Object> content = FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
-      channel.invokeMethod("Messaging#onMessage", content);
-    };
+    remoteMessageObserver =
+        remoteMessage -> {
+          Map<String, Object> content =
+              FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
+          channel.invokeMethod("Messaging#onMessage", content);
+        };
     tokenObserver = token -> channel.invokeMethod("Messaging#onTokenRefresh", token);
     // We remove these observers in the onDetachedFromEngine method. Using "observeForever()"
     // allows us to use without a LifecycleOwner.
@@ -363,7 +366,8 @@ public class FlutterFirebaseMessagingPlugin implements FlutterFirebasePlugin,
                     permissions.put("authorizationStatus", notificationsEnabled);
                     taskCompletionSource.setResult(permissions);
                   },
-                  (String errorDescription) -> taskCompletionSource.setException(new Exception(errorDescription)));
+                  (String errorDescription) ->
+                      taskCompletionSource.setException(new Exception(errorDescription)));
             } else {
               permissions.put("authorizationStatus", 1);
               taskCompletionSource.setResult(permissions);
@@ -395,7 +399,8 @@ public class FlutterFirebaseMessagingPlugin implements FlutterFirebasePlugin,
             if (Build.VERSION.SDK_INT >= 33) {
               areNotificationsEnabled = checkPermissions();
             } else {
-              areNotificationsEnabled = NotificationManagerCompat.from(mainActivity).areNotificationsEnabled();
+              areNotificationsEnabled =
+                  NotificationManagerCompat.from(mainActivity).areNotificationsEnabled();
             }
             permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
             taskCompletionSource.setResult(permissions);
@@ -430,18 +435,20 @@ public class FlutterFirebaseMessagingPlugin implements FlutterFirebasePlugin,
 
         if (arg1 instanceof Long) {
           pluginCallbackHandle = (Long) arg1;
-        } else if(arg1 instanceof Integer) {
+        } else if (arg1 instanceof Integer) {
           pluginCallbackHandle = Long.valueOf((Integer) arg1);
         } else {
-          throw new IllegalArgumentException("Expected 'Long' or 'Integer' type for 'pluginCallbackHandle'.");
+          throw new IllegalArgumentException(
+              "Expected 'Long' or 'Integer' type for 'pluginCallbackHandle'.");
         }
 
         if (arg2 instanceof Long) {
           userCallbackHandle = (Long) arg2;
-        } else if(arg2 instanceof Integer){
+        } else if (arg2 instanceof Integer) {
           userCallbackHandle = Long.valueOf((Integer) arg2);
         } else {
-          throw new IllegalArgumentException("Expected 'Long' or 'Integer' type for 'userCallbackHandle'.");
+          throw new IllegalArgumentException(
+              "Expected 'Long' or 'Integer' type for 'userCallbackHandle'.");
         }
 
         FlutterShellArgs shellArgs = null;
