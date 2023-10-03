@@ -26,7 +26,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace 'io.flutter.plugins.firebase.messaging.example'
-    compileSdkVersion 33
+    compileSdk 33
 
     lintOptions {
         disable 'InvalidPackage'
