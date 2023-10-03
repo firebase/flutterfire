@@ -116,19 +116,19 @@
 
     // Limit
     id limit = parameters.limit;
-    if (![limit isEqual:[NSNull null]]) {
+    if (![limit isEqual:[NSNull null]] && limit != nil) {
           query = [query queryLimitedTo:((NSNumber *)limit).intValue];
     }
 
     // Limit To Last
     id limitToLast = parameters.limitToLast;
-    if (![limitToLast isEqual:[NSNull null]]) {
+    if (![limitToLast isEqual:[NSNull null]] && limit != nil) {
           query = [query queryLimitedToLast:((NSNumber *)limitToLast).intValue];
     }
 
     // Ordering
     NSArray *orderBy = parameters.orderBy;
-    if ([orderBy isEqual:[NSNull null]]) {
+    if ([orderBy isEqual:[NSNull null]] && limit != nil) {
           // We return early if no ordering set as cursor queries below require at least one orderBy
           // set
           return query;
@@ -142,17 +142,17 @@
 
     // Start At
     id startAt = parameters.startAt;
-    if (![startAt isEqual:[NSNull null]]) query = [query queryStartingAtValues:(NSArray *)startAt];
+    if (![startAt isEqual:[NSNull null]] && limit != nil) query = [query queryStartingAtValues:(NSArray *)startAt];
     // Start After
     id startAfter = parameters.startAfter;
-    if (![startAfter isEqual:[NSNull null]])
+    if (![startAfter isEqual:[NSNull null]] && limit != nil)
           query = [query queryStartingAfterValues:(NSArray *)startAfter];
     // End At
     id endAt = parameters.endAt;
-    if (![endAt isEqual:[NSNull null]]) query = [query queryEndingAtValues:(NSArray *)endAt];
+    if (![endAt isEqual:[NSNull null]] && limit != nil) query = [query queryEndingAtValues:(NSArray *)endAt];
     // End Before
     id endBefore = parameters.endBefore;
-    if (![endBefore isEqual:[NSNull null]])
+    if (![endBefore isEqual:[NSNull null]] && limit != nil)
           query = [query queryEndingBeforeValues:(NSArray *)endBefore];
 
     return query;

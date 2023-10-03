@@ -7,6 +7,8 @@
 
 #import "Private/FLTFirebaseFirestoreUtils.h"
 #import "Private/FLTQuerySnapshotStreamHandler.h"
+#import "Private/PigeonParser.h"
+#import "Public/CustomPigeonHeaderFirestore.h"
 
 @interface FLTQuerySnapshotStreamHandler ()
 @property(readwrite, strong) id<FIRListenerRegistration> listenerRegistration;
@@ -30,7 +32,7 @@
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
-  FIRQuery *query = _query;
+  FIRQuery *query = self.query;
 
   if (query == nil) {
     return [FlutterError
@@ -57,7 +59,25 @@
       });
     } else {
       dispatch_async(dispatch_get_main_queue(), ^{
-        events(snapshot);
+          
+          NSMutableArray *toListResult = [[NSMutableArray alloc] initWithCapacity:3];
+
+          NSMutableArray *documents = [[NSMutableArray alloc] initWithCapacity:snapshot.documents.count];
+          NSMutableArray *documentChanges = [[NSMutableArray alloc] initWithCapacity:snapshot.documentChanges.count];
+
+          for (FIRDocumentSnapshot *documentSnapshot in snapshot.documents) {
+              [documents addObject:[[PigeonParser toPigeonDocumentSnapshot:documentSnapshot serverTimestampBehavior:self.serverTimestampBehavior] toList]];
+          }
+
+          for (FIRDocumentChange *documentChange in snapshot.documentChanges) {
+              [documentChanges addObject:[[PigeonParser toPigeonDocumentChange:documentChange serverTimestampBehavior:self.serverTimestampBehavior] toList]];
+          }
+
+          [toListResult addObject:documents];
+          [toListResult addObject:documentChanges];
+          [toListResult addObject:[[PigeonParser toPigeonSnapshotMetadata:snapshot.metadata] toList]];
+
+          events(toListResult);
       });
     }
   };

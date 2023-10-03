@@ -212,7 +212,7 @@ FlutterStandardMethodCodec *_codec;
 
   [FLTFirebaseFirestoreUtils setCachedFIRFirestoreInstance:firestore
                                                 forAppName:app.name
-                                               databaseURL:databaseUrl];
+                                               databaseURL:pigeonApp.databaseURL];
 
   return firestore;
 }

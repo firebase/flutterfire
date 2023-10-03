@@ -68,6 +68,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   late final PigeonFirebaseApp pigeonApp = PigeonFirebaseApp(
     appName: Firebase.app().name,
+    databaseURL: databaseURL,
     settings: PigeonFirebaseSettings(
       persistenceEnabled: settings.persistenceEnabled,
       host: settings.host,

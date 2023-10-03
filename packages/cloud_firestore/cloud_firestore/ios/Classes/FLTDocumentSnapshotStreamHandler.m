@@ -7,6 +7,8 @@
 
 #import "Private/FLTDocumentSnapshotStreamHandler.h"
 #import "Private/FLTFirebaseFirestoreUtils.h"
+#import "Private/PigeonParser.h"
+#import "Public/CustomPigeonHeaderFirestore.h"
 
 @interface FLTDocumentSnapshotStreamHandler ()
 @property(readwrite, strong) id<FIRListenerRegistration> listenerRegistration;
@@ -47,7 +49,7 @@
       });
     } else {
       dispatch_async(dispatch_get_main_queue(), ^{
-        events(snapshot);
+        events([[PigeonParser toPigeonDocumentSnapshot:snapshot serverTimestampBehavior:self.serverTimestampBehavior] toList]);
       });
     }
   };
