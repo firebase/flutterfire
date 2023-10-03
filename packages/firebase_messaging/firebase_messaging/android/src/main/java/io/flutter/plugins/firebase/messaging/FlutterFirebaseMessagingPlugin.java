@@ -199,7 +199,9 @@ public class FlutterFirebaseMessagingPlugin
 
     return taskCompletionSource.getTask();
   }
-
+  // This API will be removed in a future release. Slated to be removed by June 2024 by Firebase.
+  // https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/FirebaseMessaging#send
+  @SuppressWarnings("deprecation")
   private Task<Void> sendMessage(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
