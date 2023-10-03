@@ -30,7 +30,8 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
    * Schedule the message to be handled by the {@link FlutterFirebaseMessagingBackgroundService}.
    */
   public static void enqueueMessageProcessing(Context context, Intent messageIntent) {
-    RemoteMessage message = (RemoteMessage) Objects.requireNonNull(messageIntent.getExtras()).get("notification");
+    RemoteMessage message =
+        (RemoteMessage) Objects.requireNonNull(messageIntent.getExtras()).get("notification");
 
     assert message != null;
     enqueueWork(
