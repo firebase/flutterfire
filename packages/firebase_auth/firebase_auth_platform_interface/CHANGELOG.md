@@ -1,3 +1,7 @@
+## 6.19.1
+
+ - Update a dependency to the latest release.
+
 ## 6.19.0
 
  - **FIX**(auth): deprecate `FirebaseAuth.instanceFor`'s `persistence` parameter ([#11259](https://github.com/firebase/flutterfire/issues/11259)). ([a1966e82](https://github.com/firebase/flutterfire/commit/a1966e82c15f13119cb28a262a57c67b4f2b8d3b))
