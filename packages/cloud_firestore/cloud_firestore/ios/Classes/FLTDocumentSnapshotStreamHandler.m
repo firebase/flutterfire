@@ -49,7 +49,8 @@
       });
     } else {
       dispatch_async(dispatch_get_main_queue(), ^{
-        events([[PigeonParser toPigeonDocumentSnapshot:snapshot serverTimestampBehavior:self.serverTimestampBehavior] toList]);
+        events([[PigeonParser toPigeonDocumentSnapshot:snapshot
+                               serverTimestampBehavior:self.serverTimestampBehavior] toList]);
       });
     }
   };

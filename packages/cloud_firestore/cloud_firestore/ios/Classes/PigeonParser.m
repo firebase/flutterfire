@@ -142,14 +142,16 @@
 
     // Start At
     id startAt = parameters.startAt;
-    if (![startAt isEqual:[NSNull null]] && limit != nil) query = [query queryStartingAtValues:(NSArray *)startAt];
+    if (![startAt isEqual:[NSNull null]] && limit != nil)
+          query = [query queryStartingAtValues:(NSArray *)startAt];
     // Start After
     id startAfter = parameters.startAfter;
     if (![startAfter isEqual:[NSNull null]] && limit != nil)
           query = [query queryStartingAfterValues:(NSArray *)startAfter];
     // End At
     id endAt = parameters.endAt;
-    if (![endAt isEqual:[NSNull null]] && limit != nil) query = [query queryEndingAtValues:(NSArray *)endAt];
+    if (![endAt isEqual:[NSNull null]] && limit != nil)
+          query = [query queryEndingAtValues:(NSArray *)endAt];
     // End Before
     id endBefore = parameters.endBefore;
     if (![endBefore isEqual:[NSNull null]] && limit != nil)

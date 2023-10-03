@@ -59,25 +59,31 @@
       });
     } else {
       dispatch_async(dispatch_get_main_queue(), ^{
-          
-          NSMutableArray *toListResult = [[NSMutableArray alloc] initWithCapacity:3];
+        NSMutableArray *toListResult = [[NSMutableArray alloc] initWithCapacity:3];
 
-          NSMutableArray *documents = [[NSMutableArray alloc] initWithCapacity:snapshot.documents.count];
-          NSMutableArray *documentChanges = [[NSMutableArray alloc] initWithCapacity:snapshot.documentChanges.count];
+        NSMutableArray *documents =
+            [[NSMutableArray alloc] initWithCapacity:snapshot.documents.count];
+        NSMutableArray *documentChanges =
+            [[NSMutableArray alloc] initWithCapacity:snapshot.documentChanges.count];
 
-          for (FIRDocumentSnapshot *documentSnapshot in snapshot.documents) {
-              [documents addObject:[[PigeonParser toPigeonDocumentSnapshot:documentSnapshot serverTimestampBehavior:self.serverTimestampBehavior] toList]];
-          }
+        for (FIRDocumentSnapshot *documentSnapshot in snapshot.documents) {
+          [documents addObject:[[PigeonParser toPigeonDocumentSnapshot:documentSnapshot
+                                               serverTimestampBehavior:self.serverTimestampBehavior]
+                                   toList]];
+        }
 
-          for (FIRDocumentChange *documentChange in snapshot.documentChanges) {
-              [documentChanges addObject:[[PigeonParser toPigeonDocumentChange:documentChange serverTimestampBehavior:self.serverTimestampBehavior] toList]];
-          }
+        for (FIRDocumentChange *documentChange in snapshot.documentChanges) {
+          [documentChanges
+              addObject:[[PigeonParser toPigeonDocumentChange:documentChange
+                                      serverTimestampBehavior:self.serverTimestampBehavior]
+                            toList]];
+        }
 
-          [toListResult addObject:documents];
-          [toListResult addObject:documentChanges];
-          [toListResult addObject:[[PigeonParser toPigeonSnapshotMetadata:snapshot.metadata] toList]];
+        [toListResult addObject:documents];
+        [toListResult addObject:documentChanges];
+        [toListResult addObject:[[PigeonParser toPigeonSnapshotMetadata:snapshot.metadata] toList]];
 
-          events(toListResult);
+        events(toListResult);
       });
     }
   };
