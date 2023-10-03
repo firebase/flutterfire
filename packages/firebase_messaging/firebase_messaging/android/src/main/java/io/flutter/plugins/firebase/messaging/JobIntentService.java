@@ -26,6 +26,8 @@ import androidx.annotation.RequiresApi;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+// Issue added for this file, we will migrate this in the future
+@SuppressWarnings("all")
 abstract class JobIntentService extends Service {
   static final String TAG = "JobIntentService";
 
