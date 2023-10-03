@@ -248,15 +248,17 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
           dispatch_semaphore_signal(semaphore);
         };
 
-        [strongSelf->_channel invokeMethod:@"FirebaseDatabase#callTransactionHandler"
-                                 arguments:@{
-                                   @"transactionKey" : @(transactionKey),
-                                   @"snapshot" : @{
-                                     @"key" : currentData.key ?: [NSNull null],
-                                     @"value" : currentData.value ?: [NSNull null],
+        dispatch_async(dispatch_get_main_queue(), ^{
+          [strongSelf->_channel invokeMethod:@"FirebaseDatabase#callTransactionHandler"
+                                   arguments:@{
+                                     @"transactionKey" : @(transactionKey),
+                                     @"snapshot" : @{
+                                       @"key" : currentData.key ?: [NSNull null],
+                                       @"value" : currentData.value ?: [NSNull null],
+                                     }
                                    }
-                                 }
-                                    result:methodCallResultHandler];
+                                      result:methodCallResultHandler];
+        });
         // Wait while Dart side updates the value.
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 
