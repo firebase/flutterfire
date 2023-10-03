@@ -203,6 +203,9 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   }
 
   /// Send a new [RemoteMessage] to the FCM server. Android only.
+  /// Firebase will decommission in June 2024: https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/FirebaseMessaging#send
+  @Deprecated(
+      'This will be removed in a future release. Firebase will decommission in June 2024')
   Future<void> sendMessage({
     String? to,
     Map<String, String>? data,
