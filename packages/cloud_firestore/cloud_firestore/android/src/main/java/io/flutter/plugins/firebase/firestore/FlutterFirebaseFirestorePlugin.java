@@ -299,10 +299,10 @@ public class FlutterFirebaseFirestorePlugin
       GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp pigeonApp) {
     synchronized (FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
       if (FlutterFirebaseFirestorePlugin.getFirestoreInstanceByNameAndDatabaseUrl(
-        pigeonApp.getAppName(), pigeonApp.getDatabaseURL())
-        != null) {
+              pigeonApp.getAppName(), pigeonApp.getDatabaseURL())
+          != null) {
         return FlutterFirebaseFirestorePlugin.getFirestoreInstanceByNameAndDatabaseUrl(
-          pigeonApp.getAppName(), pigeonApp.getDatabaseURL());
+            pigeonApp.getAppName(), pigeonApp.getDatabaseURL());
       }
 
       FirebaseApp app = FirebaseApp.getInstance(pigeonApp.getAppName());
@@ -310,7 +310,7 @@ public class FlutterFirebaseFirestorePlugin
       firestore.setFirestoreSettings(getSettingsFromPigeon(pigeonApp));
 
       FlutterFirebaseFirestorePlugin.setCachedFirebaseFirestoreInstanceForKey(
-        firestore, pigeonApp.getDatabaseURL());
+          firestore, pigeonApp.getDatabaseURL());
       return firestore;
     }
   }
@@ -567,7 +567,7 @@ public class FlutterFirebaseFirestorePlugin
             DocumentReference documentReference =
                 getFirestoreFromPigeon(app).document(request.getPath());
 
-            Map<String, Object> data = Objects.requireNonNull(request.getData());
+            Map<Object, Object> data = Objects.requireNonNull(request.getData());
 
             Task<Void> setTask;
 
@@ -600,11 +600,18 @@ public class FlutterFirebaseFirestorePlugin
           try {
             DocumentReference documentReference =
                 getFirestoreFromPigeon(app).document(request.getPath());
-            Map<String, Object> dataWithString = Objects.requireNonNull(request.getData());
+            Map<Object, Object> dataWithString = Objects.requireNonNull(request.getData());
 
             Map<FieldPath, Object> data = new HashMap<>();
-            for (String key : dataWithString.keySet()) {
-              data.put(FieldPath.of(key), data.get(key));
+            for (Object key : dataWithString.keySet()) {
+              if (key instanceof String) {
+                data.put(FieldPath.of((String) key), dataWithString.get(key));
+              } else if (key instanceof FieldPath) {
+                data.put((FieldPath) key, dataWithString.get(key));
+              } else {
+                throw new IllegalArgumentException(
+                    "Invalid key type in update data. Supported types are String and FieldPath.");
+              }
             }
 
             // Due to the signature of the function, I extract the first element of the map and

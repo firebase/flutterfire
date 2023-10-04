@@ -57,11 +57,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         pigeonApp,
         DocumentReferenceRequest(
           path: _pointer.path,
-          data: data.keys.fold<Map<String, dynamic>>(<String, dynamic>{},
-              (previousValue, element) {
-            previousValue[element.components.join('.')] = data[element];
-            return previousValue;
-          }),
+          data: data,
         ),
       );
     } catch (e, stack) {

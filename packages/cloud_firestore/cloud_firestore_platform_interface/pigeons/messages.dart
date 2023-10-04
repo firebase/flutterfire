@@ -208,7 +208,7 @@ class DocumentReferenceRequest {
     this.serverTimestampBehavior,
   });
   final String path;
-  final Map<String?, Object?>? data;
+  final Map<Object?, Object?>? data;
   final PigeonDocumentOption? option;
   final Source? source;
   final ServerTimestampBehavior? serverTimestampBehavior;

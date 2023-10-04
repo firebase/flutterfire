@@ -374,7 +374,7 @@ class DocumentReferenceRequest {
 
   String path;
 
-  Map<String?, Object?>? data;
+  Map<Object?, Object?>? data;
 
   PigeonDocumentOption? option;
 
@@ -396,7 +396,7 @@ class DocumentReferenceRequest {
     result as List<Object?>;
     return DocumentReferenceRequest(
       path: result[0]! as String,
-      data: (result[1] as Map<Object?, Object?>?)?.cast<String?, Object?>(),
+      data: (result[1] as Map<Object?, Object?>?)?.cast<Object?, Object?>(),
       option: result[2] != null
           ? PigeonDocumentOption.decode(result[2]! as List<Object?>)
           : null,

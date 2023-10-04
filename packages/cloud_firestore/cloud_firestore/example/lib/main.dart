@@ -10,7 +10,7 @@ import 'firebase_options.dart';
 
 /// Requires that a Firestore emulator is running locally.
 /// See https://firebase.flutter.dev/docs/firestore/usage#emulator-usage
-bool shouldUseFirestoreEmulator = false;
+bool shouldUseFirestoreEmulator = true;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +19,19 @@ Future<void> main() async {
   if (shouldUseFirestoreEmulator) {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
+
+  final document =
+      FirebaseFirestore.instance.collection('flutter-tests').doc('test');
+
+  await document.set({
+    'foo': {'bar': 'baz'},
+  });
+  DocumentSnapshot<Map<String, dynamic>> snapshot = await document.get();
+  print(snapshot);
+
+  await document.update({'foo.bar': 'toto'});
+  DocumentSnapshot<Map<String, dynamic>> snapshot2 = await document.get();
+  print(snapshot2);
   runApp(FirestoreExampleApp());
 }
 

@@ -446,7 +446,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 
 @implementation DocumentReferenceRequest
 + (instancetype)makeWithPath:(NSString *)path
-                        data:(nullable NSDictionary<NSString *, id> *)data
+                        data:(nullable NSDictionary<id, id> *)data
                       option:(nullable PigeonDocumentOption *)option
                       source:(nullable SourceBox *)source
      serverTimestampBehavior:(nullable ServerTimestampBehaviorBox *)serverTimestampBehavior {

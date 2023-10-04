@@ -225,12 +225,12 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithPath:(NSString *)path
-                        data:(nullable NSDictionary<NSString *, id> *)data
+                        data:(nullable NSDictionary<id, id> *)data
                       option:(nullable PigeonDocumentOption *)option
                       source:(nullable SourceBox *)source
      serverTimestampBehavior:(nullable ServerTimestampBehaviorBox *)serverTimestampBehavior;
 @property(nonatomic, copy) NSString *path;
-@property(nonatomic, strong, nullable) NSDictionary<NSString *, id> *data;
+@property(nonatomic, strong, nullable) NSDictionary<id, id> *data;
 @property(nonatomic, strong, nullable) PigeonDocumentOption *option;
 @property(nonatomic, strong, nullable) SourceBox *source;
 @property(nonatomic, strong, nullable) ServerTimestampBehaviorBox *serverTimestampBehavior;
