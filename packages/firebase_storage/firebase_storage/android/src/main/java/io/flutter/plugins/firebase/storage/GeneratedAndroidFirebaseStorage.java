@@ -61,7 +61,7 @@ public class GeneratedAndroidFirebaseStorage {
    * The type of operation that generated the action code from calling
    * [TaskState].
    */
-  public enum PigeonTaskState {
+  public enum PigeonStorageTaskState {
     /** Indicates the task has been paused by the user. */
     PAUSED(0),
     /** Indicates the task is currently in-progress. */
@@ -75,13 +75,13 @@ public class GeneratedAndroidFirebaseStorage {
 
     final int index;
 
-    private PigeonTaskState(final int index) {
+    private PigeonStorageTaskState(final int index) {
       this.index = index;
     }
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
-  public static final class PigeonFirebaseApp {
+  public static final class PigeonStorageFirebaseApp {
     private @NonNull String appName;
 
     public @NonNull String getAppName() {
@@ -106,7 +106,7 @@ public class GeneratedAndroidFirebaseStorage {
     }
 
     /** Constructor is non-public to enforce null safety; use Builder. */
-    PigeonFirebaseApp() {}
+    PigeonStorageFirebaseApp() {}
 
     public static final class Builder {
 
@@ -124,8 +124,8 @@ public class GeneratedAndroidFirebaseStorage {
         return this;
       }
 
-      public @NonNull PigeonFirebaseApp build() {
-        PigeonFirebaseApp pigeonReturn = new PigeonFirebaseApp();
+      public @NonNull PigeonStorageFirebaseApp build() {
+        PigeonStorageFirebaseApp pigeonReturn = new PigeonStorageFirebaseApp();
         pigeonReturn.setAppName(appName);
         pigeonReturn.setTenantId(tenantId);
         return pigeonReturn;
@@ -140,8 +140,8 @@ public class GeneratedAndroidFirebaseStorage {
       return toListResult;
     }
 
-    static @NonNull PigeonFirebaseApp fromList(@NonNull ArrayList<Object> list) {
-      PigeonFirebaseApp pigeonResult = new PigeonFirebaseApp();
+    static @NonNull PigeonStorageFirebaseApp fromList(@NonNull ArrayList<Object> list) {
+      PigeonStorageFirebaseApp pigeonResult = new PigeonStorageFirebaseApp();
       Object appName = list.get(0);
       pigeonResult.setAppName((String) appName);
       Object tenantId = list.get(1);
@@ -648,15 +648,15 @@ public class GeneratedAndroidFirebaseStorage {
     protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
       switch (type) {
         case (byte) 128:
-          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
-        case (byte) 129:
           return PigeonFullMetaData.fromList((ArrayList<Object>) readValue(buffer));
-        case (byte) 130:
+        case (byte) 129:
           return PigeonListOptions.fromList((ArrayList<Object>) readValue(buffer));
-        case (byte) 131:
+        case (byte) 130:
           return PigeonListResult.fromList((ArrayList<Object>) readValue(buffer));
-        case (byte) 132:
+        case (byte) 131:
           return PigeonSettableMetadata.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 132:
+          return PigeonStorageFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 133:
           return PigeonStorageReference.fromList((ArrayList<Object>) readValue(buffer));
         default:
@@ -666,21 +666,21 @@ public class GeneratedAndroidFirebaseStorage {
 
     @Override
     protected void writeValue(@NonNull ByteArrayOutputStream stream, Object value) {
-      if (value instanceof PigeonFirebaseApp) {
+      if (value instanceof PigeonFullMetaData) {
         stream.write(128);
-        writeValue(stream, ((PigeonFirebaseApp) value).toList());
-      } else if (value instanceof PigeonFullMetaData) {
-        stream.write(129);
         writeValue(stream, ((PigeonFullMetaData) value).toList());
       } else if (value instanceof PigeonListOptions) {
-        stream.write(130);
+        stream.write(129);
         writeValue(stream, ((PigeonListOptions) value).toList());
       } else if (value instanceof PigeonListResult) {
-        stream.write(131);
+        stream.write(130);
         writeValue(stream, ((PigeonListResult) value).toList());
       } else if (value instanceof PigeonSettableMetadata) {
-        stream.write(132);
+        stream.write(131);
         writeValue(stream, ((PigeonSettableMetadata) value).toList());
+      } else if (value instanceof PigeonStorageFirebaseApp) {
+        stream.write(132);
+        writeValue(stream, ((PigeonStorageFirebaseApp) value).toList());
       } else if (value instanceof PigeonStorageReference) {
         stream.write(133);
         writeValue(stream, ((PigeonStorageReference) value).toList());
@@ -693,43 +693,43 @@ public class GeneratedAndroidFirebaseStorage {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseStorageHostApi {
 
-    void getReferencebyPath(@NonNull PigeonFirebaseApp app, @NonNull String path, @Nullable String bucket, @NonNull Result<PigeonStorageReference> result);
+    void getReferencebyPath(@NonNull PigeonStorageFirebaseApp app, @NonNull String path, @Nullable String bucket, @NonNull Result<PigeonStorageReference> result);
 
-    void setMaxOperationRetryTime(@NonNull PigeonFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
+    void setMaxOperationRetryTime(@NonNull PigeonStorageFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
 
-    void setMaxUploadRetryTime(@NonNull PigeonFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
+    void setMaxUploadRetryTime(@NonNull PigeonStorageFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
 
-    void setMaxDownloadRetryTime(@NonNull PigeonFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
+    void setMaxDownloadRetryTime(@NonNull PigeonStorageFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
 
-    void useStorageEmulator(@NonNull PigeonFirebaseApp app, @NonNull String host, @NonNull Long port, @NonNull Result<Void> result);
+    void useStorageEmulator(@NonNull PigeonStorageFirebaseApp app, @NonNull String host, @NonNull Long port, @NonNull Result<Void> result);
 
-    void referenceDelete(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<Void> result);
+    void referenceDelete(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<Void> result);
 
-    void referenceGetDownloadURL(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<String> result);
+    void referenceGetDownloadURL(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<String> result);
 
-    void referenceGetMetaData(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<PigeonFullMetaData> result);
+    void referenceGetMetaData(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<PigeonFullMetaData> result);
 
-    void referenceList(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull PigeonListOptions options, @NonNull Result<PigeonListResult> result);
+    void referenceList(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull PigeonListOptions options, @NonNull Result<PigeonListResult> result);
 
-    void referenceListAll(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<PigeonListResult> result);
+    void referenceListAll(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<PigeonListResult> result);
 
-    void referenceGetData(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Long maxSize, @NonNull Result<byte[]> result);
+    void referenceGetData(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Long maxSize, @NonNull Result<byte[]> result);
 
-    void referencePutData(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull byte[] data, @NonNull PigeonSettableMetadata settableMetaData, @NonNull Long handle, @NonNull Result<String> result);
+    void referencePutData(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull byte[] data, @NonNull PigeonSettableMetadata settableMetaData, @NonNull Long handle, @NonNull Result<String> result);
 
-    void referencePutString(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull String data, @NonNull Long format, @NonNull PigeonSettableMetadata settableMetaData, @NonNull Long handle, @NonNull Result<String> result);
+    void referencePutString(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull String data, @NonNull Long format, @NonNull PigeonSettableMetadata settableMetaData, @NonNull Long handle, @NonNull Result<String> result);
 
-    void referencePutFile(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull String filePath, @NonNull PigeonSettableMetadata settableMetaData, @NonNull Long handle, @NonNull Result<String> result);
+    void referencePutFile(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull String filePath, @NonNull PigeonSettableMetadata settableMetaData, @NonNull Long handle, @NonNull Result<String> result);
 
-    void referenceDownloadFile(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull String filePath, @NonNull Long handle, @NonNull Result<String> result);
+    void referenceDownloadFile(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull String filePath, @NonNull Long handle, @NonNull Result<String> result);
 
-    void referenceUpdateMetadata(@NonNull PigeonFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull PigeonSettableMetadata metadata, @NonNull Result<PigeonFullMetaData> result);
+    void referenceUpdateMetadata(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull PigeonSettableMetadata metadata, @NonNull Result<PigeonFullMetaData> result);
 
-    void taskPause(@NonNull PigeonFirebaseApp app, @NonNull Long handle, @NonNull Result<Map<String, Object>> result);
+    void taskPause(@NonNull PigeonStorageFirebaseApp app, @NonNull Long handle, @NonNull Result<Map<String, Object>> result);
 
-    void taskResume(@NonNull PigeonFirebaseApp app, @NonNull Long handle, @NonNull Result<Map<String, Object>> result);
+    void taskResume(@NonNull PigeonStorageFirebaseApp app, @NonNull Long handle, @NonNull Result<Map<String, Object>> result);
 
-    void taskCancel(@NonNull PigeonFirebaseApp app, @NonNull Long handle, @NonNull Result<Map<String, Object>> result);
+    void taskCancel(@NonNull PigeonStorageFirebaseApp app, @NonNull Long handle, @NonNull Result<Map<String, Object>> result);
 
     /** The codec used by FirebaseStorageHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -746,7 +746,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 String pathArg = (String) args.get(1);
                 String bucketArg = (String) args.get(2);
                 Result<PigeonStorageReference> resultCallback =
@@ -777,7 +777,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 Number timeArg = (Number) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -807,7 +807,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 Number timeArg = (Number) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -837,7 +837,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 Number timeArg = (Number) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -867,7 +867,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 String hostArg = (String) args.get(1);
                 Number portArg = (Number) args.get(2);
                 Result<Void> resultCallback =
@@ -898,7 +898,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -928,7 +928,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
                 Result<String> resultCallback =
                     new Result<String>() {
@@ -958,7 +958,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
                 Result<PigeonFullMetaData> resultCallback =
                     new Result<PigeonFullMetaData>() {
@@ -988,7 +988,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
                 PigeonListOptions optionsArg = (PigeonListOptions) args.get(2);
                 Result<PigeonListResult> resultCallback =
@@ -1019,7 +1019,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
                 Result<PigeonListResult> resultCallback =
                     new Result<PigeonListResult>() {
@@ -1049,7 +1049,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
                 Number maxSizeArg = (Number) args.get(2);
                 Result<byte[]> resultCallback =
@@ -1080,7 +1080,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
                 byte[] dataArg = (byte[]) args.get(2);
                 PigeonSettableMetadata settableMetaDataArg = (PigeonSettableMetadata) args.get(3);
@@ -1113,7 +1113,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
                 String dataArg = (String) args.get(2);
                 Number formatArg = (Number) args.get(3);
@@ -1147,7 +1147,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
                 String filePathArg = (String) args.get(2);
                 PigeonSettableMetadata settableMetaDataArg = (PigeonSettableMetadata) args.get(3);
@@ -1180,7 +1180,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
                 String filePathArg = (String) args.get(2);
                 Number handleArg = (Number) args.get(3);
@@ -1212,7 +1212,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 PigeonStorageReference referenceArg = (PigeonStorageReference) args.get(1);
                 PigeonSettableMetadata metadataArg = (PigeonSettableMetadata) args.get(2);
                 Result<PigeonFullMetaData> resultCallback =
@@ -1243,7 +1243,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 Number handleArg = (Number) args.get(1);
                 Result<Map<String, Object>> resultCallback =
                     new Result<Map<String, Object>>() {
@@ -1273,7 +1273,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 Number handleArg = (Number) args.get(1);
                 Result<Map<String, Object>> resultCallback =
                     new Result<Map<String, Object>>() {
@@ -1303,7 +1303,7 @@ public class GeneratedAndroidFirebaseStorage {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                PigeonStorageFirebaseApp appArg = (PigeonStorageFirebaseApp) args.get(0);
                 Number handleArg = (Number) args.get(1);
                 Result<Map<String, Object>> resultCallback =
                     new Result<Map<String, Object>>() {

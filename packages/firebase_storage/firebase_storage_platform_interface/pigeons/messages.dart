@@ -17,12 +17,14 @@ import 'package:pigeon/pigeon.dart';
       package: 'io.flutter.plugins.firebase.storage',
       className: 'GeneratedAndroidFirebaseStorage',
     ),
-    objcHeaderOut: '../firebase_storage/ios/Classes/messages.g.h',
-    objcSourceOut: '../firebase_storage/ios/Classes/messages.g.m',
+    objcHeaderOut:
+        '../firebase_storage/ios/Classes/firebase_storage_messages.g.h',
+    objcSourceOut:
+        '../firebase_storage/ios/Classes/firebase_storage_messages.g.m',
   ),
 )
-class PigeonFirebaseApp {
-  const PigeonFirebaseApp({
+class PigeonStorageFirebaseApp {
+  const PigeonStorageFirebaseApp({
     required this.appName,
     required this.tenantId,
   });
@@ -33,7 +35,7 @@ class PigeonFirebaseApp {
 
 /// The type of operation that generated the action code from calling
 /// [TaskState].
-enum PigeonTaskState {
+enum PigeonStorageTaskState {
   /// Indicates the task has been paused by the user.
   paused,
 
@@ -126,8 +128,8 @@ class PigeonSettableMetadata {
   final Map<String?, String?>? customMetadata;
 }
 
-class PigeonTaskSnapShot {
-  const PigeonTaskSnapShot({
+class PigeonStorageTaskSnapShot {
+  const PigeonStorageTaskSnapShot({
     required this.bytesTransferred,
     required this.metadata,
     required this.state,
@@ -136,7 +138,7 @@ class PigeonTaskSnapShot {
 
   final int bytesTransferred;
   final PigeonFullMetaData? metadata;
-  final PigeonTaskState state;
+  final PigeonStorageTaskState state;
   final int totalBytes;
 }
 
@@ -156,29 +158,29 @@ class PigeonListResult {
 abstract class FirebaseStorageHostApi {
   @async
   PigeonStorageReference getReferencebyPath(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     String path,
     String? bucket,
   );
   @async
   void setMaxOperationRetryTime(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     int time,
   );
   @async
   void setMaxUploadRetryTime(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     int time,
   );
   @async
   void setMaxDownloadRetryTime(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     int time,
   );
 
   @async
   void useStorageEmulator(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     String host,
     int port,
   );
@@ -187,45 +189,45 @@ abstract class FirebaseStorageHostApi {
 
   @async
   void referenceDelete(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     PigeonStorageReference reference,
   );
 
   @async
   String referenceGetDownloadURL(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     PigeonStorageReference reference,
   );
 
   @async
   PigeonFullMetaData referenceGetMetaData(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     PigeonStorageReference reference,
   );
 
   @async
   PigeonListResult referenceList(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     PigeonStorageReference reference,
     PigeonListOptions options,
   );
 
   @async
   PigeonListResult referenceListAll(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     PigeonStorageReference reference,
   );
 
   @async
   Uint8List? referenceGetData(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     PigeonStorageReference reference,
     int maxSize,
   );
 
   @async
   String referencePutData(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     PigeonStorageReference reference,
     Uint8List data,
     PigeonSettableMetadata settableMetaData,
@@ -234,7 +236,7 @@ abstract class FirebaseStorageHostApi {
 
   @async
   String referencePutString(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     PigeonStorageReference reference,
     String data,
     int format,
@@ -244,7 +246,7 @@ abstract class FirebaseStorageHostApi {
 
   @async
   String referencePutFile(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     PigeonStorageReference reference,
     String filePath,
     PigeonSettableMetadata settableMetaData,
@@ -253,7 +255,7 @@ abstract class FirebaseStorageHostApi {
 
   @async
   String referenceDownloadFile(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     PigeonStorageReference reference,
     String filePath,
     int handle,
@@ -261,7 +263,7 @@ abstract class FirebaseStorageHostApi {
 
   @async
   PigeonFullMetaData referenceUpdateMetadata(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     PigeonStorageReference reference,
     PigeonSettableMetadata metadata,
   );
@@ -269,19 +271,19 @@ abstract class FirebaseStorageHostApi {
   // APIs for Task class
   @async
   Map<String, Object> taskPause(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     int handle,
   );
 
   @async
   Map<String, Object> taskResume(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     int handle,
   );
 
   @async
   Map<String, Object> taskCancel(
-    PigeonFirebaseApp app,
+    PigeonStorageFirebaseApp app,
     int handle,
   );
 }

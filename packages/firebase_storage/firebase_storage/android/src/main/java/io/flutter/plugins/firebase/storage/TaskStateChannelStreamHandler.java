@@ -46,7 +46,7 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
           if (destroyed)
             return;
           Map<String, Object> event = getTaskEventMap(taskSnapshot, null);
-          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonTaskState.RUNNING.index);
+          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.RUNNING.index);
           events.success(event);
           synchronized (resumeSyncObject) {
             resumeSyncObject.notifyAll();
@@ -58,7 +58,7 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
           if (destroyed)
             return;
           Map<String, Object> event = getTaskEventMap(taskSnapshot, null);
-          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonTaskState.PAUSED.index);
+          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.PAUSED.index);
           events.success(event);
           synchronized (pauseSyncObject) {
             pauseSyncObject.notifyAll();
@@ -70,7 +70,7 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
           if (destroyed)
             return;
           Map<String, Object> event = getTaskEventMap(taskSnapshot, null);
-          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonTaskState.SUCCESS.index);
+          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.SUCCESS.index);
           events.success(event);
           //destroy();
         });
@@ -80,7 +80,7 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
           if (destroyed)
             return;
           Map<String, Object> event = getTaskEventMap(null, null);
-          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonTaskState.CANCELED.index);
+          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.CANCELED.index);
           events.success(event);
         });
 
@@ -89,7 +89,7 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
           if (destroyed)
             return;
           Map<String, Object> event = getTaskEventMap(null, exception);
-          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonTaskState.ERROR.index);
+          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.ERROR.index);
           events.error(FlutterFirebaseStoragePlugin.DEFAULT_ERROR_CODE, exception.getMessage(), event);
         });
 

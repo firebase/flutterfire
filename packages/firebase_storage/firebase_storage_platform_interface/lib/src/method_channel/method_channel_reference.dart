@@ -22,8 +22,8 @@ class MethodChannelReference extends ReferencePlatform {
       : super(storage, path);
 
   /// Default FirebaseApp pigeon instance
-  PigeonFirebaseApp get pigeonFirebaseAppDefault {
-    return PigeonFirebaseApp(
+  PigeonStorageFirebaseApp get pigeonFirebaseAppDefault {
+    return PigeonStorageFirebaseApp(
       appName: storage.app.name,
     );
   }
