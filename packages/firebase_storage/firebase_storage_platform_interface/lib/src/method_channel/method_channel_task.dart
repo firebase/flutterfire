@@ -241,7 +241,7 @@ class MethodChannelPutFileTask extends MethodChannelTask {
       MethodChannelFirebaseStorage.getPigeonReference(
           storage.bucket, path, 'putFile'),
       file.path,
-      MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata!),
+      MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata),
       handle,
     );
   }
@@ -273,7 +273,7 @@ class MethodChannelPutStringTask extends MethodChannelTask {
           storage.bucket, path, 'putString'),
       data,
       format.index,
-      MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata!),
+      MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata),
       handle,
     );
   }
@@ -294,7 +294,7 @@ class MethodChannelPutTask extends MethodChannelTask {
       MethodChannelFirebaseStorage.getPigeonReference(
           storage.bucket, path, 'putData'),
       data,
-      MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata!),
+      MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata),
       handle,
     );
   }
