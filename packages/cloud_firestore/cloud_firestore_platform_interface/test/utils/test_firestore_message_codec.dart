@@ -76,6 +76,7 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
             settings: PigeonFirebaseSettings(
               ignoreUndefinedProperties: false,
             ),
+            databaseURL: '',
           ),
         );
       case _kFirestoreSettings:

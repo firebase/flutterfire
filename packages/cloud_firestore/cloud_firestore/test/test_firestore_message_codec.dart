@@ -76,9 +76,10 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
           MethodChannelFirebaseFirestore(app: app, databaseURL: '(default)'),
           values['path'],
           PigeonFirebaseApp(
-              appName: "['DEFAULT']",
-              settings:
-                  PigeonFirebaseSettings(ignoreUndefinedProperties: true)),
+            appName: "['DEFAULT']",
+            settings: PigeonFirebaseSettings(ignoreUndefinedProperties: true),
+            databaseURL: '',
+          ),
         );
       case _kFirestoreSettings:
         readValue(buffer);
