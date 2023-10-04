@@ -37,7 +37,7 @@
   successHandle = [_task observeStatus:FIRStorageTaskStatusSuccess
                 handler:^(FIRStorageTaskSnapshot *snapshot) {
                   events(@{
-                    @"taskState":@(PigeonTaskStateSuccess),
+                    @"taskState":@(PigeonStorageTaskStateSuccess),
                     @"appName":snapshot.reference.storage.app.name,
                     @"snapshot":[self parseSnapshot:snapshot],
                   });
@@ -46,7 +46,7 @@
   failureHandle = [_task observeStatus:FIRStorageTaskStatusFailure
                 handler:^(FIRStorageTaskSnapshot *snapshot) {
                   events(@{
-                    @"taskState":@(PigeonTaskStateError),
+                    @"taskState":@(PigeonStorageTaskStateError),
                     @"appName":snapshot.reference.storage.app.name,
                     @"snapshot":[self parseSnapshot:snapshot],
                     // TODO Pass in error
@@ -56,7 +56,7 @@
   pausedHandle = [_task observeStatus:FIRStorageTaskStatusPause
                 handler:^(FIRStorageTaskSnapshot *snapshot) {
                   events(@{
-                    @"taskState":@(PigeonTaskStatePaused),
+                    @"taskState":@(PigeonStorageTaskStatePaused),
                     @"appName":snapshot.reference.storage.app.name,
                     @"snapshot":[self parseSnapshot:snapshot],
                   });
@@ -64,7 +64,7 @@
   progressHandle = [_task observeStatus:FIRStorageTaskStatusProgress
                 handler:^(FIRStorageTaskSnapshot *snapshot) {
                   events(@{
-                    @"taskState":@(PigeonTaskStateRunning),
+                    @"taskState":@(PigeonStorageTaskStateRunning),
                     @"appName":snapshot.reference.storage.app.name,
                     @"snapshot":[self parseSnapshot:snapshot],
                   });

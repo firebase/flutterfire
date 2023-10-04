@@ -192,11 +192,11 @@ public class FlutterFirebaseStoragePlugin
     streamHandlers.clear();
   }
 
-  private FirebaseStorage getStorageFromPigeon(GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app) {
+  private FirebaseStorage getStorageFromPigeon(GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app) {
     return getStorageFromPigeon(app, null);
   }
 
-  private FirebaseStorage getStorageFromPigeon(GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  private FirebaseStorage getStorageFromPigeon(GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @Nullable String bucket) {
     FirebaseApp androidApp = FirebaseApp.getInstance(app.getAppName());
     if (bucket == null) {
@@ -237,7 +237,7 @@ public class FlutterFirebaseStoragePlugin
     return storage;
   }
 
-  private StorageReference getReferenceFromPigeon(GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  private StorageReference getReferenceFromPigeon(GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       GeneratedAndroidFirebaseStorage.PigeonStorageReference reference) {
     FirebaseStorage androidStorage = getStorageFromPigeon(app, reference.getBucket());
     return androidStorage.getReference(reference.getFullPath());
@@ -258,7 +258,7 @@ public class FlutterFirebaseStoragePlugin
 
   @Override
   public void getReferencebyPath(
-      @NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app, @NonNull String path,
+      @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app, @NonNull String path,
       @Nullable String bucket,
       @NonNull GeneratedAndroidFirebaseStorage.Result<GeneratedAndroidFirebaseStorage.PigeonStorageReference> result) {
     StorageReference androidReference = getStorageFromPigeon(app, bucket).getReference(path);
@@ -290,7 +290,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void useStorageEmulator(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app, @NonNull String host,
+  public void useStorageEmulator(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app, @NonNull String host,
       @NonNull Long port,
       @NonNull GeneratedAndroidFirebaseStorage.Result<Void> result) {
     try {
@@ -304,7 +304,7 @@ public class FlutterFirebaseStoragePlugin
 
   // FirebaseStorageHostApi Reference releated api override
   @Override
-  public void referenceDelete(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void referenceDelete(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull GeneratedAndroidFirebaseStorage.Result<Void> result) {
     FirebaseStorage firebaseStorage = getStorageFromPigeon(app);
@@ -322,7 +322,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void referenceGetDownloadURL(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void referenceGetDownloadURL(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull GeneratedAndroidFirebaseStorage.Result<String> result) {
     FirebaseStorage firebaseStorage = getStorageFromPigeon(app);
@@ -340,7 +340,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void referenceGetData(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void referenceGetData(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull Long maxSize, @NonNull GeneratedAndroidFirebaseStorage.Result<byte[]> result) {
     FirebaseStorage firebaseStorage = getStorageFromPigeon(app);
@@ -363,7 +363,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void referenceGetMetaData(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void referenceGetMetaData(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull GeneratedAndroidFirebaseStorage.Result<GeneratedAndroidFirebaseStorage.PigeonFullMetaData> result) {
     FirebaseStorage firebaseStorage = getStorageFromPigeon(app);
@@ -395,7 +395,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void referenceList(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void referenceList(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonListOptions options,
       @NonNull GeneratedAndroidFirebaseStorage.Result<GeneratedAndroidFirebaseStorage.PigeonListResult> result) {
@@ -414,7 +414,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void referenceListAll(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void referenceListAll(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull GeneratedAndroidFirebaseStorage.Result<GeneratedAndroidFirebaseStorage.PigeonListResult> result) {
     FirebaseStorage firebaseStorage = getStorageFromPigeon(app);
@@ -451,7 +451,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void referenceUpdateMetadata(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void referenceUpdateMetadata(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonSettableMetadata metadata,
       @NonNull GeneratedAndroidFirebaseStorage.Result<GeneratedAndroidFirebaseStorage.PigeonFullMetaData> result) {
@@ -470,7 +470,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void referencePutData(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void referencePutData(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull byte[] data,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData, @NonNull Long handle,
@@ -491,7 +491,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void referencePutString(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void referencePutString(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull String data, @NonNull Long format,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData,
@@ -513,7 +513,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void referencePutFile(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void referencePutFile(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull String filePath, @NonNull GeneratedAndroidFirebaseStorage.PigeonSettableMetadata settableMetaData,
       @NonNull Long handle,
@@ -535,7 +535,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void referenceDownloadFile(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void referenceDownloadFile(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull String filePath, @NonNull Long handle, @NonNull GeneratedAndroidFirebaseStorage.Result<String> result) {
 
@@ -555,7 +555,7 @@ public class FlutterFirebaseStoragePlugin
 
   // FirebaseStorageHostApi Task releated api override
   @Override
-  public void taskPause(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void taskPause(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull Long handle,
       @NonNull GeneratedAndroidFirebaseStorage.Result<Map<String, Object>> result) {
 
@@ -583,7 +583,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void taskResume(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void taskResume(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull Long handle,
       @NonNull GeneratedAndroidFirebaseStorage.Result<Map<String, Object>> result) {
 
@@ -611,7 +611,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void taskCancel(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void taskCancel(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull Long handle,
       @NonNull GeneratedAndroidFirebaseStorage.Result<Map<String, Object>> result) {
     FlutterFirebaseStorageTask storageTask = FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle.intValue());
@@ -637,7 +637,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void setMaxOperationRetryTime(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void setMaxOperationRetryTime(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull Long time, @NonNull GeneratedAndroidFirebaseStorage.Result<Void> result) {
     FirebaseStorage androidStorage = getStorageFromPigeon(app);
     androidStorage.setMaxOperationRetryTimeMillis(time);
@@ -645,7 +645,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void setMaxUploadRetryTime(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void setMaxUploadRetryTime(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull Long time, @NonNull GeneratedAndroidFirebaseStorage.Result<Void> result) {
     FirebaseStorage androidStorage = getStorageFromPigeon(app);
     androidStorage.setMaxUploadRetryTimeMillis(time);
@@ -653,7 +653,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void setMaxDownloadRetryTime(@NonNull GeneratedAndroidFirebaseStorage.PigeonFirebaseApp app,
+  public void setMaxDownloadRetryTime(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull Long time, @NonNull GeneratedAndroidFirebaseStorage.Result<Void> result) {
     FirebaseStorage androidStorage = getStorageFromPigeon(app);
     androidStorage.setMaxDownloadRetryTimeMillis(time);

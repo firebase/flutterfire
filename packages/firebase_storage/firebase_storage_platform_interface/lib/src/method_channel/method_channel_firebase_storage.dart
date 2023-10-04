@@ -29,21 +29,21 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// then initialized via the [delegateFor] method.
   MethodChannelFirebaseStorage._() : super(appInstance: null, bucket: '');
 
-  static const String STORAGE_METHOD_CHANNEL_NAME = 'plugins.flutter.io/firebase_storage';
+  static const String STORAGE_METHOD_CHANNEL_NAME =
+      'plugins.flutter.io/firebase_storage';
   static const String STORAGE_TASK_EVENT_NAME = "taskEvent";
 
   /// The [EventChannel] used for storageTask
   static EventChannel storageTaskChannel(String id) {
     return EventChannel(
-      '$STORAGE_METHOD_CHANNEL_NAME/$STORAGE_TASK_EVENT_NAME/$id'
-    );
+        '$STORAGE_METHOD_CHANNEL_NAME/$STORAGE_TASK_EVENT_NAME/$id');
   }
 
   static final FirebaseStorageHostApi pigeonChannel = FirebaseStorageHostApi();
 
   /// Default FirebaseApp pigeon instance
-  PigeonFirebaseApp get pigeonFirebaseAppDefault {
-    return PigeonFirebaseApp(
+  PigeonStorageFirebaseApp get pigeonFirebaseAppDefault {
+    return PigeonStorageFirebaseApp(
       appName: app.name,
     );
   }
@@ -69,24 +69,27 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     return MethodChannelFirebaseStorage._();
   }
 
-  static PigeonStorageReference getPigeonReference(String bucket, String fullPath, String name) {
-    return PigeonStorageReference(bucket: bucket, fullPath: fullPath, name: name);
+  static PigeonStorageReference getPigeonReference(
+      String bucket, String fullPath, String name) {
+    return PigeonStorageReference(
+        bucket: bucket, fullPath: fullPath, name: name);
   }
 
-  static PigeonFirebaseApp getPigeonFirebaseApp(String appName) {
-    return PigeonFirebaseApp(
+  static PigeonStorageFirebaseApp getPigeonFirebaseApp(String appName) {
+    return PigeonStorageFirebaseApp(
       appName: appName,
     );
   }
 
-  static PigeonSettableMetadata getPigeonSettableMetaData(SettableMetadata metaData) {
+  static PigeonSettableMetadata getPigeonSettableMetaData(
+      SettableMetadata metaData) {
     return PigeonSettableMetadata(
-      cacheControl: metaData.cacheControl,
-      contentDisposition: metaData.contentDisposition,
-      contentEncoding: metaData.contentEncoding,
-      contentLanguage: metaData.contentLanguage,
-      contentType: metaData.contentType,
-      customMetadata: metaData.customMetadata);
+        cacheControl: metaData.cacheControl,
+        contentDisposition: metaData.contentDisposition,
+        contentEncoding: metaData.contentEncoding,
+        contentLanguage: metaData.contentLanguage,
+        contentType: metaData.contentType,
+        customMetadata: metaData.customMetadata);
   }
 
   static int _methodChannelHandleId = 0;

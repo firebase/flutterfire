@@ -94,24 +94,24 @@ abstract class MethodChannelTask extends TaskPlatform {
   }
 
   /// Default FirebaseApp pigeon instance
-  PigeonFirebaseApp get pigeonFirebaseAppDefault {
-    return PigeonFirebaseApp(
+  PigeonStorageFirebaseApp get pigeonFirebaseAppDefault {
+    return PigeonStorageFirebaseApp(
       appName: storage.app.name,
     );
   }
 
-  PigeonTaskState convertToPigeonTaskState(TaskState state) {
+  PigeonStorageTaskState convertToPigeonTaskState(TaskState state) {
     switch (state) {
       case TaskState.canceled:
-        return PigeonTaskState.canceled;
+        return PigeonStorageTaskState.canceled;
       case TaskState.error:
-        return PigeonTaskState.error;
+        return PigeonStorageTaskState.error;
       case TaskState.paused:
-        return PigeonTaskState.paused;
+        return PigeonStorageTaskState.paused;
       case TaskState.running:
-        return PigeonTaskState.running;
+        return PigeonStorageTaskState.running;
       case TaskState.success:
-        return PigeonTaskState.success;
+        return PigeonStorageTaskState.success;
     }
   }
 

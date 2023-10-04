@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 
 /// The type of operation that generated the action code from calling
 /// [TaskState].
-enum PigeonTaskState {
+enum PigeonStorageTaskState {
   /// Indicates the task has been paused by the user.
   paused,
   /// Indicates the task is currently in-progress.
@@ -23,8 +23,8 @@ enum PigeonTaskState {
   error,
 }
 
-class PigeonFirebaseApp {
-  PigeonFirebaseApp({
+class PigeonStorageFirebaseApp {
+  PigeonStorageFirebaseApp({
     required this.appName,
     this.tenantId,
   });
@@ -40,9 +40,9 @@ class PigeonFirebaseApp {
     ];
   }
 
-  static PigeonFirebaseApp decode(Object result) {
+  static PigeonStorageFirebaseApp decode(Object result) {
     result as List<Object?>;
-    return PigeonFirebaseApp(
+    return PigeonStorageFirebaseApp(
       appName: result[0]! as String,
       tenantId: result[1] as String?,
     );
@@ -230,19 +230,19 @@ class _FirebaseStorageHostApiCodec extends StandardMessageCodec {
   const _FirebaseStorageHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonFirebaseApp) {
+    if (value is PigeonFullMetaData) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFullMetaData) {
+    } else if (value is PigeonListOptions) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonListOptions) {
+    } else if (value is PigeonListResult) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonListResult) {
+    } else if (value is PigeonSettableMetadata) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonSettableMetadata) {
+    } else if (value is PigeonStorageFirebaseApp) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
     } else if (value is PigeonStorageReference) {
@@ -257,15 +257,15 @@ class _FirebaseStorageHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128: 
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
-      case 129: 
         return PigeonFullMetaData.decode(readValue(buffer)!);
-      case 130: 
+      case 129: 
         return PigeonListOptions.decode(readValue(buffer)!);
-      case 131: 
+      case 130: 
         return PigeonListResult.decode(readValue(buffer)!);
-      case 132: 
+      case 131: 
         return PigeonSettableMetadata.decode(readValue(buffer)!);
+      case 132: 
+        return PigeonStorageFirebaseApp.decode(readValue(buffer)!);
       case 133: 
         return PigeonStorageReference.decode(readValue(buffer)!);
       default:
@@ -284,7 +284,7 @@ class FirebaseStorageHostApi {
 
   static const MessageCodec<Object?> codec = _FirebaseStorageHostApiCodec();
 
-  Future<PigeonStorageReference> getReferencebyPath(PigeonFirebaseApp arg_app, String arg_path, String? arg_bucket) async {
+  Future<PigeonStorageReference> getReferencebyPath(PigeonStorageFirebaseApp arg_app, String arg_path, String? arg_bucket) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath', codec,
         binaryMessenger: _binaryMessenger);
@@ -311,7 +311,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<void> setMaxOperationRetryTime(PigeonFirebaseApp arg_app, int arg_time) async {
+  Future<void> setMaxOperationRetryTime(PigeonStorageFirebaseApp arg_app, int arg_time) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime', codec,
         binaryMessenger: _binaryMessenger);
@@ -333,7 +333,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<void> setMaxUploadRetryTime(PigeonFirebaseApp arg_app, int arg_time) async {
+  Future<void> setMaxUploadRetryTime(PigeonStorageFirebaseApp arg_app, int arg_time) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime', codec,
         binaryMessenger: _binaryMessenger);
@@ -355,7 +355,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<void> setMaxDownloadRetryTime(PigeonFirebaseApp arg_app, int arg_time) async {
+  Future<void> setMaxDownloadRetryTime(PigeonStorageFirebaseApp arg_app, int arg_time) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime', codec,
         binaryMessenger: _binaryMessenger);
@@ -377,7 +377,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<void> useStorageEmulator(PigeonFirebaseApp arg_app, String arg_host, int arg_port) async {
+  Future<void> useStorageEmulator(PigeonStorageFirebaseApp arg_app, String arg_host, int arg_port) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator', codec,
         binaryMessenger: _binaryMessenger);
@@ -399,7 +399,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<void> referenceDelete(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference) async {
+  Future<void> referenceDelete(PigeonStorageFirebaseApp arg_app, PigeonStorageReference arg_reference) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete', codec,
         binaryMessenger: _binaryMessenger);
@@ -421,7 +421,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<String> referenceGetDownloadURL(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference) async {
+  Future<String> referenceGetDownloadURL(PigeonStorageFirebaseApp arg_app, PigeonStorageReference arg_reference) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL', codec,
         binaryMessenger: _binaryMessenger);
@@ -448,7 +448,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<PigeonFullMetaData> referenceGetMetaData(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference) async {
+  Future<PigeonFullMetaData> referenceGetMetaData(PigeonStorageFirebaseApp arg_app, PigeonStorageReference arg_reference) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData', codec,
         binaryMessenger: _binaryMessenger);
@@ -475,7 +475,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<PigeonListResult> referenceList(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, PigeonListOptions arg_options) async {
+  Future<PigeonListResult> referenceList(PigeonStorageFirebaseApp arg_app, PigeonStorageReference arg_reference, PigeonListOptions arg_options) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList', codec,
         binaryMessenger: _binaryMessenger);
@@ -502,7 +502,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<PigeonListResult> referenceListAll(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference) async {
+  Future<PigeonListResult> referenceListAll(PigeonStorageFirebaseApp arg_app, PigeonStorageReference arg_reference) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll', codec,
         binaryMessenger: _binaryMessenger);
@@ -529,7 +529,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<Uint8List?> referenceGetData(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, int arg_maxSize) async {
+  Future<Uint8List?> referenceGetData(PigeonStorageFirebaseApp arg_app, PigeonStorageReference arg_reference, int arg_maxSize) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData', codec,
         binaryMessenger: _binaryMessenger);
@@ -551,7 +551,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<String> referencePutData(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, Uint8List arg_data, PigeonSettableMetadata arg_settableMetaData, int arg_handle) async {
+  Future<String> referencePutData(PigeonStorageFirebaseApp arg_app, PigeonStorageReference arg_reference, Uint8List arg_data, PigeonSettableMetadata arg_settableMetaData, int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData', codec,
         binaryMessenger: _binaryMessenger);
@@ -578,7 +578,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<String> referencePutString(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, String arg_data, int arg_format, PigeonSettableMetadata arg_settableMetaData, int arg_handle) async {
+  Future<String> referencePutString(PigeonStorageFirebaseApp arg_app, PigeonStorageReference arg_reference, String arg_data, int arg_format, PigeonSettableMetadata arg_settableMetaData, int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString', codec,
         binaryMessenger: _binaryMessenger);
@@ -605,7 +605,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<String> referencePutFile(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, String arg_filePath, PigeonSettableMetadata arg_settableMetaData, int arg_handle) async {
+  Future<String> referencePutFile(PigeonStorageFirebaseApp arg_app, PigeonStorageReference arg_reference, String arg_filePath, PigeonSettableMetadata arg_settableMetaData, int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile', codec,
         binaryMessenger: _binaryMessenger);
@@ -632,7 +632,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<String> referenceDownloadFile(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, String arg_filePath, int arg_handle) async {
+  Future<String> referenceDownloadFile(PigeonStorageFirebaseApp arg_app, PigeonStorageReference arg_reference, String arg_filePath, int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile', codec,
         binaryMessenger: _binaryMessenger);
@@ -659,7 +659,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<PigeonFullMetaData> referenceUpdateMetadata(PigeonFirebaseApp arg_app, PigeonStorageReference arg_reference, PigeonSettableMetadata arg_metadata) async {
+  Future<PigeonFullMetaData> referenceUpdateMetadata(PigeonStorageFirebaseApp arg_app, PigeonStorageReference arg_reference, PigeonSettableMetadata arg_metadata) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata', codec,
         binaryMessenger: _binaryMessenger);
@@ -686,7 +686,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<Map<String?, Object?>> taskPause(PigeonFirebaseApp arg_app, int arg_handle) async {
+  Future<Map<String?, Object?>> taskPause(PigeonStorageFirebaseApp arg_app, int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause', codec,
         binaryMessenger: _binaryMessenger);
@@ -713,7 +713,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<Map<String?, Object?>> taskResume(PigeonFirebaseApp arg_app, int arg_handle) async {
+  Future<Map<String?, Object?>> taskResume(PigeonStorageFirebaseApp arg_app, int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume', codec,
         binaryMessenger: _binaryMessenger);
@@ -740,7 +740,7 @@ class FirebaseStorageHostApi {
     }
   }
 
-  Future<Map<String?, Object?>> taskCancel(PigeonFirebaseApp arg_app, int arg_handle) async {
+  Future<Map<String?, Object?>> taskCancel(PigeonStorageFirebaseApp arg_app, int arg_handle) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel', codec,
         binaryMessenger: _binaryMessenger);

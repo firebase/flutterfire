@@ -62,29 +62,30 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 };
 
 @interface FLTFirebaseStoragePlugin ()
-@property(nonatomic, retain) FlutterMethodChannel *channel;
-@property(strong, nonatomic) PigeonFirebaseApp *appleArguments;
+@property(nonatomic, retain) FlutterMethodChannel *storage_method_channel;
+//@property(strong, nonatomic) PigeonStorageFirebaseApp *appleArguments;
 
-@property(nonatomic, retain) NSObject<FlutterBinaryMessenger> *_binaryMessenger;
-@property(nonatomic, retain) NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
-@property(nonatomic, retain) NSMutableDictionary<NSString *, NSObject<FlutterStreamHandler> *> *_streamHandlers;
+
 @end
 
 @implementation FLTFirebaseStoragePlugin {
   NSMutableDictionary<NSNumber *, FIRStorageObservableTask<FIRStorageTaskManagement> *> *_tasks;
   dispatch_queue_t _callbackQueue;
   bool hasEmulatorBooted;
+  NSObject<FlutterBinaryMessenger> *_binaryMessenger;
+  NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
+  NSMutableDictionary<NSString *, NSObject<FlutterStreamHandler> *> *_streamHandlers;
 }
 
 #pragma mark - FlutterPlugin
 
 // Returns a singleton instance of the Firebase Storage plugin.
-+ (instancetype)sharedInstance {
++ (instancetype)sharedInstance :(NSObject<FlutterBinaryMessenger> *)messenger {
   static dispatch_once_t onceToken;
   static FLTFirebaseStoragePlugin *instance;
 
   dispatch_once(&onceToken, ^{
-    instance = [[FLTFirebaseStoragePlugin alloc] init];
+    instance = [[FLTFirebaseStoragePlugin alloc] init:messenger];
     // Register with the Flutter Firebase plugin registry.
     [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
   });
@@ -92,7 +93,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   return instance;
 }
 
-- (instancetype)init {
+- (instancetype)init: (NSObject<FlutterBinaryMessenger> *)messenger{
   self = [super init];
   if (self) {
     _tasks = [NSMutableDictionary<NSNumber *, FIRStorageObservableTask<FIRStorageTaskManagement> *>
@@ -100,6 +101,9 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     _callbackQueue =
         dispatch_queue_create("io.flutter.plugins.firebase.storage", DISPATCH_QUEUE_SERIAL);
     hasEmulatorBooted = false;
+    _binaryMessenger = messenger;
+    _eventChannels = [NSMutableDictionary dictionary];
+    _streamHandlers = [NSMutableDictionary dictionary];
   }
   return self;
 }
@@ -109,16 +113,13 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseStorageChannelName
                                   binaryMessenger:[registrar messenger]];
 
-  FLTFirebaseStoragePlugin *instance = [FLTFirebaseStoragePlugin sharedInstance];
-  if (instance.channel != nil) {
+  FLTFirebaseStoragePlugin *instance = [FLTFirebaseStoragePlugin sharedInstance:[registrar messenger]];
+  if (instance.storage_method_channel != nil) {
     NSLog(@"FLTFirebaseStorage was already registered. If using isolates, you can safely ignore "
           @"this message.");
     return;
   }
-  instance.channel = channel;
-  instance._binaryMessenger = [registrar messenger];
-  instance._eventChannels = [NSMutableDictionary dictionary];
-  instance._streamHandlers = [NSMutableDictionary dictionary];
+  instance.storage_method_channel = channel;
 #if TARGET_OS_OSX
   // TODO(Salakar): Publish does not exist on MacOS version of FlutterPluginRegistrar.
 #else
@@ -145,7 +146,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
 - (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   [self cleanupWithCompletion:^() {
-    self.channel = nil;
+    self.storage_method_channel = nil;
   }];
 }
 
@@ -206,14 +207,14 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 //   }
 // }
 
-- (FIRStorage *_Nullable)getFIRStorageFromAppNameFromPigeon:(PigeonFirebaseApp *)pigeonApp {
+- (FIRStorage *_Nullable)getFIRStorageFromAppNameFromPigeon:(PigeonStorageFirebaseApp *)pigeonApp {
   FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:pigeonApp.appName];
   FIRStorage *storage = [FIRStorage storageForApp:app];
 
   return storage;
 }
 
-- (FIRStorageReference *_Nullable)getFIRStorageReferenceFromPigeon:(PigeonFirebaseApp *)pigeonApp
+- (FIRStorageReference *_Nullable)getFIRStorageReferenceFromPigeon:(PigeonStorageFirebaseApp *)pigeonApp
                                                          reference:(PigeonStorageReference *)reference {
   FIRStorage *storage = [self getFIRStorageFromAppNameFromPigeon:pigeonApp];
   return [storage referenceWithPath:reference.fullPath];
@@ -240,7 +241,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
 #pragma mark - Firebase Storage API
 
-- (void)getReferencebyPathApp:(PigeonFirebaseApp *)app
+- (void)getReferencebyPathApp:(PigeonStorageFirebaseApp *)app
                        path:(NSString *)path
                      bucket:(nullable NSString *)bucket
                  completion:(void (^)(PigeonStorageReference *_Nullable, FlutterError *_Nullable))completion {
@@ -252,7 +253,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
              nil);
 }
 
-- (void)setMaxOperationRetryTimeApp:(PigeonFirebaseApp *)app
+- (void)setMaxOperationRetryTimeApp:(PigeonStorageFirebaseApp *)app
                                time:(NSNumber *)time
                          completion:(void (^)(FlutterError *_Nullable))completion {
   FIRStorage *storage = [self getFIRStorageFromAppNameFromPigeon:app];
@@ -262,7 +263,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   completion(nil);
 }
 
-- (void)setMaxUploadRetryTimeApp:(PigeonFirebaseApp *)app
+- (void)setMaxUploadRetryTimeApp:(PigeonStorageFirebaseApp *)app
                             time:(NSNumber *)time
                       completion:(void (^)(FlutterError *_Nullable))completion {
   FIRStorage *storage = [self getFIRStorageFromAppNameFromPigeon:app];
@@ -272,7 +273,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   completion(nil);
 }
 
-- (void)setMaxDownloadRetryTimeApp:(PigeonFirebaseApp *)app
+- (void)setMaxDownloadRetryTimeApp:(PigeonStorageFirebaseApp *)app
                               time:(NSNumber *)time
                         completion:(void (^)(FlutterError *_Nullable))completion {
   FIRStorage *storage = [self getFIRStorageFromAppNameFromPigeon:app];
@@ -282,7 +283,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   completion(nil);
 }
 
-- (void)useStorageEmulatorApp:(PigeonFirebaseApp *)app
+- (void)useStorageEmulatorApp:(PigeonStorageFirebaseApp *)app
                               host:(NSString *)host
                               port:(NSNumber *)port
                               completion:(void (^)(FlutterError *_Nullable))completion {
@@ -291,7 +292,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   completion(nil);
 }
 
-- (void)referenceDeleteApp:(PigeonFirebaseApp *)app
+- (void)referenceDeleteApp:(PigeonStorageFirebaseApp *)app
                  reference:(PigeonStorageReference *)reference
                 completion:(void (^)(FlutterError *_Nullable))completion {
   FIRStorageReference *storage_reference = [self getFIRStorageReferenceFromPigeon:app
@@ -301,7 +302,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   }];
 }
 
-- (void)referenceGetDownloadURLApp:(PigeonFirebaseApp *)app
+- (void)referenceGetDownloadURLApp:(PigeonStorageFirebaseApp *)app
                          reference:(PigeonStorageReference *)reference
                         completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion {
   FIRStorageReference *storage_reference = [self getFIRStorageReferenceFromPigeon:app
@@ -322,7 +323,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   }];
 }
 
-- (void)referenceGetMetaDataApp:(PigeonFirebaseApp *)app
+- (void)referenceGetMetaDataApp:(PigeonStorageFirebaseApp *)app
                       reference:(PigeonStorageReference *)reference
                      completion:(void (^)(PigeonFullMetaData *_Nullable, FlutterError *_Nullable))completion {
   FIRStorageReference *storage_reference = [self getFIRStorageReferenceFromPigeon:app
@@ -352,7 +353,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                                  prefixs:prefixes];
 }
 
-- (void)referenceListApp:(PigeonFirebaseApp *)app
+- (void)referenceListApp:(PigeonStorageFirebaseApp *)app
                reference:(PigeonStorageReference *)reference
                  options:(PigeonListOptions *)options
               completion:(void (^)(PigeonListResult *_Nullable, FlutterError *_Nullable))completion {
@@ -375,7 +376,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   }
 }
 
-- (void)referenceListAllApp:(PigeonFirebaseApp *)app
+- (void)referenceListAllApp:(PigeonStorageFirebaseApp *)app
                   reference:(PigeonStorageReference *)reference
                  completion:(void (^)(PigeonListResult *_Nullable, FlutterError *_Nullable))completion {
   FIRStorageReference *storage_reference = [self getFIRStorageReferenceFromPigeon:app
@@ -389,7 +390,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   }];
 }
 
-- (void)referenceGetDataApp:(PigeonFirebaseApp *)app
+- (void)referenceGetDataApp:(PigeonStorageFirebaseApp *)app
                   reference:(PigeonStorageReference *)reference
                     maxSize:(NSNumber *)maxSize
                  completion:(void (^)(FlutterStandardTypedData *_Nullable, FlutterError *_Nullable))completion {
@@ -413,7 +414,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                           }];
 }
 
-- (void)referencePutDataApp:(PigeonFirebaseApp *)app
+- (void)referencePutDataApp:(PigeonStorageFirebaseApp *)app
                   reference:(PigeonStorageReference *)reference
                        data:(FlutterStandardTypedData *)data
            settableMetaData:(PigeonSettableMetadata *)settableMetaData
@@ -442,18 +443,18 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   NSString *channelName = [NSString stringWithFormat:@"%@/taskEvent/%@", kFLTFirebaseStorageChannelName, uuid];
 
   FlutterEventChannel *channel = [FlutterEventChannel eventChannelWithName:channelName
-                                                           binaryMessenger:self._binaryMessenger];
+                                                           binaryMessenger:_binaryMessenger];
   FLTTaskStateChannelStreamHandler *handler =
       [[FLTTaskStateChannelStreamHandler alloc] initWithTask:task];
   [channel setStreamHandler:handler];
 
-  [self._eventChannels setObject:channel forKey:channelName];
-  [self._streamHandlers setObject:handler forKey:channelName];
+  [_eventChannels setObject:channel forKey:channelName];
+  [_streamHandlers setObject:handler forKey:channelName];
 
   return uuid;
 }
 
-- (void)referencePutStringApp:(PigeonFirebaseApp *)app
+- (void)referencePutStringApp:(PigeonStorageFirebaseApp *)app
                     reference:(PigeonStorageReference *)reference
                          data:(NSString *)data
                        format:(NSNumber *)format
@@ -477,7 +478,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   completion([self setupTaskListeners:task], nil);
 }
 
-- (void)referencePutFileApp:(PigeonFirebaseApp *)app
+- (void)referencePutFileApp:(PigeonStorageFirebaseApp *)app
                   reference:(PigeonStorageReference *)reference
                    filePath:(NSString *)filePath
            settableMetaData:(PigeonSettableMetadata *)settableMetaData
@@ -498,7 +499,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   completion([self setupTaskListeners:task], nil);
 }
 
-- (void)referenceDownloadFileApp:(PigeonFirebaseApp *)app
+- (void)referenceDownloadFileApp:(PigeonStorageFirebaseApp *)app
                        reference:(PigeonStorageReference *)reference
                         filePath:(NSString *)filePath
                           handle:(NSNumber *)handle
@@ -517,7 +518,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   completion([self setupTaskListeners:task], nil);
 }
 
-- (void)referenceUpdateMetadataApp:(PigeonFirebaseApp *)app
+- (void)referenceUpdateMetadataApp:(PigeonStorageFirebaseApp *)app
                          reference:(PigeonStorageReference *)reference
                           metadata:(PigeonSettableMetadata *)metadata
                         completion:(void (^)(PigeonFullMetaData *_Nullable, FlutterError *_Nullable))completion {
@@ -536,21 +537,21 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   }];
 }
 
-- (void)taskPauseApp:(PigeonFirebaseApp *)app
+- (void)taskPauseApp:(PigeonStorageFirebaseApp *)app
               handle:(NSNumber *)handle
           completion:(void (^)(NSDictionary<NSString *, id> *_Nullable, FlutterError *_Nullable))completion {
   // TODO
   NSLog(@"taskPauseApp");
 }
 
-- (void)taskResumeApp:(PigeonFirebaseApp *)app
+- (void)taskResumeApp:(PigeonStorageFirebaseApp *)app
                handle:(NSNumber *)handle
            completion:(void (^)(NSDictionary<NSString *, id> *_Nullable, FlutterError *_Nullable))completion {
   // TODO
   NSLog(@"taskResumeApp");
 }
 
-- (void)taskCancelApp:(PigeonFirebaseApp *)app
+- (void)taskCancelApp:(PigeonStorageFirebaseApp *)app
                handle:(NSNumber *)handle
            completion:(void (^)(NSDictionary<NSString *, id> *_Nullable, FlutterError *_Nullable))completion {
   // TODO
@@ -793,7 +794,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     [task observeStatus:FIRStorageTaskStatusPause
                 handler:^(FIRStorageTaskSnapshot *snapshot) {
                   dispatch_async(self->_callbackQueue, ^() {
-                    [weakSelf.channel invokeMethod:@"Task#onPaused"
+                    [weakSelf.storage_method_channel invokeMethod:@"Task#onPaused"
                                          arguments:[weakSelf NSDictionaryFromHandle:handle
                                                           andFIRStorageTaskSnapshot:snapshot]];
                   });
@@ -803,7 +804,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     [task observeStatus:FIRStorageTaskStatusProgress
                 handler:^(FIRStorageTaskSnapshot *snapshot) {
                   dispatch_async(self->_callbackQueue, ^() {
-                    [weakSelf.channel invokeMethod:@"Task#onProgress"
+                    [weakSelf.storage_method_channel invokeMethod:@"Task#onProgress"
                                          arguments:[weakSelf NSDictionaryFromHandle:handle
                                                           andFIRStorageTaskSnapshot:snapshot]];
                   });
@@ -816,7 +817,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                     @synchronized(self->_tasks) {
                       [self->_tasks removeObjectForKey:handle];
                     }
-                    [weakSelf.channel invokeMethod:@"Task#onSuccess"
+                    [weakSelf.storage_method_channel invokeMethod:@"Task#onSuccess"
                                          arguments:[weakSelf NSDictionaryFromHandle:handle
                                                           andFIRStorageTaskSnapshot:snapshot]];
                   });
@@ -829,11 +830,11 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                       [self->_tasks removeObjectForKey:handle];
                     }
                     if (snapshot.error.code == FIRStorageErrorCodeCancelled) {
-                      [weakSelf.channel invokeMethod:@"Task#onCanceled"
+                      [weakSelf.storage_method_channel invokeMethod:@"Task#onCanceled"
                                            arguments:[weakSelf NSDictionaryFromHandle:handle
                                                             andFIRStorageTaskSnapshot:snapshot]];
                     } else {
-                      [weakSelf.channel invokeMethod:@"Task#onFailure"
+                      [weakSelf.storage_method_channel invokeMethod:@"Task#onFailure"
                                            arguments:[weakSelf NSDictionaryFromHandle:handle
                                                             andFIRStorageTaskSnapshot:snapshot]];
                     }
