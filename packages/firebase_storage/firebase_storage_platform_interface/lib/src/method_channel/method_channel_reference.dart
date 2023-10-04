@@ -80,14 +80,29 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   static PigeonListOptions convertOptions(ListOptions? options) {
-    // TODO
-    return PigeonListOptions();
+    if (options == null) {
+      return PigeonListOptions();
+    }
+    return PigeonListOptions(
+        maxResults: options.maxResults, pageToken: options.pageToken);
   }
 
   ListResultPlatform convertListReference(
       PigeonListResult pigeonReferenceList) {
-    // TODO
-    return MethodChannelListResult(storage);
+    List<String> referencePaths = [];
+    for (final reference in pigeonReferenceList.items) {
+      referencePaths.add(reference!.fullPath);
+    }
+    List<String> prefixPaths = [];
+    for (final prefix in pigeonReferenceList.prefixs) {
+      prefixPaths.add(prefix!.fullPath);
+    }
+    return MethodChannelListResult(
+      storage,
+      nextPageToken: pigeonReferenceList.pageToken,
+      items: referencePaths,
+      prefixes: prefixPaths,
+    );
   }
 
   @override
@@ -152,7 +167,13 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   PigeonSettableMetadata convertToPigeonMetaData(SettableMetadata data) {
-    return PigeonSettableMetadata();
+    return PigeonSettableMetadata(
+      cacheControl: data.cacheControl,
+      contentDisposition: data.contentDisposition,
+      contentEncoding: data.contentEncoding,
+      contentLanguage: data.contentLanguage,
+      contentType: data.contentType,
+    );
   }
 
   @override
