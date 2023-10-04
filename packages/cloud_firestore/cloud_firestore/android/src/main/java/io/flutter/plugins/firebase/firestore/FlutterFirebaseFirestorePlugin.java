@@ -705,8 +705,11 @@ public class FlutterFirebaseFirestorePlugin
 
             if (query == null) {
               result.error(
-                  new IllegalArgumentException(
-                      "An error occurred while parsing query arguments, see native logs for more information. Please report this issue."));
+                new GeneratedAndroidFirebaseFirestore.FlutterError(
+                    "invalid_query",
+                    "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
+                    null
+                ));
               return;
             }
             final QuerySnapshot querySnapshot = Tasks.await(query.get(source));
@@ -816,8 +819,11 @@ public class FlutterFirebaseFirestorePlugin
 
     if (query == null) {
       result.error(
-          new IllegalArgumentException(
-              "An error occurred while parsing query arguments, see native logs for more information. Please report this issue."));
+        new GeneratedAndroidFirebaseFirestore.FlutterError(
+          "invalid_query",
+          "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
+          null
+        ));
       return;
     }
 

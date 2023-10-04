@@ -26,7 +26,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
         .aggregateQueryCount(_pigeonApp, _path, _pigeonParameters, source);
 
     return AggregateQuerySnapshotPlatform(
-      count: data,
+      count: data.toInt(),
     );
   }
 }
