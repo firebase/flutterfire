@@ -42,6 +42,7 @@ import io.flutter.plugins.firebase.firestore.streamhandler.OnTransactionResultLi
 import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
+import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -296,10 +297,22 @@ public class FlutterFirebaseFirestorePlugin
 
   public static FirebaseFirestore getFirestoreFromPigeon(
       GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp pigeonApp) {
-    FirebaseApp app = FirebaseApp.getInstance(pigeonApp.getAppName());
-    FirebaseFirestore firestore = FirebaseFirestore.getInstance(app);
-    firestore.setFirestoreSettings(getSettingsFromPigeon(pigeonApp));
-    return firestore;
+    synchronized (FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
+      if (FlutterFirebaseFirestorePlugin.getFirestoreInstanceByNameAndDatabaseUrl(
+        pigeonApp.getAppName(), pigeonApp.getDatabaseURL())
+        != null) {
+        return FlutterFirebaseFirestorePlugin.getFirestoreInstanceByNameAndDatabaseUrl(
+          pigeonApp.getAppName(), pigeonApp.getDatabaseURL());
+      }
+
+      FirebaseApp app = FirebaseApp.getInstance(pigeonApp.getAppName());
+      FirebaseFirestore firestore = FirebaseFirestore.getInstance(app, pigeonApp.getDatabaseURL());
+      firestore.setFirestoreSettings(getSettingsFromPigeon(pigeonApp));
+
+      FlutterFirebaseFirestorePlugin.setCachedFirebaseFirestoreInstanceForKey(
+        firestore, pigeonApp.getDatabaseURL());
+      return firestore;
+    }
   }
 
   @Override
@@ -345,7 +358,7 @@ public class FlutterFirebaseFirestorePlugin
                     PigeonParser.parsePigeonServerTimestampBehavior(
                         options.getServerTimestampBehavior())));
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -361,7 +374,7 @@ public class FlutterFirebaseFirestorePlugin
             Tasks.await(firestore.clearPersistence());
             result.success(null);
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -377,7 +390,7 @@ public class FlutterFirebaseFirestorePlugin
             Tasks.await(firestore.disableNetwork());
             result.success(null);
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -393,7 +406,7 @@ public class FlutterFirebaseFirestorePlugin
             Tasks.await(firestore.enableNetwork());
             result.success(null);
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -410,7 +423,7 @@ public class FlutterFirebaseFirestorePlugin
             destroyCachedFirebaseFirestoreInstanceForKey(firestore);
             result.success(null);
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -426,7 +439,7 @@ public class FlutterFirebaseFirestorePlugin
             Tasks.await(firestore.waitForPendingWrites());
             result.success(null);
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -444,7 +457,7 @@ public class FlutterFirebaseFirestorePlugin
 
             result.success(null);
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -460,7 +473,7 @@ public class FlutterFirebaseFirestorePlugin
 
             result.success(null);
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -538,7 +551,7 @@ public class FlutterFirebaseFirestorePlugin
                     transaction.get(documentReference),
                     DocumentSnapshot.ServerTimestampBehavior.NONE));
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -572,7 +585,7 @@ public class FlutterFirebaseFirestorePlugin
 
             result.success(Tasks.await(setTask));
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -611,7 +624,7 @@ public class FlutterFirebaseFirestorePlugin
                 Tasks.await(
                     documentReference.update(firstFieldPath, firstObject, flattenData.toArray())));
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -641,7 +654,7 @@ public class FlutterFirebaseFirestorePlugin
                     PigeonParser.parsePigeonServerTimestampBehavior(
                         request.getServerTimestampBehavior())));
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -659,7 +672,7 @@ public class FlutterFirebaseFirestorePlugin
 
             result.success(Tasks.await(documentReference.delete()));
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -697,7 +710,7 @@ public class FlutterFirebaseFirestorePlugin
                     PigeonParser.parsePigeonServerTimestampBehavior(
                         options.getServerTimestampBehavior())));
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -719,7 +732,7 @@ public class FlutterFirebaseFirestorePlugin
                 Tasks.await(aggregateQuery.get(PigeonParser.parseAggregateSource(source)));
             result.success((double) aggregateQuerySnapshot.getCount());
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
@@ -777,7 +790,7 @@ public class FlutterFirebaseFirestorePlugin
             Tasks.await(batch.commit());
             result.success(null);
           } catch (Exception e) {
-            result.error(e);
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
         });
   }
