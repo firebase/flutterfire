@@ -70,14 +70,10 @@ abstract class MethodChannelTask extends TaskPlatform {
 
         _didComplete = true;
 
-        Map<String, String>? details = exception.details != null
-            ? Map<String, String>.from(exception.details)
-            : null;
-
         throw FirebaseException(
             plugin: 'firebase_storage',
             code: 'task-state-error',
-            message: details?['message'] ?? '');
+            message: exception.message);
       }
     }
 
