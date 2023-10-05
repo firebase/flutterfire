@@ -71,7 +71,7 @@ FirebaseStoragePlugin::FirebaseStoragePlugin() {}
 
 FirebaseStoragePlugin::~FirebaseStoragePlugin() = default;
 
-Storage* GetCPPStorageFromPigeon(const PigeonFirebaseApp& pigeonApp,
+Storage* GetCPPStorageFromPigeon(const PigeonStorageFirebaseApp& pigeonApp,
                                  const std::string& bucket_path) {
   std::string default_url = std::string("gs://") + bucket_path;
   App* app = App::GetInstance(pigeonApp.app_name().c_str());
@@ -81,7 +81,7 @@ Storage* GetCPPStorageFromPigeon(const PigeonFirebaseApp& pigeonApp,
 }
 
 StorageReference GetCPPStorageReferenceFromPigeon(
-    const PigeonFirebaseApp& pigeonApp, const std::string& bucket,
+    const PigeonStorageFirebaseApp& pigeonApp, const std::string& bucket,
     const PigeonStorageReference& pigeonReference) {
   Storage* cpp_storage = GetCPPStorageFromPigeon(pigeonApp, bucket);
   return cpp_storage->GetReference(pigeonReference.full_path());
@@ -135,7 +135,7 @@ std::string RegisterEventChannel(
 }
 
 void FirebaseStoragePlugin::GetReferencebyPath(
-    const PigeonFirebaseApp& app, const std::string& path,
+    const PigeonStorageFirebaseApp& app, const std::string& path,
     const std::string* bucket,
     std::function<void(ErrorOr<PigeonStorageReference> reply)> result) {
   Storage* cpp_storage = GetCPPStorageFromPigeon(app, *bucket);
@@ -146,33 +146,34 @@ void FirebaseStoragePlugin::GetReferencebyPath(
 }
 
 void FirebaseStoragePlugin::SetMaxOperationRetryTime(
-    const PigeonFirebaseApp& app, int64_t time,
+    const PigeonStorageFirebaseApp& app, int64_t time,
     std::function<void(std::optional<FlutterError> reply)> result) {
   Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
   cpp_storage->set_max_operation_retry_time((double)time);
 }
 
 void FirebaseStoragePlugin::SetMaxUploadRetryTime(
-    const PigeonFirebaseApp& app, int64_t time,
+    const PigeonStorageFirebaseApp& app, int64_t time,
     std::function<void(std::optional<FlutterError> reply)> result) {
   Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
   cpp_storage->set_max_upload_retry_time((double)time);
 }
 
 void FirebaseStoragePlugin::SetMaxDownloadRetryTime(
-    const PigeonFirebaseApp& app, int64_t time,
+    const PigeonStorageFirebaseApp& app, int64_t time,
     std::function<void(std::optional<FlutterError> reply)> result) {
   Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
   cpp_storage->set_max_download_retry_time((double)time);
 }
 
 void FirebaseStoragePlugin::UseStorageEmulator(
-    const PigeonFirebaseApp& app, const std::string& host, int64_t port,
+    const PigeonStorageFirebaseApp& app, const std::string& host, int64_t port,
     std::function<void(std::optional<FlutterError> reply)> result) {
   // C++ doesn't support emulator on desktop for now. Do nothing.
 }
 void FirebaseStoragePlugin::ReferenceDelete(
-    const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
+    const PigeonStorageFirebaseApp& app,
+    const PigeonStorageReference& reference,
     std::function<void(std::optional<FlutterError> reply)> result) {
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, "", reference);
@@ -185,7 +186,8 @@ void FirebaseStoragePlugin::ReferenceDelete(
   });
 }
 void FirebaseStoragePlugin::ReferenceGetDownloadURL(
-    const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
+    const PigeonStorageFirebaseApp& app,
+    const PigeonStorageReference& reference,
     std::function<void(ErrorOr<std::string> reply)> result) {
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, "", reference);
@@ -218,7 +220,8 @@ void GetMetadataFromPigeon(PigeonSettableMetadata pigeonMetadata,
 }
 
 void FirebaseStoragePlugin::ReferenceGetMetaData(
-    const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
+    const PigeonStorageFirebaseApp& app,
+    const PigeonStorageReference& reference,
     std::function<void(ErrorOr<PigeonFullMetaData> reply)> result) {
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, "", reference);
@@ -236,8 +239,8 @@ void FirebaseStoragePlugin::ReferenceGetMetaData(
 }
 
 void FirebaseStoragePlugin::ReferenceList(
-    const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
-    const PigeonListOptions& options,
+    const PigeonStorageFirebaseApp& app,
+    const PigeonStorageReference& reference, const PigeonListOptions& options,
     std::function<void(ErrorOr<PigeonListResult> reply)> result) {
   // C++ doesn't support list yet
   flutter::EncodableList items = flutter::EncodableList();
@@ -247,7 +250,8 @@ void FirebaseStoragePlugin::ReferenceList(
 }
 
 void FirebaseStoragePlugin::ReferenceListAll(
-    const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
+    const PigeonStorageFirebaseApp& app,
+    const PigeonStorageReference& reference,
     std::function<void(ErrorOr<PigeonListResult> reply)> result) {
   // C++ doesn't support listAll yet
   flutter::EncodableList items = flutter::EncodableList();
@@ -257,8 +261,8 @@ void FirebaseStoragePlugin::ReferenceListAll(
 }
 
 void FirebaseStoragePlugin::ReferenceGetData(
-    const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
-    int64_t max_size,
+    const PigeonStorageFirebaseApp& app,
+    const PigeonStorageReference& reference, int64_t max_size,
     std::function<void(ErrorOr<std::optional<std::vector<uint8_t>>> reply)>
         result) {
   StorageReference cpp_reference =
@@ -297,7 +301,7 @@ class TaskStateListener : public Listener {
     // TODO error handling
     std::cout << "[C++] TaskStateListener::OnProgress()" << std::endl;
     flutter::EncodableMap event = flutter::EncodableMap();
-    event[kTaskStateName] = static_cast<int>(PigeonTaskState::running);
+    event[kTaskStateName] = static_cast<int>(PigeonStorageTaskState::running);
     event[kTaskAppName] = controller->GetReference().storage()->app()->name();
     flutter::EncodableMap snapshot = flutter::EncodableMap();
     snapshot[kTaskSnapshotPath] = controller->GetReference().full_path();
@@ -312,7 +316,7 @@ class TaskStateListener : public Listener {
     std::cout << "[C++] TaskStateListener::OnPaused()" << std::endl;
     // A progress event occurred
     flutter::EncodableMap event = flutter::EncodableMap();
-    event[kTaskStateName] = static_cast<int>(PigeonTaskState::paused);
+    event[kTaskStateName] = static_cast<int>(PigeonStorageTaskState::paused);
     event[kTaskAppName] = controller->GetReference().storage()->app()->name();
     flutter::EncodableMap snapshot = flutter::EncodableMap();
     snapshot[kTaskSnapshotPath] = controller->GetReference().full_path();
@@ -362,7 +366,7 @@ class PutDataStreamHandler
                 << ", error message: " << data_result.error_message()
                 << std::endl;
       flutter::EncodableMap event = flutter::EncodableMap();
-      event[kTaskStateName] = static_cast<int>(PigeonTaskState::success);
+      event[kTaskStateName] = static_cast<int>(PigeonStorageTaskState::success);
       event[kTaskAppName] = std::string(storage_->app()->name());
       flutter::EncodableMap snapshot = flutter::EncodableMap();
       snapshot[kTaskSnapshotPath] = data_result.result()->path();
@@ -427,7 +431,7 @@ class PutFileStreamHandler
                 << ", error message: " << data_result.error_message()
                 << std::endl;
       flutter::EncodableMap event = flutter::EncodableMap();
-      event[kTaskStateName] = static_cast<int>(PigeonTaskState::success);
+      event[kTaskStateName] = static_cast<int>(PigeonStorageTaskState::success);
       event[kTaskAppName] = std::string(storage_->app()->name());
       flutter::EncodableMap snapshot = flutter::EncodableMap();
       snapshot[kTaskSnapshotPath] = data_result.result()->path();
@@ -492,7 +496,7 @@ class GetFileStreamHandler
                 << ", error message: " << data_result.error_message()
                 << std::endl;
       flutter::EncodableMap event = flutter::EncodableMap();
-      event[kTaskStateName] = static_cast<int>(PigeonTaskState::success);
+      event[kTaskStateName] = static_cast<int>(PigeonStorageTaskState::success);
       event[kTaskAppName] = std::string(storage_->app()->name());
       flutter::EncodableMap snapshot = flutter::EncodableMap();
       // snapshot[kTaskSnapshotPath] = data_result.result()->path();
@@ -524,7 +528,7 @@ class GetFileStreamHandler
 };
 
 void FirebaseStoragePlugin::ReferencePutData(
-    const PigeonFirebaseApp& pigeon_app,
+    const PigeonStorageFirebaseApp& pigeon_app,
     const PigeonStorageReference& pigeon_reference,
     const std::vector<uint8_t>& data,
     const PigeonSettableMetadata& pigeon_meta_data, int64_t handle,
@@ -547,7 +551,7 @@ void FirebaseStoragePlugin::ReferencePutData(
 }
 
 void FirebaseStoragePlugin::ReferencePutString(
-    const PigeonFirebaseApp& pigeon_app,
+    const PigeonStorageFirebaseApp& pigeon_app,
     const PigeonStorageReference& pigeon_reference, const std::string& data,
     int64_t format, const PigeonSettableMetadata& settable_meta_data,
     int64_t handle, std::function<void(ErrorOr<std::string> reply)> result) {
@@ -571,7 +575,7 @@ void FirebaseStoragePlugin::ReferencePutString(
 }
 
 void FirebaseStoragePlugin::ReferencePutFile(
-    const PigeonFirebaseApp& pigeon_app,
+    const PigeonStorageFirebaseApp& pigeon_app,
     const PigeonStorageReference& pigeon_reference,
     const std::string& file_path,
     const PigeonSettableMetadata& settable_meta_data, int64_t handle,
@@ -594,7 +598,7 @@ void FirebaseStoragePlugin::ReferencePutFile(
 }
 
 void FirebaseStoragePlugin::ReferenceDownloadFile(
-    const PigeonFirebaseApp& pigeon_app,
+    const PigeonStorageFirebaseApp& pigeon_app,
     const PigeonStorageReference& pigeon_reference,
     const std::string& file_path, int64_t handle,
     std::function<void(ErrorOr<std::string> reply)> result) {
@@ -618,7 +622,8 @@ void FirebaseStoragePlugin::ReferenceDownloadFile(
 }
 
 void FirebaseStoragePlugin::ReferenceUpdateMetadata(
-    const PigeonFirebaseApp& app, const PigeonStorageReference& reference,
+    const PigeonStorageFirebaseApp& app,
+    const PigeonStorageReference& reference,
     const PigeonSettableMetadata& metadata,
     std::function<void(ErrorOr<PigeonFullMetaData> reply)> result) {
   StorageReference cpp_reference =
@@ -638,7 +643,7 @@ void FirebaseStoragePlugin::ReferenceUpdateMetadata(
 }
 
 void FirebaseStoragePlugin::TaskPause(
-    const PigeonFirebaseApp& app, int64_t handle,
+    const PigeonStorageFirebaseApp& app, int64_t handle,
     std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) {
   bool status = controllers_[handle]->Pause();
   flutter::EncodableMap task_result = flutter::EncodableMap();
@@ -651,7 +656,7 @@ void FirebaseStoragePlugin::TaskPause(
 }
 
 void FirebaseStoragePlugin::TaskResume(
-    const PigeonFirebaseApp& app, int64_t handle,
+    const PigeonStorageFirebaseApp& app, int64_t handle,
     std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) {
   bool status = controllers_[handle]->Resume();
   flutter::EncodableMap task_result = flutter::EncodableMap();
@@ -664,7 +669,7 @@ void FirebaseStoragePlugin::TaskResume(
 }
 
 void FirebaseStoragePlugin::TaskCancel(
-    const PigeonFirebaseApp& app, int64_t handle,
+    const PigeonStorageFirebaseApp& app, int64_t handle,
     std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) {
   bool status = controllers_[handle]->Cancel();
   flutter::EncodableMap task_result = flutter::EncodableMap();

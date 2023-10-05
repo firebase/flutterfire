@@ -58,7 +58,7 @@ template<class T> class ErrorOr {
 
 // The type of operation that generated the action code from calling
 // [TaskState].
-enum class PigeonTaskState {
+enum class PigeonStorageTaskState {
   // Indicates the task has been paused by the user.
   paused = 0,
   // Indicates the task is currently in-progress.
@@ -72,13 +72,13 @@ enum class PigeonTaskState {
 };
 
 // Generated class from Pigeon that represents data sent in messages.
-class PigeonFirebaseApp {
+class PigeonStorageFirebaseApp {
  public:
   // Constructs an object setting all non-nullable fields.
-  explicit PigeonFirebaseApp(const std::string& app_name);
+  explicit PigeonStorageFirebaseApp(const std::string& app_name);
 
   // Constructs an object setting all fields.
-  explicit PigeonFirebaseApp(
+  explicit PigeonStorageFirebaseApp(
     const std::string& app_name,
     const std::string* tenant_id);
 
@@ -91,7 +91,7 @@ class PigeonFirebaseApp {
 
 
  private:
-  static PigeonFirebaseApp FromEncodableList(const flutter::EncodableList& list);
+  static PigeonStorageFirebaseApp FromEncodableList(const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseStorageHostApi;
   friend class FirebaseStorageHostApiCodecSerializer;
@@ -326,62 +326,62 @@ class FirebaseStorageHostApi {
   FirebaseStorageHostApi& operator=(const FirebaseStorageHostApi&) = delete;
   virtual ~FirebaseStorageHostApi() {}
   virtual void GetReferencebyPath(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     const std::string& path,
     const std::string* bucket,
     std::function<void(ErrorOr<PigeonStorageReference> reply)> result) = 0;
   virtual void SetMaxOperationRetryTime(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     int64_t time,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SetMaxUploadRetryTime(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     int64_t time,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SetMaxDownloadRetryTime(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     int64_t time,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void UseStorageEmulator(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     const std::string& host,
     int64_t port,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void ReferenceDelete(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     const PigeonStorageReference& reference,
     std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void ReferenceGetDownloadURL(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     const PigeonStorageReference& reference,
     std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void ReferenceGetMetaData(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     const PigeonStorageReference& reference,
     std::function<void(ErrorOr<PigeonFullMetaData> reply)> result) = 0;
   virtual void ReferenceList(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     const PigeonStorageReference& reference,
     const PigeonListOptions& options,
     std::function<void(ErrorOr<PigeonListResult> reply)> result) = 0;
   virtual void ReferenceListAll(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     const PigeonStorageReference& reference,
     std::function<void(ErrorOr<PigeonListResult> reply)> result) = 0;
   virtual void ReferenceGetData(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     const PigeonStorageReference& reference,
     int64_t max_size,
     std::function<void(ErrorOr<std::optional<std::vector<uint8_t>>> reply)> result) = 0;
   virtual void ReferencePutData(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     const PigeonStorageReference& reference,
     const std::vector<uint8_t>& data,
     const PigeonSettableMetadata& settable_meta_data,
     int64_t handle,
     std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void ReferencePutString(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     const PigeonStorageReference& reference,
     const std::string& data,
     int64_t format,
@@ -389,33 +389,33 @@ class FirebaseStorageHostApi {
     int64_t handle,
     std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void ReferencePutFile(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     const PigeonStorageReference& reference,
     const std::string& file_path,
     const PigeonSettableMetadata& settable_meta_data,
     int64_t handle,
     std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void ReferenceDownloadFile(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     const PigeonStorageReference& reference,
     const std::string& file_path,
     int64_t handle,
     std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void ReferenceUpdateMetadata(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     const PigeonStorageReference& reference,
     const PigeonSettableMetadata& metadata,
     std::function<void(ErrorOr<PigeonFullMetaData> reply)> result) = 0;
   virtual void TaskPause(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     int64_t handle,
     std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) = 0;
   virtual void TaskResume(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     int64_t handle,
     std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) = 0;
   virtual void TaskCancel(
-    const PigeonFirebaseApp& app,
+    const PigeonStorageFirebaseApp& app,
     int64_t handle,
     std::function<void(ErrorOr<flutter::EncodableMap> reply)> result) = 0;
 
