@@ -175,9 +175,7 @@
     case SourceCache:
           return FIRFirestoreSourceCache;
     default:
-          @throw [NSException exceptionWithName:@"InvalidSource"
-                                         reason:@"Invalid source"
-                                       userInfo:nil];
+          return FIRFirestoreSourceDefault;
   }
 }
 
@@ -191,9 +189,7 @@
     case ServerTimestampBehaviorPrevious:
           return FIRServerTimestampBehaviorPrevious;
     default:
-          @throw [NSException exceptionWithName:@"InvalidServerTimestampBehavior"
-                                         reason:@"Invalid server timestamp behavior"
-                                       userInfo:nil];
+          return FIRServerTimestampBehaviorNone;
   }
 }
 

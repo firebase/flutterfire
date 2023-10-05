@@ -20,18 +20,6 @@ Future<void> main() async {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
 
-  final document =
-      FirebaseFirestore.instance.collection('flutter-tests').doc('test');
-
-  await document.set({
-    'foo': {'bar': 'baz'},
-  });
-  DocumentSnapshot<Map<String, dynamic>> snapshot = await document.get();
-  print(snapshot);
-
-  await document.update({'foo.bar': 'toto'});
-  DocumentSnapshot<Map<String, dynamic>> snapshot2 = await document.get();
-  print(snapshot2);
   runApp(FirestoreExampleApp());
 }
 
