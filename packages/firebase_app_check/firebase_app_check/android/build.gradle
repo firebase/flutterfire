@@ -57,7 +57,8 @@ android {
     implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
     implementation 'com.google.firebase:firebase-appcheck-debug'
     implementation 'com.google.firebase:firebase-appcheck-playintegrity'
-    implementation 'com.google.firebase:firebase-appcheck-safetynet'
+    // SafetyNet is deprecated and not part of Firebase BOM
+    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.1.2'
     implementation 'androidx.annotation:annotation:1.5.0'
   }
 }
