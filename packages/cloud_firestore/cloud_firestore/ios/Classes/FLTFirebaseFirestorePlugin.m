@@ -315,9 +315,9 @@ FlutterStandardMethodCodec *_codec;
                                                   FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   FIRDocumentReference *document = [firestore documentWithPath:request.path];
-  FIRFirestoreSource source = [PigeonParser parseSource:request.source];
+  FIRFirestoreSource source = [PigeonParser parseSource:request.source.value];
   FIRServerTimestampBehavior serverTimestampBehavior =
-      [PigeonParser parseServerTimestampBehavior:request.serverTimestampBehavior];
+      [PigeonParser parseServerTimestampBehavior:request.serverTimestampBehavior.value];
 
   id completionGet = ^(FIRDocumentSnapshot *_Nullable snapshot, NSError *_Nullable error) {
     if (error != nil) {
@@ -349,8 +349,8 @@ FlutterStandardMethodCodec *_codec;
 
   if ([request.option.merge isEqual:@YES]) {
     [document setData:data merge:YES completion:completionBlock];
-  } else if (![request.option.mergeFields isEqual:[NSNull null]]) {
-    [document setData:data mergeFields:request.option.mergeFields completion:completionBlock];
+  } else if (request.option.mergeFields) {
+      [document setData:data mergeFields:[PigeonParser parseFieldPath:request.option.mergeFields] completion:completionBlock];
   } else {
     [document setData:data completion:completionBlock];
   }
@@ -364,7 +364,7 @@ FlutterStandardMethodCodec *_codec;
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   FIRDocumentReference *document = [firestore documentWithPath:parameters.path];
   FIRServerTimestampBehavior serverTimestampBehavior =
-      [PigeonParser parseServerTimestampBehavior:parameters.serverTimestampBehavior];
+      [PigeonParser parseServerTimestampBehavior:parameters.serverTimestampBehavior.value];
 
   completion(
       [self registerEventChannelWithPrefix:kFLTFirebaseFirestoreDocumentSnapshotEventChannelName
@@ -627,8 +627,8 @@ FlutterStandardMethodCodec *_codec;
       case PigeonTransactionTypeSet:
         if ([write.option.merge isEqual:@YES]) {
           [batch setData:write.data forDocument:reference merge:YES];
-        } else if (![write.option.mergeFields isEqual:[NSNull null]]) {
-          [batch setData:write.data forDocument:reference mergeFields:write.option.mergeFields];
+        } else if (write.option.mergeFields) {
+          [batch setData:write.data forDocument:reference mergeFields:[PigeonParser parseFieldPath:write.option.mergeFields]];
         } else {
           [batch setData:write.data forDocument:reference];
         }

@@ -175,9 +175,23 @@
     case SourceCache:
           return FIRFirestoreSourceCache;
     default:
-          return FIRFirestoreSourceDefault;
+          @throw [NSException exceptionWithName:@"Invalid Source"
+                                         reason:@"This source is not supported by the SDK"
+                                       userInfo:nil];
+
   }
 }
+
+
++ (NSArray<FIRFieldPath *> *)parseFieldPath:(NSArray<NSArray<NSString *> *> *)fieldPaths {
+    NSMutableArray<FIRFieldPath *> *paths = [NSMutableArray arrayWithCapacity:[fieldPaths count]];
+    for (NSArray<NSString *> *fieldPath in fieldPaths) {
+        FIRFieldPath* parsed = [[FIRFieldPath alloc] initWithFields:fieldPath];
+        [paths addObject:parsed];
+    }
+    return [NSArray arrayWithArray:paths];
+}
+
 
 + (FIRServerTimestampBehavior)parseServerTimestampBehavior:
     (ServerTimestampBehavior)serverTimestampBehavior {
@@ -189,7 +203,9 @@
     case ServerTimestampBehaviorPrevious:
           return FIRServerTimestampBehaviorPrevious;
     default:
-          return FIRServerTimestampBehaviorNone;
+          @throw [NSException exceptionWithName:@"Invalid Server Timestamp Behavior"
+                                         reason:@"This Server Timestamp Behavior is not supported by the SDK"
+                                       userInfo:nil];
   }
 }
 

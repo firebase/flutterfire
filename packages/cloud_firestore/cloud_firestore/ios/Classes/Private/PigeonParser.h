@@ -31,5 +31,6 @@
                              (FIRServerTimestampBehavior)serverTimestampBehavior;
 + (PigeonSnapshotMetadata *)toPigeonSnapshotMetadata:(FIRSnapshotMetadata *)snapshotMetadata;
 + (DocumentChangeType)toPigeonDocumentChangeType:(FIRDocumentChangeType)documentChangeType;
++ (NSArray<FIRFieldPath *> *)parseFieldPath:(NSArray<NSArray<NSString *> *> *)fieldPaths;
 
 @end
