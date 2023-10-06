@@ -13,7 +13,7 @@ void runInstanceTests() {
   group(
     '$FirebaseFirestore.instance',
     () {
-      late FirebaseFirestore /*?*/ firestore;
+      late FirebaseFirestore firestore;
 
       setUpAll(() async {
         firestore = FirebaseFirestore.instance;

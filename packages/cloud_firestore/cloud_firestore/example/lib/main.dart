@@ -20,6 +20,14 @@ Future<void> main() async {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
 
+  DocumentReference<Map<String, dynamic>> document =
+      FirebaseFirestore.instance.doc('flutter-tests/document-get-cache');
+  await document.set({'foo': 'bar'});
+  DocumentSnapshot<Map<String, dynamic>> snapshot =
+      await document.get(const GetOptions(source: Source.cache));
+  print(snapshot.data());
+  print(snapshot.metadata.isFromCache);
+
   runApp(FirestoreExampleApp());
 }
 

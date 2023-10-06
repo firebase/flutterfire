@@ -218,21 +218,15 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (FlutterError *)convertToFlutterError:(NSError *)error {
-  NSString *code = [NSString stringWithFormat:@"ios-%ld", (long)error.code];
-  NSString *message = @"An unknown error has occurred.";
-
-  if (error == nil) {
-    return [FlutterError errorWithCode:code message:message details:@{}];
-  }
-
-  // message
-  if ([error userInfo][NSLocalizedDescriptionKey] != nil) {
-    message = [error userInfo][NSLocalizedDescriptionKey];
-  }
-
-  NSMutableDictionary *additionalData = [NSMutableDictionary dictionary];
-
-  return [FlutterError errorWithCode:code message:message details:additionalData];
+  NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
+    NSString *_Nullable code = codeAndMessage[0];
+    NSString *_Nullable message = codeAndMessage[1];
+    NSDictionary *_Nullable details = @{
+    @"code" : code,
+    @"message" : message,
+  };
+    
+  return [FlutterError errorWithCode:code message:message details:details];
 }
 
 - (void)aggregateQueryCountApp:(nonnull PigeonFirebaseApp *)app

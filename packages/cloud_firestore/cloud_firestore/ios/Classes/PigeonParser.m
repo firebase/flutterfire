@@ -226,12 +226,33 @@
 + (PigeonDocumentChange *)toPigeonDocumentChange:(FIRDocumentChange *)documentChange
                          serverTimestampBehavior:
                              (FIRServerTimestampBehavior)serverTimestampBehavior {
+    NSNumber *oldIndex;
+     NSNumber *newIndex;
+
+     // Note the Firestore C++ SDK here returns a maxed UInt that is != NSUIntegerMax, so we make one
+     // ourselves so we can convert to -1 for Dart.
+     NSUInteger MAX_VAL = (NSUInteger)[@(-1) integerValue];
+
+     if (documentChange.newIndex == NSNotFound || documentChange.newIndex == 4294967295 ||
+         documentChange.newIndex == MAX_VAL) {
+       newIndex = @([@(-1) intValue]);
+     } else {
+       newIndex = @([@(documentChange.newIndex) intValue]);
+     }
+
+     if (documentChange.oldIndex == NSNotFound || documentChange.oldIndex == 4294967295 ||
+         documentChange.oldIndex == MAX_VAL) {
+       oldIndex = @([@(-1) intValue]);
+     } else {
+       oldIndex = @([@(documentChange.oldIndex) intValue]);
+     }
+
   return [PigeonDocumentChange
       makeWithType:[PigeonParser toPigeonDocumentChangeType:documentChange.type]
           document:[PigeonParser toPigeonDocumentSnapshot:documentChange.document
                                   serverTimestampBehavior:serverTimestampBehavior]
-          oldIndex:@(documentChange.oldIndex)
-          newIndex:@(documentChange.newIndex)];
+          oldIndex:oldIndex
+          newIndex:newIndex];
 }
 
 + (NSArray<PigeonDocumentChange *> *)

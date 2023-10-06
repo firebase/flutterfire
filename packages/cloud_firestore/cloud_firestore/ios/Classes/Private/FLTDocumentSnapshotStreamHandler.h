@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FLTDocumentSnapshotStreamHandler : NSObject <FlutterStreamHandler>
 @property(nonatomic, strong) FIRFirestore *firestore;
-@property(nonatomic, assign) FIRDocumentReference *reference;
+@property(nonatomic, strong) FIRDocumentReference *reference;
 @property(nonatomic, assign) BOOL includeMetadataChanges;
 @property(nonatomic, assign) FIRServerTimestampBehavior serverTimestampBehavior;
 
