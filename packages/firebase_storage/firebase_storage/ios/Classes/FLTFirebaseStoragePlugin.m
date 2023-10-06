@@ -594,7 +594,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     // upload paused
     [task observeStatus:FIRStorageTaskStatusPause
                 handler:^(FIRStorageTaskSnapshot *snapshot) {
-                  dispatch_async(self->_callbackQueue, ^() {
+                  dispatch_async(dispatch_get_main_queue(), ^{
                     [weakSelf.channel invokeMethod:@"Task#onPaused"
                                          arguments:[weakSelf NSDictionaryFromHandle:handle
                                                           andFIRStorageTaskSnapshot:snapshot]];
@@ -604,7 +604,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     // upload reported progress
     [task observeStatus:FIRStorageTaskStatusProgress
                 handler:^(FIRStorageTaskSnapshot *snapshot) {
-                  dispatch_async(self->_callbackQueue, ^() {
+                  dispatch_async(dispatch_get_main_queue(), ^{
                     [weakSelf.channel invokeMethod:@"Task#onProgress"
                                          arguments:[weakSelf NSDictionaryFromHandle:handle
                                                           andFIRStorageTaskSnapshot:snapshot]];
@@ -614,7 +614,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     // upload completed successfully
     [task observeStatus:FIRStorageTaskStatusSuccess
                 handler:^(FIRStorageTaskSnapshot *snapshot) {
-                  dispatch_async(self->_callbackQueue, ^() {
+                  dispatch_async(dispatch_get_main_queue(), ^{
                     @synchronized(self->_tasks) {
                       [self->_tasks removeObjectForKey:handle];
                     }
@@ -626,7 +626,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
     [task observeStatus:FIRStorageTaskStatusFailure
                 handler:^(FIRStorageTaskSnapshot *snapshot) {
-                  dispatch_async(self->_callbackQueue, ^() {
+                  dispatch_async(dispatch_get_main_queue(), ^{
                     @synchronized(self->_tasks) {
                       [self->_tasks removeObjectForKey:handle];
                     }
