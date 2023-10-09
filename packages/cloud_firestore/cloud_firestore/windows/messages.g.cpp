@@ -929,8 +929,7 @@ EncodableValue FirebaseFirestoreHostApiCodecSerializer::ReadValueOfType(
       return CustomEncodableValue(PigeonTransactionCommand::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     default:
-      return cloud_firestore_windows::FirestoreCodec::ReadValueOfType(type,
-                                                                      stream);
+      return cloud_firestore_windows::FirestoreCodec::ReadValueOfType(type, stream);
   }
 }
 

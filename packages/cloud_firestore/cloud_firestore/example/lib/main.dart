@@ -20,46 +20,6 @@ Future<void> main() async {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
 
-  await FirebaseFirestore.instance
-      .collection('cioiuc')
-      .where(
-        Filter.and(
-          Filter('rating1', isEqualTo: 3.8),
-          Filter('year1', isEqualTo: 1970),
-          Filter('runtime1', isEqualTo: 90),
-          Filter('director1', isEqualTo: 'Director2'),
-          Filter('producer1', isEqualTo: 'Producer2'),
-          Filter('budget1', isEqualTo: 20000000),
-          Filter('boxOffice1', isEqualTo: 50000000),
-          Filter('actor1', isEqualTo: 'Actor2'),
-          Filter('language1', isEqualTo: 'English'),
-          Filter('award1', isEqualTo: 'Award2'),
-          Filter('genre1', arrayContainsAny: ['sci-fi']),
-          Filter('country1', isEqualTo: 'USA'),
-          Filter('released1', isEqualTo: true),
-          Filter('screenplay1', isEqualTo: 'Screenplay2'),
-          Filter('cinematography1', isEqualTo: 'Cinematography2'),
-          Filter('music1', isEqualTo: 'Music2'),
-          Filter('rating2', isEqualTo: 4.2),
-          Filter('year2', isEqualTo: 1982),
-          Filter('runtime2', isEqualTo: 60),
-          Filter('director2', isEqualTo: 'Director3'),
-          Filter('producer2', isEqualTo: 'Producer3'),
-          Filter('budget2', isEqualTo: 30000000),
-          Filter('boxOffice2', isEqualTo: 60000000),
-          Filter('actor2', isEqualTo: 'Actor3'),
-          Filter('language2', isEqualTo: 'Korean'),
-          Filter('award2', isEqualTo: 'Award3'),
-          Filter('genre2', isEqualTo: ['sci-fi', 'action']),
-          Filter('country2', isEqualTo: 'South Korea'),
-          Filter('released2', isEqualTo: false),
-          // Fails because this is not allowed when arrayContainsAny is included in the Query
-          Filter('screenplay2', isNotEqualTo: 'blah'),
-        ),
-      )
-      .orderBy('rating1', descending: true)
-      .get();
-
   runApp(FirestoreExampleApp());
 }
 
