@@ -7,6 +7,7 @@
 
 #import "Private/FLTFirebaseFirestoreUtils.h"
 #import "Private/FLTTransactionStreamHandler.h"
+#import "Private/PigeonParser.h"
 
 @interface FLTTransactionStreamHandler ()
 @property(nonatomic, copy, nonnull) void (^started)(FIRTransaction *);
@@ -95,10 +96,10 @@
         case PigeonTransactionTypeSet:
           if ([command.option.merge isEqual:@YES]) {
             [transaction setData:command.data forDocument:reference merge:YES];
-          } else if (![command.option.mergeFields isEqual:[NSNull null]]) {
+          } else if (command.option.mergeFields) {
             [transaction setData:command.data
                      forDocument:reference
-                     mergeFields:command.option.mergeFields];
+                     mergeFields:[PigeonParser parseFieldPath:command.option.mergeFields]];
           } else {
             [transaction setData:command.data forDocument:reference];
           }

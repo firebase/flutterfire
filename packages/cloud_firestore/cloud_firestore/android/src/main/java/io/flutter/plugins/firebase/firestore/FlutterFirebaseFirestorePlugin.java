@@ -6,7 +6,6 @@ package io.flutter.plugins.firebase.firestore;
 
 import android.app.Activity;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
@@ -709,11 +708,10 @@ public class FlutterFirebaseFirestorePlugin
 
             if (query == null) {
               result.error(
-                new GeneratedAndroidFirebaseFirestore.FlutterError(
-                    "invalid_query",
-                    "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
-                    null
-                ));
+                  new GeneratedAndroidFirebaseFirestore.FlutterError(
+                      "invalid_query",
+                      "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
+                      null));
               return;
             }
             final QuerySnapshot querySnapshot = Tasks.await(query.get(source));
@@ -823,11 +821,10 @@ public class FlutterFirebaseFirestorePlugin
 
     if (query == null) {
       result.error(
-        new GeneratedAndroidFirebaseFirestore.FlutterError(
-          "invalid_query",
-          "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
-          null
-        ));
+          new GeneratedAndroidFirebaseFirestore.FlutterError(
+              "invalid_query",
+              "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
+              null));
       return;
     }
 

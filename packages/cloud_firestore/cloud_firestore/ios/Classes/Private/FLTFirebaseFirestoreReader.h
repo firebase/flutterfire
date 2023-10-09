@@ -13,4 +13,5 @@
 
 @interface FLTFirebaseFirestoreReader : FlutterStandardReader
 - (id)readValueOfType:(UInt8)type;
++ (dispatch_queue_t)getFirestoreQueue;
 @end

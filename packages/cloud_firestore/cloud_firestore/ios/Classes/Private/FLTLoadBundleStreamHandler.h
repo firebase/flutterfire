@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FLTLoadBundleStreamHandler : NSObject <FlutterStreamHandler>
 @property(nonatomic, strong) FIRFirestore *firestore;
-@property(nonatomic, assign) FlutterStandardTypedData *bundle;
+@property(nonatomic, strong) FlutterStandardTypedData *bundle;
 
 - (instancetype)initWithFirestore:(FIRFirestore *)firestore
                            bundle:(FlutterStandardTypedData *)bundle;

@@ -7,6 +7,7 @@
 
 #import <TargetConditionals.h>
 #import "Private/FLTDocumentSnapshotStreamHandler.h"
+#import "Private/FLTFirebaseFirestoreReader.h"
 #import "Private/FLTFirebaseFirestoreUtils.h"
 #import "Private/FLTLoadBundleStreamHandler.h"
 #import "Private/FLTQuerySnapshotStreamHandler.h"
@@ -207,69 +208,70 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (FIRFirestore *_Nullable)getFIRFirestoreFromAppNameFromPigeon:(PigeonFirebaseApp *)pigeonApp {
-    @synchronized(self) {
-      NSString *appNameDart = pigeonApp.appName;
-      NSString *databaseUrl = pigeonApp.databaseURL;
-        
-        FIRFirestoreSettings *settings = [[FIRFirestoreSettings alloc] init];
-        
-          bool persistEnabled = pigeonApp.settings.persistenceEnabled;
+  @synchronized(self) {
+    NSString *appNameDart = pigeonApp.appName;
+    NSString *databaseUrl = pigeonApp.databaseURL;
 
-          // This is the maximum amount of cache allowed. We use the same number on android.
-          // This now causes an exception: kFIRFirestoreCacheSizeUnlimited
-          NSNumber *size = @104857600;
+    FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
 
-          if (pigeonApp.settings.cacheSizeBytes) {
-            NSNumber *cacheSizeBytes = pigeonApp.settings.cacheSizeBytes;
-            if ([cacheSizeBytes intValue] != -1) {
-              size = cacheSizeBytes;
-            }
-          }
+    if ([FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
+                                                  databaseURL:databaseUrl] != nil) {
+      return [FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
+                                                       databaseURL:databaseUrl];
+    }
 
-          if (persistEnabled) {
-            settings.cacheSettings = [[FIRPersistentCacheSettings alloc] initWithSizeBytes:size];
-          } else {
-            settings.cacheSettings = [[FIRMemoryCacheSettings alloc]
-                initWithGarbageCollectorSettings:[[FIRMemoryLRUGCSettings alloc] init]];
-          }
-        
+    FIRFirestoreSettings *settings = [[FIRFirestoreSettings alloc] init];
+    if (pigeonApp.settings.persistenceEnabled != nil) {
+      bool persistEnabled = [pigeonApp.settings.persistenceEnabled boolValue];
 
-        if (pigeonApp.settings.host) {
-          settings.host = pigeonApp.settings.host;
-          // Only allow changing ssl if host is also specified.
-          if (pigeonApp.settings.sslEnabled) {
-            settings.sslEnabled = pigeonApp.settings.sslEnabled;
-          }
+      // This is the maximum amount of cache allowed. We use the same number on android.
+      // This now causes an exception: kFIRFirestoreCacheSizeUnlimited
+      NSNumber *size = @104857600;
+
+      if (pigeonApp.settings.cacheSizeBytes) {
+        NSNumber *cacheSizeBytes = pigeonApp.settings.cacheSizeBytes;
+        if ([cacheSizeBytes intValue] != -1) {
+          size = cacheSizeBytes;
         }
-
-
-      FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
-
-      if ([FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
-                                                    databaseURL:databaseUrl] != nil) {
-        return [FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
-                                                         databaseURL:databaseUrl];
       }
 
-      FIRFirestore *firestore = [FIRFirestore firestoreForApp:app database:databaseUrl];
-      firestore.settings = settings;
-
-      [FLTFirebaseFirestoreUtils setCachedFIRFirestoreInstance:firestore
-                                                    forAppName:app.name
-                                                   databaseURL:databaseUrl];
-      return firestore;
+      if (persistEnabled) {
+        settings.cacheSettings = [[FIRPersistentCacheSettings alloc] initWithSizeBytes:size];
+      } else {
+        settings.cacheSettings = [[FIRMemoryCacheSettings alloc]
+            initWithGarbageCollectorSettings:[[FIRMemoryLRUGCSettings alloc] init]];
+      }
     }
+
+    if (pigeonApp.settings.host != nil) {
+      settings.host = pigeonApp.settings.host;
+      // Only allow changing ssl if host is also specified.
+      if (pigeonApp.settings.sslEnabled != nil) {
+        settings.sslEnabled = [pigeonApp.settings.sslEnabled boolValue];
+      }
+    }
+
+    settings.dispatchQueue = [FLTFirebaseFirestoreReader getFirestoreQueue];
+
+    FIRFirestore *firestore = [FIRFirestore firestoreForApp:app database:databaseUrl];
+    firestore.settings = settings;
+
+    [FLTFirebaseFirestoreUtils setCachedFIRFirestoreInstance:firestore
+                                                  forAppName:app.name
+                                                 databaseURL:databaseUrl];
+    return firestore;
+  }
 }
 
 - (FlutterError *)convertToFlutterError:(NSError *)error {
   NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
-    NSString *_Nullable code = codeAndMessage[0];
-    NSString *_Nullable message = codeAndMessage[1];
-    NSDictionary *_Nullable details = @{
+  NSString *_Nullable code = codeAndMessage[0];
+  NSString *_Nullable message = codeAndMessage[1];
+  NSDictionary *_Nullable details = @{
     @"code" : code,
     @"message" : message,
   };
-    
+
   return [FlutterError errorWithCode:code message:message details:details];
 }
 
@@ -285,6 +287,13 @@ FlutterStandardMethodCodec *_codec;
                                                  firestore:firestore
                                                       path:path
                                          isCollectionGroup:NO];
+  if (query == nil) {
+    completion(nil, [FlutterError errorWithCode:@"error-parsing"
+                                        message:@"An error occurred while parsing query arguments, "
+                                                @"this is most likely an error with this SDK."
+                                        details:nil]);
+    return;
+  }
 
   FIRAggregateQuery *aggregateQuery = [query count];
 
@@ -294,7 +303,8 @@ FlutterStandardMethodCodec *_codec;
                                if (error != nil) {
                                  completion(nil, [self convertToFlutterError:error]);
                                } else {
-                                 completion(snapshot.count, nil);
+                                 double myDoubleValue = [snapshot.count doubleValue];
+                                 completion([NSNumber numberWithDouble:myDoubleValue], nil);
                                }
                              }];
 }
@@ -394,7 +404,9 @@ FlutterStandardMethodCodec *_codec;
   if ([request.option.merge isEqual:@YES]) {
     [document setData:data merge:YES completion:completionBlock];
   } else if (request.option.mergeFields) {
-      [document setData:data mergeFields:[PigeonParser parseFieldPath:request.option.mergeFields] completion:completionBlock];
+    [document setData:data
+          mergeFields:[PigeonParser parseFieldPath:request.option.mergeFields]
+           completion:completionBlock];
   } else {
     [document setData:data completion:completionBlock];
   }
@@ -512,6 +524,14 @@ FlutterStandardMethodCodec *_codec;
                                                  firestore:firestore
                                                       path:path
                                          isCollectionGroup:[isCollectionGroup boolValue]];
+  if (query == nil) {
+    completion(nil, [FlutterError errorWithCode:@"error-parsing"
+                                        message:@"An error occurred while parsing query arguments, "
+                                                @"this is most likely an error with this SDK."
+                                        details:nil]);
+    return;
+  }
+
   FIRFirestoreSource source = [PigeonParser parseSource:options.source];
   FIRServerTimestampBehavior serverTimestampBehavior =
       [PigeonParser parseServerTimestampBehavior:options.serverTimestampBehavior];
@@ -541,6 +561,14 @@ FlutterStandardMethodCodec *_codec;
                                                  firestore:firestore
                                                       path:path
                                          isCollectionGroup:[isCollectionGroup boolValue]];
+  if (query == nil) {
+    completion(nil, [FlutterError errorWithCode:@"error-parsing"
+                                        message:@"An error occurred while parsing query arguments, "
+                                                @"this is most likely an error with this SDK."
+                                        details:nil]);
+    return;
+  }
+
   FIRServerTimestampBehavior serverTimestampBehavior =
       [PigeonParser parseServerTimestampBehavior:options.serverTimestampBehavior];
 
@@ -672,7 +700,9 @@ FlutterStandardMethodCodec *_codec;
         if ([write.option.merge isEqual:@YES]) {
           [batch setData:write.data forDocument:reference merge:YES];
         } else if (write.option.mergeFields) {
-          [batch setData:write.data forDocument:reference mergeFields:[PigeonParser parseFieldPath:write.option.mergeFields]];
+          [batch setData:write.data
+              forDocument:reference
+              mergeFields:[PigeonParser parseFieldPath:write.option.mergeFields]];
         } else {
           [batch setData:write.data forDocument:reference];
         }

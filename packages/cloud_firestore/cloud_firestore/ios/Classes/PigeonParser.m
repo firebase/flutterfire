@@ -142,20 +142,16 @@
 
     // Start At
     id startAt = parameters.startAt;
-    if (startAt)
-          query = [query queryStartingAtValues:(NSArray *)startAt];
+    if (startAt) query = [query queryStartingAtValues:(NSArray *)startAt];
     // Start After
     id startAfter = parameters.startAfter;
-    if (startAfter)
-          query = [query queryStartingAfterValues:(NSArray *)startAfter];
+    if (startAfter) query = [query queryStartingAfterValues:(NSArray *)startAfter];
     // End At
     id endAt = parameters.endAt;
-    if (endAt)
-          query = [query queryEndingAtValues:(NSArray *)endAt];
+    if (endAt) query = [query queryEndingAtValues:(NSArray *)endAt];
     // End Before
     id endBefore = parameters.endBefore;
-    if (endBefore)
-          query = [query queryEndingBeforeValues:(NSArray *)endBefore];
+    if (endBefore) query = [query queryEndingBeforeValues:(NSArray *)endBefore];
 
     return query;
   } @catch (NSException *exception) {
@@ -178,20 +174,17 @@
           @throw [NSException exceptionWithName:@"Invalid Source"
                                          reason:@"This source is not supported by the SDK"
                                        userInfo:nil];
-
   }
 }
 
-
 + (NSArray<FIRFieldPath *> *)parseFieldPath:(NSArray<NSArray<NSString *> *> *)fieldPaths {
-    NSMutableArray<FIRFieldPath *> *paths = [NSMutableArray arrayWithCapacity:[fieldPaths count]];
-    for (NSArray<NSString *> *fieldPath in fieldPaths) {
-        FIRFieldPath* parsed = [[FIRFieldPath alloc] initWithFields:fieldPath];
-        [paths addObject:parsed];
-    }
-    return [NSArray arrayWithArray:paths];
+  NSMutableArray<FIRFieldPath *> *paths = [NSMutableArray arrayWithCapacity:[fieldPaths count]];
+  for (NSArray<NSString *> *fieldPath in fieldPaths) {
+    FIRFieldPath *parsed = [[FIRFieldPath alloc] initWithFields:fieldPath];
+    [paths addObject:parsed];
+  }
+  return [NSArray arrayWithArray:paths];
 }
-
 
 + (FIRServerTimestampBehavior)parseServerTimestampBehavior:
     (ServerTimestampBehavior)serverTimestampBehavior {
@@ -203,9 +196,10 @@
     case ServerTimestampBehaviorPrevious:
           return FIRServerTimestampBehaviorPrevious;
     default:
-          @throw [NSException exceptionWithName:@"Invalid Server Timestamp Behavior"
-                                         reason:@"This Server Timestamp Behavior is not supported by the SDK"
-                                       userInfo:nil];
+          @throw [NSException
+              exceptionWithName:@"Invalid Server Timestamp Behavior"
+                         reason:@"This Server Timestamp Behavior is not supported by the SDK"
+                       userInfo:nil];
   }
 }
 
@@ -242,26 +236,26 @@
 + (PigeonDocumentChange *)toPigeonDocumentChange:(FIRDocumentChange *)documentChange
                          serverTimestampBehavior:
                              (FIRServerTimestampBehavior)serverTimestampBehavior {
-    NSNumber *oldIndex;
-     NSNumber *newIndex;
+  NSNumber *oldIndex;
+  NSNumber *newIndex;
 
-     // Note the Firestore C++ SDK here returns a maxed UInt that is != NSUIntegerMax, so we make one
-     // ourselves so we can convert to -1 for Dart.
-     NSUInteger MAX_VAL = (NSUInteger)[@(-1) integerValue];
+  // Note the Firestore C++ SDK here returns a maxed UInt that is != NSUIntegerMax, so we make one
+  // ourselves so we can convert to -1 for Dart.
+  NSUInteger MAX_VAL = (NSUInteger)[@(-1) integerValue];
 
-     if (documentChange.newIndex == NSNotFound || documentChange.newIndex == 4294967295 ||
-         documentChange.newIndex == MAX_VAL) {
-       newIndex = @([@(-1) intValue]);
-     } else {
-       newIndex = @([@(documentChange.newIndex) intValue]);
-     }
+  if (documentChange.newIndex == NSNotFound || documentChange.newIndex == 4294967295 ||
+      documentChange.newIndex == MAX_VAL) {
+    newIndex = @([@(-1) intValue]);
+  } else {
+    newIndex = @([@(documentChange.newIndex) intValue]);
+  }
 
-     if (documentChange.oldIndex == NSNotFound || documentChange.oldIndex == 4294967295 ||
-         documentChange.oldIndex == MAX_VAL) {
-       oldIndex = @([@(-1) intValue]);
-     } else {
-       oldIndex = @([@(documentChange.oldIndex) intValue]);
-     }
+  if (documentChange.oldIndex == NSNotFound || documentChange.oldIndex == 4294967295 ||
+      documentChange.oldIndex == MAX_VAL) {
+    oldIndex = @([@(-1) intValue]);
+  } else {
+    oldIndex = @([@(documentChange.oldIndex) intValue]);
+  }
 
   return [PigeonDocumentChange
       makeWithType:[PigeonParser toPigeonDocumentChangeType:documentChange.type]
