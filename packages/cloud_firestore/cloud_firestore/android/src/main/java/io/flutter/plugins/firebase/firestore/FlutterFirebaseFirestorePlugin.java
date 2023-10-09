@@ -5,6 +5,8 @@
 package io.flutter.plugins.firebase.firestore;
 
 import android.app.Activity;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
@@ -298,6 +300,8 @@ public class FlutterFirebaseFirestorePlugin
   public static FirebaseFirestore getFirestoreFromPigeon(
       GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp pigeonApp) {
     synchronized (FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
+      // Log app anme
+      Log.d("coucou", "getFirestoreFromPigeon: " + pigeonApp.getAppName());
       if (FlutterFirebaseFirestorePlugin.getFirestoreInstanceByNameAndDatabaseUrl(
               pigeonApp.getAppName(), pigeonApp.getDatabaseURL())
           != null) {

@@ -20,6 +20,23 @@ Future<void> main() async {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
 
+  FirebaseApp secondApp = await Firebase.initializeApp(
+    name: 'secondApp',
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  final secondFirestoreProject = FirebaseFirestore.instanceFor(
+    app: secondApp,
+  );
+
+  await FirebaseFirestore.instance
+      .collection('flutter-tests/banned/doc')
+      .add({'foo': 'bar'});
+
+  // permission denied on second app with Firebase that denies database writes
+  await secondFirestoreProject
+      .collection('flutter-tests/banned/doc')
+      .add({'foo': 'bar'});
+
   runApp(FirestoreExampleApp());
 }
 

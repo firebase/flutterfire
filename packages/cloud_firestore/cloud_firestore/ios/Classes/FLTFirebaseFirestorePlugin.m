@@ -207,14 +207,58 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (FIRFirestore *_Nullable)getFIRFirestoreFromAppNameFromPigeon:(PigeonFirebaseApp *)pigeonApp {
-  FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:pigeonApp.appName];
-  FIRFirestore *firestore = [FIRFirestore firestoreForApp:app];
+    @synchronized(self) {
+      NSString *appNameDart = pigeonApp.appName;
+      NSString *databaseUrl = pigeonApp.databaseURL;
+        
+        FIRFirestoreSettings *settings = [[FIRFirestoreSettings alloc] init];
+        
+          bool persistEnabled = pigeonApp.settings.persistenceEnabled;
 
-  [FLTFirebaseFirestoreUtils setCachedFIRFirestoreInstance:firestore
-                                                forAppName:app.name
-                                               databaseURL:pigeonApp.databaseURL];
+          // This is the maximum amount of cache allowed. We use the same number on android.
+          // This now causes an exception: kFIRFirestoreCacheSizeUnlimited
+          NSNumber *size = @104857600;
 
-  return firestore;
+          if (pigeonApp.settings.cacheSizeBytes) {
+            NSNumber *cacheSizeBytes = pigeonApp.settings.cacheSizeBytes;
+            if ([cacheSizeBytes intValue] != -1) {
+              size = cacheSizeBytes;
+            }
+          }
+
+          if (persistEnabled) {
+            settings.cacheSettings = [[FIRPersistentCacheSettings alloc] initWithSizeBytes:size];
+          } else {
+            settings.cacheSettings = [[FIRMemoryCacheSettings alloc]
+                initWithGarbageCollectorSettings:[[FIRMemoryLRUGCSettings alloc] init]];
+          }
+        
+
+        if (pigeonApp.settings.host) {
+          settings.host = pigeonApp.settings.host;
+          // Only allow changing ssl if host is also specified.
+          if (pigeonApp.settings.sslEnabled) {
+            settings.sslEnabled = pigeonApp.settings.sslEnabled;
+          }
+        }
+
+
+      FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
+
+      if ([FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
+                                                    databaseURL:databaseUrl] != nil) {
+        return [FLTFirebaseFirestoreUtils getFirestoreInstanceByName:app.name
+                                                         databaseURL:databaseUrl];
+      }
+
+      FIRFirestore *firestore = [FIRFirestore firestoreForApp:app database:databaseUrl];
+      firestore.settings = settings;
+
+      [FLTFirebaseFirestoreUtils setCachedFIRFirestoreInstance:firestore
+                                                    forAppName:app.name
+                                                   databaseURL:databaseUrl];
+      return firestore;
+    }
 }
 
 - (FlutterError *)convertToFlutterError:(NSError *)error {

@@ -67,7 +67,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   static final pigeonChannel = FirebaseFirestoreHostApi();
 
   late final PigeonFirebaseApp pigeonApp = PigeonFirebaseApp(
-    appName: Firebase.app().name,
+    appName: appInstance!.name,
     databaseURL: databaseURL,
     settings: PigeonFirebaseSettings(
       persistenceEnabled: settings.persistenceEnabled,
