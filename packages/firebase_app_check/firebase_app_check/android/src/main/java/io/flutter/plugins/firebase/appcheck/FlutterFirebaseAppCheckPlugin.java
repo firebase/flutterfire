@@ -100,7 +100,7 @@ public class FlutterFirebaseAppCheckPlugin
             switch (provider) {
               case debugProvider:
                 {
-                  FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+                  FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
                   firebaseAppCheck.installAppCheckProviderFactory(
                       DebugAppCheckProviderFactory.getInstance());
                   break;
