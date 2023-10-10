@@ -58,9 +58,26 @@ FirebaseException platformExceptionToFirebaseAuthException(
       }
     }
 
+    AuthCredential? credential;
+
+    if (platformException.details != null &&
+        platformException.details['authCredential'] != null &&
+        platformException.details['authCredential'] is PigeonAuthCredential) {
+      PigeonAuthCredential pigeonAuthCredential =
+          platformException.details['authCredential'];
+
+      credential = AuthCredential(
+        providerId: pigeonAuthCredential.providerId,
+        signInMethod: pigeonAuthCredential.signInMethod,
+        token: pigeonAuthCredential.nativeId,
+        accessToken: pigeonAuthCredential.accessToken,
+      );
+    }
+
     return FirebaseAuthException(
       code: code,
       message: platformException.message?.split(': ').last,
+      credential: credential,
     );
   }
 
