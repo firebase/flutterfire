@@ -16,6 +16,9 @@ import 'src/internals.dart';
 import 'src/interop/app_check.dart' as app_check_interop;
 
 class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
+  static const recaptchaTypeV3 = 'recaptcha-v3';
+  static const recaptchaTypeEnterprise = 'enterprise';
+
   static Map<String, StreamController<String?>> _tokenChangesListeners = {};
 
   /// Stub initializer to allow the [registerWith] to create an instance without
@@ -37,14 +40,14 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
       productNameOverride: 'app_check',
       ensurePluginInitialized: (firebaseApp) async {
         final recaptchaType =
-            window.sessionStorage['${firebaseApp.name}-recaptchaType'];
-        final recaptchaSiteKey =
-            window.sessionStorage['${firebaseApp.name}-recaptchaSiteKey'];
+            window.sessionStorage[_sessionKeyRecaptchaType(firebaseApp.name)];
+        final recaptchaSiteKey = window
+            .sessionStorage[_sessionKeyRecaptchaSiteKey(firebaseApp.name)];
         if (recaptchaType != null && recaptchaSiteKey != null) {
           final WebProvider provider;
-          if (recaptchaType == 'recaptcha-v3') {
+          if (recaptchaType == recaptchaTypeV3) {
             provider = ReCaptchaV3Provider(recaptchaSiteKey);
-          } else if (recaptchaType == 'enterprise') {
+          } else if (recaptchaType == recaptchaTypeEnterprise) {
             provider = ReCaptchaEnterpriseProvider(recaptchaSiteKey);
           } else {
             throw Exception('Invalid recaptcha type: $recaptchaType');
@@ -58,6 +61,14 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   /// Initializes a stub instance to allow the class to be registered.
   static FirebaseAppCheckWeb get instance {
     return FirebaseAppCheckWeb._();
+  }
+
+  static String _sessionKeyRecaptchaType(String appName) {
+    return 'FlutterFire-$appName-recaptchaType';
+  }
+
+  static String _sessionKeyRecaptchaSiteKey(String appName) {
+    return 'FlutterFire-$appName-recaptchaSiteKey';
   }
 
   /// instance of AppCheck from the web plugin
@@ -92,14 +103,14 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     if (webProvider != null) {
       final String recaptchaType;
       if (webProvider is ReCaptchaV3Provider) {
-        recaptchaType = 'recaptcha-v3';
+        recaptchaType = recaptchaTypeV3;
       } else if (webProvider is ReCaptchaEnterpriseProvider) {
-        recaptchaType = 'enterprise';
+        recaptchaType = recaptchaTypeEnterprise;
       } else {
         throw Exception('Invalid web provider: $webProvider');
       }
-      window.sessionStorage['${app.name}-recaptchaType'] = recaptchaType;
-      window.sessionStorage['${app.name}-recaptchaSiteKey'] =
+      window.sessionStorage[_sessionKeyRecaptchaType(app.name)] = recaptchaType;
+      window.sessionStorage[_sessionKeyRecaptchaSiteKey(app.name)] =
           webProvider.siteKey;
     }
 
