@@ -13,21 +13,18 @@ Future<void> main() async {
   );
 
   group('where(arrayContains)', () {
-    test(' is typed', () {
+    test('is typed', () {
       expect(
         library.withCode(
           '''
 import 'simple.dart';
 
 void main() {
-  // Does not arrayContains for non-list
-  // expect-error: UNDEFINED_METHOD
   nestedRef.whereValue();
   nestedRef.whereSimple(
     // expect-error: UNDEFINED_NAMED_PARAMETER
     arrayContains: null,
   );
-  // expect-error: UNDEFINED_METHOD
   nestedRef.whereValueList();
 
   nestedRef.whereNumList(arrayContains: 42);
@@ -52,11 +49,9 @@ import 'simple.dart';
 
 void main() {
   nestedRef.doc('42').update(
-    // expect-error: UNDEFINED_NAMED_PARAMETER
     value: null,
   );
   nestedRef.doc('42').update(
-    // expect-error: UNDEFINED_NAMED_PARAMETER
     valueList: null,
   );
   nestedRef.doc('42').update(
