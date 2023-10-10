@@ -118,28 +118,6 @@ public class FlutterFirebaseStoragePlugin
     return out;
   }
 
-  static Map<String, String> getExceptionDetails(Exception exception) {
-    Map<String, String> details = new HashMap<>();
-    FlutterFirebaseStorageException storageException = null;
-
-    if (exception instanceof StorageException) {
-      storageException = new FlutterFirebaseStorageException(exception, exception.getCause());
-    } else if (exception.getCause() != null && exception.getCause() instanceof StorageException) {
-      storageException = new FlutterFirebaseStorageException(
-          (StorageException) exception.getCause(),
-          exception.getCause().getCause() != null
-              ? exception.getCause().getCause()
-              : exception.getCause());
-    }
-
-    if (storageException != null) {
-      details.put("code", storageException.getCode());
-      details.put("message", storageException.getMessage());
-    }
-
-    return details;
-  }
-
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
     initInstance(binding.getBinaryMessenger());
@@ -149,17 +127,16 @@ public class FlutterFirebaseStoragePlugin
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     FlutterFirebaseStorageTask.cancelInProgressTasks();
     channel.setMethodCallHandler(null);
+    assert messenger != null;
+    GeneratedAndroidFirebaseStorage.FirebaseStorageHostApi.setup(messenger, null);
     channel = null;
     messenger = null;
-    GeneratedAndroidFirebaseStorage.FirebaseStorageHostApi.setup(messenger, null);
-
     removeEventListeners();
   }
 
   private void initInstance(BinaryMessenger messenger) {
-    channel = new MethodChannel(messenger, STORAGE_METHOD_CHANNEL_NAME);
     FlutterFirebasePluginRegistry.registerPlugin(STORAGE_METHOD_CHANNEL_NAME, this);
-
+    channel = new MethodChannel(messenger, STORAGE_METHOD_CHANNEL_NAME);
     GeneratedAndroidFirebaseStorage.FirebaseStorageHostApi.setup(messenger, this);
     this.messenger = messenger;
   }
@@ -298,7 +275,7 @@ public class FlutterFirebaseStoragePlugin
       androidStorage.useEmulator(host, port.intValue());
       result.success(null);
     } catch (Exception e) {
-      result.error(e);
+      result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
     }
   }
 
@@ -315,7 +292,7 @@ public class FlutterFirebaseStoragePlugin
             result.success(null);
           } else {
             result.error(
-                task.getException());
+                FlutterFirebaseStorageException.parserExceptionToFlutter(task.getException()));
           }
         });
 
@@ -334,7 +311,7 @@ public class FlutterFirebaseStoragePlugin
             result.success(androidUrl.toString());
           } else {
             result.error(
-                task.getException());
+                FlutterFirebaseStorageException.parserExceptionToFlutter(task.getException()));
           }
         });
   }
@@ -352,7 +329,7 @@ public class FlutterFirebaseStoragePlugin
             result.success(androidData);
           } else {
             result.error(
-                task.getException());
+                FlutterFirebaseStorageException.parserExceptionToFlutter(task.getException()));
           }
         });
   }
@@ -375,7 +352,7 @@ public class FlutterFirebaseStoragePlugin
             result.success(convertToPigeonMetaData(androidMetaData));
           } else {
             result.error(
-                task.getException());
+                FlutterFirebaseStorageException.parserExceptionToFlutter(task.getException()));
           }
         });
   }
@@ -401,14 +378,20 @@ public class FlutterFirebaseStoragePlugin
       @NonNull GeneratedAndroidFirebaseStorage.Result<GeneratedAndroidFirebaseStorage.PigeonListResult> result) {
     FirebaseStorage firebaseStorage = getStorageFromPigeon(app);
     StorageReference androidReference = firebaseStorage.getReference(reference.getFullPath());
-    androidReference.list(options.getMaxResults().intValue(), options.getPageToken()).addOnCompleteListener(
+    Task<ListResult> androidResult;
+    if (options.getPageToken() == null) {
+      androidResult = androidReference.list(options.getMaxResults().intValue());
+    } else {
+      androidResult = androidReference.list(options.getMaxResults().intValue(), options.getPageToken());
+    }
+    androidResult.addOnCompleteListener(
         task -> {
           if (task.isSuccessful()) {
             ListResult androidListResult = task.getResult();
             result.success(convertToPigeonListResult(androidListResult));
           } else {
             result.error(
-                task.getException());
+                FlutterFirebaseStorageException.parserExceptionToFlutter(task.getException()));
           }
         });
   }
@@ -426,7 +409,7 @@ public class FlutterFirebaseStoragePlugin
             result.success(convertToPigeonListResult(androidListResult));
           } else {
             result.error(
-                task.getException());
+                FlutterFirebaseStorageException.parserExceptionToFlutter(task.getException()));
           }
         });
   }
@@ -440,13 +423,13 @@ public class FlutterFirebaseStoragePlugin
         .setContentLanguage(pigeonSettableMetatdata.getContentLanguage())
         .setContentType(pigeonSettableMetatdata.getContentType());
 
-    for (Map.Entry<String, String> entry : pigeonSettableMetatdata.getCustomMetadata().entrySet()) {
-      androidMetaDataBuilder.setCustomMetadata(entry.getKey(), entry.getValue());
-      // System.out.println(entry.getKey() + "/" + entry.getValue());
+    Map<String, String> pigeonCustomMetadata = pigeonSettableMetatdata.getCustomMetadata();
+    if (pigeonCustomMetadata != null) {
+      for (Map.Entry<String, String> entry : pigeonCustomMetadata.entrySet()) {
+        androidMetaDataBuilder.setCustomMetadata(entry.getKey(), entry.getValue());
+      }
     }
-    // pigeonSettableMetatdata.getCustomMetadata()
-    // .foreach((key, value) -> androidMetaDataBuilder.setCustomMetadata(key,
-    // value));
+
     return androidMetaDataBuilder.build();
   }
 
@@ -464,7 +447,7 @@ public class FlutterFirebaseStoragePlugin
             result.success(convertToPigeonMetaData(androidMetadata));
           } else {
             result.error(
-                task.getException());
+                FlutterFirebaseStorageException.parserExceptionToFlutter(task.getException()));
           }
         });
   }
@@ -486,7 +469,7 @@ public class FlutterFirebaseStoragePlugin
       result.success(registerEventChannel(
           STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, handler));
     } catch (Exception e) {
-      result.error(e);
+      result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
     }
   }
 
@@ -508,7 +491,7 @@ public class FlutterFirebaseStoragePlugin
       result.success(registerEventChannel(
           STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, handler));
     } catch (Exception e) {
-      result.error(e);
+      result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
     }
   }
 
@@ -530,7 +513,7 @@ public class FlutterFirebaseStoragePlugin
       result.success(registerEventChannel(
           STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, handler));
     } catch (Exception e) {
-      result.error(e);
+      result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
     }
   }
 
@@ -549,7 +532,7 @@ public class FlutterFirebaseStoragePlugin
       result.success(registerEventChannel(
           STORAGE_METHOD_CHANNEL_NAME + "/" + STORAGE_TASK_EVENT_NAME, handler));
     } catch (Exception e) {
-      result.error(e);
+      result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
     }
   }
 
@@ -563,7 +546,7 @@ public class FlutterFirebaseStoragePlugin
 
     if (storageTask == null) {
       Exception e = new Exception("Pause operation was called on a task which does not exist.");
-      result.error(e);
+      result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
       return;
     }
 
@@ -578,7 +561,7 @@ public class FlutterFirebaseStoragePlugin
       }
       result.success(statusMap);
     } catch (Exception e) {
-      result.error(e);
+      result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
     }
   }
 
@@ -591,7 +574,7 @@ public class FlutterFirebaseStoragePlugin
 
     if (storageTask == null) {
       Exception e = new Exception("Resume operation was called on a task which does notexist.");
-      result.error(e);
+      result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
       return;
     }
 
@@ -606,7 +589,7 @@ public class FlutterFirebaseStoragePlugin
       }
       result.success(statusMap);
     } catch (Exception e) {
-      result.error(e);
+      result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
     }
   }
 
@@ -617,7 +600,7 @@ public class FlutterFirebaseStoragePlugin
     FlutterFirebaseStorageTask storageTask = FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle.intValue());
     if (storageTask == null) {
       Exception e = new Exception("Cancel operation was called on a task which does not exist.");
-      result.error(e);
+      result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
       return;
     }
 
@@ -632,7 +615,7 @@ public class FlutterFirebaseStoragePlugin
       }
       result.success(statusMap);
     } catch (Exception e) {
-      result.error(e);
+      result.error(FlutterFirebaseStorageException.parserExceptionToFlutter(e));
     }
   }
 

@@ -6,7 +6,6 @@
 
 package io.flutter.plugins.firebase.storage;
 
-import static io.flutter.plugins.firebase.storage.FlutterFirebaseStoragePlugin.getExceptionDetails;
 import static io.flutter.plugins.firebase.storage.FlutterFirebaseStoragePlugin.parseMetadata;
 
 import android.net.Uri;
@@ -253,7 +252,7 @@ class FlutterFirebaseStorageTask {
       arguments.put("snapshot", parseTaskSnapshot(snapshot));
     }
     if (exception != null) {
-      arguments.put("error", getExceptionDetails(exception));
+      arguments.put("error", FlutterFirebaseStorageException.parserExceptionToFlutter(exception));
     }
     return arguments;
   }

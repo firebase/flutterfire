@@ -81,7 +81,7 @@ class MethodChannelReference extends ReferencePlatform {
 
   static PigeonListOptions convertOptions(ListOptions? options) {
     if (options == null) {
-      return PigeonListOptions();
+      return PigeonListOptions(maxResults: 1000);
     }
     return PigeonListOptions(
         maxResults: options.maxResults, pageToken: options.pageToken);

@@ -110,7 +110,7 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
       arguments.put(TASK_SNAPSHOT, FlutterFirebaseStorageTask.parseTaskSnapshot(snapshot));
     }
     if (exception != null) {
-      arguments.put("error", FlutterFirebaseStoragePlugin.getExceptionDetails(exception));
+      arguments.put("error", FlutterFirebaseStorageException.parserExceptionToFlutter(exception));
     }
     return arguments;
   }
