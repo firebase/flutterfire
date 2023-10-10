@@ -32,13 +32,12 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
-    final instance =
-        FirebaseAppCheckPlatform.instance = FirebaseAppCheckWeb.instance;
-
     FirebaseCoreWeb.registerService(
       'app-check',
       productNameOverride: 'app_check',
       ensurePluginInitialized: (firebaseApp) async {
+        final instance =
+            FirebaseAppCheckWeb(app: Firebase.app(firebaseApp.name));
         final recaptchaType =
             window.sessionStorage[_sessionKeyRecaptchaType(firebaseApp.name)];
         final recaptchaSiteKey = window
@@ -56,6 +55,8 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
         }
       },
     );
+
+    FirebaseAppCheckPlatform.instance = FirebaseAppCheckWeb.instance;
   }
 
   /// Initializes a stub instance to allow the class to be registered.
