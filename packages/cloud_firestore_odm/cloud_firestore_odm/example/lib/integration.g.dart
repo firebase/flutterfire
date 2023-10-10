@@ -9,781 +9,13 @@ part of 'integration.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters, duplicate_ignore
 
 class _Sentinel {
   const _Sentinel();
 }
 
 const _sentinel = _Sentinel();
-
-/// A collection reference object can be used for adding documents,
-/// getting document references, and querying for documents
-/// (using the methods inherited from Query).
-abstract class ManualJsonCollectionReference
-    implements
-        ManualJsonQuery,
-        FirestoreCollectionReference<ManualJson, ManualJsonQuerySnapshot> {
-  factory ManualJsonCollectionReference([
-    FirebaseFirestore? firestore,
-  ]) = _$ManualJsonCollectionReference;
-
-  static ManualJson fromFirestore(
-    DocumentSnapshot<Map<String, Object?>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    return ManualJson.fromJson(snapshot.data()!);
-  }
-
-  static Map<String, Object?> toFirestore(
-    ManualJson value,
-    SetOptions? options,
-  ) {
-    return value.toJson();
-  }
-
-  @override
-  CollectionReference<ManualJson> get reference;
-
-  @override
-  ManualJsonDocumentReference doc([String? id]);
-
-  /// Add a new document to this collection with the specified data,
-  /// assigning it a document ID automatically.
-  Future<ManualJsonDocumentReference> add(ManualJson value);
-}
-
-class _$ManualJsonCollectionReference extends _$ManualJsonQuery
-    implements ManualJsonCollectionReference {
-  factory _$ManualJsonCollectionReference([FirebaseFirestore? firestore]) {
-    firestore ??= FirebaseFirestore.instance;
-
-    return _$ManualJsonCollectionReference._(
-      firestore.collection('root').withConverter(
-            fromFirestore: ManualJsonCollectionReference.fromFirestore,
-            toFirestore: ManualJsonCollectionReference.toFirestore,
-          ),
-    );
-  }
-
-  _$ManualJsonCollectionReference._(
-    CollectionReference<ManualJson> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
-
-  String get path => reference.path;
-
-  @override
-  CollectionReference<ManualJson> get reference =>
-      super.reference as CollectionReference<ManualJson>;
-
-  @override
-  ManualJsonDocumentReference doc([String? id]) {
-    assert(
-      id == null || id.split('/').length == 1,
-      'The document ID cannot be from a different collection',
-    );
-    return ManualJsonDocumentReference(
-      reference.doc(id),
-    );
-  }
-
-  @override
-  Future<ManualJsonDocumentReference> add(ManualJson value) {
-    return reference.add(value).then((ref) => ManualJsonDocumentReference(ref));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is _$ManualJsonCollectionReference &&
-        other.runtimeType == runtimeType &&
-        other.reference == reference;
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, reference);
-}
-
-abstract class ManualJsonDocumentReference
-    extends FirestoreDocumentReference<ManualJson, ManualJsonDocumentSnapshot> {
-  factory ManualJsonDocumentReference(DocumentReference<ManualJson> reference) =
-      _$ManualJsonDocumentReference;
-
-  DocumentReference<ManualJson> get reference;
-
-  /// A reference to the [ManualJsonCollectionReference] containing this document.
-  ManualJsonCollectionReference get parent {
-    return _$ManualJsonCollectionReference(reference.firestore);
-  }
-
-  @override
-  Stream<ManualJsonDocumentSnapshot> snapshots();
-
-  @override
-  Future<ManualJsonDocumentSnapshot> get([GetOptions? options]);
-
-  @override
-  Future<void> delete();
-
-  /// Updates data on the document. Data will be merged with any existing
-  /// document data.
-  ///
-  /// If no document exists yet, the update will fail.
-  Future<void> update({
-    String value,
-    FieldValue valueFieldValue,
-  });
-
-  /// Updates fields in the current document using the transaction API.
-  ///
-  /// The update will fail if applied to a document that does not exist.
-  void transactionUpdate(
-    Transaction transaction, {
-    String value,
-    FieldValue valueFieldValue,
-  });
-}
-
-class _$ManualJsonDocumentReference
-    extends FirestoreDocumentReference<ManualJson, ManualJsonDocumentSnapshot>
-    implements ManualJsonDocumentReference {
-  _$ManualJsonDocumentReference(this.reference);
-
-  @override
-  final DocumentReference<ManualJson> reference;
-
-  /// A reference to the [ManualJsonCollectionReference] containing this document.
-  ManualJsonCollectionReference get parent {
-    return _$ManualJsonCollectionReference(reference.firestore);
-  }
-
-  @override
-  Stream<ManualJsonDocumentSnapshot> snapshots() {
-    return reference.snapshots().map(ManualJsonDocumentSnapshot._);
-  }
-
-  @override
-  Future<ManualJsonDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(ManualJsonDocumentSnapshot._);
-  }
-
-  @override
-  Future<ManualJsonDocumentSnapshot> transactionGet(Transaction transaction) {
-    return transaction.get(reference).then(ManualJsonDocumentSnapshot._);
-  }
-
-  Future<void> update({
-    Object? value = _sentinel,
-    FieldValue? valueFieldValue,
-  }) async {
-    assert(
-      value == _sentinel || valueFieldValue == null,
-      "Cannot specify both value and valueFieldValue",
-    );
-    final json = {
-      if (value != _sentinel) 'value': value as String,
-      if (valueFieldValue != null) 'value': valueFieldValue,
-    };
-
-    return reference.update(json);
-  }
-
-  void transactionUpdate(
-    Transaction transaction, {
-    Object? value = _sentinel,
-    FieldValue? valueFieldValue,
-  }) {
-    assert(
-      value == _sentinel || valueFieldValue == null,
-      "Cannot specify both value and valueFieldValue",
-    );
-    final json = {
-      if (value != _sentinel) 'value': value as String,
-      if (valueFieldValue != null) 'value': valueFieldValue,
-    };
-
-    transaction.update(reference, json);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ManualJsonDocumentReference &&
-        other.runtimeType == runtimeType &&
-        other.parent == parent &&
-        other.id == id;
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-abstract class ManualJsonQuery
-    implements QueryReference<ManualJson, ManualJsonQuerySnapshot> {
-  @override
-  ManualJsonQuery limit(int limit);
-
-  @override
-  ManualJsonQuery limitToLast(int limit);
-
-  /// Perform an order query based on a [FieldPath].
-  ///
-  /// This method is considered unsafe as it does check that the field path
-  /// maps to a valid property or that parameters such as [isEqualTo] receive
-  /// a value of the correct type.
-  ///
-  /// If possible, instead use the more explicit variant of order queries:
-  ///
-  /// **AVOID**:
-  /// ```dart
-  /// collection.orderByFieldPath(
-  ///   FieldPath.fromString('title'),
-  ///   startAt: 'title',
-  /// );
-  /// ```
-  ///
-  /// **PREFER**:
-  /// ```dart
-  /// collection.orderByTitle(startAt: 'title');
-  /// ```
-  ManualJsonQuery orderByFieldPath(
-    FieldPath fieldPath, {
-    bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
-    ManualJsonDocumentSnapshot? startAtDocument,
-    ManualJsonDocumentSnapshot? endAtDocument,
-    ManualJsonDocumentSnapshot? endBeforeDocument,
-    ManualJsonDocumentSnapshot? startAfterDocument,
-  });
-
-  /// Perform a where query based on a [FieldPath].
-  ///
-  /// This method is considered unsafe as it does check that the field path
-  /// maps to a valid property or that parameters such as [isEqualTo] receive
-  /// a value of the correct type.
-  ///
-  /// If possible, instead use the more explicit variant of where queries:
-  ///
-  /// **AVOID**:
-  /// ```dart
-  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
-  /// ```
-  ///
-  /// **PREFER**:
-  /// ```dart
-  /// collection.whereTitle(isEqualTo: 'title');
-  /// ```
-  ManualJsonQuery whereFieldPath(
-    FieldPath fieldPath, {
-    Object? isEqualTo,
-    Object? isNotEqualTo,
-    Object? isLessThan,
-    Object? isLessThanOrEqualTo,
-    Object? isGreaterThan,
-    Object? isGreaterThanOrEqualTo,
-    Object? arrayContains,
-    List<Object?>? arrayContainsAny,
-    List<Object?>? whereIn,
-    List<Object?>? whereNotIn,
-    bool? isNull,
-  });
-
-  ManualJsonQuery whereDocumentId({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  });
-  ManualJsonQuery whereValue({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  });
-
-  ManualJsonQuery orderByDocumentId({
-    bool descending = false,
-    String startAt,
-    String startAfter,
-    String endAt,
-    String endBefore,
-    ManualJsonDocumentSnapshot? startAtDocument,
-    ManualJsonDocumentSnapshot? endAtDocument,
-    ManualJsonDocumentSnapshot? endBeforeDocument,
-    ManualJsonDocumentSnapshot? startAfterDocument,
-  });
-
-  ManualJsonQuery orderByValue({
-    bool descending = false,
-    String startAt,
-    String startAfter,
-    String endAt,
-    String endBefore,
-    ManualJsonDocumentSnapshot? startAtDocument,
-    ManualJsonDocumentSnapshot? endAtDocument,
-    ManualJsonDocumentSnapshot? endBeforeDocument,
-    ManualJsonDocumentSnapshot? startAfterDocument,
-  });
-}
-
-class _$ManualJsonQuery
-    extends QueryReference<ManualJson, ManualJsonQuerySnapshot>
-    implements ManualJsonQuery {
-  _$ManualJsonQuery(
-    this._collection, {
-    required Query<ManualJson> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
-
-  final CollectionReference<Object?> _collection;
-
-  @override
-  Stream<ManualJsonQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference
-        .snapshots()
-        .map(ManualJsonQuerySnapshot._fromQuerySnapshot);
-  }
-
-  @override
-  Future<ManualJsonQuerySnapshot> get([GetOptions? options]) {
-    return reference
-        .get(options)
-        .then(ManualJsonQuerySnapshot._fromQuerySnapshot);
-  }
-
-  @override
-  ManualJsonQuery limit(int limit) {
-    return _$ManualJsonQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  @override
-  ManualJsonQuery limitToLast(int limit) {
-    return _$ManualJsonQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  ManualJsonQuery orderByFieldPath(
-    FieldPath fieldPath, {
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    ManualJsonDocumentSnapshot? startAtDocument,
-    ManualJsonDocumentSnapshot? endAtDocument,
-    ManualJsonDocumentSnapshot? endBeforeDocument,
-    ManualJsonDocumentSnapshot? startAfterDocument,
-  }) {
-    final query =
-        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-    return _$ManualJsonQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
-  ManualJsonQuery whereFieldPath(
-    FieldPath fieldPath, {
-    Object? isEqualTo,
-    Object? isNotEqualTo,
-    Object? isLessThan,
-    Object? isLessThanOrEqualTo,
-    Object? isGreaterThan,
-    Object? isGreaterThanOrEqualTo,
-    Object? arrayContains,
-    List<Object?>? arrayContainsAny,
-    List<Object?>? whereIn,
-    List<Object?>? whereNotIn,
-    bool? isNull,
-  }) {
-    return _$ManualJsonQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        fieldPath,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        arrayContains: arrayContains,
-        arrayContainsAny: arrayContainsAny,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-        isNull: isNull,
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  ManualJsonQuery whereDocumentId({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  }) {
-    return _$ManualJsonQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        FieldPath.documentId,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  ManualJsonQuery whereValue({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  }) {
-    return _$ManualJsonQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        'value',
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  ManualJsonQuery orderByDocumentId({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    ManualJsonDocumentSnapshot? startAtDocument,
-    ManualJsonDocumentSnapshot? endAtDocument,
-    ManualJsonDocumentSnapshot? endBeforeDocument,
-    ManualJsonDocumentSnapshot? startAfterDocument,
-  }) {
-    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
-        descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-
-    return _$ManualJsonQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
-  ManualJsonQuery orderByValue({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    ManualJsonDocumentSnapshot? startAtDocument,
-    ManualJsonDocumentSnapshot? endAtDocument,
-    ManualJsonDocumentSnapshot? endBeforeDocument,
-    ManualJsonDocumentSnapshot? startAfterDocument,
-  }) {
-    final query =
-        $referenceWithoutCursor.orderBy('value', descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-
-    return _$ManualJsonQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is _$ManualJsonQuery &&
-        other.runtimeType == runtimeType &&
-        other.reference == reference;
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, reference);
-}
-
-class ManualJsonDocumentSnapshot extends FirestoreDocumentSnapshot<ManualJson> {
-  ManualJsonDocumentSnapshot._(this.snapshot) : data = snapshot.data();
-
-  @override
-  final DocumentSnapshot<ManualJson> snapshot;
-
-  @override
-  ManualJsonDocumentReference get reference {
-    return ManualJsonDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final ManualJson? data;
-}
-
-class ManualJsonQuerySnapshot extends FirestoreQuerySnapshot<ManualJson,
-    ManualJsonQueryDocumentSnapshot> {
-  ManualJsonQuerySnapshot._(
-    this.snapshot,
-    this.docs,
-    this.docChanges,
-  );
-
-  factory ManualJsonQuerySnapshot._fromQuerySnapshot(
-    QuerySnapshot<ManualJson> snapshot,
-  ) {
-    final docs = snapshot.docs.map(ManualJsonQueryDocumentSnapshot._).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return _decodeDocumentChange(
-        change,
-        ManualJsonDocumentSnapshot._,
-      );
-    }).toList();
-
-    return ManualJsonQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
-  static FirestoreDocumentChange<ManualJsonDocumentSnapshot>
-      _decodeDocumentChange<T>(
-    DocumentChange<T> docChange,
-    ManualJsonDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
-  ) {
-    return FirestoreDocumentChange<ManualJsonDocumentSnapshot>(
-      type: docChange.type,
-      oldIndex: docChange.oldIndex,
-      newIndex: docChange.newIndex,
-      doc: decodeDoc(docChange.doc),
-    );
-  }
-
-  final QuerySnapshot<ManualJson> snapshot;
-
-  @override
-  final List<ManualJsonQueryDocumentSnapshot> docs;
-
-  @override
-  final List<FirestoreDocumentChange<ManualJsonDocumentSnapshot>> docChanges;
-}
-
-class ManualJsonQueryDocumentSnapshot
-    extends FirestoreQueryDocumentSnapshot<ManualJson>
-    implements ManualJsonDocumentSnapshot {
-  ManualJsonQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
-
-  @override
-  final QueryDocumentSnapshot<ManualJson> snapshot;
-
-  @override
-  final ManualJson data;
-
-  @override
-  ManualJsonDocumentReference get reference {
-    return ManualJsonDocumentReference(snapshot.reference);
-  }
-}
 
 /// A collection reference object can be used for adding documents,
 /// getting document references, and querying for documents
@@ -962,11 +194,13 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (firstName != _sentinel)
-        _$AdvancedJsonFieldMap['firstName']!: firstName as String?,
+        _$AdvancedJsonFieldMap['firstName']!:
+            _$AdvancedJsonPerFieldToJson.firstName(firstName as String?),
       if (firstNameFieldValue != null)
         _$AdvancedJsonFieldMap['firstName']!: firstNameFieldValue,
       if (lastName != _sentinel)
-        _$AdvancedJsonFieldMap['lastName']!: lastName as String?,
+        _$AdvancedJsonFieldMap['lastName']!:
+            _$AdvancedJsonPerFieldToJson.lastName(lastName as String?),
       if (lastNameFieldValue != null)
         _$AdvancedJsonFieldMap['lastName']!: lastNameFieldValue,
     };
@@ -991,11 +225,13 @@ class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (firstName != _sentinel)
-        _$AdvancedJsonFieldMap['firstName']!: firstName as String?,
+        _$AdvancedJsonFieldMap['firstName']!:
+            _$AdvancedJsonPerFieldToJson.firstName(firstName as String?),
       if (firstNameFieldValue != null)
         _$AdvancedJsonFieldMap['firstName']!: firstNameFieldValue,
       if (lastName != _sentinel)
-        _$AdvancedJsonFieldMap['lastName']!: lastName as String?,
+        _$AdvancedJsonFieldMap['lastName']!:
+            _$AdvancedJsonPerFieldToJson.lastName(lastName as String?),
       if (lastNameFieldValue != null)
         _$AdvancedJsonFieldMap['lastName']!: lastNameFieldValue,
     };
@@ -1355,15 +591,28 @@ class _$AdvancedJsonQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$AdvancedJsonFieldMap['firstName']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$AdvancedJsonPerFieldToJson.firstName(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$AdvancedJsonPerFieldToJson.firstName(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$AdvancedJsonPerFieldToJson.firstName(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$AdvancedJsonPerFieldToJson.firstName(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$AdvancedJsonPerFieldToJson.firstName(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$AdvancedJsonPerFieldToJson.firstName(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$AdvancedJsonPerFieldToJson.firstName(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$AdvancedJsonPerFieldToJson.firstName(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -1384,15 +633,28 @@ class _$AdvancedJsonQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$AdvancedJsonFieldMap['lastName']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$AdvancedJsonPerFieldToJson.lastName(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$AdvancedJsonPerFieldToJson.lastName(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$AdvancedJsonPerFieldToJson.lastName(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$AdvancedJsonPerFieldToJson.lastName(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$AdvancedJsonPerFieldToJson.lastName(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$AdvancedJsonPerFieldToJson.lastName(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$AdvancedJsonPerFieldToJson.lastName(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$AdvancedJsonPerFieldToJson.lastName(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -1899,11 +1161,13 @@ class _$_PrivateAdvancedJsonDocumentReference
     );
     final json = {
       if (firstName != _sentinel)
-        _$PrivateAdvancedJsonFieldMap['firstName']!: firstName as String?,
+        _$PrivateAdvancedJsonFieldMap['firstName']!:
+            _$PrivateAdvancedJsonPerFieldToJson.firstName(firstName as String?),
       if (firstNameFieldValue != null)
         _$PrivateAdvancedJsonFieldMap['firstName']!: firstNameFieldValue,
       if (lastName != _sentinel)
-        _$PrivateAdvancedJsonFieldMap['lastName']!: lastName as String?,
+        _$PrivateAdvancedJsonFieldMap['lastName']!:
+            _$PrivateAdvancedJsonPerFieldToJson.lastName(lastName as String?),
       if (lastNameFieldValue != null)
         _$PrivateAdvancedJsonFieldMap['lastName']!: lastNameFieldValue,
     };
@@ -1928,11 +1192,13 @@ class _$_PrivateAdvancedJsonDocumentReference
     );
     final json = {
       if (firstName != _sentinel)
-        _$PrivateAdvancedJsonFieldMap['firstName']!: firstName as String?,
+        _$PrivateAdvancedJsonFieldMap['firstName']!:
+            _$PrivateAdvancedJsonPerFieldToJson.firstName(firstName as String?),
       if (firstNameFieldValue != null)
         _$PrivateAdvancedJsonFieldMap['firstName']!: firstNameFieldValue,
       if (lastName != _sentinel)
-        _$PrivateAdvancedJsonFieldMap['lastName']!: lastName as String?,
+        _$PrivateAdvancedJsonFieldMap['lastName']!:
+            _$PrivateAdvancedJsonPerFieldToJson.lastName(lastName as String?),
       if (lastNameFieldValue != null)
         _$PrivateAdvancedJsonFieldMap['lastName']!: lastNameFieldValue,
     };
@@ -2294,15 +1560,30 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$PrivateAdvancedJsonFieldMap['firstName']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$PrivateAdvancedJsonPerFieldToJson.firstName(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$PrivateAdvancedJsonPerFieldToJson.firstName(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$PrivateAdvancedJsonPerFieldToJson.firstName(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$PrivateAdvancedJsonPerFieldToJson.firstName(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$PrivateAdvancedJsonPerFieldToJson.firstName(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$PrivateAdvancedJsonPerFieldToJson
+                .firstName(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn
+            ?.map((e) => _$PrivateAdvancedJsonPerFieldToJson.firstName(e)),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$PrivateAdvancedJsonPerFieldToJson.firstName(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -2323,15 +1604,30 @@ class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$PrivateAdvancedJsonFieldMap['lastName']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$PrivateAdvancedJsonPerFieldToJson.lastName(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$PrivateAdvancedJsonPerFieldToJson.lastName(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$PrivateAdvancedJsonPerFieldToJson.lastName(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$PrivateAdvancedJsonPerFieldToJson.lastName(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$PrivateAdvancedJsonPerFieldToJson.lastName(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$PrivateAdvancedJsonPerFieldToJson
+                .lastName(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn
+            ?.map((e) => _$PrivateAdvancedJsonPerFieldToJson.lastName(e)),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$PrivateAdvancedJsonPerFieldToJson.lastName(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -3256,6 +2552,9 @@ EmptyModel _$EmptyModelFromJson(Map<String, dynamic> json) => EmptyModel();
 
 const _$EmptyModelFieldMap = <String, String>{};
 
+// ignore: unused_element
+abstract class _$EmptyModelPerFieldToJson {}
+
 Map<String, dynamic> _$EmptyModelToJson(EmptyModel instance) =>
     <String, dynamic>{};
 
@@ -3268,6 +2567,14 @@ const _$AdvancedJsonFieldMap = <String, String>{
   'firstName': 'first_name',
   'lastName': 'LAST_NAME',
 };
+
+// ignore: unused_element
+abstract class _$AdvancedJsonPerFieldToJson {
+  // ignore: unused_element
+  static Object? firstName(String? instance) => instance;
+  // ignore: unused_element
+  static Object? lastName(String? instance) => instance;
+}
 
 Map<String, dynamic> _$AdvancedJsonToJson(AdvancedJson instance) =>
     <String, dynamic>{
@@ -3285,6 +2592,14 @@ const _$PrivateAdvancedJsonFieldMap = <String, String>{
   'firstName': 'first_name',
   'lastName': 'LAST_NAME',
 };
+
+// ignore: unused_element
+abstract class _$PrivateAdvancedJsonPerFieldToJson {
+  // ignore: unused_element
+  static Object? firstName(String? instance) => instance;
+  // ignore: unused_element
+  static Object? lastName(String? instance) => instance;
+}
 
 Map<String, dynamic> _$PrivateAdvancedJsonToJson(
         _PrivateAdvancedJson instance) =>
