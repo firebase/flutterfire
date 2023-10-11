@@ -290,6 +290,10 @@ EncodableValue ConvertFieldValueToEncodableValue(const FieldValue& fieldValue) {
       return encodableList;
     }
 
+    case FieldValue::Type::kGeoPoint: {
+      return CustomEncodableValue(fieldValue.geo_point_value());
+    }
+
     default:
       return EncodableValue(nullptr);
   }

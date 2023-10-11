@@ -299,8 +299,6 @@ public class FlutterFirebaseFirestorePlugin
   public static FirebaseFirestore getFirestoreFromPigeon(
       GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp pigeonApp) {
     synchronized (FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
-      // Log app anme
-      Log.d("coucou", "getFirestoreFromPigeon: " + pigeonApp.getAppName());
       if (FlutterFirebaseFirestorePlugin.getFirestoreInstanceByNameAndDatabaseUrl(
               pigeonApp.getAppName(), pigeonApp.getDatabaseURL())
           != null) {

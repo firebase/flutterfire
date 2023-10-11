@@ -29,6 +29,12 @@ using flutter::EncodableValue;
 
 cloud_firestore_windows::FirestoreCodec::FirestoreCodec() {}
 
+union DoubleToBytes {
+  double value;
+  uint8_t bytes[sizeof(double)];
+};
+
+
 void cloud_firestore_windows::FirestoreCodec::WriteValue(
     const flutter::EncodableValue& value,
     flutter::ByteStreamWriter* stream) const {
@@ -44,9 +50,12 @@ void cloud_firestore_windows::FirestoreCodec::WriteValue(
       const GeoPoint& geopoint = std::any_cast<GeoPoint>(custom_value);
       stream->WriteByte(DATA_TYPE_GEO_POINT);
       stream->WriteAlignment(8);
-      flutter::StandardCodecSerializer::WriteValue(geopoint.latitude(), stream);
-      flutter::StandardCodecSerializer::WriteValue(geopoint.longitude(),
-                                                   stream);
+      DoubleToBytes converterLatitude;
+      converterLatitude.value = geopoint.latitude();
+      stream->WriteBytes(converterLatitude.bytes, 8);
+      DoubleToBytes converterLongitude;
+      converterLongitude.value = geopoint.longitude();
+      stream->WriteBytes(converterLongitude.bytes, 8);
     } else if (custom_value.type() == typeid(DocumentReference)) {
       const DocumentReference& reference =
           std::any_cast<DocumentReference>(custom_value);
@@ -196,7 +205,7 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
       if (CloudFirestorePlugin::firestoreInstances_.find(appName) !=
         CloudFirestorePlugin::firestoreInstances_.end()) {
         return CustomEncodableValue(
-            &CloudFirestorePlugin::firestoreInstances_[appName]);
+            CloudFirestorePlugin::firestoreInstances_[appName]);
       }
 
         firebase::App* app = firebase::App::GetInstance(appName.c_str());
