@@ -18,6 +18,7 @@
 #include <memory>
 #include <mutex>
 #include <sstream>
+#include <future>
 
 #include "firebase/app.h"
 #include "firebase/firestore.h"
@@ -110,17 +111,45 @@ CloudFirestorePlugin::CloudFirestorePlugin() {}
 CloudFirestorePlugin::~CloudFirestorePlugin() {}
 
 Firestore* GetFirestoreFromPigeon(const PigeonFirebaseApp& pigeonApp) {
-  // std::vector<std::string> app_vector = GetFirebaseApp(pigeonApp.app_name());
-  // firebase::AppOptions options;
-
-  // options.set_api_key(app_vector[1].c_str());
-  // options.set_app_id(app_vector[2].c_str());
-  // options.set_database_url(app_vector[3].c_str());
-  // options.set_project_id(app_vector[4].c_str());
+  if (CloudFirestorePlugin::firestoreInstances_.find(pigeonApp.app_name()) !=
+      CloudFirestorePlugin::firestoreInstances_.end()) {
+    return CloudFirestorePlugin::firestoreInstances_[pigeonApp.app_name()];
+  }
 
   App* app = App::GetInstance(pigeonApp.app_name().c_str());
 
   Firestore* firestore = Firestore::GetInstance(app);
+
+  std::unique_ptr<firebase::firestore::Settings> settings =
+      std::make_unique<firebase::firestore::Settings>();
+
+  if (pigeonApp.settings().persistence_enabled()) {
+    bool persistEnabled = pigeonApp.settings().persistence_enabled();
+
+    // This is the maximum amount of cache allowed. We use the same number on
+    // android.
+    int64_t size = 104857600;
+
+    if (pigeonApp.settings().cache_size_bytes()) {
+      const int64_t* cacheSizeBytes = pigeonApp.settings().cache_size_bytes();
+      if (*cacheSizeBytes != -1) {
+        size = *cacheSizeBytes;
+      }
+    }
+
+    if (persistEnabled) {
+      settings->set_cache_size_bytes(size);
+    }
+  }
+
+  if (pigeonApp.settings().host()) {
+    settings->set_host(*pigeonApp.settings().host());
+
+    // Only allow changing ssl if host is also specified.
+    settings->set_ssl_enabled(false);
+  }
+
+  firestore->set_settings(*settings);
 
   if (CloudFirestorePlugin::firestoreInstances_.find(pigeonApp.app_name()) ==
       CloudFirestorePlugin::firestoreInstances_.end()) {
@@ -129,6 +158,68 @@ Firestore* GetFirestoreFromPigeon(const PigeonFirebaseApp& pigeonApp) {
 
   return firestore;
 }
+
+std::string CloudFirestorePlugin::GetErrorCode(firebase::firestore::Error error) {
+   switch (error) {
+    case kErrorOk:
+      return "ok";
+    case kErrorCancelled:
+      return "cancelled";
+    case kErrorUnknown:
+      return "unknown";
+    case kErrorInvalidArgument:
+      return "invalid-argument";
+    case kErrorDeadlineExceeded:
+      return "deadline-exceeded";
+    case kErrorNotFound:
+      return "not-found";
+    case kErrorAlreadyExists:
+      return "already-exists";
+    case kErrorPermissionDenied:
+      return "permission-denied";
+    case kErrorResourceExhausted:
+      return "resource-exhausted";
+    case kErrorFailedPrecondition:
+      return "failed-precondition";
+    case kErrorAborted:
+      return "aborted";
+    case kErrorOutOfRange:
+      return "out-of-range";
+    case kErrorUnimplemented:
+      return "unimplemented";
+    case kErrorInternal:
+      return "internal";
+    case kErrorUnavailable:
+      return "unavailable";
+    case kErrorDataLoss:
+      return "data-loss";
+    case kErrorUnauthenticated:
+      return "unauthenticated";
+    default:
+      return "unknown-error";
+  }
+}
+
+FlutterError CloudFirestorePlugin::ParseError(
+    const firebase::FutureBase& completed_future) {
+  const firebase::firestore::Error errorCode =
+      static_cast<const firebase::firestore::Error>(completed_future.error());
+
+  using flutter::EncodableMap;
+  using flutter::EncodableValue;
+  EncodableMap details;
+  details[EncodableValue("code")] =
+      EncodableValue(CloudFirestorePlugin::GetErrorCode(errorCode));
+  details[EncodableValue("message")] =
+      EncodableValue(completed_future.error_message());
+
+
+  return FlutterError("firebase_firestore",
+                      completed_future.error_message(),
+                      details
+                      );
+}
+
 
 firebase::firestore::Source GetSourceFromPigeon(const Source& pigeonSource) {
   switch (pigeonSource) {
@@ -167,7 +258,7 @@ using flutter::EncodableValue;
 EncodableValue ConvertFieldValueToEncodableValue(const FieldValue& fieldValue) {
   switch (fieldValue.type()) {
     case FieldValue::Type::kNull:
-      return EncodableValue(nullptr);
+      return EncodableValue();
 
     case FieldValue::Type::kBoolean:
       return EncodableValue(fieldValue.boolean_value());
@@ -230,8 +321,13 @@ PigeonSnapshotMetadata ParseSnapshotMetadata(
 PigeonDocumentSnapshot ParseDocumentSnapshot(
     DocumentSnapshot document,
     DocumentSnapshot::ServerTimestampBehavior serverTimestampBehavior) {
-  auto tempMap =
+  flutter::EncodableMap tempMap =
       ConvertToEncodableMap(document.GetData(serverTimestampBehavior));
+
+  if (tempMap.empty()) {
+    return PigeonDocumentSnapshot(document.reference().path(), nullptr,
+                                  ParseSnapshotMetadata(document.metadata()));
+  }
 
   PigeonDocumentSnapshot pigeonDocumentSnapshot =
       PigeonDocumentSnapshot(document.reference().path(), &tempMap,
@@ -302,7 +398,9 @@ PigeonQuerySnapshot ParseQuerySnapshot(
 
 firebase::firestore::FieldValue ConvertToFieldValue(
     const EncodableValue& variant) {
-  if (std::holds_alternative<bool>(variant)) {
+  if (std::holds_alternative<std::monostate>(variant)) {
+    return firebase::firestore::FieldValue::Null();
+  } else if (std::holds_alternative<bool>(variant)) {
     return firebase::firestore::FieldValue::Boolean(std::get<bool>(variant));
   } else if (std::holds_alternative<int32_t>(variant)) {
     return firebase::firestore::FieldValue::Integer(std::get<int32_t>(variant));
@@ -484,7 +582,7 @@ void CloudFirestorePlugin::NamedQueryGet(
                     query_snapshot, GetServerTimestampBehaviorFromPigeon(
                                         options.server_timestamp_behavior())));
               } else {
-                result(FlutterError(completed_future.error_message()));
+                result(CloudFirestorePlugin::ParseError(completed_future));
                 return;
               }
             });
@@ -500,7 +598,7 @@ void CloudFirestorePlugin::ClearPersistence(
         if (completed_future.error() == firebase::firestore::kErrorOk) {
           result(std::nullopt);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(CloudFirestorePlugin::ParseError(completed_future));
           return;
         }
       });
@@ -515,7 +613,7 @@ void CloudFirestorePlugin::DisableNetwork(
         if (completed_future.error() == firebase::firestore::kErrorOk) {
           result(std::nullopt);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(CloudFirestorePlugin::ParseError(completed_future));
           return;
         }
       });
@@ -530,7 +628,7 @@ void CloudFirestorePlugin::EnableNetwork(
         if (completed_future.error() == firebase::firestore::kErrorOk) {
           result(std::nullopt);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(CloudFirestorePlugin::ParseError(completed_future));
           return;
         }
       });
@@ -545,7 +643,7 @@ void CloudFirestorePlugin::Terminate(
         if (completed_future.error() == firebase::firestore::kErrorOk) {
           result(std::nullopt);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(CloudFirestorePlugin::ParseError(completed_future));
           return;
         }
       });
@@ -560,7 +658,7 @@ void CloudFirestorePlugin::WaitForPendingWrites(
         if (completed_future.error() == firebase::firestore::kErrorOk) {
           result(std::nullopt);
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(CloudFirestorePlugin::ParseError(completed_future));
           return;
         }
       });
@@ -593,21 +691,38 @@ class SnapshotInSyncStreamHandler
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
     events_ = std::move(events);
-    listener_ = firestore_->AddSnapshotsInSyncListener(
-        [this]() { events_->Success(flutter::EncodableValue()); });
+    // We do this to bind the event to the main channel
+    auto boundSendEvent =
+        std::bind(&SnapshotInSyncStreamHandler::SendEvent, this);
+    this->SetSendEventFunction(boundSendEvent); 
+
+    listener_ = firestore_->AddSnapshotsInSyncListener([this]() {
+      if (sendEventFunc_) sendEventFunc_();
+     });
     return nullptr;
   }
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
     listener_.Remove();
+
+    events_->EndOfStream();
     return nullptr;
   }
+
+      void SetSendEventFunction(std::function<void()> func) {
+    sendEventFunc_ = func;
+  }
+
+
+    void SendEvent() { events_->Success(flutter::EncodableValue()); }
+
 
  private:
   Firestore* firestore_;
   ListenerRegistration listener_;
   std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events_;
+  std::function<void()> sendEventFunc_;
 };
 
 void CloudFirestorePlugin::SnapshotsInSyncSetup(
@@ -888,7 +1003,7 @@ void CloudFirestorePlugin::DocumentReferenceSet(
     if (completed_future.error() == firebase::firestore::kErrorOk) {
       result(std::nullopt);
     } else {
-      result(FlutterError(completed_future.error_message()));
+      result(CloudFirestorePlugin::ParseError(completed_future));
       return;
     }
   });
@@ -902,14 +1017,13 @@ void CloudFirestorePlugin::DocumentReferenceUpdate(
 
   // Get the data
   MapFieldPathValue data = ConvertToMapFieldPathValue(*request.data());
-  Future<void> future =
-      document_reference.Update(ConvertToMapFieldValue(*request.data()));
+  Future<void> future = document_reference.Update(data);
 
   future.OnCompletion([result](const Future<void>& completed_future) {
     if (completed_future.error() == firebase::firestore::kErrorOk) {
       result(std::nullopt);
     } else {
-      result(FlutterError(completed_future.error_message()));
+      result(CloudFirestorePlugin::ParseError(completed_future));
       return;
     }
   });
@@ -933,7 +1047,7 @@ void CloudFirestorePlugin::DocumentReferenceGet(
               *document_snapshot, GetServerTimestampBehaviorFromPigeon(
                                       *request.server_timestamp_behavior())));
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(CloudFirestorePlugin::ParseError(completed_future));
           return;
         }
       });
@@ -951,7 +1065,7 @@ void CloudFirestorePlugin::DocumentReferenceDelete(
     if (completed_future.error() == firebase::firestore::kErrorOk) {
       result(std::nullopt);
     } else {
-      result(FlutterError(completed_future.error_message()));
+      result(CloudFirestorePlugin::ParseError(completed_future));
       return;
     }
   });
@@ -1112,7 +1226,7 @@ void CloudFirestorePlugin::QueryGet(
                                     GetServerTimestampBehaviorFromPigeon(
                                         options.server_timestamp_behavior())));
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(CloudFirestorePlugin::ParseError(completed_future));
         }
       });
 }
@@ -1146,7 +1260,7 @@ void CloudFirestorePlugin::AggregateQueryCount(
               completed_future.result();
           result(static_cast<double>(aggregateQuerySnapshot->count()));
         } else {
-          result(FlutterError(completed_future.error_message()));
+          result(CloudFirestorePlugin::ParseError(completed_future));
         }
       });
 }
@@ -1198,7 +1312,7 @@ void CloudFirestorePlugin::WriteBatchCommit(
       if (completed_future.error() == firebase::firestore::kErrorOk) {
         result(std::nullopt);
       } else {
-        result(FlutterError(completed_future.error_message()));
+        result(CloudFirestorePlugin::ParseError(completed_future));
       }
     });
 
@@ -1269,6 +1383,7 @@ class QuerySnapshotStreamHandler
             events_->Success(toListResult);
           } else {
             events_->Error("Error parsing QuerySnapshot");
+            events_->EndOfStream();
           }
         });
     return nullptr;
@@ -1277,6 +1392,7 @@ class QuerySnapshotStreamHandler
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
     listener_.Remove();
+    events_->EndOfStream();
     return nullptr;
   }
 
@@ -1314,10 +1430,11 @@ class DocumentSnapshotStreamHandler
     : public flutter::StreamHandler<flutter::EncodableValue> {
  public:
   DocumentSnapshotStreamHandler(
-      DocumentReference* reference, bool includeMetadataChanges,
+      std::unique_ptr<DocumentReference> reference,
+      bool includeMetadataChanges,
       firebase::firestore::DocumentSnapshot::ServerTimestampBehavior
           serverTimestampBehavior) {
-    reference_ = reference;
+    reference_ = std::move(reference);
     includeMetadataChanges_ = includeMetadataChanges;
     serverTimestampBehavior_ = serverTimestampBehavior;
   }
@@ -1331,18 +1448,27 @@ class DocumentSnapshotStreamHandler
                                           ? MetadataChanges::kInclude
                                           : MetadataChanges::kExclude;
 
+    events_ = std::move(events);
+
     listener_ = reference_->AddSnapshotListener(
         metadataChanges,
-        [&events, serverTimestampBehavior = serverTimestampBehavior_,
+        [this, serverTimestampBehavior = serverTimestampBehavior_,
          metadataChanges](const firebase::firestore::DocumentSnapshot& snapshot,
                           firebase::firestore::Error error,
                           const std::string& errorMessage) mutable {
           if (error == firebase::firestore::kErrorOk) {
-            events->Success(
+            events_->Success(
                 ParseDocumentSnapshot(snapshot, serverTimestampBehavior)
                     .ToEncodableList());
           } else {
-            events->Error("Error parsing Dpciùe,tSnapshot");
+            EncodableMap details;
+            details[EncodableValue("code")] =
+                EncodableValue(CloudFirestorePlugin::GetErrorCode(error));
+            details[EncodableValue("message")] =
+                EncodableValue(errorMessage);
+
+            events_->Error("firebase_firestore", errorMessage, details);
+            events_->EndOfStream();
           }
         });
     return nullptr;
@@ -1351,12 +1477,14 @@ class DocumentSnapshotStreamHandler
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
     listener_.Remove();
+    events_->EndOfStream();
     return nullptr;
   }
 
  private:
   firebase::firestore::ListenerRegistration listener_;
-  DocumentReference* reference_;
+  std::unique_ptr<DocumentReference> reference_;
+  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events_;
   bool includeMetadataChanges_;
   firebase::firestore::DocumentSnapshot::ServerTimestampBehavior
       serverTimestampBehavior_;
@@ -1367,15 +1495,20 @@ void CloudFirestorePlugin::DocumentReferenceSnapshot(
     bool include_metadata_changes,
     std::function<void(ErrorOr<std::string> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
-  DocumentReference documentReference = firestore->Document(parameters.path());
+  std::unique_ptr<DocumentReference> documentReference =
+      std::make_unique<DocumentReference>(
+      firestore->Document(parameters.path()));
+
+
   auto document_snapshot_handler =
       std::make_unique<DocumentSnapshotStreamHandler>(
-          &documentReference, include_metadata_changes,
+          std::move(documentReference), include_metadata_changes,
           GetServerTimestampBehaviorFromPigeon(
               *parameters.server_timestamp_behavior()));
 
-  std::string channelName = RegisterEventChannel(
-      METHOD_CHANNEL_NAME, std::move(document_snapshot_handler));
+  std::string channelName =
+      RegisterEventChannel("plugins.flutter.io/firebase_firestore/document/",
+                           std::move(document_snapshot_handler));
   result(channelName);
 }
 

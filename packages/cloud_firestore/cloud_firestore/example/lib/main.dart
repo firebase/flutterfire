@@ -20,6 +20,19 @@ Future<void> main() async {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
 
+  final firestore = FirebaseFirestore.instance;
+
+          DocumentReference<Map<String, dynamic>> document =
+              firestore.doc('not-allowed/document');
+
+          try {
+            await document.delete();
+          } catch (error) {
+            print(error);
+          }
+
+
+
   runApp(FirestoreExampleApp());
 }
 

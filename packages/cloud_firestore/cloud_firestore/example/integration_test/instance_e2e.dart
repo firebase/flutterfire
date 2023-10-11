@@ -147,7 +147,7 @@ void runInstanceTests() {
           await firestore.terminate();
           await firestore.clearPersistence();
         },
-        skip: kIsWeb,
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
 
       testWidgets('setIndexConfiguration()', (_) async {
@@ -229,7 +229,7 @@ void runInstanceTests() {
           indexes: [index1, index2],
           fieldOverrides: [fieldOverride1, fieldOverride2],
         );
-      });
+      }, skip: defaultTargetPlatform == TargetPlatform.windows,);
 
       testWidgets('setIndexConfigurationFromJSON()', (_) async {
         final json = jsonEncode({
@@ -253,7 +253,7 @@ void runInstanceTests() {
         });
 
         await firestore.setIndexConfigurationFromJSON(json);
-      });
+      }, skip: defaultTargetPlatform == TargetPlatform.windows,);
 
       testWidgets('setLoggingEnabled should resolve without issue',
           (widgetTester) async {

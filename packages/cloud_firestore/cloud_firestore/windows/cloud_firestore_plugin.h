@@ -30,6 +30,10 @@ class CloudFirestorePlugin : public flutter::Plugin,
 
   virtual ~CloudFirestorePlugin();
 
+  static std::string GetErrorCode(firebase::firestore::Error authError);
+
+  static FlutterError ParseError(const firebase::FutureBase& completed_future);
+
   // Disallow copy and assign.
   CloudFirestorePlugin(const CloudFirestorePlugin&) = delete;
   CloudFirestorePlugin& operator=(const CloudFirestorePlugin&) = delete;

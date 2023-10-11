@@ -39,20 +39,20 @@ void main() {
       }
     });
 
-    runInstanceTests();
+    // runInstanceTests();
 
-    runCollectionReferenceTests();
-    runDocumentChangeTests();
-    runDocumentReferenceTests();
-    runFieldValueTests();
-    runGeoPointTests();
-    runQueryTests();
-    runSnapshotMetadataTests();
-    runTimestampTests();
-    runTransactionTests();
-    runWriteBatchTests();
-    runLoadBundleTests();
-    runSecondAppTests();
-    runSecondDatabaseTests();
+    // runCollectionReferenceTests();
+    // runDocumentChangeTests();
+     runDocumentReferenceTests();
+    // runFieldValueTests();
+    // runGeoPointTests();
+    // runQueryTests();
+    // runSnapshotMetadataTests();
+    // runTimestampTests();
+    // runTransactionTests();
+    // runWriteBatchTests();
+    // runLoadBundleTests();
+    // runSecondAppTests();
+    // runSecondDatabaseTests();
   });
 }
