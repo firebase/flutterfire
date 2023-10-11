@@ -52,7 +52,20 @@ public class FlutterFirebaseStoragePlugin
   private final Map<String, EventChannel> eventChannels = new HashMap<>();
   private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
 
-  static Map<String, Object> parseMetadata(StorageMetadata storageMetadata) {
+  static Map<String, String> getExceptionDetails(Exception exception) {
+    Map<String, String> details = new HashMap<>();
+    GeneratedAndroidFirebaseStorage.FlutterError storageException = FlutterFirebaseStorageException
+        .parserExceptionToFlutter(exception);
+
+    if (storageException != null) {
+      details.put("code", storageException.code);
+      details.put("message", storageException.getMessage());
+    }
+
+    return details;
+  }
+
+  static Map<String, Object> parseMetadataToMap(StorageMetadata storageMetadata) {
     if (storageMetadata == null) {
       return null;
     }
@@ -267,7 +280,8 @@ public class FlutterFirebaseStoragePlugin
   }
 
   @Override
-  public void useStorageEmulator(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app, @NonNull String host,
+  public void useStorageEmulator(@NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
+      @NonNull String host,
       @NonNull Long port,
       @NonNull GeneratedAndroidFirebaseStorage.Result<Void> result) {
     try {
@@ -335,7 +349,7 @@ public class FlutterFirebaseStoragePlugin
   }
 
   GeneratedAndroidFirebaseStorage.PigeonFullMetaData convertToPigeonMetaData(StorageMetadata meteData) {
-    return new GeneratedAndroidFirebaseStorage.PigeonFullMetaData.Builder().setMetadata(parseMetadata(meteData))
+    return new GeneratedAndroidFirebaseStorage.PigeonFullMetaData.Builder().setMetadata(parseMetadataToMap(meteData))
         .build();
   }
 
@@ -643,7 +657,7 @@ public class FlutterFirebaseStoragePlugin
     result.success(null);
   }
 
-  private StorageMetadata parseMetadata(Map<String, Object> metadata) {
+  private StorageMetadata parseToStorageMetadata(Map<String, Object> metadata) {
     if (metadata == null) {
       return null;
     }

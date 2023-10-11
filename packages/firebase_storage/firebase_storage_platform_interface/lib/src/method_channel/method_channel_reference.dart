@@ -173,6 +173,7 @@ class MethodChannelReference extends ReferencePlatform {
       contentEncoding: data.contentEncoding,
       contentLanguage: data.contentLanguage,
       contentType: data.contentType,
+      customMetadata: data.customMetadata,
     );
   }
 
