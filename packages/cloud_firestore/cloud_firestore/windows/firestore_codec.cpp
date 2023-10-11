@@ -77,7 +77,7 @@ void cloud_firestore_windows::FirestoreCodec::WriteValue(
 flutter::EncodableValue
 cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
     uint8_t type, flutter::ByteStreamReader* stream) const {
-  switch (type) {
+    switch (type) {
     case DATA_TYPE_DATE_TIME: {
       int64_t value;
       stream->ReadBytes(reinterpret_cast<uint8_t*>(&value),
@@ -95,6 +95,22 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
 
       return CustomEncodableValue(
           FieldValue::Timestamp(Timestamp(seconds, nanoseconds)));
+    }
+    case DATA_TYPE_DOCUMENT_REFERENCE: {
+      auto customValue =
+          std::get<CustomEncodableValue>(FirestoreCodec::ReadValue(stream));
+
+      Firestore* firestoreRef =
+          std::any_cast<Firestore*>(customValue);
+
+
+
+        std::string path =
+            std::get<std::string>(FirestoreCodec::ReadValue(stream));
+
+
+        DocumentReference reference = firestoreRef->Document(path);
+        return CustomEncodableValue(reference);
     }
     case DATA_TYPE_GEO_POINT: {
       double latitude;
@@ -177,21 +193,18 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
               std::get<CustomEncodableValue>(
                   FirestoreCodec::ReadValue(stream)));
 
-      // Print out the settings
-      std::cout << "Host: " << settings.host() << std::endl;
-
-      if (CloudFirestorePlugin::firestoreInstances_[appName] != nullptr) {
+      if (CloudFirestorePlugin::firestoreInstances_.find(appName) !=
+        CloudFirestorePlugin::firestoreInstances_.end()) {
         return CustomEncodableValue(
-            CloudFirestorePlugin::firestoreInstances_[appName]);
+            &CloudFirestorePlugin::firestoreInstances_[appName]);
       }
 
-      firebase::AppOptions options;
-
-      options.set_database_url(databaseUrl.c_str());
-
-      firebase::App* app = firebase::App::Create(options, appName.c_str());
+        firebase::App* app = firebase::App::GetInstance(appName.c_str());
 
       Firestore* firestore = Firestore::GetInstance(app);
+        firestore->set_settings(settings);
+
+        CloudFirestorePlugin::firestoreInstances_[appName] = firestore;
 
       return CustomEncodableValue(firestore);
     }
@@ -203,11 +216,57 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
     case DATA_TYPE_FIRESTORE_SETTINGS: {
       flutter::EncodableMap settingsMap =
           std::get<flutter::EncodableMap>(FirestoreCodec::ReadValue(stream));
-      return CustomEncodableValue(firebase::firestore::Settings());
+
+      firebase::firestore::Settings settings;
+
+      std::map<std::string, flutter::EncodableValue> map;
+
+      for (const auto& kv : settingsMap) {
+        if (std::holds_alternative<std::string>(kv.first)) {
+          std::string key = std::get<std::string>(kv.first);
+
+          if (!std::holds_alternative<std::monostate>(kv.second)) {
+            map[key] = kv.second;
+          }
+        } else {
+          // Handle or skip non-string keys
+          // You may throw an exception or handle this some other way
+          throw std::runtime_error("Unsupported key type");
+        }
+      }
+
+
+      if (map.count("persistenceEnabled")) {
+        bool persistEnabled = std::get<bool>(map["persistenceEnabled"]);
+
+        // This is the maximum amount of cache allowed. We use the same number
+        // on android.
+        int64_t size = 104857600;
+
+        if (map.count("cacheSizeBytes")) {
+          int64_t cacheSizeBytes = std::get<int64_t>(map["cacheSizeBytes"]);
+          if (cacheSizeBytes != -1) {
+            size = cacheSizeBytes;
+          }
+        }
+
+        if (persistEnabled) {
+          settings.set_cache_size_bytes(size);
+        }
+      }
+
+      if (map.count("host")) {
+        settings.set_host(std::get<std::string>(map["host"]));
+
+        settings.set_ssl_enabled(false); 
+      }
+
+      return CustomEncodableValue(settings);
     }
 
     case DATA_TYPE_NAN: {
-      return CustomEncodableValue(std::nan(""));
+      double myNaN = std::nan("1");
+      return CustomEncodableValue(myNaN);
     }
 
     case DATA_TYPE_INFINITY: {

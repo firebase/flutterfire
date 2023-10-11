@@ -23,13 +23,41 @@ Future<void> main() async {
   final firestore = FirebaseFirestore.instance;
 
           DocumentReference<Map<String, dynamic>> document =
-              firestore.doc('not-allowed/document');
+              firestore.doc('flutter-tests/document-set-merge');
 
-          try {
-            await document.delete();
-          } catch (error) {
-            print(error);
-          }
+        await document.set({
+          'string': 'foo bar',
+          'number_32': 123,
+          // Equivalent of `Number.MAX_SAFE_INTEGER` in JS, can't go higher than this.
+          'number_64': 9007199254740991,
+           'bool_true': true,
+           'bool_false': false,
+           'map': {
+             'foo': 'bar',
+             'bar': {'baz': 'ben'},
+           },
+           'list': [
+             1,
+             '2',
+             true,
+             false,
+             {'foo': 'bar'},
+           ],
+           'null': null,
+           'timestamp': Timestamp.now(),
+           'geopoint': const GeoPoint(1, 2),
+          'reference': firestore.doc('foo/bar'),
+           'nan': double.nan,
+           'infinity': double.infinity,
+           'negative_infinity': double.negativeInfinity,
+        });
+
+        print("Document set");
+
+        DocumentSnapshot<Map<String, dynamic>> snapshot = await document.get();
+        Map<String, dynamic> data = snapshot.data()!;
+        print(data);
+
 
 
 

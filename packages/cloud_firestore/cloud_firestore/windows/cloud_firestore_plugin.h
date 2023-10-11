@@ -141,7 +141,7 @@ class CloudFirestorePlugin : public flutter::Plugin,
 firebase::firestore::MapFieldValue ConvertToMapFieldValue(
     const flutter::EncodableMap& originalMap);
 
-std::vector<std::string> ConvertToFieldPathVector(
+std::vector<firebase::firestore::FieldPath> ConvertToFieldPathVector(
     const flutter::EncodableList& encodableList);
 
 }  // namespace cloud_firestore_windows

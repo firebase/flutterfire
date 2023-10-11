@@ -120,8 +120,7 @@ Firestore* GetFirestoreFromPigeon(const PigeonFirebaseApp& pigeonApp) {
 
   Firestore* firestore = Firestore::GetInstance(app);
 
-  std::unique_ptr<firebase::firestore::Settings> settings =
-      std::make_unique<firebase::firestore::Settings>();
+  firebase::firestore::Settings settings;
 
   if (pigeonApp.settings().persistence_enabled()) {
     bool persistEnabled = pigeonApp.settings().persistence_enabled();
@@ -138,23 +137,20 @@ Firestore* GetFirestoreFromPigeon(const PigeonFirebaseApp& pigeonApp) {
     }
 
     if (persistEnabled) {
-      settings->set_cache_size_bytes(size);
+      settings.set_cache_size_bytes(size);
     }
   }
 
   if (pigeonApp.settings().host()) {
-    settings->set_host(*pigeonApp.settings().host());
+    settings.set_host(*pigeonApp.settings().host());
 
     // Only allow changing ssl if host is also specified.
-    settings->set_ssl_enabled(false);
+    settings.set_ssl_enabled(false);
   }
 
-  firestore->set_settings(*settings);
+  firestore->set_settings(settings);
 
-  if (CloudFirestorePlugin::firestoreInstances_.find(pigeonApp.app_name()) ==
-      CloudFirestorePlugin::firestoreInstances_.end()) {
-    CloudFirestorePlugin::firestoreInstances_[pigeonApp.app_name()] = firestore;
-  }
+  CloudFirestorePlugin::firestoreInstances_[pigeonApp.app_name()] = firestore;
 
   return firestore;
 }
@@ -396,6 +392,7 @@ PigeonQuerySnapshot ParseQuerySnapshot(
   return pigeonQuerySnapshot;
 }
 
+
 firebase::firestore::FieldValue ConvertToFieldValue(
     const EncodableValue& variant) {
   if (std::holds_alternative<std::monostate>(variant)) {
@@ -424,6 +421,34 @@ firebase::firestore::FieldValue ConvertToFieldValue(
     firebase::firestore::MapFieldValue convertedMap =
         ConvertToMapFieldValue(map);
     return firebase::firestore::FieldValue::Map(convertedMap);
+  } else if (std::holds_alternative<flutter::CustomEncodableValue>(variant)) {
+    const CustomEncodableValue& custom_value =
+        std::get<CustomEncodableValue>(variant);
+
+    using firebase::Timestamp;
+
+    if (custom_value.type() == typeid(firebase::firestore::FieldValue::Timestamp)) {
+      const firebase::firestore::FieldValue& timestamp =
+          std::any_cast<firebase::firestore::FieldValue>(
+              custom_value);
+      return timestamp;
+    }
+    else if (custom_value.type() == typeid(firebase::firestore::DocumentReference)) {
+      const firebase::firestore::DocumentReference& documentReference =
+        std::any_cast<firebase::firestore::DocumentReference>(
+              custom_value);
+      return firebase::firestore::FieldValue::Reference(documentReference);
+    }
+    // check if nan and store it in number
+    else if (custom_value.type() == typeid(double)) {
+      const double& number =
+        std::any_cast<double>(custom_value);
+      return firebase::firestore::FieldValue::Double(number);
+    }
+
+    const firebase::firestore::FieldValue& anyField =
+        std::any_cast<firebase::firestore::FieldValue>(custom_value);
+    return anyField;
   } else {
     // Add more types as needed
     // You may throw an exception or handle this some other way
@@ -705,7 +730,6 @@ class SnapshotInSyncStreamHandler
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
     listener_.Remove();
-
     events_->EndOfStream();
     return nullptr;
   }
@@ -822,7 +846,7 @@ class TransactionStreamHandler
                     } else if (command.option()->merge_fields()) {
                       transaction.Set(
                           reference, ConvertToMapFieldValue(*command.data()),
-                          SetOptions::MergeFields(ConvertToFieldPathVector(
+                          SetOptions::MergeFieldPaths(ConvertToFieldPathVector(
                               *command.option()->merge_fields())));
                     } else {
                       transaction.Set(reference,
@@ -867,6 +891,7 @@ class TransactionStreamHandler
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
     std::unique_lock<std::mutex> lock(mtx_);
     cv_.notify_one();
+    events_->EndOfStream();
     return nullptr;
   }
 
@@ -964,15 +989,21 @@ void CloudFirestorePlugin::TransactionGet(
 using firebase::firestore::DocumentReference;
 using firebase::firestore::SetOptions;
 
-std::vector<std::string> ConvertToFieldPathVector(
+std::vector<firebase::firestore::FieldPath> ConvertToFieldPathVector(
     const flutter::EncodableList& encodableList) {
-  std::vector<std::string> fieldVector;
+  std::vector<firebase::firestore::FieldPath> fieldVector;
 
   for (const auto& element : encodableList) {
-    std::string fieldPath = std::get<std::string>(element);
+    flutter::EncodableList fieldPath =
+        std::get<flutter::EncodableList>(element);
+
+    std::vector<std::string> convertedList;
+    for (const auto& field : fieldPath) {
+      convertedList.push_back(std::get<std::string>(field));
+    }
 
     // Was already converted by the Codec
-    fieldVector.push_back(fieldPath);
+    fieldVector.push_back(firebase::firestore::FieldPath(convertedList));
   }
 
   return fieldVector;
@@ -993,7 +1024,7 @@ void CloudFirestorePlugin::DocumentReferenceSet(
   } else if (request.option()->merge_fields()) {
     future = document_reference.Set(
         ConvertToMapFieldValue(*request.data()),
-        SetOptions::MergeFields(
+        SetOptions::MergeFieldPaths(
             ConvertToFieldPathVector(*request.option()->merge_fields())));
   } else {
     future = document_reference.Set(ConvertToMapFieldValue(*request.data()));
@@ -1299,7 +1330,7 @@ void CloudFirestorePlugin::WriteBatchCommit(
                       firebase::firestore::SetOptions::Merge());
           } else if (options->merge_fields()) {
             batch.Set(documentReference, ConvertToMapFieldValue(*data),
-                      SetOptions::MergeFields(
+                      SetOptions::MergeFieldPaths(
                           ConvertToFieldPathVector(*options->merge_fields())));
           } else {
             batch.Set(documentReference, ConvertToMapFieldValue(*data));
