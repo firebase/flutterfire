@@ -60,20 +60,8 @@ abstract class MethodChannelTask extends TaskPlatform {
             _completer?.complete(snapshot);
           }
         }
-      } catch (exception) {
-        // TODO this should be refactored to use `convertPlatformException`,
-        // then change receiveBroadcastStream -> receiveGuardedBroadedStream
-        if (exception is! Exception || exception is! PlatformException) {
-          developer.log('TaskMethodChannel, got general exception');
-          rethrow;
-        }
-
-        _didComplete = true;
-
-        throw FirebaseException(
-            plugin: 'firebase_storage',
-            code: 'task-state-error',
-            message: exception.message);
+      } catch (exception, stack) {
+        convertPlatformException(exception, stack);
       }
     }
 

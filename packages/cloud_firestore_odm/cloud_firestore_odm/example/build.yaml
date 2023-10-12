@@ -15,6 +15,7 @@ targets:
             - lib/**
         options:
           create_field_map: true
+          create_per_field_to_json: true
       source_gen|combining_builder:
         options:
           ignore_for_file:

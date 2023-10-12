@@ -10,19 +10,12 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:recase/recase.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:source_helper/source_helper.dart';
 
 import 'collection_generator.dart';
 import 'names.dart';
 
 const collectionChecker = TypeChecker.fromRuntime(Collection);
-const dateTimeChecker = TypeChecker.fromRuntime(DateTime);
-const timestampChecker = TypeChecker.fromUrl(
-  'package:cloud_firestore_platform_interface/src/timestamp.dart#Timestamp',
-);
-const geoPointChecker = TypeChecker.fromUrl(
-  'package:cloud_firestore_platform_interface/src/geo_point.dart#GeoPoint',
-);
-
 const jsonSerializableChecker = TypeChecker.fromRuntime(JsonSerializable);
 const freezedChecker = TypeChecker.fromRuntime(Freezed);
 
@@ -92,6 +85,7 @@ class CollectionData with Names {
     required this.queryableFields,
     required this.fromJson,
     required this.toJson,
+    required this.perFieldToJson,
     required this.idKey,
     required this.libraryElement,
   }) : collectionName =
@@ -116,9 +110,6 @@ class CollectionData with Names {
 
     final type = CollectionData.modelTypeOfAnnotation(annotation);
 
-    final hasJsonSerializable =
-        jsonSerializableChecker.hasAnnotationOf(type.element!);
-
     if (type is DynamicType) {
       throw InvalidGenerationSourceError(
         'The annotation @Collection was used, but no generic type was specified. ',
@@ -135,7 +126,7 @@ class CollectionData with Names {
       );
     }
 
-    final hasFreezed = freezedChecker.hasAnnotationOf(type.element!);
+    final hasFreezed = freezedChecker.hasAnnotationOf(collectionTargetElement);
     final redirectedFreezedConstructors =
         collectionTargetElement.constructors.where(
       (element) {
@@ -146,30 +137,24 @@ class CollectionData with Names {
       },
     ).toList();
 
-    // TODO throw when using json_serializable if the Model type and
-    // the collection are defined in separate libraries
-
-    // TODO test error handling
-    if (redirectedFreezedConstructors.length > 1) {
+    final hasJsonSerializable =
+        jsonSerializableChecker.hasAnnotationOf(collectionTargetElement);
+    // Freezed classes are also JsonSerializable
+    if (!hasJsonSerializable && !hasFreezed) {
       throw InvalidGenerationSourceError(
-        'Union types when using @freezed are currently unsupported. Use a single constructor instead',
-        element: annotatedElement,
+        'Used @Collection with the class ${collectionTargetElement.name}, but '
+        'the class has no @JsonSerializable annotation.',
       );
     }
 
     final annotatedElementSource = annotatedElement.librarySource;
-
     // TODO(rrousselGit) handle parts
     // Whether the model class and the reference variable are defined in the same file
     // This is important because json_serializable generates private code for
     // decoding a Model class.
     final modelAndReferenceInTheSameLibrary =
         collectionTargetElement.librarySource == annotatedElementSource;
-
-    final fromJson = collectionTargetElement.constructors.firstWhereOrNull(
-      (ctor) => ctor.name == 'fromJson',
-    );
-    if (hasJsonSerializable && !modelAndReferenceInTheSameLibrary) {
+    if (!modelAndReferenceInTheSameLibrary) {
       throw InvalidGenerationSourceError(
         '''
 When using json_serializable, the `@Collection` annotation and the class that
@@ -182,16 +167,18 @@ represents the content of the collection must be in the same file.
       );
     }
 
-    if ((!hasJsonSerializable || !modelAndReferenceInTheSameLibrary) &&
-        fromJson == null) {
+    // TODO test error handling
+    if (redirectedFreezedConstructors.length > 1) {
       throw InvalidGenerationSourceError(
-        'Used @Collection with the class ${collectionTargetElement.name}, but '
-        'the class has no `fromJson` constructor.',
-        todo: 'Add a `fromJson` constructor to ${collectionTargetElement.name}',
+        'Union types when using @freezed are currently unsupported. Use a single constructor instead',
         element: annotatedElement,
       );
     }
 
+    final collectionTargetElementPublicType =
+        collectionTargetElement.name.public;
+    final fromJson = collectionTargetElement.constructors
+        .firstWhereOrNull((ctor) => ctor.name == 'fromJson');
     if (fromJson != null) {
       if (fromJson.parameters.length != 1 ||
           !fromJson.parameters.first.isRequiredPositional ||
@@ -204,20 +191,17 @@ represents the content of the collection must be in the same file.
         );
       }
     }
-
     final toJson = collectionTargetElement
         // Looking into fromJson from superTypes too
         .allMethods
         .firstWhereOrNull((method) => method.name == 'toJson');
-    if (!hasJsonSerializable && toJson == null) {
-      throw InvalidGenerationSourceError(
-        'Used @Collection with the class ${collectionTargetElement.name}, but '
-        'the class has no `toJson` method.',
-        todo: 'Add a `toJson` method to ${collectionTargetElement.name}',
-        element: annotatedElement,
-      );
-    }
-
+    final redirectedFreezedClass = redirectedFreezedConstructors
+        .singleOrNull?.redirectedConstructor!.enclosingElement.name;
+    final generatedJsonTypePrefix = _generatedJsonTypePrefix(
+      hasFreezed: hasFreezed,
+      redirectedFreezedClass: redirectedFreezedClass,
+      collectionTargetElementPublicType: collectionTargetElementPublicType,
+    );
     if (toJson != null) {
       if (toJson.parameters.isNotEmpty || !toJson.returnType.isDartCoreMap) {
         // TODO support serializing generic objects
@@ -228,7 +212,6 @@ represents the content of the collection must be in the same file.
         );
       }
     }
-
     final data = CollectionData(
       type: type,
       path: path,
@@ -237,12 +220,14 @@ represents the content of the collection must be in the same file.
       libraryElement: libraryElement,
       fromJson: (json) {
         if (fromJson != null) return '$type.fromJson($json)';
-        return '_\$${type.toString().public}FromJson($json)';
+        return '${generatedJsonTypePrefix}FromJson($json)';
       },
       toJson: (value) {
         if (toJson != null) return '$value.toJson()';
-        return '_\$${type.toString().public}ToJson($value)';
+        return '${generatedJsonTypePrefix}ToJson($value)';
       },
+      perFieldToJson: (field) =>
+          '${generatedJsonTypePrefix}PerFieldToJson.$field',
       idKey: collectionTargetElement
           .allFields(
             hasFreezed: hasFreezed,
@@ -263,29 +248,17 @@ represents the content of the collection must be in the same file.
               freezedConstructors: redirectedFreezedConstructors,
             )
             .where((f) => f.isPublic)
-            .where((f) => _isSupportedType(f.type))
             .where((f) => !f.hasId())
             .where((f) => !f.isJsonIgnored())
             .map(
-          (e) {
-            var key = "'${e.name}'";
-
-            if (hasFreezed) {
-              key =
-                  // two $ because both Freezed and json_serializable add one
-                  '_\$\$${redirectedFreezedConstructors.single.redirectedConstructor!.enclosingElement.name}FieldMap[$key]!';
-            } else if (hasJsonSerializable) {
-              key = '_\$${collectionTargetElement.name.public}FieldMap[$key]!';
-            }
-
-            return QueryingField(
-              e.name,
-              e.type,
-              updatable: true,
-              field: key,
-            );
-          },
-        ).toList(),
+              (f) => QueryingField(
+                f.name,
+                f.type,
+                updatable: true,
+                field: "${generatedJsonTypePrefix}FieldMap['${f.name}']!",
+              ),
+            )
+            .toList(),
       ],
     );
 
@@ -349,18 +322,16 @@ represents the content of the collection must be in the same file.
     return (annotation.type! as ParameterizedType).typeArguments.first;
   }
 
-  static bool _isSupportedType(DartType type) {
-    return type.isDartCoreString ||
-        type.isDartCoreNum ||
-        type.isDartCoreInt ||
-        type.isDartCoreDouble ||
-        type.isDartCoreBool ||
-        type.isSupportedPrimitiveIterable ||
-        type.isJsonDocumentReference ||
-        dateTimeChecker.isAssignableFromType(type) ||
-        timestampChecker.isAssignableFromType(type) ||
-        geoPointChecker.isAssignableFromType(type);
-    // TODO filter list other than List<string|bool|num>
+  static String _generatedJsonTypePrefix({
+    required bool hasFreezed,
+    required String? redirectedFreezedClass,
+    required String collectionTargetElementPublicType,
+  }) {
+    if (hasFreezed) {
+      return '_\$\$$redirectedFreezedClass';
+    } else {
+      return '_\$$collectionTargetElementPublicType';
+    }
   }
 
   @override
@@ -385,6 +356,7 @@ represents the content of the collection must be in the same file.
 
   String Function(String json) fromJson;
   String Function(String value) toJson;
+  String Function(String field) perFieldToJson;
 
   @override
   String toString() {
@@ -450,9 +422,9 @@ extension DartTypeExtension on DartType {
         (this as InterfaceType).typeArguments.single.isDartCoreMap;
   }
 
-  bool get isSupportedIterable =>
-      _coreListChecker.isExactlyType(this) ||
-      _coreSetChecker.isExactlyType(this);
+  bool get isList => _coreListChecker.isExactlyType(this);
+  bool get isSet => _coreSetChecker.isExactlyType(this);
+  bool get isSupportedIterable => isList || isSet;
 
   bool get isSupportedPrimitiveIterable {
     if (!isSupportedIterable) return false;
@@ -463,6 +435,7 @@ extension DartTypeExtension on DartType {
         generic.isDartCoreString ||
         generic.isDartCoreBool ||
         generic.isDartCoreObject ||
+        generic.isEnum ||
         generic is DynamicType;
   }
 }

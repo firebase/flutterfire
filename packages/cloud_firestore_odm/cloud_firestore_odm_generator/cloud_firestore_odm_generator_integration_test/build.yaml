@@ -4,3 +4,4 @@ targets:
       json_serializable:
         options:
           create_field_map: true
+          create_per_field_to_json: true

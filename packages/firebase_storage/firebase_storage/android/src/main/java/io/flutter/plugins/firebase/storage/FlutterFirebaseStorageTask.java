@@ -6,8 +6,7 @@
 
 package io.flutter.plugins.firebase.storage;
 
-import static io.flutter.plugins.firebase.storage.FlutterFirebaseStoragePlugin.getExceptionDetails;
-import static io.flutter.plugins.firebase.storage.FlutterFirebaseStoragePlugin.parseMetadata;
+import static io.flutter.plugins.firebase.storage.FlutterFirebaseStoragePlugin.parseMetadataToMap;
 
 import android.net.Uri;
 import android.os.Handler;
@@ -111,7 +110,7 @@ class FlutterFirebaseStorageTask {
     out.put("bytesTransferred", snapshot.getBytesTransferred());
     out.put("totalBytes", snapshot.getTotalByteCount());
     if (snapshot.getMetadata() != null) {
-      out.put("metadata", parseMetadata(snapshot.getMetadata()));
+      out.put("metadata", parseMetadataToMap(snapshot.getMetadata()));
     }
     return out;
   }
@@ -253,7 +252,7 @@ class FlutterFirebaseStorageTask {
       arguments.put("snapshot", parseTaskSnapshot(snapshot));
     }
     if (exception != null) {
-      arguments.put("error", getExceptionDetails(exception));
+      arguments.put("error", FlutterFirebaseStoragePlugin.getExceptionDetails(exception));
     }
     return arguments;
   }

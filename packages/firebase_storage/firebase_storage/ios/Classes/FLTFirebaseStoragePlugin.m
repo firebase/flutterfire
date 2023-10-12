@@ -4,7 +4,6 @@
 #import <TargetConditionals.h>
 
 #import <Firebase/Firebase.h>
-#import <FirebaseStorage/FIRStorageTypedefs.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 #import "FLTFirebaseStoragePlugin.h"
 #import "FLTTaskStateChannelStreamHandler.h"
@@ -333,7 +332,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     if (error != nil) {
       completion(nil, [self FlutterErrorFromNSError:error]);
     } else {
-      NSDictionary *dict = [self NSDictionaryFromFIRStorageMetadata:metadata];
+      NSDictionary *dict = [FLTFirebaseStoragePlugin NSDictionaryFromFIRStorageMetadata:metadata];
       completion([PigeonFullMetaData makeWithMetadata:dict], nil);
     }
   }];
@@ -531,7 +530,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     if (error != nil) {
       completion(nil, [self FlutterErrorFromNSError:error]);
     } else {
-      NSDictionary *dict = [self NSDictionaryFromFIRStorageMetadata:updatedMetadata];
+      NSDictionary *dict = [FLTFirebaseStoragePlugin NSDictionaryFromFIRStorageMetadata:updatedMetadata];
       completion([PigeonFullMetaData makeWithMetadata:dict], nil);
     }
   }];
@@ -651,7 +650,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                         [task removeObserverWithHandle:pauseHandle];
                         [task removeObserverWithHandle:successHandle];
                         [task removeObserverWithHandle:failureHandle];
-                        completion(YES, [self NSDictionaryFromFIRStorageTaskSnapshot:snapshot]);
+                        completion(YES, [FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot]);
                       }];
       successHandle = [task observeStatus:FIRStorageTaskStatusSuccess
                                   handler:^(FIRStorageTaskSnapshot *snapshot) {
@@ -689,7 +688,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                         [task removeObserverWithHandle:progressHandle];
                         [task removeObserverWithHandle:successHandle];
                         [task removeObserverWithHandle:failureHandle];
-                        completion(YES, [self NSDictionaryFromFIRStorageTaskSnapshot:snapshot]);
+                        completion(YES, [FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot]);
                       }];
       progressHandle =
           [task observeStatus:FIRStorageTaskStatusProgress
@@ -698,7 +697,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                         [task removeObserverWithHandle:progressHandle];
                         [task removeObserverWithHandle:successHandle];
                         [task removeObserverWithHandle:failureHandle];
-                        completion(YES, [self NSDictionaryFromFIRStorageTaskSnapshot:snapshot]);
+                        completion(YES, [FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot]);
                       }];
       successHandle = [task observeStatus:FIRStorageTaskStatusSuccess
                                   handler:^(FIRStorageTaskSnapshot *snapshot) {
@@ -743,7 +742,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                         [task removeObserverWithHandle:successHandle];
                         [task removeObserverWithHandle:failureHandle];
                         if (snapshot.error && snapshot.error.code == FIRStorageErrorCodeCancelled) {
-                          completion(YES, [self NSDictionaryFromFIRStorageTaskSnapshot:snapshot]);
+                          completion(YES, [FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot]);
                         } else {
                           completion(NO, nil);
                         }
@@ -911,18 +910,18 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     dictionary[@"error"] = [self NSDictionaryFromNSError:snapshot.error];
   } else {
     dictionary[kFLTFirebaseStorageKeySnapshot] =
-        [self NSDictionaryFromFIRStorageTaskSnapshot:snapshot];
+        [FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot];
   }
   return dictionary;
 }
 
-- (NSDictionary *)NSDictionaryFromFIRStorageTaskSnapshot:(FIRStorageTaskSnapshot *)snapshot {
++ (NSDictionary *)parseTaskSnapshot:(FIRStorageTaskSnapshot *)snapshot {
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
 
   dictionary[kFLTFirebaseStorageKeyPath] = snapshot.reference.fullPath;
 
   if (snapshot.metadata != nil) {
-    dictionary[@"metadata"] = [self NSDictionaryFromFIRStorageMetadata:snapshot.metadata];
+    dictionary[@"metadata"] = [FLTFirebaseStoragePlugin NSDictionaryFromFIRStorageMetadata:snapshot.metadata];
   }
 
   if (snapshot.progress != nil) {
@@ -1015,7 +1014,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   return [[FIRStorageMetadata alloc] initWithDictionary:metadata];
 }
 
-- (NSDictionary *)NSDictionaryFromFIRStorageMetadata:(FIRStorageMetadata *)metadata {
++ (NSDictionary *)NSDictionaryFromFIRStorageMetadata:(FIRStorageMetadata *)metadata {
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
 
   [dictionary setValue:[metadata name] forKey:kFLTFirebaseStorageKeyName];

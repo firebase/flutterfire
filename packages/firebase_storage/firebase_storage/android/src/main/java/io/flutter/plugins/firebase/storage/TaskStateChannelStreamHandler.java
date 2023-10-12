@@ -103,9 +103,7 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
   private Map<String, Object> getTaskEventMap(
     @Nullable Object snapshot, @Nullable Exception exception) {
     Map<String, Object> arguments = new HashMap<>();
-    //arguments.put("handle", handle);
     arguments.put(TASK_APP_NAME, androidStorage.getApp().getName());
-    //arguments.put("bucket", reference.getBucket());
     if (snapshot != null) {
       arguments.put(TASK_SNAPSHOT, FlutterFirebaseStorageTask.parseTaskSnapshot(snapshot));
     }

@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_odm_example/integration.dart';
+import 'package:cloud_firestore_odm_example/integration/enums.dart';
 import 'package:cloud_firestore_odm_example/movie.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -973,6 +974,83 @@ void main() {
           MovieCollectionReference(customFirestore).doc('123').comments,
         );
       });
+    });
+  });
+
+  group('enums', () {
+    test('enumValue', () async {
+      final collection = await initializeTest(EnumsCollectionReference());
+
+      await collection.add(Enums(id: 'A'));
+      await collection.add(Enums(id: 'B', enumValue: TestEnum.two));
+      await collection.add(Enums(id: 'C', enumValue: TestEnum.two));
+
+      final querySnap =
+          await collection.whereEnumValue(isEqualTo: TestEnum.two).get();
+
+      expect(
+        querySnap.docs.map((e) => e.data.id),
+        ['B', 'C'],
+      );
+    });
+
+    test('nullable enumValue', () async {
+      final collection = await initializeTest(EnumsCollectionReference());
+
+      await collection.add(Enums(id: 'A'));
+      await collection.add(Enums(id: 'B', nullableEnumValue: TestEnum.two));
+      await collection.add(Enums(id: 'C', nullableEnumValue: TestEnum.two));
+
+      final querySnap = await collection
+          .whereNullableEnumValue(isEqualTo: TestEnum.two)
+          .get();
+
+      expect(
+        querySnap.docs.map((e) => e.data.id),
+        ['B', 'C'],
+      );
+    });
+
+    test('enumList', () async {
+      final collection = await initializeTest(EnumsCollectionReference());
+
+      await collection
+          .add(Enums(id: 'A', enumList: [TestEnum.one, TestEnum.three]));
+      await collection
+          .add(Enums(id: 'B', enumList: [TestEnum.two, TestEnum.three]));
+      await collection
+          .add(Enums(id: 'C', enumList: [TestEnum.two, TestEnum.three]));
+
+      final querySnap =
+          await collection.whereEnumList(arrayContains: TestEnum.two).get();
+
+      expect(
+        querySnap.docs.map((e) => e.data.id),
+        ['B', 'C'],
+      );
+    });
+
+    test('nullable enumList', () async {
+      final collection = await initializeTest(EnumsCollectionReference());
+
+      await collection.add(
+        Enums(id: 'A', nullableEnumList: [TestEnum.one, TestEnum.three]),
+      );
+      await collection.add(
+        Enums(id: 'B', nullableEnumList: [TestEnum.two, TestEnum.three]),
+      );
+      await collection.add(
+        Enums(id: 'C', nullableEnumList: [TestEnum.two, TestEnum.three]),
+      );
+
+      final querySnap = await collection
+          .whereNullableEnumList(arrayContains: TestEnum.two)
+          .get();
+
+      expect(
+        querySnap.docs.map((e) => e.data.id),
+        ['B', 'C'],
+      );
     });
   });
 }

@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.firebase.messaging.RemoteMessage;
 import java.util.HashMap;
 
@@ -42,9 +41,7 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
     //      App in Foreground
     //   ------------------------
     if (FlutterFirebaseMessagingUtils.isApplicationForeground(context)) {
-      Intent onMessageIntent = new Intent(FlutterFirebaseMessagingUtils.ACTION_REMOTE_MESSAGE);
-      onMessageIntent.putExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, remoteMessage);
-      LocalBroadcastManager.getInstance(context).sendBroadcast(onMessageIntent);
+      FlutterFirebaseRemoteMessageLiveData.getInstance().postRemoteMessage(remoteMessage);
       return;
     }
 
