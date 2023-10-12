@@ -117,27 +117,27 @@
     // Limit
     id limit = parameters.limit;
     if (limit) {
-          query = [query queryLimitedTo:((NSNumber *)limit).intValue];
+      query = [query queryLimitedTo:((NSNumber *)limit).intValue];
     }
 
     // Limit To Last
     id limitToLast = parameters.limitToLast;
     if (limitToLast) {
-          query = [query queryLimitedToLast:((NSNumber *)limitToLast).intValue];
+      query = [query queryLimitedToLast:((NSNumber *)limitToLast).intValue];
     }
 
     // Ordering
     NSArray *orderBy = parameters.orderBy;
     if (!orderBy) {
-          // We return early if no ordering set as cursor queries below require at least one orderBy
-          // set
-          return query;
+      // We return early if no ordering set as cursor queries below require at least one orderBy
+      // set
+      return query;
     }
 
     for (NSArray *orderByParameters in orderBy) {
-          FIRFieldPath *fieldPath = (FIRFieldPath *)orderByParameters[0];
-          NSNumber *descending = orderByParameters[1];
-          query = [query queryOrderedByFieldPath:fieldPath descending:[descending boolValue]];
+      FIRFieldPath *fieldPath = (FIRFieldPath *)orderByParameters[0];
+      NSNumber *descending = orderByParameters[1];
+      query = [query queryOrderedByFieldPath:fieldPath descending:[descending boolValue]];
     }
 
     // Start At
@@ -165,15 +165,15 @@
 + (FIRFirestoreSource)parseSource:(Source)source {
   switch (source) {
     case SourceServerAndCache:
-          return FIRFirestoreSourceDefault;
+      return FIRFirestoreSourceDefault;
     case SourceServer:
-          return FIRFirestoreSourceServer;
+      return FIRFirestoreSourceServer;
     case SourceCache:
-          return FIRFirestoreSourceCache;
+      return FIRFirestoreSourceCache;
     default:
-          @throw [NSException exceptionWithName:@"Invalid Source"
-                                         reason:@"This source is not supported by the SDK"
-                                       userInfo:nil];
+      @throw [NSException exceptionWithName:@"Invalid Source"
+                                     reason:@"This source is not supported by the SDK"
+                                   userInfo:nil];
   }
 }
 
@@ -190,16 +190,16 @@
     (ServerTimestampBehavior)serverTimestampBehavior {
   switch (serverTimestampBehavior) {
     case ServerTimestampBehaviorNone:
-          return FIRServerTimestampBehaviorNone;
+      return FIRServerTimestampBehaviorNone;
     case ServerTimestampBehaviorEstimate:
-          return FIRServerTimestampBehaviorEstimate;
+      return FIRServerTimestampBehaviorEstimate;
     case ServerTimestampBehaviorPrevious:
-          return FIRServerTimestampBehaviorPrevious;
+      return FIRServerTimestampBehaviorPrevious;
     default:
-          @throw [NSException
-              exceptionWithName:@"Invalid Server Timestamp Behavior"
-                         reason:@"This Server Timestamp Behavior is not supported by the SDK"
-                       userInfo:nil];
+      @throw [NSException
+          exceptionWithName:@"Invalid Server Timestamp Behavior"
+                     reason:@"This Server Timestamp Behavior is not supported by the SDK"
+                   userInfo:nil];
   }
 }
 
@@ -221,15 +221,15 @@
 + (DocumentChangeType)toPigeonDocumentChangeType:(FIRDocumentChangeType)documentChangeType {
   switch (documentChangeType) {
     case FIRDocumentChangeTypeAdded:
-          return DocumentChangeTypeAdded;
+      return DocumentChangeTypeAdded;
     case FIRDocumentChangeTypeModified:
-          return DocumentChangeTypeModified;
+      return DocumentChangeTypeModified;
     case FIRDocumentChangeTypeRemoved:
-          return DocumentChangeTypeRemoved;
+      return DocumentChangeTypeRemoved;
     default:
-          @throw [NSException exceptionWithName:@"InvalidDocumentChangeType"
-                                         reason:@"Invalid document change type"
-                                       userInfo:nil];
+      @throw [NSException exceptionWithName:@"InvalidDocumentChangeType"
+                                     reason:@"Invalid document change type"
+                                   userInfo:nil];
   }
 }
 
