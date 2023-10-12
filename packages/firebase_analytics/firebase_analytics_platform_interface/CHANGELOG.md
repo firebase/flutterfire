@@ -1,3 +1,11 @@
+## 3.7.1
+
+ - Update a dependency to the latest release.
+
+## 3.7.0
+
+ - **FEAT**(firebase_analytics): support `getSessionId` for android and apple platforms ([#11478](https://github.com/firebase/flutterfire/issues/11478)). ([13aaf03d](https://github.com/firebase/flutterfire/commit/13aaf03dc2050514cea97023fae5c27491bcac8a))
+
 ## 3.6.5
 
  - Update a dependency to the latest release.

@@ -1,3 +1,13 @@
+## 0.2.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(app-check,web): support for `ReCaptchaEnterpriseProvider`. User facing API updated. ([#11573](https://github.com/firebase/flutterfire/issues/11573)). ([09825edd](https://github.com/firebase/flutterfire/commit/09825edd0e1ecd609e2046fdefda439ce4099087))
+
 ## 0.1.5+2
 
  - Update a dependency to the latest release.

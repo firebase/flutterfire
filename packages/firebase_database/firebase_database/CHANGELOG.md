@@ -1,3 +1,11 @@
+## 10.2.7
+
+ - **FIX**(database,apple): ensure platform channel is invoked on main thread ([#11650](https://github.com/firebase/flutterfire/issues/11650)). ([d7133997](https://github.com/firebase/flutterfire/commit/d71339978bdd662080daa0bff392ccd6dc366a53))
+
+## 10.2.6
+
+ - Update a dependency to the latest release.
+
 ## 10.2.5
 
  - Update a dependency to the latest release.

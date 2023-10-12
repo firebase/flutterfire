@@ -1,3 +1,11 @@
+## 1.4.7
+
+ - Update a dependency to the latest release.
+
+## 1.4.6
+
+ - **DOCS**(firebase_remote_config): Remove comment about defaults in `RemoteConfigSettings` ([#11502](https://github.com/firebase/flutterfire/issues/11502)). ([198201f5](https://github.com/firebase/flutterfire/commit/198201f5445c1ccc4eaf1040b4422f2992f5d31a))
+
 ## 1.4.5
 
  - Update a dependency to the latest release.

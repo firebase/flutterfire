@@ -4,7 +4,7 @@
 # customers of the plugin.
 cmake_minimum_required(VERSION 3.14)
 
-set(FIREBASE_SDK_VERSION "11.2.0")
+set(FIREBASE_SDK_VERSION "11.4.2")
 
 if (EXISTS $ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h)
     file(READ "$ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h" existing_version)
@@ -25,8 +25,8 @@ if(existing_version VERSION_EQUAL FIREBASE_SDK_VERSION)
     message(STATUS "Found Firebase SDK version ${existing_version}")
     set(FIREBASE_CPP_SDK_DIR $ENV{FIREBASE_CPP_SDK_DIR})
 else()
-    set(firebase_sdk_url "https://dl.google.com/firebase/sdk/cpp/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
-    set(firebase_sdk_filename "${CMAKE_BINARY_DIR}/firebase_cpp_sdk_${FIREBASE_SDK_VERSION}.zip")
+    set(firebase_sdk_url "https://dl.google.com/firebase/sdk/cpp/firebase_cpp_sdk_windows_${FIREBASE_SDK_VERSION}.zip")
+    set(firebase_sdk_filename "${CMAKE_BINARY_DIR}/firebase_cpp_sdk_windows_${FIREBASE_SDK_VERSION}.zip")
     set(extracted_path "${CMAKE_BINARY_DIR}/extracted")
     if(NOT EXISTS ${firebase_sdk_filename})
         file(DOWNLOAD ${firebase_sdk_url} ${firebase_sdk_filename}
@@ -44,7 +44,7 @@ else()
         file(ARCHIVE_EXTRACT INPUT ${firebase_sdk_filename}
              DESTINATION ${extracted_path})
     endif()
-    set(FIREBASE_CPP_SDK_DIR "${extracted_path}/firebase_cpp_sdk")
+    set(FIREBASE_CPP_SDK_DIR "${extracted_path}/firebase_cpp_sdk_windows")
 endif()
 
 # Project-level configuration.
@@ -65,7 +65,7 @@ list(APPEND PLUGIN_SOURCES
 
 # Define the plugin library target. Its name must not be changed (see comment
 # on PLUGIN_NAME above).
-add_library(${PLUGIN_NAME} SHARED
+add_library(${PLUGIN_NAME} STATIC
   "include/firebase_core/firebase_core_plugin_c_api.h"
   "firebase_core_plugin_c_api.cpp"
   ${PLUGIN_SOURCES}
@@ -82,7 +82,7 @@ apply_standard_settings(${PLUGIN_NAME})
 # exported should be explicitly exported with the FLUTTER_PLUGIN_EXPORT macro.
 set_target_properties(${PLUGIN_NAME} PROPERTIES
   CXX_VISIBILITY_PRESET hidden)
-target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
+target_compile_definitions(${PLUGIN_NAME} PUBLIC FLUTTER_PLUGIN_IMPL)
 
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.
@@ -90,7 +90,7 @@ set(MSVC_RUNTIME_MODE MD)
 add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${FIREBASE_CPP_SDK_DIR}/include")
-set(FIREBASE_LIBS firebase_app firebase_auth firebase_remote_config)
+set(FIREBASE_LIBS firebase_app)
 foreach(firebase_lib IN ITEMS ${FIREBASE_LIBS})
     get_target_property(firebase_lib_path ${firebase_lib} IMPORTED_LOCATION)
     string(REPLACE "Debug" "Release" firebase_lib_release_path ${firebase_lib_path})

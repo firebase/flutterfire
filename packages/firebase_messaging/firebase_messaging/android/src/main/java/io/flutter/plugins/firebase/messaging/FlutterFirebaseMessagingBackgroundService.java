@@ -14,6 +14,7 @@ import io.flutter.embedding.engine.FlutterShellArgs;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
 public class FlutterFirebaseMessagingBackgroundService extends JobIntentService {
@@ -29,8 +30,10 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
    * Schedule the message to be handled by the {@link FlutterFirebaseMessagingBackgroundService}.
    */
   public static void enqueueMessageProcessing(Context context, Intent messageIntent) {
-    RemoteMessage message = (RemoteMessage) messageIntent.getExtras().get("notification");
+    RemoteMessage message =
+        (RemoteMessage) Objects.requireNonNull(messageIntent.getExtras()).get("notification");
 
+    assert message != null;
     enqueueWork(
         context,
         FlutterFirebaseMessagingBackgroundService.class,

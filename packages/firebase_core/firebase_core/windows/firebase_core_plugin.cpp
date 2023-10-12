@@ -8,8 +8,6 @@
 #include <windows.h>
 
 #include "firebase/app.h"
-#include "firebase/auth.h"
-#include "firebase/remote_config.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -20,14 +18,14 @@
 
 #include <future>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
+
 using ::firebase::App;
-using ::firebase::auth::Auth;
-using ::firebase::remote_config::RemoteConfig;
 
 namespace firebase_core_windows {
 
@@ -42,25 +40,7 @@ void FirebaseCorePlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
 }
 
-void *FirebaseCorePlugin::GetFirebaseApp(std::string appName) {
-  return App::GetInstance(appName.c_str());
-}
-
-void *FirebaseCorePlugin::GetFirebaseAuth(std::string appName) {
-  App *app = App::GetInstance(appName.c_str());
-  if (app == nullptr) {
-    return nullptr;
-  }
-  return Auth::GetAuth(app);
-}
-
-void *FirebaseCorePlugin::GetFirebaseRemoteConfig(std::string appName) {
-  App *app = App::GetInstance(appName.c_str());
-  if (app == nullptr) {
-    return nullptr;
-  }
-  return RemoteConfig::GetInstance(app);
-}
+std::map<std::string, std::vector<std::string>> apps;
 
 FirebaseCorePlugin::FirebaseCorePlugin() {}
 
@@ -119,9 +99,23 @@ void FirebaseCorePlugin::InitializeApp(
     const PigeonFirebaseOptions &initialize_app_request,
     std::function<void(ErrorOr<PigeonInitializeResponse> reply)> result) {
   // Create an app
-  App *app;
-  app = App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
-                    app_name.c_str());
+  App *app =
+      App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
+                  app_name.c_str());
+
+  auto app_it = apps.find(app_name);
+
+  // If the app is already in the map, return the stored shared_ptr
+  if (app_it == apps.end()) {
+    std::vector<std::string> app_vector;
+    app_vector.push_back(app_name);
+    app_vector.push_back(initialize_app_request.api_key());
+    app_vector.push_back(initialize_app_request.app_id());
+    app_vector.push_back(*initialize_app_request.database_u_r_l());
+    app_vector.push_back(initialize_app_request.project_id());
+
+    apps[app_name] = app_vector;
+  }
 
   // Send back the result to Flutter
   result(AppToPigeonInitializeResponse(*app));

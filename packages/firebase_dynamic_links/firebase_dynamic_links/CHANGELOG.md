@@ -1,3 +1,11 @@
+## 5.3.7
+
+ - Update a dependency to the latest release.
+
+## 5.3.6
+
+ - **DOCS**(firebase_dynamic_links): add deprecation note to README.md ([#11506](https://github.com/firebase/flutterfire/issues/11506)). ([520fed64](https://github.com/firebase/flutterfire/commit/520fed6409892c4ee9ca4e9b9f20d6f820cbc1a5))
+
 ## 5.3.5
 
  - Update a dependency to the latest release.

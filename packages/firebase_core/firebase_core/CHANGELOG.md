@@ -1,3 +1,14 @@
+## 2.17.0
+
+ - **FEAT**: bump Firebase android SDK `32.3.1` ([#11663](https://github.com/firebase/flutterfire/issues/11663)). ([639bc2ea](https://github.com/firebase/flutterfire/commit/639bc2eaabe320a533ec643d4f0c91d2ab3ea5d1))
+
+## 2.16.0
+
+ - **FEAT**: bump Firebase iOS SDK `10.15.0` ([#11586](https://github.com/firebase/flutterfire/issues/11586)). ([baedd3ee](https://github.com/firebase/flutterfire/commit/baedd3eec24e8df9fa0602b92c60fc2535cd449b))
+ - **FEAT**: bump Firebase android SDK `32.2.3` ([#11587](https://github.com/firebase/flutterfire/issues/11587)). ([26415d54](https://github.com/firebase/flutterfire/commit/26415d5477634704c13a1e2dbaad5b7f4cf41c06))
+ - **FEAT**(core,windows): Change the windows plugin compiling way ([#11594](https://github.com/firebase/flutterfire/issues/11594)). ([3dab95e0](https://github.com/firebase/flutterfire/commit/3dab95e01f7f71680aff84db4e9dccfe1e77643b))
+ - **FEAT**(auth,windows): add Windows support to auth plugin ([#11089](https://github.com/firebase/flutterfire/issues/11089)). ([0cedfc85](https://github.com/firebase/flutterfire/commit/0cedfc8580bedd9e21b262537e643dbace0d7114))
+
 ## 2.15.1
 
  - Update a dependency to the latest release.

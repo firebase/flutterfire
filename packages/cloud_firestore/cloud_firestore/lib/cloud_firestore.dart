@@ -37,8 +37,7 @@ export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
         FieldOverrideIndex,
         Order,
         ArrayConfig,
-        QueryScope,
-        Filter;
+        QueryScope;
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;
 
@@ -49,6 +48,7 @@ part 'src/document_change.dart';
 part 'src/document_reference.dart';
 part 'src/document_snapshot.dart';
 part 'src/field_value.dart';
+part 'src/filters.dart';
 part 'src/firestore.dart';
 part 'src/load_bundle_task.dart';
 part 'src/load_bundle_task_snapshot.dart';

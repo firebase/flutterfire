@@ -1,3 +1,11 @@
+## 4.4.2
+
+ - Update a dependency to the latest release.
+
+## 4.4.1
+
+ - Update a dependency to the latest release.
+
 ## 4.4.0
 
  - **FEAT**(functions): pass `limitedUseAppCheckToken` option to Cloud Function ([#11402](https://github.com/firebase/flutterfire/issues/11402)). ([9fce7f28](https://github.com/firebase/flutterfire/commit/9fce7f28d7ce38cf1b59b11a111e23d31581d34c))

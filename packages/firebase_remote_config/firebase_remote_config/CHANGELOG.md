@@ -1,3 +1,11 @@
+## 4.2.7
+
+ - Update a dependency to the latest release.
+
+## 4.2.6
+
+ - Update a dependency to the latest release.
+
 ## 4.2.5
 
  - **DOCS**(firebase_remote_config): Remove link with archived content from readme ([#11471](https://github.com/firebase/flutterfire/issues/11471)). ([26ee5ed1](https://github.com/firebase/flutterfire/commit/26ee5ed1c555681b420852512f671653b14cb4fa))
