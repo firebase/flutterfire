@@ -299,6 +299,12 @@ class FirebaseCoreWeb extends FirebasePlatform {
       }
     }
 
+    final appCheck = _services.remove('app-check');
+    if (appCheck != null) {
+      // Activate app check first
+      await appCheck.ensurePluginInitialized!(app!);
+    }
+
     await Future.wait(
       _services.values.map((service) {
         final ensureInitializedFunction = service.ensurePluginInitialized;
