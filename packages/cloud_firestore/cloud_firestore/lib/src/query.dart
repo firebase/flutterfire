@@ -86,6 +86,11 @@ abstract class Query<T extends Object?> {
   /// Notifies of query results at this location.
   Stream<QuerySnapshot<T>> snapshots({bool includeMetadataChanges = false});
 
+  /// Notifies of query change results at this location.
+  Stream<QuerySnapshotChanges<T>> snapshotChanges({
+    bool includeMetadataChanges = false,
+  });
+
   /// Creates and returns a new [Query] that's additionally sorted by the specified
   /// [field].
   /// The field may be a [String] representing a single field name or a [FieldPath].
@@ -429,6 +434,16 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     return _delegate
         .snapshots(includeMetadataChanges: includeMetadataChanges)
         .map((item) => _JsonQuerySnapshot(firestore, item));
+  }
+
+  /// Notifies of query change results at this location.
+  @override
+  Stream<QuerySnapshotChanges<Map<String, dynamic>>> snapshotChanges({
+    bool includeMetadataChanges = false,
+  }) {
+    return _delegate
+        .snapshotChanges(includeMetadataChanges: includeMetadataChanges)
+        .map((item) => _JsonQuerySnapshotChanges(firestore, item));
   }
 
   /// Creates and returns a new [Query] that's additionally sorted by the specified
@@ -887,6 +902,21 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
         .snapshots(includeMetadataChanges: includeMetadataChanges)
         .map(
           (snapshot) => _WithConverterQuerySnapshot<T>(
+            snapshot,
+            _fromFirestore,
+            _toFirestore,
+          ),
+        );
+  }
+
+  @override
+  Stream<QuerySnapshotChanges<T>> snapshotChanges({
+    bool includeMetadataChanges = false,
+  }) {
+    return _originalQuery
+        .snapshotChanges(includeMetadataChanges: includeMetadataChanges)
+        .map(
+          (snapshot) => _WithConverterQuerySnapshotChanges<T>(
             snapshot,
             _fromFirestore,
             _toFirestore,
