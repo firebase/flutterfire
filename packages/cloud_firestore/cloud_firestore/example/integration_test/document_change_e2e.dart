@@ -31,58 +31,55 @@ void runDocumentChangeTests() {
       return collection;
     }
 
-    testWidgets(
-      'can add/update values to null in the document',
-      (_) async {
-        CollectionReference<Map<String, dynamic>> collection =
-            await initializeTest('null-test');
-        DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
+    testWidgets('can add/update values to null in the document', (_) async {
+      CollectionReference<Map<String, dynamic>> collection =
+          await initializeTest('null-test');
+      DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
 
-        await expectLater(
-          doc1.snapshots(),
-          emits(
-            isA<DocumentSnapshot<Map<String, dynamic>>>()
-                .having((q) => q.exists, 'exists', false),
-          ),
-        );
+      await expectLater(
+        doc1.snapshots(),
+        emits(
+          isA<DocumentSnapshot<Map<String, dynamic>>>()
+              .having((q) => q.exists, 'exists', false),
+        ),
+      );
 
-        await doc1.set(<String, Object?>{
-          'key': null,
-          'key2': 42,
-        });
+      await doc1.set(<String, Object?>{
+        'key': null,
+        'key2': 42,
+      });
 
-        await expectLater(
-          doc1.snapshots(),
-          emits(
-            isA<DocumentSnapshot<Map<String, dynamic>>>()
-                .having((q) => q.exists, 'exists', true)
-                .having((q) => q.data(), 'data()', <String, Object?>{
-              'key': null,
-              'key2': 42,
-            }),
-          ),
-        );
+      await expectLater(
+        doc1.snapshots(),
+        emits(
+          isA<DocumentSnapshot<Map<String, dynamic>>>()
+              .having((q) => q.exists, 'exists', true)
+              .having((q) => q.data(), 'data()', <String, Object?>{
+            'key': null,
+            'key2': 42,
+          }),
+        ),
+      );
 
-        await doc1.set({
-          'key': null,
-          'key2': null,
-        });
+      await doc1.set({
+        'key': null,
+        'key2': null,
+      });
 
-        await expectLater(
-          doc1.snapshots(),
-          emits(
-            isA<DocumentSnapshot<Map<String, dynamic>>>()
-                .having((q) => q.exists, 'exists', true)
-                .having((q) => q.data(), 'data()', <String, Object?>{
-              'key': null,
-              'key2': null,
-            }),
-          ),
-        );
-      },
-      timeout: const Timeout.factor(8),
-      skip: defaultTargetPlatform == TargetPlatform.windows
-    );
+      await expectLater(
+        doc1.snapshots(),
+        emits(
+          isA<DocumentSnapshot<Map<String, dynamic>>>()
+              .having((q) => q.exists, 'exists', true)
+              .having((q) => q.data(), 'data()', <String, Object?>{
+            'key': null,
+            'key2': null,
+          }),
+        ),
+      );
+    },
+        timeout: const Timeout.factor(8),
+        skip: defaultTargetPlatform == TargetPlatform.windows);
 
     testWidgets('returns the correct metadata when adding and removing',
         (_) async {

@@ -34,7 +34,6 @@ union DoubleToBytes {
   uint8_t bytes[sizeof(double)];
 };
 
-
 void cloud_firestore_windows::FirestoreCodec::WriteValue(
     const flutter::EncodableValue& value,
     flutter::ByteStreamWriter* stream) const {
@@ -87,13 +86,14 @@ void cloud_firestore_windows::FirestoreCodec::WriteValue(
 flutter::EncodableValue
 cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
     uint8_t type, flutter::ByteStreamReader* stream) const {
-    switch (type) {
+  switch (type) {
     case DATA_TYPE_DATE_TIME: {
       int64_t value;
       stream->ReadBytes(reinterpret_cast<uint8_t*>(&value),
                         8);  // Read 8 bytes into value
 
-      return CustomEncodableValue(FieldValue::Timestamp(Timestamp(value / 1000, 0)));
+      return CustomEncodableValue(
+          FieldValue::Timestamp(Timestamp(value / 1000, 0)));
     }
 
     case DATA_TYPE_TIMESTAMP: {
@@ -110,17 +110,13 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
       auto customValue =
           std::get<CustomEncodableValue>(FirestoreCodec::ReadValue(stream));
 
-      Firestore* firestoreRef =
-          std::any_cast<Firestore*>(customValue);
+      Firestore* firestoreRef = std::any_cast<Firestore*>(customValue);
 
+      std::string path =
+          std::get<std::string>(FirestoreCodec::ReadValue(stream));
 
-
-        std::string path =
-            std::get<std::string>(FirestoreCodec::ReadValue(stream));
-
-
-        DocumentReference reference = firestoreRef->Document(path);
-        return CustomEncodableValue(reference);
+      DocumentReference reference = firestoreRef->Document(path);
+      return CustomEncodableValue(reference);
     }
     case DATA_TYPE_GEO_POINT: {
       double latitude;
@@ -217,17 +213,17 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
                   FirestoreCodec::ReadValue(stream)));
 
       if (CloudFirestorePlugin::firestoreInstances_.find(appName) !=
-        CloudFirestorePlugin::firestoreInstances_.end()) {
+          CloudFirestorePlugin::firestoreInstances_.end()) {
         return CustomEncodableValue(
             CloudFirestorePlugin::firestoreInstances_[appName]);
       }
 
-        firebase::App* app = firebase::App::GetInstance(appName.c_str());
+      firebase::App* app = firebase::App::GetInstance(appName.c_str());
 
       Firestore* firestore = Firestore::GetInstance(app);
-        firestore->set_settings(settings);
+      firestore->set_settings(settings);
 
-        CloudFirestorePlugin::firestoreInstances_[appName] = firestore;
+      CloudFirestorePlugin::firestoreInstances_[appName] = firestore;
 
       return CustomEncodableValue(firestore);
     }
@@ -258,7 +254,6 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
         }
       }
 
-
       if (map.count("persistenceEnabled")) {
         bool persistEnabled = std::get<bool>(map["persistenceEnabled"]);
 
@@ -281,7 +276,7 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
       if (map.count("host")) {
         settings.set_host(std::get<std::string>(map["host"]));
 
-        settings.set_ssl_enabled(false); 
+        settings.set_ssl_enabled(false);
       }
 
       return CustomEncodableValue(settings);

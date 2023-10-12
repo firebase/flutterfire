@@ -15,10 +15,10 @@
 #include <windows.h>
 
 #include <condition_variable>
+#include <future>
 #include <memory>
 #include <mutex>
 #include <sstream>
-#include <future>
 
 #include "firebase/app.h"
 #include "firebase/firestore.h"
@@ -28,12 +28,12 @@
 
 using namespace firebase::firestore;
 using firebase::App;
+using firebase::firestore::DocumentSnapshot;
 using firebase::firestore::Firestore;
+using flutter::CustomEncodableValue;
+using flutter::EncodableList;
+using flutter::EncodableMap;
 using flutter::EncodableValue;
-  using flutter::EncodableMap;
-    using flutter::EncodableList;
-        using flutter::CustomEncodableValue;
-  using firebase::firestore::DocumentSnapshot;
 
 namespace cloud_firestore_windows {
 
@@ -220,8 +220,9 @@ Firestore* GetFirestoreFromPigeon(const PigeonFirebaseApp& pigeonApp) {
   return firestore;
 }
 
-std::string CloudFirestorePlugin::GetErrorCode(firebase::firestore::Error error) {
-   switch (error) {
+std::string CloudFirestorePlugin::GetErrorCode(
+    firebase::firestore::Error error) {
+  switch (error) {
     case kErrorOk:
       return "ok";
     case kErrorCancelled:
@@ -272,13 +273,9 @@ FlutterError CloudFirestorePlugin::ParseError(
   details[EncodableValue("message")] =
       EncodableValue(completed_future.error_message());
 
-
-  return FlutterError("firebase_firestore",
-                      completed_future.error_message(),
-                      details
-                      );
+  return FlutterError("firebase_firestore", completed_future.error_message(),
+                      details);
 }
-
 
 firebase::firestore::Source GetSourceFromPigeon(const Source& pigeonSource) {
   switch (pigeonSource) {
@@ -308,7 +305,6 @@ GetServerTimestampBehaviorFromPigeon(
           kNone;
   }
 }
-
 
 EncodableValue ConvertFieldValueToEncodableValue(const FieldValue& fieldValue) {
   switch (fieldValue.type()) {
@@ -541,17 +537,18 @@ class LoadBundleStreamHandler
           map[flutter::EncodableValue("bytesLoaded")] =
               flutter::EncodableValue(progress.bytes_loaded());
           map[flutter::EncodableValue("documentsLoaded")] =
-flutter::EncodableValue(progress.documents_loaded());
-map[flutter::EncodableValue("totalBytes")] =
+              flutter::EncodableValue(progress.documents_loaded());
+          map[flutter::EncodableValue("totalBytes")] =
               flutter::EncodableValue(progress.total_bytes());
           map[flutter::EncodableValue("totalDocuments")] =
-flutter::EncodableValue(progress.total_documents());
+              flutter::EncodableValue(progress.total_documents());
           switch (progress.state()) {
             case LoadBundleTaskProgress::State::kError: {
               EncodableMap details;
               details[EncodableValue("code")] =
                   EncodableValue("load-bundle-error");
-              details[EncodableValue("message")] = EncodableValue("Error loading the bundle");
+              details[EncodableValue("message")] =
+                  EncodableValue("Error loading the bundle");
 
               events_->Error("firebase_firestore", "Error loading the bundle",
                              details);
@@ -564,8 +561,7 @@ flutter::EncodableValue(progress.total_documents());
               map[flutter::EncodableValue("taskState")] =
                   flutter::EncodableValue("running");
 
-              events_->Success(
-                  map);
+              events_->Success(map);
               break;
             }
             case LoadBundleTaskProgress::State::kSuccess: {
@@ -573,8 +569,7 @@ flutter::EncodableValue(progress.total_documents());
               map[flutter::EncodableValue("taskState")] =
                   flutter::EncodableValue("success");
 
-              events_->Success(
-                  map);
+              events_->Success(map);
               events_->EndOfStream();
               break;
             }
@@ -605,8 +600,8 @@ void CloudFirestorePlugin::LoadBundle(
   auto handler =
       std::make_unique<LoadBundleStreamHandler>(firestore, bundleConverted);
 
-    std::string channelName =
-      RegisterEventChannel("plugins.flutter.io/firebase_firestore/loadBundle/", std::move(handler));
+  std::string channelName = RegisterEventChannel(
+      "plugins.flutter.io/firebase_firestore/loadBundle/", std::move(handler));
 
   result(channelName);
 }
@@ -755,11 +750,11 @@ class SnapshotInSyncStreamHandler
     // We do this to bind the event to the main channel
     auto boundSendEvent =
         std::bind(&SnapshotInSyncStreamHandler::SendEvent, this);
-    this->SetSendEventFunction(boundSendEvent); 
+    this->SetSendEventFunction(boundSendEvent);
 
     listener_ = firestore_->AddSnapshotsInSyncListener([this]() {
       if (sendEventFunc_) sendEventFunc_();
-     });
+    });
     return nullptr;
   }
 
@@ -770,13 +765,11 @@ class SnapshotInSyncStreamHandler
     return nullptr;
   }
 
-      void SetSendEventFunction(std::function<void()> func) {
+  void SetSendEventFunction(std::function<void()> func) {
     sendEventFunc_ = func;
   }
 
-
-    void SendEvent() { events_->Success(flutter::EncodableValue()); }
-
+  void SendEvent() { events_->Success(flutter::EncodableValue()); }
 
  private:
   Firestore* firestore_;
@@ -1507,8 +1500,7 @@ class DocumentSnapshotStreamHandler
     : public flutter::StreamHandler<flutter::EncodableValue> {
  public:
   DocumentSnapshotStreamHandler(
-      std::unique_ptr<DocumentReference> reference,
-      bool includeMetadataChanges,
+      std::unique_ptr<DocumentReference> reference, bool includeMetadataChanges,
       firebase::firestore::DocumentSnapshot::ServerTimestampBehavior
           serverTimestampBehavior) {
     reference_ = std::move(reference);
@@ -1541,8 +1533,7 @@ class DocumentSnapshotStreamHandler
             EncodableMap details;
             details[EncodableValue("code")] =
                 EncodableValue(CloudFirestorePlugin::GetErrorCode(error));
-            details[EncodableValue("message")] =
-                EncodableValue(errorMessage);
+            details[EncodableValue("message")] = EncodableValue(errorMessage);
 
             events_->Error("firebase_firestore", errorMessage, details);
             events_->EndOfStream();
@@ -1574,8 +1565,7 @@ void CloudFirestorePlugin::DocumentReferenceSnapshot(
   Firestore* firestore = GetFirestoreFromPigeon(app);
   std::unique_ptr<DocumentReference> documentReference =
       std::make_unique<DocumentReference>(
-      firestore->Document(parameters.path()));
-
+          firestore->Document(parameters.path()));
 
   auto document_snapshot_handler =
       std::make_unique<DocumentSnapshotStreamHandler>(

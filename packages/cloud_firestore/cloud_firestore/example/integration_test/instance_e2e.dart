@@ -150,110 +150,118 @@ void runInstanceTests() {
         skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      testWidgets('setIndexConfiguration()', (_) async {
-        Index index1 = Index(
-          collectionGroup: 'bar',
-          queryScope: QueryScope.collectionGroup,
-          fields: [
-            IndexField(
-              fieldPath: 'fieldPath',
-              order: Order.ascending,
-              arrayConfig: ArrayConfig.contains,
-            ),
-          ],
-        );
+      testWidgets(
+        'setIndexConfiguration()',
+        (_) async {
+          Index index1 = Index(
+            collectionGroup: 'bar',
+            queryScope: QueryScope.collectionGroup,
+            fields: [
+              IndexField(
+                fieldPath: 'fieldPath',
+                order: Order.ascending,
+                arrayConfig: ArrayConfig.contains,
+              ),
+            ],
+          );
 
-        Index index2 = Index(
-          collectionGroup: 'baz',
-          queryScope: QueryScope.collection,
-          fields: [
-            IndexField(
-              fieldPath: 'foo',
-              arrayConfig: ArrayConfig.contains,
-            ),
-            IndexField(
-              fieldPath: 'bar',
-              order: Order.descending,
-              arrayConfig: ArrayConfig.contains,
-            ),
-            IndexField(
-              fieldPath: 'baz',
-              order: Order.descending,
-              arrayConfig: ArrayConfig.contains,
-            ),
-          ],
-        );
+          Index index2 = Index(
+            collectionGroup: 'baz',
+            queryScope: QueryScope.collection,
+            fields: [
+              IndexField(
+                fieldPath: 'foo',
+                arrayConfig: ArrayConfig.contains,
+              ),
+              IndexField(
+                fieldPath: 'bar',
+                order: Order.descending,
+                arrayConfig: ArrayConfig.contains,
+              ),
+              IndexField(
+                fieldPath: 'baz',
+                order: Order.descending,
+                arrayConfig: ArrayConfig.contains,
+              ),
+            ],
+          );
 
-        FieldOverrides fieldOverride1 = FieldOverrides(
-          fieldPath: 'fieldPath',
-          indexes: [
-            FieldOverrideIndex(
-              queryScope: 'foo',
-              order: Order.ascending,
-              arrayConfig: ArrayConfig.contains,
-            ),
-            FieldOverrideIndex(
-              queryScope: 'bar',
-              order: Order.descending,
-              arrayConfig: ArrayConfig.contains,
-            ),
-            FieldOverrideIndex(
-              queryScope: 'baz',
-              order: Order.descending,
-            ),
-          ],
-          collectionGroup: 'bar',
-        );
-        FieldOverrides fieldOverride2 = FieldOverrides(
-          fieldPath: 'anotherField',
-          indexes: [
-            FieldOverrideIndex(
-              queryScope: 'foo',
-              order: Order.ascending,
-              arrayConfig: ArrayConfig.contains,
-            ),
-            FieldOverrideIndex(
-              queryScope: 'bar',
-              order: Order.descending,
-              arrayConfig: ArrayConfig.contains,
-            ),
-            FieldOverrideIndex(
-              queryScope: 'baz',
-              order: Order.descending,
-            ),
-          ],
-          collectionGroup: 'collectiongroup',
-        );
+          FieldOverrides fieldOverride1 = FieldOverrides(
+            fieldPath: 'fieldPath',
+            indexes: [
+              FieldOverrideIndex(
+                queryScope: 'foo',
+                order: Order.ascending,
+                arrayConfig: ArrayConfig.contains,
+              ),
+              FieldOverrideIndex(
+                queryScope: 'bar',
+                order: Order.descending,
+                arrayConfig: ArrayConfig.contains,
+              ),
+              FieldOverrideIndex(
+                queryScope: 'baz',
+                order: Order.descending,
+              ),
+            ],
+            collectionGroup: 'bar',
+          );
+          FieldOverrides fieldOverride2 = FieldOverrides(
+            fieldPath: 'anotherField',
+            indexes: [
+              FieldOverrideIndex(
+                queryScope: 'foo',
+                order: Order.ascending,
+                arrayConfig: ArrayConfig.contains,
+              ),
+              FieldOverrideIndex(
+                queryScope: 'bar',
+                order: Order.descending,
+                arrayConfig: ArrayConfig.contains,
+              ),
+              FieldOverrideIndex(
+                queryScope: 'baz',
+                order: Order.descending,
+              ),
+            ],
+            collectionGroup: 'collectiongroup',
+          );
 
-        await firestore.setIndexConfiguration(
-          indexes: [index1, index2],
-          fieldOverrides: [fieldOverride1, fieldOverride2],
-        );
-      }, skip: defaultTargetPlatform == TargetPlatform.windows,);
+          await firestore.setIndexConfiguration(
+            indexes: [index1, index2],
+            fieldOverrides: [fieldOverride1, fieldOverride2],
+          );
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
 
-      testWidgets('setIndexConfigurationFromJSON()', (_) async {
-        final json = jsonEncode({
-          'indexes': [
-            {
-              'collectionGroup': 'posts',
-              'queryScope': 'COLLECTION',
-              'fields': [
-                {'fieldPath': 'author', 'arrayConfig': 'CONTAINS'},
-                {'fieldPath': 'timestamp', 'order': 'DESCENDING'},
-              ],
-            }
-          ],
-          'fieldOverrides': [
-            {
-              'collectionGroup': 'posts',
-              'fieldPath': 'myBigMapField',
-              'indexes': [],
-            }
-          ],
-        });
+      testWidgets(
+        'setIndexConfigurationFromJSON()',
+        (_) async {
+          final json = jsonEncode({
+            'indexes': [
+              {
+                'collectionGroup': 'posts',
+                'queryScope': 'COLLECTION',
+                'fields': [
+                  {'fieldPath': 'author', 'arrayConfig': 'CONTAINS'},
+                  {'fieldPath': 'timestamp', 'order': 'DESCENDING'},
+                ],
+              }
+            ],
+            'fieldOverrides': [
+              {
+                'collectionGroup': 'posts',
+                'fieldPath': 'myBigMapField',
+                'indexes': [],
+              }
+            ],
+          });
 
-        await firestore.setIndexConfigurationFromJSON(json);
-      }, skip: defaultTargetPlatform == TargetPlatform.windows,);
+          await firestore.setIndexConfigurationFromJSON(json);
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
 
       testWidgets('setLoggingEnabled should resolve without issue',
           (widgetTester) async {
