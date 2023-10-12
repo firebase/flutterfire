@@ -132,7 +132,8 @@ void runDocumentChangeTests() {
         );
 
         await Future.delayed(
-            const Duration(seconds: 1)); // Ensure listener fires
+          const Duration(seconds: 1),
+        ); // Ensure listener fires
         await doc1.delete();
 
         await subscription.cancel();
@@ -189,7 +190,8 @@ void runDocumentChangeTests() {
         );
 
         await Future.delayed(
-            const Duration(seconds: 1)); // Ensure listener fires
+          const Duration(seconds: 1),
+        ); // Ensure listener fires
         await doc1.update({'value': 4});
 
         await subscription.cancel();
