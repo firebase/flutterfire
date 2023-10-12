@@ -4,6 +4,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -39,20 +40,22 @@ void main() {
       }
     });
 
-    // runInstanceTests();
+    runInstanceTests();
 
-    // runCollectionReferenceTests();
-    // runDocumentChangeTests();
-     runDocumentReferenceTests();
-    // runFieldValueTests();
-    // runGeoPointTests();
-    // runQueryTests();
-    // runSnapshotMetadataTests();
-    // runTimestampTests();
-    // runTransactionTests();
-    // runWriteBatchTests();
-    // runLoadBundleTests();
-    // runSecondAppTests();
-    // runSecondDatabaseTests();
+    runCollectionReferenceTests();
+    runDocumentChangeTests();
+    runDocumentReferenceTests();
+    runFieldValueTests();
+    runGeoPointTests();
+    runQueryTests();
+    runSnapshotMetadataTests();
+    runTimestampTests();
+    runTransactionTests();
+    runWriteBatchTests();
+    runLoadBundleTests();
+    runSecondAppTests();
+    if (defaultTargetPlatform != TargetPlatform.windows) {
+      runSecondDatabaseTests();
+    }
   });
 }

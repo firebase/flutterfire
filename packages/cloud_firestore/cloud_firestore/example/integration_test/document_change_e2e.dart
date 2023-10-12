@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runDocumentChangeTests() {
@@ -80,6 +81,7 @@ void runDocumentChangeTests() {
         );
       },
       timeout: const Timeout.factor(8),
+      skip: defaultTargetPlatform == TargetPlatform.windows
     );
 
     testWidgets('returns the correct metadata when adding and removing',
@@ -132,7 +134,7 @@ void runDocumentChangeTests() {
       await doc1.delete();
 
       await subscription.cancel();
-    });
+    }, skip: defaultTargetPlatform == TargetPlatform.windows);
 
     testWidgets('returns the correct metadata when modifying', (_) async {
       CollectionReference<Map<String, dynamic>> collection =
@@ -184,6 +186,6 @@ void runDocumentChangeTests() {
       await doc1.update({'value': 4});
 
       await subscription.cancel();
-    });
+    }, skip: defaultTargetPlatform == TargetPlatform.windows);
   });
 }

@@ -93,7 +93,7 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
       stream->ReadBytes(reinterpret_cast<uint8_t*>(&value),
                         8);  // Read 8 bytes into value
 
-      return CustomEncodableValue(FieldValue::Timestamp(Timestamp(value, 0)));
+      return CustomEncodableValue(FieldValue::Timestamp(Timestamp(value / 1000, 0)));
     }
 
     case DATA_TYPE_TIMESTAMP: {
@@ -158,16 +158,28 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
     }
 
     case DATA_TYPE_ARRAY_UNION: {
-      const std::vector<FieldValue>& arrayUnionValue =
-          std::any_cast<std::vector<FieldValue>>(std::get<CustomEncodableValue>(
-              FirestoreCodec::ReadValue(stream)));
+      auto customValue =
+          std::get<flutter::EncodableList>(FirestoreCodec::ReadValue(stream));
+      std::vector<FieldValue> arrayUnionValue;
+
+      for (auto& value : customValue) {
+        arrayUnionValue.push_back(
+            cloud_firestore_windows::CloudFirestorePlugin::ConvertToFieldValue(
+                value));
+      }
       return CustomEncodableValue(FieldValue::ArrayUnion(arrayUnionValue));
     }
 
     case DATA_TYPE_ARRAY_REMOVE: {
-      const std::vector<FieldValue>& arrayRemoveValue =
-          std::any_cast<std::vector<FieldValue>>(std::get<CustomEncodableValue>(
-              FirestoreCodec::ReadValue(stream)));
+      auto customValue =
+          std::get<flutter::EncodableList>(FirestoreCodec::ReadValue(stream));
+      std::vector<FieldValue> arrayRemoveValue;
+
+      for (auto& value : customValue) {
+        arrayRemoveValue.push_back(
+            cloud_firestore_windows::CloudFirestorePlugin::ConvertToFieldValue(
+                value));
+      }
       return CustomEncodableValue(FieldValue::ArrayRemove(arrayRemoveValue));
     }
 
@@ -180,12 +192,13 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
     }
 
     case DATA_TYPE_INCREMENT_DOUBLE: {
-      double incrementValue = stream->ReadDouble();
+      double incrementValue =
+          std::get<double>(FirestoreCodec::ReadValue(stream));
       return CustomEncodableValue(FieldValue::Increment(incrementValue));
     }
 
     case DATA_TYPE_INCREMENT_INTEGER: {
-      int incrementValue = stream->ReadInt32();
+      int incrementValue = std::get<int>(FirestoreCodec::ReadValue(stream));
       return CustomEncodableValue(FieldValue::Increment(incrementValue));
     }
 

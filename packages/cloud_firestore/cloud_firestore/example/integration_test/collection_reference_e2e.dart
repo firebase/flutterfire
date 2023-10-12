@@ -5,6 +5,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runCollectionReferenceTests() {
@@ -76,7 +77,7 @@ void runCollectionReferenceTests() {
               .having((e) => e.data(), 'data', {'value': 42}),
         ]),
       );
-    });
+    }, skip: defaultTargetPlatform == TargetPlatform.windows);
 
     group('withConverter', () {
       testWidgets(
@@ -195,6 +196,6 @@ void runCollectionReferenceTests() {
           );
         },
       );
-    });
+    }, skip: defaultTargetPlatform == TargetPlatform.windows);
   });
 }

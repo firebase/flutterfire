@@ -25,11 +25,15 @@
 #include "firebase/log.h"
 #include "firebase_core/firebase_core_plugin_c_api.h"
 #include "messages.g.h"
-using namespace firebase::firestore;
 
+using namespace firebase::firestore;
 using firebase::App;
 using firebase::firestore::Firestore;
 using flutter::EncodableValue;
+  using flutter::EncodableMap;
+    using flutter::EncodableList;
+        using flutter::CustomEncodableValue;
+  using firebase::firestore::DocumentSnapshot;
 
 namespace cloud_firestore_windows {
 
@@ -48,6 +52,67 @@ void CloudFirestorePlugin::RegisterWithRegistrar(
   FirebaseFirestoreHostApi::SetUp(registrar->messenger(), plugin.get());
 
   registrar->AddPlugin(std::move(plugin));
+}
+
+firebase::firestore::FieldValue CloudFirestorePlugin::ConvertToFieldValue(
+    const flutter::EncodableValue& variant) {
+  if (std::holds_alternative<std::monostate>(variant)) {
+    return firebase::firestore::FieldValue::Null();
+  } else if (std::holds_alternative<bool>(variant)) {
+    return firebase::firestore::FieldValue::Boolean(std::get<bool>(variant));
+  } else if (std::holds_alternative<int32_t>(variant)) {
+    return firebase::firestore::FieldValue::Integer(std::get<int32_t>(variant));
+  } else if (std::holds_alternative<int64_t>(variant)) {
+    return firebase::firestore::FieldValue::Integer(std::get<int64_t>(variant));
+  } else if (std::holds_alternative<double>(variant)) {
+    return firebase::firestore::FieldValue::Double(std::get<double>(variant));
+  } else if (std::holds_alternative<std::string>(variant)) {
+    return firebase::firestore::FieldValue::String(
+        std::get<std::string>(variant));
+  } else if (std::holds_alternative<flutter::EncodableList>(variant)) {
+    const flutter::EncodableList& list =
+        std::get<flutter::EncodableList>(variant);
+    std::vector<firebase::firestore::FieldValue> convertedList;
+    for (const auto& item : list) {
+      convertedList.push_back(ConvertToFieldValue(item));
+    }
+    return firebase::firestore::FieldValue::Array(convertedList);
+  } else if (std::holds_alternative<flutter::EncodableMap>(variant)) {
+    const flutter::EncodableMap& map = std::get<flutter::EncodableMap>(variant);
+    firebase::firestore::MapFieldValue convertedMap =
+        ConvertToMapFieldValue(map);
+    return firebase::firestore::FieldValue::Map(convertedMap);
+  } else if (std::holds_alternative<flutter::CustomEncodableValue>(variant)) {
+    const CustomEncodableValue& custom_value =
+        std::get<CustomEncodableValue>(variant);
+
+    using firebase::Timestamp;
+
+    if (custom_value.type() ==
+        typeid(firebase::firestore::FieldValue::Timestamp)) {
+      const firebase::firestore::FieldValue& timestamp =
+          std::any_cast<firebase::firestore::FieldValue>(custom_value);
+      return timestamp;
+    } else if (custom_value.type() ==
+               typeid(firebase::firestore::DocumentReference)) {
+      const firebase::firestore::DocumentReference& documentReference =
+          std::any_cast<firebase::firestore::DocumentReference>(custom_value);
+      return firebase::firestore::FieldValue::Reference(documentReference);
+    }
+    // check if nan and store it in number
+    else if (custom_value.type() == typeid(double)) {
+      const double& number = std::any_cast<double>(custom_value);
+      return firebase::firestore::FieldValue::Double(number);
+    }
+
+    const firebase::firestore::FieldValue& anyField =
+        std::any_cast<firebase::firestore::FieldValue>(custom_value);
+    return anyField;
+  } else {
+    // Add more types as needed
+    // You may throw an exception or handle this some other way
+    throw std::runtime_error("Unsupported EncodableValue type");
+  }
 }
 
 flutter::BinaryMessenger*
@@ -201,8 +266,6 @@ FlutterError CloudFirestorePlugin::ParseError(
   const firebase::firestore::Error errorCode =
       static_cast<const firebase::firestore::Error>(completed_future.error());
 
-  using flutter::EncodableMap;
-  using flutter::EncodableValue;
   EncodableMap details;
   details[EncodableValue("code")] =
       EncodableValue(CloudFirestorePlugin::GetErrorCode(errorCode));
@@ -246,10 +309,6 @@ GetServerTimestampBehaviorFromPigeon(
   }
 }
 
-using firebase::firestore::DocumentSnapshot;
-using flutter::CustomEncodableValue;
-using flutter::EncodableMap;
-using flutter::EncodableValue;
 
 EncodableValue ConvertFieldValueToEncodableValue(const FieldValue& fieldValue) {
   switch (fieldValue.type()) {
@@ -400,75 +459,12 @@ PigeonQuerySnapshot ParseQuerySnapshot(
   return pigeonQuerySnapshot;
 }
 
-
-firebase::firestore::FieldValue ConvertToFieldValue(
-    const EncodableValue& variant) {
-  if (std::holds_alternative<std::monostate>(variant)) {
-    return firebase::firestore::FieldValue::Null();
-  } else if (std::holds_alternative<bool>(variant)) {
-    return firebase::firestore::FieldValue::Boolean(std::get<bool>(variant));
-  } else if (std::holds_alternative<int32_t>(variant)) {
-    return firebase::firestore::FieldValue::Integer(std::get<int32_t>(variant));
-  } else if (std::holds_alternative<int64_t>(variant)) {
-    return firebase::firestore::FieldValue::Integer(std::get<int64_t>(variant));
-  } else if (std::holds_alternative<double>(variant)) {
-    return firebase::firestore::FieldValue::Double(std::get<double>(variant));
-  } else if (std::holds_alternative<std::string>(variant)) {
-    return firebase::firestore::FieldValue::String(
-        std::get<std::string>(variant));
-  } else if (std::holds_alternative<flutter::EncodableList>(variant)) {
-    const flutter::EncodableList& list =
-        std::get<flutter::EncodableList>(variant);
-    std::vector<firebase::firestore::FieldValue> convertedList;
-    for (const auto& item : list) {
-      convertedList.push_back(ConvertToFieldValue(item));
-    }
-    return firebase::firestore::FieldValue::Array(convertedList);
-  } else if (std::holds_alternative<flutter::EncodableMap>(variant)) {
-    const flutter::EncodableMap& map = std::get<flutter::EncodableMap>(variant);
-    firebase::firestore::MapFieldValue convertedMap =
-        ConvertToMapFieldValue(map);
-    return firebase::firestore::FieldValue::Map(convertedMap);
-  } else if (std::holds_alternative<flutter::CustomEncodableValue>(variant)) {
-    const CustomEncodableValue& custom_value =
-        std::get<CustomEncodableValue>(variant);
-
-    using firebase::Timestamp;
-
-    if (custom_value.type() == typeid(firebase::firestore::FieldValue::Timestamp)) {
-      const firebase::firestore::FieldValue& timestamp =
-          std::any_cast<firebase::firestore::FieldValue>(
-              custom_value);
-      return timestamp;
-    }
-    else if (custom_value.type() == typeid(firebase::firestore::DocumentReference)) {
-      const firebase::firestore::DocumentReference& documentReference =
-        std::any_cast<firebase::firestore::DocumentReference>(
-              custom_value);
-      return firebase::firestore::FieldValue::Reference(documentReference);
-    }
-    // check if nan and store it in number
-    else if (custom_value.type() == typeid(double)) {
-      const double& number =
-        std::any_cast<double>(custom_value);
-      return firebase::firestore::FieldValue::Double(number);
-    }
-
-    const firebase::firestore::FieldValue& anyField =
-        std::any_cast<firebase::firestore::FieldValue>(custom_value);
-    return anyField;
-  } else {
-    // Add more types as needed
-    // You may throw an exception or handle this some other way
-    throw std::runtime_error("Unsupported EncodableValue type");
-  }
-}
-
 std::vector<firebase::firestore::FieldValue> ConvertToFieldValueList(
     const flutter::EncodableList& originalList) {
   std::vector<firebase::firestore::FieldValue> convertedList;
   for (const auto& item : originalList) {
-    firebase::firestore::FieldValue convertedItem = ConvertToFieldValue(item);
+    firebase::firestore::FieldValue convertedItem =
+        CloudFirestorePlugin::ConvertToFieldValue(item);
     convertedList.push_back(convertedItem);
   }
   return convertedList;
@@ -481,7 +477,8 @@ firebase::firestore::MapFieldValue ConvertToMapFieldValue(
   for (const auto& kv : originalMap) {
     if (std::holds_alternative<std::string>(kv.first)) {
       std::string key = std::get<std::string>(kv.first);
-      firebase::firestore::FieldValue value = ConvertToFieldValue(kv.second);
+      firebase::firestore::FieldValue value =
+          CloudFirestorePlugin::ConvertToFieldValue(kv.second);
       convertedMap[key] = value;
     } else {
       // Handle or skip non-string keys
@@ -505,12 +502,14 @@ firebase::firestore::MapFieldPathValue ConvertToMapFieldPathValue(
       std::vector<std::string> convertedList;
       convertedList.push_back(key);
 
-      firebase::firestore::FieldValue value = ConvertToFieldValue(kv.second);
+      firebase::firestore::FieldValue value =
+          CloudFirestorePlugin::ConvertToFieldValue(kv.second);
       convertedMap[FieldPath(convertedList)] = value;
     } else if (std::holds_alternative<CustomEncodableValue>(kv.first)) {
       const FieldPath& fieldPath =
           std::any_cast<FieldPath>(std::get<CustomEncodableValue>(kv.first));
-      firebase::firestore::FieldValue value = ConvertToFieldValue(kv.second);
+      firebase::firestore::FieldValue value =
+          CloudFirestorePlugin::ConvertToFieldValue(kv.second);
       convertedMap[fieldPath] = value;
     } else {
       // Handle or skip non-string keys
@@ -535,22 +534,48 @@ class LoadBundleStreamHandler
       const flutter::EncodableValue* arguments,
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
+    events_ = std::move(events);
     firestore_->LoadBundle(
-        bundle_, [&events](const LoadBundleTaskProgress& progress) {
+        bundle_, [this](const LoadBundleTaskProgress& progress) {
+          flutter::EncodableMap map;
+          map[flutter::EncodableValue("bytesLoaded")] =
+              flutter::EncodableValue(progress.bytes_loaded());
+          map[flutter::EncodableValue("documentsLoaded")] =
+flutter::EncodableValue(progress.documents_loaded());
+map[flutter::EncodableValue("totalBytes")] =
+              flutter::EncodableValue(progress.total_bytes());
+          map[flutter::EncodableValue("totalDocuments")] =
+flutter::EncodableValue(progress.total_documents());
           switch (progress.state()) {
             case LoadBundleTaskProgress::State::kError: {
-              events->Error("LoadBundleError", "Error loading the bundle");
+              EncodableMap details;
+              details[EncodableValue("code")] =
+                  EncodableValue("load-bundle-error");
+              details[EncodableValue("message")] = EncodableValue("Error loading the bundle");
+
+              events_->Error("firebase_firestore", "Error loading the bundle",
+                             details);
+              events_->EndOfStream();
               return;
             }
             case LoadBundleTaskProgress::State::kInProgress: {
               std::cout << "Bytes loaded from bundle: "
                         << progress.bytes_loaded() << std::endl;
-              events->Success(flutter::EncodableValue(progress.bytes_loaded()));
+              map[flutter::EncodableValue("taskState")] =
+                  flutter::EncodableValue("running");
+
+              events_->Success(
+                  map);
               break;
             }
             case LoadBundleTaskProgress::State::kSuccess: {
-              std::cout << "Bundle load succeeeded" << std::endl;
-              events->Success(flutter::EncodableValue(progress.bytes_loaded()));
+              std::cout << "Bundle load succeeded" << std::endl;
+              map[flutter::EncodableValue("taskState")] =
+                  flutter::EncodableValue("success");
+
+              events_->Success(
+                  map);
+              events_->EndOfStream();
               break;
             }
           }
@@ -560,11 +585,13 @@ class LoadBundleStreamHandler
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
+    events_->EndOfStream();
     return nullptr;
   }
 
  private:
   Firestore* firestore_;
+  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events_;
   std::string bundle_;
 };
 
@@ -578,8 +605,9 @@ void CloudFirestorePlugin::LoadBundle(
   auto handler =
       std::make_unique<LoadBundleStreamHandler>(firestore, bundleConverted);
 
-  std::string channelName =
-      RegisterEventChannel("loadbundle", std::move(handler));
+    std::string channelName =
+      RegisterEventChannel("plugins.flutter.io/firebase_firestore/loadBundle/", std::move(handler));
+
   result(channelName);
 }
 
@@ -821,6 +849,7 @@ class TransactionStreamHandler
               if (cv_.wait_for(lock, std::chrono::milliseconds(timeout_)) ==
                   std::cv_status::timeout) {
                 events_->Error("Timeout", "Transaction timed out.");
+                events_->EndOfStream();
                 return Error::kErrorDeadlineExceeded;
               }
 
@@ -1153,26 +1182,30 @@ firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
     for (const auto& condition : conditions) {
       const FieldPath& fieldPath = std::any_cast<FieldPath>(
           std::get<CustomEncodableValue>(condition[0]));
-      const std::string& op = std::any_cast<std::string>(
-          std::get<CustomEncodableValue>(condition[1]));
+      const std::string& op = std::get<std::string>(condition[1]);
 
       auto value = condition[2];
       if (op == "==") {
-        query = query.WhereEqualTo(fieldPath, ConvertToFieldValue(value));
+        query = query.WhereEqualTo(
+            fieldPath, CloudFirestorePlugin::ConvertToFieldValue(value));
       } else if (op == "!=") {
-        query = query.WhereNotEqualTo(fieldPath, ConvertToFieldValue(value));
+        query = query.WhereNotEqualTo(
+            fieldPath, CloudFirestorePlugin::ConvertToFieldValue(value));
       } else if (op == "<") {
-        query = query.WhereLessThan(fieldPath, ConvertToFieldValue(value));
+        query = query.WhereLessThan(
+            fieldPath, CloudFirestorePlugin::ConvertToFieldValue(value));
       } else if (op == "<=") {
-        query =
-            query.WhereLessThanOrEqualTo(fieldPath, ConvertToFieldValue(value));
+        query = query.WhereLessThanOrEqualTo(
+            fieldPath, CloudFirestorePlugin::ConvertToFieldValue(value));
       } else if (op == ">") {
-        query = query.WhereGreaterThan(fieldPath, ConvertToFieldValue(value));
+        query = query.WhereGreaterThan(
+            fieldPath, CloudFirestorePlugin::ConvertToFieldValue(value));
       } else if (op == ">=") {
-        query = query.WhereGreaterThanOrEqualTo(fieldPath,
-                                                ConvertToFieldValue(value));
+        query = query.WhereGreaterThanOrEqualTo(
+            fieldPath, CloudFirestorePlugin::ConvertToFieldValue(value));
       } else if (op == "array-contains") {
-        query = query.WhereArrayContains(fieldPath, ConvertToFieldValue(value));
+        query = query.WhereArrayContains(
+            fieldPath, CloudFirestorePlugin::ConvertToFieldValue(value));
       } else if (op == "array-contains-any") {
         query = query.WhereArrayContainsAny(
             fieldPath,
@@ -1421,7 +1454,12 @@ class QuerySnapshotStreamHandler
 
             events_->Success(toListResult);
           } else {
-            events_->Error("Error parsing QuerySnapshot");
+            EncodableMap details;
+            details[EncodableValue("code")] =
+                EncodableValue(CloudFirestorePlugin::GetErrorCode(error));
+            details[EncodableValue("message")] = EncodableValue(errorMessage);
+
+            events_->Error("firebase_firestore", errorMessage, details);
             events_->EndOfStream();
           }
         });

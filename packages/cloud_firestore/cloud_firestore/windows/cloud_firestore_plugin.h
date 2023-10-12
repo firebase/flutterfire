@@ -25,6 +25,8 @@ class CloudFirestorePlugin : public flutter::Plugin,
                              public FirebaseFirestoreHostApi {
  public:
   static void RegisterWithRegistrar(flutter::PluginRegistrarWindows* registrar);
+  static firebase::firestore::FieldValue ConvertToFieldValue(
+      const flutter::EncodableValue& variant);
 
   CloudFirestorePlugin();
 

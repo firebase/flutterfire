@@ -150,8 +150,7 @@ void runDocumentReferenceTests() {
           await Future.delayed(
             const Duration(seconds: 1),
           ); 
-          // Semantic handle issue
-        }, skip: defaultTargetPlatform == TargetPlatform.windows);
+        });
 
         testWidgets('listeners throws a [FirebaseException]', (_) async {
           DocumentReference<Map<String, dynamic>> document =

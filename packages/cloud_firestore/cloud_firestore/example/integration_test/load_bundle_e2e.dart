@@ -124,10 +124,10 @@ void runLoadBundleTests() {
             ),
           ),
         );
-      });
+      }, skip: defaultTargetPlatform == TargetPlatform.windows);
     });
 
-    group('FirebaeFirestore.namedQueryGet()', () {
+    group('FirebaseFirestore.namedQueryGet()', () {
       testWidgets('namedQueryGet() successful', (_) async {
         const int number = 4;
         Uint8List buffer = await loadBundleSetup(number);
@@ -173,7 +173,7 @@ void runLoadBundleTests() {
           );
         },
         // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-        skip: kIsWeb,
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
     });
 
@@ -225,7 +225,7 @@ void runLoadBundleTests() {
           );
         },
         // This will fail until this is resolved: https://github.com/dart-lang/sdk/issues/52572
-        skip: kIsWeb,
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
     });
   });
