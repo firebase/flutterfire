@@ -187,8 +187,7 @@ NSString *const kErrMsgInvalidCredential =
   // additionalData.authCredential
   if ([error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey] != nil) {
     FIRAuthCredential *authCredential = [error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey];
-    additionalData[@"authCredential"] =
-        [FLTFirebaseAuthPlugin getNSDictionaryFromAuthCredential:authCredential];
+    additionalData[@"authCredential"] = [PigeonParser getPigeonAuthCredential:authCredential];
   }
 
   // Manual message overrides to ensure messages/codes matches other platforms.
@@ -576,9 +575,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
     if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
       [object handleMultiFactorError:app completion:completion withError:error];
     } else {
-      completion(nil, [FlutterError errorWithCode:@"sign-in-failed"
-                                          message:error.localizedDescription
-                                          details:error.userInfo]);
+      completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
     }
     return;
   }
@@ -1227,9 +1224,13 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, PigeonFirebaseA
                       if (firebaseDictionary != nil && firebaseDictionary[@"message"] != nil) {
                         // error from firebase-ios-sdk is buried in underlying
                         // error.
-                        completion(nil, [FlutterError errorWithCode:firebaseDictionary[@"code"]
-                                                            message:firebaseDictionary[@"message"]
-                                                            details:nil]);
+                        if ([firebaseDictionary[@"code"] isKindOfClass:[NSNumber class]]) {
+                          [self handleInternalError:completion withError:error];
+                        } else {
+                          completion(nil, [FlutterError errorWithCode:firebaseDictionary[@"code"]
+                                                              message:firebaseDictionary[@"message"]
+                                                              details:nil]);
+                        }
                       } else {
                         if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
                           [self handleMultiFactorError:app completion:completion withError:error];
