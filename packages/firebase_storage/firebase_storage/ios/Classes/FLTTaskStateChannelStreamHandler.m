@@ -24,14 +24,6 @@
   return self;
 }
 
-- (NSDictionary *)parseSnapshot:(FIRStorageTaskSnapshot *)snapshot {
-  return @{
-    @"path":snapshot.reference.fullPath,
-    @"bytesTransferred":@(snapshot.progress.completedUnitCount),
-    @"totalBytes":@(snapshot.progress.totalUnitCount),
-  };
-}
-
 - (FlutterError *)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)events {
   // Set up the various status listeners
   successHandle = [_task observeStatus:FIRStorageTaskStatusSuccess
@@ -39,7 +31,7 @@
                   events(@{
                     @"taskState":@(PigeonStorageTaskStateSuccess),
                     @"appName":snapshot.reference.storage.app.name,
-                    @"snapshot":[self parseSnapshot:snapshot],
+                    @"snapshot":[FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot],
                   });
                   // TODO Cleanup
                 }];
@@ -48,7 +40,7 @@
                   events(@{
                     @"taskState":@(PigeonStorageTaskStateError),
                     @"appName":snapshot.reference.storage.app.name,
-                    @"snapshot":[self parseSnapshot:snapshot],
+                    @"snapshot":[FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot],
                     // TODO Pass in error
                   });
                   // TODO Cleanup
@@ -58,7 +50,7 @@
                   events(@{
                     @"taskState":@(PigeonStorageTaskStatePaused),
                     @"appName":snapshot.reference.storage.app.name,
-                    @"snapshot":[self parseSnapshot:snapshot],
+                    @"snapshot":[FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot],
                   });
                 }];
   progressHandle = [_task observeStatus:FIRStorageTaskStatusProgress
@@ -66,7 +58,7 @@
                   events(@{
                     @"taskState":@(PigeonStorageTaskStateRunning),
                     @"appName":snapshot.reference.storage.app.name,
-                    @"snapshot":[self parseSnapshot:snapshot],
+                    @"snapshot":[FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot],
                   });
                 }];
 
