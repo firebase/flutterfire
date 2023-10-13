@@ -29,20 +29,9 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace 'io.flutter.plugins.firebase.firestore.example'
+
     compileSdk 33
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
 
     defaultConfig {
         applicationId "io.flutter.plugins.firebase.firestore.example"
@@ -50,7 +39,19 @@ android {
         targetSdk 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+    }
 
+    compileOptions {
+      sourceCompatibility JavaVersion.VERSION_1_8
+      targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+      jvmTarget = '1.8'
+    }
+
+    sourceSets {
+      main.java.srcDirs += 'src/main/kotlin'
     }
 
     buildTypes {
@@ -60,7 +61,6 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-    namespace 'io.flutter.plugins.firebase.firestore.example'
 }
 
 flutter {

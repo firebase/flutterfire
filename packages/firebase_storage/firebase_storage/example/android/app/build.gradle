@@ -26,15 +26,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace 'io.flutter.plugins.firebasestorageexample'
+
     compileSdk 33
-
-    buildFeatures {
-      buildConfig = true
-    }
-
-    lintOptions {
-        disable 'InvalidPackage'
-    }
 
     defaultConfig {
         applicationId 'io.flutter.plugins.firebasestorageexample'
@@ -43,6 +36,14 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
     }
 
     buildTypes {

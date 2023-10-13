@@ -27,15 +27,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
   namespace 'io.flutter.plugins.firebase.tests'
+
   compileSdk 33
-
-  buildFeatures {
-    buildConfig = true
-  }
-
-  lintOptions {
-    disable 'InvalidPackage'
-  }
 
   defaultConfig {
     applicationId "io.flutter.plugins.firebase.tests"
@@ -46,15 +39,23 @@ android {
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  buildFeatures {
+    buildConfig = true
+  }
+
+  lintOptions {
+    disable 'InvalidPackage'
+  }
+
   buildTypes {
     release {
       signingConfig signingConfigs.debug
     }
-  }
-
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
   }
 }
 

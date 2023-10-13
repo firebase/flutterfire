@@ -42,19 +42,20 @@ android {
 
     compileSdk 33
 
-    buildFeatures {
-      buildConfig = true
-    }
-
-    compileOptions {
-      sourceCompatibility JavaVersion.VERSION_1_8
-      targetCompatibility JavaVersion.VERSION_1_8
-    }
-
     defaultConfig {
         minSdk 19
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     lintOptions {
         disable 'InvalidPackage'
     }

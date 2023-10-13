@@ -29,11 +29,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "io.flutter.plugins.firebase.appcheck.example"
-    compileSdk 33
 
-    buildFeatures {
-      buildConfig true
-    }
+    compileSdk 33
 
     defaultConfig {
         applicationId "io.flutter.plugins.firebase.appcheck.example"
@@ -41,6 +38,10 @@ android {
         targetSdk 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     buildTypes {

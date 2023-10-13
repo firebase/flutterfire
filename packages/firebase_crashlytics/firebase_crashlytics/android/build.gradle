@@ -41,8 +41,9 @@ android {
 
   compileSdk 33
 
-  buildFeatures {
-    buildConfig = true
+  defaultConfig {
+    minSdk 19
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   compileOptions {
@@ -50,9 +51,8 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-  defaultConfig {
-    minSdk 19
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  buildFeatures {
+    buildConfig = true
   }
 
   lintOptions {

@@ -26,10 +26,6 @@ android {
       namespace 'io.flutter.plugins.firebase.core'
     }
 
-    buildFeatures {
-      buildConfig true
-    }
-
     compileSdk 33
 
     defaultConfig {
@@ -40,6 +36,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     lintOptions {

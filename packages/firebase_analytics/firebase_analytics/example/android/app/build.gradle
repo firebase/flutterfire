@@ -27,11 +27,8 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     namespace 'io.flutter.plugins.firebase.analytics.example'
-    compileSdk 33
 
-    lintOptions {
-        disable 'InvalidPackage'
-    }
+    compileSdk 33
 
     defaultConfig {
         applicationId "io.flutter.plugins.firebase.analytics.example"
@@ -40,6 +37,10 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
     }
 
     buildTypes {

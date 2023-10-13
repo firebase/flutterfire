@@ -26,15 +26,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace 'io.flutter.plugins.firebase.messaging.example'
+
     compileSdk 33
-
-    lintOptions {
-        disable 'InvalidPackage'
-    }
-
-    buildFeatures {
-      buildConfig = true
-    }
 
     defaultConfig {
         applicationId "io.flutter.plugins.firebase.messaging.example"
@@ -42,6 +35,14 @@ android {
         targetSdk 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
     }
 
     buildTypes {

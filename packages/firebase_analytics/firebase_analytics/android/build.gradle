@@ -40,10 +40,6 @@ android {
         namespace 'io.flutter.plugins.firebase.analytics'
     }
 
-    buildFeatures {
-      buildConfig true
-    }
-
     compileSdk 33
 
     defaultConfig {
@@ -56,8 +52,12 @@ android {
       targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    buildFeatures {
+      buildConfig true
+    }
+
     lintOptions {
-        disable 'InvalidPackage'
+      disable 'InvalidPackage'
     }
 
     dependencies {

@@ -26,11 +26,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
   namespace 'io.flutter.plugins.firebasecoreexample'
-  compileSdk flutter.compileSdkVersion
 
-  buildFeatures {
-    buildConfig = true
-  }
+  compileSdk flutter.compileSdkVersion
 
   defaultConfig {
     applicationId "io.flutter.plugins.firebasecoreexample"
@@ -45,6 +42,10 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
+  buildFeatures {
+    buildConfig = true
+  }
+
   buildTypes {
     release {
       signingConfig signingConfigs.debug
@@ -54,7 +55,4 @@ android {
 
 flutter {
   source '../..'
-}
-
-dependencies {
 }

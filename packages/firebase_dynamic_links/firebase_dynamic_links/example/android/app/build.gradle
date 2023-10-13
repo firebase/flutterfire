@@ -29,20 +29,20 @@ android {
 
   compileSdk 33
 
-  lintOptions {
-    disable 'InvalidPackage'
-  }
-
-  buildFeatures {
-    buildConfig = true
-  }
-
   defaultConfig {
     applicationId "io.flutter.plugins.firebase.dynamiclinksexample"
     minSdk 19
     targetSdk 33
     versionCode flutterVersionCode.toInteger()
     versionName flutterVersionName
+  }
+
+  buildFeatures {
+    buildConfig = true
+  }
+
+  lintOptions {
+    disable 'InvalidPackage'
   }
 
   buildTypes {
