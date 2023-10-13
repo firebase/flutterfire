@@ -5,7 +5,6 @@
 
 import 'dart:async';
 
-import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
@@ -13,7 +12,6 @@ import './utils/exception.dart';
 import '../../firebase_storage_platform_interface.dart';
 import '../pigeon/messages.pigeon.dart';
 import 'method_channel_reference.dart';
-import 'method_channel_task_snapshot.dart';
 
 /// Method Channel delegate for [FirebaseStoragePlatform].
 class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {

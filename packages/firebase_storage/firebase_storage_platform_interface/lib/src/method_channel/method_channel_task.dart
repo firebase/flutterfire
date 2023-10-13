@@ -7,7 +7,6 @@ import 'dart:async';
 import 'dart:developer' as developer;
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
 import '../../firebase_storage_platform_interface.dart';
