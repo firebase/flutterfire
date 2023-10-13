@@ -214,6 +214,7 @@ scripts:
     run: |
       melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart" && \
       melos run generate:pigeon:macos --no-select && \
+      melos run generate:pigeon:android --no-select && \
       melos run format --no-select
     packageFilters:
       fileExists: 'pigeons/messages.dart'
@@ -225,6 +226,14 @@ scripts:
     packageFilters:
       fileExists: 'ios/Classes/messages.g.m'
     description: Pigeon does not add the condition to import Flutter or FlutterMacOs. Add the condition
+
+  generate:pigeon:android:
+    run: |
+      melos exec -- "find ./android -type f -name '*Generated*' | xargs sed -i '.bak' 's/ArrayList<Object> toList() {/public ArrayList<Object> toList() {/g'" && \
+      melos exec -- "find ./android -type f -name '*.bak' -delete"
+    packageFilters:
+      dirExists: 'android'
+    description: Transform the method toList() into a public one to be used in EventChannel
 
   odm:test:
     run: |
