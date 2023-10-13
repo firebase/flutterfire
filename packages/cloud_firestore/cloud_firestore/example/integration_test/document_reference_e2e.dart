@@ -147,6 +147,9 @@ void runDocumentReferenceTests() {
           await document.update({'foo': 'baz'});
 
           await subscription.cancel();
+          await Future.delayed(
+            const Duration(seconds: 1),
+          );
         });
 
         testWidgets('listeners throws a [FirebaseException]', (_) async {

@@ -21,14 +21,21 @@
 
 @implementation FLTLoadBundleStreamHandler
 
+- (nonnull instancetype)initWithFirestore:(nonnull FIRFirestore *)firestore
+                                   bundle:(FlutterStandardTypedData *)bundle {
+  self = [super init];
+  if (self) {
+    _firestore = firestore;
+    _bundle = bundle;
+  }
+  return self;
+}
+
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
-  FlutterStandardTypedData *bundle = arguments[@"bundle"];
-  FIRFirestore *firestore = arguments[@"firestore"];
-
   // use completion handler to inform user of platform error.
-  self.task = [firestore
-      loadBundle:bundle.data
+  self.task = [_firestore
+      loadBundle:_bundle.data
       completion:^(FIRLoadBundleTaskProgress *_Nullable snapshot, NSError *_Nullable error) {
         if (error != nil) {
           NSArray *codeAndMessage =
@@ -66,5 +73,4 @@
 
   return nil;
 }
-
 @end
