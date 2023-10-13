@@ -39,17 +39,17 @@ android {
     if (project.android.hasProperty("namespace")) {
       namespace 'io.flutter.plugins.firebase.firestore'
     }
+    buildFeatures {
+      buildConfig true
+    }
     compileSDK 33
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     defaultConfig {
-        minSdkVersion 19
+        minSdk 19
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-    buildFeatures {
-      buildConfig true
     }
     lintOptions {
         disable 'InvalidPackage'

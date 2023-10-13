@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath 'com.android.tools.build:gradle:8.1.2'
     }
 }
 
@@ -40,7 +40,7 @@ android {
       namespace 'io.flutter.plugins.firebase.installations.firebase_app_installations'
     }
 
-    compileSdkVersion 31
+    compileSdk 33
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -48,7 +48,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 19
+        minSdk 19
     }
 
     dependencies {
@@ -59,7 +59,7 @@ android {
 }
 
 dependencies {
-  implementation 'androidx.annotation:annotation:1.1.0'
+  implementation 'androidx.annotation:annotation:1.7.0'
 }
 
 apply from: file("./user-agent.gradle")

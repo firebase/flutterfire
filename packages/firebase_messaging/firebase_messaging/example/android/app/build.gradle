@@ -32,10 +32,14 @@ android {
         disable 'InvalidPackage'
     }
 
+    buildFeatures {
+      buildConfig = true
+    }
+
     defaultConfig {
         applicationId "io.flutter.plugins.firebase.messaging.example"
-        minSdkVersion 21
-        targetSdkVersion 33
+        minSdk 21
+        targetSdk 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

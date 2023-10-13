@@ -26,16 +26,21 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
   namespace 'io.flutter.plugins.firebase.dynamiclinksexample'
-  compileSdkVersion 33
+
+  compileSdk 33
 
   lintOptions {
     disable 'InvalidPackage'
   }
 
+  buildFeatures {
+    buildConfig = true
+  }
+
   defaultConfig {
     applicationId "io.flutter.plugins.firebase.dynamiclinksexample"
-    minSdkVersion 19
-    targetSdkVersion 33
+    minSdk 19
+    targetSdk 33
     versionCode flutterVersionCode.toInteger()
     versionName flutterVersionName
   }

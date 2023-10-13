@@ -8,7 +8,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:4.1.0'
+    classpath 'com.android.tools.build:gradle:8.1.2'
   }
 }
 
@@ -39,14 +39,16 @@ android {
   if (project.android.hasProperty("namespace")) {
     namespace 'io.flutter.plugins.firebase.appcheck'
   }
-
-  compileSdkVersion 31
+  buildFeatures {
+    buildConfig true
+  }
+  compileSdk 33
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
   defaultConfig {
-    minSdkVersion 16
+    minSdk 19
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
   lintOptions {
@@ -59,7 +61,7 @@ android {
     implementation 'com.google.firebase:firebase-appcheck-safetynet:16.1.0'
     implementation 'com.google.firebase:firebase-appcheck-debug:16.1.0'
     implementation 'com.google.firebase:firebase-appcheck-playintegrity'
-    implementation 'androidx.annotation:annotation:1.5.0'
+    implementation 'androidx.annotation:annotation:1.7.0'
   }
 }
 
