@@ -38,6 +38,10 @@ jobs:
         name: Install Node.js 16
         with:
           node-version: '16'
+      - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
       - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         name: Gradle Cache
         with:
@@ -107,6 +111,10 @@ jobs:
         name: Install Node.js 16
         with:
           node-version: '16'
+      - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
       - uses: hendrikmuhs/ccache-action@ca3acd2731eef11f1572ccb126356c2f9298d35e
         name: Xcode Compile Cache
         with:
@@ -178,6 +186,10 @@ jobs:
         name: Install Node.js 16
         with:
           node-version: '16'
+      - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
       - uses: hendrikmuhs/ccache-action@ca3acd2731eef11f1572ccb126356c2f9298d35e
         name: Xcode Compile Cache
         with:
@@ -243,6 +255,10 @@ jobs:
         name: Install Node.js 16
         with:
           node-version: '16'
+      - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
       - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
           channel: 'stable'
@@ -283,6 +299,10 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
+      - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
       - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         name: Install Node.js 16
         with:
