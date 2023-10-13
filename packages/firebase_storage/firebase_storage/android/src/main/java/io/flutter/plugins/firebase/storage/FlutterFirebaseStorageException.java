@@ -7,14 +7,14 @@
 package io.flutter.plugins.firebase.storage;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.NonNull;
 import com.google.firebase.storage.StorageException;
 
 class FlutterFirebaseStorageException {
   static GeneratedAndroidFirebaseStorage.FlutterError parserExceptionToFlutter(
-    @Nullable Exception nativeException) {
+      @Nullable Exception nativeException) {
     if (nativeException == null) {
-      return new GeneratedAndroidFirebaseStorage.FlutterError("UNKNOWN", "An unknown error occurred", null);
+      return new GeneratedAndroidFirebaseStorage.FlutterError(
+          "UNKNOWN", "An unknown error occurred", null);
     }
     String code = "UNKNOWN";
     String message = "An unknown error occurred";

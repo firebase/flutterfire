@@ -5,19 +5,15 @@
  */
 package io.flutter.plugins.firebase.storage;
 
-import android.util.Log;
-import com.google.firebase.storage.StorageTask;
+import androidx.annotation.Nullable;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.OnPausedListener;
-
+import com.google.firebase.storage.StorageTask;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import androidx.annotation.Nullable;
 
 public class TaskStateChannelStreamHandler implements StreamHandler {
   private final FirebaseStorage androidStorage;
@@ -43,10 +39,11 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
   public void onListen(Object arguments, EventSink events) {
     androidTask.addOnProgressListener(
         taskSnapshot -> {
-          if (destroyed)
-            return;
+          if (destroyed) return;
           Map<String, Object> event = getTaskEventMap(taskSnapshot, null);
-          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.RUNNING.index);
+          event.put(
+              TASK_STATE_NAME,
+              GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.RUNNING.index);
           events.success(event);
           synchronized (resumeSyncObject) {
             resumeSyncObject.notifyAll();
@@ -55,10 +52,10 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
 
     androidTask.addOnPausedListener(
         taskSnapshot -> {
-          if (destroyed)
-            return;
+          if (destroyed) return;
           Map<String, Object> event = getTaskEventMap(taskSnapshot, null);
-          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.PAUSED.index);
+          event.put(
+              TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.PAUSED.index);
           events.success(event);
           synchronized (pauseSyncObject) {
             pauseSyncObject.notifyAll();
@@ -67,32 +64,34 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
 
     androidTask.addOnSuccessListener(
         taskSnapshot -> {
-          if (destroyed)
-            return;
+          if (destroyed) return;
           Map<String, Object> event = getTaskEventMap(taskSnapshot, null);
-          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.SUCCESS.index);
+          event.put(
+              TASK_STATE_NAME,
+              GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.SUCCESS.index);
           events.success(event);
           //destroy();
         });
 
     androidTask.addOnCanceledListener(
         () -> {
-          if (destroyed)
-            return;
+          if (destroyed) return;
           Map<String, Object> event = getTaskEventMap(null, null);
-          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.CANCELED.index);
+          event.put(
+              TASK_STATE_NAME,
+              GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.CANCELED.index);
           events.success(event);
         });
 
     androidTask.addOnFailureListener(
         exception -> {
-          if (destroyed)
-            return;
+          if (destroyed) return;
           Map<String, Object> event = getTaskEventMap(null, exception);
-          event.put(TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.ERROR.index);
-          events.error(FlutterFirebaseStoragePlugin.DEFAULT_ERROR_CODE, exception.getMessage(), event);
+          event.put(
+              TASK_STATE_NAME, GeneratedAndroidFirebaseStorage.PigeonStorageTaskState.ERROR.index);
+          events.error(
+              FlutterFirebaseStoragePlugin.DEFAULT_ERROR_CODE, exception.getMessage(), event);
         });
-
   }
 
   @Override
@@ -101,7 +100,7 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
   }
 
   private Map<String, Object> getTaskEventMap(
-    @Nullable Object snapshot, @Nullable Exception exception) {
+      @Nullable Object snapshot, @Nullable Exception exception) {
     Map<String, Object> arguments = new HashMap<>();
     arguments.put(TASK_APP_NAME, androidStorage.getApp().getName());
     if (snapshot != null) {

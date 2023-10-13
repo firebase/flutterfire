@@ -9,8 +9,6 @@ package io.flutter.plugins.firebase.storage;
 import static io.flutter.plugins.firebase.storage.FlutterFirebaseStoragePlugin.parseMetadataToMap;
 
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.SparseArray;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -220,7 +218,8 @@ class FlutterFirebaseStorageTask {
     return taskCompletionSource.getTask();
   }
 
-  TaskStateChannelStreamHandler startTaskWithMethodChannel(@NonNull MethodChannel channel) throws Exception {
+  TaskStateChannelStreamHandler startTaskWithMethodChannel(@NonNull MethodChannel channel)
+      throws Exception {
     if (type == FlutterFirebaseStorageTaskType.BYTES && bytes != null) {
       if (metadata == null) {
         storageTask = reference.putBytes(bytes);
