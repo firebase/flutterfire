@@ -61,7 +61,7 @@ jobs:
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
       - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
           channel: 'stable'

@@ -41,7 +41,7 @@ jobs:
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
       - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         name: Gradle Cache
         with:
@@ -114,7 +114,7 @@ jobs:
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
       - uses: hendrikmuhs/ccache-action@ca3acd2731eef11f1572ccb126356c2f9298d35e
         name: Xcode Compile Cache
         with:
@@ -189,7 +189,7 @@ jobs:
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
       - uses: hendrikmuhs/ccache-action@ca3acd2731eef11f1572ccb126356c2f9298d35e
         name: Xcode Compile Cache
         with:
@@ -258,7 +258,7 @@ jobs:
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
       - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
           channel: 'stable'
@@ -302,7 +302,7 @@ jobs:
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
       - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
         name: Install Node.js 16
         with:
