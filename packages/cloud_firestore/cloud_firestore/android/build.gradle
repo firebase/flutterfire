@@ -40,7 +40,7 @@ android {
       namespace 'io.flutter.plugins.firebase.firestore'
     }
 
-    compileSDK 33
+    compileSdk 33
 
     defaultConfig {
         minSdk 19
