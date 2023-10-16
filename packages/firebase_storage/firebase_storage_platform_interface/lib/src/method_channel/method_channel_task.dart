@@ -81,6 +81,7 @@ abstract class MethodChannelTask extends TaskPlatform {
     );
   }
 
+  /// Convert [TaskState] to [PigeonStorageTaskState]
   PigeonStorageTaskState convertToPigeonTaskState(TaskState state) {
     switch (state) {
       case TaskState.canceled:

@@ -23,9 +23,7 @@ void main() {
   late ReferencePlatform ref;
   final List<MethodCall> log = <MethodCall>[];
   const String bucketParam = 'bucket-test';
-  // mock props
-  bool mockPlatformExceptionThrown = false;
-  File? kFile;
+
   final kMetadata = SettableMetadata(
       contentLanguage: 'en',
       customMetadata: <String, String>{'activity': 'test'});
@@ -34,14 +32,12 @@ void main() {
   group('$MethodChannelReference', () {
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();
-      kFile = File('flt-ok.txt');
 
       storage = MethodChannelFirebaseStorage(app: app, bucket: bucketParam);
       ref = MethodChannelReference(storage, '/');
     });
 
     setUp(() async {
-      mockPlatformExceptionThrown = false;
       log.clear();
     });
 
@@ -56,7 +52,6 @@ void main() {
       test(
           'catch a [PlatformException] error and throws a [FirebaseException] error',
           () async {
-        mockPlatformExceptionThrown = true;
         Function callMethod;
         callMethod = () => ref.delete();
         await testExceptionHandling('PLATFORM', callMethod);
@@ -67,7 +62,6 @@ void main() {
       test(
           'catch a [PlatformException] error and throws a [FirebaseException] error',
           () async {
-        mockPlatformExceptionThrown = true;
         Function callMethod;
         callMethod = () => ref.getDownloadURL();
         await testExceptionHandling('PLATFORM', callMethod);
@@ -78,7 +72,6 @@ void main() {
       test(
           'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
           () async {
-        mockPlatformExceptionThrown = true;
         Function callMethod;
         callMethod = () => ref.getMetadata();
         await testExceptionHandling('PLATFORM', callMethod);
@@ -89,7 +82,6 @@ void main() {
       test(
           'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
           () async {
-        mockPlatformExceptionThrown = true;
         Function callMethod;
         callMethod = () => ref.list(kListOptions);
         await testExceptionHandling('PLATFORM', callMethod);
@@ -100,7 +92,6 @@ void main() {
       test(
           'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
           () async {
-        mockPlatformExceptionThrown = true;
         Function callMethod;
         callMethod = () => ref.listAll();
         await testExceptionHandling('PLATFORM', callMethod);
@@ -120,7 +111,6 @@ void main() {
       test(
           'catch a [PlatformException] error and throws a [FirebaseException] error',
           () async {
-        mockPlatformExceptionThrown = true;
         Function callMethod;
         callMethod = () => ref.updateMetadata(kMetadata);
         await testExceptionHandling('PLATFORM', callMethod);
