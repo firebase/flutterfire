@@ -20,7 +20,9 @@ import com.google.firebase.firestore.TransactionOptions;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreTransactionResult;
+import io.flutter.plugins.firebase.firestore.GeneratedAndroidFirebaseFirestore;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
+import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,40 +38,36 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
   }
 
   final OnTransactionStartedListener onTransactionStartedListener;
+  final FirebaseFirestore firestore;
+  final String transactionId;
+  final Long timeout;
 
-  public TransactionStreamHandler(OnTransactionStartedListener onTransactionStartedListener) {
+  final Long maxAttempts;
+
+  public TransactionStreamHandler(
+      OnTransactionStartedListener onTransactionStartedListener,
+      FirebaseFirestore firestore,
+      String transactionId,
+      Long timeout,
+      Long maxAttempts) {
     this.onTransactionStartedListener = onTransactionStartedListener;
+    this.firestore = firestore;
+    this.transactionId = transactionId;
+    this.timeout = timeout;
+    this.maxAttempts = maxAttempts;
   }
 
   final Semaphore semaphore = new Semaphore(0);
-  final Map<String, Object> response = new HashMap<>();
+  private GeneratedAndroidFirebaseFirestore.PigeonTransactionResult resultType;
+  private List<GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand> commands;
+
   final Handler mainLooper = new Handler(Looper.getMainLooper());
 
   @Override
   public void onListen(Object arguments, EventSink events) {
-    @SuppressWarnings("unchecked")
-    Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
-
-    FirebaseFirestore firestore =
-        (FirebaseFirestore) Objects.requireNonNull(argumentsMap.get("firestore"));
-
-    Object value = argumentsMap.get("timeout");
-    Long timeout;
-
-    if (value instanceof Long) {
-      timeout = (Long) value;
-    } else if (value instanceof Integer) {
-      timeout = Long.valueOf((Integer) value);
-    } else {
-      timeout = 5000L;
-    }
-
-    // Always sent by the PlatformChannel
-    int maxAttempts = (int) argumentsMap.get("maxAttempts");
-
     firestore
         .runTransaction(
-            new TransactionOptions.Builder().setMaxAttempts(maxAttempts).build(),
+            new TransactionOptions.Builder().setMaxAttempts(maxAttempts.intValue()).build(),
             transaction -> {
               onTransactionStartedListener.onStarted(transaction);
 
@@ -88,55 +86,47 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
                     new FirebaseFirestoreException("interrupted", Code.DEADLINE_EXCEEDED));
               }
 
-              if (response.isEmpty()) {
-                return FlutterFirebaseFirestoreTransactionResult.complete();
-              }
-              final String resultType = (String) response.get("type");
-
-              if ("ERROR".equalsIgnoreCase(resultType)) {
+              if (commands.isEmpty()) {
                 return FlutterFirebaseFirestoreTransactionResult.complete();
               }
 
-              @SuppressWarnings("unchecked")
-              List<Map<String, Object>> commands =
-                  (List<Map<String, Object>>) response.get("commands");
+              if (resultType == GeneratedAndroidFirebaseFirestore.PigeonTransactionResult.FAILURE) {
+                return FlutterFirebaseFirestoreTransactionResult.complete();
+              }
 
-              for (Map<String, Object> command : commands) {
-                String type = (String) Objects.requireNonNull(command.get("type"));
-                String path = (String) Objects.requireNonNull(command.get("path"));
-                DocumentReference documentReference = firestore.document(path);
+              for (GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand command : commands) {
+                DocumentReference documentReference = firestore.document(command.getPath());
 
-                @SuppressWarnings("unchecked")
-                Map<String, Object> data = (Map<String, Object>) command.get("data");
-
-                switch (type) {
-                  case "DELETE":
+                switch (command.getType()) {
+                  case DELETE_TYPE:
                     transaction.delete(documentReference);
                     break;
-                  case "UPDATE":
-                    transaction.update(documentReference, Objects.requireNonNull(data));
+                  case UPDATE:
+                    transaction.update(
+                        documentReference, Objects.requireNonNull(command.getData()));
                     break;
-                  case "SET":
+                  case SET:
                     {
-                      @SuppressWarnings("unchecked")
-                      Map<String, Object> options =
-                          (Map<String, Object>) Objects.requireNonNull(command.get("options"));
+                      GeneratedAndroidFirebaseFirestore.PigeonDocumentOption options =
+                          Objects.requireNonNull(command.getOption());
                       SetOptions setOptions = null;
 
-                      if (options.get("merge") != null && (boolean) options.get("merge")) {
+                      if (options.getMerge() != null && options.getMerge()) {
                         setOptions = SetOptions.merge();
-                      } else if (options.get("mergeFields") != null) {
-                        @SuppressWarnings("unchecked")
-                        List<FieldPath> fieldPathList =
-                            (List<FieldPath>) Objects.requireNonNull(options.get("mergeFields"));
+                      } else if (options.getMergeFields() != null) {
+                        List<List<String>> fieldList =
+                            Objects.requireNonNull(options.getMergeFields());
+                        List<FieldPath> fieldPathList = PigeonParser.parseFieldPath(fieldList);
+
                         setOptions = SetOptions.mergeFieldPaths(fieldPathList);
                       }
 
+                      Map<String, Object> data = Objects.requireNonNull(command.getData());
+
                       if (setOptions == null) {
-                        transaction.set(documentReference, Objects.requireNonNull(data));
+                        transaction.set(documentReference, data);
                       } else {
-                        transaction.set(
-                            documentReference, Objects.requireNonNull(data), setOptions);
+                        transaction.set(documentReference, data, setOptions);
                       }
 
                       break;
@@ -171,8 +161,11 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
   }
 
   @Override
-  public void receiveTransactionResponse(Map<String, Object> result) {
-    response.putAll(result);
+  public void receiveTransactionResponse(
+      GeneratedAndroidFirebaseFirestore.PigeonTransactionResult resultType,
+      List<GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand> commands) {
+    this.resultType = resultType;
+    this.commands = commands;
     semaphore.release();
   }
 }

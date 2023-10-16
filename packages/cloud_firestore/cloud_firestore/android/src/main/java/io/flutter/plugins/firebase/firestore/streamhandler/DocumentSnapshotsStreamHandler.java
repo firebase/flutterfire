@@ -9,31 +9,39 @@ package io.flutter.plugins.firebase.firestore.streamhandler;
 import static io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.DEFAULT_ERROR_CODE;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.MetadataChanges;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
+import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
 import java.util.Map;
-import java.util.Objects;
 
 public class DocumentSnapshotsStreamHandler implements StreamHandler {
 
   ListenerRegistration listenerRegistration;
+  FirebaseFirestore firestore;
+  DocumentReference documentReference;
+  MetadataChanges metadataChanges;
+
+  DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior;
+
+  public DocumentSnapshotsStreamHandler(
+      FirebaseFirestore firestore,
+      DocumentReference documentReference,
+      Boolean includeMetadataChanges,
+      DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior) {
+    this.firestore = firestore;
+    this.documentReference = documentReference;
+    this.metadataChanges =
+        includeMetadataChanges ? MetadataChanges.INCLUDE : MetadataChanges.EXCLUDE;
+    this.serverTimestampBehavior = serverTimestampBehavior;
+  }
 
   @Override
   public void onListen(Object arguments, EventSink events) {
-    @SuppressWarnings("unchecked")
-    Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
-
-    MetadataChanges metadataChanges =
-        (Boolean) Objects.requireNonNull(argumentsMap.get("includeMetadataChanges"))
-            ? MetadataChanges.INCLUDE
-            : MetadataChanges.EXCLUDE;
-
-    DocumentReference documentReference =
-        (DocumentReference) Objects.requireNonNull(argumentsMap.get("reference"));
-
     listenerRegistration =
         documentReference.addSnapshotListener(
             metadataChanges,
@@ -45,7 +53,9 @@ public class DocumentSnapshotsStreamHandler implements StreamHandler {
 
                 onCancel(null);
               } else {
-                events.success(documentSnapshot);
+                events.success(
+                    PigeonParser.toPigeonDocumentSnapshot(documentSnapshot, serverTimestampBehavior)
+                        .toList());
               }
             });
   }

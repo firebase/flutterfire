@@ -6,9 +6,12 @@
 
 package io.flutter.plugins.firebase.firestore.streamhandler;
 
-import java.util.Map;
+import io.flutter.plugins.firebase.firestore.GeneratedAndroidFirebaseFirestore;
+import java.util.List;
 
 /** callback when a transaction result has been computed. */
 public interface OnTransactionResultListener {
-  void receiveTransactionResponse(Map<String, Object> result);
+  void receiveTransactionResponse(
+      GeneratedAndroidFirebaseFirestore.PigeonTransactionResult resultType,
+      List<GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand> commands);
 }

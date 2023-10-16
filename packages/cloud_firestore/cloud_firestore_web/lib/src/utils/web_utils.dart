@@ -14,11 +14,24 @@ const _kChangeTypeAdded = 'added';
 const _kChangeTypeModified = 'modified';
 const _kChangeTypeRemoved = 'removed';
 
+String getServerTimestampBehaviorString(
+  ServerTimestampBehavior serverTimestampBehavior,
+) {
+  switch (serverTimestampBehavior) {
+    case ServerTimestampBehavior.none:
+      return 'none';
+    case ServerTimestampBehavior.estimate:
+      return 'estimate';
+    case ServerTimestampBehavior.previous:
+      return 'previous';
+  }
+}
+
 /// Converts a [web.QuerySnapshot] to a [QuerySnapshotPlatform].
 QuerySnapshotPlatform convertWebQuerySnapshot(
     FirebaseFirestorePlatform firestore,
     firestore_interop.QuerySnapshot webQuerySnapshot,
-    String serverTimestampBehavior) {
+    ServerTimestampBehavior serverTimestampBehavior) {
   return QuerySnapshotPlatform(
     webQuerySnapshot.docs
         .map((webDocumentSnapshot) => convertWebDocumentSnapshot(
@@ -43,22 +56,22 @@ QuerySnapshotPlatform convertWebQuerySnapshot(
 DocumentSnapshotPlatform convertWebDocumentSnapshot(
   FirebaseFirestorePlatform firestore,
   firestore_interop.DocumentSnapshot webSnapshot,
-  String serverTimestampBehavior,
+  ServerTimestampBehavior serverTimestampBehavior,
 ) {
   return DocumentSnapshotPlatform(
     firestore,
     webSnapshot.ref!.path,
-    <String, dynamic>{
-      'data': DecodeUtility.decodeMapData(
-          webSnapshot.data(SnapshotOptions(
-            serverTimestamps: serverTimestampBehavior,
-          )),
-          firestore),
-      'metadata': <String, bool>{
-        'hasPendingWrites': webSnapshot.metadata.hasPendingWrites,
-        'isFromCache': webSnapshot.metadata.fromCache,
-      },
-    },
+    DecodeUtility.decodeMapData(
+      webSnapshot.data(SnapshotOptions(
+        serverTimestamps:
+            getServerTimestampBehaviorString(serverTimestampBehavior),
+      )),
+      firestore,
+    ),
+    PigeonSnapshotMetadata(
+      hasPendingWrites: webSnapshot.metadata.hasPendingWrites,
+      isFromCache: webSnapshot.metadata.fromCache,
+    ),
   );
 }
 
@@ -66,7 +79,7 @@ DocumentSnapshotPlatform convertWebDocumentSnapshot(
 DocumentChangePlatform convertWebDocumentChange(
   FirebaseFirestorePlatform firestore,
   firestore_interop.DocumentChange webDocumentChange,
-  String serverTimestampBehavior,
+  ServerTimestampBehavior serverTimestampBehavior,
 ) {
   return DocumentChangePlatform(
       convertWebDocumentChangeType(webDocumentChange.type),
