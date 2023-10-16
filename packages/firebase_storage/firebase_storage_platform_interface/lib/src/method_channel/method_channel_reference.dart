@@ -28,6 +28,7 @@ class MethodChannelReference extends ReferencePlatform {
     );
   }
 
+  /// Default of FirebaseReference pigeon instance
   PigeonStorageReference get pigeonReference {
     return PigeonStorageReference(
       bucket: storage.app.name,
@@ -57,6 +58,7 @@ class MethodChannelReference extends ReferencePlatform {
     }
   }
 
+  /// Convert a [PigeonFullMetaData] to [FullMetadata]
   static FullMetadata convertMetadata(PigeonFullMetaData pigeonMetadata) {
     Map<String, dynamic> _metadata = <String, dynamic>{};
     pigeonMetadata.metadata?.forEach((key, value) {
@@ -79,6 +81,7 @@ class MethodChannelReference extends ReferencePlatform {
     }
   }
 
+  /// Convert a [ListOptions] to [PigeonListOptions]
   static PigeonListOptions convertOptions(ListOptions? options) {
     if (options == null) {
       return PigeonListOptions(maxResults: 1000);
@@ -87,6 +90,7 @@ class MethodChannelReference extends ReferencePlatform {
         maxResults: options.maxResults, pageToken: options.pageToken);
   }
 
+  /// Convert a [PigeonListResult] to [ListResultPlatform]
   ListResultPlatform convertListReference(
       PigeonListResult pigeonReferenceList) {
     List<String> referencePaths = [];
@@ -166,6 +170,7 @@ class MethodChannelReference extends ReferencePlatform {
         handle, storage, fullPath, data, format, metadata);
   }
 
+  /// Convert a [SettableMetadata] to [PigeonSettableMetadata]
   PigeonSettableMetadata convertToPigeonMetaData(SettableMetadata data) {
     return PigeonSettableMetadata(
       cacheControl: data.cacheControl,

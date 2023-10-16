@@ -30,7 +30,7 @@ abstract class MethodChannelTask extends TaskPlatform {
       final observerId = await _initialTask;
 
       final nativePlatformStream =
-          MethodChannelFirebaseStorage.storageTaskChannel(observerId!)
+          MethodChannelFirebaseStorage.storageTaskChannel(observerId)
               .receiveBroadcastStream();
       try {
         await for (final events in nativePlatformStream) {
@@ -151,10 +151,10 @@ abstract class MethodChannelTask extends TaskPlatform {
               .taskPause(pigeonFirebaseAppDefault, _handle))
           .cast<String, dynamic>();
 
-      final success = data?['status'] ?? false;
+      final success = data['status'] ?? false;
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.paused,
-            Map<String, dynamic>.from(data!['snapshot']));
+            Map<String, dynamic>.from(data['snapshot']));
       }
       return success;
     } catch (e, stack) {
@@ -173,10 +173,10 @@ abstract class MethodChannelTask extends TaskPlatform {
               .taskResume(pigeonFirebaseAppDefault, _handle))
           .cast<String, dynamic>();
 
-      final success = data?['status'] ?? false;
+      final success = data['status'] ?? false;
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running,
-            Map<String, dynamic>.from(data!['snapshot']));
+            Map<String, dynamic>.from(data['snapshot']));
       }
       return success;
     } catch (e, stack) {
@@ -195,10 +195,10 @@ abstract class MethodChannelTask extends TaskPlatform {
               .taskCancel(pigeonFirebaseAppDefault, _handle))
           .cast<String, dynamic>();
 
-      final success = data?['status'] ?? false;
+      final success = data['status'] ?? false;
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.canceled,
-            Map<String, dynamic>.from(data!['snapshot']));
+            Map<String, dynamic>.from(data['snapshot']));
       }
       return success;
     } catch (e, stack) {
