@@ -22,7 +22,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0
-  pigeon: ^11.0.1
+  pigeon: 11.0.1
   watcher: ^1.1.0
 
 dependency_overrides:
