@@ -10,18 +10,15 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 class MethodChannelDocumentChange extends DocumentChangePlatform {
   /// Creates a [MethodChannelDocumentChange] from the given [data]
   MethodChannelDocumentChange(
-      FirebaseFirestorePlatform firestore, Map<String, dynamic> data)
-      : super(DocumentChangeType.values.firstWhere((DocumentChangeType type) {
-          return type.toString() == data['type'];
-        }),
-            data['oldIndex'],
-            data['newIndex'],
+      FirebaseFirestorePlatform firestore, PigeonDocumentChange documentChange)
+      : super(
+            documentChange.type,
+            documentChange.oldIndex,
+            documentChange.newIndex,
             DocumentSnapshotPlatform(
               firestore,
-              data['path'],
-              <String, dynamic>{
-                'data': Map<String, dynamic>.from(data['data']),
-                'metadata': Map<String, dynamic>.from(data['metadata']),
-              },
+              documentChange.document.path,
+              documentChange.document.data,
+              documentChange.document.metadata,
             ));
 }

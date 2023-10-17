@@ -3,8 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'server_timestamp_behavior.dart';
-import 'source.dart';
+import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
 
 /// An options class that configures the behavior of get() calls on [DocumentReference] and [Query].
 ///

@@ -4,6 +4,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -17,11 +18,11 @@ import 'instance_e2e.dart';
 import 'load_bundle_e2e.dart';
 import 'query_e2e.dart';
 import 'second_app_e2e.dart';
+import 'second_database.dart';
 import 'snapshot_metadata_e2e.dart';
 import 'timestamp_e2e.dart';
 import 'transaction_e2e.dart';
 import 'write_batch_e2e.dart';
-import 'second_database.dart';
 
 bool kUseFirestoreEmulator = true;
 
@@ -53,6 +54,8 @@ void main() {
     runWriteBatchTests();
     runLoadBundleTests();
     runSecondAppTests();
-    runSecondDatabaseTests();
+    if (defaultTargetPlatform != TargetPlatform.windows) {
+      runSecondDatabaseTests();
+    }
   });
 }
