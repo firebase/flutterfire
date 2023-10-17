@@ -9,7 +9,7 @@ part of 'named_query.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters, duplicate_ignore
 
 class _Sentinel {
   const _Sentinel();
@@ -199,7 +199,9 @@ class _$ConflictDocumentReference
       "Cannot specify both number and numberFieldValue",
     );
     final json = {
-      if (number != _sentinel) _$ConflictFieldMap['number']!: number as num,
+      if (number != _sentinel)
+        _$ConflictFieldMap['number']!:
+            _$ConflictPerFieldToJson.number(number as num),
       if (numberFieldValue != null)
         _$ConflictFieldMap['number']!: numberFieldValue,
     };
@@ -217,7 +219,9 @@ class _$ConflictDocumentReference
       "Cannot specify both number and numberFieldValue",
     );
     final json = {
-      if (number != _sentinel) _$ConflictFieldMap['number']!: number as num,
+      if (number != _sentinel)
+        _$ConflictFieldMap['number']!:
+            _$ConflictPerFieldToJson.number(number as num),
       if (numberFieldValue != null)
         _$ConflictFieldMap['number']!: numberFieldValue,
     };
@@ -551,15 +555,27 @@ class _$ConflictQuery extends QueryReference<Conflict, ConflictQuerySnapshot>
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$ConflictFieldMap['number']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$ConflictPerFieldToJson.number(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$ConflictPerFieldToJson.number(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$ConflictPerFieldToJson.number(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$ConflictPerFieldToJson.number(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$ConflictPerFieldToJson.number(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$ConflictPerFieldToJson.number(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$ConflictPerFieldToJson.number(e)),
+        whereNotIn: whereNotIn?.map((e) => _$ConflictPerFieldToJson.number(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -814,6 +830,12 @@ Conflict _$ConflictFromJson(Map<String, dynamic> json) => Conflict(
 const _$ConflictFieldMap = <String, String>{
   'number': 'number',
 };
+
+// ignore: unused_element
+abstract class _$ConflictPerFieldToJson {
+  // ignore: unused_element
+  static Object? number(num instance) => instance;
+}
 
 Map<String, dynamic> _$ConflictToJson(Conflict instance) => <String, dynamic>{
       'number': instance.number,

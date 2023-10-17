@@ -37,6 +37,7 @@ const firestoreSerializable = JsonSerializable(
   // The following values could alternatively be set inside your `build.yaml`
   explicitToJson: true,
   createFieldMap: true,
+  createPerFieldToJson: true,
 );
 
 @firestoreSerializable

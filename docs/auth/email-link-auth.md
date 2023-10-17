@@ -188,6 +188,9 @@ differentiate the method of sign in for a password/link user, use
 the user is first asked to provide their email and then presented with the
 method of sign-in:
 
+Warning: This method - `fetchSignInMethodsForEmail()` may return an empty array if email enumeration protection is enabled. Please see documentation
+on [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection) for more details.
+
 ```dart
 try {
     final signInMethods =

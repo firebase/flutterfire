@@ -79,7 +79,7 @@ project.targets.each do |target|
                 "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"",
                 "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/\"",
                 "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"",
-                "\"$(BUILT_PRODUCTS_DIR)/$(EXECUTABLE_PATH)\"",
+                "\"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)\"",
                 "\"$(PROJECT_DIR)/firebase_app_id_file.json\"",
             ]
             project.save()

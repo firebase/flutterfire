@@ -9,13 +9,808 @@ part of 'query.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, require_trailing_commas, prefer_single_quotes, prefer_double_quotes, use_super_parameters, duplicate_ignore
 
 class _Sentinel {
   const _Sentinel();
 }
 
 const _sentinel = _Sentinel();
+
+/// A collection reference object can be used for adding documents,
+/// getting document references, and querying for documents
+/// (using the methods inherited from Query).
+abstract class DurationQueryCollectionReference
+    implements
+        DurationQueryQuery,
+        FirestoreCollectionReference<DurationQuery,
+            DurationQueryQuerySnapshot> {
+  factory DurationQueryCollectionReference([
+    FirebaseFirestore? firestore,
+  ]) = _$DurationQueryCollectionReference;
+
+  static DurationQuery fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return _$DurationQueryFromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    DurationQuery value,
+    SetOptions? options,
+  ) {
+    return _$DurationQueryToJson(value);
+  }
+
+  @override
+  CollectionReference<DurationQuery> get reference;
+
+  @override
+  DurationQueryDocumentReference doc([String? id]);
+
+  /// Add a new document to this collection with the specified data,
+  /// assigning it a document ID automatically.
+  Future<DurationQueryDocumentReference> add(DurationQuery value);
+}
+
+class _$DurationQueryCollectionReference extends _$DurationQueryQuery
+    implements DurationQueryCollectionReference {
+  factory _$DurationQueryCollectionReference([FirebaseFirestore? firestore]) {
+    firestore ??= FirebaseFirestore.instance;
+
+    return _$DurationQueryCollectionReference._(
+      firestore.collection('firestore-example-app/42/duration').withConverter(
+            fromFirestore: DurationQueryCollectionReference.fromFirestore,
+            toFirestore: DurationQueryCollectionReference.toFirestore,
+          ),
+    );
+  }
+
+  _$DurationQueryCollectionReference._(
+    CollectionReference<DurationQuery> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
+
+  String get path => reference.path;
+
+  @override
+  CollectionReference<DurationQuery> get reference =>
+      super.reference as CollectionReference<DurationQuery>;
+
+  @override
+  DurationQueryDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
+    return DurationQueryDocumentReference(
+      reference.doc(id),
+    );
+  }
+
+  @override
+  Future<DurationQueryDocumentReference> add(DurationQuery value) {
+    return reference
+        .add(value)
+        .then((ref) => DurationQueryDocumentReference(ref));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$DurationQueryCollectionReference &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+abstract class DurationQueryDocumentReference
+    extends FirestoreDocumentReference<DurationQuery,
+        DurationQueryDocumentSnapshot> {
+  factory DurationQueryDocumentReference(
+          DocumentReference<DurationQuery> reference) =
+      _$DurationQueryDocumentReference;
+
+  DocumentReference<DurationQuery> get reference;
+
+  /// A reference to the [DurationQueryCollectionReference] containing this document.
+  DurationQueryCollectionReference get parent {
+    return _$DurationQueryCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<DurationQueryDocumentSnapshot> snapshots();
+
+  @override
+  Future<DurationQueryDocumentSnapshot> get([GetOptions? options]);
+
+  @override
+  Future<void> delete();
+
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
+  Future<void> update({
+    Duration duration,
+    FieldValue durationFieldValue,
+  });
+
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    Duration duration,
+    FieldValue durationFieldValue,
+  });
+}
+
+class _$DurationQueryDocumentReference extends FirestoreDocumentReference<
+    DurationQuery,
+    DurationQueryDocumentSnapshot> implements DurationQueryDocumentReference {
+  _$DurationQueryDocumentReference(this.reference);
+
+  @override
+  final DocumentReference<DurationQuery> reference;
+
+  /// A reference to the [DurationQueryCollectionReference] containing this document.
+  DurationQueryCollectionReference get parent {
+    return _$DurationQueryCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<DurationQueryDocumentSnapshot> snapshots() {
+    return reference.snapshots().map(DurationQueryDocumentSnapshot._);
+  }
+
+  @override
+  Future<DurationQueryDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(DurationQueryDocumentSnapshot._);
+  }
+
+  @override
+  Future<DurationQueryDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then(DurationQueryDocumentSnapshot._);
+  }
+
+  Future<void> update({
+    Object? duration = _sentinel,
+    FieldValue? durationFieldValue,
+  }) async {
+    assert(
+      duration == _sentinel || durationFieldValue == null,
+      "Cannot specify both duration and durationFieldValue",
+    );
+    final json = {
+      if (duration != _sentinel)
+        _$DurationQueryFieldMap['duration']!:
+            _$DurationQueryPerFieldToJson.duration(duration as Duration),
+      if (durationFieldValue != null)
+        _$DurationQueryFieldMap['duration']!: durationFieldValue,
+    };
+
+    return reference.update(json);
+  }
+
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? duration = _sentinel,
+    FieldValue? durationFieldValue,
+  }) {
+    assert(
+      duration == _sentinel || durationFieldValue == null,
+      "Cannot specify both duration and durationFieldValue",
+    );
+    final json = {
+      if (duration != _sentinel)
+        _$DurationQueryFieldMap['duration']!:
+            _$DurationQueryPerFieldToJson.duration(duration as Duration),
+      if (durationFieldValue != null)
+        _$DurationQueryFieldMap['duration']!: durationFieldValue,
+    };
+
+    transaction.update(reference, json);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DurationQueryDocumentReference &&
+        other.runtimeType == runtimeType &&
+        other.parent == parent &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, parent, id);
+}
+
+abstract class DurationQueryQuery
+    implements QueryReference<DurationQuery, DurationQueryQuerySnapshot> {
+  @override
+  DurationQueryQuery limit(int limit);
+
+  @override
+  DurationQueryQuery limitToLast(int limit);
+
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  DurationQueryQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    DurationQueryDocumentSnapshot? startAtDocument,
+    DurationQueryDocumentSnapshot? endAtDocument,
+    DurationQueryDocumentSnapshot? endBeforeDocument,
+    DurationQueryDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  DurationQueryQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  DurationQueryQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+  DurationQueryQuery whereDuration({
+    Duration? isEqualTo,
+    Duration? isNotEqualTo,
+    Duration? isLessThan,
+    Duration? isLessThanOrEqualTo,
+    Duration? isGreaterThan,
+    Duration? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<Duration>? whereIn,
+    List<Duration>? whereNotIn,
+  });
+
+  DurationQueryQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    DurationQueryDocumentSnapshot? startAtDocument,
+    DurationQueryDocumentSnapshot? endAtDocument,
+    DurationQueryDocumentSnapshot? endBeforeDocument,
+    DurationQueryDocumentSnapshot? startAfterDocument,
+  });
+
+  DurationQueryQuery orderByDuration({
+    bool descending = false,
+    Duration startAt,
+    Duration startAfter,
+    Duration endAt,
+    Duration endBefore,
+    DurationQueryDocumentSnapshot? startAtDocument,
+    DurationQueryDocumentSnapshot? endAtDocument,
+    DurationQueryDocumentSnapshot? endBeforeDocument,
+    DurationQueryDocumentSnapshot? startAfterDocument,
+  });
+}
+
+class _$DurationQueryQuery
+    extends QueryReference<DurationQuery, DurationQueryQuerySnapshot>
+    implements DurationQueryQuery {
+  _$DurationQueryQuery(
+    this._collection, {
+    required Query<DurationQuery> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
+
+  final CollectionReference<Object?> _collection;
+
+  @override
+  Stream<DurationQueryQuerySnapshot> snapshots([SnapshotOptions? options]) {
+    return reference
+        .snapshots()
+        .map(DurationQueryQuerySnapshot._fromQuerySnapshot);
+  }
+
+  @override
+  Future<DurationQueryQuerySnapshot> get([GetOptions? options]) {
+    return reference
+        .get(options)
+        .then(DurationQueryQuerySnapshot._fromQuerySnapshot);
+  }
+
+  @override
+  DurationQueryQuery limit(int limit) {
+    return _$DurationQueryQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  @override
+  DurationQueryQuery limitToLast(int limit) {
+    return _$DurationQueryQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  DurationQueryQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    DurationQueryDocumentSnapshot? startAtDocument,
+    DurationQueryDocumentSnapshot? endAtDocument,
+    DurationQueryDocumentSnapshot? endBeforeDocument,
+    DurationQueryDocumentSnapshot? startAfterDocument,
+  }) {
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+    return _$DurationQueryQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  DurationQueryQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$DurationQueryQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  DurationQueryQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$DurationQueryQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  DurationQueryQuery whereDuration({
+    Duration? isEqualTo,
+    Duration? isNotEqualTo,
+    Duration? isLessThan,
+    Duration? isLessThanOrEqualTo,
+    Duration? isGreaterThan,
+    Duration? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<Duration>? whereIn,
+    List<Duration>? whereNotIn,
+  }) {
+    return _$DurationQueryQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$DurationQueryFieldMap['duration']!,
+        isEqualTo: isEqualTo != null
+            ? _$DurationQueryPerFieldToJson.duration(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$DurationQueryPerFieldToJson.duration(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$DurationQueryPerFieldToJson.duration(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$DurationQueryPerFieldToJson.duration(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$DurationQueryPerFieldToJson.duration(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$DurationQueryPerFieldToJson.duration(isGreaterThanOrEqualTo)
+            : null,
+        isNull: isNull,
+        whereIn: whereIn?.map((e) => _$DurationQueryPerFieldToJson.duration(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$DurationQueryPerFieldToJson.duration(e)),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  DurationQueryQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    DurationQueryDocumentSnapshot? startAtDocument,
+    DurationQueryDocumentSnapshot? endAtDocument,
+    DurationQueryDocumentSnapshot? endBeforeDocument,
+    DurationQueryDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$DurationQueryQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  DurationQueryQuery orderByDuration({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    DurationQueryDocumentSnapshot? startAtDocument,
+    DurationQueryDocumentSnapshot? endAtDocument,
+    DurationQueryDocumentSnapshot? endBeforeDocument,
+    DurationQueryDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$DurationQueryFieldMap['duration']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$DurationQueryQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$DurationQueryQuery &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+class DurationQueryDocumentSnapshot
+    extends FirestoreDocumentSnapshot<DurationQuery> {
+  DurationQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<DurationQuery> snapshot;
+
+  @override
+  DurationQueryDocumentReference get reference {
+    return DurationQueryDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final DurationQuery? data;
+}
+
+class DurationQueryQuerySnapshot extends FirestoreQuerySnapshot<DurationQuery,
+    DurationQueryQueryDocumentSnapshot> {
+  DurationQueryQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  factory DurationQueryQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<DurationQuery> snapshot,
+  ) {
+    final docs =
+        snapshot.docs.map(DurationQueryQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        DurationQueryDocumentSnapshot._,
+      );
+    }).toList();
+
+    return DurationQueryQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<DurationQueryDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    DurationQueryDocumentSnapshot Function(DocumentSnapshot<T> doc) decodeDoc,
+  ) {
+    return FirestoreDocumentChange<DurationQueryDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
+
+  final QuerySnapshot<DurationQuery> snapshot;
+
+  @override
+  final List<DurationQueryQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<DurationQueryDocumentSnapshot>> docChanges;
+}
+
+class DurationQueryQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<DurationQuery>
+    implements DurationQueryDocumentSnapshot {
+  DurationQueryQueryDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final QueryDocumentSnapshot<DurationQuery> snapshot;
+
+  @override
+  final DurationQuery data;
+
+  @override
+  DurationQueryDocumentReference get reference {
+    return DurationQueryDocumentReference(snapshot.reference);
+  }
+}
 
 /// A collection reference object can be used for adding documents,
 /// getting document references, and querying for documents
@@ -186,7 +981,9 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) _$DateTimeQueryFieldMap['time']!: time as DateTime,
+      if (time != _sentinel)
+        _$DateTimeQueryFieldMap['time']!:
+            _$DateTimeQueryPerFieldToJson.time(time as DateTime),
       if (timeFieldValue != null)
         _$DateTimeQueryFieldMap['time']!: timeFieldValue,
     };
@@ -204,7 +1001,9 @@ class _$DateTimeQueryDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both time and timeFieldValue",
     );
     final json = {
-      if (time != _sentinel) _$DateTimeQueryFieldMap['time']!: time as DateTime,
+      if (time != _sentinel)
+        _$DateTimeQueryFieldMap['time']!:
+            _$DateTimeQueryPerFieldToJson.time(time as DateTime),
       if (timeFieldValue != null)
         _$DateTimeQueryFieldMap['time']!: timeFieldValue,
     };
@@ -541,15 +1340,28 @@ class _$DateTimeQueryQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$DateTimeQueryFieldMap['time']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$DateTimeQueryPerFieldToJson.time(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$DateTimeQueryPerFieldToJson.time(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$DateTimeQueryPerFieldToJson.time(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$DateTimeQueryPerFieldToJson.time(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$DateTimeQueryPerFieldToJson.time(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$DateTimeQueryPerFieldToJson.time(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$DateTimeQueryPerFieldToJson.time(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$DateTimeQueryPerFieldToJson.time(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -967,7 +1779,8 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (time != _sentinel)
-        _$TimestampQueryFieldMap['time']!: time as Timestamp,
+        _$TimestampQueryFieldMap['time']!:
+            _$TimestampQueryPerFieldToJson.time(time as Timestamp),
       if (timeFieldValue != null)
         _$TimestampQueryFieldMap['time']!: timeFieldValue,
     };
@@ -986,7 +1799,8 @@ class _$TimestampQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (time != _sentinel)
-        _$TimestampQueryFieldMap['time']!: time as Timestamp,
+        _$TimestampQueryFieldMap['time']!:
+            _$TimestampQueryPerFieldToJson.time(time as Timestamp),
       if (timeFieldValue != null)
         _$TimestampQueryFieldMap['time']!: timeFieldValue,
     };
@@ -1323,15 +2137,28 @@ class _$TimestampQueryQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$TimestampQueryFieldMap['time']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$TimestampQueryPerFieldToJson.time(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$TimestampQueryPerFieldToJson.time(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$TimestampQueryPerFieldToJson.time(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$TimestampQueryPerFieldToJson.time(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$TimestampQueryPerFieldToJson.time(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$TimestampQueryPerFieldToJson.time(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$TimestampQueryPerFieldToJson.time(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$TimestampQueryPerFieldToJson.time(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -1750,7 +2577,8 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (point != _sentinel)
-        _$GeoPointQueryFieldMap['point']!: point as GeoPoint,
+        _$GeoPointQueryFieldMap['point']!:
+            _$GeoPointQueryPerFieldToJson.point(point as GeoPoint),
       if (pointFieldValue != null)
         _$GeoPointQueryFieldMap['point']!: pointFieldValue,
     };
@@ -1769,7 +2597,8 @@ class _$GeoPointQueryDocumentReference extends FirestoreDocumentReference<
     );
     final json = {
       if (point != _sentinel)
-        _$GeoPointQueryFieldMap['point']!: point as GeoPoint,
+        _$GeoPointQueryFieldMap['point']!:
+            _$GeoPointQueryPerFieldToJson.point(point as GeoPoint),
       if (pointFieldValue != null)
         _$GeoPointQueryFieldMap['point']!: pointFieldValue,
     };
@@ -2106,15 +2935,28 @@ class _$GeoPointQueryQuery
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$GeoPointQueryFieldMap['point']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$GeoPointQueryPerFieldToJson.point(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$GeoPointQueryPerFieldToJson.point(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$GeoPointQueryPerFieldToJson.point(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$GeoPointQueryPerFieldToJson.point(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$GeoPointQueryPerFieldToJson.point(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$GeoPointQueryPerFieldToJson.point(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn: whereIn?.map((e) => _$GeoPointQueryPerFieldToJson.point(e)),
+        whereNotIn:
+            whereNotIn?.map((e) => _$GeoPointQueryPerFieldToJson.point(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -2541,7 +3383,8 @@ class _$DocumentReferenceQueryDocumentReference
     final json = {
       if (ref != _sentinel)
         _$DocumentReferenceQueryFieldMap['ref']!:
-            ref as DocumentReference<Map<String, dynamic>>,
+            _$DocumentReferenceQueryPerFieldToJson
+                .ref(ref as DocumentReference<Map<String, dynamic>>),
       if (refFieldValue != null)
         _$DocumentReferenceQueryFieldMap['ref']!: refFieldValue,
     };
@@ -2561,7 +3404,8 @@ class _$DocumentReferenceQueryDocumentReference
     final json = {
       if (ref != _sentinel)
         _$DocumentReferenceQueryFieldMap['ref']!:
-            ref as DocumentReference<Map<String, dynamic>>,
+            _$DocumentReferenceQueryPerFieldToJson
+                .ref(ref as DocumentReference<Map<String, dynamic>>),
       if (refFieldValue != null)
         _$DocumentReferenceQueryFieldMap['ref']!: refFieldValue,
     };
@@ -2901,15 +3745,29 @@ class _$DocumentReferenceQueryQuery extends QueryReference<
       _collection,
       $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$DocumentReferenceQueryFieldMap['ref']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isEqualTo: isEqualTo != null
+            ? _$DocumentReferenceQueryPerFieldToJson.ref(isEqualTo)
+            : null,
+        isNotEqualTo: isNotEqualTo != null
+            ? _$DocumentReferenceQueryPerFieldToJson.ref(isNotEqualTo)
+            : null,
+        isLessThan: isLessThan != null
+            ? _$DocumentReferenceQueryPerFieldToJson.ref(isLessThan)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$DocumentReferenceQueryPerFieldToJson.ref(isLessThanOrEqualTo)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$DocumentReferenceQueryPerFieldToJson.ref(isGreaterThan)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$DocumentReferenceQueryPerFieldToJson.ref(isGreaterThanOrEqualTo)
+            : null,
         isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
+        whereIn:
+            whereIn?.map((e) => _$DocumentReferenceQueryPerFieldToJson.ref(e)),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$DocumentReferenceQueryPerFieldToJson.ref(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -3165,6 +4023,26 @@ class DocumentReferenceQueryQueryDocumentSnapshot
 // JsonSerializableGenerator
 // **************************************************************************
 
+DurationQuery _$DurationQueryFromJson(Map<String, dynamic> json) =>
+    DurationQuery(
+      Duration(microseconds: json['duration'] as int),
+    );
+
+const _$DurationQueryFieldMap = <String, String>{
+  'duration': 'duration',
+};
+
+// ignore: unused_element
+abstract class _$DurationQueryPerFieldToJson {
+  // ignore: unused_element
+  static Object? duration(Duration instance) => instance.inMicroseconds;
+}
+
+Map<String, dynamic> _$DurationQueryToJson(DurationQuery instance) =>
+    <String, dynamic>{
+      'duration': instance.duration.inMicroseconds,
+    };
+
 DateTimeQuery _$DateTimeQueryFromJson(Map<String, dynamic> json) =>
     DateTimeQuery(
       const FirestoreDateTimeConverter().fromJson(json['time'] as Timestamp),
@@ -3173,6 +4051,13 @@ DateTimeQuery _$DateTimeQueryFromJson(Map<String, dynamic> json) =>
 const _$DateTimeQueryFieldMap = <String, String>{
   'time': 'time',
 };
+
+// ignore: unused_element
+abstract class _$DateTimeQueryPerFieldToJson {
+  // ignore: unused_element
+  static Object? time(DateTime instance) =>
+      const FirestoreDateTimeConverter().toJson(instance);
+}
 
 Map<String, dynamic> _$DateTimeQueryToJson(DateTimeQuery instance) =>
     <String, dynamic>{
@@ -3188,6 +4073,13 @@ const _$TimestampQueryFieldMap = <String, String>{
   'time': 'time',
 };
 
+// ignore: unused_element
+abstract class _$TimestampQueryPerFieldToJson {
+  // ignore: unused_element
+  static Object? time(Timestamp instance) =>
+      const FirestoreTimestampConverter().toJson(instance);
+}
+
 Map<String, dynamic> _$TimestampQueryToJson(TimestampQuery instance) =>
     <String, dynamic>{
       'time': const FirestoreTimestampConverter().toJson(instance.time),
@@ -3201,6 +4093,13 @@ GeoPointQuery _$GeoPointQueryFromJson(Map<String, dynamic> json) =>
 const _$GeoPointQueryFieldMap = <String, String>{
   'point': 'point',
 };
+
+// ignore: unused_element
+abstract class _$GeoPointQueryPerFieldToJson {
+  // ignore: unused_element
+  static Object? point(GeoPoint instance) =>
+      const FirestoreGeoPointConverter().toJson(instance);
+}
 
 Map<String, dynamic> _$GeoPointQueryToJson(GeoPointQuery instance) =>
     <String, dynamic>{
@@ -3217,6 +4116,13 @@ DocumentReferenceQuery _$DocumentReferenceQueryFromJson(
 const _$DocumentReferenceQueryFieldMap = <String, String>{
   'ref': 'ref',
 };
+
+// ignore: unused_element
+abstract class _$DocumentReferenceQueryPerFieldToJson {
+  // ignore: unused_element
+  static Object? ref(DocumentReference<Map<String, dynamic>> instance) =>
+      const FirestoreDocumentReferenceConverter().toJson(instance);
+}
 
 Map<String, dynamic> _$DocumentReferenceQueryToJson(
         DocumentReferenceQuery instance) =>
