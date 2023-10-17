@@ -29,19 +29,24 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace 'io.flutter.plugins.firebase.tests'
-    compileSdkVersion 33
+
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "io.flutter.plugins.firebase.tests"
+        minSdk 21
+        targetSdk 33
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    defaultConfig {
-        applicationId "io.flutter.plugins.firebase.tests"
-        minSdkVersion 21
-        targetSdkVersion 33
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

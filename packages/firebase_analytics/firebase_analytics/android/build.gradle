@@ -39,7 +39,7 @@ android {
     if (project.android.hasProperty("namespace")) {
         namespace 'io.flutter.plugins.firebase.analytics'
     }
-    
+
     compileSdkVersion 31
 
     defaultConfig {
