@@ -15,7 +15,7 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  cloud_firestore_platform_interface: ^5.16.2
+  cloud_firestore_platform_interface: 5.16.2
   cloud_firestore_web: ^3.7.2
   collection: ^1.0.0
   firebase_core: ^2.17.0
