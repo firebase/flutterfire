@@ -7,7 +7,7 @@ To learn more about Firebase App Check, please visit the [Firebase website](http
 
 ## Getting Started
 
-To get started with Firebase App Check for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/app-check/overview).
+To get started with Firebase App Check for Flutter, please [see the documentation](https://firebase.google.com/docs/app-check/flutter/default-providers).
 
 ## Usage
 
