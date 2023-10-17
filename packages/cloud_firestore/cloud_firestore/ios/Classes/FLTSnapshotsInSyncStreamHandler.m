@@ -14,17 +14,23 @@
 
 @implementation FLTSnapshotsInSyncStreamHandler
 
+- (nonnull instancetype)initWithFirestore:(nonnull FIRFirestore *)firestore {
+  self = [super init];
+  if (self) {
+    _firestore = firestore;
+  }
+  return self;
+}
+
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
-  FIRFirestore *firestore = arguments[@"firestore"];
-
   id listener = ^() {
     dispatch_async(dispatch_get_main_queue(), ^{
       events(nil);
     });
   };
 
-  self.listenerRegistration = [firestore addSnapshotsInSyncListener:listener];
+  self.listenerRegistration = [_firestore addSnapshotsInSyncListener:listener];
 
   return nil;
 }
