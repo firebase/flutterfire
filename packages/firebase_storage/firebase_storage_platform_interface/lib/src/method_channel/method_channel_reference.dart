@@ -30,7 +30,7 @@ class MethodChannelReference extends ReferencePlatform {
 
   PigeonStorageReference get pigeonReference {
     return PigeonStorageReference(
-      bucket: storage.app.name,
+      bucket: storage.bucket,
       fullPath: fullPath,
       name: name,
     );

@@ -13,8 +13,11 @@
 
 #include <memory>
 
+#include "firebase/storage/common.h"
 #include "firebase/storage/controller.h"
 #include "messages.g.h"
+
+using firebase::storage::Error;
 
 namespace firebase_storage_windows {
 
@@ -30,6 +33,11 @@ class FirebaseStoragePlugin : public flutter::Plugin,
   // Disallow copy and assign.
   FirebaseStoragePlugin(const FirebaseStoragePlugin&) = delete;
   FirebaseStoragePlugin& operator=(const FirebaseStoragePlugin&) = delete;
+
+  // Parser functions
+  static std::string GetStorageErrorCode(Error cppError);
+  static std::string GetStorageErrorMessage(Error cppError);
+  static FlutterError ParseError(const firebase::FutureBase& future);
 
   // FirebaseStorageHostApi
   virtual void GetReferencebyPath(
