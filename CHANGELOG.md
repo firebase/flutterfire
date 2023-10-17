@@ -3,6 +3,204 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-10-17
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`cloud_firestore_platform_interface` - `v6.0.0`](#cloud_firestore_platform_interface---v600)
+ - [`firebase_auth_platform_interface` - `v7.0.0`](#firebase_auth_platform_interface---v700)
+ - [`firebase_core_platform_interface` - `v5.0.0`](#firebase_core_platform_interface---v500)
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.10.0`](#cloud_firestore---v4100)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.70`](#cloud_firestore_odm---v100-dev70)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.70`](#cloud_firestore_odm_generator---v100-dev70)
+ - [`cloud_firestore_web` - `v3.8.0`](#cloud_firestore_web---v380)
+ - [`cloud_functions` - `v4.5.0`](#cloud_functions---v450)
+ - [`firebase_analytics` - `v10.6.0`](#firebase_analytics---v1060)
+ - [`firebase_app_check` - `v0.2.1`](#firebase_app_check---v021)
+ - [`firebase_app_check_web` - `v0.1.0+2`](#firebase_app_check_web---v0102)
+ - [`firebase_app_installations` - `v0.2.4`](#firebase_app_installations---v024)
+ - [`firebase_auth` - `v4.11.0`](#firebase_auth---v4110)
+ - [`firebase_core` - `v2.18.0`](#firebase_core---v2180)
+ - [`firebase_core_web` - `v2.8.1`](#firebase_core_web---v281)
+ - [`firebase_crashlytics` - `v3.4.0`](#firebase_crashlytics---v340)
+ - [`firebase_database` - `v10.3.0`](#firebase_database---v1030)
+ - [`firebase_dynamic_links` - `v5.4.0`](#firebase_dynamic_links---v540)
+ - [`firebase_in_app_messaging` - `v0.7.4`](#firebase_in_app_messaging---v074)
+ - [`firebase_messaging` - `v14.7.0`](#firebase_messaging---v1470)
+ - [`firebase_ml_model_downloader` - `v0.2.4`](#firebase_ml_model_downloader---v024)
+ - [`firebase_performance` - `v0.9.3`](#firebase_performance---v093)
+ - [`firebase_remote_config` - `v4.3.0`](#firebase_remote_config---v430)
+ - [`firebase_storage` - `v11.3.0`](#firebase_storage---v1130)
+ - [`firebase_auth_web` - `v5.8.3`](#firebase_auth_web---v583)
+ - [`_flutterfire_internals` - `v1.3.8`](#_flutterfire_internals---v138)
+ - [`firebase_crashlytics_platform_interface` - `v3.6.8`](#firebase_crashlytics_platform_interface---v368)
+ - [`firebase_remote_config_web` - `v1.4.8`](#firebase_remote_config_web---v148)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.4+8`](#firebase_in_app_messaging_platform_interface---v0248)
+ - [`firebase_remote_config_platform_interface` - `v1.4.8`](#firebase_remote_config_platform_interface---v148)
+ - [`firebase_messaging_platform_interface` - `v4.5.9`](#firebase_messaging_platform_interface---v459)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.6+8`](#firebase_dynamic_links_platform_interface---v0268)
+ - [`firebase_database_web` - `v0.2.3+8`](#firebase_database_web---v0238)
+ - [`firebase_messaging_web` - `v3.5.9`](#firebase_messaging_web---v359)
+ - [`firebase_database_platform_interface` - `v0.2.5+8`](#firebase_database_platform_interface---v0258)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.4+8`](#firebase_ml_model_downloader_platform_interface---v0148)
+ - [`firebase_performance_platform_interface` - `v0.1.4+8`](#firebase_performance_platform_interface---v0148)
+ - [`firebase_storage_web` - `v3.6.9`](#firebase_storage_web---v369)
+ - [`firebase_app_installations_web` - `v0.1.3+8`](#firebase_app_installations_web---v0138)
+ - [`firebase_performance_web` - `v0.1.4+8`](#firebase_performance_web---v0148)
+ - [`cloud_functions_platform_interface` - `v5.5.3`](#cloud_functions_platform_interface---v553)
+ - [`firebase_analytics_platform_interface` - `v3.7.2`](#firebase_analytics_platform_interface---v372)
+ - [`firebase_analytics_web` - `v0.5.5+2`](#firebase_analytics_web---v0552)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+8`](#firebase_app_installations_platform_interface---v0148)
+ - [`firebase_app_check_platform_interface` - `v0.1.0+2`](#firebase_app_check_platform_interface---v0102)
+ - [`firebase_storage_platform_interface` - `v4.4.8`](#firebase_storage_platform_interface---v448)
+ - [`cloud_functions_web` - `v4.6.3`](#cloud_functions_web---v463)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_auth_web` - `v5.8.3`
+ - `_flutterfire_internals` - `v1.3.8`
+ - `firebase_crashlytics_platform_interface` - `v3.6.8`
+ - `firebase_remote_config_web` - `v1.4.8`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.4+8`
+ - `firebase_remote_config_platform_interface` - `v1.4.8`
+ - `firebase_messaging_platform_interface` - `v4.5.9`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.6+8`
+ - `firebase_database_web` - `v0.2.3+8`
+ - `firebase_messaging_web` - `v3.5.9`
+ - `firebase_database_platform_interface` - `v0.2.5+8`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.4+8`
+ - `firebase_performance_platform_interface` - `v0.1.4+8`
+ - `firebase_storage_web` - `v3.6.9`
+ - `firebase_app_installations_web` - `v0.1.3+8`
+ - `firebase_performance_web` - `v0.1.4+8`
+ - `cloud_functions_platform_interface` - `v5.5.3`
+ - `firebase_analytics_platform_interface` - `v3.7.2`
+ - `firebase_analytics_web` - `v0.5.5+2`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+8`
+ - `firebase_app_check_platform_interface` - `v0.1.0+2`
+ - `firebase_storage_platform_interface` - `v4.4.8`
+ - `cloud_functions_web` - `v4.6.3`
+
+---
+
+#### `cloud_firestore_platform_interface` - `v6.0.0`
+
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+ - **BREAKING** **FIX**: pin pigeon for `firebase_auth`, `cloud_firestore` & `firebase_core` ([#11715](https://github.com/firebase/flutterfire/issues/11715)). ([66c158c3](https://github.com/firebase/flutterfire/commit/66c158c3732d1ef50b9677b44c12a6afea9c2ec5))
+
+#### `firebase_auth_platform_interface` - `v7.0.0`
+
+ - **FIX**(auth): ensure `PigeonAuthCredential` is passed back to Dart side within try/catch ([#11683](https://github.com/firebase/flutterfire/issues/11683)). ([d42c3396](https://github.com/firebase/flutterfire/commit/d42c33969b096a9825af21c624f8d93aebede8b2))
+ - **BREAKING** **FIX**: pin pigeon for `firebase_auth`, `cloud_firestore` & `firebase_core` ([#11715](https://github.com/firebase/flutterfire/issues/11715)). ([66c158c3](https://github.com/firebase/flutterfire/commit/66c158c3732d1ef50b9677b44c12a6afea9c2ec5))
+
+#### `firebase_core_platform_interface` - `v5.0.0`
+
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+ - **BREAKING** **FIX**: pin pigeon for `firebase_auth`, `cloud_firestore` & `firebase_core` ([#11715](https://github.com/firebase/flutterfire/issues/11715)). ([66c158c3](https://github.com/firebase/flutterfire/commit/66c158c3732d1ef50b9677b44c12a6afea9c2ec5))
+
+#### `cloud_firestore` - `v4.10.0`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.70`
+
+ - **FEAT**(cloud_firestore_odm_generator): Support all serializable types ([#11365](https://github.com/firebase/flutterfire/issues/11365)). ([f4c21f83](https://github.com/firebase/flutterfire/commit/f4c21f834569bb363c80af583b53164f7cbd5ada))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.70`
+
+ - **FEAT**(cloud_firestore_odm_generator): Support all serializable types ([#11365](https://github.com/firebase/flutterfire/issues/11365)). ([f4c21f83](https://github.com/firebase/flutterfire/commit/f4c21f834569bb363c80af583b53164f7cbd5ada))
+
+#### `cloud_firestore_web` - `v3.8.0`
+
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+
+#### `cloud_functions` - `v4.5.0`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
+#### `firebase_analytics` - `v10.6.0`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
+#### `firebase_app_check` - `v0.2.1`
+
+ - **REFACTOR**(app-check,android): update linting warnings ([#11666](https://github.com/firebase/flutterfire/issues/11666)). ([fa9c8181](https://github.com/firebase/flutterfire/commit/fa9c8181156697a96b2615906b24613f28346175))
+ - **FIX**(firebase_app_check): Allow non-default app for Android debug provider ([#11680](https://github.com/firebase/flutterfire/issues/11680)). ([dd20c0c7](https://github.com/firebase/flutterfire/commit/dd20c0c7413dd9c9cd4c54426afc2572f9438607))
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+ - **FEAT**(app_check): Use Android dependencies from Firebase BOM ([#11671](https://github.com/firebase/flutterfire/issues/11671)). ([378fcbdc](https://github.com/firebase/flutterfire/commit/378fcbdc4909e448d47cc204147a2ecd978b4fb7))
+ - **DOCS**: Updated documentation link in firebase_app_check README.md ([#11712](https://github.com/firebase/flutterfire/issues/11712)). ([dd3e56c6](https://github.com/firebase/flutterfire/commit/dd3e56c67a2ddad0a11043f00e9d80544d36355a))
+
+#### `firebase_app_check_web` - `v0.1.0+2`
+
+ - **FIX**(firebase_app_check_web): Activate web app check on startup if it was previously activated ([#11625](https://github.com/firebase/flutterfire/issues/11625)). ([493f2548](https://github.com/firebase/flutterfire/commit/493f254824aa7aedf6ccc5223efbb72d13811c5f))
+
+#### `firebase_app_installations` - `v0.2.4`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
+#### `firebase_auth` - `v4.11.0`
+
+ - **FIX**(auth): ensure `PigeonAuthCredential` is passed back to Dart side within try/catch ([#11683](https://github.com/firebase/flutterfire/issues/11683)). ([d42c3396](https://github.com/firebase/flutterfire/commit/d42c33969b096a9825af21c624f8d93aebede8b2))
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+
+#### `firebase_core` - `v2.18.0`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+
+#### `firebase_core_web` - `v2.8.1`
+
+ - **FIX**(firebase_app_check_web): Activate web app check on startup if it was previously activated ([#11625](https://github.com/firebase/flutterfire/issues/11625)). ([493f2548](https://github.com/firebase/flutterfire/commit/493f254824aa7aedf6ccc5223efbb72d13811c5f))
+
+#### `firebase_crashlytics` - `v3.4.0`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
+#### `firebase_database` - `v10.3.0`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
+#### `firebase_dynamic_links` - `v5.4.0`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
+#### `firebase_in_app_messaging` - `v0.7.4`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
+#### `firebase_messaging` - `v14.7.0`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
+#### `firebase_ml_model_downloader` - `v0.2.4`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
+#### `firebase_performance` - `v0.9.3`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
+#### `firebase_remote_config` - `v4.3.0`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+
+#### `firebase_storage` - `v11.3.0`
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
+
 ## 2023-10-03
 
 ### Changes

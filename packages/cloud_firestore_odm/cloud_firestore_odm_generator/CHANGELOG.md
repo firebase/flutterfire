@@ -1,3 +1,7 @@
+## 1.0.0-dev.70
+
+ - **FEAT**(cloud_firestore_odm_generator): Support all serializable types ([#11365](https://github.com/firebase/flutterfire/issues/11365)). ([f4c21f83](https://github.com/firebase/flutterfire/commit/f4c21f834569bb363c80af583b53164f7cbd5ada))
+
 ## 1.0.0-dev.69
 
  - Update a dependency to the latest release.

@@ -1,3 +1,10 @@
+## 7.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(auth): ensure `PigeonAuthCredential` is passed back to Dart side within try/catch ([#11683](https://github.com/firebase/flutterfire/issues/11683)). ([d42c3396](https://github.com/firebase/flutterfire/commit/d42c33969b096a9825af21c624f8d93aebede8b2))
+ - **BREAKING** **FIX**: pin pigeon for `firebase_auth`, `cloud_firestore` & `firebase_core` ([#11715](https://github.com/firebase/flutterfire/issues/11715)). ([66c158c3](https://github.com/firebase/flutterfire/commit/66c158c3732d1ef50b9677b44c12a6afea9c2ec5))
+
 ## 6.19.1
 
  - Update a dependency to the latest release.
