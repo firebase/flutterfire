@@ -66,7 +66,8 @@ class CloudFirestorePlugin : public flutter::Plugin,
       const FirestorePigeonFirebaseApp& app,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void SetIndexConfiguration(
-      const FirestorePigeonFirebaseApp& app, const std::string& index_configuration,
+      const FirestorePigeonFirebaseApp& app,
+      const std::string& index_configuration,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void SetLoggingEnabled(
       bool logging_enabled,
@@ -75,7 +76,8 @@ class CloudFirestorePlugin : public flutter::Plugin,
       const FirestorePigeonFirebaseApp& app,
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void TransactionCreate(
-      const FirestorePigeonFirebaseApp& app, int64_t timeout, int64_t max_attempts,
+      const FirestorePigeonFirebaseApp& app, int64_t timeout,
+      int64_t max_attempts,
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void TransactionStoreResult(
       const std::string& transaction_id,
@@ -88,17 +90,21 @@ class CloudFirestorePlugin : public flutter::Plugin,
       std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result)
       override;
   virtual void DocumentReferenceSet(
-      const FirestorePigeonFirebaseApp& app, const DocumentReferenceRequest& request,
+      const FirestorePigeonFirebaseApp& app,
+      const DocumentReferenceRequest& request,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void DocumentReferenceUpdate(
-      const FirestorePigeonFirebaseApp& app, const DocumentReferenceRequest& request,
+      const FirestorePigeonFirebaseApp& app,
+      const DocumentReferenceRequest& request,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void DocumentReferenceGet(
-      const FirestorePigeonFirebaseApp& app, const DocumentReferenceRequest& request,
+      const FirestorePigeonFirebaseApp& app,
+      const DocumentReferenceRequest& request,
       std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result)
       override;
   virtual void DocumentReferenceDelete(
-      const FirestorePigeonFirebaseApp& app, const DocumentReferenceRequest& request,
+      const FirestorePigeonFirebaseApp& app,
+      const DocumentReferenceRequest& request,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void QueryGet(
       const FirestorePigeonFirebaseApp& app, const std::string& path,
@@ -110,7 +116,8 @@ class CloudFirestorePlugin : public flutter::Plugin,
       const PigeonQueryParameters& parameters, const AggregateSource& source,
       std::function<void(ErrorOr<double> reply)> result) override;
   virtual void WriteBatchCommit(
-      const FirestorePigeonFirebaseApp& app, const flutter::EncodableList& writes,
+      const FirestorePigeonFirebaseApp& app,
+      const flutter::EncodableList& writes,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void QuerySnapshot(
       const FirestorePigeonFirebaseApp& app, const std::string& path,
@@ -118,8 +125,8 @@ class CloudFirestorePlugin : public flutter::Plugin,
       const PigeonGetOptions& options, bool include_metadata_changes,
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void DocumentReferenceSnapshot(
-      const FirestorePigeonFirebaseApp& app, const DocumentReferenceRequest& parameters,
-      bool include_metadata_changes,
+      const FirestorePigeonFirebaseApp& app,
+      const DocumentReferenceRequest& parameters, bool include_metadata_changes,
       std::function<void(ErrorOr<std::string> reply)> result) override;
 
   static flutter::BinaryMessenger* messenger_;

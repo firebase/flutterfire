@@ -764,7 +764,8 @@ firebase::auth::FederatedOAuthProvider getProviderFromArguments(
 }
 
 void FirebaseAuthPlugin::SignInWithProvider(
-    const AuthPigeonFirebaseApp& app, const PigeonSignInProvider& sign_in_provider,
+    const AuthPigeonFirebaseApp& app,
+    const PigeonSignInProvider& sign_in_provider,
     std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
 
@@ -874,7 +875,8 @@ void FirebaseAuthPlugin::SetLanguageCode(
 }
 
 void FirebaseAuthPlugin::SetSettings(
-    const AuthPigeonFirebaseApp& app, const PigeonFirebaseAuthSettings& settings,
+    const AuthPigeonFirebaseApp& app,
+    const PigeonFirebaseAuthSettings& settings,
     std::function<void(std::optional<FlutterError> reply)> result) {
   result(FlutterError("unimplemented",
                       "SetSettings is not available on this platform yet.",
@@ -891,7 +893,8 @@ void FirebaseAuthPlugin::VerifyPasswordResetCode(
 }
 
 void FirebaseAuthPlugin::VerifyPhoneNumber(
-    const AuthPigeonFirebaseApp& app, const PigeonVerifyPhoneNumberRequest& request,
+    const AuthPigeonFirebaseApp& app,
+    const PigeonVerifyPhoneNumberRequest& request,
     std::function<void(ErrorOr<std::string> reply)> result) {
   result(FlutterError(
       "unimplemented",
@@ -962,7 +965,8 @@ void FirebaseAuthPlugin::LinkWithCredential(
 }
 
 void FirebaseAuthPlugin::LinkWithProvider(
-    const AuthPigeonFirebaseApp& app, const PigeonSignInProvider& sign_in_provider,
+    const AuthPigeonFirebaseApp& app,
+    const PigeonSignInProvider& sign_in_provider,
     std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
   firebase::auth::User user = firebaseAuth->current_user();
@@ -1004,7 +1008,8 @@ void FirebaseAuthPlugin::ReauthenticateWithCredential(
 }
 
 void FirebaseAuthPlugin::ReauthenticateWithProvider(
-    const AuthPigeonFirebaseApp& app, const PigeonSignInProvider& sign_in_provider,
+    const AuthPigeonFirebaseApp& app,
+    const PigeonSignInProvider& sign_in_provider,
     std::function<void(ErrorOr<PigeonUserCredential> reply)> result) {
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
   firebase::auth::User user = firebaseAuth->current_user();

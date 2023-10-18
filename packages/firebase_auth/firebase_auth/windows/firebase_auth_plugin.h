@@ -117,7 +117,8 @@ class FirebaseAuthPlugin : public flutter::Plugin,
       const AuthPigeonFirebaseApp& app, const std::string* language_code,
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void SetSettings(
-      const AuthPigeonFirebaseApp& app, const PigeonFirebaseAuthSettings& settings,
+      const AuthPigeonFirebaseApp& app,
+      const PigeonFirebaseAuthSettings& settings,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void VerifyPasswordResetCode(
       const AuthPigeonFirebaseApp& app, const std::string& code,
