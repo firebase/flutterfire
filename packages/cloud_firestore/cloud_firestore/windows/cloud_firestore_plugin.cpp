@@ -753,7 +753,7 @@ class SnapshotInSyncStreamHandler
         std::bind(&SnapshotInSyncStreamHandler::SendEvent, this);
     this->SetSendEventFunction(boundSendEvent);
 
-    listener_ = firestore_->AddSnapshotsInSyncListener([this]() {  
+    listener_ = firestore_->AddSnapshotsInSyncListener([this]() {
       if (sendEventFunc_) sendEventFunc_();
     });
     return nullptr;
@@ -1154,9 +1154,7 @@ std::vector<std::vector<EncodableValue>> ConvertToConditions(
 
 using firebase::firestore::Filter;
 
-
-firebase::firestore::Filter filterFromJson(
-    const EncodableMap& map) {
+firebase::firestore::Filter filterFromJson(const EncodableMap& map) {
   if (map.find(EncodableValue("fieldPath")) != map.end()) {
     // Deserialize a FilterQuery
     std::string op = std::get<std::string>(map.at(EncodableValue("op")));
@@ -1193,10 +1191,12 @@ firebase::firestore::Filter filterFromJson(
           fieldPath,
           ConvertToFieldValueList(std::get<flutter::EncodableList>(value)));
     } else if (op == "in") {
-      return Filter::In(fieldPath,
+      return Filter::In(
+          fieldPath,
           ConvertToFieldValueList(std::get<flutter::EncodableList>(value)));
     } else if (op == "not-in") {
-      return Filter::NotIn(fieldPath,
+      return Filter::NotIn(
+          fieldPath,
           ConvertToFieldValueList(std::get<flutter::EncodableList>(value)));
     } else {
       throw std::runtime_error("Invalid operator");
@@ -1208,9 +1208,9 @@ firebase::firestore::Filter filterFromJson(
   // Assuming the queries are a list of maps
 
   std::vector<EncodableMap> queries;
-  for (const auto& query : std::get<flutter::EncodableList>(map.at(EncodableValue("queries")))) {
-    queries.push_back(
-        std::get<EncodableMap>(query));
+  for (const auto& query :
+       std::get<flutter::EncodableList>(map.at(EncodableValue("queries")))) {
+    queries.push_back(std::get<EncodableMap>(query));
   }
 
   std::vector<Filter> parsedFilters;
@@ -1226,9 +1226,6 @@ firebase::firestore::Filter filterFromJson(
 
   throw std::runtime_error("Invalid operator");
 }
-
-
-
 
 firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
                                       const std::string& path,
@@ -1345,7 +1342,7 @@ firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
     std::cerr << "Error: " << e.what() << std::endl;
     // Return a 'null' or 'empty' query based on your C++ Firestore API
     return firebase::firestore::Query();
-  } 
+  }
 }
 
 void CloudFirestorePlugin::QueryGet(
