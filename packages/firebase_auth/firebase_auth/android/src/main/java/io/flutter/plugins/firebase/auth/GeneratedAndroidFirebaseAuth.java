@@ -339,7 +339,7 @@ public class GeneratedAndroidFirebaseAuth {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
-  public static final class PigeonFirebaseApp {
+  public static final class AuthPigeonFirebaseApp {
     private @NonNull String appName;
 
     public @NonNull String getAppName() {
@@ -364,7 +364,7 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     /** Constructor is non-public to enforce null safety; use Builder. */
-    PigeonFirebaseApp() {}
+    AuthPigeonFirebaseApp() {}
 
     public static final class Builder {
 
@@ -382,8 +382,8 @@ public class GeneratedAndroidFirebaseAuth {
         return this;
       }
 
-      public @NonNull PigeonFirebaseApp build() {
-        PigeonFirebaseApp pigeonReturn = new PigeonFirebaseApp();
+      public @NonNull AuthPigeonFirebaseApp build() {
+        AuthPigeonFirebaseApp pigeonReturn = new AuthPigeonFirebaseApp();
         pigeonReturn.setAppName(appName);
         pigeonReturn.setTenantId(tenantId);
         return pigeonReturn;
@@ -398,8 +398,8 @@ public class GeneratedAndroidFirebaseAuth {
       return toListResult;
     }
 
-    static @NonNull PigeonFirebaseApp fromList(@NonNull ArrayList<Object> list) {
-      PigeonFirebaseApp pigeonResult = new PigeonFirebaseApp();
+    static @NonNull AuthPigeonFirebaseApp fromList(@NonNull ArrayList<Object> list) {
+      AuthPigeonFirebaseApp pigeonResult = new AuthPigeonFirebaseApp();
       Object appName = list.get(0);
       pigeonResult.setAppName((String) appName);
       Object tenantId = list.get(1);
@@ -2292,17 +2292,17 @@ public class GeneratedAndroidFirebaseAuth {
     protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
       switch (type) {
         case (byte) 128:
-          return PigeonActionCodeInfo.fromList((ArrayList<Object>) readValue(buffer));
+          return AuthPigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 129:
-          return PigeonActionCodeInfoData.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonActionCodeInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
-          return PigeonActionCodeSettings.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonActionCodeInfoData.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 131:
-          return PigeonAdditionalUserInfo.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonActionCodeSettings.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 132:
-          return PigeonAuthCredential.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonAdditionalUserInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 133:
-          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonAuthCredential.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 134:
           return PigeonFirebaseAuthSettings.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 135:
@@ -2334,24 +2334,24 @@ public class GeneratedAndroidFirebaseAuth {
 
     @Override
     protected void writeValue(@NonNull ByteArrayOutputStream stream, Object value) {
-      if (value instanceof PigeonActionCodeInfo) {
+      if (value instanceof AuthPigeonFirebaseApp) {
         stream.write(128);
+        writeValue(stream, ((AuthPigeonFirebaseApp) value).toList());
+      } else if (value instanceof PigeonActionCodeInfo) {
+        stream.write(129);
         writeValue(stream, ((PigeonActionCodeInfo) value).toList());
       } else if (value instanceof PigeonActionCodeInfoData) {
-        stream.write(129);
+        stream.write(130);
         writeValue(stream, ((PigeonActionCodeInfoData) value).toList());
       } else if (value instanceof PigeonActionCodeSettings) {
-        stream.write(130);
+        stream.write(131);
         writeValue(stream, ((PigeonActionCodeSettings) value).toList());
       } else if (value instanceof PigeonAdditionalUserInfo) {
-        stream.write(131);
+        stream.write(132);
         writeValue(stream, ((PigeonAdditionalUserInfo) value).toList());
       } else if (value instanceof PigeonAuthCredential) {
-        stream.write(132);
-        writeValue(stream, ((PigeonAuthCredential) value).toList());
-      } else if (value instanceof PigeonFirebaseApp) {
         stream.write(133);
-        writeValue(stream, ((PigeonFirebaseApp) value).toList());
+        writeValue(stream, ((PigeonAuthCredential) value).toList());
       } else if (value instanceof PigeonFirebaseAuthSettings) {
         stream.write(134);
         writeValue(stream, ((PigeonFirebaseAuthSettings) value).toList());
@@ -2397,105 +2397,107 @@ public class GeneratedAndroidFirebaseAuth {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseAuthHostApi {
 
-    void registerIdTokenListener(@NonNull PigeonFirebaseApp app, @NonNull Result<String> result);
+    void registerIdTokenListener(
+        @NonNull AuthPigeonFirebaseApp app, @NonNull Result<String> result);
 
-    void registerAuthStateListener(@NonNull PigeonFirebaseApp app, @NonNull Result<String> result);
+    void registerAuthStateListener(
+        @NonNull AuthPigeonFirebaseApp app, @NonNull Result<String> result);
 
     void useEmulator(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String host,
         @NonNull Long port,
         @NonNull Result<Void> result);
 
     void applyActionCode(
-        @NonNull PigeonFirebaseApp app, @NonNull String code, @NonNull Result<Void> result);
+        @NonNull AuthPigeonFirebaseApp app, @NonNull String code, @NonNull Result<Void> result);
 
     void checkActionCode(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String code,
         @NonNull Result<PigeonActionCodeInfo> result);
 
     void confirmPasswordReset(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String code,
         @NonNull String newPassword,
         @NonNull Result<Void> result);
 
     void createUserWithEmailAndPassword(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String email,
         @NonNull String password,
         @NonNull Result<PigeonUserCredential> result);
 
     void signInAnonymously(
-        @NonNull PigeonFirebaseApp app, @NonNull Result<PigeonUserCredential> result);
+        @NonNull AuthPigeonFirebaseApp app, @NonNull Result<PigeonUserCredential> result);
 
     void signInWithCredential(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull Map<String, Object> input,
         @NonNull Result<PigeonUserCredential> result);
 
     void signInWithCustomToken(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String token,
         @NonNull Result<PigeonUserCredential> result);
 
     void signInWithEmailAndPassword(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String email,
         @NonNull String password,
         @NonNull Result<PigeonUserCredential> result);
 
     void signInWithEmailLink(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String email,
         @NonNull String emailLink,
         @NonNull Result<PigeonUserCredential> result);
 
     void signInWithProvider(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull PigeonSignInProvider signInProvider,
         @NonNull Result<PigeonUserCredential> result);
 
-    void signOut(@NonNull PigeonFirebaseApp app, @NonNull Result<Void> result);
+    void signOut(@NonNull AuthPigeonFirebaseApp app, @NonNull Result<Void> result);
 
     void fetchSignInMethodsForEmail(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String email,
         @NonNull Result<List<String>> result);
 
     void sendPasswordResetEmail(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String email,
         @Nullable PigeonActionCodeSettings actionCodeSettings,
         @NonNull Result<Void> result);
 
     void sendSignInLinkToEmail(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String email,
         @NonNull PigeonActionCodeSettings actionCodeSettings,
         @NonNull Result<Void> result);
 
     void setLanguageCode(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @Nullable String languageCode,
         @NonNull Result<String> result);
 
     void setSettings(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull PigeonFirebaseAuthSettings settings,
         @NonNull Result<Void> result);
 
     void verifyPasswordResetCode(
-        @NonNull PigeonFirebaseApp app, @NonNull String code, @NonNull Result<String> result);
+        @NonNull AuthPigeonFirebaseApp app, @NonNull String code, @NonNull Result<String> result);
 
     void verifyPhoneNumber(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull PigeonVerifyPhoneNumberRequest request,
         @NonNull Result<String> result);
 
     void revokeTokenWithAuthorizationCode(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String authorizationCode,
         @NonNull Result<Void> result);
 
@@ -2519,7 +2521,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 Result<String> resultCallback =
                     new Result<String>() {
                       public void success(String result) {
@@ -2550,7 +2552,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 Result<String> resultCallback =
                     new Result<String>() {
                       public void success(String result) {
@@ -2581,7 +2583,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String hostArg = (String) args.get(1);
                 Number portArg = (Number) args.get(2);
                 Result<Void> resultCallback =
@@ -2618,7 +2620,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String codeArg = (String) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -2650,7 +2652,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String codeArg = (String) args.get(1);
                 Result<PigeonActionCodeInfo> resultCallback =
                     new Result<PigeonActionCodeInfo>() {
@@ -2682,7 +2684,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String codeArg = (String) args.get(1);
                 String newPasswordArg = (String) args.get(2);
                 Result<Void> resultCallback =
@@ -2715,7 +2717,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String emailArg = (String) args.get(1);
                 String passwordArg = (String) args.get(2);
                 Result<PigeonUserCredential> resultCallback =
@@ -2748,7 +2750,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 Result<PigeonUserCredential> resultCallback =
                     new Result<PigeonUserCredential>() {
                       public void success(PigeonUserCredential result) {
@@ -2779,7 +2781,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 Map<String, Object> inputArg = (Map<String, Object>) args.get(1);
                 Result<PigeonUserCredential> resultCallback =
                     new Result<PigeonUserCredential>() {
@@ -2811,7 +2813,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String tokenArg = (String) args.get(1);
                 Result<PigeonUserCredential> resultCallback =
                     new Result<PigeonUserCredential>() {
@@ -2843,7 +2845,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String emailArg = (String) args.get(1);
                 String passwordArg = (String) args.get(2);
                 Result<PigeonUserCredential> resultCallback =
@@ -2876,7 +2878,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String emailArg = (String) args.get(1);
                 String emailLinkArg = (String) args.get(2);
                 Result<PigeonUserCredential> resultCallback =
@@ -2909,7 +2911,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 PigeonSignInProvider signInProviderArg = (PigeonSignInProvider) args.get(1);
                 Result<PigeonUserCredential> resultCallback =
                     new Result<PigeonUserCredential>() {
@@ -2941,7 +2943,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -2972,7 +2974,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String emailArg = (String) args.get(1);
                 Result<List<String>> resultCallback =
                     new Result<List<String>>() {
@@ -3004,7 +3006,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String emailArg = (String) args.get(1);
                 PigeonActionCodeSettings actionCodeSettingsArg =
                     (PigeonActionCodeSettings) args.get(2);
@@ -3038,7 +3040,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String emailArg = (String) args.get(1);
                 PigeonActionCodeSettings actionCodeSettingsArg =
                     (PigeonActionCodeSettings) args.get(2);
@@ -3072,7 +3074,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String languageCodeArg = (String) args.get(1);
                 Result<String> resultCallback =
                     new Result<String>() {
@@ -3104,7 +3106,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 PigeonFirebaseAuthSettings settingsArg = (PigeonFirebaseAuthSettings) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -3136,7 +3138,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String codeArg = (String) args.get(1);
                 Result<String> resultCallback =
                     new Result<String>() {
@@ -3168,7 +3170,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 PigeonVerifyPhoneNumberRequest requestArg =
                     (PigeonVerifyPhoneNumberRequest) args.get(1);
                 Result<String> resultCallback =
@@ -3201,7 +3203,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String authorizationCodeArg = (String) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -3234,17 +3236,17 @@ public class GeneratedAndroidFirebaseAuth {
     protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
       switch (type) {
         case (byte) 128:
-          return PigeonActionCodeInfo.fromList((ArrayList<Object>) readValue(buffer));
+          return AuthPigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 129:
-          return PigeonActionCodeInfoData.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonActionCodeInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
-          return PigeonActionCodeSettings.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonActionCodeInfoData.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 131:
-          return PigeonAdditionalUserInfo.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonActionCodeSettings.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 132:
-          return PigeonAuthCredential.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonAdditionalUserInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 133:
-          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonAuthCredential.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 134:
           return PigeonFirebaseAuthSettings.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 135:
@@ -3276,24 +3278,24 @@ public class GeneratedAndroidFirebaseAuth {
 
     @Override
     protected void writeValue(@NonNull ByteArrayOutputStream stream, Object value) {
-      if (value instanceof PigeonActionCodeInfo) {
+      if (value instanceof AuthPigeonFirebaseApp) {
         stream.write(128);
+        writeValue(stream, ((AuthPigeonFirebaseApp) value).toList());
+      } else if (value instanceof PigeonActionCodeInfo) {
+        stream.write(129);
         writeValue(stream, ((PigeonActionCodeInfo) value).toList());
       } else if (value instanceof PigeonActionCodeInfoData) {
-        stream.write(129);
+        stream.write(130);
         writeValue(stream, ((PigeonActionCodeInfoData) value).toList());
       } else if (value instanceof PigeonActionCodeSettings) {
-        stream.write(130);
+        stream.write(131);
         writeValue(stream, ((PigeonActionCodeSettings) value).toList());
       } else if (value instanceof PigeonAdditionalUserInfo) {
-        stream.write(131);
+        stream.write(132);
         writeValue(stream, ((PigeonAdditionalUserInfo) value).toList());
       } else if (value instanceof PigeonAuthCredential) {
-        stream.write(132);
-        writeValue(stream, ((PigeonAuthCredential) value).toList());
-      } else if (value instanceof PigeonFirebaseApp) {
         stream.write(133);
-        writeValue(stream, ((PigeonFirebaseApp) value).toList());
+        writeValue(stream, ((PigeonAuthCredential) value).toList());
       } else if (value instanceof PigeonFirebaseAuthSettings) {
         stream.write(134);
         writeValue(stream, ((PigeonFirebaseAuthSettings) value).toList());
@@ -3339,67 +3341,67 @@ public class GeneratedAndroidFirebaseAuth {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseAuthUserHostApi {
 
-    void delete(@NonNull PigeonFirebaseApp app, @NonNull Result<Void> result);
+    void delete(@NonNull AuthPigeonFirebaseApp app, @NonNull Result<Void> result);
 
     void getIdToken(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull Boolean forceRefresh,
         @NonNull Result<PigeonIdTokenResult> result);
 
     void linkWithCredential(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull Map<String, Object> input,
         @NonNull Result<PigeonUserCredential> result);
 
     void linkWithProvider(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull PigeonSignInProvider signInProvider,
         @NonNull Result<PigeonUserCredential> result);
 
     void reauthenticateWithCredential(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull Map<String, Object> input,
         @NonNull Result<PigeonUserCredential> result);
 
     void reauthenticateWithProvider(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull PigeonSignInProvider signInProvider,
         @NonNull Result<PigeonUserCredential> result);
 
-    void reload(@NonNull PigeonFirebaseApp app, @NonNull Result<PigeonUserDetails> result);
+    void reload(@NonNull AuthPigeonFirebaseApp app, @NonNull Result<PigeonUserDetails> result);
 
     void sendEmailVerification(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @Nullable PigeonActionCodeSettings actionCodeSettings,
         @NonNull Result<Void> result);
 
     void unlink(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String providerId,
         @NonNull Result<PigeonUserCredential> result);
 
     void updateEmail(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String newEmail,
         @NonNull Result<PigeonUserDetails> result);
 
     void updatePassword(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String newPassword,
         @NonNull Result<PigeonUserDetails> result);
 
     void updatePhoneNumber(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull Map<String, Object> input,
         @NonNull Result<PigeonUserDetails> result);
 
     void updateProfile(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull PigeonUserProfile profile,
         @NonNull Result<PigeonUserDetails> result);
 
     void verifyBeforeUpdateEmail(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String newEmail,
         @Nullable PigeonActionCodeSettings actionCodeSettings,
         @NonNull Result<Void> result);
@@ -3425,7 +3427,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -3456,7 +3458,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 Boolean forceRefreshArg = (Boolean) args.get(1);
                 Result<PigeonIdTokenResult> resultCallback =
                     new Result<PigeonIdTokenResult>() {
@@ -3488,7 +3490,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 Map<String, Object> inputArg = (Map<String, Object>) args.get(1);
                 Result<PigeonUserCredential> resultCallback =
                     new Result<PigeonUserCredential>() {
@@ -3520,7 +3522,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 PigeonSignInProvider signInProviderArg = (PigeonSignInProvider) args.get(1);
                 Result<PigeonUserCredential> resultCallback =
                     new Result<PigeonUserCredential>() {
@@ -3552,7 +3554,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 Map<String, Object> inputArg = (Map<String, Object>) args.get(1);
                 Result<PigeonUserCredential> resultCallback =
                     new Result<PigeonUserCredential>() {
@@ -3584,7 +3586,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 PigeonSignInProvider signInProviderArg = (PigeonSignInProvider) args.get(1);
                 Result<PigeonUserCredential> resultCallback =
                     new Result<PigeonUserCredential>() {
@@ -3616,7 +3618,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 Result<PigeonUserDetails> resultCallback =
                     new Result<PigeonUserDetails>() {
                       public void success(PigeonUserDetails result) {
@@ -3647,7 +3649,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 PigeonActionCodeSettings actionCodeSettingsArg =
                     (PigeonActionCodeSettings) args.get(1);
                 Result<Void> resultCallback =
@@ -3680,7 +3682,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String providerIdArg = (String) args.get(1);
                 Result<PigeonUserCredential> resultCallback =
                     new Result<PigeonUserCredential>() {
@@ -3712,7 +3714,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String newEmailArg = (String) args.get(1);
                 Result<PigeonUserDetails> resultCallback =
                     new Result<PigeonUserDetails>() {
@@ -3744,7 +3746,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String newPasswordArg = (String) args.get(1);
                 Result<PigeonUserDetails> resultCallback =
                     new Result<PigeonUserDetails>() {
@@ -3776,7 +3778,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 Map<String, Object> inputArg = (Map<String, Object>) args.get(1);
                 Result<PigeonUserDetails> resultCallback =
                     new Result<PigeonUserDetails>() {
@@ -3808,7 +3810,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 PigeonUserProfile profileArg = (PigeonUserProfile) args.get(1);
                 Result<PigeonUserDetails> resultCallback =
                     new Result<PigeonUserDetails>() {
@@ -3840,7 +3842,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String newEmailArg = (String) args.get(1);
                 PigeonActionCodeSettings actionCodeSettingsArg =
                     (PigeonActionCodeSettings) args.get(2);
@@ -3876,7 +3878,7 @@ public class GeneratedAndroidFirebaseAuth {
     protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
       switch (type) {
         case (byte) 128:
-          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+          return AuthPigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 129:
           return PigeonMultiFactorInfo.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
@@ -3890,9 +3892,9 @@ public class GeneratedAndroidFirebaseAuth {
 
     @Override
     protected void writeValue(@NonNull ByteArrayOutputStream stream, Object value) {
-      if (value instanceof PigeonFirebaseApp) {
+      if (value instanceof AuthPigeonFirebaseApp) {
         stream.write(128);
-        writeValue(stream, ((PigeonFirebaseApp) value).toList());
+        writeValue(stream, ((AuthPigeonFirebaseApp) value).toList());
       } else if (value instanceof PigeonMultiFactorInfo) {
         stream.write(129);
         writeValue(stream, ((PigeonMultiFactorInfo) value).toList());
@@ -3912,25 +3914,27 @@ public class GeneratedAndroidFirebaseAuth {
   public interface MultiFactorUserHostApi {
 
     void enrollPhone(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull PigeonPhoneMultiFactorAssertion assertion,
         @Nullable String displayName,
         @NonNull Result<Void> result);
 
     void enrollTotp(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull AuthPigeonFirebaseApp app,
         @NonNull String assertionId,
         @Nullable String displayName,
         @NonNull Result<Void> result);
 
     void getSession(
-        @NonNull PigeonFirebaseApp app, @NonNull Result<PigeonMultiFactorSession> result);
+        @NonNull AuthPigeonFirebaseApp app, @NonNull Result<PigeonMultiFactorSession> result);
 
     void unenroll(
-        @NonNull PigeonFirebaseApp app, @NonNull String factorUid, @NonNull Result<Void> result);
+        @NonNull AuthPigeonFirebaseApp app,
+        @NonNull String factorUid,
+        @NonNull Result<Void> result);
 
     void getEnrolledFactors(
-        @NonNull PigeonFirebaseApp app, @NonNull Result<List<PigeonMultiFactorInfo>> result);
+        @NonNull AuthPigeonFirebaseApp app, @NonNull Result<List<PigeonMultiFactorInfo>> result);
 
     /** The codec used by MultiFactorUserHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -3953,7 +3957,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 PigeonPhoneMultiFactorAssertion assertionArg =
                     (PigeonPhoneMultiFactorAssertion) args.get(1);
                 String displayNameArg = (String) args.get(2);
@@ -3987,7 +3991,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String assertionIdArg = (String) args.get(1);
                 String displayNameArg = (String) args.get(2);
                 Result<Void> resultCallback =
@@ -4020,7 +4024,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 Result<PigeonMultiFactorSession> resultCallback =
                     new Result<PigeonMultiFactorSession>() {
                       public void success(PigeonMultiFactorSession result) {
@@ -4051,7 +4055,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 String factorUidArg = (String) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -4083,7 +4087,7 @@ public class GeneratedAndroidFirebaseAuth {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 Result<List<PigeonMultiFactorInfo>> resultCallback =
                     new Result<List<PigeonMultiFactorInfo>>() {
                       public void success(List<PigeonMultiFactorInfo> result) {

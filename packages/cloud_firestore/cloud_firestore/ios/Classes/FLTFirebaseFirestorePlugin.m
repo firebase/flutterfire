@@ -207,7 +207,8 @@ FlutterStandardMethodCodec *_codec;
   return identifier;
 }
 
-- (FIRFirestore *_Nullable)getFIRFirestoreFromAppNameFromPigeon:(FirestorePigeonFirebaseApp *)pigeonApp {
+- (FIRFirestore *_Nullable)getFIRFirestoreFromAppNameFromPigeon:
+    (FirestorePigeonFirebaseApp *)pigeonApp {
   @synchronized(self) {
     NSString *appNameDart = pigeonApp.appName;
     NSString *databaseUrl = pigeonApp.databaseURL;
@@ -284,9 +285,9 @@ FlutterStandardMethodCodec *_codec;
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
 
   FIRQuery *query = [FirestorePigeonParser parseQueryWithParameters:parameters
-                                                 firestore:firestore
-                                                      path:path
-                                         isCollectionGroup:NO];
+                                                          firestore:firestore
+                                                               path:path
+                                                  isCollectionGroup:NO];
   if (query == nil) {
     completion(nil, [FlutterError errorWithCode:@"error-parsing"
                                         message:@"An error occurred while parsing query arguments, "
@@ -378,7 +379,7 @@ FlutterStandardMethodCodec *_codec;
       completion(nil, [self convertToFlutterError:error]);
     } else {
       completion([FirestorePigeonParser toPigeonDocumentSnapshot:snapshot
-                                serverTimestampBehavior:serverTimestampBehavior],
+                                         serverTimestampBehavior:serverTimestampBehavior],
                  nil);
     }
   };
@@ -503,10 +504,10 @@ FlutterStandardMethodCodec *_codec;
                                 if (error != nil) {
                                   completion(nil, [self convertToFlutterError:error]);
                                 } else {
-                                  completion(
-                                      [FirestorePigeonParser toPigeonQuerySnapshot:snapshot
-                                                  serverTimestampBehavior:serverTimestampBehavior],
-                                      nil);
+                                  completion([FirestorePigeonParser
+                                                   toPigeonQuerySnapshot:snapshot
+                                                 serverTimestampBehavior:serverTimestampBehavior],
+                                             nil);
                                 }
                               }];
          }];
@@ -521,9 +522,9 @@ FlutterStandardMethodCodec *_codec;
                                         FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   FIRQuery *query = [FirestorePigeonParser parseQueryWithParameters:parameters
-                                                 firestore:firestore
-                                                      path:path
-                                         isCollectionGroup:[isCollectionGroup boolValue]];
+                                                          firestore:firestore
+                                                               path:path
+                                                  isCollectionGroup:[isCollectionGroup boolValue]];
   if (query == nil) {
     completion(nil, [FlutterError errorWithCode:@"error-parsing"
                                         message:@"An error occurred while parsing query arguments, "
@@ -541,9 +542,10 @@ FlutterStandardMethodCodec *_codec;
                        if (error != nil) {
                          completion(nil, [self convertToFlutterError:error]);
                        } else {
-                         completion([FirestorePigeonParser toPigeonQuerySnapshot:snapshot
-                                                serverTimestampBehavior:serverTimestampBehavior],
-                                    nil);
+                         completion(
+                             [FirestorePigeonParser toPigeonQuerySnapshot:snapshot
+                                                  serverTimestampBehavior:serverTimestampBehavior],
+                             nil);
                        }
                      }];
 }
@@ -558,9 +560,9 @@ FlutterStandardMethodCodec *_codec;
                     (nonnull void (^)(NSString *_Nullable, FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   FIRQuery *query = [FirestorePigeonParser parseQueryWithParameters:parameters
-                                                 firestore:firestore
-                                                      path:path
-                                         isCollectionGroup:[isCollectionGroup boolValue]];
+                                                          firestore:firestore
+                                                               path:path
+                                                  isCollectionGroup:[isCollectionGroup boolValue]];
   if (query == nil) {
     completion(nil, [FlutterError errorWithCode:@"error-parsing"
                                         message:@"An error occurred while parsing query arguments, "
@@ -648,7 +650,7 @@ FlutterStandardMethodCodec *_codec;
     completion(nil, [self convertToFlutterError:error]);
   } else if (snapshot != nil) {
     completion([FirestorePigeonParser toPigeonDocumentSnapshot:snapshot
-                              serverTimestampBehavior:FIRServerTimestampBehaviorNone],
+                                       serverTimestampBehavior:FIRServerTimestampBehaviorNone],
                nil);
   } else {
     completion(nil, nil);

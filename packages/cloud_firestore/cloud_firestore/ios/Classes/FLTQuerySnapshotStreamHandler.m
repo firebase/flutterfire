@@ -67,21 +67,22 @@
             [[NSMutableArray alloc] initWithCapacity:snapshot.documentChanges.count];
 
         for (FIRDocumentSnapshot *documentSnapshot in snapshot.documents) {
-          [documents addObject:[[FirestorePigeonParser toPigeonDocumentSnapshot:documentSnapshot
-                                               serverTimestampBehavior:self.serverTimestampBehavior]
-                                   toList]];
+          [documents addObject:[[FirestorePigeonParser
+                                   toPigeonDocumentSnapshot:documentSnapshot
+                                    serverTimestampBehavior:self.serverTimestampBehavior] toList]];
         }
 
         for (FIRDocumentChange *documentChange in snapshot.documentChanges) {
           [documentChanges
               addObject:[[FirestorePigeonParser toPigeonDocumentChange:documentChange
-                                      serverTimestampBehavior:self.serverTimestampBehavior]
+                                               serverTimestampBehavior:self.serverTimestampBehavior]
                             toList]];
         }
 
         [toListResult addObject:documents];
         [toListResult addObject:documentChanges];
-        [toListResult addObject:[[FirestorePigeonParser toPigeonSnapshotMetadata:snapshot.metadata] toList]];
+        [toListResult
+            addObject:[[FirestorePigeonParser toPigeonSnapshotMetadata:snapshot.metadata] toList]];
 
         events(toListResult);
       });

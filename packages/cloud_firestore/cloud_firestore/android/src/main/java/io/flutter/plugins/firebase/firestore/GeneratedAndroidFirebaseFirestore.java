@@ -667,7 +667,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(4);
       toListResult.add(type == null ? null : type.index);
       toListResult.add((document == null) ? null : document.toList());

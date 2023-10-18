@@ -49,7 +49,7 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
 
   public PhoneNumberVerificationStreamHandler(
       Activity activity,
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseAuth.PigeonVerifyPhoneNumberRequest request,
       @Nullable MultiFactorSession multiFactorSession,
       @Nullable PhoneMultiFactorInfo multiFactorInfo,

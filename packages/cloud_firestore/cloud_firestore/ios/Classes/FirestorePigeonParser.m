@@ -260,7 +260,7 @@
   return [PigeonDocumentChange
       makeWithType:[FirestorePigeonParser toPigeonDocumentChangeType:documentChange.type]
           document:[FirestorePigeonParser toPigeonDocumentSnapshot:documentChange.document
-                                  serverTimestampBehavior:serverTimestampBehavior]
+                                           serverTimestampBehavior:serverTimestampBehavior]
           oldIndex:oldIndex
           newIndex:newIndex];
 }
@@ -270,8 +270,9 @@
     serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
   NSMutableArray *pigeonDocumentChanges = [NSMutableArray array];
   for (FIRDocumentChange *documentChange in documentChanges) {
-    [pigeonDocumentChanges addObject:[FirestorePigeonParser toPigeonDocumentChange:documentChange
-                                                  serverTimestampBehavior:serverTimestampBehavior]];
+    [pigeonDocumentChanges
+        addObject:[FirestorePigeonParser toPigeonDocumentChange:documentChange
+                                        serverTimestampBehavior:serverTimestampBehavior]];
   }
   return pigeonDocumentChanges;
 }
@@ -280,13 +281,14 @@
                        serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
   NSMutableArray *documentSnapshots = [NSMutableArray array];
   for (FIRDocumentSnapshot *documentSnapshot in querySnaphot.documents) {
-    [documentSnapshots addObject:[FirestorePigeonParser toPigeonDocumentSnapshot:documentSnapshot
-                                                serverTimestampBehavior:serverTimestampBehavior]];
+    [documentSnapshots
+        addObject:[FirestorePigeonParser toPigeonDocumentSnapshot:documentSnapshot
+                                          serverTimestampBehavior:serverTimestampBehavior]];
   }
   return [PigeonQuerySnapshot
       makeWithDocuments:documentSnapshots
         documentChanges:[FirestorePigeonParser toPigeonDocumentChanges:querySnaphot.documentChanges
-                                      serverTimestampBehavior:serverTimestampBehavior]
+                                               serverTimestampBehavior:serverTimestampBehavior]
                metadata:[FirestorePigeonParser toPigeonSnapshotMetadata:querySnaphot.metadata]];
 }
 
