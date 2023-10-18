@@ -22,6 +22,7 @@
 
 #include "firebase/app.h"
 #include "firebase/firestore.h"
+#include "firebase/firestore/filter.h"
 #include "firebase/log.h"
 #include "firebase_core/firebase_core_plugin_c_api.h"
 #include "messages.g.h"
@@ -1151,6 +1152,81 @@ std::vector<std::vector<EncodableValue>> ConvertToConditions(
   return conditions;
 }
 
+using firebase::firestore::Filter;
+
+firebase::firestore::Filter filterFromJson(const EncodableMap& map) {
+  if (map.find(EncodableValue("fieldPath")) != map.end()) {
+    // Deserialize a FilterQuery
+    std::string op = std::get<std::string>(map.at(EncodableValue("op")));
+    const FieldPath& fieldPath = std::any_cast<FieldPath>(
+        std::get<CustomEncodableValue>(map.at(EncodableValue("fieldPath"))));
+
+    auto value = map.at(EncodableValue("value"));
+
+    // All the operators from Firebase
+    if (op == "==") {
+      return Filter::EqualTo(fieldPath,
+                             CloudFirestorePlugin::ConvertToFieldValue(value));
+    } else if (op == "!=") {
+      return Filter::NotEqualTo(
+          fieldPath, CloudFirestorePlugin::ConvertToFieldValue(value));
+    } else if (op == "<") {
+      return Filter::LessThan(fieldPath,
+                              CloudFirestorePlugin::ConvertToFieldValue(value));
+    } else if (op == "<=") {
+      return Filter::LessThanOrEqualTo(
+          fieldPath, CloudFirestorePlugin::ConvertToFieldValue(value));
+    } else if (op == ">") {
+      return Filter::GreaterThan(
+          fieldPath, CloudFirestorePlugin::ConvertToFieldValue(value));
+    } else if (op == ">=") {
+      return Filter::GreaterThanOrEqualTo(
+          fieldPath, CloudFirestorePlugin::ConvertToFieldValue(value));
+    } else if (op == "array-contains") {
+      return Filter::ArrayContains(
+          fieldPath, CloudFirestorePlugin::ConvertToFieldValue(value));
+    } else if (op == "array-contains-any") {
+      // Here you should make sure 'value' is the correct type, e.g., a vector
+      return Filter::ArrayContainsAny(
+          fieldPath,
+          ConvertToFieldValueList(std::get<flutter::EncodableList>(value)));
+    } else if (op == "in") {
+      return Filter::In(
+          fieldPath,
+          ConvertToFieldValueList(std::get<flutter::EncodableList>(value)));
+    } else if (op == "not-in") {
+      return Filter::NotIn(
+          fieldPath,
+          ConvertToFieldValueList(std::get<flutter::EncodableList>(value)));
+    } else {
+      throw std::runtime_error("Invalid operator");
+    }
+  }
+
+  // Deserialize a FilterOperator
+  std::string op = std::get<std::string>(map.at(EncodableValue("op")));
+  // Assuming the queries are a list of maps
+
+  std::vector<EncodableMap> queries;
+  for (const auto& query :
+       std::get<flutter::EncodableList>(map.at(EncodableValue("queries")))) {
+    queries.push_back(std::get<EncodableMap>(query));
+  }
+
+  std::vector<Filter> parsedFilters;
+  for (const auto& query : queries) {
+    parsedFilters.push_back(filterFromJson(query));
+  }
+
+  if (op == "OR") {
+    return Filter::Or(parsedFilters);
+  } else if (op == "AND") {
+    return Filter::And(parsedFilters);
+  }
+
+  throw std::runtime_error("Invalid operator");
+}
+
 firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
                                       const std::string& path,
                                       bool isCollectionGroup,
@@ -1164,10 +1240,10 @@ firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
       query = firestore->Collection(path);
     }
 
-    // Assume filterFromJson function converts filters to appropriate Firestore
-    // filter
-    // TODO: not available in the SDK
-    // auto filter = filterFromJson(*parameters.filters());
+    if (parameters.filters()) {
+      Filter filter = filterFromJson(*parameters.filters());
+      query = query.Where(filter);
+    }
 
     std::vector<std::vector<EncodableValue>> conditions =
         ConvertToConditions(*parameters.where());
