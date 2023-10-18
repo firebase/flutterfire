@@ -26,19 +26,20 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace 'io.flutter.plugins.firebasecrashlyticsexample'
-    compileSdkVersion 33
 
-    lintOptions {
-        disable 'InvalidPackage'
-    }
+    compileSdk 33
 
     defaultConfig {
         applicationId 'io.flutter.plugins.firebasecrashlyticsexample'
-        minSdkVersion 19
-        targetSdkVersion 33
+        minSdk 19
+        targetSdk 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
     }
 
     buildTypes {

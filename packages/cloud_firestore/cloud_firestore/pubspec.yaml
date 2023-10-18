@@ -4,7 +4,7 @@ description:
   live synchronization and offline support on Android and iOS.
 homepage: https://firebase.google.com/docs/firestore
 repository: https://github.com/firebase/flutterfire/tree/master/packages/cloud_firestore/cloud_firestore
-version: 4.9.3
+version: 4.10.0
 
 false_secrets:
   - example/**
@@ -15,11 +15,11 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  cloud_firestore_platform_interface: ^5.16.2
-  cloud_firestore_web: ^3.7.2
+  cloud_firestore_platform_interface: ^6.0.0
+  cloud_firestore_web: ^3.8.0
   collection: ^1.0.0
-  firebase_core: ^2.17.0
-  firebase_core_platform_interface: ^4.8.0
+  firebase_core: ^2.18.0
+  firebase_core_platform_interface: ^5.0.0
   flutter:
     sdk: flutter
   meta: ^1.8.0
@@ -41,3 +41,6 @@ flutter:
         pluginClass: FLTFirebaseFirestorePlugin
       web:
         default_package: cloud_firestore_web
+      windows:
+        pluginClass: CloudFirestorePluginCApi
+
