@@ -13,7 +13,7 @@
 #import "Private/FLTQuerySnapshotStreamHandler.h"
 #import "Private/FLTSnapshotsInSyncStreamHandler.h"
 #import "Private/FLTTransactionStreamHandler.h"
-#import "Private/PigeonParser.h"
+#import "Private/FirestorePigeonParser.h"
 #import "Public/FLTFirebaseFirestorePlugin.h"
 
 NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase_firestore";
@@ -207,7 +207,7 @@ FlutterStandardMethodCodec *_codec;
   return identifier;
 }
 
-- (FIRFirestore *_Nullable)getFIRFirestoreFromAppNameFromPigeon:(PigeonFirebaseApp *)pigeonApp {
+- (FIRFirestore *_Nullable)getFIRFirestoreFromAppNameFromPigeon:(FirestorePigeonFirebaseApp *)pigeonApp {
   @synchronized(self) {
     NSString *appNameDart = pigeonApp.appName;
     NSString *databaseUrl = pigeonApp.databaseURL;
@@ -275,7 +275,7 @@ FlutterStandardMethodCodec *_codec;
   return [FlutterError errorWithCode:code message:message details:details];
 }
 
-- (void)aggregateQueryCountApp:(nonnull PigeonFirebaseApp *)app
+- (void)aggregateQueryCountApp:(nonnull FirestorePigeonFirebaseApp *)app
                           path:(nonnull NSString *)path
                     parameters:(nonnull PigeonQueryParameters *)parameters
                         source:(AggregateSource)source
@@ -283,7 +283,7 @@ FlutterStandardMethodCodec *_codec;
                         (nonnull void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
 
-  FIRQuery *query = [PigeonParser parseQueryWithParameters:parameters
+  FIRQuery *query = [FirestorePigeonParser parseQueryWithParameters:parameters
                                                  firestore:firestore
                                                       path:path
                                          isCollectionGroup:NO];
@@ -309,7 +309,7 @@ FlutterStandardMethodCodec *_codec;
                              }];
 }
 
-- (void)clearPersistenceApp:(nonnull PigeonFirebaseApp *)app
+- (void)clearPersistenceApp:(nonnull FirestorePigeonFirebaseApp *)app
                  completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   [firestore clearPersistenceWithCompletion:^(NSError *error) {
@@ -321,7 +321,7 @@ FlutterStandardMethodCodec *_codec;
   }];
 }
 
-- (void)disableNetworkApp:(nonnull PigeonFirebaseApp *)app
+- (void)disableNetworkApp:(nonnull FirestorePigeonFirebaseApp *)app
                completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   [firestore disableNetworkWithCompletion:^(NSError *error) {
@@ -333,7 +333,7 @@ FlutterStandardMethodCodec *_codec;
   }];
 }
 
-- (void)documentReferenceDeleteApp:(nonnull PigeonFirebaseApp *)app
+- (void)documentReferenceDeleteApp:(nonnull FirestorePigeonFirebaseApp *)app
                            request:(nonnull DocumentReferenceRequest *)request
                         completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
@@ -363,21 +363,21 @@ FlutterStandardMethodCodec *_codec;
   }];
 }
 
-- (void)documentReferenceGetApp:(nonnull PigeonFirebaseApp *)app
+- (void)documentReferenceGetApp:(nonnull FirestorePigeonFirebaseApp *)app
                         request:(nonnull DocumentReferenceRequest *)request
                      completion:(nonnull void (^)(PigeonDocumentSnapshot *_Nullable,
                                                   FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   FIRDocumentReference *document = [firestore documentWithPath:request.path];
-  FIRFirestoreSource source = [PigeonParser parseSource:request.source.value];
+  FIRFirestoreSource source = [FirestorePigeonParser parseSource:request.source.value];
   FIRServerTimestampBehavior serverTimestampBehavior =
-      [PigeonParser parseServerTimestampBehavior:request.serverTimestampBehavior.value];
+      [FirestorePigeonParser parseServerTimestampBehavior:request.serverTimestampBehavior.value];
 
   id completionGet = ^(FIRDocumentSnapshot *_Nullable snapshot, NSError *_Nullable error) {
     if (error != nil) {
       completion(nil, [self convertToFlutterError:error]);
     } else {
-      completion([PigeonParser toPigeonDocumentSnapshot:snapshot
+      completion([FirestorePigeonParser toPigeonDocumentSnapshot:snapshot
                                 serverTimestampBehavior:serverTimestampBehavior],
                  nil);
     }
@@ -386,7 +386,7 @@ FlutterStandardMethodCodec *_codec;
   [document getDocumentWithSource:source completion:completionGet];
 }
 
-- (void)documentReferenceSetApp:(nonnull PigeonFirebaseApp *)app
+- (void)documentReferenceSetApp:(nonnull FirestorePigeonFirebaseApp *)app
                         request:(nonnull DocumentReferenceRequest *)request
                      completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   id data = request.data;
@@ -405,14 +405,14 @@ FlutterStandardMethodCodec *_codec;
     [document setData:data merge:YES completion:completionBlock];
   } else if (request.option.mergeFields) {
     [document setData:data
-          mergeFields:[PigeonParser parseFieldPath:request.option.mergeFields]
+          mergeFields:[FirestorePigeonParser parseFieldPath:request.option.mergeFields]
            completion:completionBlock];
   } else {
     [document setData:data completion:completionBlock];
   }
 }
 
-- (void)documentReferenceSnapshotApp:(nonnull PigeonFirebaseApp *)app
+- (void)documentReferenceSnapshotApp:(nonnull FirestorePigeonFirebaseApp *)app
                           parameters:(nonnull DocumentReferenceRequest *)parameters
               includeMetadataChanges:(nonnull NSNumber *)includeMetadataChanges
                           completion:(nonnull void (^)(NSString *_Nullable,
@@ -420,7 +420,7 @@ FlutterStandardMethodCodec *_codec;
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   FIRDocumentReference *document = [firestore documentWithPath:parameters.path];
   FIRServerTimestampBehavior serverTimestampBehavior =
-      [PigeonParser parseServerTimestampBehavior:parameters.serverTimestampBehavior.value];
+      [FirestorePigeonParser parseServerTimestampBehavior:parameters.serverTimestampBehavior.value];
 
   completion(
       [self registerEventChannelWithPrefix:kFLTFirebaseFirestoreDocumentSnapshotEventChannelName
@@ -433,7 +433,7 @@ FlutterStandardMethodCodec *_codec;
       nil);
 }
 
-- (void)documentReferenceUpdateApp:(nonnull PigeonFirebaseApp *)app
+- (void)documentReferenceUpdateApp:(nonnull FirestorePigeonFirebaseApp *)app
                            request:(nonnull DocumentReferenceRequest *)request
                         completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   id data = request.data;
@@ -450,7 +450,7 @@ FlutterStandardMethodCodec *_codec;
             }];
 }
 
-- (void)enableNetworkApp:(nonnull PigeonFirebaseApp *)app
+- (void)enableNetworkApp:(nonnull FirestorePigeonFirebaseApp *)app
               completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   [firestore enableNetworkWithCompletion:^(NSError *error) {
@@ -462,7 +462,7 @@ FlutterStandardMethodCodec *_codec;
   }];
 }
 
-- (void)loadBundleApp:(nonnull PigeonFirebaseApp *)app
+- (void)loadBundleApp:(nonnull FirestorePigeonFirebaseApp *)app
                bundle:(nonnull FlutterStandardTypedData *)bundle
            completion:(nonnull void (^)(NSString *_Nullable, FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
@@ -474,16 +474,16 @@ FlutterStandardMethodCodec *_codec;
              nil);
 }
 
-- (void)namedQueryGetApp:(nonnull PigeonFirebaseApp *)app
+- (void)namedQueryGetApp:(nonnull FirestorePigeonFirebaseApp *)app
                     name:(nonnull NSString *)name
                  options:(nonnull PigeonGetOptions *)options
               completion:(nonnull void (^)(PigeonQuerySnapshot *_Nullable,
                                            FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
 
-  FIRFirestoreSource source = [PigeonParser parseSource:options.source];
+  FIRFirestoreSource source = [FirestorePigeonParser parseSource:options.source];
   FIRServerTimestampBehavior serverTimestampBehavior =
-      [PigeonParser parseServerTimestampBehavior:options.serverTimestampBehavior];
+      [FirestorePigeonParser parseServerTimestampBehavior:options.serverTimestampBehavior];
 
   [firestore
       getQueryNamed:name
@@ -504,7 +504,7 @@ FlutterStandardMethodCodec *_codec;
                                   completion(nil, [self convertToFlutterError:error]);
                                 } else {
                                   completion(
-                                      [PigeonParser toPigeonQuerySnapshot:snapshot
+                                      [FirestorePigeonParser toPigeonQuerySnapshot:snapshot
                                                   serverTimestampBehavior:serverTimestampBehavior],
                                       nil);
                                 }
@@ -512,7 +512,7 @@ FlutterStandardMethodCodec *_codec;
          }];
 }
 
-- (void)queryGetApp:(nonnull PigeonFirebaseApp *)app
+- (void)queryGetApp:(nonnull FirestorePigeonFirebaseApp *)app
                  path:(nonnull NSString *)path
     isCollectionGroup:(nonnull NSNumber *)isCollectionGroup
            parameters:(nonnull PigeonQueryParameters *)parameters
@@ -520,7 +520,7 @@ FlutterStandardMethodCodec *_codec;
            completion:(nonnull void (^)(PigeonQuerySnapshot *_Nullable,
                                         FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
-  FIRQuery *query = [PigeonParser parseQueryWithParameters:parameters
+  FIRQuery *query = [FirestorePigeonParser parseQueryWithParameters:parameters
                                                  firestore:firestore
                                                       path:path
                                          isCollectionGroup:[isCollectionGroup boolValue]];
@@ -532,23 +532,23 @@ FlutterStandardMethodCodec *_codec;
     return;
   }
 
-  FIRFirestoreSource source = [PigeonParser parseSource:options.source];
+  FIRFirestoreSource source = [FirestorePigeonParser parseSource:options.source];
   FIRServerTimestampBehavior serverTimestampBehavior =
-      [PigeonParser parseServerTimestampBehavior:options.serverTimestampBehavior];
+      [FirestorePigeonParser parseServerTimestampBehavior:options.serverTimestampBehavior];
 
   [query getDocumentsWithSource:source
                      completion:^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
                        if (error != nil) {
                          completion(nil, [self convertToFlutterError:error]);
                        } else {
-                         completion([PigeonParser toPigeonQuerySnapshot:snapshot
+                         completion([FirestorePigeonParser toPigeonQuerySnapshot:snapshot
                                                 serverTimestampBehavior:serverTimestampBehavior],
                                     nil);
                        }
                      }];
 }
 
-- (void)querySnapshotApp:(nonnull PigeonFirebaseApp *)app
+- (void)querySnapshotApp:(nonnull FirestorePigeonFirebaseApp *)app
                       path:(nonnull NSString *)path
          isCollectionGroup:(nonnull NSNumber *)isCollectionGroup
                 parameters:(nonnull PigeonQueryParameters *)parameters
@@ -557,7 +557,7 @@ FlutterStandardMethodCodec *_codec;
                 completion:
                     (nonnull void (^)(NSString *_Nullable, FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
-  FIRQuery *query = [PigeonParser parseQueryWithParameters:parameters
+  FIRQuery *query = [FirestorePigeonParser parseQueryWithParameters:parameters
                                                  firestore:firestore
                                                       path:path
                                          isCollectionGroup:[isCollectionGroup boolValue]];
@@ -570,7 +570,7 @@ FlutterStandardMethodCodec *_codec;
   }
 
   FIRServerTimestampBehavior serverTimestampBehavior =
-      [PigeonParser parseServerTimestampBehavior:options.serverTimestampBehavior];
+      [FirestorePigeonParser parseServerTimestampBehavior:options.serverTimestampBehavior];
 
   completion(
       [self registerEventChannelWithPrefix:kFLTFirebaseFirestoreQuerySnapshotEventChannelName
@@ -583,7 +583,7 @@ FlutterStandardMethodCodec *_codec;
       nil);
 }
 
-- (void)setIndexConfigurationApp:(nonnull PigeonFirebaseApp *)app
+- (void)setIndexConfigurationApp:(nonnull FirestorePigeonFirebaseApp *)app
               indexConfiguration:(nonnull NSString *)indexConfiguration
                       completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
@@ -604,7 +604,7 @@ FlutterStandardMethodCodec *_codec;
   completion(nil);
 }
 
-- (void)terminateApp:(nonnull PigeonFirebaseApp *)app
+- (void)terminateApp:(nonnull FirestorePigeonFirebaseApp *)app
           completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   [firestore terminateWithCompletion:^(NSError *error) {
@@ -620,7 +620,7 @@ FlutterStandardMethodCodec *_codec;
   }];
 }
 
-- (void)transactionGetApp:(nonnull PigeonFirebaseApp *)app
+- (void)transactionGetApp:(nonnull FirestorePigeonFirebaseApp *)app
             transactionId:(nonnull NSString *)transactionId
                      path:(nonnull NSString *)path
                completion:(nonnull void (^)(PigeonDocumentSnapshot *_Nullable,
@@ -647,7 +647,7 @@ FlutterStandardMethodCodec *_codec;
   if (error != nil) {
     completion(nil, [self convertToFlutterError:error]);
   } else if (snapshot != nil) {
-    completion([PigeonParser toPigeonDocumentSnapshot:snapshot
+    completion([FirestorePigeonParser toPigeonDocumentSnapshot:snapshot
                               serverTimestampBehavior:FIRServerTimestampBehaviorNone],
                nil);
   } else {
@@ -664,7 +664,7 @@ FlutterStandardMethodCodec *_codec;
   completion(nil);
 }
 
-- (void)waitForPendingWritesApp:(nonnull PigeonFirebaseApp *)app
+- (void)waitForPendingWritesApp:(nonnull FirestorePigeonFirebaseApp *)app
                      completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   [firestore waitForPendingWritesWithCompletion:^(NSError *error) {
@@ -676,7 +676,7 @@ FlutterStandardMethodCodec *_codec;
   }];
 }
 
-- (void)writeBatchCommitApp:(nonnull PigeonFirebaseApp *)app
+- (void)writeBatchCommitApp:(nonnull FirestorePigeonFirebaseApp *)app
                      writes:(nonnull NSArray<PigeonTransactionCommand *> *)writes
                  completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
@@ -702,7 +702,7 @@ FlutterStandardMethodCodec *_codec;
         } else if (write.option.mergeFields) {
           [batch setData:write.data
               forDocument:reference
-              mergeFields:[PigeonParser parseFieldPath:write.option.mergeFields]];
+              mergeFields:[FirestorePigeonParser parseFieldPath:write.option.mergeFields]];
         } else {
           [batch setData:write.data forDocument:reference];
         }
@@ -719,7 +719,7 @@ FlutterStandardMethodCodec *_codec;
   }];
 }
 
-- (void)snapshotsInSyncSetupApp:(nonnull PigeonFirebaseApp *)app
+- (void)snapshotsInSyncSetupApp:(nonnull FirestorePigeonFirebaseApp *)app
                      completion:(nonnull void (^)(NSString *_Nullable,
                                                   FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
@@ -731,7 +731,7 @@ FlutterStandardMethodCodec *_codec;
       nil);
 }
 
-- (void)transactionCreateApp:(nonnull PigeonFirebaseApp *)app
+- (void)transactionCreateApp:(nonnull FirestorePigeonFirebaseApp *)app
                      timeout:(nonnull NSNumber *)timeout
                  maxAttempts:(nonnull NSNumber *)maxAttempts
                   completion:

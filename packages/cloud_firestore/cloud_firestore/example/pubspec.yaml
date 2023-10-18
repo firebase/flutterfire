@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.3
+  firebase_auth: 
+    path: ../../../firebase_auth/firebase_auth
 
 dev_dependencies:
   flutter_test:

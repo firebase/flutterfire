@@ -2,10 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-#import "PigeonParser.h"
+#import "FirestorePigeonParser.h"
 #import <Foundation/Foundation.h>
 
-@implementation PigeonParser
+@implementation FirestorePigeonParser
 
 + (FIRFilter *_Nonnull)filterFromJson:(NSDictionary<NSString *, id> *_Nullable)map {
   if (map[@"fieldPath"]) {
@@ -77,7 +77,7 @@
 
     BOOL isFilterQuery = parameters.filters != nil;
     if (isFilterQuery) {
-      FIRFilter *filter = [PigeonParser filterFromJson:parameters.filters];
+      FIRFilter *filter = [FirestorePigeonParser filterFromJson:parameters.filters];
       query = [query queryWhereFilter:filter];
     }
 
@@ -215,7 +215,7 @@
   return [PigeonDocumentSnapshot
       makeWithPath:documentSnapshot.reference.path
               data:[documentSnapshot dataWithServerTimestampBehavior:serverTimestampBehavior]
-          metadata:[PigeonParser toPigeonSnapshotMetadata:documentSnapshot.metadata]];
+          metadata:[FirestorePigeonParser toPigeonSnapshotMetadata:documentSnapshot.metadata]];
 }
 
 + (DocumentChangeType)toPigeonDocumentChangeType:(FIRDocumentChangeType)documentChangeType {
@@ -258,8 +258,8 @@
   }
 
   return [PigeonDocumentChange
-      makeWithType:[PigeonParser toPigeonDocumentChangeType:documentChange.type]
-          document:[PigeonParser toPigeonDocumentSnapshot:documentChange.document
+      makeWithType:[FirestorePigeonParser toPigeonDocumentChangeType:documentChange.type]
+          document:[FirestorePigeonParser toPigeonDocumentSnapshot:documentChange.document
                                   serverTimestampBehavior:serverTimestampBehavior]
           oldIndex:oldIndex
           newIndex:newIndex];
@@ -270,7 +270,7 @@
     serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
   NSMutableArray *pigeonDocumentChanges = [NSMutableArray array];
   for (FIRDocumentChange *documentChange in documentChanges) {
-    [pigeonDocumentChanges addObject:[PigeonParser toPigeonDocumentChange:documentChange
+    [pigeonDocumentChanges addObject:[FirestorePigeonParser toPigeonDocumentChange:documentChange
                                                   serverTimestampBehavior:serverTimestampBehavior]];
   }
   return pigeonDocumentChanges;
@@ -280,14 +280,14 @@
                        serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
   NSMutableArray *documentSnapshots = [NSMutableArray array];
   for (FIRDocumentSnapshot *documentSnapshot in querySnaphot.documents) {
-    [documentSnapshots addObject:[PigeonParser toPigeonDocumentSnapshot:documentSnapshot
+    [documentSnapshots addObject:[FirestorePigeonParser toPigeonDocumentSnapshot:documentSnapshot
                                                 serverTimestampBehavior:serverTimestampBehavior]];
   }
   return [PigeonQuerySnapshot
       makeWithDocuments:documentSnapshots
-        documentChanges:[PigeonParser toPigeonDocumentChanges:querySnaphot.documentChanges
+        documentChanges:[FirestorePigeonParser toPigeonDocumentChanges:querySnaphot.documentChanges
                                       serverTimestampBehavior:serverTimestampBehavior]
-               metadata:[PigeonParser toPigeonSnapshotMetadata:querySnaphot.metadata]];
+               metadata:[FirestorePigeonParser toPigeonSnapshotMetadata:querySnaphot.metadata]];
 }
 
 @end

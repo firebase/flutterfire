@@ -27,7 +27,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     _pointer = Pointer(path);
   }
 
-  final PigeonFirebaseApp pigeonApp;
+  final FirestorePigeonFirebaseApp pigeonApp;
 
   @override
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) async {

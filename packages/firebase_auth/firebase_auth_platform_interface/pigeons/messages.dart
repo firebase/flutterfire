@@ -60,8 +60,10 @@ class PigeonMultiFactorInfo {
   final String? phoneNumber;
 }
 
-class PigeonFirebaseApp {
-  const PigeonFirebaseApp({
+// We prefix the class name with `Auth` to avoid a conflict with
+// other classes in other packages.
+class AuthPigeonFirebaseApp {
+  const AuthPigeonFirebaseApp({
     required this.appName,
     required this.tenantId,
   });
@@ -281,135 +283,135 @@ class PigeonVerifyPhoneNumberRequest {
 abstract class FirebaseAuthHostApi {
   @async
   String registerIdTokenListener(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
   );
 
   @async
   String registerAuthStateListener(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
   );
 
   @async
   void useEmulator(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String host,
     int port,
   );
 
   @async
   void applyActionCode(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String code,
   );
 
   @async
   PigeonActionCodeInfo checkActionCode(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String code,
   );
 
   @async
   void confirmPasswordReset(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String code,
     String newPassword,
   );
 
   @async
   PigeonUserCredential createUserWithEmailAndPassword(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String email,
     String password,
   );
 
   @async
   PigeonUserCredential signInAnonymously(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
   );
 
   @async
   PigeonUserCredential signInWithCredential(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     Map<String, Object> input,
   );
 
   @async
   PigeonUserCredential signInWithCustomToken(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String token,
   );
 
   @async
   PigeonUserCredential signInWithEmailAndPassword(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String email,
     String password,
   );
 
   @async
   PigeonUserCredential signInWithEmailLink(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String email,
     String emailLink,
   );
 
   @async
   PigeonUserCredential signInWithProvider(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     PigeonSignInProvider signInProvider,
   );
 
   @async
   void signOut(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
   );
 
   @async
   List<String> fetchSignInMethodsForEmail(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String email,
   );
 
   @async
   void sendPasswordResetEmail(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String email,
     PigeonActionCodeSettings? actionCodeSettings,
   );
 
   @async
   void sendSignInLinkToEmail(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String email,
     PigeonActionCodeSettings actionCodeSettings,
   );
 
   @async
   String setLanguageCode(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String? languageCode,
   );
 
   @async
   void setSettings(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     PigeonFirebaseAuthSettings settings,
   );
 
   @async
   String verifyPasswordResetCode(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String code,
   );
 
   @async
   String verifyPhoneNumber(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     PigeonVerifyPhoneNumberRequest request,
   );
   @async
   void revokeTokenWithAuthorizationCode(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String authorizationCode,
   );
 }
@@ -452,83 +454,83 @@ class PigeonUserProfile {
 abstract class FirebaseAuthUserHostApi {
   @async
   void delete(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
   );
 
   @async
   PigeonIdTokenResult getIdToken(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     bool forceRefresh,
   );
 
   @async
   PigeonUserCredential linkWithCredential(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     Map<String, Object> input,
   );
 
   @async
   PigeonUserCredential linkWithProvider(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     PigeonSignInProvider signInProvider,
   );
 
   @async
   PigeonUserCredential reauthenticateWithCredential(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     Map<String, Object> input,
   );
 
   @async
   PigeonUserCredential reauthenticateWithProvider(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     PigeonSignInProvider signInProvider,
   );
 
   @async
   PigeonUserDetails reload(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
   );
 
   @async
   void sendEmailVerification(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     PigeonActionCodeSettings? actionCodeSettings,
   );
 
   @async
   PigeonUserCredential unlink(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String providerId,
   );
 
   @async
   PigeonUserDetails updateEmail(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String newEmail,
   );
 
   @async
   PigeonUserDetails updatePassword(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String newPassword,
   );
 
   @async
   PigeonUserDetails updatePhoneNumber(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     Map<String, Object> input,
   );
 
   @async
   PigeonUserDetails updateProfile(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     PigeonUserProfile profile,
   );
 
   @async
   void verifyBeforeUpdateEmail(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String newEmail,
     PigeonActionCodeSettings? actionCodeSettings,
   );
@@ -538,32 +540,32 @@ abstract class FirebaseAuthUserHostApi {
 abstract class MultiFactorUserHostApi {
   @async
   void enrollPhone(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     PigeonPhoneMultiFactorAssertion assertion,
     String? displayName,
   );
 
   @async
   void enrollTotp(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String assertionId,
     String? displayName,
   );
 
   @async
   PigeonMultiFactorSession getSession(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
   );
 
   @async
   void unenroll(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
     String factorUid,
   );
 
   @async
   List<PigeonMultiFactorInfo> getEnrolledFactors(
-    PigeonFirebaseApp app,
+    AuthPigeonFirebaseApp app,
   );
 }
 

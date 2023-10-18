@@ -17,7 +17,7 @@ import 'package:pigeon/pigeon.dart';
       className: 'GeneratedAndroidFirebaseFirestore',
     ),
     objcHeaderOut:
-        '../cloud_firestore/ios/Classes/Private/FirestoreMessages.g.h',
+        '../cloud_firestore/ios/Classes/Public/FirestoreMessages.g.h',
     objcSourceOut: '../cloud_firestore/ios/Classes/FirestoreMessages.g.m',
     cppHeaderOut: '../cloud_firestore/windows/messages.g.h',
     cppSourceOut: '../cloud_firestore/windows/messages.g.cpp',
@@ -41,8 +41,10 @@ class PigeonFirebaseSettings {
   final bool ignoreUndefinedProperties;
 }
 
-class PigeonFirebaseApp {
-  const PigeonFirebaseApp({
+// We prefix the class name with `Auth` to avoid a conflict with
+// other classes in other packages.
+class FirestorePigeonFirebaseApp {
+  const FirestorePigeonFirebaseApp({
     required this.appName,
     required this.settings,
     required this.databaseURL,
@@ -242,45 +244,45 @@ class PigeonQueryParameters {
 abstract class FirebaseFirestoreHostApi {
   @async
   String loadBundle(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     Uint8List bundle,
   );
 
   @async
   PigeonQuerySnapshot namedQueryGet(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     String name,
     PigeonGetOptions options,
   );
 
   @async
   void clearPersistence(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
   );
 
   @async
   void disableNetwork(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
   );
 
   @async
   void enableNetwork(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
   );
 
   @async
   void terminate(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
   );
 
   @async
   void waitForPendingWrites(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
   );
 
   @async
   void setIndexConfiguration(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     String indexConfiguration,
   );
 
@@ -291,12 +293,12 @@ abstract class FirebaseFirestoreHostApi {
 
   @async
   String snapshotsInSyncSetup(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
   );
 
   @async
   String transactionCreate(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     int timeout,
     int maxAttempts,
   );
@@ -310,38 +312,38 @@ abstract class FirebaseFirestoreHostApi {
 
   @async
   PigeonDocumentSnapshot transactionGet(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     String transactionId,
     String path,
   );
 
   @async
   void documentReferenceSet(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
   @async
   void documentReferenceUpdate(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
   @async
   PigeonDocumentSnapshot documentReferenceGet(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
   @async
   void documentReferenceDelete(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
   @async
   PigeonQuerySnapshot queryGet(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     String path,
     bool isCollectionGroup,
     PigeonQueryParameters parameters,
@@ -350,7 +352,7 @@ abstract class FirebaseFirestoreHostApi {
 
   @async
   double aggregateQueryCount(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     String path,
     PigeonQueryParameters parameters,
     AggregateSource source,
@@ -358,13 +360,13 @@ abstract class FirebaseFirestoreHostApi {
 
   @async
   void writeBatchCommit(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     List<PigeonTransactionCommand?> writes,
   );
 
   @async
   String querySnapshot(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     String path,
     bool isCollectionGroup,
     PigeonQueryParameters parameters,
@@ -374,7 +376,7 @@ abstract class FirebaseFirestoreHostApi {
 
   @async
   String documentReferenceSnapshot(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest parameters,
     bool includeMetadataChanges,
   );
