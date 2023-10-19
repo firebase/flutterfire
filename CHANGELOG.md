@@ -141,12 +141,12 @@ Packages with breaking changes:
  - [`cloud_firestore_platform_interface` - `v6.0.0`](#cloud_firestore_platform_interface---v600)
  - [`firebase_auth_platform_interface` - `v7.0.0`](#firebase_auth_platform_interface---v700)
  - [`firebase_core_platform_interface` - `v5.0.0`](#firebase_core_platform_interface---v500)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.70`](#cloud_firestore_odm_generator---v100-dev70)
 
 Packages with other changes:
 
  - [`cloud_firestore` - `v4.10.0`](#cloud_firestore---v4100)
  - [`cloud_firestore_odm` - `v1.0.0-dev.70`](#cloud_firestore_odm---v100-dev70)
- - [`cloud_firestore_odm_generator` - `v1.0.0-dev.70`](#cloud_firestore_odm_generator---v100-dev70)
  - [`cloud_firestore_web` - `v3.8.0`](#cloud_firestore_web---v380)
  - [`cloud_functions` - `v4.5.0`](#cloud_functions---v450)
  - [`firebase_analytics` - `v10.6.0`](#firebase_analytics---v1060)
@@ -245,7 +245,7 @@ Packages with dependency updates only:
 
 #### `cloud_firestore_odm_generator` - `v1.0.0-dev.70`
 
- - **FEAT**(cloud_firestore_odm_generator): Support all serializable types ([#11365](https://github.com/firebase/flutterfire/issues/11365)). ([f4c21f83](https://github.com/firebase/flutterfire/commit/f4c21f834569bb363c80af583b53164f7cbd5ada))
+ - **BREAKING** **FEAT**(cloud_firestore_odm_generator): Support all serializable types ([#11365](https://github.com/firebase/flutterfire/issues/11365)). ([f4c21f83](https://github.com/firebase/flutterfire/commit/f4c21f834569bb363c80af583b53164f7cbd5ada))
 
 #### `cloud_firestore_web` - `v3.8.0`
 
