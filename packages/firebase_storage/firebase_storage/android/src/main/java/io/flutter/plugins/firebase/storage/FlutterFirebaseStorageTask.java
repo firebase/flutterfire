@@ -10,23 +10,17 @@ import static io.flutter.plugins.firebase.storage.FlutterFirebaseStoragePlugin.p
 
 import android.net.Uri;
 import android.util.SparseArray;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 class FlutterFirebaseStorageTask {
   static final SparseArray<FlutterFirebaseStorageTask> inProgressTasks = new SparseArray<>();
