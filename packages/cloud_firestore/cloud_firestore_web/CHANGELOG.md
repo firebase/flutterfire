@@ -1,3 +1,7 @@
+## 3.8.0
+
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+
 ## 3.7.2
 
  - Update a dependency to the latest release.

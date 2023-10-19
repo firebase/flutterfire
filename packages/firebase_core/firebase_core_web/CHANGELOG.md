@@ -1,3 +1,7 @@
+## 2.8.1
+
+ - **FIX**(firebase_app_check_web): Activate web app check on startup if it was previously activated ([#11625](https://github.com/firebase/flutterfire/issues/11625)). ([493f2548](https://github.com/firebase/flutterfire/commit/493f254824aa7aedf6ccc5223efbb72d13811c5f))
+
 ## 2.8.0
 
  - **FEAT**: bump Firebase web JS SDK `10.3.1` ([#11588](https://github.com/firebase/flutterfire/issues/11588)). ([e65b270e](https://github.com/firebase/flutterfire/commit/e65b270ea420a696671c26768751df4bdd6a46c1))

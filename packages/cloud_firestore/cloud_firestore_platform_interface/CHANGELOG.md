@@ -1,3 +1,10 @@
+## 6.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+ - **BREAKING** **FIX**: pin pigeon for `firebase_auth`, `cloud_firestore` & `firebase_core` ([#11715](https://github.com/firebase/flutterfire/issues/11715)). ([66c158c3](https://github.com/firebase/flutterfire/commit/66c158c3732d1ef50b9677b44c12a6afea9c2ec5))
+
 ## 5.16.2
 
  - Update a dependency to the latest release.
