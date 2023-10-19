@@ -502,25 +502,26 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
               handle:(NSNumber *)handle
           completion:(void (^)(NSDictionary<NSString *, id> *_Nullable,
                                FlutterError *_Nullable))completion {
-    FIRStorageObservableTask<FIRStorageTaskManagement> *task;
-    @synchronized(self->_tasks) {
-      task = self->_tasks[handle];
-    }
-    if (task != nil) {
-      [self setState:FLTFirebaseStorageTaskStatePause
-          forFIRStorageObservableTask:task
-                       withCompletion:^(BOOL success, NSDictionary *snapshotDict) {
-
-                         completion(@{
-                           @"status" : @(success),
-                           @"snapshot" : (id)snapshotDict ?: [NSNull null],
-                         }, nil);
-                       }];
-    } else {
-      completion(nil, [FlutterError errorWithCode:@"unknown"
-                             message:@"Cannot find task to pause."
-                             details:@{}]);
-    }
+  FIRStorageObservableTask<FIRStorageTaskManagement> *task;
+  @synchronized(self->_tasks) {
+    task = self->_tasks[handle];
+  }
+  if (task != nil) {
+    [self setState:FLTFirebaseStorageTaskStatePause
+        forFIRStorageObservableTask:task
+                     withCompletion:^(BOOL success, NSDictionary *snapshotDict) {
+                       completion(
+                           @{
+                             @"status" : @(success),
+                             @"snapshot" : (id)snapshotDict ?: [NSNull null],
+                           },
+                           nil);
+                     }];
+  } else {
+    completion(nil, [FlutterError errorWithCode:@"unknown"
+                                        message:@"Cannot find task to pause."
+                                        details:@{}]);
+  }
 }
 
 - (void)taskResumeApp:(PigeonStorageFirebaseApp *)app
@@ -528,23 +529,25 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
            completion:(void (^)(NSDictionary<NSString *, id> *_Nullable,
                                 FlutterError *_Nullable))completion {
   FIRStorageObservableTask<FIRStorageTaskManagement> *task;
-    @synchronized(self->_tasks) {
-      task = self->_tasks[handle];
-    }
-    if (task != nil) {
-      [self setState:FLTFirebaseStorageTaskStateResume
-          forFIRStorageObservableTask:task
-                       withCompletion:^(BOOL success, NSDictionary *snapshotDict) {
-                         completion(@{
-                           @"status" : @(success),
-                           @"snapshot" : (id)snapshotDict ?: [NSNull null],
-                         }, nil);
-                       }];
-    } else {
-      completion(nil, [FlutterError errorWithCode:@"unknown"
-                             message:@"Cannot find task to resume."
-                             details:@{}]);
-    }
+  @synchronized(self->_tasks) {
+    task = self->_tasks[handle];
+  }
+  if (task != nil) {
+    [self setState:FLTFirebaseStorageTaskStateResume
+        forFIRStorageObservableTask:task
+                     withCompletion:^(BOOL success, NSDictionary *snapshotDict) {
+                       completion(
+                           @{
+                             @"status" : @(success),
+                             @"snapshot" : (id)snapshotDict ?: [NSNull null],
+                           },
+                           nil);
+                     }];
+  } else {
+    completion(nil, [FlutterError errorWithCode:@"unknown"
+                                        message:@"Cannot find task to resume."
+                                        details:@{}]);
+  }
 }
 
 - (void)taskCancelApp:(PigeonStorageFirebaseApp *)app
@@ -552,23 +555,25 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
            completion:(void (^)(NSDictionary<NSString *, id> *_Nullable,
                                 FlutterError *_Nullable))completion {
   FIRStorageObservableTask<FIRStorageTaskManagement> *task;
-    @synchronized(self->_tasks) {
-      task = self->_tasks[handle];
-    }
-    if (task != nil) {
-      [self setState:FLTFirebaseStorageTaskStateCancel
-          forFIRStorageObservableTask:task
-                       withCompletion:^(BOOL success, NSDictionary *snapshotDict) {
-                         completion(@{
-                           @"status" : @(success),
-                           @"snapshot" : (id)snapshotDict ?: [NSNull null],
-                         }, nil);
-                       }];
-    } else {
-      completion(nil, [FlutterError errorWithCode:@"unknown"
-                             message:@"Cannot find task to cancel."
-                             details:@{}]);
-    }
+  @synchronized(self->_tasks) {
+    task = self->_tasks[handle];
+  }
+  if (task != nil) {
+    [self setState:FLTFirebaseStorageTaskStateCancel
+        forFIRStorageObservableTask:task
+                     withCompletion:^(BOOL success, NSDictionary *snapshotDict) {
+                       completion(
+                           @{
+                             @"status" : @(success),
+                             @"snapshot" : (id)snapshotDict ?: [NSNull null],
+                           },
+                           nil);
+                     }];
+  } else {
+    completion(nil, [FlutterError errorWithCode:@"unknown"
+                                        message:@"Cannot find task to cancel."
+                                        details:@{}]);
+  }
 }
 
 #pragma mark - Utilities

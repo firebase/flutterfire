@@ -34,7 +34,6 @@
                        @"appName" : snapshot.reference.storage.app.name,
                        @"snapshot" : [FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot],
                      });
-                     // TODO Cleanup
                    }];
   failureHandle =
       [_task observeStatus:FIRStorageTaskStatusFailure
@@ -43,9 +42,7 @@
                        @"taskState" : @(PigeonStorageTaskStateError),
                        @"appName" : snapshot.reference.storage.app.name,
                        @"snapshot" : [FLTFirebaseStoragePlugin parseTaskSnapshot:snapshot],
-                       // TODO Pass in error
                      });
-                     // TODO Cleanup
                    }];
   pausedHandle =
       [_task observeStatus:FIRStorageTaskStatusPause
@@ -70,7 +67,29 @@
 }
 
 - (FlutterError *)onCancelWithArguments:(id)arguments {
-  // TODO Cleanup
+  if (!_task) {
+    return nil;
+  }
+
+  if (successHandle) {
+    [_task removeObserverWithHandle:successHandle];
+  }
+  successHandle = nil;
+
+  if (failureHandle) {
+    [_task removeObserverWithHandle:failureHandle];
+  }
+  failureHandle = nil;
+
+  if (pausedHandle) {
+    [_task removeObserverWithHandle:pausedHandle];
+  }
+  pausedHandle = nil;
+
+  if (progressHandle) {
+    [_task removeObserverWithHandle:progressHandle];
+  }
+  progressHandle = nil;
 
   return nil;
 }
