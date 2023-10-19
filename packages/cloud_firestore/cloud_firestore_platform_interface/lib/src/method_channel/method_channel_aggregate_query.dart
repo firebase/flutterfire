@@ -14,7 +14,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
     this._pigeonApp,
   ) : super(query);
 
-  final PigeonFirebaseApp _pigeonApp;
+  final FirestorePigeonFirebaseApp _pigeonApp;
   final String _path;
   final PigeonQueryParameters _pigeonParameters;
 

@@ -34,7 +34,7 @@ class MethodChannelQuery extends QueryPlatform {
   final bool isCollectionGroupQuery;
 
   final Pointer _pointer;
-  final PigeonFirebaseApp pigeonApp;
+  final FirestorePigeonFirebaseApp pigeonApp;
 
   /// Returns the Document path that that this query relates to.
   String get path {

@@ -195,37 +195,37 @@ PigeonMultiFactorInfo PigeonMultiFactorInfo::FromEncodableList(
   return decoded;
 }
 
-// PigeonFirebaseApp
+// AuthPigeonFirebaseApp
 
-PigeonFirebaseApp::PigeonFirebaseApp(const std::string& app_name)
+AuthPigeonFirebaseApp::AuthPigeonFirebaseApp(const std::string& app_name)
     : app_name_(app_name) {}
 
-PigeonFirebaseApp::PigeonFirebaseApp(const std::string& app_name,
-                                     const std::string* tenant_id)
+AuthPigeonFirebaseApp::AuthPigeonFirebaseApp(const std::string& app_name,
+                                             const std::string* tenant_id)
     : app_name_(app_name),
       tenant_id_(tenant_id ? std::optional<std::string>(*tenant_id)
                            : std::nullopt) {}
 
-const std::string& PigeonFirebaseApp::app_name() const { return app_name_; }
+const std::string& AuthPigeonFirebaseApp::app_name() const { return app_name_; }
 
-void PigeonFirebaseApp::set_app_name(std::string_view value_arg) {
+void AuthPigeonFirebaseApp::set_app_name(std::string_view value_arg) {
   app_name_ = value_arg;
 }
 
-const std::string* PigeonFirebaseApp::tenant_id() const {
+const std::string* AuthPigeonFirebaseApp::tenant_id() const {
   return tenant_id_ ? &(*tenant_id_) : nullptr;
 }
 
-void PigeonFirebaseApp::set_tenant_id(const std::string_view* value_arg) {
+void AuthPigeonFirebaseApp::set_tenant_id(const std::string_view* value_arg) {
   tenant_id_ =
       value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void PigeonFirebaseApp::set_tenant_id(std::string_view value_arg) {
+void AuthPigeonFirebaseApp::set_tenant_id(std::string_view value_arg) {
   tenant_id_ = value_arg;
 }
 
-EncodableList PigeonFirebaseApp::ToEncodableList() const {
+EncodableList AuthPigeonFirebaseApp::ToEncodableList() const {
   EncodableList list;
   list.reserve(2);
   list.push_back(EncodableValue(app_name_));
@@ -233,9 +233,9 @@ EncodableList PigeonFirebaseApp::ToEncodableList() const {
   return list;
 }
 
-PigeonFirebaseApp PigeonFirebaseApp::FromEncodableList(
+AuthPigeonFirebaseApp AuthPigeonFirebaseApp::FromEncodableList(
     const EncodableList& list) {
-  PigeonFirebaseApp decoded(std::get<std::string>(list[0]));
+  AuthPigeonFirebaseApp decoded(std::get<std::string>(list[0]));
   auto& encodable_tenant_id = list[1];
   if (!encodable_tenant_id.IsNull()) {
     decoded.set_tenant_id(std::get<std::string>(encodable_tenant_id));
@@ -1821,22 +1821,22 @@ EncodableValue FirebaseAuthHostApiCodecSerializer::ReadValueOfType(
     uint8_t type, flutter::ByteStreamReader* stream) const {
   switch (type) {
     case 128:
-      return CustomEncodableValue(PigeonActionCodeInfo::FromEncodableList(
+      return CustomEncodableValue(AuthPigeonFirebaseApp::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 129:
-      return CustomEncodableValue(PigeonActionCodeInfoData::FromEncodableList(
+      return CustomEncodableValue(PigeonActionCodeInfo::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 130:
-      return CustomEncodableValue(PigeonActionCodeSettings::FromEncodableList(
+      return CustomEncodableValue(PigeonActionCodeInfoData::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 131:
-      return CustomEncodableValue(PigeonAdditionalUserInfo::FromEncodableList(
+      return CustomEncodableValue(PigeonActionCodeSettings::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 132:
-      return CustomEncodableValue(PigeonAuthCredential::FromEncodableList(
+      return CustomEncodableValue(PigeonAdditionalUserInfo::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 133:
-      return CustomEncodableValue(PigeonFirebaseApp::FromEncodableList(
+      return CustomEncodableValue(PigeonAuthCredential::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 134:
       return CustomEncodableValue(PigeonFirebaseAuthSettings::FromEncodableList(
@@ -1885,8 +1885,16 @@ void FirebaseAuthHostApiCodecSerializer::WriteValue(
     const EncodableValue& value, flutter::ByteStreamWriter* stream) const {
   if (const CustomEncodableValue* custom_value =
           std::get_if<CustomEncodableValue>(&value)) {
-    if (custom_value->type() == typeid(PigeonActionCodeInfo)) {
+    if (custom_value->type() == typeid(AuthPigeonFirebaseApp)) {
       stream->WriteByte(128);
+      WriteValue(
+          EncodableValue(std::any_cast<AuthPigeonFirebaseApp>(*custom_value)
+                             .ToEncodableList()),
+          stream);
+      return;
+    }
+    if (custom_value->type() == typeid(PigeonActionCodeInfo)) {
+      stream->WriteByte(129);
       WriteValue(
           EncodableValue(std::any_cast<PigeonActionCodeInfo>(*custom_value)
                              .ToEncodableList()),
@@ -1894,7 +1902,7 @@ void FirebaseAuthHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonActionCodeInfoData)) {
-      stream->WriteByte(129);
+      stream->WriteByte(130);
       WriteValue(
           EncodableValue(std::any_cast<PigeonActionCodeInfoData>(*custom_value)
                              .ToEncodableList()),
@@ -1902,7 +1910,7 @@ void FirebaseAuthHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonActionCodeSettings)) {
-      stream->WriteByte(130);
+      stream->WriteByte(131);
       WriteValue(
           EncodableValue(std::any_cast<PigeonActionCodeSettings>(*custom_value)
                              .ToEncodableList()),
@@ -1910,7 +1918,7 @@ void FirebaseAuthHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonAdditionalUserInfo)) {
-      stream->WriteByte(131);
+      stream->WriteByte(132);
       WriteValue(
           EncodableValue(std::any_cast<PigeonAdditionalUserInfo>(*custom_value)
                              .ToEncodableList()),
@@ -1918,18 +1926,11 @@ void FirebaseAuthHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonAuthCredential)) {
-      stream->WriteByte(132);
+      stream->WriteByte(133);
       WriteValue(
           EncodableValue(std::any_cast<PigeonAuthCredential>(*custom_value)
                              .ToEncodableList()),
           stream);
-      return;
-    }
-    if (custom_value->type() == typeid(PigeonFirebaseApp)) {
-      stream->WriteByte(133);
-      WriteValue(EncodableValue(std::any_cast<PigeonFirebaseApp>(*custom_value)
-                                    .ToEncodableList()),
-                 stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonFirebaseAuthSettings)) {
@@ -2057,7 +2058,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               api->RegisterIdTokenListener(
                   app_arg, [reply](ErrorOr<std::string>&& output) {
@@ -2095,7 +2096,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               api->RegisterAuthStateListener(
                   app_arg, [reply](ErrorOr<std::string>&& output) {
@@ -2133,7 +2134,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_host_arg = args.at(1);
               if (encodable_host_arg.IsNull()) {
@@ -2182,7 +2183,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_code_arg = args.at(1);
               if (encodable_code_arg.IsNull()) {
@@ -2226,7 +2227,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_code_arg = args.at(1);
               if (encodable_code_arg.IsNull()) {
@@ -2271,7 +2272,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_code_arg = args.at(1);
               if (encodable_code_arg.IsNull()) {
@@ -2322,7 +2323,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_email_arg = args.at(1);
               if (encodable_email_arg.IsNull()) {
@@ -2375,7 +2376,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               api->SignInAnonymously(
                   app_arg, [reply](ErrorOr<PigeonUserCredential>&& output) {
@@ -2413,7 +2414,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_input_arg = args.at(1);
               if (encodable_input_arg.IsNull()) {
@@ -2459,7 +2460,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_token_arg = args.at(1);
               if (encodable_token_arg.IsNull()) {
@@ -2505,7 +2506,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_email_arg = args.at(1);
               if (encodable_email_arg.IsNull()) {
@@ -2558,7 +2559,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_email_arg = args.at(1);
               if (encodable_email_arg.IsNull()) {
@@ -2611,7 +2612,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_sign_in_provider_arg = args.at(1);
               if (encodable_sign_in_provider_arg.IsNull()) {
@@ -2659,7 +2660,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               api->SignOut(app_arg,
                            [reply](std::optional<FlutterError>&& output) {
@@ -2696,7 +2697,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_email_arg = args.at(1);
               if (encodable_email_arg.IsNull()) {
@@ -2741,7 +2742,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_email_arg = args.at(1);
               if (encodable_email_arg.IsNull()) {
@@ -2791,7 +2792,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_email_arg = args.at(1);
               if (encodable_email_arg.IsNull()) {
@@ -2845,7 +2846,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_language_code_arg = args.at(1);
               const auto* language_code_arg =
@@ -2886,7 +2887,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_settings_arg = args.at(1);
               if (encodable_settings_arg.IsNull()) {
@@ -2931,7 +2932,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_code_arg = args.at(1);
               if (encodable_code_arg.IsNull()) {
@@ -2975,7 +2976,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_request_arg = args.at(1);
               if (encodable_request_arg.IsNull()) {
@@ -3021,7 +3022,7 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_authorization_code_arg = args.at(1);
               if (encodable_authorization_code_arg.IsNull()) {
@@ -3070,22 +3071,22 @@ EncodableValue FirebaseAuthUserHostApiCodecSerializer::ReadValueOfType(
     uint8_t type, flutter::ByteStreamReader* stream) const {
   switch (type) {
     case 128:
-      return CustomEncodableValue(PigeonActionCodeInfo::FromEncodableList(
+      return CustomEncodableValue(AuthPigeonFirebaseApp::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 129:
-      return CustomEncodableValue(PigeonActionCodeInfoData::FromEncodableList(
+      return CustomEncodableValue(PigeonActionCodeInfo::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 130:
-      return CustomEncodableValue(PigeonActionCodeSettings::FromEncodableList(
+      return CustomEncodableValue(PigeonActionCodeInfoData::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 131:
-      return CustomEncodableValue(PigeonAdditionalUserInfo::FromEncodableList(
+      return CustomEncodableValue(PigeonActionCodeSettings::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 132:
-      return CustomEncodableValue(PigeonAuthCredential::FromEncodableList(
+      return CustomEncodableValue(PigeonAdditionalUserInfo::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 133:
-      return CustomEncodableValue(PigeonFirebaseApp::FromEncodableList(
+      return CustomEncodableValue(PigeonAuthCredential::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 134:
       return CustomEncodableValue(PigeonFirebaseAuthSettings::FromEncodableList(
@@ -3134,8 +3135,16 @@ void FirebaseAuthUserHostApiCodecSerializer::WriteValue(
     const EncodableValue& value, flutter::ByteStreamWriter* stream) const {
   if (const CustomEncodableValue* custom_value =
           std::get_if<CustomEncodableValue>(&value)) {
-    if (custom_value->type() == typeid(PigeonActionCodeInfo)) {
+    if (custom_value->type() == typeid(AuthPigeonFirebaseApp)) {
       stream->WriteByte(128);
+      WriteValue(
+          EncodableValue(std::any_cast<AuthPigeonFirebaseApp>(*custom_value)
+                             .ToEncodableList()),
+          stream);
+      return;
+    }
+    if (custom_value->type() == typeid(PigeonActionCodeInfo)) {
+      stream->WriteByte(129);
       WriteValue(
           EncodableValue(std::any_cast<PigeonActionCodeInfo>(*custom_value)
                              .ToEncodableList()),
@@ -3143,7 +3152,7 @@ void FirebaseAuthUserHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonActionCodeInfoData)) {
-      stream->WriteByte(129);
+      stream->WriteByte(130);
       WriteValue(
           EncodableValue(std::any_cast<PigeonActionCodeInfoData>(*custom_value)
                              .ToEncodableList()),
@@ -3151,7 +3160,7 @@ void FirebaseAuthUserHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonActionCodeSettings)) {
-      stream->WriteByte(130);
+      stream->WriteByte(131);
       WriteValue(
           EncodableValue(std::any_cast<PigeonActionCodeSettings>(*custom_value)
                              .ToEncodableList()),
@@ -3159,7 +3168,7 @@ void FirebaseAuthUserHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonAdditionalUserInfo)) {
-      stream->WriteByte(131);
+      stream->WriteByte(132);
       WriteValue(
           EncodableValue(std::any_cast<PigeonAdditionalUserInfo>(*custom_value)
                              .ToEncodableList()),
@@ -3167,18 +3176,11 @@ void FirebaseAuthUserHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonAuthCredential)) {
-      stream->WriteByte(132);
+      stream->WriteByte(133);
       WriteValue(
           EncodableValue(std::any_cast<PigeonAuthCredential>(*custom_value)
                              .ToEncodableList()),
           stream);
-      return;
-    }
-    if (custom_value->type() == typeid(PigeonFirebaseApp)) {
-      stream->WriteByte(133);
-      WriteValue(EncodableValue(std::any_cast<PigeonFirebaseApp>(*custom_value)
-                                    .ToEncodableList()),
-                 stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonFirebaseAuthSettings)) {
@@ -3306,7 +3308,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               api->Delete(app_arg,
                           [reply](std::optional<FlutterError>&& output) {
@@ -3343,7 +3345,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_force_refresh_arg = args.at(1);
               if (encodable_force_refresh_arg.IsNull()) {
@@ -3388,7 +3390,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_input_arg = args.at(1);
               if (encodable_input_arg.IsNull()) {
@@ -3434,7 +3436,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_sign_in_provider_arg = args.at(1);
               if (encodable_sign_in_provider_arg.IsNull()) {
@@ -3482,7 +3484,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_input_arg = args.at(1);
               if (encodable_input_arg.IsNull()) {
@@ -3528,7 +3530,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_sign_in_provider_arg = args.at(1);
               if (encodable_sign_in_provider_arg.IsNull()) {
@@ -3576,7 +3578,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               api->Reload(
                   app_arg, [reply](ErrorOr<PigeonUserDetails>&& output) {
@@ -3614,7 +3616,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_action_code_settings_arg = args.at(1);
               const auto* action_code_settings_arg =
@@ -3657,7 +3659,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_provider_id_arg = args.at(1);
               if (encodable_provider_id_arg.IsNull()) {
@@ -3702,7 +3704,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_new_email_arg = args.at(1);
               if (encodable_new_email_arg.IsNull()) {
@@ -3747,7 +3749,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_new_password_arg = args.at(1);
               if (encodable_new_password_arg.IsNull()) {
@@ -3792,7 +3794,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_input_arg = args.at(1);
               if (encodable_input_arg.IsNull()) {
@@ -3838,7 +3840,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_profile_arg = args.at(1);
               if (encodable_profile_arg.IsNull()) {
@@ -3883,7 +3885,7 @@ void FirebaseAuthUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_new_email_arg = args.at(1);
               if (encodable_new_email_arg.IsNull()) {
@@ -3938,7 +3940,7 @@ EncodableValue MultiFactorUserHostApiCodecSerializer::ReadValueOfType(
     uint8_t type, flutter::ByteStreamReader* stream) const {
   switch (type) {
     case 128:
-      return CustomEncodableValue(PigeonFirebaseApp::FromEncodableList(
+      return CustomEncodableValue(AuthPigeonFirebaseApp::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 129:
       return CustomEncodableValue(PigeonMultiFactorInfo::FromEncodableList(
@@ -3959,11 +3961,12 @@ void MultiFactorUserHostApiCodecSerializer::WriteValue(
     const EncodableValue& value, flutter::ByteStreamWriter* stream) const {
   if (const CustomEncodableValue* custom_value =
           std::get_if<CustomEncodableValue>(&value)) {
-    if (custom_value->type() == typeid(PigeonFirebaseApp)) {
+    if (custom_value->type() == typeid(AuthPigeonFirebaseApp)) {
       stream->WriteByte(128);
-      WriteValue(EncodableValue(std::any_cast<PigeonFirebaseApp>(*custom_value)
-                                    .ToEncodableList()),
-                 stream);
+      WriteValue(
+          EncodableValue(std::any_cast<AuthPigeonFirebaseApp>(*custom_value)
+                             .ToEncodableList()),
+          stream);
       return;
     }
     if (custom_value->type() == typeid(PigeonMultiFactorInfo)) {
@@ -4021,7 +4024,7 @@ void MultiFactorUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_assertion_arg = args.at(1);
               if (encodable_assertion_arg.IsNull()) {
@@ -4069,7 +4072,7 @@ void MultiFactorUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_assertion_id_arg = args.at(1);
               if (encodable_assertion_id_arg.IsNull()) {
@@ -4116,7 +4119,7 @@ void MultiFactorUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               api->GetSession(
                   app_arg, [reply](ErrorOr<PigeonMultiFactorSession>&& output) {
@@ -4154,7 +4157,7 @@ void MultiFactorUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               const auto& encodable_factor_uid_arg = args.at(1);
               if (encodable_factor_uid_arg.IsNull()) {
@@ -4198,7 +4201,7 @@ void MultiFactorUserHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                 reply(WrapError("app_arg unexpectedly null."));
                 return;
               }
-              const auto& app_arg = std::any_cast<const PigeonFirebaseApp&>(
+              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
                   std::get<CustomEncodableValue>(encodable_app_arg));
               api->GetEnrolledFactors(
                   app_arg, [reply](ErrorOr<EncodableList>&& output) {

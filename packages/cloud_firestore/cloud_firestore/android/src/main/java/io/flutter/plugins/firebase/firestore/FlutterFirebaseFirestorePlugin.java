@@ -274,7 +274,7 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   static FirebaseFirestoreSettings getSettingsFromPigeon(
-      GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp pigeonApp) {
+      GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp pigeonApp) {
     FirebaseFirestoreSettings.Builder builder = new FirebaseFirestoreSettings.Builder();
     if (pigeonApp.getSettings().getHost() != null) {
       builder.setHost(pigeonApp.getSettings().getHost());
@@ -296,7 +296,7 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   public static FirebaseFirestore getFirestoreFromPigeon(
-      GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp pigeonApp) {
+      GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp pigeonApp) {
     synchronized (FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
       if (FlutterFirebaseFirestorePlugin.getFirestoreInstanceByNameAndDatabaseUrl(
               pigeonApp.getAppName(), pigeonApp.getDatabaseURL())
@@ -317,7 +317,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void loadBundle(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull byte[] bundle,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
     result.success(
@@ -328,7 +328,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void namedQueryGet(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull String name,
       @NonNull GeneratedAndroidFirebaseFirestore.PigeonGetOptions options,
       @NonNull
@@ -365,7 +365,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void clearPersistence(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
         () -> {
@@ -381,7 +381,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void disableNetwork(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
         () -> {
@@ -397,7 +397,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void enableNetwork(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
         () -> {
@@ -413,7 +413,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void terminate(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
         () -> {
@@ -430,7 +430,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void waitForPendingWrites(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
         () -> {
@@ -446,7 +446,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void setIndexConfiguration(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull String indexConfiguration,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
@@ -480,7 +480,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void snapshotsInSyncSetup(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
     FirebaseFirestore firestore = getFirestoreFromPigeon(app);
 
@@ -491,7 +491,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void transactionCreate(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull Long timeout,
       @NonNull Long maxAttempts,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
@@ -524,7 +524,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void transactionGet(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull String transactionId,
       @NonNull String path,
       @NonNull
@@ -558,7 +558,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void documentReferenceSet(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
@@ -592,7 +592,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void documentReferenceUpdate(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
@@ -638,7 +638,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void documentReferenceGet(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request,
       @NonNull
           GeneratedAndroidFirebaseFirestore.Result<
@@ -668,7 +668,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void documentReferenceDelete(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
@@ -686,7 +686,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void queryGet(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull String path,
       @NonNull Boolean isCollectionGroup,
       @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
@@ -726,7 +726,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void aggregateQueryCount(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull String path,
       @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
       @NonNull GeneratedAndroidFirebaseFirestore.AggregateSource source,
@@ -748,7 +748,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void writeBatchCommit(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull List<GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand> writes,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
     cachedThreadPool.execute(
@@ -806,7 +806,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void querySnapshot(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull String path,
       @NonNull Boolean isCollectionGroup,
       @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
@@ -837,7 +837,7 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void documentReferenceSnapshot(
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest parameters,
       @NonNull Boolean includeMetadataChanges,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {

@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FirestoreMessages.g.h"
 
-@interface PigeonParser : NSObject
+@interface FirestorePigeonParser : NSObject
 
 + (FIRQuery *)parseQueryWithParameters:(nonnull PigeonQueryParameters *)parameters
                              firestore:(nonnull FIRFirestore *)firestore

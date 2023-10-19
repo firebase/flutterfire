@@ -20,16 +20,16 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     if (value is DocumentReferenceRequest) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonDocumentChange) {
+    } else if (value is FirestorePigeonFirebaseApp) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonDocumentOption) {
+    } else if (value is PigeonDocumentChange) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonDocumentSnapshot) {
+    } else if (value is PigeonDocumentOption) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseApp) {
+    } else if (value is PigeonDocumentSnapshot) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
     } else if (value is PigeonFirebaseSettings) {
@@ -61,13 +61,13 @@ class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
       case 128:
         return DocumentReferenceRequest.decode(readValue(buffer)!);
       case 129:
-        return PigeonDocumentChange.decode(readValue(buffer)!);
+        return FirestorePigeonFirebaseApp.decode(readValue(buffer)!);
       case 130:
-        return PigeonDocumentOption.decode(readValue(buffer)!);
+        return PigeonDocumentChange.decode(readValue(buffer)!);
       case 131:
-        return PigeonDocumentSnapshot.decode(readValue(buffer)!);
+        return PigeonDocumentOption.decode(readValue(buffer)!);
       case 132:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
+        return PigeonDocumentSnapshot.decode(readValue(buffer)!);
       case 133:
         return PigeonFirebaseSettings.decode(readValue(buffer)!);
       case 134:
@@ -92,35 +92,35 @@ abstract class TestFirebaseFirestoreHostApi {
   static const MessageCodec<Object?> codec =
       _TestFirebaseFirestoreHostApiCodec();
 
-  Future<String> loadBundle(PigeonFirebaseApp app, Uint8List bundle);
+  Future<String> loadBundle(FirestorePigeonFirebaseApp app, Uint8List bundle);
 
   Future<PigeonQuerySnapshot> namedQueryGet(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     String name,
     PigeonGetOptions options,
   );
 
-  Future<void> clearPersistence(PigeonFirebaseApp app);
+  Future<void> clearPersistence(FirestorePigeonFirebaseApp app);
 
-  Future<void> disableNetwork(PigeonFirebaseApp app);
+  Future<void> disableNetwork(FirestorePigeonFirebaseApp app);
 
-  Future<void> enableNetwork(PigeonFirebaseApp app);
+  Future<void> enableNetwork(FirestorePigeonFirebaseApp app);
 
-  Future<void> terminate(PigeonFirebaseApp app);
+  Future<void> terminate(FirestorePigeonFirebaseApp app);
 
-  Future<void> waitForPendingWrites(PigeonFirebaseApp app);
+  Future<void> waitForPendingWrites(FirestorePigeonFirebaseApp app);
 
   Future<void> setIndexConfiguration(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     String indexConfiguration,
   );
 
   Future<void> setLoggingEnabled(bool loggingEnabled);
 
-  Future<String> snapshotsInSyncSetup(PigeonFirebaseApp app);
+  Future<String> snapshotsInSyncSetup(FirestorePigeonFirebaseApp app);
 
   Future<String> transactionCreate(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     int timeout,
     int maxAttempts,
   );
@@ -132,33 +132,33 @@ abstract class TestFirebaseFirestoreHostApi {
   );
 
   Future<PigeonDocumentSnapshot> transactionGet(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     String transactionId,
     String path,
   );
 
   Future<void> documentReferenceSet(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
   Future<void> documentReferenceUpdate(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
   Future<PigeonDocumentSnapshot> documentReferenceGet(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
   Future<void> documentReferenceDelete(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
   Future<PigeonQuerySnapshot> queryGet(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     String path,
     bool isCollectionGroup,
     PigeonQueryParameters parameters,
@@ -166,19 +166,19 @@ abstract class TestFirebaseFirestoreHostApi {
   );
 
   Future<double> aggregateQueryCount(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     String path,
     PigeonQueryParameters parameters,
     AggregateSource source,
   );
 
   Future<void> writeBatchCommit(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     List<PigeonTransactionCommand?> writes,
   );
 
   Future<String> querySnapshot(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     String path,
     bool isCollectionGroup,
     PigeonQueryParameters parameters,
@@ -187,7 +187,7 @@ abstract class TestFirebaseFirestoreHostApi {
   );
 
   Future<String> documentReferenceSnapshot(
-    PigeonFirebaseApp app,
+    FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest parameters,
     bool includeMetadataChanges,
   );
@@ -214,10 +214,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final Uint8List? arg_bundle = (args[1] as Uint8List?);
           assert(
@@ -247,10 +248,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final String? arg_name = (args[1] as String?);
           assert(
@@ -286,10 +288,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           await api.clearPersistence(arg_app!);
           return <Object?>[];
@@ -314,10 +317,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           await api.disableNetwork(arg_app!);
           return <Object?>[];
@@ -342,10 +346,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           await api.enableNetwork(arg_app!);
           return <Object?>[];
@@ -370,10 +375,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           await api.terminate(arg_app!);
           return <Object?>[];
@@ -398,10 +404,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           await api.waitForPendingWrites(arg_app!);
           return <Object?>[];
@@ -426,10 +433,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final String? arg_indexConfiguration = (args[1] as String?);
           assert(
@@ -487,10 +495,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final String output = await api.snapshotsInSyncSetup(arg_app!);
           return <Object?>[output];
@@ -515,10 +524,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final int? arg_timeout = (args[1] as int?);
           assert(
@@ -598,10 +608,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final String? arg_transactionId = (args[1] as String?);
           assert(
@@ -637,10 +648,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final DocumentReferenceRequest? arg_request =
               (args[1] as DocumentReferenceRequest?);
@@ -671,10 +683,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final DocumentReferenceRequest? arg_request =
               (args[1] as DocumentReferenceRequest?);
@@ -705,10 +718,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final DocumentReferenceRequest? arg_request =
               (args[1] as DocumentReferenceRequest?);
@@ -740,10 +754,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final DocumentReferenceRequest? arg_request =
               (args[1] as DocumentReferenceRequest?);
@@ -774,10 +789,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final String? arg_path = (args[1] as String?);
           assert(
@@ -829,10 +845,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQueryCount was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQueryCount was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQueryCount was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final String? arg_path = (args[1] as String?);
           assert(
@@ -879,10 +896,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final List<PigeonTransactionCommand?>? arg_writes =
               (args[1] as List<Object?>?)?.cast<PigeonTransactionCommand?>();
@@ -913,10 +931,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final String? arg_path = (args[1] as String?);
           assert(
@@ -974,10 +993,11 @@ abstract class TestFirebaseFirestoreHostApi {
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final FirestorePigeonFirebaseApp? arg_app =
+              (args[0] as FirestorePigeonFirebaseApp?);
           assert(
             arg_app != null,
-            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null PigeonFirebaseApp.',
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null FirestorePigeonFirebaseApp.',
           );
           final DocumentReferenceRequest? arg_parameters =
               (args[1] as DocumentReferenceRequest?);

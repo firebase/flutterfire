@@ -176,7 +176,7 @@ CloudFirestorePlugin::CloudFirestorePlugin() {}
 
 CloudFirestorePlugin::~CloudFirestorePlugin() {}
 
-Firestore* GetFirestoreFromPigeon(const PigeonFirebaseApp& pigeonApp) {
+Firestore* GetFirestoreFromPigeon(const FirestorePigeonFirebaseApp& pigeonApp) {
   if (CloudFirestorePlugin::firestoreInstances_.find(pigeonApp.app_name()) !=
       CloudFirestorePlugin::firestoreInstances_.end()) {
     return CloudFirestorePlugin::firestoreInstances_[pigeonApp.app_name()];
@@ -592,7 +592,7 @@ class LoadBundleStreamHandler
 };
 
 void CloudFirestorePlugin::LoadBundle(
-    const PigeonFirebaseApp& app, const std::vector<uint8_t>& bundle,
+    const FirestorePigeonFirebaseApp& app, const std::vector<uint8_t>& bundle,
     std::function<void(ErrorOr<std::string> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
 
@@ -612,7 +612,7 @@ using firebase::firestore::Query;
 using firebase::firestore::QuerySnapshot;
 
 void CloudFirestorePlugin::NamedQueryGet(
-    const PigeonFirebaseApp& app, const std::string& name,
+    const FirestorePigeonFirebaseApp& app, const std::string& name,
     const PigeonGetOptions& options,
     std::function<void(ErrorOr<PigeonQuerySnapshot> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
@@ -647,7 +647,7 @@ void CloudFirestorePlugin::NamedQueryGet(
 }
 
 void CloudFirestorePlugin::ClearPersistence(
-    const PigeonFirebaseApp& app,
+    const FirestorePigeonFirebaseApp& app,
     std::function<void(std::optional<FlutterError> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   firestore->ClearPersistence().OnCompletion(
@@ -662,7 +662,7 @@ void CloudFirestorePlugin::ClearPersistence(
 }
 
 void CloudFirestorePlugin::DisableNetwork(
-    const PigeonFirebaseApp& app,
+    const FirestorePigeonFirebaseApp& app,
     std::function<void(std::optional<FlutterError> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   firestore->DisableNetwork().OnCompletion(
@@ -677,7 +677,7 @@ void CloudFirestorePlugin::DisableNetwork(
 }
 
 void CloudFirestorePlugin::EnableNetwork(
-    const PigeonFirebaseApp& app,
+    const FirestorePigeonFirebaseApp& app,
     std::function<void(std::optional<FlutterError> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   firestore->EnableNetwork().OnCompletion(
@@ -692,7 +692,7 @@ void CloudFirestorePlugin::EnableNetwork(
 }
 
 void CloudFirestorePlugin::Terminate(
-    const PigeonFirebaseApp& app,
+    const FirestorePigeonFirebaseApp& app,
     std::function<void(std::optional<FlutterError> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   firestore->Terminate().OnCompletion(
@@ -707,7 +707,7 @@ void CloudFirestorePlugin::Terminate(
 }
 
 void CloudFirestorePlugin::WaitForPendingWrites(
-    const PigeonFirebaseApp& app,
+    const FirestorePigeonFirebaseApp& app,
     std::function<void(std::optional<FlutterError> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   firestore->WaitForPendingWrites().OnCompletion(
@@ -722,7 +722,8 @@ void CloudFirestorePlugin::WaitForPendingWrites(
 }
 
 void CloudFirestorePlugin::SetIndexConfiguration(
-    const PigeonFirebaseApp& app, const std::string& index_configuration,
+    const FirestorePigeonFirebaseApp& app,
+    const std::string& index_configuration,
     std::function<void(std::optional<FlutterError> reply)> result) {
   // TODO: not available in C++ SDK
   result(FlutterError("Not available in C++ SDK"));
@@ -780,7 +781,7 @@ class SnapshotInSyncStreamHandler
 };
 
 void CloudFirestorePlugin::SnapshotsInSyncSetup(
-    const PigeonFirebaseApp& app,
+    const FirestorePigeonFirebaseApp& app,
     std::function<void(ErrorOr<std::string> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
 
@@ -940,7 +941,8 @@ class TransactionStreamHandler
 };
 
 void CloudFirestorePlugin::TransactionCreate(
-    const PigeonFirebaseApp& app, int64_t timeout, int64_t max_attempts,
+    const FirestorePigeonFirebaseApp& app, int64_t timeout,
+    int64_t max_attempts,
     std::function<void(ErrorOr<std::string> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
 
@@ -995,7 +997,7 @@ void CloudFirestorePlugin::TransactionStoreResult(
 }
 
 void CloudFirestorePlugin::TransactionGet(
-    const PigeonFirebaseApp& app, const std::string& transaction_id,
+    const FirestorePigeonFirebaseApp& app, const std::string& transaction_id,
     const std::string& path,
     std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
@@ -1041,7 +1043,8 @@ std::vector<firebase::firestore::FieldPath> ConvertToFieldPathVector(
 }
 
 void CloudFirestorePlugin::DocumentReferenceSet(
-    const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
+    const FirestorePigeonFirebaseApp& app,
+    const DocumentReferenceRequest& request,
     std::function<void(std::optional<FlutterError> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   DocumentReference document_reference = firestore->Document(request.path());
@@ -1072,7 +1075,8 @@ void CloudFirestorePlugin::DocumentReferenceSet(
 }
 
 void CloudFirestorePlugin::DocumentReferenceUpdate(
-    const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
+    const FirestorePigeonFirebaseApp& app,
+    const DocumentReferenceRequest& request,
     std::function<void(std::optional<FlutterError> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   DocumentReference document_reference = firestore->Document(request.path());
@@ -1092,7 +1096,8 @@ void CloudFirestorePlugin::DocumentReferenceUpdate(
 }
 
 void CloudFirestorePlugin::DocumentReferenceGet(
-    const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
+    const FirestorePigeonFirebaseApp& app,
+    const DocumentReferenceRequest& request,
     std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   DocumentReference document_reference = firestore->Document(request.path());
@@ -1116,7 +1121,8 @@ void CloudFirestorePlugin::DocumentReferenceGet(
 }
 
 void CloudFirestorePlugin::DocumentReferenceDelete(
-    const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
+    const FirestorePigeonFirebaseApp& app,
+    const DocumentReferenceRequest& request,
     std::function<void(std::optional<FlutterError> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   DocumentReference document_reference = firestore->Document(request.path());
@@ -1346,7 +1352,7 @@ firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
 }
 
 void CloudFirestorePlugin::QueryGet(
-    const PigeonFirebaseApp& app, const std::string& path,
+    const FirestorePigeonFirebaseApp& app, const std::string& path,
     bool is_collection_group, const PigeonQueryParameters& parameters,
     const PigeonGetOptions& options,
     std::function<void(ErrorOr<PigeonQuerySnapshot> reply)> result) {
@@ -1384,7 +1390,7 @@ firebase::firestore::AggregateSource GetAggregateSourceFromPigeon(
 }
 
 void CloudFirestorePlugin::AggregateQueryCount(
-    const PigeonFirebaseApp& app, const std::string& path,
+    const FirestorePigeonFirebaseApp& app, const std::string& path,
     const PigeonQueryParameters& parameters, const AggregateSource& source,
     std::function<void(ErrorOr<double> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
@@ -1407,7 +1413,7 @@ void CloudFirestorePlugin::AggregateQueryCount(
 }
 
 void CloudFirestorePlugin::WriteBatchCommit(
-    const PigeonFirebaseApp& app, const flutter::EncodableList& writes,
+    const FirestorePigeonFirebaseApp& app, const flutter::EncodableList& writes,
     std::function<void(std::optional<FlutterError> reply)> result) {
   try {
     Firestore* firestore = GetFirestoreFromPigeon(app);
@@ -1552,7 +1558,7 @@ class QuerySnapshotStreamHandler
 };
 
 void CloudFirestorePlugin::QuerySnapshot(
-    const PigeonFirebaseApp& app, const std::string& path,
+    const FirestorePigeonFirebaseApp& app, const std::string& path,
     bool is_collection_group, const PigeonQueryParameters& parameters,
     const PigeonGetOptions& options, bool include_metadata_changes,
     std::function<void(ErrorOr<std::string> reply)> result) {
@@ -1635,8 +1641,8 @@ class DocumentSnapshotStreamHandler
 };
 
 void CloudFirestorePlugin::DocumentReferenceSnapshot(
-    const PigeonFirebaseApp& app, const DocumentReferenceRequest& parameters,
-    bool include_metadata_changes,
+    const FirestorePigeonFirebaseApp& app,
+    const DocumentReferenceRequest& parameters, bool include_metadata_changes,
     std::function<void(ErrorOr<std::string> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   std::unique_ptr<DocumentReference> documentReference =
