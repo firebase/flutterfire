@@ -201,6 +201,7 @@ void setupTaskTests() {
 
           expect(url, contains('/$secondaryBucket/'));
         },
+        skip: true, // does Firebase Emulator support custom bucket?
       );
     });
 

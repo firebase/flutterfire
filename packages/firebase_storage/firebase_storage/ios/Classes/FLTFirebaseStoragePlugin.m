@@ -502,29 +502,6 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
               handle:(NSNumber *)handle
           completion:(void (^)(NSDictionary<NSString *, id> *_Nullable,
                                FlutterError *_Nullable))completion {
-  // TODO
-  NSLog(@"taskPauseApp");
-}
-
-- (void)taskResumeApp:(PigeonStorageFirebaseApp *)app
-               handle:(NSNumber *)handle
-           completion:(void (^)(NSDictionary<NSString *, id> *_Nullable,
-                                FlutterError *_Nullable))completion {
-  // TODO
-  NSLog(@"taskResumeApp");
-}
-
-- (void)taskCancelApp:(PigeonStorageFirebaseApp *)app
-               handle:(NSNumber *)handle
-           completion:(void (^)(NSDictionary<NSString *, id> *_Nullable,
-                                FlutterError *_Nullable))completion {
-  // TODO
-  NSLog(@"taskCancelApp");
-}
-
-- (void)taskPause:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  dispatch_async(self->_callbackQueue, ^() {
-    NSNumber *handle = arguments[kFLTFirebaseStorageKeyHandle];
     FIRStorageObservableTask<FIRStorageTaskManagement> *task;
     @synchronized(self->_tasks) {
       task = self->_tasks[handle];
@@ -533,23 +510,24 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
       [self setState:FLTFirebaseStorageTaskStatePause
           forFIRStorageObservableTask:task
                        withCompletion:^(BOOL success, NSDictionary *snapshotDict) {
-                         result.success(@{
+
+                         completion(@{
                            @"status" : @(success),
                            @"snapshot" : (id)snapshotDict ?: [NSNull null],
-                         });
+                         }, nil);
                        }];
     } else {
-      result.success(@{
-        @"status" : @(NO),
-      });
+      completion(nil, [FlutterError errorWithCode:@"unknown"
+                             message:@"Cannot find task to pause."
+                             details:@{}]);
     }
-  });
 }
 
-- (void)taskResume:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  dispatch_async(self->_callbackQueue, ^() {
-    NSNumber *handle = arguments[kFLTFirebaseStorageKeyHandle];
-    FIRStorageObservableTask<FIRStorageTaskManagement> *task;
+- (void)taskResumeApp:(PigeonStorageFirebaseApp *)app
+               handle:(NSNumber *)handle
+           completion:(void (^)(NSDictionary<NSString *, id> *_Nullable,
+                                FlutterError *_Nullable))completion {
+  FIRStorageObservableTask<FIRStorageTaskManagement> *task;
     @synchronized(self->_tasks) {
       task = self->_tasks[handle];
     }
@@ -557,23 +535,23 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
       [self setState:FLTFirebaseStorageTaskStateResume
           forFIRStorageObservableTask:task
                        withCompletion:^(BOOL success, NSDictionary *snapshotDict) {
-                         result.success(@{
+                         completion(@{
                            @"status" : @(success),
                            @"snapshot" : (id)snapshotDict ?: [NSNull null],
-                         });
+                         }, nil);
                        }];
     } else {
-      result.success(@{
-        @"status" : @(NO),
-      });
+      completion(nil, [FlutterError errorWithCode:@"unknown"
+                             message:@"Cannot find task to resume."
+                             details:@{}]);
     }
-  });
 }
 
-- (void)taskCancel:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  dispatch_async(self->_callbackQueue, ^() {
-    NSNumber *handle = arguments[kFLTFirebaseStorageKeyHandle];
-    FIRStorageObservableTask<FIRStorageTaskManagement> *task;
+- (void)taskCancelApp:(PigeonStorageFirebaseApp *)app
+               handle:(NSNumber *)handle
+           completion:(void (^)(NSDictionary<NSString *, id> *_Nullable,
+                                FlutterError *_Nullable))completion {
+  FIRStorageObservableTask<FIRStorageTaskManagement> *task;
     @synchronized(self->_tasks) {
       task = self->_tasks[handle];
     }
@@ -581,17 +559,16 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
       [self setState:FLTFirebaseStorageTaskStateCancel
           forFIRStorageObservableTask:task
                        withCompletion:^(BOOL success, NSDictionary *snapshotDict) {
-                         result.success(@{
+                         completion(@{
                            @"status" : @(success),
                            @"snapshot" : (id)snapshotDict ?: [NSNull null],
-                         });
+                         }, nil);
                        }];
     } else {
-      result.success(@{
-        @"status" : @(NO),
-      });
+      completion(nil, [FlutterError errorWithCode:@"unknown"
+                             message:@"Cannot find task to cancel."
+                             details:@{}]);
     }
-  });
 }
 
 #pragma mark - Utilities
@@ -720,96 +697,6 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   }
 
   completion(NO, nil);
-}
-
-- (void)startFIRStorageObservableTaskForArguments:(id)arguments
-                    andFLTFirebaseStorageTaskType:(FLTFirebaseStorageTaskType)type {
-  dispatch_async(self->_callbackQueue, ^() {
-    FIRStorageObservableTask<FIRStorageTaskManagement> *task;
-    FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];
-    FIRStorageMetadata *metadata =
-        [self FIRStorageMetadataFromNSDictionary:arguments[kFLTFirebaseStorageKeyMetadata]
-                                        fullPath:[reference fullPath]];
-
-    if (type == FLTFirebaseStorageTaskTypeFile) {
-      NSURL *fileUrl = [NSURL fileURLWithPath:arguments[@"filePath"]];
-      task = [reference putFile:fileUrl metadata:metadata];
-    } else if (type == FLTFirebaseStorageTaskTypeBytes) {
-      NSData *data = [(FlutterStandardTypedData *)arguments[@"data"] data];
-      task = [reference putData:data metadata:metadata];
-    } else if (type == FLTFirebaseStorageTaskTypeDownload) {
-      NSURL *fileUrl = [NSURL fileURLWithPath:arguments[@"filePath"]];
-      task = [reference writeToFile:fileUrl];
-    } else if (type == FLTFirebaseStorageTaskTypeString) {
-      NSData *data = [self
-          NSDataFromUploadString:arguments[@"data"]
-                          format:(FLTFirebaseStorageStringType)[arguments[@"format"] intValue]];
-      task = [reference putData:data metadata:metadata];
-    }
-
-    NSNumber *handle = arguments[kFLTFirebaseStorageKeyHandle];
-    __weak FLTFirebaseStoragePlugin *weakSelf = self;
-
-    @synchronized(self->_tasks) {
-      self->_tasks[handle] = task;
-    }
-
-    // upload paused
-    [task observeStatus:FIRStorageTaskStatusPause
-                handler:^(FIRStorageTaskSnapshot *snapshot) {
-                  dispatch_async(self->_callbackQueue, ^() {
-                    [weakSelf.storage_method_channel
-                        invokeMethod:@"Task#onPaused"
-                           arguments:[weakSelf NSDictionaryFromHandle:handle
-                                            andFIRStorageTaskSnapshot:snapshot]];
-                  });
-                }];
-
-    // upload reported progress
-    [task observeStatus:FIRStorageTaskStatusProgress
-                handler:^(FIRStorageTaskSnapshot *snapshot) {
-                  dispatch_async(self->_callbackQueue, ^() {
-                    [weakSelf.storage_method_channel
-                        invokeMethod:@"Task#onProgress"
-                           arguments:[weakSelf NSDictionaryFromHandle:handle
-                                            andFIRStorageTaskSnapshot:snapshot]];
-                  });
-                }];
-
-    // upload completed successfully
-    [task observeStatus:FIRStorageTaskStatusSuccess
-                handler:^(FIRStorageTaskSnapshot *snapshot) {
-                  dispatch_async(self->_callbackQueue, ^() {
-                    @synchronized(self->_tasks) {
-                      [self->_tasks removeObjectForKey:handle];
-                    }
-                    [weakSelf.storage_method_channel
-                        invokeMethod:@"Task#onSuccess"
-                           arguments:[weakSelf NSDictionaryFromHandle:handle
-                                            andFIRStorageTaskSnapshot:snapshot]];
-                  });
-                }];
-
-    [task observeStatus:FIRStorageTaskStatusFailure
-                handler:^(FIRStorageTaskSnapshot *snapshot) {
-                  dispatch_async(self->_callbackQueue, ^() {
-                    @synchronized(self->_tasks) {
-                      [self->_tasks removeObjectForKey:handle];
-                    }
-                    if (snapshot.error.code == FIRStorageErrorCodeCancelled) {
-                      [weakSelf.storage_method_channel
-                          invokeMethod:@"Task#onCanceled"
-                             arguments:[weakSelf NSDictionaryFromHandle:handle
-                                              andFIRStorageTaskSnapshot:snapshot]];
-                    } else {
-                      [weakSelf.storage_method_channel
-                          invokeMethod:@"Task#onFailure"
-                             arguments:[weakSelf NSDictionaryFromHandle:handle
-                                              andFIRStorageTaskSnapshot:snapshot]];
-                    }
-                  });
-                }];
-  });
 }
 
 - (NSDictionary *)NSDictionaryFromNSError:(NSError *)error {
