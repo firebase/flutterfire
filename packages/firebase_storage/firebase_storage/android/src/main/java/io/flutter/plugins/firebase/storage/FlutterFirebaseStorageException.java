@@ -17,7 +17,7 @@ class FlutterFirebaseStorageException {
           "UNKNOWN", "An unknown error occurred", null);
     }
     String code = "UNKNOWN";
-    String message = "An unknown error occurred";
+    String message = "An unknown error occurred:" + nativeException.getMessage();
     int codeNumber;
 
     if (nativeException instanceof StorageException) {

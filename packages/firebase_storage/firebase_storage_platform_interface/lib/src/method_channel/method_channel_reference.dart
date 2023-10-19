@@ -31,7 +31,7 @@ class MethodChannelReference extends ReferencePlatform {
   /// Default of FirebaseReference pigeon instance
   PigeonStorageReference get pigeonReference {
     return PigeonStorageReference(
-      bucket: storage.app.name,
+      bucket: storage.bucket,
       fullPath: fullPath,
       name: name,
     );
