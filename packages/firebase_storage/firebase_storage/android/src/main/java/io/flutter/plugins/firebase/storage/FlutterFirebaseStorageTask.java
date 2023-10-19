@@ -9,29 +9,21 @@ package io.flutter.plugins.firebase.storage;
 import static io.flutter.plugins.firebase.storage.FlutterFirebaseStoragePlugin.parseMetadataToMap;
 
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.SparseArray;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 class FlutterFirebaseStorageTask {
   static final SparseArray<FlutterFirebaseStorageTask> inProgressTasks = new SparseArray<>();
-  private static final Executor taskExecutor = Executors.newSingleThreadExecutor();
   private final FlutterFirebaseStorageTaskType type;
   private final int handle;
   private final StorageReference reference;
@@ -121,8 +113,8 @@ class FlutterFirebaseStorageTask {
     out.put("path", snapshot.getStorage().getPath());
     if (snapshot.getTask().isSuccessful()) {
       // TODO(Salakar): work around a bug on the Firebase Android SDK where
-      //  sometimes `getBytesTransferred` != `getTotalByteCount` even
-      //  when download has completed.
+      // sometimes `getBytesTransferred` != `getTotalByteCount` even
+      // when download has completed.
       out.put("bytesTransferred", snapshot.getTotalByteCount());
     } else {
       out.put("bytesTransferred", snapshot.getBytesTransferred());
@@ -162,65 +154,8 @@ class FlutterFirebaseStorageTask {
     }
   }
 
-  Task<Boolean> pause() {
-    TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
-
-    FlutterFirebasePlugin.cachedThreadPool.execute(
-        () -> {
-          synchronized (pauseSyncObject) {
-            boolean paused = storageTask.pause();
-            if (!paused) {
-              taskCompletionSource.setResult(false);
-              return;
-            }
-            try {
-              pauseSyncObject.wait();
-            } catch (InterruptedException e) {
-              taskCompletionSource.setResult(false);
-              return;
-            }
-            taskCompletionSource.setResult(true);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  Task<Boolean> resume() {
-    TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
-
-    FlutterFirebasePlugin.cachedThreadPool.execute(
-        () -> {
-          synchronized (resumeSyncObject) {
-            boolean resumed = storageTask.resume();
-            if (!resumed) {
-              taskCompletionSource.setResult(false);
-              return;
-            }
-            try {
-              resumeSyncObject.wait();
-            } catch (InterruptedException e) {
-              taskCompletionSource.setResult(false);
-              return;
-            }
-            taskCompletionSource.setResult(true);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  Task<Boolean> cancel() {
-    TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
-    FlutterFirebasePlugin.cachedThreadPool.execute(
-        () -> {
-          taskCompletionSource.setResult(storageTask.cancel());
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  TaskStateChannelStreamHandler startTaskWithMethodChannel(@NonNull MethodChannel channel) throws Exception {
+  TaskStateChannelStreamHandler startTaskWithMethodChannel(@NonNull MethodChannel channel)
+      throws Exception {
     if (type == FlutterFirebaseStorageTaskType.BYTES && bytes != null) {
       if (metadata == null) {
         storageTask = reference.putBytes(bytes);
@@ -239,7 +174,7 @@ class FlutterFirebaseStorageTask {
       throw new Exception("Unable to start task. Some arguments have no been initialized.");
     }
 
-    return new TaskStateChannelStreamHandler(reference.getStorage(), storageTask);
+    return new TaskStateChannelStreamHandler(this, reference.getStorage(), storageTask);
   }
 
   private Map<String, Object> getTaskEventMap(
@@ -259,6 +194,32 @@ class FlutterFirebaseStorageTask {
 
   public Object getSnapshot() {
     return storageTask.getSnapshot();
+  }
+
+  public boolean isDestroyed() {
+    return destroyed;
+  }
+
+  public void notifyResumeObjects() {
+    synchronized (resumeSyncObject) {
+      resumeSyncObject.notifyAll();
+    }
+  }
+
+  public void notifyCancelObjects() {
+    synchronized (cancelSyncObject) {
+      cancelSyncObject.notifyAll();
+    }
+  }
+
+  public void notifyPauseObjects() {
+    synchronized (pauseSyncObject) {
+      pauseSyncObject.notifyAll();
+    }
+  }
+
+  public StorageTask<?> getAndroidTask() {
+    return storageTask;
   }
 
   private enum FlutterFirebaseStorageTaskType {

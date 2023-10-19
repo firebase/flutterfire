@@ -6,7 +6,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// [AggregateQuerySnapshotPlatform] represents a response to an [AggregateQueryPlatform] request.
 class AggregateQuerySnapshotPlatform extends PlatformInterface {
-  AggregateQuerySnapshotPlatform({required count})
+  AggregateQuerySnapshotPlatform({required int count})
       : _count = count,
         super(token: _token);
 

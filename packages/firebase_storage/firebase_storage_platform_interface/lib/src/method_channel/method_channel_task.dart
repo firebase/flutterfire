@@ -7,7 +7,6 @@ import 'dart:async';
 import 'dart:developer' as developer;
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
 import '../../firebase_storage_platform_interface.dart';
@@ -31,7 +30,7 @@ abstract class MethodChannelTask extends TaskPlatform {
       final observerId = await _initialTask;
 
       final nativePlatformStream =
-          MethodChannelFirebaseStorage.storageTaskChannel(observerId!)
+          MethodChannelFirebaseStorage.storageTaskChannel(observerId)
               .receiveBroadcastStream();
       try {
         developer.log('TaskMethodChannel, start listen');
@@ -42,16 +41,15 @@ abstract class MethodChannelTask extends TaskPlatform {
           developer.log(
               'TaskMethodChannel, listen appName: $appName, taskState: $taskState');
 
-          MethodChannelTaskSnapshot snapshot = MethodChannelTaskSnapshot(
-              storage,
-              taskState,
-              Map<String, dynamic>.from(events['snapshot']));
-
           if (_snapshot.state != TaskState.canceled) {
+            MethodChannelTaskSnapshot snapshot = MethodChannelTaskSnapshot(
+                storage,
+                taskState,
+                Map<String, dynamic>.from(events['snapshot']));
             _snapshot = snapshot;
           }
 
-          yield snapshot;
+          yield _snapshot;
 
           // If the stream event is complete, trigger the
           // completer to resolve with the snapshot.
@@ -69,7 +67,6 @@ abstract class MethodChannelTask extends TaskPlatform {
         onListen: (sub) => sub.resume(), onCancel: (sub) => sub.pause());
 
     // Keep reference to whether the initial "start" task has completed.
-    _initialTaskCompleter = Completer<void>();
     _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running, {
       'path': path,
       'bytesTransferred': 0,
@@ -84,6 +81,7 @@ abstract class MethodChannelTask extends TaskPlatform {
     );
   }
 
+  /// Convert [TaskState] to [PigeonStorageTaskState]
   PigeonStorageTaskState convertToPigeonTaskState(TaskState state) {
     switch (state) {
       case TaskState.canceled:
@@ -108,8 +106,6 @@ abstract class MethodChannelTask extends TaskPlatform {
   Completer<TaskSnapshotPlatform>? _completer;
 
   late Stream<TaskSnapshotPlatform> _stream;
-
-  late Completer<void> _initialTaskCompleter;
 
   Future<String> _initialTask;
 
@@ -146,18 +142,15 @@ abstract class MethodChannelTask extends TaskPlatform {
   @override
   Future<bool> pause() async {
     try {
-      if (!_initialTaskCompleter.isCompleted) {
-        await _initialTaskCompleter.future;
-      }
       Map<String, dynamic>? data = (await MethodChannelFirebaseStorage
               .pigeonChannel
               .taskPause(pigeonFirebaseAppDefault, _handle))
           .cast<String, dynamic>();
 
-      final success = data?['status'] ?? false;
+      final success = data['status'] ?? false;
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.paused,
-            Map<String, dynamic>.from(data!['snapshot']));
+            Map<String, dynamic>.from(data['snapshot']));
       }
       return success;
     } catch (e, stack) {
@@ -168,18 +161,15 @@ abstract class MethodChannelTask extends TaskPlatform {
   @override
   Future<bool> resume() async {
     try {
-      if (!_initialTaskCompleter.isCompleted) {
-        await _initialTaskCompleter.future;
-      }
       Map<String, dynamic>? data = (await MethodChannelFirebaseStorage
               .pigeonChannel
               .taskResume(pigeonFirebaseAppDefault, _handle))
           .cast<String, dynamic>();
 
-      final success = data?['status'] ?? false;
+      final success = data['status'] ?? false;
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running,
-            Map<String, dynamic>.from(data!['snapshot']));
+            Map<String, dynamic>.from(data['snapshot']));
       }
       return success;
     } catch (e, stack) {
@@ -190,18 +180,15 @@ abstract class MethodChannelTask extends TaskPlatform {
   @override
   Future<bool> cancel() async {
     try {
-      if (!_initialTaskCompleter.isCompleted) {
-        await _initialTaskCompleter.future;
-      }
       Map<String, dynamic>? data = (await MethodChannelFirebaseStorage
               .pigeonChannel
               .taskCancel(pigeonFirebaseAppDefault, _handle))
           .cast<String, dynamic>();
 
-      final success = data?['status'] ?? false;
+      final success = data['status'] ?? false;
       if (success) {
         _snapshot = MethodChannelTaskSnapshot(storage, TaskState.canceled,
-            Map<String, dynamic>.from(data!['snapshot']));
+            Map<String, dynamic>.from(data['snapshot']));
       }
       return success;
     } catch (e, stack) {

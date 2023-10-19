@@ -5,7 +5,6 @@
 
 import 'dart:async';
 
-import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
@@ -13,7 +12,6 @@ import './utils/exception.dart';
 import '../../firebase_storage_platform_interface.dart';
 import '../pigeon/messages.pigeon.dart';
 import 'method_channel_reference.dart';
-import 'method_channel_task_snapshot.dart';
 
 /// Method Channel delegate for [FirebaseStoragePlatform].
 class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
@@ -21,7 +19,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// [bucket].
   MethodChannelFirebaseStorage(
       {required FirebaseApp app, required String bucket})
-      : super(appInstance: app, bucket: bucket) {}
+      : super(appInstance: app, bucket: bucket);
 
   /// Internal stub class initializer.
   ///
@@ -29,16 +27,19 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// then initialized via the [delegateFor] method.
   MethodChannelFirebaseStorage._() : super(appInstance: null, bucket: '');
 
-  static const String STORAGE_METHOD_CHANNEL_NAME =
+  /// Const Method channel name for Firebase Storage.
+  static const String storageMethodChannelName =
       'plugins.flutter.io/firebase_storage';
-  static const String STORAGE_TASK_EVENT_NAME = "taskEvent";
+
+  /// Const task event name for the storage tasks
+  static const String storageTaskEventName = 'taskEvent';
 
   /// The [EventChannel] used for storageTask
   static EventChannel storageTaskChannel(String id) {
-    return EventChannel(
-        '$STORAGE_METHOD_CHANNEL_NAME/$STORAGE_TASK_EVENT_NAME/$id');
+    return EventChannel('$storageMethodChannelName/$storageTaskEventName/$id');
   }
 
+  /// The pigeon channel instance to communicate through.
   static final FirebaseStorageHostApi pigeonChannel = FirebaseStorageHostApi();
 
   /// Default FirebaseApp pigeon instance
@@ -56,7 +57,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   /// The [MethodChannelFirebaseStorage] method channel.
   static const MethodChannel channel = MethodChannel(
-    STORAGE_METHOD_CHANNEL_NAME,
+    storageMethodChannelName,
   );
 
   static Map<String, MethodChannelFirebaseStorage>
@@ -69,18 +70,21 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     return MethodChannelFirebaseStorage._();
   }
 
+  /// Return an instance of a [PigeonStorageReference]
   static PigeonStorageReference getPigeonReference(
       String bucket, String fullPath, String name) {
     return PigeonStorageReference(
         bucket: bucket, fullPath: fullPath, name: name);
   }
 
+  /// Return an instance of a [PigeonStorageFirebaseApp]
   static PigeonStorageFirebaseApp getPigeonFirebaseApp(String appName) {
     return PigeonStorageFirebaseApp(
       appName: appName,
     );
   }
 
+  /// Convert a [SettableMetadata] to [PigeonSettableMetadata]
   static PigeonSettableMetadata getPigeonSettableMetaData(
       SettableMetadata? metaData) {
     if (metaData == null) {
