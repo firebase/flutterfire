@@ -158,7 +158,7 @@ class PigeonFirebaseSettings {
   static PigeonFirebaseSettings FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
-  friend class PigeonFirebaseApp;
+  friend class FirestorePigeonFirebaseApp;
   friend class FirebaseFirestoreHostApi;
   friend class FirebaseFirestoreHostApiCodecSerializer;
   std::optional<bool> persistence_enabled_;
@@ -169,12 +169,12 @@ class PigeonFirebaseSettings {
 };
 
 // Generated class from Pigeon that represents data sent in messages.
-class PigeonFirebaseApp {
+class FirestorePigeonFirebaseApp {
  public:
   // Constructs an object setting all fields.
-  explicit PigeonFirebaseApp(const std::string& app_name,
-                             const PigeonFirebaseSettings& settings,
-                             const std::string& database_u_r_l);
+  explicit FirestorePigeonFirebaseApp(const std::string& app_name,
+                                      const PigeonFirebaseSettings& settings,
+                                      const std::string& database_u_r_l);
 
   const std::string& app_name() const;
   void set_app_name(std::string_view value_arg);
@@ -186,7 +186,7 @@ class PigeonFirebaseApp {
   void set_database_u_r_l(std::string_view value_arg);
 
  private:
-  static PigeonFirebaseApp FromEncodableList(
+  static FirestorePigeonFirebaseApp FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebaseFirestoreHostApi;
@@ -545,38 +545,40 @@ class FirebaseFirestoreHostApi {
   FirebaseFirestoreHostApi& operator=(const FirebaseFirestoreHostApi&) = delete;
   virtual ~FirebaseFirestoreHostApi() {}
   virtual void LoadBundle(
-      const PigeonFirebaseApp& app, const std::vector<uint8_t>& bundle,
+      const FirestorePigeonFirebaseApp& app, const std::vector<uint8_t>& bundle,
       std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void NamedQueryGet(
-      const PigeonFirebaseApp& app, const std::string& name,
+      const FirestorePigeonFirebaseApp& app, const std::string& name,
       const PigeonGetOptions& options,
       std::function<void(ErrorOr<PigeonQuerySnapshot> reply)> result) = 0;
   virtual void ClearPersistence(
-      const PigeonFirebaseApp& app,
+      const FirestorePigeonFirebaseApp& app,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void DisableNetwork(
-      const PigeonFirebaseApp& app,
+      const FirestorePigeonFirebaseApp& app,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void EnableNetwork(
-      const PigeonFirebaseApp& app,
+      const FirestorePigeonFirebaseApp& app,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void Terminate(
-      const PigeonFirebaseApp& app,
+      const FirestorePigeonFirebaseApp& app,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void WaitForPendingWrites(
-      const PigeonFirebaseApp& app,
+      const FirestorePigeonFirebaseApp& app,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SetIndexConfiguration(
-      const PigeonFirebaseApp& app, const std::string& index_configuration,
+      const FirestorePigeonFirebaseApp& app,
+      const std::string& index_configuration,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SetLoggingEnabled(
       bool logging_enabled,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SnapshotsInSyncSetup(
-      const PigeonFirebaseApp& app,
+      const FirestorePigeonFirebaseApp& app,
       std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void TransactionCreate(
-      const PigeonFirebaseApp& app, int64_t timeout, int64_t max_attempts,
+      const FirestorePigeonFirebaseApp& app, int64_t timeout,
+      int64_t max_attempts,
       std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void TransactionStoreResult(
       const std::string& transaction_id,
@@ -584,41 +586,46 @@ class FirebaseFirestoreHostApi {
       const flutter::EncodableList* commands,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void TransactionGet(
-      const PigeonFirebaseApp& app, const std::string& transaction_id,
+      const FirestorePigeonFirebaseApp& app, const std::string& transaction_id,
       const std::string& path,
       std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result) = 0;
   virtual void DocumentReferenceSet(
-      const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
+      const FirestorePigeonFirebaseApp& app,
+      const DocumentReferenceRequest& request,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void DocumentReferenceUpdate(
-      const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
+      const FirestorePigeonFirebaseApp& app,
+      const DocumentReferenceRequest& request,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void DocumentReferenceGet(
-      const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
+      const FirestorePigeonFirebaseApp& app,
+      const DocumentReferenceRequest& request,
       std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result) = 0;
   virtual void DocumentReferenceDelete(
-      const PigeonFirebaseApp& app, const DocumentReferenceRequest& request,
+      const FirestorePigeonFirebaseApp& app,
+      const DocumentReferenceRequest& request,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void QueryGet(
-      const PigeonFirebaseApp& app, const std::string& path,
+      const FirestorePigeonFirebaseApp& app, const std::string& path,
       bool is_collection_group, const PigeonQueryParameters& parameters,
       const PigeonGetOptions& options,
       std::function<void(ErrorOr<PigeonQuerySnapshot> reply)> result) = 0;
   virtual void AggregateQueryCount(
-      const PigeonFirebaseApp& app, const std::string& path,
+      const FirestorePigeonFirebaseApp& app, const std::string& path,
       const PigeonQueryParameters& parameters, const AggregateSource& source,
       std::function<void(ErrorOr<double> reply)> result) = 0;
   virtual void WriteBatchCommit(
-      const PigeonFirebaseApp& app, const flutter::EncodableList& writes,
+      const FirestorePigeonFirebaseApp& app,
+      const flutter::EncodableList& writes,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void QuerySnapshot(
-      const PigeonFirebaseApp& app, const std::string& path,
+      const FirestorePigeonFirebaseApp& app, const std::string& path,
       bool is_collection_group, const PigeonQueryParameters& parameters,
       const PigeonGetOptions& options, bool include_metadata_changes,
       std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void DocumentReferenceSnapshot(
-      const PigeonFirebaseApp& app, const DocumentReferenceRequest& parameters,
-      bool include_metadata_changes,
+      const FirestorePigeonFirebaseApp& app,
+      const DocumentReferenceRequest& parameters, bool include_metadata_changes,
       std::function<void(ErrorOr<std::string> reply)> result) = 0;
 
   // The codec used by FirebaseFirestoreHostApi.

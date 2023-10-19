@@ -100,9 +100,9 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList;
 @end
 
-@interface PigeonFirebaseApp ()
-+ (PigeonFirebaseApp *)fromList:(NSArray *)list;
-+ (nullable PigeonFirebaseApp *)nullableFromList:(NSArray *)list;
+@interface FirestorePigeonFirebaseApp ()
++ (FirestorePigeonFirebaseApp *)fromList:(NSArray *)list;
++ (nullable FirestorePigeonFirebaseApp *)nullableFromList:(NSArray *)list;
 - (NSArray *)toList;
 @end
 
@@ -198,18 +198,18 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
-@implementation PigeonFirebaseApp
+@implementation FirestorePigeonFirebaseApp
 + (instancetype)makeWithAppName:(NSString *)appName
                        settings:(PigeonFirebaseSettings *)settings
                     databaseURL:(NSString *)databaseURL {
-  PigeonFirebaseApp *pigeonResult = [[PigeonFirebaseApp alloc] init];
+  FirestorePigeonFirebaseApp *pigeonResult = [[FirestorePigeonFirebaseApp alloc] init];
   pigeonResult.appName = appName;
   pigeonResult.settings = settings;
   pigeonResult.databaseURL = databaseURL;
   return pigeonResult;
 }
-+ (PigeonFirebaseApp *)fromList:(NSArray *)list {
-  PigeonFirebaseApp *pigeonResult = [[PigeonFirebaseApp alloc] init];
++ (FirestorePigeonFirebaseApp *)fromList:(NSArray *)list {
+  FirestorePigeonFirebaseApp *pigeonResult = [[FirestorePigeonFirebaseApp alloc] init];
   pigeonResult.appName = GetNullableObjectAtIndex(list, 0);
   NSAssert(pigeonResult.appName != nil, @"");
   pigeonResult.settings =
@@ -219,8 +219,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   NSAssert(pigeonResult.databaseURL != nil, @"");
   return pigeonResult;
 }
-+ (nullable PigeonFirebaseApp *)nullableFromList:(NSArray *)list {
-  return (list) ? [PigeonFirebaseApp fromList:list] : nil;
++ (nullable FirestorePigeonFirebaseApp *)nullableFromList:(NSArray *)list {
+  return (list) ? [FirestorePigeonFirebaseApp fromList:list] : nil;
 }
 - (NSArray *)toList {
   return @[
@@ -554,13 +554,13 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     case 128:
       return [DocumentReferenceRequest fromList:[self readValue]];
     case 129:
-      return [PigeonDocumentChange fromList:[self readValue]];
+      return [FirestorePigeonFirebaseApp fromList:[self readValue]];
     case 130:
-      return [PigeonDocumentOption fromList:[self readValue]];
+      return [PigeonDocumentChange fromList:[self readValue]];
     case 131:
-      return [PigeonDocumentSnapshot fromList:[self readValue]];
+      return [PigeonDocumentOption fromList:[self readValue]];
     case 132:
-      return [PigeonFirebaseApp fromList:[self readValue]];
+      return [PigeonDocumentSnapshot fromList:[self readValue]];
     case 133:
       return [PigeonFirebaseSettings fromList:[self readValue]];
     case 134:
@@ -586,16 +586,16 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   if ([value isKindOfClass:[DocumentReferenceRequest class]]) {
     [self writeByte:128];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonDocumentChange class]]) {
+  } else if ([value isKindOfClass:[FirestorePigeonFirebaseApp class]]) {
     [self writeByte:129];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonDocumentOption class]]) {
+  } else if ([value isKindOfClass:[PigeonDocumentChange class]]) {
     [self writeByte:130];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonDocumentSnapshot class]]) {
+  } else if ([value isKindOfClass:[PigeonDocumentOption class]]) {
     [self writeByte:131];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonFirebaseApp class]]) {
+  } else if ([value isKindOfClass:[PigeonDocumentSnapshot class]]) {
     [self writeByte:132];
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[PigeonFirebaseSettings class]]) {
@@ -659,7 +659,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         FlutterStandardTypedData *arg_bundle = GetNullableObjectAtIndex(args, 1);
         [api loadBundleApp:arg_app
                     bundle:arg_bundle
@@ -684,7 +684,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_name = GetNullableObjectAtIndex(args, 1);
         PigeonGetOptions *arg_options = GetNullableObjectAtIndex(args, 2);
         [api namedQueryGetApp:arg_app
@@ -712,7 +712,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         [api clearPersistenceApp:arg_app
                       completion:^(FlutterError *_Nullable error) {
                         callback(wrapResult(nil, error));
@@ -735,7 +735,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         [api disableNetworkApp:arg_app
                     completion:^(FlutterError *_Nullable error) {
                       callback(wrapResult(nil, error));
@@ -758,7 +758,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         [api enableNetworkApp:arg_app
                    completion:^(FlutterError *_Nullable error) {
                      callback(wrapResult(nil, error));
@@ -781,7 +781,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         [api terminateApp:arg_app
                completion:^(FlutterError *_Nullable error) {
                  callback(wrapResult(nil, error));
@@ -804,7 +804,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         [api waitForPendingWritesApp:arg_app
                           completion:^(FlutterError *_Nullable error) {
                             callback(wrapResult(nil, error));
@@ -828,7 +828,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_indexConfiguration = GetNullableObjectAtIndex(args, 1);
         [api setIndexConfigurationApp:arg_app
                    indexConfiguration:arg_indexConfiguration
@@ -876,7 +876,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         [api snapshotsInSyncSetupApp:arg_app
                           completion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
                             callback(wrapResult(output, error));
@@ -900,7 +900,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSNumber *arg_timeout = GetNullableObjectAtIndex(args, 1);
         NSNumber *arg_maxAttempts = GetNullableObjectAtIndex(args, 2);
         [api transactionCreateApp:arg_app
@@ -956,7 +956,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_transactionId = GetNullableObjectAtIndex(args, 1);
         NSString *arg_path = GetNullableObjectAtIndex(args, 2);
         [api transactionGetApp:arg_app
@@ -984,7 +984,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         DocumentReferenceRequest *arg_request = GetNullableObjectAtIndex(args, 1);
         [api documentReferenceSetApp:arg_app
                              request:arg_request
@@ -1009,7 +1009,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         DocumentReferenceRequest *arg_request = GetNullableObjectAtIndex(args, 1);
         [api documentReferenceUpdateApp:arg_app
                                 request:arg_request
@@ -1034,7 +1034,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         DocumentReferenceRequest *arg_request = GetNullableObjectAtIndex(args, 1);
         [api documentReferenceGetApp:arg_app
                              request:arg_request
@@ -1060,7 +1060,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         DocumentReferenceRequest *arg_request = GetNullableObjectAtIndex(args, 1);
         [api documentReferenceDeleteApp:arg_app
                                 request:arg_request
@@ -1086,7 +1086,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_path = GetNullableObjectAtIndex(args, 1);
         NSNumber *arg_isCollectionGroup = GetNullableObjectAtIndex(args, 2);
         PigeonQueryParameters *arg_parameters = GetNullableObjectAtIndex(args, 3);
@@ -1119,7 +1119,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_path = GetNullableObjectAtIndex(args, 1);
         PigeonQueryParameters *arg_parameters = GetNullableObjectAtIndex(args, 2);
         AggregateSource arg_source = [GetNullableObjectAtIndex(args, 3) integerValue];
@@ -1148,7 +1148,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSArray<PigeonTransactionCommand *> *arg_writes = GetNullableObjectAtIndex(args, 1);
         [api writeBatchCommitApp:arg_app
                           writes:arg_writes
@@ -1177,7 +1177,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
           api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_path = GetNullableObjectAtIndex(args, 1);
         NSNumber *arg_isCollectionGroup = GetNullableObjectAtIndex(args, 2);
         PigeonQueryParameters *arg_parameters = GetNullableObjectAtIndex(args, 3);
@@ -1212,7 +1212,7 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
           api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
-        PigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
+        FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         DocumentReferenceRequest *arg_parameters = GetNullableObjectAtIndex(args, 1);
         NSNumber *arg_includeMetadataChanges = GetNullableObjectAtIndex(args, 2);
         [api documentReferenceSnapshotApp:arg_app

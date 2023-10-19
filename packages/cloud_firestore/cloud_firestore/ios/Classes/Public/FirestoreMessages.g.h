@@ -111,7 +111,7 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 @end
 
 @class PigeonFirebaseSettings;
-@class PigeonFirebaseApp;
+@class FirestorePigeonFirebaseApp;
 @class PigeonSnapshotMetadata;
 @class PigeonDocumentSnapshot;
 @class PigeonDocumentChange;
@@ -137,7 +137,7 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 @property(nonatomic, strong) NSNumber *ignoreUndefinedProperties;
 @end
 
-@interface PigeonFirebaseApp : NSObject
+@interface FirestorePigeonFirebaseApp : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithAppName:(NSString *)appName
@@ -261,32 +261,32 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
 
 @protocol FirebaseFirestoreHostApi
-- (void)loadBundleApp:(PigeonFirebaseApp *)app
+- (void)loadBundleApp:(FirestorePigeonFirebaseApp *)app
                bundle:(FlutterStandardTypedData *)bundle
            completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)namedQueryGetApp:(PigeonFirebaseApp *)app
+- (void)namedQueryGetApp:(FirestorePigeonFirebaseApp *)app
                     name:(NSString *)name
                  options:(PigeonGetOptions *)options
               completion:
                   (void (^)(PigeonQuerySnapshot *_Nullable, FlutterError *_Nullable))completion;
-- (void)clearPersistenceApp:(PigeonFirebaseApp *)app
+- (void)clearPersistenceApp:(FirestorePigeonFirebaseApp *)app
                  completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)disableNetworkApp:(PigeonFirebaseApp *)app
+- (void)disableNetworkApp:(FirestorePigeonFirebaseApp *)app
                completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)enableNetworkApp:(PigeonFirebaseApp *)app
+- (void)enableNetworkApp:(FirestorePigeonFirebaseApp *)app
               completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)terminateApp:(PigeonFirebaseApp *)app
+- (void)terminateApp:(FirestorePigeonFirebaseApp *)app
           completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)waitForPendingWritesApp:(PigeonFirebaseApp *)app
+- (void)waitForPendingWritesApp:(FirestorePigeonFirebaseApp *)app
                      completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)setIndexConfigurationApp:(PigeonFirebaseApp *)app
+- (void)setIndexConfigurationApp:(FirestorePigeonFirebaseApp *)app
               indexConfiguration:(NSString *)indexConfiguration
                       completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)setLoggingEnabledLoggingEnabled:(NSNumber *)loggingEnabled
                              completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)snapshotsInSyncSetupApp:(PigeonFirebaseApp *)app
+- (void)snapshotsInSyncSetupApp:(FirestorePigeonFirebaseApp *)app
                      completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)transactionCreateApp:(PigeonFirebaseApp *)app
+- (void)transactionCreateApp:(FirestorePigeonFirebaseApp *)app
                      timeout:(NSNumber *)timeout
                  maxAttempts:(NSNumber *)maxAttempts
                   completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
@@ -294,46 +294,46 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
                                  resultType:(PigeonTransactionResult)resultType
                                    commands:(nullable NSArray<PigeonTransactionCommand *> *)commands
                                  completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)transactionGetApp:(PigeonFirebaseApp *)app
+- (void)transactionGetApp:(FirestorePigeonFirebaseApp *)app
             transactionId:(NSString *)transactionId
                      path:(NSString *)path
                completion:
                    (void (^)(PigeonDocumentSnapshot *_Nullable, FlutterError *_Nullable))completion;
-- (void)documentReferenceSetApp:(PigeonFirebaseApp *)app
+- (void)documentReferenceSetApp:(FirestorePigeonFirebaseApp *)app
                         request:(DocumentReferenceRequest *)request
                      completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)documentReferenceUpdateApp:(PigeonFirebaseApp *)app
+- (void)documentReferenceUpdateApp:(FirestorePigeonFirebaseApp *)app
                            request:(DocumentReferenceRequest *)request
                         completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)documentReferenceGetApp:(PigeonFirebaseApp *)app
+- (void)documentReferenceGetApp:(FirestorePigeonFirebaseApp *)app
                         request:(DocumentReferenceRequest *)request
                      completion:(void (^)(PigeonDocumentSnapshot *_Nullable,
                                           FlutterError *_Nullable))completion;
-- (void)documentReferenceDeleteApp:(PigeonFirebaseApp *)app
+- (void)documentReferenceDeleteApp:(FirestorePigeonFirebaseApp *)app
                            request:(DocumentReferenceRequest *)request
                         completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)queryGetApp:(PigeonFirebaseApp *)app
+- (void)queryGetApp:(FirestorePigeonFirebaseApp *)app
                  path:(NSString *)path
     isCollectionGroup:(NSNumber *)isCollectionGroup
            parameters:(PigeonQueryParameters *)parameters
               options:(PigeonGetOptions *)options
            completion:(void (^)(PigeonQuerySnapshot *_Nullable, FlutterError *_Nullable))completion;
-- (void)aggregateQueryCountApp:(PigeonFirebaseApp *)app
+- (void)aggregateQueryCountApp:(FirestorePigeonFirebaseApp *)app
                           path:(NSString *)path
                     parameters:(PigeonQueryParameters *)parameters
                         source:(AggregateSource)source
                     completion:(void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion;
-- (void)writeBatchCommitApp:(PigeonFirebaseApp *)app
+- (void)writeBatchCommitApp:(FirestorePigeonFirebaseApp *)app
                      writes:(NSArray<PigeonTransactionCommand *> *)writes
                  completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)querySnapshotApp:(PigeonFirebaseApp *)app
+- (void)querySnapshotApp:(FirestorePigeonFirebaseApp *)app
                       path:(NSString *)path
          isCollectionGroup:(NSNumber *)isCollectionGroup
                 parameters:(PigeonQueryParameters *)parameters
                    options:(PigeonGetOptions *)options
     includeMetadataChanges:(NSNumber *)includeMetadataChanges
                 completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)documentReferenceSnapshotApp:(PigeonFirebaseApp *)app
+- (void)documentReferenceSnapshotApp:(FirestorePigeonFirebaseApp *)app
                           parameters:(DocumentReferenceRequest *)parameters
               includeMetadataChanges:(NSNumber *)includeMetadataChanges
                           completion:
