@@ -32,7 +32,7 @@ void setupTaskTests() {
 
       Future<void> _testPauseTask(String type) async {
         List<TaskSnapshot> snapshots = [];
-        late FirebaseException streamError;
+        FirebaseException? streamError;
         expect(task!.snapshot.state, TaskState.running);
 
         task!.snapshotEvents.listen(
@@ -70,7 +70,7 @@ void setupTaskTests() {
 
         expect(snapshot.totalBytes, snapshot.bytesTransferred);
 
-        //expect(streamError, isNull);
+        expect(streamError, isNull);
         // TODO(Salakar): Known issue with iOS where pausing/resuming doesn't immediately return as paused/resumed 'true'.
         if (defaultTargetPlatform != TargetPlatform.iOS) {
           expect(
@@ -212,7 +212,7 @@ void setupTaskTests() {
 
         Future<void> _testCancelTask() async {
           List<TaskSnapshot> snapshots = [];
-          late FirebaseException streamError;
+          FirebaseException? streamError;
           expect(task.snapshot.state, TaskState.running);
 
           task.snapshotEvents.listen(
@@ -240,7 +240,7 @@ void setupTaskTests() {
           expect(task.snapshot.state, TaskState.canceled);
 
           expect(streamError, isNotNull);
-          expect(streamError.code, 'canceled');
+          expect(streamError!.code, 'canceled');
           // Expecting there to only be running states, canceled should not get sent as an event.
           expect(
             snapshots.every((snapshot) => snapshot.state == TaskState.running),
