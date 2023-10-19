@@ -19,7 +19,8 @@
 + (FIRActionCodeSettings *_Nullable)parseActionCodeSettings:
     (nullable PigeonActionCodeSettings *)settings;
 + (PigeonUserCredential *_Nullable)getPigeonUserCredentialFromFIRUser:(nonnull FIRUser *)user;
-+ (PigeonIdTokenResult *)parseIdTokenResult:(FIRAuthTokenResult *)tokenResult;
++ (PigeonIdTokenResult *_Nonnull)parseIdTokenResult:(nonnull FIRAuthTokenResult *)tokenResult;
 + (PigeonTotpSecret *_Nonnull)getPigeonTotpSecret:(nonnull FIRTOTPSecret *)secret;
-
++ (PigeonAuthCredential *_Nullable)getPigeonAuthCredential:
+    (FIRAuthCredential *_Nullable)authCredential;
 @end

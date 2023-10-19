@@ -352,7 +352,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   @override
   Query<Map<String, dynamic>> endAt(Iterable<Object?> values) {
     _assertQueryCursorValues(values);
-    return _JsonQuery(firestore, _delegate.endAt(values));
+    return _JsonQuery(firestore, _delegate.endAt(values.toList()));
   }
 
   /// Creates and returns a new [Query] that ends before the provided document
@@ -383,7 +383,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     _assertQueryCursorValues(values);
     return _JsonQuery(
       firestore,
-      _delegate.endBefore(values),
+      _delegate.endBefore(values.toList()),
     );
   }
 
@@ -547,7 +547,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   @override
   Query<Map<String, dynamic>> startAfter(Iterable<Object?> values) {
     _assertQueryCursorValues(values);
-    return _JsonQuery(firestore, _delegate.startAfter(values));
+    return _JsonQuery(firestore, _delegate.startAfter(values.toList()));
   }
 
   /// Creates and returns a new [Query] that starts at the provided document
@@ -577,7 +577,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   @override
   Query<Map<String, dynamic>> startAt(Iterable<Object?> values) {
     _assertQueryCursorValues(values);
-    return _JsonQuery(firestore, _delegate.startAt(values));
+    return _JsonQuery(firestore, _delegate.startAt(values.toList()));
   }
 
   /// Creates and returns a new [Query] with additional filter on specified

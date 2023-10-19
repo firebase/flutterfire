@@ -4,15 +4,11 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-// TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
-// ignore: unnecessary_import
-import 'dart:typed_data';
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_load_bundle_task.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query_snapshot.dart';
-import 'package:cloud_firestore_platform_interface/src/method_channel/utils/source.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
@@ -35,12 +31,6 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///
   /// If null, the default [FirebaseApp] is used.
-
-  /// The [MethodChannel] used to communicate with the native plugin
-  static MethodChannel channel = const MethodChannel(
-    'plugins.flutter.io/firebase_firestore',
-    StandardMethodCodec(FirestoreMessageCodec()),
-  );
 
   /// The [EventChannel] used for query snapshots
   static EventChannel querySnapshotChannel(String id) {
@@ -74,6 +64,20 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     );
   }
 
+  static final pigeonChannel = FirebaseFirestoreHostApi();
+
+  late final FirestorePigeonFirebaseApp pigeonApp = FirestorePigeonFirebaseApp(
+    appName: appInstance!.name,
+    databaseURL: databaseURL,
+    settings: PigeonFirebaseSettings(
+      persistenceEnabled: settings.persistenceEnabled,
+      host: settings.host,
+      sslEnabled: settings.sslEnabled,
+      cacheSizeBytes: settings.cacheSizeBytes,
+      ignoreUndefinedProperties: settings.ignoreUndefinedProperties,
+    ),
+  );
+
   /// Gets a [FirebaseFirestorePlatform] with specific arguments such as a different
   /// [FirebaseApp].
   @override
@@ -87,9 +91,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   LoadBundleTaskPlatform loadBundle(Uint8List bundle) {
     return MethodChannelLoadBundleTask(
-      task: channel.invokeMethod<String>('LoadBundle#snapshots'),
-      bundle: bundle,
-      firestore: this,
+      task: pigeonChannel.loadBundle(pigeonApp, bundle),
     );
   }
 
@@ -99,23 +101,18 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     GetOptions options = const GetOptions(),
   }) async {
     try {
-      final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
-          .channel
-          .invokeMapMethod<String, dynamic>(
-        'Firestore#namedQueryGet',
-        <String, dynamic>{
-          'name': name,
-          'firestore': FirebaseFirestorePlatform.instance,
-          'source': getSourceString(options.source),
-          'serverTimestampBehavior': getServerTimestampBehaviorString(
-            options.serverTimestampBehavior,
-          ),
-        },
+      final data = await pigeonChannel.namedQueryGet(
+        pigeonApp,
+        name,
+        PigeonGetOptions(
+          source: options.source,
+          serverTimestampBehavior: options.serverTimestampBehavior,
+        ),
       );
 
       return MethodChannelQuerySnapshot(
         FirebaseFirestorePlatform.instance,
-        data!,
+        data,
       );
     } catch (e, stack) {
       if (e.toString().contains('Named query has not been found')) {
@@ -135,15 +132,12 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  WriteBatchPlatform batch() => MethodChannelWriteBatch(this);
+  WriteBatchPlatform batch() => MethodChannelWriteBatch(pigeonApp);
 
   @override
   Future<void> clearPersistence() async {
     try {
-      await channel
-          .invokeMethod<void>('Firestore#clearPersistence', <String, dynamic>{
-        'firestore': this,
-      });
+      await pigeonChannel.clearPersistence(pigeonApp);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -158,22 +152,32 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   CollectionReferencePlatform collection(String collectionPath) {
-    return MethodChannelCollectionReference(this, collectionPath);
+    return MethodChannelCollectionReference(this, collectionPath, pigeonApp);
   }
 
   @override
   QueryPlatform collectionGroup(String collectionPath) {
-    return MethodChannelQuery(this, collectionPath,
-        isCollectionGroupQuery: true);
+    return MethodChannelQuery(
+      this,
+      collectionPath,
+      pigeonApp,
+      isCollectionGroupQuery: true,
+    );
   }
 
   @override
   Future<void> disableNetwork() async {
     try {
-      await channel
-          .invokeMethod<void>('Firestore#disableNetwork', <String, dynamic>{
-        'firestore': this,
-      });
+      await pigeonChannel.disableNetwork(pigeonApp);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<void> enableNetwork() async {
+    try {
+      await pigeonChannel.enableNetwork(pigeonApp);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -181,19 +185,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   DocumentReferencePlatform doc(String documentPath) {
-    return MethodChannelDocumentReference(this, documentPath);
-  }
-
-  @override
-  Future<void> enableNetwork() async {
-    try {
-      await channel
-          .invokeMethod<void>('Firestore#enableNetwork', <String, dynamic>{
-        'firestore': this,
-      });
-    } catch (e, stack) {
-      convertPlatformException(e, stack);
-    }
+    return MethodChannelDocumentReference(this, documentPath, pigeonApp);
   }
 
   @override
@@ -203,11 +195,10 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
     controller = StreamController<void>.broadcast(
       onListen: () async {
-        final observerId = await MethodChannelFirebaseFirestore.channel
-            .invokeMethod<String>('SnapshotsInSync#setup');
+        final observerId = await pigeonChannel.snapshotsInSyncSetup(pigeonApp);
 
         snapshotStreamSubscription =
-            MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId!)
+            MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId)
                 .receiveGuardedBroadcastStream(
           arguments: <String, dynamic>{'firestore': this},
           onError: convertPlatformException,
@@ -233,9 +224,10 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     assert(timeout.inMilliseconds > 0,
         'Transaction timeout must be more than 0 milliseconds');
 
-    final String? transactionId =
-        await MethodChannelFirebaseFirestore.channel.invokeMethod<String>(
-      'Transaction#create',
+    final String transactionId = await pigeonChannel.transactionCreate(
+      pigeonApp,
+      timeout.inMilliseconds,
+      maxAttempts,
     );
 
     Completer<T> completer = Completer();
@@ -273,7 +265,11 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         }
 
         final TransactionPlatform transaction = MethodChannelTransaction(
-            transactionId!, event['appName'], databaseURL);
+          transactionId,
+          event['appName'],
+          pigeonApp,
+          databaseURL,
+        );
 
         // If the transaction fails on Dart side, then forward the error
         // right away and only inform native side of the error.
@@ -282,13 +278,11 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         } catch (error, stack) {
           // Signal native that a user error occurred, and finish the
           // transaction
-          await MethodChannelFirebaseFirestore.channel
-              .invokeMethod('Transaction#storeResult', <String, dynamic>{
-            'transactionId': transactionId,
-            'result': {
-              'type': 'ERROR',
-            }
-          });
+          await pigeonChannel.transactionStoreResult(
+            transactionId,
+            PigeonTransactionResult.failure,
+            null,
+          );
 
           // Allow the [runTransaction] method to listen to an error.
 
@@ -298,14 +292,11 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         }
 
         // Send the transaction commands to Dart.
-        await MethodChannelFirebaseFirestore.channel
-            .invokeMethod('Transaction#storeResult', <String, dynamic>{
-          'transactionId': transactionId,
-          'result': {
-            'type': 'SUCCESS',
-            'commands': transaction.commands,
-          },
-        });
+        await pigeonChannel.transactionStoreResult(
+          transactionId,
+          PigeonTransactionResult.success,
+          transaction.commands,
+        );
       },
     );
 
@@ -318,9 +309,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   Future<void> terminate() async {
     try {
-      await channel.invokeMethod<void>('Firestore#terminate', <String, dynamic>{
-        'firestore': this,
-      });
+      await pigeonChannel.terminate(pigeonApp);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -329,10 +318,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   Future<void> waitForPendingWrites() async {
     try {
-      await channel.invokeMethod<void>(
-          'Firestore#waitForPendingWrites', <String, dynamic>{
-        'firestore': this,
-      });
+      await pigeonChannel.waitForPendingWrites(pigeonApp);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -341,11 +327,10 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   Future<void> setIndexConfiguration(String indexConfiguration) async {
     try {
-      await channel.invokeMethod<void>(
-          'Firestore#setIndexConfiguration', <String, dynamic>{
-        'firestore': this,
-        'indexConfiguration': indexConfiguration,
-      });
+      await pigeonChannel.setIndexConfiguration(
+        pigeonApp,
+        indexConfiguration,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -354,10 +339,9 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   Future<void> setLoggingEnabled(bool enabled) async {
     try {
-      await channel
-          .invokeMethod<void>('Firestore#setLoggingEnabled', <String, dynamic>{
-        'enabled': enabled,
-      });
+      await pigeonChannel.setLoggingEnabled(
+        enabled,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

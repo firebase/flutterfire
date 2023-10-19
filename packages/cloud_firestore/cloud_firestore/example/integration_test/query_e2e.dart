@@ -1816,10 +1816,11 @@ void runQueryTests() {
     });
 
     group('Query.where() with Filter class', () {
-      testWidgets('returns documents with `DocumentReference` as an argument',
+      testWidgets(
+          'returns documents with `DocumentReference` as an argument in `isEqualTo`',
           (_) async {
         CollectionReference<Map<String, dynamic>> collection =
-            await initializeTest('doc-ref-arg');
+            await initializeTest('doc-ref-arg-isequal-to');
         final ref = FirebaseFirestore.instance.doc('foo/bar');
         final ref2 = FirebaseFirestore.instance.doc('foo/foo');
         await Future.wait([
@@ -1852,6 +1853,56 @@ void runQueryTests() {
                   Filter(
                     'ref',
                     isEqualTo: ref2,
+                  ),
+                ),
+              ),
+            )
+            .orderBy('title', descending: true)
+            .get();
+
+        expect(results.docs.length, equals(3));
+        expect(results.docs[0].data()['title'], equals('Book C'));
+        expect(results.docs[1].data()['title'], equals('Book B'));
+        expect(results.docs[2].data()['title'], equals('Book A'));
+      });
+
+      testWidgets(
+          'returns documents with `DocumentReference` as an argument in `arrayContains`',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('doc-ref-arg-array-contains');
+        final ref = FirebaseFirestore.instance.doc('foo/bar');
+        final ref2 = FirebaseFirestore.instance.doc('foo/foo');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'genre': 'fantasy',
+            'title': 'Book A',
+            'ref': [ref],
+          }),
+          collection.doc('doc2').set({
+            'genre': 'fantasy',
+            'title': 'Book B',
+            'ref': [ref],
+          }),
+          collection.doc('doc3').set({
+            'genre': 'adventure',
+            'title': 'Book C',
+            'ref': [ref2],
+          }),
+        ]);
+
+        final results = await collection
+            .where(
+              Filter.or(
+                Filter.and(
+                  Filter('genre', isEqualTo: 'fantasy'),
+                  Filter('ref', arrayContains: ref),
+                ),
+                Filter.and(
+                  Filter('genre', isEqualTo: 'adventure'),
+                  Filter(
+                    'ref',
+                    arrayContains: ref2,
                   ),
                 ),
               ),

@@ -2,13 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 
 /// This codec is able to decode FieldValues.
 /// This ability is only required in tests, hence why
@@ -76,6 +75,11 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
         return MethodChannelQuery(
           MethodChannelFirebaseFirestore(app: app, databaseURL: '(default)'),
           values['path'],
+          FirestorePigeonFirebaseApp(
+            appName: "['DEFAULT']",
+            settings: PigeonFirebaseSettings(ignoreUndefinedProperties: true),
+            databaseURL: '',
+          ),
         );
       case _kFirestoreSettings:
         readValue(buffer);

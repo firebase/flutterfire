@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.3'
+        classpath 'com.android.tools.build:gradle:8.1.2'
     }
 }
 
@@ -39,24 +39,28 @@ android {
   if (project.android.hasProperty("namespace")) {
     namespace 'io.flutter.plugins.firebase.firebase_ml_model_downloader'
   }
-  
-  compileSdkVersion 31
+
+  compileSdk 33
+
+  defaultConfig {
+    minSdk 19
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
-  defaultConfig {
-    minSdkVersion 19
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-  }
+
   lintOptions {
     disable 'InvalidPackage'
   }
+
   dependencies {
     api firebaseCoreProject
     implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
     implementation 'com.google.firebase:firebase-ml-modeldownloader'
-    implementation 'androidx.annotation:annotation:1.3.0'
+    implementation 'androidx.annotation:annotation:1.7.0'
   }
 }
 
