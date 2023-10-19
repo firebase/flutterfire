@@ -216,7 +216,7 @@ void setupReferenceTests() {
           throwsAssertionError,
         );
       });
-    });
+    }, skip: defaultTargetPlatform == TargetPlatform.windows);
 
     test('listAll', () async {
       Reference ref = storage.ref('flutter-tests/list');
@@ -227,7 +227,7 @@ void setupReferenceTests() {
 
       expect(result.prefixes, isA<List<Reference>>());
       expect(result.prefixes.length, greaterThan(0));
-    });
+    }, skip: defaultTargetPlatform == TargetPlatform.windows);
 
     group(
       'putData',

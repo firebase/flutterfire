@@ -206,6 +206,18 @@ class _TaskManager extends State<TaskManager> {
     );
   }
 
+  Future<void> _delete(Reference ref) async {
+    await ref.delete();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+            'Success!\n deleted ${ref.name} \n from bucket: ${ref.bucket}\n '
+            'at path: ${ref.fullPath} \n'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -253,6 +265,9 @@ class _TaskManager extends State<TaskManager> {
                     return _downloadFile(_uploadTasks[index].snapshot.ref);
                   }
                 },
+                onDelete: () async {
+                  return _delete(_uploadTasks[index].snapshot.ref);
+                },
               ),
             ),
     );
@@ -268,6 +283,7 @@ class UploadTaskListTile extends StatelessWidget {
     required this.onDismissed,
     required this.onDownload,
     required this.onDownloadLink,
+    required this.onDelete,
   }) : super(key: key);
 
   /// The [UploadTask].
@@ -281,6 +297,9 @@ class UploadTaskListTile extends StatelessWidget {
 
   /// Triggered when the user presses the "link" button on a completed upload task.
   final VoidCallback /*!*/ onDownloadLink;
+
+  /// Triggered when the user presses the "delete" button on a completed upload task.
+  final VoidCallback /*!*/ onDelete;
 
   /// Displays the current transferred bytes of the task.
   String _bytesTransferred(TaskSnapshot snapshot) {
@@ -346,6 +365,11 @@ class UploadTaskListTile extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.link),
                     onPressed: onDownloadLink,
+                  ),
+                if (state == TaskState.success)
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: onDelete,
                   ),
               ],
             ),
