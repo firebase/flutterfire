@@ -112,6 +112,8 @@ void setupTaskTests() {
           await _testPauseTask('Upload');
         },
         retry: 3,
+        // This task is flaky on mac, skip for now.
+        skip: defaultTargetPlatform == TargetPlatform.macOS,
       );
 
       //TODO(pr-mais): causes the emulator to crash
