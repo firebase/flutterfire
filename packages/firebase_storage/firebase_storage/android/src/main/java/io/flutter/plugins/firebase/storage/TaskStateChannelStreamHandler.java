@@ -91,7 +91,7 @@ public class TaskStateChannelStreamHandler implements StreamHandler {
 
   @Override
   public void onCancel(Object arguments) {
-    flutterTask.destroy();
+    // Task already destroyed, do nothing.
   }
 
   private Map<String, Object> getTaskEventMap(
