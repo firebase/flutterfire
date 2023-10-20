@@ -401,7 +401,7 @@ void FirebaseStoragePlugin::ReferenceGetData(
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, reference);
   const size_t kMaxAllowedSize = 1 * 1024 * 1024;
-  int8_t byte_buffer[kMaxAllowedSize];
+  uint8_t byte_buffer[kMaxAllowedSize];
 
   Future<size_t> future_result = cpp_reference.GetBytes(byte_buffer, max_size);
   ::Sleep(1);
@@ -409,10 +409,10 @@ void FirebaseStoragePlugin::ReferenceGetData(
       [result, byte_buffer](const Future<size_t>& data_result) {
         if (data_result.error() == 0) {
           size_t vector_size = *data_result.result();
-          std::vector<uint8_t> vector_buffer(byte_buffer,
-                                             byte_buffer + vector_size);
-
-          // result(vector_buffer);
+          std::optional<std::vector<uint8_t>> vector_buffer;
+          vector_buffer =
+              std::vector<uint8_t>(byte_buffer, byte_buffer + vector_size);
+          result(vector_buffer);
         } else {
           result(FirebaseStoragePlugin::ParseError(data_result));
         }
