@@ -132,7 +132,7 @@ class FlutterFirebaseStorageTask {
   }
 
   void destroy() {
-    if(destroyed) return;
+    if (destroyed) return;
     destroyed = true;
 
     synchronized (inProgressTasks) {
