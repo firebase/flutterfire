@@ -282,30 +282,41 @@ std::string kContentEncodingName = "contentEncoding";
 std::string kContentLanguageName = "contentLanguage";
 std::string kContentTypeName = "contentType";
 std::string kCustomMetadataName = "metadata";
+std::string kSizeName = "size";
 
 flutter::EncodableMap ConvertMedadataToPigeon(const Metadata* meta) {
   flutter::EncodableMap meta_map = flutter::EncodableMap();
   if (meta->cache_control() != nullptr) {
-    meta_map[kCacheControlName] = meta->cache_control();
+    meta_map[flutter::EncodableValue(kCacheControlName)] =
+        flutter::EncodableValue(meta->cache_control());
   }
   if (meta->content_disposition() != nullptr) {
-    meta_map[kContentDispositionName] = meta->content_disposition();
+    meta_map[flutter::EncodableValue(kContentDispositionName)] =
+        flutter::EncodableValue(meta->content_disposition());
   }
   if (meta->content_encoding() != nullptr) {
-    meta_map[kContentEncodingName] = meta->content_encoding();
+    meta_map[flutter::EncodableValue(kContentEncodingName)] =
+        flutter::EncodableValue(meta->content_encoding());
   }
   if (meta->content_language() != nullptr) {
-    meta_map[kContentLanguageName] = meta->content_language();
+    meta_map[flutter::EncodableValue(kContentLanguageName)] =
+        flutter::EncodableValue(meta->content_language());
   }
   if (meta->content_type() != nullptr) {
-    meta_map[kContentTypeName] = meta->content_type();
+    meta_map[flutter::EncodableValue(kContentTypeName)] =
+        flutter::EncodableValue(meta->content_type());
   }
+  std::cout << "ConvertMedadataToPigeon C++ metadata size:"
+            << meta->size_bytes() << std::endl;
+  meta_map[flutter::EncodableValue(kSizeName)] =
+      flutter::EncodableValue(meta->size_bytes());
   if (meta->custom_metadata() != nullptr) {
     flutter::EncodableMap custom_meta_map = flutter::EncodableMap();
     for (const auto& kv : *meta->custom_metadata()) {
-      custom_meta_map[kv.first] = kv.second;
+      custom_meta_map[flutter::EncodableValue(kv.first)] =
+          flutter::EncodableValue(kv.second);
     }
-    meta_map[kCustomMetadataName] = custom_meta_map;
+    meta_map[flutter::EncodableValue(kCustomMetadataName)] = custom_meta_map;
   }
   return meta_map;
 }
@@ -491,13 +502,8 @@ class PutDataStreamHandler
         snapshot[kTaskSnapshotTotalBytes] = data_result.result()->size_bytes();
         snapshot[kTaskSnapshotBytesTransferred] =
             data_result.result()->size_bytes();
-        if (data_result.result()->custom_metadata() != nullptr) {
-          flutter::EncodableMap custom_meta_map = flutter::EncodableMap();
-          for (const auto& kv : *data_result.result()->custom_metadata()) {
-            custom_meta_map[kv.first] = kv.second;
-          }
-          snapshot[kCustomMetadataName] = custom_meta_map;
-        }
+        snapshot[kCustomMetadataName] =
+            ConvertMedadataToPigeon(data_result.result());
         event[kTaskSnapshotName] = snapshot;
 
         events_->Success(event);
@@ -544,10 +550,10 @@ class PutFileStreamHandler
       override {
     events_ = std::move(events);
 
-    TaskStateListener putStringListener = TaskStateListener(events_.get());
+    TaskStateListener putFileListener = TaskStateListener(events_.get());
     StorageReference reference = storage_->GetReference(reference_path_);
     Future<Metadata> future_result =
-        reference.PutFile(file_path_.c_str(), &putStringListener, controller_);
+        reference.PutFile(file_path_.c_str(), &putFileListener, controller_);
 
     ::Sleep(1);
     future_result.OnCompletion([this](const Future<Metadata>& data_result) {
@@ -561,13 +567,8 @@ class PutFileStreamHandler
         snapshot[kTaskSnapshotTotalBytes] = data_result.result()->size_bytes();
         snapshot[kTaskSnapshotBytesTransferred] =
             data_result.result()->size_bytes();
-        if (data_result.result()->custom_metadata() != nullptr) {
-          flutter::EncodableMap custom_meta_map = flutter::EncodableMap();
-          for (const auto& kv : *data_result.result()->custom_metadata()) {
-            custom_meta_map[kv.first] = kv.second;
-          }
-          snapshot[kCustomMetadataName] = custom_meta_map;
-        }
+        snapshot[kCustomMetadataName] =
+            ConvertMedadataToPigeon(data_result.result());
         event[kTaskSnapshotName] = snapshot;
 
         events_->Success(event);
@@ -614,10 +615,10 @@ class GetFileStreamHandler
     events_ = std::move(events);
     std::unique_lock<std::mutex> lock(mtx_);
 
-    TaskStateListener putStringListener = TaskStateListener(events_.get());
+    TaskStateListener getFileListener = TaskStateListener(events_.get());
     StorageReference reference = storage_->GetReference(reference_path_);
     Future<size_t> future_result =
-        reference.GetFile(file_path_.c_str(), &putStringListener, controller_);
+        reference.GetFile(file_path_.c_str(), &getFileListener, controller_);
 
     ::Sleep(1);
     future_result.OnCompletion([this](const Future<size_t>& data_result) {
@@ -628,9 +629,11 @@ class GetFileStreamHandler
             static_cast<int>(PigeonStorageTaskState::success);
         event[kTaskAppName] = std::string(storage_->app()->name());
         flutter::EncodableMap snapshot = flutter::EncodableMap();
-        // snapshot[kTaskSnapshotPath] = data_result.result()->path();
-        snapshot[kTaskSnapshotTotalBytes] = data_result.result();
-        snapshot[kTaskSnapshotBytesTransferred] = data_result.result();
+        size_t data_size = *data_result.result();
+        snapshot[kTaskSnapshotTotalBytes] =
+            flutter::EncodableValue(static_cast<int64_t>(data_size));
+        snapshot[kTaskSnapshotBytesTransferred] =
+            flutter::EncodableValue(static_cast<int64_t>(data_size));
         event[kTaskSnapshotName] = snapshot;
 
         events_->Success(event);
@@ -752,12 +755,56 @@ void FirebaseStoragePlugin::ReferenceUpdateMetadata(
       GetCPPStorageReferenceFromPigeon(app, reference);
   Metadata cpp_meta;
   GetMetadataFromPigeon(metadata, &cpp_meta);
+  auto search = cpp_meta.custom_metadata()->find("foo");
+  if (search != cpp_meta.custom_metadata()->end()) {
+    std::cout << "Converted C++ metadata.custom_meta: " << search->first << ","
+              << search->second << std::endl;
+  } else {
+    std::cout << "Converted C++ metadata.custom_meta: don't have key foo "
+              << std::endl;
+  }
+
   Future<Metadata> future_result = cpp_reference.UpdateMetadata(cpp_meta);
   ::Sleep(1);
   future_result.OnCompletion([result](const Future<Metadata>& data_result) {
     if (data_result.error() == 0) {
+      const Metadata* result_meta = data_result.result();
+      std::map<std::string, std::string>* result_meta_custom_meta =
+          result_meta->custom_metadata();
+      if (result_meta_custom_meta != nullptr) {
+        auto cpp_search = result_meta_custom_meta->find("foo");
+        if (cpp_search != result_meta_custom_meta->end()) {
+          std::cout << "Updated C++ metadata.custom_meta: " << cpp_search->first
+                    << "," << cpp_search->second << std::endl;
+        } else {
+          std::cout << "Updated C++ metadata.custom_meta don't have foo, bar "
+                    << std::endl;
+        }
+      } else {
+        std::cout << "Updated C++ metadata don't have custom_meta "
+                  << std::endl;
+      }
       PigeonFullMetaData pigeonData;
-      pigeonData.set_metadata(ConvertMedadataToPigeon(data_result.result()));
+      pigeonData.set_metadata(ConvertMedadataToPigeon(result_meta));
+      const flutter::EncodableMap* meta_map = pigeonData.metadata();
+      auto search = meta_map->find(kCustomMetadataName);
+      if (search != meta_map->end()) {
+        flutter::EncodableMap custom_meta =
+            std::get<flutter::EncodableMap>(search->second);
+        auto meta_search = custom_meta.find(flutter::EncodableValue('foo'));
+        if (meta_search != custom_meta.end()) {
+          std::cout << "Updated pigeon metadata.custom_meta: "
+                    << std::get<std::string>(meta_search->first) << ","
+                    << std::get<std::string>(meta_search->second) << std::endl;
+        } else {
+          std::cout
+              << "Updated pigeon metadata.custom_meta don't have foo, bar "
+              << std::endl;
+        }
+      } else {
+        std::cout << "Updated pigeon metadata don't have custom meta "
+                  << std::endl;
+      }
       result(pigeonData);
     } else {
       result(FirebaseStoragePlugin::ParseError(data_result));
