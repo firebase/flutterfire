@@ -1766,45 +1766,48 @@ class PublicRedirectedQueryDocumentSnapshot
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Person _$$_PersonFromJson(Map<String, dynamic> json) => _$_Person(
+_$PersonImpl _$$PersonImplFromJson(Map<String, dynamic> json) => _$PersonImpl(
       firstName: json['first_name'] as String,
       lastName: json['LAST_NAME'] as String,
     );
 
-const _$$_PersonFieldMap = <String, String>{
+const _$$PersonImplFieldMap = <String, String>{
   'firstName': 'first_name',
   'lastName': 'LAST_NAME',
 };
 
 // ignore: unused_element
-abstract class _$$_PersonPerFieldToJson {
+abstract class _$$PersonImplPerFieldToJson {
   // ignore: unused_element
   static Object? firstName(String instance) => instance;
   // ignore: unused_element
   static Object? lastName(String instance) => instance;
 }
 
-Map<String, dynamic> _$$_PersonToJson(_$_Person instance) => <String, dynamic>{
+Map<String, dynamic> _$$PersonImplToJson(_$PersonImpl instance) =>
+    <String, dynamic>{
       'first_name': instance.firstName,
       'LAST_NAME': instance.lastName,
     };
 
-_$PublicRedirected2 _$$PublicRedirected2FromJson(Map<String, dynamic> json) =>
-    _$PublicRedirected2(
+_$PublicRedirected2Impl _$$PublicRedirected2ImplFromJson(
+        Map<String, dynamic> json) =>
+    _$PublicRedirected2Impl(
       value: json['value'] as String,
     );
 
-const _$$PublicRedirected2FieldMap = <String, String>{
+const _$$PublicRedirected2ImplFieldMap = <String, String>{
   'value': 'value',
 };
 
 // ignore: unused_element
-abstract class _$$PublicRedirected2PerFieldToJson {
+abstract class _$$PublicRedirected2ImplPerFieldToJson {
   // ignore: unused_element
   static Object? value(String instance) => instance;
 }
 
-Map<String, dynamic> _$$PublicRedirected2ToJson(_$PublicRedirected2 instance) =>
+Map<String, dynamic> _$$PublicRedirected2ImplToJson(
+        _$PublicRedirected2Impl instance) =>
     <String, dynamic>{
       'value': instance.value,
     };

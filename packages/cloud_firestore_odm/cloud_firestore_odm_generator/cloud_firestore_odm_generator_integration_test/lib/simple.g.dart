@@ -7,6 +7,7 @@ part of 'simple.dart';
 // **************************************************************************
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: unused_element
 // ignore_for_file: type=lint
 
 class _Sentinel {
