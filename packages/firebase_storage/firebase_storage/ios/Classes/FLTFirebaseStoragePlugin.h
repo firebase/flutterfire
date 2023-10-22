@@ -9,8 +9,13 @@
 #import <Flutter/Flutter.h>
 #endif
 
+#import <FirebaseStorage/FIRStorageTypedefs.h>
 #import <Foundation/Foundation.h>
 #import <firebase_core/FLTFirebasePlugin.h>
+#import "firebase_storage_messages.g.h"
 
-@interface FLTFirebaseStoragePlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
+@interface FLTFirebaseStoragePlugin
+    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FirebaseStorageHostApi>
+
++ (NSDictionary *)parseTaskSnapshot:(FIRStorageTaskSnapshot *)snapshot;
 @end

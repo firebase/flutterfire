@@ -6,22 +6,31 @@
 
 package io.flutter.plugins.firebase.storage;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.firebase.storage.StorageException;
 
-class FlutterFirebaseStorageException extends Exception {
-  private int code;
-
-  FlutterFirebaseStorageException(@NonNull Exception nativeException, Throwable cause) {
-    super(nativeException.getMessage(), cause);
+class FlutterFirebaseStorageException {
+  static GeneratedAndroidFirebaseStorage.FlutterError parserExceptionToFlutter(
+      @Nullable Exception nativeException) {
+    if (nativeException == null) {
+      return new GeneratedAndroidFirebaseStorage.FlutterError(
+          "UNKNOWN", "An unknown error occurred", null);
+    }
+    String code = "UNKNOWN";
+    String message = "An unknown error occurred:" + nativeException.getMessage();
+    int codeNumber;
 
     if (nativeException instanceof StorageException) {
-      code = ((StorageException) nativeException).getErrorCode();
+      codeNumber = ((StorageException) nativeException).getErrorCode();
+      code = getCode(codeNumber);
+      message = getMessage(codeNumber);
     }
+
+    return new GeneratedAndroidFirebaseStorage.FlutterError(code, message, null);
   }
 
-  public String getCode() {
-    switch (code) {
+  public static String getCode(int codeNumber) {
+    switch (codeNumber) {
       case StorageException.ERROR_OBJECT_NOT_FOUND:
         return "object-not-found";
       case StorageException.ERROR_BUCKET_NOT_FOUND:
@@ -48,9 +57,8 @@ class FlutterFirebaseStorageException extends Exception {
     }
   }
 
-  @Override
-  public String getMessage() {
-    switch (code) {
+  public static String getMessage(int codeNumber) {
+    switch (codeNumber) {
       case StorageException.ERROR_OBJECT_NOT_FOUND:
         return "No object exists at the desired reference.";
       case StorageException.ERROR_BUCKET_NOT_FOUND:
