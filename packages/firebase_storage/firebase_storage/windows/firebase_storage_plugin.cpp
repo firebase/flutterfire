@@ -251,7 +251,7 @@ void FirebaseStoragePlugin::ReferenceDelete(
   Future<void> future_result = cpp_reference.Delete();
   ::Sleep(1);
   future_result.OnCompletion([result](const Future<void>& void_result) {
-    if (void_result.error() == 0) {
+    if (void_result.error() == firebase::storage::kErrorNone) {
       result(std::nullopt);
     } else {
       result(FirebaseStoragePlugin::ParseError(void_result));
@@ -268,7 +268,7 @@ void FirebaseStoragePlugin::ReferenceGetDownloadURL(
   ::Sleep(1);
   future_result.OnCompletion(
       [result](const Future<std::string>& string_result) {
-        if (string_result.error() == 0) {
+        if (string_result.error() == firebase::storage::kErrorNone) {
           result(*string_result.result());
         } else {
           result(FirebaseStoragePlugin::ParseError(string_result));
@@ -359,7 +359,7 @@ void FirebaseStoragePlugin::ReferenceGetMetaData(
   Future<Metadata> future_result = cpp_reference.GetMetadata();
   ::Sleep(1);
   future_result.OnCompletion([result](const Future<Metadata>& metadata_result) {
-    if (metadata_result.error() == 0) {
+    if (metadata_result.error() == firebase::storage::kErrorNone) {
       PigeonFullMetaData pigeon_meta = PigeonFullMetaData();
       pigeon_meta.set_metadata(
           ConvertMedadataToPigeon(metadata_result.result()));
@@ -407,7 +407,7 @@ void FirebaseStoragePlugin::ReferenceGetData(
   ::Sleep(1);
   future_result.OnCompletion(
       [result, byte_buffer](const Future<size_t>& data_result) {
-        if (data_result.error() == 0) {
+        if (data_result.error() == firebase::storage::kErrorNone) {
           size_t vector_size = *data_result.result();
           std::optional<std::vector<uint8_t>> vector_buffer;
           vector_buffer =
@@ -492,7 +492,7 @@ class PutDataStreamHandler
     ::Sleep(1);
 
     future_result.OnCompletion([this](const Future<Metadata>& data_result) {
-      if (data_result.error() == 0) {
+      if (data_result.error() == firebase::storage::kErrorNone) {
         flutter::EncodableMap event = flutter::EncodableMap();
         event[kTaskStateName] =
             static_cast<int>(PigeonStorageTaskState::success);
@@ -557,7 +557,7 @@ class PutFileStreamHandler
 
     ::Sleep(1);
     future_result.OnCompletion([this](const Future<Metadata>& data_result) {
-      if (data_result.error() == 0) {
+      if (data_result.error() == firebase::storage::kErrorNone) {
         flutter::EncodableMap event = flutter::EncodableMap();
         event[kTaskStateName] =
             static_cast<int>(PigeonStorageTaskState::success);
@@ -622,8 +622,7 @@ class GetFileStreamHandler
 
     ::Sleep(1);
     future_result.OnCompletion([this](const Future<size_t>& data_result) {
-      // TODO error handling
-      if (data_result.error() == 0) {
+      if (data_result.error() == firebase::storage::kErrorNone) {
         flutter::EncodableMap event = flutter::EncodableMap();
         event[kTaskStateName] =
             static_cast<int>(PigeonStorageTaskState::success);
@@ -767,7 +766,7 @@ void FirebaseStoragePlugin::ReferenceUpdateMetadata(
   Future<Metadata> future_result = cpp_reference.UpdateMetadata(cpp_meta);
   ::Sleep(1);
   future_result.OnCompletion([result](const Future<Metadata>& data_result) {
-    if (data_result.error() == 0) {
+    if (data_result.error() == firebase::storage::kErrorNone) {
       const Metadata* result_meta = data_result.result();
       std::map<std::string, std::string>* result_meta_custom_meta =
           result_meta->custom_metadata();
