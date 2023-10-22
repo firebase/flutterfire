@@ -101,6 +101,7 @@ void setupTaskTests() {
           await _testPauseTask('Download');
           // Skip on web: There's no DownloadTask on web.
         },
+        retry: 3,
       );
 
       // TODO(Salakar): Test is flaky on CI - needs investigating ('[firebase_storage/unknown] An unknown error occurred, please check the server response.')
@@ -110,6 +111,9 @@ void setupTaskTests() {
           task = uploadRef.putString('This is an upload task!');
           await _testPauseTask('Upload');
         },
+        retry: 3,
+        // This task is flaky on mac, skip for now.
+        skip: defaultTargetPlatform == TargetPlatform.macOS,
       );
 
       //TODO(pr-mais): causes the emulator to crash

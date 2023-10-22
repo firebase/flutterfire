@@ -21,7 +21,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   /// Create an instance of [MethodChannelWriteBatch]
   MethodChannelWriteBatch(this.pigeonApp) : super();
 
-  final PigeonFirebaseApp pigeonApp;
+  final FirestorePigeonFirebaseApp pigeonApp;
 
   /// Keeps track of all batch writes in order.
   List<PigeonTransactionCommand> _writes = [];

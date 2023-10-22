@@ -33,9 +33,7 @@ abstract class MethodChannelTask extends TaskPlatform {
           MethodChannelFirebaseStorage.storageTaskChannel(observerId)
               .receiveBroadcastStream();
       try {
-        developer.log('TaskMethodChannel, start listen');
         await for (final events in nativePlatformStream) {
-          developer.log('TaskMethodChannel, get events');
           final appName = events['appName'];
           final taskState = TaskState.values[events['taskState']];
           developer.log(

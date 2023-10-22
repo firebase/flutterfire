@@ -27,7 +27,7 @@ class MethodChannelCollectionReference extends MethodChannelQuery
   MethodChannelCollectionReference(
     FirebaseFirestorePlatform firestore,
     String path,
-    PigeonFirebaseApp pigeonApp,
+    FirestorePigeonFirebaseApp pigeonApp,
   )   : _pointer = Pointer(path),
         super(firestore, path, pigeonApp);
 

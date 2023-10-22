@@ -300,7 +300,7 @@ public class GeneratedAndroidFirebaseFirestore {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
-  public static final class PigeonFirebaseApp {
+  public static final class FirestorePigeonFirebaseApp {
     private @NonNull String appName;
 
     public @NonNull String getAppName() {
@@ -341,7 +341,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     /** Constructor is non-public to enforce null safety; use Builder. */
-    PigeonFirebaseApp() {}
+    FirestorePigeonFirebaseApp() {}
 
     public static final class Builder {
 
@@ -366,8 +366,8 @@ public class GeneratedAndroidFirebaseFirestore {
         return this;
       }
 
-      public @NonNull PigeonFirebaseApp build() {
-        PigeonFirebaseApp pigeonReturn = new PigeonFirebaseApp();
+      public @NonNull FirestorePigeonFirebaseApp build() {
+        FirestorePigeonFirebaseApp pigeonReturn = new FirestorePigeonFirebaseApp();
         pigeonReturn.setAppName(appName);
         pigeonReturn.setSettings(settings);
         pigeonReturn.setDatabaseURL(databaseURL);
@@ -384,8 +384,8 @@ public class GeneratedAndroidFirebaseFirestore {
       return toListResult;
     }
 
-    static @NonNull PigeonFirebaseApp fromList(@NonNull ArrayList<Object> list) {
-      PigeonFirebaseApp pigeonResult = new PigeonFirebaseApp();
+    static @NonNull FirestorePigeonFirebaseApp fromList(@NonNull ArrayList<Object> list) {
+      FirestorePigeonFirebaseApp pigeonResult = new FirestorePigeonFirebaseApp();
       Object appName = list.get(0);
       pigeonResult.setAppName((String) appName);
       Object settings = list.get(1);
@@ -1426,13 +1426,13 @@ public class GeneratedAndroidFirebaseFirestore {
         case (byte) 128:
           return DocumentReferenceRequest.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 129:
-          return PigeonDocumentChange.fromList((ArrayList<Object>) readValue(buffer));
+          return FirestorePigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
-          return PigeonDocumentOption.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonDocumentChange.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 131:
-          return PigeonDocumentSnapshot.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonDocumentOption.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 132:
-          return PigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonDocumentSnapshot.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 133:
           return PigeonFirebaseSettings.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 134:
@@ -1455,18 +1455,18 @@ public class GeneratedAndroidFirebaseFirestore {
       if (value instanceof DocumentReferenceRequest) {
         stream.write(128);
         writeValue(stream, ((DocumentReferenceRequest) value).toList());
-      } else if (value instanceof PigeonDocumentChange) {
+      } else if (value instanceof FirestorePigeonFirebaseApp) {
         stream.write(129);
+        writeValue(stream, ((FirestorePigeonFirebaseApp) value).toList());
+      } else if (value instanceof PigeonDocumentChange) {
+        stream.write(130);
         writeValue(stream, ((PigeonDocumentChange) value).toList());
       } else if (value instanceof PigeonDocumentOption) {
-        stream.write(130);
+        stream.write(131);
         writeValue(stream, ((PigeonDocumentOption) value).toList());
       } else if (value instanceof PigeonDocumentSnapshot) {
-        stream.write(131);
-        writeValue(stream, ((PigeonDocumentSnapshot) value).toList());
-      } else if (value instanceof PigeonFirebaseApp) {
         stream.write(132);
-        writeValue(stream, ((PigeonFirebaseApp) value).toList());
+        writeValue(stream, ((PigeonDocumentSnapshot) value).toList());
       } else if (value instanceof PigeonFirebaseSettings) {
         stream.write(133);
         writeValue(stream, ((PigeonFirebaseSettings) value).toList());
@@ -1495,35 +1495,39 @@ public class GeneratedAndroidFirebaseFirestore {
   public interface FirebaseFirestoreHostApi {
 
     void loadBundle(
-        @NonNull PigeonFirebaseApp app, @NonNull byte[] bundle, @NonNull Result<String> result);
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull byte[] bundle,
+        @NonNull Result<String> result);
 
     void namedQueryGet(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull FirestorePigeonFirebaseApp app,
         @NonNull String name,
         @NonNull PigeonGetOptions options,
         @NonNull Result<PigeonQuerySnapshot> result);
 
-    void clearPersistence(@NonNull PigeonFirebaseApp app, @NonNull Result<Void> result);
+    void clearPersistence(@NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
 
-    void disableNetwork(@NonNull PigeonFirebaseApp app, @NonNull Result<Void> result);
+    void disableNetwork(@NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
 
-    void enableNetwork(@NonNull PigeonFirebaseApp app, @NonNull Result<Void> result);
+    void enableNetwork(@NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
 
-    void terminate(@NonNull PigeonFirebaseApp app, @NonNull Result<Void> result);
+    void terminate(@NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
 
-    void waitForPendingWrites(@NonNull PigeonFirebaseApp app, @NonNull Result<Void> result);
+    void waitForPendingWrites(
+        @NonNull FirestorePigeonFirebaseApp app, @NonNull Result<Void> result);
 
     void setIndexConfiguration(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull FirestorePigeonFirebaseApp app,
         @NonNull String indexConfiguration,
         @NonNull Result<Void> result);
 
     void setLoggingEnabled(@NonNull Boolean loggingEnabled, @NonNull Result<Void> result);
 
-    void snapshotsInSyncSetup(@NonNull PigeonFirebaseApp app, @NonNull Result<String> result);
+    void snapshotsInSyncSetup(
+        @NonNull FirestorePigeonFirebaseApp app, @NonNull Result<String> result);
 
     void transactionCreate(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull FirestorePigeonFirebaseApp app,
         @NonNull Long timeout,
         @NonNull Long maxAttempts,
         @NonNull Result<String> result);
@@ -1535,33 +1539,33 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull Result<Void> result);
 
     void transactionGet(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull FirestorePigeonFirebaseApp app,
         @NonNull String transactionId,
         @NonNull String path,
         @NonNull Result<PigeonDocumentSnapshot> result);
 
     void documentReferenceSet(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull FirestorePigeonFirebaseApp app,
         @NonNull DocumentReferenceRequest request,
         @NonNull Result<Void> result);
 
     void documentReferenceUpdate(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull FirestorePigeonFirebaseApp app,
         @NonNull DocumentReferenceRequest request,
         @NonNull Result<Void> result);
 
     void documentReferenceGet(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull FirestorePigeonFirebaseApp app,
         @NonNull DocumentReferenceRequest request,
         @NonNull Result<PigeonDocumentSnapshot> result);
 
     void documentReferenceDelete(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull FirestorePigeonFirebaseApp app,
         @NonNull DocumentReferenceRequest request,
         @NonNull Result<Void> result);
 
     void queryGet(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull FirestorePigeonFirebaseApp app,
         @NonNull String path,
         @NonNull Boolean isCollectionGroup,
         @NonNull PigeonQueryParameters parameters,
@@ -1569,19 +1573,19 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull Result<PigeonQuerySnapshot> result);
 
     void aggregateQueryCount(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull FirestorePigeonFirebaseApp app,
         @NonNull String path,
         @NonNull PigeonQueryParameters parameters,
         @NonNull AggregateSource source,
         @NonNull Result<Double> result);
 
     void writeBatchCommit(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull FirestorePigeonFirebaseApp app,
         @NonNull List<PigeonTransactionCommand> writes,
         @NonNull Result<Void> result);
 
     void querySnapshot(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull FirestorePigeonFirebaseApp app,
         @NonNull String path,
         @NonNull Boolean isCollectionGroup,
         @NonNull PigeonQueryParameters parameters,
@@ -1590,7 +1594,7 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull Result<String> result);
 
     void documentReferenceSnapshot(
-        @NonNull PigeonFirebaseApp app,
+        @NonNull FirestorePigeonFirebaseApp app,
         @NonNull DocumentReferenceRequest parameters,
         @NonNull Boolean includeMetadataChanges,
         @NonNull Result<String> result);
@@ -1616,7 +1620,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 byte[] bundleArg = (byte[]) args.get(1);
                 Result<String> resultCallback =
                     new Result<String>() {
@@ -1648,7 +1652,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 String nameArg = (String) args.get(1);
                 PigeonGetOptions optionsArg = (PigeonGetOptions) args.get(2);
                 Result<PigeonQuerySnapshot> resultCallback =
@@ -1681,7 +1685,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -1712,7 +1716,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -1743,7 +1747,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -1774,7 +1778,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -1805,7 +1809,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 Result<Void> resultCallback =
                     new Result<Void>() {
                       public void success(Void result) {
@@ -1836,7 +1840,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 String indexConfigurationArg = (String) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -1899,7 +1903,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 Result<String> resultCallback =
                     new Result<String>() {
                       public void success(String result) {
@@ -1930,7 +1934,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 Number timeoutArg = (Number) args.get(1);
                 Number maxAttemptsArg = (Number) args.get(2);
                 Result<String> resultCallback =
@@ -2003,7 +2007,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 String transactionIdArg = (String) args.get(1);
                 String pathArg = (String) args.get(2);
                 Result<PigeonDocumentSnapshot> resultCallback =
@@ -2036,7 +2040,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 DocumentReferenceRequest requestArg = (DocumentReferenceRequest) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -2068,7 +2072,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 DocumentReferenceRequest requestArg = (DocumentReferenceRequest) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -2100,7 +2104,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 DocumentReferenceRequest requestArg = (DocumentReferenceRequest) args.get(1);
                 Result<PigeonDocumentSnapshot> resultCallback =
                     new Result<PigeonDocumentSnapshot>() {
@@ -2132,7 +2136,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 DocumentReferenceRequest requestArg = (DocumentReferenceRequest) args.get(1);
                 Result<Void> resultCallback =
                     new Result<Void>() {
@@ -2164,7 +2168,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 String pathArg = (String) args.get(1);
                 Boolean isCollectionGroupArg = (Boolean) args.get(2);
                 PigeonQueryParameters parametersArg = (PigeonQueryParameters) args.get(3);
@@ -2205,7 +2209,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 String pathArg = (String) args.get(1);
                 PigeonQueryParameters parametersArg = (PigeonQueryParameters) args.get(2);
                 AggregateSource sourceArg = AggregateSource.values()[(int) args.get(3)];
@@ -2239,7 +2243,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 List<PigeonTransactionCommand> writesArg =
                     (List<PigeonTransactionCommand>) args.get(1);
                 Result<Void> resultCallback =
@@ -2272,7 +2276,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 String pathArg = (String) args.get(1);
                 Boolean isCollectionGroupArg = (Boolean) args.get(2);
                 PigeonQueryParameters parametersArg = (PigeonQueryParameters) args.get(3);
@@ -2315,7 +2319,7 @@ public class GeneratedAndroidFirebaseFirestore {
               (message, reply) -> {
                 ArrayList<Object> wrapped = new ArrayList<Object>();
                 ArrayList<Object> args = (ArrayList<Object>) message;
-                PigeonFirebaseApp appArg = (PigeonFirebaseApp) args.get(0);
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
                 DocumentReferenceRequest parametersArg = (DocumentReferenceRequest) args.get(1);
                 Boolean includeMetadataChangesArg = (Boolean) args.get(2);
                 Result<String> resultCallback =

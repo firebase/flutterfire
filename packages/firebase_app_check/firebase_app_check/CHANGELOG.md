@@ -1,3 +1,7 @@
+## 0.2.1+1
+
+ - Update a dependency to the latest release.
+
 ## 0.2.1
 
  - **REFACTOR**(app-check,android): update linting warnings ([#11666](https://github.com/firebase/flutterfire/issues/11666)). ([fa9c8181](https://github.com/firebase/flutterfire/commit/fa9c8181156697a96b2615906b24613f28346175))

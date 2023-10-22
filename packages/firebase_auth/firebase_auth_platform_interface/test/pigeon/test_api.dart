@@ -17,22 +17,22 @@ class _TestFirebaseAuthHostApiCodec extends StandardMessageCodec {
   const _TestFirebaseAuthHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonActionCodeInfo) {
+    if (value is AuthPigeonFirebaseApp) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonActionCodeInfoData) {
+    } else if (value is PigeonActionCodeInfo) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonActionCodeSettings) {
+    } else if (value is PigeonActionCodeInfoData) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonAdditionalUserInfo) {
+    } else if (value is PigeonActionCodeSettings) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonAuthCredential) {
+    } else if (value is PigeonAdditionalUserInfo) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseApp) {
+    } else if (value is PigeonAuthCredential) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
     } else if (value is PigeonFirebaseAuthSettings) {
@@ -80,17 +80,17 @@ class _TestFirebaseAuthHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
-        return PigeonActionCodeInfo.decode(readValue(buffer)!);
+        return AuthPigeonFirebaseApp.decode(readValue(buffer)!);
       case 129:
-        return PigeonActionCodeInfoData.decode(readValue(buffer)!);
+        return PigeonActionCodeInfo.decode(readValue(buffer)!);
       case 130:
-        return PigeonActionCodeSettings.decode(readValue(buffer)!);
+        return PigeonActionCodeInfoData.decode(readValue(buffer)!);
       case 131:
-        return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
+        return PigeonActionCodeSettings.decode(readValue(buffer)!);
       case 132:
-        return PigeonAuthCredential.decode(readValue(buffer)!);
+        return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
       case 133:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
+        return PigeonAuthCredential.decode(readValue(buffer)!);
       case 134:
         return PigeonFirebaseAuthSettings.decode(readValue(buffer)!);
       case 135:
@@ -126,63 +126,65 @@ abstract class TestFirebaseAuthHostApi {
       TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> codec = _TestFirebaseAuthHostApiCodec();
 
-  Future<String> registerIdTokenListener(PigeonFirebaseApp app);
+  Future<String> registerIdTokenListener(AuthPigeonFirebaseApp app);
 
-  Future<String> registerAuthStateListener(PigeonFirebaseApp app);
+  Future<String> registerAuthStateListener(AuthPigeonFirebaseApp app);
 
-  Future<void> useEmulator(PigeonFirebaseApp app, String host, int port);
+  Future<void> useEmulator(AuthPigeonFirebaseApp app, String host, int port);
 
-  Future<void> applyActionCode(PigeonFirebaseApp app, String code);
+  Future<void> applyActionCode(AuthPigeonFirebaseApp app, String code);
 
   Future<PigeonActionCodeInfo> checkActionCode(
-      PigeonFirebaseApp app, String code);
+      AuthPigeonFirebaseApp app, String code);
 
   Future<void> confirmPasswordReset(
-      PigeonFirebaseApp app, String code, String newPassword);
+      AuthPigeonFirebaseApp app, String code, String newPassword);
 
   Future<PigeonUserCredential> createUserWithEmailAndPassword(
-      PigeonFirebaseApp app, String email, String password);
+      AuthPigeonFirebaseApp app, String email, String password);
 
-  Future<PigeonUserCredential> signInAnonymously(PigeonFirebaseApp app);
+  Future<PigeonUserCredential> signInAnonymously(AuthPigeonFirebaseApp app);
 
   Future<PigeonUserCredential> signInWithCredential(
-      PigeonFirebaseApp app, Map<String?, Object?> input);
+      AuthPigeonFirebaseApp app, Map<String?, Object?> input);
 
   Future<PigeonUserCredential> signInWithCustomToken(
-      PigeonFirebaseApp app, String token);
+      AuthPigeonFirebaseApp app, String token);
 
   Future<PigeonUserCredential> signInWithEmailAndPassword(
-      PigeonFirebaseApp app, String email, String password);
+      AuthPigeonFirebaseApp app, String email, String password);
 
   Future<PigeonUserCredential> signInWithEmailLink(
-      PigeonFirebaseApp app, String email, String emailLink);
+      AuthPigeonFirebaseApp app, String email, String emailLink);
 
   Future<PigeonUserCredential> signInWithProvider(
-      PigeonFirebaseApp app, PigeonSignInProvider signInProvider);
+      AuthPigeonFirebaseApp app, PigeonSignInProvider signInProvider);
 
-  Future<void> signOut(PigeonFirebaseApp app);
+  Future<void> signOut(AuthPigeonFirebaseApp app);
 
   Future<List<String?>> fetchSignInMethodsForEmail(
-      PigeonFirebaseApp app, String email);
+      AuthPigeonFirebaseApp app, String email);
 
-  Future<void> sendPasswordResetEmail(PigeonFirebaseApp app, String email,
+  Future<void> sendPasswordResetEmail(AuthPigeonFirebaseApp app, String email,
       PigeonActionCodeSettings? actionCodeSettings);
 
-  Future<void> sendSignInLinkToEmail(PigeonFirebaseApp app, String email,
+  Future<void> sendSignInLinkToEmail(AuthPigeonFirebaseApp app, String email,
       PigeonActionCodeSettings actionCodeSettings);
 
-  Future<String> setLanguageCode(PigeonFirebaseApp app, String? languageCode);
+  Future<String> setLanguageCode(
+      AuthPigeonFirebaseApp app, String? languageCode);
 
   Future<void> setSettings(
-      PigeonFirebaseApp app, PigeonFirebaseAuthSettings settings);
+      AuthPigeonFirebaseApp app, PigeonFirebaseAuthSettings settings);
 
-  Future<String> verifyPasswordResetCode(PigeonFirebaseApp app, String code);
+  Future<String> verifyPasswordResetCode(
+      AuthPigeonFirebaseApp app, String code);
 
   Future<String> verifyPhoneNumber(
-      PigeonFirebaseApp app, PigeonVerifyPhoneNumberRequest request);
+      AuthPigeonFirebaseApp app, PigeonVerifyPhoneNumberRequest request);
 
   Future<void> revokeTokenWithAuthorizationCode(
-      PigeonFirebaseApp app, String authorizationCode);
+      AuthPigeonFirebaseApp app, String authorizationCode);
 
   static void setup(TestFirebaseAuthHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -201,9 +203,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener was null, expected non-null AuthPigeonFirebaseApp.');
           final String output = await api.registerIdTokenListener(arg_app!);
           return <Object?>[output];
         });
@@ -224,9 +227,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener was null, expected non-null AuthPigeonFirebaseApp.');
           final String output = await api.registerAuthStateListener(arg_app!);
           return <Object?>[output];
         });
@@ -247,9 +251,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_host = (args[1] as String?);
           assert(arg_host != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator was null, expected non-null String.');
@@ -276,9 +281,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_code = (args[1] as String?);
           assert(arg_code != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode was null, expected non-null String.');
@@ -302,9 +308,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_code = (args[1] as String?);
           assert(arg_code != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode was null, expected non-null String.');
@@ -329,9 +336,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_code = (args[1] as String?);
           assert(arg_code != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset was null, expected non-null String.');
@@ -358,9 +366,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_email = (args[1] as String?);
           assert(arg_email != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword was null, expected non-null String.');
@@ -389,9 +398,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously was null, expected non-null AuthPigeonFirebaseApp.');
           final PigeonUserCredential output =
               await api.signInAnonymously(arg_app!);
           return <Object?>[output];
@@ -413,9 +423,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential was null, expected non-null AuthPigeonFirebaseApp.');
           final Map<String?, Object?>? arg_input =
               (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
           assert(arg_input != null,
@@ -441,9 +452,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_token = (args[1] as String?);
           assert(arg_token != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken was null, expected non-null String.');
@@ -468,9 +480,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_email = (args[1] as String?);
           assert(arg_email != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword was null, expected non-null String.');
@@ -498,9 +511,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_email = (args[1] as String?);
           assert(arg_email != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink was null, expected non-null String.');
@@ -528,9 +542,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider was null, expected non-null AuthPigeonFirebaseApp.');
           final PigeonSignInProvider? arg_signInProvider =
               (args[1] as PigeonSignInProvider?);
           assert(arg_signInProvider != null,
@@ -556,9 +571,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut was null, expected non-null AuthPigeonFirebaseApp.');
           await api.signOut(arg_app!);
           return <Object?>[];
         });
@@ -579,9 +595,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_email = (args[1] as String?);
           assert(arg_email != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail was null, expected non-null String.');
@@ -606,9 +623,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_email = (args[1] as String?);
           assert(arg_email != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail was null, expected non-null String.');
@@ -635,9 +653,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_email = (args[1] as String?);
           assert(arg_email != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail was null, expected non-null String.');
@@ -666,9 +685,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_languageCode = (args[1] as String?);
           final String output =
               await api.setLanguageCode(arg_app!, arg_languageCode);
@@ -691,9 +711,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings was null, expected non-null AuthPigeonFirebaseApp.');
           final PigeonFirebaseAuthSettings? arg_settings =
               (args[1] as PigeonFirebaseAuthSettings?);
           assert(arg_settings != null,
@@ -718,9 +739,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_code = (args[1] as String?);
           assert(arg_code != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode was null, expected non-null String.');
@@ -745,9 +767,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber was null, expected non-null AuthPigeonFirebaseApp.');
           final PigeonVerifyPhoneNumberRequest? arg_request =
               (args[1] as PigeonVerifyPhoneNumberRequest?);
           assert(arg_request != null,
@@ -773,9 +796,10 @@ abstract class TestFirebaseAuthHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_authorizationCode = (args[1] as String?);
           assert(arg_authorizationCode != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode was null, expected non-null String.');
@@ -792,22 +816,22 @@ class _TestFirebaseAuthUserHostApiCodec extends StandardMessageCodec {
   const _TestFirebaseAuthUserHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonActionCodeInfo) {
+    if (value is AuthPigeonFirebaseApp) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonActionCodeInfoData) {
+    } else if (value is PigeonActionCodeInfo) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonActionCodeSettings) {
+    } else if (value is PigeonActionCodeInfoData) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonAdditionalUserInfo) {
+    } else if (value is PigeonActionCodeSettings) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonAuthCredential) {
+    } else if (value is PigeonAdditionalUserInfo) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseApp) {
+    } else if (value is PigeonAuthCredential) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
     } else if (value is PigeonFirebaseAuthSettings) {
@@ -855,17 +879,17 @@ class _TestFirebaseAuthUserHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
-        return PigeonActionCodeInfo.decode(readValue(buffer)!);
+        return AuthPigeonFirebaseApp.decode(readValue(buffer)!);
       case 129:
-        return PigeonActionCodeInfoData.decode(readValue(buffer)!);
+        return PigeonActionCodeInfo.decode(readValue(buffer)!);
       case 130:
-        return PigeonActionCodeSettings.decode(readValue(buffer)!);
+        return PigeonActionCodeInfoData.decode(readValue(buffer)!);
       case 131:
-        return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
+        return PigeonActionCodeSettings.decode(readValue(buffer)!);
       case 132:
-        return PigeonAuthCredential.decode(readValue(buffer)!);
+        return PigeonAdditionalUserInfo.decode(readValue(buffer)!);
       case 133:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
+        return PigeonAuthCredential.decode(readValue(buffer)!);
       case 134:
         return PigeonFirebaseAuthSettings.decode(readValue(buffer)!);
       case 135:
@@ -902,43 +926,45 @@ abstract class TestFirebaseAuthUserHostApi {
   static const MessageCodec<Object?> codec =
       _TestFirebaseAuthUserHostApiCodec();
 
-  Future<void> delete(PigeonFirebaseApp app);
+  Future<void> delete(AuthPigeonFirebaseApp app);
 
   Future<PigeonIdTokenResult> getIdToken(
-      PigeonFirebaseApp app, bool forceRefresh);
+      AuthPigeonFirebaseApp app, bool forceRefresh);
 
   Future<PigeonUserCredential> linkWithCredential(
-      PigeonFirebaseApp app, Map<String?, Object?> input);
+      AuthPigeonFirebaseApp app, Map<String?, Object?> input);
 
   Future<PigeonUserCredential> linkWithProvider(
-      PigeonFirebaseApp app, PigeonSignInProvider signInProvider);
+      AuthPigeonFirebaseApp app, PigeonSignInProvider signInProvider);
 
   Future<PigeonUserCredential> reauthenticateWithCredential(
-      PigeonFirebaseApp app, Map<String?, Object?> input);
+      AuthPigeonFirebaseApp app, Map<String?, Object?> input);
 
   Future<PigeonUserCredential> reauthenticateWithProvider(
-      PigeonFirebaseApp app, PigeonSignInProvider signInProvider);
+      AuthPigeonFirebaseApp app, PigeonSignInProvider signInProvider);
 
-  Future<PigeonUserDetails> reload(PigeonFirebaseApp app);
+  Future<PigeonUserDetails> reload(AuthPigeonFirebaseApp app);
 
   Future<void> sendEmailVerification(
-      PigeonFirebaseApp app, PigeonActionCodeSettings? actionCodeSettings);
+      AuthPigeonFirebaseApp app, PigeonActionCodeSettings? actionCodeSettings);
 
-  Future<PigeonUserCredential> unlink(PigeonFirebaseApp app, String providerId);
+  Future<PigeonUserCredential> unlink(
+      AuthPigeonFirebaseApp app, String providerId);
 
-  Future<PigeonUserDetails> updateEmail(PigeonFirebaseApp app, String newEmail);
+  Future<PigeonUserDetails> updateEmail(
+      AuthPigeonFirebaseApp app, String newEmail);
 
   Future<PigeonUserDetails> updatePassword(
-      PigeonFirebaseApp app, String newPassword);
+      AuthPigeonFirebaseApp app, String newPassword);
 
   Future<PigeonUserDetails> updatePhoneNumber(
-      PigeonFirebaseApp app, Map<String?, Object?> input);
+      AuthPigeonFirebaseApp app, Map<String?, Object?> input);
 
   Future<PigeonUserDetails> updateProfile(
-      PigeonFirebaseApp app, PigeonUserProfile profile);
+      AuthPigeonFirebaseApp app, PigeonUserProfile profile);
 
-  Future<void> verifyBeforeUpdateEmail(PigeonFirebaseApp app, String newEmail,
-      PigeonActionCodeSettings? actionCodeSettings);
+  Future<void> verifyBeforeUpdateEmail(AuthPigeonFirebaseApp app,
+      String newEmail, PigeonActionCodeSettings? actionCodeSettings);
 
   static void setup(TestFirebaseAuthUserHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -957,9 +983,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete was null, expected non-null AuthPigeonFirebaseApp.');
           await api.delete(arg_app!);
           return <Object?>[];
         });
@@ -980,9 +1007,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken was null, expected non-null AuthPigeonFirebaseApp.');
           final bool? arg_forceRefresh = (args[1] as bool?);
           assert(arg_forceRefresh != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken was null, expected non-null bool.');
@@ -1007,9 +1035,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential was null, expected non-null AuthPigeonFirebaseApp.');
           final Map<String?, Object?>? arg_input =
               (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
           assert(arg_input != null,
@@ -1035,9 +1064,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider was null, expected non-null AuthPigeonFirebaseApp.');
           final PigeonSignInProvider? arg_signInProvider =
               (args[1] as PigeonSignInProvider?);
           assert(arg_signInProvider != null,
@@ -1063,9 +1093,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential was null, expected non-null AuthPigeonFirebaseApp.');
           final Map<String?, Object?>? arg_input =
               (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
           assert(arg_input != null,
@@ -1091,9 +1122,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider was null, expected non-null AuthPigeonFirebaseApp.');
           final PigeonSignInProvider? arg_signInProvider =
               (args[1] as PigeonSignInProvider?);
           assert(arg_signInProvider != null,
@@ -1119,9 +1151,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload was null, expected non-null AuthPigeonFirebaseApp.');
           final PigeonUserDetails output = await api.reload(arg_app!);
           return <Object?>[output];
         });
@@ -1142,9 +1175,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification was null, expected non-null AuthPigeonFirebaseApp.');
           final PigeonActionCodeSettings? arg_actionCodeSettings =
               (args[1] as PigeonActionCodeSettings?);
           await api.sendEmailVerification(arg_app!, arg_actionCodeSettings);
@@ -1167,9 +1201,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_providerId = (args[1] as String?);
           assert(arg_providerId != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink was null, expected non-null String.');
@@ -1194,9 +1229,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_newEmail = (args[1] as String?);
           assert(arg_newEmail != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail was null, expected non-null String.');
@@ -1221,9 +1257,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_newPassword = (args[1] as String?);
           assert(arg_newPassword != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword was null, expected non-null String.');
@@ -1248,9 +1285,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber was null, expected non-null AuthPigeonFirebaseApp.');
           final Map<String?, Object?>? arg_input =
               (args[1] as Map<Object?, Object?>?)?.cast<String?, Object?>();
           assert(arg_input != null,
@@ -1276,9 +1314,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile was null, expected non-null AuthPigeonFirebaseApp.');
           final PigeonUserProfile? arg_profile =
               (args[1] as PigeonUserProfile?);
           assert(arg_profile != null,
@@ -1304,9 +1343,10 @@ abstract class TestFirebaseAuthUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_newEmail = (args[1] as String?);
           assert(arg_newEmail != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail was null, expected non-null String.');
@@ -1325,7 +1365,7 @@ class _TestMultiFactorUserHostApiCodec extends StandardMessageCodec {
   const _TestMultiFactorUserHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonFirebaseApp) {
+    if (value is AuthPigeonFirebaseApp) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
     } else if (value is PigeonMultiFactorInfo) {
@@ -1346,7 +1386,7 @@ class _TestMultiFactorUserHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
+        return AuthPigeonFirebaseApp.decode(readValue(buffer)!);
       case 129:
         return PigeonMultiFactorInfo.decode(readValue(buffer)!);
       case 130:
@@ -1364,18 +1404,18 @@ abstract class TestMultiFactorUserHostApi {
       TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> codec = _TestMultiFactorUserHostApiCodec();
 
-  Future<void> enrollPhone(PigeonFirebaseApp app,
+  Future<void> enrollPhone(AuthPigeonFirebaseApp app,
       PigeonPhoneMultiFactorAssertion assertion, String? displayName);
 
   Future<void> enrollTotp(
-      PigeonFirebaseApp app, String assertionId, String? displayName);
+      AuthPigeonFirebaseApp app, String assertionId, String? displayName);
 
-  Future<PigeonMultiFactorSession> getSession(PigeonFirebaseApp app);
+  Future<PigeonMultiFactorSession> getSession(AuthPigeonFirebaseApp app);
 
-  Future<void> unenroll(PigeonFirebaseApp app, String factorUid);
+  Future<void> unenroll(AuthPigeonFirebaseApp app, String factorUid);
 
   Future<List<PigeonMultiFactorInfo?>> getEnrolledFactors(
-      PigeonFirebaseApp app);
+      AuthPigeonFirebaseApp app);
 
   static void setup(TestMultiFactorUserHostApi? api,
       {BinaryMessenger? binaryMessenger}) {
@@ -1394,9 +1434,10 @@ abstract class TestMultiFactorUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone was null, expected non-null AuthPigeonFirebaseApp.');
           final PigeonPhoneMultiFactorAssertion? arg_assertion =
               (args[1] as PigeonPhoneMultiFactorAssertion?);
           assert(arg_assertion != null,
@@ -1422,9 +1463,10 @@ abstract class TestMultiFactorUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_assertionId = (args[1] as String?);
           assert(arg_assertionId != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp was null, expected non-null String.');
@@ -1449,9 +1491,10 @@ abstract class TestMultiFactorUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession was null, expected non-null AuthPigeonFirebaseApp.');
           final PigeonMultiFactorSession output =
               await api.getSession(arg_app!);
           return <Object?>[output];
@@ -1473,9 +1516,10 @@ abstract class TestMultiFactorUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll was null, expected non-null AuthPigeonFirebaseApp.');
           final String? arg_factorUid = (args[1] as String?);
           assert(arg_factorUid != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll was null, expected non-null String.');
@@ -1499,9 +1543,10 @@ abstract class TestMultiFactorUserHostApi {
           assert(message != null,
               'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final PigeonFirebaseApp? arg_app = (args[0] as PigeonFirebaseApp?);
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
           assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors was null, expected non-null PigeonFirebaseApp.');
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors was null, expected non-null AuthPigeonFirebaseApp.');
           final List<PigeonMultiFactorInfo?> output =
               await api.getEnrolledFactors(arg_app!);
           return <Object?>[output];

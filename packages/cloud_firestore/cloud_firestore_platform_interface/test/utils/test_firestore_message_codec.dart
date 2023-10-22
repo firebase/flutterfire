@@ -71,7 +71,7 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
           //ignore: avoid_redundant_argument_values
           MethodChannelFirebaseFirestore(app: null),
           values['path'],
-          PigeonFirebaseApp(
+          FirestorePigeonFirebaseApp(
             appName: 'test',
             settings: PigeonFirebaseSettings(
               ignoreUndefinedProperties: false,

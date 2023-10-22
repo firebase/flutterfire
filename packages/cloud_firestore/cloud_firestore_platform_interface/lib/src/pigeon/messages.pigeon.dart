@@ -116,8 +116,8 @@ class PigeonFirebaseSettings {
   }
 }
 
-class PigeonFirebaseApp {
-  PigeonFirebaseApp({
+class FirestorePigeonFirebaseApp {
+  FirestorePigeonFirebaseApp({
     required this.appName,
     required this.settings,
     required this.databaseURL,
@@ -137,9 +137,9 @@ class PigeonFirebaseApp {
     ];
   }
 
-  static PigeonFirebaseApp decode(Object result) {
+  static FirestorePigeonFirebaseApp decode(Object result) {
     result as List<Object?>;
-    return PigeonFirebaseApp(
+    return FirestorePigeonFirebaseApp(
       appName: result[0]! as String,
       settings: PigeonFirebaseSettings.decode(result[1]! as List<Object?>),
       databaseURL: result[2]! as String,
@@ -476,16 +476,16 @@ class _FirebaseFirestoreHostApiCodec extends FirestoreMessageCodec {
     if (value is DocumentReferenceRequest) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonDocumentChange) {
+    } else if (value is FirestorePigeonFirebaseApp) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonDocumentOption) {
+    } else if (value is PigeonDocumentChange) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonDocumentSnapshot) {
+    } else if (value is PigeonDocumentOption) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonFirebaseApp) {
+    } else if (value is PigeonDocumentSnapshot) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
     } else if (value is PigeonFirebaseSettings) {
@@ -517,13 +517,13 @@ class _FirebaseFirestoreHostApiCodec extends FirestoreMessageCodec {
       case 128:
         return DocumentReferenceRequest.decode(readValue(buffer)!);
       case 129:
-        return PigeonDocumentChange.decode(readValue(buffer)!);
+        return FirestorePigeonFirebaseApp.decode(readValue(buffer)!);
       case 130:
-        return PigeonDocumentOption.decode(readValue(buffer)!);
+        return PigeonDocumentChange.decode(readValue(buffer)!);
       case 131:
-        return PigeonDocumentSnapshot.decode(readValue(buffer)!);
+        return PigeonDocumentOption.decode(readValue(buffer)!);
       case 132:
-        return PigeonFirebaseApp.decode(readValue(buffer)!);
+        return PigeonDocumentSnapshot.decode(readValue(buffer)!);
       case 133:
         return PigeonFirebaseSettings.decode(readValue(buffer)!);
       case 134:
@@ -553,7 +553,7 @@ class FirebaseFirestoreHostApi {
   static const MessageCodec<Object?> codec = _FirebaseFirestoreHostApiCodec();
 
   Future<String> loadBundle(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     Uint8List arg_bundle,
   ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -585,7 +585,7 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<PigeonQuerySnapshot> namedQueryGet(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     String arg_name,
     PigeonGetOptions arg_options,
   ) async {
@@ -617,7 +617,7 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<void> clearPersistence(PigeonFirebaseApp arg_app) async {
+  Future<void> clearPersistence(FirestorePigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence',
       codec,
@@ -641,7 +641,7 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<void> disableNetwork(PigeonFirebaseApp arg_app) async {
+  Future<void> disableNetwork(FirestorePigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork',
       codec,
@@ -665,7 +665,7 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<void> enableNetwork(PigeonFirebaseApp arg_app) async {
+  Future<void> enableNetwork(FirestorePigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork',
       codec,
@@ -689,7 +689,7 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<void> terminate(PigeonFirebaseApp arg_app) async {
+  Future<void> terminate(FirestorePigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate',
       codec,
@@ -713,7 +713,7 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<void> waitForPendingWrites(PigeonFirebaseApp arg_app) async {
+  Future<void> waitForPendingWrites(FirestorePigeonFirebaseApp arg_app) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites',
       codec,
@@ -738,7 +738,7 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<void> setIndexConfiguration(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     String arg_indexConfiguration,
   ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -788,7 +788,9 @@ class FirebaseFirestoreHostApi {
     }
   }
 
-  Future<String> snapshotsInSyncSetup(PigeonFirebaseApp arg_app) async {
+  Future<String> snapshotsInSyncSetup(
+    FirestorePigeonFirebaseApp arg_app,
+  ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup',
       codec,
@@ -818,7 +820,7 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<String> transactionCreate(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     int arg_timeout,
     int arg_maxAttempts,
   ) async {
@@ -881,7 +883,7 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<PigeonDocumentSnapshot> transactionGet(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     String arg_transactionId,
     String arg_path,
   ) async {
@@ -915,7 +917,7 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<void> documentReferenceSet(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     DocumentReferenceRequest arg_request,
   ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -942,7 +944,7 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<void> documentReferenceUpdate(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     DocumentReferenceRequest arg_request,
   ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -969,7 +971,7 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<PigeonDocumentSnapshot> documentReferenceGet(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     DocumentReferenceRequest arg_request,
   ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -1001,7 +1003,7 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<void> documentReferenceDelete(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     DocumentReferenceRequest arg_request,
   ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -1028,7 +1030,7 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<PigeonQuerySnapshot> queryGet(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     String arg_path,
     bool arg_isCollectionGroup,
     PigeonQueryParameters arg_parameters,
@@ -1068,7 +1070,7 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<double> aggregateQueryCount(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     String arg_path,
     PigeonQueryParameters arg_parameters,
     AggregateSource arg_source,
@@ -1103,7 +1105,7 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<void> writeBatchCommit(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     List<PigeonTransactionCommand?> arg_writes,
   ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -1130,7 +1132,7 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<String> querySnapshot(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     String arg_path,
     bool arg_isCollectionGroup,
     PigeonQueryParameters arg_parameters,
@@ -1172,7 +1174,7 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<String> documentReferenceSnapshot(
-    PigeonFirebaseApp arg_app,
+    FirestorePigeonFirebaseApp arg_app,
     DocumentReferenceRequest arg_parameters,
     bool arg_includeMetadataChanges,
   ) async {
