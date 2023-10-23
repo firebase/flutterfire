@@ -328,7 +328,7 @@ represents the content of the collection must be in the same file.
     required String collectionTargetElementPublicType,
   }) {
     if (hasFreezed) {
-      return '_\$\$$redirectedFreezedClass';
+      return '_\$\$${redirectedFreezedClass?.public}Impl';
     } else {
       return '_\$$collectionTargetElementPublicType';
     }
