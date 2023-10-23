@@ -57,7 +57,6 @@ class FirebaseCorePlugin : public flutter::Plugin,
 
  private:
   bool coreInitialized = false;
-  static std::map<std::string, std::vector<std::string>> firebase_apps;
 };
 
 }  // namespace firebase_core_windows
