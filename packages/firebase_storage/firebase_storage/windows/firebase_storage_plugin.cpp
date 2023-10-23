@@ -249,7 +249,7 @@ void FirebaseStoragePlugin::ReferenceDelete(
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, reference);
   Future<void> future_result = cpp_reference.Delete();
-  ::Sleep(1);
+  ::Sleep(1);  // timing for c++ sdk grabbing a mutex
   future_result.OnCompletion([result](const Future<void>& void_result) {
     if (void_result.error() == firebase::storage::kErrorNone) {
       result(std::nullopt);
@@ -265,7 +265,7 @@ void FirebaseStoragePlugin::ReferenceGetDownloadURL(
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, reference);
   Future<std::string> future_result = cpp_reference.GetDownloadUrl();
-  ::Sleep(1);
+  ::Sleep(1);  // timing for c++ sdk grabbing a mutex
   future_result.OnCompletion(
       [result](const Future<std::string>& string_result) {
         if (string_result.error() == firebase::storage::kErrorNone) {
@@ -357,7 +357,7 @@ void FirebaseStoragePlugin::ReferenceGetMetaData(
   StorageReference cpp_reference =
       GetCPPStorageReferenceFromPigeon(app, reference);
   Future<Metadata> future_result = cpp_reference.GetMetadata();
-  ::Sleep(1);
+  ::Sleep(1);  // timing for c++ sdk grabbing a mutex
   future_result.OnCompletion([result](const Future<Metadata>& metadata_result) {
     if (metadata_result.error() == firebase::storage::kErrorNone) {
       PigeonFullMetaData pigeon_meta = PigeonFullMetaData();
@@ -404,7 +404,7 @@ void FirebaseStoragePlugin::ReferenceGetData(
   uint8_t byte_buffer[kMaxAllowedSize];
 
   Future<size_t> future_result = cpp_reference.GetBytes(byte_buffer, max_size);
-  ::Sleep(1);
+  ::Sleep(1);  // timing for c++ sdk grabbing a mutex
   future_result.OnCompletion(
       [result, byte_buffer](const Future<size_t>& data_result) {
         if (data_result.error() == firebase::storage::kErrorNone) {
@@ -489,7 +489,7 @@ class PutDataStreamHandler
     StorageReference reference = storage_->GetReference(reference_path_);
     Future<Metadata> future_result = reference.PutBytes(
         data_, buffer_size_, &putStringListener, controller_);
-    ::Sleep(1);
+    ::Sleep(1);  // timing for c++ sdk grabbing a mutex
 
     future_result.OnCompletion([this](const Future<Metadata>& data_result) {
       if (data_result.error() == firebase::storage::kErrorNone) {
@@ -555,7 +555,7 @@ class PutFileStreamHandler
     Future<Metadata> future_result =
         reference.PutFile(file_path_.c_str(), &putFileListener, controller_);
 
-    ::Sleep(1);
+    ::Sleep(1);  // timing for c++ sdk grabbing a mutex
     future_result.OnCompletion([this](const Future<Metadata>& data_result) {
       if (data_result.error() == firebase::storage::kErrorNone) {
         flutter::EncodableMap event = flutter::EncodableMap();
@@ -620,7 +620,7 @@ class GetFileStreamHandler
     Future<size_t> future_result =
         reference.GetFile(file_path_.c_str(), &getFileListener, controller_);
 
-    ::Sleep(1);
+    ::Sleep(1);  // timing for c++ sdk grabbing a mutex
     future_result.OnCompletion([this](const Future<size_t>& data_result) {
       if (data_result.error() == firebase::storage::kErrorNone) {
         flutter::EncodableMap event = flutter::EncodableMap();
@@ -764,7 +764,7 @@ void FirebaseStoragePlugin::ReferenceUpdateMetadata(
   }
 
   Future<Metadata> future_result = cpp_reference.UpdateMetadata(cpp_meta);
-  ::Sleep(1);
+  ::Sleep(1);  // timing for c++ sdk grabbing a mutex
   future_result.OnCompletion([result](const Future<Metadata>& data_result) {
     if (data_result.error() == firebase::storage::kErrorNone) {
       const Metadata* result_meta = data_result.result();
