@@ -249,11 +249,23 @@ enum AggregateType {
 class AggregateQuery {
   const AggregateQuery({
     required this.type,
-    required this.fieldPath,
+    required this.field,
   });
 
   final AggregateType type;
-  final String fieldPath;
+  final String? field;
+}
+
+class AggregateQueryResponse {
+  const AggregateQueryResponse({
+    required this.type,
+    required this.value,
+    required this.field,
+  });
+
+  final AggregateType type;
+  final String? field;
+  final double value;
 }
 
 @HostApi(dartHostTestHandler: 'TestFirebaseFirestoreHostApi')
@@ -367,7 +379,7 @@ abstract class FirebaseFirestoreHostApi {
   );
 
   @async
-  double aggregateQuery(
+  List<AggregateQueryResponse?> aggregateQuery(
     FirestorePigeonFirebaseApp app,
     String path,
     PigeonQueryParameters parameters,

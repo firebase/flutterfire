@@ -6,20 +6,12 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../../cloud_firestore_platform_interface.dart';
 
-enum AggregateType {
-  count,
-  sum,
-  average,
-}
-
 /// [AggregateQueryPlatform] represents the data at a particular location for retrieving metadata
 /// without retrieving the actual documents.
 abstract class AggregateQueryPlatform extends PlatformInterface {
-  AggregateQueryPlatform(this.query, this.aggregateType) : super(token: _token);
+  AggregateQueryPlatform(this.query) : super(token: _token);
 
   static final Object _token = Object();
-
-  final AggregateType aggregateType;
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [AggregateQueryPlatform].
@@ -39,5 +31,22 @@ abstract class AggregateQueryPlatform extends PlatformInterface {
     required AggregateSource source,
   }) async {
     throw UnimplementedError('get() is not implemented');
+  }
+
+  /// Returns an [AggregateQuerySnapshotPlatform] with the count of the documents that match the query.
+  AggregateQueryPlatform count() {
+    throw UnimplementedError('count() is not implemented');
+  }
+
+  /// Returns an [AggregateQuerySnapshotPlatform] with the sum of the values of the documents that match the query.
+  AggregateQueryPlatform sum(
+    String field,
+  ) {
+    throw UnimplementedError('sum() is not implemented');
+  }
+
+  /// Returns an [AggregateQuerySnapshotPlatform] with the average of the values of the documents that match the query.
+  AggregateQueryPlatform average(String field) {
+    throw UnimplementedError('average() is not implemented');
   }
 }

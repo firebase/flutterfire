@@ -272,6 +272,43 @@ class MethodChannelQuery extends QueryPlatform {
       _pigeonParameters,
       _pointer.path,
       pigeonApp,
+      [
+        AggregateQuery(
+          type: AggregateType.count,
+        )
+      ],
+    );
+  }
+
+  @override
+  AggregateQueryPlatform sum(String field) {
+    return MethodChannelAggregateQuery(
+      this,
+      _pigeonParameters,
+      _pointer.path,
+      pigeonApp,
+      [
+        AggregateQuery(
+          type: AggregateType.sum,
+          field: field,
+        )
+      ],
+    );
+  }
+
+  @override
+  AggregateQueryPlatform average(String field) {
+    return MethodChannelAggregateQuery(
+      this,
+      _pigeonParameters,
+      _pointer.path,
+      pigeonApp,
+      [
+        AggregateQuery(
+          type: AggregateType.average,
+          field: field,
+        )
+      ],
     );
   }
 

@@ -238,4 +238,16 @@ abstract class QueryPlatform extends PlatformInterface {
   AggregateQueryPlatform count() {
     throw UnimplementedError('count() is not implemented');
   }
+
+  /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
+  /// metadata
+  AggregateQueryPlatform sum(String field) {
+    throw UnimplementedError('sum() is not implemented');
+  }
+
+  /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
+  /// metadata
+  AggregateQueryPlatform average(String field) {
+    throw UnimplementedError('average() is not implemented');
+  }
 }

@@ -134,6 +134,7 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 @class DocumentReferenceRequest;
 @class PigeonQueryParameters;
 @class AggregateQuery;
+@class AggregateQueryResponse;
 
 @interface PigeonFirebaseSettings : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
@@ -273,9 +274,20 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 @interface AggregateQuery : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithType:(AggregateType)type fieldPath:(NSString *)fieldPath;
++ (instancetype)makeWithType:(AggregateType)type field:(nullable NSString *)field;
 @property(nonatomic, assign) AggregateType type;
-@property(nonatomic, copy) NSString *fieldPath;
+@property(nonatomic, copy, nullable) NSString *field;
+@end
+
+@interface AggregateQueryResponse : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithType:(AggregateType)type
+                       field:(nullable NSString *)field
+                       value:(NSNumber *)value;
+@property(nonatomic, assign) AggregateType type;
+@property(nonatomic, copy, nullable) NSString *field;
+@property(nonatomic, strong) NSNumber *value;
 @end
 
 /// The codec used by FirebaseFirestoreHostApi.
@@ -344,7 +356,8 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
                parameters:(PigeonQueryParameters *)parameters
                    source:(AggregateSource)source
                   queries:(NSArray<AggregateQuery *> *)queries
-               completion:(void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion;
+               completion:(void (^)(NSArray<AggregateQueryResponse *> *_Nullable,
+                                    FlutterError *_Nullable))completion;
 - (void)writeBatchCommitApp:(FirestorePigeonFirebaseApp *)app
                      writes:(NSArray<PigeonTransactionCommand *> *)writes
                  completion:(void (^)(FlutterError *_Nullable))completion;

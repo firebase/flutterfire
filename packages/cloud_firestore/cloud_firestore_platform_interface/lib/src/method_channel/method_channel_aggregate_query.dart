@@ -12,57 +12,92 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
     this._pigeonParameters,
     this._path,
     this._pigeonApp,
+    this._aggregateQueries,
   ) : super(query);
 
   final FirestorePigeonFirebaseApp _pigeonApp;
   final String _path;
   final PigeonQueryParameters _pigeonParameters;
 
+  final List<AggregateQuery> _aggregateQueries;
+
   @override
   Future<AggregateQuerySnapshotPlatform> get({
     required AggregateSource source,
   }) async {
-    switch (aggregateType) {
-      case AggregateType.count:
-        return _getCount(source);
-      case AggregateType.sum:
-        return _getSum(source);
-      case AggregateType.average:
-        return _getAverage(source);
+    final data =
+        await MethodChannelFirebaseFirestore.pigeonChannel.aggregateQuery(
+      _pigeonApp,
+      _path,
+      _pigeonParameters,
+      source,
+      _aggregateQueries,
+    );
+
+    int? count;
+    List<AggregateQueryResponse> sum = [];
+    List<AggregateQueryResponse> average = [];
+    for (final query in data) {
+      if (query == null) continue;
+      switch (query.type) {
+        case AggregateType.count:
+          count = query.value.toInt();
+          break;
+        case AggregateType.sum:
+          sum.add(query);
+          break;
+        case AggregateType.average:
+          average.add(query);
+          break;
+      }
     }
-  }
-
-  Future<AggregateQuerySnapshotPlatform> _getCount(
-    AggregateSource source,
-  ) async {
-    final data = await MethodChannelFirebaseFirestore.pigeonChannel
-        .aggregateQueryCount(_pigeonApp, _path, _pigeonParameters, source);
 
     return AggregateQuerySnapshotPlatform(
-      count: data.toInt(),
-      sum,
+      count: count,
+      sum: sum,
+      average: average,
     );
   }
 
-  Future<AggregateQuerySnapshotPlatform> _getSum(
-    AggregateSource source,
-  ) async {
-    final data = await MethodChannelFirebaseFirestore.pigeonChannel
-        .aggregateQuerySum(_pigeonApp, _path, _pigeonParameters, source);
-
-    return AggregateQuerySnapshotPlatform(
-      sum: data,
+  @override
+  AggregateQueryPlatform count() {
+    return MethodChannelAggregateQuery(
+      query,
+      _pigeonParameters,
+      _path,
+      _pigeonApp,
+      [
+        ..._aggregateQueries,
+        AggregateQuery(type: AggregateType.count),
+      ],
     );
   }
 
-  Future<AggregateQuerySnapshotPlatform> _getAverage(
-    AggregateSource source,
-  ) async {
-    final data = await MethodChannelFirebaseFirestore.pigeonChannel
-        .aggregateQueryAverage(_pigeonApp, _path, _pigeonParameters, source);
+  @override
+  AggregateQueryPlatform sum(String field) {
+    return MethodChannelAggregateQuery(
+      query,
+      _pigeonParameters,
+      _path,
+      _pigeonApp,
+      [
+        ..._aggregateQueries,
+        AggregateQuery(type: AggregateType.sum, field: field),
+      ],
+    );
+  }
 
-    return AggregateQuerySnapshotPlatform(
-      average: data,
+  @override
+  AggregateQueryPlatform average(String field) {
+    return MethodChannelAggregateQuery(
+      query,
+      _pigeonParameters,
+      _path,
+      _pigeonApp,
+      [
+        ..._aggregateQueries,
+        AggregateQuery(type: AggregateType.average, field: field),
+      ],
     );
   }
 }

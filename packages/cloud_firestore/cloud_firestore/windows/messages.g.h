@@ -523,15 +523,18 @@ class PigeonQueryParameters {
 // Generated class from Pigeon that represents data sent in messages.
 class AggregateQuery {
  public:
+  // Constructs an object setting all non-nullable fields.
+  explicit AggregateQuery(const AggregateType& type);
+
   // Constructs an object setting all fields.
-  explicit AggregateQuery(const AggregateType& type,
-                          const std::string& field_path);
+  explicit AggregateQuery(const AggregateType& type, const std::string* field);
 
   const AggregateType& type() const;
   void set_type(const AggregateType& value_arg);
 
-  const std::string& field_path() const;
-  void set_field_path(std::string_view value_arg);
+  const std::string* field() const;
+  void set_field(const std::string_view* value_arg);
+  void set_field(std::string_view value_arg);
 
  private:
   static AggregateQuery FromEncodableList(const flutter::EncodableList& list);
@@ -539,7 +542,38 @@ class AggregateQuery {
   friend class FirebaseFirestoreHostApi;
   friend class FirebaseFirestoreHostApiCodecSerializer;
   AggregateType type_;
-  std::string field_path_;
+  std::optional<std::string> field_;
+};
+
+// Generated class from Pigeon that represents data sent in messages.
+class AggregateQueryResponse {
+ public:
+  // Constructs an object setting all non-nullable fields.
+  explicit AggregateQueryResponse(const AggregateType& type, double value);
+
+  // Constructs an object setting all fields.
+  explicit AggregateQueryResponse(const AggregateType& type,
+                                  const std::string* field, double value);
+
+  const AggregateType& type() const;
+  void set_type(const AggregateType& value_arg);
+
+  const std::string* field() const;
+  void set_field(const std::string_view* value_arg);
+  void set_field(std::string_view value_arg);
+
+  double value() const;
+  void set_value(double value_arg);
+
+ private:
+  static AggregateQueryResponse FromEncodableList(
+      const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseFirestoreHostApi;
+  friend class FirebaseFirestoreHostApiCodecSerializer;
+  AggregateType type_;
+  std::optional<std::string> field_;
+  double value_;
 };
 
 class FirebaseFirestoreHostApiCodecSerializer
@@ -636,7 +670,7 @@ class FirebaseFirestoreHostApi {
       const FirestorePigeonFirebaseApp& app, const std::string& path,
       const PigeonQueryParameters& parameters, const AggregateSource& source,
       const flutter::EncodableList& queries,
-      std::function<void(ErrorOr<double> reply)> result) = 0;
+      std::function<void(ErrorOr<flutter::EncodableList> reply)> result) = 0;
   virtual void WriteBatchCommit(
       const FirestorePigeonFirebaseApp& app,
       const flutter::EncodableList& writes,

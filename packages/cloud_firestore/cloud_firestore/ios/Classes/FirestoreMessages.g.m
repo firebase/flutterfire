@@ -174,6 +174,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList;
 @end
 
+@interface AggregateQueryResponse ()
++ (AggregateQueryResponse *)fromList:(NSArray *)list;
++ (nullable AggregateQueryResponse *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
 @implementation PigeonFirebaseSettings
 + (instancetype)makeWithPersistenceEnabled:(nullable NSNumber *)persistenceEnabled
                                       host:(nullable NSString *)host
@@ -561,17 +567,16 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @end
 
 @implementation AggregateQuery
-+ (instancetype)makeWithType:(AggregateType)type fieldPath:(NSString *)fieldPath {
++ (instancetype)makeWithType:(AggregateType)type field:(nullable NSString *)field {
   AggregateQuery *pigeonResult = [[AggregateQuery alloc] init];
   pigeonResult.type = type;
-  pigeonResult.fieldPath = fieldPath;
+  pigeonResult.field = field;
   return pigeonResult;
 }
 + (AggregateQuery *)fromList:(NSArray *)list {
   AggregateQuery *pigeonResult = [[AggregateQuery alloc] init];
   pigeonResult.type = [GetNullableObjectAtIndex(list, 0) integerValue];
-  pigeonResult.fieldPath = GetNullableObjectAtIndex(list, 1);
-  NSAssert(pigeonResult.fieldPath != nil, @"");
+  pigeonResult.field = GetNullableObjectAtIndex(list, 1);
   return pigeonResult;
 }
 + (nullable AggregateQuery *)nullableFromList:(NSArray *)list {
@@ -580,7 +585,37 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 - (NSArray *)toList {
   return @[
     @(self.type),
-    (self.fieldPath ?: [NSNull null]),
+    (self.field ?: [NSNull null]),
+  ];
+}
+@end
+
+@implementation AggregateQueryResponse
++ (instancetype)makeWithType:(AggregateType)type
+                       field:(nullable NSString *)field
+                       value:(NSNumber *)value {
+  AggregateQueryResponse *pigeonResult = [[AggregateQueryResponse alloc] init];
+  pigeonResult.type = type;
+  pigeonResult.field = field;
+  pigeonResult.value = value;
+  return pigeonResult;
+}
++ (AggregateQueryResponse *)fromList:(NSArray *)list {
+  AggregateQueryResponse *pigeonResult = [[AggregateQueryResponse alloc] init];
+  pigeonResult.type = [GetNullableObjectAtIndex(list, 0) integerValue];
+  pigeonResult.field = GetNullableObjectAtIndex(list, 1);
+  pigeonResult.value = GetNullableObjectAtIndex(list, 2);
+  NSAssert(pigeonResult.value != nil, @"");
+  return pigeonResult;
+}
++ (nullable AggregateQueryResponse *)nullableFromList:(NSArray *)list {
+  return (list) ? [AggregateQueryResponse fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    @(self.type),
+    (self.field ?: [NSNull null]),
+    (self.value ?: [NSNull null]),
   ];
 }
 @end
@@ -593,26 +628,28 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     case 128:
       return [AggregateQuery fromList:[self readValue]];
     case 129:
-      return [DocumentReferenceRequest fromList:[self readValue]];
+      return [AggregateQueryResponse fromList:[self readValue]];
     case 130:
-      return [FirestorePigeonFirebaseApp fromList:[self readValue]];
+      return [DocumentReferenceRequest fromList:[self readValue]];
     case 131:
-      return [PigeonDocumentChange fromList:[self readValue]];
+      return [FirestorePigeonFirebaseApp fromList:[self readValue]];
     case 132:
-      return [PigeonDocumentOption fromList:[self readValue]];
+      return [PigeonDocumentChange fromList:[self readValue]];
     case 133:
-      return [PigeonDocumentSnapshot fromList:[self readValue]];
+      return [PigeonDocumentOption fromList:[self readValue]];
     case 134:
-      return [PigeonFirebaseSettings fromList:[self readValue]];
+      return [PigeonDocumentSnapshot fromList:[self readValue]];
     case 135:
-      return [PigeonGetOptions fromList:[self readValue]];
+      return [PigeonFirebaseSettings fromList:[self readValue]];
     case 136:
-      return [PigeonQueryParameters fromList:[self readValue]];
+      return [PigeonGetOptions fromList:[self readValue]];
     case 137:
-      return [PigeonQuerySnapshot fromList:[self readValue]];
+      return [PigeonQueryParameters fromList:[self readValue]];
     case 138:
-      return [PigeonSnapshotMetadata fromList:[self readValue]];
+      return [PigeonQuerySnapshot fromList:[self readValue]];
     case 139:
+      return [PigeonSnapshotMetadata fromList:[self readValue]];
+    case 140:
       return [PigeonTransactionCommand fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -627,38 +664,41 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   if ([value isKindOfClass:[AggregateQuery class]]) {
     [self writeByte:128];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[DocumentReferenceRequest class]]) {
+  } else if ([value isKindOfClass:[AggregateQueryResponse class]]) {
     [self writeByte:129];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[FirestorePigeonFirebaseApp class]]) {
+  } else if ([value isKindOfClass:[DocumentReferenceRequest class]]) {
     [self writeByte:130];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonDocumentChange class]]) {
+  } else if ([value isKindOfClass:[FirestorePigeonFirebaseApp class]]) {
     [self writeByte:131];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonDocumentOption class]]) {
+  } else if ([value isKindOfClass:[PigeonDocumentChange class]]) {
     [self writeByte:132];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonDocumentSnapshot class]]) {
+  } else if ([value isKindOfClass:[PigeonDocumentOption class]]) {
     [self writeByte:133];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonFirebaseSettings class]]) {
+  } else if ([value isKindOfClass:[PigeonDocumentSnapshot class]]) {
     [self writeByte:134];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonGetOptions class]]) {
+  } else if ([value isKindOfClass:[PigeonFirebaseSettings class]]) {
     [self writeByte:135];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonQueryParameters class]]) {
+  } else if ([value isKindOfClass:[PigeonGetOptions class]]) {
     [self writeByte:136];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonQuerySnapshot class]]) {
+  } else if ([value isKindOfClass:[PigeonQueryParameters class]]) {
     [self writeByte:137];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonSnapshotMetadata class]]) {
+  } else if ([value isKindOfClass:[PigeonQuerySnapshot class]]) {
     [self writeByte:138];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonTransactionCommand class]]) {
+  } else if ([value isKindOfClass:[PigeonSnapshotMetadata class]]) {
     [self writeByte:139];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonTransactionCommand class]]) {
+    [self writeByte:140];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];
@@ -1173,7 +1213,8 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
                     parameters:arg_parameters
                         source:arg_source
                        queries:arg_queries
-                    completion:^(NSNumber *_Nullable output, FlutterError *_Nullable error) {
+                    completion:^(NSArray<AggregateQueryResponse *> *_Nullable output,
+                                 FlutterError *_Nullable error) {
                       callback(wrapResult(output, error));
                     }];
       }];
