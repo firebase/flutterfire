@@ -6,8 +6,13 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// [AggregateQuerySnapshotPlatform] represents a response to an [AggregateQueryPlatform] request.
 class AggregateQuerySnapshotPlatform extends PlatformInterface {
-  AggregateQuerySnapshotPlatform({required int count})
-      : _count = count,
+  AggregateQuerySnapshotPlatform({
+    required int? count,
+    required Map<String, double>? sum,
+    required Map<String, double>? average,
+  })  : _count = count,
+        _sum = sum,
+        _average = average,
         super(token: _token);
 
   static final Object _token = Object();
@@ -22,8 +27,30 @@ class AggregateQuerySnapshotPlatform extends PlatformInterface {
     PlatformInterface.verifyToken(instance, _token);
   }
 
-  final int _count;
+  final int? _count;
+
+  final Map<String, double>? _average;
+
+  final Map<String, double>? _sum;
 
   /// Returns the count of the documents that match the query.
-  int get count => _count;
+  int? get count => _count;
+
+  /// Returns the average of the documents that match the query.
+  /// The key is the field name and the value is the average.
+  double getAverage(String field) {
+    if (_average == null) {
+      throw 'This query does not have an average for $field.';
+    }
+    return _average![field]!;
+  }
+
+  /// Returns the sum of the documents that match the query.
+  /// The key is the field name and the value is the sum.
+  double getSum(String field) {
+    if (_sum == null) {
+      throw 'This query does not have a sum for $field.';
+    }
+    return _sum![field]!;
+  }
 }

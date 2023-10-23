@@ -5,8 +5,6 @@
 // See also: https://pub.dev/packages/pigeon
 
 #import "FirestoreMessages.g.h"
-#import "FLTFirebaseFirestoreReader.h"
-#import "FLTFirebaseFirestoreWriter.h"
 
 #if TARGET_OS_OSX
 #import <FlutterMacOS/FlutterMacOS.h>
@@ -73,6 +71,16 @@
 
 @implementation PigeonTransactionTypeBox
 - (instancetype)initWithValue:(PigeonTransactionType)value {
+  self = [super init];
+  if (self) {
+    _value = value;
+  }
+  return self;
+}
+@end
+
+@implementation AggregateTypeBox
+- (instancetype)initWithValue:(AggregateType)value {
   self = [super init];
   if (self) {
     _value = value;
@@ -157,6 +165,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @interface PigeonQueryParameters ()
 + (PigeonQueryParameters *)fromList:(NSArray *)list;
 + (nullable PigeonQueryParameters *)nullableFromList:(NSArray *)list;
+- (NSArray *)toList;
+@end
+
+@interface AggregateQuery ()
++ (AggregateQuery *)fromList:(NSArray *)list;
++ (nullable AggregateQuery *)nullableFromList:(NSArray *)list;
 - (NSArray *)toList;
 @end
 
@@ -299,7 +313,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.type = type;
   pigeonResult.document = document;
   pigeonResult.oldIndex = oldIndex;
-  pigeonResult.index = newIndex;
+  pigeonResult.newIndex = newIndex;
   return pigeonResult;
 }
 + (PigeonDocumentChange *)fromList:(NSArray *)list {
@@ -310,8 +324,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   NSAssert(pigeonResult.document != nil, @"");
   pigeonResult.oldIndex = GetNullableObjectAtIndex(list, 2);
   NSAssert(pigeonResult.oldIndex != nil, @"");
-  pigeonResult.index = GetNullableObjectAtIndex(list, 3);
-  NSAssert(pigeonResult.index != nil, @"");
+  pigeonResult.newIndex = GetNullableObjectAtIndex(list, 3);
+  NSAssert(pigeonResult.newIndex != nil, @"");
   return pigeonResult;
 }
 + (nullable PigeonDocumentChange *)nullableFromList:(NSArray *)list {
@@ -322,7 +336,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     @(self.type),
     (self.document ? [self.document toList] : [NSNull null]),
     (self.oldIndex ?: [NSNull null]),
-    (self.index ?: [NSNull null]),
+    (self.newIndex ?: [NSNull null]),
   ];
 }
 @end
@@ -546,32 +560,59 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
-@interface FirebaseFirestoreHostApiCodecReader : FLTFirebaseFirestoreReader
+@implementation AggregateQuery
++ (instancetype)makeWithType:(AggregateType)type fieldPath:(NSString *)fieldPath {
+  AggregateQuery *pigeonResult = [[AggregateQuery alloc] init];
+  pigeonResult.type = type;
+  pigeonResult.fieldPath = fieldPath;
+  return pigeonResult;
+}
++ (AggregateQuery *)fromList:(NSArray *)list {
+  AggregateQuery *pigeonResult = [[AggregateQuery alloc] init];
+  pigeonResult.type = [GetNullableObjectAtIndex(list, 0) integerValue];
+  pigeonResult.fieldPath = GetNullableObjectAtIndex(list, 1);
+  NSAssert(pigeonResult.fieldPath != nil, @"");
+  return pigeonResult;
+}
++ (nullable AggregateQuery *)nullableFromList:(NSArray *)list {
+  return (list) ? [AggregateQuery fromList:list] : nil;
+}
+- (NSArray *)toList {
+  return @[
+    @(self.type),
+    (self.fieldPath ?: [NSNull null]),
+  ];
+}
+@end
+
+@interface FirebaseFirestoreHostApiCodecReader : FlutterStandardReader
 @end
 @implementation FirebaseFirestoreHostApiCodecReader
 - (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
     case 128:
-      return [DocumentReferenceRequest fromList:[self readValue]];
+      return [AggregateQuery fromList:[self readValue]];
     case 129:
-      return [FirestorePigeonFirebaseApp fromList:[self readValue]];
+      return [DocumentReferenceRequest fromList:[self readValue]];
     case 130:
-      return [PigeonDocumentChange fromList:[self readValue]];
+      return [FirestorePigeonFirebaseApp fromList:[self readValue]];
     case 131:
-      return [PigeonDocumentOption fromList:[self readValue]];
+      return [PigeonDocumentChange fromList:[self readValue]];
     case 132:
-      return [PigeonDocumentSnapshot fromList:[self readValue]];
+      return [PigeonDocumentOption fromList:[self readValue]];
     case 133:
-      return [PigeonFirebaseSettings fromList:[self readValue]];
+      return [PigeonDocumentSnapshot fromList:[self readValue]];
     case 134:
-      return [PigeonGetOptions fromList:[self readValue]];
+      return [PigeonFirebaseSettings fromList:[self readValue]];
     case 135:
-      return [PigeonQueryParameters fromList:[self readValue]];
+      return [PigeonGetOptions fromList:[self readValue]];
     case 136:
-      return [PigeonQuerySnapshot fromList:[self readValue]];
+      return [PigeonQueryParameters fromList:[self readValue]];
     case 137:
-      return [PigeonSnapshotMetadata fromList:[self readValue]];
+      return [PigeonQuerySnapshot fromList:[self readValue]];
     case 138:
+      return [PigeonSnapshotMetadata fromList:[self readValue]];
+    case 139:
       return [PigeonTransactionCommand fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -579,42 +620,45 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
-@interface FirebaseFirestoreHostApiCodecWriter : FLTFirebaseFirestoreWriter
+@interface FirebaseFirestoreHostApiCodecWriter : FlutterStandardWriter
 @end
 @implementation FirebaseFirestoreHostApiCodecWriter
 - (void)writeValue:(id)value {
-  if ([value isKindOfClass:[DocumentReferenceRequest class]]) {
+  if ([value isKindOfClass:[AggregateQuery class]]) {
     [self writeByte:128];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[FirestorePigeonFirebaseApp class]]) {
+  } else if ([value isKindOfClass:[DocumentReferenceRequest class]]) {
     [self writeByte:129];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonDocumentChange class]]) {
+  } else if ([value isKindOfClass:[FirestorePigeonFirebaseApp class]]) {
     [self writeByte:130];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonDocumentOption class]]) {
+  } else if ([value isKindOfClass:[PigeonDocumentChange class]]) {
     [self writeByte:131];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonDocumentSnapshot class]]) {
+  } else if ([value isKindOfClass:[PigeonDocumentOption class]]) {
     [self writeByte:132];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonFirebaseSettings class]]) {
+  } else if ([value isKindOfClass:[PigeonDocumentSnapshot class]]) {
     [self writeByte:133];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonGetOptions class]]) {
+  } else if ([value isKindOfClass:[PigeonFirebaseSettings class]]) {
     [self writeByte:134];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonQueryParameters class]]) {
+  } else if ([value isKindOfClass:[PigeonGetOptions class]]) {
     [self writeByte:135];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonQuerySnapshot class]]) {
+  } else if ([value isKindOfClass:[PigeonQueryParameters class]]) {
     [self writeByte:136];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonSnapshotMetadata class]]) {
+  } else if ([value isKindOfClass:[PigeonQuerySnapshot class]]) {
     [self writeByte:137];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[PigeonTransactionCommand class]]) {
+  } else if ([value isKindOfClass:[PigeonSnapshotMetadata class]]) {
     [self writeByte:138];
+    [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[PigeonTransactionCommand class]]) {
+    [self writeByte:139];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];
@@ -1108,14 +1152,14 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
   {
     FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
            initWithName:@"dev.flutter.pigeon.cloud_firestore_platform_interface."
-                        @"FirebaseFirestoreHostApi.aggregateQueryCount"
+                        @"FirebaseFirestoreHostApi.aggregateQuery"
         binaryMessenger:binaryMessenger
                   codec:FirebaseFirestoreHostApiGetCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector
-                     (aggregateQueryCountApp:path:parameters:source:completion:)],
+                     (aggregateQueryApp:path:parameters:source:queries:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
-                @"@selector(aggregateQueryCountApp:path:parameters:source:completion:)",
+                @"@selector(aggregateQueryApp:path:parameters:source:queries:completion:)",
                 api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
@@ -1123,13 +1167,15 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
         NSString *arg_path = GetNullableObjectAtIndex(args, 1);
         PigeonQueryParameters *arg_parameters = GetNullableObjectAtIndex(args, 2);
         AggregateSource arg_source = [GetNullableObjectAtIndex(args, 3) integerValue];
-        [api aggregateQueryCountApp:arg_app
-                               path:arg_path
-                         parameters:arg_parameters
-                             source:arg_source
-                         completion:^(NSNumber *_Nullable output, FlutterError *_Nullable error) {
-                           callback(wrapResult(output, error));
-                         }];
+        NSArray<AggregateQuery *> *arg_queries = GetNullableObjectAtIndex(args, 4);
+        [api aggregateQueryApp:arg_app
+                          path:arg_path
+                    parameters:arg_parameters
+                        source:arg_source
+                       queries:arg_queries
+                    completion:^(NSNumber *_Nullable output, FlutterError *_Nullable error) {
+                      callback(wrapResult(output, error));
+                    }];
       }];
     } else {
       [channel setMessageHandler:nil];

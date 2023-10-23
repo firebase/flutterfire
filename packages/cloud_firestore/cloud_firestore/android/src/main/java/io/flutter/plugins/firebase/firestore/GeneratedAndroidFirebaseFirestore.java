@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import io.flutter.plugin.common.BasicMessageChannel;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MessageCodec;
+import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -157,6 +158,18 @@ public class GeneratedAndroidFirebaseFirestore {
     final int index;
 
     private PigeonTransactionType(final int index) {
+      this.index = index;
+    }
+  }
+
+  public enum AggregateType {
+    COUNT(0),
+    SUM(1),
+    AVERAGE(2);
+
+    final int index;
+
+    private AggregateType(final int index) {
       this.index = index;
     }
   }
@@ -455,7 +468,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    public ArrayList<Object> toList() {
+    ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(hasPendingWrites);
       toListResult.add(isFromCache);
@@ -546,7 +559,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    public ArrayList<Object> toList() {
+    ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(path);
       toListResult.add(data);
@@ -667,7 +680,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    public ArrayList<Object> toList() {
+    ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(4);
       toListResult.add(type == null ? null : type.index);
       toListResult.add((document == null) ? null : document.toList());
@@ -1407,6 +1420,79 @@ public class GeneratedAndroidFirebaseFirestore {
     }
   }
 
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class AggregateQuery {
+    private @NonNull AggregateType type;
+
+    public @NonNull AggregateType getType() {
+      return type;
+    }
+
+    public void setType(@NonNull AggregateType setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"type\" is null.");
+      }
+      this.type = setterArg;
+    }
+
+    private @NonNull String fieldPath;
+
+    public @NonNull String getFieldPath() {
+      return fieldPath;
+    }
+
+    public void setFieldPath(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"fieldPath\" is null.");
+      }
+      this.fieldPath = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    AggregateQuery() {}
+
+    public static final class Builder {
+
+      private @Nullable AggregateType type;
+
+      public @NonNull Builder setType(@NonNull AggregateType setterArg) {
+        this.type = setterArg;
+        return this;
+      }
+
+      private @Nullable String fieldPath;
+
+      public @NonNull Builder setFieldPath(@NonNull String setterArg) {
+        this.fieldPath = setterArg;
+        return this;
+      }
+
+      public @NonNull AggregateQuery build() {
+        AggregateQuery pigeonReturn = new AggregateQuery();
+        pigeonReturn.setType(type);
+        pigeonReturn.setFieldPath(fieldPath);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+      toListResult.add(type == null ? null : type.index);
+      toListResult.add(fieldPath);
+      return toListResult;
+    }
+
+    static @NonNull AggregateQuery fromList(@NonNull ArrayList<Object> list) {
+      AggregateQuery pigeonResult = new AggregateQuery();
+      Object type = list.get(0);
+      pigeonResult.setType(AggregateType.values()[(int) type]);
+      Object fieldPath = list.get(1);
+      pigeonResult.setFieldPath((String) fieldPath);
+      return pigeonResult;
+    }
+  }
+
   public interface Result<T> {
     @SuppressWarnings("UnknownNullness")
     void success(T result);
@@ -1414,7 +1500,7 @@ public class GeneratedAndroidFirebaseFirestore {
     void error(@NonNull Throwable error);
   }
 
-  private static class FirebaseFirestoreHostApiCodec extends FlutterFirebaseFirestoreMessageCodec {
+  private static class FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
     public static final FirebaseFirestoreHostApiCodec INSTANCE =
         new FirebaseFirestoreHostApiCodec();
 
@@ -1424,26 +1510,28 @@ public class GeneratedAndroidFirebaseFirestore {
     protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
       switch (type) {
         case (byte) 128:
-          return DocumentReferenceRequest.fromList((ArrayList<Object>) readValue(buffer));
+          return AggregateQuery.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 129:
-          return FirestorePigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
+          return DocumentReferenceRequest.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 130:
-          return PigeonDocumentChange.fromList((ArrayList<Object>) readValue(buffer));
+          return FirestorePigeonFirebaseApp.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 131:
-          return PigeonDocumentOption.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonDocumentChange.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 132:
-          return PigeonDocumentSnapshot.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonDocumentOption.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 133:
-          return PigeonFirebaseSettings.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonDocumentSnapshot.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 134:
-          return PigeonGetOptions.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonFirebaseSettings.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 135:
-          return PigeonQueryParameters.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonGetOptions.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 136:
-          return PigeonQuerySnapshot.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonQueryParameters.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 137:
-          return PigeonSnapshotMetadata.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonQuerySnapshot.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 138:
+          return PigeonSnapshotMetadata.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 139:
           return PigeonTransactionCommand.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
@@ -1452,38 +1540,41 @@ public class GeneratedAndroidFirebaseFirestore {
 
     @Override
     protected void writeValue(@NonNull ByteArrayOutputStream stream, Object value) {
-      if (value instanceof DocumentReferenceRequest) {
+      if (value instanceof AggregateQuery) {
         stream.write(128);
+        writeValue(stream, ((AggregateQuery) value).toList());
+      } else if (value instanceof DocumentReferenceRequest) {
+        stream.write(129);
         writeValue(stream, ((DocumentReferenceRequest) value).toList());
       } else if (value instanceof FirestorePigeonFirebaseApp) {
-        stream.write(129);
+        stream.write(130);
         writeValue(stream, ((FirestorePigeonFirebaseApp) value).toList());
       } else if (value instanceof PigeonDocumentChange) {
-        stream.write(130);
+        stream.write(131);
         writeValue(stream, ((PigeonDocumentChange) value).toList());
       } else if (value instanceof PigeonDocumentOption) {
-        stream.write(131);
+        stream.write(132);
         writeValue(stream, ((PigeonDocumentOption) value).toList());
       } else if (value instanceof PigeonDocumentSnapshot) {
-        stream.write(132);
+        stream.write(133);
         writeValue(stream, ((PigeonDocumentSnapshot) value).toList());
       } else if (value instanceof PigeonFirebaseSettings) {
-        stream.write(133);
+        stream.write(134);
         writeValue(stream, ((PigeonFirebaseSettings) value).toList());
       } else if (value instanceof PigeonGetOptions) {
-        stream.write(134);
+        stream.write(135);
         writeValue(stream, ((PigeonGetOptions) value).toList());
       } else if (value instanceof PigeonQueryParameters) {
-        stream.write(135);
+        stream.write(136);
         writeValue(stream, ((PigeonQueryParameters) value).toList());
       } else if (value instanceof PigeonQuerySnapshot) {
-        stream.write(136);
+        stream.write(137);
         writeValue(stream, ((PigeonQuerySnapshot) value).toList());
       } else if (value instanceof PigeonSnapshotMetadata) {
-        stream.write(137);
+        stream.write(138);
         writeValue(stream, ((PigeonSnapshotMetadata) value).toList());
       } else if (value instanceof PigeonTransactionCommand) {
-        stream.write(138);
+        stream.write(139);
         writeValue(stream, ((PigeonTransactionCommand) value).toList());
       } else {
         super.writeValue(stream, value);
@@ -1572,11 +1663,12 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull PigeonGetOptions options,
         @NonNull Result<PigeonQuerySnapshot> result);
 
-    void aggregateQueryCount(
+    void aggregateQuery(
         @NonNull FirestorePigeonFirebaseApp app,
         @NonNull String path,
         @NonNull PigeonQueryParameters parameters,
         @NonNull AggregateSource source,
+        @NonNull List<AggregateQuery> queries,
         @NonNull Result<Double> result);
 
     void writeBatchCommit(
@@ -2202,7 +2294,7 @@ public class GeneratedAndroidFirebaseFirestore {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
                 binaryMessenger,
-                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQueryCount",
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery",
                 getCodec());
         if (api != null) {
           channel.setMessageHandler(
@@ -2213,6 +2305,7 @@ public class GeneratedAndroidFirebaseFirestore {
                 String pathArg = (String) args.get(1);
                 PigeonQueryParameters parametersArg = (PigeonQueryParameters) args.get(2);
                 AggregateSource sourceArg = AggregateSource.values()[(int) args.get(3)];
+                List<AggregateQuery> queriesArg = (List<AggregateQuery>) args.get(4);
                 Result<Double> resultCallback =
                     new Result<Double>() {
                       public void success(Double result) {
@@ -2226,7 +2319,8 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.aggregateQueryCount(appArg, pathArg, parametersArg, sourceArg, resultCallback);
+                api.aggregateQuery(
+                    appArg, pathArg, parametersArg, sourceArg, queriesArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
