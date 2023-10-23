@@ -25,6 +25,10 @@ class AggregateQueryWeb extends AggregateQueryPlatform {
     // Note: There isn't a source option on the web platform
     firestore_interop.AggregateQuerySnapshot snapshot = await _delegate.get();
 
-    return AggregateQuerySnapshotPlatform(count: snapshot.count);
+    return AggregateQuerySnapshotPlatform(
+      count: snapshot.count,
+      sum: [],
+      average: [],
+    );
   }
 }

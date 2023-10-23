@@ -20,6 +20,30 @@ Future<void> main() async {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
 
+  // Count the number of movies
+  final count = await FirebaseFirestore.instance
+      .collection('firestore-example-app')
+      .count()
+      .get();
+
+  print('Count: ${count.count}');
+
+  // Average the number of likes
+  final average = await FirebaseFirestore.instance
+      .collection('firestore-example-app')
+      .average('likes')
+      .get();
+
+  print('Average: $average');
+
+  // Sum the number of likes
+  final sum = await FirebaseFirestore.instance
+      .collection('firestore-example-app')
+      .sum('likes')
+      .get();
+
+  print('Sum: $sum');
+
   runApp(FirestoreExampleApp());
 }
 

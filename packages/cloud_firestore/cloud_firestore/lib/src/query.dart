@@ -188,6 +188,10 @@ abstract class Query<T extends Object?> {
   });
 
   AggregateQuery count();
+
+  AggregateQuery sum(String field);
+
+  AggregateQuery average(String field);
 }
 
 /// Represents a [Query] over the data at a particular location.
@@ -844,6 +848,20 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   AggregateQuery count() {
     return AggregateQuery._(_delegate.count(), this);
   }
+
+  /// Represents an [AggregateQuery] over the data at a particular location for retrieving metadata
+  /// without retrieving the actual documents.
+  @override
+  AggregateQuery sum(String field) {
+    return AggregateQuery._(_delegate.sum(field), this);
+  }
+
+  /// Represents an [AggregateQuery] over the data at a particular location for retrieving metadata
+  /// without retrieving the actual documents.
+  @override
+  AggregateQuery average(String field) {
+    return AggregateQuery._(_delegate.average(field), this);
+  }
 }
 
 class _WithConverterQuery<T extends Object?> implements Query<T> {
@@ -1012,5 +1030,19 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   @override
   AggregateQuery count() {
     return _originalQuery.count();
+  }
+
+  /// Represents an [AggregateQuery] over the data at a particular location for retrieving metadata
+  /// without retrieving the actual documents.
+  @override
+  AggregateQuery sum(String field) {
+    return _originalQuery.sum(field);
+  }
+
+  /// Represents an [AggregateQuery] over the data at a particular location for retrieving metadata
+  /// without retrieving the actual documents.
+  @override
+  AggregateQuery average(String field) {
+    return _originalQuery.average(field);
   }
 }

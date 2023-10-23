@@ -23,4 +23,24 @@ class AggregateQuery {
   }) async {
     return AggregateQuerySnapshot._(await _delegate.get(source: source), query);
   }
+
+  /// Represents an [AggregateQuery] over the data at a particular location for retrieving metadata
+  /// without retrieving the actual documents.
+  AggregateQuery count() {
+    return AggregateQuery._(_delegate.count(), query);
+  }
+
+  /// Represents an [AggregateQuery] over the data at a particular location for retrieving metadata
+  /// without retrieving the actual documents.
+  AggregateQuery sum(
+    String field,
+  ) {
+    return AggregateQuery._(_delegate.sum(field), query);
+  }
+
+  /// Represents an [AggregateQuery] over the data at a particular location for retrieving metadata
+  /// without retrieving the actual documents.
+  AggregateQuery average(String field) {
+    return AggregateQuery._(_delegate.average(field), query);
+  }
 }
