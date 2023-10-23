@@ -70,7 +70,6 @@ public class FlutterFirebaseFirestorePlugin
           io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreMessageCodec.INSTANCE);
 
   private BinaryMessenger binaryMessenger;
-  private MethodChannel channel;
 
   private final AtomicReference<Activity> activity = new AtomicReference<>(null);
 
@@ -129,9 +128,6 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    channel.setMethodCallHandler(null);
-    channel = null;
-
     removeEventListeners();
 
     binaryMessenger = null;
