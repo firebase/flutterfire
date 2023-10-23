@@ -115,14 +115,8 @@ FlutterStandardMethodCodec *_codec;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:kFLTFirebaseFirestoreChannelName
-                                  binaryMessenger:[registrar messenger]
-                                            codec:_codec];
-
   FLTFirebaseFirestorePlugin *instance =
       [[FLTFirebaseFirestorePlugin alloc] init:[registrar messenger]];
-  [registrar addMethodCallDelegate:instance channel:channel];
 
 #if TARGET_OS_OSX
 // TODO(Salakar): Publish does not exist on MacOS version of FlutterPluginRegistrar.
