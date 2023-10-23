@@ -21,12 +21,15 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // final emulatorHost =
-  //     (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)
-  //         ? '10.0.2.2'
-  //         : 'localhost';
+  if (defaultTargetPlatform != TargetPlatform.windows) {
+    // window currently don't support storage emulator
+    final emulatorHost =
+        (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)
+            ? '10.0.2.2'
+            : 'localhost';
 
-  // await FirebaseStorage.instance.useStorageEmulator(emulatorHost, 9199);
+    await FirebaseStorage.instance.useStorageEmulator(emulatorHost, 9199);
+  }
 
   runApp(StorageExampleApp());
 }
