@@ -468,7 +468,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(hasPendingWrites);
       toListResult.add(isFromCache);
@@ -559,7 +559,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(path);
       toListResult.add(data);
@@ -680,7 +680,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(4);
       toListResult.add(type == null ? null : type.index);
       toListResult.add((document == null) ? null : document.toList());
@@ -1591,7 +1591,7 @@ public class GeneratedAndroidFirebaseFirestore {
     void error(@NonNull Throwable error);
   }
 
-  private static class FirebaseFirestoreHostApiCodec extends StandardMessageCodec {
+  private static class FirebaseFirestoreHostApiCodec extends FlutterFirebaseFirestoreMessageCodec {
     public static final FirebaseFirestoreHostApiCodec INSTANCE =
         new FirebaseFirestoreHostApiCodec();
 
