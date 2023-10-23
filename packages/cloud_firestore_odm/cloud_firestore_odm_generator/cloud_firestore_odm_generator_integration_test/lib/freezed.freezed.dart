@@ -81,9 +81,10 @@ class _$PersonCopyWithImpl<$Res, $Val extends Person>
 }
 
 /// @nodoc
-abstract class _$$_PersonCopyWith<$Res> implements $PersonCopyWith<$Res> {
-  factory _$$_PersonCopyWith(_$_Person value, $Res Function(_$_Person) then) =
-      __$$_PersonCopyWithImpl<$Res>;
+abstract class _$$PersonImplCopyWith<$Res> implements $PersonCopyWith<$Res> {
+  factory _$$PersonImplCopyWith(
+          _$PersonImpl value, $Res Function(_$PersonImpl) then) =
+      __$$PersonImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -93,10 +94,11 @@ abstract class _$$_PersonCopyWith<$Res> implements $PersonCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_PersonCopyWithImpl<$Res>
-    extends _$PersonCopyWithImpl<$Res, _$_Person>
-    implements _$$_PersonCopyWith<$Res> {
-  __$$_PersonCopyWithImpl(_$_Person _value, $Res Function(_$_Person) _then)
+class __$$PersonImplCopyWithImpl<$Res>
+    extends _$PersonCopyWithImpl<$Res, _$PersonImpl>
+    implements _$$PersonImplCopyWith<$Res> {
+  __$$PersonImplCopyWithImpl(
+      _$PersonImpl _value, $Res Function(_$PersonImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -106,7 +108,7 @@ class __$$_PersonCopyWithImpl<$Res>
     Object? lastName = null,
     Object? ignored = freezed,
   }) {
-    return _then(_$_Person(
+    return _then(_$PersonImpl(
       firstName: null == firstName
           ? _value.firstName
           : firstName // ignore: cast_nullable_to_non_nullable
@@ -126,14 +128,14 @@ class __$$_PersonCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class _$_Person implements _Person {
-  _$_Person(
+class _$PersonImpl implements _Person {
+  _$PersonImpl(
       {required this.firstName,
       @JsonKey(name: 'LAST_NAME') required this.lastName,
       @JsonKey(includeFromJson: false, includeToJson: false) this.ignored});
 
-  factory _$_Person.fromJson(Map<String, dynamic> json) =>
-      _$$_PersonFromJson(json);
+  factory _$PersonImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PersonImplFromJson(json);
 
   @override
   final String firstName;
@@ -153,7 +155,7 @@ class _$_Person implements _Person {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Person &&
+            other is _$PersonImpl &&
             (identical(other.firstName, firstName) ||
                 other.firstName == firstName) &&
             (identical(other.lastName, lastName) ||
@@ -168,12 +170,12 @@ class _$_Person implements _Person {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PersonCopyWith<_$_Person> get copyWith =>
-      __$$_PersonCopyWithImpl<_$_Person>(this, _$identity);
+  _$$PersonImplCopyWith<_$PersonImpl> get copyWith =>
+      __$$PersonImplCopyWithImpl<_$PersonImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PersonToJson(
+    return _$$PersonImplToJson(
       this,
     );
   }
@@ -184,9 +186,9 @@ abstract class _Person implements Person {
       {required final String firstName,
       @JsonKey(name: 'LAST_NAME') required final String lastName,
       @JsonKey(includeFromJson: false, includeToJson: false)
-      final int? ignored}) = _$_Person;
+      final int? ignored}) = _$PersonImpl;
 
-  factory _Person.fromJson(Map<String, dynamic> json) = _$_Person.fromJson;
+  factory _Person.fromJson(Map<String, dynamic> json) = _$PersonImpl.fromJson;
 
   @override
   String get firstName;
@@ -198,7 +200,7 @@ abstract class _Person implements Person {
   int? get ignored;
   @override
   @JsonKey(ignore: true)
-  _$$_PersonCopyWith<_$_Person> get copyWith =>
+  _$$PersonImplCopyWith<_$PersonImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -250,22 +252,22 @@ class _$PublicRedirectedCopyWithImpl<$Res, $Val extends PublicRedirected>
 }
 
 /// @nodoc
-abstract class _$$PublicRedirected2CopyWith<$Res>
+abstract class _$$PublicRedirected2ImplCopyWith<$Res>
     implements $PublicRedirectedCopyWith<$Res> {
-  factory _$$PublicRedirected2CopyWith(
-          _$PublicRedirected2 value, $Res Function(_$PublicRedirected2) then) =
-      __$$PublicRedirected2CopyWithImpl<$Res>;
+  factory _$$PublicRedirected2ImplCopyWith(_$PublicRedirected2Impl value,
+          $Res Function(_$PublicRedirected2Impl) then) =
+      __$$PublicRedirected2ImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String value});
 }
 
 /// @nodoc
-class __$$PublicRedirected2CopyWithImpl<$Res>
-    extends _$PublicRedirectedCopyWithImpl<$Res, _$PublicRedirected2>
-    implements _$$PublicRedirected2CopyWith<$Res> {
-  __$$PublicRedirected2CopyWithImpl(
-      _$PublicRedirected2 _value, $Res Function(_$PublicRedirected2) _then)
+class __$$PublicRedirected2ImplCopyWithImpl<$Res>
+    extends _$PublicRedirectedCopyWithImpl<$Res, _$PublicRedirected2Impl>
+    implements _$$PublicRedirected2ImplCopyWith<$Res> {
+  __$$PublicRedirected2ImplCopyWithImpl(_$PublicRedirected2Impl _value,
+      $Res Function(_$PublicRedirected2Impl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -273,7 +275,7 @@ class __$$PublicRedirected2CopyWithImpl<$Res>
   $Res call({
     Object? value = null,
   }) {
-    return _then(_$PublicRedirected2(
+    return _then(_$PublicRedirected2Impl(
       value: null == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -284,11 +286,11 @@ class __$$PublicRedirected2CopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PublicRedirected2 implements PublicRedirected2 {
-  _$PublicRedirected2({required this.value});
+class _$PublicRedirected2Impl implements PublicRedirected2 {
+  _$PublicRedirected2Impl({required this.value});
 
-  factory _$PublicRedirected2.fromJson(Map<String, dynamic> json) =>
-      _$$PublicRedirected2FromJson(json);
+  factory _$PublicRedirected2Impl.fromJson(Map<String, dynamic> json) =>
+      _$$PublicRedirected2ImplFromJson(json);
 
   @override
   final String value;
@@ -302,7 +304,7 @@ class _$PublicRedirected2 implements PublicRedirected2 {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$PublicRedirected2 &&
+            other is _$PublicRedirected2Impl &&
             (identical(other.value, value) || other.value == value));
   }
 
@@ -313,12 +315,13 @@ class _$PublicRedirected2 implements PublicRedirected2 {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$PublicRedirected2CopyWith<_$PublicRedirected2> get copyWith =>
-      __$$PublicRedirected2CopyWithImpl<_$PublicRedirected2>(this, _$identity);
+  _$$PublicRedirected2ImplCopyWith<_$PublicRedirected2Impl> get copyWith =>
+      __$$PublicRedirected2ImplCopyWithImpl<_$PublicRedirected2Impl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PublicRedirected2ToJson(
+    return _$$PublicRedirected2ImplToJson(
       this,
     );
   }
@@ -326,15 +329,15 @@ class _$PublicRedirected2 implements PublicRedirected2 {
 
 abstract class PublicRedirected2 implements PublicRedirected {
   factory PublicRedirected2({required final String value}) =
-      _$PublicRedirected2;
+      _$PublicRedirected2Impl;
 
   factory PublicRedirected2.fromJson(Map<String, dynamic> json) =
-      _$PublicRedirected2.fromJson;
+      _$PublicRedirected2Impl.fromJson;
 
   @override
   String get value;
   @override
   @JsonKey(ignore: true)
-  _$$PublicRedirected2CopyWith<_$PublicRedirected2> get copyWith =>
+  _$$PublicRedirected2ImplCopyWith<_$PublicRedirected2Impl> get copyWith =>
       throw _privateConstructorUsedError;
 }
