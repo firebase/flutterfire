@@ -50,19 +50,9 @@ FirebaseException platformExceptionToFirebaseException(
   PlatformException platformException,
   StackTrace stackTrace,
 ) {
-  Map<String, String>? details = platformException.details != null
-      ? Map<String, String>.from(platformException.details)
-      : null;
-
-  String code = 'unknown';
-  String message = platformException.message ?? '';
-
-  if (details != null) {
-    code = details['code'] ?? code;
-    message = details['message'] ?? message;
-  }
-
   // TODO(ehesp): Add stack trace support when it lands
   return FirebaseException(
-      plugin: 'firebase_storage', code: code, message: message);
+      plugin: 'firebase_storage',
+      code: platformException.code,
+      message: platformException.message);
 }

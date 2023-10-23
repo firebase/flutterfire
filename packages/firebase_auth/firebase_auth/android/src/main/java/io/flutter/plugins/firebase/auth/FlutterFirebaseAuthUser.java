@@ -33,7 +33,7 @@ public class FlutterFirebaseAuthUser
   }
 
   public static FirebaseUser getCurrentUserFromPigeon(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp pigeonApp) {
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp pigeonApp) {
     FirebaseApp app = FirebaseApp.getInstance(pigeonApp.getAppName());
     FirebaseAuth auth = FirebaseAuth.getInstance(app);
     if (pigeonApp.getTenantId() != null) {
@@ -45,7 +45,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void delete(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
@@ -70,7 +70,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void getIdToken(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull Boolean forceRefresh,
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonIdTokenResult>
@@ -94,7 +94,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void linkWithCredential(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull Map<String, Object> input,
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
@@ -128,7 +128,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void linkWithProvider(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseAuth.PigeonSignInProvider signInProvider,
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
@@ -159,7 +159,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void reauthenticateWithCredential(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull Map<String, Object> input,
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
@@ -193,7 +193,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void reauthenticateWithProvider(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseAuth.PigeonSignInProvider signInProvider,
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
@@ -224,7 +224,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void reload(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails>
               result) {
@@ -251,7 +251,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void sendEmailVerification(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @Nullable GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
       @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
@@ -293,7 +293,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void unlink(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String providerId,
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
@@ -327,7 +327,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void updateEmail(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String newEmail,
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails>
@@ -366,7 +366,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void updatePassword(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String newPassword,
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails>
@@ -405,7 +405,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void updatePhoneNumber(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull Map<String, Object> input,
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails>
@@ -452,7 +452,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void updateProfile(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseAuth.PigeonUserProfile profile,
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails>
@@ -505,7 +505,7 @@ public class FlutterFirebaseAuthUser
 
   @Override
   public void verifyBeforeUpdateEmail(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonFirebaseApp app,
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String newEmail,
       @Nullable GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
       @NonNull GeneratedAndroidFirebaseAuth.Result<Void> result) {

@@ -26,19 +26,24 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
   namespace 'io.flutter.plugins.firebasecoreexample'
-  compileSdkVersion flutter.compileSdkVersion
+
+  compileSdk flutter.compileSdkVersion
+
+  defaultConfig {
+    applicationId "io.flutter.plugins.firebasecoreexample"
+    minSdkVersion flutter.minSdkVersion
+    targetSdk flutter.targetSdkVersion
+    versionCode flutterVersionCode.toInteger()
+    versionName flutterVersionName
+  }
 
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-  defaultConfig {
-    applicationId "io.flutter.plugins.firebasecoreexample"
-    minSdkVersion flutter.minSdkVersion
-    targetSdkVersion flutter.targetSdkVersion
-    versionCode flutterVersionCode.toInteger()
-    versionName flutterVersionName
+  buildFeatures {
+    buildConfig = true
   }
 
   buildTypes {
@@ -50,7 +55,4 @@ android {
 
 flutter {
   source '../..'
-}
-
-dependencies {
 }
