@@ -39,3 +39,5 @@ flutter:
         pluginClass: FLTFirebaseStoragePlugin
       web:
         default_package: firebase_storage_web
+      windows:
+        pluginClass: FirebaseStoragePluginCApi
