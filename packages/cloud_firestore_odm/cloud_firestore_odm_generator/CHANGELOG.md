@@ -1,3 +1,7 @@
+## 1.0.0-dev.72
+
+ - **FIX**: Fix ODM not working with latest Freezed ([#11753](https://github.com/firebase/flutterfire/issues/11753)). ([0578182d](https://github.com/firebase/flutterfire/commit/0578182d4f0ddbb855f036771b971ef24d942157))
+
 ## 1.0.0-dev.71
 
  - Update a dependency to the latest release.
