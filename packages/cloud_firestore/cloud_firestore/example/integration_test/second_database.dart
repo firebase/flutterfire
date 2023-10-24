@@ -1817,7 +1817,8 @@ void runSecondDatabaseTests() {
                       .message!
                       .contains('Client specified an invalid argument.') ||
                   e.message!.contains(
-                      'An error occurred while parsing query arguments'),
+                    'An error occurred while parsing query arguments',
+                  ),
               isTrue,
             );
             expect(e, isA<FirebaseException>());
@@ -1884,7 +1885,8 @@ void runSecondDatabaseTests() {
                       .message!
                       .contains('Client specified an invalid argument.') ||
                   e.message!.contains(
-                      'An error occurred while parsing query arguments'),
+                    'An error occurred while parsing query arguments',
+                  ),
               isTrue,
             );
             expect(e, isA<FirebaseException>());
