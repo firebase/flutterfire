@@ -306,8 +306,6 @@ flutter::EncodableMap ConvertMedadataToPigeon(const Metadata* meta) {
     meta_map[flutter::EncodableValue(kContentTypeName)] =
         flutter::EncodableValue(meta->content_type());
   }
-  std::cout << "ConvertMedadataToPigeon C++ metadata size:"
-            << meta->size_bytes() << std::endl;
   meta_map[flutter::EncodableValue(kSizeName)] =
       flutter::EncodableValue(meta->size_bytes());
   if (meta->custom_metadata() != nullptr) {
@@ -754,56 +752,15 @@ void FirebaseStoragePlugin::ReferenceUpdateMetadata(
       GetCPPStorageReferenceFromPigeon(app, reference);
   Metadata cpp_meta;
   GetMetadataFromPigeon(metadata, &cpp_meta);
-  auto search = cpp_meta.custom_metadata()->find("foo");
-  if (search != cpp_meta.custom_metadata()->end()) {
-    std::cout << "Converted C++ metadata.custom_meta: " << search->first << ","
-              << search->second << std::endl;
-  } else {
-    std::cout << "Converted C++ metadata.custom_meta: don't have key foo "
-              << std::endl;
-  }
 
   Future<Metadata> future_result = cpp_reference.UpdateMetadata(cpp_meta);
   ::Sleep(1);  // timing for c++ sdk grabbing a mutex
   future_result.OnCompletion([result](const Future<Metadata>& data_result) {
     if (data_result.error() == firebase::storage::kErrorNone) {
       const Metadata* result_meta = data_result.result();
-      std::map<std::string, std::string>* result_meta_custom_meta =
-          result_meta->custom_metadata();
-      if (result_meta_custom_meta != nullptr) {
-        auto cpp_search = result_meta_custom_meta->find("foo");
-        if (cpp_search != result_meta_custom_meta->end()) {
-          std::cout << "Updated C++ metadata.custom_meta: " << cpp_search->first
-                    << "," << cpp_search->second << std::endl;
-        } else {
-          std::cout << "Updated C++ metadata.custom_meta don't have foo, bar "
-                    << std::endl;
-        }
-      } else {
-        std::cout << "Updated C++ metadata don't have custom_meta "
-                  << std::endl;
-      }
       PigeonFullMetaData pigeonData;
       pigeonData.set_metadata(ConvertMedadataToPigeon(result_meta));
-      const flutter::EncodableMap* meta_map = pigeonData.metadata();
-      auto search = meta_map->find(kCustomMetadataName);
-      if (search != meta_map->end()) {
-        flutter::EncodableMap custom_meta =
-            std::get<flutter::EncodableMap>(search->second);
-        auto meta_search = custom_meta.find(flutter::EncodableValue('foo'));
-        if (meta_search != custom_meta.end()) {
-          std::cout << "Updated pigeon metadata.custom_meta: "
-                    << std::get<std::string>(meta_search->first) << ","
-                    << std::get<std::string>(meta_search->second) << std::endl;
-        } else {
-          std::cout
-              << "Updated pigeon metadata.custom_meta don't have foo, bar "
-              << std::endl;
-        }
-      } else {
-        std::cout << "Updated pigeon metadata don't have custom meta "
-                  << std::endl;
-      }
+
       result(pigeonData);
     } else {
       result(FirebaseStoragePlugin::ParseError(data_result));
