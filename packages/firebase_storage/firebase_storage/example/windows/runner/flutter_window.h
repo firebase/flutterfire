@@ -34,4 +34,5 @@ class FlutterWindow : public Win32Window {
   std::unique_ptr<flutter::FlutterViewController> flutter_controller_;
 };
 
-#endif /* FIREBASE_PACKAGES_FIREBASE_STORAGE_FIREBASE_STORAGE_EXAMPLE_WINDOWS_RUNNER_FLUTTER_WINDOW_H_ */
+#endif /* FIREBASE_PACKAGES_FIREBASE_STORAGE_FIREBASE_STORAGE_EXAMPLE_WINDOWS_RUNNER_FLUTTER_WINDOW_H_ \
+        */
