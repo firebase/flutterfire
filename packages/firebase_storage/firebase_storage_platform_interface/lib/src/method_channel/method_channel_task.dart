@@ -4,7 +4,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -34,10 +33,7 @@ abstract class MethodChannelTask extends TaskPlatform {
               .receiveBroadcastStream();
       try {
         await for (final events in nativePlatformStream) {
-          final appName = events['appName'];
           final taskState = TaskState.values[events['taskState']];
-          developer.log(
-              'TaskMethodChannel, listen appName: $appName, taskState: $taskState');
 
           if (_snapshot.state != TaskState.canceled) {
             MethodChannelTaskSnapshot snapshot = MethodChannelTaskSnapshot(
