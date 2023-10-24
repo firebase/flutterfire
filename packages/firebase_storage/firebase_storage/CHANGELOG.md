@@ -1,3 +1,8 @@
+## 11.4.0
+
+ - **FEAT**(storage,windows): Add windows support ([#11617](https://github.com/firebase/flutterfire/issues/11617)). ([87ea02c8](https://github.com/firebase/flutterfire/commit/87ea02c8ae03eb351636cf202961ad0df6caebd8))
+ - **FEAT**(storage): move Storage to use Pigeon for platform channels ([#11521](https://github.com/firebase/flutterfire/issues/11521)). ([edddc1de](https://github.com/firebase/flutterfire/commit/edddc1def508d0c516534b80c13d41a919fd39bc))
+
 ## 11.3.1
 
  - Update a dependency to the latest release.

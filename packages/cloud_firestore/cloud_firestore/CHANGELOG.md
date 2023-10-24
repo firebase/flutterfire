@@ -1,3 +1,8 @@
+## 4.12.0
+
+ - **FIX**(firestore): cleaned up use of previous method channel ([#11758](https://github.com/firebase/flutterfire/issues/11758)). ([8cfc69bf](https://github.com/firebase/flutterfire/commit/8cfc69bf7c773fac26f12f01863e7853791fce8f))
+ - **FEAT**: bump Firebase iOS SDK `10.16.0` ([#11698](https://github.com/firebase/flutterfire/issues/11698)). ([666f90ea](https://github.com/firebase/flutterfire/commit/666f90ea1eb090ee3f2397c9ffde8ddaf934f36c))
+
 ## 4.11.0
 
  - **FIX**(ios): fix clashing filenames between Auth and Firestore ([#11731](https://github.com/firebase/flutterfire/issues/11731)). ([8770cafc](https://github.com/firebase/flutterfire/commit/8770cafccccb11607b5530311e3150ac08cd172e))
