@@ -1,3 +1,7 @@
+## 7.0.2
+
+ - Update a dependency to the latest release.
+
 ## 7.0.1
 
  - **FIX**(ios): fix clashing filenames between Auth and Firestore ([#11731](https://github.com/firebase/flutterfire/issues/11731)). ([8770cafc](https://github.com/firebase/flutterfire/commit/8770cafccccb11607b5530311e3150ac08cd172e))
