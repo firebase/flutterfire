@@ -44,7 +44,7 @@ dependencies:
   firebase_remote_config_platform_interface: ^1.4.10
   firebase_remote_config_web: ^1.4.10
   firebase_storage: ^11.4.0
-  firebase_storage_platform_interface: ^4.5.0
+  firebase_storage_platform_interface: ^5.0.0
   firebase_storage_web: ^3.6.11
   flutter:
     sdk: flutter
