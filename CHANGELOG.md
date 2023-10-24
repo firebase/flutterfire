@@ -11,7 +11,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 Packages with breaking changes:
 
- - There are no breaking changes in this release.
+ - [`firebase_storage_platform_interface` - `v5.0.0`](#firebase_storage_platform_interface---v500)
 
 Packages with other changes:
 
@@ -21,7 +21,6 @@ Packages with other changes:
  - [`firebase_auth` - `v4.12.0`](#firebase_auth---v4120)
  - [`firebase_core` - `v2.20.0`](#firebase_core---v2200)
  - [`firebase_storage` - `v11.4.0`](#firebase_storage---v1140)
- - [`firebase_storage_platform_interface` - `v4.5.0`](#firebase_storage_platform_interface---v450)
  - [`_flutterfire_internals` - `v1.3.10`](#_flutterfire_internals---v1310)
  - [`firebase_in_app_messaging` - `v0.7.4+2`](#firebase_in_app_messaging---v0742)
  - [`firebase_in_app_messaging_platform_interface` - `v0.2.4+10`](#firebase_in_app_messaging_platform_interface---v02410)
@@ -135,10 +134,10 @@ Packages with dependency updates only:
  - **FEAT**(storage,windows): Add windows support ([#11617](https://github.com/firebase/flutterfire/issues/11617)). ([87ea02c8](https://github.com/firebase/flutterfire/commit/87ea02c8ae03eb351636cf202961ad0df6caebd8))
  - **FEAT**(storage): move Storage to use Pigeon for platform channels ([#11521](https://github.com/firebase/flutterfire/issues/11521)). ([edddc1de](https://github.com/firebase/flutterfire/commit/edddc1def508d0c516534b80c13d41a919fd39bc))
 
-#### `firebase_storage_platform_interface` - `v4.5.0`
+#### `firebase_storage_platform_interface` - `v5.0.0`
 
  - **FEAT**(storage,windows): Add windows support ([#11617](https://github.com/firebase/flutterfire/issues/11617)). ([87ea02c8](https://github.com/firebase/flutterfire/commit/87ea02c8ae03eb351636cf202961ad0df6caebd8))
- - **FEAT**(storage): move Storage to use Pigeon for platform channels ([#11521](https://github.com/firebase/flutterfire/issues/11521)). ([edddc1de](https://github.com/firebase/flutterfire/commit/edddc1def508d0c516534b80c13d41a919fd39bc))
+ - **BREAKING** **FEAT**(storage): move Storage to use Pigeon for platform channels ([#11521](https://github.com/firebase/flutterfire/issues/11521)). ([edddc1de](https://github.com/firebase/flutterfire/commit/edddc1def508d0c516534b80c13d41a919fd39bc))
 
 
 ## 2023-10-19

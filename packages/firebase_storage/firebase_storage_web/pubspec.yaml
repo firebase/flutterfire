@@ -13,7 +13,7 @@ dependencies:
   async: ^2.5.0
   firebase_core: ^2.20.0
   firebase_core_web: ^2.8.1
-  firebase_storage_platform_interface: ^4.5.0
+  firebase_storage_platform_interface: ^5.0.0
   flutter:
     sdk: flutter
   flutter_web_plugins:
