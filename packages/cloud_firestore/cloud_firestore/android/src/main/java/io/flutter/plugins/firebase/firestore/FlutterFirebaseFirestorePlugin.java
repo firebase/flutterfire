@@ -199,11 +199,11 @@ public class FlutterFirebaseFirestorePlugin
               Tasks.await(firestore.terminate());
               FlutterFirebaseFirestorePlugin.destroyCachedFirebaseFirestoreInstanceForKey(
                   firestore);
-
-              removeEventListeners();
-
-              taskCompletionSource.setResult(null);
             }
+            removeEventListeners();
+
+            taskCompletionSource.setResult(null);
+
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
