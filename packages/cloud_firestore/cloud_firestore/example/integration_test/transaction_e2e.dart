@@ -5,6 +5,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -423,6 +424,33 @@ void runTransactionTests() {
         DocumentSnapshot<Map<String, dynamic>> snapshot2 =
             await documentReference2.get();
         expect(snapshot2.exists, isFalse);
+      });
+
+      testWidgets('should not fail to get if user is authentified', (_) async {
+        DocumentReference<Map<String, dynamic>> doc1 =
+            await initializeTest('transaction-authentified-1');
+
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: 'firestore@mail.com',
+          password: 'this-is-a-password',
+        );
+
+        await doc1.set({'test': 0});
+
+        final value = await firestore.runTransaction(
+          (Transaction transaction) async {
+            final value = await transaction.get(doc1);
+            final newValue = value['test'] + 1;
+            transaction.set(doc1, {
+              'test': newValue,
+            });
+
+            return newValue;
+          },
+          maxAttempts: 1,
+        );
+
+        expect(value, equals(1));
       });
     },
     skip: kIsWeb,
