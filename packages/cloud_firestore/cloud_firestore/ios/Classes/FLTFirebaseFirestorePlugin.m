@@ -621,34 +621,38 @@ FlutterStandardMethodCodec *_codec;
                      path:(nonnull NSString *)path
                completion:(nonnull void (^)(PigeonDocumentSnapshot *_Nullable,
                                             FlutterError *_Nullable))completion {
-  FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
-  FIRDocumentReference *document = [firestore documentWithPath:path];
+  // Dispatching to main thread allow us to ensure that the auth token are fetched in time
+  // for the transaction
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+    FIRDocumentReference *document = [firestore documentWithPath:path];
 
-  FIRTransaction *transaction = self->_transactions[transactionId];
+    FIRTransaction *transaction = self->_transactions[transactionId];
 
-  if (transaction == nil) {
-    completion(
-        nil,
-        [FlutterError
-            errorWithCode:@"missing-transaction"
-                  message:@"An error occurred while getting the native transaction. "
-                          @"It could be caused by a timeout in a preceding transaction operation."
-                  details:nil]);
-    return;
-  }
+    if (transaction == nil) {
+      completion(
+          nil,
+          [FlutterError
+              errorWithCode:@"missing-transaction"
+                    message:@"An error occurred while getting the native transaction. "
+                            @"It could be caused by a timeout in a preceding transaction operation."
+                    details:nil]);
+      return;
+    }
 
-  NSError *error = [[NSError alloc] init];
-  FIRDocumentSnapshot *snapshot = [transaction getDocument:document error:&error];
+    NSError *error = [[NSError alloc] init];
+    FIRDocumentSnapshot *snapshot = [transaction getDocument:document error:&error];
 
-  if (error != nil) {
-    completion(nil, [self convertToFlutterError:error]);
-  } else if (snapshot != nil) {
-    completion([FirestorePigeonParser toPigeonDocumentSnapshot:snapshot
-                                       serverTimestampBehavior:FIRServerTimestampBehaviorNone],
-               nil);
-  } else {
-    completion(nil, nil);
-  }
+    if (error != nil) {
+      completion(nil, [self convertToFlutterError:error]);
+    } else if (snapshot != nil) {
+      completion([FirestorePigeonParser toPigeonDocumentSnapshot:snapshot
+                                         serverTimestampBehavior:FIRServerTimestampBehaviorNone],
+                 nil);
+    } else {
+      completion(nil, nil);
+    }
+  });
 }
 
 - (void)transactionStoreResultTransactionId:(nonnull NSString *)transactionId
