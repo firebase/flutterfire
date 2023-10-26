@@ -60,15 +60,17 @@
         dispatch_time(DISPATCH_TIME_NOW, [self.timeout integerValue] * NSEC_PER_MSEC));
 
     if (timedOut) {
+      NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils
+          ErrorCodeAndMessageFromNSError:[NSError
+                                             errorWithDomain:FIRFirestoreErrorDomain
+                                                        code:FIRFirestoreErrorCodeDeadlineExceeded
+                                                    userInfo:@{}]];
+
       dispatch_async(dispatch_get_main_queue(), ^{
         events(@{
           @"error" : @{
-            @"code" : @"deadline-exceeded",
-            @"message" :
-                @"Deadline expired before operation could complete. For operations that change the "
-                @"state of the system, this error may be returned even if the operation has "
-                @"completed successfully. For example, a successful response from a server could "
-                @"have been delayed long enough for the deadline to expire.",
+            @"code" : codeAndMessage[0],
+            @"message" : codeAndMessage[1],
           }
         });
       });
@@ -113,7 +115,7 @@
   id transactionCompleteBlock = ^(id transactionResult, NSError *error) {
     FLTTransactionStreamHandler *strongSelf = weakSelf;
     if (error) {
-      NSArray *details = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
+     NSArray *details = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
 
       dispatch_async(dispatch_get_main_queue(), ^{
         events(@{
