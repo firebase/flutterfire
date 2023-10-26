@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -37,6 +38,7 @@ void main() {
 
       if (kUseFirestoreEmulator) {
         FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+        await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
       }
     });
 
