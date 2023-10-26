@@ -426,7 +426,9 @@ void runTransactionTests() {
         expect(snapshot2.exists, isFalse);
       });
 
-      testWidgets('should not fail to get if user is authentified', (_) async {
+      testWidgets(
+          'should not fail to complete transaction if user is authenticated',
+          (_) async {
         DocumentReference<Map<String, dynamic>> doc1 =
             await initializeTest('transaction-authentified-1');
 
