@@ -432,10 +432,17 @@ void runTransactionTests() {
         DocumentReference<Map<String, dynamic>> doc1 =
             await initializeTest('transaction-authentified-1');
 
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: 'firestore@mail.com',
-          password: 'this-is-a-password',
-        );
+        try {
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: 'firestore@mail.com',
+            password: 'this-is-a-password',
+          );
+        } catch (e) {
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: 'firestore@mail.com',
+            password: 'this-is-a-password',
+          );
+        }
 
         await doc1.set({'test': 0});
 
@@ -453,6 +460,8 @@ void runTransactionTests() {
         );
 
         expect(value, equals(1));
+
+        await FirebaseAuth.instance.signOut();
       });
     },
     skip: kIsWeb,
