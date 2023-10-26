@@ -115,7 +115,7 @@
   id transactionCompleteBlock = ^(id transactionResult, NSError *error) {
     FLTTransactionStreamHandler *strongSelf = weakSelf;
     if (error) {
-     NSArray *details = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
+      NSArray *details = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
 
       dispatch_async(dispatch_get_main_queue(), ^{
         events(@{
