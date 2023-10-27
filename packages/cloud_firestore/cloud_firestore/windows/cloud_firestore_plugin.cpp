@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-#pragma comment(lib, \
-                "rpcrt4.lib")  // UuidCreate - Minimum supported OS Win 2000
+#pragma comment( \
+        lib, "rpcrt4.lib")  // UuidCreate - Minimum supported OS Win 2000
 
 #include "cloud_firestore_plugin.h"
 
@@ -20,6 +20,7 @@
 #include <mutex>
 #include <sstream>
 
+#include "cloud_firestore/plugin_version.h"
 #include "firebase/app.h"
 #include "firebase/firestore.h"
 #include "firebase/firestore/filter.h"
@@ -38,6 +39,7 @@ using flutter::EncodableValue;
 
 namespace cloud_firestore_windows {
 
+static std::string kLibrarayName = "flutter-fire-fst";
 // static
 void CloudFirestorePlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows* registrar) {
@@ -53,6 +55,10 @@ void CloudFirestorePlugin::RegisterWithRegistrar(
   FirebaseFirestoreHostApi::SetUp(registrar->messenger(), plugin.get());
 
   registrar->AddPlugin(std::move(plugin));
+
+  // Register for platform logging
+  App::RegisterLibrary(kLibrarayName.c_str(), getPluginVersion().c_str(),
+                       nullptr);
 }
 
 firebase::firestore::FieldValue CloudFirestorePlugin::ConvertToFieldValue(
