@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
+import 'package:firebase_analytics_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
@@ -32,6 +33,9 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_analytics');
+
+  // Api made with Pigeon
+  final _api = FirebaseAnalyticsHostApi();
 
   @override
   FirebaseAnalyticsPlatform delegateFor({required FirebaseApp app}) {
@@ -127,6 +131,18 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
         'Analytics#setUserId',
         <String, String?>{'userId': id},
       );
+    } catch (e, s) {
+      convertPlatformException(e, s);
+    }
+  }
+
+  @override
+  Future<void> initiateOnDeviceConversionMeasurementWithEmailAddress(
+    String emailAddress,
+  ) {
+    try {
+      return _api
+          .initiateOnDeviceConversionMeasurementWithEmailAddress(emailAddress);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
