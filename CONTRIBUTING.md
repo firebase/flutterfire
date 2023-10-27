@@ -60,8 +60,9 @@ plugins, examples and tests to build from the local clone project.
 ### Use
 
 FlutterFire uses [pigeon](https://github.com/flutter/packages/tree/main/packages/pigeon) to generate the `MethodChannel` API layer between Dart and the native platforms.
-To modify the messages sent with Pigeon (i.e. API code between Dart and native platforms), you can modify the `pigeons/messages.dart` file in the corresponding folder and regenerate the code running the below noted melos command.
+To modify the messages sent with Pigeon (i.e. API code between Dart and native platforms), you can modify the `pigeons/messages.dart` file in the corresponding folder. In case the package you're working on doesn't have a pigeons folder (located in `*_platform_interface`) you can copy paste it from one of the other places where it does exist and then modify it as you need.
 
+After creating or modifying pigeons/messages.dart regenerate the code running the below noted melos command.
 
 ```
 melos run generate:pigeon

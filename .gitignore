@@ -76,3 +76,7 @@ firebase-debug.log
 firestore-debug.log
 database-debug.log
 ui-debug.log
+
+packages/firebase_analytics/firebase_analytics_platform_interface/.fvm/flutter_sdk
+
+packages/firebase_analytics/firebase_analytics_platform_interface/.fvm/fvm_config.json

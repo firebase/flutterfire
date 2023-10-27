@@ -176,7 +176,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }
 
   /// Sends the email address, which is used for ads conversion measurement, without allowing any personally
-  /// identifiable information to leave the user device.
+  /// identifiable information to leave the user device. (Only available for ios)
   ///
   /// See:
   ///
@@ -184,6 +184,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> initiateOnDeviceConversionMeasurementWithEmailAddress(
     String emailAddress,
   ) async {
+    if (!Platform.isIOS) {
+      return;
+    }
     await _delegate
         .initiateOnDeviceConversionMeasurementWithEmailAddress(emailAddress);
   }
