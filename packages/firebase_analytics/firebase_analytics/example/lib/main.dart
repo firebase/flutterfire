@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -84,6 +85,23 @@ class _MyHomePageState extends State<MyHomePage> {
         'bool': true.toString(),
       });
       setMessage('setDefaultEventParameters succeeded');
+    }
+  }
+
+  Future<void> initiateOnDeviceConversionMeasurementWithEmailAddress() async {
+    if (!Platform.isIOS) {
+      setMessage(
+        '"setDefaultEventParameters()" is only supported on iOs',
+      );
+    } else {
+      await widget.analytics
+          .initiateOnDeviceConversionMeasurementWithEmailAddress(
+        'test@email.com',
+      );
+
+      setMessage(
+        'initiateOnDeviceConversionMeasurementWithEmailAddress succeeded',
+      );
     }
   }
 
@@ -352,6 +370,12 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialButton(
             onPressed: _setDefaultEventParameters,
             child: const Text('Test setDefaultEventParameters'),
+          ),
+          MaterialButton(
+            onPressed: initiateOnDeviceConversionMeasurementWithEmailAddress,
+            child: const Text(
+              'Test initiateOnDeviceConversionMeasurementWithEmailAddress',
+            ),
           ),
           Text(
             _message,

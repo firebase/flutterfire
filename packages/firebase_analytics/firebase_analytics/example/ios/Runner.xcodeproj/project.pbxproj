@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,21 +17,9 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		A0CC87652AE80E0200271E94 /* GoogleAppMeasurementOnDeviceConversion.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0CC87642AE80E0200271E94 /* GoogleAppMeasurementOnDeviceConversion.xcframework */; };
 		E1D20ECD490B7CE4199CAC43 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 982A23A68A97522ECCDC0270 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
@@ -51,6 +39,9 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		982A23A68A97522ECCDC0270 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A0CC875D2AE80ADE00271E94 /* GoogleAppMeasurement.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleAppMeasurement.xcframework; path = Pods/GoogleAppMeasurement/Frameworks/GoogleAppMeasurement.xcframework; sourceTree = "<group>"; };
+		A0CC87602AE80B1F00271E94 /* GoogleAppMeasurementIdentitySupport.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleAppMeasurementIdentitySupport.xcframework; path = Pods/GoogleAppMeasurement/Frameworks/GoogleAppMeasurementIdentitySupport.xcframework; sourceTree = "<group>"; };
+		A0CC87642AE80E0200271E94 /* GoogleAppMeasurementOnDeviceConversion.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleAppMeasurementOnDeviceConversion.xcframework; path = Pods/GoogleAppMeasurementOnDeviceConversion/Frameworks/GoogleAppMeasurementOnDeviceConversion.xcframework; sourceTree = "<group>"; };
 		A12F9DA458F6E6E8483C89AF /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -59,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0CC87652AE80E0200271E94 /* GoogleAppMeasurementOnDeviceConversion.xcframework in Frameworks */,
 				366C1E85719C1EBACF2B5A3A /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -133,6 +125,9 @@
 		CF3B75C9A7D2FA2A4C99F110 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A0CC87642AE80E0200271E94 /* GoogleAppMeasurementOnDeviceConversion.xcframework */,
+				A0CC87602AE80B1F00271E94 /* GoogleAppMeasurementIdentitySupport.xcframework */,
+				A0CC875D2AE80ADE00271E94 /* GoogleAppMeasurement.xcframework */,
 				68E5CB5E06702596AF56A313 /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
@@ -150,7 +145,6 @@
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
-				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				D575413CF7B0DE447DD5DD8A /* [CP] Embed Pods Frameworks */,
 			);
@@ -216,6 +210,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -230,6 +225,7 @@
 		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
