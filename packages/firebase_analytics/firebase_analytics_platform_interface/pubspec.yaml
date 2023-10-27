@@ -20,3 +20,4 @@ dev_dependencies:
   firebase_core_platform_interface: ^5.0.0
   flutter_test:
     sdk: flutter
+  pigeon: ^11.0.1
