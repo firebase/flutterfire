@@ -39,7 +39,7 @@ using flutter::EncodableValue;
 
 namespace cloud_firestore_windows {
 
-static std::string kLibrarayName = "flutter-fire-fst";
+static std::string kLibraryName = "flutter-fire-fst";
 // static
 void CloudFirestorePlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows* registrar) {
