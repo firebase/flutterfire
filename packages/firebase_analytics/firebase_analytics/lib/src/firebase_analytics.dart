@@ -178,6 +178,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// Sends the email address, which is used for ads conversion measurement, without allowing any personally
   /// identifiable information to leave the user device. (Only available for ios)
   ///
+  /// Set '$FirebaseAnalyticsGoogleAppMeasurementOnDeviceConversion = true' in your podfile
+  /// to enable this feature.
+  ///
   /// See:
   ///
   /// * https://firebase.google.com/docs/tutorials/ads-ios-on-device-measurement/step-3
