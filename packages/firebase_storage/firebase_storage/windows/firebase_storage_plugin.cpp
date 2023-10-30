@@ -48,7 +48,7 @@ using flutter::EncodableValue;
 
 namespace firebase_storage_windows {
 
-static std::string kLibrarayName = "flutter-fire-gcs";
+static std::string kLibraryName = "flutter-fire-gcs";
 static std::string kStorageMethodChannelName =
     "plugins.flutter.io/firebase_storage";
 static std::string kStorageTaskEventName = "taskEvent";
