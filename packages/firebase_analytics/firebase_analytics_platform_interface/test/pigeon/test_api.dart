@@ -19,15 +19,19 @@ abstract class TestFirebaseAnalyticsHostApi {
   static const MessageCodec<Object?> codec = StandardMessageCodec();
 
   Future<void> initiateOnDeviceConversionMeasurementWithEmailAddress(
-      String emailAddress);
+    String emailAddress,
+  );
 
-  static void setup(TestFirebaseAnalyticsHostApi? api,
-      {BinaryMessenger? binaryMessenger}) {
+  static void setup(
+    TestFirebaseAnalyticsHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+  }) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurementWithEmailAddress',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurementWithEmailAddress',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -35,14 +39,19 @@ abstract class TestFirebaseAnalyticsHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurementWithEmailAddress was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurementWithEmailAddress was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_emailAddress = (args[0] as String?);
-          assert(arg_emailAddress != null,
-              'Argument for dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurementWithEmailAddress was null, expected non-null String.');
+          assert(
+            arg_emailAddress != null,
+            'Argument for dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurementWithEmailAddress was null, expected non-null String.',
+          );
           await api.initiateOnDeviceConversionMeasurementWithEmailAddress(
-              arg_emailAddress!);
+            arg_emailAddress!,
+          );
           return <Object?>[];
         });
       }
