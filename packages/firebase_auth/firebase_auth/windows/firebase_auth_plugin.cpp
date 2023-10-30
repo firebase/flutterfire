@@ -41,7 +41,7 @@ using ::firebase::auth::Auth;
 
 namespace firebase_auth_windows {
 
-static std::string kLibrarayName = "flutter-fire-auth";
+static std::string kLibraryName = "flutter-fire-auth";
 flutter::BinaryMessenger* FirebaseAuthPlugin::binaryMessenger = nullptr;
 
 // static
