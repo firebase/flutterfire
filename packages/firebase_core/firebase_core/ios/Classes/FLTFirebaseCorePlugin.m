@@ -42,10 +42,10 @@
     //
     // Default app exists check is for backwards compatibility of legacy
     // FlutterFire plugins that call [FIRApp configure]; themselves internally.
-    FIROptions *options = [FIROptions defaultOptions];
-    if (options != nil && [FIRApp allApps][@"__FIRAPP_DEFAULT"] == nil) {
-      [FIRApp configureWithOptions:options];
-    }
+    // FIROptions *options = [FIROptions defaultOptions];
+    // if (options != nil && [FIRApp allApps][@"__FIRAPP_DEFAULT"] == nil) {
+    //   [FIRApp configureWithOptions:options];
+    // }
   });
 
   return instance;
