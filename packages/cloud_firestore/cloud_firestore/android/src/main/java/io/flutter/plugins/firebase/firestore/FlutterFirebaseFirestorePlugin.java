@@ -282,10 +282,8 @@ public class FlutterFirebaseFirestorePlugin
         Long receivedCacheSizeBytes = pigeonApp.getSettings().getCacheSizeBytes();
         // This is the maximum amount of cache allowed.
         Long cacheSizeBytes = 104857600L;
-        if (receivedCacheSizeBytes != null) {
-          if (receivedCacheSizeBytes != -1) {
-            cacheSizeBytes = receivedCacheSizeBytes;
-          }
+        if (receivedCacheSizeBytes != null && receivedCacheSizeBytes != -1) {
+          cacheSizeBytes = receivedCacheSizeBytes;
         }
         builder.setLocalCacheSettings(
             PersistentCacheSettings.newBuilder().setSizeBytes(cacheSizeBytes).build());
