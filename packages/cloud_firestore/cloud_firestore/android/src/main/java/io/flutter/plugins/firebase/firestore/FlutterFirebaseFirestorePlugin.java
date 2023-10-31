@@ -280,7 +280,8 @@ public class FlutterFirebaseFirestorePlugin
     if (pigeonApp.getSettings().getPersistenceEnabled() != null) {
       if (pigeonApp.getSettings().getPersistenceEnabled()) {
         Long receivedCacheSizeBytes = pigeonApp.getSettings().getCacheSizeBytes();
-        // This is the maximum amount of cache allowed.
+        // This is the maximum amount of cache allowed:
+        // https://firebase.google.com/docs/firestore/manage-data/enable-offline#configure_cache_size
         Long cacheSizeBytes = 104857600L;
         if (receivedCacheSizeBytes != null && receivedCacheSizeBytes != -1) {
           cacheSizeBytes = receivedCacheSizeBytes;
