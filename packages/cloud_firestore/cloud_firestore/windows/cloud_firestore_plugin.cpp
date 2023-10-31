@@ -57,7 +57,7 @@ void CloudFirestorePlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
 
   // Register for platform logging
-  App::RegisterLibrary(kLibrarayName.c_str(), getPluginVersion().c_str(),
+  App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
                        nullptr);
 }
 

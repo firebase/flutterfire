@@ -57,7 +57,7 @@ void FirebaseAuthPlugin::RegisterWithRegistrar(
   binaryMessenger = registrar->messenger();
 
   // Register for platform logging
-  App::RegisterLibrary(kLibrarayName.c_str(), getPluginVersion().c_str(),
+  App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
                        nullptr);
 }
 
