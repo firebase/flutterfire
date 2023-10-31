@@ -3,6 +3,126 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-10-31
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.12.2`](#cloud_firestore---v4122)
+ - [`firebase_core` - `v2.21.0`](#firebase_core---v2210)
+ - [`firebase_storage_platform_interface` - `v5.0.1`](#firebase_storage_platform_interface---v501)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.74`](#cloud_firestore_odm---v100-dev74)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.74`](#cloud_firestore_odm_generator---v100-dev74)
+ - [`firebase_in_app_messaging` - `v0.7.4+3`](#firebase_in_app_messaging---v0743)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.4+11`](#firebase_in_app_messaging_platform_interface---v02411)
+ - [`_flutterfire_internals` - `v1.3.11`](#_flutterfire_internals---v1311)
+ - [`firebase_auth` - `v4.12.1`](#firebase_auth---v4121)
+ - [`firebase_auth_platform_interface` - `v7.0.3`](#firebase_auth_platform_interface---v703)
+ - [`firebase_auth_web` - `v5.8.6`](#firebase_auth_web---v586)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.6+11`](#firebase_dynamic_links_platform_interface---v02611)
+ - [`firebase_remote_config` - `v4.3.3`](#firebase_remote_config---v433)
+ - [`firebase_remote_config_platform_interface` - `v1.4.11`](#firebase_remote_config_platform_interface---v1411)
+ - [`firebase_dynamic_links` - `v5.4.3`](#firebase_dynamic_links---v543)
+ - [`firebase_remote_config_web` - `v1.4.11`](#firebase_remote_config_web---v1411)
+ - [`cloud_firestore_web` - `v3.8.3`](#cloud_firestore_web---v383)
+ - [`cloud_firestore_platform_interface` - `v6.0.3`](#cloud_firestore_platform_interface---v603)
+ - [`firebase_app_installations_web` - `v0.1.3+11`](#firebase_app_installations_web---v01311)
+ - [`firebase_messaging_web` - `v3.5.12`](#firebase_messaging_web---v3512)
+ - [`firebase_messaging_platform_interface` - `v4.5.12`](#firebase_messaging_platform_interface---v4512)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+11`](#firebase_app_installations_platform_interface---v01411)
+ - [`firebase_app_installations` - `v0.2.4+3`](#firebase_app_installations---v0243)
+ - [`firebase_messaging` - `v14.7.3`](#firebase_messaging---v1473)
+ - [`firebase_database_web` - `v0.2.3+11`](#firebase_database_web---v02311)
+ - [`firebase_database` - `v10.3.3`](#firebase_database---v1033)
+ - [`firebase_database_platform_interface` - `v0.2.5+11`](#firebase_database_platform_interface---v02511)
+ - [`firebase_analytics_web` - `v0.5.5+5`](#firebase_analytics_web---v0555)
+ - [`firebase_crashlytics_platform_interface` - `v3.6.11`](#firebase_crashlytics_platform_interface---v3611)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.4+11`](#firebase_ml_model_downloader_platform_interface---v01411)
+ - [`firebase_analytics` - `v10.6.3`](#firebase_analytics---v1063)
+ - [`firebase_ml_model_downloader` - `v0.2.4+3`](#firebase_ml_model_downloader---v0243)
+ - [`firebase_crashlytics` - `v3.4.3`](#firebase_crashlytics---v343)
+ - [`firebase_analytics_platform_interface` - `v3.7.5`](#firebase_analytics_platform_interface---v375)
+ - [`firebase_app_check` - `v0.2.1+3`](#firebase_app_check---v0213)
+ - [`firebase_app_check_platform_interface` - `v0.1.0+5`](#firebase_app_check_platform_interface---v0105)
+ - [`firebase_storage_web` - `v3.6.12`](#firebase_storage_web---v3612)
+ - [`firebase_app_check_web` - `v0.1.0+5`](#firebase_app_check_web---v0105)
+ - [`cloud_functions_platform_interface` - `v5.5.6`](#cloud_functions_platform_interface---v556)
+ - [`cloud_functions` - `v4.5.3`](#cloud_functions---v453)
+ - [`firebase_performance_web` - `v0.1.4+11`](#firebase_performance_web---v01411)
+ - [`firebase_performance_platform_interface` - `v0.1.4+11`](#firebase_performance_platform_interface---v01411)
+ - [`cloud_functions_web` - `v4.6.6`](#cloud_functions_web---v466)
+ - [`firebase_storage` - `v11.4.1`](#firebase_storage---v1141)
+ - [`firebase_performance` - `v0.9.3+3`](#firebase_performance---v0933)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_firestore_odm` - `v1.0.0-dev.74`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.74`
+ - `firebase_in_app_messaging` - `v0.7.4+3`
+ - `firebase_in_app_messaging_platform_interface` - `v0.2.4+11`
+ - `_flutterfire_internals` - `v1.3.11`
+ - `firebase_auth` - `v4.12.1`
+ - `firebase_auth_platform_interface` - `v7.0.3`
+ - `firebase_auth_web` - `v5.8.6`
+ - `firebase_dynamic_links_platform_interface` - `v0.2.6+11`
+ - `firebase_remote_config` - `v4.3.3`
+ - `firebase_remote_config_platform_interface` - `v1.4.11`
+ - `firebase_dynamic_links` - `v5.4.3`
+ - `firebase_remote_config_web` - `v1.4.11`
+ - `cloud_firestore_web` - `v3.8.3`
+ - `cloud_firestore_platform_interface` - `v6.0.3`
+ - `firebase_app_installations_web` - `v0.1.3+11`
+ - `firebase_messaging_web` - `v3.5.12`
+ - `firebase_messaging_platform_interface` - `v4.5.12`
+ - `firebase_app_installations_platform_interface` - `v0.1.4+11`
+ - `firebase_app_installations` - `v0.2.4+3`
+ - `firebase_messaging` - `v14.7.3`
+ - `firebase_database_web` - `v0.2.3+11`
+ - `firebase_database` - `v10.3.3`
+ - `firebase_database_platform_interface` - `v0.2.5+11`
+ - `firebase_analytics_web` - `v0.5.5+5`
+ - `firebase_crashlytics_platform_interface` - `v3.6.11`
+ - `firebase_ml_model_downloader_platform_interface` - `v0.1.4+11`
+ - `firebase_analytics` - `v10.6.3`
+ - `firebase_ml_model_downloader` - `v0.2.4+3`
+ - `firebase_crashlytics` - `v3.4.3`
+ - `firebase_analytics_platform_interface` - `v3.7.5`
+ - `firebase_app_check` - `v0.2.1+3`
+ - `firebase_app_check_platform_interface` - `v0.1.0+5`
+ - `firebase_storage_web` - `v3.6.12`
+ - `firebase_app_check_web` - `v0.1.0+5`
+ - `cloud_functions_platform_interface` - `v5.5.6`
+ - `cloud_functions` - `v4.5.3`
+ - `firebase_performance_web` - `v0.1.4+11`
+ - `firebase_performance_platform_interface` - `v0.1.4+11`
+ - `cloud_functions_web` - `v4.6.6`
+ - `firebase_storage` - `v11.4.1`
+ - `firebase_performance` - `v0.9.3+3`
+
+---
+
+#### `cloud_firestore` - `v4.12.2`
+
+ - **FIX**(firestore,android): `cacheSizeBytes` value cannot be null when setting `persistenceEnabled` ([#11794](https://github.com/firebase/flutterfire/issues/11794)). ([a10399eb](https://github.com/firebase/flutterfire/commit/a10399eb1cad2207eba7d2efa64267c9d0176b4a))
+
+#### `firebase_core` - `v2.21.0`
+
+ - **FEAT**: bump Firebase android SDK BoM `32.5.0` ([#11803](https://github.com/firebase/flutterfire/issues/11803)). ([adf98ea4](https://github.com/firebase/flutterfire/commit/adf98ea49bfb1c601f452f00c2d0dd74ada858f2))
+
+#### `firebase_storage_platform_interface` - `v5.0.1`
+
+ - **FIX**(storage,windows): add missing c++ generated files into pigeon template ([#11799](https://github.com/firebase/flutterfire/issues/11799)). ([ad9e018b](https://github.com/firebase/flutterfire/commit/ad9e018bf7943e7b300aa5adea9845a306c1f12d))
+
+
 ## 2023-10-26
 
 ### Changes

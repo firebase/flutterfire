@@ -1,3 +1,7 @@
+## 5.0.1
+
+ - **FIX**(storage,windows): add missing c++ generated files into pigeon template ([#11799](https://github.com/firebase/flutterfire/issues/11799)). ([ad9e018b](https://github.com/firebase/flutterfire/commit/ad9e018bf7943e7b300aa5adea9845a306c1f12d))
+
 ## 5.0.0
 
 > Note: This release has breaking changes.

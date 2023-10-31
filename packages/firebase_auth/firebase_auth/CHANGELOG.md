@@ -1,3 +1,7 @@
+## 4.12.1
+
+ - Update a dependency to the latest release.
+
 ## 4.12.0
 
  - **FEAT**(storage,windows): Add windows support ([#11617](https://github.com/firebase/flutterfire/issues/11617)). ([87ea02c8](https://github.com/firebase/flutterfire/commit/87ea02c8ae03eb351636cf202961ad0df6caebd8))
