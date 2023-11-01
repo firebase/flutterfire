@@ -9,13 +9,13 @@
 
 #include "firebase/app.h"
 #include "firebase/future.h"
-#include "firebase/log.h"
 #include "firebase/storage.h"
 #include "firebase/storage/controller.h"
 #include "firebase/storage/listener.h"
 #include "firebase/storage/metadata.h"
 #include "firebase/storage/storage_reference.h"
 #include "firebase_core/firebase_core_plugin_c_api.h"
+#include "firebase_storage/plugin_version.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -48,6 +48,7 @@ using flutter::EncodableValue;
 
 namespace firebase_storage_windows {
 
+static std::string kLibraryName = "flutter-fire-gcs";
 static std::string kStorageMethodChannelName =
     "plugins.flutter.io/firebase_storage";
 static std::string kStorageTaskEventName = "taskEvent";
@@ -58,7 +59,9 @@ void FirebaseStoragePlugin::RegisterWithRegistrar(
   messenger_ = registrar->messenger();
   FirebaseStorageHostApi::SetUp(registrar->messenger(), plugin.get());
   registrar->AddPlugin(std::move(plugin));
-  firebase::SetLogLevel(firebase::kLogLevelVerbose);
+  // Register for platform logging
+  App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
+                       nullptr);
 }
 
 FirebaseStoragePlugin::FirebaseStoragePlugin() {}
