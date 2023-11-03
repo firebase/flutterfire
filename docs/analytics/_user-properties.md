@@ -20,7 +20,7 @@ To set a user property, follow these steps:
 1. Create a custom definition for the user property in the
   [**Custom Definitions** page](https://console.firebase.google.com/project/_/analytics/userproperty){: .external}
   of _{{analytics}}_ in the {{name_appmanager}}. For more information, see
-  [Custom dimensions and metrics](//support.google.com/firebase/answer/6317519).
+  [Custom dimensions and metrics](https://support.google.com/analytics/answer/10075209).
 1. Set a user property in your app with the `setUserProperty()` method.
 
 The following example adds a hypothetical favorite food property, which
