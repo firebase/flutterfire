@@ -730,7 +730,6 @@ public class FlutterFirebaseFirestorePlugin
         });
   }
 
-  @SuppressLint("RestrictedApi")
   @Override
   public void aggregateQuery(@NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app, @NonNull String path, @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters, @NonNull GeneratedAndroidFirebaseFirestore.AggregateSource source, @NonNull List<GeneratedAndroidFirebaseFirestore.AggregateQuery> queries, @NonNull GeneratedAndroidFirebaseFirestore.Result<List<GeneratedAndroidFirebaseFirestore.AggregateQueryResponse>> result) {
     Query query =
@@ -755,6 +754,7 @@ public class FlutterFirebaseFirestorePlugin
       }
     }
 
+    assert query != null;
     aggregateQuery = query.aggregate(aggregateFields.get(0), aggregateFields.subList(1, aggregateFields.size()).toArray(new AggregateField[0]));
 
     cachedThreadPool.execute(
@@ -777,7 +777,7 @@ public class FlutterFirebaseFirestorePlugin
                 assert queryRequest.getField() != null;
                 GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder builderSum = new GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder();
                 builderSum.setType(GeneratedAndroidFirebaseFirestore.AggregateType.SUM);
-                builderSum.setValue((Double) Objects.requireNonNull(aggregateQuerySnapshot.get(sum(queryRequest.getField()))));
+                builderSum.setValue(((Number) Objects.requireNonNull(aggregateQuerySnapshot.get(sum(queryRequest.getField())))).doubleValue());
                 builderSum.setField(queryRequest.getField());
 
                 aggregateResponse.add(builderSum.build());
