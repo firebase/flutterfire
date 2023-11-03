@@ -640,7 +640,7 @@ FlutterStandardMethodCodec *_codec;
       return;
     }
 
-    NSError *error = [[NSError alloc] init];
+    NSError *error = nil;
     FIRDocumentSnapshot *snapshot = [transaction getDocument:document error:&error];
 
     if (error != nil) {
