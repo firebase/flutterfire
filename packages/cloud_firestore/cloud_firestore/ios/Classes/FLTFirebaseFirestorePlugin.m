@@ -743,7 +743,6 @@ FlutterStandardMethodCodec *_codec;
       return;
     }
 
-    FIRAggregateQuery *aggregateQuery;
     NSMutableArray<FIRAggregateField *> *aggregateFields = [[NSMutableArray<FIRAggregateField *> alloc] init];
 
     for (AggregateQuery *queryRequest in queries) {
@@ -762,7 +761,8 @@ FlutterStandardMethodCodec *_codec;
                 break;
         }
     }
-
+    
+    FIRAggregateQuery *aggregateQuery = [query aggregate:aggregateFields];
 
     [aggregateQuery aggregationWithSource:FIRAggregateSourceServer
                                completion:^(FIRAggregateQuerySnapshot *_Nullable snapshot,
@@ -776,15 +776,21 @@ FlutterStandardMethodCodec *_codec;
         for (AggregateQuery *queryRequest in queries) {
             switch (queryRequest.type) {
                 case AggregateTypeCount: {
-                    [aggregateResponses addObject:[AggregateQueryResponse makeWithType:AggregateTypeCount field:nil value:snapshot.count]];
+                    double doubleValue = [snapshot.count doubleValue];
+                    
+                    [aggregateResponses addObject:[AggregateQueryResponse makeWithType:AggregateTypeCount field:nil value:[NSNumber numberWithDouble:doubleValue]]];
                     break;
                 }
                 case AggregateTypeSum: {
-                    [aggregateResponses addObject:[AggregateQueryResponse makeWithType:AggregateTypeSum field:queryRequest.field value:[snapshot valueForAggregateField:[FIRAggregateField aggregateFieldForSumOfField:[queryRequest field]]]]];
+                    double doubleValue = [[snapshot valueForAggregateField:[FIRAggregateField aggregateFieldForSumOfField:[queryRequest field]]] doubleValue];
+
+                    [aggregateResponses addObject:[AggregateQueryResponse makeWithType:AggregateTypeSum field:queryRequest.field value:[NSNumber numberWithDouble:doubleValue]]];
                     break;
                 }
                 case AggregateTypeAverage: {
-                    [aggregateResponses addObject:[AggregateQueryResponse makeWithType:AggregateTypeAverage field:queryRequest.field value:[snapshot valueForAggregateField:[FIRAggregateField aggregateFieldForAverageOfField:[queryRequest field]]]]];
+                    double doubleValue = [[snapshot valueForAggregateField:[FIRAggregateField aggregateFieldForAverageOfField:[queryRequest field]]] doubleValue];
+
+                    [aggregateResponses addObject:[AggregateQueryResponse makeWithType:AggregateTypeAverage field:queryRequest.field value:[NSNumber numberWithDouble:doubleValue]]];
                     break;
                 }
             }

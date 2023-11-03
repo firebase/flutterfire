@@ -20,30 +20,6 @@ Future<void> main() async {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
 
-  // Count the number of movies
-  final count = await FirebaseFirestore.instance
-      .collection('firestore-example-app')
-      .count()
-      .get();
-
-  print('Count: ${count.count}');
-
-  // Average the number of likes
-  final average = await FirebaseFirestore.instance
-      .collection('firestore-example-app')
-      .average('likes')
-      .get();
-
-  print('Average: ${average.getAverage('likes')}');
-
-  // Sum the number of likes
-  final sum = await FirebaseFirestore.instance
-      .collection('firestore-example-app')
-      .sum('likes')
-      .get();
-
-  print('Sum: ${sum.getSum('likes')}');
-
   runApp(FirestoreExampleApp());
 }
 
@@ -174,12 +150,48 @@ class _FilmListState extends State<FilmList> {
             },
           ),
           PopupMenuButton<String>(
-            onSelected: (_) => _resetLikes(),
+            onSelected: (value) async {
+              switch (value) {
+                case 'reset_likes':
+                  return _resetLikes();
+                case 'aggregate':
+                  // Count the number of movies
+                  final count = await FirebaseFirestore.instance
+                      .collection('firestore-example-app')
+                      .count()
+                      .get();
+
+                  print('Count: ${count.count}');
+
+                  // Average the number of likes
+                  final average = await FirebaseFirestore.instance
+                      .collection('firestore-example-app')
+                      .average('likes')
+                      .get();
+
+                  print('Average: ${average.getAverage('likes')}');
+
+                  // Sum the number of likes
+                  final sum = await FirebaseFirestore.instance
+                      .collection('firestore-example-app')
+                      .sum('likes')
+                      .get();
+
+                  print('Sum: ${sum.getSum('likes')}');
+                  return;
+                default:
+                  return;
+              }
+            },
             itemBuilder: (BuildContext context) {
               return [
                 const PopupMenuItem(
                   value: 'reset_likes',
                   child: Text('Reset like counts (WriteBatch)'),
+                ),
+                const PopupMenuItem(
+                  value: 'aggregate',
+                  child: Text('Get aggregate data'),
                 ),
               ];
             },

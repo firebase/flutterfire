@@ -659,7 +659,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
-@interface FirebaseFirestoreHostApiCodecWriter : FlutterStandardWriter
+@interface FirebaseFirestoreHostApiCodecWriter : FLTFirebaseFirestoreWriter
 @end
 @implementation FirebaseFirestoreHostApiCodecWriter
 - (void)writeValue:(id)value {
@@ -708,7 +708,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 }
 @end
 
-@interface FirebaseFirestoreHostApiCodecReaderWriter : FLTFirebaseFirestoreWriter
+@interface FirebaseFirestoreHostApiCodecReaderWriter : FlutterStandardReaderWriter
 @end
 @implementation FirebaseFirestoreHostApiCodecReaderWriter
 - (FlutterStandardWriter *)writerWithData:(NSMutableData *)data {
