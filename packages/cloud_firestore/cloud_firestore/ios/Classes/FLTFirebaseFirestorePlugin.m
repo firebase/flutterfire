@@ -276,40 +276,6 @@ FlutterStandardMethodCodec *_codec;
   return [FlutterError errorWithCode:code message:message details:details];
 }
 
-- (void)aggregateQueryCountApp:(nonnull FirestorePigeonFirebaseApp *)app
-                          path:(nonnull NSString *)path
-                    parameters:(nonnull PigeonQueryParameters *)parameters
-                        source:(AggregateSource)source
-                    completion:
-                        (nonnull void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion {
-  FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
-
-  FIRQuery *query = [FirestorePigeonParser parseQueryWithParameters:parameters
-                                                          firestore:firestore
-                                                               path:path
-                                                  isCollectionGroup:NO];
-  if (query == nil) {
-    completion(nil, [FlutterError errorWithCode:@"error-parsing"
-                                        message:@"An error occurred while parsing query arguments, "
-                                                @"this is most likely an error with this SDK."
-                                        details:nil]);
-    return;
-  }
-
-  FIRAggregateQuery *aggregateQuery = [query count];
-
-  [aggregateQuery aggregationWithSource:FIRAggregateSourceServer
-                             completion:^(FIRAggregateQuerySnapshot *_Nullable snapshot,
-                                          NSError *_Nullable error) {
-                               if (error != nil) {
-                                 completion(nil, [self convertToFlutterError:error]);
-                               } else {
-                                 double myDoubleValue = [snapshot.count doubleValue];
-                                 completion([NSNumber numberWithDouble:myDoubleValue], nil);
-                               }
-                             }];
-}
-
 - (void)clearPersistenceApp:(nonnull FirestorePigeonFirebaseApp *)app
                  completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
@@ -761,5 +727,73 @@ FlutterStandardMethodCodec *_codec;
                                     streamHandler:handler],
              nil);
 }
+
+- (void)aggregateQueryApp:(nonnull FirestorePigeonFirebaseApp *)app path:(nonnull NSString *)path parameters:(nonnull PigeonQueryParameters *)parameters source:(AggregateSource)source queries:(nonnull NSArray<AggregateQuery *> *)queries completion:(nonnull void (^)(NSArray<AggregateQueryResponse *> * _Nullable, FlutterError * _Nullable))completion { 
+    FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+
+    FIRQuery *query = [FirestorePigeonParser parseQueryWithParameters:parameters
+                                                            firestore:firestore
+                                                                 path:path
+                                                    isCollectionGroup:NO];
+    if (query == nil) {
+      completion(nil, [FlutterError errorWithCode:@"error-parsing"
+                                          message:@"An error occurred while parsing query arguments, "
+                                                  @"this is most likely an error with this SDK."
+                                          details:nil]);
+      return;
+    }
+
+    FIRAggregateQuery *aggregateQuery;
+    NSMutableArray<FIRAggregateField *> *aggregateFields = [[NSMutableArray<FIRAggregateField *> alloc] init];
+
+    for (AggregateQuery *queryRequest in queries) {
+        switch ([queryRequest type]) {
+            case AggregateTypeCount:
+                [aggregateFields addObject:[FIRAggregateField aggregateFieldForCount]];
+                break;
+            case AggregateTypeSum:
+                [aggregateFields addObject:[FIRAggregateField aggregateFieldForSumOfField:[queryRequest field]]];
+                break;
+            case AggregateTypeAverage:
+                [aggregateFields addObject:[FIRAggregateField aggregateFieldForAverageOfField:[queryRequest field]]];
+                break;
+            default:
+                // Handle the default case
+                break;
+        }
+    }
+
+
+    [aggregateQuery aggregationWithSource:FIRAggregateSourceServer
+                               completion:^(FIRAggregateQuerySnapshot *_Nullable snapshot,
+                                            NSError *_Nullable error) {
+                                 if (error != nil) {
+                                   completion(nil, [self convertToFlutterError:error]);
+                                     return;
+                                 }
+        NSMutableArray<AggregateQueryResponse *>* aggregateResponses = [[NSMutableArray alloc] init];
+
+        for (AggregateQuery *queryRequest in queries) {
+            switch (queryRequest.type) {
+                case AggregateTypeCount: {
+                    [aggregateResponses addObject:[AggregateQueryResponse makeWithType:AggregateTypeCount field:nil value:snapshot.count]];
+                    break;
+                }
+                case AggregateTypeSum: {
+                    [aggregateResponses addObject:[AggregateQueryResponse makeWithType:AggregateTypeSum field:queryRequest.field value:[snapshot valueForAggregateField:[FIRAggregateField aggregateFieldForSumOfField:[queryRequest field]]]]];
+                    break;
+                }
+                case AggregateTypeAverage: {
+                    [aggregateResponses addObject:[AggregateQueryResponse makeWithType:AggregateTypeAverage field:queryRequest.field value:[snapshot valueForAggregateField:[FIRAggregateField aggregateFieldForAverageOfField:[queryRequest field]]]]];
+                    break;
+                }
+            }
+        }
+
+        completion(aggregateResponses, nil);
+    }];
+
+}
+
 
 @end
