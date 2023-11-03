@@ -34,7 +34,7 @@ Future<void> main() async {
       .average('likes')
       .get();
 
-  print('Average: $average');
+  print('Average: ${average.getAverage('likes')}');
 
   // Sum the number of likes
   final sum = await FirebaseFirestore.instance
@@ -42,7 +42,7 @@ Future<void> main() async {
       .sum('likes')
       .get();
 
-  print('Sum: $sum');
+  print('Sum: ${sum.getSum('likes')}');
 
   runApp(FirestoreExampleApp());
 }
