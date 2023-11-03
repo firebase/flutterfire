@@ -38,9 +38,9 @@ sample code.
     flutter run
     ```
 
-1.  If you're using Remote Config on macOS, you need to the add the [Keychain
-    Sharing](https://developer.apple.com/documentation/xcode/configuring-keychain-sharing)
-    capability in Xcode.
+1.  If you're using Remote Config on macOS, enable
+    [Keychain Sharing](https://developer.apple.com/documentation/xcode/configuring-keychain-sharing)
+    in Xcode.
 
 Note: Because the Remote Config SDK has a dependency on the Remote Config REST
 API, make sure that you do **not** disable that API, which is enabled by default
@@ -72,6 +72,11 @@ You can set in-app default parameter values in the Remote Config
 object, so that your app behaves as intended before it connects to the
 Remote Config backend, and so that default values are available if none are
 set in the backend.
+
+Important: Don't store confidential data in Remote Config parameter keys or
+values. Remote Config data is encrypted in transit, but end users can access
+any default or fetched Remote Config parameter that is available to their
+client app instance.
 
 ```dart
 await remoteConfig.setDefaults(const {
