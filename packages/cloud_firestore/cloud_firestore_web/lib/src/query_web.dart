@@ -255,6 +255,42 @@ class QueryWeb extends QueryPlatform {
 
   @override
   AggregateQueryPlatform count() {
-    return AggregateQueryWeb(this, _buildWebQueryWithParameters());
+    return AggregateQueryWeb(
+      this,
+      _buildWebQueryWithParameters(),
+      [
+        AggregateQuery(
+          type: AggregateType.count,
+        )
+      ],
+    );
+  }
+
+  @override
+  AggregateQueryPlatform sum(String field) {
+    return AggregateQueryWeb(
+      this,
+      _buildWebQueryWithParameters(),
+      [
+        AggregateQuery(
+          type: AggregateType.sum,
+          field: field,
+        )
+      ],
+    );
+  }
+
+  @override
+  AggregateQueryPlatform average(String field) {
+    return AggregateQueryWeb(
+      this,
+      _buildWebQueryWithParameters(),
+      [
+        AggregateQuery(
+          type: AggregateType.average,
+          field: field,
+        )
+      ],
+    );
   }
 }
