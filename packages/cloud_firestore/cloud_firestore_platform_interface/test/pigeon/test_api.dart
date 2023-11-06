@@ -6,12 +6,12 @@
 // ignore_for_file: public_member_api_docs, non_constant_identifier_names, avoid_as, unused_import, unnecessary_parenthesis, unnecessary_import
 // ignore_for_file: avoid_relative_lib_imports
 import 'dart:async';
-import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
+import 'dart:typed_data' show Uint8List;
+
+import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
 
 class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   const _TestFirebaseFirestoreHostApiCodec();
@@ -105,7 +105,10 @@ abstract class TestFirebaseFirestoreHostApi {
   Future<String> loadBundle(FirestorePigeonFirebaseApp app, Uint8List bundle);
 
   Future<PigeonQuerySnapshot> namedQueryGet(
-      FirestorePigeonFirebaseApp app, String name, PigeonGetOptions options);
+    FirestorePigeonFirebaseApp app,
+    String name,
+    PigeonGetOptions options,
+  );
 
   Future<void> clearPersistence(FirestorePigeonFirebaseApp app);
 
@@ -118,70 +121,98 @@ abstract class TestFirebaseFirestoreHostApi {
   Future<void> waitForPendingWrites(FirestorePigeonFirebaseApp app);
 
   Future<void> setIndexConfiguration(
-      FirestorePigeonFirebaseApp app, String indexConfiguration);
+    FirestorePigeonFirebaseApp app,
+    String indexConfiguration,
+  );
 
   Future<void> setLoggingEnabled(bool loggingEnabled);
 
   Future<String> snapshotsInSyncSetup(FirestorePigeonFirebaseApp app);
 
   Future<String> transactionCreate(
-      FirestorePigeonFirebaseApp app, int timeout, int maxAttempts);
+    FirestorePigeonFirebaseApp app,
+    int timeout,
+    int maxAttempts,
+  );
 
   Future<void> transactionStoreResult(
-      String transactionId,
-      PigeonTransactionResult resultType,
-      List<PigeonTransactionCommand?>? commands);
+    String transactionId,
+    PigeonTransactionResult resultType,
+    List<PigeonTransactionCommand?>? commands,
+  );
 
   Future<PigeonDocumentSnapshot> transactionGet(
-      FirestorePigeonFirebaseApp app, String transactionId, String path);
+    FirestorePigeonFirebaseApp app,
+    String transactionId,
+    String path,
+  );
 
   Future<void> documentReferenceSet(
-      FirestorePigeonFirebaseApp app, DocumentReferenceRequest request);
+    FirestorePigeonFirebaseApp app,
+    DocumentReferenceRequest request,
+  );
 
   Future<void> documentReferenceUpdate(
-      FirestorePigeonFirebaseApp app, DocumentReferenceRequest request);
+    FirestorePigeonFirebaseApp app,
+    DocumentReferenceRequest request,
+  );
 
   Future<PigeonDocumentSnapshot> documentReferenceGet(
-      FirestorePigeonFirebaseApp app, DocumentReferenceRequest request);
+    FirestorePigeonFirebaseApp app,
+    DocumentReferenceRequest request,
+  );
 
   Future<void> documentReferenceDelete(
-      FirestorePigeonFirebaseApp app, DocumentReferenceRequest request);
+    FirestorePigeonFirebaseApp app,
+    DocumentReferenceRequest request,
+  );
 
   Future<PigeonQuerySnapshot> queryGet(
-      FirestorePigeonFirebaseApp app,
-      String path,
-      bool isCollectionGroup,
-      PigeonQueryParameters parameters,
-      PigeonGetOptions options);
+    FirestorePigeonFirebaseApp app,
+    String path,
+    bool isCollectionGroup,
+    PigeonQueryParameters parameters,
+    PigeonGetOptions options,
+  );
 
   Future<List<AggregateQueryResponse?>> aggregateQuery(
-      FirestorePigeonFirebaseApp app,
-      String path,
-      PigeonQueryParameters parameters,
-      AggregateSource source,
-      List<AggregateQuery?> queries);
+    FirestorePigeonFirebaseApp app,
+    String path,
+    PigeonQueryParameters parameters,
+    AggregateSource source,
+    List<AggregateQuery?> queries,
+  );
 
   Future<void> writeBatchCommit(
-      FirestorePigeonFirebaseApp app, List<PigeonTransactionCommand?> writes);
+    FirestorePigeonFirebaseApp app,
+    List<PigeonTransactionCommand?> writes,
+  );
 
   Future<String> querySnapshot(
-      FirestorePigeonFirebaseApp app,
-      String path,
-      bool isCollectionGroup,
-      PigeonQueryParameters parameters,
-      PigeonGetOptions options,
-      bool includeMetadataChanges);
+    FirestorePigeonFirebaseApp app,
+    String path,
+    bool isCollectionGroup,
+    PigeonQueryParameters parameters,
+    PigeonGetOptions options,
+    bool includeMetadataChanges,
+  );
 
-  Future<String> documentReferenceSnapshot(FirestorePigeonFirebaseApp app,
-      DocumentReferenceRequest parameters, bool includeMetadataChanges);
+  Future<String> documentReferenceSnapshot(
+    FirestorePigeonFirebaseApp app,
+    DocumentReferenceRequest parameters,
+    bool includeMetadataChanges,
+  );
 
-  static void setup(TestFirebaseFirestoreHostApi? api,
-      {BinaryMessenger? binaryMessenger}) {
+  static void setup(
+    TestFirebaseFirestoreHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+  }) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -189,16 +220,22 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final Uint8List? arg_bundle = (args[1] as Uint8List?);
-          assert(arg_bundle != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle was null, expected non-null Uint8List.');
+          assert(
+            arg_bundle != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle was null, expected non-null Uint8List.',
+          );
           final String output = await api.loadBundle(arg_app!, arg_bundle!);
           return <Object?>[output];
         });
@@ -206,9 +243,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -216,19 +254,27 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final String? arg_name = (args[1] as String?);
-          assert(arg_name != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet was null, expected non-null String.');
+          assert(
+            arg_name != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet was null, expected non-null String.',
+          );
           final PigeonGetOptions? arg_options = (args[2] as PigeonGetOptions?);
-          assert(arg_options != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet was null, expected non-null PigeonGetOptions.');
+          assert(
+            arg_options != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet was null, expected non-null PigeonGetOptions.',
+          );
           final PigeonQuerySnapshot output =
               await api.namedQueryGet(arg_app!, arg_name!, arg_options!);
           return <Object?>[output];
@@ -237,9 +283,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -247,13 +294,17 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           await api.clearPersistence(arg_app!);
           return <Object?>[];
         });
@@ -261,9 +312,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -271,13 +323,17 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           await api.disableNetwork(arg_app!);
           return <Object?>[];
         });
@@ -285,9 +341,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -295,13 +352,17 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           await api.enableNetwork(arg_app!);
           return <Object?>[];
         });
@@ -309,9 +370,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -319,13 +381,17 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           await api.terminate(arg_app!);
           return <Object?>[];
         });
@@ -333,9 +399,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -343,13 +410,17 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           await api.waitForPendingWrites(arg_app!);
           return <Object?>[];
         });
@@ -357,9 +428,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -367,16 +439,22 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final String? arg_indexConfiguration = (args[1] as String?);
-          assert(arg_indexConfiguration != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration was null, expected non-null String.');
+          assert(
+            arg_indexConfiguration != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration was null, expected non-null String.',
+          );
           await api.setIndexConfiguration(arg_app!, arg_indexConfiguration!);
           return <Object?>[];
         });
@@ -384,9 +462,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -394,12 +473,16 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final bool? arg_loggingEnabled = (args[0] as bool?);
-          assert(arg_loggingEnabled != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled was null, expected non-null bool.');
+          assert(
+            arg_loggingEnabled != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled was null, expected non-null bool.',
+          );
           await api.setLoggingEnabled(arg_loggingEnabled!);
           return <Object?>[];
         });
@@ -407,9 +490,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -417,13 +501,17 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final String output = await api.snapshotsInSyncSetup(arg_app!);
           return <Object?>[output];
         });
@@ -431,9 +519,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -441,30 +530,42 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final int? arg_timeout = (args[1] as int?);
-          assert(arg_timeout != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null int.');
+          assert(
+            arg_timeout != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null int.',
+          );
           final int? arg_maxAttempts = (args[2] as int?);
-          assert(arg_maxAttempts != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null int.');
+          assert(
+            arg_maxAttempts != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate was null, expected non-null int.',
+          );
           final String output = await api.transactionCreate(
-              arg_app!, arg_timeout!, arg_maxAttempts!);
+            arg_app!,
+            arg_timeout!,
+            arg_maxAttempts!,
+          );
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -472,30 +573,40 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_transactionId = (args[0] as String?);
-          assert(arg_transactionId != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult was null, expected non-null String.');
+          assert(
+            arg_transactionId != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult was null, expected non-null String.',
+          );
           final PigeonTransactionResult? arg_resultType = args[1] == null
               ? null
               : PigeonTransactionResult.values[args[1]! as int];
-          assert(arg_resultType != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult was null, expected non-null PigeonTransactionResult.');
+          assert(
+            arg_resultType != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult was null, expected non-null PigeonTransactionResult.',
+          );
           final List<PigeonTransactionCommand?>? arg_commands =
               (args[2] as List<Object?>?)?.cast<PigeonTransactionCommand?>();
           await api.transactionStoreResult(
-              arg_transactionId!, arg_resultType!, arg_commands);
+            arg_transactionId!,
+            arg_resultType!,
+            arg_commands,
+          );
           return <Object?>[];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -503,19 +614,27 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final String? arg_transactionId = (args[1] as String?);
-          assert(arg_transactionId != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet was null, expected non-null String.');
+          assert(
+            arg_transactionId != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet was null, expected non-null String.',
+          );
           final String? arg_path = (args[2] as String?);
-          assert(arg_path != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet was null, expected non-null String.');
+          assert(
+            arg_path != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet was null, expected non-null String.',
+          );
           final PigeonDocumentSnapshot output =
               await api.transactionGet(arg_app!, arg_transactionId!, arg_path!);
           return <Object?>[output];
@@ -524,9 +643,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -534,17 +654,23 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final DocumentReferenceRequest? arg_request =
               (args[1] as DocumentReferenceRequest?);
-          assert(arg_request != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet was null, expected non-null DocumentReferenceRequest.');
+          assert(
+            arg_request != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet was null, expected non-null DocumentReferenceRequest.',
+          );
           await api.documentReferenceSet(arg_app!, arg_request!);
           return <Object?>[];
         });
@@ -552,9 +678,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -562,17 +689,23 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final DocumentReferenceRequest? arg_request =
               (args[1] as DocumentReferenceRequest?);
-          assert(arg_request != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate was null, expected non-null DocumentReferenceRequest.');
+          assert(
+            arg_request != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate was null, expected non-null DocumentReferenceRequest.',
+          );
           await api.documentReferenceUpdate(arg_app!, arg_request!);
           return <Object?>[];
         });
@@ -580,9 +713,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -590,17 +724,23 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final DocumentReferenceRequest? arg_request =
               (args[1] as DocumentReferenceRequest?);
-          assert(arg_request != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet was null, expected non-null DocumentReferenceRequest.');
+          assert(
+            arg_request != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet was null, expected non-null DocumentReferenceRequest.',
+          );
           final PigeonDocumentSnapshot output =
               await api.documentReferenceGet(arg_app!, arg_request!);
           return <Object?>[output];
@@ -609,9 +749,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -619,17 +760,23 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final DocumentReferenceRequest? arg_request =
               (args[1] as DocumentReferenceRequest?);
-          assert(arg_request != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete was null, expected non-null DocumentReferenceRequest.');
+          assert(
+            arg_request != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete was null, expected non-null DocumentReferenceRequest.',
+          );
           await api.documentReferenceDelete(arg_app!, arg_request!);
           return <Object?>[];
         });
@@ -637,9 +784,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -647,37 +795,55 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final String? arg_path = (args[1] as String?);
-          assert(arg_path != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null, expected non-null String.');
+          assert(
+            arg_path != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null, expected non-null String.',
+          );
           final bool? arg_isCollectionGroup = (args[2] as bool?);
-          assert(arg_isCollectionGroup != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null, expected non-null bool.');
+          assert(
+            arg_isCollectionGroup != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null, expected non-null bool.',
+          );
           final PigeonQueryParameters? arg_parameters =
               (args[3] as PigeonQueryParameters?);
-          assert(arg_parameters != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null, expected non-null PigeonQueryParameters.');
+          assert(
+            arg_parameters != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null, expected non-null PigeonQueryParameters.',
+          );
           final PigeonGetOptions? arg_options = (args[4] as PigeonGetOptions?);
-          assert(arg_options != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null, expected non-null PigeonGetOptions.');
-          final PigeonQuerySnapshot output = await api.queryGet(arg_app!,
-              arg_path!, arg_isCollectionGroup!, arg_parameters!, arg_options!);
+          assert(
+            arg_options != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet was null, expected non-null PigeonGetOptions.',
+          );
+          final PigeonQuerySnapshot output = await api.queryGet(
+            arg_app!,
+            arg_path!,
+            arg_isCollectionGroup!,
+            arg_parameters!,
+            arg_options!,
+          );
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -685,39 +851,57 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final String? arg_path = (args[1] as String?);
-          assert(arg_path != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null String.');
+          assert(
+            arg_path != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null String.',
+          );
           final PigeonQueryParameters? arg_parameters =
               (args[2] as PigeonQueryParameters?);
-          assert(arg_parameters != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null PigeonQueryParameters.');
+          assert(
+            arg_parameters != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null PigeonQueryParameters.',
+          );
           final AggregateSource? arg_source =
               args[3] == null ? null : AggregateSource.values[args[3]! as int];
-          assert(arg_source != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null AggregateSource.');
+          assert(
+            arg_source != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null AggregateSource.',
+          );
           final List<AggregateQuery?>? arg_queries =
               (args[4] as List<Object?>?)?.cast<AggregateQuery?>();
-          assert(arg_queries != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null List<AggregateQuery?>.');
+          assert(
+            arg_queries != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null List<AggregateQuery?>.',
+          );
           final List<AggregateQueryResponse?> output = await api.aggregateQuery(
-              arg_app!, arg_path!, arg_parameters!, arg_source!, arg_queries!);
+            arg_app!,
+            arg_path!,
+            arg_parameters!,
+            arg_source!,
+            arg_queries!,
+          );
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -725,17 +909,23 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final List<PigeonTransactionCommand?>? arg_writes =
               (args[1] as List<Object?>?)?.cast<PigeonTransactionCommand?>();
-          assert(arg_writes != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit was null, expected non-null List<PigeonTransactionCommand?>.');
+          assert(
+            arg_writes != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit was null, expected non-null List<PigeonTransactionCommand?>.',
+          );
           await api.writeBatchCommit(arg_app!, arg_writes!);
           return <Object?>[];
         });
@@ -743,9 +933,10 @@ abstract class TestFirebaseFirestoreHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -753,45 +944,61 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final String? arg_path = (args[1] as String?);
-          assert(arg_path != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null String.');
+          assert(
+            arg_path != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null String.',
+          );
           final bool? arg_isCollectionGroup = (args[2] as bool?);
-          assert(arg_isCollectionGroup != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null bool.');
+          assert(
+            arg_isCollectionGroup != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null bool.',
+          );
           final PigeonQueryParameters? arg_parameters =
               (args[3] as PigeonQueryParameters?);
-          assert(arg_parameters != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null PigeonQueryParameters.');
+          assert(
+            arg_parameters != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null PigeonQueryParameters.',
+          );
           final PigeonGetOptions? arg_options = (args[4] as PigeonGetOptions?);
-          assert(arg_options != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null PigeonGetOptions.');
+          assert(
+            arg_options != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null PigeonGetOptions.',
+          );
           final bool? arg_includeMetadataChanges = (args[5] as bool?);
-          assert(arg_includeMetadataChanges != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null bool.');
+          assert(
+            arg_includeMetadataChanges != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot was null, expected non-null bool.',
+          );
           final String output = await api.querySnapshot(
-              arg_app!,
-              arg_path!,
-              arg_isCollectionGroup!,
-              arg_parameters!,
-              arg_options!,
-              arg_includeMetadataChanges!);
+            arg_app!,
+            arg_path!,
+            arg_isCollectionGroup!,
+            arg_parameters!,
+            arg_options!,
+            arg_includeMetadataChanges!,
+          );
           return <Object?>[output];
         });
       }
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot',
-          codec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel, null);
@@ -799,22 +1006,33 @@ abstract class TestFirebaseFirestoreHostApi {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(channel,
                 (Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final FirestorePigeonFirebaseApp? arg_app =
               (args[0] as FirestorePigeonFirebaseApp?);
-          assert(arg_app != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null FirestorePigeonFirebaseApp.');
+          assert(
+            arg_app != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null FirestorePigeonFirebaseApp.',
+          );
           final DocumentReferenceRequest? arg_parameters =
               (args[1] as DocumentReferenceRequest?);
-          assert(arg_parameters != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null DocumentReferenceRequest.');
+          assert(
+            arg_parameters != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null DocumentReferenceRequest.',
+          );
           final bool? arg_includeMetadataChanges = (args[2] as bool?);
-          assert(arg_includeMetadataChanges != null,
-              'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null bool.');
+          assert(
+            arg_includeMetadataChanges != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot was null, expected non-null bool.',
+          );
           final String output = await api.documentReferenceSnapshot(
-              arg_app!, arg_parameters!, arg_includeMetadataChanges!);
+            arg_app!,
+            arg_parameters!,
+            arg_includeMetadataChanges!,
+          );
           return <Object?>[output];
         });
       }
