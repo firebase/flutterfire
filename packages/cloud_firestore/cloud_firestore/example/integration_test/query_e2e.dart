@@ -3734,6 +3734,37 @@ void runQueryTests() {
       );
 
       testWidgets(
+        'chaining aggregate queries',
+        (_) async {
+          final collection = await initializeTest('chaining');
+
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
+
+          AggregateQuery query = collection.count().sum('foo').average('foo');
+
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.count,
+            2,
+          );
+
+          expect(
+            snapshot.getSum('foo'),
+            3,
+          );
+
+          expect(
+            snapshot.getAverage('foo'),
+            1.5,
+          );
+        },
+      );
+
+      testWidgets(
         'chaining multiples aggregate queries',
         (_) async {
           final collection = await initializeTest('chaining');
