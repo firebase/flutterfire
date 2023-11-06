@@ -18,9 +18,11 @@ class AggregateQueryWeb extends AggregateQueryPlatform {
     _webQuery,
     this._aggregateQueries,
   )   : _delegate = firestore_interop.AggregateQuery(_webQuery),
+        _webQuery = _webQuery,
         super(query);
 
   final List<AggregateQuery> _aggregateQueries;
+  final firestore_interop.Query _webQuery;
 
   /// Returns an [AggregateQuerySnapshotPlatform] with the count of the documents that match the query.
   @override
@@ -70,7 +72,7 @@ class AggregateQueryWeb extends AggregateQueryPlatform {
   AggregateQueryPlatform count() {
     return AggregateQueryWeb(
       query,
-      this,
+      _webQuery,
       [
         ..._aggregateQueries,
         AggregateQuery(
@@ -84,7 +86,7 @@ class AggregateQueryWeb extends AggregateQueryPlatform {
   AggregateQueryPlatform sum(String field) {
     return AggregateQueryWeb(
       query,
-      this,
+      _webQuery,
       [
         ..._aggregateQueries,
         AggregateQuery(type: AggregateType.sum, field: field),
@@ -96,7 +98,7 @@ class AggregateQueryWeb extends AggregateQueryPlatform {
   AggregateQueryPlatform average(String field) {
     return AggregateQueryWeb(
       query,
-      this,
+      _webQuery,
       [
         ..._aggregateQueries,
         AggregateQuery(type: AggregateType.average, field: field),
