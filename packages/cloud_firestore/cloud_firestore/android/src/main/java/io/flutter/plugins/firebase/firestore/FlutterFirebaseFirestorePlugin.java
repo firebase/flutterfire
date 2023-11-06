@@ -38,7 +38,6 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
-import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
@@ -76,7 +75,6 @@ public class FlutterFirebaseFirestorePlugin
           io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreMessageCodec.INSTANCE);
 
   private BinaryMessenger binaryMessenger;
-  private MethodChannel channel;
 
   private final AtomicReference<Activity> activity = new AtomicReference<>(null);
 
@@ -135,9 +133,6 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    channel.setMethodCallHandler(null);
-    channel = null;
-
     removeEventListeners();
 
     binaryMessenger = null;
@@ -210,11 +205,11 @@ public class FlutterFirebaseFirestorePlugin
               Tasks.await(firestore.terminate());
               FlutterFirebaseFirestorePlugin.destroyCachedFirebaseFirestoreInstanceForKey(
                   firestore);
-
-              removeEventListeners();
-
-              taskCompletionSource.setResult(null);
             }
+            removeEventListeners();
+
+            taskCompletionSource.setResult(null);
+
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
@@ -290,10 +285,15 @@ public class FlutterFirebaseFirestorePlugin
     }
     if (pigeonApp.getSettings().getPersistenceEnabled() != null) {
       if (pigeonApp.getSettings().getPersistenceEnabled()) {
+        Long receivedCacheSizeBytes = pigeonApp.getSettings().getCacheSizeBytes();
+        // This is the maximum amount of cache allowed:
+        // https://firebase.google.com/docs/firestore/manage-data/enable-offline#configure_cache_size
+        Long cacheSizeBytes = 104857600L;
+        if (receivedCacheSizeBytes != null && receivedCacheSizeBytes != -1) {
+          cacheSizeBytes = receivedCacheSizeBytes;
+        }
         builder.setLocalCacheSettings(
-            PersistentCacheSettings.newBuilder()
-                .setSizeBytes(pigeonApp.getSettings().getCacheSizeBytes())
-                .build());
+            PersistentCacheSettings.newBuilder().setSizeBytes(cacheSizeBytes).build());
       } else {
         builder.setLocalCacheSettings(MemoryCacheSettings.newBuilder().build());
       }

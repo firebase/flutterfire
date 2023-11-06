@@ -8,6 +8,7 @@
 #include <windows.h>
 
 #include "firebase/app.h"
+#include "firebase_core/plugin_version.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -29,6 +30,8 @@ using ::firebase::App;
 
 namespace firebase_core_windows {
 
+static std::string kLibraryName = "flutter-fire-core";
+
 // static
 void FirebaseCorePlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows *registrar) {
@@ -38,6 +41,10 @@ void FirebaseCorePlugin::RegisterWithRegistrar(
   FirebaseAppHostApi::SetUp(registrar->messenger(), plugin.get());
 
   registrar->AddPlugin(std::move(plugin));
+
+  // Register for platform logging
+  App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
+                       nullptr);
 }
 
 FirebaseCorePlugin::FirebaseCorePlugin() {}

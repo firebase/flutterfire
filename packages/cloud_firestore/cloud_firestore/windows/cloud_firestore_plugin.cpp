@@ -20,6 +20,7 @@
 #include <mutex>
 #include <sstream>
 
+#include "cloud_firestore/plugin_version.h"
 #include "firebase/app.h"
 #include "firebase/firestore.h"
 #include "firebase/firestore/filter.h"
@@ -38,6 +39,7 @@ using flutter::EncodableValue;
 
 namespace cloud_firestore_windows {
 
+static std::string kLibraryName = "flutter-fire-fst";
 // static
 void CloudFirestorePlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows* registrar) {
@@ -53,6 +55,10 @@ void CloudFirestorePlugin::RegisterWithRegistrar(
   FirebaseFirestoreHostApi::SetUp(registrar->messenger(), plugin.get());
 
   registrar->AddPlugin(std::move(plugin));
+
+  // Register for platform logging
+  App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
+                       nullptr);
 }
 
 firebase::firestore::FieldValue CloudFirestorePlugin::ConvertToFieldValue(

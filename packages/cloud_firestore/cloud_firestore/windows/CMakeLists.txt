@@ -22,12 +22,31 @@ list(APPEND PLUGIN_SOURCES
   "firestore_codec.h"
 )
 
+# Read version from pubspec.yaml
+file(STRINGS "../pubspec.yaml" pubspec_content)
+foreach(line ${pubspec_content})
+  string(FIND ${line} "version: " has_version)
+  
+  if("${has_version}" STREQUAL "0")
+    string(FIND ${line} ": " version_start_pos)
+    math(EXPR version_start_pos "${version_start_pos} + 2")
+    string(LENGTH ${line} version_end_pos)
+    math(EXPR len "${version_end_pos} - ${version_start_pos}")
+    string(SUBSTRING ${line} ${version_start_pos} ${len} PLUGIN_VERSION)
+    break()
+  endif()
+endforeach(line)
+
+configure_file(plugin_version.h.in ${CMAKE_BINARY_DIR}/generated/cloud_firestore/plugin_version.h)
+include_directories(${CMAKE_BINARY_DIR}/generated/)
+
 # Define the plugin library target. Its name must not be changed (see comment
 # on PLUGIN_NAME above).
 add_library(${PLUGIN_NAME} STATIC
   "include/cloud_firestore/cloud_firestore_plugin_c_api.h"
   "cloud_firestore_plugin_c_api.cpp"
   ${PLUGIN_SOURCES}
+  ${CMAKE_BINARY_DIR}/generated/cloud_firestore/plugin_version.h
 )
 
 # Apply a standard set of build settings that are configured in the
@@ -41,6 +60,8 @@ apply_standard_settings(${PLUGIN_NAME})
 set_target_properties(${PLUGIN_NAME} PROPERTIES
   CXX_VISIBILITY_PRESET hidden)
 target_compile_definitions(${PLUGIN_NAME} PUBLIC FLUTTER_PLUGIN_IMPL)
+# Enable firebase-cpp-sdk's platform logging api.
+target_compile_definitions(${PLUGIN_NAME} PRIVATE -DINTERNAL_EXPERIMENTAL=1)
 
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.

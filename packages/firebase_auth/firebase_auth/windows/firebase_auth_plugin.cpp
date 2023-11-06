@@ -16,6 +16,7 @@
 #include "firebase/log.h"
 #include "firebase/util.h"
 #include "firebase/variant.h"
+#include "firebase_auth/plugin_version.h"
 #include "firebase_core/firebase_core_plugin_c_api.h"
 #include "messages.g.h"
 
@@ -39,6 +40,8 @@ using ::firebase::App;
 using ::firebase::auth::Auth;
 
 namespace firebase_auth_windows {
+
+static std::string kLibraryName = "flutter-fire-auth";
 flutter::BinaryMessenger* FirebaseAuthPlugin::binaryMessenger = nullptr;
 
 // static
@@ -52,6 +55,10 @@ void FirebaseAuthPlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
 
   binaryMessenger = registrar->messenger();
+
+  // Register for platform logging
+  App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
+                       nullptr);
 }
 
 FirebaseAuthPlugin::FirebaseAuthPlugin() {

@@ -63,12 +63,31 @@ list(APPEND PLUGIN_SOURCES
   "messages.g.h"
 )
 
+# Read version from pubspec.yaml
+file(STRINGS "../pubspec.yaml" pubspec_content)
+foreach(line ${pubspec_content})
+  string(FIND ${line} "version: " has_version)
+  
+  if("${has_version}" STREQUAL "0")
+    string(FIND ${line} ": " version_start_pos)
+    math(EXPR version_start_pos "${version_start_pos} + 2")
+    string(LENGTH ${line} version_end_pos)
+    math(EXPR len "${version_end_pos} - ${version_start_pos}")
+    string(SUBSTRING ${line} ${version_start_pos} ${len} PLUGIN_VERSION)
+    break()
+  endif()
+endforeach(line)
+
+configure_file(plugin_version.h.in ${CMAKE_BINARY_DIR}/generated/firebase_core/plugin_version.h)
+include_directories(${CMAKE_BINARY_DIR}/generated/)
+
 # Define the plugin library target. Its name must not be changed (see comment
 # on PLUGIN_NAME above).
 add_library(${PLUGIN_NAME} STATIC
   "include/firebase_core/firebase_core_plugin_c_api.h"
   "firebase_core_plugin_c_api.cpp"
   ${PLUGIN_SOURCES}
+  ${CMAKE_BINARY_DIR}/generated/firebase_core/plugin_version.h
 )
 
 
@@ -83,6 +102,9 @@ apply_standard_settings(${PLUGIN_NAME})
 set_target_properties(${PLUGIN_NAME} PROPERTIES
   CXX_VISIBILITY_PRESET hidden)
 target_compile_definitions(${PLUGIN_NAME} PUBLIC FLUTTER_PLUGIN_IMPL)
+
+# Enable firebase-cpp-sdk's platform logging api.
+target_compile_definitions(${PLUGIN_NAME} PRIVATE -DINTERNAL_EXPERIMENTAL=1)
 
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.
@@ -105,11 +127,11 @@ endforeach()
 
 set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32 icu)
 
-target_link_libraries(${PLUGIN_NAME} PRIVATE "${FIREBASE_LIBS}" "${ADDITIONAL_LIBS}")
+target_link_libraries(${PLUGIN_NAME} PUBLIC "${FIREBASE_LIBS}" "${ADDITIONAL_LIBS}")
 
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
-target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
+target_link_libraries(${PLUGIN_NAME} PUBLIC flutter flutter_wrapper_plugin)
 
 # List of absolute paths to libraries that should be bundled with the plugin.
 # This list could contain prebuilt libraries, or libraries created by an

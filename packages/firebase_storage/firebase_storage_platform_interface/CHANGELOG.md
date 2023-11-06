@@ -1,3 +1,14 @@
+## 5.0.1
+
+ - **FIX**(storage,windows): add missing c++ generated files into pigeon template ([#11799](https://github.com/firebase/flutterfire/issues/11799)). ([ad9e018b](https://github.com/firebase/flutterfire/commit/ad9e018bf7943e7b300aa5adea9845a306c1f12d))
+
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**(storage,windows): Add windows support ([#11617](https://github.com/firebase/flutterfire/issues/11617)). ([87ea02c8](https://github.com/firebase/flutterfire/commit/87ea02c8ae03eb351636cf202961ad0df6caebd8))
+ - **BREAKING** **FEAT**(storage): move Storage to use Pigeon for platform channels ([#11521](https://github.com/firebase/flutterfire/issues/11521)). ([edddc1de](https://github.com/firebase/flutterfire/commit/edddc1def508d0c516534b80c13d41a919fd39bc))
+
 ## 4.4.9
 
  - Update a dependency to the latest release.

@@ -1,3 +1,17 @@
+## 4.12.2
+
+ - **FIX**(firestore,android): `cacheSizeBytes` value cannot be null when setting `persistenceEnabled` ([#11794](https://github.com/firebase/flutterfire/issues/11794)). ([a10399eb](https://github.com/firebase/flutterfire/commit/a10399eb1cad2207eba7d2efa64267c9d0176b4a))
+
+## 4.12.1
+
+ - **FIX**(firestore,ios): fix freeze when doing a get in transactions when auth is also installed ([#11773](https://github.com/firebase/flutterfire/issues/11773)). ([180c0918](https://github.com/firebase/flutterfire/commit/180c0918336cdee6efd95bb9926be931d69eedce))
+ - **FIX**(firestore,android): fix hot reload freezing the app on Android ([#11776](https://github.com/firebase/flutterfire/issues/11776)). ([bd1ab457](https://github.com/firebase/flutterfire/commit/bd1ab457a4dde19e18457fe05413d1096565f45f))
+
+## 4.12.0
+
+ - **FIX**(firestore): cleaned up use of previous method channel ([#11758](https://github.com/firebase/flutterfire/issues/11758)). ([8cfc69bf](https://github.com/firebase/flutterfire/commit/8cfc69bf7c773fac26f12f01863e7853791fce8f))
+ - **FEAT**: bump Firebase iOS SDK `10.16.0` ([#11698](https://github.com/firebase/flutterfire/issues/11698)). ([666f90ea](https://github.com/firebase/flutterfire/commit/666f90ea1eb090ee3f2397c9ffde8ddaf934f36c))
+
 ## 4.11.0
 
  - **FIX**(ios): fix clashing filenames between Auth and Firestore ([#11731](https://github.com/firebase/flutterfire/issues/11731)). ([8770cafc](https://github.com/firebase/flutterfire/commit/8770cafccccb11607b5530311e3150ac08cd172e))

@@ -138,7 +138,7 @@ The SDK is designed to manage interactions with database servers whether your
 app is online or offline.
 
 Generally, you should use the value events techniques described above to read
-data to get notified of updates to the data from the backend. Those technique
+data to get notified of updates to the data from the backend. Those techniques
 reduce your usage and billing, and are optimized to give your users the best
 experience as they go online and offline.
 
