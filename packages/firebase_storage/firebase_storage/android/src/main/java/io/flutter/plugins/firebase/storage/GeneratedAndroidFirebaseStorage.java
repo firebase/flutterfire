@@ -16,9 +16,6 @@ import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,8 +32,7 @@ public class GeneratedAndroidFirebaseStorage {
     /** The error details. Must be a datatype supported by the api codec. */
     public final Object details;
 
-    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) 
-    {
+    public FlutterError(@NonNull String code, @Nullable String message, @Nullable Object details) {
       super(message);
       this.code = code;
       this.details = details;
@@ -55,15 +51,12 @@ public class GeneratedAndroidFirebaseStorage {
       errorList.add(exception.toString());
       errorList.add(exception.getClass().getSimpleName());
       errorList.add(
-        "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
+          "Cause: " + exception.getCause() + ", Stacktrace: " + Log.getStackTraceString(exception));
     }
     return errorList;
   }
 
-  /**
-   * The type of operation that generated the action code from calling
-   * [TaskState].
-   */
+  /** The type of operation that generated the action code from calling [TaskState]. */
   public enum PigeonStorageTaskState {
     /** Indicates the task has been paused by the user. */
     PAUSED(0),
@@ -322,7 +315,7 @@ public class GeneratedAndroidFirebaseStorage {
     /**
      * If set, limits the total number of `prefixes` and `items` to return.
      *
-     * The default and maximum maxResults is 1000.
+     * <p>The default and maximum maxResults is 1000.
      */
     private @NonNull Long maxResults;
 
@@ -340,7 +333,7 @@ public class GeneratedAndroidFirebaseStorage {
     /**
      * The nextPageToken from a previous call to list().
      *
-     * If provided, listing is resumed from the previous position.
+     * <p>If provided, listing is resumed from the previous position.
      */
     private @Nullable String pageToken;
 
@@ -390,7 +383,10 @@ public class GeneratedAndroidFirebaseStorage {
     static @NonNull PigeonListOptions fromList(@NonNull ArrayList<Object> list) {
       PigeonListOptions pigeonResult = new PigeonListOptions();
       Object maxResults = list.get(0);
-      pigeonResult.setMaxResults((maxResults == null) ? null : ((maxResults instanceof Integer) ? (Integer) maxResults : (Long) maxResults));
+      pigeonResult.setMaxResults(
+          (maxResults == null)
+              ? null
+              : ((maxResults instanceof Integer) ? (Integer) maxResults : (Long) maxResults));
       Object pageToken = list.get(1);
       pigeonResult.setPageToken((String) pageToken);
       return pigeonResult;
@@ -402,7 +398,7 @@ public class GeneratedAndroidFirebaseStorage {
     /**
      * Served as the 'Cache-Control' header on object download.
      *
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control.
+     * <p>See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control.
      */
     private @Nullable String cacheControl;
 
@@ -417,7 +413,7 @@ public class GeneratedAndroidFirebaseStorage {
     /**
      * Served as the 'Content-Disposition' header on object download.
      *
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition.
+     * <p>See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition.
      */
     private @Nullable String contentDisposition;
 
@@ -432,7 +428,7 @@ public class GeneratedAndroidFirebaseStorage {
     /**
      * Served as the 'Content-Encoding' header on object download.
      *
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding.
+     * <p>See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding.
      */
     private @Nullable String contentEncoding;
 
@@ -447,7 +443,7 @@ public class GeneratedAndroidFirebaseStorage {
     /**
      * Served as the 'Content-Language' header on object download.
      *
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language.
+     * <p>See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language.
      */
     private @Nullable String contentLanguage;
 
@@ -462,7 +458,7 @@ public class GeneratedAndroidFirebaseStorage {
     /**
      * Served as the 'Content-Type' header on object download.
      *
-     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type.
+     * <p>See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type.
      */
     private @Nullable String contentType;
 
@@ -726,54 +722,128 @@ public class GeneratedAndroidFirebaseStorage {
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseStorageHostApi {
 
-    void getReferencebyPath(@NonNull PigeonStorageFirebaseApp app, @NonNull String path, @Nullable String bucket, @NonNull Result<PigeonStorageReference> result);
+    void getReferencebyPath(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull String path,
+        @Nullable String bucket,
+        @NonNull Result<PigeonStorageReference> result);
 
-    void setMaxOperationRetryTime(@NonNull PigeonStorageFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
+    void setMaxOperationRetryTime(
+        @NonNull PigeonStorageFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
 
-    void setMaxUploadRetryTime(@NonNull PigeonStorageFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
+    void setMaxUploadRetryTime(
+        @NonNull PigeonStorageFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
 
-    void setMaxDownloadRetryTime(@NonNull PigeonStorageFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
+    void setMaxDownloadRetryTime(
+        @NonNull PigeonStorageFirebaseApp app, @NonNull Long time, @NonNull Result<Void> result);
 
-    void useStorageEmulator(@NonNull PigeonStorageFirebaseApp app, @NonNull String host, @NonNull Long port, @NonNull Result<Void> result);
+    void useStorageEmulator(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull String host,
+        @NonNull Long port,
+        @NonNull Result<Void> result);
 
-    void referenceDelete(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<Void> result);
+    void referenceDelete(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull PigeonStorageReference reference,
+        @NonNull Result<Void> result);
 
-    void referenceGetDownloadURL(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<String> result);
+    void referenceGetDownloadURL(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull PigeonStorageReference reference,
+        @NonNull Result<String> result);
 
-    void referenceGetMetaData(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<PigeonFullMetaData> result);
+    void referenceGetMetaData(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull PigeonStorageReference reference,
+        @NonNull Result<PigeonFullMetaData> result);
 
-    void referenceList(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull PigeonListOptions options, @NonNull Result<PigeonListResult> result);
+    void referenceList(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull PigeonStorageReference reference,
+        @NonNull PigeonListOptions options,
+        @NonNull Result<PigeonListResult> result);
 
-    void referenceListAll(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Result<PigeonListResult> result);
+    void referenceListAll(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull PigeonStorageReference reference,
+        @NonNull Result<PigeonListResult> result);
 
-    void referenceGetData(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull Long maxSize, @NonNull Result<byte[]> result);
+    void referenceGetData(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull PigeonStorageReference reference,
+        @NonNull Long maxSize,
+        @NonNull Result<byte[]> result);
 
-    void referencePutData(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull byte[] data, @NonNull PigeonSettableMetadata settableMetaData, @NonNull Long handle, @NonNull Result<String> result);
+    void referencePutData(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull PigeonStorageReference reference,
+        @NonNull byte[] data,
+        @NonNull PigeonSettableMetadata settableMetaData,
+        @NonNull Long handle,
+        @NonNull Result<String> result);
 
-    void referencePutString(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull String data, @NonNull Long format, @NonNull PigeonSettableMetadata settableMetaData, @NonNull Long handle, @NonNull Result<String> result);
+    void referencePutString(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull PigeonStorageReference reference,
+        @NonNull String data,
+        @NonNull Long format,
+        @NonNull PigeonSettableMetadata settableMetaData,
+        @NonNull Long handle,
+        @NonNull Result<String> result);
 
-    void referencePutFile(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull String filePath, @NonNull PigeonSettableMetadata settableMetaData, @NonNull Long handle, @NonNull Result<String> result);
+    void referencePutFile(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull PigeonStorageReference reference,
+        @NonNull String filePath,
+        @NonNull PigeonSettableMetadata settableMetaData,
+        @NonNull Long handle,
+        @NonNull Result<String> result);
 
-    void referenceDownloadFile(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull String filePath, @NonNull Long handle, @NonNull Result<String> result);
+    void referenceDownloadFile(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull PigeonStorageReference reference,
+        @NonNull String filePath,
+        @NonNull Long handle,
+        @NonNull Result<String> result);
 
-    void referenceUpdateMetadata(@NonNull PigeonStorageFirebaseApp app, @NonNull PigeonStorageReference reference, @NonNull PigeonSettableMetadata metadata, @NonNull Result<PigeonFullMetaData> result);
+    void referenceUpdateMetadata(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull PigeonStorageReference reference,
+        @NonNull PigeonSettableMetadata metadata,
+        @NonNull Result<PigeonFullMetaData> result);
 
-    void taskPause(@NonNull PigeonStorageFirebaseApp app, @NonNull Long handle, @NonNull Result<Map<String, Object>> result);
+    void taskPause(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull Long handle,
+        @NonNull Result<Map<String, Object>> result);
 
-    void taskResume(@NonNull PigeonStorageFirebaseApp app, @NonNull Long handle, @NonNull Result<Map<String, Object>> result);
+    void taskResume(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull Long handle,
+        @NonNull Result<Map<String, Object>> result);
 
-    void taskCancel(@NonNull PigeonStorageFirebaseApp app, @NonNull Long handle, @NonNull Result<Map<String, Object>> result);
+    void taskCancel(
+        @NonNull PigeonStorageFirebaseApp app,
+        @NonNull Long handle,
+        @NonNull Result<Map<String, Object>> result);
 
     /** The codec used by FirebaseStorageHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
       return FirebaseStorageHostApiCodec.INSTANCE;
     }
-    /**Sets up an instance of `FirebaseStorageHostApi` to handle messages through the `binaryMessenger`. */
-    static void setup(@NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseStorageHostApi api) {
+    /**
+     * Sets up an instance of `FirebaseStorageHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
+    static void setup(
+        @NonNull BinaryMessenger binaryMessenger, @Nullable FirebaseStorageHostApi api) {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -804,7 +874,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -825,7 +897,8 @@ public class GeneratedAndroidFirebaseStorage {
                       }
                     };
 
-                api.setMaxOperationRetryTime(appArg, (timeArg == null) ? null : timeArg.longValue(), resultCallback);
+                api.setMaxOperationRetryTime(
+                    appArg, (timeArg == null) ? null : timeArg.longValue(), resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -834,7 +907,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -855,7 +930,8 @@ public class GeneratedAndroidFirebaseStorage {
                       }
                     };
 
-                api.setMaxUploadRetryTime(appArg, (timeArg == null) ? null : timeArg.longValue(), resultCallback);
+                api.setMaxUploadRetryTime(
+                    appArg, (timeArg == null) ? null : timeArg.longValue(), resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -864,7 +940,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -885,7 +963,8 @@ public class GeneratedAndroidFirebaseStorage {
                       }
                     };
 
-                api.setMaxDownloadRetryTime(appArg, (timeArg == null) ? null : timeArg.longValue(), resultCallback);
+                api.setMaxDownloadRetryTime(
+                    appArg, (timeArg == null) ? null : timeArg.longValue(), resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -894,7 +973,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -916,7 +997,11 @@ public class GeneratedAndroidFirebaseStorage {
                       }
                     };
 
-                api.useStorageEmulator(appArg, hostArg, (portArg == null) ? null : portArg.longValue(), resultCallback);
+                api.useStorageEmulator(
+                    appArg,
+                    hostArg,
+                    (portArg == null) ? null : portArg.longValue(),
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -925,7 +1010,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -955,7 +1042,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -985,7 +1074,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1015,7 +1106,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1046,7 +1139,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1076,7 +1171,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1098,7 +1195,11 @@ public class GeneratedAndroidFirebaseStorage {
                       }
                     };
 
-                api.referenceGetData(appArg, referenceArg, (maxSizeArg == null) ? null : maxSizeArg.longValue(), resultCallback);
+                api.referenceGetData(
+                    appArg,
+                    referenceArg,
+                    (maxSizeArg == null) ? null : maxSizeArg.longValue(),
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -1107,7 +1208,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1131,7 +1234,13 @@ public class GeneratedAndroidFirebaseStorage {
                       }
                     };
 
-                api.referencePutData(appArg, referenceArg, dataArg, settableMetaDataArg, (handleArg == null) ? null : handleArg.longValue(), resultCallback);
+                api.referencePutData(
+                    appArg,
+                    referenceArg,
+                    dataArg,
+                    settableMetaDataArg,
+                    (handleArg == null) ? null : handleArg.longValue(),
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -1140,7 +1249,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1165,7 +1276,14 @@ public class GeneratedAndroidFirebaseStorage {
                       }
                     };
 
-                api.referencePutString(appArg, referenceArg, dataArg, (formatArg == null) ? null : formatArg.longValue(), settableMetaDataArg, (handleArg == null) ? null : handleArg.longValue(), resultCallback);
+                api.referencePutString(
+                    appArg,
+                    referenceArg,
+                    dataArg,
+                    (formatArg == null) ? null : formatArg.longValue(),
+                    settableMetaDataArg,
+                    (handleArg == null) ? null : handleArg.longValue(),
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -1174,7 +1292,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1198,7 +1318,13 @@ public class GeneratedAndroidFirebaseStorage {
                       }
                     };
 
-                api.referencePutFile(appArg, referenceArg, filePathArg, settableMetaDataArg, (handleArg == null) ? null : handleArg.longValue(), resultCallback);
+                api.referencePutFile(
+                    appArg,
+                    referenceArg,
+                    filePathArg,
+                    settableMetaDataArg,
+                    (handleArg == null) ? null : handleArg.longValue(),
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -1207,7 +1333,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1230,7 +1358,12 @@ public class GeneratedAndroidFirebaseStorage {
                       }
                     };
 
-                api.referenceDownloadFile(appArg, referenceArg, filePathArg, (handleArg == null) ? null : handleArg.longValue(), resultCallback);
+                api.referenceDownloadFile(
+                    appArg,
+                    referenceArg,
+                    filePathArg,
+                    (handleArg == null) ? null : handleArg.longValue(),
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -1239,7 +1372,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1270,7 +1405,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1291,7 +1428,8 @@ public class GeneratedAndroidFirebaseStorage {
                       }
                     };
 
-                api.taskPause(appArg, (handleArg == null) ? null : handleArg.longValue(), resultCallback);
+                api.taskPause(
+                    appArg, (handleArg == null) ? null : handleArg.longValue(), resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -1300,7 +1438,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1321,7 +1461,8 @@ public class GeneratedAndroidFirebaseStorage {
                       }
                     };
 
-                api.taskResume(appArg, (handleArg == null) ? null : handleArg.longValue(), resultCallback);
+                api.taskResume(
+                    appArg, (handleArg == null) ? null : handleArg.longValue(), resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
@@ -1330,7 +1471,9 @@ public class GeneratedAndroidFirebaseStorage {
       {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
-                binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel", getCodec());
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel",
+                getCodec());
         if (api != null) {
           channel.setMessageHandler(
               (message, reply) -> {
@@ -1351,7 +1494,8 @@ public class GeneratedAndroidFirebaseStorage {
                       }
                     };
 
-                api.taskCancel(appArg, (handleArg == null) ? null : handleArg.longValue(), resultCallback);
+                api.taskCancel(
+                    appArg, (handleArg == null) ? null : handleArg.longValue(), resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

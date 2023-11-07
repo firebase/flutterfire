@@ -12,7 +12,6 @@ import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-
 class _TestFirebaseStorageHostApiCodec extends StandardMessageCodec {
   const _TestFirebaseStorageHostApiCodec();
   @override
