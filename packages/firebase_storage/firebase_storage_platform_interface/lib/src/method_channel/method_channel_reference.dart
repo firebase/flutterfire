@@ -114,9 +114,9 @@ class MethodChannelReference extends ReferencePlatform {
   Future<ListResultPlatform> list([ListOptions? options]) async {
     try {
       PigeonListOptions pigeonOptions = convertOptions(options);
-      PigeonListResult pigeonReferenceList =
-          await MethodChannelFirebaseStorage.pigeonChannel.referenceList(
-              pigeonFirebaseApp, pigeonReference, pigeonOptions);
+      PigeonListResult pigeonReferenceList = await MethodChannelFirebaseStorage
+          .pigeonChannel
+          .referenceList(pigeonFirebaseApp, pigeonReference, pigeonOptions);
       return convertListReference(pigeonReferenceList);
     } catch (e, stack) {
       convertPlatformException(e, stack);

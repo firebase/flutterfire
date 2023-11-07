@@ -69,7 +69,8 @@ abstract class MethodChannelTask extends TaskPlatform {
   }
 
   ///  FirebaseApp pigeon instance
-  static PigeonStorageFirebaseApp pigeonFirebaseApp(FirebaseStoragePlatform storage) {
+  static PigeonStorageFirebaseApp pigeonFirebaseApp(
+      FirebaseStoragePlatform storage) {
     return PigeonStorageFirebaseApp(
       appName: storage.app.name,
       bucket: storage.bucket,
@@ -156,10 +157,10 @@ abstract class MethodChannelTask extends TaskPlatform {
   @override
   Future<bool> resume() async {
     try {
-      Map<String, dynamic>? data = (await MethodChannelFirebaseStorage
-              .pigeonChannel
-              .taskResume(MethodChannelTask.pigeonFirebaseApp(storage), _handle))
-          .cast<String, dynamic>();
+      Map<String, dynamic>? data =
+          (await MethodChannelFirebaseStorage.pigeonChannel.taskResume(
+                  MethodChannelTask.pigeonFirebaseApp(storage), _handle))
+              .cast<String, dynamic>();
 
       final success = data['status'] ?? false;
       if (success) {
@@ -175,10 +176,10 @@ abstract class MethodChannelTask extends TaskPlatform {
   @override
   Future<bool> cancel() async {
     try {
-      Map<String, dynamic>? data = (await MethodChannelFirebaseStorage
-              .pigeonChannel
-              .taskCancel(MethodChannelTask.pigeonFirebaseApp(storage), _handle))
-          .cast<String, dynamic>();
+      Map<String, dynamic>? data =
+          (await MethodChannelFirebaseStorage.pigeonChannel.taskCancel(
+                  MethodChannelTask.pigeonFirebaseApp(storage), _handle))
+              .cast<String, dynamic>();
 
       final success = data['status'] ?? false;
       if (success) {

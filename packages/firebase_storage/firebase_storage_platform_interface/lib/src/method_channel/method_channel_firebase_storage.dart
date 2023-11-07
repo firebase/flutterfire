@@ -45,7 +45,8 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// FirebaseApp pigeon instance
   PigeonStorageFirebaseApp get pigeonFirebaseAppDefault {
     return PigeonStorageFirebaseApp(
-      appName: app.name, bucket: bucket,
+      appName: app.name,
+      bucket: bucket,
     );
   }
 
@@ -78,7 +79,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   }
 
   /// Return an instance of a [PigeonStorageFirebaseApp]
-   PigeonStorageFirebaseApp getPigeonFirebaseApp(String appName) {
+  PigeonStorageFirebaseApp getPigeonFirebaseApp(String appName) {
     return PigeonStorageFirebaseApp(
       appName: appName,
       bucket: bucket,
