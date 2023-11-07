@@ -88,7 +88,9 @@ class MethodChannelReference extends ReferencePlatform {
       return PigeonListOptions(maxResults: 1000);
     }
     return PigeonListOptions(
-        maxResults: options.maxResults, pageToken: options.pageToken);
+      maxResults: options.maxResults ?? 1000,
+      pageToken: options.pageToken,
+    );
   }
 
   /// Convert a [PigeonListResult] to [ListResultPlatform]
