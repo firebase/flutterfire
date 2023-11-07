@@ -42,10 +42,10 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// The pigeon channel instance to communicate through.
   static final FirebaseStorageHostApi pigeonChannel = FirebaseStorageHostApi();
 
-  /// Default FirebaseApp pigeon instance
+  /// FirebaseApp pigeon instance
   PigeonStorageFirebaseApp get pigeonFirebaseAppDefault {
     return PigeonStorageFirebaseApp(
-      appName: app.name,
+      appName: app.name, bucket: bucket,
     );
   }
 
@@ -78,9 +78,10 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   }
 
   /// Return an instance of a [PigeonStorageFirebaseApp]
-  static PigeonStorageFirebaseApp getPigeonFirebaseApp(String appName) {
+   PigeonStorageFirebaseApp getPigeonFirebaseApp(String appName) {
     return PigeonStorageFirebaseApp(
       appName: appName,
+      bucket: bucket,
     );
   }
 

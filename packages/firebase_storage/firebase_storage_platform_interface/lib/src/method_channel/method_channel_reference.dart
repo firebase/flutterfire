@@ -21,10 +21,11 @@ class MethodChannelReference extends ReferencePlatform {
   MethodChannelReference(FirebaseStoragePlatform storage, String path)
       : super(storage, path);
 
-  /// Default FirebaseApp pigeon instance
-  PigeonStorageFirebaseApp get pigeonFirebaseAppDefault {
+  /// FirebaseApp pigeon instance
+  PigeonStorageFirebaseApp get pigeonFirebaseApp {
     return PigeonStorageFirebaseApp(
       appName: storage.app.name,
+      bucket: storage.bucket,
     );
   }
 
@@ -41,7 +42,7 @@ class MethodChannelReference extends ReferencePlatform {
   Future<void> delete() async {
     try {
       await MethodChannelFirebaseStorage.pigeonChannel
-          .referenceDelete(pigeonFirebaseAppDefault, pigeonReference);
+          .referenceDelete(pigeonFirebaseApp, pigeonReference);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -51,7 +52,7 @@ class MethodChannelReference extends ReferencePlatform {
   Future<String> getDownloadURL() async {
     try {
       String url = await MethodChannelFirebaseStorage.pigeonChannel
-          .referenceGetDownloadURL(pigeonFirebaseAppDefault, pigeonReference);
+          .referenceGetDownloadURL(pigeonFirebaseApp, pigeonReference);
       return url;
     } catch (e, stack) {
       convertPlatformException(e, stack);
@@ -74,7 +75,7 @@ class MethodChannelReference extends ReferencePlatform {
     try {
       PigeonFullMetaData metaData = await MethodChannelFirebaseStorage
           .pigeonChannel
-          .referenceGetMetaData(pigeonFirebaseAppDefault, pigeonReference);
+          .referenceGetMetaData(pigeonFirebaseApp, pigeonReference);
       return convertMetadata(metaData);
     } catch (e, stack) {
       convertPlatformException(e, stack);
@@ -115,7 +116,7 @@ class MethodChannelReference extends ReferencePlatform {
       PigeonListOptions pigeonOptions = convertOptions(options);
       PigeonListResult pigeonReferenceList =
           await MethodChannelFirebaseStorage.pigeonChannel.referenceList(
-              pigeonFirebaseAppDefault, pigeonReference, pigeonOptions);
+              pigeonFirebaseApp, pigeonReference, pigeonOptions);
       return convertListReference(pigeonReferenceList);
     } catch (e, stack) {
       convertPlatformException(e, stack);
@@ -127,7 +128,7 @@ class MethodChannelReference extends ReferencePlatform {
     try {
       PigeonListResult pigeonReferenceList = await MethodChannelFirebaseStorage
           .pigeonChannel
-          .referenceListAll(pigeonFirebaseAppDefault, pigeonReference);
+          .referenceListAll(pigeonFirebaseApp, pigeonReference);
       return convertListReference(pigeonReferenceList);
     } catch (e, stack) {
       convertPlatformException(e, stack);
@@ -138,7 +139,7 @@ class MethodChannelReference extends ReferencePlatform {
   Future<Uint8List?> getData(int maxSize) async {
     try {
       return await MethodChannelFirebaseStorage.pigeonChannel
-          .referenceGetData(pigeonFirebaseAppDefault, pigeonReference, maxSize);
+          .referenceGetData(pigeonFirebaseApp, pigeonReference, maxSize);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -187,7 +188,7 @@ class MethodChannelReference extends ReferencePlatform {
     try {
       PigeonFullMetaData updatedMetaData = await MethodChannelFirebaseStorage
           .pigeonChannel
-          .referenceUpdateMetadata(pigeonFirebaseAppDefault, pigeonReference,
+          .referenceUpdateMetadata(pigeonFirebaseApp, pigeonReference,
               convertToPigeonMetaData(metadata));
       return convertMetadata(updatedMetaData);
     } catch (e, stack) {
