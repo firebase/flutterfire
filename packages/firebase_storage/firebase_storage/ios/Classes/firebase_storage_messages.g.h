@@ -69,12 +69,14 @@ typedef NS_ENUM(NSUInteger, PigeonStorageTaskState) {
 @end
 
 @interface PigeonListOptions : NSObject
-+ (instancetype)makeWithMaxResults:(nullable NSNumber *)maxResults
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithMaxResults:(NSNumber *)maxResults
     pageToken:(nullable NSString *)pageToken;
 /// If set, limits the total number of `prefixes` and `items` to return.
 ///
 /// The default and maximum maxResults is 1000.
-@property(nonatomic, strong, nullable) NSNumber * maxResults;
+@property(nonatomic, strong) NSNumber * maxResults;
 /// The nextPageToken from a previous call to list().
 ///
 /// If provided, listing is resumed from the previous position.

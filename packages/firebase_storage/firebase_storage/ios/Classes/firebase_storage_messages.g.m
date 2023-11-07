@@ -162,7 +162,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @end
 
 @implementation PigeonListOptions
-+ (instancetype)makeWithMaxResults:(nullable NSNumber *)maxResults
++ (instancetype)makeWithMaxResults:(NSNumber *)maxResults
     pageToken:(nullable NSString *)pageToken {
   PigeonListOptions* pigeonResult = [[PigeonListOptions alloc] init];
   pigeonResult.maxResults = maxResults;
@@ -172,6 +172,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 + (PigeonListOptions *)fromList:(NSArray *)list {
   PigeonListOptions *pigeonResult = [[PigeonListOptions alloc] init];
   pigeonResult.maxResults = GetNullableObjectAtIndex(list, 0);
+  NSAssert(pigeonResult.maxResults != nil, @"");
   pigeonResult.pageToken = GetNullableObjectAtIndex(list, 1);
   return pigeonResult;
 }
