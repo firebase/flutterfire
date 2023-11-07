@@ -28,7 +28,7 @@ Future<void> main() async {
             ? '10.0.2.2'
             : 'localhost';
 
-    await FirebaseStorage.instance.useStorageEmulator(emulatorHost, 9199);
+    // await FirebaseStorage.instance.useStorageEmulator(emulatorHost, 9199);
   }
 
   runApp(StorageExampleApp());
@@ -95,10 +95,12 @@ class _TaskManager extends State<TaskManager> {
     UploadTask uploadTask;
 
     // Create a Reference to the file
-    Reference ref = FirebaseStorage.instance
-        .ref()
-        .child('flutter-tests')
-        .child('/some-image.jpg');
+    // Reference ref = FirebaseStorage.instance
+    Reference ref =
+        FirebaseStorage.instanceFor(bucket: 'flutterfire-e2e-tests-two')
+            .ref()
+            .child('flutter-tests')
+            .child('/some-image.jpg');
 
     final metadata = SettableMetadata(
       contentType: 'image/jpeg',
@@ -120,10 +122,12 @@ class _TaskManager extends State<TaskManager> {
         'This upload has been generated using the putString method! Check the metadata too!';
 
     // Create a Reference to the file
-    Reference ref = FirebaseStorage.instance
-        .ref()
-        .child('flutter-tests')
-        .child('/put-string-example.txt');
+    // Reference ref = FirebaseStorage.instance
+    Reference ref =
+        FirebaseStorage.instanceFor(bucket: 'flutterfire-e2e-tests-two')
+            .ref()
+            .child('flutter-tests')
+            .child('/put-string-yolo.txt');
 
     // Start upload of putString
     return ref.putString(
@@ -134,6 +138,8 @@ class _TaskManager extends State<TaskManager> {
       ),
     );
   }
+
+  Future<void> fixMePlease() async {}
 
   /// Handles the user pressing the PopupMenuItem item.
   Future<void> handleUploadType(UploadType type) async {
@@ -146,7 +152,12 @@ class _TaskManager extends State<TaskManager> {
       case UploadType.file:
         final file = await ImagePicker().pickImage(source: ImageSource.gallery);
         UploadTask? task = await uploadFile(file);
-
+        // TaskSnapshot snapshot = await task!.whenComplete(() {
+        //   print('YOLO');
+        // });
+        // print('WWWWWW');
+        // final url = await task.snapshot.ref.getDownloadURL();
+        // print('Download-Link: $url');
         if (task != null) {
           setState(() {
             _uploadTasks = [..._uploadTasks, task];
@@ -224,56 +235,67 @@ class _TaskManager extends State<TaskManager> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Storage Example App'),
-        actions: [
-          PopupMenuButton<UploadType>(
-            onSelected: handleUploadType,
-            icon: const Icon(Icons.add),
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                // ignore: sort_child_properties_last
-                child: Text('Upload string'),
-                value: UploadType.string,
-              ),
-              const PopupMenuItem(
-                // ignore: sort_child_properties_last
-                child: Text('Upload local file'),
-                value: UploadType.file,
-              ),
-              if (_uploadTasks.isNotEmpty)
+        appBar: AppBar(
+          title: const Text('Storage Example App'),
+          actions: [
+            PopupMenuButton<UploadType>(
+              onSelected: handleUploadType,
+              icon: const Icon(Icons.add),
+              itemBuilder: (context) => [
                 const PopupMenuItem(
                   // ignore: sort_child_properties_last
-                  child: Text('Clear list'),
-                  value: UploadType.clear,
+                  child: Text('Upload string'),
+                  value: UploadType.string,
                 ),
-            ],
-          ),
-        ],
-      ),
-      body: _uploadTasks.isEmpty
-          ? const Center(child: Text("Press the '+' button to add a new file."))
-          : ListView.builder(
-              itemCount: _uploadTasks.length,
-              itemBuilder: (context, index) => UploadTaskListTile(
-                task: _uploadTasks[index],
-                onDismissed: () => _removeTaskAtIndex(index),
-                onDownloadLink: () async {
-                  return _downloadLink(_uploadTasks[index].snapshot.ref);
-                },
-                onDownload: () async {
-                  if (kIsWeb) {
-                    return _downloadBytes(_uploadTasks[index].snapshot.ref);
-                  } else {
-                    return _downloadFile(_uploadTasks[index].snapshot.ref);
-                  }
-                },
-                onDelete: () async {
-                  return _delete(_uploadTasks[index].snapshot.ref);
-                },
-              ),
+                const PopupMenuItem(
+                  // ignore: sort_child_properties_last
+                  child: Text('Upload local file'),
+                  value: UploadType.file,
+                ),
+                if (_uploadTasks.isNotEmpty)
+                  const PopupMenuItem(
+                    // ignore: sort_child_properties_last
+                    child: Text('Clear list'),
+                    value: UploadType.clear,
+                  ),
+              ],
             ),
-    );
+          ],
+        ),
+        body: Column(
+          children: [
+            ElevatedButton(
+                onPressed: () async {
+                  String? photoDownloadUrl;
+
+                  Reference storageRef = FirebaseStorage.instanceFor(
+                          bucket:
+                              'flutterfire-e2e-tests-two' // change this to a bucket that isn't your project's default bucket
+                          )
+                      .ref()
+                      .child('flutter-tests')
+                      .child('/put-string-example.txt');
+
+                  photoDownloadUrl = await storageRef.getDownloadURL();
+                  print("Current link: $photoDownloadUrl");
+
+                  UploadTask task = storageRef.putString(
+                    "something unusual",
+                  );
+
+                  await task.whenComplete(() => null);
+
+                  // await task.whenComplete(() {
+                  //   print('YOLO');
+                  //   return null;
+                  // });
+
+                  photoDownloadUrl = await task.snapshot.ref.getDownloadURL();
+                  print("Upload test link: $photoDownloadUrl");
+                },
+                child: const Text('press me')),
+          ],
+        ));
   }
 }
 
