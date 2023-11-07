@@ -6,7 +6,6 @@ package io.flutter.plugins.firebase.storage;
 
 import android.net.Uri;
 import android.util.Base64;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
@@ -180,7 +179,7 @@ public class FlutterFirebaseStoragePlugin
       GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app) {
     FirebaseApp androidApp = FirebaseApp.getInstance(app.getAppName());
 
-      return FirebaseStorage.getInstance(androidApp, "gs://" + app.getBucket());
+    return FirebaseStorage.getInstance(androidApp, "gs://" + app.getBucket());
   }
 
   private StorageReference getReferenceFromPigeon(
@@ -351,13 +350,11 @@ public class FlutterFirebaseStoragePlugin
     FirebaseStorage firebaseStorage = getStorageFromPigeon(app);
     StorageReference androidReference = firebaseStorage.getReference(reference.getFullPath());
     Task<ListResult> androidResult;
-    if (options.getPageToken() == null && options.getMaxResults() != null) {
-      androidResult = androidReference.list(options.getMaxResults().intValue());
-    } else {
-      if(options.getMaxResults() != null){
+    if (options.getPageToken() != null) {
       androidResult =
           androidReference.list(options.getMaxResults().intValue(), options.getPageToken());
-      }
+    } else {
+      androidResult = androidReference.list(options.getMaxResults().intValue());
     }
     androidResult.addOnCompleteListener(
         task -> {
