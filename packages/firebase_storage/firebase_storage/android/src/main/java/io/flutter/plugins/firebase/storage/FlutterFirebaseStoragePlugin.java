@@ -633,7 +633,6 @@ public class FlutterFirebaseStoragePlugin
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       @NonNull Long time,
       @NonNull GeneratedAndroidFirebaseStorage.Result<Void> result) {
-    // TODO - this needs fixing
     FirebaseStorage androidStorage = getStorageFromPigeon(app);
     androidStorage.setMaxOperationRetryTimeMillis(time);
     result.success(null);
