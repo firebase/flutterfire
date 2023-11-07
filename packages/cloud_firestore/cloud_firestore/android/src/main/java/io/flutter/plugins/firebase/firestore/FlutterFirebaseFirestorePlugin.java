@@ -8,7 +8,6 @@ import static com.google.firebase.firestore.AggregateField.average;
 import static com.google.firebase.firestore.AggregateField.count;
 import static com.google.firebase.firestore.AggregateField.sum;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -731,9 +730,17 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   @Override
-  public void aggregateQuery(@NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app, @NonNull String path, @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters, @NonNull GeneratedAndroidFirebaseFirestore.AggregateSource source, @NonNull List<GeneratedAndroidFirebaseFirestore.AggregateQuery> queries, @NonNull GeneratedAndroidFirebaseFirestore.Result<List<GeneratedAndroidFirebaseFirestore.AggregateQueryResponse>> result) {
-    Query query =
-      PigeonParser.parseQuery(getFirestoreFromPigeon(app), path, false, parameters);
+  public void aggregateQuery(
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
+      @NonNull String path,
+      @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
+      @NonNull GeneratedAndroidFirebaseFirestore.AggregateSource source,
+      @NonNull List<GeneratedAndroidFirebaseFirestore.AggregateQuery> queries,
+      @NonNull
+          GeneratedAndroidFirebaseFirestore.Result<
+                  List<GeneratedAndroidFirebaseFirestore.AggregateQueryResponse>>
+              result) {
+    Query query = PigeonParser.parseQuery(getFirestoreFromPigeon(app), path, false, parameters);
 
     AggregateQuery aggregateQuery;
     ArrayList<AggregateField> aggregateFields = new ArrayList<>();
@@ -755,52 +762,65 @@ public class FlutterFirebaseFirestorePlugin
     }
 
     assert query != null;
-    aggregateQuery = query.aggregate(aggregateFields.get(0), aggregateFields.subList(1, aggregateFields.size()).toArray(new AggregateField[0]));
+    aggregateQuery =
+        query.aggregate(
+            aggregateFields.get(0),
+            aggregateFields.subList(1, aggregateFields.size()).toArray(new AggregateField[0]));
 
     cachedThreadPool.execute(
-      () -> {
-        try {
-          AggregateQuerySnapshot aggregateQuerySnapshot =
-            Tasks.await(aggregateQuery.get(PigeonParser.parseAggregateSource(source)));
+        () -> {
+          try {
+            AggregateQuerySnapshot aggregateQuerySnapshot =
+                Tasks.await(aggregateQuery.get(PigeonParser.parseAggregateSource(source)));
 
-          ArrayList<GeneratedAndroidFirebaseFirestore.AggregateQueryResponse> aggregateResponse = new ArrayList<>();
-          for (GeneratedAndroidFirebaseFirestore.AggregateQuery queryRequest : queries) {
-            switch (queryRequest.getType()) {
-              case COUNT:
-                GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder builder = new GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder();
-                builder.setType(GeneratedAndroidFirebaseFirestore.AggregateType.COUNT);
-                builder.setValue((double) aggregateQuerySnapshot.getCount());
+            ArrayList<GeneratedAndroidFirebaseFirestore.AggregateQueryResponse> aggregateResponse =
+                new ArrayList<>();
+            for (GeneratedAndroidFirebaseFirestore.AggregateQuery queryRequest : queries) {
+              switch (queryRequest.getType()) {
+                case COUNT:
+                  GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder builder =
+                      new GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder();
+                  builder.setType(GeneratedAndroidFirebaseFirestore.AggregateType.COUNT);
+                  builder.setValue((double) aggregateQuerySnapshot.getCount());
 
-                aggregateResponse.add(builder.build());
-                break;
-              case SUM:
-                assert queryRequest.getField() != null;
-                GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder builderSum = new GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder();
-                builderSum.setType(GeneratedAndroidFirebaseFirestore.AggregateType.SUM);
-                builderSum.setValue(((Number) Objects.requireNonNull(aggregateQuerySnapshot.get(sum(queryRequest.getField())))).doubleValue());
-                builderSum.setField(queryRequest.getField());
+                  aggregateResponse.add(builder.build());
+                  break;
+                case SUM:
+                  assert queryRequest.getField() != null;
+                  GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder builderSum =
+                      new GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder();
+                  builderSum.setType(GeneratedAndroidFirebaseFirestore.AggregateType.SUM);
+                  builderSum.setValue(
+                      ((Number)
+                              Objects.requireNonNull(
+                                  aggregateQuerySnapshot.get(sum(queryRequest.getField()))))
+                          .doubleValue());
+                  builderSum.setField(queryRequest.getField());
 
-                aggregateResponse.add(builderSum.build());
-                break;
-              case AVERAGE:
-                assert queryRequest.getField() != null;
-                GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder builderAverage = new GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder();
-                builderAverage.setType(GeneratedAndroidFirebaseFirestore.AggregateType.AVERAGE);
-                builderAverage.setValue(Objects.requireNonNull(aggregateQuerySnapshot.get(average(queryRequest.getField()))));
-                builderAverage.setField(queryRequest.getField());
+                  aggregateResponse.add(builderSum.build());
+                  break;
+                case AVERAGE:
+                  assert queryRequest.getField() != null;
+                  GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder builderAverage =
+                      new GeneratedAndroidFirebaseFirestore.AggregateQueryResponse.Builder();
+                  builderAverage.setType(GeneratedAndroidFirebaseFirestore.AggregateType.AVERAGE);
+                  builderAverage.setValue(
+                      Objects.requireNonNull(
+                          aggregateQuerySnapshot.get(average(queryRequest.getField()))));
+                  builderAverage.setField(queryRequest.getField());
 
-                aggregateResponse.add(builderAverage.build());
-                break;
+                  aggregateResponse.add(builderAverage.build());
+                  break;
+              }
             }
+
+            result.success(aggregateResponse);
+          } catch (Exception e) {
+            ExceptionConverter.sendErrorToFlutter(result, e);
           }
-
-          result.success(aggregateResponse);
-        } catch (Exception e) {
-          ExceptionConverter.sendErrorToFlutter(result, e);
-        }
-      });
-
+        });
   }
+
   @Override
   public void writeBatchCommit(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
