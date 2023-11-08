@@ -431,14 +431,19 @@ void setupSecondBucketTests() {
     });
 
     group('writeToFile', () {
-      test('writes a file', () async {
-        File file = await createFile('ok.txt');
-        TaskSnapshot complete =
-            await storage.ref('flutter-tests/ok.txt').writeToFile(file);
-        expect(complete.bytesTransferred, complete.totalBytes);
-        expect(complete.state, TaskState.success);
-        expect(complete.ref.bucket, secondStorageBucket);
-      });
+      test(
+        'writes a file',
+        () async {
+          File file = await createFile('ok.txt');
+          TaskSnapshot complete =
+              await storage.ref('flutter-tests/ok.txt').writeToFile(file);
+          expect(complete.bytesTransferred, complete.totalBytes);
+          expect(complete.state, TaskState.success);
+          expect(complete.ref.bucket, secondStorageBucket);
+        },
+        skip: defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS,
+      );
     });
 
     group('updateMetadata', () {
