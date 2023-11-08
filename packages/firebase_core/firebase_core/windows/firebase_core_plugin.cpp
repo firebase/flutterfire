@@ -8,8 +8,7 @@
 #include <windows.h>
 
 #include "firebase/app.h"
-#include "firebase/auth.h"
-#include "firebase/remote_config.h"
+#include "firebase_core/plugin_version.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -20,16 +19,18 @@
 
 #include <future>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
+
 using ::firebase::App;
-using ::firebase::auth::Auth;
-using ::firebase::remote_config::RemoteConfig;
 
 namespace firebase_core_windows {
+
+static std::string kLibraryName = "flutter-fire-core";
 
 // static
 void FirebaseCorePlugin::RegisterWithRegistrar(
@@ -40,26 +41,10 @@ void FirebaseCorePlugin::RegisterWithRegistrar(
   FirebaseAppHostApi::SetUp(registrar->messenger(), plugin.get());
 
   registrar->AddPlugin(std::move(plugin));
-}
 
-void *FirebaseCorePlugin::GetFirebaseApp(std::string appName) {
-  return App::GetInstance(appName.c_str());
-}
-
-void *FirebaseCorePlugin::GetFirebaseAuth(std::string appName) {
-  App *app = App::GetInstance(appName.c_str());
-  if (app == nullptr) {
-    return nullptr;
-  }
-  return Auth::GetAuth(app);
-}
-
-void *FirebaseCorePlugin::GetFirebaseRemoteConfig(std::string appName) {
-  App *app = App::GetInstance(appName.c_str());
-  if (app == nullptr) {
-    return nullptr;
-  }
-  return RemoteConfig::GetInstance(app);
+  // Register for platform logging
+  App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
+                       nullptr);
 }
 
 FirebaseCorePlugin::FirebaseCorePlugin() {}
@@ -119,9 +104,9 @@ void FirebaseCorePlugin::InitializeApp(
     const PigeonFirebaseOptions &initialize_app_request,
     std::function<void(ErrorOr<PigeonInitializeResponse> reply)> result) {
   // Create an app
-  App *app;
-  app = App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
-                    app_name.c_str());
+  App *app =
+      App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
+                  app_name.c_str());
 
   // Send back the result to Flutter
   result(AppToPigeonInitializeResponse(*app));

@@ -21,8 +21,8 @@ class MethodChannelUser extends UserPlatform {
 
   final _api = FirebaseAuthUserHostApi();
 
-  PigeonFirebaseApp get pigeonDefault {
-    return PigeonFirebaseApp(
+  AuthPigeonFirebaseApp get pigeonDefault {
+    return AuthPigeonFirebaseApp(
       appName: auth.app.name,
       tenantId: auth.tenantId,
     );

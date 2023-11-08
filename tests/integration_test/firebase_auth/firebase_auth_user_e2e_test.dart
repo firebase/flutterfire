@@ -94,7 +94,7 @@ void main() {
           }
           fail('should have thrown an error');
         });
-      });
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
 
       group('getIdTokenResult()', () {
         test('should return a valid IdTokenResult Object', () async {
@@ -116,7 +116,7 @@ void main() {
           expect(idTokenResult.expirationTime.runtimeType, equals(DateTime));
           expect(idTokenResult.token!.length, greaterThan(24));
           expect(idTokenResult.signInProvider, equals('password'));
-        });
+        }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
         // TODO add custom claims and tenant id tests for id token result
       });
 
@@ -235,7 +235,7 @@ void main() {
                 ?.unlink(PhoneAuthProvider.PROVIDER_ID);
             await FirebaseAuth.instance.currentUser?.delete();
           },
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.windows,
         ); // verifyPhoneNumber not supported on web.
 
         test(
@@ -266,9 +266,9 @@ void main() {
 
             fail('should have thrown an error');
           },
-          skip: defaultTargetPlatform == TargetPlatform.macOS,
+          skip: defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.windows,
         );
-      });
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
 
       group('reauthenticateWithCredential()', () {
         test('should reauthenticate correctly', () async {
@@ -421,7 +421,7 @@ void main() {
 
           fail('should have thrown an error');
         });
-      });
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
 
       group('reload()', () {
         test('should not error', () async {
@@ -475,7 +475,7 @@ void main() {
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
           skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
         );
-      });
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
 
       group('unlink()', () {
         test('should unlink the email address', () async {
@@ -557,7 +557,7 @@ void main() {
           }
           fail('should have thrown an error');
         });
-      });
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
 
       group('updateEmail()', () {
         test('should update the email address', () async {
@@ -573,7 +573,7 @@ void main() {
           await FirebaseAuth.instance.currentUser!.updateEmail(email);
           expect(FirebaseAuth.instance.currentUser!.email, equals(email));
         });
-      });
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
 
       group('updatePassword()', () {
         test('should update the password', () async {
@@ -617,7 +617,7 @@ void main() {
           }
           fail('should have thrown an error');
         });
-      });
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
 
       group('refreshToken', () {
         test(
@@ -663,7 +663,7 @@ void main() {
           },
           skip: !kIsWeb,
         );
-      });
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
 
       group('user.metadata', () {
         test(
@@ -685,7 +685,7 @@ void main() {
           expect(metadata?.creationTime, isA<DateTime>());
           expect(metadata?.creationTime!.year, DateTime.now().year);
         });
-      });
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
 
       group('updateDisplayName', () {
         test('updates the user displayName without impacting the photoURL',
@@ -755,8 +755,8 @@ void main() {
           },
           // setting `displayName` on web throws an error
           skip: kIsWeb ||
-              (defaultTargetPlatform == TargetPlatform.iOS ||
-                  defaultTargetPlatform == TargetPlatform.macOS),
+              defaultTargetPlatform == TargetPlatform.iOS ||
+                  defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.windows,
         );
       });
 
@@ -829,9 +829,9 @@ void main() {
           },
           // setting `photoURL` on web throws an error
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS  || defaultTargetPlatform == TargetPlatform.windows,
         );
-      });
+      },);
 
       group('updatePhoneNumber()', () {
         // TODO this test is now flakey since switching to Auth emulator, consider
@@ -907,7 +907,7 @@ void main() {
 
             fail('should have thrown an error');
           },
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.windows,
         );
 
         // TODO error codes no longer match up on emulator
@@ -1013,7 +1013,7 @@ void main() {
 
           fail('Should have thrown an error');
         });
-      });
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,);
     },
     // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
     skip: defaultTargetPlatform == TargetPlatform.macOS,

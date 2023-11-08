@@ -8,17 +8,15 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -41,7 +39,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /** FlutterFirebaseMessagingPlugin */
-public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
+public class FlutterFirebaseMessagingPlugin
     implements FlutterFirebasePlugin,
         MethodCallHandler,
         NewIntentListener,
@@ -51,6 +49,12 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
   private final HashMap<String, Boolean> consumedInitialMessages = new HashMap<>();
   private MethodChannel channel;
   private Activity mainActivity;
+
+  private final LiveData<RemoteMessage> liveDataRemoteMessage =
+      FlutterFirebaseRemoteMessageLiveData.getInstance();
+  private Observer<RemoteMessage> remoteMessageObserver;
+  private final LiveData<String> liveDataToken = FlutterFirebaseTokenLiveData.getInstance();
+  private Observer<String> tokenObserver;
 
   private RemoteMessage initialMessage;
   // We store the initial notification in a separate variable
@@ -65,13 +69,18 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     channel = new MethodChannel(messenger, channelName);
     channel.setMethodCallHandler(this);
     permissionManager = new FlutterFirebasePermissionManager();
-    // Register broadcast receiver
-    IntentFilter intentFilter = new IntentFilter();
-    intentFilter.addAction(FlutterFirebaseMessagingUtils.ACTION_TOKEN);
-    intentFilter.addAction(FlutterFirebaseMessagingUtils.ACTION_REMOTE_MESSAGE);
-    LocalBroadcastManager manager =
-        LocalBroadcastManager.getInstance(ContextHolder.getApplicationContext());
-    manager.registerReceiver(this, intentFilter);
+
+    remoteMessageObserver =
+        remoteMessage -> {
+          Map<String, Object> content =
+              FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
+          channel.invokeMethod("Messaging#onMessage", content);
+        };
+    tokenObserver = token -> channel.invokeMethod("Messaging#onTokenRefresh", token);
+    // We remove these observers in the onDetachedFromEngine method. Using "observeForever()"
+    // allows us to use without a LifecycleOwner.
+    liveDataRemoteMessage.observeForever(remoteMessageObserver);
+    liveDataToken.observeForever(tokenObserver);
 
     registerPlugin(channelName, this);
   }
@@ -83,7 +92,8 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    LocalBroadcastManager.getInstance(binding.getApplicationContext()).unregisterReceiver(this);
+    liveDataToken.removeObserver(tokenObserver);
+    liveDataRemoteMessage.removeObserver(remoteMessageObserver);
   }
 
   @Override
@@ -113,33 +123,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
   @Override
   public void onDetachedFromActivity() {
     this.mainActivity = null;
-  }
-
-  // BroadcastReceiver implementation.
-  @Override
-  public void onReceive(Context context, Intent intent) {
-    String action = intent.getAction();
-
-    if (action == null) {
-      return;
-    }
-
-    if (action.equals(FlutterFirebaseMessagingUtils.ACTION_TOKEN)) {
-      String token = intent.getStringExtra(FlutterFirebaseMessagingUtils.EXTRA_TOKEN);
-      channel.invokeMethod("Messaging#onTokenRefresh", token);
-    } else if (action.equals(FlutterFirebaseMessagingUtils.ACTION_REMOTE_MESSAGE)) {
-      RemoteMessage message;
-      if (android.os.Build.VERSION.SDK_INT >= 33) {
-        message =
-            intent.getParcelableExtra(
-                FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE, RemoteMessage.class);
-      } else {
-        message = intent.getParcelableExtra(FlutterFirebaseMessagingUtils.EXTRA_REMOTE_MESSAGE);
-      }
-      if (message == null) return;
-      Map<String, Object> content = FlutterFirebaseMessagingUtils.remoteMessageToMap(message);
-      channel.invokeMethod("Messaging#onMessage", content);
-    }
   }
 
   private Task<Void> deleteToken() {
@@ -216,7 +199,9 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
 
     return taskCompletionSource.getTask();
   }
-
+  // This API will be removed in a future release. Slated to be removed by June 2024 by Firebase.
+  // https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/FirebaseMessaging#send
+  @SuppressWarnings("deprecation")
   private Task<Void> sendMessage(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -383,9 +368,8 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
                     permissions.put("authorizationStatus", notificationsEnabled);
                     taskCompletionSource.setResult(permissions);
                   },
-                  (String errorDescription) -> {
-                    taskCompletionSource.setException(new Exception(errorDescription));
-                  });
+                  (String errorDescription) ->
+                      taskCompletionSource.setException(new Exception(errorDescription)));
             } else {
               permissions.put("authorizationStatus", 1);
               taskCompletionSource.setResult(permissions);
@@ -413,14 +397,14 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         () -> {
           try {
             final Map<String, Integer> permissions = new HashMap<>();
+            final boolean areNotificationsEnabled;
             if (Build.VERSION.SDK_INT >= 33) {
-              final boolean areNotificationsEnabled = checkPermissions();
-              permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
+              areNotificationsEnabled = checkPermissions();
             } else {
-              final boolean areNotificationsEnabled =
+              areNotificationsEnabled =
                   NotificationManagerCompat.from(mainActivity).areNotificationsEnabled();
-              permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
             }
+            permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
             taskCompletionSource.setResult(permissions);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
@@ -445,22 +429,28 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         @SuppressWarnings("unchecked")
         Map<String, Object> arguments = ((Map<String, Object>) call.arguments);
 
-        long pluginCallbackHandle = 0;
-        long userCallbackHandle = 0;
+        long pluginCallbackHandle;
+        long userCallbackHandle;
 
         Object arg1 = arguments.get("pluginCallbackHandle");
         Object arg2 = arguments.get("userCallbackHandle");
 
         if (arg1 instanceof Long) {
           pluginCallbackHandle = (Long) arg1;
-        } else {
+        } else if (arg1 instanceof Integer) {
           pluginCallbackHandle = Long.valueOf((Integer) arg1);
+        } else {
+          throw new IllegalArgumentException(
+              "Expected 'Long' or 'Integer' type for 'pluginCallbackHandle'.");
         }
 
         if (arg2 instanceof Long) {
           userCallbackHandle = (Long) arg2;
-        } else {
+        } else if (arg2 instanceof Integer) {
           userCallbackHandle = Long.valueOf((Integer) arg2);
+        } else {
+          throw new IllegalArgumentException(
+              "Expected 'Long' or 'Integer' type for 'userCallbackHandle'.");
         }
 
         FlutterShellArgs shellArgs = null;
@@ -546,8 +536,8 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
   }
 
   @Override
-  public boolean onNewIntent(Intent intent) {
-    if (intent == null || intent.getExtras() == null) {
+  public boolean onNewIntent(@NonNull Intent intent) {
+    if (intent.getExtras() == null) {
       return false;
     }
 

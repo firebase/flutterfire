@@ -128,7 +128,7 @@ class MockFirebaseAppCheckWeb extends _i1.Mock
       ) as _i4.FirebaseAppCheckWeb);
   @override
   _i5.Future<void> activate({
-    String? webRecaptchaSiteKey,
+    _i3.WebProvider? webProvider,
     _i3.AndroidProvider? androidProvider,
     _i3.AppleProvider? appleProvider,
   }) =>
@@ -137,7 +137,7 @@ class MockFirebaseAppCheckWeb extends _i1.Mock
           #activate,
           [],
           {
-            #webRecaptchaSiteKey: webRecaptchaSiteKey,
+            #webProvider: webProvider,
             #androidProvider: androidProvider,
             #appleProvider: appleProvider,
           },

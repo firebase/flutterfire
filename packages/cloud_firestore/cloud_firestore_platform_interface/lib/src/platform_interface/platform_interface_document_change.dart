@@ -6,20 +6,6 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-/// An enumeration of document change types.
-enum DocumentChangeType {
-  /// Indicates a new document was added to the set of documents matching the
-  /// query.
-  added,
-
-  /// Indicates a document within the query was modified.
-  modified,
-
-  /// Indicates a document within the query was removed (either deleted or no
-  /// longer matches the query.
-  removed,
-}
-
 /// A change to the documents matching a query.
 ///
 /// It contains the document affected and the type of change that occurred

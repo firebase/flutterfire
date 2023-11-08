@@ -10,15 +10,16 @@ logs two primary types of information:
   user base, such as language preference or geographic location.
 
 Analytics automatically logs some
-[events](https://support.google.com/firebase/answer/6317485) and
-[user properties](https://support.google.com/firebase/answer/6317486);
+[events](https://support.google.com/analytics/answer/9234069) and
+[user properties](https://support.google.com/analytics/answer/9268042);
 you don't need to add any code to enable them.
 
 ## Before you begin
 
 1. [Install `firebase_core`](/docs/flutter/setup) and add the initialization code
-   to your app if you haven't already.
-1. Add your app to your Firebase project in the <a href="https://console.firebase.google.com/">Firebase console</a>.
+  to your app if you haven't already.
+1. Add your app to your Firebase project in the
+  [Firebase console](https://console.firebase.google.com).
 
 ## Add the Analytics SDK to your app {:#add-sdk}
 
@@ -41,8 +42,8 @@ you don't need to add any code to enable them.
     import 'package:firebase_analytics/firebase_analytics.dart';
     ```
 
-1.  Create a new Firebase Analytics instance by calling the
-    `instance` getter on
+1.  Create a new Firebase Analytics instance by accessing the
+    `instance` property on
     `FirebaseAnalytics`:
 
     ```dart
@@ -56,12 +57,12 @@ After you have created a `FirebaseAnalytics` instance, you can begin to log
 events with the library's `log`- methods.
 
 Certain events are
-[recommended for all apps](https://support.google.com/firebase/answer/6317498?ref_topic=6317484);
+[recommended for all apps](https://support.google.com/analytics/answer/9267735);
 others are recommended for specific business types or verticals. You should send
-suggested events along with their prescribed parameters, to ensure maximum
+recommended events along with their prescribed parameters, to ensure maximum
 available detail in your reports and to benefit from future features and
 integrations as they become available. This section demonstrates logging a
-pre-defined event, for more information on logging events, see
+predefined event, for more information on logging events, see
 [Log events](events).
 
 The following code logs a checkout event:
@@ -88,4 +89,4 @@ await FirebaseAnalytics.instance
 * Explore your data in the [Firebase console](https://console.firebase.google.com/project/_/analytics/).
 * Explore the guides on [events](events) and
   [user properties](user-properties).
-* Learn how to export your data to [BigQuery](https://support.google.com/firebase/answer/7030014?ref_topic=7029512).
+* Learn how to export your data to [BigQuery](https://support.google.com/firebase/answer/7030014).

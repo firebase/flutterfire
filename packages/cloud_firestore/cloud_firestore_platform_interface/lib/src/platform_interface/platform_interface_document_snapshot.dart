@@ -14,7 +14,8 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 /// to get a specific field.
 class DocumentSnapshotPlatform extends PlatformInterface {
   /// Constructs a [DocumentSnapshotPlatform] using the provided [FirebaseFirestorePlatform].
-  DocumentSnapshotPlatform(this._firestore, String path, this._data)
+  DocumentSnapshotPlatform(
+      this._firestore, String path, this._data, this._metadata)
       : _pointer = Pointer(path),
         super(token: _token);
 
@@ -35,7 +36,9 @@ class DocumentSnapshotPlatform extends PlatformInterface {
 
   final Pointer _pointer;
 
-  final Map<String, dynamic> _data;
+  final Map<String?, Object?>? _data;
+
+  final PigeonSnapshotMetadata _metadata;
 
   /// The database ID of the snapshot's document.
   String get id => _pointer.id;
@@ -44,14 +47,14 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   /// modifications.
   SnapshotMetadataPlatform get metadata {
     return SnapshotMetadataPlatform(
-      _data['metadata']['hasPendingWrites'],
-      _data['metadata']['isFromCache'],
+      _metadata.hasPendingWrites,
+      _metadata.isFromCache,
     );
   }
 
   /// Signals whether or not the data exists.
   bool get exists {
-    return _data['data'] != null;
+    return _data != null;
   }
 
   /// The reference that produced this snapshot.
@@ -59,7 +62,9 @@ class DocumentSnapshotPlatform extends PlatformInterface {
 
   /// Contains all the data of this snapshot.
   Map<String, dynamic>? data() {
-    return exists ? Map<String, dynamic>.from(_data['data']) : null;
+    return exists
+        ? Map<String, dynamic>.from(_data!.cast<String, dynamic>())
+        : null;
   }
 
   /// Gets a nested field by [String] or [FieldPath] from the snapshot.

@@ -3,8 +3,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:firebase_storage_platform_interface/src/method_channel/method_channel_firebase_storage.dart';
@@ -80,10 +78,10 @@ void main() {
       nextMockHandleId;
     });
 
-    test('taskObservers', () {
-      expect(MethodChannelFirebaseStorage.taskObservers,
-          isInstanceOf<Map<int, StreamController<TaskSnapshotPlatform>>>());
-    });
+    // test('taskObservers', () {
+    //   expect(MethodChannelFirebaseStorage.taskObservers,
+    //       isInstanceOf<Map<int, StreamController<TaskSnapshotPlatform>>>());
+    // });
 
     group('delegateFor()', () {
       test('returns a [FirebaseStoragePlatform] with arguments', () {

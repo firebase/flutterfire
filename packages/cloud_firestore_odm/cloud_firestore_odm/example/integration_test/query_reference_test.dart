@@ -92,6 +92,22 @@ void main() {
       });
     });
 
+    test('supports Durations', () async {
+      final ref = await initializeTest(durationQueryRef);
+
+      await ref.add(DurationQuery(const Duration(days: 1)));
+      await ref.add(DurationQuery(const Duration(days: 2)));
+      await ref.add(DurationQuery(const Duration(days: 3)));
+
+      final snapshot =
+          await ref.orderByDuration(startAt: const Duration(days: 2)).get();
+
+      expect(snapshot.docs.length, 2);
+
+      expect(snapshot.docs[0].data.duration, const Duration(days: 2));
+      expect(snapshot.docs[1].data.duration, const Duration(days: 3));
+    });
+
     test('supports DateTimes', () async {
       final ref = await initializeTest(dateTimeQueryRef);
 

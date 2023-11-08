@@ -10,6 +10,8 @@ page_type: guide
 
 # Create Dynamic Links in a Flutter app
 
+{% include "docs/dynamic-links/_deprecation_banner.html" %}
+
 You can create short or long Dynamic Links with the Firebase Dynamic Links Builder API.
 This API accepts either a long Dynamic Link or an object containing Dynamic Link
 parameters, and returns URLs like the following examples:

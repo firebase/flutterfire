@@ -179,39 +179,18 @@ be shown to the user to force them to open the link on the same device. Some
 state can be passed in the link to provide information on the type of operation
 and the user uid.
 
+## Deprecated: Differentiating email-password from email link {:#differentiating_emailpassword_from_email_link}
 
-## Differentiating email/password from email link
+If you created your project on or after September 15, 2023, email enumeration
+protection is enabled by default. This feature improves the security of your
+project's user accounts, but it disables the `fetchSignInMethodsForEmail()`
+method, which we formerly recommended to implement identifier-first flows.
 
-In case you support both password and link-based sign in with email, to
-differentiate the method of sign in for a password/link user, use
-`fetchSignInMethodsForEmail`. This is useful for identifier-first flows where
-the user is first asked to provide their email and then presented with the
-method of sign-in:
+Although you can disable email enumeration protection for your project, we
+recommend against doing so.
 
-```dart
-try {
-    final signInMethods =
-        await FirebaseAuth.instance.fetchSignInMethodsForEmail(emailAuth);
-    final userExists = signInMethods.isNotEmpty;
-    final canSignInWithLink = signInMethods
-        .contains(EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD);
-    final canSignInWithPassword = signInMethods
-        .contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD);
-} on FirebaseAuthException catch (exception) {
-    switch (exception.code) {
-        case "invalid-email":
-            print("Not a valid email address.");
-            break;
-        default:
-            print("Unknown error.");
-    }
-}
-```
-
-As described above email/password and email/link are considered the same
-`EmailAuthProvider` (same `PROVIDER_ID`) with different methods of
-sign-in.
-
+See the documentation on [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
+for more details.
 
 ## Next steps
 

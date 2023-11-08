@@ -401,7 +401,27 @@ class ${data.queryReferenceImplName}
       final prototype =
           operators.entries.map((e) => '${e.value} ${e.key},').join();
 
-      final parameters = operators.keys.map((e) => '$e: $e,').join();
+      final perFieldToJson = data.perFieldToJson(field.name);
+
+      final parameters = operators.keys.map((e) {
+        if (field.name == 'documentId' || e == 'isNull') {
+          return '$e: $e,';
+        } else if ({'whereIn', 'whereNotIn'}.contains(e)) {
+          return '$e: $e?.map((e) => $perFieldToJson(e)),';
+        } else if (e == 'arrayContainsAny') {
+          return '$e: $e != null ? $perFieldToJson($e) as Iterable<Object>? : null,';
+        } else if (e == 'arrayContains') {
+          var transform = '$e: $e != null ? ($perFieldToJson(';
+          if (field.type.isSet) {
+            transform += '{$e}';
+          } else {
+            transform += '[$e]';
+          }
+          return '$transform) as List?)!.single : null,';
+        } else {
+          return '$e: $e != null ? $perFieldToJson($e) : null,';
+        }
+      }).join();
 
       // TODO support whereX(isEqual: null);
       // TODO handle JsonSerializable case change and JsonKey(name: ...)

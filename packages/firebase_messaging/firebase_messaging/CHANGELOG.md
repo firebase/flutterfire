@@ -1,3 +1,27 @@
+## 14.7.3
+
+ - Update a dependency to the latest release.
+
+## 14.7.2
+
+ - Update a dependency to the latest release.
+
+## 14.7.1
+
+ - Update a dependency to the latest release.
+
+## 14.7.0
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
+## 14.6.9
+
+ - **REFACTOR**(messaging,android): removed unsafe & deprecated API. E.g. `LocalBroadcastManager` replaced by `LiveData` ([#11659](https://github.com/firebase/flutterfire/issues/11659)). ([690160f8](https://github.com/firebase/flutterfire/commit/690160f8ac6c9ec582d0882a22618e3126d705ad))
+
+## 14.6.8
+
+ - Update a dependency to the latest release.
+
 ## 14.6.7
 
  - Update a dependency to the latest release.

@@ -424,6 +424,45 @@ void runTransactionTests() {
             await documentReference2.get();
         expect(snapshot2.exists, isFalse);
       });
+
+      // TODO(Lyokone): adding auth make some tests fails in macOS
+      // testWidgets(
+      //     'should not fail to complete transaction if user is authenticated',
+      //     (_) async {
+      //   DocumentReference<Map<String, dynamic>> doc1 =
+      //       await initializeTest('transaction-authentified-1');
+
+      //   try {
+      //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      //       email: 'firestore@mail.com',
+      //       password: 'this-is-a-password',
+      //     );
+      //   } catch (e) {
+      //     await FirebaseAuth.instance.signInWithEmailAndPassword(
+      //       email: 'firestore@mail.com',
+      //       password: 'this-is-a-password',
+      //     );
+      //   }
+
+      //   await doc1.set({'test': 0});
+
+      //   final value = await firestore.runTransaction(
+      //     (Transaction transaction) async {
+      //       final value = await transaction.get(doc1);
+      //       final newValue = value['test'] + 1;
+      //       transaction.set(doc1, {
+      //         'test': newValue,
+      //       });
+
+      //       return newValue;
+      //     },
+      //     maxAttempts: 1,
+      //   );
+
+      //   expect(value, equals(1));
+
+      //   await FirebaseAuth.instance.signOut();
+      // });
     },
     skip: kIsWeb,
   );

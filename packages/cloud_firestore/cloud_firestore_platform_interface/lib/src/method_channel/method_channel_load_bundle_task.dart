@@ -4,9 +4,6 @@
 
 // ignore_for_file: require_trailing_commas
 import 'dart:async';
-// TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
-// ignore: unnecessary_import
-import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,17 +14,13 @@ import 'method_channel_firestore.dart';
 class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
   MethodChannelLoadBundleTask({
     required Future<String?> task,
-    required Uint8List bundle,
-    required MethodChannelFirebaseFirestore firestore,
   }) : super() {
     Stream<LoadBundleTaskSnapshotPlatform> mapNativeStream() async* {
       final observerId = await task;
 
       final nativePlatformStream =
           MethodChannelFirebaseFirestore.loadBundleChannel(observerId!)
-              .receiveBroadcastStream(
-        <String, Object>{'bundle': bundle, 'firestore': firestore},
-      );
+              .receiveBroadcastStream();
       try {
         await for (final snapshot in nativePlatformStream) {
           final taskState = convertToTaskState(snapshot['taskState']);
