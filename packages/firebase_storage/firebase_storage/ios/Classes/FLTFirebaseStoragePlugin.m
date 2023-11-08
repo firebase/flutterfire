@@ -158,7 +158,10 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
 - (FIRStorage *_Nullable)getFIRStorageFromAppNameFromPigeon:(PigeonStorageFirebaseApp *)pigeonApp {
   FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:pigeonApp.appName];
-  FIRStorage *storage = [FIRStorage storageForApp:app URL:pigeonApp.bucket];
+  NSString *baseString = @"gs://";
+  NSString *fullURL = [baseString stringByAppendingString:pigeonApp.bucket];
+
+  FIRStorage *storage = [FIRStorage storageForApp:app URL:fullURL];
 
   return storage;
 }
