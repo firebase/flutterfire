@@ -299,7 +299,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.type = type;
   pigeonResult.document = document;
   pigeonResult.oldIndex = oldIndex;
-  pigeonResult.index = newIndex;
+  pigeonResult.newIndex = newIndex;
   return pigeonResult;
 }
 + (PigeonDocumentChange *)fromList:(NSArray *)list {
@@ -310,8 +310,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   NSAssert(pigeonResult.document != nil, @"");
   pigeonResult.oldIndex = GetNullableObjectAtIndex(list, 2);
   NSAssert(pigeonResult.oldIndex != nil, @"");
-  pigeonResult.index = GetNullableObjectAtIndex(list, 3);
-  NSAssert(pigeonResult.index != nil, @"");
+  pigeonResult.newIndex = GetNullableObjectAtIndex(list, 3);
+  NSAssert(pigeonResult.newIndex != nil, @"");
   return pigeonResult;
 }
 + (nullable PigeonDocumentChange *)nullableFromList:(NSArray *)list {
@@ -322,7 +322,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     @(self.type),
     (self.document ? [self.document toList] : [NSNull null]),
     (self.oldIndex ?: [NSNull null]),
-    (self.index ?: [NSNull null]),
+    (self.newIndex ?: [NSNull null]),
   ];
 }
 @end
@@ -1112,21 +1112,24 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
         binaryMessenger:binaryMessenger
                   codec:FirebaseFirestoreHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector
-                     (aggregateQueryCountApp:path:parameters:source:completion:)],
-                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
-                @"@selector(aggregateQueryCountApp:path:parameters:source:completion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector
+               (aggregateQueryCountApp:path:parameters:source:isCollectionGroup:completion:)],
+          @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+          @"@selector(aggregateQueryCountApp:path:parameters:source:isCollectionGroup:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_path = GetNullableObjectAtIndex(args, 1);
         PigeonQueryParameters *arg_parameters = GetNullableObjectAtIndex(args, 2);
         AggregateSource arg_source = [GetNullableObjectAtIndex(args, 3) integerValue];
+        NSNumber *arg_isCollectionGroup = GetNullableObjectAtIndex(args, 4);
         [api aggregateQueryCountApp:arg_app
                                path:arg_path
                          parameters:arg_parameters
                              source:arg_source
+                  isCollectionGroup:arg_isCollectionGroup
                          completion:^(NSNumber *_Nullable output, FlutterError *_Nullable error) {
                            callback(wrapResult(output, error));
                          }];

@@ -1909,9 +1909,16 @@ void FirebaseFirestoreHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
               }
               const AggregateSource& source_arg =
                   (AggregateSource)encodable_source_arg.LongValue();
+              const auto& encodable_is_collection_group_arg = args.at(4);
+              if (encodable_is_collection_group_arg.IsNull()) {
+                reply(WrapError("is_collection_group_arg unexpectedly null."));
+                return;
+              }
+              const auto& is_collection_group_arg =
+                  std::get<bool>(encodable_is_collection_group_arg);
               api->AggregateQueryCount(
                   app_arg, path_arg, parameters_arg, source_arg,
-                  [reply](ErrorOr<double>&& output) {
+                  is_collection_group_arg, [reply](ErrorOr<double>&& output) {
                     if (output.has_error()) {
                       reply(WrapError(output.error()));
                       return;

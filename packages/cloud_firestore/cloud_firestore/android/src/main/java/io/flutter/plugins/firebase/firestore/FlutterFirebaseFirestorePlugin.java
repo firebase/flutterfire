@@ -730,12 +730,14 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull String path,
       @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
       @NonNull GeneratedAndroidFirebaseFirestore.AggregateSource source,
+      @NonNull Boolean isCollectionGroup,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<Double> result) {
     cachedThreadPool.execute(
         () -> {
           try {
             Query query =
-                PigeonParser.parseQuery(getFirestoreFromPigeon(app), path, false, parameters);
+                PigeonParser.parseQuery(
+                    getFirestoreFromPigeon(app), path, isCollectionGroup, parameters);
             AggregateQuery aggregateQuery = query.count();
             AggregateQuerySnapshot aggregateQuerySnapshot =
                 Tasks.await(aggregateQuery.get(PigeonParser.parseAggregateSource(source)));

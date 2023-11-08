@@ -178,7 +178,7 @@ typedef NS_ENUM(NSUInteger, PigeonTransactionType) {
 @property(nonatomic, assign) DocumentChangeType type;
 @property(nonatomic, strong) PigeonDocumentSnapshot *document;
 @property(nonatomic, strong) NSNumber *oldIndex;
-@property(nonatomic, strong) NSNumber *index;
+@property(nonatomic, strong) NSNumber *newIndex;
 @end
 
 @interface PigeonQuerySnapshot : NSObject
@@ -322,6 +322,7 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
                           path:(NSString *)path
                     parameters:(PigeonQueryParameters *)parameters
                         source:(AggregateSource)source
+             isCollectionGroup:(NSNumber *)isCollectionGroup
                     completion:(void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion;
 - (void)writeBatchCommitApp:(FirestorePigeonFirebaseApp *)app
                      writes:(NSArray<PigeonTransactionCommand *> *)writes
