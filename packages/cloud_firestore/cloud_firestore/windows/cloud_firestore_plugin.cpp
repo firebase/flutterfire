@@ -1384,7 +1384,6 @@ void CloudFirestorePlugin::QueryGet(
       });
 }
 
-using firebase::firestore::AggregateQuery;
 
 firebase::firestore::AggregateSource GetAggregateSourceFromPigeon(
     const AggregateSource& source) {
@@ -1395,28 +1394,80 @@ firebase::firestore::AggregateSource GetAggregateSourceFromPigeon(
   }
 }
 
-void CloudFirestorePlugin::AggregateQueryCount(
+void CloudFirestorePlugin::AggregateQuery(
     const FirestorePigeonFirebaseApp& app, const std::string& path,
     const PigeonQueryParameters& parameters, const AggregateSource& source,
-    std::function<void(ErrorOr<double> reply)> result) {
+    const flutter::EncodableList& queries,
+    std::function<void(ErrorOr<flutter::EncodableList> reply)> result) {
+
   Firestore* firestore = GetFirestoreFromPigeon(app);
   Query query = ParseQuery(firestore, path, false, parameters);
-  AggregateQuery aggregate_query = query.Count();
+
+  // C++ SDK does not support average and sum
+  firebase::firestore::AggregateQuery aggregate_query;
+
+  for (auto& queryRequest : queries) {
+    const cloud_firestore_windows::AggregateQuery& queryRequestTyped =
+        std::any_cast<cloud_firestore_windows::AggregateQuery>(
+            std::get<CustomEncodableValue>(queryRequest));
+
+    switch (queryRequestTyped.type()) {
+      case AggregateType::count:
+        aggregate_query = query.Count();
+        break;
+      case AggregateType::sum:
+        std::cout << "Sum is not supported on C++" << std::endl;
+        break;
+      case AggregateType::average:
+        std::cout << "Average is not supported on C++" << std::endl;
+        break;
+    }
+  }
 
   Future<AggregateQuerySnapshot> future =
       aggregate_query.Get(GetAggregateSourceFromPigeon(source));
 
   future.OnCompletion(
-      [result](const Future<AggregateQuerySnapshot>& completed_future) {
+      [result,
+       queries](const Future<AggregateQuerySnapshot>& completed_future) {
         if (completed_future.error() == firebase::firestore::kErrorOk) {
           const AggregateQuerySnapshot* aggregateQuerySnapshot =
               completed_future.result();
-          result(static_cast<double>(aggregateQuerySnapshot->count()));
+          EncodableList aggregateResponses;
+
+          for (auto& queryRequest : queries) {
+            const cloud_firestore_windows::AggregateQuery& queryRequestTyped =
+                std::any_cast<cloud_firestore_windows::AggregateQuery>(
+                    std::get<CustomEncodableValue>(queryRequest));
+
+            switch (queryRequestTyped.type()) {
+              case AggregateType::count: {
+                double doubleValue =
+                    static_cast<double>(aggregateQuerySnapshot->count());   
+                aggregateResponses.push_back(
+                    CustomEncodableValue(
+                    AggregateQueryResponse(
+                        AggregateType::count, doubleValue)));
+                break;
+              }
+              case AggregateType::sum: {
+                std::cout << "Sum is not supported on C++" << std::endl;
+                break;
+              }
+              case AggregateType::average: {
+                std::cout << "Average is not supported on C++" << std::endl;
+                break;
+              }
+            }
+          }
+
+          result(aggregateResponses);
         } else {
           result(CloudFirestorePlugin::ParseError(completed_future));
         }
       });
 }
+
 
 void CloudFirestorePlugin::WriteBatchCommit(
     const FirestorePigeonFirebaseApp& app, const flutter::EncodableList& writes,
