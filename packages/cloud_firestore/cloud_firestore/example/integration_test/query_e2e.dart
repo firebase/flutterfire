@@ -3652,6 +3652,46 @@ void runQueryTests() {
           );
         },
       );
+
+      testWidgets(
+        'count() with collectionGroup',
+        (_) async {
+          const subCollection = 'aggregate-group-count';
+          final doc1 = FirebaseFirestore.instance
+              .collection('flutter-tests')
+              .doc('agg1');
+          final doc2 = FirebaseFirestore.instance
+              .collection('flutter-tests')
+              .doc('agg2');
+          await Future.wait([
+            doc1.set({'foo': 'bar'}),
+            doc2.set({'foo': 'baz'}),
+          ]);
+
+          final collection = doc1.collection(subCollection);
+          final collection2 = doc2.collection(subCollection);
+
+          await Future.wait([
+            // 6 sub-documents
+            collection.doc('agg1').set({'foo': 'bar'}),
+            collection.doc('agg2').set({'foo': 'bar'}),
+            collection.doc('agg3').set({'foo': 'bar'}),
+            collection2.doc('agg4').set({'foo': 'bar'}),
+            collection2.doc('agg5').set({'foo': 'bar'}),
+            collection2.doc('agg6').set({'foo': 'bar'}),
+          ]);
+
+          AggregateQuery query =
+              FirebaseFirestore.instance.collectionGroup(subCollection).count();
+
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.count,
+            6,
+          );
+        },
+      );
     });
 
     group('startAfterDocument', () {
