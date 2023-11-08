@@ -105,6 +105,14 @@ void main() {
         expect(reference, isA<Reference>());
         verify(kMockStoragePlatform.ref(testPath));
       });
+
+      test('gets a correct complete path', () {
+        const String testPath = 'foo/bar';
+        const String testCompletePath = 'gs://$testBucket/$testPath';
+        final reference = storage.ref(testPath);
+
+        expect(reference.completePath, testCompletePath);
+      });
     });
 
     group('.refFromURL()', () {
