@@ -379,11 +379,17 @@ void setupSecondBucketTests() {
           final Reference ref = storage.ref('uploadNope.jpeg');
 
           await expectLater(
-              () => ref.putFile(file),
-              throwsA(isA<FirebaseException>()
+            () => ref.putFile(file),
+            throwsA(
+              isA<FirebaseException>()
                   .having((e) => e.code, 'code', 'unauthorized')
-                  .having((e) => e.message, 'message',
-                      'User is not authorized to perform the desired action.')));
+                  .having(
+                    (e) => e.message,
+                    'message',
+                    'User is not authorized to perform the desired action.',
+                  ),
+            ),
+          );
         });
       },
       // putFile is not supported in web.
