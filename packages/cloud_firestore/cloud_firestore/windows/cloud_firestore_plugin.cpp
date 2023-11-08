@@ -1384,7 +1384,6 @@ void CloudFirestorePlugin::QueryGet(
       });
 }
 
-
 firebase::firestore::AggregateSource GetAggregateSourceFromPigeon(
     const AggregateSource& source) {
   switch (source) {
@@ -1399,7 +1398,6 @@ void CloudFirestorePlugin::AggregateQuery(
     const PigeonQueryParameters& parameters, const AggregateSource& source,
     const flutter::EncodableList& queries,
     std::function<void(ErrorOr<flutter::EncodableList> reply)> result) {
-
   Firestore* firestore = GetFirestoreFromPigeon(app);
   Query query = ParseQuery(firestore, path, false, parameters);
 
@@ -1443,11 +1441,9 @@ void CloudFirestorePlugin::AggregateQuery(
             switch (queryRequestTyped.type()) {
               case AggregateType::count: {
                 double doubleValue =
-                    static_cast<double>(aggregateQuerySnapshot->count());   
-                aggregateResponses.push_back(
-                    CustomEncodableValue(
-                    AggregateQueryResponse(
-                        AggregateType::count, doubleValue)));
+                    static_cast<double>(aggregateQuerySnapshot->count());
+                aggregateResponses.push_back(CustomEncodableValue(
+                    AggregateQueryResponse(AggregateType::count, doubleValue)));
                 break;
               }
               case AggregateType::sum: {
@@ -1467,7 +1463,6 @@ void CloudFirestorePlugin::AggregateQuery(
         }
       });
 }
-
 
 void CloudFirestorePlugin::WriteBatchCommit(
     const FirestorePigeonFirebaseApp& app, const flutter::EncodableList& writes,
