@@ -43,7 +43,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   static final FirebaseStorageHostApi pigeonChannel = FirebaseStorageHostApi();
 
   /// FirebaseApp pigeon instance
-  PigeonStorageFirebaseApp get pigeonFirebaseAppDefault {
+  PigeonStorageFirebaseApp get pigeonFirebaseApp {
     return PigeonStorageFirebaseApp(
       appName: app.name,
       bucket: bucket,
@@ -135,7 +135,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     emulatorPort = port;
     try {
       return await pigeonChannel.useStorageEmulator(
-          pigeonFirebaseAppDefault, host, port);
+          pigeonFirebaseApp, host, port);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -144,18 +144,18 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   @override
   void setMaxOperationRetryTime(int time) {
     maxOperationRetryTime = time;
-    pigeonChannel.setMaxOperationRetryTime(pigeonFirebaseAppDefault, time);
+    pigeonChannel.setMaxOperationRetryTime(pigeonFirebaseApp, time);
   }
 
   @override
   void setMaxUploadRetryTime(int time) {
     maxUploadRetryTime = time;
-    pigeonChannel.setMaxUploadRetryTime(pigeonFirebaseAppDefault, time);
+    pigeonChannel.setMaxUploadRetryTime(pigeonFirebaseApp, time);
   }
 
   @override
   void setMaxDownloadRetryTime(int time) {
     maxDownloadRetryTime = time;
-    pigeonChannel.setMaxDownloadRetryTime(pigeonFirebaseAppDefault, time);
+    pigeonChannel.setMaxDownloadRetryTime(pigeonFirebaseApp, time);
   }
 }
