@@ -431,8 +431,8 @@ void setupSecondBucketTests() {
     });
 
     group('writeToFile', () {
-      test('downloads a file', () async {
-        File file = await createFile('ok.jpeg');
+      test('writes a file', () async {
+        File file = await createFile('ok.txt');
         TaskSnapshot complete =
             await storage.ref('flutter-tests/ok.txt').writeToFile(file);
         expect(complete.bytesTransferred, complete.totalBytes);
