@@ -178,21 +178,6 @@ class FlutterFirebaseStorageTask {
     return new TaskStateChannelStreamHandler(this, reference.getStorage(), storageTask);
   }
 
-  private Map<String, Object> getTaskEventMap(
-      @Nullable Object snapshot, @Nullable Exception exception) {
-    Map<String, Object> arguments = new HashMap<>();
-    arguments.put("handle", handle);
-    arguments.put("appName", reference.getStorage().getApp().getName());
-    arguments.put("bucket", reference.getBucket());
-    if (snapshot != null) {
-      arguments.put("snapshot", parseTaskSnapshot(snapshot));
-    }
-    if (exception != null) {
-      arguments.put("error", FlutterFirebaseStoragePlugin.getExceptionDetails(exception));
-    }
-    return arguments;
-  }
-
   public Object getSnapshot() {
     return storageTask.getSnapshot();
   }

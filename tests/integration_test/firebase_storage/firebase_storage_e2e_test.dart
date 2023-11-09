@@ -13,6 +13,7 @@ import 'instance_e2e.dart';
 import 'list_result_e2e.dart';
 import 'reference_e2e.dart';
 import 'task_e2e.dart';
+import 'second_bucket.dart';
 import 'test_utils.dart';
 
 void main() {
@@ -50,7 +51,7 @@ void main() {
           .putString('File 3');
       await FirebaseStorage.instance
           .ref('flutter-tests/list/file4.txt')
-          .putString('File 5');
+          .putString('File 4');
       await FirebaseStorage.instance
           .ref('flutter-tests/list/nested/file5.txt')
           .putString('File 5');
@@ -60,5 +61,6 @@ void main() {
     setupListResultTests();
     setupReferenceTests();
     setupTaskTests();
+    setupSecondBucketTests();
   });
 }
