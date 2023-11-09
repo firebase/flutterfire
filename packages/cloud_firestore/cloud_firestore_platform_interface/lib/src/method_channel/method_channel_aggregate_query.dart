@@ -24,9 +24,14 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
   Future<AggregateQuerySnapshotPlatform> get({
     required AggregateSource source,
   }) async {
-    final data = await MethodChannelFirebaseFirestore.pigeonChannel
-        .aggregateQueryCount(_pigeonApp, _path, _pigeonParameters, source,
-            _isCollectionGroupQuery);
+    final data =
+        await MethodChannelFirebaseFirestore.pigeonChannel.aggregateQueryCount(
+      _pigeonApp,
+      _path,
+      _pigeonParameters,
+      source,
+      _isCollectionGroupQuery,
+    );
 
     return AggregateQuerySnapshotPlatform(
       count: data.toInt(),
