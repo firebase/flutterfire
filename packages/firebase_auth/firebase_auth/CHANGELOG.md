@@ -1,3 +1,8 @@
+## 4.13.0
+
+ - **FEAT**(firebase_auth): export `AuthProvider` from `firebase_auth_interface` ([#11470](https://github.com/firebase/flutterfire/issues/11470)). ([39881e7e](https://github.com/firebase/flutterfire/commit/39881e7e4671faa94b274d980aad81829e6e0bfc))
+ - **FEAT**(windows): add platform logging for core, auth, firestore and storage ([#11790](https://github.com/firebase/flutterfire/issues/11790)). ([e7d428d1](https://github.com/firebase/flutterfire/commit/e7d428d14be1535a2d579d4b2d376fbb81f06742))
+
 ## 4.12.1
 
  - Update a dependency to the latest release.

@@ -1,3 +1,8 @@
+## 4.13.0
+
+ - **FIX**(firestore,ios): remove a warning that would be printed when using transactions ([#11783](https://github.com/firebase/flutterfire/issues/11783)). ([355ab9a5](https://github.com/firebase/flutterfire/commit/355ab9a515551afd5f01bbbc94341a85757e8c8c))
+ - **FEAT**(windows): add platform logging for core, auth, firestore and storage ([#11790](https://github.com/firebase/flutterfire/issues/11790)). ([e7d428d1](https://github.com/firebase/flutterfire/commit/e7d428d14be1535a2d579d4b2d376fbb81f06742))
+
 ## 4.12.2
 
  - **FIX**(firestore,android): `cacheSizeBytes` value cannot be null when setting `persistenceEnabled` ([#11794](https://github.com/firebase/flutterfire/issues/11794)). ([a10399eb](https://github.com/firebase/flutterfire/commit/a10399eb1cad2207eba7d2efa64267c9d0176b4a))
