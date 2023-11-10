@@ -1,3 +1,8 @@
+## 2.22.0
+
+ - **FEAT**: update iOS SDK to version 10.17.0 ([#11839](https://github.com/firebase/flutterfire/issues/11839)). ([f78838ae](https://github.com/firebase/flutterfire/commit/f78838ae480e28f0f83f1b7cf10bf424ac0593d6))
+ - **FEAT**(windows): add platform logging for core, auth, firestore and storage ([#11790](https://github.com/firebase/flutterfire/issues/11790)). ([e7d428d1](https://github.com/firebase/flutterfire/commit/e7d428d14be1535a2d579d4b2d376fbb81f06742))
+
 ## 2.21.0
 
  - **FEAT**: bump Firebase android SDK BoM `32.5.0` ([#11803](https://github.com/firebase/flutterfire/issues/11803)). ([adf98ea4](https://github.com/firebase/flutterfire/commit/adf98ea49bfb1c601f452f00c2d0dd74ada858f2))

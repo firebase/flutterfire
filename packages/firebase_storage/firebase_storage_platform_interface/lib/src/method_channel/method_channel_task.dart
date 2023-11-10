@@ -68,10 +68,12 @@ abstract class MethodChannelTask extends TaskPlatform {
     });
   }
 
-  /// Default FirebaseApp pigeon instance
-  PigeonStorageFirebaseApp get pigeonFirebaseAppDefault {
+  ///  FirebaseApp pigeon instance
+  static PigeonStorageFirebaseApp pigeonFirebaseApp(
+      FirebaseStoragePlatform storage) {
     return PigeonStorageFirebaseApp(
       appName: storage.app.name,
+      bucket: storage.bucket,
     );
   }
 
@@ -138,7 +140,7 @@ abstract class MethodChannelTask extends TaskPlatform {
     try {
       Map<String, dynamic>? data = (await MethodChannelFirebaseStorage
               .pigeonChannel
-              .taskPause(pigeonFirebaseAppDefault, _handle))
+              .taskPause(MethodChannelTask.pigeonFirebaseApp(storage), _handle))
           .cast<String, dynamic>();
 
       final success = data['status'] ?? false;
@@ -155,10 +157,10 @@ abstract class MethodChannelTask extends TaskPlatform {
   @override
   Future<bool> resume() async {
     try {
-      Map<String, dynamic>? data = (await MethodChannelFirebaseStorage
-              .pigeonChannel
-              .taskResume(pigeonFirebaseAppDefault, _handle))
-          .cast<String, dynamic>();
+      Map<String, dynamic>? data =
+          (await MethodChannelFirebaseStorage.pigeonChannel.taskResume(
+                  MethodChannelTask.pigeonFirebaseApp(storage), _handle))
+              .cast<String, dynamic>();
 
       final success = data['status'] ?? false;
       if (success) {
@@ -174,10 +176,10 @@ abstract class MethodChannelTask extends TaskPlatform {
   @override
   Future<bool> cancel() async {
     try {
-      Map<String, dynamic>? data = (await MethodChannelFirebaseStorage
-              .pigeonChannel
-              .taskCancel(pigeonFirebaseAppDefault, _handle))
-          .cast<String, dynamic>();
+      Map<String, dynamic>? data =
+          (await MethodChannelFirebaseStorage.pigeonChannel.taskCancel(
+                  MethodChannelTask.pigeonFirebaseApp(storage), _handle))
+              .cast<String, dynamic>();
 
       final success = data['status'] ?? false;
       if (success) {
@@ -202,7 +204,7 @@ class MethodChannelPutFileTask extends MethodChannelTask {
   static Future<String> _getTask(int handle, FirebaseStoragePlatform storage,
       String path, File file, SettableMetadata? metadata) {
     return MethodChannelFirebaseStorage.pigeonChannel.referencePutFile(
-      MethodChannelFirebaseStorage.getPigeonFirebaseApp(storage.app.name),
+      MethodChannelTask.pigeonFirebaseApp(storage),
       MethodChannelFirebaseStorage.getPigeonReference(
           storage.bucket, path, 'putFile'),
       file.path,
@@ -233,7 +235,7 @@ class MethodChannelPutStringTask extends MethodChannelTask {
       PutStringFormat format,
       SettableMetadata? metadata) {
     return MethodChannelFirebaseStorage.pigeonChannel.referencePutString(
-      MethodChannelFirebaseStorage.getPigeonFirebaseApp(storage.app.name),
+      MethodChannelTask.pigeonFirebaseApp(storage),
       MethodChannelFirebaseStorage.getPigeonReference(
           storage.bucket, path, 'putString'),
       data,
@@ -255,7 +257,7 @@ class MethodChannelPutTask extends MethodChannelTask {
   static Future<String> _getTask(int handle, FirebaseStoragePlatform storage,
       String path, Uint8List data, SettableMetadata? metadata) {
     return MethodChannelFirebaseStorage.pigeonChannel.referencePutData(
-      MethodChannelFirebaseStorage.getPigeonFirebaseApp(storage.app.name),
+      MethodChannelTask.pigeonFirebaseApp(storage),
       MethodChannelFirebaseStorage.getPigeonReference(
           storage.bucket, path, 'putData'),
       data,
@@ -275,7 +277,7 @@ class MethodChannelDownloadTask extends MethodChannelTask {
   static Future<String> _getTask(
       int handle, FirebaseStoragePlatform storage, String path, File file) {
     return MethodChannelFirebaseStorage.pigeonChannel.referenceDownloadFile(
-      MethodChannelFirebaseStorage.getPigeonFirebaseApp(storage.app.name),
+      MethodChannelTask.pigeonFirebaseApp(storage),
       MethodChannelFirebaseStorage.getPigeonReference(
           storage.bucket, path, 'writeToFile'),
       file.path,
