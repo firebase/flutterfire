@@ -38,8 +38,11 @@ Future<void> main() async {
     await auth.useAuthEmulator('localhost', 9099);
   }
 
-   if (!kIsWeb && Platform.isWindows) {
-    await GoogleSignInDart.register(clientId: "406099696497-g5o9l0blii9970bgmfcfv14pioj90djd.apps.googleusercontent.com");
+  if (!kIsWeb && Platform.isWindows) {
+    await GoogleSignInDart.register(
+      clientId:
+          '406099696497-g5o9l0blii9970bgmfcfv14pioj90djd.apps.googleusercontent.com',
+    );
   }
 
   runApp(const AuthExampleApp());
