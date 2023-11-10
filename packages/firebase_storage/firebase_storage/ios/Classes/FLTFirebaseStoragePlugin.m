@@ -242,7 +242,10 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                          port:(NSNumber *)port
                    completion:(void (^)(FlutterError *_Nullable))completion {
   FIRStorage *storage = [self getFIRStorageFromAppNameFromPigeon:app];
-  [storage useEmulatorWithHost:host port:[port integerValue]];
+  if (hasEmulatorBooted == false) {
+    [storage useEmulatorWithHost:host port:[port integerValue]];
+    hasEmulatorBooted = true;
+  }
   completion(nil);
 }
 
