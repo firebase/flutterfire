@@ -2,9 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_test/flutter_test.dart';
+
 import './mock.dart';
 
 const String COUPON = 'coupon';
@@ -92,6 +93,7 @@ AnalyticsEventItem ITEM = AnalyticsEventItem(
   promotionId: 'promotionId',
   promotionName: 'promotionName',
   quantity: 1,
+  parameters: {'a': 'b'},
 );
 
 void main() {
@@ -149,6 +151,7 @@ void main() {
           value: VALUE_DOUBLE,
           items: [ITEM],
           paymentType: PAYMENT_TYPE,
+          parameters: {'a': 'b'},
         );
         expect(
           methodCallLog,
@@ -163,6 +166,7 @@ void main() {
                   PAYMENT_TYPE: PAYMENT_TYPE,
                   VALUE: VALUE_DOUBLE,
                   ITEMS: [ITEM.asMap()],
+                  'a': 'b',
                 },
               },
             ),
@@ -177,6 +181,7 @@ void main() {
           shippingTier: SHIPPING_TIER,
           value: VALUE_DOUBLE,
           items: [ITEM],
+          parameters: {'a': 'b'},
         );
         expect(
           methodCallLog,
@@ -191,6 +196,7 @@ void main() {
                   SHIPPING_TIER: SHIPPING_TIER,
                   VALUE: VALUE_DOUBLE,
                   ITEMS: [ITEM.asMap()],
+                  'a': 'b',
                 },
               },
             ),
@@ -203,6 +209,7 @@ void main() {
           currency: CURRENCY,
           value: VALUE_DOUBLE,
           items: [ITEM],
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -216,6 +223,7 @@ void main() {
                   CURRENCY: CURRENCY,
                   VALUE: VALUE_DOUBLE,
                   ITEMS: [ITEM.asMap()],
+                  'a': 'b',
                 },
               },
             ),
@@ -228,6 +236,7 @@ void main() {
           currency: CURRENCY,
           value: VALUE_DOUBLE,
           items: [ITEM],
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -241,6 +250,7 @@ void main() {
                   CURRENCY: CURRENCY,
                   VALUE: VALUE_DOUBLE,
                   ITEMS: [ITEM.asMap()],
+                  'a': 'b',
                 },
               },
             ),
@@ -256,6 +266,7 @@ void main() {
           adUnitName: AD_UNIT_NAME,
           currency: CURRENCY,
           value: VALUE_DOUBLE,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -272,6 +283,7 @@ void main() {
                   AD_SOURCE: AD_SOURCE,
                   AD_FORMAT: AD_FORMAT,
                   AD_UNIT_NAME: AD_UNIT_NAME,
+                  'a': 'b',
                 },
               },
             ),
@@ -280,7 +292,9 @@ void main() {
       });
 
       test('logAppOpen', () async {
-        await analytics!.logAppOpen();
+        await analytics!.logAppOpen(
+          parameters: {'a': 'b'},
+        );
 
         expect(
           methodCallLog,
@@ -289,7 +303,9 @@ void main() {
               'Analytics#logEvent',
               arguments: <String, dynamic>{
                 'eventName': 'app_open',
-                'parameters': null,
+                'parameters': {
+                  'a': 'b',
+                },
               },
             ),
           ],
@@ -302,6 +318,7 @@ void main() {
           currency: CURRENCY,
           items: [ITEM],
           coupon: COUPON,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -316,6 +333,7 @@ void main() {
                   VALUE: VALUE_DOUBLE,
                   ITEMS: [ITEM.asMap()],
                   COUPON: COUPON,
+                  'a': 'b',
                 },
               },
             ),
@@ -332,6 +350,7 @@ void main() {
           content: CONTENT,
           aclid: ACLID,
           cp1: CP1,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -349,6 +368,7 @@ void main() {
                   CONTENT: CONTENT,
                   ACLID: ACLID,
                   CP1: CP1,
+                  'a': 'b',
                 },
               },
             ),
@@ -360,6 +380,7 @@ void main() {
         await analytics!.logEarnVirtualCurrency(
           virtualCurrencyName: VIRTUAL_CURRENCY_NAME,
           value: VALUE_DOUBLE,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -372,6 +393,7 @@ void main() {
                 'parameters': {
                   VALUE: VALUE_DOUBLE,
                   VIRTUAL_CURRENCY_NAME: VIRTUAL_CURRENCY_NAME,
+                  'a': 'b',
                 },
               },
             ),
@@ -383,6 +405,7 @@ void main() {
         await analytics!.logGenerateLead(
           value: VALUE_DOUBLE,
           currency: CURRENCY,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -395,6 +418,7 @@ void main() {
                 'parameters': {
                   VALUE: VALUE_DOUBLE,
                   CURRENCY: CURRENCY,
+                  'a': 'b',
                 },
               },
             ),
@@ -405,6 +429,7 @@ void main() {
       test('logJoinGroup', () async {
         await analytics!.logJoinGroup(
           groupId: GROUP_ID,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -416,6 +441,7 @@ void main() {
                 'eventName': 'join_group',
                 'parameters': {
                   GROUP_ID: GROUP_ID,
+                  'a': 'b',
                 },
               },
             ),
@@ -424,7 +450,11 @@ void main() {
       });
 
       test('logLevelUp', () async {
-        await analytics!.logLevelUp(level: LEVEL_INT, character: CHARACTER);
+        await analytics!.logLevelUp(
+          level: LEVEL_INT,
+          character: CHARACTER,
+          parameters: {'a': 'b'},
+        );
 
         expect(
           methodCallLog,
@@ -433,7 +463,11 @@ void main() {
               'Analytics#logEvent',
               arguments: <String, dynamic>{
                 'eventName': 'level_up',
-                'parameters': {LEVEL: LEVEL_INT, CHARACTER: CHARACTER},
+                'parameters': {
+                  LEVEL: LEVEL_INT,
+                  CHARACTER: CHARACTER,
+                  'a': 'b',
+                },
               },
             ),
           ],
@@ -443,6 +477,7 @@ void main() {
       test('logLevelStart', () async {
         await analytics!.logLevelStart(
           levelName: LEVEL_NAME,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -454,6 +489,7 @@ void main() {
                 'eventName': 'level_start',
                 'parameters': {
                   LEVEL_NAME: LEVEL_NAME,
+                  'a': 'b',
                 },
               },
             ),
@@ -462,8 +498,11 @@ void main() {
       });
 
       test('logLevelEnd', () async {
-        await analytics!
-            .logLevelEnd(levelName: LEVEL_NAME, success: SUCCESS_INT);
+        await analytics!.logLevelEnd(
+          levelName: LEVEL_NAME,
+          success: SUCCESS_INT,
+          parameters: {'a': 'b'},
+        );
 
         expect(
           methodCallLog,
@@ -475,6 +514,7 @@ void main() {
                 'parameters': {
                   LEVEL_NAME: LEVEL_NAME,
                   SUCCESS: SUCCESS_INT,
+                  'a': 'b',
                 },
               },
             ),
@@ -483,7 +523,10 @@ void main() {
       });
 
       test('logLogin', () async {
-        await analytics!.logLogin(loginMethod: METHOD);
+        await analytics!.logLogin(
+          loginMethod: METHOD,
+          parameters: {'a': 'b'},
+        );
 
         expect(
           methodCallLog,
@@ -494,6 +537,7 @@ void main() {
                 'eventName': 'login',
                 'parameters': {
                   METHOD: METHOD,
+                  'a': 'b',
                 },
               },
             ),
@@ -506,6 +550,7 @@ void main() {
           score: SCORE_INT,
           level: LEVEL_INT,
           character: CHARACTER,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -519,6 +564,7 @@ void main() {
                   LEVEL: LEVEL_INT,
                   SCORE: SCORE_INT,
                   CHARACTER: CHARACTER,
+                  'a': 'b',
                 },
               },
             ),
@@ -536,6 +582,7 @@ void main() {
           shipping: SHIPPING_DOUBLE,
           transactionId: TRANSACTION_ID,
           affiliation: AFFILIATION,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -554,6 +601,7 @@ void main() {
                   SHIPPING: SHIPPING_DOUBLE,
                   TRANSACTION_ID: TRANSACTION_ID,
                   AFFILIATION: AFFILIATION,
+                  'a': 'b',
                 },
               },
             ),
@@ -566,6 +614,7 @@ void main() {
           currency: CURRENCY,
           value: VALUE_DOUBLE,
           items: [ITEM],
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -579,6 +628,7 @@ void main() {
                   CURRENCY: CURRENCY,
                   VALUE: VALUE_DOUBLE,
                   ITEMS: [ITEM.asMap()],
+                  'a': 'b',
                 },
               },
             ),
@@ -590,6 +640,7 @@ void main() {
         await analytics!.logScreenView(
           screenClass: SCREEN_CLASS,
           screenName: SCREEN_NAME,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -602,6 +653,7 @@ void main() {
                 'parameters': {
                   SCREEN_CLASS: SCREEN_CLASS,
                   SCREEN_NAME: SCREEN_NAME,
+                  'a': 'b',
                 },
               },
             ),
@@ -614,6 +666,7 @@ void main() {
           items: [ITEM],
           itemListId: ITEM_LIST_ID,
           itemListName: ITEM_LIST_NAME,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -627,6 +680,7 @@ void main() {
                   ITEM_LIST_ID: ITEM_LIST_ID,
                   ITEM_LIST_NAME: ITEM_LIST_NAME,
                   ITEMS: [ITEM.asMap()],
+                  'a': 'b',
                 },
               },
             ),
@@ -642,6 +696,7 @@ void main() {
           locationId: LOCATION_ID,
           promotionId: PROMOTION_ID,
           promotionName: PROMOTION_NAME,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -658,6 +713,7 @@ void main() {
                   PROMOTION_ID: PROMOTION_ID,
                   PROMOTION_NAME: PROMOTION_NAME,
                   ITEMS: [ITEM.asMap()],
+                  'a': 'b',
                 },
               },
             ),
@@ -670,6 +726,7 @@ void main() {
           currency: CURRENCY,
           value: VALUE_DOUBLE,
           items: [ITEM],
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -683,6 +740,7 @@ void main() {
                   CURRENCY: CURRENCY,
                   VALUE: VALUE_DOUBLE,
                   ITEMS: [ITEM.asMap()],
+                  'a': 'b',
                 },
               },
             ),
@@ -701,6 +759,7 @@ void main() {
           startDate: START_DATE,
           endDate: END_DATE,
           travelClass: TRAVEL_CLASS,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -720,6 +779,7 @@ void main() {
                   START_DATE: START_DATE,
                   END_DATE: END_DATE,
                   TRAVEL_CLASS: TRAVEL_CLASS,
+                  'a': 'b',
                 },
               },
             ),
@@ -731,6 +791,7 @@ void main() {
         await analytics!.logSelectContent(
           contentType: CONTENT_TYPE,
           itemId: ITEM_ID,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -743,6 +804,7 @@ void main() {
                 'parameters': {
                   CONTENT_TYPE: CONTENT_TYPE,
                   ITEM_ID: ITEM_ID,
+                  'a': 'b',
                 },
               },
             ),
@@ -755,6 +817,7 @@ void main() {
           contentType: CONTENT_TYPE,
           itemId: ITEM_ID,
           method: METHOD,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -768,6 +831,7 @@ void main() {
                   CONTENT_TYPE: CONTENT_TYPE,
                   ITEM_ID: ITEM_ID,
                   METHOD: METHOD,
+                  'a': 'b',
                 },
               },
             ),
@@ -776,7 +840,10 @@ void main() {
       });
 
       test('logSignUp', () async {
-        await analytics!.logSignUp(signUpMethod: METHOD);
+        await analytics!.logSignUp(
+          signUpMethod: METHOD,
+          parameters: {'a': 'b'},
+        );
 
         expect(
           methodCallLog,
@@ -787,6 +854,7 @@ void main() {
                 'eventName': 'sign_up',
                 'parameters': {
                   METHOD: METHOD,
+                  'a': 'b',
                 },
               },
             ),
@@ -799,6 +867,7 @@ void main() {
           itemName: ITEM_NAME,
           virtualCurrencyName: VIRTUAL_CURRENCY_NAME,
           value: VALUE_DOUBLE,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -812,6 +881,7 @@ void main() {
                   ITEM_NAME: ITEM_NAME,
                   VIRTUAL_CURRENCY_NAME: VIRTUAL_CURRENCY_NAME,
                   VALUE: VALUE_DOUBLE,
+                  'a': 'b',
                 },
               },
             ),
@@ -820,7 +890,9 @@ void main() {
       });
 
       test('logTutorialBegin', () async {
-        await analytics!.logTutorialBegin();
+        await analytics!.logTutorialBegin(
+          parameters: {'a': 'b'},
+        );
 
         expect(
           methodCallLog,
@@ -829,7 +901,9 @@ void main() {
               'Analytics#logEvent',
               arguments: <String, dynamic>{
                 'eventName': 'tutorial_begin',
-                'parameters': null,
+                'parameters': {
+                  'a': 'b',
+                },
               },
             ),
           ],
@@ -837,7 +911,9 @@ void main() {
       });
 
       test('logTutorialComplete', () async {
-        await analytics!.logTutorialComplete();
+        await analytics!.logTutorialComplete(
+          parameters: {'a': 'b'},
+        );
 
         expect(
           methodCallLog,
@@ -846,7 +922,9 @@ void main() {
               'Analytics#logEvent',
               arguments: <String, dynamic>{
                 'eventName': 'tutorial_complete',
-                'parameters': null,
+                'parameters': {
+                  'a': 'b',
+                },
               },
             ),
           ],
@@ -854,7 +932,10 @@ void main() {
       });
 
       test('logUnlockAchievement', () async {
-        await analytics!.logUnlockAchievement(id: ACHIEVEMENT_ID);
+        await analytics!.logUnlockAchievement(
+          id: ACHIEVEMENT_ID,
+          parameters: {'a': 'b'},
+        );
 
         expect(
           methodCallLog,
@@ -863,7 +944,10 @@ void main() {
               'Analytics#logEvent',
               arguments: <String, dynamic>{
                 'eventName': 'unlock_achievement',
-                'parameters': {ACHIEVEMENT_ID: ACHIEVEMENT_ID},
+                'parameters': {
+                  ACHIEVEMENT_ID: ACHIEVEMENT_ID,
+                  'a': 'b',
+                },
               },
             ),
           ],
@@ -875,6 +959,7 @@ void main() {
           currency: CURRENCY,
           value: VALUE_DOUBLE,
           items: [ITEM],
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -888,6 +973,7 @@ void main() {
                   CURRENCY: CURRENCY,
                   VALUE: VALUE_DOUBLE,
                   ITEMS: [ITEM.asMap()],
+                  'a': 'b',
                 },
               },
             ),
@@ -900,6 +986,7 @@ void main() {
           itemListId: ITEM_LIST_ID,
           itemListName: ITEM_LIST_NAME,
           items: [ITEM],
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -913,6 +1000,7 @@ void main() {
                   ITEM_LIST_ID: ITEM_LIST_ID,
                   ITEM_LIST_NAME: ITEM_LIST_NAME,
                   ITEMS: [ITEM.asMap()],
+                  'a': 'b',
                 },
               },
             ),
@@ -928,6 +1016,7 @@ void main() {
           locationId: LOCATION_ID,
           promotionName: PROMOTION_NAME,
           promotionId: PROMOTION_ID,
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -944,6 +1033,7 @@ void main() {
                   PROMOTION_NAME: PROMOTION_NAME,
                   PROMOTION_ID: PROMOTION_ID,
                   ITEMS: [ITEM.asMap()],
+                  'a': 'b',
                 },
               },
             ),
@@ -952,7 +1042,10 @@ void main() {
       });
 
       test('logViewSearchResults', () async {
-        await analytics!.logViewSearchResults(searchTerm: SEARCH_TERM);
+        await analytics!.logViewSearchResults(
+          searchTerm: SEARCH_TERM,
+          parameters: {'a': 'b'},
+        );
 
         expect(
           methodCallLog,
@@ -963,6 +1056,7 @@ void main() {
                 'eventName': 'view_search_results',
                 'parameters': {
                   SEARCH_TERM: SEARCH_TERM,
+                  'a': 'b',
                 },
               },
             ),
@@ -980,6 +1074,7 @@ void main() {
           shipping: SHIPPING_DOUBLE,
           affiliation: AFFILIATION,
           items: [ITEM],
+          parameters: {'a': 'b'},
         );
 
         expect(
@@ -998,6 +1093,7 @@ void main() {
                   SHIPPING: SHIPPING_DOUBLE,
                   AFFILIATION: AFFILIATION,
                   ITEMS: [ITEM.asMap()],
+                  'a': 'b',
                 },
               },
             ),
