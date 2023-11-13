@@ -68,7 +68,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 @implementation FLTFirebaseStoragePlugin {
   NSMutableDictionary<NSNumber *, FIRStorageObservableTask<FIRStorageTaskManagement> *> *_tasks;
   dispatch_queue_t _callbackQueue;
-  bool hasEmulatorBooted;
+  NSMutableDictionary<NSString *, NSNumber *> *_emulatorBooted;
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
   NSMutableDictionary<NSString *, NSObject<FlutterStreamHandler> *> *_streamHandlers;
@@ -97,7 +97,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
         dictionary];
     _callbackQueue =
         dispatch_queue_create("io.flutter.plugins.firebase.storage", DISPATCH_QUEUE_SERIAL);
-    hasEmulatorBooted = false;
+    _emulatorBooted = [[NSMutableDictionary alloc] init];
     _binaryMessenger = messenger;
     _eventChannels = [NSMutableDictionary dictionary];
     _streamHandlers = [NSMutableDictionary dictionary];
@@ -242,9 +242,11 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                          port:(NSNumber *)port
                    completion:(void (^)(FlutterError *_Nullable))completion {
   FIRStorage *storage = [self getFIRStorageFromAppNameFromPigeon:app];
-  if (hasEmulatorBooted == false) {
+  NSNumber *emulatorKey = _emulatorBooted[app.bucket];
+
+  if (emulatorKey == nil) {
     [storage useEmulatorWithHost:host port:[port integerValue]];
-    hasEmulatorBooted = true;
+    [_emulatorBooted setObject:@(YES) forKey:app.bucket];
   }
   completion(nil);
 }
