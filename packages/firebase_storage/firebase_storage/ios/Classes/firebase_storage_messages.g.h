@@ -44,9 +44,12 @@ typedef NS_ENUM(NSUInteger, PigeonStorageTaskState) {
 @interface PigeonStorageFirebaseApp : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithAppName:(NSString *)appName tenantId:(nullable NSString *)tenantId;
++ (instancetype)makeWithAppName:(NSString *)appName
+                       tenantId:(nullable NSString *)tenantId
+                         bucket:(NSString *)bucket;
 @property(nonatomic, copy) NSString *appName;
 @property(nonatomic, copy, nullable) NSString *tenantId;
+@property(nonatomic, copy) NSString *bucket;
 @end
 
 @interface PigeonStorageReference : NSObject
@@ -66,12 +69,13 @@ typedef NS_ENUM(NSUInteger, PigeonStorageTaskState) {
 @end
 
 @interface PigeonListOptions : NSObject
-+ (instancetype)makeWithMaxResults:(nullable NSNumber *)maxResults
-                         pageToken:(nullable NSString *)pageToken;
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithMaxResults:(NSNumber *)maxResults pageToken:(nullable NSString *)pageToken;
 /// If set, limits the total number of `prefixes` and `items` to return.
 ///
 /// The default and maximum maxResults is 1000.
-@property(nonatomic, strong, nullable) NSNumber *maxResults;
+@property(nonatomic, strong) NSNumber *maxResults;
 /// The nextPageToken from a previous call to list().
 ///
 /// If provided, listing is resumed from the previous position.

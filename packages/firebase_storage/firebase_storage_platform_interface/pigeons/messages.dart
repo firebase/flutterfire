@@ -24,16 +24,19 @@ import 'package:pigeon/pigeon.dart';
     cppHeaderOut: '../firebase_storage/windows/messages.g.h',
     cppSourceOut: '../firebase_storage/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_storage_windows'),
+    copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
 class PigeonStorageFirebaseApp {
   const PigeonStorageFirebaseApp({
     required this.appName,
     required this.tenantId,
+    required this.bucket,
   });
 
   final String appName;
   final String? tenantId;
+  final String bucket;
 }
 
 /// The type of operation that generated the action code from calling
@@ -76,14 +79,14 @@ class PigeonFullMetaData {
 
 class PigeonListOptions {
   const PigeonListOptions({
-    this.maxResults,
+    required this.maxResults,
     this.pageToken,
   });
 
   /// If set, limits the total number of `prefixes` and `items` to return.
   ///
   /// The default and maximum maxResults is 1000.
-  final int? maxResults;
+  final int maxResults;
 
   /// The nextPageToken from a previous call to list().
   ///

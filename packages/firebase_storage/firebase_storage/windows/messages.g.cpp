@@ -26,14 +26,17 @@ using flutter::EncodableValue;
 
 // PigeonStorageFirebaseApp
 
-PigeonStorageFirebaseApp::PigeonStorageFirebaseApp(const std::string& app_name)
-    : app_name_(app_name) {}
+PigeonStorageFirebaseApp::PigeonStorageFirebaseApp(const std::string& app_name,
+                                                   const std::string& bucket)
+    : app_name_(app_name), bucket_(bucket) {}
 
 PigeonStorageFirebaseApp::PigeonStorageFirebaseApp(const std::string& app_name,
-                                                   const std::string* tenant_id)
+                                                   const std::string* tenant_id,
+                                                   const std::string& bucket)
     : app_name_(app_name),
       tenant_id_(tenant_id ? std::optional<std::string>(*tenant_id)
-                           : std::nullopt) {}
+                           : std::nullopt),
+      bucket_(bucket) {}
 
 const std::string& PigeonStorageFirebaseApp::app_name() const {
   return app_name_;
@@ -57,17 +60,25 @@ void PigeonStorageFirebaseApp::set_tenant_id(std::string_view value_arg) {
   tenant_id_ = value_arg;
 }
 
+const std::string& PigeonStorageFirebaseApp::bucket() const { return bucket_; }
+
+void PigeonStorageFirebaseApp::set_bucket(std::string_view value_arg) {
+  bucket_ = value_arg;
+}
+
 EncodableList PigeonStorageFirebaseApp::ToEncodableList() const {
   EncodableList list;
-  list.reserve(2);
+  list.reserve(3);
   list.push_back(EncodableValue(app_name_));
   list.push_back(tenant_id_ ? EncodableValue(*tenant_id_) : EncodableValue());
+  list.push_back(EncodableValue(bucket_));
   return list;
 }
 
 PigeonStorageFirebaseApp PigeonStorageFirebaseApp::FromEncodableList(
     const EncodableList& list) {
-  PigeonStorageFirebaseApp decoded(std::get<std::string>(list[0]));
+  PigeonStorageFirebaseApp decoded(std::get<std::string>(list[0]),
+                                   std::get<std::string>(list[2]));
   auto& encodable_tenant_id = list[1];
   if (!encodable_tenant_id.IsNull()) {
     decoded.set_tenant_id(std::get<std::string>(encodable_tenant_id));
@@ -159,22 +170,16 @@ PigeonFullMetaData PigeonFullMetaData::FromEncodableList(
 
 // PigeonListOptions
 
-PigeonListOptions::PigeonListOptions() {}
+PigeonListOptions::PigeonListOptions(int64_t max_results)
+    : max_results_(max_results) {}
 
-PigeonListOptions::PigeonListOptions(const int64_t* max_results,
+PigeonListOptions::PigeonListOptions(int64_t max_results,
                                      const std::string* page_token)
-    : max_results_(max_results ? std::optional<int64_t>(*max_results)
-                               : std::nullopt),
+    : max_results_(max_results),
       page_token_(page_token ? std::optional<std::string>(*page_token)
                              : std::nullopt) {}
 
-const int64_t* PigeonListOptions::max_results() const {
-  return max_results_ ? &(*max_results_) : nullptr;
-}
-
-void PigeonListOptions::set_max_results(const int64_t* value_arg) {
-  max_results_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
-}
+int64_t PigeonListOptions::max_results() const { return max_results_; }
 
 void PigeonListOptions::set_max_results(int64_t value_arg) {
   max_results_ = value_arg;
@@ -196,19 +201,14 @@ void PigeonListOptions::set_page_token(std::string_view value_arg) {
 EncodableList PigeonListOptions::ToEncodableList() const {
   EncodableList list;
   list.reserve(2);
-  list.push_back(max_results_ ? EncodableValue(*max_results_)
-                              : EncodableValue());
+  list.push_back(EncodableValue(max_results_));
   list.push_back(page_token_ ? EncodableValue(*page_token_) : EncodableValue());
   return list;
 }
 
 PigeonListOptions PigeonListOptions::FromEncodableList(
     const EncodableList& list) {
-  PigeonListOptions decoded;
-  auto& encodable_max_results = list[0];
-  if (!encodable_max_results.IsNull()) {
-    decoded.set_max_results(encodable_max_results.LongValue());
-  }
+  PigeonListOptions decoded(list[0].LongValue());
   auto& encodable_page_token = list[1];
   if (!encodable_page_token.IsNull()) {
     decoded.set_page_token(std::get<std::string>(encodable_page_token));

@@ -56,5 +56,9 @@
   <string>This app would like to access your camera.</string>
   <key>NSMicrophoneUsageDescription</key>
   <string>This app would like to access your microphoner.</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>
