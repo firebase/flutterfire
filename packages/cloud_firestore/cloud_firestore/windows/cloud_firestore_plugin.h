@@ -144,7 +144,6 @@ class CloudFirestorePlugin : public flutter::Plugin,
       transactions_;
   static std::map<std::string, firebase::firestore::Firestore*>
       firestoreInstances_;
-
 };
 
 firebase::firestore::MapFieldValue ConvertToMapFieldValue(

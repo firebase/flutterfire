@@ -15,7 +15,6 @@ import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.da
 
 class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   const _TestFirebaseFirestoreHostApiCodec();
-
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
     if (value is DocumentReferenceRequest) {

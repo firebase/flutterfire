@@ -471,7 +471,6 @@ class PigeonQueryParameters {
 
 class _FirebaseFirestoreHostApiCodec extends FirestoreMessageCodec {
   const _FirebaseFirestoreHostApiCodec();
-
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
     if (value is DocumentReferenceRequest) {

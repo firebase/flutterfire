@@ -1401,8 +1401,7 @@ void CloudFirestorePlugin::AggregateQueryCount(
     bool is_collection_group,
     std::function<void(ErrorOr<double> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
-  Query query =
-      ParseQuery(firestore, path, is_collection_group, parameters);
+  Query query = ParseQuery(firestore, path, is_collection_group, parameters);
   AggregateQuery aggregate_query = query.Count();
 
   Future<AggregateQuerySnapshot> future =
