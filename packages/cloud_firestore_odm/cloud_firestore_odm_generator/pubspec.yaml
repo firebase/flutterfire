@@ -8,7 +8,7 @@ environment:
   sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
-  analyzer: '>=5.12.0 <6.0.0'
+  analyzer: '>=5.12.0 <7.0.0'
   build: ^2.0.1
   build_config: ^1.0.0
   cloud_firestore_odm: ^1.0.0-dev.75
