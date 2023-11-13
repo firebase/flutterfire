@@ -24,7 +24,7 @@ class Reference {
   String get fullPath => _delegate.fullPath;
 
   /// The complete path of this object, including bucket and protocol.
-  String get completePath => "gs://$bucket/$fullPath";
+  String get completePath => 'gs://$bucket/$fullPath';
 
   /// The short name of this object, which is the last component of the full path.
   ///
