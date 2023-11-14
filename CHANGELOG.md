@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-11-14
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.13.1`](#cloud_firestore---v4131)
+ - [`cloud_firestore_platform_interface` - `v6.0.5`](#cloud_firestore_platform_interface---v605)
+ - [`firebase_analytics` - `v10.7.0`](#firebase_analytics---v1070)
+ - [`firebase_analytics_platform_interface` - `v3.8.0`](#firebase_analytics_platform_interface---v380)
+ - [`firebase_auth` - `v4.14.0`](#firebase_auth---v4140)
+ - [`firebase_storage` - `v11.5.1`](#firebase_storage---v1151)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.76`](#cloud_firestore_odm---v100-dev76)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.76`](#cloud_firestore_odm_generator---v100-dev76)
+ - [`cloud_firestore_web` - `v3.8.5`](#cloud_firestore_web---v385)
+ - [`firebase_analytics_web` - `v0.5.5+7`](#firebase_analytics_web---v0557)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_firestore_odm` - `v1.0.0-dev.76`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.76`
+ - `cloud_firestore_web` - `v3.8.5`
+ - `firebase_analytics_web` - `v0.5.5+7`
+
+---
+
+#### `cloud_firestore` - `v4.13.1`
+
+ - **FIX**(firestore,android): fix a race condition that could cause a crash when adding event channels while closing the app ([#11881](https://github.com/firebase/flutterfire/issues/11881)). ([963c1b8d](https://github.com/firebase/flutterfire/commit/963c1b8d2d54e03f6d6edcb4b6a05f43c62b345c))
+ - **FIX**(firestore): ensure `collectionGroup().count()` aggregate query works ([#11850](https://github.com/firebase/flutterfire/issues/11850)). ([85e71293](https://github.com/firebase/flutterfire/commit/85e712937cd609977a9681712b3afaf8f3018903))
+
+#### `cloud_firestore_platform_interface` - `v6.0.5`
+
+ - **FIX**(firestore): ensure `collectionGroup().count()` aggregate query works ([#11850](https://github.com/firebase/flutterfire/issues/11850)). ([85e71293](https://github.com/firebase/flutterfire/commit/85e712937cd609977a9681712b3afaf8f3018903))
+
+#### `firebase_analytics` - `v10.7.0`
+
+ - **FEAT**(firebase_analytics): allow custom parameters (strings and numbers) for events and event items ([#11030](https://github.com/firebase/flutterfire/issues/11030)). ([81dfec93](https://github.com/firebase/flutterfire/commit/81dfec93bcc9490f84fd1e8e3e1bc3737f5eed43))
+
+#### `firebase_analytics_platform_interface` - `v3.8.0`
+
+ - **FEAT**(firebase_analytics): allow custom parameters (strings and numbers) for events and event items ([#11030](https://github.com/firebase/flutterfire/issues/11030)). ([81dfec93](https://github.com/firebase/flutterfire/commit/81dfec93bcc9490f84fd1e8e3e1bc3737f5eed43))
+
+#### `firebase_auth` - `v4.14.0`
+
+ - **FEAT**(auth,windows): add Windows support for Google Sign In ([#11861](https://github.com/firebase/flutterfire/issues/11861)). ([cde57d05](https://github.com/firebase/flutterfire/commit/cde57d059e099913efc994db27141540a2a981d1))
+
+#### `firebase_storage` - `v11.5.1`
+
+ - **FIX**(storage,apple): set the storage emulator only once to stop it from crashing on hot restart ([#11862](https://github.com/firebase/flutterfire/issues/11862)). ([7f07d7aa](https://github.com/firebase/flutterfire/commit/7f07d7aaf3e4c978b7404660f736032b90bffd61))
+
+
 ## 2023-11-09
 
 ### Changes

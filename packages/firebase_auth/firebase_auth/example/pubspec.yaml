@@ -6,7 +6,7 @@ environment:
 
 dependencies:
   barcode_widget: ^2.0.4
-  firebase_auth: ^4.13.0
+  firebase_auth: ^4.14.0
   firebase_core: ^2.22.0
   firebase_messaging: ^14.7.4
   flutter:
