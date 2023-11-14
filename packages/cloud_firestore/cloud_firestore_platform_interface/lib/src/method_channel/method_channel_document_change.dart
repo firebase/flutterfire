@@ -20,5 +20,6 @@ class MethodChannelDocumentChange extends DocumentChangePlatform {
               documentChange.document.path,
               documentChange.document.data,
               documentChange.document.metadata,
+              null,
             ));
 }

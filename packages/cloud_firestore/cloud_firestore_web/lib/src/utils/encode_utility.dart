@@ -132,6 +132,12 @@ class EncodeUtility {
       return encodeArrayData(value);
     } else if (value is Iterable<dynamic>) {
       return encodeArrayData(value.toList());
+    } else if (value is DocumentSnapshotObject) {
+      // We are using dynamic here to upcast DocumentSnapshotObject to DocumentSnapshot to avoid a circular dependency
+      DocumentSnapshotPlatform reference = (value as dynamic).delegate;
+      firestore_interop.DocumentSnapshot delegate = reference.delegate;
+
+      return delegate.jsObject;
     }
     return value;
   }

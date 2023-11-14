@@ -25,6 +25,7 @@ class MethodChannelQuerySnapshot extends QuerySnapshotPlatform {
                     document.path,
                     document.data,
                     document.metadata,
+                    null,
                   );
                 })
                 .whereNotNull()

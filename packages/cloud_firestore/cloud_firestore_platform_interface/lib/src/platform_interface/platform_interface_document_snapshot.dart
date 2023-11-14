@@ -7,6 +7,9 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+/// Dummy class used to represent a [DocumentSnapshotPlatform] in the web
+class DocumentSnapshotObject {}
+
 /// Contains data read from a document in your Firestore
 /// database.
 ///
@@ -15,7 +18,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 class DocumentSnapshotPlatform extends PlatformInterface {
   /// Constructs a [DocumentSnapshotPlatform] using the provided [FirebaseFirestorePlatform].
   DocumentSnapshotPlatform(
-      this._firestore, String path, this._data, this._metadata)
+      this._firestore, String path, this._data, this._metadata, this.delegate)
       : _pointer = Pointer(path),
         super(token: _token);
 
@@ -39,6 +42,9 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   final Map<String?, Object?>? _data;
 
   final PigeonSnapshotMetadata _metadata;
+
+  /// The delegate used to handle calls to this [DocumentSnapshotPlatform] on the native platform.
+  final dynamic delegate;
 
   /// The database ID of the snapshot's document.
   String get id => _pointer.id;

@@ -27,7 +27,8 @@ class SnapshotOptions {}
 /// The data can be extracted with the data property or by using subscript
 /// syntax to access a specific field.
 @sealed
-abstract class DocumentSnapshot<T extends Object?> {
+abstract class DocumentSnapshot<T extends Object?>
+    extends DocumentSnapshotObject {
   /// This document's given ID for this snapshot.
   String get id;
 
@@ -64,6 +65,9 @@ class _JsonDocumentSnapshot implements DocumentSnapshot<Map<String, dynamic>> {
 
   final FirebaseFirestore _firestore;
   final DocumentSnapshotPlatform _delegate;
+
+  /// Used to get the underlying platform representation of the snapshot.
+  DocumentSnapshotPlatform get delegate => _delegate;
 
   @override
   String get id => _delegate.id;

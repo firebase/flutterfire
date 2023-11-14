@@ -72,6 +72,7 @@ DocumentSnapshotPlatform convertWebDocumentSnapshot(
       hasPendingWrites: webSnapshot.metadata.hasPendingWrites,
       isFromCache: webSnapshot.metadata.fromCache,
     ),
+    webSnapshot,
   );
 }
 

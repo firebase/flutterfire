@@ -54,6 +54,7 @@ class MethodChannelTransaction extends TransactionPlatform {
       documentPath,
       result.data,
       result.metadata,
+      null,
     );
   }
 

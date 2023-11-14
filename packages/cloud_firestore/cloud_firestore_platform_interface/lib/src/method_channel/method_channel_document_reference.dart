@@ -84,6 +84,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         _pointer.path,
         result.data,
         result.metadata,
+        null,
       );
     } catch (e, stack) {
       convertPlatformException(e, stack);
@@ -142,6 +143,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
                 result.path,
                 result.data,
                 result.metadata,
+                null,
               ),
             );
           },
