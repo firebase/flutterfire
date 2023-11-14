@@ -34,7 +34,7 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
+      - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
         name: Install Node.js 16
         with:
           node-version: '16'
@@ -107,7 +107,7 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
+      - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
         name: Install Node.js 16
         with:
           node-version: '16'
@@ -182,7 +182,7 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
+      - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
         name: Install Node.js 16
         with:
           node-version: '16'
@@ -251,7 +251,7 @@ jobs:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
+      - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
         name: Install Node.js 16
         with:
           node-version: '16'
@@ -303,7 +303,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8
+      - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
         name: Install Node.js 16
         with:
           node-version: "16"
