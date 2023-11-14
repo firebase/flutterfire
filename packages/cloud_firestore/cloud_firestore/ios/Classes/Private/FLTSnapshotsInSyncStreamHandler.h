@@ -14,6 +14,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FLTSnapshotsInSyncStreamHandler : NSObject <FlutterStreamHandler>
+@property(nonatomic, strong) FIRFirestore *firestore;
+
+- (instancetype)initWithFirestore:(FIRFirestore *)firestore;
 
 @end
 

@@ -1,3 +1,39 @@
+## 4.13.0
+
+ - **FEAT**(firebase_auth): export `AuthProvider` from `firebase_auth_interface` ([#11470](https://github.com/firebase/flutterfire/issues/11470)). ([39881e7e](https://github.com/firebase/flutterfire/commit/39881e7e4671faa94b274d980aad81829e6e0bfc))
+ - **FEAT**(windows): add platform logging for core, auth, firestore and storage ([#11790](https://github.com/firebase/flutterfire/issues/11790)). ([e7d428d1](https://github.com/firebase/flutterfire/commit/e7d428d14be1535a2d579d4b2d376fbb81f06742))
+
+## 4.12.1
+
+ - Update a dependency to the latest release.
+
+## 4.12.0
+
+ - **FEAT**(storage,windows): Add windows support ([#11617](https://github.com/firebase/flutterfire/issues/11617)). ([87ea02c8](https://github.com/firebase/flutterfire/commit/87ea02c8ae03eb351636cf202961ad0df6caebd8))
+
+## 4.11.1
+
+ - **FIX**(ios): fix clashing filenames between Auth and Firestore ([#11731](https://github.com/firebase/flutterfire/issues/11731)). ([8770cafc](https://github.com/firebase/flutterfire/commit/8770cafccccb11607b5530311e3150ac08cd172e))
+
+## 4.11.0
+
+ - **FIX**(auth): ensure `PigeonAuthCredential` is passed back to Dart side within try/catch ([#11683](https://github.com/firebase/flutterfire/issues/11683)). ([d42c3396](https://github.com/firebase/flutterfire/commit/d42c33969b096a9825af21c624f8d93aebede8b2))
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+
+## 4.10.1
+
+ - Update a dependency to the latest release.
+
+## 4.10.0
+
+ - **FIX**(auth): deprecate `FirebaseAuth.instanceFor`'s `persistence` parameter ([#11259](https://github.com/firebase/flutterfire/issues/11259)). ([a1966e82](https://github.com/firebase/flutterfire/commit/a1966e82c15f13119cb28a262a57c67b4f2b8d3b))
+ - **FIX**(auth,apple): `fetchSignInMethodsForEmail` if value is `nil`, pass empty array. ([#11596](https://github.com/firebase/flutterfire/issues/11596)). ([6d261cc9](https://github.com/firebase/flutterfire/commit/6d261cc9a147befbfd203004aff8565492567f58))
+ - **FEAT**(core,windows): Change the windows plugin compiling way ([#11594](https://github.com/firebase/flutterfire/issues/11594)). ([3dab95e0](https://github.com/firebase/flutterfire/commit/3dab95e01f7f71680aff84db4e9dccfe1e77643b))
+ - **FEAT**(auth,windows): add Windows support to auth plugin ([#11089](https://github.com/firebase/flutterfire/issues/11089)). ([0cedfc85](https://github.com/firebase/flutterfire/commit/0cedfc8580bedd9e21b262537e643dbace0d7114))
+ - **DOCS**: firebase_auth description ([#11292](https://github.com/firebase/flutterfire/issues/11292)). ([d9e05713](https://github.com/firebase/flutterfire/commit/d9e057137dffca09ea293b5df7292d7b7b21ca99))
+ - **DOCS**(auth): update the incorrect "getting started" link ([#11440](https://github.com/firebase/flutterfire/issues/11440)). ([5db956dc](https://github.com/firebase/flutterfire/commit/5db956dc935dfec5be28e0463f7e8499a20d5577))
+
 ## 4.9.0
 
  - **FEAT**(auth): TOTP (time-based one-time password) support for multi-factor authentication ([#11420](https://github.com/firebase/flutterfire/issues/11420)). ([3cc1243c](https://github.com/firebase/flutterfire/commit/3cc1243c94368de44d3a5c4be96b905a0a37b963))

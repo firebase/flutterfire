@@ -5,7 +5,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'internal/field_path_type.dart';
+import 'field_path_type.dart';
 
 String _reserved = "Paths must not contain '~', '*', '/', '[', or ']'.";
 

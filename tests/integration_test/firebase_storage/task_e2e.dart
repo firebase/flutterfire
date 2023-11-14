@@ -32,7 +32,7 @@ void setupTaskTests() {
 
       Future<void> _testPauseTask(String type) async {
         List<TaskSnapshot> snapshots = [];
-        late FirebaseException streamError;
+        FirebaseException? streamError;
         expect(task!.snapshot.state, TaskState.running);
 
         task!.snapshotEvents.listen(
@@ -56,6 +56,8 @@ void setupTaskTests() {
           bool? paused = await task!.pause();
           expect(paused, isTrue);
           expect(task!.snapshot.state, TaskState.paused);
+
+          await Future.delayed(const Duration(milliseconds: 500));
 
           bool? resumed = await task!.resume();
           expect(resumed, isTrue);
@@ -95,21 +97,23 @@ void setupTaskTests() {
         'successfully pauses and resumes a download task',
         () async {
           file = await createFile('ok.jpeg');
-          await downloadRef.writeToFile(file);
+          task = downloadRef.writeToFile(file);
           await _testPauseTask('Download');
           // Skip on web: There's no DownloadTask on web.
         },
-        skip: true,
+        retry: 3,
       );
 
       // TODO(Salakar): Test is flaky on CI - needs investigating ('[firebase_storage/unknown] An unknown error occurred, please check the server response.')
       test(
         'successfully pauses and resumes a upload task',
         () async {
-          await uploadRef.putString('This is an upload task!');
+          task = uploadRef.putString('This is an upload task!');
           await _testPauseTask('Upload');
         },
-        skip: true,
+        retry: 3,
+        // This task is flaky on mac, skip for now.
+        skip: defaultTargetPlatform == TargetPlatform.macOS,
       );
 
       //TODO(pr-mais): causes the emulator to crash
@@ -161,8 +165,6 @@ void setupTaskTests() {
           expect(snapshot.totalBytes, completedSnapshot.totalBytes);
           expect(snapshot.metadata, isNull);
         },
-        // TODO(salakar): this test is flakey when using the Firebase Storage Emulator.
-        skip: true,
         // There's no DownloadTask on web.
         // skip: kIsWeb
         retry: 2,
@@ -182,35 +184,9 @@ void setupTaskTests() {
           expect(snapshot.metadata, isA<FullMetadata>());
         },
         retry: 2,
-        // TODO(salakar): this test is flakey when using the Firebase Storage Emulator.
-        skip: true,
-      );
-
-      test(
-        'upload task to a custom bucket',
-        () async {
-          String secondaryBucket = 'flutterfire-e2e-tests-two';
-          Reference storageReference =
-              FirebaseStorage.instanceFor(bucket: secondaryBucket)
-                  .ref('flutter-tests/ok.txt');
-
-          expect(storageReference.bucket, secondaryBucket);
-
-          final task = storageReference.putString('test second bucket');
-          final snapshot = await task;
-
-          expect(snapshot.ref.bucket, secondaryBucket);
-
-          String url = await storageReference.getDownloadURL();
-
-          expect(url, contains('/$secondaryBucket/'));
-        },
-        // TODO(salakar): blocked by https://github.com/firebase/firebase-tools/issues/3390
-        skip: true,
       );
     });
 
-    // TODO(Salakar): Test fails on Firebase Storage emulator since the task completes before .cancel() has a chance to be called.
     group(
       'cancel()',
       () {
@@ -218,7 +194,7 @@ void setupTaskTests() {
 
         Future<void> _testCancelTask() async {
           List<TaskSnapshot> snapshots = [];
-          late FirebaseException streamError;
+          FirebaseException? streamError;
           expect(task.snapshot.state, TaskState.running);
 
           task.snapshotEvents.listen(
@@ -246,7 +222,7 @@ void setupTaskTests() {
           expect(task.snapshot.state, TaskState.canceled);
 
           expect(streamError, isNotNull);
-          expect(streamError.code, 'canceled');
+          expect(streamError!.code, 'canceled');
           // Expecting there to only be running states, canceled should not get sent as an event.
           expect(
             snapshots.every((snapshot) => snapshot.state == TaskState.running),
@@ -269,7 +245,7 @@ void setupTaskTests() {
           await _testCancelTask();
         });
       },
-      skip: true,
+      skip: true, // Cancel still cannot get correct result in e2e test.
     );
   });
 }

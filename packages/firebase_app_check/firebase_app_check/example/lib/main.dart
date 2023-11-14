@@ -25,7 +25,7 @@ Future<void> main() async {
       .activate(
     androidProvider: AndroidProvider.debug,
     appleProvider: AppleProvider.debug,
-    webRecaptchaSiteKey: kWebRecaptchaSiteKey,
+    webProvider: ReCaptchaV3Provider(kWebRecaptchaSiteKey),
   );
 
   runApp(MyApp());
@@ -115,7 +115,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                   );
                 }
                 await appCheck.activate(
-                  webRecaptchaSiteKey: kWebRecaptchaSiteKey,
+                  webProvider: ReCaptchaV3Provider(kWebRecaptchaSiteKey),
                 );
                 setMessage('activated!!');
               },

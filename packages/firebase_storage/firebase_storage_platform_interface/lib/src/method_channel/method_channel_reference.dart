@@ -8,6 +8,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import '../../firebase_storage_platform_interface.dart';
+import '../pigeon/messages.pigeon.dart';
 import 'method_channel_firebase_storage.dart';
 import 'method_channel_list_result.dart';
 import 'method_channel_task.dart';
@@ -20,20 +21,28 @@ class MethodChannelReference extends ReferencePlatform {
   MethodChannelReference(FirebaseStoragePlatform storage, String path)
       : super(storage, path);
 
+  /// FirebaseApp pigeon instance
+  PigeonStorageFirebaseApp get pigeonFirebaseApp {
+    return PigeonStorageFirebaseApp(
+      appName: storage.app.name,
+      bucket: storage.bucket,
+    );
+  }
+
+  /// Default of FirebaseReference pigeon instance
+  PigeonStorageReference get pigeonReference {
+    return PigeonStorageReference(
+      bucket: storage.bucket,
+      fullPath: fullPath,
+      name: name,
+    );
+  }
+
   @override
   Future<void> delete() async {
     try {
-      await MethodChannelFirebaseStorage.channel
-          .invokeMethod('Reference#delete', <String, dynamic>{
-        'appName': storage.app.name,
-        'maxOperationRetryTime': storage.maxOperationRetryTime,
-        'maxUploadRetryTime': storage.maxUploadRetryTime,
-        'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-        'bucket': storage.bucket,
-        'host': storage.emulatorHost,
-        'port': storage.emulatorPort,
-        'path': fullPath,
-      });
+      await MethodChannelFirebaseStorage.pigeonChannel
+          .referenceDelete(pigeonFirebaseApp, pigeonReference);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -42,72 +51,75 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   Future<String> getDownloadURL() async {
     try {
-      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
-          .invokeMapMethod<String, dynamic>(
-              'Reference#getDownloadURL', <String, dynamic>{
-        'appName': storage.app.name,
-        'maxOperationRetryTime': storage.maxOperationRetryTime,
-        'maxUploadRetryTime': storage.maxUploadRetryTime,
-        'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-        'bucket': storage.bucket,
-        'host': storage.emulatorHost,
-        'port': storage.emulatorPort,
-        'path': fullPath,
-      });
-
-      return data!['downloadURL'];
+      String url = await MethodChannelFirebaseStorage.pigeonChannel
+          .referenceGetDownloadURL(pigeonFirebaseApp, pigeonReference);
+      return url;
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
+  }
+
+  /// Convert a [PigeonFullMetaData] to [FullMetadata]
+  static FullMetadata convertMetadata(PigeonFullMetaData pigeonMetadata) {
+    Map<String, dynamic> _metadata = <String, dynamic>{};
+    pigeonMetadata.metadata?.forEach((key, value) {
+      if (key != null) {
+        _metadata[key] = value;
+      }
+    });
+    return FullMetadata(_metadata);
   }
 
   @override
   Future<FullMetadata> getMetadata() async {
     try {
-      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
-          .invokeMapMethod<String, dynamic>(
-              'Reference#getMetadata', <String, dynamic>{
-        'appName': storage.app.name,
-        'maxOperationRetryTime': storage.maxOperationRetryTime,
-        'maxUploadRetryTime': storage.maxUploadRetryTime,
-        'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-        'bucket': storage.bucket,
-        'host': storage.emulatorHost,
-        'port': storage.emulatorPort,
-        'path': fullPath,
-      });
-
-      return FullMetadata(data!);
+      PigeonFullMetaData metaData = await MethodChannelFirebaseStorage
+          .pigeonChannel
+          .referenceGetMetaData(pigeonFirebaseApp, pigeonReference);
+      return convertMetadata(metaData);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
   }
 
+  /// Convert a [ListOptions] to [PigeonListOptions]
+  static PigeonListOptions convertOptions(ListOptions? options) {
+    if (options == null) {
+      return PigeonListOptions(maxResults: 1000);
+    }
+    return PigeonListOptions(
+      maxResults: options.maxResults ?? 1000,
+      pageToken: options.pageToken,
+    );
+  }
+
+  /// Convert a [PigeonListResult] to [ListResultPlatform]
+  ListResultPlatform convertListReference(
+      PigeonListResult pigeonReferenceList) {
+    List<String> referencePaths = [];
+    for (final reference in pigeonReferenceList.items) {
+      referencePaths.add(reference!.fullPath);
+    }
+    List<String> prefixPaths = [];
+    for (final prefix in pigeonReferenceList.prefixs) {
+      prefixPaths.add(prefix!.fullPath);
+    }
+    return MethodChannelListResult(
+      storage,
+      nextPageToken: pigeonReferenceList.pageToken,
+      items: referencePaths,
+      prefixes: prefixPaths,
+    );
+  }
+
   @override
   Future<ListResultPlatform> list([ListOptions? options]) async {
     try {
-      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
-          .invokeMapMethod<String, dynamic>('Reference#list', <String, dynamic>{
-        'appName': storage.app.name,
-        'maxOperationRetryTime': storage.maxOperationRetryTime,
-        'maxUploadRetryTime': storage.maxUploadRetryTime,
-        'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-        'bucket': storage.bucket,
-        'host': storage.emulatorHost,
-        'port': storage.emulatorPort,
-        'path': fullPath,
-        'options': <String, dynamic>{
-          'maxResults': options?.maxResults ?? 1000,
-          'pageToken': options?.pageToken,
-        },
-      });
-
-      return MethodChannelListResult(
-        storage,
-        nextPageToken: data!['nextPageToken'],
-        items: List.from(data['items']),
-        prefixes: List.from(data['prefixes']),
-      );
+      PigeonListOptions pigeonOptions = convertOptions(options);
+      PigeonListResult pigeonReferenceList = await MethodChannelFirebaseStorage
+          .pigeonChannel
+          .referenceList(pigeonFirebaseApp, pigeonReference, pigeonOptions);
+      return convertListReference(pigeonReferenceList);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -116,44 +128,20 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   Future<ListResultPlatform> listAll() async {
     try {
-      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
-          .invokeMapMethod<String, dynamic>(
-              'Reference#listAll', <String, dynamic>{
-        'appName': storage.app.name,
-        'maxOperationRetryTime': storage.maxOperationRetryTime,
-        'maxUploadRetryTime': storage.maxUploadRetryTime,
-        'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-        'bucket': storage.bucket,
-        'host': storage.emulatorHost,
-        'port': storage.emulatorPort,
-        'path': fullPath,
-      });
-      return MethodChannelListResult(
-        storage,
-        nextPageToken: data!['nextPageToken'],
-        items: List.from(data['items']),
-        prefixes: List.from(data['prefixes']),
-      );
+      PigeonListResult pigeonReferenceList = await MethodChannelFirebaseStorage
+          .pigeonChannel
+          .referenceListAll(pigeonFirebaseApp, pigeonReference);
+      return convertListReference(pigeonReferenceList);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
   }
 
   @override
-  Future<Uint8List?> getData(int maxSize) {
+  Future<Uint8List?> getData(int maxSize) async {
     try {
-      return MethodChannelFirebaseStorage.channel
-          .invokeMethod<Uint8List>('Reference#getData', <String, dynamic>{
-        'appName': storage.app.name,
-        'maxOperationRetryTime': storage.maxOperationRetryTime,
-        'maxUploadRetryTime': storage.maxUploadRetryTime,
-        'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-        'bucket': storage.bucket,
-        'host': storage.emulatorHost,
-        'port': storage.emulatorPort,
-        'path': fullPath,
-        'maxSize': maxSize,
-      });
+      return await MethodChannelFirebaseStorage.pigeonChannel
+          .referenceGetData(pigeonFirebaseApp, pigeonReference, maxSize);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -162,8 +150,6 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   TaskPlatform putData(Uint8List data, [SettableMetadata? metadata]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
-    MethodChannelFirebaseStorage.taskObservers[handle] =
-        StreamController<TaskSnapshotPlatform>.broadcast();
     return MethodChannelPutTask(handle, storage, fullPath, data, metadata);
   }
 
@@ -176,8 +162,6 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   TaskPlatform putFile(File file, [SettableMetadata? metadata]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
-    MethodChannelFirebaseStorage.taskObservers[handle] =
-        StreamController<TaskSnapshotPlatform>.broadcast();
     return MethodChannelPutFileTask(handle, storage, fullPath, file, metadata);
   }
 
@@ -185,30 +169,30 @@ class MethodChannelReference extends ReferencePlatform {
   TaskPlatform putString(String data, PutStringFormat format,
       [SettableMetadata? metadata]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
-    MethodChannelFirebaseStorage.taskObservers[handle] =
-        StreamController<TaskSnapshotPlatform>.broadcast();
     return MethodChannelPutStringTask(
         handle, storage, fullPath, data, format, metadata);
+  }
+
+  /// Convert a [SettableMetadata] to [PigeonSettableMetadata]
+  PigeonSettableMetadata convertToPigeonMetaData(SettableMetadata data) {
+    return PigeonSettableMetadata(
+      cacheControl: data.cacheControl,
+      contentDisposition: data.contentDisposition,
+      contentEncoding: data.contentEncoding,
+      contentLanguage: data.contentLanguage,
+      contentType: data.contentType,
+      customMetadata: data.customMetadata,
+    );
   }
 
   @override
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) async {
     try {
-      Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
-          .invokeMapMethod<String, dynamic>(
-              'Reference#updateMetadata', <String, dynamic>{
-        'appName': storage.app.name,
-        'maxOperationRetryTime': storage.maxOperationRetryTime,
-        'maxUploadRetryTime': storage.maxUploadRetryTime,
-        'maxDownloadRetryTime': storage.maxDownloadRetryTime,
-        'bucket': storage.bucket,
-        'host': storage.emulatorHost,
-        'port': storage.emulatorPort,
-        'path': fullPath,
-        'metadata': metadata.asMap(),
-      });
-
-      return FullMetadata(data!);
+      PigeonFullMetaData updatedMetaData = await MethodChannelFirebaseStorage
+          .pigeonChannel
+          .referenceUpdateMetadata(pigeonFirebaseApp, pigeonReference,
+              convertToPigeonMetaData(metadata));
+      return convertMetadata(updatedMetaData);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -217,8 +201,6 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   TaskPlatform writeToFile(File file) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
-    MethodChannelFirebaseStorage.taskObservers[handle] =
-        StreamController<TaskSnapshotPlatform>.broadcast();
     return MethodChannelDownloadTask(handle, storage, fullPath, file);
   }
 }

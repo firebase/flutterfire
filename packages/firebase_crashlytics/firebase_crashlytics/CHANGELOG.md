@@ -1,3 +1,31 @@
+## 3.4.4
+
+ - Update a dependency to the latest release.
+
+## 3.4.3
+
+ - Update a dependency to the latest release.
+
+## 3.4.2
+
+ - Update a dependency to the latest release.
+
+## 3.4.1
+
+ - Update a dependency to the latest release.
+
+## 3.4.0
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
+## 3.3.7
+
+ - Update a dependency to the latest release.
+
+## 3.3.6
+
+ - Update a dependency to the latest release.
+
 ## 3.3.5
 
  - Update a dependency to the latest release.

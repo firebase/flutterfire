@@ -25,9 +25,11 @@ class MethodChannelCollectionReference extends MethodChannelQuery
         CollectionReferencePlatform {
   /// Create a [MethodChannelCollectionReference] instance.
   MethodChannelCollectionReference(
-      FirebaseFirestorePlatform firestore, String path)
-      : _pointer = Pointer(path),
-        super(firestore, path);
+    FirebaseFirestorePlatform firestore,
+    String path,
+    FirestorePigeonFirebaseApp pigeonApp,
+  )   : _pointer = Pointer(path),
+        super(firestore, path, pigeonApp);
 
   final Pointer _pointer;
 
@@ -42,7 +44,7 @@ class MethodChannelCollectionReference extends MethodChannelQuery
     String? parentPath = _pointer.parentPath();
     return parentPath == null
         ? null
-        : MethodChannelDocumentReference(firestore, parentPath);
+        : MethodChannelDocumentReference(firestore, parentPath, pigeonApp);
   }
 
   /// Returns the path of this referenced collection.
@@ -60,6 +62,6 @@ class MethodChannelCollectionReference extends MethodChannelQuery
       documentPath = _pointer.documentPath(autoId);
     }
 
-    return MethodChannelDocumentReference(firestore, documentPath);
+    return MethodChannelDocumentReference(firestore, documentPath, pigeonApp);
   }
 }

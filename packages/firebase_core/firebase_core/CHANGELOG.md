@@ -1,3 +1,39 @@
+## 2.22.0
+
+ - **FEAT**: update iOS SDK to version 10.17.0 ([#11839](https://github.com/firebase/flutterfire/issues/11839)). ([f78838ae](https://github.com/firebase/flutterfire/commit/f78838ae480e28f0f83f1b7cf10bf424ac0593d6))
+ - **FEAT**(windows): add platform logging for core, auth, firestore and storage ([#11790](https://github.com/firebase/flutterfire/issues/11790)). ([e7d428d1](https://github.com/firebase/flutterfire/commit/e7d428d14be1535a2d579d4b2d376fbb81f06742))
+
+## 2.21.0
+
+ - **FEAT**: bump Firebase android SDK BoM `32.5.0` ([#11803](https://github.com/firebase/flutterfire/issues/11803)). ([adf98ea4](https://github.com/firebase/flutterfire/commit/adf98ea49bfb1c601f452f00c2d0dd74ada858f2))
+
+## 2.20.0
+
+ - **FIX**(core,windows): remove unused map of string that was causing a crash ([#11745](https://github.com/firebase/flutterfire/issues/11745)). ([895da052](https://github.com/firebase/flutterfire/commit/895da052207d832d30c9eeceafabac3051e1dabb))
+ - **FIX**(core,windows): allow user to override MSVC_RUNTIME_MODE ([#11150](https://github.com/firebase/flutterfire/issues/11150)). ([3be28676](https://github.com/firebase/flutterfire/commit/3be28676578c53ce4a26bc2f8f480630b579350c))
+ - **FEAT**: bump Firebase iOS SDK `10.16.0` ([#11698](https://github.com/firebase/flutterfire/issues/11698)). ([666f90ea](https://github.com/firebase/flutterfire/commit/666f90ea1eb090ee3f2397c9ffde8ddaf934f36c))
+ - **FEAT**(storage,windows): Add windows support ([#11617](https://github.com/firebase/flutterfire/issues/11617)). ([87ea02c8](https://github.com/firebase/flutterfire/commit/87ea02c8ae03eb351636cf202961ad0df6caebd8))
+
+## 2.19.0
+
+ - **FEAT**(firestore,windows): add Filters to windows ([#11726](https://github.com/firebase/flutterfire/issues/11726)). ([dde59d46](https://github.com/firebase/flutterfire/commit/dde59d466e1b6cc483ba29654a35f198d6e8c9ae))
+
+## 2.18.0
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+
+## 2.17.0
+
+ - **FEAT**: bump Firebase android SDK `32.3.1` ([#11663](https://github.com/firebase/flutterfire/issues/11663)). ([639bc2ea](https://github.com/firebase/flutterfire/commit/639bc2eaabe320a533ec643d4f0c91d2ab3ea5d1))
+
+## 2.16.0
+
+ - **FEAT**: bump Firebase iOS SDK `10.15.0` ([#11586](https://github.com/firebase/flutterfire/issues/11586)). ([baedd3ee](https://github.com/firebase/flutterfire/commit/baedd3eec24e8df9fa0602b92c60fc2535cd449b))
+ - **FEAT**: bump Firebase android SDK `32.2.3` ([#11587](https://github.com/firebase/flutterfire/issues/11587)). ([26415d54](https://github.com/firebase/flutterfire/commit/26415d5477634704c13a1e2dbaad5b7f4cf41c06))
+ - **FEAT**(core,windows): Change the windows plugin compiling way ([#11594](https://github.com/firebase/flutterfire/issues/11594)). ([3dab95e0](https://github.com/firebase/flutterfire/commit/3dab95e01f7f71680aff84db4e9dccfe1e77643b))
+ - **FEAT**(auth,windows): add Windows support to auth plugin ([#11089](https://github.com/firebase/flutterfire/issues/11089)). ([0cedfc85](https://github.com/firebase/flutterfire/commit/0cedfc8580bedd9e21b262537e643dbace0d7114))
+
 ## 2.15.1
 
  - Update a dependency to the latest release.

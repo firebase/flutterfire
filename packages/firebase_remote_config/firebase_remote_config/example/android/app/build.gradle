@@ -26,18 +26,23 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
   namespace 'io.flutter.plugins.firebase.remoteconfig.example'
-  compileSdkVersion 33
 
-  lintOptions {
-    disable 'InvalidPackage'
-  }
+  compileSdk 33
 
   defaultConfig {
     applicationId "io.flutter.plugins.firebase.remoteconfig.example"
-    minSdkVersion 21
-    targetSdkVersion 33
+    minSdk 21
+    targetSdk 33
     versionCode flutterVersionCode.toInteger()
     versionName flutterVersionName
+  }
+
+  buildFeatures {
+    buildConfig = true
+  }
+
+  lintOptions {
+    disable 'InvalidPackage'
   }
 
   buildTypes {

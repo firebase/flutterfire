@@ -31,6 +31,7 @@ export 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
         PhoneCodeSent,
         PhoneCodeAutoRetrievalTimeout,
         AuthCredential,
+        AuthProvider,
         AppleAuthProvider,
         AppleAuthCredential,
         EmailAuthProvider,

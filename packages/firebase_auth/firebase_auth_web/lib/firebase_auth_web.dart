@@ -34,14 +34,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   Completer<void> _initialized = Completer();
 
-  // To set "persistence" on web, it is now required on the v9.0.0 or above Firebase JS SDK to pass the value on calling `initializeAuth()`.
-  // https://firebase.google.com/docs/reference/js/auth.md#initializeauth
-  Persistence? _persistence;
-
   /// The entry point for the [FirebaseAuthWeb] class.
-  FirebaseAuthWeb({required FirebaseApp app, Persistence? persistence})
-      : super(appInstance: app) {
-    _persistence = persistence;
+  FirebaseAuthWeb({required FirebaseApp app}) : super(appInstance: app) {
     // Create a app instance broadcast stream for both delegate listener events
     _userChangesListeners[app.name] =
         StreamController<UserPlatform?>.broadcast();
@@ -148,16 +142,14 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   auth_interop.Auth? _webAuth;
 
   auth_interop.Auth get delegate {
-    _webAuth ??= auth_interop.getAuthInstance(core_interop.app(app.name),
-        persistence: _persistence);
+    _webAuth ??= auth_interop.getAuthInstance(core_interop.app(app.name));
 
     return _webAuth!;
   }
 
   @override
-  FirebaseAuthPlatform delegateFor(
-      {required FirebaseApp app, Persistence? persistence}) {
-    return FirebaseAuthWeb(app: app, persistence: persistence);
+  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
+    return FirebaseAuthWeb(app: app);
   }
 
   @override

@@ -21,19 +21,6 @@ class EmptyModel {
 @Collection<EmptyModel>('firestore-example-app/test/config')
 final emptyModelRef = EmptyModelCollectionReference();
 
-@Collection<ManualJson>('root')
-class ManualJson {
-  ManualJson(this.value);
-
-  factory ManualJson.fromJson(Map<String, Object?> json) {
-    return ManualJson(json['value']! as String);
-  }
-
-  final String value;
-
-  Map<String, Object?> toJson() => {'value': value};
-}
-
 @Collection<AdvancedJson>('firestore-example-app/test/advanced')
 @JsonSerializable(fieldRename: FieldRename.snake)
 class AdvancedJson {

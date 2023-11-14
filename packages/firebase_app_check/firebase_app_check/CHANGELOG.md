@@ -1,3 +1,37 @@
+## 0.2.1+4
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.1
+
+ - **REFACTOR**(app-check,android): update linting warnings ([#11666](https://github.com/firebase/flutterfire/issues/11666)). ([fa9c8181](https://github.com/firebase/flutterfire/commit/fa9c8181156697a96b2615906b24613f28346175))
+ - **FIX**(firebase_app_check): Allow non-default app for Android debug provider ([#11680](https://github.com/firebase/flutterfire/issues/11680)). ([dd20c0c7](https://github.com/firebase/flutterfire/commit/dd20c0c7413dd9c9cd4c54426afc2572f9438607))
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+ - **FEAT**(app_check): Use Android dependencies from Firebase BOM ([#11671](https://github.com/firebase/flutterfire/issues/11671)). ([378fcbdc](https://github.com/firebase/flutterfire/commit/378fcbdc4909e448d47cc204147a2ecd978b4fb7))
+ - **DOCS**: Updated documentation link in firebase_app_check README.md ([#11712](https://github.com/firebase/flutterfire/issues/11712)). ([dd3e56c6](https://github.com/firebase/flutterfire/commit/dd3e56c67a2ddad0a11043f00e9d80544d36355a))
+
+## 0.2.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(app-check,web): support for `ReCaptchaEnterpriseProvider`. User facing API updated. ([#11573](https://github.com/firebase/flutterfire/issues/11573)). ([09825edd](https://github.com/firebase/flutterfire/commit/09825edd0e1ecd609e2046fdefda439ce4099087))
+
 ## 0.1.5+2
 
  - Update a dependency to the latest release.

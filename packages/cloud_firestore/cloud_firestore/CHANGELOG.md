@@ -1,3 +1,41 @@
+## 4.13.0
+
+ - **FIX**(firestore,ios): remove a warning that would be printed when using transactions ([#11783](https://github.com/firebase/flutterfire/issues/11783)). ([355ab9a5](https://github.com/firebase/flutterfire/commit/355ab9a515551afd5f01bbbc94341a85757e8c8c))
+ - **FEAT**(windows): add platform logging for core, auth, firestore and storage ([#11790](https://github.com/firebase/flutterfire/issues/11790)). ([e7d428d1](https://github.com/firebase/flutterfire/commit/e7d428d14be1535a2d579d4b2d376fbb81f06742))
+
+## 4.12.2
+
+ - **FIX**(firestore,android): `cacheSizeBytes` value cannot be null when setting `persistenceEnabled` ([#11794](https://github.com/firebase/flutterfire/issues/11794)). ([a10399eb](https://github.com/firebase/flutterfire/commit/a10399eb1cad2207eba7d2efa64267c9d0176b4a))
+
+## 4.12.1
+
+ - **FIX**(firestore,ios): fix freeze when doing a get in transactions when auth is also installed ([#11773](https://github.com/firebase/flutterfire/issues/11773)). ([180c0918](https://github.com/firebase/flutterfire/commit/180c0918336cdee6efd95bb9926be931d69eedce))
+ - **FIX**(firestore,android): fix hot reload freezing the app on Android ([#11776](https://github.com/firebase/flutterfire/issues/11776)). ([bd1ab457](https://github.com/firebase/flutterfire/commit/bd1ab457a4dde19e18457fe05413d1096565f45f))
+
+## 4.12.0
+
+ - **FIX**(firestore): cleaned up use of previous method channel ([#11758](https://github.com/firebase/flutterfire/issues/11758)). ([8cfc69bf](https://github.com/firebase/flutterfire/commit/8cfc69bf7c773fac26f12f01863e7853791fce8f))
+ - **FEAT**: bump Firebase iOS SDK `10.16.0` ([#11698](https://github.com/firebase/flutterfire/issues/11698)). ([666f90ea](https://github.com/firebase/flutterfire/commit/666f90ea1eb090ee3f2397c9ffde8ddaf934f36c))
+
+## 4.11.0
+
+ - **FIX**(ios): fix clashing filenames between Auth and Firestore ([#11731](https://github.com/firebase/flutterfire/issues/11731)). ([8770cafc](https://github.com/firebase/flutterfire/commit/8770cafccccb11607b5530311e3150ac08cd172e))
+ - **FEAT**(firestore,windows): add Filters to windows ([#11726](https://github.com/firebase/flutterfire/issues/11726)). ([dde59d46](https://github.com/firebase/flutterfire/commit/dde59d466e1b6cc483ba29654a35f198d6e8c9ae))
+
+## 4.10.0
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+
+## 4.9.3
+
+ - Update a dependency to the latest release.
+
+## 4.9.2
+
+ - **FIX**(firestore): allow `DocumentReference` to be used to in Filter queries ([#11593](https://github.com/firebase/flutterfire/issues/11593)). ([3f570c6d](https://github.com/firebase/flutterfire/commit/3f570c6d42305bef299e75de6053eb57d8520c8a))
+ - **FIX**(firestore): Correct static property getter `serverTimestampMap` ([#11570](https://github.com/firebase/flutterfire/issues/11570)). ([251d15e9](https://github.com/firebase/flutterfire/commit/251d15e970c771f30bc03aeda319538e9b3b76fc))
+
 ## 4.9.1
 
  - **FIX**(cloud_firestore): Fix crashes on iOS/macOS ([#11501](https://github.com/firebase/flutterfire/issues/11501)). ([3ed53470](https://github.com/firebase/flutterfire/commit/3ed53470f0536294d4d1905c759c91aabf1d39ff))

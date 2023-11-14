@@ -4,18 +4,14 @@
 
 package io.flutter.plugins.firebase.messaging;
 
-import android.content.Intent;
 import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   @Override
   public void onNewToken(@NonNull String token) {
-    Intent onMessageIntent = new Intent(FlutterFirebaseMessagingUtils.ACTION_TOKEN);
-    onMessageIntent.putExtra(FlutterFirebaseMessagingUtils.EXTRA_TOKEN, token);
-    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(onMessageIntent);
+    FlutterFirebaseTokenLiveData.getInstance().postToken(token);
   }
 
   @Override

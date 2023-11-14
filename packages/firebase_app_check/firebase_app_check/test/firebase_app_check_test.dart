@@ -56,7 +56,7 @@ void main() {
     group('activate', () {
       test('successful call', () async {
         await appCheck.activate(
-          webRecaptchaSiteKey: 'key',
+          webProvider: ReCaptchaV3Provider('key'),
         );
 
         expect(

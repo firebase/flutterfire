@@ -211,6 +211,19 @@ void main() {
         ),
       );
     });
+
+    test('throws if .getSessionId() not implemented', () async {
+      await expectLater(
+        () => firebaseAnalyticsPlatform.getSessionId(),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'getSessionId() is not implemented',
+          ),
+        ),
+      );
+    });
   });
 }
 

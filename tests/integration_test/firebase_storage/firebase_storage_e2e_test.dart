@@ -7,11 +7,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
+import 'package:flutter/foundation.dart';
 
 import 'instance_e2e.dart';
 import 'list_result_e2e.dart';
 import 'reference_e2e.dart';
 import 'task_e2e.dart';
+import 'second_bucket.dart';
 import 'test_utils.dart';
 
 void main() {
@@ -22,8 +24,11 @@ void main() {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      await FirebaseStorage.instance
-          .useStorageEmulator(testEmulatorHost, testEmulatorPort);
+      if (defaultTargetPlatform != TargetPlatform.windows) {
+        // windows don't support emulator yet
+        await FirebaseStorage.instance
+            .useStorageEmulator(testEmulatorHost, testEmulatorPort);
+      }
 
       // Add a write only file
       await FirebaseStorage.instance
@@ -46,7 +51,7 @@ void main() {
           .putString('File 3');
       await FirebaseStorage.instance
           .ref('flutter-tests/list/file4.txt')
-          .putString('File 5');
+          .putString('File 4');
       await FirebaseStorage.instance
           .ref('flutter-tests/list/nested/file5.txt')
           .putString('File 5');
@@ -56,5 +61,6 @@ void main() {
     setupListResultTests();
     setupReferenceTests();
     setupTaskTests();
+    setupSecondBucketTests();
   });
 }

@@ -1,3 +1,32 @@
+## 4.3.4
+
+ - Update a dependency to the latest release.
+
+## 4.3.3
+
+ - Update a dependency to the latest release.
+
+## 4.3.2
+
+ - Update a dependency to the latest release.
+
+## 4.3.1
+
+ - Update a dependency to the latest release.
+
+## 4.3.0
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+
+## 4.2.7
+
+ - Update a dependency to the latest release.
+
+## 4.2.6
+
+ - Update a dependency to the latest release.
+
 ## 4.2.5
 
  - **DOCS**(firebase_remote_config): Remove link with archived content from readme ([#11471](https://github.com/firebase/flutterfire/issues/11471)). ([26ee5ed1](https://github.com/firebase/flutterfire/commit/26ee5ed1c555681b420852512f671653b14cb4fa))
