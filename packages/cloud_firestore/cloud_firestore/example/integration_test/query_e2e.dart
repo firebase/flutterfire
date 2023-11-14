@@ -1011,6 +1011,34 @@ void runQueryTests() {
         expect(snapshot.docs[0].id, equals('doc3'));
         expect(snapshot.docs[1].id, equals('doc4'));
       });
+
+      testWidgets('startAfterDocument() starts after a document', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startAfter-document');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'bar': {'value': 1},
+          }),
+          collection.doc('doc2').set({
+            'bar': {'value': 2},
+          }),
+          collection.doc('doc3').set({
+            'bar': {'value': 3},
+          }),
+          collection.doc('doc4').set({
+            'bar': {'value': 4},
+          }),
+        ]);
+
+        DocumentSnapshot startAtSnapshot = await collection.doc('doc2').get();
+
+        QuerySnapshot<Map<String, dynamic>> snapshot =
+            await collection.startAfter([startAtSnapshot]).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc3'));
+        expect(snapshot.docs[1].id, equals('doc4'));
+      });
     });
 
     /**

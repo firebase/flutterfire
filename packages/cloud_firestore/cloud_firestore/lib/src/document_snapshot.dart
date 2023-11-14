@@ -144,4 +144,8 @@ class _WithConverterDocumentSnapshot<T> implements DocumentSnapshot<T> {
 
   @override
   dynamic operator [](Object field) => _originalDocumentSnapshot[field];
+
+  /// Used to get the underlying platform representation of the snapshot.
+  DocumentSnapshotPlatform get delegate =>
+      (_originalDocumentSnapshot as _JsonDocumentSnapshot).delegate;
 }
