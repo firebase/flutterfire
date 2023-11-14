@@ -616,6 +616,7 @@ class FirebaseFirestoreHostApi {
   virtual void AggregateQueryCount(
       const FirestorePigeonFirebaseApp& app, const std::string& path,
       const PigeonQueryParameters& parameters, const AggregateSource& source,
+      bool is_collection_group,
       std::function<void(ErrorOr<double> reply)> result) = 0;
   virtual void WriteBatchCommit(
       const FirestorePigeonFirebaseApp& app,

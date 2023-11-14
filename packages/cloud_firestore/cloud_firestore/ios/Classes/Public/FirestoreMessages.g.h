@@ -322,6 +322,7 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
                           path:(NSString *)path
                     parameters:(PigeonQueryParameters *)parameters
                         source:(AggregateSource)source
+             isCollectionGroup:(NSNumber *)isCollectionGroup
                     completion:(void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion;
 - (void)writeBatchCommitApp:(FirestorePigeonFirebaseApp *)app
                      writes:(NSArray<PigeonTransactionCommand *> *)writes

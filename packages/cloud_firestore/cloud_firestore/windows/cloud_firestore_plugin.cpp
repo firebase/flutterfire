@@ -1398,9 +1398,10 @@ firebase::firestore::AggregateSource GetAggregateSourceFromPigeon(
 void CloudFirestorePlugin::AggregateQueryCount(
     const FirestorePigeonFirebaseApp& app, const std::string& path,
     const PigeonQueryParameters& parameters, const AggregateSource& source,
+    bool is_collection_group,
     std::function<void(ErrorOr<double> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
-  Query query = ParseQuery(firestore, path, false, parameters);
+  Query query = ParseQuery(firestore, path, is_collection_group, parameters);
   AggregateQuery aggregate_query = query.Count();
 
   Future<AggregateQuerySnapshot> future =

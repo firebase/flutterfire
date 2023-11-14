@@ -1577,6 +1577,7 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull String path,
         @NonNull PigeonQueryParameters parameters,
         @NonNull AggregateSource source,
+        @NonNull Boolean isCollectionGroup,
         @NonNull Result<Double> result);
 
     void writeBatchCommit(
@@ -2213,6 +2214,7 @@ public class GeneratedAndroidFirebaseFirestore {
                 String pathArg = (String) args.get(1);
                 PigeonQueryParameters parametersArg = (PigeonQueryParameters) args.get(2);
                 AggregateSource sourceArg = AggregateSource.values()[(int) args.get(3)];
+                Boolean isCollectionGroupArg = (Boolean) args.get(4);
                 Result<Double> resultCallback =
                     new Result<Double>() {
                       public void success(Double result) {
@@ -2226,7 +2228,13 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.aggregateQueryCount(appArg, pathArg, parametersArg, sourceArg, resultCallback);
+                api.aggregateQueryCount(
+                    appArg,
+                    pathArg,
+                    parametersArg,
+                    sourceArg,
+                    isCollectionGroupArg,
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

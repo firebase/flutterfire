@@ -1112,21 +1112,24 @@ void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
         binaryMessenger:binaryMessenger
                   codec:FirebaseFirestoreHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector
-                     (aggregateQueryCountApp:path:parameters:source:completion:)],
-                @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
-                @"@selector(aggregateQueryCountApp:path:parameters:source:completion:)",
-                api);
+      NSCAssert(
+          [api respondsToSelector:@selector
+               (aggregateQueryCountApp:path:parameters:source:isCollectionGroup:completion:)],
+          @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
+          @"@selector(aggregateQueryCountApp:path:parameters:source:isCollectionGroup:completion:)",
+          api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         FirestorePigeonFirebaseApp *arg_app = GetNullableObjectAtIndex(args, 0);
         NSString *arg_path = GetNullableObjectAtIndex(args, 1);
         PigeonQueryParameters *arg_parameters = GetNullableObjectAtIndex(args, 2);
         AggregateSource arg_source = [GetNullableObjectAtIndex(args, 3) integerValue];
+        NSNumber *arg_isCollectionGroup = GetNullableObjectAtIndex(args, 4);
         [api aggregateQueryCountApp:arg_app
                                path:arg_path
                          parameters:arg_parameters
                              source:arg_source
+                  isCollectionGroup:arg_isCollectionGroup
                          completion:^(NSNumber *_Nullable output, FlutterError *_Nullable error) {
                            callback(wrapResult(output, error));
                          }];
