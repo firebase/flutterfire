@@ -135,7 +135,6 @@
     options.storageBucket = initializeAppRequest.storageBucket;
   }
 
-
   // kFirebaseOptionsDeepLinkURLScheme
   if (![initializeAppRequest.deepLinkURLScheme isEqual:[NSNull null]]) {
     options.deepLinkURLScheme = initializeAppRequest.deepLinkURLScheme;
