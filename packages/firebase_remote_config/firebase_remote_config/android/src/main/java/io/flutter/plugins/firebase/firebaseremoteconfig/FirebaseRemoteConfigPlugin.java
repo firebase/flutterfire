@@ -127,6 +127,10 @@ public class FirebaseRemoteConfigPlugin
     channel = null;
     eventChannel.setStreamHandler(null);
     eventChannel = null;
+    for (ConfigUpdateListenerRegistration listener : listenersMap.values()) {
+      listener.remove();
+      listenersMap.remove(listener);
+    }
   }
 
   private FirebaseRemoteConfig getRemoteConfig(Map<String, Object> arguments) {
@@ -305,6 +309,9 @@ public class FirebaseRemoteConfigPlugin
   @Override
   public void onCancel(Object arguments) {
     Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
+    if (argumentsMap == null) {
+      return;
+    }
     String appName = (String) Objects.requireNonNull(argumentsMap.get("appName"));
 
     ConfigUpdateListenerRegistration listener = listenersMap.get(appName);
