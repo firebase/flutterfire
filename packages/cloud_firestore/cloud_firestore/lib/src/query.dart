@@ -658,17 +658,25 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       conditions.add(condition);
     }
 
-    if (!identical(isEqualTo, _notSetQueryParam))
+    if (!identical(isEqualTo, _notSetQueryParam)) {
       addCondition(field, '==', isEqualTo);
-    if (!identical(isNotEqualTo, _notSetQueryParam))
+    }
+
+    if (!identical(isNotEqualTo, _notSetQueryParam)) {
       addCondition(field, '!=', isNotEqualTo);
-    if (!identical(isLessThan, _notSetQueryParam))
+    }
+
+    if (!identical(isLessThan, _notSetQueryParam)) {
       addCondition(field, '<', isLessThan);
+    }
+
     if (!identical(isLessThanOrEqualTo, _notSetQueryParam)) {
       addCondition(field, '<=', isLessThanOrEqualTo);
     }
-    if (!identical(isGreaterThan, _notSetQueryParam))
+    if (!identical(isGreaterThan, _notSetQueryParam)) {
       addCondition(field, '>', isGreaterThan);
+    }
+
     if (!identical(isGreaterThanOrEqualTo, _notSetQueryParam)) {
       addCondition(field, '>=', isGreaterThanOrEqualTo);
     }
