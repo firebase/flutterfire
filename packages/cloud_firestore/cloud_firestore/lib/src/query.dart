@@ -4,7 +4,7 @@
 
 part of cloud_firestore;
 
-// Setinel value to check whether user passed values explicitly through .where() method
+// Sentinel value to check whether user passed values explicitly through .where() method
 const _notSetQueryParam = Object();
 
 /// Represents a [Query] over the data at a particular location.
