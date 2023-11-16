@@ -1984,6 +1984,46 @@ void runQueryTests() {
         expect(results.docs[0].data()['genre'], equals(['sci-fi', 'action']));
       });
 
+      testWidgets('returns documents with OR filter and a previous condition',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-filter-and');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'genre': 'fantasy',
+            'rating': 4.5,
+            'year': 1970,
+          }),
+          collection.doc('doc2').set({
+            'genre': 'fantasy',
+            'rating': 3.8,
+            'year': 1980,
+          }),
+          collection.doc('doc3').set({
+            'genre': 'sci-fi',
+            'rating': 4.2,
+            'year': 1980,
+          }),
+        ]);
+
+        final results = await collection
+            .where('genre', isEqualTo: 'fantasy')
+            .where(
+              Filter.or(
+                Filter('year', isEqualTo: 1980),
+                Filter('rating', isGreaterThanOrEqualTo: 4.0),
+              ),
+            )
+            .orderBy('rating')
+            .get();
+
+        expect(results.docs.length, equals(2));
+        expect(results.docs[0].id, equals('doc2'));
+        expect(results.docs[0].data()['rating'], equals(3.8));
+        expect(results.docs[1].id, equals('doc1'));
+        expect(results.docs[1].data()['rating'], equals(4.5));
+      });
+
       testWidgets('returns documents with nested OR and AND filters',
           (_) async {
         CollectionReference<Map<String, dynamic>> collection =
