@@ -408,11 +408,15 @@ class ${data.queryReferenceImplName}
             : _WhereType('Object?', 'notSetQueryParam'),
         'isNull': _WhereType('bool?'),
         if (field.type.isSupportedIterable) ...{
-          'arrayContains': _WhereType(
-            data.libraryElement.typeProvider
-                .asNullable((field.type as InterfaceType).typeArguments.first)
-                .toString(),
-          ),
+          'arrayContains': isAbstract
+              ? _WhereType(
+                  data.libraryElement.typeProvider
+                      .asNullable(
+                        (field.type as InterfaceType).typeArguments.first,
+                      )
+                      .toString(),
+                )
+              : _WhereType('Object?', 'notSetQueryParam'),
           'arrayContainsAny': _WhereType(nullableType),
         } else ...{
           'whereIn': _WhereType('List<${field.type}>?'),
@@ -437,13 +441,17 @@ class ${data.queryReferenceImplName}
         } else if (e == 'arrayContainsAny') {
           return '$e: $e != null ? $perFieldToJson($e) as Iterable<Object>? : null,';
         } else if (e == 'arrayContains') {
+          final itemType =
+              (field.type as InterfaceType).typeArguments.first.toString();
+          final cast = itemType != 'Object?' ? ' as $itemType' : '';
+
           var transform = '$e: $e != notSetQueryParam ? ($perFieldToJson(';
           if (field.type.isSet) {
-            transform += '{$e}';
+            transform += '{$e$cast}';
           } else {
-            transform += '[$e]';
+            transform += '[$e$cast]';
           }
-          return '$transform as ${field.type}) as List?)!.single : notSetQueryParam,';
+          return '$transform) as List?)!.single : notSetQueryParam,';
         } else {
           return '$e: $e != notSetQueryParam ? $perFieldToJson($e as ${field.type}) : notSetQueryParam,';
         }

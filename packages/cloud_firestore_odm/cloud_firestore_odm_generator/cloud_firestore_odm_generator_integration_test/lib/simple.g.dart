@@ -2765,7 +2765,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     Object? isGreaterThan = notSetQueryParam,
     Object? isGreaterThanOrEqualTo = notSetQueryParam,
     bool? isNull,
-    Nested? arrayContains,
+    Object? arrayContains = notSetQueryParam,
     List<Nested>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -2794,8 +2794,8 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : notSetQueryParam,
         isNull: isNull,
         arrayContains: arrayContains != notSetQueryParam
-            ? (_$NestedPerFieldToJson
-                    .valueList([arrayContains] as List<Nested>?) as List?)!
+            ? (_$NestedPerFieldToJson.valueList([arrayContains as Nested])
+                    as List?)!
                 .single
             : notSetQueryParam,
         arrayContainsAny: arrayContainsAny != null
@@ -2815,7 +2815,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     Object? isGreaterThan = notSetQueryParam,
     Object? isGreaterThanOrEqualTo = notSetQueryParam,
     bool? isNull,
-    bool? arrayContains,
+    Object? arrayContains = notSetQueryParam,
     List<bool>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -2844,7 +2844,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : notSetQueryParam,
         isNull: isNull,
         arrayContains: arrayContains != notSetQueryParam
-            ? (_$NestedPerFieldToJson.boolList([arrayContains] as List<bool>?)
+            ? (_$NestedPerFieldToJson.boolList([arrayContains as bool])
                     as List?)!
                 .single
             : notSetQueryParam,
@@ -2865,7 +2865,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     Object? isGreaterThan = notSetQueryParam,
     Object? isGreaterThanOrEqualTo = notSetQueryParam,
     bool? isNull,
-    String? arrayContains,
+    Object? arrayContains = notSetQueryParam,
     List<String>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -2894,8 +2894,8 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : notSetQueryParam,
         isNull: isNull,
         arrayContains: arrayContains != notSetQueryParam
-            ? (_$NestedPerFieldToJson
-                    .stringList([arrayContains] as List<String>?) as List?)!
+            ? (_$NestedPerFieldToJson.stringList([arrayContains as String])
+                    as List?)!
                 .single
             : notSetQueryParam,
         arrayContainsAny: arrayContainsAny != null
@@ -2915,7 +2915,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     Object? isGreaterThan = notSetQueryParam,
     Object? isGreaterThanOrEqualTo = notSetQueryParam,
     bool? isNull,
-    num? arrayContains,
+    Object? arrayContains = notSetQueryParam,
     List<num>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -2943,8 +2943,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : notSetQueryParam,
         isNull: isNull,
         arrayContains: arrayContains != notSetQueryParam
-            ? (_$NestedPerFieldToJson.numList([arrayContains] as List<num>?)
-                    as List?)!
+            ? (_$NestedPerFieldToJson.numList([arrayContains as num]) as List?)!
                 .single
             : notSetQueryParam,
         arrayContainsAny: arrayContainsAny != null
@@ -2964,7 +2963,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     Object? isGreaterThan = notSetQueryParam,
     Object? isGreaterThanOrEqualTo = notSetQueryParam,
     bool? isNull,
-    Object? arrayContains,
+    Object? arrayContains = notSetQueryParam,
     List<Object?>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -2993,8 +2992,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : notSetQueryParam,
         isNull: isNull,
         arrayContains: arrayContains != notSetQueryParam
-            ? (_$NestedPerFieldToJson
-                    .objectList([arrayContains] as List<Object?>?) as List?)!
+            ? (_$NestedPerFieldToJson.objectList([arrayContains]) as List?)!
                 .single
             : notSetQueryParam,
         arrayContainsAny: arrayContainsAny != null
@@ -3014,7 +3012,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     Object? isGreaterThan = notSetQueryParam,
     Object? isGreaterThanOrEqualTo = notSetQueryParam,
     bool? isNull,
-    dynamic arrayContains,
+    Object? arrayContains = notSetQueryParam,
     List<dynamic>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -3044,8 +3042,8 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : notSetQueryParam,
         isNull: isNull,
         arrayContains: arrayContains != notSetQueryParam
-            ? (_$NestedPerFieldToJson
-                    .dynamicList([arrayContains] as List<dynamic>?) as List?)!
+            ? (_$NestedPerFieldToJson.dynamicList([arrayContains as dynamic])
+                    as List?)!
                 .single
             : notSetQueryParam,
         arrayContainsAny: arrayContainsAny != null
@@ -3065,7 +3063,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     Object? isGreaterThan = notSetQueryParam,
     Object? isGreaterThanOrEqualTo = notSetQueryParam,
     bool? isNull,
-    bool? arrayContains,
+    Object? arrayContains = notSetQueryParam,
     Set<bool>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -3093,7 +3091,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : notSetQueryParam,
         isNull: isNull,
         arrayContains: arrayContains != notSetQueryParam
-            ? (_$NestedPerFieldToJson.boolSet({arrayContains} as Set<bool>?)
+            ? (_$NestedPerFieldToJson.boolSet({arrayContains as bool})
                     as List?)!
                 .single
             : notSetQueryParam,
@@ -3203,7 +3201,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     Object? isGreaterThan = notSetQueryParam,
     Object? isGreaterThanOrEqualTo = notSetQueryParam,
     bool? isNull,
-    TestEnum? arrayContains,
+    Object? arrayContains = notSetQueryParam,
     List<TestEnum>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -3232,8 +3230,8 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : notSetQueryParam,
         isNull: isNull,
         arrayContains: arrayContains != notSetQueryParam
-            ? (_$NestedPerFieldToJson
-                    .enumList([arrayContains] as List<TestEnum>) as List?)!
+            ? (_$NestedPerFieldToJson.enumList([arrayContains as TestEnum])
+                    as List?)!
                 .single
             : notSetQueryParam,
         arrayContainsAny: arrayContainsAny != null
@@ -3253,7 +3251,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     Object? isGreaterThan = notSetQueryParam,
     Object? isGreaterThanOrEqualTo = notSetQueryParam,
     bool? isNull,
-    TestEnum? arrayContains,
+    Object? arrayContains = notSetQueryParam,
     List<TestEnum>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -3286,8 +3284,8 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             : notSetQueryParam,
         isNull: isNull,
         arrayContains: arrayContains != notSetQueryParam
-            ? (_$NestedPerFieldToJson.nullableEnumList(
-                    [arrayContains] as List<TestEnum>?) as List?)!
+            ? (_$NestedPerFieldToJson
+                    .nullableEnumList([arrayContains as TestEnum]) as List?)!
                 .single
             : notSetQueryParam,
         arrayContainsAny: arrayContainsAny != null
