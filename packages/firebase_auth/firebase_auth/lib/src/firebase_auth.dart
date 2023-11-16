@@ -362,8 +362,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
     await _delegate.sendSignInLinkToEmail(email, actionCodeSettings);
   }
 
-  /// When set to null, the default Firebase Console language setting is
-  /// applied.
+  /// When set to null, sets the user-facing language code to be the default app language.
   ///
   /// The language code will propagate to email action templates (password
   /// reset, email verification and email change revocation), SMS templates for
