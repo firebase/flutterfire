@@ -277,8 +277,8 @@ By default, the Firebase Flutter SDK auto-injects the Firebase JavaScript SDK wh
 
       ```js
         // "web/my-analytics.js" & "web/my-firestore.js" file loaded as a script into your "web/index.html" file: 
-        window.firebase_firestore = await import("./my-analytics.js");
-        window.firebase_analytics = await import("./my-firestore.js");
+        window.firebase_analytics = await import("./my-analytics.js");
+        window.firebase_firestore = await import("./my-firestore.js");
       ```
 
 {% dynamic endif %}
