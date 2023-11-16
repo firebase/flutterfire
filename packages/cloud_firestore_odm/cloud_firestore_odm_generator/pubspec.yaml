@@ -15,7 +15,7 @@ dependencies:
   collection: ^1.15.0
   freezed_annotation: '>=1.0.0 <3.0.0'
   # Can be removed once this is fixed https://github.com/dart-lang/graphs/issues/86
-  graphs: '>=2.0.0 <2.3.0'
+  graphs: ^2.0.0
   json_annotation: ^4.8.1
   meta: ^1.8.0
   recase: ^4.0.0
