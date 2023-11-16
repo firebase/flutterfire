@@ -369,10 +369,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// phone authentication, reCAPTCHA verifier and OAuth popup/redirect
   /// operations provided the specified providers support localization with the
   /// language code specified.
-  ///
-  /// On web platforms, if `null` is provided as the [languageCode] the Firebase
-  /// project default language will be used. On native platforms, the device
-  /// language will be used.
   Future<void> setLanguageCode(String? languageCode) {
     return _delegate.setLanguageCode(languageCode);
   }
