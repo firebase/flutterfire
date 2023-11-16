@@ -663,6 +663,11 @@ class User {
   }
 
   MultiFactor get multiFactor {
+    if (!kIsWeb && (Platform.isMacOS || Platform.isWindows)) {
+      throw UnimplementedError(
+        'MultiFactor Authentication is only supported on web, Android and iOS.',
+      );
+    }
     return _multiFactor ??= MultiFactor._(_delegate.multiFactor);
   }
 
