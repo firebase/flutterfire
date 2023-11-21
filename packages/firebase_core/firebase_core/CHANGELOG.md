@@ -1,3 +1,9 @@
+## 2.23.0
+
+ - **FIX**(core,apple): remove usage of deprecated options `trackingID` and `androidClientID` ([#11893](https://github.com/firebase/flutterfire/issues/11893)). ([4dfbe5a4](https://github.com/firebase/flutterfire/commit/4dfbe5a485284ae7fa1356284e7971e96db15f27))
+ - **FEAT**: bump iOS SDK to version 10.18.0 ([#11916](https://github.com/firebase/flutterfire/issues/11916)). ([abbea170](https://github.com/firebase/flutterfire/commit/abbea170a6d87f6e313f0244395b60f5b2b3f64e))
+ - **FEAT**: bump firebase android SDK BOM to `32.6.0` ([#11910](https://github.com/firebase/flutterfire/issues/11910)). ([8467816c](https://github.com/firebase/flutterfire/commit/8467816c234f979b40fa1ad4f2737e27ccd33271))
+
 ## 2.22.0
 
  - **FEAT**: update iOS SDK to version 10.17.0 ([#11839](https://github.com/firebase/flutterfire/issues/11839)). ([f78838ae](https://github.com/firebase/flutterfire/commit/f78838ae480e28f0f83f1b7cf10bf424ac0593d6))

@@ -1,3 +1,7 @@
+## 11.5.2
+
+ - Update a dependency to the latest release.
+
 ## 11.5.1
 
  - **FIX**(storage,apple): set the storage emulator only once to stop it from crashing on hot restart ([#11862](https://github.com/firebase/flutterfire/issues/11862)). ([7f07d7aa](https://github.com/firebase/flutterfire/commit/7f07d7aaf3e4c978b7404660f736032b90bffd61))
