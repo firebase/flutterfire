@@ -1,3 +1,8 @@
+## 4.13.2
+
+ - **FIX**(firestore): allow `null` value to `isEqualsTo` & `isNotEqualsTo` in `where()` query ([#11896](https://github.com/firebase/flutterfire/issues/11896)). ([3ee59a7c](https://github.com/firebase/flutterfire/commit/3ee59a7c4aff589cc5845107099cc012d7b19b53))
+ - **FIX**(firestore,web): fix being able to use normal `where` conditions and `Filter.OR` together ([#11891](https://github.com/firebase/flutterfire/issues/11891)). ([c8410acd](https://github.com/firebase/flutterfire/commit/c8410acd79fe6f8f4cd36b4eacb384c5874d61d2))
+
 ## 4.13.1
 
  - **FIX**(firestore,android): fix a race condition that could cause a crash when adding event channels while closing the app ([#11881](https://github.com/firebase/flutterfire/issues/11881)). ([963c1b8d](https://github.com/firebase/flutterfire/commit/963c1b8d2d54e03f6d6edcb4b6a05f43c62b345c))
