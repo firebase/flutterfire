@@ -1813,6 +1813,56 @@ void runQueryTests() {
         expect(snapshot.docs.length, equals(1));
         expect(snapshot.docs[0].get('foo'), equals(ref));
       });
+
+      testWidgets('pass `null` to `isEqualTo`', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-null-isEqualTo');
+
+        await Future.wait([
+          collection.add({
+            'foo': 1,
+          }),
+          collection.add({'foo': 2}),
+          collection.add({
+            'foo': null,
+          }),
+          collection.add({
+            'foo': null,
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot =
+            await collection.where('foo', isEqualTo: null).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].get('foo'), equals(null));
+        expect(snapshot.docs[1].get('foo'), equals(null));
+      });
+
+      testWidgets('pass `null` to `isNotEqualTo`', (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where-null-isNotEqualTo');
+
+        await Future.wait([
+          collection.add({
+            'foo': 11,
+          }),
+          collection.add({'foo': 11}),
+          collection.add({
+            'foo': null,
+          }),
+          collection.add({
+            'foo': null,
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot =
+            await collection.where('foo', isNotEqualTo: null).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].get('foo'), equals(11));
+        expect(snapshot.docs[1].get('foo'), equals(11));
+      });
     });
 
     group('Query.where() with Filter class', () {

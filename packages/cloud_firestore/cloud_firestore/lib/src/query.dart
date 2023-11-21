@@ -4,6 +4,10 @@
 
 part of cloud_firestore;
 
+/// Sentinel value to check whether user passed values explicitly through .where() method
+@internal
+const notSetQueryParam = Object();
+
 /// Represents a [Query] over the data at a particular location.
 ///
 /// Can construct refined [Query] objects by adding filters and ordering.
@@ -595,13 +599,13 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   @override
   Query<Map<String, dynamic>> where(
     Object fieldOrFilter, {
-    Object? isEqualTo,
-    Object? isNotEqualTo,
-    Object? isLessThan,
-    Object? isLessThanOrEqualTo,
-    Object? isGreaterThan,
-    Object? isGreaterThanOrEqualTo,
-    Object? arrayContains,
+    Object? isEqualTo = notSetQueryParam,
+    Object? isNotEqualTo = notSetQueryParam,
+    Object? isLessThan = notSetQueryParam,
+    Object? isLessThanOrEqualTo = notSetQueryParam,
+    Object? isGreaterThan = notSetQueryParam,
+    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? arrayContains = notSetQueryParam,
     Iterable<Object?>? arrayContainsAny,
     Iterable<Object?>? whereIn,
     Iterable<Object?>? whereNotIn,
@@ -611,13 +615,13 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
 
     if (fieldOrFilter is Filter) {
       assert(
-        isEqualTo == null &&
-            isNotEqualTo == null &&
-            isLessThan == null &&
-            isLessThanOrEqualTo == null &&
-            isGreaterThan == null &&
-            isGreaterThanOrEqualTo == null &&
-            arrayContains == null &&
+        identical(isEqualTo, notSetQueryParam) &&
+            identical(isNotEqualTo, notSetQueryParam) &&
+            identical(isLessThan, notSetQueryParam) &&
+            identical(isLessThanOrEqualTo, notSetQueryParam) &&
+            identical(isGreaterThan, notSetQueryParam) &&
+            identical(isGreaterThanOrEqualTo, notSetQueryParam) &&
+            identical(arrayContains, notSetQueryParam) &&
             arrayContainsAny == null &&
             whereIn == null &&
             whereNotIn == null &&
@@ -655,17 +659,29 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       conditions.add(condition);
     }
 
-    if (isEqualTo != null) addCondition(field, '==', isEqualTo);
-    if (isNotEqualTo != null) addCondition(field, '!=', isNotEqualTo);
-    if (isLessThan != null) addCondition(field, '<', isLessThan);
-    if (isLessThanOrEqualTo != null) {
+    if (!identical(isEqualTo, notSetQueryParam)) {
+      addCondition(field, '==', isEqualTo);
+    }
+
+    if (!identical(isNotEqualTo, notSetQueryParam)) {
+      addCondition(field, '!=', isNotEqualTo);
+    }
+
+    if (!identical(isLessThan, notSetQueryParam)) {
+      addCondition(field, '<', isLessThan);
+    }
+
+    if (!identical(isLessThanOrEqualTo, notSetQueryParam)) {
       addCondition(field, '<=', isLessThanOrEqualTo);
     }
-    if (isGreaterThan != null) addCondition(field, '>', isGreaterThan);
-    if (isGreaterThanOrEqualTo != null) {
+    if (!identical(isGreaterThan, notSetQueryParam)) {
+      addCondition(field, '>', isGreaterThan);
+    }
+
+    if (!identical(isGreaterThanOrEqualTo, notSetQueryParam)) {
       addCondition(field, '>=', isGreaterThanOrEqualTo);
     }
-    if (arrayContains != null) {
+    if (!identical(arrayContains, notSetQueryParam)) {
       addCondition(field, 'array-contains', arrayContains);
     }
     if (arrayContainsAny != null) {
@@ -952,13 +968,13 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   @override
   Query<T> where(
     Object field, {
-    Object? isEqualTo,
-    Object? isNotEqualTo,
-    Object? isLessThan,
-    Object? isLessThanOrEqualTo,
-    Object? isGreaterThan,
-    Object? isGreaterThanOrEqualTo,
-    Object? arrayContains,
+    Object? isEqualTo = notSetQueryParam,
+    Object? isNotEqualTo = notSetQueryParam,
+    Object? isLessThan = notSetQueryParam,
+    Object? isLessThanOrEqualTo = notSetQueryParam,
+    Object? isGreaterThan = notSetQueryParam,
+    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? arrayContains = notSetQueryParam,
     Iterable<Object?>? arrayContainsAny,
     Iterable<Object?>? whereIn,
     Iterable<Object?>? whereNotIn,
