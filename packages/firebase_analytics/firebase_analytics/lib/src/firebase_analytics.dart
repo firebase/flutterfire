@@ -1360,6 +1360,20 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> setSessionTimeoutDuration(Duration timeout) async {
     await _delegate.setSessionTimeoutDuration(timeout);
   }
+
+  /// Initiates on-device conversion measurement given a user email address or a phone number in E.164 format.
+  /// Requires dependency GoogleAppMeasurementOnDeviceConversion to be linked in, otherwise it is a no-op.
+  ///
+  /// Only available on iOS.
+  Future<void> initiateOnDeviceConversionMeasurement({
+    String? emailAddress,
+    String? phoneNumber,
+  }) async {
+    await _delegate.initiateOnDeviceConversionMeasurement(
+      emailAddress: emailAddress,
+      phoneNumber: phoneNumber,
+    );
+  }
 }
 
 /// Android-specific analytics API.
