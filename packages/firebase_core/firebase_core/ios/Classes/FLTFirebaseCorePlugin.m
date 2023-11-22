@@ -51,6 +51,12 @@
   return instance;
 }
 
+static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
+
++ (NSString *)getCustomDomain:(NSString *)appName {
+  return customAuthDomains[appName];
+}
+
 #pragma mark - Helpers
 
 - (PigeonFirebaseOptions *)optionsFromFIROptions:(FIROptions *)options {
@@ -153,6 +159,10 @@
   // kFirebaseOptionsAppGroupId
   if (![initializeAppRequest.appGroupId isEqual:[NSNull null]]) {
     options.appGroupID = initializeAppRequest.appGroupId;
+  }
+
+  if (initializeAppRequest.authDomain != nil) {
+    customAuthDomains[appNameIos] = initializeAppRequest.authDomain;
   }
 
   [FIRApp configureWithName:appNameIos options:options];
