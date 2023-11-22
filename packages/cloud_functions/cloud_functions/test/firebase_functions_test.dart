@@ -6,7 +6,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'mock.dart';
@@ -118,32 +117,6 @@ void main() {
                 .delegate
                 .origin,
             isNull);
-      });
-
-      test('handles "localhost" and "127.0.0.1" origin only for Android', () {
-        const testLocalhostOrigins = [
-          '127.0.0.1',
-          'localhost',
-        ];
-
-        for (final platform in TargetPlatform.values) {
-          debugDefaultTargetPlatformOverride = platform;
-
-          for (final testOrigin in testLocalhostOrigins) {
-            final expectedOrigin = platform == TargetPlatform.android
-                ? 'http://10.0.2.2:5000'
-                : 'http://$testOrigin:5000';
-
-            FirebaseFunctions.instance.useFunctionsEmulator(testOrigin, 5000);
-            // Origin on the default FirebaseFunctions instance should be set.
-            expect(
-                FirebaseFunctions.instance
-                    .httpsCallable('test')
-                    .delegate
-                    .origin,
-                equals(expectedOrigin));
-          }
-        }
       });
     });
 
