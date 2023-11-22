@@ -1369,6 +1369,11 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? emailAddress,
     String? phoneNumber,
   }) async {
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      throw UnimplementedError(
+        'initiateOnDeviceConversionMeasurement() is only supported on iOS.',
+      );
+    }
     await _delegate.initiateOnDeviceConversionMeasurement(
       emailAddress: emailAddress,
       phoneNumber: phoneNumber,
