@@ -194,8 +194,8 @@ class FirebaseStorage extends FirebasePluginPlatform {
     if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
       if (mappedHost == 'localhost' || mappedHost == '127.0.0.1') {
         // ignore: avoid_print
-        print('Mapping Storage Emulator host "$mappedHost" to "10.0.2.2".');
-        mappedHost = '10.0.2.2';
+        print(
+            'You are using the Storage Emulator on "$mappedHost". This host might not be accessible on Android.');
       }
     }
 

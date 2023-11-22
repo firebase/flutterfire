@@ -28,7 +28,9 @@ void main() {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+      final localhostMapped =
+      kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+      FirebaseFunctions.instance.useFunctionsEmulator(localhostMapped, 5001);
       callable =
           FirebaseFunctions.instance.httpsCallable(kTestFunctionDefaultRegion);
     });
@@ -193,7 +195,9 @@ void main() {
     group('instanceFor', () {
       test('accepts a custom region', () async {
         final instance = FirebaseFunctions.instanceFor(region: 'europe-west1');
-        instance.useFunctionsEmulator('localhost', 5001);
+        final localhostMapped =
+        kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+        instance.useFunctionsEmulator(localhostMapped, 5001);
         final customRegionCallable =
             instance.httpsCallable(kTestFunctionCustomRegion);
         final result = await customRegionCallable();
@@ -206,7 +210,9 @@ void main() {
         'times out when the provided timeout option is exceeded',
         () async {
           final instance = FirebaseFunctions.instance;
-          instance.useFunctionsEmulator('localhost', 5001);
+          final localhostMapped =
+          kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+          instance.useFunctionsEmulator(localhostMapped, 5001);
           final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
             kTestFunctionTimeout,
             options: HttpsCallableOptions(timeout: const Duration(seconds: 3)),
@@ -232,7 +238,9 @@ void main() {
         'allow passing of `limitedUseAppCheckToken` as option',
             () async {
           final instance = FirebaseFunctions.instance;
-          instance.useFunctionsEmulator('localhost', 5001);
+          final localhostMapped =
+          kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+          instance.useFunctionsEmulator(localhostMapped, 5001);
           final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
             kTestFunctionDefaultRegion,
             options: HttpsCallableOptions(timeout: const Duration(seconds: 3), limitedUseAppCheckToken: true),
