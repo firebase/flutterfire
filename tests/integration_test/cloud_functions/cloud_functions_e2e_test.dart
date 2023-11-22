@@ -29,7 +29,7 @@ void main() {
         options: DefaultFirebaseOptions.currentPlatform,
       );
       final localhostMapped =
-      kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+          kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
       FirebaseFunctions.instance.useFunctionsEmulator(localhostMapped, 5001);
       callable =
           FirebaseFunctions.instance.httpsCallable(kTestFunctionDefaultRegion);
@@ -196,7 +196,7 @@ void main() {
       test('accepts a custom region', () async {
         final instance = FirebaseFunctions.instanceFor(region: 'europe-west1');
         final localhostMapped =
-        kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+            kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
         instance.useFunctionsEmulator(localhostMapped, 5001);
         final customRegionCallable =
             instance.httpsCallable(kTestFunctionCustomRegion);
@@ -211,7 +211,7 @@ void main() {
         () async {
           final instance = FirebaseFunctions.instance;
           final localhostMapped =
-          kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+              kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
           instance.useFunctionsEmulator(localhostMapped, 5001);
           final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
             kTestFunctionTimeout,
@@ -239,7 +239,7 @@ void main() {
             () async {
           final instance = FirebaseFunctions.instance;
           final localhostMapped =
-          kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+              kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
           instance.useFunctionsEmulator(localhostMapped, 5001);
           final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
             kTestFunctionDefaultRegion,
