@@ -143,7 +143,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
         if (mappedHost == 'localhost' || mappedHost == '127.0.0.1') {
           // ignore: avoid_print
           print(
-              'You are using the Firestore Emulator on "$mappedHost". This host might not be accessible on Android.');
+              'You are using the Firestore Emulator on "$mappedHost". This host might not be accessible on Android.',);
         }
       }
 
