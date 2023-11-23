@@ -300,6 +300,11 @@ void main() {
       'initiateOnDeviceConversionMeasurement',
       () async {
         await expectLater(
+          FirebaseAnalytics.instance.initiateOnDeviceConversionMeasurement(),
+          completes,
+        );
+
+        await expectLater(
           FirebaseAnalytics.instance.initiateOnDeviceConversionMeasurement(
             emailAddress: 'test@mail.com',
           ),
