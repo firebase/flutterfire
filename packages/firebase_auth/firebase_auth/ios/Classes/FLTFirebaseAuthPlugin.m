@@ -15,6 +15,7 @@
 #import "Public/FLTFirebaseAuthPlugin.h"
 @import CommonCrypto;
 #import <AuthenticationServices/AuthenticationServices.h>
+#import <firebase_core/FLTFirebaseCorePlugin.h>
 
 NSString *const kFLTFirebaseAuthChannelName = @"plugins.flutter.io/firebase_auth";
 
@@ -632,6 +633,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   FIRAuth *auth = [FIRAuth authWithApp:app];
 
   auth.tenantID = pigeonApp.tenantId;
+  auth.customAuthDomain = [FLTFirebaseCorePlugin getCustomDomain:app.name];
 
   return auth;
 }
