@@ -731,7 +731,7 @@ FlutterStandardMethodCodec *_codec;
                parameters:(nonnull PigeonQueryParameters *)parameters
                    source:(AggregateSource)source
                   queries:(nonnull NSArray<AggregateQuery *> *)queries
-                               isCollectionGroup:(NSNumber *)isCollectionGroup
+        isCollectionGroup:(NSNumber *)isCollectionGroup
                completion:(nonnull void (^)(NSArray<AggregateQueryResponse *> *_Nullable,
                                             FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
