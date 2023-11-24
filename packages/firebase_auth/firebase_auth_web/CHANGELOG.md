@@ -1,3 +1,11 @@
+## 5.8.8
+
+ - **FIX**(auth,web): use the device language when using `setLanguageCode` with null ([#11905](https://github.com/firebase/flutterfire/issues/11905)). ([f9322b6f](https://github.com/firebase/flutterfire/commit/f9322b6f25cd9520c5e033361e63a4db3f375a15))
+
+## 5.8.7
+
+ - Update a dependency to the latest release.
+
 ## 5.8.6
 
  - Update a dependency to the latest release.

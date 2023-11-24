@@ -1,3 +1,15 @@
+## 6.0.6
+
+ - Update a dependency to the latest release.
+
+## 6.0.5
+
+ - **FIX**(firestore): ensure `collectionGroup().count()` aggregate query works ([#11850](https://github.com/firebase/flutterfire/issues/11850)). ([85e71293](https://github.com/firebase/flutterfire/commit/85e712937cd609977a9681712b3afaf8f3018903))
+
+## 6.0.4
+
+ - Update a dependency to the latest release.
+
 ## 6.0.3
 
  - Update a dependency to the latest release.

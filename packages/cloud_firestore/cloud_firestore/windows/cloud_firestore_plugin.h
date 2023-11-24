@@ -115,6 +115,7 @@ class CloudFirestorePlugin : public flutter::Plugin,
       const FirestorePigeonFirebaseApp& app, const std::string& path,
       const PigeonQueryParameters& parameters, const AggregateSource& source,
       const flutter::EncodableList& queries,
+      bool is_collection_group,
       std::function<void(ErrorOr<flutter::EncodableList> reply)> result)
       override;
   virtual void WriteBatchCommit(
@@ -145,8 +146,6 @@ class CloudFirestorePlugin : public flutter::Plugin,
       transactions_;
   static std::map<std::string, firebase::firestore::Firestore*>
       firestoreInstances_;
-
- private:
 };
 
 firebase::firestore::MapFieldValue ConvertToMapFieldValue(

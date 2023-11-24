@@ -185,28 +185,6 @@ void setupTaskTests() {
         },
         retry: 2,
       );
-
-      test(
-        'upload task to a custom bucket',
-        () async {
-          String secondaryBucket = 'flutterfire-e2e-tests-two';
-          Reference storageReference =
-              FirebaseStorage.instanceFor(bucket: secondaryBucket)
-                  .ref('flutter-tests/ok.txt');
-
-          expect(storageReference.bucket, secondaryBucket);
-
-          final task = storageReference.putString('test second bucket');
-          final snapshot = await task;
-
-          expect(snapshot.ref.bucket, secondaryBucket);
-
-          String url = await storageReference.getDownloadURL();
-
-          expect(url, contains('/$secondaryBucket/'));
-        },
-        skip: true, // does Firebase Emulator support custom bucket?
-      );
     });
 
     group(

@@ -1148,6 +1148,7 @@ class FirebaseFirestoreHostApi {
     PigeonQueryParameters arg_parameters,
     AggregateSource arg_source,
     List<AggregateQuery?> arg_queries,
+    bool arg_isCollectionGroup,
   ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery',
@@ -1160,6 +1161,7 @@ class FirebaseFirestoreHostApi {
       arg_parameters,
       arg_source.index,
       arg_queries,
+      arg_isCollectionGroup,
     ]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(

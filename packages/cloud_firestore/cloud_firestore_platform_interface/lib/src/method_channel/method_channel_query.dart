@@ -277,6 +277,7 @@ class MethodChannelQuery extends QueryPlatform {
           type: AggregateType.count,
         )
       ],
+      isCollectionGroupQuery,
     );
   }
 
@@ -293,6 +294,7 @@ class MethodChannelQuery extends QueryPlatform {
           field: field,
         )
       ],
+      isCollectionGroupQuery,
     );
   }
 
@@ -309,6 +311,7 @@ class MethodChannelQuery extends QueryPlatform {
           field: field,
         )
       ],
+      isCollectionGroupQuery,
     );
   }
 

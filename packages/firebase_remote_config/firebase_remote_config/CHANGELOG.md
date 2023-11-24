@@ -1,3 +1,11 @@
+## 4.3.5
+
+ - **FIX**(remote_config,android): fix an issue that could cause a non responsive app when hot restarting an app ([#11895](https://github.com/firebase/flutterfire/issues/11895)). ([1cfdb063](https://github.com/firebase/flutterfire/commit/1cfdb063f01a0036bec02e69e96a0ca6bb8ca83a))
+
+## 4.3.4
+
+ - Update a dependency to the latest release.
+
 ## 4.3.3
 
  - Update a dependency to the latest release.

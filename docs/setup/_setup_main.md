@@ -265,20 +265,28 @@ By default, the Firebase Flutter SDK auto-injects the Firebase JavaScript SDK wh
 
 2.  Load the script manually using one of the following alternatives:
 
-    - Add the SDK explicitly to your `web/index.html` file:
+    - Add the SDK explicitly to your `web/index.html` file, inside the `window.addEventListener` callback:
 
-      ```html
-      <script src="https://www.gstatic.com/firebasejs/{{web_sdk_version}}/firebase-analytics.js"></script>
-      <script src="https://www.gstatic.com/firebasejs/{{web_sdk_version}}/firebase-firestore.js"></script>
+      ```js
+        window.addEventListener('load', async function (ev) {
+          window.firebase_firestore = await import("https://www.gstatic.com/firebasejs/{{web_sdk_version}}/firebase-firestore.js");
+          window.firebase_analytics = await import("https://www.gstatic.com/firebasejs/{{web_sdk_version}}/firebase-analytics.js");
+          
+          _flutter.loader.loadEntrypoint().then(function (engineInitializer) {
+            // rest of the code
       ```
 
     - Or, download the plugin's Firebase JavaScript SDK code from the "gstatic" domain,
       and save them to a JavaScript file to be kept within your project and loaded in manually:
 
-      ```html
-      <!-- "web/my-analytics.js" & "web/my-firestore.js" file loaded as a script into your "web/index.html" file: -->
-      <script src="./my-analytics.js"></script>
-      <script src="./my-firestore.js"></script>
+      ```js
+        // "web/my-analytics.js" & "web/my-firestore.js" file loaded as a script into your "web/index.html" file: 
+        window.addEventListener('load', async function (ev) {
+          window.firebase_analytics = await import("./my-analytics.js");
+          window.firebase_firestore = await import("./my-firestore.js");
+          
+          _flutter.loader.loadEntrypoint().then(function (engineInitializer) {
+            // rest of the code
       ```
 
 {% dynamic endif %}

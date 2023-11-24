@@ -385,6 +385,7 @@ abstract class FirebaseFirestoreHostApi {
     PigeonQueryParameters parameters,
     AggregateSource source,
     List<AggregateQuery?> queries,
+    bool isCollectionGroup,
   );
 
   @async

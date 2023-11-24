@@ -1,3 +1,15 @@
+## 1.0.0-dev.77
+
+ - **FIX**(firestore): allow `null` value to `isEqualsTo` & `isNotEqualsTo` in `where()` query ([#11896](https://github.com/firebase/flutterfire/issues/11896)). ([3ee59a7c](https://github.com/firebase/flutterfire/commit/3ee59a7c4aff589cc5845107099cc012d7b19b53))
+
+## 1.0.0-dev.76
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.75
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.74
 
  - Update a dependency to the latest release.

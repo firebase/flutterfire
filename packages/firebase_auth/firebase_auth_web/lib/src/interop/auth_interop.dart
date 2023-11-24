@@ -236,6 +236,9 @@ external PromiseJsImpl<void> updateProfile(
   UserProfile profile,
 );
 
+@JS()
+external void useDeviceLanguage(AuthJsImpl auth);
+
 /// https://firebase.google.com/docs/reference/js/auth.md#multifactor
 @JS()
 external MultiFactorUserJsImpl multiFactor(
@@ -269,7 +272,6 @@ abstract class AuthJsImpl {
     Func0? opt_completed,
   ]);
   external PromiseJsImpl<void> signOut();
-  external void useDeviceLanguage();
 }
 
 @anonymous

@@ -687,7 +687,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       auth_interop.connectAuthEmulator(jsObject, origin);
 
   /// Sets the current language to the default device/browser preference.
-  void useDeviceLanguage() => jsObject.useDeviceLanguage();
+  void useDeviceLanguage() => auth_interop.useDeviceLanguage(jsObject);
 
   /// Verifies a password reset [code] sent to the user by email
   /// or other out-of-band mechanism.

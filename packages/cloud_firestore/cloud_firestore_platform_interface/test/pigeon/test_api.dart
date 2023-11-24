@@ -181,6 +181,7 @@ abstract class TestFirebaseFirestoreHostApi {
     PigeonQueryParameters parameters,
     AggregateSource source,
     List<AggregateQuery?> queries,
+    bool isCollectionGroup,
   );
 
   Future<void> writeBatchCommit(
@@ -885,12 +886,18 @@ abstract class TestFirebaseFirestoreHostApi {
             arg_queries != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null List<AggregateQuery?>.',
           );
+          final bool? arg_isCollectionGroup = (args[5] as bool?);
+          assert(
+            arg_isCollectionGroup != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery was null, expected non-null bool.',
+          );
           final List<AggregateQueryResponse?> output = await api.aggregateQuery(
             arg_app!,
             arg_path!,
             arg_parameters!,
             arg_source!,
             arg_queries!,
+            arg_isCollectionGroup!,
           );
           return <Object?>[output];
         });

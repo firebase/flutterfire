@@ -1,3 +1,15 @@
+## 3.8.1
+
+ - Update a dependency to the latest release.
+
+## 3.8.0
+
+ - **FEAT**(firebase_analytics): allow custom parameters (strings and numbers) for events and event items ([#11030](https://github.com/firebase/flutterfire/issues/11030)). ([81dfec93](https://github.com/firebase/flutterfire/commit/81dfec93bcc9490f84fd1e8e3e1bc3737f5eed43))
+
+## 3.7.6
+
+ - Update a dependency to the latest release.
+
 ## 3.7.5
 
  - Update a dependency to the latest release.

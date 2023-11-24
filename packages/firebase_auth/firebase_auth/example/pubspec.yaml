@@ -6,13 +6,14 @@ environment:
 
 dependencies:
   barcode_widget: ^2.0.4
-  firebase_auth: ^4.12.1
-  firebase_core: ^2.21.0
-  firebase_messaging: ^14.7.3
+  firebase_auth: ^4.14.1
+  firebase_core: ^2.23.0
+  firebase_messaging: ^14.7.5
   flutter:
     sdk: flutter
   flutter_signin_button: ^2.0.0
   google_sign_in: ^6.1.0
+  google_sign_in_dartio: ^0.2.2+1 # For Windows support
 
 dev_dependencies:
   http: ^0.13.3

@@ -68,7 +68,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 @implementation FLTFirebaseStoragePlugin {
   NSMutableDictionary<NSNumber *, FIRStorageObservableTask<FIRStorageTaskManagement> *> *_tasks;
   dispatch_queue_t _callbackQueue;
-  bool hasEmulatorBooted;
+  NSMutableDictionary<NSString *, NSNumber *> *_emulatorBooted;
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
   NSMutableDictionary<NSString *, NSObject<FlutterStreamHandler> *> *_streamHandlers;
@@ -97,7 +97,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
         dictionary];
     _callbackQueue =
         dispatch_queue_create("io.flutter.plugins.firebase.storage", DISPATCH_QUEUE_SERIAL);
-    hasEmulatorBooted = false;
+    _emulatorBooted = [[NSMutableDictionary alloc] init];
     _binaryMessenger = messenger;
     _eventChannels = [NSMutableDictionary dictionary];
     _streamHandlers = [NSMutableDictionary dictionary];
@@ -158,7 +158,10 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
 - (FIRStorage *_Nullable)getFIRStorageFromAppNameFromPigeon:(PigeonStorageFirebaseApp *)pigeonApp {
   FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:pigeonApp.appName];
-  FIRStorage *storage = [FIRStorage storageForApp:app];
+  NSString *baseString = @"gs://";
+  NSString *fullURL = [baseString stringByAppendingString:pigeonApp.bucket];
+
+  FIRStorage *storage = [FIRStorage storageForApp:app URL:fullURL];
 
   return storage;
 }
@@ -239,7 +242,12 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                          port:(NSNumber *)port
                    completion:(void (^)(FlutterError *_Nullable))completion {
   FIRStorage *storage = [self getFIRStorageFromAppNameFromPigeon:app];
-  [storage useEmulatorWithHost:host port:[port integerValue]];
+  NSNumber *emulatorKey = _emulatorBooted[app.bucket];
+
+  if (emulatorKey == nil) {
+    [storage useEmulatorWithHost:host port:[port integerValue]];
+    [_emulatorBooted setObject:@(YES) forKey:app.bucket];
+  }
   completion(nil);
 }
 
@@ -845,40 +853,6 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   return dictionary;
 }
 
-- (FIRStorageMetadata *)FIRStorageMetadataFromNSDictionary:(NSDictionary *)dictionary
-                                                  fullPath:(NSString *)fullPath {
-  NSMutableDictionary *metadata = [NSMutableDictionary dictionary];
-
-  // NOTE: Firebase iOS SDK 10 requires a "path" property on `FIRStorageMetadata`. We do this by
-  // "initWithDictionary()" which uses "name" property as "path" under the hood.
-  // See
-  // https://github.com/firebase/firebase-ios-sdk/blob/970b4c45098319e40e6e5157d340d16cb73a2b88/FirebaseStorage/Sources/StorageMetadata.swift#L156-L178
-  metadata[@"name"] = fullPath;
-
-  if (dictionary == nil || [dictionary isEqual:[NSNull null]]) return nil;
-
-  if (dictionary[kFLTFirebaseStorageKeyCacheControl] != [NSNull null]) {
-    metadata[@"cacheControl"] = dictionary[kFLTFirebaseStorageKeyCacheControl];
-  }
-  if (dictionary[kFLTFirebaseStorageKeyContentDisposition] != [NSNull null]) {
-    metadata[@"contentDisposition"] = dictionary[kFLTFirebaseStorageKeyContentDisposition];
-  }
-  if (dictionary[kFLTFirebaseStorageKeyContentEncoding] != [NSNull null]) {
-    metadata[@"contentEncoding"] = dictionary[kFLTFirebaseStorageKeyContentEncoding];
-  }
-  if (dictionary[kFLTFirebaseStorageKeyContentLanguage] != [NSNull null]) {
-    metadata[@"contentLanguage"] = dictionary[kFLTFirebaseStorageKeyContentLanguage];
-  }
-  if (dictionary[kFLTFirebaseStorageKeyContentType] != [NSNull null]) {
-    metadata[@"contentType"] = dictionary[kFLTFirebaseStorageKeyContentType];
-  }
-  if (dictionary[kFLTFirebaseStorageKeyCustomMetadata] != [NSNull null]) {
-    metadata[@"metadata"] = dictionary[kFLTFirebaseStorageKeyCustomMetadata];
-  }
-
-  return [[FIRStorageMetadata alloc] initWithDictionary:metadata];
-}
-
 + (NSDictionary *)NSDictionaryFromFIRStorageMetadata:(FIRStorageMetadata *)metadata {
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
 
@@ -933,51 +907,6 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   }
 
   return dictionary;
-}
-
-- (FIRStorage *)FIRStorageForArguments:(id)arguments {
-  FIRStorage *storage;
-  NSString *appName = arguments[kFLTFirebaseStorageKeyAppName];
-  NSString *bucket = arguments[kFLTFirebaseStorageKeyBucket];
-  FIRApp *firebaseApp = [FLTFirebasePlugin firebaseAppNamed:appName];
-
-  if (![bucket isEqual:[NSNull null]] && bucket != nil) {
-    NSString *url = [@"gs://" stringByAppendingString:bucket];
-    storage = [FIRStorage storageForApp:firebaseApp URL:url];
-  } else {
-    storage = [FIRStorage storageForApp:firebaseApp];
-  }
-
-  NSNumber *maxOperationRetryTime = arguments[kFLTFirebaseStorageKeyMaxOperationRetryTime];
-  if (![maxOperationRetryTime isEqual:[NSNull null]]) {
-    storage.maxOperationRetryTime = [maxOperationRetryTime longLongValue] / 1000.0;
-  }
-
-  NSNumber *maxDownloadRetryTime = arguments[kFLTFirebaseStorageKeyMaxDownloadRetryTime];
-  if (![maxDownloadRetryTime isEqual:[NSNull null]]) {
-    storage.maxDownloadRetryTime = [maxDownloadRetryTime longLongValue] / 1000.0;
-  }
-
-  NSNumber *maxUploadRetryTime = arguments[kFLTFirebaseStorageKeyMaxUploadRetryTime];
-  if (![maxUploadRetryTime isEqual:[NSNull null]]) {
-    storage.maxUploadRetryTime = [maxUploadRetryTime longLongValue] / 1000.0;
-  }
-
-  NSString *emulatorHost = arguments[@"host"];
-  if (![emulatorHost isEqual:[NSNull null]] && emulatorHost != nil && hasEmulatorBooted == false) {
-    [storage useEmulatorWithHost:emulatorHost port:[arguments[@"port"] integerValue]];
-    hasEmulatorBooted = true;
-  }
-
-  storage.callbackQueue = _callbackQueue;
-
-  return storage;
-}
-
-- (FIRStorageReference *)FIRStorageReferenceForArguments:(id)arguments {
-  NSString *path = arguments[kFLTFirebaseStorageKeyPath];
-  FIRStorage *storage = [self FIRStorageForArguments:arguments];
-  return [storage referenceWithPath:path];
 }
 
 #pragma mark - FLTFirebasePlugin

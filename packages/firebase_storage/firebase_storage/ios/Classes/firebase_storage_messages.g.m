@@ -78,10 +78,13 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @end
 
 @implementation PigeonStorageFirebaseApp
-+ (instancetype)makeWithAppName:(NSString *)appName tenantId:(nullable NSString *)tenantId {
++ (instancetype)makeWithAppName:(NSString *)appName
+                       tenantId:(nullable NSString *)tenantId
+                         bucket:(NSString *)bucket {
   PigeonStorageFirebaseApp *pigeonResult = [[PigeonStorageFirebaseApp alloc] init];
   pigeonResult.appName = appName;
   pigeonResult.tenantId = tenantId;
+  pigeonResult.bucket = bucket;
   return pigeonResult;
 }
 + (PigeonStorageFirebaseApp *)fromList:(NSArray *)list {
@@ -89,6 +92,8 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.appName = GetNullableObjectAtIndex(list, 0);
   NSAssert(pigeonResult.appName != nil, @"");
   pigeonResult.tenantId = GetNullableObjectAtIndex(list, 1);
+  pigeonResult.bucket = GetNullableObjectAtIndex(list, 2);
+  NSAssert(pigeonResult.bucket != nil, @"");
   return pigeonResult;
 }
 + (nullable PigeonStorageFirebaseApp *)nullableFromList:(NSArray *)list {
@@ -98,6 +103,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   return @[
     (self.appName ?: [NSNull null]),
     (self.tenantId ?: [NSNull null]),
+    (self.bucket ?: [NSNull null]),
   ];
 }
 @end
@@ -156,8 +162,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @end
 
 @implementation PigeonListOptions
-+ (instancetype)makeWithMaxResults:(nullable NSNumber *)maxResults
-                         pageToken:(nullable NSString *)pageToken {
++ (instancetype)makeWithMaxResults:(NSNumber *)maxResults pageToken:(nullable NSString *)pageToken {
   PigeonListOptions *pigeonResult = [[PigeonListOptions alloc] init];
   pigeonResult.maxResults = maxResults;
   pigeonResult.pageToken = pageToken;
@@ -166,6 +171,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 + (PigeonListOptions *)fromList:(NSArray *)list {
   PigeonListOptions *pigeonResult = [[PigeonListOptions alloc] init];
   pigeonResult.maxResults = GetNullableObjectAtIndex(list, 0);
+  NSAssert(pigeonResult.maxResults != nil, @"");
   pigeonResult.pageToken = GetNullableObjectAtIndex(list, 1);
   return pigeonResult;
 }

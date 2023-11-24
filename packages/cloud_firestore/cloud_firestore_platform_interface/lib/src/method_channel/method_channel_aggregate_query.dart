@@ -13,11 +13,13 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
     this._path,
     this._pigeonApp,
     this._aggregateQueries,
+    this._isCollectionGroupQuery,
   ) : super(query);
 
   final FirestorePigeonFirebaseApp _pigeonApp;
   final String _path;
   final PigeonQueryParameters _pigeonParameters;
+  final bool _isCollectionGroupQuery;
 
   final List<AggregateQuery> _aggregateQueries;
 
@@ -32,6 +34,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
       _pigeonParameters,
       source,
       _aggregateQueries,
+      _isCollectionGroupQuery,
     );
 
     int? count;
@@ -70,6 +73,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
         ..._aggregateQueries,
         AggregateQuery(type: AggregateType.count),
       ],
+      _isCollectionGroupQuery,
     );
   }
 
@@ -84,6 +88,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
         ..._aggregateQueries,
         AggregateQuery(type: AggregateType.sum, field: field),
       ],
+      _isCollectionGroupQuery,
     );
   }
 
@@ -98,6 +103,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
         ..._aggregateQueries,
         AggregateQuery(type: AggregateType.average, field: field),
       ],
+      _isCollectionGroupQuery,
     );
   }
 }

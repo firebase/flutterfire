@@ -260,15 +260,19 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   private void removeEventListeners() {
-    for (String identifier : eventChannels.keySet()) {
-      eventChannels.get(identifier).setStreamHandler(null);
+    synchronized (eventChannels) {
+      for (String identifier : eventChannels.keySet()) {
+        eventChannels.get(identifier).setStreamHandler(null);
+      }
+      eventChannels.clear();
     }
-    eventChannels.clear();
 
-    for (String identifier : streamHandlers.keySet()) {
-      streamHandlers.get(identifier).onCancel(null);
+    synchronized (streamHandlers) {
+      for (String identifier : streamHandlers.keySet()) {
+        streamHandlers.get(identifier).onCancel(null);
+      }
+      streamHandlers.clear();
     }
-    streamHandlers.clear();
 
     transactionHandlers.clear();
   }
@@ -736,11 +740,13 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
       @NonNull GeneratedAndroidFirebaseFirestore.AggregateSource source,
       @NonNull List<GeneratedAndroidFirebaseFirestore.AggregateQuery> queries,
+      @NonNull Boolean isCollectionGroup,
       @NonNull
           GeneratedAndroidFirebaseFirestore.Result<
                   List<GeneratedAndroidFirebaseFirestore.AggregateQueryResponse>>
               result) {
-    Query query = PigeonParser.parseQuery(getFirestoreFromPigeon(app), path, false, parameters);
+    Query query =
+        PigeonParser.parseQuery(getFirestoreFromPigeon(app), path, isCollectionGroup, parameters);
 
     AggregateQuery aggregateQuery;
     ArrayList<AggregateField> aggregateFields = new ArrayList<>();

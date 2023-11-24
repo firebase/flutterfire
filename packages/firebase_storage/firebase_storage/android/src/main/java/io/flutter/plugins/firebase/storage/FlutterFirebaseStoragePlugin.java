@@ -38,7 +38,6 @@ public class FlutterFirebaseStoragePlugin
 
   private MethodChannel channel;
   @Nullable private BinaryMessenger messenger;
-
   static final String STORAGE_METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_storage";
   static final String STORAGE_TASK_EVENT_NAME = "taskEvent";
   static final String DEFAULT_ERROR_CODE = "firebase_storage";
@@ -178,60 +177,16 @@ public class FlutterFirebaseStoragePlugin
 
   private FirebaseStorage getStorageFromPigeon(
       GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app) {
-    return getStorageFromPigeon(app, null);
-  }
-
-  private FirebaseStorage getStorageFromPigeon(
-      GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app, @Nullable String bucket) {
     FirebaseApp androidApp = FirebaseApp.getInstance(app.getAppName());
-    if (bucket == null) {
-      return FirebaseStorage.getInstance(androidApp);
-    } else {
-      return FirebaseStorage.getInstance(androidApp, "gs://" + bucket);
-    }
-  }
 
-  private FirebaseStorage getStorage(Map<String, Object> arguments) {
-    String appName = (String) Objects.requireNonNull(arguments.get("appName"));
-    FirebaseApp app = FirebaseApp.getInstance(appName);
-    String bucket = (String) arguments.get("bucket");
-
-    FirebaseStorage storage;
-
-    if (bucket == null) {
-      storage = FirebaseStorage.getInstance(app);
-    } else {
-      storage = FirebaseStorage.getInstance(app, "gs://" + bucket);
-    }
-
-    Object maxOperationRetryTime = arguments.get("maxOperationRetryTime");
-    if (maxOperationRetryTime != null) {
-      storage.setMaxOperationRetryTimeMillis(getLongValue(maxOperationRetryTime));
-    }
-
-    Object maxDownloadRetryTime = arguments.get("maxDownloadRetryTime");
-    if (maxDownloadRetryTime != null) {
-      storage.setMaxDownloadRetryTimeMillis(getLongValue(maxDownloadRetryTime));
-    }
-
-    Object maxUploadRetryTime = arguments.get("maxUploadRetryTime");
-    if (maxUploadRetryTime != null) {
-      storage.setMaxUploadRetryTimeMillis(getLongValue(maxUploadRetryTime));
-    }
-
-    return storage;
+    return FirebaseStorage.getInstance(androidApp, "gs://" + app.getBucket());
   }
 
   private StorageReference getReferenceFromPigeon(
       GeneratedAndroidFirebaseStorage.PigeonStorageFirebaseApp app,
       GeneratedAndroidFirebaseStorage.PigeonStorageReference reference) {
-    FirebaseStorage androidStorage = getStorageFromPigeon(app, reference.getBucket());
+    FirebaseStorage androidStorage = getStorageFromPigeon(app);
     return androidStorage.getReference(reference.getFullPath());
-  }
-
-  private StorageReference getReference(Map<String, Object> arguments) {
-    String path = (String) Objects.requireNonNull(arguments.get("path"));
-    return getStorage(arguments).getReference(path);
   }
 
   private GeneratedAndroidFirebaseStorage.PigeonStorageReference convertToPigeonReference(
@@ -252,32 +207,9 @@ public class FlutterFirebaseStoragePlugin
           GeneratedAndroidFirebaseStorage.Result<
                   GeneratedAndroidFirebaseStorage.PigeonStorageReference>
               result) {
-    StorageReference androidReference = getStorageFromPigeon(app, bucket).getReference(path);
+    StorageReference androidReference = getStorageFromPigeon(app).getReference(path);
 
     result.success(convertToPigeonReference(androidReference));
-  }
-
-  private Map<String, Object> parseListResult(ListResult listResult) {
-    Map<String, Object> out = new HashMap<>();
-
-    if (listResult.getPageToken() != null) {
-      out.put("nextPageToken", listResult.getPageToken());
-    }
-
-    List<String> items = new ArrayList<>();
-    List<String> prefixes = new ArrayList<>();
-
-    for (StorageReference reference : listResult.getItems()) {
-      items.add(reference.getPath());
-    }
-
-    for (StorageReference reference : listResult.getPrefixes()) {
-      prefixes.add(reference.getPath());
-    }
-
-    out.put("items", items);
-    out.put("prefixes", prefixes);
-    return out;
   }
 
   @Override
@@ -322,6 +254,7 @@ public class FlutterFirebaseStoragePlugin
       @NonNull GeneratedAndroidFirebaseStorage.PigeonStorageReference reference,
       @NonNull GeneratedAndroidFirebaseStorage.Result<String> result) {
     FirebaseStorage firebaseStorage = getStorageFromPigeon(app);
+
     StorageReference androidReference = firebaseStorage.getReference(reference.getFullPath());
     androidReference
         .getDownloadUrl()
@@ -417,11 +350,11 @@ public class FlutterFirebaseStoragePlugin
     FirebaseStorage firebaseStorage = getStorageFromPigeon(app);
     StorageReference androidReference = firebaseStorage.getReference(reference.getFullPath());
     Task<ListResult> androidResult;
-    if (options.getPageToken() == null) {
-      androidResult = androidReference.list(options.getMaxResults().intValue());
-    } else {
+    if (options.getPageToken() != null) {
       androidResult =
           androidReference.list(options.getMaxResults().intValue(), options.getPageToken());
+    } else {
+      androidResult = androidReference.list(options.getMaxResults().intValue());
     }
     androidResult.addOnCompleteListener(
         task -> {
@@ -725,40 +658,6 @@ public class FlutterFirebaseStoragePlugin
     result.success(null);
   }
 
-  private StorageMetadata parseToStorageMetadata(Map<String, Object> metadata) {
-    if (metadata == null) {
-      return null;
-    }
-
-    StorageMetadata.Builder builder = new StorageMetadata.Builder();
-
-    if (metadata.get("cacheControl") != null) {
-      builder.setCacheControl((String) metadata.get("cacheControl"));
-    }
-    if (metadata.get("contentDisposition") != null) {
-      builder.setContentDisposition((String) metadata.get("contentDisposition"));
-    }
-    if (metadata.get("contentEncoding") != null) {
-      builder.setContentEncoding((String) metadata.get("contentEncoding"));
-    }
-    if (metadata.get("contentLanguage") != null) {
-      builder.setContentLanguage((String) metadata.get("contentLanguage"));
-    }
-    if (metadata.get("contentType") != null) {
-      builder.setContentType((String) metadata.get("contentType"));
-    }
-    if (metadata.get("customMetadata") != null) {
-      @SuppressWarnings("unchecked")
-      Map<String, String> customMetadata =
-          (Map<String, String>) Objects.requireNonNull(metadata.get("customMetadata"));
-      for (String key : customMetadata.keySet()) {
-        builder.setCustomMetadata(key, customMetadata.get(key));
-      }
-    }
-
-    return builder.build();
-  }
-
   private byte[] stringToByteData(@NonNull String data, int format) {
     switch (format) {
       case 1: // PutStringFormat.base64
@@ -767,16 +666,6 @@ public class FlutterFirebaseStoragePlugin
         return Base64.decode(data, Base64.URL_SAFE);
       default:
         return null;
-    }
-  }
-
-  private Long getLongValue(Object value) {
-    if (value instanceof Long) {
-      return (Long) value;
-    } else if (value instanceof Integer) {
-      return Long.valueOf((Integer) value);
-    } else {
-      return 0L;
     }
   }
 

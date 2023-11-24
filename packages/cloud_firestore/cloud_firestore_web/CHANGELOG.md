@@ -1,3 +1,15 @@
+## 3.8.6
+
+ - **FIX**(firestore,web): fix being able to use normal `where` conditions and `Filter.OR` together ([#11891](https://github.com/firebase/flutterfire/issues/11891)). ([c8410acd](https://github.com/firebase/flutterfire/commit/c8410acd79fe6f8f4cd36b4eacb384c5874d61d2))
+
+## 3.8.5
+
+ - Update a dependency to the latest release.
+
+## 3.8.4
+
+ - Update a dependency to the latest release.
+
 ## 3.8.3
 
  - Update a dependency to the latest release.

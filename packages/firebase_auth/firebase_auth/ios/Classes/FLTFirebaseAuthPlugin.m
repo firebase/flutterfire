@@ -65,6 +65,9 @@ NSString *const kErrMsgInvalidCredential =
     @"The supplied auth credential is malformed, has expired or is not "
     @"currently supported.";
 
+// Used for caching credentials between Method Channel method calls.
+static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
+
 @interface FLTFirebaseAuthPlugin ()
 @property(nonatomic, retain) NSObject<FlutterBinaryMessenger> *messenger;
 @property(strong, nonatomic) FIROAuthProvider *authProvider;
@@ -80,9 +83,6 @@ NSString *const kErrMsgInvalidCredential =
 @end
 
 @implementation FLTFirebaseAuthPlugin {
-  // Used for caching credentials between Method Channel method calls.
-  NSMutableDictionary<NSNumber *, FIRAuthCredential *> *_credentials;
-
 #if TARGET_OS_IPHONE
   // Map an id to a MultiFactorSession object.
   NSMutableDictionary<NSString *, FIRMultiFactorSession *> *_multiFactorSessionMap;
@@ -110,7 +110,7 @@ NSString *const kErrMsgInvalidCredential =
   self = [super init];
   if (self) {
     [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];
-    _credentials = [NSMutableDictionary<NSNumber *, FIRAuthCredential *> dictionary];
+    credentialsMap = [NSMutableDictionary<NSNumber *, FIRAuthCredential *> dictionary];
     _binaryMessenger = messenger;
     _eventChannels = [NSMutableDictionary dictionary];
     _streamHandlers = [NSMutableDictionary dictionary];
@@ -184,6 +184,10 @@ NSString *const kErrMsgInvalidCredential =
   if ([error userInfo][FIRAuthErrorUserInfoEmailKey] != nil) {
     additionalData[kArgumentEmail] = [error userInfo][FIRAuthErrorUserInfoEmailKey];
   }
+  // We want to store the credential if present for future sign in if the exception contains a
+  // credential
+  [FLTFirebaseAuthPlugin storeAuthCredentialIfPresent:error];
+
   // additionalData.authCredential
   if ([error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey] != nil) {
     FIRAuthCredential *authCredential = [error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey];
@@ -225,7 +229,7 @@ NSString *const kErrMsgInvalidCredential =
 
 - (void)cleanupWithCompletion:(void (^)(void))completion {
   // Cleanup credentials.
-  [_credentials removeAllObjects];
+  [credentialsMap removeAllObjects];
 
   for (FlutterEventChannel *channel in self->_eventChannels.allValues) {
     [channel setStreamHandler:nil];
@@ -613,13 +617,13 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 
 #pragma mark - Utilities
 
-- (void)storeAuthCredentialIfPresent:(NSError *)error {
++ (void)storeAuthCredentialIfPresent:(NSError *)error {
   if ([error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey] != nil) {
     FIRAuthCredential *authCredential = [error userInfo][FIRAuthErrorUserInfoUpdatedCredentialKey];
     // We temporarily store the non-serializable credential so the
     // Dart API can consume these at a later time.
     NSNumber *authCredentialHash = @([authCredential hash]);
-    _credentials[authCredentialHash] = authCredential;
+    credentialsMap[authCredentialHash] = authCredential;
   }
 }
 
@@ -638,7 +642,9 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   // been stored for later usage, so we'll attempt to retrieve it here.
   if (arguments[kArgumentToken] != nil && ![arguments[kArgumentToken] isEqual:[NSNull null]]) {
     NSNumber *credentialHashCode = arguments[kArgumentToken];
-    return _credentials[credentialHashCode];
+    if (credentialsMap[credentialHashCode] != nil) {
+      return credentialsMap[credentialHashCode];
+    }
   }
 
   NSString *signInMethod = arguments[kArgumentSignInMethod];

@@ -1,6 +1,7 @@
 rules_version = '2';
 service firebase.storage {
-  match /b/{bucket}/o {
+  // Default bucket
+  match /b/flutterfire-e2e-tests.appspot.com/o {
     match /{document=**} {
       allow read, write: if false;
     }
@@ -14,4 +15,24 @@ service firebase.storage {
       allow read, write: if true;
     }
   }
+  // Second bucket
+  match /b/flutterfire-e2e-tests-two/o {
+      match /{document=**} {
+        allow read, write: if false;
+      }
+
+      match /allowable-lists-2nd-bucket/{document=**} {
+        allow read, write: if true;
+      }
+
+      match /writeOnly.txt {
+        allow read: if false;
+        allow write: if true;
+      }
+
+      match /flutter-tests/{fileName} {
+        // Blocks read and write access if the file name exactly matches 'second-bucket-not-allowed', regardless of the file extension
+         allow read, write: if !(fileName == 'second-bucket-not-allowed.jpeg' || fileName == 'second-bucket-not-allowed.txt');
+      }
+    }
 }
