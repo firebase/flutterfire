@@ -1,3 +1,7 @@
+## 1.0.0-dev.78
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.77
 
  - Update a dependency to the latest release.
