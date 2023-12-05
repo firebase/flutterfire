@@ -15,15 +15,9 @@ export 'package:firebase_database_platform_interface/firebase_database_platform_
     show ServerValue, TransactionHandler, DatabaseEventType, Transaction;
 
 part 'src/data_snapshot.dart';
-
 part 'src/database_event.dart';
-
 part 'src/database_reference.dart';
-
 part 'src/firebase_database.dart';
-
 part 'src/on_disconnect.dart';
-
 part 'src/query.dart';
-
 part 'src/transaction_result.dart';
