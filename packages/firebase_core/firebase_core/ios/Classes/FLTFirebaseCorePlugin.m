@@ -132,32 +132,32 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
   options.projectID = initializeAppRequest.projectId;
 
   // kFirebaseOptionsDatabaseUrl
-  if (![initializeAppRequest.databaseURL isEqual:[NSNull null]]) {
+  if (initializeAppRequest.databaseURL != nil) {
     options.databaseURL = initializeAppRequest.databaseURL;
   }
 
   // kFirebaseOptionsStorageBucket
-  if (![options.storageBucket isEqual:[NSNull null]]) {
+  if (options.storageBucket != nil) {
     options.storageBucket = initializeAppRequest.storageBucket;
   }
 
   // kFirebaseOptionsDeepLinkURLScheme
-  if (![initializeAppRequest.deepLinkURLScheme isEqual:[NSNull null]]) {
+  if (initializeAppRequest.deepLinkURLScheme  != nil) {
     options.deepLinkURLScheme = initializeAppRequest.deepLinkURLScheme;
   }
 
   // kFirebaseOptionsIosBundleId
-  if (![initializeAppRequest.iosBundleId isEqual:[NSNull null]]) {
+  if (initializeAppRequest.iosBundleId  != nil) {
     options.bundleID = initializeAppRequest.iosBundleId;
   }
 
   // kFirebaseOptionsIosClientId
-  if (![initializeAppRequest.iosClientId isEqual:[NSNull null]]) {
+  if (initializeAppRequest.iosClientId  != nil) {
     options.clientID = initializeAppRequest.iosClientId;
   }
 
   // kFirebaseOptionsAppGroupId
-  if (![initializeAppRequest.appGroupId isEqual:[NSNull null]]) {
+  if (initializeAppRequest.appGroupId != nil) {
     options.appGroupID = initializeAppRequest.appGroupId;
   }
 

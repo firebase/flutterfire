@@ -39,7 +39,20 @@ class Firebase {
   static Future<FirebaseApp> initializeApp({
     String? name,
     FirebaseOptions? options,
+    String? demoProjectId,
   }) async {
+    if (demoProjectId != null) {
+      FirebaseAppPlatform app = await _delegate.initializeApp(
+        options: FirebaseOptions(
+          apiKey: '',
+          appId: '1:1:1:1',
+          messagingSenderId: '',
+          projectId: demoProjectId,
+        ),
+      );
+
+      return FirebaseApp._(app);
+    }
     FirebaseAppPlatform app = await _delegate.initializeApp(
       name: name,
       options: options,
