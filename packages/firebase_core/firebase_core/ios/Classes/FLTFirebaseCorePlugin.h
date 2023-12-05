@@ -14,4 +14,7 @@
 
 @interface FLTFirebaseCorePlugin
     : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FirebaseCoreHostApi, FirebaseAppHostApi>
+
++ (NSString *)getCustomDomain:(NSString *)appName;
+
 @end
