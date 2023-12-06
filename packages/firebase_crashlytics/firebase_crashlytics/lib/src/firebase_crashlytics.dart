@@ -181,6 +181,8 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// Android Manifest, iOS Plist settings, as well as any Firebase-wide automatic
   /// data collection settings.
   ///
+  /// When you set a value for this method, it persists across runs of the app.
+  ///
   /// If automatic data collection is disabled for Crashlytics, crash reports are
   /// stored on the device. To check for reports, use the [checkForUnsentReports]
   /// method. Use [sendUnsentReports] to upload existing reports even when automatic
