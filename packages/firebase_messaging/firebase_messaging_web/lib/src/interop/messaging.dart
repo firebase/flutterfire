@@ -23,7 +23,7 @@ Messaging getMessagingInstance([App? app]) {
 
 class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
   // Used to fix a race condition in the `getToken` method.
-  static var firstGetTokenCall = true;
+  static bool firstGetTokenCall = true;
 
   static final _expando = Expando<Messaging>();
 
