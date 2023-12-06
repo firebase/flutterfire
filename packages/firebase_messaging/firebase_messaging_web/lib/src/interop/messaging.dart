@@ -22,6 +22,9 @@ Messaging getMessagingInstance([App? app]) {
 }
 
 class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
+  // Used to fix a race condition in the `getToken` method.
+  static bool firstGetTokenCall = true;
+
   static final _expando = Expando<Messaging>();
 
   static Messaging getInstance(messaging_interop.MessagingJsImpl jsObject) {
@@ -41,12 +44,26 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
 
   /// After calling [requestPermission] you can call this method to get an FCM registration token
   /// that can be used to send push messages to this user.
-  Future<String> getToken({String? vapidKey}) =>
-      handleThenable(messaging_interop.getToken(
+  Future<String> getToken({String? vapidKey}) async {
+    try {
+      final token = await handleThenable(messaging_interop.getToken(
           jsObject,
           vapidKey == null
               ? null
               : messaging_interop.GetTokenOptions(vapidKey: vapidKey)));
+      return token;
+    } catch (err) {
+      // A race condition can happen in which the service worker get registered
+      // only when getToken is called. In this case, the first call to getToken
+      // might fail.
+      if (err.toString().toLowerCase().contains('no active service worker') &&
+          firstGetTokenCall) {
+        firstGetTokenCall = false;
+        return getToken(vapidKey: vapidKey);
+      }
+      rethrow;
+    }
+  }
 
   // ignore: close_sinks
   StreamController<MessagePayload>? _onMessageController;
