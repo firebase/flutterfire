@@ -48,7 +48,7 @@ using flutter::EncodableValue;
 
 namespace firebase_storage_windows {
 
-static std::string kLibrarayName = "flutter-fire-gcs";
+static std::string kLibraryName = "flutter-fire-gcs";
 static std::string kStorageMethodChannelName =
     "plugins.flutter.io/firebase_storage";
 static std::string kStorageTaskEventName = "taskEvent";
@@ -60,7 +60,7 @@ void FirebaseStoragePlugin::RegisterWithRegistrar(
   FirebaseStorageHostApi::SetUp(registrar->messenger(), plugin.get());
   registrar->AddPlugin(std::move(plugin));
   // Register for platform logging
-  App::RegisterLibrary(kLibrarayName.c_str(), getPluginVersion().c_str(),
+  App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
                        nullptr);
 }
 

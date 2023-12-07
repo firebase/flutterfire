@@ -207,6 +207,7 @@ class PigeonSnapshotMetadata {
 
   bool is_from_cache() const;
   void set_is_from_cache(bool value_arg);
+
   static PigeonSnapshotMetadata FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
@@ -241,6 +242,7 @@ class PigeonDocumentSnapshot {
 
   const PigeonSnapshotMetadata& metadata() const;
   void set_metadata(const PigeonSnapshotMetadata& value_arg);
+
   static PigeonDocumentSnapshot FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
@@ -273,6 +275,7 @@ class PigeonDocumentChange {
 
   int64_t new_index() const;
   void set_new_index(int64_t value_arg);
+
   static PigeonDocumentChange FromEncodableList(
       const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
@@ -613,6 +616,7 @@ class FirebaseFirestoreHostApi {
   virtual void AggregateQueryCount(
       const FirestorePigeonFirebaseApp& app, const std::string& path,
       const PigeonQueryParameters& parameters, const AggregateSource& source,
+      bool is_collection_group,
       std::function<void(ErrorOr<double> reply)> result) = 0;
   virtual void WriteBatchCommit(
       const FirestorePigeonFirebaseApp& app,

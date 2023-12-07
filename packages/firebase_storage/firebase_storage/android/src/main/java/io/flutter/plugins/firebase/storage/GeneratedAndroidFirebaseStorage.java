@@ -101,6 +101,19 @@ public class GeneratedAndroidFirebaseStorage {
       this.tenantId = setterArg;
     }
 
+    private @NonNull String bucket;
+
+    public @NonNull String getBucket() {
+      return bucket;
+    }
+
+    public void setBucket(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"bucket\" is null.");
+      }
+      this.bucket = setterArg;
+    }
+
     /** Constructor is non-public to enforce null safety; use Builder. */
     PigeonStorageFirebaseApp() {}
 
@@ -120,19 +133,28 @@ public class GeneratedAndroidFirebaseStorage {
         return this;
       }
 
+      private @Nullable String bucket;
+
+      public @NonNull Builder setBucket(@NonNull String setterArg) {
+        this.bucket = setterArg;
+        return this;
+      }
+
       public @NonNull PigeonStorageFirebaseApp build() {
         PigeonStorageFirebaseApp pigeonReturn = new PigeonStorageFirebaseApp();
         pigeonReturn.setAppName(appName);
         pigeonReturn.setTenantId(tenantId);
+        pigeonReturn.setBucket(bucket);
         return pigeonReturn;
       }
     }
 
     @NonNull
-    ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+    public ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(appName);
       toListResult.add(tenantId);
+      toListResult.add(bucket);
       return toListResult;
     }
 
@@ -142,6 +164,8 @@ public class GeneratedAndroidFirebaseStorage {
       pigeonResult.setAppName((String) appName);
       Object tenantId = list.get(1);
       pigeonResult.setTenantId((String) tenantId);
+      Object bucket = list.get(2);
+      pigeonResult.setBucket((String) bucket);
       return pigeonResult;
     }
   }
@@ -223,7 +247,7 @@ public class GeneratedAndroidFirebaseStorage {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(bucket);
       toListResult.add(fullPath);
@@ -272,7 +296,7 @@ public class GeneratedAndroidFirebaseStorage {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(1);
       toListResult.add(metadata);
       return toListResult;
@@ -293,13 +317,16 @@ public class GeneratedAndroidFirebaseStorage {
      *
      * <p>The default and maximum maxResults is 1000.
      */
-    private @Nullable Long maxResults;
+    private @NonNull Long maxResults;
 
-    public @Nullable Long getMaxResults() {
+    public @NonNull Long getMaxResults() {
       return maxResults;
     }
 
-    public void setMaxResults(@Nullable Long setterArg) {
+    public void setMaxResults(@NonNull Long setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"maxResults\" is null.");
+      }
       this.maxResults = setterArg;
     }
 
@@ -318,11 +345,14 @@ public class GeneratedAndroidFirebaseStorage {
       this.pageToken = setterArg;
     }
 
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonListOptions() {}
+
     public static final class Builder {
 
       private @Nullable Long maxResults;
 
-      public @NonNull Builder setMaxResults(@Nullable Long setterArg) {
+      public @NonNull Builder setMaxResults(@NonNull Long setterArg) {
         this.maxResults = setterArg;
         return this;
       }
@@ -343,7 +373,7 @@ public class GeneratedAndroidFirebaseStorage {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(maxResults);
       toListResult.add(pageToken);
@@ -508,7 +538,7 @@ public class GeneratedAndroidFirebaseStorage {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(6);
       toListResult.add(cacheControl);
       toListResult.add(contentDisposition);
@@ -611,7 +641,7 @@ public class GeneratedAndroidFirebaseStorage {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(items);
       toListResult.add(pageToken);

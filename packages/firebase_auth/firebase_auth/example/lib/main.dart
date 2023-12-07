@@ -2,9 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in_dartio/google_sign_in_dartio.dart';
 
 import 'auth.dart';
 import 'firebase_options.dart';
@@ -32,6 +36,13 @@ Future<void> main() async {
 
   if (shouldUseFirebaseEmulator) {
     await auth.useAuthEmulator('localhost', 9099);
+  }
+
+  if (!kIsWeb && Platform.isWindows) {
+    await GoogleSignInDart.register(
+      clientId:
+          '406099696497-g5o9l0blii9970bgmfcfv14pioj90djd.apps.googleusercontent.com',
+    );
   }
 
   runApp(const AuthExampleApp());

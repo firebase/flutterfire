@@ -21,6 +21,10 @@ service cloud.firestore {
       allow read, write: if true;
     }
 
+    match /{path=**}/aggregate-group-count/{documentId} {
+          allow read, write: if true;
+    }
+
     match /flutter-tests/{testid}/group-test/{docid} {
       allow read, write: if true;
     }

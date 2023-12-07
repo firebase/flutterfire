@@ -255,15 +255,19 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   private void removeEventListeners() {
-    for (String identifier : eventChannels.keySet()) {
-      eventChannels.get(identifier).setStreamHandler(null);
+    synchronized (eventChannels) {
+      for (String identifier : eventChannels.keySet()) {
+        eventChannels.get(identifier).setStreamHandler(null);
+      }
+      eventChannels.clear();
     }
-    eventChannels.clear();
 
-    for (String identifier : streamHandlers.keySet()) {
-      streamHandlers.get(identifier).onCancel(null);
+    synchronized (streamHandlers) {
+      for (String identifier : streamHandlers.keySet()) {
+        streamHandlers.get(identifier).onCancel(null);
+      }
+      streamHandlers.clear();
     }
-    streamHandlers.clear();
 
     transactionHandlers.clear();
   }
@@ -279,10 +283,15 @@ public class FlutterFirebaseFirestorePlugin
     }
     if (pigeonApp.getSettings().getPersistenceEnabled() != null) {
       if (pigeonApp.getSettings().getPersistenceEnabled()) {
+        Long receivedCacheSizeBytes = pigeonApp.getSettings().getCacheSizeBytes();
+        // This is the maximum amount of cache allowed:
+        // https://firebase.google.com/docs/firestore/manage-data/enable-offline#configure_cache_size
+        Long cacheSizeBytes = 104857600L;
+        if (receivedCacheSizeBytes != null && receivedCacheSizeBytes != -1) {
+          cacheSizeBytes = receivedCacheSizeBytes;
+        }
         builder.setLocalCacheSettings(
-            PersistentCacheSettings.newBuilder()
-                .setSizeBytes(pigeonApp.getSettings().getCacheSizeBytes())
-                .build());
+            PersistentCacheSettings.newBuilder().setSizeBytes(cacheSizeBytes).build());
       } else {
         builder.setLocalCacheSettings(MemoryCacheSettings.newBuilder().build());
       }
@@ -725,12 +734,14 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull String path,
       @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
       @NonNull GeneratedAndroidFirebaseFirestore.AggregateSource source,
+      @NonNull Boolean isCollectionGroup,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<Double> result) {
     cachedThreadPool.execute(
         () -> {
           try {
             Query query =
-                PigeonParser.parseQuery(getFirestoreFromPigeon(app), path, false, parameters);
+                PigeonParser.parseQuery(
+                    getFirestoreFromPigeon(app), path, isCollectionGroup, parameters);
             AggregateQuery aggregateQuery = query.count();
             AggregateQuerySnapshot aggregateQuerySnapshot =
                 Tasks.await(aggregateQuery.get(PigeonParser.parseAggregateSource(source)));

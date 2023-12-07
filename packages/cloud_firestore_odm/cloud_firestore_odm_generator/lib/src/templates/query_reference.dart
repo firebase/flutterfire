@@ -8,6 +8,13 @@ import 'package:analyzer/dart/element/type_provider.dart';
 
 import '../collection_data.dart';
 
+class _WhereType {
+  _WhereType(this.type, [this.defaultValue]);
+
+  final String type;
+  final String? defaultValue;
+}
+
 class QueryTemplate {
   QueryTemplate(this.data);
 
@@ -208,13 +215,13 @@ class ${data.queryReferenceImplName}
 
   ${data.queryReferenceInterfaceName} whereFieldPath(
     FieldPath fieldPath, {
-    Object? isEqualTo,
-    Object? isNotEqualTo,
-    Object? isLessThan,
-    Object? isLessThanOrEqualTo,
-    Object? isGreaterThan,
-    Object? isGreaterThanOrEqualTo,
-    Object? arrayContains,
+    Object? isEqualTo = notSetQueryParam,
+    Object? isNotEqualTo = notSetQueryParam,
+    Object? isLessThan = notSetQueryParam,
+    Object? isLessThanOrEqualTo = notSetQueryParam,
+    Object? isGreaterThan = notSetQueryParam,
+    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? arrayContains = notSetQueryParam,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -380,26 +387,49 @@ class ${data.queryReferenceImplName}
               ? '${field.type}'
               : '${field.type}?';
 
-      final operators = {
-        'isEqualTo': nullableType,
-        'isNotEqualTo': nullableType,
-        'isLessThan': nullableType,
-        'isLessThanOrEqualTo': nullableType,
-        'isGreaterThan': nullableType,
-        'isGreaterThanOrEqualTo': nullableType,
-        'isNull': 'bool?',
+      final operators = <String, _WhereType>{
+        'isEqualTo': isAbstract
+            ? _WhereType(nullableType)
+            : _WhereType('Object?', 'notSetQueryParam'),
+        'isNotEqualTo': isAbstract
+            ? _WhereType(nullableType)
+            : _WhereType('Object?', 'notSetQueryParam'),
+        'isLessThan': isAbstract
+            ? _WhereType(nullableType)
+            : _WhereType('Object?', 'notSetQueryParam'),
+        'isLessThanOrEqualTo': isAbstract
+            ? _WhereType(nullableType)
+            : _WhereType('Object?', 'notSetQueryParam'),
+        'isGreaterThan': isAbstract
+            ? _WhereType(nullableType)
+            : _WhereType('Object?', 'notSetQueryParam'),
+        'isGreaterThanOrEqualTo': isAbstract
+            ? _WhereType(nullableType)
+            : _WhereType('Object?', 'notSetQueryParam'),
+        'isNull': _WhereType('bool?'),
         if (field.type.isSupportedIterable) ...{
-          'arrayContains': data.libraryElement.typeProvider
-              .asNullable((field.type as InterfaceType).typeArguments.first),
-          'arrayContainsAny': nullableType,
+          'arrayContains': isAbstract
+              ? _WhereType(
+                  data.libraryElement.typeProvider
+                      .asNullable(
+                        (field.type as InterfaceType).typeArguments.first,
+                      )
+                      .toString(),
+                )
+              : _WhereType('Object?', 'notSetQueryParam'),
+          'arrayContainsAny': _WhereType(nullableType),
         } else ...{
-          'whereIn': 'List<${field.type}>?',
-          'whereNotIn': 'List<${field.type}>?',
+          'whereIn': _WhereType('List<${field.type}>?'),
+          'whereNotIn': _WhereType('List<${field.type}>?'),
         },
       };
 
-      final prototype =
-          operators.entries.map((e) => '${e.value} ${e.key},').join();
+      final prototype = operators.entries.map((e) {
+        if (e.value.defaultValue != null) {
+          return '${e.value.type} ${e.key} = ${e.value.defaultValue},';
+        }
+        return '${e.value.type} ${e.key},';
+      }).join();
 
       final perFieldToJson = data.perFieldToJson(field.name);
 
@@ -411,19 +441,22 @@ class ${data.queryReferenceImplName}
         } else if (e == 'arrayContainsAny') {
           return '$e: $e != null ? $perFieldToJson($e) as Iterable<Object>? : null,';
         } else if (e == 'arrayContains') {
-          var transform = '$e: $e != null ? ($perFieldToJson(';
+          final itemType =
+              (field.type as InterfaceType).typeArguments.first.toString();
+          final cast = itemType != 'Object?' ? ' as $itemType' : '';
+
+          var transform = '$e: $e != notSetQueryParam ? ($perFieldToJson(';
           if (field.type.isSet) {
-            transform += '{$e}';
+            transform += '{$e$cast}';
           } else {
-            transform += '[$e]';
+            transform += '[$e$cast]';
           }
-          return '$transform) as List?)!.single : null,';
+          return '$transform) as List?)!.single : notSetQueryParam,';
         } else {
-          return '$e: $e != null ? $perFieldToJson($e) : null,';
+          return '$e: $e != notSetQueryParam ? $perFieldToJson($e as ${field.type}) : notSetQueryParam,';
         }
       }).join();
 
-      // TODO support whereX(isEqual: null);
       // TODO handle JsonSerializable case change and JsonKey(name: ...)
 
       if (isAbstract) {

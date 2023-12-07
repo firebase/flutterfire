@@ -272,6 +272,7 @@ class MethodChannelQuery extends QueryPlatform {
       _pigeonParameters,
       _pointer.path,
       pigeonApp,
+      isCollectionGroupQuery,
     );
   }
 

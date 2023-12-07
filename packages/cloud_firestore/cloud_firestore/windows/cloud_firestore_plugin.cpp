@@ -39,7 +39,7 @@ using flutter::EncodableValue;
 
 namespace cloud_firestore_windows {
 
-static std::string kLibrarayName = "flutter-fire-fst";
+static std::string kLibraryName = "flutter-fire-fst";
 // static
 void CloudFirestorePlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows* registrar) {
@@ -57,7 +57,7 @@ void CloudFirestorePlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
 
   // Register for platform logging
-  App::RegisterLibrary(kLibrarayName.c_str(), getPluginVersion().c_str(),
+  App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
                        nullptr);
 }
 
@@ -1398,9 +1398,10 @@ firebase::firestore::AggregateSource GetAggregateSourceFromPigeon(
 void CloudFirestorePlugin::AggregateQueryCount(
     const FirestorePigeonFirebaseApp& app, const std::string& path,
     const PigeonQueryParameters& parameters, const AggregateSource& source,
+    bool is_collection_group,
     std::function<void(ErrorOr<double> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
-  Query query = ParseQuery(firestore, path, false, parameters);
+  Query query = ParseQuery(firestore, path, is_collection_group, parameters);
   AggregateQuery aggregate_query = query.Count();
 
   Future<AggregateQuerySnapshot> future =

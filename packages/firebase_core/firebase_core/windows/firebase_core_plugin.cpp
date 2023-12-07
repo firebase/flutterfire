@@ -30,7 +30,7 @@ using ::firebase::App;
 
 namespace firebase_core_windows {
 
-static std::string kLibrarayName = "flutter-fire-core";
+static std::string kLibraryName = "flutter-fire-core";
 
 // static
 void FirebaseCorePlugin::RegisterWithRegistrar(
@@ -43,7 +43,7 @@ void FirebaseCorePlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
 
   // Register for platform logging
-  App::RegisterLibrary(kLibrarayName.c_str(), getPluginVersion().c_str(),
+  App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
                        nullptr);
 }
 

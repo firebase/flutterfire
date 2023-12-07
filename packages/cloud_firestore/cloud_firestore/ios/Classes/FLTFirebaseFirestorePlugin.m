@@ -274,6 +274,7 @@ FlutterStandardMethodCodec *_codec;
                           path:(nonnull NSString *)path
                     parameters:(nonnull PigeonQueryParameters *)parameters
                         source:(AggregateSource)source
+             isCollectionGroup:(NSNumber *)isCollectionGroup
                     completion:
                         (nonnull void (^)(NSNumber *_Nullable, FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
@@ -281,7 +282,7 @@ FlutterStandardMethodCodec *_codec;
   FIRQuery *query = [FirestorePigeonParser parseQueryWithParameters:parameters
                                                           firestore:firestore
                                                                path:path
-                                                  isCollectionGroup:NO];
+                                                  isCollectionGroup:[isCollectionGroup boolValue]];
   if (query == nil) {
     completion(nil, [FlutterError errorWithCode:@"error-parsing"
                                         message:@"An error occurred while parsing query arguments, "
@@ -640,7 +641,7 @@ FlutterStandardMethodCodec *_codec;
       return;
     }
 
-    NSError *error = [[NSError alloc] init];
+    NSError *error = nil;
     FIRDocumentSnapshot *snapshot = [transaction getDocument:document error:&error];
 
     if (error != nil) {

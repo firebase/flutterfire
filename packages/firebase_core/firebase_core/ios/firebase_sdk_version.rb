@@ -1,4 +1,4 @@
 # https://firebase.google.com/support/release-notes/ios
 def firebase_sdk_version!()
-  '10.16.0'
+  '10.18.0'
 end

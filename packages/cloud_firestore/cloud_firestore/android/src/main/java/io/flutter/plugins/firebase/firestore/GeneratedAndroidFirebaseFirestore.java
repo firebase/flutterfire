@@ -268,7 +268,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(5);
       toListResult.add(persistenceEnabled);
       toListResult.add(host);
@@ -376,7 +376,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(appName);
       toListResult.add((settings == null) ? null : settings.toList());
@@ -776,7 +776,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(3);
       toListResult.add(documents);
       toListResult.add(documentChanges);
@@ -856,7 +856,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(source == null ? null : source.index);
       toListResult.add(serverTimestampBehavior == null ? null : serverTimestampBehavior.index);
@@ -921,7 +921,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(2);
       toListResult.add(merge);
       toListResult.add(mergeFields);
@@ -1030,7 +1030,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(4);
       toListResult.add(type == null ? null : type.index);
       toListResult.add(path);
@@ -1162,7 +1162,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(5);
       toListResult.add(path);
       toListResult.add(data);
@@ -1365,7 +1365,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<Object>(9);
       toListResult.add(where);
       toListResult.add(orderBy);
@@ -1577,6 +1577,7 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull String path,
         @NonNull PigeonQueryParameters parameters,
         @NonNull AggregateSource source,
+        @NonNull Boolean isCollectionGroup,
         @NonNull Result<Double> result);
 
     void writeBatchCommit(
@@ -2213,6 +2214,7 @@ public class GeneratedAndroidFirebaseFirestore {
                 String pathArg = (String) args.get(1);
                 PigeonQueryParameters parametersArg = (PigeonQueryParameters) args.get(2);
                 AggregateSource sourceArg = AggregateSource.values()[(int) args.get(3)];
+                Boolean isCollectionGroupArg = (Boolean) args.get(4);
                 Result<Double> resultCallback =
                     new Result<Double>() {
                       public void success(Double result) {
@@ -2226,7 +2228,13 @@ public class GeneratedAndroidFirebaseFirestore {
                       }
                     };
 
-                api.aggregateQueryCount(appArg, pathArg, parametersArg, sourceArg, resultCallback);
+                api.aggregateQueryCount(
+                    appArg,
+                    pathArg,
+                    parametersArg,
+                    sourceArg,
+                    isCollectionGroupArg,
+                    resultCallback);
               });
         } else {
           channel.setMessageHandler(null);

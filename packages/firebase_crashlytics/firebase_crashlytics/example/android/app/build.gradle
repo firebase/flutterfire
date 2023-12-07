@@ -31,7 +31,7 @@ android {
 
     defaultConfig {
         applicationId 'io.flutter.plugins.firebasecrashlyticsexample'
-        minSdk 19
+        minSdk 21
         targetSdk 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

@@ -7,11 +7,11 @@
 // ignore_for_file: avoid_relative_lib_imports
 import 'dart:async';
 import 'dart:typed_data' show Uint8List;
-
-import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
 
 class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {
   const _TestFirebaseFirestoreHostApiCodec();
@@ -170,6 +170,7 @@ abstract class TestFirebaseFirestoreHostApi {
     String path,
     PigeonQueryParameters parameters,
     AggregateSource source,
+    bool isCollectionGroup,
   );
 
   Future<void> writeBatchCommit(
@@ -868,11 +869,17 @@ abstract class TestFirebaseFirestoreHostApi {
             arg_source != null,
             'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQueryCount was null, expected non-null AggregateSource.',
           );
+          final bool? arg_isCollectionGroup = (args[4] as bool?);
+          assert(
+            arg_isCollectionGroup != null,
+            'Argument for dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQueryCount was null, expected non-null bool.',
+          );
           final double output = await api.aggregateQueryCount(
             arg_app!,
             arg_path!,
             arg_parameters!,
             arg_source!,
+            arg_isCollectionGroup!,
           );
           return <Object?>[output];
         });
