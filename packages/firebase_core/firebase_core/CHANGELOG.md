@@ -1,3 +1,7 @@
+## 2.24.1
+
+ - Update a dependency to the latest release.
+
 ## 2.24.0
 
  - **FEAT**(auth): add support for custom domains on mobile ([#11925](https://github.com/firebase/flutterfire/issues/11925)). ([552119c7](https://github.com/firebase/flutterfire/commit/552119c78e2750a929c6226de22f9f6d8df948a4))
