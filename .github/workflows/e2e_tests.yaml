@@ -35,9 +35,9 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
-        name: Install Node.js 16
+        name: Install Node.js 18
         with:
-          node-version: '16'
+          node-version: '18'
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
@@ -108,9 +108,9 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
-        name: Install Node.js 16
+        name: Install Node.js 18
         with:
-          node-version: '16'
+          node-version: '18'
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
@@ -183,9 +183,9 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
-        name: Install Node.js 16
+        name: Install Node.js 18
         with:
-          node-version: '16'
+          node-version: '18'
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
@@ -252,9 +252,9 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
-        name: Install Node.js 16
+        name: Install Node.js 18
         with:
-          node-version: '16'
+          node-version: '18'
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
@@ -304,9 +304,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
-        name: Install Node.js 16
+        name: Install Node.js 18
         with:
-          node-version: "16"
+          node-version: "18"
       - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
           channel: 'stable'
