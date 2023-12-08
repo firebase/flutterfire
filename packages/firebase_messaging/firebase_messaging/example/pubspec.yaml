@@ -6,8 +6,8 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  firebase_core: ^2.24.1
-  firebase_messaging: ^14.7.7
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.7.8
   flutter:
     sdk: flutter
   flutter_local_notifications: ^16.1.0

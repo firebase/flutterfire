@@ -6,9 +6,9 @@ environment:
   sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
-  cloud_firestore: ^4.13.4
-  cloud_firestore_odm: ^1.0.0-dev.79
-  firebase_core: ^2.24.1
+  cloud_firestore: ^4.13.5
+  cloud_firestore_odm: ^1.0.0-dev.80
+  firebase_core: ^2.24.2
   flutter:
     sdk: flutter
   freezed_annotation: ^2.2.0
