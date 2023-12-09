@@ -90,7 +90,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
       }
 
       throw StateError(
-        'field does not exist within the $DocumentSnapshotPlatform',
+        'field "$key" does not exist within the $DocumentSnapshotPlatform',
       );
     }
 
