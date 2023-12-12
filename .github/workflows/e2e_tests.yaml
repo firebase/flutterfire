@@ -35,9 +35,9 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
-        name: Install Node.js 16
+        name: Install Node.js 20
         with:
-          node-version: '16'
+          node-version: '20'
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
@@ -60,8 +60,8 @@ jobs:
         uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         with:
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v2-${{ github.run_id }}
-          restore-keys: firebase-emulators-v2
+          key: firebase-emulators-v3-${{ github.run_id }}
+          restore-keys: firebase-emulators-v3
       - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
           channel: 'stable'
@@ -76,7 +76,7 @@ jobs:
         run: |
           sudo npm i -g firebase-tools
       - name: Start Firebase Emulator
-        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+        run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: Create and start emulator
         # We use the installed SDK in the macOS image to create and start the emulator
         run: |
@@ -108,9 +108,9 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
-        name: Install Node.js 16
+        name: Install Node.js 20
         with:
-          node-version: '16'
+          node-version: '20'
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
@@ -131,8 +131,8 @@ jobs:
         uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         with:
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v1-${{ github.run_id }}
-          restore-keys: firebase-emulators-v1
+          key: firebase-emulators-v3-${{ github.run_id }}
+          restore-keys: firebase-emulators-v3
       - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
           channel: 'stable'
@@ -158,7 +158,7 @@ jobs:
           flutter build ios --no-codesign --simulator --debug --target=./integration_test/e2e_test.dart --dart-define=CI=true
           ccache -s
       - name: Start Firebase Emulator
-        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+        run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: 'E2E Tests'
         working-directory: ${{ matrix.working_directory }}
         run: |
@@ -183,9 +183,9 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
-        name: Install Node.js 16
+        name: Install Node.js 20
         with:
-          node-version: '16'
+          node-version: '20'
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
@@ -206,8 +206,8 @@ jobs:
         uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         with:
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v1-${{ github.run_id }}
-          restore-keys: firebase-emulators-v1
+          key: firebase-emulators-v3-${{ github.run_id }}
+          restore-keys: firebase-emulators-v3
       - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
           channel: 'stable'
@@ -233,7 +233,8 @@ jobs:
           flutter build macos --debug --target=./integration_test/e2e_test.dart --device-id=macos --dart-define=CI=true
           ccache -s
       - name: Start Firebase Emulator
-        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+        # Chown the npm cache directory to the runner user to avoid permission issues
+        run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: 'E2E Tests'
         working-directory: ${{ matrix.working_directory }}
         run: |
@@ -252,9 +253,9 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
-        name: Install Node.js 16
+        name: Install Node.js 20
         with:
-          node-version: '16'
+          node-version: '20'
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
@@ -276,8 +277,8 @@ jobs:
         uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
         with:
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v1-${{ github.run_id }}
-          restore-keys: firebase-emulators-v1
+          key: firebase-emulators-v3-${{ github.run_id }}
+          restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: 'E2E Tests'
@@ -304,9 +305,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65
-        name: Install Node.js 16
+        name: Install Node.js 20
         with:
-          node-version: "16"
+          node-version: "20"
       - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
           channel: 'stable'
