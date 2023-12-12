@@ -601,11 +601,11 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     Object fieldOrFilter, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     Iterable<Object?>? arrayContainsAny,
     Iterable<Object?>? whereIn,
     Iterable<Object?>? whereNotIn,
@@ -617,11 +617,11 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       assert(
         identical(isEqualTo, notSetQueryParam) &&
             identical(isNotEqualTo, notSetQueryParam) &&
-            identical(isLessThan, notSetQueryParam) &&
-            identical(isLessThanOrEqualTo, notSetQueryParam) &&
-            identical(isGreaterThan, notSetQueryParam) &&
-            identical(isGreaterThanOrEqualTo, notSetQueryParam) &&
-            identical(arrayContains, notSetQueryParam) &&
+            isLessThan == null &&
+            isLessThanOrEqualTo == null &&
+            isGreaterThan == null &&
+            isGreaterThanOrEqualTo == null &&
+            arrayContains == null &&
             arrayContainsAny == null &&
             whereIn == null &&
             whereNotIn == null &&
@@ -662,26 +662,18 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     if (!identical(isEqualTo, notSetQueryParam)) {
       addCondition(field, '==', isEqualTo);
     }
-
     if (!identical(isNotEqualTo, notSetQueryParam)) {
       addCondition(field, '!=', isNotEqualTo);
     }
-
-    if (!identical(isLessThan, notSetQueryParam)) {
-      addCondition(field, '<', isLessThan);
-    }
-
-    if (!identical(isLessThanOrEqualTo, notSetQueryParam)) {
+    if (isLessThan != null) addCondition(field, '<', isLessThan);
+    if (isLessThanOrEqualTo != null) {
       addCondition(field, '<=', isLessThanOrEqualTo);
     }
-    if (!identical(isGreaterThan, notSetQueryParam)) {
-      addCondition(field, '>', isGreaterThan);
-    }
-
-    if (!identical(isGreaterThanOrEqualTo, notSetQueryParam)) {
+    if (isGreaterThan != null) addCondition(field, '>', isGreaterThan);
+    if (isGreaterThanOrEqualTo != null) {
       addCondition(field, '>=', isGreaterThanOrEqualTo);
     }
-    if (!identical(arrayContains, notSetQueryParam)) {
+    if (arrayContains != null) {
       addCondition(field, 'array-contains', arrayContains);
     }
     if (arrayContainsAny != null) {
@@ -970,11 +962,11 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
     Object field, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     Iterable<Object?>? arrayContainsAny,
     Iterable<Object?>? whereIn,
     Iterable<Object?>? whereNotIn,
