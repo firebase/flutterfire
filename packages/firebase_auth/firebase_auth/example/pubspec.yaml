@@ -17,7 +17,7 @@ dependencies:
   google_sign_in_dartio: ^0.2.2+1 # For Windows support
 
 dev_dependencies:
-  http: ^0.13.3
+  http: ^1.0.0
 
 flutter:
   uses-material-design: true
