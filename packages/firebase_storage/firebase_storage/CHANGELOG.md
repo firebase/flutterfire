@@ -1,3 +1,7 @@
+## 11.5.6
+
+ - **FIX**(storage,windows): fix an issue where getData function would statically allocate memory ([#12020](https://github.com/firebase/flutterfire/issues/12020)). ([7d51dbdc](https://github.com/firebase/flutterfire/commit/7d51dbdc1795ff9708dc3e60e4fb7089e0af8d36))
+
 ## 11.5.5
 
  - Update a dependency to the latest release.

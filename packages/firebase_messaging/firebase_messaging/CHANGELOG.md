@@ -1,3 +1,7 @@
+## 14.7.9
+
+ - **FIX**(messaging): expose the missing WebNotification object ([#11991](https://github.com/firebase/flutterfire/issues/11991)). ([9f4529e3](https://github.com/firebase/flutterfire/commit/9f4529e39cc707f321c6f765835f038165ff785f))
+
 ## 14.7.8
 
  - Update a dependency to the latest release.

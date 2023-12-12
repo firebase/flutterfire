@@ -1,3 +1,7 @@
+## 7.0.9
+
+ - **FIX**(auth): return email address if one is returned by the auth exception ([#11978](https://github.com/firebase/flutterfire/issues/11978)). ([ceee304d](https://github.com/firebase/flutterfire/commit/ceee304dd87cd66e34a7f7fa67c9961b72c10e72))
+
 ## 7.0.8
 
  - Update a dependency to the latest release.
