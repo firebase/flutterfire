@@ -80,7 +80,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
 
     if (!exists) {
       throw StateError(
-        'cannot get a field on a $DocumentSnapshotPlatform which does not exist',
+        'cannot get field "$field" on a $DocumentSnapshotPlatform which does not exist',
       );
     }
 
@@ -118,7 +118,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
             componentIndex + 1, Map<String, dynamic>.from(value));
       } else {
         throw StateError(
-          'field does not exist within the $DocumentSnapshotPlatform',
+          'field "$value" does not exist within the $DocumentSnapshotPlatform',
         );
       }
     }
