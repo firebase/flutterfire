@@ -1,3 +1,7 @@
+## 6.0.10
+
+ - **FIX**(firestore): output non-existent field in error message. ([#12011](https://github.com/firebase/flutterfire/issues/12011)). ([d1bc584f](https://github.com/firebase/flutterfire/commit/d1bc584ffa0abda33445e74ab162c2345e125ade))
+
 ## 6.0.9
 
  - Update a dependency to the latest release.
