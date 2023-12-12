@@ -217,11 +217,11 @@ class ${data.queryReferenceImplName}
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -396,16 +396,16 @@ class ${data.queryReferenceImplName}
             : _WhereType('Object?', 'notSetQueryParam'),
         'isLessThan': isAbstract
             ? _WhereType(nullableType)
-            : _WhereType('Object?', 'notSetQueryParam'),
+            : _WhereType('Object?', 'null'),
         'isLessThanOrEqualTo': isAbstract
             ? _WhereType(nullableType)
-            : _WhereType('Object?', 'notSetQueryParam'),
+            : _WhereType('Object?', 'null'),
         'isGreaterThan': isAbstract
             ? _WhereType(nullableType)
-            : _WhereType('Object?', 'notSetQueryParam'),
+            : _WhereType('Object?', 'null'),
         'isGreaterThanOrEqualTo': isAbstract
             ? _WhereType(nullableType)
-            : _WhereType('Object?', 'notSetQueryParam'),
+            : _WhereType('Object?', 'null'),
         'isNull': _WhereType('bool?'),
         if (field.type.isSupportedIterable) ...{
           'arrayContains': isAbstract
@@ -433,27 +433,29 @@ class ${data.queryReferenceImplName}
 
       final perFieldToJson = data.perFieldToJson(field.name);
 
-      final parameters = operators.keys.map((e) {
-        if (field.name == 'documentId' || e == 'isNull') {
-          return '$e: $e,';
-        } else if ({'whereIn', 'whereNotIn'}.contains(e)) {
-          return '$e: $e?.map((e) => $perFieldToJson(e)),';
-        } else if (e == 'arrayContainsAny') {
-          return '$e: $e != null ? $perFieldToJson($e) as Iterable<Object>? : null,';
-        } else if (e == 'arrayContains') {
+      final parameters = operators.entries.map((entry) {
+        final key = entry.key;
+        final value = entry.value;
+        if (field.name == 'documentId' || key == 'isNull') {
+          return '$key: $key,';
+        } else if ({'whereIn', 'whereNotIn'}.contains(key)) {
+          return '$key: $key?.map((e) => $perFieldToJson(e)),';
+        } else if (key == 'arrayContainsAny') {
+          return '$key: $key != null ? $perFieldToJson($key) as Iterable<Object>? : null,';
+        } else if (key == 'arrayContains') {
           final itemType =
               (field.type as InterfaceType).typeArguments.first.toString();
           final cast = itemType != 'Object?' ? ' as $itemType' : '';
 
-          var transform = '$e: $e != notSetQueryParam ? ($perFieldToJson(';
+          var transform = '$key: $key != null ? ($perFieldToJson(';
           if (field.type.isSet) {
-            transform += '{$e$cast}';
+            transform += '{$key$cast}';
           } else {
-            transform += '[$e$cast]';
+            transform += '[$key$cast]';
           }
-          return '$transform) as List?)!.single : notSetQueryParam,';
+          return '$transform) as List?)!.single : null,';
         } else {
-          return '$e: $e != notSetQueryParam ? $perFieldToJson($e as ${field.type}) : notSetQueryParam,';
+          return '$key: $key != ${value.defaultValue} ? $perFieldToJson($key as ${field.type}) : ${value.defaultValue},';
         }
       }).join();
 
