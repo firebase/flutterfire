@@ -111,6 +111,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
+      - run: sudo chown -R 501:20 "/Users/runner/.npm"
       - uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
         with:
           distribution: 'temurin'
