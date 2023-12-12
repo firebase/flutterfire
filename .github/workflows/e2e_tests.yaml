@@ -220,7 +220,6 @@ jobs:
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
         run: |
-          sudo chown -R 501:20 "/Users/runner/.npm"
           sudo npm i -g firebase-tools
       - name: 'Build Application'
         working-directory: ${{ matrix.working_directory }}
@@ -234,7 +233,7 @@ jobs:
           flutter build macos --debug --target=./integration_test/e2e_test.dart --device-id=macos --dart-define=CI=true
           ccache -s
       - name: Start Firebase Emulator
-        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+        run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: 'E2E Tests'
         working-directory: ${{ matrix.working_directory }}
         run: |
