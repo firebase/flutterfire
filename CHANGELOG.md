@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-12-12
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore_platform_interface` - `v6.0.10`](#cloud_firestore_platform_interface---v6010)
+ - [`firebase_messaging` - `v14.7.9`](#firebase_messaging---v1479)
+ - [`firebase_messaging_platform_interface` - `v4.5.18`](#firebase_messaging_platform_interface---v4518)
+ - [`firebase_storage` - `v11.5.6`](#firebase_storage---v1156)
+ - [`cloud_firestore` - `v4.13.6`](#cloud_firestore---v4136)
+ - [`cloud_firestore_web` - `v3.8.10`](#cloud_firestore_web---v3810)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.81`](#cloud_firestore_odm---v100-dev81)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.81`](#cloud_firestore_odm_generator---v100-dev81)
+ - [`firebase_messaging_web` - `v3.5.18`](#firebase_messaging_web---v3518)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_firestore` - `v4.13.6`
+ - `cloud_firestore_web` - `v3.8.10`
+ - `cloud_firestore_odm` - `v1.0.0-dev.81`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.81`
+ - `firebase_messaging_web` - `v3.5.18`
+
+---
+
+#### `cloud_firestore_platform_interface` - `v6.0.10`
+
+ - **FIX**(firestore): output non-existent field in error message. ([#12011](https://github.com/firebase/flutterfire/issues/12011)). ([d1bc584f](https://github.com/firebase/flutterfire/commit/d1bc584ffa0abda33445e74ab162c2345e125ade))
+
+#### `firebase_messaging` - `v14.7.9`
+
+ - **FIX**(messaging): expose the missing WebNotification object ([#11991](https://github.com/firebase/flutterfire/issues/11991)). ([9f4529e3](https://github.com/firebase/flutterfire/commit/9f4529e39cc707f321c6f765835f038165ff785f))
+
+#### `firebase_messaging_platform_interface` - `v4.5.18`
+
+ - **FIX**(messaging): expose the missing WebNotification object ([#11991](https://github.com/firebase/flutterfire/issues/11991)). ([9f4529e3](https://github.com/firebase/flutterfire/commit/9f4529e39cc707f321c6f765835f038165ff785f))
+
+#### `firebase_storage` - `v11.5.6`
+
+ - **FIX**(storage,windows): fix an issue where getData function would statically allocate memory ([#12020](https://github.com/firebase/flutterfire/issues/12020)). ([7d51dbdc](https://github.com/firebase/flutterfire/commit/7d51dbdc1795ff9708dc3e60e4fb7089e0af8d36))
+
+
 ## 2023-12-08
 
 ### Changes
