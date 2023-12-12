@@ -62,7 +62,7 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
           restore-keys: firebase-emulators-v3
-      - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
+      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
         with:
           channel: 'stable'
           cache: true
@@ -133,7 +133,7 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
           restore-keys: firebase-emulators-v3
-      - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
+      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
         with:
           channel: 'stable'
           cache: true
@@ -208,7 +208,7 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v3-${{ github.run_id }}
           restore-keys: firebase-emulators-v3
-      - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
+      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
         with:
           channel: 'stable'
           cache: true
@@ -260,7 +260,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
+      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
         with:
           channel: 'stable'
           cache: true
@@ -308,7 +308,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: "20"
-      - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
+      - uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
         with:
           channel: 'stable'
           cache: true
