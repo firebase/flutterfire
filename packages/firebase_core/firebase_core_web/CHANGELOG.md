@@ -1,3 +1,7 @@
+## 2.10.0
+
+ - **FEAT**: bump JS SDK to version 10.7.0 ([#11980](https://github.com/firebase/flutterfire/issues/11980)). ([ba1924d8](https://github.com/firebase/flutterfire/commit/ba1924d8544507f32071f37258adecb11182cdfe))
+
 ## 2.9.0
 
  - **FEAT**: bump JS SDK to version 10.6.0 ([#11927](https://github.com/firebase/flutterfire/issues/11927)). ([eb9c7874](https://github.com/firebase/flutterfire/commit/eb9c7874dc7e34afba1c2fd0c02c6d56bd6adfc0))
