@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_local_notifications: ^16.1.0
-  http: ^0.13.0
+  http: ^1.0.0
 
 flutter:
   uses-material-design: true

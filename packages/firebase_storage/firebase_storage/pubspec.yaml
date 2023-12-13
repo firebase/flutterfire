@@ -23,7 +23,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  http: ^0.13.0
+  http: ^1.0.0
   mockito: ^5.0.0
   plugin_platform_interface: ^2.1.3
 
