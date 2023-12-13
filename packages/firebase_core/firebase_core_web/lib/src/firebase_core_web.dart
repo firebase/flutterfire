@@ -104,27 +104,26 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// document.
   @visibleForTesting
   Future<void> injectSrcScript(String src, String windowVar) async {
-    DomTrustedScriptUrl? trustedUrl;
-    final trustedPolicyName = _defaultTrustedPolicyName + windowVar;
-    if (trustedTypes != null) {
-      console.debug(
-        'TrustedTypes available. Creating policy:',
-        trustedPolicyName,
+    web.TrustedScriptURL? trustedUrl;
+    final trustedTypePolicyName = _defaultTrustedPolicyName + windowVar;
+    if (web.window.nullableTrustedTypes != null) {
+      web.console.debug(
+        'TrustedTypes available. Creating policy: $trustedTypePolicyName'.toJS,
       );
-      final DomTrustedTypePolicyFactory factory = trustedTypes!;
       try {
-        final DomTrustedTypePolicy policy = factory.createPolicy(
-          trustedPolicyName,
-          DomTrustedTypePolicyOptions(
-            createScriptURL: allowInterop((String url) => src),
+        final web.TrustedTypePolicy policy =
+            web.window.trustedTypes.createPolicy(
+          trustedTypePolicyName,
+          web.TrustedTypePolicyOptions(
+            createScriptURL: ((JSString url) => src).toJS,
           ),
         );
-        trustedUrl = policy.createScriptURL(src);
+        trustedUrl = policy.createScriptURLNoArgs(src);
       } catch (e) {
-        rethrow;
+        throw TrustedTypesException(e.toString());
       }
     }
-    ScriptElement script = ScriptElement();
+    web.HTMLScriptElement script = web.HTMLScriptElement();
     script.type = 'text/javascript';
     script.crossOrigin = 'anonymous';
     script.text = '''
@@ -134,8 +133,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
       };
     ''';
 
-    assert(document.head != null);
-    document.head!.append(script);
+    assert(web.document.head != null);
+    web.document.head!.append(script);
 
     Completer completer = Completer();
 
@@ -366,4 +365,16 @@ R guardNotInitialized<R>(R Function() cb) {
   } catch (error, stackTrace) {
     _handleException(error, stackTrace);
   }
+}
+
+/// Exception thrown if the Trusted Types feature is supported, enabled, and it
+/// has prevented this loader from injecting the JS SDK.
+class TrustedTypesException implements Exception {
+  ///
+  TrustedTypesException(this.message);
+
+  /// The message of the exception
+  final String message;
+  @override
+  String toString() => 'TrustedTypesException: $message';
 }
