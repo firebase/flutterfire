@@ -11,7 +11,7 @@ dependencies:
   firebase_performance: ^0.9.3+8
   flutter:
     sdk: flutter
-  http: ^0.13.0
+  http: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -11,13 +11,13 @@ dependencies:
   firebase_messaging: ^14.7.9
   flutter:
     sdk: flutter
-  flutter_facebook_auth: ^5.0.11
+  flutter_facebook_auth: ^6.0.0
   flutter_signin_button: ^2.0.0
   google_sign_in: ^6.1.0
-  google_sign_in_dartio: ^0.2.2+1 # For Windows support
+  google_sign_in_dartio: ^0.3.0
 
 dev_dependencies:
-  http: ^0.13.3
+  http: ^1.0.0
 
 flutter:
   uses-material-design: true

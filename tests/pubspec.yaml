@@ -48,7 +48,7 @@ dependencies:
   firebase_storage_web: ^3.6.17
   flutter:
     sdk: flutter
-  http: ^0.13.4
+  http: ^1.0.0
 
 dev_dependencies:
   flutter_test:
