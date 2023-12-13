@@ -13,8 +13,8 @@ import 'dart:js_interop';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 @JS()
-// TODO FIX
-List<AppJsImpl> getApps() => throw UnimplementedError();
+// List<AppJsImpl>
+external JSArray getApps();
 
 /// The current SDK version.
 ///
