@@ -471,11 +471,11 @@ class _$IgnoredGetterQuery
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -504,10 +504,10 @@ class _$IgnoredGetterQuery
   IgnoredGetterQuery whereDocumentId({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -533,10 +533,10 @@ class _$IgnoredGetterQuery
   IgnoredGetterQuery whereValue({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<int>? whereIn,
     List<int>? whereNotIn,
@@ -551,18 +551,18 @@ class _$IgnoredGetterQuery
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$IgnoredGetterPerFieldToJson.value(isNotEqualTo as int)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$IgnoredGetterPerFieldToJson.value(isLessThan as int)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$IgnoredGetterPerFieldToJson.value(isLessThanOrEqualTo as int)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$IgnoredGetterPerFieldToJson.value(isGreaterThan as int)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$IgnoredGetterPerFieldToJson.value(isGreaterThanOrEqualTo as int)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$IgnoredGetterPerFieldToJson.value(e)),
         whereNotIn:
@@ -1250,11 +1250,11 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -1283,10 +1283,10 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
   ModelQuery whereDocumentId({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -1312,10 +1312,10 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
   ModelQuery whereValue({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -1330,18 +1330,18 @@ class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$ModelPerFieldToJson.value(isNotEqualTo as String)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$ModelPerFieldToJson.value(isLessThan as String)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$ModelPerFieldToJson.value(isLessThanOrEqualTo as String)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$ModelPerFieldToJson.value(isGreaterThan as String)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$ModelPerFieldToJson.value(isGreaterThanOrEqualTo as String)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$ModelPerFieldToJson.value(e)),
         whereNotIn: whereNotIn?.map((e) => _$ModelPerFieldToJson.value(e)),
@@ -2616,11 +2616,11 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -2649,10 +2649,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereDocumentId({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -2678,10 +2678,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereValue({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<Nested?>? whereIn,
     List<Nested?>? whereNotIn,
@@ -2696,18 +2696,18 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$NestedPerFieldToJson.value(isNotEqualTo as Nested?)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$NestedPerFieldToJson.value(isLessThan as Nested?)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$NestedPerFieldToJson.value(isLessThanOrEqualTo as Nested?)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$NestedPerFieldToJson.value(isGreaterThan as Nested?)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$NestedPerFieldToJson.value(isGreaterThanOrEqualTo as Nested?)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$NestedPerFieldToJson.value(e)),
         whereNotIn: whereNotIn?.map((e) => _$NestedPerFieldToJson.value(e)),
@@ -2719,10 +2719,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereSimple({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<int?>? whereIn,
     List<int?>? whereNotIn,
@@ -2737,18 +2737,18 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$NestedPerFieldToJson.simple(isNotEqualTo as int?)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$NestedPerFieldToJson.simple(isLessThan as int?)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$NestedPerFieldToJson.simple(isLessThanOrEqualTo as int?)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$NestedPerFieldToJson.simple(isGreaterThan as int?)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$NestedPerFieldToJson.simple(isGreaterThanOrEqualTo as int?)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$NestedPerFieldToJson.simple(e)),
         whereNotIn: whereNotIn?.map((e) => _$NestedPerFieldToJson.simple(e)),
@@ -2760,10 +2760,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereValueList({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     Object? arrayContains = notSetQueryParam,
     List<Nested>? arrayContainsAny,
@@ -2778,26 +2778,26 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$NestedPerFieldToJson.valueList(isNotEqualTo as List<Nested>?)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$NestedPerFieldToJson.valueList(isLessThan as List<Nested>?)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .valueList(isLessThanOrEqualTo as List<Nested>?)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$NestedPerFieldToJson.valueList(isGreaterThan as List<Nested>?)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .valueList(isGreaterThanOrEqualTo as List<Nested>?)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains != notSetQueryParam
+        arrayContains: arrayContains != null
             ? (_$NestedPerFieldToJson.valueList([arrayContains as Nested])
                     as List?)!
                 .single
-            : notSetQueryParam,
+            : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.valueList(arrayContainsAny)
                 as Iterable<Object>?
@@ -2810,10 +2810,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereBoolList({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     Object? arrayContains = notSetQueryParam,
     List<bool>? arrayContainsAny,
@@ -2828,26 +2828,26 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$NestedPerFieldToJson.boolList(isNotEqualTo as List<bool>?)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$NestedPerFieldToJson.boolList(isLessThan as List<bool>?)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .boolList(isLessThanOrEqualTo as List<bool>?)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$NestedPerFieldToJson.boolList(isGreaterThan as List<bool>?)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .boolList(isGreaterThanOrEqualTo as List<bool>?)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains != notSetQueryParam
+        arrayContains: arrayContains != null
             ? (_$NestedPerFieldToJson.boolList([arrayContains as bool])
                     as List?)!
                 .single
-            : notSetQueryParam,
+            : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.boolList(arrayContainsAny)
                 as Iterable<Object>?
@@ -2860,10 +2860,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereStringList({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     Object? arrayContains = notSetQueryParam,
     List<String>? arrayContainsAny,
@@ -2878,26 +2878,26 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$NestedPerFieldToJson.stringList(isNotEqualTo as List<String>?)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$NestedPerFieldToJson.stringList(isLessThan as List<String>?)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .stringList(isLessThanOrEqualTo as List<String>?)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$NestedPerFieldToJson.stringList(isGreaterThan as List<String>?)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .stringList(isGreaterThanOrEqualTo as List<String>?)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains != notSetQueryParam
+        arrayContains: arrayContains != null
             ? (_$NestedPerFieldToJson.stringList([arrayContains as String])
                     as List?)!
                 .single
-            : notSetQueryParam,
+            : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.stringList(arrayContainsAny)
                 as Iterable<Object>?
@@ -2910,10 +2910,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereNumList({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     Object? arrayContains = notSetQueryParam,
     List<num>? arrayContainsAny,
@@ -2928,24 +2928,24 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$NestedPerFieldToJson.numList(isNotEqualTo as List<num>?)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$NestedPerFieldToJson.numList(isLessThan as List<num>?)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$NestedPerFieldToJson.numList(isLessThanOrEqualTo as List<num>?)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$NestedPerFieldToJson.numList(isGreaterThan as List<num>?)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .numList(isGreaterThanOrEqualTo as List<num>?)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains != notSetQueryParam
+        arrayContains: arrayContains != null
             ? (_$NestedPerFieldToJson.numList([arrayContains as num]) as List?)!
                 .single
-            : notSetQueryParam,
+            : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.numList(arrayContainsAny)
                 as Iterable<Object>?
@@ -2958,10 +2958,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereObjectList({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     Object? arrayContains = notSetQueryParam,
     List<Object?>? arrayContainsAny,
@@ -2976,25 +2976,25 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$NestedPerFieldToJson.objectList(isNotEqualTo as List<Object?>?)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$NestedPerFieldToJson.objectList(isLessThan as List<Object?>?)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .objectList(isLessThanOrEqualTo as List<Object?>?)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$NestedPerFieldToJson.objectList(isGreaterThan as List<Object?>?)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .objectList(isGreaterThanOrEqualTo as List<Object?>?)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains != notSetQueryParam
+        arrayContains: arrayContains != null
             ? (_$NestedPerFieldToJson.objectList([arrayContains]) as List?)!
                 .single
-            : notSetQueryParam,
+            : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.objectList(arrayContainsAny)
                 as Iterable<Object>?
@@ -3007,10 +3007,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereDynamicList({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     Object? arrayContains = notSetQueryParam,
     List<dynamic>? arrayContainsAny,
@@ -3025,27 +3025,27 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$NestedPerFieldToJson.dynamicList(isNotEqualTo as List<dynamic>?)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$NestedPerFieldToJson.dynamicList(isLessThan as List<dynamic>?)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .dynamicList(isLessThanOrEqualTo as List<dynamic>?)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$NestedPerFieldToJson
                 .dynamicList(isGreaterThan as List<dynamic>?)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .dynamicList(isGreaterThanOrEqualTo as List<dynamic>?)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains != notSetQueryParam
+        arrayContains: arrayContains != null
             ? (_$NestedPerFieldToJson.dynamicList([arrayContains as dynamic])
                     as List?)!
                 .single
-            : notSetQueryParam,
+            : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.dynamicList(arrayContainsAny)
                 as Iterable<Object>?
@@ -3058,10 +3058,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereBoolSet({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     Object? arrayContains = notSetQueryParam,
     Set<bool>? arrayContainsAny,
@@ -3076,25 +3076,25 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$NestedPerFieldToJson.boolSet(isNotEqualTo as Set<bool>?)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$NestedPerFieldToJson.boolSet(isLessThan as Set<bool>?)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$NestedPerFieldToJson.boolSet(isLessThanOrEqualTo as Set<bool>?)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$NestedPerFieldToJson.boolSet(isGreaterThan as Set<bool>?)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .boolSet(isGreaterThanOrEqualTo as Set<bool>?)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains != notSetQueryParam
+        arrayContains: arrayContains != null
             ? (_$NestedPerFieldToJson.boolSet({arrayContains as bool})
                     as List?)!
                 .single
-            : notSetQueryParam,
+            : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.boolSet(arrayContainsAny)
                 as Iterable<Object>?
@@ -3107,10 +3107,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereEnumValue({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<TestEnum>? whereIn,
     List<TestEnum>? whereNotIn,
@@ -3125,19 +3125,19 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$NestedPerFieldToJson.enumValue(isNotEqualTo as TestEnum)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$NestedPerFieldToJson.enumValue(isLessThan as TestEnum)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$NestedPerFieldToJson.enumValue(isLessThanOrEqualTo as TestEnum)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$NestedPerFieldToJson.enumValue(isGreaterThan as TestEnum)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .enumValue(isGreaterThanOrEqualTo as TestEnum)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$NestedPerFieldToJson.enumValue(e)),
         whereNotIn: whereNotIn?.map((e) => _$NestedPerFieldToJson.enumValue(e)),
@@ -3149,10 +3149,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereNullableEnumValue({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<TestEnum?>? whereIn,
     List<TestEnum?>? whereNotIn,
@@ -3168,21 +3168,21 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             ? _$NestedPerFieldToJson
                 .nullableEnumValue(isNotEqualTo as TestEnum?)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$NestedPerFieldToJson.nullableEnumValue(isLessThan as TestEnum?)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .nullableEnumValue(isLessThanOrEqualTo as TestEnum?)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$NestedPerFieldToJson
                 .nullableEnumValue(isGreaterThan as TestEnum?)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .nullableEnumValue(isGreaterThanOrEqualTo as TestEnum?)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn:
             whereIn?.map((e) => _$NestedPerFieldToJson.nullableEnumValue(e)),
@@ -3196,10 +3196,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereEnumList({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     Object? arrayContains = notSetQueryParam,
     List<TestEnum>? arrayContainsAny,
@@ -3214,26 +3214,26 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$NestedPerFieldToJson.enumList(isNotEqualTo as List<TestEnum>)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$NestedPerFieldToJson.enumList(isLessThan as List<TestEnum>)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .enumList(isLessThanOrEqualTo as List<TestEnum>)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$NestedPerFieldToJson.enumList(isGreaterThan as List<TestEnum>)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .enumList(isGreaterThanOrEqualTo as List<TestEnum>)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains != notSetQueryParam
+        arrayContains: arrayContains != null
             ? (_$NestedPerFieldToJson.enumList([arrayContains as TestEnum])
                     as List?)!
                 .single
-            : notSetQueryParam,
+            : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.enumList(arrayContainsAny)
                 as Iterable<Object>?
@@ -3246,10 +3246,10 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
   NestedQuery whereNullableEnumList({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     Object? arrayContains = notSetQueryParam,
     List<TestEnum>? arrayContainsAny,
@@ -3266,28 +3266,28 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
             ? _$NestedPerFieldToJson
                 .nullableEnumList(isNotEqualTo as List<TestEnum>?)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$NestedPerFieldToJson
                 .nullableEnumList(isLessThan as List<TestEnum>?)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .nullableEnumList(isLessThanOrEqualTo as List<TestEnum>?)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$NestedPerFieldToJson
                 .nullableEnumList(isGreaterThan as List<TestEnum>?)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$NestedPerFieldToJson
                 .nullableEnumList(isGreaterThanOrEqualTo as List<TestEnum>?)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
-        arrayContains: arrayContains != notSetQueryParam
+        arrayContains: arrayContains != null
             ? (_$NestedPerFieldToJson
                     .nullableEnumList([arrayContains as TestEnum]) as List?)!
                 .single
-            : notSetQueryParam,
+            : null,
         arrayContainsAny: arrayContainsAny != null
             ? _$NestedPerFieldToJson.nullableEnumList(arrayContainsAny)
                 as Iterable<Object>?
@@ -4767,11 +4767,11 @@ class _$EmptyModelQuery
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -4800,10 +4800,10 @@ class _$EmptyModelQuery
   EmptyModelQuery whereDocumentId({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -5443,11 +5443,11 @@ class _$OptionalJsonQuery
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -5476,10 +5476,10 @@ class _$OptionalJsonQuery
   OptionalJsonQuery whereDocumentId({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -5505,10 +5505,10 @@ class _$OptionalJsonQuery
   OptionalJsonQuery whereValue({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<int>? whereIn,
     List<int>? whereNotIn,
@@ -5523,18 +5523,18 @@ class _$OptionalJsonQuery
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$OptionalJsonPerFieldToJson.value(isNotEqualTo as int)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$OptionalJsonPerFieldToJson.value(isLessThan as int)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$OptionalJsonPerFieldToJson.value(isLessThanOrEqualTo as int)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$OptionalJsonPerFieldToJson.value(isGreaterThan as int)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$OptionalJsonPerFieldToJson.value(isGreaterThanOrEqualTo as int)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$OptionalJsonPerFieldToJson.value(e)),
         whereNotIn:
@@ -6229,11 +6229,11 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -6262,10 +6262,10 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
   MixedJsonQuery whereDocumentId({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -6291,10 +6291,10 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
   MixedJsonQuery whereValue({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<int>? whereIn,
     List<int>? whereNotIn,
@@ -6309,18 +6309,18 @@ class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$MixedJsonPerFieldToJson.value(isNotEqualTo as int)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$MixedJsonPerFieldToJson.value(isLessThan as int)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$MixedJsonPerFieldToJson.value(isLessThanOrEqualTo as int)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$MixedJsonPerFieldToJson.value(isGreaterThan as int)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$MixedJsonPerFieldToJson.value(isGreaterThanOrEqualTo as int)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$MixedJsonPerFieldToJson.value(e)),
         whereNotIn: whereNotIn?.map((e) => _$MixedJsonPerFieldToJson.value(e)),
@@ -7096,11 +7096,11 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -7129,10 +7129,10 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
   RootQuery whereDocumentId({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -7158,10 +7158,10 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
   RootQuery whereNonNullable({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -7176,18 +7176,18 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$RootPerFieldToJson.nonNullable(isNotEqualTo as String)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$RootPerFieldToJson.nonNullable(isLessThan as String)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$RootPerFieldToJson.nonNullable(isLessThanOrEqualTo as String)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$RootPerFieldToJson.nonNullable(isGreaterThan as String)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$RootPerFieldToJson.nonNullable(isGreaterThanOrEqualTo as String)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$RootPerFieldToJson.nonNullable(e)),
         whereNotIn: whereNotIn?.map((e) => _$RootPerFieldToJson.nonNullable(e)),
@@ -7199,10 +7199,10 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
   RootQuery whereNullable({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<int?>? whereIn,
     List<int?>? whereNotIn,
@@ -7217,18 +7217,18 @@ class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$RootPerFieldToJson.nullable(isNotEqualTo as int?)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$RootPerFieldToJson.nullable(isLessThan as int?)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$RootPerFieldToJson.nullable(isLessThanOrEqualTo as int?)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$RootPerFieldToJson.nullable(isGreaterThan as int?)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$RootPerFieldToJson.nullable(isGreaterThanOrEqualTo as int?)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$RootPerFieldToJson.nullable(e)),
         whereNotIn: whereNotIn?.map((e) => _$RootPerFieldToJson.nullable(e)),
@@ -8052,11 +8052,11 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -8085,10 +8085,10 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
   SubQuery whereDocumentId({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -8114,10 +8114,10 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
   SubQuery whereNonNullable({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -8132,18 +8132,18 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$SubPerFieldToJson.nonNullable(isNotEqualTo as String)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$SubPerFieldToJson.nonNullable(isLessThan as String)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$SubPerFieldToJson.nonNullable(isLessThanOrEqualTo as String)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$SubPerFieldToJson.nonNullable(isGreaterThan as String)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$SubPerFieldToJson.nonNullable(isGreaterThanOrEqualTo as String)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$SubPerFieldToJson.nonNullable(e)),
         whereNotIn: whereNotIn?.map((e) => _$SubPerFieldToJson.nonNullable(e)),
@@ -8155,10 +8155,10 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
   SubQuery whereNullable({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<int?>? whereIn,
     List<int?>? whereNotIn,
@@ -8173,18 +8173,18 @@ class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$SubPerFieldToJson.nullable(isNotEqualTo as int?)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$SubPerFieldToJson.nullable(isLessThan as int?)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$SubPerFieldToJson.nullable(isLessThanOrEqualTo as int?)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$SubPerFieldToJson.nullable(isGreaterThan as int?)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$SubPerFieldToJson.nullable(isGreaterThanOrEqualTo as int?)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$SubPerFieldToJson.nullable(e)),
         whereNotIn: whereNotIn?.map((e) => _$SubPerFieldToJson.nullable(e)),
@@ -8970,11 +8970,11 @@ class _$AsCamelCaseQuery
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -9003,10 +9003,10 @@ class _$AsCamelCaseQuery
   AsCamelCaseQuery whereDocumentId({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -9032,10 +9032,10 @@ class _$AsCamelCaseQuery
   AsCamelCaseQuery whereValue({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<num>? whereIn,
     List<num>? whereNotIn,
@@ -9050,18 +9050,18 @@ class _$AsCamelCaseQuery
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$AsCamelCasePerFieldToJson.value(isNotEqualTo as num)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$AsCamelCasePerFieldToJson.value(isLessThan as num)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$AsCamelCasePerFieldToJson.value(isLessThanOrEqualTo as num)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$AsCamelCasePerFieldToJson.value(isGreaterThan as num)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$AsCamelCasePerFieldToJson.value(isGreaterThanOrEqualTo as num)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$AsCamelCasePerFieldToJson.value(e)),
         whereNotIn:
@@ -9782,11 +9782,11 @@ class _$CustomSubNameQuery
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -9815,10 +9815,10 @@ class _$CustomSubNameQuery
   CustomSubNameQuery whereDocumentId({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -9844,10 +9844,10 @@ class _$CustomSubNameQuery
   CustomSubNameQuery whereValue({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<num>? whereIn,
     List<num>? whereNotIn,
@@ -9862,18 +9862,18 @@ class _$CustomSubNameQuery
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$CustomSubNamePerFieldToJson.value(isNotEqualTo as num)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$CustomSubNamePerFieldToJson.value(isLessThan as num)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$CustomSubNamePerFieldToJson.value(isLessThanOrEqualTo as num)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$CustomSubNamePerFieldToJson.value(isGreaterThan as num)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$CustomSubNamePerFieldToJson.value(isGreaterThanOrEqualTo as num)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$CustomSubNamePerFieldToJson.value(e)),
         whereNotIn:
@@ -10600,11 +10600,11 @@ class _$ThisIsACustomPrefixQuery
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -10633,10 +10633,10 @@ class _$ThisIsACustomPrefixQuery
   ThisIsACustomPrefixQuery whereDocumentId({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -10662,10 +10662,10 @@ class _$ThisIsACustomPrefixQuery
   ThisIsACustomPrefixQuery whereValue({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<num>? whereIn,
     List<num>? whereNotIn,
@@ -10680,20 +10680,20 @@ class _$ThisIsACustomPrefixQuery
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$CustomClassPrefixPerFieldToJson.value(isNotEqualTo as num)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$CustomClassPrefixPerFieldToJson.value(isLessThan as num)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$CustomClassPrefixPerFieldToJson
                 .value(isLessThanOrEqualTo as num)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$CustomClassPrefixPerFieldToJson.value(isGreaterThan as num)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$CustomClassPrefixPerFieldToJson
                 .value(isGreaterThanOrEqualTo as num)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn:
             whereIn?.map((e) => _$CustomClassPrefixPerFieldToJson.value(e)),
@@ -11408,11 +11408,11 @@ class _$ExplicitPathQuery
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -11441,10 +11441,10 @@ class _$ExplicitPathQuery
   ExplicitPathQuery whereDocumentId({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -11470,10 +11470,10 @@ class _$ExplicitPathQuery
   ExplicitPathQuery whereValue({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<num>? whereIn,
     List<num>? whereNotIn,
@@ -11488,18 +11488,18 @@ class _$ExplicitPathQuery
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$ExplicitPathPerFieldToJson.value(isNotEqualTo as num)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$ExplicitPathPerFieldToJson.value(isLessThan as num)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$ExplicitPathPerFieldToJson.value(isLessThanOrEqualTo as num)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$ExplicitPathPerFieldToJson.value(isGreaterThan as num)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$ExplicitPathPerFieldToJson.value(isGreaterThanOrEqualTo as num)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$ExplicitPathPerFieldToJson.value(e)),
         whereNotIn:
@@ -12221,11 +12221,11 @@ class _$ExplicitSubPathQuery
     FieldPath fieldPath, {
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
-    Object? arrayContains = notSetQueryParam,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
     List<Object?>? whereIn,
     List<Object?>? whereNotIn,
@@ -12254,10 +12254,10 @@ class _$ExplicitSubPathQuery
   ExplicitSubPathQuery whereDocumentId({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
@@ -12283,10 +12283,10 @@ class _$ExplicitSubPathQuery
   ExplicitSubPathQuery whereValue({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = notSetQueryParam,
-    Object? isLessThanOrEqualTo = notSetQueryParam,
-    Object? isGreaterThan = notSetQueryParam,
-    Object? isGreaterThanOrEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
     bool? isNull,
     List<num>? whereIn,
     List<num>? whereNotIn,
@@ -12301,19 +12301,19 @@ class _$ExplicitSubPathQuery
         isNotEqualTo: isNotEqualTo != notSetQueryParam
             ? _$ExplicitSubPathPerFieldToJson.value(isNotEqualTo as num)
             : notSetQueryParam,
-        isLessThan: isLessThan != notSetQueryParam
+        isLessThan: isLessThan != null
             ? _$ExplicitSubPathPerFieldToJson.value(isLessThan as num)
-            : notSetQueryParam,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != notSetQueryParam
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
             ? _$ExplicitSubPathPerFieldToJson.value(isLessThanOrEqualTo as num)
-            : notSetQueryParam,
-        isGreaterThan: isGreaterThan != notSetQueryParam
+            : null,
+        isGreaterThan: isGreaterThan != null
             ? _$ExplicitSubPathPerFieldToJson.value(isGreaterThan as num)
-            : notSetQueryParam,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != notSetQueryParam
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
             ? _$ExplicitSubPathPerFieldToJson
                 .value(isGreaterThanOrEqualTo as num)
-            : notSetQueryParam,
+            : null,
         isNull: isNull,
         whereIn: whereIn?.map((e) => _$ExplicitSubPathPerFieldToJson.value(e)),
         whereNotIn:

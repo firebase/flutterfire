@@ -5,6 +5,6 @@
     "send-message": "node send-message.js"
   },
   "dependencies": {
-    "firebase-admin": "^11.0.1"
+    "firebase-admin": "^11.5.0"
   }
 }

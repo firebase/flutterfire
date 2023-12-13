@@ -115,8 +115,9 @@ endif()
 add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${FIREBASE_CPP_SDK_DIR}/include")
-set(FIREBASE_LIBS firebase_app)
-foreach(firebase_lib IN ITEMS ${FIREBASE_LIBS})
+
+set(FIREBASE_RELEASE_PATH_LIBS firebase_app firebase_auth firebase_storage firebase_firestore)
+foreach(firebase_lib IN ITEMS ${FIREBASE_RELEASE_PATH_LIBS})
     get_target_property(firebase_lib_path ${firebase_lib} IMPORTED_LOCATION)
     string(REPLACE "Debug" "Release" firebase_lib_release_path ${firebase_lib_path})
     set_target_properties(${firebase_lib} PROPERTIES
@@ -125,6 +126,7 @@ foreach(firebase_lib IN ITEMS ${FIREBASE_LIBS})
     )
 endforeach()
 
+set(FIREBASE_LIBS firebase_app)
 set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32 icu)
 
 target_link_libraries(${PLUGIN_NAME} PUBLIC "${FIREBASE_LIBS}" "${ADDITIONAL_LIBS}")

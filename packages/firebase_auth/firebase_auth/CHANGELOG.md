@@ -1,3 +1,15 @@
+## 4.15.3
+
+ - **FIX**(auth): return email address if one is returned by the auth exception ([#11978](https://github.com/firebase/flutterfire/issues/11978)). ([ceee304d](https://github.com/firebase/flutterfire/commit/ceee304dd87cd66e34a7f7fa67c9961b72c10e72))
+
+## 4.15.2
+
+ - Update a dependency to the latest release.
+
+## 4.15.1
+
+ - Update a dependency to the latest release.
+
 ## 4.15.0
 
  - **FEAT**(auth): add support for custom domains on mobile ([#11925](https://github.com/firebase/flutterfire/issues/11925)). ([552119c7](https://github.com/firebase/flutterfire/commit/552119c78e2750a929c6226de22f9f6d8df948a4))
