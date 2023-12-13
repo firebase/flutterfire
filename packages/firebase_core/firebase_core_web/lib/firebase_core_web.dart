@@ -6,9 +6,8 @@
 library firebase_core_web;
 
 import 'dart:async';
-import 'dart:js';
 import 'dart:js_interop';
-import 'dart:js_util';
+import 'dart:js_interop_unsafe';
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/src/interop/package_web_tweaks.dart';

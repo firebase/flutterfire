@@ -67,7 +67,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// own risk as the version might be unsupported or untested against.
   @visibleForTesting
   String get firebaseSDKVersion {
-    return context['flutterfire_web_sdk_version'] ??
+    return globalContext.getProperty('flutterfire_web_sdk_version'.toJS) ??
         supportedFirebaseJsSdkVersion;
   }
 
@@ -83,8 +83,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// You must ensure the Firebase script is injected before using the service.
   List<String> get _ignoredServiceScripts {
     try {
-      JsObject ignored =
-          JsObject.fromBrowserObject(context['flutterfire_ignore_scripts']);
+      JSObject ignored =
+          globalContext.getProperty('flutterfire_ignore_scripts'.toJS);
 
       if (ignored is Iterable) {
         return (ignored as Iterable)
@@ -131,7 +131,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
     script.text = '''
       window.ff_trigger_$windowVar = async (callback) => {
         console.debug("Initializing Firebase $windowVar");
-        callback(await import("${trustedUrl != null ? callMethod(trustedUrl, 'toString', []) : src}"));
+        callback(await import("${trustedUrl != null ? trustedUrl.callMethod('toString'.toJS) : src}"));
       };
     ''';
 
@@ -139,13 +139,14 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
     Completer completer = Completer();
 
-    context.callMethod('ff_trigger_$windowVar', [
-      (module) {
-        context[windowVar] = module;
-        context.deleteProperty('ff_trigger_$windowVar');
+    globalContext.callMethod(
+      'ff_trigger_$windowVar'.toJS,
+      (JSAny module) {
+        globalContext[windowVar] = module;
+        globalContext.delete('ff_trigger_$windowVar'.toJS);
         completer.complete();
-      }
-    ]);
+      }.toJS,
+    );
 
     await completer.future;
   }
@@ -155,7 +156,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
   Future<void> _initializeCore() async {
     // If Firebase is already available, core has already been initialized
     // (or the user has added the scripts to their html file).
-    if (context['firebase_core'] != null) {
+    if (globalContext.getProperty('firebase_core'.toJS) != null) {
       return;
     }
 
