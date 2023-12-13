@@ -123,7 +123,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
         throw TrustedTypesException(e.toString());
       }
     }
-    web.HTMLScriptElement script = web.HTMLScriptElement();
+
+    final web.HTMLScriptElement script =
+        web.document.createElement('script') as web.HTMLScriptElement;
     script.type = 'text/javascript';
     script.crossOrigin = 'anonymous';
     script.text = '''
@@ -133,8 +135,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
       };
     ''';
 
-    assert(web.document.head != null);
-    web.document.head!.append(script);
+    web.document.head!.appendChild(script);
 
     Completer completer = Completer();
 

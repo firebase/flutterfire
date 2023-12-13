@@ -6,12 +6,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
-import 'dart:js_interop/js_interop.dart' as js_interop;
-
-import 'package:js/js.dart';
-
-import 'es6_interop.dart';
-import 'func.dart';
+import 'dart:js_interop' as js_interop;
 
 /// Returns Dart representation from JS Object.
 ///
@@ -117,17 +112,17 @@ Future<js_interop.JSAny?> handleThenable<T>(
 }
 
 /// Handles the [Future] object with the provided [mapper] function.
-PromiseJsImpl<S> handleFutureWithMapper<T, S>(
-  Future<T> future,
-  Func1<T, S> mapper,
-) {
-  return PromiseJsImpl<S>(allowInterop((
-    Function(S) resolve,
-    Function(Object) reject,
-  ) {
-    future.then((value) {
-      var mappedValue = mapper(value);
-      resolve(mappedValue);
-    }).catchError((error) => reject(error));
-  }));
-}
+// PromiseJsImpl<S> handleFutureWithMapper<T, S>(
+//   Future<T> future,
+//   Func1<T, S> mapper,
+// ) {
+//   return PromiseJsImpl<S>(allowInterop((
+//     Function(S) resolve,
+//     Function(Object) reject,
+//   ) {
+//     future.then((value) {
+//       var mappedValue = mapper(value);
+//       resolve(mappedValue);
+//     }).catchError((error) => reject(error));
+//   }));
+// }

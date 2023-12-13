@@ -47,7 +47,7 @@ extension FirebaseErrorExtension on FirebaseError {
   external String get stack;
 
   /// Not part of the core JS API, but occasionally exposed in error objects.
-  external Object get serverResponse;
+  external JSAny get serverResponse;
 }
 
 /// A structure for options provided to Firebase.
