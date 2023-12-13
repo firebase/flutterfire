@@ -267,8 +267,12 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// returns a [UserCredential] with a null User.
   ///
   /// This method is only support on web platforms.
-  Future<UserCredential> getRedirectResult() async {
-    return UserCredential._(this, await _delegate.getRedirectResult());
+  Future<UserCredential?> getRedirectResult() async {
+    final userCredential = await _delegate.getRedirectResult();
+
+    return userCredential != null
+        ? UserCredential._(this, userCredential)
+        : null;
   }
 
   /// Checks if an incoming link is a sign-in with email link.

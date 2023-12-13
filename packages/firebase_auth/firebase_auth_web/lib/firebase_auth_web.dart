@@ -245,13 +245,17 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<UserCredentialPlatform> getRedirectResult() async {
+  Future<UserCredentialPlatform?> getRedirectResult() async {
     try {
-      return UserCredentialWeb(
-        this,
-        await delegate.getRedirectResult(),
-        _webAuth,
-      );
+      final userCredential = await delegate.getRedirectResult();
+
+      return userCredential != null
+          ? UserCredentialWeb(
+              this,
+              userCredential,
+              _webAuth,
+            )
+          : null;
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
