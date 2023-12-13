@@ -859,7 +859,7 @@ class MockFirebaseAuth extends Mock
   }
 
   @override
-  Future<UserCredentialPlatform> getRedirectResult() {
+  Future<UserCredentialPlatform?> getRedirectResult() {
     return super.noSuchMethod(
       Invocation.method(#getRedirectResult, []),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),

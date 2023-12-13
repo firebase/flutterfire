@@ -249,7 +249,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// returns a [UserCredential] with a null User.
   ///
   /// This method is only support on web platforms.
-  Future<UserCredentialPlatform> getRedirectResult() {
+  Future<UserCredentialPlatform?> getRedirectResult() {
     throw UnimplementedError('getRedirectResult() is not implemented');
   }
 
