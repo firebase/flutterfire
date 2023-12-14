@@ -507,9 +507,9 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// if sign is unsuccessful.
   /// The [UserCredential] with a null [User] is returned if no redirect
   /// operation was called.
-  Future<UserCredential> getRedirectResult() =>
-      handleThenable(auth_interop.getRedirectResult(jsObject))
-          .then(UserCredential.fromJsObject);
+  Future<UserCredential?> getRedirectResult() =>
+      handleThenable(auth_interop.getRedirectResult(jsObject)).then(
+          (value) => value == null ? null : UserCredential.fromJsObject(value));
 
   /// Sends a sign-in email link to the user with the specified email.
   ///
