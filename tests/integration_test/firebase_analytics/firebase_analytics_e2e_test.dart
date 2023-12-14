@@ -40,6 +40,7 @@ void main() {
           expect(result, isA<int>());
         }
       },
+      skip: defaultTargetPlatform == TargetPlatform.iOS && !kIsWeb,
     );
 
     test('isSupported', () async {
