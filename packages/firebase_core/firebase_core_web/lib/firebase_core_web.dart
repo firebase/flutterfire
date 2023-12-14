@@ -12,7 +12,6 @@ import 'dart:js_interop_unsafe';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/src/interop/package_web_tweaks.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:js/js_util.dart' as js_util;
 import 'package:meta/meta.dart';
 import 'package:web/web.dart' as web;
 
@@ -46,9 +45,9 @@ FirebaseOptions _createFromJsOptions(firebase.FirebaseOptions options) {
 /// When the Firebase JS SDK throws an error, it contains a code which can be
 /// used to identify the specific type of error. This helper function is used
 /// to keep error messages consistent across different platforms.
-String _getJSErrorCode(dynamic e) {
-  if (js_util.getProperty(e, 'name') == 'FirebaseError') {
-    return js_util.getProperty(e, 'code') ?? '';
+String _getJSErrorCode(JSObject e) {
+  if (e.getProperty<JSString?>('name'.toJS)?.toDart == 'FirebaseError') {
+    return e.getProperty<JSString?>('code'.toJS)?.toDart ?? '';
   }
 
   return '';
@@ -59,11 +58,11 @@ String _getJSErrorCode(dynamic e) {
 /// If a JavaScript error is thrown and not manually handled using the code,
 /// this function ensures that if the error is Firebase related, it is instead
 /// re-created as a [FirebaseException] with a familiar code and message.
-FirebaseException _catchJSError(dynamic e) {
-  if (js_util.getProperty(e, 'name') == 'FirebaseError') {
-    String rawCode = js_util.getProperty(e, 'code');
+FirebaseException _catchJSError(JSObject e) {
+  if (e.getProperty<JSString?>('name'.toJS)?.toDart == 'FirebaseError') {
+    String rawCode = e.getProperty<JSString>('code'.toJS).toDart;
     String code = rawCode;
-    String message = js_util.getProperty(e, 'message') ?? '';
+    String message = e.getProperty<JSString?>('message'.toJS)?.toDart ?? '';
 
     if (code.contains('/')) {
       List<String> chunks = code.split('/');
