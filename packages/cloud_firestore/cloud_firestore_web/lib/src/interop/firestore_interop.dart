@@ -78,6 +78,9 @@ external DocumentReferenceJsImpl doc(
 external FieldPath documentId();
 
 @JS()
+@Deprecated(
+  'This function will be removed in a future major release. Instead, set FirestoreSettings.localCache to an instance of PersistentLocalCache to turn on IndexedDb cache.',
+)
 external PromiseJsImpl<void> enableIndexedDbPersistence(
   FirestoreJsImpl firestore, [
   PersistenceSettings? settings,
@@ -553,6 +556,33 @@ abstract class Settings {
     bool? ssl,
     bool? ignoreUndefinedProperties,
   });
+}
+
+/// Union type from all supported SDK cache layer.
+///
+/// [MemoryLocalCache] and [MemoryCacheSettings] are the two only cache types supported by the SDK. Custom implementation is not supported.
+@anonymous
+@JS()
+abstract class FirestoreLocalCache {}
+
+/// Provides an in-memory cache to the SDK. This is the default cache unless explicitly configured otherwise.
+///
+/// To use, create an instance using the factory function , then set the instance to FirestoreSettings.cache
+/// and call initializeFirestore using the settings object.
+@anonymous
+@JS()
+abstract class MemoryLocalCache extends FirestoreLocalCache {
+  external String get kind;
+}
+
+/// Provides an in-memory cache to the SDK. This is the default cache unless explicitly configured otherwise.
+///
+/// To use, create an instance using the factory function , then set the instance to FirestoreSettings.cache
+/// and call initializeFirestore using the settings object.
+@anonymous
+@JS()
+abstract class PersistentLocalCache extends FirestoreLocalCache {
+  external String get kind;
 }
 
 /// Metadata about a snapshot, describing the state of the snapshot.

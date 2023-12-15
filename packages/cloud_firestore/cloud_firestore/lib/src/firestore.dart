@@ -104,6 +104,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// If `enablePersistence()` is not called, it defaults to Memory cache.
   /// If `enablePersistence(const PersistenceSettings(synchronizeTabs: false))` is called, it persists data for a single browser tab.
   /// If `enablePersistence(const PersistenceSettings(synchronizeTabs: true))` is called, it persists data across multiple browser tabs.
+  @Deprecated('Use Settings.persistenceEnabled instead.')
   Future<void> enablePersistence([
     PersistenceSettings? persistenceSettings,
   ]) async {
