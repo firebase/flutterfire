@@ -40,7 +40,10 @@ void main() {
           expect(result, isA<int>());
         }
       },
-      skip: defaultTargetPlatform == TargetPlatform.iOS && !kIsWeb,
+      retry: 3,
+      timeout: const Timeout(
+        Duration(minutes: 1),
+      ),
     );
 
     test('isSupported', () async {
