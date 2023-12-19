@@ -24,7 +24,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^2.3.2
-  http: ^0.13.5
+  http: ^1.0.0
   integration_test:
     sdk: flutter
   json_serializable: ^6.6.1
