@@ -20,7 +20,7 @@ import org.json.JSONObject;
 public class FlutterFirebaseMessagingStore {
   private static final String PREFERENCES_FILE = "io.flutter.plugins.firebase.messaging";
   private static final String KEY_NOTIFICATION_IDS = "notification_ids";
-  private static final int MAX_SIZE_NOTIFICATIONS = 20;
+  private static final int MAX_SIZE_NOTIFICATIONS = 100;
   private static FlutterFirebaseMessagingStore instance;
   private final String DELIMITER = ",";
   private SharedPreferences preferences;
