@@ -141,8 +141,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     FlutterError.presentError(flutterErrorDetails);
 
     final information = flutterErrorDetails.informationCollector?.call() ?? [];
-    final reason =flutterErrorDetails.context
-        ?.toStringDeep(minLevel: DiagnosticLevel.info);
 
     return recordError(
       flutterErrorDetails.exceptionAsString(),
