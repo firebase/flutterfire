@@ -656,6 +656,7 @@ abstract class PersistentLocalCache extends FirestoreLocalCache {
 /// An settings object to configure an MemoryLocalCache instance.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firestore_.memorycachesettings>.
+@anonymous
 @JS()
 abstract class MemoryCacheSettings {
   /// The garbage collector to use, for the memory cache layer.
@@ -665,12 +666,13 @@ abstract class MemoryCacheSettings {
 
   external set garbageCollector(dynamic v);
 
-  external factory MemoryCacheSettings({dynamic garbageCollector});
+  external factory MemoryCacheSettings({Object? garbageCollector});
 }
 
 /// An settings object to configure an PersistentLocalCache instance.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firestore_.persistentcachesettings.md#persistentcachesettings_interface>.
+@anonymous
 @JS()
 abstract class PersistentCacheSettings {
   /// An approximate cache size threshold for the on-disk data.
@@ -691,7 +693,7 @@ abstract class PersistentCacheSettings {
 
   external factory PersistentCacheSettings({
     num? cacheSizeBytes,
-    dynamic tabManager,
+    Object? tabManager,
   });
 }
 
