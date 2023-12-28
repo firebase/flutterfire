@@ -164,6 +164,34 @@ external QueryConstraintJsImpl orderBy(
 ]);
 
 @JS()
+external MemoryLocalCache memoryLocalCache(
+  MemoryCacheSettings? settings,
+);
+
+@JS()
+external MemoryLruGarbageCollector memoryLruGarbageCollector(
+  num? cacheSizeBytes,
+);
+
+@JS()
+external MemoryEagerGarbageCollector memoryEagerGarbageCollector();
+
+@JS()
+external PersistentLocalCache persistentLocalCache(
+  PersistentCacheSettings settings,
+);
+
+@JS()
+external PersistentSingleTabManager persistentSingleTabManager(
+  PersistentSingleTabManagerSettings? settings,
+);
+
+@JS()
+external PersistentMultipleTabManager persistentMultipleTabManager(
+  PersistentSingleTabManagerSettings? settings,
+);
+
+@JS()
 external QueryJsImpl query(
   QueryJsImpl query,
   QueryConstraintJsImpl queryConstraint,
@@ -575,6 +603,34 @@ abstract class MemoryLocalCache extends FirestoreLocalCache {
   external String get kind;
 }
 
+/// A tab manager supportting only one tab, no synchronization will be performed across tabs.
+@anonymous
+@JS()
+abstract class PersistentSingleTabManager {
+  external String get kind;
+}
+
+/// A tab manager supporting multiple tabs. SDK will synchronize queries and mutations done across all tabs using the SDK.
+@anonymous
+@JS()
+abstract class PersistentMultipleTabManager {
+  external String get kind;
+}
+
+/// A garbage collector deletes documents whenever they are not part of any active queries, and have no local mutations attached to them.
+@anonymous
+@JS()
+abstract class MemoryEagerGarbageCollector {
+  external String get kind;
+}
+
+/// A garbage collector deletes Least-Recently-Used documents in multiple batches.
+@anonymous
+@JS()
+abstract class MemoryLruGarbageCollector {
+  external String get kind;
+}
+
 /// Provides an in-memory cache to the SDK. This is the default cache unless explicitly configured otherwise.
 ///
 /// To use, create an instance using the factory function , then set the instance to FirestoreSettings.cache
@@ -583,6 +639,56 @@ abstract class MemoryLocalCache extends FirestoreLocalCache {
 @JS()
 abstract class PersistentLocalCache extends FirestoreLocalCache {
   external String get kind;
+}
+
+/// An settings object to configure an MemoryLocalCache instance.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firestore_.memorycachesettings>.
+@JS()
+abstract class MemoryCacheSettings {
+  /// The garbage collector to use, for the memory cache layer.
+  /// A MemoryEagerGarbageCollector is used when this is undefined.
+  /// Union type MemoryEagerGarbageCollector | MemoryLruGarbageCollector;
+  external dynamic get garbageCollector;
+
+  external set garbageCollector(dynamic v);
+}
+
+/// An settings object to configure an PersistentLocalCache instance.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firestore_.persistentcachesettings.md#persistentcachesettings_interface>.
+@JS()
+abstract class PersistentCacheSettings {
+  /// An approximate cache size threshold for the on-disk data.
+  /// If the cache grows beyond this size, Firestore will start removing data that hasn't been recently used.
+  /// The SDK does not guarantee that the cache will stay below that size,
+  /// only that if the cache exceeds the given size, cleanup will be attempted.
+  /// The default value is 40 MB. The threshold must be set to at least 1 MB,
+  /// and can be set to CACHE_SIZE_UNLIMITED to disable garbage collection.
+  external num get cacheSizeBytes;
+
+  external set cacheSizeBytes(num v);
+
+  /// Specifies how multiple tabs/windows will be managed by the SDK.
+  /// Union type PersistentSingleTabManager | PersistentMultipleTabManager
+  external dynamic get tabManager;
+
+  external set tabManager(dynamic v);
+}
+
+/// An settings object to configure an PersistentLocalCache instance.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firestore_.persistentsingletabmanagersettings>.
+@JS()
+abstract class PersistentSingleTabManagerSettings {
+  /// Whether to force-enable persistent (IndexedDB) cache for the client.
+  /// This cannot be used with multi-tab synchronization and is primarily
+  /// intended for use with Web Workers.
+  /// Setting this to true will enable IndexedDB, but cause other tabs using
+  /// IndexedDB cache to fail.
+  external bool get forceOwnership;
+
+  external set forceOwnership(bool v);
 }
 
 /// Metadata about a snapshot, describing the state of the snapshot.
