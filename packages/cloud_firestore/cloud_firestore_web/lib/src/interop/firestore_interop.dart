@@ -20,7 +20,7 @@ external FirestoreJsImpl getFirestore([AppJsImpl? app, String? databasURL]);
 
 @JS()
 external FirestoreJsImpl initializeFirestore(
-    [AppJsImpl app, Settings settings, String? databaseURL]);
+    [AppJsImpl app, FirestoreSettings settings, String? databaseURL]);
 
 @JS()
 external PromiseJsImpl<DocumentReferenceJsImpl> addDoc(
@@ -565,7 +565,8 @@ abstract class SnapshotListenOptions {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.Settings>.
 @anonymous
 @JS()
-abstract class Settings {
+abstract class FirestoreSettings {
+  @Deprecated('Use FirestoreSettings.localCache instead.')
   //ignore: avoid_setters_without_getters
   external set cacheSizeBytes(int i);
 
@@ -578,11 +579,22 @@ abstract class Settings {
   //ignore: avoid_setters_without_getters
   external set ignoreUndefinedProperties(bool u);
 
-  external factory Settings({
+  /// Specifies the cache used by the SDK.
+  /// Available options are MemoryLocalCache and PersistentLocalCache, each with different configuration options.
+  /// When unspecified, MemoryLocalCache will be used by default.
+  /// NOTE: setting this field and cacheSizeBytes at the same time will throw exception during SDK initialization.
+  /// Instead, using the configuration in the FirestoreLocalCache object to specify the cache size.
+  ///
+  /// Union type MemoryLocalCache | PersistentLocalCache;
+  //ignore: avoid_setters_without_getters
+  external set localCache(dynamic u);
+
+  external factory FirestoreSettings({
     int? cacheSizeBytes,
     String? host,
     bool? ssl,
     bool? ignoreUndefinedProperties,
+    dynamic localCache,
   });
 }
 
@@ -652,6 +664,8 @@ abstract class MemoryCacheSettings {
   external dynamic get garbageCollector;
 
   external set garbageCollector(dynamic v);
+
+  external factory MemoryCacheSettings({dynamic garbageCollector});
 }
 
 /// An settings object to configure an PersistentLocalCache instance.
@@ -665,15 +679,20 @@ abstract class PersistentCacheSettings {
   /// only that if the cache exceeds the given size, cleanup will be attempted.
   /// The default value is 40 MB. The threshold must be set to at least 1 MB,
   /// and can be set to CACHE_SIZE_UNLIMITED to disable garbage collection.
-  external num get cacheSizeBytes;
+  external num? get cacheSizeBytes;
 
-  external set cacheSizeBytes(num v);
+  external set cacheSizeBytes(num? v);
 
   /// Specifies how multiple tabs/windows will be managed by the SDK.
   /// Union type PersistentSingleTabManager | PersistentMultipleTabManager
   external dynamic get tabManager;
 
   external set tabManager(dynamic v);
+
+  external factory PersistentCacheSettings({
+    num? cacheSizeBytes,
+    dynamic tabManager,
+  });
 }
 
 /// An settings object to configure an PersistentLocalCache instance.
