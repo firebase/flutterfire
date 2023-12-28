@@ -66,8 +66,19 @@ class QueryWeb extends QueryPlatform {
 
   @override
   String get path {
-    final refPath = Uri.parse(_queryDelegate.ref.toString()).path;
-    return refPath.isEmpty ? '/' : refPath;
+    // A bug on Flutter web causes this to throw an exception on "profile" & "release" mode and leaves the path as "undefined"
+    // See: https://github.com/firebase/flutterfire/issues/11670
+    String? path;
+    try {
+      path = Uri.parse(_queryDelegate.ref.toString()).path;
+    } catch (e) {
+      if (path == null) {
+        // testing shows "path" contains correct string even when it throws an exception on "profile" and "release" mode
+        rethrow;
+      }
+    }
+
+    return path.isEmpty ? '/' : path;
   }
 
   @override
