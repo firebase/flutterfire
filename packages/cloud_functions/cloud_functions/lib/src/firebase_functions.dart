@@ -100,11 +100,13 @@ class FirebaseFunctions extends FirebasePluginPlatform {
   ///
   /// Set the [host] of the local emulator, such as "localhost"
   /// Set the [port] of the local emulator, such as "5001" (port 5001 is default for functions package)
-  void useFunctionsEmulator(String host, int port) {
+  void useFunctionsEmulator(String host, int port,
+      {bool automaticHostMapping = true}) {
     String mappedHost = host;
     // Android considers localhost as 10.0.2.2 - automatically handle this for users.
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      if (mappedHost == 'localhost' || mappedHost == '127.0.0.1') {
+      if ((mappedHost == 'localhost' || mappedHost == '127.0.0.1') &&
+          automaticHostMapping) {
         // ignore: avoid_print
         print('Mapping Functions Emulator host "$mappedHost" to "10.0.2.2".');
         mappedHost = '10.0.2.2';

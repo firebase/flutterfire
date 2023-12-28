@@ -121,7 +121,12 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// Note: Must be called immediately, prior to accessing FirebaseFirestore methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
-  void useFirestoreEmulator(String host, int port, {bool sslEnabled = false}) {
+  void useFirestoreEmulator(
+    String host,
+    int port, {
+    bool sslEnabled = false,
+    bool automaticHostMapping = true,
+  }) {
     if (kIsWeb) {
       // use useEmulator() API for web as settings are set immediately unlike native platforms
       try {
@@ -140,7 +145,8 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       String mappedHost = host;
       // Android considers localhost as 10.0.2.2 - automatically handle this for users.
       if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-        if (mappedHost == 'localhost' || mappedHost == '127.0.0.1') {
+        if ((mappedHost == 'localhost' || mappedHost == '127.0.0.1') &&
+            automaticHostMapping) {
           // ignore: avoid_print
           print('Mapping Firestore Emulator host "$mappedHost" to "10.0.2.2".');
           mappedHost = '10.0.2.2';
