@@ -2753,12 +2753,12 @@ void FirebaseAuthHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
                   std::get<std::string>(encodable_email_arg);
               const auto& encodable_action_code_settings_arg = args.at(2);
               const PigeonActionCodeSettings* action_code_settings_arg =
-				  nullptr;
+                  nullptr;
               if (!encodable_action_code_settings_arg.IsNull()) {
-                  action_code_settings_arg =
-                      &(std::any_cast<const PigeonActionCodeSettings&>(
-                          std::get<CustomEncodableValue>(
-                              encodable_action_code_settings_arg)));
+                action_code_settings_arg =
+                    &(std::any_cast<const PigeonActionCodeSettings&>(
+                        std::get<CustomEncodableValue>(
+                            encodable_action_code_settings_arg)));
               }
               api->SendPasswordResetEmail(
                   app_arg, email_arg, action_code_settings_arg,
