@@ -1,3 +1,15 @@
+## 2.24.2
+
+ - **FIX**(core,windows): fix release build of Firebase Auth, Firestore and Storage on Windows ([#11997](https://github.com/firebase/flutterfire/issues/11997)). ([12b186a8](https://github.com/firebase/flutterfire/commit/12b186a82578f792d7f4c500f145f5bd4f398545))
+
+## 2.24.1
+
+ - Update a dependency to the latest release.
+
+## 2.24.0
+
+ - **FEAT**(auth): add support for custom domains on mobile ([#11925](https://github.com/firebase/flutterfire/issues/11925)). ([552119c7](https://github.com/firebase/flutterfire/commit/552119c78e2750a929c6226de22f9f6d8df948a4))
+
 ## 2.23.0
 
  - **FIX**(core,apple): remove usage of deprecated options `trackingID` and `androidClientID` ([#11893](https://github.com/firebase/flutterfire/issues/11893)). ([4dfbe5a4](https://github.com/firebase/flutterfire/commit/4dfbe5a485284ae7fa1356284e7971e96db15f27))

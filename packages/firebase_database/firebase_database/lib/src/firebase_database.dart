@@ -75,8 +75,26 @@ class FirebaseDatabase extends FirebasePluginPlatform {
   ///
   /// Note: Must be called immediately, prior to accessing FirebaseFirestore methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
-  void useDatabaseEmulator(String host, int port) {
-    _delegate.useDatabaseEmulator(host, port);
+  void useDatabaseEmulator(
+    String host,
+    int port, {
+    bool automaticHostMapping = true,
+  }) {
+    assert(host.isNotEmpty);
+    assert(!port.isNegative);
+
+    String mappedHost = host;
+
+    // Android considers localhost as 10.0.2.2 - automatically handle this for users.
+    if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
+      if ((mappedHost == 'localhost' || mappedHost == '127.0.0.1') &&
+          automaticHostMapping) {
+        // ignore: avoid_print
+        print('Mapping Database Emulator host "$mappedHost" to "10.0.2.2".');
+        mappedHost = '10.0.2.2';
+      }
+    }
+    _delegate.useDatabaseEmulator(mappedHost, port);
   }
 
   /// Returns a [DatabaseReference] accessing the root of the database.

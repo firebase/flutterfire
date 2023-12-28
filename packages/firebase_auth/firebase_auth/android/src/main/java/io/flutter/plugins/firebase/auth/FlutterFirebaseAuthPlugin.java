@@ -29,6 +29,7 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.HashMap;
 import java.util.List;
@@ -134,6 +135,11 @@ public class FlutterFirebaseAuthPlugin
     if (pigeonApp.getTenantId() != null) {
       auth.setTenantId(pigeonApp.getTenantId());
     }
+    String customDomain = FlutterFirebaseCorePlugin.customAuthDomain.get(pigeonApp.getAppName());
+    if (customDomain != null) {
+      auth.setCustomAuthDomain(customDomain);
+    }
+
     return auth;
   }
 

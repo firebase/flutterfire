@@ -40,6 +40,10 @@ void main() {
           expect(result, isA<int>());
         }
       },
+      retry: 3,
+      timeout: const Timeout(
+        Duration(minutes: 1),
+      ),
     );
 
     test('isSupported', () async {

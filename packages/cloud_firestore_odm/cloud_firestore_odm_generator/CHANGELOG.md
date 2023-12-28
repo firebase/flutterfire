@@ -1,3 +1,19 @@
+## 1.0.0-dev.81
+
+ - **FIX**(firestore): revert changes to `isLessThan`, `isLessThanOrEqualTo`,`isGreaterThan`, `isGreaterThanOrEqualTo` & `arrayContains`. `null` is not valid.. ([#12017](https://github.com/firebase/flutterfire/issues/12017)). ([2712ea4e](https://github.com/firebase/flutterfire/commit/2712ea4e73ab02cf2f4ac3719b41200efd2e8dc0))
+
+## 1.0.0-dev.80
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.79
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.78
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.77
 
  - **FIX**(firestore): allow `null` value to `isEqualsTo` & `isNotEqualsTo` in `where()` query ([#11896](https://github.com/firebase/flutterfire/issues/11896)). ([3ee59a7c](https://github.com/firebase/flutterfire/commit/3ee59a7c4aff589cc5845107099cc012d7b19b53))

@@ -145,7 +145,9 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     return recordError(
       flutterErrorDetails.exceptionAsString(),
       flutterErrorDetails.stack,
-      reason: flutterErrorDetails.context,
+      reason: flutterErrorDetails.context
+          ?.toStringDeep(minLevel: DiagnosticLevel.info)
+          .trim(),
       information: information,
       printDetails: false,
       fatal: fatal,
@@ -180,6 +182,8 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// If this is set, it overrides the data collection settings provided by the
   /// Android Manifest, iOS Plist settings, as well as any Firebase-wide automatic
   /// data collection settings.
+  ///
+  /// When you set a value for this method, it persists across runs of the app.
   ///
   /// If automatic data collection is disabled for Crashlytics, crash reports are
   /// stored on the device. To check for reports, use the [checkForUnsentReports]
