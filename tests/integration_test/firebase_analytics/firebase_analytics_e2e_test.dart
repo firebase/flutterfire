@@ -171,6 +171,7 @@ void main() {
 
     test('setCurrentScreen', () async {
       await expectLater(
+        // ignore: deprecated_member_use
         FirebaseAnalytics.instance.setCurrentScreen(screenName: 'screen-name'),
         completes,
       );
