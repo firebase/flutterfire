@@ -170,7 +170,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     await _delegate.setUserId(id: id, callOptions: callOptions);
   }
 
-  /// Sets the current [screenName], which specifies the current visual context
+  /// Sets the current [screenName], which  logs a "screen_view" event, contributing to analytics data
   /// in your app.
   ///
   /// This helps identify the areas in your app where users spend their time
@@ -185,10 +185,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// Setting a null [screenName] clears the current screen name.
   ///
-  /// See also:
-  ///
-  ///  * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.html#setCurrentScreen(android.app.Activity, java.lang.String, java.lang.String)
-  ///  * https://firebase.google.com/docs/reference/ios/firebaseanalytics/api/reference/Classes/FIRAnalytics#setscreennamescreenclass
+
   Future<void> setCurrentScreen({
     required String? screenName,
     String screenClassOverride = 'Flutter',
