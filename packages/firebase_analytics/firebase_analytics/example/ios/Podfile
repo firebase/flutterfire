@@ -10,6 +10,9 @@ project 'Runner', {
   'Release' => :release,
 }
 
+# Toggle this to true if you want to include support for on device conversion measurement APIs
+$FirebaseAnalyticsGoogleAppMeasurementOnDeviceConversion = true
+
 def flutter_root
   generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
   unless File.exist?(generated_xcode_build_settings_path)

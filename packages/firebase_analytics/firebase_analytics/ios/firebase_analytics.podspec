@@ -40,6 +40,18 @@ Pod::Spec.new do |s|
   s.dependency 'firebase_core'
   s.dependency firebase_analytics, firebase_sdk_version
 
+  # Special pod for on-device conversion
+  if defined?($FirebaseAnalyticsGoogleAppMeasurementOnDeviceConversion) && ($FirebaseAnalyticsGoogleAppMeasurementOnDeviceConversion == true)
+    Pod::UI.puts "#{s.name}: GoogleAppMeasurementOnDeviceConversion pod added"
+
+    # Releasing as non-breaking change as it is optional but it raises minimum requirements, validate just in case
+    if (Gem::Version.new(firebase_sdk_version) < Gem::Version.new("9.0.0"))
+      raise "GoogleAppMeasurementOnDeviceConversion requires firebase-ios-sdk 9.0.0 or greater."
+    end
+
+    s.dependency 'GoogleAppMeasurementOnDeviceConversion'
+  end
+
   s.static_framework = true
   s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-analytics\\\"",

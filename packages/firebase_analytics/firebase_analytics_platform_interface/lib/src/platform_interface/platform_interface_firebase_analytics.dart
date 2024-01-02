@@ -131,6 +131,19 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     throw UnimplementedError('setUserId() is not implemented');
   }
 
+  /// Starts privacy-sensitive on-device conversion management.
+  /// This is iOS-only.
+  ///
+  /// [emailAddress] email address, properly formatted complete with domain name e.g, 'user@example.com'
+  ///
+  Future<void> initiateOnDeviceConversionMeasurementWithEmailAddress(
+    String emailAddress,
+  ) {
+    throw UnimplementedError(
+      'initiateOnDeviceConversionMeasurementWithEmailAddress() is not implemented',
+    );
+  }
+
   /// Sets the current screen name, which specifies the current visual context
   /// in your app.
   ///

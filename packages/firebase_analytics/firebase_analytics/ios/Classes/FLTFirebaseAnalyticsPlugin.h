@@ -12,6 +12,7 @@
 
 #import <Foundation/Foundation.h>
 #import <firebase_core/FLTFirebasePlugin.h>
+#import "firebase_analytics_messages.g.h"
 
-@interface FLTFirebaseAnalyticsPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
+@interface FLTFirebaseAnalyticsPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FirebaseAnalyticsHostApi>
 @end

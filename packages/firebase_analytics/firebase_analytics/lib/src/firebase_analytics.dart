@@ -170,6 +170,25 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     await _delegate.setUserId(id: id, callOptions: callOptions);
   }
 
+  /// Sends the email address, which is used for ads conversion measurement, without allowing any personally
+  /// identifiable information to leave the user device. (Only available for ios)
+  ///
+  /// Set '$FirebaseAnalyticsGoogleAppMeasurementOnDeviceConversion = true' in your podfile
+  /// to enable this feature.
+  ///
+  /// See:
+  ///
+  /// * https://firebase.google.com/docs/tutorials/ads-ios-on-device-measurement/step-3
+  Future<void> initiateOnDeviceConversionMeasurementWithEmailAddress(
+    String emailAddress,
+  ) async {
+    if (!Platform.isIOS) {
+      return;
+    }
+    await _delegate
+        .initiateOnDeviceConversionMeasurementWithEmailAddress(emailAddress);
+  }
+
   /// Sets the current [screenName], which specifies the current visual context
   /// in your app.
   ///

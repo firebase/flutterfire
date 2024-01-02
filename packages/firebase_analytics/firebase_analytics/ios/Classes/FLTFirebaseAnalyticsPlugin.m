@@ -8,6 +8,8 @@
 
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
+#import "firebase_analytics_messages.g.h"
+
 NSString *const kFLTFirebaseAnalyticsName = @"name";
 NSString *const kFLTFirebaseAnalyticsValue = @"value";
 NSString *const kFLTFirebaseAnalyticsEnabled = @"enabled";
@@ -35,6 +37,7 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:FLTFirebaseAnalyticsChannelName
                                   binaryMessenger:[registrar messenger]];
+    
   FLTFirebaseAnalyticsPlugin *instance = [FLTFirebaseAnalyticsPlugin sharedInstance];
   [registrar addMethodCallDelegate:instance channel:channel];
 #if !TARGET_OS_OSX
@@ -44,6 +47,7 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
   if ([FIRApp respondsToSelector:sel]) {
     [FIRApp performSelector:sel withObject:LIBRARY_NAME withObject:LIBRARY_VERSION];
   }
+  FirebaseAnalyticsHostApiSetup(registrar.messenger, instance);
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
@@ -154,6 +158,27 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
              withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   [FIRAnalytics setDefaultEventParameters:arguments];
   result.success(nil);
+}
+
+- (void)initiateOnDeviceConversionMeasurementWithEmailAddressEmailAddress:(NSString *)emailAddress
+                                                           completion:
+                                                               (void (^)(FlutterError *_Nullable))
+                                                                   completion {
+  [FIRAnalytics initiateOnDeviceConversionMeasurementWithEmailAddress:emailAddress];
+
+  completion(nil);
+}
+
+- (void)setAutomaticDataCollectionEnabledAppName:(nonnull NSString *)appName
+                                         enabled:(nonnull NSNumber *)enabled
+                                      completion:
+                                          (nonnull void (^)(FlutterError *_Nullable))completion {
+  FIRApp *firebaseApp = [FLTFirebasePlugin firebaseAppNamed:appName];
+  if (firebaseApp) {
+    [firebaseApp setDataCollectionDefaultEnabled:[enabled boolValue]];
+  }
+
+  completion(nil);
 }
 
 - (void)getAppInstanceIdWithMethodCallResult:(FLTFirebaseMethodCallResult *)result {
