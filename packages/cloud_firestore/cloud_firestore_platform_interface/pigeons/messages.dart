@@ -240,6 +240,34 @@ class PigeonQueryParameters {
   final Map<String?, Object?>? filters;
 }
 
+enum AggregateType {
+  count,
+  sum,
+  average,
+}
+
+class AggregateQuery {
+  const AggregateQuery({
+    required this.type,
+    required this.field,
+  });
+
+  final AggregateType type;
+  final String? field;
+}
+
+class AggregateQueryResponse {
+  const AggregateQueryResponse({
+    required this.type,
+    required this.value,
+    required this.field,
+  });
+
+  final AggregateType type;
+  final String? field;
+  final double value;
+}
+
 @HostApi(dartHostTestHandler: 'TestFirebaseFirestoreHostApi')
 abstract class FirebaseFirestoreHostApi {
   @async
@@ -351,11 +379,12 @@ abstract class FirebaseFirestoreHostApi {
   );
 
   @async
-  double aggregateQueryCount(
+  List<AggregateQueryResponse?> aggregateQuery(
     FirestorePigeonFirebaseApp app,
     String path,
     PigeonQueryParameters parameters,
     AggregateSource source,
+    List<AggregateQuery?> queries,
     bool isCollectionGroup,
   );
 
