@@ -3,9 +3,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
+    as platform_interface;
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_platform_interface/src/platform_interface/platform_interface_query.dart'
-    as query;
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 import 'package:collection/collection.dart';
 
@@ -274,16 +274,16 @@ class QueryWeb extends QueryPlatform {
       this,
       _buildWebQueryWithParameters(),
       fields.map((e) {
-        if (e is query.count) {
+        if (e is platform_interface.count) {
           return AggregateQuery(
             type: AggregateType.count,
           );
-        } else if (e is query.sum) {
+        } else if (e is platform_interface.sum) {
           return AggregateQuery(
             type: AggregateType.sum,
             field: e.field,
           );
-        } else if (e is query.average) {
+        } else if (e is platform_interface.average) {
           return AggregateQuery(
             type: AggregateType.average,
             field: e.field,
