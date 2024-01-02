@@ -4,13 +4,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:io';
-import 'package:js/js_util.dart';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/firebase_auth_web.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:js/js_util.dart';
 
 import '../interop/auth.dart' as auth_interop;
 import '../interop/multi_factor.dart' as multi_factor_interop;
@@ -88,35 +88,7 @@ FirebaseAuthException getFirebaseAuthException(
       phoneNumber: customData.phoneNumber,
       tenantId: customData.tenantId,
       resolver: MultiFactorResolverWeb(
-        resolverWeb.hints.map((e) {
-          if (e is multi_factor_interop.PhoneMultiFactorInfo) {
-            return PhoneMultiFactorInfo(
-              displayName: e.displayName,
-              factorId: e.factorId,
-              enrollmentTimestamp:
-                  HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch /
-                      1000,
-              uid: e.uid,
-              phoneNumber: e.phoneNumber,
-            );
-          } else if (e is multi_factor_interop.TotpMultiFactorInfo) {
-            return TotpMultiFactorInfo(
-              displayName: e.displayName,
-              factorId: e.factorId,
-              enrollmentTimestamp:
-                  HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch /
-                      1000,
-              uid: e.uid,
-            );
-          }
-          return MultiFactorInfo(
-            displayName: e.displayName,
-            factorId: e.factorId,
-            enrollmentTimestamp:
-                HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch / 1000,
-            uid: e.uid,
-          );
-        }).toList(),
+        resolverWeb.hints.map(fromInteropMultiFactorInfo).toList(),
         MultiFactorSessionWeb('web', resolverWeb.session),
         FirebaseAuthWeb.instance,
         resolverWeb,
@@ -131,6 +103,36 @@ FirebaseAuthException getFirebaseAuthException(
     email: customData.email,
     phoneNumber: customData.phoneNumber,
     tenantId: customData.tenantId,
+  );
+}
+
+MultiFactorInfo fromInteropMultiFactorInfo(
+  multi_factor_interop.MultiFactorInfo e,
+) {
+  if (e is multi_factor_interop.PhoneMultiFactorInfo) {
+    return PhoneMultiFactorInfo(
+      displayName: e.displayName,
+      factorId: e.factorId,
+      enrollmentTimestamp:
+          HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch / 1000,
+      uid: e.uid,
+      phoneNumber: e.phoneNumber,
+    );
+  } else if (e is multi_factor_interop.TotpMultiFactorInfo) {
+    return TotpMultiFactorInfo(
+      displayName: e.displayName,
+      factorId: e.factorId,
+      enrollmentTimestamp:
+          HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch / 1000,
+      uid: e.uid,
+    );
+  }
+  return MultiFactorInfo(
+    displayName: e.displayName,
+    factorId: e.factorId,
+    enrollmentTimestamp:
+        HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch / 1000,
+    uid: e.uid,
   );
 }
 

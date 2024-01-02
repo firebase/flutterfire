@@ -230,7 +230,7 @@ void runTransactionTests() {
           expect(e.code, equals('permission-denied'));
           return;
         } catch (e) {
-          fail('Transaction threw invalid exeption');
+          fail('Transaction threw invalid exception');
         }
       });
 
@@ -247,6 +247,25 @@ void runTransactionTests() {
             }),
             throwsAssertionError,
           );
+        });
+
+        testWidgets(
+            'should throw a native error, and convert to a [FirebaseException]',
+            (_) async {
+          DocumentReference<Map<String, dynamic>> documentReference =
+              firestore.doc('not-allowed/document');
+
+          try {
+            await firestore.runTransaction((Transaction transaction) async {
+              await transaction.get(documentReference);
+            });
+            fail('Transaction should not have resolved');
+          } on FirebaseException catch (e) {
+            expect(e.code, equals('permission-denied'));
+            return;
+          } catch (e) {
+            fail('Transaction threw invalid exception');
+          }
         });
 
         // ignore: todo

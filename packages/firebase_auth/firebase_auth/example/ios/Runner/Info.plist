@@ -22,6 +22,11 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>FacebookAppID</key>
+  <string>128693022464535</string>
+  <!--  The Facebook client token should not be made public but this is a developer mode app with whitelisted user access -->
+  <key>FacebookClientToken</key>
+  <string>16dbbdf0cfb309034a6ad98ac2a21688</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -30,6 +35,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.406099696497-134k3722m01rtrsklhf3b7k8sqa5r7in</string>
+				<string>fb128693022464535</string>
 			</array>
 		</dict>
 	</array>
