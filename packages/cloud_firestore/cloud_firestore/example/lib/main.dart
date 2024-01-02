@@ -168,14 +168,16 @@ class _FilmListState extends State<FilmList> {
                   // Average the number of likes
                   final _average = await FirebaseFirestore.instance
                       .collection('firestore-example-app')
-                      .aggregate([average('likes')]).get();
+                      .aggregate(average('likes'))
+                      .get();
 
                   print('Average: ${_average.getAverage('likes')}');
 
                   // Sum the number of likes
                   final _sum = await FirebaseFirestore.instance
                       .collection('firestore-example-app')
-                      .aggregate([sum('likes')]).get();
+                      .aggregate(sum('likes'))
+                      .get();
 
                   print('Sum: ${_sum.getSum('likes')}');
 
@@ -183,8 +185,11 @@ class _FilmListState extends State<FilmList> {
                   final _all = await FirebaseFirestore.instance
                       .collection('firestore-example-app')
                       .aggregate(
-                    [average('likes'), sum('likes'), count()],
-                  ).get();
+                        average('likes'),
+                        sum('likes'),
+                        count(),
+                      )
+                      .get();
 
                   print('Average: ${_all.getAverage('likes')} '
                       'Sum: ${_all.getSum('likes')} '
