@@ -169,10 +169,10 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
   NSString *emailAddress = arguments[@"emailAddress"];
   NSString *phoneNumber = arguments[@"phoneNumber"];
 
-  if (emailAddress != nil) {
+  if (![emailAddress isKindOfClass:[NSNull class]]) {
     [FIRAnalytics initiateOnDeviceConversionMeasurementWithEmailAddress:emailAddress];
   }
-  if (phoneNumber != nil) {
+  if (![phoneNumber isKindOfClass:[NSNull class]]) {
     [FIRAnalytics initiateOnDeviceConversionMeasurementWithPhoneNumber:phoneNumber];
   }
   result.success(nil);
