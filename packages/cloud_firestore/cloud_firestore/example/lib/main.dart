@@ -158,12 +158,12 @@ class _FilmListState extends State<FilmList> {
                   return _resetLikes();
                 case 'aggregate':
                   // Count the number of movies
-                  final count = await FirebaseFirestore.instance
+                  final _count = await FirebaseFirestore.instance
                       .collection('firestore-example-app')
                       .count()
                       .get();
 
-                  print('Count: ${count.count}');
+                  print('Count: ${_count.count}');
 
                   // Average the number of likes
                   final _average = await FirebaseFirestore.instance
@@ -178,6 +178,17 @@ class _FilmListState extends State<FilmList> {
                       .aggregate([sum('likes')]).get();
 
                   print('Sum: ${_sum.getSum('likes')}');
+
+                  // In one query
+                  final _all = await FirebaseFirestore.instance
+                      .collection('firestore-example-app')
+                      .aggregate(
+                          [average('likes'), sum('likes'), count()]).get();
+
+                  print('Average: ${_all.getAverage('likes')} '
+                      'Sum: ${_all.getSum('likes')} '
+                      'Count: ${_all.count}');
+
                   return;
                 default:
                   return;
