@@ -3831,7 +3831,7 @@ void runQueryTests() {
             collection.add({'foo': 2}),
           ]);
 
-          AggregateQuery query = collection.sum('foo');
+          AggregateQuery query = collection.aggregate([sum('foo')]);
 
           AggregateQuerySnapshot snapshot = await query.get();
 
@@ -3853,7 +3853,7 @@ void runQueryTests() {
           ]);
 
           AggregateQuery query =
-              collection.where('foo', isEqualTo: 1).sum('foo');
+              collection.where('foo', isEqualTo: 1).aggregate([sum('foo')]);
 
           AggregateQuerySnapshot snapshot = await query.get();
 
@@ -3874,7 +3874,7 @@ void runQueryTests() {
             collection.add({'foo': 2}),
           ]);
 
-          AggregateQuery query = collection.average('foo');
+          AggregateQuery query = collection.aggregate([average('foo')]);
 
           AggregateQuerySnapshot snapshot = await query.get();
 
@@ -3896,7 +3896,7 @@ void runQueryTests() {
           ]);
 
           AggregateQuery query =
-              collection.where('foo', isEqualTo: 1).average('foo');
+              collection.where('foo', isEqualTo: 1).aggregate([average('foo')]);
 
           AggregateQuerySnapshot snapshot = await query.get();
 
@@ -3917,7 +3917,8 @@ void runQueryTests() {
             collection.add({'foo': 2}),
           ]);
 
-          AggregateQuery query = collection.count().sum('foo').average('foo');
+          AggregateQuery query =
+              collection.aggregate([count(), sum('fou'), average('foo')]);
           AggregateQuerySnapshot snapshot = await query.get();
 
           expect(
@@ -3947,9 +3948,7 @@ void runQueryTests() {
 
         AggregateQuery query = collection
             .where('foo', isEqualTo: 1)
-            .count()
-            .sum('foo')
-            .average('foo');
+            .aggregate([count(), sum('fou'), average('foo')]);
 
         AggregateQuerySnapshot snapshot = await query.get();
 

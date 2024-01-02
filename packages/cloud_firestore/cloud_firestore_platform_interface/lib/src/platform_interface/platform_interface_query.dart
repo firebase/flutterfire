@@ -239,15 +239,48 @@ abstract class QueryPlatform extends PlatformInterface {
     throw UnimplementedError('count() is not implemented');
   }
 
+  AggregateQueryPlatform aggregate(List<AggregateField> fields) {
+    throw UnimplementedError('aggregate() is not implemented');
+  }
+
   /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
   /// metadata
+  ///
+  /// This method is not exposed in the public API, but can be used internally
   AggregateQueryPlatform sum(String field) {
     throw UnimplementedError('sum() is not implemented');
   }
 
   /// Returns an [AggregateQueryPlatform] which uses the [QueryPlatform] to query for
   /// metadata
+  ///
+  /// This method is not exposed in the public API, but can be used internally
   AggregateQueryPlatform average(String field) {
     throw UnimplementedError('average() is not implemented');
   }
+}
+
+abstract class AggregateField {}
+
+/// Create a CountAggregateField object that can be used to compute
+/// the count of documents in the result set of a query.
+// ignore: camel_case_types
+class count extends AggregateField {}
+
+/// Create an object that can be used to compute the sum of a specified field
+/// over a range of documents in the result set of a query.
+// ignore: camel_case_types
+class sum extends AggregateField {
+  sum(this.field);
+
+  final String field;
+}
+
+/// Create an object that can be used to compute the average of a specified field
+/// over a range of documents in the result set of a query.
+// ignore: camel_case_types
+class average extends AggregateField {
+  average(this.field);
+
+  final String field;
 }

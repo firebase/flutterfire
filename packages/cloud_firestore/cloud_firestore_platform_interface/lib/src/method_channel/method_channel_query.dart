@@ -8,6 +8,8 @@ import 'dart:async';
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
+import 'package:cloud_firestore_platform_interface/src/platform_interface/platform_interface_query.dart'
+    as query;
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 
@@ -282,6 +284,40 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
+  AggregateQueryPlatform aggregate(List<AggregateField> fields) {
+    return MethodChannelAggregateQuery(
+      this,
+      _pigeonParameters,
+      _pointer.path,
+      pigeonApp,
+      fields.map(
+        (e) {
+          if (e is query.count) {
+            return AggregateQuery(
+              type: AggregateType.count,
+            );
+          } else if (e is query.sum) {
+            return AggregateQuery(
+              type: AggregateType.sum,
+              field: e.field,
+            );
+          } else if (e is query.average) {
+            return AggregateQuery(
+              type: AggregateType.average,
+              field: e.field,
+            );
+          } else {
+            throw ArgumentError(
+                'Unsupported aggregate method ${e.runtimeType}');
+          }
+        },
+      ).toList(),
+      isCollectionGroupQuery,
+    );
+  }
+
+  // This method is not exposed in the public API, but can be used internally
+  @override
   AggregateQueryPlatform sum(String field) {
     return MethodChannelAggregateQuery(
       this,
@@ -298,6 +334,7 @@ class MethodChannelQuery extends QueryPlatform {
     );
   }
 
+  // This method is not exposed in the public API, but can be used internally
   @override
   AggregateQueryPlatform average(String field) {
     return MethodChannelAggregateQuery(

@@ -166,20 +166,18 @@ class _FilmListState extends State<FilmList> {
                   print('Count: ${count.count}');
 
                   // Average the number of likes
-                  final average = await FirebaseFirestore.instance
+                  final _average = await FirebaseFirestore.instance
                       .collection('firestore-example-app')
-                      .average('likes')
-                      .get();
+                      .aggregate([average('likes')]).get();
 
-                  print('Average: ${average.getAverage('likes')}');
+                  print('Average: ${_average.getAverage('likes')}');
 
                   // Sum the number of likes
-                  final sum = await FirebaseFirestore.instance
+                  final _sum = await FirebaseFirestore.instance
                       .collection('firestore-example-app')
-                      .sum('likes')
-                      .get();
+                      .aggregate([sum('likes')]).get();
 
-                  print('Sum: ${sum.getSum('likes')}');
+                  print('Sum: ${_sum.getSum('likes')}');
                   return;
                 default:
                   return;

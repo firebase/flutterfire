@@ -193,9 +193,9 @@ abstract class Query<T extends Object?> {
 
   AggregateQuery count();
 
-  AggregateQuery sum(String field);
-
-  AggregateQuery average(String field);
+  /// Calculates the specified aggregations over the documents in the
+  /// result set of the given query, without actually downloading the documents.
+  AggregateQuery aggregate(List<AggregateField> fields);
 }
 
 /// Represents a [Query] over the data at a particular location.
@@ -857,18 +857,11 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     return AggregateQuery._(_delegate.count(), this);
   }
 
-  /// Represents an [AggregateQuery] over the data at a particular location for retrieving metadata
-  /// without retrieving the actual documents.
+  /// Calculates the specified aggregations over the documents in the
+  /// result set of the given query, without actually downloading the documents.
   @override
-  AggregateQuery sum(String field) {
-    return AggregateQuery._(_delegate.sum(field), this);
-  }
-
-  /// Represents an [AggregateQuery] over the data at a particular location for retrieving metadata
-  /// without retrieving the actual documents.
-  @override
-  AggregateQuery average(String field) {
-    return AggregateQuery._(_delegate.average(field), this);
+  AggregateQuery aggregate(List<AggregateField> fields) {
+    return AggregateQuery._(_delegate.aggregate(fields), this);
   }
 }
 
@@ -1040,17 +1033,10 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
     return _originalQuery.count();
   }
 
-  /// Represents an [AggregateQuery] over the data at a particular location for retrieving metadata
-  /// without retrieving the actual documents.
+  /// Calculates the specified aggregations over the documents in the
+  /// result set of the given query, without actually downloading the documents.
   @override
-  AggregateQuery sum(String field) {
-    return _originalQuery.sum(field);
-  }
-
-  /// Represents an [AggregateQuery] over the data at a particular location for retrieving metadata
-  /// without retrieving the actual documents.
-  @override
-  AggregateQuery average(String field) {
-    return _originalQuery.average(field);
+  AggregateQuery aggregate(List<AggregateField> fields) {
+    return _originalQuery.aggregate(fields);
   }
 }

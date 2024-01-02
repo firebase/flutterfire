@@ -4,6 +4,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_platform_interface/src/platform_interface/platform_interface_query.dart'
+    as query;
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 import 'package:collection/collection.dart';
 
@@ -263,6 +265,35 @@ class QueryWeb extends QueryPlatform {
           type: AggregateType.count,
         )
       ],
+    );
+  }
+
+  @override
+  AggregateQueryPlatform aggregate(List<AggregateField> fields) {
+    return AggregateQueryWeb(
+      this,
+      _buildWebQueryWithParameters(),
+      fields.map((e) {
+        if (e is query.count) {
+          return AggregateQuery(
+            type: AggregateType.count,
+          );
+        } else if (e is query.sum) {
+          return AggregateQuery(
+            type: AggregateType.sum,
+            field: e.field,
+          );
+        } else if (e is query.average) {
+          return AggregateQuery(
+            type: AggregateType.average,
+            field: e.field,
+          );
+        } else {
+          throw UnsupportedError(
+            'Unsupported aggregate field type ${e.runtimeType}',
+          );
+        }
+      }).toList(),
     );
   }
 
