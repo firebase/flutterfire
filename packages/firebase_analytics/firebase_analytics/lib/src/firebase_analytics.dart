@@ -1361,21 +1361,36 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     await _delegate.setSessionTimeoutDuration(timeout);
   }
 
-  /// Initiates on-device conversion measurement given a user email address or a phone number in E.164 format.
+  /// Initiates on-device conversion measurement given a user email address.
   /// Requires dependency GoogleAppMeasurementOnDeviceConversion to be linked in, otherwise it is a no-op.
   ///
   /// Only available on iOS.
-  Future<void> initiateOnDeviceConversionMeasurement({
-    String? emailAddress,
-    String? phoneNumber,
-  }) async {
+  Future<void> initiateOnDeviceConversionMeasurementWithEmailAddress(
+    String emailAddress,
+  ) async {
     if (defaultTargetPlatform != TargetPlatform.iOS) {
       throw UnimplementedError(
-        'initiateOnDeviceConversionMeasurement() is only supported on iOS.',
+        'initiateOnDeviceConversionMeasurementWithEmailAddress() is only supported on iOS.',
       );
     }
     await _delegate.initiateOnDeviceConversionMeasurement(
       emailAddress: emailAddress,
+    );
+  }
+
+  /// Initiates on-device conversion measurement given a user phone number in E.164 format.
+  /// Requires dependency GoogleAppMeasurementOnDeviceConversion to be linked in, otherwise it is a no-op.
+  ///
+  /// Only available on iOS.
+  Future<void> initiateOnDeviceConversionMeasurementWithPhoneNumber(
+    String phoneNumber,
+  ) async {
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      throw UnimplementedError(
+        'initiateOnDeviceConversionMeasurementWithPhoneNumber() is only supported on iOS.',
+      );
+    }
+    await _delegate.initiateOnDeviceConversionMeasurement(
       phoneNumber: phoneNumber,
     );
   }

@@ -304,28 +304,17 @@ void main() {
       'initiateOnDeviceConversionMeasurement',
       () async {
         await expectLater(
-          FirebaseAnalytics.instance.initiateOnDeviceConversionMeasurement(),
-          completes,
-        );
-
-        await expectLater(
-          FirebaseAnalytics.instance.initiateOnDeviceConversionMeasurement(
-            emailAddress: 'test@mail.com',
+          FirebaseAnalytics.instance
+              .initiateOnDeviceConversionMeasurementWithEmailAddress(
+            'test@mail.com',
           ),
           completes,
         );
 
         await expectLater(
-          FirebaseAnalytics.instance.initiateOnDeviceConversionMeasurement(
-            phoneNumber: '+15555555555',
-          ),
-          completes,
-        );
-
-        await expectLater(
-          FirebaseAnalytics.instance.initiateOnDeviceConversionMeasurement(
-            emailAddress: 'test@mail.com',
-            phoneNumber: '+15555555555',
+          FirebaseAnalytics.instance
+              .initiateOnDeviceConversionMeasurementWithPhoneNumber(
+            '+15555555555',
           ),
           completes,
         );
