@@ -3918,7 +3918,7 @@ void runQueryTests() {
           ]);
 
           AggregateQuery query =
-              collection.aggregate([count(), sum('fou'), average('foo')]);
+              collection.aggregate([count(), sum('foo'), average('foo')]);
           AggregateQuerySnapshot snapshot = await query.get();
 
           expect(
@@ -3948,7 +3948,7 @@ void runQueryTests() {
 
         AggregateQuery query = collection
             .where('foo', isEqualTo: 1)
-            .aggregate([count(), sum('fou'), average('foo')]);
+            .aggregate([count(), sum('foo'), average('foo')]);
 
         AggregateQuerySnapshot snapshot = await query.get();
 
