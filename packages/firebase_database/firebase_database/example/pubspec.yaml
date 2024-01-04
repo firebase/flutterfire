@@ -7,7 +7,7 @@ environment:
 
 dependencies:
   firebase_core: ^2.24.2
-  firebase_database: ^10.3.8
+  firebase_database: ^10.4.0
   flutter:
     sdk: flutter
 
