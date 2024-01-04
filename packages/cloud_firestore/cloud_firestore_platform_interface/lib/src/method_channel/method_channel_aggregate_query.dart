@@ -12,6 +12,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
     this._pigeonParameters,
     this._path,
     this._pigeonApp,
+    this._aggregateQueries,
     this._isCollectionGroupQuery,
   ) : super(query);
 
@@ -20,21 +21,89 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
   final PigeonQueryParameters _pigeonParameters;
   final bool _isCollectionGroupQuery;
 
+  final List<AggregateQuery> _aggregateQueries;
+
   @override
   Future<AggregateQuerySnapshotPlatform> get({
     required AggregateSource source,
   }) async {
     final data =
-        await MethodChannelFirebaseFirestore.pigeonChannel.aggregateQueryCount(
+        await MethodChannelFirebaseFirestore.pigeonChannel.aggregateQuery(
       _pigeonApp,
       _path,
       _pigeonParameters,
       source,
+      _aggregateQueries,
       _isCollectionGroupQuery,
     );
 
+    int? count;
+    List<AggregateQueryResponse> sum = [];
+    List<AggregateQueryResponse> average = [];
+    for (final query in data) {
+      if (query == null) continue;
+      switch (query.type) {
+        case AggregateType.count:
+          count = query.value.toInt();
+          break;
+        case AggregateType.sum:
+          sum.add(query);
+          break;
+        case AggregateType.average:
+          average.add(query);
+          break;
+      }
+    }
+
     return AggregateQuerySnapshotPlatform(
-      count: data.toInt(),
+      count: count,
+      sum: sum,
+      average: average,
+    );
+  }
+
+  @override
+  AggregateQueryPlatform count() {
+    return MethodChannelAggregateQuery(
+      query,
+      _pigeonParameters,
+      _path,
+      _pigeonApp,
+      [
+        ..._aggregateQueries,
+        AggregateQuery(type: AggregateType.count),
+      ],
+      _isCollectionGroupQuery,
+    );
+  }
+
+  @override
+  AggregateQueryPlatform sum(String field) {
+    return MethodChannelAggregateQuery(
+      query,
+      _pigeonParameters,
+      _path,
+      _pigeonApp,
+      [
+        ..._aggregateQueries,
+        AggregateQuery(type: AggregateType.sum, field: field),
+      ],
+      _isCollectionGroupQuery,
+    );
+  }
+
+  @override
+  AggregateQueryPlatform average(String field) {
+    return MethodChannelAggregateQuery(
+      query,
+      _pigeonParameters,
+      _path,
+      _pigeonApp,
+      [
+        ..._aggregateQueries,
+        AggregateQuery(type: AggregateType.average, field: field),
+      ],
+      _isCollectionGroupQuery,
     );
   }
 }

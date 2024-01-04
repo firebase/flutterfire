@@ -16,5 +16,11 @@ class AggregateQuerySnapshot {
   final Query query;
 
   /// Returns the count of the documents that match the query.
-  int get count => _delegate.count;
+  int? get count => _delegate.count;
+
+  /// Returns the sum of the values of the documents that match the query.
+  double? getSum(String field) => _delegate.getSum(field);
+
+  /// Returns the average of the values of the documents that match the query.
+  double? getAverage(String field) => _delegate.getAverage(field);
 }
