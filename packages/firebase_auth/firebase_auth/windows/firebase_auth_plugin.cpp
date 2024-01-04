@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 #include "firebase_auth_plugin.h"
+#include <firebase_core/firebase_core_plugin_c_api.h>
 
 // This must be included before many other Windows headers.
 #include <windows.h>

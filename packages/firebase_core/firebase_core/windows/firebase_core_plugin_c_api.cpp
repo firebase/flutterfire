@@ -10,10 +10,21 @@
 #include <vector>
 
 #include "firebase_core_plugin.h"
+#include "flutter_firebase_plugin_registry.h"
 
 void FirebaseCorePluginCApiRegisterWithRegistrar(
     FlutterDesktopPluginRegistrarRef registrar) {
   firebase_core_windows::FirebaseCorePlugin::RegisterWithRegistrar(
       flutter::PluginRegistrarManager::GetInstance()
-          ->GetRegistrar<flutter::PluginRegistrarWindows>(registrar));
+          ->GetRegistrar<flutter::PluginRegistrarWindows>(registrar)); 
 }
+
+void RegisterPlugin(
+    std::string channelName,
+    void* flutterFirebasePlugin) {
+    FlutterFirebasePlugin* fireplugin = static_cast<FlutterFirebasePlugin*>(flutterFirebasePlugin);
+
+    firebase_core_windows::FlutterFirebasePluginRegistry::registerPlugin(
+		channelName, fireplugin);
+}
+
