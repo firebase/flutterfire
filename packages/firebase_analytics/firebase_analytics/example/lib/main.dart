@@ -137,6 +137,11 @@ class _MyHomePageState extends State<MyHomePage> {
     setMessage('setUserProperty succeeded');
   }
 
+  Future<void> _testSetConsent() async {
+    await widget.analytics.setConsent(adStorageConsentGranted: true);
+    setMessage('setConsent succeeded');
+  }
+
   Future<void> _testAppInstanceId() async {
     String? id = await widget.analytics.appInstanceId;
     if (id != null) {
@@ -355,6 +360,10 @@ class _MyHomePageState extends State<MyHomePage> {
             MaterialButton(
               onPressed: _testResetAnalyticsData,
               child: const Text('Test resetAnalyticsData'),
+            ),
+            MaterialButton(
+              onPressed: _testSetConsent,
+              child: const Text('Test setConsent'),
             ),
             MaterialButton(
               onPressed: _setDefaultEventParameters,
