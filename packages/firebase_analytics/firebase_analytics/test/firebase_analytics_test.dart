@@ -69,7 +69,7 @@ const String CONTENT_TYPE = 'content_type';
 const String ITEM_NAME = 'item_name';
 const String ACHIEVEMENT_ID = 'achievement_id';
 
-AnalyticsEventItem ITEM = AnalyticsEventItem(
+final ITEM = AnalyticsEventItem(
   affiliation: 'affil',
   coupon: 'coup',
   creativeName: 'creativeName',
@@ -112,6 +112,17 @@ void main() {
     });
 
     tearDown(methodCallLog.clear);
+
+    group('AnalyticsEventItem', () {
+      test('Should properly toString', () {
+        expect(
+          ITEM.toString(),
+          equals(
+            'AnalyticsEventItem({a: b, affiliation: affil, currency: USD, coupon: coup, creative_name: creativeName, creative_slot: creativeSlot, discount: 2.22, index: 3, item_brand: itemBrand, item_category: itemCategory, item_category2: itemCategory2, item_category3: itemCategory3, item_category4: itemCategory4, item_category5: itemCategory5, item_id: itemId, item_list_id: itemListId, item_list_name: itemListName, item_name: itemName, item_variant: itemVariant, location_id: locationId, price: 9.99, promotion_id: promotionId, promotion_name: promotionName, quantity: 1})',
+          ),
+        );
+      });
+    });
 
     group('logEvent', () {
       test('reject events with reserved names', () async {

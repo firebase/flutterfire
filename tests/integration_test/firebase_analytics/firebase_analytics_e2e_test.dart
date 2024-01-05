@@ -40,6 +40,10 @@ void main() {
           expect(result, isA<int>());
         }
       },
+      retry: 3,
+      timeout: const Timeout(
+        Duration(minutes: 1),
+      ),
     );
 
     test('isSupported', () async {
@@ -295,5 +299,27 @@ void main() {
         expect(result2, isA<String>());
       }
     });
+
+    test(
+      'initiateOnDeviceConversionMeasurement',
+      () async {
+        await expectLater(
+          FirebaseAnalytics.instance
+              .initiateOnDeviceConversionMeasurementWithEmailAddress(
+            'test@mail.com',
+          ),
+          completes,
+        );
+
+        await expectLater(
+          FirebaseAnalytics.instance
+              .initiateOnDeviceConversionMeasurementWithPhoneNumber(
+            '+15555555555',
+          ),
+          completes,
+        );
+      },
+      skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
+    );
   });
 }

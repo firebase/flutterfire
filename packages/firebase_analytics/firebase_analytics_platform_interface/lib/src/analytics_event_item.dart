@@ -169,6 +169,6 @@ class AnalyticsEventItem {
 
   @override
   String toString() {
-    return '$AnalyticsEventItem($asMap)';
+    return '$AnalyticsEventItem(${asMap()})';
   }
 }

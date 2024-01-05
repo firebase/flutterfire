@@ -1863,6 +1863,82 @@ void runQueryTests() {
         expect(snapshot.docs[0].get('foo'), equals(11));
         expect(snapshot.docs[1].get('foo'), equals(11));
       });
+
+      testWidgets(
+          'pass `null` to `isNotEqualTo` and ignore other `null` value queries',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest(
+          'where-null-isNotEqualTo-ignore-other-queries',
+        );
+
+        await Future.wait([
+          collection.add({
+            'foo': 11,
+          }),
+          collection.add({'foo': 11}),
+          collection.add({
+            'foo': null,
+          }),
+          collection.add({
+            'foo': null,
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .where(
+              'foo',
+              isNotEqualTo: null,
+              isGreaterThan: null,
+              isLessThan: null,
+              isLessThanOrEqualTo: null,
+              arrayContains: null,
+              isGreaterThanOrEqualTo: null,
+            )
+            .get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].get('foo'), equals(11));
+        expect(snapshot.docs[1].get('foo'), equals(11));
+      });
+
+      testWidgets(
+          'pass `null` to `isEqualTo` and ignore other `null` value queries',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest(
+          'where-null-isEqualTo-ignore-other-queries',
+        );
+
+        await Future.wait([
+          collection.add({
+            'foo': 1,
+          }),
+          collection.add({'foo': 2}),
+          collection.add({
+            'foo': null,
+          }),
+          collection.add({
+            'foo': null,
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot = await collection
+            .where(
+              'foo',
+              isEqualTo: null,
+              isGreaterThan: null,
+              isLessThan: null,
+              isLessThanOrEqualTo: null,
+              arrayContains: null,
+              isGreaterThanOrEqualTo: null,
+            )
+            .get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].get('foo'), equals(null));
+        expect(snapshot.docs[1].get('foo'), equals(null));
+      });
     });
 
     group('Query.where() with Filter class', () {
@@ -3699,7 +3775,9 @@ void runQueryTests() {
         },
         timeout: const Timeout.factor(3),
       );
+    });
 
+    group('Aggregate Queries', () {
       testWidgets(
         'count()',
         (_) async {
@@ -3742,6 +3820,153 @@ void runQueryTests() {
           );
         },
       );
+
+      testWidgets(
+        'sum()',
+        (_) async {
+          final collection = await initializeTest('sum');
+
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
+
+          AggregateQuery query = collection.aggregate(sum('foo'));
+
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.getSum('foo'),
+            3,
+          );
+        },
+      );
+
+      testWidgets(
+        'sum() with query',
+        (_) async {
+          final collection = await initializeTest('sum');
+
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
+
+          AggregateQuery query =
+              collection.where('foo', isEqualTo: 1).aggregate(sum('foo'));
+
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.getSum('foo'),
+            1,
+          );
+        },
+      );
+
+      testWidgets(
+        'average()',
+        (_) async {
+          final collection = await initializeTest('avg');
+
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
+
+          AggregateQuery query = collection.aggregate(average('foo'));
+
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.getAverage('foo'),
+            1.5,
+          );
+        },
+      );
+
+      testWidgets(
+        'average() with query',
+        (_) async {
+          final collection = await initializeTest('avg');
+
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
+
+          AggregateQuery query =
+              collection.where('foo', isEqualTo: 1).aggregate(average('foo'));
+
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.getAverage('foo'),
+            1,
+          );
+        },
+      );
+
+      testWidgets(
+        'chaining aggregate queries',
+        (_) async {
+          final collection = await initializeTest('chaining');
+
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
+
+          AggregateQuery query =
+              collection.aggregate(count(), sum('foo'), average('foo'));
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.count,
+            2,
+          );
+
+          expect(
+            snapshot.getSum('foo'),
+            3,
+          );
+
+          expect(
+            snapshot.getAverage('foo'),
+            1.5,
+          );
+        },
+      );
+
+      testWidgets('chaining multiples aggregate queries', (_) async {
+        final collection = await initializeTest('chaining');
+
+        await Future.wait([
+          collection.add({'foo': 1}),
+          collection.add({'foo': 2}),
+        ]);
+
+        AggregateQuery query = collection
+            .where('foo', isEqualTo: 1)
+            .aggregate(count(), sum('foo'), average('foo'));
+
+        AggregateQuerySnapshot snapshot = await query.get();
+
+        expect(
+          snapshot.count,
+          1,
+        );
+
+        expect(
+          snapshot.getSum('foo'),
+          1,
+        );
+
+        expect(
+          snapshot.getAverage('foo'),
+          1,
+        );
+      });
 
       testWidgets(
         'count() with collectionGroup',

@@ -1,3 +1,19 @@
+## 1.0.0-dev.82
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.81
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.80
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.79
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.78
 
  - Update a dependency to the latest release.

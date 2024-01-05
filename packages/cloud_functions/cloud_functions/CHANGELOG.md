@@ -1,3 +1,15 @@
+## 4.6.0
+
+ - **FEAT**: allow users to disable automatic host mapping ([#11962](https://github.com/firebase/flutterfire/issues/11962)). ([13c1ce33](https://github.com/firebase/flutterfire/commit/13c1ce333b8cd113241a1f7ac07181c1c76194bc))
+
+## 4.5.8
+
+ - Update a dependency to the latest release.
+
+## 4.5.7
+
+ - Update a dependency to the latest release.
+
 ## 4.5.6
 
  - Update a dependency to the latest release.
