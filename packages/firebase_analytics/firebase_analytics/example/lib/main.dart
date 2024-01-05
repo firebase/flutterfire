@@ -112,14 +112,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setMessage('setUserId succeeded');
   }
 
-  Future<void> _testSetCurrentScreen() async {
-    await widget.analytics.setCurrentScreen(
-      screenName: 'Analytics Demo',
-      screenClassOverride: 'AnalyticsDemo',
-    );
-    setMessage('setCurrentScreen succeeded');
-  }
-
   Future<void> _testSetAnalyticsCollectionEnabled() async {
     await widget.analytics.setAnalyticsCollectionEnabled(false);
     await widget.analytics.setAnalyticsCollectionEnabled(true);
@@ -336,10 +328,6 @@ class _MyHomePageState extends State<MyHomePage> {
             MaterialButton(
               onPressed: _testSetUserId,
               child: const Text('Test setUserId'),
-            ),
-            MaterialButton(
-              onPressed: _testSetCurrentScreen,
-              child: const Text('Test setCurrentScreen'),
             ),
             MaterialButton(
               onPressed: _testSetAnalyticsCollectionEnabled,

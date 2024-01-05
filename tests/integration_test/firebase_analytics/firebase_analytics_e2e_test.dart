@@ -108,7 +108,7 @@ void main() {
         throwsA(isA<AssertionError>()),
       );
 
-      // test 2 reserved events
+      // test 3 reserved events
       await expectLater(
         FirebaseAnalytics.instance.logAdImpression(
           adPlatform: 'foo',
@@ -131,6 +131,14 @@ void main() {
           shipping: 23,
           transactionId: 'bar',
           affiliation: 'baz',
+        ),
+        completes,
+      );
+
+      await expectLater(
+        FirebaseAnalytics.instance.logScreenView(
+          screenClass: 'FooActivity',
+          screenName: 'bar',
         ),
         completes,
       );
@@ -171,6 +179,7 @@ void main() {
 
     test('setCurrentScreen', () async {
       await expectLater(
+        // ignore: deprecated_member_use
         FirebaseAnalytics.instance.setCurrentScreen(screenName: 'screen-name'),
         completes,
       );
