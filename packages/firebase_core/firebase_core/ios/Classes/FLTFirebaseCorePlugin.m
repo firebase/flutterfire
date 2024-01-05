@@ -142,17 +142,17 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
   }
 
   // kFirebaseOptionsDeepLinkURLScheme
-  if (initializeAppRequest.deepLinkURLScheme  != nil) {
+  if (initializeAppRequest.deepLinkURLScheme != nil) {
     options.deepLinkURLScheme = initializeAppRequest.deepLinkURLScheme;
   }
 
   // kFirebaseOptionsIosBundleId
-  if (initializeAppRequest.iosBundleId  != nil) {
+  if (initializeAppRequest.iosBundleId != nil) {
     options.bundleID = initializeAppRequest.iosBundleId;
   }
 
   // kFirebaseOptionsIosClientId
-  if (initializeAppRequest.iosClientId  != nil) {
+  if (initializeAppRequest.iosClientId != nil) {
     options.clientID = initializeAppRequest.iosClientId;
   }
 
