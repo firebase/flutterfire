@@ -3,6 +3,99 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-01-04
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v4.14.0`](#cloud_firestore---v4140)
+ - [`cloud_firestore_platform_interface` - `v6.1.0`](#cloud_firestore_platform_interface---v610)
+ - [`cloud_firestore_web` - `v3.9.0`](#cloud_firestore_web---v390)
+ - [`cloud_functions` - `v4.6.0`](#cloud_functions---v460)
+ - [`firebase_analytics` - `v10.8.0`](#firebase_analytics---v1080)
+ - [`firebase_analytics_platform_interface` - `v3.9.0`](#firebase_analytics_platform_interface---v390)
+ - [`firebase_auth` - `v4.16.0`](#firebase_auth---v4160)
+ - [`firebase_auth_web` - `v5.8.13`](#firebase_auth_web---v5813)
+ - [`firebase_crashlytics` - `v3.4.9`](#firebase_crashlytics---v349)
+ - [`firebase_database` - `v10.4.0`](#firebase_database---v1040)
+ - [`firebase_messaging` - `v14.7.10`](#firebase_messaging---v14710)
+ - [`firebase_storage` - `v11.6.0`](#firebase_storage---v1160)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.82`](#cloud_firestore_odm---v100-dev82)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.82`](#cloud_firestore_odm_generator---v100-dev82)
+ - [`firebase_analytics_web` - `v0.5.5+12`](#firebase_analytics_web---v05512)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_firestore_odm` - `v1.0.0-dev.82`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.82`
+ - `firebase_analytics_web` - `v0.5.5+12`
+
+---
+
+#### `cloud_firestore` - `v4.14.0`
+
+ - **FIX**(firestore): `transaction.get()` should throw `FirebaseException` on exception. ([#12064](https://github.com/firebase/flutterfire/issues/12064)). ([3cfc5019](https://github.com/firebase/flutterfire/commit/3cfc5019d4f9a5f3c610a44ef370541bf22cd028))
+ - **FIX**(firestore): export `LoadBundleTaskState` in `cloud_firestore` ([#12065](https://github.com/firebase/flutterfire/issues/12065)). ([97903034](https://github.com/firebase/flutterfire/commit/97903034b6bf720be141ded3eb74961323ec72f5))
+ - **FEAT**(firestore): add support for `sum` and `average` aggregated queries ([#11757](https://github.com/firebase/flutterfire/issues/11757)). ([82af6c2f](https://github.com/firebase/flutterfire/commit/82af6c2f40160a9e2f74e2d48652003fa48bb161))
+ - **FEAT**: allow users to disable automatic host mapping ([#11962](https://github.com/firebase/flutterfire/issues/11962)). ([13c1ce33](https://github.com/firebase/flutterfire/commit/13c1ce333b8cd113241a1f7ac07181c1c76194bc))
+
+#### `cloud_firestore_platform_interface` - `v6.1.0`
+
+ - **FIX**(firestore): `transaction.get()` should throw `FirebaseException` on exception. ([#12064](https://github.com/firebase/flutterfire/issues/12064)). ([3cfc5019](https://github.com/firebase/flutterfire/commit/3cfc5019d4f9a5f3c610a44ef370541bf22cd028))
+ - **FEAT**(firestore): add support for `sum` and `average` aggregated queries ([#11757](https://github.com/firebase/flutterfire/issues/11757)). ([82af6c2f](https://github.com/firebase/flutterfire/commit/82af6c2f40160a9e2f74e2d48652003fa48bb161))
+
+#### `cloud_firestore_web` - `v3.9.0`
+
+ - **FEAT**(firestore): add support for `sum` and `average` aggregated queries ([#11757](https://github.com/firebase/flutterfire/issues/11757)). ([82af6c2f](https://github.com/firebase/flutterfire/commit/82af6c2f40160a9e2f74e2d48652003fa48bb161))
+
+#### `cloud_functions` - `v4.6.0`
+
+ - **FEAT**: allow users to disable automatic host mapping ([#11962](https://github.com/firebase/flutterfire/issues/11962)). ([13c1ce33](https://github.com/firebase/flutterfire/commit/13c1ce333b8cd113241a1f7ac07181c1c76194bc))
+
+#### `firebase_analytics` - `v10.8.0`
+
+ - **FEAT**(analytics,ios): add support for initiateOnDeviceConversionMeasurement using email address or phone number ([#11926](https://github.com/firebase/flutterfire/issues/11926)). ([9bc83f1e](https://github.com/firebase/flutterfire/commit/9bc83f1e6770d263092f6367ca3cfe46a83bb1b1))
+
+#### `firebase_analytics_platform_interface` - `v3.9.0`
+
+ - **FEAT**(analytics,ios): add support for initiateOnDeviceConversionMeasurement using email address or phone number ([#11926](https://github.com/firebase/flutterfire/issues/11926)). ([9bc83f1e](https://github.com/firebase/flutterfire/commit/9bc83f1e6770d263092f6367ca3cfe46a83bb1b1))
+
+#### `firebase_auth` - `v4.16.0`
+
+ - **FIX**(auth,windows): fix a parsing issue of the Pigeon message on Windows for sendPasswordResetEmail ([#12082](https://github.com/firebase/flutterfire/issues/12082)). ([17c4ab12](https://github.com/firebase/flutterfire/commit/17c4ab128650c8e7a4f7e3cea0c55d1fea0998fd))
+ - **FEAT**: allow users to disable automatic host mapping ([#11962](https://github.com/firebase/flutterfire/issues/11962)). ([13c1ce33](https://github.com/firebase/flutterfire/commit/13c1ce333b8cd113241a1f7ac07181c1c76194bc))
+
+#### `firebase_auth_web` - `v5.8.13`
+
+ - **FIX**(auth,web): fix typing of `getRedirectResult` on Web, preventing a crash ([#12036](https://github.com/firebase/flutterfire/issues/12036)). ([52c53f5c](https://github.com/firebase/flutterfire/commit/52c53f5c470aeca32e652cb0d477c5fc2bba7812))
+
+#### `firebase_crashlytics` - `v3.4.9`
+
+ - **FIX**(crashlytics): update exception `reason` to ensure it does not produce incorrect value in Firebase console ([#12053](https://github.com/firebase/flutterfire/issues/12053)). ([1cf38b86](https://github.com/firebase/flutterfire/commit/1cf38b86e640d0b64dcc8614b04d870478067b84))
+
+#### `firebase_database` - `v10.4.0`
+
+ - **FEAT**(database,android): automatically map the host to 10.0.2.2  when using useDatabaseEmulator to match other plugins ([#11976](https://github.com/firebase/flutterfire/issues/11976)). ([6c6c589a](https://github.com/firebase/flutterfire/commit/6c6c589a953a43ba79aa20404a0380bcbefba140))
+
+#### `firebase_messaging` - `v14.7.10`
+
+ - **FIX**(messaging,android): increase notification storage limit to `100` ([#12060](https://github.com/firebase/flutterfire/issues/12060)). ([2718db66](https://github.com/firebase/flutterfire/commit/2718db663e61ecb2fd4333553a17ebb217e77330))
+ - **FIX**(messaging,android): possible fix to a crash occurring on android background executor ([#12057](https://github.com/firebase/flutterfire/issues/12057)). ([3eaae47f](https://github.com/firebase/flutterfire/commit/3eaae47faccf38fc5f3ec52a753858780a0e5efc))
+
+#### `firebase_storage` - `v11.6.0`
+
+ - **FEAT**: allow users to disable automatic host mapping ([#11962](https://github.com/firebase/flutterfire/issues/11962)). ([13c1ce33](https://github.com/firebase/flutterfire/commit/13c1ce333b8cd113241a1f7ac07181c1c76194bc))
+
+
 ## 2023-12-12
 
 ### Changes

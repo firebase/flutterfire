@@ -74,6 +74,9 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
     [self getAppInstanceIdWithMethodCallResult:methodCallResult];
   } else if ([@"Analytics#getSessionId" isEqualToString:call.method]) {
     [self getSessionIdWithMethodCallResult:methodCallResult];
+  } else if ([@"Analytics#initiateOnDeviceConversionMeasurement" isEqualToString:call.method]) {
+    [self initiateOnDeviceConversionMeasurement:call.arguments
+                           withMethodCallResult:methodCallResult];
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -159,6 +162,20 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
 - (void)getAppInstanceIdWithMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *appInstanceID = [FIRAnalytics appInstanceID];
   result.success(appInstanceID);
+}
+
+- (void)initiateOnDeviceConversionMeasurement:(id)arguments
+                         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSString *emailAddress = arguments[@"emailAddress"];
+  NSString *phoneNumber = arguments[@"phoneNumber"];
+
+  if (![emailAddress isKindOfClass:[NSNull class]]) {
+    [FIRAnalytics initiateOnDeviceConversionMeasurementWithEmailAddress:emailAddress];
+  }
+  if (![phoneNumber isKindOfClass:[NSNull class]]) {
+    [FIRAnalytics initiateOnDeviceConversionMeasurementWithPhoneNumber:phoneNumber];
+  }
+  result.success(nil);
 }
 
 #pragma mark - FLTFirebasePlugin

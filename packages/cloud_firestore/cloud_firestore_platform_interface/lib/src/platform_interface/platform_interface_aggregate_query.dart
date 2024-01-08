@@ -32,4 +32,21 @@ abstract class AggregateQueryPlatform extends PlatformInterface {
   }) async {
     throw UnimplementedError('get() is not implemented');
   }
+
+  /// Returns an [AggregateQuerySnapshotPlatform] with the count of the documents that match the query.
+  AggregateQueryPlatform count() {
+    throw UnimplementedError('count() is not implemented');
+  }
+
+  /// Returns an [AggregateQuerySnapshotPlatform] with the sum of the values of the documents that match the query.
+  AggregateQueryPlatform sum(
+    String field,
+  ) {
+    throw UnimplementedError('sum() is not implemented');
+  }
+
+  /// Returns an [AggregateQuerySnapshotPlatform] with the average of the values of the documents that match the query.
+  AggregateQueryPlatform average(String field) {
+    throw UnimplementedError('average() is not implemented');
+  }
 }

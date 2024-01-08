@@ -180,4 +180,14 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   ) {
     throw UnimplementedError('setDefaultEventParameters() is not implemented');
   }
+
+  /// Used for ads conversion measurement, without allowing any personally identifiable information to leave the user device.
+  Future<void> initiateOnDeviceConversionMeasurement({
+    String? emailAddress,
+    String? phoneNumber,
+  }) {
+    throw UnimplementedError(
+      'initiateOnDeviceConversionMeasurement() is not implemented',
+    );
+  }
 }
