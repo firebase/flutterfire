@@ -13,9 +13,16 @@ class AggregateQueryWeb extends AggregateQueryPlatform {
 
   /// [AggregateQueryWeb] represents the data at a particular location for retrieving metadata
   /// without retrieving the actual documents.
-  AggregateQueryWeb(QueryPlatform query, _webQuery)
-      : _delegate = firestore_interop.AggregateQuery(_webQuery),
+  AggregateQueryWeb(
+    QueryPlatform query,
+    _webQuery,
+    this._aggregateQueries,
+  )   : _delegate = firestore_interop.AggregateQuery(_webQuery),
+        _webQuery = _webQuery,
         super(query);
+
+  final List<AggregateQuery> _aggregateQueries;
+  final firestore_interop.Query _webQuery;
 
   /// Returns an [AggregateQuerySnapshotPlatform] with the count of the documents that match the query.
   @override
@@ -23,8 +30,79 @@ class AggregateQueryWeb extends AggregateQueryPlatform {
     required AggregateSource source,
   }) async {
     // Note: There isn't a source option on the web platform
-    firestore_interop.AggregateQuerySnapshot snapshot = await _delegate.get();
+    firestore_interop.AggregateQuerySnapshot snapshot =
+        await _delegate.get(_aggregateQueries);
 
-    return AggregateQuerySnapshotPlatform(count: snapshot.count);
+    List<AggregateQueryResponse> sum = [];
+    List<AggregateQueryResponse> average = [];
+
+    for (final query in _aggregateQueries) {
+      switch (query.type) {
+        case AggregateType.sum:
+          sum.add(
+            AggregateQueryResponse(
+              type: AggregateType.sum,
+              value: snapshot.getDataValue(query),
+              field: query.field,
+            ),
+          );
+          break;
+        case AggregateType.average:
+          average.add(
+            AggregateQueryResponse(
+              type: AggregateType.average,
+              value: snapshot.getDataValue(query),
+              field: query.field,
+            ),
+          );
+          break;
+        default:
+          break;
+      }
+    }
+
+    return AggregateQuerySnapshotPlatform(
+      count: snapshot.count,
+      sum: sum,
+      average: average,
+    );
+  }
+
+  @override
+  AggregateQueryPlatform count() {
+    return AggregateQueryWeb(
+      query,
+      _webQuery,
+      [
+        ..._aggregateQueries,
+        AggregateQuery(
+          type: AggregateType.count,
+        ),
+      ],
+    );
+  }
+
+  @override
+  AggregateQueryPlatform sum(String field) {
+    return AggregateQueryWeb(
+      query,
+      _webQuery,
+      [
+        ..._aggregateQueries,
+        AggregateQuery(type: AggregateType.sum, field: field),
+      ],
+    );
+  }
+
+  @override
+  AggregateQueryPlatform average(String field) {
+    return AggregateQueryWeb(
+      query,
+      _webQuery,
+      [
+        ..._aggregateQueries,
+        AggregateQuery(type: AggregateType.average, field: field),
+      ],
+    );
   }
 }
