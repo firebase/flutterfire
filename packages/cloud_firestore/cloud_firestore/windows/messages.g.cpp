@@ -893,6 +893,105 @@ PigeonQueryParameters PigeonQueryParameters::FromEncodableList(
   return decoded;
 }
 
+// AggregateQuery
+
+AggregateQuery::AggregateQuery(const AggregateType& type) : type_(type) {}
+
+AggregateQuery::AggregateQuery(const AggregateType& type,
+                               const std::string* field)
+    : type_(type),
+      field_(field ? std::optional<std::string>(*field) : std::nullopt) {}
+
+const AggregateType& AggregateQuery::type() const { return type_; }
+
+void AggregateQuery::set_type(const AggregateType& value_arg) {
+  type_ = value_arg;
+}
+
+const std::string* AggregateQuery::field() const {
+  return field_ ? &(*field_) : nullptr;
+}
+
+void AggregateQuery::set_field(const std::string_view* value_arg) {
+  field_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void AggregateQuery::set_field(std::string_view value_arg) {
+  field_ = value_arg;
+}
+
+EncodableList AggregateQuery::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(2);
+  list.push_back(EncodableValue((int)type_));
+  list.push_back(field_ ? EncodableValue(*field_) : EncodableValue());
+  return list;
+}
+
+AggregateQuery AggregateQuery::FromEncodableList(const EncodableList& list) {
+  AggregateQuery decoded((AggregateType)(std::get<int32_t>(list[0])));
+  auto& encodable_field = list[1];
+  if (!encodable_field.IsNull()) {
+    decoded.set_field(std::get<std::string>(encodable_field));
+  }
+  return decoded;
+}
+
+// AggregateQueryResponse
+
+AggregateQueryResponse::AggregateQueryResponse(const AggregateType& type,
+                                               double value)
+    : type_(type), value_(value) {}
+
+AggregateQueryResponse::AggregateQueryResponse(const AggregateType& type,
+                                               const std::string* field,
+                                               double value)
+    : type_(type),
+      field_(field ? std::optional<std::string>(*field) : std::nullopt),
+      value_(value) {}
+
+const AggregateType& AggregateQueryResponse::type() const { return type_; }
+
+void AggregateQueryResponse::set_type(const AggregateType& value_arg) {
+  type_ = value_arg;
+}
+
+const std::string* AggregateQueryResponse::field() const {
+  return field_ ? &(*field_) : nullptr;
+}
+
+void AggregateQueryResponse::set_field(const std::string_view* value_arg) {
+  field_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void AggregateQueryResponse::set_field(std::string_view value_arg) {
+  field_ = value_arg;
+}
+
+double AggregateQueryResponse::value() const { return value_; }
+
+void AggregateQueryResponse::set_value(double value_arg) { value_ = value_arg; }
+
+EncodableList AggregateQueryResponse::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(3);
+  list.push_back(EncodableValue((int)type_));
+  list.push_back(field_ ? EncodableValue(*field_) : EncodableValue());
+  list.push_back(EncodableValue(value_));
+  return list;
+}
+
+AggregateQueryResponse AggregateQueryResponse::FromEncodableList(
+    const EncodableList& list) {
+  AggregateQueryResponse decoded((AggregateType)(std::get<int32_t>(list[0])),
+                                 std::get<double>(list[2]));
+  auto& encodable_field = list[1];
+  if (!encodable_field.IsNull()) {
+    decoded.set_field(std::get<std::string>(encodable_field));
+  }
+  return decoded;
+}
+
 FirebaseFirestoreHostApiCodecSerializer::
     FirebaseFirestoreHostApiCodecSerializer() {}
 
@@ -900,36 +999,42 @@ EncodableValue FirebaseFirestoreHostApiCodecSerializer::ReadValueOfType(
     uint8_t type, flutter::ByteStreamReader* stream) const {
   switch (type) {
     case 128:
-      return CustomEncodableValue(DocumentReferenceRequest::FromEncodableList(
+      return CustomEncodableValue(AggregateQuery::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 129:
-      return CustomEncodableValue(FirestorePigeonFirebaseApp::FromEncodableList(
+      return CustomEncodableValue(AggregateQueryResponse::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 130:
-      return CustomEncodableValue(PigeonDocumentChange::FromEncodableList(
+      return CustomEncodableValue(DocumentReferenceRequest::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 131:
-      return CustomEncodableValue(PigeonDocumentOption::FromEncodableList(
+      return CustomEncodableValue(FirestorePigeonFirebaseApp::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 132:
-      return CustomEncodableValue(PigeonDocumentSnapshot::FromEncodableList(
+      return CustomEncodableValue(PigeonDocumentChange::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 133:
-      return CustomEncodableValue(PigeonFirebaseSettings::FromEncodableList(
+      return CustomEncodableValue(PigeonDocumentOption::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 134:
-      return CustomEncodableValue(PigeonGetOptions::FromEncodableList(
+      return CustomEncodableValue(PigeonDocumentSnapshot::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 135:
-      return CustomEncodableValue(PigeonQueryParameters::FromEncodableList(
+      return CustomEncodableValue(PigeonFirebaseSettings::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 136:
-      return CustomEncodableValue(PigeonQuerySnapshot::FromEncodableList(
+      return CustomEncodableValue(PigeonGetOptions::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 137:
-      return CustomEncodableValue(PigeonSnapshotMetadata::FromEncodableList(
+      return CustomEncodableValue(PigeonQueryParameters::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     case 138:
+      return CustomEncodableValue(PigeonQuerySnapshot::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
+    case 139:
+      return CustomEncodableValue(PigeonSnapshotMetadata::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
+    case 140:
       return CustomEncodableValue(PigeonTransactionCommand::FromEncodableList(
           std::get<EncodableList>(ReadValue(stream))));
     default:
@@ -942,8 +1047,24 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
     const EncodableValue& value, flutter::ByteStreamWriter* stream) const {
   if (const CustomEncodableValue* custom_value =
           std::get_if<CustomEncodableValue>(&value)) {
-    if (custom_value->type() == typeid(DocumentReferenceRequest)) {
+    if (custom_value->type() == typeid(AggregateQuery)) {
       stream->WriteByte(128);
+      WriteValue(
+          EncodableValue(
+              std::any_cast<AggregateQuery>(*custom_value).ToEncodableList()),
+          stream);
+      return;
+    }
+    if (custom_value->type() == typeid(AggregateQueryResponse)) {
+      stream->WriteByte(129);
+      WriteValue(
+          EncodableValue(std::any_cast<AggregateQueryResponse>(*custom_value)
+                             .ToEncodableList()),
+          stream);
+      return;
+    }
+    if (custom_value->type() == typeid(DocumentReferenceRequest)) {
+      stream->WriteByte(130);
       WriteValue(
           EncodableValue(std::any_cast<DocumentReferenceRequest>(*custom_value)
                              .ToEncodableList()),
@@ -951,7 +1072,7 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(FirestorePigeonFirebaseApp)) {
-      stream->WriteByte(129);
+      stream->WriteByte(131);
       WriteValue(EncodableValue(
                      std::any_cast<FirestorePigeonFirebaseApp>(*custom_value)
                          .ToEncodableList()),
@@ -959,7 +1080,7 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonDocumentChange)) {
-      stream->WriteByte(130);
+      stream->WriteByte(132);
       WriteValue(
           EncodableValue(std::any_cast<PigeonDocumentChange>(*custom_value)
                              .ToEncodableList()),
@@ -967,7 +1088,7 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonDocumentOption)) {
-      stream->WriteByte(131);
+      stream->WriteByte(133);
       WriteValue(
           EncodableValue(std::any_cast<PigeonDocumentOption>(*custom_value)
                              .ToEncodableList()),
@@ -975,7 +1096,7 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonDocumentSnapshot)) {
-      stream->WriteByte(132);
+      stream->WriteByte(134);
       WriteValue(
           EncodableValue(std::any_cast<PigeonDocumentSnapshot>(*custom_value)
                              .ToEncodableList()),
@@ -983,7 +1104,7 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonFirebaseSettings)) {
-      stream->WriteByte(133);
+      stream->WriteByte(135);
       WriteValue(
           EncodableValue(std::any_cast<PigeonFirebaseSettings>(*custom_value)
                              .ToEncodableList()),
@@ -991,7 +1112,7 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonGetOptions)) {
-      stream->WriteByte(134);
+      stream->WriteByte(136);
       WriteValue(
           EncodableValue(
               std::any_cast<PigeonGetOptions>(*custom_value).ToEncodableList()),
@@ -999,7 +1120,7 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonQueryParameters)) {
-      stream->WriteByte(135);
+      stream->WriteByte(137);
       WriteValue(
           EncodableValue(std::any_cast<PigeonQueryParameters>(*custom_value)
                              .ToEncodableList()),
@@ -1007,7 +1128,7 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonQuerySnapshot)) {
-      stream->WriteByte(136);
+      stream->WriteByte(138);
       WriteValue(
           EncodableValue(std::any_cast<PigeonQuerySnapshot>(*custom_value)
                              .ToEncodableList()),
@@ -1015,7 +1136,7 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonSnapshotMetadata)) {
-      stream->WriteByte(137);
+      stream->WriteByte(139);
       WriteValue(
           EncodableValue(std::any_cast<PigeonSnapshotMetadata>(*custom_value)
                              .ToEncodableList()),
@@ -1023,7 +1144,7 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
       return;
     }
     if (custom_value->type() == typeid(PigeonTransactionCommand)) {
-      stream->WriteByte(138);
+      stream->WriteByte(140);
       WriteValue(
           EncodableValue(std::any_cast<PigeonTransactionCommand>(*custom_value)
                              .ToEncodableList()),
@@ -1872,7 +1993,7 @@ void FirebaseFirestoreHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
     auto channel = std::make_unique<BasicMessageChannel<>>(
         binary_messenger,
         "dev.flutter.pigeon.cloud_firestore_platform_interface."
-        "FirebaseFirestoreHostApi.aggregateQueryCount",
+        "FirebaseFirestoreHostApi.aggregateQuery",
         &GetCodec());
     if (api != nullptr) {
       channel->SetMessageHandler(
@@ -1909,25 +2030,32 @@ void FirebaseFirestoreHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
               }
               const AggregateSource& source_arg =
                   (AggregateSource)encodable_source_arg.LongValue();
-              const auto& encodable_is_collection_group_arg = args.at(4);
+              const auto& encodable_queries_arg = args.at(4);
+              if (encodable_queries_arg.IsNull()) {
+                reply(WrapError("queries_arg unexpectedly null."));
+                return;
+              }
+              const auto& queries_arg =
+                  std::get<EncodableList>(encodable_queries_arg);
+              const auto& encodable_is_collection_group_arg = args.at(5);
               if (encodable_is_collection_group_arg.IsNull()) {
                 reply(WrapError("is_collection_group_arg unexpectedly null."));
                 return;
               }
               const auto& is_collection_group_arg =
                   std::get<bool>(encodable_is_collection_group_arg);
-              api->AggregateQueryCount(
-                  app_arg, path_arg, parameters_arg, source_arg,
-                  is_collection_group_arg, [reply](ErrorOr<double>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
+              api->AggregateQuery(app_arg, path_arg, parameters_arg, source_arg,
+                                  queries_arg, is_collection_group_arg,
+                                  [reply](ErrorOr<EncodableList>&& output) {
+                                    if (output.has_error()) {
+                                      reply(WrapError(output.error()));
+                                      return;
+                                    }
+                                    EncodableList wrapped;
+                                    wrapped.push_back(EncodableValue(
+                                        std::move(output).TakeValue()));
+                                    reply(EncodableValue(std::move(wrapped)));
+                                  });
             } catch (const std::exception& exception) {
               reply(WrapError(exception.what()));
             }

@@ -3775,7 +3775,9 @@ void runQueryTests() {
         },
         timeout: const Timeout.factor(3),
       );
+    });
 
+    group('Aggregate Queries', () {
       testWidgets(
         'count()',
         (_) async {
@@ -3818,6 +3820,153 @@ void runQueryTests() {
           );
         },
       );
+
+      testWidgets(
+        'sum()',
+        (_) async {
+          final collection = await initializeTest('sum');
+
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
+
+          AggregateQuery query = collection.aggregate(sum('foo'));
+
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.getSum('foo'),
+            3,
+          );
+        },
+      );
+
+      testWidgets(
+        'sum() with query',
+        (_) async {
+          final collection = await initializeTest('sum');
+
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
+
+          AggregateQuery query =
+              collection.where('foo', isEqualTo: 1).aggregate(sum('foo'));
+
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.getSum('foo'),
+            1,
+          );
+        },
+      );
+
+      testWidgets(
+        'average()',
+        (_) async {
+          final collection = await initializeTest('avg');
+
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
+
+          AggregateQuery query = collection.aggregate(average('foo'));
+
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.getAverage('foo'),
+            1.5,
+          );
+        },
+      );
+
+      testWidgets(
+        'average() with query',
+        (_) async {
+          final collection = await initializeTest('avg');
+
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
+
+          AggregateQuery query =
+              collection.where('foo', isEqualTo: 1).aggregate(average('foo'));
+
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.getAverage('foo'),
+            1,
+          );
+        },
+      );
+
+      testWidgets(
+        'chaining aggregate queries',
+        (_) async {
+          final collection = await initializeTest('chaining');
+
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
+
+          AggregateQuery query =
+              collection.aggregate(count(), sum('foo'), average('foo'));
+          AggregateQuerySnapshot snapshot = await query.get();
+
+          expect(
+            snapshot.count,
+            2,
+          );
+
+          expect(
+            snapshot.getSum('foo'),
+            3,
+          );
+
+          expect(
+            snapshot.getAverage('foo'),
+            1.5,
+          );
+        },
+      );
+
+      testWidgets('chaining multiples aggregate queries', (_) async {
+        final collection = await initializeTest('chaining');
+
+        await Future.wait([
+          collection.add({'foo': 1}),
+          collection.add({'foo': 2}),
+        ]);
+
+        AggregateQuery query = collection
+            .where('foo', isEqualTo: 1)
+            .aggregate(count(), sum('foo'), average('foo'));
+
+        AggregateQuerySnapshot snapshot = await query.get();
+
+        expect(
+          snapshot.count,
+          1,
+        );
+
+        expect(
+          snapshot.getSum('foo'),
+          1,
+        );
+
+        expect(
+          snapshot.getAverage('foo'),
+          1,
+        );
+      });
 
       testWidgets(
         'count() with collectionGroup',

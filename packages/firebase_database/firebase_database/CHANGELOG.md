@@ -1,3 +1,7 @@
+## 10.4.0
+
+ - **FEAT**(database,android): automatically map the host to 10.0.2.2  when using useDatabaseEmulator to match other plugins ([#11976](https://github.com/firebase/flutterfire/issues/11976)). ([6c6c589a](https://github.com/firebase/flutterfire/commit/6c6c589a953a43ba79aa20404a0380bcbefba140))
+
 ## 10.3.8
 
  - Update a dependency to the latest release.
