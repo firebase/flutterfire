@@ -8,6 +8,7 @@
 #include <windows.h>
 
 #include "firebase/app.h"
+#include "firebase_core/plugin_version.h"
 #include "messages.g.h"
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -29,6 +30,8 @@ using ::firebase::App;
 
 namespace firebase_core_windows {
 
+static std::string kLibraryName = "flutter-fire-core";
+
 // static
 void FirebaseCorePlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows *registrar) {
@@ -38,9 +41,11 @@ void FirebaseCorePlugin::RegisterWithRegistrar(
   FirebaseAppHostApi::SetUp(registrar->messenger(), plugin.get());
 
   registrar->AddPlugin(std::move(plugin));
-}
 
-std::map<std::string, std::vector<std::string>> apps;
+  // Register for platform logging
+  App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
+                       nullptr);
+}
 
 FirebaseCorePlugin::FirebaseCorePlugin() {}
 
@@ -102,20 +107,6 @@ void FirebaseCorePlugin::InitializeApp(
   App *app =
       App::Create(PigeonFirebaseOptionsToAppOptions(initialize_app_request),
                   app_name.c_str());
-
-  auto app_it = apps.find(app_name);
-
-  // If the app is already in the map, return the stored shared_ptr
-  if (app_it == apps.end()) {
-    std::vector<std::string> app_vector;
-    app_vector.push_back(app_name);
-    app_vector.push_back(initialize_app_request.api_key());
-    app_vector.push_back(initialize_app_request.app_id());
-    app_vector.push_back(*initialize_app_request.database_u_r_l());
-    app_vector.push_back(initialize_app_request.project_id());
-
-    apps[app_name] = app_vector;
-  }
 
   // Send back the result to Flutter
   result(AppToPigeonInitializeResponse(*app));

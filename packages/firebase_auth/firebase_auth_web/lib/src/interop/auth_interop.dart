@@ -79,7 +79,9 @@ external PromiseJsImpl<List> fetchSignInMethodsForEmail(
 external bool isSignInWithEmailLink(String emailLink);
 
 @JS()
-external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult(AuthJsImpl auth);
+external PromiseJsImpl<UserCredentialJsImpl?> getRedirectResult(
+  AuthJsImpl auth,
+);
 
 @JS()
 external PromiseJsImpl<void> sendSignInLinkToEmail(
@@ -236,6 +238,9 @@ external PromiseJsImpl<void> updateProfile(
   UserProfile profile,
 );
 
+@JS()
+external void useDeviceLanguage(AuthJsImpl auth);
+
 /// https://firebase.google.com/docs/reference/js/auth.md#multifactor
 @JS()
 external MultiFactorUserJsImpl multiFactor(
@@ -269,7 +274,6 @@ abstract class AuthJsImpl {
     Func0? opt_completed,
   ]);
   external PromiseJsImpl<void> signOut();
-  external void useDeviceLanguage();
 }
 
 @anonymous

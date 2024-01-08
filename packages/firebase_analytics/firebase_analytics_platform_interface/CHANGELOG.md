@@ -1,3 +1,47 @@
+## 3.9.0
+
+ - **FEAT**(analytics,ios): add support for initiateOnDeviceConversionMeasurement using email address or phone number ([#11926](https://github.com/firebase/flutterfire/issues/11926)). ([9bc83f1e](https://github.com/firebase/flutterfire/commit/9bc83f1e6770d263092f6367ca3cfe46a83bb1b1))
+
+## 3.8.4
+
+ - Update a dependency to the latest release.
+
+## 3.8.3
+
+ - **FIX**(analytics): fix the toString method on AnalyticsEventItem to print out its content ([#11977](https://github.com/firebase/flutterfire/issues/11977)). ([5fe96ece](https://github.com/firebase/flutterfire/commit/5fe96ece22847e29d2007afe2f6b85b3d6ce4b94))
+
+## 3.8.2
+
+ - Update a dependency to the latest release.
+
+## 3.8.1
+
+ - Update a dependency to the latest release.
+
+## 3.8.0
+
+ - **FEAT**(firebase_analytics): allow custom parameters (strings and numbers) for events and event items ([#11030](https://github.com/firebase/flutterfire/issues/11030)). ([81dfec93](https://github.com/firebase/flutterfire/commit/81dfec93bcc9490f84fd1e8e3e1bc3737f5eed43))
+
+## 3.7.6
+
+ - Update a dependency to the latest release.
+
+## 3.7.5
+
+ - Update a dependency to the latest release.
+
+## 3.7.4
+
+ - Update a dependency to the latest release.
+
+## 3.7.3
+
+ - Update a dependency to the latest release.
+
+## 3.7.2
+
+ - Update a dependency to the latest release.
+
 ## 3.7.1
 
  - Update a dependency to the latest release.

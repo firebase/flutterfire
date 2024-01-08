@@ -1,3 +1,47 @@
+## 10.8.0
+
+ - **FEAT**(analytics,ios): add support for initiateOnDeviceConversionMeasurement using email address or phone number ([#11926](https://github.com/firebase/flutterfire/issues/11926)). ([9bc83f1e](https://github.com/firebase/flutterfire/commit/9bc83f1e6770d263092f6367ca3cfe46a83bb1b1))
+
+## 10.7.4
+
+ - Update a dependency to the latest release.
+
+## 10.7.3
+
+ - **FIX**(analytics): fix the toString method on AnalyticsEventItem to print out its content ([#11977](https://github.com/firebase/flutterfire/issues/11977)). ([5fe96ece](https://github.com/firebase/flutterfire/commit/5fe96ece22847e29d2007afe2f6b85b3d6ce4b94))
+
+## 10.7.2
+
+ - Update a dependency to the latest release.
+
+## 10.7.1
+
+ - Update a dependency to the latest release.
+
+## 10.7.0
+
+ - **FEAT**(firebase_analytics): allow custom parameters (strings and numbers) for events and event items ([#11030](https://github.com/firebase/flutterfire/issues/11030)). ([81dfec93](https://github.com/firebase/flutterfire/commit/81dfec93bcc9490f84fd1e8e3e1bc3737f5eed43))
+
+## 10.6.4
+
+ - Update a dependency to the latest release.
+
+## 10.6.3
+
+ - Update a dependency to the latest release.
+
+## 10.6.2
+
+ - Update a dependency to the latest release.
+
+## 10.6.1
+
+ - Update a dependency to the latest release.
+
+## 10.6.0
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
 ## 10.5.1
 
  - Update a dependency to the latest release.

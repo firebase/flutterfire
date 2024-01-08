@@ -3,8 +3,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/firebase_auth_web.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_user_credential.dart';
@@ -70,16 +68,7 @@ class MultiFactorWeb extends MultiFactorPlatform {
   @override
   Future<List<MultiFactorInfo>> getEnrolledFactors() async {
     final data = _webMultiFactorUser.enrolledFactors;
-    return data
-        .map((e) => MultiFactorInfo(
-              factorId: e.factorId,
-              enrollmentTimestamp:
-                  HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch /
-                      1000,
-              displayName: e.displayName,
-              uid: e.uid,
-            ))
-        .toList();
+    return data.map(fromInteropMultiFactorInfo).toList();
   }
 }
 

@@ -1,3 +1,55 @@
+## 1.0.0-dev.82
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.81
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.80
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.79
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.78
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.77
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.76
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.75
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.74
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.73
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.72
+
+ - **FIX**: Fix ODM not working with latest Freezed ([#11753](https://github.com/firebase/flutterfire/issues/11753)). ([0578182d](https://github.com/firebase/flutterfire/commit/0578182d4f0ddbb855f036771b971ef24d942157))
+
+## 1.0.0-dev.71
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.70
+
+ - **FEAT**(cloud_firestore_odm_generator): Support all serializable types ([#11365](https://github.com/firebase/flutterfire/issues/11365)). ([f4c21f83](https://github.com/firebase/flutterfire/commit/f4c21f834569bb363c80af583b53164f7cbd5ada))
+
 ## 1.0.0-dev.69
 
  - Update a dependency to the latest release.

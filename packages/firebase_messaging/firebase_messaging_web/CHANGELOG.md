@@ -1,3 +1,43 @@
+## 3.5.18
+
+ - Update a dependency to the latest release.
+
+## 3.5.17
+
+ - Update a dependency to the latest release.
+
+## 3.5.16
+
+ - **FIX**(messaging): fix an issue where Service Worker would not register in time ([#11979](https://github.com/firebase/flutterfire/issues/11979)). ([4752efb6](https://github.com/firebase/flutterfire/commit/4752efb6dba0634c1f60e68ac8ae6d3fdcaa83ea))
+
+## 3.5.15
+
+ - Update a dependency to the latest release.
+
+## 3.5.14
+
+ - Update a dependency to the latest release.
+
+## 3.5.13
+
+ - Update a dependency to the latest release.
+
+## 3.5.12
+
+ - Update a dependency to the latest release.
+
+## 3.5.11
+
+ - Update a dependency to the latest release.
+
+## 3.5.10
+
+ - Update a dependency to the latest release.
+
+## 3.5.9
+
+ - Update a dependency to the latest release.
+
 ## 3.5.8
 
  - Update a dependency to the latest release.

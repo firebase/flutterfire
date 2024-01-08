@@ -5,6 +5,8 @@ Book: /docs/_book.yaml
 
 # Receive Firebase Dynamic Links in a Flutter app
 
+{% include "docs/dynamic-links/_deprecation_banner.html" %}
+
 To receive the Firebase Dynamic Links that <a href="/docs/dynamic-links/create-links">you created</a>,
 you must include the Dynamic Links SDK in your app and call the
 `FirebaseDynamicLinks.getDynamicLink()` method when your app loads to

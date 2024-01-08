@@ -1,4 +1,4 @@
-{# This content gets published to the following location:                              #}
+{# This content gets published to the following location:                                #}
 {#   https://firebase.google.com/docs/crashlytics/start-using-analytics?platform=flutter #}
 
 1.  Make sure that {{firebase_analytics}} is enabled in your Firebase project:

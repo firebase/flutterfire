@@ -1,3 +1,39 @@
+## 0.1.0+10
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+9
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+8
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+7
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+6
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+5
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+4
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+3
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+2
+
+ - **FIX**(firebase_app_check_web): Activate web app check on startup if it was previously activated ([#11625](https://github.com/firebase/flutterfire/issues/11625)). ([493f2548](https://github.com/firebase/flutterfire/commit/493f254824aa7aedf6ccc5223efbb72d13811c5f))
+
 ## 0.1.0+1
 
  - Update a dependency to the latest release.

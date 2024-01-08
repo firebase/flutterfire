@@ -232,10 +232,11 @@ Future<UserCredential> signInWithApple() async {
 }
 ```
 
-### Revoke Apple auth tokens
+### Revoke Apple auth tokens {:#revoke-apple}
 
-Apple sign-in on Apple platforms will return an authorization code that can be used to revoke the Apple auth token
-using the `revokeTokenWithAuthorizationCode()` API.
+Apple sign-in on Apple platforms returns an authorization code that can be used
+to revoke the Apple auth token using the `revokeTokenWithAuthorizationCode()`
+API.
 
 ```dart
 import 'package:firebase_auth/firebase_auth.dart';

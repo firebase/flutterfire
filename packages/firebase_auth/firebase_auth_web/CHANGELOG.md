@@ -1,3 +1,47 @@
+## 5.8.13
+
+ - **FIX**(auth,web): fix typing of `getRedirectResult` on Web, preventing a crash ([#12036](https://github.com/firebase/flutterfire/issues/12036)). ([52c53f5c](https://github.com/firebase/flutterfire/commit/52c53f5c470aeca32e652cb0d477c5fc2bba7812))
+
+## 5.8.12
+
+ - Update a dependency to the latest release.
+
+## 5.8.11
+
+ - Update a dependency to the latest release.
+
+## 5.8.10
+
+ - Update a dependency to the latest release.
+
+## 5.8.9
+
+ - Update a dependency to the latest release.
+
+## 5.8.8
+
+ - **FIX**(auth,web): use the device language when using `setLanguageCode` with null ([#11905](https://github.com/firebase/flutterfire/issues/11905)). ([f9322b6f](https://github.com/firebase/flutterfire/commit/f9322b6f25cd9520c5e033361e63a4db3f375a15))
+
+## 5.8.7
+
+ - Update a dependency to the latest release.
+
+## 5.8.6
+
+ - Update a dependency to the latest release.
+
+## 5.8.5
+
+ - Update a dependency to the latest release.
+
+## 5.8.4
+
+ - Update a dependency to the latest release.
+
+## 5.8.3
+
+ - Update a dependency to the latest release.
+
 ## 5.8.2
 
  - Update a dependency to the latest release.

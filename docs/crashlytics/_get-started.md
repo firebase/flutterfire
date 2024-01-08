@@ -53,6 +53,48 @@ first crash report to Firebase.
     flutter run
     ```
 
+1.  _(Optional)_ If your Flutter project uses the `--split-debug-info` flag
+    (and, optionally, also the `--obfuscate` flag), additional steps are
+    required to show readable stack traces for your apps.
+
+    * **Apple platforms:** Make sure that your project is using the recommended
+      version configuration (Flutter 3.12.0+ and
+      {{crashlytics}} Flutter plugin 3.3.4+) so that your project can
+      automatically generate and upload Flutter symbols (dSYM files) to
+      {{crashlytics}}.
+
+    * **Android:** Use the [{{firebase_cli}}](/docs/cli) (v.11.9.0+) to upload
+      Flutter debug symbols. You need to upload the debug symbols _before_
+      reporting a crash from an obfuscated code build.
+
+      From the root directory of your Flutter project, run the following
+      command:
+
+      <pre class="devsite-terminal" data-terminal-prefix="your-flutter-proj$ ">firebase crashlytics:symbols:upload --app=<var class="readonly">FIREBASE_APP_ID</var> <var class="readonly">PATH/TO</var>/symbols</pre>
+
+      * <var>FIREBASE_APP_ID</var>: Your Firebase Android App ID (not your
+        package name)<br>
+        Example Firebase Android App ID: `1:567383003300:android:17104a2ced0c9b9b`
+
+          {{ '<section class="expandable">' }}
+          <p class="showalways">Need to find your Firebase App ID?</p>
+
+          > Here are two ways to find your Firebase App ID:
+          >
+          > * In your `google-services.json` file, your App ID is the
+          >   `mobilesdk_app_id` value; or
+          >
+          > * In the {{name_appmanager}}, go to your
+          >   [_Project settings_](https://console.firebase.google.com/project/_/settings/general/){: .external}.
+          >   Scroll down to the _Your apps_ card, then click on the desired Firebase
+          >   App to find its App ID.
+
+          {{ '</section>' }}
+
+      * <code><var>PATH/TO</var>/symbols</code>: The same directory that you
+        pass to the `--split-debug-info` flag when building the application
+
+
 ## **Step 2**: Configure crash handlers {: #configure-crash-handlers}
 
 You can automatically catch all errors that are thrown within the Flutter

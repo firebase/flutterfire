@@ -8,6 +8,13 @@ import 'package:analyzer/dart/element/type_provider.dart';
 
 import '../collection_data.dart';
 
+class _WhereType {
+  _WhereType(this.type, [this.defaultValue]);
+
+  final String type;
+  final String? defaultValue;
+}
+
 class QueryTemplate {
   QueryTemplate(this.data);
 
@@ -208,8 +215,8 @@ class ${data.queryReferenceImplName}
 
   ${data.queryReferenceInterfaceName} whereFieldPath(
     FieldPath fieldPath, {
-    Object? isEqualTo,
-    Object? isNotEqualTo,
+    Object? isEqualTo = notSetQueryParam,
+    Object? isNotEqualTo = notSetQueryParam,
     Object? isLessThan,
     Object? isLessThanOrEqualTo,
     Object? isGreaterThan,
@@ -380,30 +387,78 @@ class ${data.queryReferenceImplName}
               ? '${field.type}'
               : '${field.type}?';
 
-      final operators = {
-        'isEqualTo': nullableType,
-        'isNotEqualTo': nullableType,
-        'isLessThan': nullableType,
-        'isLessThanOrEqualTo': nullableType,
-        'isGreaterThan': nullableType,
-        'isGreaterThanOrEqualTo': nullableType,
-        'isNull': 'bool?',
+      final operators = <String, _WhereType>{
+        'isEqualTo': isAbstract
+            ? _WhereType(nullableType)
+            : _WhereType('Object?', 'notSetQueryParam'),
+        'isNotEqualTo': isAbstract
+            ? _WhereType(nullableType)
+            : _WhereType('Object?', 'notSetQueryParam'),
+        'isLessThan': isAbstract
+            ? _WhereType(nullableType)
+            : _WhereType('Object?', 'null'),
+        'isLessThanOrEqualTo': isAbstract
+            ? _WhereType(nullableType)
+            : _WhereType('Object?', 'null'),
+        'isGreaterThan': isAbstract
+            ? _WhereType(nullableType)
+            : _WhereType('Object?', 'null'),
+        'isGreaterThanOrEqualTo': isAbstract
+            ? _WhereType(nullableType)
+            : _WhereType('Object?', 'null'),
+        'isNull': _WhereType('bool?'),
         if (field.type.isSupportedIterable) ...{
-          'arrayContains': data.libraryElement.typeProvider
-              .asNullable((field.type as InterfaceType).typeArguments.first),
-          'arrayContainsAny': nullableType,
+          'arrayContains': isAbstract
+              ? _WhereType(
+                  data.libraryElement.typeProvider
+                      .asNullable(
+                        (field.type as InterfaceType).typeArguments.first,
+                      )
+                      .toString(),
+                )
+              : _WhereType('Object?', 'notSetQueryParam'),
+          'arrayContainsAny': _WhereType(nullableType),
         } else ...{
-          'whereIn': 'List<${field.type}>?',
-          'whereNotIn': 'List<${field.type}>?',
+          'whereIn': _WhereType('List<${field.type}>?'),
+          'whereNotIn': _WhereType('List<${field.type}>?'),
         },
       };
 
-      final prototype =
-          operators.entries.map((e) => '${e.value} ${e.key},').join();
+      final prototype = operators.entries.map((e) {
+        if (e.value.defaultValue != null) {
+          return '${e.value.type} ${e.key} = ${e.value.defaultValue},';
+        }
+        return '${e.value.type} ${e.key},';
+      }).join();
 
-      final parameters = operators.keys.map((e) => '$e: $e,').join();
+      final perFieldToJson = data.perFieldToJson(field.name);
 
-      // TODO support whereX(isEqual: null);
+      final parameters = operators.entries.map((entry) {
+        final key = entry.key;
+        final value = entry.value;
+        if (field.name == 'documentId' || key == 'isNull') {
+          return '$key: $key,';
+        } else if ({'whereIn', 'whereNotIn'}.contains(key)) {
+          return '$key: $key?.map((e) => $perFieldToJson(e)),';
+        } else if (key == 'arrayContainsAny') {
+          return '$key: $key != null ? $perFieldToJson($key) as Iterable<Object>? : null,';
+        } else if (key == 'arrayContains') {
+          final itemType =
+              (field.type as InterfaceType).typeArguments.first.toString();
+          final cast = itemType != 'Object?' ? ' as $itemType' : '';
+
+          var transform = '$key: $key != null ? ($perFieldToJson(';
+          if (field.type.isSet) {
+            transform += '{$key$cast}';
+          } else {
+            transform += '[$key$cast]';
+          }
+          return '$transform) as List?)!.single : null,';
+        } else {
+          return '$key: $key != ${value.defaultValue} ? $perFieldToJson($key as ${field.type}) : ${value.defaultValue},';
+        }
+      }).join();
+
       // TODO handle JsonSerializable case change and JsonKey(name: ...)
 
       if (isAbstract) {

@@ -7,6 +7,8 @@
 
 #import "Private/FLTFirebaseFirestoreUtils.h"
 #import "Private/FLTQuerySnapshotStreamHandler.h"
+#import "Private/FirestorePigeonParser.h"
+#import "Public/CustomPigeonHeaderFirestore.h"
 
 @interface FLTQuerySnapshotStreamHandler ()
 @property(readwrite, strong) id<FIRListenerRegistration> listenerRegistration;
@@ -14,9 +16,23 @@
 
 @implementation FLTQuerySnapshotStreamHandler
 
+- (instancetype)initWithFirestore:(FIRFirestore *)firestore
+                            query:(FIRQuery *)query
+           includeMetadataChanges:(BOOL)includeMetadataChanges
+          serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
+  self = [super init];
+  if (self) {
+    _firestore = firestore;
+    _query = query;
+    _includeMetadataChanges = includeMetadataChanges;
+    _serverTimestampBehavior = serverTimestampBehavior;
+  }
+  return self;
+}
+
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
-  FIRQuery *query = arguments[@"query"];
+  FIRQuery *query = self.query;
 
   if (query == nil) {
     return [FlutterError
@@ -25,8 +41,6 @@
                       @"information. Please report this issue."
               details:nil];
   }
-
-  NSNumber *includeMetadataChanges = arguments[@"includeMetadataChanges"];
 
   id listener = ^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
     if (error) {
@@ -45,13 +59,38 @@
       });
     } else {
       dispatch_async(dispatch_get_main_queue(), ^{
-        events(snapshot);
+        NSMutableArray *toListResult = [[NSMutableArray alloc] initWithCapacity:3];
+
+        NSMutableArray *documents =
+            [[NSMutableArray alloc] initWithCapacity:snapshot.documents.count];
+        NSMutableArray *documentChanges =
+            [[NSMutableArray alloc] initWithCapacity:snapshot.documentChanges.count];
+
+        for (FIRDocumentSnapshot *documentSnapshot in snapshot.documents) {
+          [documents addObject:[[FirestorePigeonParser
+                                   toPigeonDocumentSnapshot:documentSnapshot
+                                    serverTimestampBehavior:self.serverTimestampBehavior] toList]];
+        }
+
+        for (FIRDocumentChange *documentChange in snapshot.documentChanges) {
+          [documentChanges
+              addObject:[[FirestorePigeonParser toPigeonDocumentChange:documentChange
+                                               serverTimestampBehavior:self.serverTimestampBehavior]
+                            toList]];
+        }
+
+        [toListResult addObject:documents];
+        [toListResult addObject:documentChanges];
+        [toListResult
+            addObject:[[FirestorePigeonParser toPigeonSnapshotMetadata:snapshot.metadata] toList]];
+
+        events(toListResult);
       });
     }
   };
 
   self.listenerRegistration =
-      [query addSnapshotListenerWithIncludeMetadataChanges:includeMetadataChanges.boolValue
+      [query addSnapshotListenerWithIncludeMetadataChanges:_includeMetadataChanges
                                                   listener:listener];
 
   return nil;

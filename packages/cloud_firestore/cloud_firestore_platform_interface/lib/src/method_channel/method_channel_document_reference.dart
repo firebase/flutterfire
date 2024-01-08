@@ -12,7 +12,6 @@ import 'package:flutter/services.dart';
 
 import 'method_channel_firestore.dart';
 import 'utils/exception.dart';
-import 'utils/source.dart';
 
 /// An implementation of [DocumentReferencePlatform] that uses [MethodChannel] to
 /// communicate with Firebase plugins.
@@ -21,25 +20,29 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
 
   /// Creates a [DocumentReferencePlatform] that is implemented using [MethodChannel].
   MethodChannelDocumentReference(
-      FirebaseFirestorePlatform firestore, String path)
-      : super(firestore, path) {
+    FirebaseFirestorePlatform firestore,
+    String path,
+    this.pigeonApp,
+  ) : super(firestore, path) {
     _pointer = Pointer(path);
   }
+
+  final FirestorePigeonFirebaseApp pigeonApp;
 
   @override
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) async {
     try {
-      await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-        'DocumentReference#set',
-        <String, dynamic>{
-          'firestore': firestore,
-          'reference': this,
-          'data': data,
-          'options': <String, dynamic>{
-            'merge': options?.merge,
-            'mergeFields': options?.mergeFields,
-          },
-        },
+      await MethodChannelFirebaseFirestore.pigeonChannel.documentReferenceSet(
+        pigeonApp,
+        DocumentReferenceRequest(
+          path: _pointer.path,
+          data: data,
+          option: PigeonDocumentOption(
+            merge: options?.merge,
+            mergeFields:
+                options?.mergeFields?.map((e) => e.components).toList(),
+          ),
+        ),
       );
     } catch (e, stack) {
       convertPlatformException(e, stack);
@@ -49,13 +52,13 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   @override
   Future<void> update(Map<FieldPath, dynamic> data) async {
     try {
-      await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-        'DocumentReference#update',
-        <String, dynamic>{
-          'firestore': firestore,
-          'reference': this,
-          'data': data,
-        },
+      await MethodChannelFirebaseFirestore.pigeonChannel
+          .documentReferenceUpdate(
+        pigeonApp,
+        DocumentReferenceRequest(
+          path: _pointer.path,
+          data: data,
+        ),
       );
     } catch (e, stack) {
       convertPlatformException(e, stack);
@@ -66,21 +69,22 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   Future<DocumentSnapshotPlatform> get(
       [GetOptions options = const GetOptions()]) async {
     try {
-      final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
-          .channel
-          .invokeMapMethod<String, dynamic>(
-        'DocumentReference#get',
-        <String, dynamic>{
-          'firestore': firestore,
-          'reference': this,
-          'source': getSourceString(options.source),
-          'serverTimestampBehavior': getServerTimestampBehaviorString(
-            options.serverTimestampBehavior,
-          ),
-        },
+      final result = await MethodChannelFirebaseFirestore.pigeonChannel
+          .documentReferenceGet(
+        pigeonApp,
+        DocumentReferenceRequest(
+          path: _pointer.path,
+          source: options.source,
+          serverTimestampBehavior: options.serverTimestampBehavior,
+        ),
       );
 
-      return DocumentSnapshotPlatform(firestore, _pointer.path, data!);
+      return DocumentSnapshotPlatform(
+        firestore,
+        _pointer.path,
+        result.data,
+        result.metadata,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -89,9 +93,12 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   @override
   Future<void> delete() async {
     try {
-      await MethodChannelFirebaseFirestore.channel.invokeMethod<void>(
-        'DocumentReference#delete',
-        <String, dynamic>{'firestore': firestore, 'reference': this},
+      await MethodChannelFirebaseFirestore.pigeonChannel
+          .documentReferenceDelete(
+        pigeonApp,
+        DocumentReferenceRequest(
+          path: _pointer.path,
+        ),
       );
     } catch (e, stack) {
       convertPlatformException(e, stack);
@@ -101,6 +108,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   @override
   Stream<DocumentSnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
+    ServerTimestampBehavior serverTimestampBehavior =
+        ServerTimestampBehavior.none,
   }) {
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
@@ -110,26 +119,29 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     StreamSubscription<dynamic>? snapshotStreamSubscription;
     controller = StreamController<DocumentSnapshotPlatform>.broadcast(
       onListen: () async {
-        final observerId = await MethodChannelFirebaseFirestore.channel
-            .invokeMethod<String>('DocumentReference#snapshots');
+        final observerId = await MethodChannelFirebaseFirestore.pigeonChannel
+            .documentReferenceSnapshot(
+                pigeonApp,
+                DocumentReferenceRequest(
+                  path: _pointer.path,
+                  serverTimestampBehavior: serverTimestampBehavior,
+                ),
+                includeMetadataChanges);
         snapshotStreamSubscription =
-            MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId!)
+            MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
                 .receiveGuardedBroadcastStream(
-          arguments: <String, dynamic>{
-            'reference': this,
-            'includeMetadataChanges': includeMetadataChanges,
-          },
           onError: convertPlatformException,
-        ).listen(
+        )
+                .listen(
           (snapshot) {
+            final PigeonDocumentSnapshot result =
+                PigeonDocumentSnapshot.decode(snapshot);
             controller.add(
               DocumentSnapshotPlatform(
                 firestore,
-                snapshot['path'],
-                <String, dynamic>{
-                  'data': snapshot['data'],
-                  'metadata': snapshot['metadata'],
-                },
+                result.path,
+                result.data,
+                result.metadata,
               ),
             );
           },

@@ -15,7 +15,9 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Flutter plugin implementation controlling the entrypoint for the Firebase SDK.
@@ -28,6 +30,8 @@ public class FlutterFirebaseCorePlugin
         GeneratedAndroidFirebaseCore.FirebaseAppHostApi {
   private Context applicationContext;
   private boolean coreInitialized = false;
+
+  public static Map<String, String> customAuthDomain = new HashMap<>();
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
@@ -138,6 +142,11 @@ public class FlutterFirebaseCorePlugin
             } catch (Exception e) {
               // do nothing
             }
+
+            if (initializeAppRequest.getAuthDomain() != null) {
+              customAuthDomain.put(appName, initializeAppRequest.getAuthDomain());
+            }
+
             FirebaseApp firebaseApp =
                 FirebaseApp.initializeApp(applicationContext, options, appName);
             taskCompletionSource.setResult(Tasks.await(firebaseAppToMap(firebaseApp)));

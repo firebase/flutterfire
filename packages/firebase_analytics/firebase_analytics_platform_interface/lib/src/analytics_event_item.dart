@@ -30,6 +30,7 @@ class AnalyticsEventItem {
     this.promotionId,
     this.promotionName,
     this.quantity,
+    this.parameters,
   });
 
   /// A product affiliation to designate a supplying company or brick and
@@ -131,9 +132,15 @@ class AnalyticsEventItem {
   /// e.g. 1
   final int? quantity;
 
+  /// Extra parameters to pass along default ones
+  ///
+  /// Only strings and numbers are correctly handled by Google Analytics
+  final Map<String, Object?>? parameters;
+
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() {
     return <String, dynamic>{
+      if (parameters != null) ...parameters!,
       if (affiliation != null) 'affiliation': affiliation,
       if (currency != null) 'currency': currency,
       if (coupon != null) 'coupon': coupon,
@@ -162,6 +169,6 @@ class AnalyticsEventItem {
 
   @override
   String toString() {
-    return '$AnalyticsEventItem($asMap)';
+    return '$AnalyticsEventItem(${asMap()})';
   }
 }

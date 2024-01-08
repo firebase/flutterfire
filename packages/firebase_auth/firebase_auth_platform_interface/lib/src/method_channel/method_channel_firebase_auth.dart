@@ -58,8 +58,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     return MethodChannelFirebaseAuth._();
   }
 
-  PigeonFirebaseApp get pigeonDefault {
-    return PigeonFirebaseApp(
+  AuthPigeonFirebaseApp get pigeonDefault {
+    return AuthPigeonFirebaseApp(
       appName: app.name,
       tenantId: tenantId,
     );

@@ -1,3 +1,39 @@
+## 0.7.4+8
+
+ - Update a dependency to the latest release.
+
+## 0.7.4+7
+
+ - Update a dependency to the latest release.
+
+## 0.7.4+6
+
+ - Update a dependency to the latest release.
+
+## 0.7.4+5
+
+ - Update a dependency to the latest release.
+
+## 0.7.4+4
+
+ - Update a dependency to the latest release.
+
+## 0.7.4+3
+
+ - Update a dependency to the latest release.
+
+## 0.7.4+2
+
+ - Update a dependency to the latest release.
+
+## 0.7.4+1
+
+ - Update a dependency to the latest release.
+
+## 0.7.4
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
 ## 0.7.3+7
 
  - Update a dependency to the latest release.

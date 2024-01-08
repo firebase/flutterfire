@@ -1,3 +1,51 @@
+## 3.9.0
+
+ - **FEAT**(firestore): add support for `sum` and `average` aggregated queries ([#11757](https://github.com/firebase/flutterfire/issues/11757)). ([82af6c2f](https://github.com/firebase/flutterfire/commit/82af6c2f40160a9e2f74e2d48652003fa48bb161))
+
+## 3.8.10
+
+ - Update a dependency to the latest release.
+
+## 3.8.9
+
+ - Update a dependency to the latest release.
+
+## 3.8.8
+
+ - Update a dependency to the latest release.
+
+## 3.8.7
+
+ - Update a dependency to the latest release.
+
+## 3.8.6
+
+ - **FIX**(firestore,web): fix being able to use normal `where` conditions and `Filter.OR` together ([#11891](https://github.com/firebase/flutterfire/issues/11891)). ([c8410acd](https://github.com/firebase/flutterfire/commit/c8410acd79fe6f8f4cd36b4eacb384c5874d61d2))
+
+## 3.8.5
+
+ - Update a dependency to the latest release.
+
+## 3.8.4
+
+ - Update a dependency to the latest release.
+
+## 3.8.3
+
+ - Update a dependency to the latest release.
+
+## 3.8.2
+
+ - Update a dependency to the latest release.
+
+## 3.8.1
+
+ - Update a dependency to the latest release.
+
+## 3.8.0
+
+ - **FEAT**(firestore,windows): add support to Windows ([#11516](https://github.com/firebase/flutterfire/issues/11516)). ([e51d2a2d](https://github.com/firebase/flutterfire/commit/e51d2a2d287f4162f5a67d8200f1bf57fc2afe14))
+
 ## 3.7.2
 
  - Update a dependency to the latest release.

@@ -43,7 +43,7 @@ class MultiFactorUser
 
   /// Returns a list of the user's enrolled second factors.
   List<MultiFactorInfo> get enrolledFactors =>
-      jsObject.enrolledFactors.map(MultiFactorInfo.fromJsObject).toList();
+      jsObject.enrolledFactors.map(fromJsMultiFactorInfo).toList();
 
   /// Returns the session identifier for a second factor enrollment operation.
   ///
@@ -140,23 +140,27 @@ class MultiFactorResolver
   MultiFactorResolver.fromJsObject(auth.MultiFactorResolverJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  List<MultiFactorInfo> get hints => jsObject.hints.map<MultiFactorInfo>((e) {
-        if (e.factorId == 'phone') {
-          return PhoneMultiFactorInfo.fromJsObject(
-              e as auth_interop.PhoneMultiFactorInfoJsImpl);
-        } else if (e.factorId == 'totp') {
-          return TotpMultiFactorInfo.fromJsObject(
-              e as auth_interop.TotpMultiFactorInfoJsImpl);
-        } else {
-          return MultiFactorInfo.fromJsObject(e);
-        }
-      }).toList();
+  List<MultiFactorInfo> get hints =>
+      jsObject.hints.map<MultiFactorInfo>(fromJsMultiFactorInfo).toList();
+
   MultiFactorSession get session =>
       MultiFactorSession.fromJsObject(jsObject.session);
 
   Future<auth.UserCredential> resolveSignIn(MultiFactorAssertion assertion) {
     return handleThenable(jsObject.resolveSignIn(assertion.jsObject))
         .then(auth.UserCredential.fromJsObject);
+  }
+}
+
+MultiFactorInfo fromJsMultiFactorInfo(auth.MultiFactorInfoJsImpl e) {
+  if (e.factorId == 'phone') {
+    return PhoneMultiFactorInfo.fromJsObject(
+        e as auth_interop.PhoneMultiFactorInfoJsImpl);
+  } else if (e.factorId == 'totp') {
+    return TotpMultiFactorInfo.fromJsObject(
+        e as auth_interop.TotpMultiFactorInfoJsImpl);
+  } else {
+    return MultiFactorInfo.fromJsObject(e);
   }
 }
 

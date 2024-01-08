@@ -1,3 +1,43 @@
+## 10.4.0
+
+ - **FEAT**(database,android): automatically map the host to 10.0.2.2  when using useDatabaseEmulator to match other plugins ([#11976](https://github.com/firebase/flutterfire/issues/11976)). ([6c6c589a](https://github.com/firebase/flutterfire/commit/6c6c589a953a43ba79aa20404a0380bcbefba140))
+
+## 10.3.8
+
+ - Update a dependency to the latest release.
+
+## 10.3.7
+
+ - **FIX**(analytics): fix the toString method on AnalyticsEventItem to print out its content ([#11977](https://github.com/firebase/flutterfire/issues/11977)). ([5fe96ece](https://github.com/firebase/flutterfire/commit/5fe96ece22847e29d2007afe2f6b85b3d6ce4b94))
+
+## 10.3.6
+
+ - Update a dependency to the latest release.
+
+## 10.3.5
+
+ - Update a dependency to the latest release.
+
+## 10.3.4
+
+ - Update a dependency to the latest release.
+
+## 10.3.3
+
+ - Update a dependency to the latest release.
+
+## 10.3.2
+
+ - Update a dependency to the latest release.
+
+## 10.3.1
+
+ - Update a dependency to the latest release.
+
+## 10.3.0
+
+ - **FEAT**: Full support of AGP 8 ([#11699](https://github.com/firebase/flutterfire/issues/11699)). ([bdb5b270](https://github.com/firebase/flutterfire/commit/bdb5b27084d225809883bdaa6aa5954650551927))
+
 ## 10.2.7
 
  - **FIX**(database,apple): ensure platform channel is invoked on main thread ([#11650](https://github.com/firebase/flutterfire/issues/11650)). ([d7133997](https://github.com/firebase/flutterfire/commit/d71339978bdd662080daa0bff392ccd6dc366a53))

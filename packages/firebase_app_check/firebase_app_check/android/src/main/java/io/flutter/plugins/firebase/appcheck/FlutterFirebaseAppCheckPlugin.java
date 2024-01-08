@@ -34,7 +34,6 @@ public class FlutterFirebaseAppCheckPlugin
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_app_check";
   private final Map<EventChannel, TokenChannelStreamHandler> streamHandlers = new HashMap<>();
-  private final String TAG = "FLTAppCheckPlugin";
 
   private final String debugProvider = "debug";
   private final String safetyNetProvider = "safetyNet";
@@ -100,7 +99,7 @@ public class FlutterFirebaseAppCheckPlugin
             switch (provider) {
               case debugProvider:
                 {
-                  FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+                  FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
                   firebaseAppCheck.installAppCheckProviderFactory(
                       DebugAppCheckProviderFactory.getInstance());
                   break;
@@ -279,6 +278,7 @@ public class FlutterFirebaseAppCheckPlugin
   private void removeEventListeners() {
     for (EventChannel eventChannel : streamHandlers.keySet()) {
       EventChannel.StreamHandler streamHandler = streamHandlers.get(eventChannel);
+      assert streamHandler != null;
       streamHandler.onCancel(null);
       eventChannel.setStreamHandler(null);
     }

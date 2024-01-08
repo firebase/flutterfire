@@ -230,7 +230,7 @@ void runTransactionTests() {
           expect(e.code, equals('permission-denied'));
           return;
         } catch (e) {
-          fail('Transaction threw invalid exeption');
+          fail('Transaction threw invalid exception');
         }
       });
 
@@ -247,6 +247,25 @@ void runTransactionTests() {
             }),
             throwsAssertionError,
           );
+        });
+
+        testWidgets(
+            'should throw a native error, and convert to a [FirebaseException]',
+            (_) async {
+          DocumentReference<Map<String, dynamic>> documentReference =
+              firestore.doc('not-allowed/document');
+
+          try {
+            await firestore.runTransaction((Transaction transaction) async {
+              await transaction.get(documentReference);
+            });
+            fail('Transaction should not have resolved');
+          } on FirebaseException catch (e) {
+            expect(e.code, equals('permission-denied'));
+            return;
+          } catch (e) {
+            fail('Transaction threw invalid exception');
+          }
         });
 
         // ignore: todo
@@ -424,6 +443,45 @@ void runTransactionTests() {
             await documentReference2.get();
         expect(snapshot2.exists, isFalse);
       });
+
+      // TODO(Lyokone): adding auth make some tests fails in macOS
+      // testWidgets(
+      //     'should not fail to complete transaction if user is authenticated',
+      //     (_) async {
+      //   DocumentReference<Map<String, dynamic>> doc1 =
+      //       await initializeTest('transaction-authentified-1');
+
+      //   try {
+      //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      //       email: 'firestore@mail.com',
+      //       password: 'this-is-a-password',
+      //     );
+      //   } catch (e) {
+      //     await FirebaseAuth.instance.signInWithEmailAndPassword(
+      //       email: 'firestore@mail.com',
+      //       password: 'this-is-a-password',
+      //     );
+      //   }
+
+      //   await doc1.set({'test': 0});
+
+      //   final value = await firestore.runTransaction(
+      //     (Transaction transaction) async {
+      //       final value = await transaction.get(doc1);
+      //       final newValue = value['test'] + 1;
+      //       transaction.set(doc1, {
+      //         'test': newValue,
+      //       });
+
+      //       return newValue;
+      //     },
+      //     maxAttempts: 1,
+      //   );
+
+      //   expect(value, equals(1));
+
+      //   await FirebaseAuth.instance.signOut();
+      // });
     },
     skip: kIsWeb,
   );

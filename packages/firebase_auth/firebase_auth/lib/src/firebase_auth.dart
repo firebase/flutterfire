@@ -126,11 +126,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///
   /// Note: Must be called immediately, prior to accessing auth methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
-  Future<void> useAuthEmulator(String host, int port) async {
+  Future<void> useAuthEmulator(String host, int port,
+      {bool automaticHostMapping = true}) async {
     String mappedHost = host;
 
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      if (mappedHost == 'localhost' || mappedHost == '127.0.0.1') {
+      if ((mappedHost == 'localhost' || mappedHost == '127.0.0.1') &&
+          automaticHostMapping) {
         // ignore: avoid_print
         print('Mapping Auth Emulator host "$mappedHost" to "10.0.2.2".');
         mappedHost = '10.0.2.2';
@@ -362,18 +364,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
     await _delegate.sendSignInLinkToEmail(email, actionCodeSettings);
   }
 
-  /// When set to null, the default Firebase Console language setting is
-  /// applied.
+  /// When set to null, sets the user-facing language code to be the default app language.
   ///
   /// The language code will propagate to email action templates (password
   /// reset, email verification and email change revocation), SMS templates for
   /// phone authentication, reCAPTCHA verifier and OAuth popup/redirect
   /// operations provided the specified providers support localization with the
   /// language code specified.
-  ///
-  /// On web platforms, if `null` is provided as the [languageCode] the Firebase
-  /// project default language will be used. On native platforms, the device
-  /// language will be used.
   Future<void> setLanguageCode(String? languageCode) {
     return _delegate.setLanguageCode(languageCode);
   }

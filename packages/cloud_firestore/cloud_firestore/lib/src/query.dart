@@ -4,6 +4,10 @@
 
 part of cloud_firestore;
 
+/// Sentinel value to check whether user passed values explicitly through .where() method
+@internal
+const notSetQueryParam = Object();
+
 /// Represents a [Query] over the data at a particular location.
 ///
 /// Can construct refined [Query] objects by adding filters and ordering.
@@ -188,6 +192,41 @@ abstract class Query<T extends Object?> {
   });
 
   AggregateQuery count();
+
+  /// Calculates the specified aggregations over the documents in the
+  /// result set of the given query, without actually downloading the documents.
+  AggregateQuery aggregate(
+    AggregateField aggregateField1, [
+    AggregateField? aggregateField2,
+    AggregateField? aggregateField3,
+    AggregateField? aggregateField4,
+    AggregateField? aggregateField5,
+    AggregateField? aggregateField6,
+    AggregateField? aggregateField7,
+    AggregateField? aggregateField8,
+    AggregateField? aggregateField9,
+    AggregateField? aggregateField10,
+    AggregateField? aggregateField11,
+    AggregateField? aggregateField12,
+    AggregateField? aggregateField13,
+    AggregateField? aggregateField14,
+    AggregateField? aggregateField15,
+    AggregateField? aggregateField16,
+    AggregateField? aggregateField17,
+    AggregateField? aggregateField18,
+    AggregateField? aggregateField19,
+    AggregateField? aggregateField20,
+    AggregateField? aggregateField21,
+    AggregateField? aggregateField22,
+    AggregateField? aggregateField23,
+    AggregateField? aggregateField24,
+    AggregateField? aggregateField25,
+    AggregateField? aggregateField26,
+    AggregateField? aggregateField27,
+    AggregateField? aggregateField28,
+    AggregateField? aggregateField29,
+    AggregateField? aggregateField30,
+  ]);
 }
 
 /// Represents a [Query] over the data at a particular location.
@@ -352,7 +391,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   @override
   Query<Map<String, dynamic>> endAt(Iterable<Object?> values) {
     _assertQueryCursorValues(values);
-    return _JsonQuery(firestore, _delegate.endAt(values));
+    return _JsonQuery(firestore, _delegate.endAt(values.toList()));
   }
 
   /// Creates and returns a new [Query] that ends before the provided document
@@ -383,7 +422,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     _assertQueryCursorValues(values);
     return _JsonQuery(
       firestore,
-      _delegate.endBefore(values),
+      _delegate.endBefore(values.toList()),
     );
   }
 
@@ -547,7 +586,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   @override
   Query<Map<String, dynamic>> startAfter(Iterable<Object?> values) {
     _assertQueryCursorValues(values);
-    return _JsonQuery(firestore, _delegate.startAfter(values));
+    return _JsonQuery(firestore, _delegate.startAfter(values.toList()));
   }
 
   /// Creates and returns a new [Query] that starts at the provided document
@@ -577,7 +616,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   @override
   Query<Map<String, dynamic>> startAt(Iterable<Object?> values) {
     _assertQueryCursorValues(values);
-    return _JsonQuery(firestore, _delegate.startAt(values));
+    return _JsonQuery(firestore, _delegate.startAt(values.toList()));
   }
 
   /// Creates and returns a new [Query] with additional filter on specified
@@ -595,8 +634,8 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   @override
   Query<Map<String, dynamic>> where(
     Object fieldOrFilter, {
-    Object? isEqualTo,
-    Object? isNotEqualTo,
+    Object? isEqualTo = notSetQueryParam,
+    Object? isNotEqualTo = notSetQueryParam,
     Object? isLessThan,
     Object? isLessThanOrEqualTo,
     Object? isGreaterThan,
@@ -611,8 +650,8 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
 
     if (fieldOrFilter is Filter) {
       assert(
-        isEqualTo == null &&
-            isNotEqualTo == null &&
+        identical(isEqualTo, notSetQueryParam) &&
+            identical(isNotEqualTo, notSetQueryParam) &&
             isLessThan == null &&
             isLessThanOrEqualTo == null &&
             isGreaterThan == null &&
@@ -655,8 +694,12 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       conditions.add(condition);
     }
 
-    if (isEqualTo != null) addCondition(field, '==', isEqualTo);
-    if (isNotEqualTo != null) addCondition(field, '!=', isNotEqualTo);
+    if (!identical(isEqualTo, notSetQueryParam)) {
+      addCondition(field, '==', isEqualTo);
+    }
+    if (!identical(isNotEqualTo, notSetQueryParam)) {
+      addCondition(field, '!=', isNotEqualTo);
+    }
     if (isLessThan != null) addCondition(field, '<', isLessThan);
     if (isLessThanOrEqualTo != null) {
       addCondition(field, '<=', isLessThanOrEqualTo);
@@ -844,6 +887,78 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   AggregateQuery count() {
     return AggregateQuery._(_delegate.count(), this);
   }
+
+  /// Calculates the specified aggregations over the documents in the
+  /// result set of the given query, without actually downloading the documents.
+  @override
+  AggregateQuery aggregate(
+    AggregateField aggregateField1, [
+    AggregateField? aggregateField2,
+    AggregateField? aggregateField3,
+    AggregateField? aggregateField4,
+    AggregateField? aggregateField5,
+    AggregateField? aggregateField6,
+    AggregateField? aggregateField7,
+    AggregateField? aggregateField8,
+    AggregateField? aggregateField9,
+    AggregateField? aggregateField10,
+    AggregateField? aggregateField11,
+    AggregateField? aggregateField12,
+    AggregateField? aggregateField13,
+    AggregateField? aggregateField14,
+    AggregateField? aggregateField15,
+    AggregateField? aggregateField16,
+    AggregateField? aggregateField17,
+    AggregateField? aggregateField18,
+    AggregateField? aggregateField19,
+    AggregateField? aggregateField20,
+    AggregateField? aggregateField21,
+    AggregateField? aggregateField22,
+    AggregateField? aggregateField23,
+    AggregateField? aggregateField24,
+    AggregateField? aggregateField25,
+    AggregateField? aggregateField26,
+    AggregateField? aggregateField27,
+    AggregateField? aggregateField28,
+    AggregateField? aggregateField29,
+    AggregateField? aggregateField30,
+  ]) {
+    return AggregateQuery._(
+      _delegate.aggregate(
+        aggregateField1,
+        aggregateField2,
+        aggregateField3,
+        aggregateField4,
+        aggregateField5,
+        aggregateField6,
+        aggregateField7,
+        aggregateField8,
+        aggregateField9,
+        aggregateField10,
+        aggregateField11,
+        aggregateField12,
+        aggregateField13,
+        aggregateField14,
+        aggregateField15,
+        aggregateField16,
+        aggregateField17,
+        aggregateField18,
+        aggregateField19,
+        aggregateField20,
+        aggregateField21,
+        aggregateField22,
+        aggregateField23,
+        aggregateField24,
+        aggregateField25,
+        aggregateField26,
+        aggregateField27,
+        aggregateField28,
+        aggregateField29,
+        aggregateField30,
+      ),
+      this,
+    );
+  }
 }
 
 class _WithConverterQuery<T extends Object?> implements Query<T> {
@@ -952,8 +1067,8 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   @override
   Query<T> where(
     Object field, {
-    Object? isEqualTo,
-    Object? isNotEqualTo,
+    Object? isEqualTo = notSetQueryParam,
+    Object? isNotEqualTo = notSetQueryParam,
     Object? isLessThan,
     Object? isLessThanOrEqualTo,
     Object? isGreaterThan,
@@ -1012,5 +1127,74 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   @override
   AggregateQuery count() {
     return _originalQuery.count();
+  }
+
+  /// Calculates the specified aggregations over the documents in the
+  /// result set of the given query, without actually downloading the documents.
+  @override
+  AggregateQuery aggregate(
+    AggregateField aggregateField1, [
+    AggregateField? aggregateField2,
+    AggregateField? aggregateField3,
+    AggregateField? aggregateField4,
+    AggregateField? aggregateField5,
+    AggregateField? aggregateField6,
+    AggregateField? aggregateField7,
+    AggregateField? aggregateField8,
+    AggregateField? aggregateField9,
+    AggregateField? aggregateField10,
+    AggregateField? aggregateField11,
+    AggregateField? aggregateField12,
+    AggregateField? aggregateField13,
+    AggregateField? aggregateField14,
+    AggregateField? aggregateField15,
+    AggregateField? aggregateField16,
+    AggregateField? aggregateField17,
+    AggregateField? aggregateField18,
+    AggregateField? aggregateField19,
+    AggregateField? aggregateField20,
+    AggregateField? aggregateField21,
+    AggregateField? aggregateField22,
+    AggregateField? aggregateField23,
+    AggregateField? aggregateField24,
+    AggregateField? aggregateField25,
+    AggregateField? aggregateField26,
+    AggregateField? aggregateField27,
+    AggregateField? aggregateField28,
+    AggregateField? aggregateField29,
+    AggregateField? aggregateField30,
+  ]) {
+    return _originalQuery.aggregate(
+      aggregateField1,
+      aggregateField2,
+      aggregateField3,
+      aggregateField4,
+      aggregateField5,
+      aggregateField6,
+      aggregateField7,
+      aggregateField8,
+      aggregateField9,
+      aggregateField10,
+      aggregateField11,
+      aggregateField12,
+      aggregateField13,
+      aggregateField14,
+      aggregateField15,
+      aggregateField16,
+      aggregateField17,
+      aggregateField18,
+      aggregateField19,
+      aggregateField20,
+      aggregateField21,
+      aggregateField22,
+      aggregateField23,
+      aggregateField24,
+      aggregateField25,
+      aggregateField26,
+      aggregateField27,
+      aggregateField28,
+      aggregateField29,
+      aggregateField30,
+    );
   }
 }

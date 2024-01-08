@@ -19,13 +19,12 @@ import 'utils/exception.dart';
 /// nor can it be committed again.
 class MethodChannelWriteBatch extends WriteBatchPlatform {
   /// Create an instance of [MethodChannelWriteBatch]
-  MethodChannelWriteBatch(this._firestore) : super();
+  MethodChannelWriteBatch(this.pigeonApp) : super();
 
-  /// The [FirebaseFirestorePlatform] instance of this batch.
-  final FirebaseFirestorePlatform _firestore;
+  final FirestorePigeonFirebaseApp pigeonApp;
 
   /// Keeps track of all batch writes in order.
-  List<Map<String, dynamic>> _writes = [];
+  List<PigeonTransactionCommand> _writes = [];
 
   /// The committed state of this batch.
   ///
@@ -43,11 +42,8 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
     }
 
     try {
-      await MethodChannelFirebaseFirestore.channel
-          .invokeMethod<void>('WriteBatch#commit', <String, dynamic>{
-        'firestore': _firestore,
-        'writes': _writes,
-      });
+      await MethodChannelFirebaseFirestore.pigeonChannel
+          .writeBatchCommit(pigeonApp, _writes);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -56,25 +52,25 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   @override
   void delete(String documentPath) {
     _assertNotCommitted();
-    _writes.add(<String, dynamic>{
-      'path': documentPath,
-      'type': 'DELETE',
-    });
+    _writes.add(PigeonTransactionCommand(
+      path: documentPath,
+      type: PigeonTransactionType.deleteType,
+    ));
   }
 
   @override
   void set(String documentPath, Map<String, dynamic> data,
       [SetOptions? options]) {
     _assertNotCommitted();
-    _writes.add(<String, dynamic>{
-      'path': documentPath,
-      'type': 'SET',
-      'data': data,
-      'options': <String, dynamic>{
-        'merge': options?.merge,
-        'mergeFields': options?.mergeFields,
-      },
-    });
+    _writes.add(PigeonTransactionCommand(
+      path: documentPath,
+      type: PigeonTransactionType.set,
+      data: data,
+      option: PigeonDocumentOption(
+        merge: options?.merge,
+        mergeFields: options?.mergeFields?.map((e) => e.components).toList(),
+      ),
+    ));
   }
 
   @override
@@ -83,11 +79,11 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
     Map<String, dynamic> data,
   ) {
     _assertNotCommitted();
-    _writes.add(<String, dynamic>{
-      'path': documentPath,
-      'type': 'UPDATE',
-      'data': data,
-    });
+    _writes.add(PigeonTransactionCommand(
+      path: documentPath,
+      type: PigeonTransactionType.update,
+      data: data,
+    ));
   }
 
   /// Ensures that once a batch has been committed, it can not be modified again.

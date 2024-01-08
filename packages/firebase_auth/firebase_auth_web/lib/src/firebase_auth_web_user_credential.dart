@@ -16,19 +16,21 @@ class UserCredentialWeb extends UserCredentialPlatform {
   /// Creates a new [UserCredentialWeb] instance.
   UserCredentialWeb(
     FirebaseAuthPlatform auth,
-    auth_interop.UserCredential webUserCredential,
+    auth_interop.UserCredential? webUserCredential,
     auth_interop.Auth? webAuth,
   ) : super(
           auth: auth,
           additionalUserInfo: convertWebAdditionalUserInfo(
-            webUserCredential.additionalUserInfo,
+            webUserCredential?.additionalUserInfo,
           ),
           credential: convertWebOAuthCredential(webUserCredential),
-          user: UserWeb(
-            auth,
-            MultiFactorWeb(auth, multiFactor(webUserCredential.user!)),
-            webUserCredential.user!,
-            webAuth,
-          ),
+          user: webUserCredential == null
+              ? null
+              : UserWeb(
+                  auth,
+                  MultiFactorWeb(auth, multiFactor(webUserCredential.user!)),
+                  webUserCredential.user!,
+                  webAuth,
+                ),
         );
 }
