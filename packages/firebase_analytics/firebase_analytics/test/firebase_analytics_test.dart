@@ -1197,6 +1197,7 @@ void main() {
       });
 
       test('setCurrentScreen', () async {
+        // ignore: deprecated_member_use_from_same_package
         await analytics!.setCurrentScreen(
           screenName: 'test-screen-name',
           screenClassOverride: 'test-class-override',

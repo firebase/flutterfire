@@ -38,7 +38,10 @@ export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
         Order,
         ArrayConfig,
         QueryScope,
-        LoadBundleTaskState;
+        LoadBundleTaskState,
+        average,
+        count,
+        sum;
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;
 
