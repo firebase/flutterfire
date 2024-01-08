@@ -44,7 +44,8 @@ Map<String, String?>? partsFromHttpUrl(String url) {
   // firebase storage url
   // 10.0.2.2 is for Android when using firebase emulator
   if (decodedUrl.contains(_firebaseStorageHost) ||
-      decodedUrl.contains('localhost') || decodedUrl.contains('10.0.2.2')) {
+      decodedUrl.contains('localhost') ||
+      decodedUrl.contains('10.0.2.2')) {
     String origin;
     if (decodedUrl.contains('localhost') || decodedUrl.contains('10.0.2.2')) {
       Uri uri = Uri.parse(url);
