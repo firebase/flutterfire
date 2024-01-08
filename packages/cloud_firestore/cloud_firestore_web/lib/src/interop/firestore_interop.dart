@@ -666,8 +666,23 @@ external Object get arrayRemove;
 external Object get arrayUnion;
 
 @JS()
+external Object count();
+
+@JS()
+external Object average(String field);
+
+@JS()
+external Object sum(String field);
+
+@JS()
 external PromiseJsImpl<AggregateQuerySnapshotJsImpl> getCountFromServer(
   QueryJsImpl query,
+);
+
+@JS()
+external PromiseJsImpl<AggregateQuerySnapshotJsImpl> getAggregateFromServer(
+  QueryJsImpl query,
+  Object specs,
 );
 
 @JS('AggregateQuerySnapshot')

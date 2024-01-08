@@ -189,6 +189,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   ///  * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.html#setCurrentScreen(android.app.Activity, java.lang.String, java.lang.String)
   ///  * https://firebase.google.com/docs/reference/ios/firebaseanalytics/api/reference/Classes/FIRAnalytics#setscreennamescreenclass
+  @Deprecated(
+    'setCurrentScreen() has been deprecated. Please use logScreenView()',
+  )
   Future<void> setCurrentScreen({
     required String? screenName,
     String screenClassOverride = 'Flutter',
@@ -1359,6 +1362,40 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// The default value is 1800000 milliseconds (30 minutes).
   Future<void> setSessionTimeoutDuration(Duration timeout) async {
     await _delegate.setSessionTimeoutDuration(timeout);
+  }
+
+  /// Initiates on-device conversion measurement given a user email address.
+  /// Requires dependency GoogleAppMeasurementOnDeviceConversion to be linked in, otherwise it is a no-op.
+  ///
+  /// Only available on iOS.
+  Future<void> initiateOnDeviceConversionMeasurementWithEmailAddress(
+    String emailAddress,
+  ) async {
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      throw UnimplementedError(
+        'initiateOnDeviceConversionMeasurementWithEmailAddress() is only supported on iOS.',
+      );
+    }
+    await _delegate.initiateOnDeviceConversionMeasurement(
+      emailAddress: emailAddress,
+    );
+  }
+
+  /// Initiates on-device conversion measurement given a user phone number in E.164 format.
+  /// Requires dependency GoogleAppMeasurementOnDeviceConversion to be linked in, otherwise it is a no-op.
+  ///
+  /// Only available on iOS.
+  Future<void> initiateOnDeviceConversionMeasurementWithPhoneNumber(
+    String phoneNumber,
+  ) async {
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      throw UnimplementedError(
+        'initiateOnDeviceConversionMeasurementWithPhoneNumber() is only supported on iOS.',
+      );
+    }
+    await _delegate.initiateOnDeviceConversionMeasurement(
+      phoneNumber: phoneNumber,
+    );
   }
 }
 

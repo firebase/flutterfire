@@ -199,4 +199,22 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
       convertPlatformException(e, s);
     }
   }
+
+  @override
+  Future<void> initiateOnDeviceConversionMeasurement({
+    String? emailAddress,
+    String? phoneNumber,
+  }) {
+    try {
+      return channel.invokeMethod<void>(
+        'Analytics#initiateOnDeviceConversionMeasurement',
+        <String, String?>{
+          'emailAddress': emailAddress,
+          'phoneNumber': phoneNumber,
+        },
+      );
+    } catch (e, s) {
+      convertPlatformException(e, s);
+    }
+  }
 }
