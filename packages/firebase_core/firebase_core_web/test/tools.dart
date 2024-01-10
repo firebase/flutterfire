@@ -4,7 +4,6 @@
 
 import 'dart:html';
 
-import 'package:firebase_core_web/src/interop/js.dart' as dom;
 import 'package:js/js_util.dart' as js_util;
 
 /// Injects a `<meta>` tag with the provided [attributes] into the [dom.document].
