@@ -11,6 +11,7 @@ import 'dart:js_interop_unsafe';
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/src/interop/package_web_tweaks.dart';
+import 'package:firebase_core_web/src/interop/utils/es6_interop.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:meta/meta.dart';
 import 'package:web/web.dart' as web;
@@ -45,9 +46,9 @@ FirebaseOptions _createFromJsOptions(firebase.FirebaseOptions options) {
 /// When the Firebase JS SDK throws an error, it contains a code which can be
 /// used to identify the specific type of error. This helper function is used
 /// to keep error messages consistent across different platforms.
-String _getJSErrorCode(JSObject e) {
-  if (e.getProperty<JSString?>('name'.toJS)?.toDart == 'FirebaseError') {
-    return e.getProperty<JSString?>('code'.toJS)?.toDart ?? '';
+String _getJSErrorCode(JSError e) {
+  if (e.name == 'FirebaseError') {
+    return e.code ?? '';
   }
 
   return '';
@@ -58,11 +59,10 @@ String _getJSErrorCode(JSObject e) {
 /// If a JavaScript error is thrown and not manually handled using the code,
 /// this function ensures that if the error is Firebase related, it is instead
 /// re-created as a [FirebaseException] with a familiar code and message.
-FirebaseException _catchJSError(JSObject e) {
-  if (e.getProperty<JSString?>('name'.toJS)?.toDart == 'FirebaseError') {
-    String rawCode = e.getProperty<JSString>('code'.toJS).toDart;
-    String code = rawCode;
-    String message = e.getProperty<JSString?>('message'.toJS)?.toDart ?? '';
+FirebaseException _catchJSError(JSError e) {
+  if (e.name == 'FirebaseError') {
+    String code = e.code ?? '';
+    String message = e.message ?? '';
 
     if (code.contains('/')) {
       List<String> chunks = code.split('/');
@@ -72,7 +72,7 @@ FirebaseException _catchJSError(JSObject e) {
     return FirebaseException(
       plugin: 'core',
       code: code,
-      message: message.replaceAll(' ($rawCode)', ''),
+      message: message.replaceAll(' ($code)', ''),
     );
   }
 
